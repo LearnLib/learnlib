@@ -14,17 +14,14 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.ls5.learnlib.os.api;
+package de.learnlib.os.api;
 
 /**
  *
  * @author merten
  */
-public interface LearningAlgorithm<A, W> {
+public interface SupportsGrowingAlphabet<S> {
 	
-	public A createHypothesis();
-	
-	public A refineHypothesis(W counterexample);
-	
+	public void addAlphabetSymbol(S symbol);
 	
 }

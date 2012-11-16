@@ -14,16 +14,17 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.ls5.learnlib.os.api;
-
-import java.util.Collection;
+package de.learnlib.os.api;
 
 /**
  *
  * @author merten
  */
-public interface CEXHandlerPrefixes<W> {
+public interface LearningAlgorithm<A, W> {
 	
-	public Collection<W> createPrefixes(W counterexample);
+	public A createHypothesis();
+	
+	public A refineHypothesis(W counterexample);
+	
 	
 }

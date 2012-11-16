@@ -14,7 +14,7 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.ls5.learnlib.os.api;
+package de.learnlib.os.api;
 
 import java.util.Collection;
 
