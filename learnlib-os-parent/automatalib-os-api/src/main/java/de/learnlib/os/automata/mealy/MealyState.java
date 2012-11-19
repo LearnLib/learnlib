@@ -16,10 +16,18 @@
 
 package de.learnlib.os.automata.mealy;
 
+import de.learnlib.os.automata.Symbol;
+
 /**
  *
  * @author merten
  */
 public interface MealyState {
+	
+	
+	public void setTransition(Symbol inputsym, MealyTransition transition);
+	
+	public MealyTransition getTransition(Symbol inputsym);
+	
 	
 }

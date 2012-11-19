@@ -20,17 +20,6 @@ package de.learnlib.os.automata;
  *
  * @author merten
  */
-public interface Word extends Iterable<Symbol> {
-	
-	public void addSymbol(Symbol sym);
-	
-	public Symbol getSymbol(int index);
-	
-	public void removeSymbol(Symbol sym);
-	
-	public void removeSymbol(int index);
-	
-	public int size();
-	
+public interface Alphabet extends Word {
 	
 }

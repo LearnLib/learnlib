@@ -16,10 +16,17 @@
 
 package de.learnlib.os.automata.mealy;
 
+import de.learnlib.os.automata.Alphabet;
+
 /**
  *
  * @author merten
  */
 public interface MealyMachine {
+	
+	public Alphabet getAlphabet();
+	
+	public MealyState getStartingState();
+	
 	
 }
