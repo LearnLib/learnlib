@@ -14,16 +14,19 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.learnlib.os.api;
+package de.learnlib.automata.mealy;
 
-import java.util.Collection;
+import de.learnlib.automata.Alphabet;
 
 /**
  *
  * @author merten
  */
-public interface CEXHandlerPrefixes<W> {
+public interface MealyMachine extends Iterable<MealyState> {
 	
-	public Collection<W> createPrefixes(W counterexample);
+	public Alphabet getAlphabet();
+	
+	public MealyState getStartingState();
+	
 	
 }

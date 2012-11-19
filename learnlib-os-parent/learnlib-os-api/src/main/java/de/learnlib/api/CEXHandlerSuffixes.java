@@ -14,23 +14,16 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.learnlib.os.automata;
+package de.learnlib.api;
+
+import java.util.Collection;
 
 /**
  *
  * @author merten
  */
-public interface Word extends Iterable<Symbol> {
-	
-	public void addSymbol(Symbol sym);
-	
-	public Symbol getSymbol(int index);
-	
-	public void removeSymbol(Symbol sym);
-	
-	public void removeSymbol(int index);
-	
-	public int size();
-	
+public interface CEXHandlerSuffixes<W> {
+
+	public Collection<W> createSuffixes(W counterexample);
 	
 }

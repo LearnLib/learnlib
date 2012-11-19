@@ -13,19 +13,26 @@
    You should have received a copy of the GNU Lesser General Public
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
-package de.learnlib.os.automata;
+
+package de.learnlib.automata.mealy;
+
+import de.learnlib.automata.Symbol;
 
 /**
  *
  * @author merten
  */
-public interface Symbol {
+public interface MealyTransition {
 	
-
-	@Override
-	abstract int hashCode();
+	public void setTargetState(MealyState state);
 	
-	@Override
-	abstract boolean equals(Object o);
+	public MealyState getTargetState();
+	
+	
+	public void setOutputSymbol(Symbol outputsym);
+	
+	public Symbol getOutputSymbol();
+	
+	
 	
 }

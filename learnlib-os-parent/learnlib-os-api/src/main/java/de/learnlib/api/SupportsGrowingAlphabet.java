@@ -14,12 +14,14 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.learnlib.os.automata;
+package de.learnlib.api;
 
 /**
  *
  * @author merten
  */
-public interface Alphabet extends Word {
+public interface SupportsGrowingAlphabet<S> {
+	
+	public void addAlphabetSymbol(S symbol);
 	
 }

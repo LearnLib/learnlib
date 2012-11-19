@@ -14,25 +14,19 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.learnlib.os.automata.mealy;
-
-import de.learnlib.os.automata.Symbol;
+package de.learnlib.automata;
 
 /**
  *
  * @author merten
  */
-public interface MealyTransition {
+public interface Word extends Iterable<Symbol> {
 	
-	public void setTargetState(MealyState state);
+	public void addSymbol(Symbol sym);
 	
-	public MealyState getTargetState();
+	public Symbol getSymbol(int index);
 	
-	
-	public void setOutputSymbol(Symbol outputsym);
-	
-	public Symbol getOutputSymbol();
-	
+	public int size();
 	
 	
 }

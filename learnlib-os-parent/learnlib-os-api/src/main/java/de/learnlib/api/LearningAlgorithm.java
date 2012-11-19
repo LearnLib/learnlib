@@ -14,19 +14,17 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.learnlib.os.automata.mealy;
-
-import de.learnlib.os.automata.Alphabet;
+package de.learnlib.api;
 
 /**
  *
  * @author merten
  */
-public interface MealyMachine {
+public interface LearningAlgorithm<A, W> {
 	
-	public Alphabet getAlphabet();
+	public A createHypothesis();
 	
-	public MealyState getStartingState();
+	public A refineHypothesis(W counterexample);
 	
 	
 }

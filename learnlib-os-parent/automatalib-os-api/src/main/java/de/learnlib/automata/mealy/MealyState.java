@@ -14,9 +14,9 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.learnlib.os.automata.mealy;
+package de.learnlib.automata.mealy;
 
-import de.learnlib.os.automata.Symbol;
+import de.learnlib.automata.Symbol;
 
 /**
  *

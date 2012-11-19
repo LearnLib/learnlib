@@ -13,15 +13,18 @@
    You should have received a copy of the GNU Lesser General Public
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
-
-package de.learnlib.os.api;
+package de.learnlib.automata;
 
 /**
  *
  * @author merten
  */
-public interface SupportsGrowingAlphabet<S> {
+public interface Symbol {
 	
-	public void addAlphabetSymbol(S symbol);
+
+	@Override
+	abstract int hashCode();
+	
+	boolean equals(Symbol o);
 	
 }

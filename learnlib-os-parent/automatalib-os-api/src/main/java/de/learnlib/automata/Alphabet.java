@@ -14,16 +14,12 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.learnlib.os.api;
-
-import java.util.Collection;
+package de.learnlib.automata;
 
 /**
  *
  * @author merten
  */
-public interface CEXHandlerSuffixes<W> {
-
-	public Collection<W> createSuffixes(W counterexample);
+public interface Alphabet extends Word {
 	
 }
