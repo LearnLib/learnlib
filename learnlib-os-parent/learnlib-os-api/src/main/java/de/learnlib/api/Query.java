@@ -12,19 +12,24 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with LearnLib; if not, see
-   <http://www.gnu.de/documents/lgpl.en.html>.  */
+   <http://www.gnu.de/documents/lgpl.en.html>
+ */
 
 package de.learnlib.api;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
  *
  * @author merten
  */
-public interface CEXHandlerSuffixes<I> {
+public class Query<I, O> {
 
-	public void createSuffixes(List<I> counterexample, Collection<List<I>> suffixes);
-	
+	public final List<I> toState, future;
+	public O output;
+
+	public Query(List<I> toState, List<I> future) {
+		this.toState = toState;
+		this.future = future;
+	}
 }

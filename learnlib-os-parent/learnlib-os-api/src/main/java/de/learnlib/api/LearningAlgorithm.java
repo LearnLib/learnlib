@@ -16,15 +16,17 @@
 
 package de.learnlib.api;
 
+import java.util.List;
+
 /**
  *
  * @author merten
  */
-public interface LearningAlgorithm<A, W> {
+public interface LearningAlgorithm<A, I, O> {
 	
 	public A createHypothesis();
 	
-	public A refineHypothesis(W counterexample);
+	public A refineHypothesis(List<I> counterexample, O output);
 	
 	
 }

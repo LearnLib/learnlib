@@ -20,8 +20,8 @@ package de.learnlib.api;
  *
  * @author merten
  */
-public interface SupportsGrowingAlphabet<S> {
+public interface SupportsGrowingAlphabet<I> {
 	
-	public void addAlphabetSymbol(S symbol);
+	public void addAlphabetSymbol(I symbol);
 	
 }

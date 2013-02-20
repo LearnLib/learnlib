@@ -16,15 +16,15 @@
 
 package de.learnlib.api;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
  *
  * @author merten
  */
-public interface CEXHandlerSuffixes<I> {
+public interface MembershipOracle<I, O> {
 
-	public void createSuffixes(List<I> counterexample, Collection<List<I>> suffixes);
 	
+	public void processQueries(List<Query<I, O>> queries);
+
 }

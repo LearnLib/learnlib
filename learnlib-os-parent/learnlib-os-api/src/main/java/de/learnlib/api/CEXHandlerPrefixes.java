@@ -17,13 +17,14 @@
 package de.learnlib.api;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
  * @author merten
  */
-public interface CEXHandlerPrefixes<W> {
+public interface CEXHandlerPrefixes<I> {
 	
-	public Collection<W> createPrefixes(W counterexample);
+	public void createPrefixes(List<I> counterexample, Collection<List<I>> prefixes);
 	
 }
