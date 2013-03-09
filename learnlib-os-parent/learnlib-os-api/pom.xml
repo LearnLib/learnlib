@@ -13,11 +13,7 @@
     <name>learnlib-os-api</name>
 
     <dependencies>
-        <dependency>
-            <groupId>de.ls5.automata</groupId>
-            <artifactId>automata-api</artifactId>
-            <version>0.2-SNAPSHOT</version>                        
-        </dependency>
+        
     </dependencies>
     
 </project>
