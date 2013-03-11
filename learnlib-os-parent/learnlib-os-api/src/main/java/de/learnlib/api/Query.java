@@ -17,6 +17,8 @@
 package de.learnlib.api;
 
 import de.ls5.words.Word;
+import static de.ls5.words.util.Words.concat;
+import static de.ls5.words.util.Words.epsilon;
 
 /**
  * A query is a container for tests a learning algorithms performs, containing
@@ -47,10 +49,8 @@ public class Query<I, O> {
     }
     
     public Query(Word<I> input) {
-        throw new IllegalStateException("Not implemented yet.");
-        //FIXME: this has to be the empty word.
-        //this.prefix = 
-        //this.suffix = input;
+        this.prefix = epsilon();
+        this.suffix = input;
     }
 
     public O getOutput() {
@@ -65,9 +65,7 @@ public class Query<I, O> {
      * @return prefix.suffix
      */
     public Word<I> getInput() {
-        throw new IllegalStateException("Not implemented yet.");
-        //FIXME: this has to return prefix.suffix
-        //return 
+        return concat(this.prefix, this.suffix);
     }
 
     @Override
