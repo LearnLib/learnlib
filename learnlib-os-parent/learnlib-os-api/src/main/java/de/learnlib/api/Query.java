@@ -1,35 +1,98 @@
 /* Copyright (C) 2012 TU Dortmund
-   This file is part of LearnLib 
+ This file is part of LearnLib 
 
-   LearnLib is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License version 3.0 as published by the Free Software Foundation.
+ LearnLib is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License version 3.0 as published by the Free Software Foundation.
 
-   LearnLib is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+ LearnLib is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with LearnLib; if not, see
-   <http://www.gnu.de/documents/lgpl.en.html>
+ You should have received a copy of the GNU Lesser General Public
+ License along with LearnLib; if not, see
+ <http://www.gnu.de/documents/lgpl.en.html>
  */
-
 package de.learnlib.api;
 
-import java.util.List;
+import de.ls5.words.Word;
 
 /**
+ * A query is a container for tests a learning algorithms performs, containing
+ * the actual test and the corresponding result.
  *
+ * @param <I> input symbol class.
+ * @param <O> output class. 
+ * 
  * @author merten
  */
 public class Query<I, O> {
 
-	public final List<I> toState, future;
-	public O output;
+    /**
+     * prefix portion of test
+     */
+    public final Word<I> prefix;
+    
+    /**
+     * suffix portion of test
+     */
+    public final Word<I> suffix;
+    
+    private O output;
+    
+    public Query(Word<I> prefix, Word<I> suffix) {
+        this.prefix = prefix;
+        this.suffix = suffix;
+    }
+    
+    public Query(Word<I> input) {
+        throw new IllegalStateException("Not implemented yet.");
+        //FIXME: this has to be the empty word.
+        //this.prefix = 
+        //this.suffix = input;
+    }
 
-	public Query(List<I> toState, List<I> future) {
-		this.toState = toState;
-		this.future = future;
-	}
+    public O getOutput() {
+        return output;
+    }
+
+    public void setOutput(O output) {
+        this.output = output;
+    }
+    
+    /** 
+     * @return prefix.suffix
+     */
+    public Word<I> getInput() {
+        throw new IllegalStateException("Not implemented yet.");
+        //FIXME: this has to return prefix.suffix
+        //return 
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 89 * hash + (this.prefix != null ? this.prefix.hashCode() : 0);
+        hash = 89 * hash + (this.suffix != null ? this.suffix.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Query<I, O> other = (Query<I, O>) obj;
+        if (this.prefix != other.prefix && (this.prefix == null || !this.prefix.equals(other.prefix))) {
+            return false;
+        }
+        if (this.suffix != other.suffix && (this.suffix == null || !this.suffix.equals(other.suffix))) {
+            return false;
+        }
+        return true;
+    }    
 }
