@@ -16,7 +16,7 @@
 
 package de.learnlib.api;
 
-import java.util.List;
+import de.ls5.words.Word;
 
 /**
  *
@@ -26,7 +26,7 @@ public interface LearningAlgorithm<A, I, O> {
 	
 	public A createHypothesis();
 	
-	public A refineHypothesis(List<I> counterexample, O output);
+	public A refineHypothesis(Word<I> counterexample, O output);
 	
 	
 }

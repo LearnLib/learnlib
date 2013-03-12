@@ -16,8 +16,8 @@
 
 package de.learnlib.api;
 
+import de.ls5.words.Word;
 import java.util.Collection;
-import java.util.List;
 
 /**
  *
@@ -25,6 +25,6 @@ import java.util.List;
  */
 public interface CEXHandlerSuffixes<I> {
 
-	public void createSuffixes(List<I> counterexample, Collection<List<I>> suffixes);
+	public void createSuffixes(Word<I> counterexample, Collection<Word<I>> suffixes);
 	
 }
