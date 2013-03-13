@@ -49,10 +49,19 @@ public class MealyContractOracle<I, O> implements MembershipOracle<I, Word<O>> {
                 throw new RuntimeException("Query batch is incomplete: Query is null at index " + i);
             }
             
+            // is there actual output?
             if(query.getOutput() == null) {
                 throw new RuntimeException("Query batch is not answered: Output is null for Query with index " + i);
             }
-      
+            
+            // does the output have fitting size?
+            int expected = query.getOutput().size();
+            int actual = query.getInput().size();
+            if(actual != expected) {
+                throw new RuntimeException("Query output in query batch with index " + i + " does not have fitting size: Expected size is " + expected + ", actual size is " + actual);
+            }
+            
+            // Check that no element of the output is null
             for(O output : query.getOutput()) {
                 if(output == null) {
                     throw new RuntimeException("Query batch is answered incompletely: Output contains null for Query at index " + i);
