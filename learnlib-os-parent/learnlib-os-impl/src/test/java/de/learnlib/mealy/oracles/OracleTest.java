@@ -26,6 +26,8 @@ import de.ls5.words.impl.ArrayWord;
 import de.ls5.words.impl.FastAlphabet;
 import de.ls5.words.impl.SharedWord;
 import de.ls5.words.impl.Symbol;
+import de.ls5.words.util.Words;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
@@ -70,30 +72,28 @@ public class OracleTest {
     @Test
     public void testMealySimulatorOracle() {
         
-        FastMealy fm = constructMachine();
+        FastMealy<Symbol,String> fm = constructMachine();
         
         MealySimulatorOracle<Symbol, String> mso = new MealySimulatorOracle<>(fm);
         MealyContractOracle<Symbol, String> oracle = new MealyContractOracle<>(mso);
         
         List<Query<Symbol, Word<String>>> queries = new ArrayList<>();
         
-        MutableWord<Symbol> trace = new ArrayWord<>();
-        trace.add(in_a);
-        trace.add(in_a);
-        trace.add(in_a);
+        
+        Word<Symbol> prefix = Words.asWord(in_a);
+        Word<Symbol> suffix = Words.asWord(in_a, in_a);
         
         
-        Query<Symbol, Word<String>> query = new Query<>(new SharedWord<>(trace));
+        Query<Symbol, Word<String>> query = new Query<>(prefix, suffix);
         queries.add(query);
         
         Assert.assertEquals(queries.get(0).getInput().size(), 3);
         
         oracle.processQueries(queries);
         
-        Assert.assertEquals(queries.get(0).getOutput().size(), 3);
+        Assert.assertEquals(queries.get(0).getOutput().size(), 2);
         Assert.assertEquals(queries.get(0).getOutput().get(0), out_ok);
-        Assert.assertEquals(queries.get(0).getOutput().get(1), out_ok);
-        Assert.assertEquals(queries.get(0).getOutput().get(2), out_error);
+        Assert.assertEquals(queries.get(0).getOutput().get(1), out_error);
         
         
     }

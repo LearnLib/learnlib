@@ -56,7 +56,7 @@ public class MealyContractOracle<I, O> implements MembershipOracle<I, Word<O>> {
             
             // does the output have fitting size?
             int expected = query.getOutput().size();
-            int actual = query.getInput().size();
+            int actual = query.getSuffix().size();
             if(actual != expected) {
                 throw new RuntimeException("Query output in query batch with index " + i + " does not have fitting size: Expected size is " + expected + ", actual size is " + actual);
             }
