@@ -84,7 +84,7 @@ public class Query<I, O> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Query<I, O> other = (Query<I, O>) obj;
+        final Query<?, ?> other = (Query<?, ?>) obj;
         if (this.prefix != other.prefix && (this.prefix == null || !this.prefix.equals(other.prefix))) {
             return false;
         }

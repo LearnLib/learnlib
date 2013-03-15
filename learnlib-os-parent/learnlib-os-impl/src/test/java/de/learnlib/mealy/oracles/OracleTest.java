@@ -24,6 +24,7 @@ import de.ls5.words.MutableWord;
 import de.ls5.words.Word;
 import de.ls5.words.impl.ArrayWord;
 import de.ls5.words.impl.FastAlphabet;
+import de.ls5.words.impl.SharedWord;
 import de.ls5.words.impl.Symbol;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +83,7 @@ public class OracleTest {
         trace.add(in_a);
         
         
-        Query<Symbol, Word<String>> query = new Query<>(trace);
+        Query<Symbol, Word<String>> query = new Query<>(new SharedWord<>(trace));
         queries.add(query);
         
         Assert.assertEquals(queries.get(0).getInput().size(), 3);
