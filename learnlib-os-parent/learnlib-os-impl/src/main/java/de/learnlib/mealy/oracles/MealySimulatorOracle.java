@@ -19,7 +19,6 @@ package de.learnlib.mealy.oracles;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.ls5.automata.transout.MealyMachine;
-import de.ls5.words.MutableWord;
 import de.ls5.words.Word;
 import de.ls5.words.impl.ArrayWord;
 import java.util.List;
@@ -43,7 +42,7 @@ public class MealySimulatorOracle<I, O> implements MembershipOracle<I, Word<O>> 
         for(Query<I, Word<O>> q : queries) {
             Word<I> input = q.getInput();
             
-            MutableWord<O> output = new ArrayWord<O>();
+            Word<O> output = new ArrayWord<>();
             mealy.trace(input, output);
            
             q.setOutput(output);
