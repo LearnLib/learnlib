@@ -16,9 +16,9 @@
  */
 package de.learnlib.api;
 
-import de.ls5.words.Word;
 import static de.ls5.words.util.Words.concat;
-import static de.ls5.words.util.Words.epsilon;
+import de.ls5.words.Word;
+import de.ls5.words.util.Words;
 
 /**
  * A query is a container for tests a learning algorithms performs, containing
@@ -34,12 +34,12 @@ public class Query<I, O> {
     /**
      * prefix portion of test
      */
-    public final Word<I> prefix;
+    private final Word<I> prefix;
     
     /**
      * suffix portion of test
      */
-    public final Word<I> suffix;
+    private final Word<I> suffix;
     
     private O output;
     
@@ -49,8 +49,7 @@ public class Query<I, O> {
     }
     
     public Query(Word<I> input) {
-        this.prefix = epsilon();
-        this.suffix = input;
+    	this(Words.<I>epsilon(), input);
     }
 
     public O getOutput() {
@@ -59,6 +58,14 @@ public class Query<I, O> {
 
     public void setOutput(O output) {
         this.output = output;
+    }
+    
+    public Word<I> getPrefix() {
+    	return prefix;
+    }
+    
+    public Word<I> getSuffix() {
+    	return suffix;
     }
     
     /** 

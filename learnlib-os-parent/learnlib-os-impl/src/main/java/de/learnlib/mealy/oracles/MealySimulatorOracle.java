@@ -16,12 +16,13 @@
 
 package de.learnlib.mealy.oracles;
 
+import java.util.List;
+
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.ls5.automata.transout.MealyMachine;
 import de.ls5.words.Word;
 import de.ls5.words.impl.ArrayWord;
-import java.util.List;
 
 /**
  *
@@ -29,24 +30,31 @@ import java.util.List;
  */
 public class MealySimulatorOracle<I, O> implements MembershipOracle<I, Word<O>> {
     
-    private MealyMachine<Object, I, Object, O> mealy;
+    private MealyMachine<?, I, ?, O> mealy;
     
     
-    public MealySimulatorOracle(MealyMachine<Object, I, Object, O> mealyMachine) {
+    public MealySimulatorOracle(MealyMachine<?, I, ?, O> mealyMachine) {
         this.mealy = mealyMachine;
     }
     
 
     @Override
     public void processQueries(List<Query<I, Word<O>>> queries) {
-        for(Query<I, Word<O>> q : queries) {
-            Word<I> input = q.getInput();
-            
-            Word<O> output = new ArrayWord<>();
-            mealy.trace(input, output);
-           
-            q.setOutput(output);
-        }
+        for(Query<I, Word<O>> q : queries)
+        		processQuery(mealy, q);
+    }
+    
+    /*
+     * Private static method used to bind wildcard type parameters
+     */
+    private static final <S,I,T,O> void processQuery(MealyMachine<S,I,T,O> mealy, Query<I,Word<O>> query) {
+    	Word<I> prefix = query.getPrefix();
+    	S prefixState = mealy.getState(prefix);
+    	Word<O> output = new ArrayWord<>();
+    	Word<I> suffix = query.getSuffix();
+    	mealy.trace(prefixState, suffix, output);
+    	
+    	query.setOutput(output);
     }
     
 }
