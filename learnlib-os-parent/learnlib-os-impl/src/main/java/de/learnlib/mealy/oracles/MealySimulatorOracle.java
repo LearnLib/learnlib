@@ -28,12 +28,12 @@ import java.util.List;
  *
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class MealySimulatorOracle<S, I, T, O> implements MembershipOracle<I, Word<O>> {
+public class MealySimulatorOracle<I, O> implements MembershipOracle<I, Word<O>> {
     
-    private MealyMachine<S, I, T, O> mealy;
+    private MealyMachine<Object, I, Object, O> mealy;
     
     
-    public MealySimulatorOracle(MealyMachine<S, I, T, O> mealyMachine) {
+    public MealySimulatorOracle(MealyMachine<Object, I, Object, O> mealyMachine) {
         this.mealy = mealyMachine;
     }
     
