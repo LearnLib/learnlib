@@ -87,10 +87,12 @@ public class OracleTest {
         
         Assert.assertEquals(queries.get(0).getInput().size(), 3);
         
-        // FIXME: NoSuchElementException in TOHelper.trace
-        // oracle.processQueries(queries);
+        oracle.processQueries(queries);
         
-        //Assert.assertEquals(queries.get(0).getOutput().size(), 3);
+        Assert.assertEquals(queries.get(0).getOutput().size(), 3);
+        Assert.assertEquals(queries.get(0).getOutput().get(0), out_ok);
+        Assert.assertEquals(queries.get(0).getOutput().get(1), out_ok);
+        Assert.assertEquals(queries.get(0).getOutput().get(2), out_error);
         
         
     }
