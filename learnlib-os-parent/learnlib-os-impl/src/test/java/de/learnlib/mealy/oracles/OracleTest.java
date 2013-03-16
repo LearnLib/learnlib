@@ -20,11 +20,8 @@ import de.learnlib.api.Query;
 import de.ls5.automata.transout.impl.FastMealy;
 import de.ls5.automata.transout.impl.FastMealyState;
 import de.ls5.words.Alphabet;
-import de.ls5.words.MutableWord;
 import de.ls5.words.Word;
-import de.ls5.words.impl.ArrayWord;
 import de.ls5.words.impl.FastAlphabet;
-import de.ls5.words.impl.SharedWord;
 import de.ls5.words.impl.Symbol;
 import de.ls5.words.util.Words;
 
@@ -46,12 +43,12 @@ public class OracleTest {
     private final static String out_error = "error";
     
     private FastMealy<Symbol, String> constructMachine() {
-        Alphabet<Symbol> alpha = new FastAlphabet<Symbol>();
+        Alphabet<Symbol> alpha = new FastAlphabet<>();
         alpha.add(in_a);
         alpha.add(in_b);
     
         
-        FastMealy<Symbol, String> fm = new FastMealy<Symbol, String>(alpha);
+        FastMealy<Symbol, String> fm = new FastMealy<>(alpha);
         
         FastMealyState<String> s0 = fm.addInitialState(),
                 s1 = fm.addState(),
