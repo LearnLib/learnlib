@@ -16,22 +16,20 @@
 
 package de.learnlib.mealy.oracles;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Assert;
+import org.junit.Test;
+
 import de.learnlib.api.Query;
 import de.ls5.automata.transout.impl.FastMealy;
 import de.ls5.automata.transout.impl.FastMealyState;
 import de.ls5.words.Alphabet;
-import de.ls5.words.MutableWord;
 import de.ls5.words.Word;
-import de.ls5.words.impl.ArrayWord;
 import de.ls5.words.impl.FastAlphabet;
-import de.ls5.words.impl.SharedWord;
 import de.ls5.words.impl.Symbol;
 import de.ls5.words.util.Words;
-
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  *
