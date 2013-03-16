@@ -44,12 +44,12 @@ public class OracleTest {
     private final static String out_error = "error";
     
     private FastMealy<Symbol, String> constructMachine() {
-        Alphabet<Symbol> alpha = new FastAlphabet<Symbol>();
+        Alphabet<Symbol> alpha = new FastAlphabet<>();
         alpha.add(in_a);
         alpha.add(in_b);
     
         
-        FastMealy<Symbol, String> fm = new FastMealy<Symbol, String>(alpha);
+        FastMealy<Symbol, String> fm = new FastMealy<>(alpha);
         
         FastMealyState<String> s0 = fm.addInitialState(),
                 s1 = fm.addState(),
