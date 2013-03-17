@@ -51,12 +51,26 @@ public class RandomWordsTest {
 		MembershipOracle<Symbol, Word<String>> oracle = new MealySimulatorOracle<>(
 				mealy);
 
-		Random random = new Random();
+		Random random = new Random(1337421337);
 
 		EquivalenceOracle<FastMealy<Symbol, String>, Symbol, Word<String>> eq = new RandomWordsEQOracle<>(
 				oracle, 10, 100, 300, random);
 
+                // no counterexample shall be found
 		Assert.assertNull(eq.findCounterExample(mealy, mealy.getInputAlphabet()));
-	}
+                
+                // retrieve new mealy machine
+                FastMealy<Symbol, String> mealy_broken = constructMachine();
+                FastMealyState<String> s0 = mealy_broken.getInitialState();
+                FastMealyState<String> s1 = mealy_broken.getSuccessor(s0, in_a);
+                
+                // deliberately introduce error
+                mealy_broken.removeAllTransitions(s0, in_a);
+                mealy_broken.addTransition(s0, in_a, s1, out_error);
+                
+                // a counterexample has to be found
+                Assert.assertNotNull(eq.findCounterExample(mealy_broken, mealy.getInputAlphabet()));
+
+        }
 
 }
