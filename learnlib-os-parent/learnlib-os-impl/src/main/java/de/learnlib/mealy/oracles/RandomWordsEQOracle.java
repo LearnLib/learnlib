@@ -22,7 +22,6 @@ import java.util.Random;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import de.ls5.automata.concepts.InputAlphabetHolder;
 import de.ls5.automata.concepts.OutputAutomaton;
 import de.ls5.words.Alphabet;
 import de.ls5.words.MutableWord;
@@ -32,13 +31,13 @@ import de.ls5.words.impl.ArrayWord;
  *
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class RandomWalkEQOracle<I,O, A extends OutputAutomaton<?,I,?,O> & InputAlphabetHolder<I>> implements EquivalenceOracle<A,I,O> {
+public class RandomWordsEQOracle<I,O, A extends OutputAutomaton<?,I,?,O>> implements EquivalenceOracle<A,I,O> {
 	
     private MembershipOracle<I, O> oracle;
     private int maxTests, minLength, maxLength;
     private final Random random;
     
-    public RandomWalkEQOracle(MembershipOracle<I, O> mqOracle, int minLength, int maxLength, int maxTests, Random random) {
+    public RandomWordsEQOracle(MembershipOracle<I, O> mqOracle, int minLength, int maxLength, int maxTests, Random random) {
         this.oracle = mqOracle;
         this.maxTests = maxTests;
         this.minLength = minLength;
@@ -48,12 +47,10 @@ public class RandomWalkEQOracle<I,O, A extends OutputAutomaton<?,I,?,O> & InputA
     
     
     @Override
-    public Query<I, O> findCounterExample(A hypothesis) {
+    public Query<I, O> findCounterExample(A hypothesis, Alphabet<I> alpha) {
 
-        Alphabet<I> alpha = hypothesis.getInputAlphabet();
-        
         for(int i = 0; i < maxTests; ++i) {
-            int length = minLength + random.nextInt(maxLength - minLength);
+            int length = minLength + random.nextInt((maxLength - minLength) + 1);
             
             MutableWord<I> testtrace = new ArrayWord<>();
             for(int j = 0; j < length; ++j) {

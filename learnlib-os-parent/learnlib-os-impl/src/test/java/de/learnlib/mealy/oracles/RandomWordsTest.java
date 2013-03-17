@@ -14,7 +14,7 @@ import de.ls5.words.Word;
 import de.ls5.words.impl.FastAlphabet;
 import de.ls5.words.impl.Symbol;
 
-public class RandomWalkTest {
+public class RandomWordsTest {
 
 	private final static Symbol in_a = new Symbol("a");
 	private final static Symbol in_b = new Symbol("b");
@@ -53,10 +53,10 @@ public class RandomWalkTest {
 
 		Random random = new Random();
 
-		EquivalenceOracle<FastMealy<Symbol, String>, Symbol, Word<String>> eq = new RandomWalkEQOracle<>(
+		EquivalenceOracle<FastMealy<Symbol, String>, Symbol, Word<String>> eq = new RandomWordsEQOracle<>(
 				oracle, 10, 100, 300, random);
 
-		Assert.assertNull(eq.findCounterExample(mealy));
+		Assert.assertNull(eq.findCounterExample(mealy, mealy.getInputAlphabet()));
 	}
 
 }

@@ -16,12 +16,14 @@
 
 package de.learnlib.api;
 
+import de.ls5.words.Alphabet;
+
 /**
  *
  * @author merten
  */
 public interface EquivalenceOracle<A, I, O> {
 	
-	public Query<I, O> findCounterExample(A hypothesis); 
+	public Query<I, O> findCounterExample(A hypothesis, Alphabet<I> alphabet); 
 	
 }
