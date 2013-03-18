@@ -8,8 +8,8 @@ import de.ls5.words.Alphabet;
 import de.ls5.words.Word;
 import de.ls5.words.impl.ArrayWord;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,14 +17,14 @@ public class Angluin<S> implements LearningAlgorithm {
 
 	private final Alphabet<S> alphabet;
 
-	private final MembershipOracle<S, Object> oracle;
+	private final MembershipOracle<S, Boolean> oracle;
 
-	private ObservationTable<S, Object> observationTable;
+	private ObservationTable<S> observationTable;
 
-	public Angluin(Alphabet<S> alphabet, MembershipOracle<S, Object> oracle) {
+	public Angluin(Alphabet<S> alphabet, MembershipOracle<S, Boolean> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
-		this.observationTable = new ObservationTable<S, Object>();
+		this.observationTable = new ObservationTable<S>();
 
 		for (S alphabetSymbol : this.alphabet) {
 			Word<S> word = new ArrayWord<S>();
@@ -37,40 +37,64 @@ public class Angluin<S> implements LearningAlgorithm {
 	public Automaton createHypothesis() {
 
 		if (observationTable.getStates().isEmpty()) {
-			observationTable.getStates().add(new ArrayWord<S>());
+			final ArrayWord<S> emptyWord = new ArrayWord<S>();
+			observationTable.getStates().add(emptyWord);
 		}
 
-		List<Query<S, Object>> queries = new LinkedList<Query<S, Object>>();
+		processMembershipQueriesForStates(observationTable.getStates());
+		processMembershipQueriesForStates(observationTable.getFutures());
 
-		for (Word<S> suffix : observationTable.getSuffixes()) {
-			for (Word<S> word : observationTable.getStates()) {
-				queries.add(new Query<S, Object>(word, suffix));
+		while (!observationTable.isClosed() || !observationTable.isConsistent()) {
+			if (!observationTable.isClosed()) {
+				closeTable();
 			}
+		}
 
-			for (Word<S> word : observationTable.getFutures()) {
-				queries.add(new Query<S, Object>(word, suffix));
+		return null;
+	}
+
+	private void closeTable() {
+
+		Word<S> future = observationTable.findUnclosedState();
+		observationTable.getStates().add(future);
+		observationTable.getFutures().remove(future);
+
+		List<Word<S>> newFutures = new ArrayList<Word<S>>(observationTable.getSuffixes().size());
+		for (Word<S> suffix : observationTable.getSuffixes()) {
+			Word<S> newFuture = new ArrayWord<S>();
+			newFuture.addAll(future);
+			newFuture.addAll(suffix);
+			newFutures.add(newFuture);
+		}
+
+		observationTable.getFutures().addAll(newFutures);
+
+		processMembershipQueriesForStates(newFutures);
+	}
+
+	private void processMembershipQueriesForStates(List<Word<S>> states) {
+		List<Query<S, Boolean>> queries = new ArrayList<Query<S, Boolean>>(states.size());
+		for (Word<S> newFuture : states) {
+			for (Word<S> suffix : observationTable.getSuffixes()) {
+				CombinedWord<S> combinedWord = new CombinedWord<S>(newFuture, suffix);
+				queries.add(new Query<S, Boolean>(combinedWord.getWord()));
 			}
 		}
 
 		oracle.processQueries(queries);
 
-		Map<Word, Object> results = new HashMap<Word, Object>((int)(1.5 * queries.size()));
+		Map<Word, Boolean> results = new HashMap<Word, Boolean>((int) (1.5 * queries.size()));
 
-		for (Query<S, Object> query : queries) {
+		for (Query<S, Boolean> query : queries) {
 			results.put(query.getInput(), query.getOutput());
 		}
 
 		for (Word<S> suffix : observationTable.getSuffixes()) {
-			for (Word<S> word : observationTable.getStates()) {
-				observationTable.addResult(word, suffix, results.get(word));
-			}
-
-			for (Word<S> word : observationTable.getFutures()) {
-				observationTable.addResult(word, suffix, results.get(word));
+			for (Word<S> newFuture : states) {
+				CombinedWord<S> combinedWord = new CombinedWord<S>(newFuture, suffix);
+				observationTable.addResult(combinedWord, results.get(combinedWord.getWord()));
 			}
 		}
-
-		return null;
 	}
 
 	@Override
