@@ -50,7 +50,7 @@ public class ObservationTable<S> {
 	}
 
 	boolean isClosed() {
-		return findUnclosedState() != null;
+		return findUnclosedState() == null;
 	}
 
 	Word<S> findUnclosedState() {
@@ -72,8 +72,62 @@ public class ObservationTable<S> {
 		return null;
 	}
 
-	boolean isConsistent() {
-		return false;
+	boolean isConsistentWithAlphabet(List<Word<S>> alphabetSymbols) {
+		return findInconsistentSymbol(alphabetSymbols) == null;
+	}
+
+	InconsistencyDataHolder<S> findInconsistentSymbol(List<Word<S>> alphabetSymbols) {
+
+		for (Word<S> symbol : alphabetSymbols) {
+			for (Word<S> firstState : states) {
+				for (Word<S> secondState : states) {
+					if (firstState.equals(secondState)) {
+						continue;
+					}
+
+					if (checkInconsistency(firstState, secondState, symbol)) {
+						return new InconsistencyDataHolder<S>(firstState, secondState, symbol);
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private boolean checkInconsistency(Word<S> firstState, Word<S> secondState, Word<S> alphabetSymbol) {
+		ObservationTableRow rowForFirstState = getRowForPrefix(firstState);
+		ObservationTableRow rowForSecondState = getRowForPrefix(secondState);
+		boolean valuesEqualWithoutPrefix = rowForFirstState.equals(rowForSecondState);
+
+		CombinedWord<S> extendedFirstState = new CombinedWord<S>(firstState, alphabetSymbol);
+		CombinedWord<S> extendedSecondState = new CombinedWord<S>(secondState, alphabetSymbol);
+		ObservationTableRow rowForExtendedFirstState = getRowForPrefix(extendedFirstState.getWord());
+		ObservationTableRow rowForExtendedSecondState = getRowForPrefix(extendedSecondState.getWord());
+
+		boolean valuesEqualWithPrefix = rowForExtendedFirstState.equals(rowForExtendedSecondState);
+
+		return valuesEqualWithoutPrefix && !valuesEqualWithPrefix;
+	}
+
+	Word<S> determineWitnessForInconsistency(InconsistencyDataHolder<S> dataHolder) {
+		if (dataHolder == null) {
+			throw new IllegalArgumentException("Dataholder must not be null!");
+		}
+
+		CombinedWord<S> firstState = new CombinedWord<S>(dataHolder.getFirstState(), dataHolder.getDifferingSymbol());
+		CombinedWord<S> secondState = new CombinedWord<S>(dataHolder.getSecondState(), dataHolder.getDifferingSymbol());
+
+		ObservationTableRow firstRow = getRowForPrefix(firstState.getWord());
+		ObservationTableRow secondRow = getRowForPrefix(secondState.getWord());
+
+		for (int i = 0; i < firstRow.getValues().size(); i++) {
+			if (firstRow.getValues().get(i) != secondRow.getValues().get(i)) {
+				return suffixes.get(i);
+			}
+		}
+
+		throw new IllegalStateException("Both rows are identical, unable to determine a witness!");
 	}
 
 	private ObservationTableRow getRowForPrefix(Word<S> state) {

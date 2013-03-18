@@ -9,6 +9,7 @@ import de.ls5.words.Word;
 import de.ls5.words.impl.ArrayWord;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class Angluin<S> implements LearningAlgorithm {
 
 	private final Alphabet<S> alphabet;
+	private final List<Word<S>> alphabetAsWords;
 
 	private final MembershipOracle<S, Boolean> oracle;
 
@@ -23,14 +25,11 @@ public class Angluin<S> implements LearningAlgorithm {
 
 	public Angluin(Alphabet<S> alphabet, MembershipOracle<S, Boolean> oracle) {
 		this.alphabet = alphabet;
+		this.alphabetAsWords = alphabetSymbolsAsWords();
 		this.oracle = oracle;
 		this.observationTable = new ObservationTable<S>();
 
-		for (S alphabetSymbol : this.alphabet) {
-			Word<S> word = new ArrayWord<S>();
-			word.add(alphabetSymbol);
-			observationTable.getFutures().add(word);
-		}
+		observationTable.getFutures().addAll(alphabetAsWords);
 	}
 
 	@Override
@@ -41,12 +40,15 @@ public class Angluin<S> implements LearningAlgorithm {
 			observationTable.getStates().add(emptyWord);
 		}
 
-		processMembershipQueriesForStates(observationTable.getStates());
-		processMembershipQueriesForStates(observationTable.getFutures());
+		processMembershipQueriesForStates(observationTable.getStates(), observationTable.getSuffixes());
+		processMembershipQueriesForStates(observationTable.getFutures(), observationTable.getSuffixes());
 
-		while (!observationTable.isClosed() || !observationTable.isConsistent()) {
+		while (!observationTable.isClosed() || !observationTable.isConsistentWithAlphabet(alphabetAsWords)) {
 			if (!observationTable.isClosed()) {
 				closeTable();
+			}
+			if (!observationTable.isConsistentWithAlphabet(alphabetAsWords)) {
+				ensureConsistency();
 			}
 		}
 
@@ -54,8 +56,12 @@ public class Angluin<S> implements LearningAlgorithm {
 	}
 
 	private void closeTable() {
-
 		Word<S> future = observationTable.findUnclosedState();
+
+		if (future == null) {
+			return;
+		}
+
 		observationTable.getStates().add(future);
 		observationTable.getFutures().remove(future);
 
@@ -69,13 +75,26 @@ public class Angluin<S> implements LearningAlgorithm {
 
 		observationTable.getFutures().addAll(newFutures);
 
-		processMembershipQueriesForStates(newFutures);
+		processMembershipQueriesForStates(newFutures, observationTable.getSuffixes());
 	}
 
-	private void processMembershipQueriesForStates(List<Word<S>> states) {
+	private void ensureConsistency() {
+		InconsistencyDataHolder<S> dataHolder = observationTable.findInconsistentSymbol(alphabetAsWords);
+
+		Word<S> witness = observationTable.determineWitnessForInconsistency(dataHolder);
+		CombinedWord<S> newSuffix = new CombinedWord<S>(dataHolder.getDifferingSymbol(), witness);
+		observationTable.getSuffixes().add(newSuffix.getWord());
+
+		List<Word<S>> singleSuffixList = Collections.singletonList(newSuffix.getWord());
+
+		processMembershipQueriesForStates(observationTable.getStates(), singleSuffixList);
+		processMembershipQueriesForStates(observationTable.getFutures(), singleSuffixList);
+	}
+
+	private void processMembershipQueriesForStates(List<Word<S>> states, List<Word<S>> suffixes) {
 		List<Query<S, Boolean>> queries = new ArrayList<Query<S, Boolean>>(states.size());
 		for (Word<S> newFuture : states) {
-			for (Word<S> suffix : observationTable.getSuffixes()) {
+			for (Word<S> suffix : suffixes) {
 				CombinedWord<S> combinedWord = new CombinedWord<S>(newFuture, suffix);
 				queries.add(new Query<S, Boolean>(combinedWord.getWord()));
 			}
@@ -89,12 +108,23 @@ public class Angluin<S> implements LearningAlgorithm {
 			results.put(query.getInput(), query.getOutput());
 		}
 
-		for (Word<S> suffix : observationTable.getSuffixes()) {
+		for (Word<S> suffix : suffixes) {
 			for (Word<S> newFuture : states) {
 				CombinedWord<S> combinedWord = new CombinedWord<S>(newFuture, suffix);
 				observationTable.addResult(combinedWord, results.get(combinedWord.getWord()));
 			}
 		}
+	}
+
+
+	private List<Word<S>> alphabetSymbolsAsWords() {
+		List<Word<S>> words = new ArrayList<Word<S>>(alphabet.size());
+		for (S symbol : alphabet) {
+			Word<S> word = new ArrayWord<S>();
+			word.add(symbol);
+			words.add(word);
+		}
+		return words;
 	}
 
 	@Override
