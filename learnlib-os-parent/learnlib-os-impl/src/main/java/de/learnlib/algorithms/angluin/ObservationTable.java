@@ -65,11 +65,18 @@ public class ObservationTable<S> {
 		}
 
 		for (Word<S> future : futures) {
+			boolean found = false;
+
 			ObservationTableRow row = getRowForPrefix(future);
 			for (ObservationTableRow stateRow : stateRows) {
-				if (!row.equals(stateRow)) {
-					return future;
+				if (row.equals(stateRow)) {
+					found = true;
+					break;
 				}
+			}
+
+			if (!found) {
+				return future;
 			}
 		}
 
@@ -81,7 +88,6 @@ public class ObservationTable<S> {
 	}
 
 	InconsistencyDataHolder<S> findInconsistentSymbol(List<Word<S>> alphabetSymbols) {
-
 		for (Word<S> symbol : alphabetSymbols) {
 			for (Word<S> firstState : states) {
 				for (Word<S> secondState : states) {
@@ -149,25 +155,32 @@ public class ObservationTable<S> {
 
 	Automaton toAutomaton(Alphabet<S> alphabet) {
 		FastDFA<S> automaton = new FastDFA<S>(alphabet);
-		Map<Word<S>, FastDFAState> dfaStates = new HashMap<Word<S>, FastDFAState>((int) (1.5 * states.size()));
-
-		automaton.addInitialState();
+		Map<ObservationTableRow, FastDFAState> dfaStates = new HashMap<ObservationTableRow, FastDFAState>(
+				(int) (1.5 * states.size()));
 
 		for (Word<S> state : states) {
-			FastDFAState dfaState = automaton.addState();
+			FastDFAState dfaState;
+
+			if (state.isEmpty()) {
+				dfaState = automaton.addInitialState();
+			}
+			else {
+				dfaState = automaton.addState();
+			}
+
 			dfaState.setAccepting(results.get(state));
-			dfaStates.put(state, dfaState);
+			dfaStates.put(getRowForPrefix(state), dfaState);
 		}
 
 		for (Word<S> state : states) {
-			FastDFAState dfaState = dfaStates.get(state);
+			FastDFAState dfaState = dfaStates.get(getRowForPrefix(state));
 			for (S alphabetSymbol : alphabet) {
 				Word<S> word = new ArrayWord<S>();
 				word.addAll(state);
 				word.add(alphabetSymbol);
 
 				final int index = alphabet.getSymbolIndex(alphabetSymbol);
-				dfaState.setTransition(index, dfaStates.get(word));
+				dfaState.setTransition(index, dfaStates.get(getRowForPrefix(word)));
 			}
 		}
 

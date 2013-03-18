@@ -39,14 +39,27 @@ public class Angluin<S> implements LearningAlgorithm {
 			observationTable.getStates().add(emptyWord);
 		}
 
+		if (observationTable.getSuffixes().isEmpty()) {
+			final ArrayWord<S> emptyWord = new ArrayWord<S>();
+			observationTable.getSuffixes().add(emptyWord);
+		}
+
 		processMembershipQueriesForStates(observationTable.getStates(), observationTable.getSuffixes());
 		processMembershipQueriesForStates(observationTable.getFutures(), observationTable.getSuffixes());
 
-		while (!observationTable.isClosed() || !observationTable.isConsistentWithAlphabet(alphabetAsWords)) {
+		boolean closedAndConsistent = false;
+
+		while (!closedAndConsistent) {
+			closedAndConsistent = true;
+
 			if (!observationTable.isClosed()) {
+				closedAndConsistent = false;
 				closeTable();
+				continue;
 			}
+
 			if (!observationTable.isConsistentWithAlphabet(alphabetAsWords)) {
+				closedAndConsistent = false;
 				ensureConsistency();
 			}
 		}
@@ -64,11 +77,11 @@ public class Angluin<S> implements LearningAlgorithm {
 		observationTable.getStates().add(future);
 		observationTable.getFutures().remove(future);
 
-		List<Word<S>> newFutures = new ArrayList<Word<S>>(observationTable.getSuffixes().size());
-		for (Word<S> suffix : observationTable.getSuffixes()) {
+		List<Word<S>> newFutures = new ArrayList<Word<S>>(alphabetAsWords.size());
+		for (Word<S> alphabetSymbol : alphabetAsWords) {
 			Word<S> newFuture = new ArrayWord<S>();
 			newFuture.addAll(future);
-			newFuture.addAll(suffix);
+			newFuture.addAll(alphabetSymbol);
 			newFutures.add(newFuture);
 		}
 
