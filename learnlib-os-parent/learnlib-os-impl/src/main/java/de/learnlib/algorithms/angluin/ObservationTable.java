@@ -1,5 +1,9 @@
 package de.learnlib.algorithms.angluin;
 
+import de.ls5.automata.Automaton;
+import de.ls5.automata.fsa.impl.FastDFA;
+import de.ls5.automata.fsa.impl.FastDFAState;
+import de.ls5.words.Alphabet;
 import de.ls5.words.Word;
 import de.ls5.words.impl.ArrayWord;
 
@@ -141,5 +145,32 @@ public class ObservationTable<S> {
 		}
 
 		return row;
+	}
+
+	Automaton toAutomaton(Alphabet<S> alphabet) {
+		FastDFA<S> automaton = new FastDFA<S>(alphabet);
+		Map<Word<S>, FastDFAState> dfaStates = new HashMap<Word<S>, FastDFAState>((int) (1.5 * states.size()));
+
+		automaton.addInitialState();
+
+		for (Word<S> state : states) {
+			FastDFAState dfaState = automaton.addState();
+			dfaState.setAccepting(results.get(state));
+			dfaStates.put(state, dfaState);
+		}
+
+		for (Word<S> state : states) {
+			FastDFAState dfaState = dfaStates.get(state);
+			for (S alphabetSymbol : alphabet) {
+				Word<S> word = new ArrayWord<S>();
+				word.addAll(state);
+				word.add(alphabetSymbol);
+
+				final int index = alphabet.getSymbolIndex(alphabetSymbol);
+				dfaState.setTransition(index, dfaStates.get(word));
+			}
+		}
+
+		return automaton;
 	}
 }

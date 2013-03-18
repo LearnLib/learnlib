@@ -34,7 +34,6 @@ public class Angluin<S> implements LearningAlgorithm {
 
 	@Override
 	public Automaton createHypothesis() {
-
 		if (observationTable.getStates().isEmpty()) {
 			final ArrayWord<S> emptyWord = new ArrayWord<S>();
 			observationTable.getStates().add(emptyWord);
@@ -52,7 +51,7 @@ public class Angluin<S> implements LearningAlgorithm {
 			}
 		}
 
-		return null;
+		return observationTable.toAutomaton(alphabet);
 	}
 
 	private void closeTable() {
