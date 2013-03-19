@@ -33,24 +33,42 @@ public class TestSimpleAutomaton {
 		angluin = new Angluin<>(alphabet, new SimpleOracle());
 	}
 
-	@Test
+	@Test(expectedExceptions = IllegalStateException.class)
+	public void testGetHypothesisBeforeLearnIteration() {
+		angluin.getHypothesisModel();
+	}
+
+	@Test(expectedExceptions = IllegalStateException.class)
+	public void testRefinementBeforeLearnIteration() {
+		angluin.refineHypothesis(createCounterExample());
+	}
+
+	@Test(dependsOnMethods = "testGetHypothesisBeforeLearnIteration")
 	public void testFirstHypothesis() {
 		angluin.startLearning();
 		DFA hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(hypothesis.getStates().size(), 2);
 	}
 
+	@Test(dependsOnMethods = "testFirstHypothesis", expectedExceptions = IllegalStateException.class)
+	public void testDuplicateLearnInvocation() {
+		angluin.startLearning();
+	}
+
 	@Test(dependsOnMethods = "testFirstHypothesis")
 	public void testCounterExample() {
+		angluin.refineHypothesis(createCounterExample());
+		DFA hypothesis = angluin.getHypothesisModel();
+		Assert.assertEquals(hypothesis.getStates().size(), 4);
+	}
+
+	private Query<Symbol, Boolean> createCounterExample() {
 		Word<Symbol> counterExample = new ArrayWord<>();
 		counterExample = Words.append(counterExample, one, one, zero);
 		Query<Symbol, Boolean> query = new Query<>(counterExample);
 		query.setOutput(false);
-
-
-		angluin.refineHypothesis(query);
-		DFA hypothesis = angluin.getHypothesisModel();
-		Assert.assertEquals(hypothesis.getStates().size(), 4);
+		return query;
 	}
+
 
 }
