@@ -16,6 +16,7 @@
 
 package de.learnlib.logging;
 
+import de.learnlib.statistics.StatisticData;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Filter;
 import java.util.logging.Handler;
@@ -137,8 +138,8 @@ public class LearnLogger extends Logger {
      * 
      * @param profiling 
      */
-    public void logProfilingInfo(String profiling) {
-        LearnLogRecord rec = new LearnLogRecord(Level.INFO, profiling, Category.PROFILING);
+    public void logProfilingInfo(StatisticData profiling) {
+        LearnLogRecord rec = new StatisticLogRecord(Level.INFO, profiling, Category.PROFILING);
         this.log(rec);
     }
     
@@ -147,15 +148,29 @@ public class LearnLogger extends Logger {
      * 
      * @param statistics 
      */
-    public void logStatistic(String statistics) {
-        LearnLogRecord rec = new LearnLogRecord(Level.INFO, statistics, Category.STATISTIC);
+    public void logStatistic(StatisticData statistics) {
+        LearnLogRecord rec = new StatisticLogRecord(Level.INFO, statistics, Category.STATISTIC);
         this.log(rec);        
     }
 
-    public void logModel() {
+    /**
+     * log a model
+     * 
+     * @param o 
+     */
+    public void logModel(Object o) {
+        LearnLogRecord rec = new PlottableLogRecord(Level.INFO, o, Category.MODEL);
+        this.log(rec);        
     }
     
-    public void logDataStructure() {
+    /**
+     * log a data structure
+     * 
+     * @param o 
+     */
+    public void logDataStructure(Object o) {
+        LearnLogRecord rec = new PlottableLogRecord(Level.INFO, o, Category.DATASTRUCTURE);
+        this.log(rec);        
     }
     
 }

@@ -13,14 +13,13 @@
    You should have received a copy of the GNU Lesser General Public
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
-//
+
 package de.learnlib.statistics;
 
+import de.learnlib.logging.LearnLogger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import de.learnlib.logging.LearnLogger;
 
 /**
  * Very rudimentary profiler. 
@@ -29,7 +28,7 @@ public class SimpleProfiler {
 
   private static boolean PROFILE = true;
   
-  private static final Map<String,Long> cumulated = new HashMap<>();
+  private static final Map<String,Counter> cumulated = new HashMap<>();
   private static final Map<String,Long> pending = new HashMap<>();
    
   private static LearnLogger logger = LearnLogger.getLogger(SimpleProfiler.class.getName());
@@ -71,11 +70,12 @@ public class SimpleProfiler {
       return;
     }
     long duration = System.currentTimeMillis() - start;
-    Long sum = cumulated.get(name);
+    Counter sum = cumulated.get(name);
     if (sum == null) {
-      sum = (long)0;
+      sum = new Counter(name, "ms");
     }
-    cumulated.put(name, sum + duration);
+    sum.increment(duration);
+    cumulated.put(name, sum);
   }
   
   /**
@@ -85,8 +85,9 @@ public class SimpleProfiler {
    */
   public static String getResults() {
     StringBuilder sb = new StringBuilder();
-    for (Entry<String, Long> e : cumulated.entrySet()) {
-      sb.append(e.getKey()).append(": ").append(e.getValue()).append(" ms [").append(e.getValue()/1000).append(" s]\n");
+    for (Entry<String, Counter> e : cumulated.entrySet()) {
+        sb.append(e.getValue().getSummary()).append(", (").append(e.getValue().getCount()/1000).
+                append(" s)").append(System.getProperty("line.separator"));
     }
     return sb.toString();
   }
@@ -95,8 +96,8 @@ public class SimpleProfiler {
    * log results in category PROFILING.
    */
   public static void logResults() {
-    for (Entry<String, Long> e : cumulated.entrySet()) {
-      logger.logProfilingInfo(e.getKey() + ": " + e.getValue() + " ms [" + e.getValue()/1000 + " s]");
+    for (Entry<String, Counter> e : cumulated.entrySet()) {
+      logger.logProfilingInfo(e.getValue());
     }  
   }
   
