@@ -14,14 +14,3 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.api;
-
-/**
- *
- * @author merten
- */
-public interface SupportsGrowingAlphabet<I> {
-	
-	public void addAlphabetSymbol(I symbol);
-	
-}

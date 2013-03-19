@@ -9,8 +9,8 @@
         <relativePath>../pom.xml</relativePath>        
     </parent>
 
-    <artifactId>learnlib-os-api</artifactId>
-    <name>learnlib-os-api</name>
+    <artifactId>learnlib-os-algorithms</artifactId>
+    <name>learnlib-os-algorithms</name>
     <build>
         <plugins>
             <plugin>
@@ -26,12 +26,30 @@
     </build>
     <dependencies>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-os-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-os-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
     

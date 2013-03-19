@@ -1,0 +1,105 @@
+/* Copyright (C) 2013 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ * 
+ * LearnLib is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 3.0 as published by the Free Software Foundation.
+ * 
+ * LearnLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with LearnLib; if not, see
+ * <http://www.gnu.de/documents/lgpl.en.html>.
+ */
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.learnlib.logging;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import java.util.EnumSet;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import de.learnlib.logging.filter.CategoryFilter;
+
+/**
+ *
+ * @author falkhowar
+ */
+public class LearnLoggerTest {
+    
+    public LearnLoggerTest() {
+    }
+    
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+    }
+    
+    @After
+    public void tearDown() {
+    }
+
+    /**
+     * Test of getLogger method, of class LearnLogger.
+     */
+    @Test
+    public void testGetLogger() {
+        System.out.println("getLogger");
+        String name = LearnLoggerTest.class.getName();
+        LearnLogger expResult = LearnLogger.getLogger(name);
+        LearnLogger result = LearnLogger.getLogger(name);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of logPhase method, of class LearnLogger.
+     */
+    @Test
+    public void testLogPhase() {
+        System.out.println("logPhase");
+        LearnLogger.defaultSetup();
+        LearnLogger.setGlobalFilter(new CategoryFilter(EnumSet.of(Category.PHASE)));
+        LearnLogger logger = LearnLogger.getLogger(LearnLoggerTest.class.getName());
+        TestHandler th = new TestHandler(new CategoryFilter(EnumSet.of(Category.PHASE)));
+        logger.addHandler(th);
+        logger.logPhase("test phase");
+        logger.removeHandler(th);
+        assertNotNull(th.getLastMessage());
+    }
+
+    /**
+     * Test of logQuery method, of class LearnLogger.
+     */
+    @Test
+    public void testLogQuery() {
+        System.out.println("logQuery");
+        LearnLogger.defaultSetup();
+        LearnLogger.setGlobalFilter(new CategoryFilter(EnumSet.of(Category.PHASE)));
+        LearnLogger logger = LearnLogger.getLogger(LearnLoggerTest.class.getName());
+        TestHandler th = new TestHandler(new CategoryFilter(EnumSet.of(Category.PHASE)));
+        logger.addHandler(th);
+        logger.logQuery("test query");
+        logger.removeHandler(th);
+        assertNull(th.getLastMessage());
+    }
+}

@@ -14,14 +14,28 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.api;
+package de.learnlib.oracles;
 
-/**
- *
- * @author merten
- */
-public interface SupportsGrowingAlphabet<I> {
+import java.util.Collection;
+
+import net.automatalib.automata.concepts.SODetOutputAutomaton;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.Query;
+
+public class SimulatorOracle<I, O> implements MembershipOracle<I, O> {
 	
-	public void addAlphabetSymbol(I symbol);
+	private final SODetOutputAutomaton<?, I, ?, O> automaton;
+	
+	public SimulatorOracle(SODetOutputAutomaton<?,I,?,O> automaton) {
+		this.automaton = automaton;
+	}
+	
+	@Override
+	public void processQueries(Collection<Query<I, O>> queries) {
+		for(Query<I,O> q : queries) {
+			O output = automaton.computeSuffixOutput(q.getPrefix(), q.getSuffix());
+			q.setOutput(output);
+		}
+	}
 	
 }

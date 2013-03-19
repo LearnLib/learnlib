@@ -1,24 +1,23 @@
-/* Copyright (C) 2012 TU Dortmund
- This file is part of LearnLib 
-
- LearnLib is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License version 3.0 as published by the Free Software Foundation.
-
- LearnLib is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with LearnLib; if not, see
- <http://www.gnu.de/documents/lgpl.en.html>
+/* Copyright (C) 2013 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ * 
+ * LearnLib is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 3.0 as published by the Free Software Foundation.
+ * 
+ * LearnLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with LearnLib; if not, see
+ * <http://www.gnu.de/documents/lgpl.en.html>.
  */
 package de.learnlib.api;
 
-import de.ls5.words.Word;
-import static de.ls5.words.util.Words.concat;
-import static de.ls5.words.util.Words.epsilon;
+import net.automatalib.words.Word;
+import net.automatalib.words.util.Words;
 
 /**
  * A query is a container for tests a learning algorithms performs, containing
@@ -34,12 +33,12 @@ public class Query<I, O> {
     /**
      * prefix portion of test
      */
-    public final Word<I> prefix;
+    private final Word<I> prefix;
     
     /**
      * suffix portion of test
      */
-    public final Word<I> suffix;
+    private final Word<I> suffix;
     
     private O output;
     
@@ -49,8 +48,11 @@ public class Query<I, O> {
     }
     
     public Query(Word<I> input) {
-        this.prefix = epsilon();
-        this.suffix = input;
+    	this(Words.<I>epsilon(), input);
+    }
+    
+    public Query(Query<I,?> query) {
+    	this(query.getPrefix(), query.getSuffix());
     }
 
     public O getOutput() {
@@ -61,11 +63,19 @@ public class Query<I, O> {
         this.output = output;
     }
     
+    public Word<I> getPrefix() {
+    	return prefix;
+    }
+    
+    public Word<I> getSuffix() {
+    	return suffix;
+    }
+    
     /** 
      * @return prefix.suffix
      */
     public Word<I> getInput() {
-        return concat(this.prefix, this.suffix);
+        return Words.concat(this.prefix, this.suffix);
     }
 
     @Override
@@ -84,7 +94,7 @@ public class Query<I, O> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Query<I, O> other = (Query<I, O>) obj;
+        final Query<?, ?> other = (Query<?, ?>) obj;
         if (this.prefix != other.prefix && (this.prefix == null || !this.prefix.equals(other.prefix))) {
             return false;
         }
