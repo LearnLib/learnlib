@@ -65,6 +65,58 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		startLearningAlreadyCalled = true;
 	}
 
+	@Override
+	public boolean refineHypothesis(Query<S, Boolean> ceQuery) {
+		if (!startLearningAlreadyCalled) {
+			throw new IllegalStateException("Unable to refine hypothesis before first learn iteration!");
+		}
+
+		List<Word<S>> states = observationTable.getStates();
+		List<Word<S>> candidates = observationTable.getCandidates();
+
+		List<Word<S>> prefixes = new LinkedList<>();
+		for (Word<S> prefix : prefixesOfWord(ceQuery.getInput())) {
+			if (!states.contains(prefix)) {
+				prefixes.add(prefix);
+			}
+		}
+
+		states.addAll(prefixes);
+
+		for (Word<S> state : states) {
+			if (candidates.contains(state)) {
+				candidates.remove(state);
+			}
+		}
+
+		List<Word<S>> newCandidates = new LinkedList<>();
+
+		for (Word<S> prefix : prefixes) {
+			for (S alphabetSymbol : alphabet) {
+				Word<S> word = Words.append(prefix, alphabetSymbol);
+				if (!states.contains(word)) {
+					newCandidates.add(word);
+				}
+			}
+		}
+
+		processMembershipQueriesForStates(prefixes, observationTable.getSuffixes());
+		processMembershipQueriesForStates(newCandidates, observationTable.getSuffixes());
+
+		makeTableClosedAndConsistent();
+
+		return true;
+	}
+
+	@Override
+	public DFA getHypothesisModel() {
+		if (!startLearningAlreadyCalled) {
+			throw new IllegalStateException("Unable to get hypothesis model before first learn iteration!");
+		}
+
+		return observationTable.toAutomaton(alphabet);
+	}
+
 	private void makeTableClosedAndConsistent() {
 		boolean closedAndConsistent = false;
 
@@ -81,15 +133,6 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 				ensureConsistency();
 			}
 		}
-	}
-
-
-	public DFA getHypothesisModel() {
-		if (!startLearningAlreadyCalled) {
-			throw new IllegalStateException("Unable to get hypothesis model before first learn iteration!");
-		}
-
-		return observationTable.toAutomaton(alphabet);
 	}
 
 	private void closeTable() {
@@ -150,49 +193,6 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 				observationTable.addResult(combinedWord, results.get(combinedWord.getWord()));
 			}
 		}
-	}
-
-	@Override
-	public boolean refineHypothesis(Query<S, Boolean> ceQuery) {
-		if (!startLearningAlreadyCalled) {
-			throw new IllegalStateException("Unable to refine hypothesis before first learn iteration!");
-		}
-
-		List<Word<S>> states = observationTable.getStates();
-		List<Word<S>> candidates = observationTable.getCandidates();
-
-		List<Word<S>> prefixes = new LinkedList<>();
-		for (Word<S> prefix : prefixesOfWord(ceQuery.getInput())) {
-			if (!states.contains(prefix)) {
-				prefixes.add(prefix);
-			}
-		}
-
-		states.addAll(prefixes);
-
-		for (Word<S> state : states) {
-			if (candidates.contains(state)) {
-				candidates.remove(state);
-			}
-		}
-
-		List<Word<S>> newCandidates = new LinkedList<>();
-
-		for (Word<S> prefix : prefixes) {
-			for (S alphabetSymbol : alphabet) {
-				Word<S> word = Words.append(prefix, alphabetSymbol);
-				if (!states.contains(word)) {
-					newCandidates.add(word);
-				}
-			}
-		}
-
-		processMembershipQueriesForStates(prefixes, observationTable.getSuffixes());
-		processMembershipQueriesForStates(newCandidates, observationTable.getSuffixes());
-
-		makeTableClosedAndConsistent();
-
-		return true;
 	}
 
 	private List<Word<S>> prefixesOfWord(Word<S> word) {
