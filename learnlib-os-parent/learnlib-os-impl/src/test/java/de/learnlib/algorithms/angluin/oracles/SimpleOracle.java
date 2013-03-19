@@ -7,7 +7,7 @@ import de.ls5.words.impl.Symbol;
 
 import java.util.List;
 
-public class TwoStateOracle implements MembershipOracle<Symbol, Boolean> {
+public class SimpleOracle implements MembershipOracle<Symbol, Boolean> {
 
 	@Override
 	public void processQueries(List<Query<Symbol, Boolean>> queries) {
@@ -17,6 +17,10 @@ public class TwoStateOracle implements MembershipOracle<Symbol, Boolean> {
 	}
 
 	private Boolean determineOutput(Word<Symbol> input) {
+		if (input.size() == 3) {
+			return true;
+		}
+
 		for (Symbol symbol : input) {
 			if (symbol.getUserObject().equals(1)) {
 				return true;
