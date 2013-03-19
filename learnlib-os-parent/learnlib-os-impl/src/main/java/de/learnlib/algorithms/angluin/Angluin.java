@@ -3,7 +3,7 @@ package de.learnlib.algorithms.angluin;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import de.ls5.automata.Automaton;
+import de.ls5.automata.fsa.DFA;
 import de.ls5.words.Alphabet;
 import de.ls5.words.Word;
 import de.ls5.words.impl.ArrayWord;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Angluin<S> implements LearningAlgorithm {
+public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 	private final Alphabet<S> alphabet;
 	private final List<Word<S>> alphabetAsWords;
@@ -33,7 +33,7 @@ public class Angluin<S> implements LearningAlgorithm {
 	}
 
 	@Override
-	public Automaton createHypothesis() {
+	public DFA createHypothesis() {
 		if (observationTable.getStates().isEmpty()) {
 			final ArrayWord<S> emptyWord = new ArrayWord<S>();
 			observationTable.getStates().add(emptyWord);
@@ -140,7 +140,7 @@ public class Angluin<S> implements LearningAlgorithm {
 	}
 
 	@Override
-	public Object refineHypothesis(Word counterexample, Object output) {
+	public DFA refineHypothesis(Word<S> counterexample, Boolean output) {
 		return null;
 	}
 

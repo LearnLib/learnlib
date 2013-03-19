@@ -1,6 +1,6 @@
 package de.learnlib.algorithms.angluin;
 
-import de.ls5.automata.Automaton;
+import de.ls5.automata.fsa.DFA;
 import de.ls5.automata.fsa.impl.FastDFA;
 import de.ls5.automata.fsa.impl.FastDFAState;
 import de.ls5.words.Alphabet;
@@ -153,7 +153,7 @@ public class ObservationTable<S> {
 		return row;
 	}
 
-	Automaton toAutomaton(Alphabet<S> alphabet) {
+	DFA toAutomaton(Alphabet<S> alphabet) {
 		FastDFA<S> automaton = new FastDFA<S>(alphabet);
 		Map<ObservationTableRow, FastDFAState> dfaStates = new HashMap<ObservationTableRow, FastDFAState>(
 				(int) (1.5 * states.size()));
