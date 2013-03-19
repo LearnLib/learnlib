@@ -12,6 +12,7 @@ import de.ls5.words.util.Words;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -140,7 +141,47 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 	@Override
 	public DFA refineHypothesis(Word<S> counterexample, Boolean output) {
-		return null;
+		List<Word<S>> states = observationTable.getStates();
+		List<Word<S>> candidates = observationTable.getCandidates();
+
+		List<Word<S>> prefixes = new LinkedList<Word<S>>();
+		for (Word<S> prefix : prefixesOfWord(counterexample)) {
+			if (!states.contains(prefix)) {
+				prefixes.add(prefix);
+			}
+		}
+
+		states.addAll(prefixes);
+
+		for (Word<S> state : states) {
+			if (candidates.contains(state)) {
+				candidates.remove(state);
+			}
+		}
+
+		List<Word<S>> newCandidates = new LinkedList<Word<S>>();
+
+		for (Word<S> prefix : prefixes) {
+			for (S alphabetSymbol : alphabet) {
+				Word<S> word = Words.append(prefix, alphabetSymbol);
+				if (!states.contains(word)) {
+					newCandidates.add(word);
+				}
+			}
+		}
+
+		processMembershipQueriesForStates(prefixes, observationTable.getSuffixes());
+		processMembershipQueriesForStates(newCandidates, observationTable.getSuffixes());
+
+		return createHypothesis();
+	}
+
+	private List<Word<S>> prefixesOfWord(Word<S> word) {
+		List<Word<S>> prefixes = new ArrayList<Word<S>>(word.size());
+		for (int i = 1; i <= word.size(); i++) {
+			prefixes.add(Words.prefix(word, i));
+		}
+		return prefixes;
 	}
 
 }
