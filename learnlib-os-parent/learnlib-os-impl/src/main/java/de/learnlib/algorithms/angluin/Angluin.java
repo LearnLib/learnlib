@@ -31,6 +31,15 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 	private boolean startLearningAlreadyCalled;
 
+	/**
+	 * Initializes a newly created Angluin implementation. After this, the method
+	 * {@link #startLearning()} may be called once.
+	 *
+	 * @param alphabet
+	 * 		The {@link Alphabet} to learn.
+	 * @param oracle
+	 * 		The {@link MembershipOracle} which is used for membership queries.
+	 */
 	public Angluin(Alphabet<S> alphabet, MembershipOracle<S, Boolean> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
@@ -45,16 +54,6 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	public void startLearning() {
 		if (startLearningAlreadyCalled) {
 			throw new IllegalStateException("startLearning may only be called once!");
-		}
-
-		if (observationTable.getStates().isEmpty()) {
-			final Word<S> emptyWord = Words.epsilon();
-			observationTable.getStates().add(emptyWord);
-		}
-
-		if (observationTable.getSuffixes().isEmpty()) {
-			final Word<S> emptyWord = Words.epsilon();
-			observationTable.getSuffixes().add(emptyWord);
 		}
 
 		processMembershipQueriesForStates(observationTable.getStates(), observationTable.getSuffixes());
@@ -117,6 +116,9 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		return observationTable.toAutomaton(alphabet);
 	}
 
+	/**
+	 * After calling this method the observation table is both closed and consistent.
+	 */
 	private void makeTableClosedAndConsistent() {
 		boolean closedAndConsistent = false;
 
@@ -135,6 +137,9 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		}
 	}
 
+	/**
+	 * After calling this method the observation table is closed.
+	 */
 	private void closeTable() {
 		Word<S> candidate = observationTable.findUnclosedState();
 
@@ -157,6 +162,9 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		}
 	}
 
+	/**
+	 * After calling this method the observation table is consistent.
+	 */
 	private void ensureConsistency() {
 		InconsistencyDataHolder<S> dataHolder = observationTable.findInconsistentSymbol(alphabet);
 
@@ -170,6 +178,16 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		processMembershipQueriesForStates(observationTable.getCandidates(), singleSuffixList);
 	}
 
+	/**
+	 * When new states are added to the observation table, this method fills the table values. For each
+	 * given state it sends one membership query for each specified suffix symbol to the oracle of the
+	 * form (state,symbol).
+	 *
+	 * @param states
+	 * 		The new states which should be evaluated.
+	 * @param suffixes
+	 * 		The suffixes which are appended to the states before sending the resulting word to the oracle.
+	 */
 	private void processMembershipQueriesForStates(List<Word<S>> states, List<Word<S>> suffixes) {
 		List<Query<S, Boolean>> queries = new ArrayList<>(states.size());
 		for (Word<S> state : states) {
@@ -195,6 +213,14 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		}
 	}
 
+	/**
+	 * A {@link Word} of the length n may have n prefixes of the length 1-n.
+	 * This method returns all of them.
+	 *
+	 * @param word
+	 * 		The word for which the prefixes should be returned.
+	 * @return A list of all prefixes for the given word.
+	 */
 	private List<Word<S>> prefixesOfWord(Word<S> word) {
 		List<Word<S>> prefixes = new ArrayList<>(word.size());
 		for (int i = 1; i <= word.size(); i++) {

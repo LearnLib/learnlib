@@ -6,12 +6,19 @@ import net.automatalib.automata.fsa.impl.FastDFAState;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.ArrayWord;
+import net.automatalib.words.util.Words;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The internal storage mechanism for {@link Angluin}.
+ *
+ * @param <S>
+ * 		state class.
+ */
 public class ObservationTable<S> {
 
 	private List<Word<S>> states;     // S
@@ -21,24 +28,54 @@ public class ObservationTable<S> {
 	private Map<Word<S>, Boolean> results;
 
 	public ObservationTable() {
+		Word<S> emptyWord = Words.epsilon();
+
 		states = new ArrayList<>();
+		states.add(emptyWord);
+
 		candidates = new ArrayList<>();
+
 		suffixes = new ArrayList<>();
+		suffixes.add(emptyWord);
+
 		results = new HashMap<>();
 	}
 
+	/**
+	 * The set of states in the observation table, often called "S".
+	 *
+	 * @return The set of states.
+	 */
 	List<Word<S>> getStates() {
 		return states;
 	}
 
+	/**
+	 * The set of states in the observation table, often called "SA" or "S Sigma".
+	 *
+	 * @return The set of candidates.
+	 */
 	List<Word<S>> getCandidates() {
 		return candidates;
 	}
 
+	/**
+	 * The set of suffixes in the observation table, often called "E".
+	 *
+	 * @return The set of candidates.
+	 */
 	List<Word<S>> getSuffixes() {
 		return suffixes;
 	}
 
+	/**
+	 * Adds the result of a membership query to this table.
+	 *
+	 * @param word
+	 * 		The {@link Word} asked with the membership query.
+	 * @param result
+	 * 		The result of the query.
+	 */
 	void addResult(CombinedWord<S> word, boolean result) {
 		if (!suffixes.contains(word.getSuffix())) {
 			throw new IllegalStateException("Suffix " + word.getSuffix() + " is not part of the suffixes set");
@@ -53,10 +90,19 @@ public class ObservationTable<S> {
 		}
 	}
 
+	/**
+	 * @return if the table is currently closed.
+	 */
 	boolean isClosed() {
 		return findUnclosedState() == null;
 	}
 
+	/**
+	 * Determines the next state for which the observation table needs to be closed.
+	 *
+	 * @return The next state for which the observation table needs to be closed. If the
+	 *         table is closed, this returns {@code null}.
+	 */
 	Word<S> findUnclosedState() {
 		List<ObservationTableRow> stateRows = new ArrayList<>(states.size());
 
@@ -83,6 +129,10 @@ public class ObservationTable<S> {
 		return null;
 	}
 
+	/**
+	 * @param alphabet
+	 * @return if the observation table is consistent with the given alphabet.
+	 */
 	boolean isConsistentWithAlphabet(Alphabet<S> alphabet) {
 		return findInconsistentSymbol(alphabet) == null;
 	}
@@ -153,6 +203,13 @@ public class ObservationTable<S> {
 		return row;
 	}
 
+	/**
+	 * Creates a hypothesis automaton based on the current state of the observation table.
+	 *
+	 * @param alphabet
+	 * 		The alphabet of the automaton.
+	 * @return The current hypothesis automaton.
+	 */
 	DFA toAutomaton(Alphabet<S> alphabet) {
 		FastDFA<S> automaton = new FastDFA<>(alphabet);
 		Map<ObservationTableRow, FastDFAState> dfaStates = new HashMap<>(
