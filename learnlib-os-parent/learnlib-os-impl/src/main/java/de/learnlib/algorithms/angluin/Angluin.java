@@ -35,7 +35,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		this.alphabet = alphabet;
 		this.alphabetAsWords = alphabetSymbolsAsWords();
 		this.oracle = oracle;
-		this.observationTable = new ObservationTable<S>();
+		this.observationTable = new ObservationTable<>();
 
 		observationTable.getCandidates().addAll(alphabetAsWords);
 	}
@@ -85,9 +85,9 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 			observationTable.getStates().add(candidate);
 			observationTable.getCandidates().remove(candidate);
 
-			List<Word<S>> newCandidates = new ArrayList<Word<S>>(alphabetAsWords.size());
+			List<Word<S>> newCandidates = new ArrayList<>(alphabetAsWords.size());
 			for (Word<S> alphabetSymbol : alphabetAsWords) {
-				Word<S> newCandidate = new ArrayWord<S>();
+				Word<S> newCandidate = new ArrayWord<>();
 				newCandidate.addAll(candidate);
 				newCandidate.addAll(alphabetSymbol);
 				newCandidates.add(newCandidate);
@@ -105,7 +105,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		InconsistencyDataHolder<S> dataHolder = observationTable.findInconsistentSymbol(alphabetAsWords);
 
 		Word<S> witness = observationTable.determineWitnessForInconsistency(dataHolder);
-		CombinedWord<S> newSuffix = new CombinedWord<S>(dataHolder.getDifferingSymbol(), witness);
+		CombinedWord<S> newSuffix = new CombinedWord<>(dataHolder.getDifferingSymbol(), witness);
 		observationTable.getSuffixes().add(newSuffix.getWord());
 
 		List<Word<S>> singleSuffixList = Collections.singletonList(newSuffix.getWord());
@@ -115,17 +115,17 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	}
 
 	private void processMembershipQueriesForStates(List<Word<S>> states, List<Word<S>> suffixes) {
-		List<Query<S, Boolean>> queries = new ArrayList<Query<S, Boolean>>(states.size());
+		List<Query<S, Boolean>> queries = new ArrayList<>(states.size());
 		for (Word<S> state : states) {
 			for (Word<S> suffix : suffixes) {
-				CombinedWord<S> combinedWord = new CombinedWord<S>(state, suffix);
+				CombinedWord<S> combinedWord = new CombinedWord<>(state, suffix);
 				queries.add(new Query<S, Boolean>(combinedWord.getWord()));
 			}
 		}
 
 		oracle.processQueries(queries);
 
-		Map<Word, Boolean> results = new HashMap<Word, Boolean>((int) (1.5 * queries.size()));
+		Map<Word, Boolean> results = new HashMap<>((int) (1.5 * queries.size()));
 
 		for (Query<S, Boolean> query : queries) {
 			results.put(query.getInput(), query.getOutput());
@@ -133,7 +133,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 		for (Word<S> suffix : suffixes) {
 			for (Word<S> state : states) {
-				CombinedWord<S> combinedWord = new CombinedWord<S>(state, suffix);
+				CombinedWord<S> combinedWord = new CombinedWord<>(state, suffix);
 				observationTable.addResult(combinedWord, results.get(combinedWord.getWord()));
 			}
 		}
@@ -141,7 +141,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 
 	private List<Word<S>> alphabetSymbolsAsWords() {
-		List<Word<S>> words = new ArrayList<Word<S>>(alphabet.size());
+		List<Word<S>> words = new ArrayList<>(alphabet.size());
 		for (S symbol : alphabet) {
 			words.add(Words.asWord(symbol));
 		}
@@ -154,7 +154,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		List<Word<S>> states = observationTable.getStates();
 		List<Word<S>> candidates = observationTable.getCandidates();
 
-		List<Word<S>> prefixes = new LinkedList<Word<S>>();
+		List<Word<S>> prefixes = new LinkedList<>();
 		for (Word<S> prefix : prefixesOfWord(ceQuery.getInput())) {
 			if (!states.contains(prefix)) {
 				prefixes.add(prefix);
@@ -169,7 +169,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 			}
 		}
 
-		List<Word<S>> newCandidates = new LinkedList<Word<S>>();
+		List<Word<S>> newCandidates = new LinkedList<>();
 
 		for (Word<S> prefix : prefixes) {
 			for (S alphabetSymbol : alphabet) {
@@ -187,7 +187,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	}
 
 	private List<Word<S>> prefixesOfWord(Word<S> word) {
-		List<Word<S>> prefixes = new ArrayList<Word<S>>(word.size());
+		List<Word<S>> prefixes = new ArrayList<>(word.size());
 		for (int i = 1; i <= word.size(); i++) {
 			prefixes.add(Words.prefix(word, i));
 		}

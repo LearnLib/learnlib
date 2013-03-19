@@ -23,7 +23,7 @@ public class CombinedWord<S> {
 	}
 
 	public Word<S> getWord() {
-		ArrayWord<S> word = new ArrayWord<S>();
+		ArrayWord<S> word = new ArrayWord<>();
 		word.addAll(prefix);
 		word.addAll(suffix);
 		return word;

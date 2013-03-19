@@ -21,10 +21,10 @@ public class ObservationTable<S> {
 	private Map<Word<S>, Boolean> results;
 
 	public ObservationTable() {
-		states = new ArrayList<Word<S>>();
-		candidates = new ArrayList<Word<S>>();
-		suffixes = new ArrayList<Word<S>>();
-		results = new HashMap<Word<S>, Boolean>();
+		states = new ArrayList<>();
+		candidates = new ArrayList<>();
+		suffixes = new ArrayList<>();
+		results = new HashMap<>();
 	}
 
 	List<Word<S>> getStates() {
@@ -58,7 +58,7 @@ public class ObservationTable<S> {
 	}
 
 	Word<S> findUnclosedState() {
-		List<ObservationTableRow> stateRows = new ArrayList<ObservationTableRow>(states.size());
+		List<ObservationTableRow> stateRows = new ArrayList<>(states.size());
 
 		for (Word<S> state : states) {
 			stateRows.add(getRowForPrefix(state));
@@ -96,7 +96,7 @@ public class ObservationTable<S> {
 					}
 
 					if (checkInconsistency(firstState, secondState, symbol)) {
-						return new InconsistencyDataHolder<S>(firstState, secondState, symbol);
+						return new InconsistencyDataHolder<>(firstState, secondState, symbol);
 					}
 				}
 			}
@@ -110,8 +110,8 @@ public class ObservationTable<S> {
 		ObservationTableRow rowForSecondState = getRowForPrefix(secondState);
 		boolean valuesEqualWithoutPrefix = rowForFirstState.equals(rowForSecondState);
 
-		CombinedWord<S> extendedFirstState = new CombinedWord<S>(firstState, alphabetSymbol);
-		CombinedWord<S> extendedSecondState = new CombinedWord<S>(secondState, alphabetSymbol);
+		CombinedWord<S> extendedFirstState = new CombinedWord<>(firstState, alphabetSymbol);
+		CombinedWord<S> extendedSecondState = new CombinedWord<>(secondState, alphabetSymbol);
 		ObservationTableRow rowForExtendedFirstState = getRowForPrefix(extendedFirstState.getWord());
 		ObservationTableRow rowForExtendedSecondState = getRowForPrefix(extendedSecondState.getWord());
 
@@ -125,8 +125,8 @@ public class ObservationTable<S> {
 			throw new IllegalArgumentException("Dataholder must not be null!");
 		}
 
-		CombinedWord<S> firstState = new CombinedWord<S>(dataHolder.getFirstState(), dataHolder.getDifferingSymbol());
-		CombinedWord<S> secondState = new CombinedWord<S>(dataHolder.getSecondState(), dataHolder.getDifferingSymbol());
+		CombinedWord<S> firstState = new CombinedWord<>(dataHolder.getFirstState(), dataHolder.getDifferingSymbol());
+		CombinedWord<S> secondState = new CombinedWord<>(dataHolder.getSecondState(), dataHolder.getDifferingSymbol());
 
 		ObservationTableRow firstRow = getRowForPrefix(firstState.getWord());
 		ObservationTableRow secondRow = getRowForPrefix(secondState.getWord());
@@ -144,7 +144,7 @@ public class ObservationTable<S> {
 		ObservationTableRow row = new ObservationTableRow();
 
 		for (Word<S> suffix : suffixes) {
-			Word<S> word = new ArrayWord<S>();
+			Word<S> word = new ArrayWord<>();
 			word.addAll(state);
 			word.addAll(suffix);
 			row.addValue(results.get(word));
@@ -154,8 +154,8 @@ public class ObservationTable<S> {
 	}
 
 	DFA toAutomaton(Alphabet<S> alphabet) {
-		FastDFA<S> automaton = new FastDFA<S>(alphabet);
-		Map<ObservationTableRow, FastDFAState> dfaStates = new HashMap<ObservationTableRow, FastDFAState>(
+		FastDFA<S> automaton = new FastDFA<>(alphabet);
+		Map<ObservationTableRow, FastDFAState> dfaStates = new HashMap<>(
 				(int) (1.5 * states.size()));
 
 		for (Word<S> state : states) {
@@ -175,7 +175,7 @@ public class ObservationTable<S> {
 		for (Word<S> state : states) {
 			FastDFAState dfaState = dfaStates.get(getRowForPrefix(state));
 			for (S alphabetSymbol : alphabet) {
-				Word<S> word = new ArrayWord<S>();
+				Word<S> word = new ArrayWord<>();
 				word.addAll(state);
 				word.add(alphabetSymbol);
 

@@ -8,7 +8,7 @@ public class ObservationTableRow {
 	private final List<Boolean> rowData;
 
 	ObservationTableRow() {
-		rowData = new LinkedList<Boolean>();
+		rowData = new LinkedList<>();
 	}
 
 	void addValue(boolean value) {

@@ -23,14 +23,14 @@ public class TestSimpleAutomaton {
 
 	@BeforeClass
 	public void setup() {
-		Alphabet<Symbol> alphabet = new FastAlphabet<Symbol>();
+		Alphabet<Symbol> alphabet = new FastAlphabet<>();
 		zero = new Symbol(0);
 		one = new Symbol(1);
 
 		alphabet.add(zero);
 		alphabet.add(one);
 
-		angluin = new Angluin<Symbol>(alphabet, new SimpleOracle());
+		angluin = new Angluin<>(alphabet, new SimpleOracle());
 	}
 
 	@Test
@@ -42,9 +42,9 @@ public class TestSimpleAutomaton {
 
 	@Test(dependsOnMethods = "testFirstHypothesis")
 	public void testCounterExample() {
-		Word<Symbol> counterExample = new ArrayWord<Symbol>();
+		Word<Symbol> counterExample = new ArrayWord<>();
 		counterExample = Words.append(counterExample, one, one, zero);
-		Query<Symbol, Boolean> query = new Query<Symbol, Boolean>(counterExample);
+		Query<Symbol, Boolean> query = new Query<>(counterExample);
 		query.setOutput(false);
 
 
