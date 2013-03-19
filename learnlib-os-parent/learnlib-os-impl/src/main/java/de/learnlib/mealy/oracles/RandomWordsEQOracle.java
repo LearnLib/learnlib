@@ -19,13 +19,13 @@ package de.learnlib.mealy.oracles;
 import java.util.Collections;
 import java.util.Random;
 
+import net.automatalib.automata.concepts.OutputAutomaton;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.MutableWord;
+import net.automatalib.words.impl.ArrayWord;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import de.ls5.automata.concepts.OutputAutomaton;
-import de.ls5.words.Alphabet;
-import de.ls5.words.MutableWord;
-import de.ls5.words.impl.ArrayWord;
 
 /**
  *

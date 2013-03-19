@@ -26,11 +26,11 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>de.ls5.automata</groupId>
+            <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.ls5.automata</groupId>
+            <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
         </dependency>
     </dependencies>

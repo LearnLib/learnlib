@@ -18,11 +18,11 @@ package de.learnlib.mealy.oracles;
 
 import java.util.List;
 
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.ArrayWord;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import de.ls5.automata.transout.MealyMachine;
-import de.ls5.words.Word;
-import de.ls5.words.impl.ArrayWord;
 
 /**
  *

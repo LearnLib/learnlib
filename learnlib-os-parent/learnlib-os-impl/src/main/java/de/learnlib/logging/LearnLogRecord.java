@@ -24,6 +24,7 @@ import java.util.logging.LogRecord;
  * @author falkhowar
  */
 public class LearnLogRecord extends LogRecord {
+	private static final long serialVersionUID = 1L;
     
     private final Category category;
     

@@ -16,7 +16,7 @@
 
 package de.learnlib.api;
 
-import de.ls5.words.Word;
+import net.automatalib.words.Word;
 
 /**
  *

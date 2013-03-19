@@ -14,21 +14,20 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.learnlib.logging.flter;
+package de.learnlib.logging.filter;
 
 import de.learnlib.logging.Category;
 import java.util.EnumSet;
 
 /**
- * only some categories. SYSTEM, CONFIG, MODEL, STATISTIC, PROFILING.
+ * No learning related output.
  * 
  * @author falkhowar
  */
-public class ExperimentalDataFilter extends CategoryFilter {
+public class SystemOnlyFilter extends CategoryFilter {
 
-    public ExperimentalDataFilter() {
-        super(EnumSet.of(Category.SYSTEM, Category.CONFIG, 
-                Category.MODEL, Category.STATISTIC, Category.PROFILING));
+    public SystemOnlyFilter() {
+        super(EnumSet.of(Category.SYSTEM));
     }
         
 }

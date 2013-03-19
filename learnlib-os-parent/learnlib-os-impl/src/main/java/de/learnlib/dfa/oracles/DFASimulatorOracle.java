@@ -16,10 +16,11 @@
 
 package de.learnlib.dfa.oracles;
 
+import java.util.List;
+
+import net.automatalib.automata.fsa.DFA;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import de.ls5.automata.fsa.DFA;
-import java.util.List;
 
 /**
  *

@@ -2,17 +2,18 @@ package de.learnlib.mealy.oracles;
 
 import java.util.Random;
 
+import net.automatalib.automata.transout.impl.FastMealy;
+import net.automatalib.automata.transout.impl.FastMealyState;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.FastAlphabet;
+import net.automatalib.words.impl.Symbol;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
-import de.ls5.automata.transout.impl.FastMealy;
-import de.ls5.automata.transout.impl.FastMealyState;
-import de.ls5.words.Alphabet;
-import de.ls5.words.Word;
-import de.ls5.words.impl.FastAlphabet;
-import de.ls5.words.impl.Symbol;
 
 public class RandomWordsTest {
 

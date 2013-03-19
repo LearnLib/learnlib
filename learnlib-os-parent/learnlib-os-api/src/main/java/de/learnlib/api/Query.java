@@ -16,9 +16,8 @@
  */
 package de.learnlib.api;
 
-import static de.ls5.words.util.Words.concat;
-import de.ls5.words.Word;
-import de.ls5.words.util.Words;
+import net.automatalib.words.Word;
+import net.automatalib.words.util.Words;
 
 /**
  * A query is a container for tests a learning algorithms performs, containing
@@ -72,7 +71,7 @@ public class Query<I, O> {
      * @return prefix.suffix
      */
     public Word<I> getInput() {
-        return concat(this.prefix, this.suffix);
+        return Words.concat(this.prefix, this.suffix);
     }
 
     @Override

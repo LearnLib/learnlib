@@ -31,14 +31,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>de.ls5.automata</groupId>
+            <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
-            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>de.ls5.automata</groupId>
+            <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
-            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

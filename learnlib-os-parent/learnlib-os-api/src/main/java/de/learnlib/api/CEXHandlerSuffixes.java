@@ -16,8 +16,9 @@
 
 package de.learnlib.api;
 
-import de.ls5.words.Word;
 import java.util.Collection;
+
+import net.automatalib.words.Word;
 
 /**
  *

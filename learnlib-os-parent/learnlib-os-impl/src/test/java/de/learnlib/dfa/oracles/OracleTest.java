@@ -16,18 +16,21 @@
 
 package de.learnlib.dfa.oracles;
 
-import de.learnlib.api.Query;
-import de.ls5.automata.fsa.DFA;
-import de.ls5.automata.fsa.impl.FastDFA;
-import de.ls5.automata.fsa.impl.FastDFAState;
-import de.ls5.words.Alphabet;
-import de.ls5.words.impl.FastAlphabet;
-import de.ls5.words.impl.Symbol;
-import de.ls5.words.util.Words;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.FastDFA;
+import net.automatalib.automata.fsa.impl.FastDFAState;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.impl.FastAlphabet;
+import net.automatalib.words.impl.Symbol;
+import net.automatalib.words.util.Words;
+
 import org.junit.Assert;
 import org.junit.Test;
+
+import de.learnlib.api.Query;
 
 /**
  *

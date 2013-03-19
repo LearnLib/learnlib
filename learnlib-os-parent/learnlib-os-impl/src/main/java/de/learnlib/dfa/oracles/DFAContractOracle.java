@@ -16,9 +16,10 @@
 
 package de.learnlib.dfa.oracles;
 
+import java.util.List;
+
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import java.util.List;
 
 /**
  *

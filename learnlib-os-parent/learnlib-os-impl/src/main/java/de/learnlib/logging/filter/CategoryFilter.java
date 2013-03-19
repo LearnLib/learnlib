@@ -14,7 +14,7 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.learnlib.logging.flter;
+package de.learnlib.logging.filter;
 
 import de.learnlib.logging.Category;
 import de.learnlib.logging.LearnLogRecord;
