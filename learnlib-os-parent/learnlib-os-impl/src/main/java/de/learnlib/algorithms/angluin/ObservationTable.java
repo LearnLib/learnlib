@@ -83,12 +83,12 @@ public class ObservationTable<S> {
 		return null;
 	}
 
-	boolean isConsistentWithAlphabet(List<Word<S>> alphabetSymbols) {
-		return findInconsistentSymbol(alphabetSymbols) == null;
+	boolean isConsistentWithAlphabet(Alphabet<S> alphabet) {
+		return findInconsistentSymbol(alphabet) == null;
 	}
 
-	InconsistencyDataHolder<S> findInconsistentSymbol(List<Word<S>> alphabetSymbols) {
-		for (Word<S> symbol : alphabetSymbols) {
+	InconsistencyDataHolder<S> findInconsistentSymbol(Alphabet<S> alphabet) {
+		for (S symbol : alphabet) {
 			for (Word<S> firstState : states) {
 				for (Word<S> secondState : states) {
 					if (firstState.equals(secondState)) {
@@ -105,7 +105,7 @@ public class ObservationTable<S> {
 		return null;
 	}
 
-	private boolean checkInconsistency(Word<S> firstState, Word<S> secondState, Word<S> alphabetSymbol) {
+	private boolean checkInconsistency(Word<S> firstState, Word<S> secondState, S alphabetSymbol) {
 		ObservationTableRow rowForFirstState = getRowForPrefix(firstState);
 		ObservationTableRow rowForSecondState = getRowForPrefix(secondState);
 		boolean valuesEqualWithoutPrefix = rowForFirstState.equals(rowForSecondState);

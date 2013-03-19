@@ -6,7 +6,6 @@ import de.learnlib.api.Query;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.ArrayWord;
 import net.automatalib.words.util.Words;
 
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import java.util.Map;
 public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 	private final Alphabet<S> alphabet;
-	private final List<Word<S>> alphabetAsWords;
 
 	private final MembershipOracle<S, Boolean> oracle;
 
@@ -33,11 +31,12 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 	public Angluin(Alphabet<S> alphabet, MembershipOracle<S, Boolean> oracle) {
 		this.alphabet = alphabet;
-		this.alphabetAsWords = alphabetSymbolsAsWords();
 		this.oracle = oracle;
 		this.observationTable = new ObservationTable<>();
 
-		observationTable.getCandidates().addAll(alphabetAsWords);
+		for (S alphabetSymbol : alphabet) {
+			observationTable.getCandidates().add(Words.asWord(alphabetSymbol));
+		}
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 				closeTable();
 			}
 
-			if (!observationTable.isConsistentWithAlphabet(alphabetAsWords)) {
+			if (!observationTable.isConsistentWithAlphabet(alphabet)) {
 				closedAndConsistent = false;
 				ensureConsistency();
 			}
@@ -85,11 +84,9 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 			observationTable.getStates().add(candidate);
 			observationTable.getCandidates().remove(candidate);
 
-			List<Word<S>> newCandidates = new ArrayList<>(alphabetAsWords.size());
-			for (Word<S> alphabetSymbol : alphabetAsWords) {
-				Word<S> newCandidate = new ArrayWord<>();
-				newCandidate.addAll(candidate);
-				newCandidate.addAll(alphabetSymbol);
+			List<Word<S>> newCandidates = new ArrayList<>(alphabet.size());
+			for (S alphabetSymbol : alphabet) {
+				Word<S> newCandidate = Words.append(candidate, alphabetSymbol);
 				newCandidates.add(newCandidate);
 			}
 
@@ -102,10 +99,10 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	}
 
 	private void ensureConsistency() {
-		InconsistencyDataHolder<S> dataHolder = observationTable.findInconsistentSymbol(alphabetAsWords);
+		InconsistencyDataHolder<S> dataHolder = observationTable.findInconsistentSymbol(alphabet);
 
 		Word<S> witness = observationTable.determineWitnessForInconsistency(dataHolder);
-		CombinedWord<S> newSuffix = new CombinedWord<>(dataHolder.getDifferingSymbol(), witness);
+		CombinedWord<S> newSuffix = new CombinedWord<>(Words.asWord(dataHolder.getDifferingSymbol()), witness);
 		observationTable.getSuffixes().add(newSuffix.getWord());
 
 		List<Word<S>> singleSuffixList = Collections.singletonList(newSuffix.getWord());
@@ -137,15 +134,6 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 				observationTable.addResult(combinedWord, results.get(combinedWord.getWord()));
 			}
 		}
-	}
-
-
-	private List<Word<S>> alphabetSymbolsAsWords() {
-		List<Word<S>> words = new ArrayList<>(alphabet.size());
-		for (S symbol : alphabet) {
-			words.add(Words.asWord(symbol));
-		}
-		return words;
 	}
 
 	@Override

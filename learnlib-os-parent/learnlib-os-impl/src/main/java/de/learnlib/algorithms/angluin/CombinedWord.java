@@ -2,6 +2,7 @@ package de.learnlib.algorithms.angluin;
 
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.ArrayWord;
+import net.automatalib.words.util.Words;
 
 public class CombinedWord<S> {
 
@@ -11,6 +12,11 @@ public class CombinedWord<S> {
 	public CombinedWord(Word<S> prefix, Word<S> suffix) {
 		this.prefix = prefix;
 		this.suffix = suffix;
+	}
+
+	public CombinedWord(Word<S> prefix, S symbol) {
+		this.prefix = prefix;
+		this.suffix = Words.asWord(symbol);
 	}
 
 
