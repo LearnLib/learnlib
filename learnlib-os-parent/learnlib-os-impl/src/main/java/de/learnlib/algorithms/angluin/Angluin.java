@@ -16,6 +16,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementation of the L* algorithm by Dana Angluin
+ *
+ * @param <S>
+ * 		state class.
+ */
 public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 	private final Alphabet<S> alphabet;
@@ -37,12 +43,12 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	@Override
 	public DFA createHypothesis() {
 		if (observationTable.getStates().isEmpty()) {
-			final ArrayWord<S> emptyWord = new ArrayWord<S>();
+			final Word<S> emptyWord = Words.epsilon();
 			observationTable.getStates().add(emptyWord);
 		}
 
 		if (observationTable.getSuffixes().isEmpty()) {
-			final ArrayWord<S> emptyWord = new ArrayWord<S>();
+			final Word<S> emptyWord = Words.epsilon();
 			observationTable.getSuffixes().add(emptyWord);
 		}
 
@@ -57,7 +63,6 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 			if (!observationTable.isClosed()) {
 				closedAndConsistent = false;
 				closeTable();
-				continue;
 			}
 
 			if (!observationTable.isConsistentWithAlphabet(alphabetAsWords)) {
@@ -72,24 +77,25 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	private void closeTable() {
 		Word<S> candidate = observationTable.findUnclosedState();
 
-		if (candidate == null) {
-			return;
+		while (candidate != null) {
+
+			observationTable.getStates().add(candidate);
+			observationTable.getCandidates().remove(candidate);
+
+			List<Word<S>> newCandidates = new ArrayList<Word<S>>(alphabetAsWords.size());
+			for (Word<S> alphabetSymbol : alphabetAsWords) {
+				Word<S> newCandidate = new ArrayWord<S>();
+				newCandidate.addAll(candidate);
+				newCandidate.addAll(alphabetSymbol);
+				newCandidates.add(newCandidate);
+			}
+
+			observationTable.getCandidates().addAll(newCandidates);
+
+			processMembershipQueriesForStates(newCandidates, observationTable.getSuffixes());
+
+			candidate = observationTable.findUnclosedState();
 		}
-
-		observationTable.getStates().add(candidate);
-		observationTable.getCandidates().remove(candidate);
-
-		List<Word<S>> newCandidates = new ArrayList<Word<S>>(alphabetAsWords.size());
-		for (Word<S> alphabetSymbol : alphabetAsWords) {
-			Word<S> newCandidate = new ArrayWord<S>();
-			newCandidate.addAll(candidate);
-			newCandidate.addAll(alphabetSymbol);
-			newCandidates.add(newCandidate);
-		}
-
-		observationTable.getCandidates().addAll(newCandidates);
-
-		processMembershipQueriesForStates(newCandidates, observationTable.getSuffixes());
 	}
 
 	private void ensureConsistency() {
