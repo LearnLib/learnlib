@@ -29,7 +29,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		this.oracle = oracle;
 		this.observationTable = new ObservationTable<S>();
 
-		observationTable.getFutures().addAll(alphabetAsWords);
+		observationTable.getCandidates().addAll(alphabetAsWords);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		}
 
 		processMembershipQueriesForStates(observationTable.getStates(), observationTable.getSuffixes());
-		processMembershipQueriesForStates(observationTable.getFutures(), observationTable.getSuffixes());
+		processMembershipQueriesForStates(observationTable.getCandidates(), observationTable.getSuffixes());
 
 		boolean closedAndConsistent = false;
 
@@ -68,26 +68,26 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	}
 
 	private void closeTable() {
-		Word<S> future = observationTable.findUnclosedState();
+		Word<S> candidate = observationTable.findUnclosedState();
 
-		if (future == null) {
+		if (candidate == null) {
 			return;
 		}
 
-		observationTable.getStates().add(future);
-		observationTable.getFutures().remove(future);
+		observationTable.getStates().add(candidate);
+		observationTable.getCandidates().remove(candidate);
 
-		List<Word<S>> newFutures = new ArrayList<Word<S>>(alphabetAsWords.size());
+		List<Word<S>> newCandidates = new ArrayList<Word<S>>(alphabetAsWords.size());
 		for (Word<S> alphabetSymbol : alphabetAsWords) {
-			Word<S> newFuture = new ArrayWord<S>();
-			newFuture.addAll(future);
-			newFuture.addAll(alphabetSymbol);
-			newFutures.add(newFuture);
+			Word<S> newCandidate = new ArrayWord<S>();
+			newCandidate.addAll(candidate);
+			newCandidate.addAll(alphabetSymbol);
+			newCandidates.add(newCandidate);
 		}
 
-		observationTable.getFutures().addAll(newFutures);
+		observationTable.getCandidates().addAll(newCandidates);
 
-		processMembershipQueriesForStates(newFutures, observationTable.getSuffixes());
+		processMembershipQueriesForStates(newCandidates, observationTable.getSuffixes());
 	}
 
 	private void ensureConsistency() {
@@ -100,14 +100,14 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		List<Word<S>> singleSuffixList = Collections.singletonList(newSuffix.getWord());
 
 		processMembershipQueriesForStates(observationTable.getStates(), singleSuffixList);
-		processMembershipQueriesForStates(observationTable.getFutures(), singleSuffixList);
+		processMembershipQueriesForStates(observationTable.getCandidates(), singleSuffixList);
 	}
 
 	private void processMembershipQueriesForStates(List<Word<S>> states, List<Word<S>> suffixes) {
 		List<Query<S, Boolean>> queries = new ArrayList<Query<S, Boolean>>(states.size());
-		for (Word<S> newFuture : states) {
+		for (Word<S> state : states) {
 			for (Word<S> suffix : suffixes) {
-				CombinedWord<S> combinedWord = new CombinedWord<S>(newFuture, suffix);
+				CombinedWord<S> combinedWord = new CombinedWord<S>(state, suffix);
 				queries.add(new Query<S, Boolean>(combinedWord.getWord()));
 			}
 		}
@@ -121,8 +121,8 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		}
 
 		for (Word<S> suffix : suffixes) {
-			for (Word<S> newFuture : states) {
-				CombinedWord<S> combinedWord = new CombinedWord<S>(newFuture, suffix);
+			for (Word<S> state : states) {
+				CombinedWord<S> combinedWord = new CombinedWord<S>(state, suffix);
 				observationTable.addResult(combinedWord, results.get(combinedWord.getWord()));
 			}
 		}

@@ -14,15 +14,15 @@ import java.util.Map;
 
 public class ObservationTable<S> {
 
-	private List<Word<S>> states;   // S
-	private List<Word<S>> futures;  // SA
-	private List<Word<S>> suffixes; // E
+	private List<Word<S>> states;     // S
+	private List<Word<S>> candidates; // SA
+	private List<Word<S>> suffixes;   // E
 
 	private Map<Word<S>, Boolean> results;
 
 	public ObservationTable() {
 		states = new ArrayList<Word<S>>();
-		futures = new ArrayList<Word<S>>();
+		candidates = new ArrayList<Word<S>>();
 		suffixes = new ArrayList<Word<S>>();
 		results = new HashMap<Word<S>, Boolean>();
 	}
@@ -31,8 +31,8 @@ public class ObservationTable<S> {
 		return states;
 	}
 
-	List<Word<S>> getFutures() {
-		return futures;
+	List<Word<S>> getCandidates() {
+		return candidates;
 	}
 
 	List<Word<S>> getSuffixes() {
@@ -64,10 +64,10 @@ public class ObservationTable<S> {
 			stateRows.add(getRowForPrefix(state));
 		}
 
-		for (Word<S> future : futures) {
+		for (Word<S> candidate : candidates) {
 			boolean found = false;
 
-			ObservationTableRow row = getRowForPrefix(future);
+			ObservationTableRow row = getRowForPrefix(candidate);
 			for (ObservationTableRow stateRow : stateRows) {
 				if (row.equals(stateRow)) {
 					found = true;
@@ -76,7 +76,7 @@ public class ObservationTable<S> {
 			}
 
 			if (!found) {
-				return future;
+				return candidate;
 			}
 		}
 
