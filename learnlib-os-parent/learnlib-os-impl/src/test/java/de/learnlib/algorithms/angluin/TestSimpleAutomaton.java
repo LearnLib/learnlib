@@ -10,28 +10,40 @@ import de.ls5.words.impl.FastAlphabet;
 import de.ls5.words.impl.Symbol;
 import de.ls5.words.util.Words;
 import org.junit.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class TestSimpleAutomaton {
 
-	@Test
-	public void test() {
+	private Symbol zero;
+	private Symbol one;
+
+	private LearningAlgorithm<DFA, Symbol, Boolean> angluin;
+
+	@BeforeClass
+	public void setup() {
 		Alphabet<Symbol> alphabet = new FastAlphabet<Symbol>();
-		Symbol zero = new Symbol(0);
-		Symbol one = new Symbol(1);
+		zero = new Symbol(0);
+		one = new Symbol(1);
 
 		alphabet.add(zero);
 		alphabet.add(one);
 
-		LearningAlgorithm<DFA, Symbol, Boolean> angluin = new Angluin<Symbol>(alphabet, new SimpleOracle());
+		angluin = new Angluin<Symbol>(alphabet, new SimpleOracle());
+	}
+
+	@Test
+	public void testFirstHypothesis() {
 		DFA hypothesis = angluin.createHypothesis();
-
 		Assert.assertEquals(hypothesis.getStates().size(), 2);
+	}
 
+	@Test(dependsOnMethods = "testFirstHypothesis")
+	public void testCounterExample() {
 		Word<Symbol> counterExample = new ArrayWord<Symbol>();
 		counterExample = Words.append(counterExample, one, one, zero);
 
-		hypothesis = angluin.refineHypothesis(counterExample, false);
+		DFA hypothesis = angluin.refineHypothesis(counterExample, false);
 		Assert.assertEquals(hypothesis.getStates().size(), 4);
 	}
 
