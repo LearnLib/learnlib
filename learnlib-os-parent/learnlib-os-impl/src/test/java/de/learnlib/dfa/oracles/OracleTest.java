@@ -31,6 +31,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.learnlib.api.Query;
+import de.learnlib.oracles.SafeOracle;
+import de.learnlib.oracles.SimulatorOracle;
 
 /**
  *
@@ -86,8 +88,8 @@ public class OracleTest {
         
         DFA<?, Symbol> dfa = constructMachine();
         
-        DFASimulatorOracle<Symbol> dso = new DFASimulatorOracle<>(dfa);
-        DFAContractOracle<Symbol> oracle = new DFAContractOracle<>(dso);
+        SimulatorOracle<Symbol,Boolean> dso = new SimulatorOracle<>(dfa);
+        SafeOracle<Symbol,Boolean> oracle = new SafeOracle<>(dso);
         
         List<Query<Symbol, Boolean>> queries = new ArrayList<>();
         

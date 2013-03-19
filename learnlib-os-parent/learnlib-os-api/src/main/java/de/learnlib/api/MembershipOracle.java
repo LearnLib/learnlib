@@ -16,15 +16,28 @@
 
 package de.learnlib.api;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
- *
+ * Membership oracle interface. A membership oracle provides an elementary abstraction
+ * to a System Under Learning (SUL), by allowing to pose {@link Query}s: A query is a sequence
+ * of input symbols (divided into a prefix and a suffix part, cf. {@link Query#getPrefix()}
+ * and {@link Query#getSuffix()}, in reaction to which the SUL produces a specific observable
+ * behavior (outputting a word, acceptance/rejection etc.).
+ * 
+ * @author Malte Isberner <malte.isberner@gmail.com>
  * @author merten
+ * 
+ * @see Query
  */
 public interface MembershipOracle<I, O> {
-
-	
-	public void processQueries(List<Query<I, O>> queries);
-
+	/**
+	 * Processes the specified collection of queries. When this method returns,
+	 * the output field of each of the contained queries should reflect the SUL
+	 * response to the respective query.
+	 * 
+	 * @param queries the queries to process
+	 * @see Query#getOutput()
+	 */
+	public void processQueries(Collection<Query<I, O>> queries);
 }

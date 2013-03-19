@@ -14,7 +14,7 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.learnlib.mealy.oracles;
+package de.learnlib.oracles.eq;
 
 import java.util.Collections;
 import java.util.Random;

@@ -16,8 +16,9 @@
 
 package de.learnlib.logging.filter;
 
-import de.learnlib.logging.Category;
 import java.util.EnumSet;
+
+import de.learnlib.logging.Category;
 
 /**
  * No learning related output.

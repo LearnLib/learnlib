@@ -1,4 +1,4 @@
-/* Copyright (C) 2012 TU Dortmund
+/* Copyright (C) 2012-2013 TU Dortmund
    This file is part of LearnLib 
 
    LearnLib is free software; you can redistribute it and/or
@@ -16,14 +16,45 @@
 
 package de.learnlib.api;
 
+import java.util.Collection;
+
 import net.automatalib.words.Alphabet;
 
 /**
- *
+ * An equivalence oracle, which checks hypothesis automata against the (possibly unknown)
+ * system under learning (SUL).
+ * 
+ * Please note that equivalence oracles are implicitly connected to a SUL, there is no explicit
+ * references in terms of a {@link MembershipOracle} or such. However, this might be different
+ * in implementing classes.
+ * 
+ * <b>CAVEAT:</b> Equivalence oracles serve as an abstraction to tackle the (generally undecidable)
+ * problem of black-box equivalence testing. The contract imposed by this interface is that
+ * results returned by the {@link #findCounterExample(Object, Collection)} method are in fact
+ * counterexamples, <b>BUT</b> a <tt>null</tt> result signalling no counterexample was found
+ * does <b>not</b> mean that there can be none.
+ * 
  * @author merten
+ * @author Malte Isberner <malte.isberner@gmail.com>
+ * 
+ * @param <A> automaton class this equivalence oracle works on
+ * @param <I> input symbol class
+ * @param <O> output class
  */
 public interface EquivalenceOracle<A, I, O> {
 	
-	public Query<I, O> findCounterExample(A hypothesis, Alphabet<I> alphabet); 
+	/**
+	 * Searches for a counterexample disproving the subjected hypothesis.
+	 * A counterexample is query which, when performed on the SUL, yields a different output
+	 * than what was predicted by the hypothesis. If no counterexample could be found (this does
+	 * not necessarily mean that none exists), <code>null</code> is returned.
+	 * 
+	 * @param hypothesis the conjecture
+	 * @param inputs the set of inputs to consider
+	 * @return a query exposing different behavior, or <tt>null</tt> if no counterexample
+	 * could be found. In case a non-<tt>null</tt> value is returned, the output field
+	 * in the {@link Query} contains the SUL output for the respective query.
+	 */
+	public Query<I, O> findCounterExample(A hypothesis, Alphabet<I> alphabet);  
 	
 }

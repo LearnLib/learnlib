@@ -16,10 +16,11 @@
 //
 package de.learnlib.statistics;
 
-import de.learnlib.logging.LearnLogger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import de.learnlib.logging.LearnLogger;
 
 /**
  * Very rudimentary profiler. 

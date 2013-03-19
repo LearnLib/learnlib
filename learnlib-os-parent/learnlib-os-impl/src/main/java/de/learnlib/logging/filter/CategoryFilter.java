@@ -16,11 +16,12 @@
 
 package de.learnlib.logging.filter;
 
-import de.learnlib.logging.Category;
-import de.learnlib.logging.LearnLogRecord;
 import java.util.EnumSet;
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;
+
+import de.learnlib.logging.Category;
+import de.learnlib.logging.LearnLogRecord;
 
 /**
  * Filters log messages based on categories. Non-LearnLib log records

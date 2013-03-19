@@ -14,9 +14,9 @@
    License along with LearnLib; if not, see
    <http://www.gnu.de/documents/lgpl.en.html>.  */
 
-package de.learnlib.dfa.oracles;
+package de.learnlib.oracles;
 
-import java.util.List;
+import java.util.Collection;
 
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
@@ -25,36 +25,34 @@ import de.learnlib.api.Query;
  *
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class DFAContractOracle<I> implements MembershipOracle<I, Boolean> {
+public class SafeOracle<I,O> implements MembershipOracle<I,O> {
     
-    private MembershipOracle<I, Boolean> nextOracle;
+    private MembershipOracle<I,O> nextOracle;
     
-    public DFAContractOracle(MembershipOracle<I, Boolean> nextOracle) {
+    public SafeOracle(MembershipOracle<I,O> nextOracle) {
         this.nextOracle = nextOracle;
     }
     
 
     @Override
-    public void processQueries(List<Query<I, Boolean>> queries) {
+    public void processQueries(Collection<Query<I,O>> queries) {
         // let the next oracle in chain process the queries
         nextOracle.processQueries(queries);
         
         // now, let's see if everything is okay
-        for(int i = 0; i < queries.size(); ++i) {
-            Query<I, Boolean> query = queries.get(i);
-            
-            // somebody punched holes into our query batch
-            if(query == null) {
-                throw new RuntimeException("Query batch is incomplete: Query is null at index " + i);
-            }
-            
-            // is there actual output?
-            if(query.getOutput() == null) {
-                throw new RuntimeException("Query batch is not answered: Output is null for Query with index " + i);
-            }
-
-        }
+        for(Query<I,O> query : queries)
+            checkQuery(query);
+    }
+    
+    protected void checkQuery(Query<I,O> query) {
+    	
+    	// somebody punched holes into our query batch
+        if(query == null)
+            throw new RuntimeException("Query batch is incomplete, contains null query.");
         
+        // is there actual output?
+        if(query.getOutput() == null)
+            throw new RuntimeException("Query batch is not answered, contains null answer for Query (" + query.getPrefix() + ", " + query.getSuffix() + ")");
     }
     
 }

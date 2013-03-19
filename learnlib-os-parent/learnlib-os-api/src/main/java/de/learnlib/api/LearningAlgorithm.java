@@ -16,17 +16,51 @@
 
 package de.learnlib.api;
 
-import net.automatalib.words.Word;
 
 /**
- *
+ * Basic interface for a model inference algorithm.
+ * 
+ * Actively inferring models (such as DFAs or Mealy machines) consists of the construction
+ * of an initial hypothesis, which is subsequently refined using counterexamples
+ * (see {@link EquivalenceOracle}). 
+ * 
  * @author merten
+ * @author Malte Isberner <malte.isberner@gmail.com>
+ *
+ * @param <M> model class.
+ * @param <I> input symbol class.
+ * @param <O> output class.
  */
-public interface LearningAlgorithm<A, I, O> {
+public interface LearningAlgorithm<M, I, O> {
 	
-	public A createHypothesis();
+	/**
+	 * Starts the model inference process, creating an initial hypothesis in the provided
+	 * model object. Please note that it should be illegal to invoke this method twice.
+	 */
+	public void startLearning();
 	
-	public A refineHypothesis(Word<I> counterexample, O output);
+	/**
+	 * Triggers a refinement of the model by providing a counterexample.
+	 * A counterexample is a query which exposes different behavior of the real SUL compared
+	 * to the hypothesis. Please note that invoking this method before an initial
+	 * invocation of {@link #startLearning()} should be illegal.
+	 * 
+	 * @param ceQuery the query which exposes diverging behavior, as posed to the real SUL
+	 * (i.e. with the SULs output).
+	 * @return <tt>true</tt> if the counterexample triggered a refinement of the hypothesis,
+	 * <tt>false</tt> otherwise (i.e., it was no counterexample).
+	 */
+	public boolean refineHypothesis(Query<I,O> ceQuery);
 	
-	
+	/**
+	 * Returns the current hypothesis model.
+	 * N.B.: By the contract of this interface, the model returned by this method may not be
+	 * modified (i.e., M generally should refer to an immutable interface), and its validity
+	 * is retained only until the next invocation of {@link #refineHypothesis(Query)}. If
+	 * older hypotheses have to be maintained, a copy of the returned model must be made
+	 * Please note that it should be illegal to invoke this method before an initial invocation
+	 * of {@link #startLearning()}.
+	 * @return the current hypothesis model.
+	 */
+	public M getHypothesisModel();
 }

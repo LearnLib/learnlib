@@ -9,8 +9,8 @@
         <relativePath>../pom.xml</relativePath>        
     </parent>
 
-    <artifactId>learnlib-os-impl</artifactId>
-    <name>learnlib-os-impl</name>
+    <artifactId>learnlib-os-algorithms</artifactId>
+    <name>learnlib-os-algorithms</name>
     <build>
         <plugins>
             <plugin>
@@ -28,6 +28,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-os-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-os-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

@@ -50,6 +50,10 @@ public class Query<I, O> {
     public Query(Word<I> input) {
     	this(Words.<I>epsilon(), input);
     }
+    
+    public Query(Query<I,?> query) {
+    	this(query.getPrefix(), query.getSuffix());
+    }
 
     public O getOutput() {
         return output;
