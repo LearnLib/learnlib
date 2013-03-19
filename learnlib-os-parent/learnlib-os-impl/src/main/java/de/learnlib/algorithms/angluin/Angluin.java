@@ -7,6 +7,7 @@ import de.ls5.automata.fsa.DFA;
 import de.ls5.words.Alphabet;
 import de.ls5.words.Word;
 import de.ls5.words.impl.ArrayWord;
+import de.ls5.words.util.Words;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -132,9 +133,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	private List<Word<S>> alphabetSymbolsAsWords() {
 		List<Word<S>> words = new ArrayList<Word<S>>(alphabet.size());
 		for (S symbol : alphabet) {
-			Word<S> word = new ArrayWord<S>();
-			word.add(symbol);
-			words.add(word);
+			words.add(Words.asWord(symbol));
 		}
 		return words;
 	}
