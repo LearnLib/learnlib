@@ -29,6 +29,8 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 	private ObservationTable<S> observationTable;
 
+	private boolean startLearningAlreadyCalled;
+
 	public Angluin(Alphabet<S> alphabet, MembershipOracle<S, Boolean> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
@@ -41,6 +43,10 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 	@Override
 	public void startLearning() {
+		if (startLearningAlreadyCalled) {
+			throw new IllegalStateException("startLearning may only be called once!");
+		}
+
 		if (observationTable.getStates().isEmpty()) {
 			final Word<S> emptyWord = Words.epsilon();
 			observationTable.getStates().add(emptyWord);
@@ -54,6 +60,12 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		processMembershipQueriesForStates(observationTable.getStates(), observationTable.getSuffixes());
 		processMembershipQueriesForStates(observationTable.getCandidates(), observationTable.getSuffixes());
 
+		makeTableClosedAndConsistent();
+
+		startLearningAlreadyCalled = true;
+	}
+
+	private void makeTableClosedAndConsistent() {
 		boolean closedAndConsistent = false;
 
 		while (!closedAndConsistent) {
@@ -69,10 +81,14 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 				ensureConsistency();
 			}
 		}
-
 	}
 
+
 	public DFA getHypothesisModel() {
+		if (!startLearningAlreadyCalled) {
+			throw new IllegalStateException("Unable to get hypothesis model before first learn iteration!");
+		}
+
 		return observationTable.toAutomaton(alphabet);
 	}
 
@@ -138,6 +154,9 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 	@Override
 	public boolean refineHypothesis(Query<S, Boolean> ceQuery) {
+		if (!startLearningAlreadyCalled) {
+			throw new IllegalStateException("Unable to refine hypothesis before first learn iteration!");
+		}
 
 		List<Word<S>> states = observationTable.getStates();
 		List<Word<S>> candidates = observationTable.getCandidates();
@@ -170,6 +189,8 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 		processMembershipQueriesForStates(prefixes, observationTable.getSuffixes());
 		processMembershipQueriesForStates(newCandidates, observationTable.getSuffixes());
+
+		makeTableClosedAndConsistent();
 
 		return true;
 	}
