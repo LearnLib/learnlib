@@ -3,11 +3,11 @@ package de.learnlib.algorithms.angluin;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import de.ls5.automata.fsa.DFA;
-import de.ls5.words.Alphabet;
-import de.ls5.words.Word;
-import de.ls5.words.impl.ArrayWord;
-import de.ls5.words.util.Words;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.ArrayWord;
+import net.automatalib.words.util.Words;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +41,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	}
 
 	@Override
-	public DFA createHypothesis() {
+	public void startLearning() {
 		if (observationTable.getStates().isEmpty()) {
 			final Word<S> emptyWord = Words.epsilon();
 			observationTable.getStates().add(emptyWord);
@@ -71,6 +71,9 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 			}
 		}
 
+	}
+
+	public DFA getHypothesisModel() {
 		return observationTable.toAutomaton(alphabet);
 	}
 
@@ -146,12 +149,13 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	}
 
 	@Override
-	public DFA refineHypothesis(Word<S> counterexample, Boolean output) {
+	public boolean refineHypothesis(Query<S, Boolean> ceQuery) {
+
 		List<Word<S>> states = observationTable.getStates();
 		List<Word<S>> candidates = observationTable.getCandidates();
 
 		List<Word<S>> prefixes = new LinkedList<Word<S>>();
-		for (Word<S> prefix : prefixesOfWord(counterexample)) {
+		for (Word<S> prefix : prefixesOfWord(ceQuery.getInput())) {
 			if (!states.contains(prefix)) {
 				prefixes.add(prefix);
 			}
@@ -179,7 +183,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		processMembershipQueriesForStates(prefixes, observationTable.getSuffixes());
 		processMembershipQueriesForStates(newCandidates, observationTable.getSuffixes());
 
-		return createHypothesis();
+		return true;
 	}
 
 	private List<Word<S>> prefixesOfWord(Word<S> word) {

@@ -1,7 +1,7 @@
 package de.learnlib.algorithms.angluin;
 
-import de.ls5.words.Word;
-import de.ls5.words.impl.ArrayWord;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.ArrayWord;
 
 public class CombinedWord<S> {
 

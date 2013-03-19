@@ -1,6 +1,6 @@
 package de.learnlib.algorithms.angluin;
 
-import de.ls5.words.Word;
+import net.automatalib.words.Word;
 
 public class InconsistencyDataHolder<S> {
 

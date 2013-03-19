@@ -1,11 +1,11 @@
 package de.learnlib.algorithms.angluin;
 
-import de.ls5.automata.fsa.DFA;
-import de.ls5.automata.fsa.impl.FastDFA;
-import de.ls5.automata.fsa.impl.FastDFAState;
-import de.ls5.words.Alphabet;
-import de.ls5.words.Word;
-import de.ls5.words.impl.ArrayWord;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.FastDFA;
+import net.automatalib.automata.fsa.impl.FastDFAState;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.ArrayWord;
 
 import java.util.ArrayList;
 import java.util.HashMap;

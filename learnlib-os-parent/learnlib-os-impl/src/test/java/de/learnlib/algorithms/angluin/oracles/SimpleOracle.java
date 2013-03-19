@@ -2,15 +2,15 @@ package de.learnlib.algorithms.angluin.oracles;
 
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import de.ls5.words.Word;
-import de.ls5.words.impl.Symbol;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.Symbol;
 
-import java.util.List;
+import java.util.Collection;
 
 public class SimpleOracle implements MembershipOracle<Symbol, Boolean> {
 
 	@Override
-	public void processQueries(List<Query<Symbol, Boolean>> queries) {
+	public void processQueries(Collection<Query<Symbol, Boolean>> queries) {
 		for (Query<Symbol, Boolean> query : queries) {
 			query.setOutput(determineOutput(query.getInput()));
 		}

@@ -2,13 +2,14 @@ package de.learnlib.algorithms.angluin;
 
 import de.learnlib.algorithms.angluin.oracles.SimpleOracle;
 import de.learnlib.api.LearningAlgorithm;
-import de.ls5.automata.fsa.DFA;
-import de.ls5.words.Alphabet;
-import de.ls5.words.Word;
-import de.ls5.words.impl.ArrayWord;
-import de.ls5.words.impl.FastAlphabet;
-import de.ls5.words.impl.Symbol;
-import de.ls5.words.util.Words;
+import de.learnlib.api.Query;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.ArrayWord;
+import net.automatalib.words.impl.FastAlphabet;
+import net.automatalib.words.impl.Symbol;
+import net.automatalib.words.util.Words;
 import org.junit.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -34,7 +35,8 @@ public class TestSimpleAutomaton {
 
 	@Test
 	public void testFirstHypothesis() {
-		DFA hypothesis = angluin.createHypothesis();
+		angluin.startLearning();
+		DFA hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(hypothesis.getStates().size(), 2);
 	}
 
@@ -42,8 +44,12 @@ public class TestSimpleAutomaton {
 	public void testCounterExample() {
 		Word<Symbol> counterExample = new ArrayWord<Symbol>();
 		counterExample = Words.append(counterExample, one, one, zero);
+		Query<Symbol, Boolean> query = new Query<Symbol, Boolean>(counterExample);
+		query.setOutput(false);
 
-		DFA hypothesis = angluin.refineHypothesis(counterExample, false);
+
+		angluin.refineHypothesis(query);
+		DFA hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(hypothesis.getStates().size(), 4);
 	}
 
