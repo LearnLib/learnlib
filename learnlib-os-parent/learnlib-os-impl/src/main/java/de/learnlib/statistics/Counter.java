@@ -15,21 +15,42 @@
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
 
-package de.learnlib.logging.filter;
-
-import java.util.EnumSet;
-
-import de.learnlib.logging.Category;
+package de.learnlib.statistics;
 
 /**
- * No learning related output.
- * 
+ * simple counter.
+ *
  * @author falkhowar
  */
-public class SystemOnlyFilter extends CategoryFilter {
+public class Counter extends StatisticData {
 
-    public SystemOnlyFilter() {
-        super(EnumSet.of(Category.SYSTEM));
+    private long count = 0;
+    
+    public Counter(String name, String unit) {
+        super(name, unit);
     }
-        
+    
+    public void increment(long inc) {
+        count += inc;
+    }
+    
+    public void increment() {
+        count++;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    @Override
+    public String getSummary() {
+        return getName() + " [" + getUnit() + "]: " + count;
+    }
+
+    @Override
+    public String getDetails() {
+        return getSummary();
+    }
+    
+    
 }

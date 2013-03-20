@@ -15,21 +15,17 @@
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
 
-package de.learnlib.logging.filter;
+package de.learnlib.statistics;
 
-import java.util.EnumSet;
-
-import de.learnlib.logging.Category;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.statistics.StatisticData;
 
 /**
- * No learning related output.
+ * Common interface for oracles keeping statistics.
  * 
  * @author falkhowar
  */
-public class SystemOnlyFilter extends CategoryFilter {
-
-    public SystemOnlyFilter() {
-        super(EnumSet.of(Category.SYSTEM));
-    }
-        
+public interface StatisticOracle<I,O> extends MembershipOracle<I, O> {
+    
+    public StatisticData getStatisticalData();
 }

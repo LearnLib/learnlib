@@ -34,7 +34,7 @@ import net.automatalib.words.Alphabet;
  * counterexamples, <b>BUT</b> a <tt>null</tt> result signalling no counterexample was found
  * does <b>not</b> mean that there can be none.
  * 
- * @author merten
+ * @author Maik Merten <maikmerten@googlemail.com>
  * @author Malte Isberner <malte.isberner@gmail.com>
  * 
  * @param <A> automaton class this equivalence oracle works on
@@ -50,7 +50,7 @@ public interface EquivalenceOracle<A, I, O> {
 	 * not necessarily mean that none exists), <code>null</code> is returned.
 	 * 
 	 * @param hypothesis the conjecture
-	 * @param inputs the set of inputs to consider
+	 * @param alphabet the set of inputs to consider
 	 * @return a query exposing different behavior, or <tt>null</tt> if no counterexample
 	 * could be found. In case a non-<tt>null</tt> value is returned, the output field
 	 * in the {@link Query} contains the SUL output for the respective query.
