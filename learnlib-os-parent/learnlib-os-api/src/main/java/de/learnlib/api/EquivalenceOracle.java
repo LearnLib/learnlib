@@ -50,7 +50,7 @@ public interface EquivalenceOracle<A, I, O> {
 	 * not necessarily mean that none exists), <code>null</code> is returned.
 	 * 
 	 * @param hypothesis the conjecture
-	 * @param inputs the set of inputs to consider
+	 * @param alphabet the set of inputs to consider
 	 * @return a query exposing different behavior, or <tt>null</tt> if no counterexample
 	 * could be found. In case a non-<tt>null</tt> value is returned, the output field
 	 * in the {@link Query} contains the SUL output for the respective query.
