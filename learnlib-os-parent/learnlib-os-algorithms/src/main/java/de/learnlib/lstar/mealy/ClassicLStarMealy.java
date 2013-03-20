@@ -45,20 +45,6 @@ public class ClassicLStarMealy<I, O> extends
 		ExtensibleAutomatonLStar<MealyMachine<?, I, ?, O>, I, O, Integer, CompactMealyTransition<O>, Void, O, CompactMealy<I,O>> {
 
 	
-	public static <I> List<Word<I>> ensureClassicMealyCompliant(List<Word<I>> initialSuffixes, Alphabet<I> alphabet) {
-		List<Word<I>> compSuffixes = new ArrayList<Word<I>>();
-		for(int i = 0; i < alphabet.size(); i++)
-			compSuffixes.add(Word.fromLetter(alphabet.getSymbol(i)));
-		
-		for(Word<I> suff : initialSuffixes) {
-			if(suff.length() <= 1)
-				continue;
-			compSuffixes.add(suff);
-		}
-		
-		return compSuffixes;
-	}
-	
 	public static <A extends MutableMealyMachine<?,I,?,O>,I,O>
 	ClassicLStarMealy<I,O> createForSymbolOracle(Alphabet<I> alphabet,
 			MembershipOracle<I,O> oracle,
@@ -95,7 +81,7 @@ public class ClassicLStarMealy<I, O> extends
 			ObservationTableCEXHandler<I, O> cexHandler,
 			ClosingStrategy<I, O> closingStrategy) {
 		super(alphabet, oracle, new CompactMealy<I,O>(alphabet),
-				ensureClassicMealyCompliant(initialSuffixes, alphabet),
+				LStarMealyUtil.ensureSuffixCompliancy(initialSuffixes, alphabet, true),
 				cexHandler,
 				closingStrategy);
 	}

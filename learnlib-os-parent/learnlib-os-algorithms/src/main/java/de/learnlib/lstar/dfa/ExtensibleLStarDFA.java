@@ -16,7 +16,6 @@
  */
 package de.learnlib.lstar.dfa;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,20 +42,7 @@ import de.learnlib.lstar.table.Row;
  */
 public class ExtensibleLStarDFA<I>
 	extends ExtensibleAutomatonLStar<DFA<?,I>, I, Boolean, Integer, Integer, Boolean, Void, CompactDFA<I>> {
-	
-	private static <I> List<Word<I>> ensureDFACompliant(List<Word<I>> suffixes) {
-		if(suffixes.get(0).isEmpty())
-			return new ArrayList<Word<I>>(suffixes);
-		List<Word<I>> compSuffixes = new ArrayList<Word<I>>(suffixes.size() + 1);
-		compSuffixes.add(Word.<I>epsilon());
-		for(Word<I> suff : suffixes) {
-			if(suff.isEmpty())
-				continue;
-			compSuffixes.add(suff);
-		}
-		
-		return compSuffixes;
-	}
+
 	
 	public static <I> List<Word<I>> getDefaultInitialSuffixes() {
 		return Collections.singletonList(Word.<I>epsilon());
@@ -80,7 +66,8 @@ public class ExtensibleLStarDFA<I>
 			ObservationTableCEXHandler<I, Boolean> cexHandler,
 			ClosingStrategy<I, Boolean> closingStrategy) {
 		super(alphabet, oracle, new CompactDFA<I>(alphabet),
-				ensureDFACompliant(initialSuffixes), cexHandler, closingStrategy);
+				LStarDFAUtil.ensureSuffixCompliancy(initialSuffixes),
+				cexHandler, closingStrategy);
 	}
 	
 	public ExtensibleLStarDFA(Alphabet<I> alphabet, MembershipOracle<I,Boolean> oracle) {

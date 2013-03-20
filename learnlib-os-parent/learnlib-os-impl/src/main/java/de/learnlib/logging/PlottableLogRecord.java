@@ -27,7 +27,12 @@ import java.util.logging.Level;
  */
 public class PlottableLogRecord extends LearnLogRecord {
 
-    private Object data;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private Object data;
     
     public PlottableLogRecord(Level lvl, Object data, Category category) {
         super(lvl, data.toString(), category);

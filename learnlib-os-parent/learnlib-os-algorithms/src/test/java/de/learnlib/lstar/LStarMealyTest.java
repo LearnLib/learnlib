@@ -23,6 +23,7 @@ import java.util.List;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
 import net.automatalib.automata.transout.impl.FastMealyState;
+import net.automatalib.examples.mealy.ExampleStack;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.FastAlphabet;
@@ -113,7 +114,7 @@ public class LStarMealyTest extends LearningTest {
 	
 	@Test
 	public void testOptimizedLStarMealy() {
-		FastMealy<Symbol,String> mealy = constructMachine();
+		FastMealy<Symbol,String> mealy = ExampleStack.constructMachine(); // constructMachine()
 		Alphabet<Symbol> alphabet = mealy.getInputAlphabet();
 		
 		MembershipOracle<Symbol,Word<String>> oracle
