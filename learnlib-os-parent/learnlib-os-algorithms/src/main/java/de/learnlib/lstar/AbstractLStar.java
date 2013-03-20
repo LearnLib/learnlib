@@ -22,10 +22,12 @@ import java.util.List;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.util.Words;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
+import de.learnlib.lstar.ce.ClassicLStarCEXHandler;
+import de.learnlib.lstar.table.Inconsistency;
+import de.learnlib.lstar.table.ObservationTable;
 import de.learnlib.lstar.table.Row;
 
 /**
@@ -54,7 +56,7 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	 * @param outputMapping a mapping that translates between oracle outputs and data entries stored
 	 * in the observation table.
 	 */
-	public AbstractLStar(Alphabet<? extends I> alphabet, MembershipOracle<I,O> oracle) {
+	public AbstractLStar(Alphabet<I> alphabet, MembershipOracle<I,O> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		
@@ -71,7 +73,7 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 		List<Word<I>> suffixes = initialSuffixes();
 		List<List<Row<I>>> initialUnclosed = table.initialize(suffixes, oracle);
 		
-		completeConsistentTable(initialUnclosed);
+		completeConsistentTable(initialUnclosed, false);
 	}
 
 	/*
@@ -79,12 +81,15 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	 * @see de.learnlib.api.LearningAlgorithm#refineHypothesis(de.learnlib.api.Query)
 	 */
 	@Override
-	public boolean refineHypothesis(Query<I, O> ceQuery) {
+	public final boolean refineHypothesis(Query<I,O> ceQuery) {
 		int oldDistinctRows = table.numDistinctRows();
-		
-		List<List<Row<I>>> unclosed = incorporateCounterExample(ceQuery);
-		completeConsistentTable(unclosed);
+		doRefineHypothesis(ceQuery);
 		return (table.numDistinctRows() > oldDistinctRows);
+	}
+	
+	protected void doRefineHypothesis(Query<I,O> ceQuery) {
+		List<List<Row<I>>> unclosed = incorporateCounterExample(ceQuery);
+		completeConsistentTable(unclosed, ClassicLStarCEXHandler.getInstance().needsConsistencyCheck());
 	}
 	
 	/**
@@ -93,22 +98,25 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	 * observation table is both closed and consistent. 
 	 * @param unclosed the unclosed rows (equivalence classes) to start with.
 	 */
-	protected void completeConsistentTable(List<List<Row<I>>> unclosed) {
+	protected void completeConsistentTable(List<List<Row<I>>> unclosed, boolean checkConsistency) {
 		do {
 			while(!unclosed.isEmpty()) {
 				List<Row<I>> closingRows = selectClosingRows(unclosed);
 				unclosed = table.toShortPrefixes(closingRows, oracle);
 			}
 			
-			Inconsistency<I,O> incons = null;
 			
-			do {
-				incons = table.findInconsistency();
-				if(incons != null) {
-					Word<I> newSuffix = analyzeInconsistency(incons);
-					unclosed = table.addSuffix(newSuffix, oracle);
-				}
-			} while(unclosed.isEmpty() && (incons != null));
+			if(checkConsistency) {
+				Inconsistency<I,O> incons = null;
+				
+				do {
+					incons = table.findInconsistency();
+					if(incons != null) {
+						Word<I> newSuffix = analyzeInconsistency(incons);
+						unclosed = table.addSuffix(newSuffix, oracle);
+					}
+				} while(unclosed.isEmpty() && (incons != null));
+			}
 		} while(!unclosed.isEmpty());
 	}
 	
@@ -132,11 +140,10 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 		
 		for(int i = 0; i < numSuffixes; i++) {
 			O val1 = contents1.get(i), val2 = contents2.get(i);
-			// FIXME: Allow null values?
 			if(!CmpUtil.equals(val1, val2)) {
 				I sym = alphabet.getSymbol(inputIdx);
 				Word<I> suffix = table.getSuffixes().get(i);
-				return Words.prepend(sym, suffix);
+				return suffix.prepend(sym);
 			}
 		}
 		
@@ -152,18 +159,7 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	 * adding the information. 
 	 */
 	protected List<List<Row<I>>> incorporateCounterExample(Query<I,O> ce) {
-		Word<I> ceWord = ce.getInput();
-		
-		List<Word<I>> newPrefixes = new ArrayList<Word<I>>(ceWord.size() - 2);
-		
-		for(int i = 1; i <= ceWord.size(); i++) {
-			Word<I> prefix = Words.prefix(ceWord, i);
-			newPrefixes.add(prefix);
-		}
-		
-		
-		
-		return table.addShortPrefixes(newPrefixes, oracle);
+		return ClassicLStarCEXHandler.<I,O>getInstance().handleCounterexample(ce, table, oracle);
 	}
 	
 	/**

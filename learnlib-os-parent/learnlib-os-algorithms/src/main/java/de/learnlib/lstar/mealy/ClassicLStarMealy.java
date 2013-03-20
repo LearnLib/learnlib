@@ -21,15 +21,15 @@ import java.util.List;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
-import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.automata.transout.impl.FastMealyState;
-import net.automatalib.automata.transout.impl.MealyTransition;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.util.Words;
 import oracles.mealy.SymbolOracleWrapper;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.lstar.AbstractAutomatonLStar;
+import de.learnlib.lstar.ExtensibleAutomatonLStar;
+import de.learnlib.lstar.ce.ObservationTableCEXHandler;
+import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.table.Row;
 
 /**
@@ -42,19 +42,45 @@ import de.learnlib.lstar.table.Row;
  * @param <O> output symbol class
  */
 public class ClassicLStarMealy<I, O> extends
-		AbstractAutomatonLStar<MealyMachine<?, I, ?, O>, I, O, FastMealyState<O>, MealyTransition<FastMealyState<O>, O>, Void, O, FastMealy<I,O>> {
+		ExtensibleAutomatonLStar<MealyMachine<?, I, ?, O>, I, O, Integer, CompactMealyTransition<O>, Void, O, CompactMealy<I,O>> {
 
+	
+	public static <I> List<Word<I>> ensureClassicMealyCompliant(List<Word<I>> initialSuffixes, Alphabet<I> alphabet) {
+		List<Word<I>> compSuffixes = new ArrayList<Word<I>>();
+		for(int i = 0; i < alphabet.size(); i++)
+			compSuffixes.add(Word.fromLetter(alphabet.getSymbol(i)));
+		
+		for(Word<I> suff : initialSuffixes) {
+			if(suff.length() <= 1)
+				continue;
+			compSuffixes.add(suff);
+		}
+		
+		return compSuffixes;
+	}
 	
 	public static <A extends MutableMealyMachine<?,I,?,O>,I,O>
 	ClassicLStarMealy<I,O> createForSymbolOracle(Alphabet<I> alphabet,
-			MembershipOracle<I,O> oracle) {
-		return new ClassicLStarMealy<>(alphabet, oracle);
+			MembershipOracle<I,O> oracle,
+			List<Word<I>> initialSuffixes,
+			ObservationTableCEXHandler<I, O> cexHandler,
+			ClosingStrategy<I,O> closingStrategy) {
+		return new ClassicLStarMealy<>(alphabet, oracle,
+				initialSuffixes,
+				cexHandler,
+				closingStrategy);
 	}
 	
 	public static <A extends MutableMealyMachine<?,I,?,O>,I,O>
 	ClassicLStarMealy<I,O> createForWordOracle(Alphabet<I> alphabet,
-			MembershipOracle<I,Word<O>> oracle) {
-		return new ClassicLStarMealy<>(alphabet, new SymbolOracleWrapper<>(oracle));
+			MembershipOracle<I,Word<O>> oracle,
+			List<Word<I>> initialSuffixes,
+			ObservationTableCEXHandler<I, O> cexHandler,
+			ClosingStrategy<I,O> closingStrategy) {
+		return new ClassicLStarMealy<>(alphabet, new SymbolOracleWrapper<>(oracle),
+				initialSuffixes,
+				cexHandler,
+				closingStrategy);
 	}
 	
 	
@@ -64,8 +90,14 @@ public class ClassicLStarMealy<I, O> extends
 	 * @param oracle the (Mealy) oracle
 	 */
 	public ClassicLStarMealy(Alphabet<I> alphabet,
-			MembershipOracle<I, O> oracle) {
-		super(alphabet, oracle, new FastMealy<I,O>(alphabet));
+			MembershipOracle<I, O> oracle,
+			List<Word<I>> initialSuffixes,
+			ObservationTableCEXHandler<I, O> cexHandler,
+			ClosingStrategy<I, O> closingStrategy) {
+		super(alphabet, oracle, new CompactMealy<I,O>(alphabet),
+				ensureClassicMealyCompliant(initialSuffixes, alphabet),
+				cexHandler,
+				closingStrategy);
 	}
 	
 	
@@ -97,7 +129,7 @@ public class ClassicLStarMealy<I, O> extends
 		List<Word<I>> suffixes = new ArrayList<Word<I>>(alphabet.size());
 		for(int i = 0; i < alphabet.size(); i++) {
 			I sym = alphabet.getSymbol(i);
-			suffixes.add(Words.asWord(sym));
+			suffixes.add(Word.fromLetter(sym));
 		}
 		return suffixes;
 	}

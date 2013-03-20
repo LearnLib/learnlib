@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.lstar;
+package de.learnlib.lstar.table;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,10 +25,8 @@ import java.util.Map;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.util.Words;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import de.learnlib.lstar.table.Row;
 
 
 /**
@@ -63,7 +61,7 @@ import de.learnlib.lstar.table.Row;
 public class ObservationTable<I,O> {
 	
 	
-	private final Alphabet<? extends I> alphabet;
+	private final Alphabet<I> alphabet;
 	
 	private final List<Row<I>> shortPrefixRows
 		= new ArrayList<Row<I>>();
@@ -91,7 +89,7 @@ public class ObservationTable<I,O> {
 	 * Constructor.
 	 * @param alphabet the learning alphabet.
 	 */
-	public ObservationTable(Alphabet<? extends I> alphabet) {
+	public ObservationTable(Alphabet<I> alphabet) {
 		this.alphabet = alphabet;
 	}
 	
@@ -114,14 +112,14 @@ public class ObservationTable<I,O> {
 		
 		List<Query<I,O>> queries = new ArrayList<Query<I,O>>(numPrefixes * numSuffixes);
 		
-		Word<I> eps = Words.epsilon();
-		Row<I> epsRow = createSpRow(Words.<I>epsilon());
+		Word<I> eps = Word.epsilon();
+		Row<I> epsRow = createSpRow(Word.<I>epsilon());
 		
 		buildQueries(queries, eps, suffixes);
 		
 		for(int i = 0; i < alphabet.size(); i++) {
 			I sym = alphabet.getSymbol(i);
-			Word<I> w = Words.asWord(sym);
+			Word<I> w = Word.fromLetter(sym);
 			Row<I> lpRow = createLpRow(w);
 			buildQueries(queries, w, suffixes);
 			epsRow.setSuccessor(i, lpRow);
@@ -205,7 +203,7 @@ public class ObservationTable<I,O> {
 		}
 		
 		List<List<Row<I>>> unclosed = new ArrayList<List<Row<I>>>();
-		numSpRows = numRows;
+		numSpRows = numDistinctRows();
 		
 		for(Row<I> row : longPrefixRows) {
 			List<O> rowContents = allRowContents.get(row.getRowContentId());
@@ -261,7 +259,7 @@ public class ObservationTable<I,O> {
 						
 			for(int i = 0; i < alphabet.size(); i++) {
 				I sym = alphabet.getSymbol(i);
-				Word<I> lp = Words.append(prefix, sym);
+				Word<I> lp = prefix.append(sym);
 				Row<I> lpRow = rowMap.get(lp);
 				if(lpRow == null) {
 					lpRow = createLpRow(lp);
@@ -302,6 +300,10 @@ public class ObservationTable<I,O> {
 		}
 		
 		return unclosed;
+	}
+	
+	public Row<I> getRowSuccessor(Row<I> row, I sym) {
+		return row.getSuccessor(alphabet.getSymbolIndex(sym));
 	}
 	
 	public List<List<Row<I>>> addShortPrefixes(List<Word<I>> shortPrefixes, MembershipOracle<I,O> oracle) {	
@@ -455,6 +457,10 @@ public class ObservationTable<I,O> {
 
 	public boolean isInitialized() {
 		return (allRows.size() > 0);
+	}
+
+	public Alphabet<I> getInputAlphabet() {
+		return alphabet;
 	}
 	
 

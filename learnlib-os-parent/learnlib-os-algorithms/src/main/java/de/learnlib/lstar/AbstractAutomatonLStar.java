@@ -53,7 +53,7 @@ public abstract class AbstractAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableD
 	 * @param alphabet the learning alphabet
 	 * @param oracle the learning oracle
 	 */
-	public AbstractAutomatonLStar(Alphabet<? extends I> alphabet,
+	public AbstractAutomatonLStar(Alphabet<I> alphabet,
 			MembershipOracle<I, O> oracle,
 			AI internalHyp) {
 		super(alphabet, oracle);
@@ -109,8 +109,13 @@ public abstract class AbstractAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableD
 		// FIRST PASS: Create new hypothesis states
 		for(Row<I> sp : table.getShortPrefixRows()) {
 			int id = sp.getRowContentId();
-			if(stateInfos.get(id) != null)
+			Pair<Row<I>,S> info = stateInfos.get(id);
+			if(info != null) {
+				// State from previous hypothesis, property might have changed
+				if(info.getFirst() == sp)
+					internalHyp.setStateProperty(info.getSecond(), stateProperty(sp));
 				continue;
+			}
 			
 			
 			SP prop = stateProperty(sp);
@@ -127,6 +132,7 @@ public abstract class AbstractAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableD
 		// SECOND PASS: Create hypothesis transitions
 		for(Pair<Row<I>,S> info : stateInfos) {
 			Row<I> sp = info.getFirst();
+			int rowId = sp.getRowContentId();
 			S state = info.getSecond();
 			
 			for(int i = 0; i < alphabet.size(); i++) {
@@ -135,7 +141,7 @@ public abstract class AbstractAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableD
 				Row<I> succ = sp.getSuccessor(i);
 				int succId = succ.getRowContentId();
 				
-				if(succId < oldStates)
+				if(rowId < oldStates && succId < oldStates)
 					continue;
 				
 				S succState = stateInfos.get(succId).getSecond();

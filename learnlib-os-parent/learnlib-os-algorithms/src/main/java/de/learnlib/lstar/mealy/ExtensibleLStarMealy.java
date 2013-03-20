@@ -20,29 +20,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.automata.transout.impl.FastMealyState;
-import net.automatalib.automata.transout.impl.MealyTransition;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.util.Words;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import de.learnlib.lstar.AbstractAutomatonLStar;
+import de.learnlib.lstar.ExtensibleAutomatonLStar;
+import de.learnlib.lstar.ce.ObservationTableCEXHandler;
+import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.table.Row;
 
-public class OptimizedLStarMealy<I, O> extends
-		AbstractAutomatonLStar<MealyMachine<?,I,?,O>, I, Word<O>, FastMealyState<O>, MealyTransition<FastMealyState<O>,O>, Void, O, FastMealy<I,O>> {
+public class ExtensibleLStarMealy<I, O> extends
+		ExtensibleAutomatonLStar<MealyMachine<?,I,?,O>, I, Word<O>, Integer, CompactMealyTransition<O>, Void, O, CompactMealy<I,O>> {
 	
 	private final List<O> outputTable
 		= new ArrayList<O>();
 	
-	private final List<Word<I>> initialSuffixes;
 
-	public OptimizedLStarMealy(Alphabet<I> alphabet,
-			MembershipOracle<I, Word<O>> oracle, List<Word<I>> initialSuffixes) {
-		super(alphabet, oracle, new FastMealy<I,O>(alphabet));
-		this.initialSuffixes = new ArrayList<Word<I>>(initialSuffixes);
+	public ExtensibleLStarMealy(Alphabet<I> alphabet,
+			MembershipOracle<I, Word<O>> oracle,
+			List<Word<I>> initialSuffixes,
+			ObservationTableCEXHandler<I, Word<O>> cexHandler,
+			ClosingStrategy<I, Word<O>> closingStrategy) {
+		super(alphabet, oracle, new CompactMealy<I,O>(alphabet),
+				new ArrayList<Word<I>>(initialSuffixes),
+				cexHandler,
+				closingStrategy);
 	}
 
 	@Override
@@ -77,8 +81,8 @@ public class OptimizedLStarMealy<I, O> extends
 			Row<I> row = table.getRow(i);
 			Word<I> rowPrefix = row.getPrefix();
 			int prefixLen = rowPrefix.size();
-			outputQueries.add(new Query<I,Word<O>>(Words.prefix(rowPrefix, prefixLen - 1),
-					Words.suffix(rowPrefix, 1)));
+			outputQueries.add(new Query<I,Word<O>>(rowPrefix.prefix(prefixLen - 1),
+					rowPrefix.suffix(1)));
 		}
 		
 		oracle.processQueries(outputQueries);
