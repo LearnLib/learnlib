@@ -31,16 +31,16 @@ import net.automatalib.words.Word;
  * @param <I> input symbol class
  * 
  */
-public interface CEXHandlerSuffixes<I> {
+public interface CEXHandlerSuffixes<I, O> {
 
     /**
      * Analize a counterexample and generate a set of counterexamples
      * that effect refinement of the current hypothesis constructed by
      * a learning algorithm.
      * 
-     * @param counterexample A sequence of input symbols that produce diverging output between the current hypothesis and the system under learning
+     * @param ceQuery A Query that produces diverging output between the current hypothesis and the system under learning
      * @param suffixes A collection that shall be filled with the suffixes created during analysis
      */
-    public void createSuffixes(Word<I> counterexample, Collection<Word<I>> suffixes);
+    public void createSuffixes(Query<I, O> ceQuery, Collection<Word<I>> suffixes);
 	
 }
