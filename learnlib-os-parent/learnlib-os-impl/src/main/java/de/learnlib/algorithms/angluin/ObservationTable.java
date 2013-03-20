@@ -232,9 +232,7 @@ public class ObservationTable<S> {
 		for (Word<S> state : states) {
 			FastDFAState dfaState = dfaStates.get(getRowForPrefix(state));
 			for (S alphabetSymbol : alphabet) {
-				Word<S> word = new ArrayWord<>();
-				word.addAll(state);
-				word.add(alphabetSymbol);
+				Word<S> word = Words.append(state, alphabetSymbol);
 
 				final int index = alphabet.getSymbolIndex(alphabetSymbol);
 				dfaState.setTransition(index, dfaStates.get(getRowForPrefix(word)));
