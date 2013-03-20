@@ -6,10 +6,8 @@ import de.learnlib.api.Query;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.ArrayWord;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
-import net.automatalib.words.util.Words;
 import org.junit.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -63,8 +61,8 @@ public class TestSimpleAutomaton {
 	}
 
 	private Query<Symbol, Boolean> createCounterExample() {
-		Word<Symbol> counterExample = new ArrayWord<>();
-		counterExample = Words.append(counterExample, one, one, zero);
+		Word<Symbol> counterExample = Word.epsilon();
+		counterExample = counterExample.append(one).append(one).append(zero);
 		Query<Symbol, Boolean> query = new Query<>(counterExample);
 		query.setOutput(false);
 		return query;

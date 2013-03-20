@@ -5,8 +5,6 @@ import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.automata.fsa.impl.FastDFAState;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.ArrayWord;
-import net.automatalib.words.util.Words;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +26,7 @@ public class ObservationTable<S> {
 	private Map<Word<S>, Boolean> results;
 
 	public ObservationTable() {
-		Word<S> emptyWord = Words.epsilon();
+		Word<S> emptyWord = Word.epsilon();
 
 		states = new ArrayList<>();
 		states.add(emptyWord);
@@ -194,10 +192,7 @@ public class ObservationTable<S> {
 		ObservationTableRow row = new ObservationTableRow();
 
 		for (Word<S> suffix : suffixes) {
-			Word<S> word = new ArrayWord<>();
-			word.addAll(state);
-			word.addAll(suffix);
-			row.addValue(results.get(word));
+			row.addValue(results.get(state.concat(suffix)));
 		}
 
 		return row;
@@ -232,7 +227,7 @@ public class ObservationTable<S> {
 		for (Word<S> state : states) {
 			FastDFAState dfaState = dfaStates.get(getRowForPrefix(state));
 			for (S alphabetSymbol : alphabet) {
-				Word<S> word = Words.append(state, alphabetSymbol);
+				Word<S> word = state.append(alphabetSymbol);
 
 				final int index = alphabet.getSymbolIndex(alphabetSymbol);
 				dfaState.setTransition(index, dfaStates.get(getRowForPrefix(word)));

@@ -6,7 +6,6 @@ import de.learnlib.api.Query;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.util.Words;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +45,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		this.observationTable = new ObservationTable<>();
 
 		for (S alphabetSymbol : alphabet) {
-			observationTable.getCandidates().add(Words.asWord(alphabetSymbol));
+			observationTable.getCandidates().add(Word.fromSymbols(alphabetSymbol));
 		}
 	}
 
@@ -92,7 +91,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 		for (Word<S> prefix : prefixes) {
 			for (S alphabetSymbol : alphabet) {
-				Word<S> word = Words.append(prefix, alphabetSymbol);
+				Word<S> word = prefix.append(alphabetSymbol);
 				if (!states.contains(word)) {
 					newCandidates.add(word);
 				}
@@ -150,7 +149,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 			List<Word<S>> newCandidates = new ArrayList<>(alphabet.size());
 			for (S alphabetSymbol : alphabet) {
-				Word<S> newCandidate = Words.append(candidate, alphabetSymbol);
+				Word<S> newCandidate = candidate.append(alphabetSymbol);
 				newCandidates.add(newCandidate);
 			}
 
@@ -169,7 +168,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		InconsistencyDataHolder<S> dataHolder = observationTable.findInconsistentSymbol(alphabet);
 
 		Word<S> witness = observationTable.determineWitnessForInconsistency(dataHolder);
-		CombinedWord<S> newSuffix = new CombinedWord<>(Words.asWord(dataHolder.getDifferingSymbol()), witness);
+		CombinedWord<S> newSuffix = new CombinedWord<>(Word.fromSymbols(dataHolder.getDifferingSymbol()), witness);
 		observationTable.getSuffixes().add(newSuffix.getWord());
 
 		List<Word<S>> singleSuffixList = Collections.singletonList(newSuffix.getWord());
@@ -224,7 +223,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	private List<Word<S>> prefixesOfWord(Word<S> word) {
 		List<Word<S>> prefixes = new ArrayList<>(word.size());
 		for (int i = 1; i <= word.size(); i++) {
-			prefixes.add(Words.prefix(word, i));
+			prefixes.add(word.prefix(i));
 		}
 		return prefixes;
 	}
