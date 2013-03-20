@@ -16,17 +16,20 @@
  */
 package de.learnlib.lstar.dfa;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.FastDFA;
-import net.automatalib.automata.fsa.impl.FastDFAState;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.util.Words;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.lstar.AbstractAutomatonLStar;
+import de.learnlib.lstar.ExtensibleAutomatonLStar;
+import de.learnlib.lstar.ce.ClassicLStarCEXHandler;
+import de.learnlib.lstar.ce.ObservationTableCEXHandler;
+import de.learnlib.lstar.closing.CloseFirstStrategy;
+import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.table.Row;
 
 
@@ -38,16 +41,53 @@ import de.learnlib.lstar.table.Row;
  *
  * @param <I> input symbol class.
  */
-public class ClassicLStarDFA<I>
-	extends AbstractAutomatonLStar<DFA<?,I>, I, Boolean, FastDFAState, FastDFAState, Boolean, Void, FastDFA<I>> {
+public class ExtensibleLStarDFA<I>
+	extends ExtensibleAutomatonLStar<DFA<?,I>, I, Boolean, Integer, Integer, Boolean, Void, CompactDFA<I>> {
+	
+	private static <I> List<Word<I>> ensureDFACompliant(List<Word<I>> suffixes) {
+		if(suffixes.get(0).isEmpty())
+			return new ArrayList<Word<I>>(suffixes);
+		List<Word<I>> compSuffixes = new ArrayList<Word<I>>(suffixes.size() + 1);
+		compSuffixes.add(Word.<I>epsilon());
+		for(Word<I> suff : suffixes) {
+			if(suff.isEmpty())
+				continue;
+			compSuffixes.add(suff);
+		}
+		
+		return compSuffixes;
+	}
+	
+	public static <I> List<Word<I>> getDefaultInitialSuffixes() {
+		return Collections.singletonList(Word.<I>epsilon());
+	}
+	
+	public static <I> ObservationTableCEXHandler<I, Boolean> getDefaultCEXHandler() {
+		return ClassicLStarCEXHandler.getInstance();
+	}
+	
+	public static <I> ClosingStrategy<I,Boolean> getDefaultClosingStrategy() {
+		return CloseFirstStrategy.getInstance();
+	}
 	
 	/**
 	 * Constructor.
 	 * @param alphabet the learning alphabet.
 	 * @param oracle the DFA oracle.
 	 */
-	public ClassicLStarDFA(Alphabet<I> alphabet, MembershipOracle<I,Boolean> oracle) {
-		super(alphabet, oracle, new FastDFA<I>(alphabet));
+	public ExtensibleLStarDFA(Alphabet<I> alphabet, MembershipOracle<I,Boolean> oracle,
+			List<Word<I>> initialSuffixes,
+			ObservationTableCEXHandler<I, Boolean> cexHandler,
+			ClosingStrategy<I, Boolean> closingStrategy) {
+		super(alphabet, oracle, new CompactDFA<I>(alphabet),
+				ensureDFACompliant(initialSuffixes), cexHandler, closingStrategy);
+	}
+	
+	public ExtensibleLStarDFA(Alphabet<I> alphabet, MembershipOracle<I,Boolean> oracle) {
+		this(alphabet, oracle,
+				ExtensibleLStarDFA.<I>getDefaultInitialSuffixes(),
+				ExtensibleLStarDFA.<I>getDefaultCEXHandler(),
+				ExtensibleLStarDFA.<I>getDefaultClosingStrategy());
 	}
 
 	
@@ -57,7 +97,7 @@ public class ClassicLStarDFA<I>
 	 */
 	@Override
 	protected List<Word<I>> initialSuffixes() {
-		return Collections.singletonList(Words.<I>epsilon());
+		return Collections.singletonList(Word.<I>epsilon());
 	}
 
 

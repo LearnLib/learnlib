@@ -17,7 +17,6 @@
 package de.learnlib.api;
 
 import net.automatalib.words.Word;
-import net.automatalib.words.util.Words;
 
 /**
  * A query is a container for tests a learning algorithms performs, containing
@@ -48,7 +47,7 @@ public class Query<I, O> {
     }
     
     public Query(Word<I> input) {
-    	this(Words.<I>epsilon(), input);
+    	this(Word.<I>epsilon(), input);
     }
     
     public Query(Query<I,?> query) {
@@ -75,7 +74,7 @@ public class Query<I, O> {
      * @return prefix.suffix
      */
     public Word<I> getInput() {
-        return Words.concat(this.prefix, this.suffix);
+        return prefix.concat(suffix);
     }
 
     @Override

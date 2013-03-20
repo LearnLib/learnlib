@@ -22,8 +22,7 @@ import java.util.Random;
 
 import net.automatalib.automata.concepts.OutputAutomaton;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.MutableWord;
-import net.automatalib.words.impl.ArrayWord;
+import net.automatalib.words.WordBuilder;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
@@ -53,21 +52,21 @@ public class RandomWordsEQOracle<I,O, A extends OutputAutomaton<?,I,?,O>> implem
         for(int i = 0; i < maxTests; ++i) {
             int length = minLength + random.nextInt((maxLength - minLength) + 1);
             
-            MutableWord<I> testtrace = new ArrayWord<>();
+            WordBuilder<I> testtrace = new WordBuilder<>(length);
             for(int j = 0; j < length; ++j) {
                 int symidx = random.nextInt(alpha.size());
                 I sym = alpha.getSymbol(symidx);
-                testtrace.add(sym);
+                testtrace.append(sym);
             }
             
-            Query<I, O> query = new Query<>(testtrace);
+            Query<I, O> query = new Query<>(testtrace.toWord());
             
             // query oracle
             oracle.processQueries(Collections.singletonList(query));
             O oracleoutput = query.getOutput();
             
             // trace hypothesis
-            O hypOutput = hypothesis.computeOutput(testtrace);
+            O hypOutput = hypothesis.computeOutput(testtrace.toWord());
             
             // compare output of hypothesis and oracle
             if(!oracleoutput.equals(hypOutput))

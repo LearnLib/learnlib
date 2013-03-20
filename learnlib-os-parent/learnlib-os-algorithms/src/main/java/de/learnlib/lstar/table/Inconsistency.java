@@ -14,9 +14,8 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.lstar;
+package de.learnlib.lstar.table;
 
-import de.learnlib.lstar.table.Row;
 
 /**
  * A description of an inconsistency in an {@link ObservationTable}. An inconsistency

@@ -24,9 +24,9 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.automata.fsa.impl.FastDFAState;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
-import net.automatalib.words.util.Words;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -94,8 +94,8 @@ public class OracleTest {
         
         List<Query<Symbol, Boolean>> queries = new ArrayList<>();
         
-        Query<Symbol, Boolean> q1 = new Query<>(Words.asWord(in_paul, in_loves, in_mary));
-        Query<Symbol, Boolean> q2 = new Query<>(Words.asWord(in_mary, in_loves, in_paul));
+        Query<Symbol, Boolean> q1 = new Query<>(Word.fromSymbols(in_paul, in_loves, in_mary));
+        Query<Symbol, Boolean> q2 = new Query<>(Word.fromSymbols(in_mary, in_loves, in_paul));
         queries.add(q1);
         queries.add(q2);
         

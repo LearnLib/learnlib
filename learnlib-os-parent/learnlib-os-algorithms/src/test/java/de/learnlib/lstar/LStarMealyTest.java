@@ -16,29 +16,36 @@
  */
 package de.learnlib.lstar;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
 import net.automatalib.automata.transout.impl.FastMealyState;
-import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
-import net.automatalib.words.util.Words;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
+import de.learnlib.lstar.ce.ClassicLStarCEXHandler;
+import de.learnlib.lstar.ce.ObservationTableCEXHandler;
+import de.learnlib.lstar.ce.ShahbazCEXHandler;
+import de.learnlib.lstar.ce.Suffix1by1CEXHandler;
+import de.learnlib.lstar.closing.CloseFirstStrategy;
+import de.learnlib.lstar.closing.CloseLexMinStrategy;
+import de.learnlib.lstar.closing.CloseRandomStrategy;
+import de.learnlib.lstar.closing.CloseShortestStrategy;
+import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.mealy.ClassicLStarMealy;
-import de.learnlib.lstar.mealy.OptimizedLStarMealy;
+import de.learnlib.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.oracles.SimulatorOracle;
 
-public class LStarMealyTest {
+public class LStarMealyTest extends LearningTest {
 
 	private final static Symbol in_a = new Symbol("a");
     private final static Symbol in_b = new Symbol("b");
@@ -78,14 +85,30 @@ public class LStarMealyTest {
 		MembershipOracle<Symbol,Word<String>> oracle
 			= new SimulatorOracle<>(mealy);
 			
-		LearningAlgorithm<MealyMachine<?,Symbol,?,String>,Symbol,String> learner
-			= ClassicLStarMealy.createForWordOracle(alphabet, oracle);
+		List<ObservationTableCEXHandler<Symbol,String>> cexHandlers
+			= Arrays.asList(ClassicLStarCEXHandler.<Symbol,String>getInstance(),
+			ShahbazCEXHandler.<Symbol,String>getInstance(),
+			Suffix1by1CEXHandler.<Symbol,String>getInstance());
 		
-		learner.startLearning();
+		List<ClosingStrategy<Symbol,String>> closingStrategies
+			= Arrays.asList(CloseFirstStrategy.<Symbol,String>getInstance(),
+					CloseLexMinStrategy.<Symbol,String>getInstance(),
+					CloseRandomStrategy.<Symbol,String>getInstance(),
+					CloseShortestStrategy.<Symbol,String>getInstance());
+			
 		
-		MealyMachine<?,Symbol,?,String> hyp = learner.getHypothesisModel();
+		List<Word<Symbol>> initSuffixes
+			= Collections.singletonList(Word.fromLetter(alphabet.getSymbol(0)));
 		
-		Assert.assertEquals(mealy.size(), hyp.size());
+		for(ObservationTableCEXHandler<Symbol,String> handler : cexHandlers) {
+			for(ClosingStrategy<Symbol,String> strategy : closingStrategies) {
+				LearningAlgorithm<MealyMachine<?,Symbol,?,String>,Symbol,String> learner
+				= ClassicLStarMealy.createForWordOracle(alphabet, oracle, initSuffixes,
+						handler, strategy);
+				
+				testLearnModel(mealy, alphabet, learner);
+			}
+		}
 	}
 	
 	@Test
@@ -96,23 +119,30 @@ public class LStarMealyTest {
 		MembershipOracle<Symbol,Word<String>> oracle
 			= new SimulatorOracle<>(mealy);
 			
-		LearningAlgorithm<MealyMachine<?,Symbol,?,String>,Symbol,Word<String>> learner
-			= new OptimizedLStarMealy<>(alphabet, oracle, Collections.singletonList(Words.asWord(in_a)));
+		List<ObservationTableCEXHandler<Symbol,Word<String>>> cexHandlers
+			= Arrays.asList(ClassicLStarCEXHandler.<Symbol,Word<String>>getInstance(),
+			ShahbazCEXHandler.<Symbol,Word<String>>getInstance(),
+			Suffix1by1CEXHandler.<Symbol,Word<String>>getInstance());
 		
-		learner.startLearning();
-		MealyMachine<?,Symbol,?,String> hyp = learner.getHypothesisModel();
+		List<ClosingStrategy<Symbol,Word<String>>> closingStrategies
+			= Arrays.asList(CloseFirstStrategy.<Symbol,Word<String>>getInstance(),
+					CloseLexMinStrategy.<Symbol,Word<String>>getInstance(),
+					CloseRandomStrategy.<Symbol,Word<String>>getInstance(),
+					CloseShortestStrategy.<Symbol,Word<String>>getInstance());
+			
 		
-		Assert.assertEquals(1, hyp.size());
+		List<Word<Symbol>> initSuffixes
+			= Collections.singletonList(Word.fromLetter(alphabet.getSymbol(0)));
 		
-		
-		Word<Symbol> ce = Automata.findSeparatingWord(mealy, hyp, alphabet);
-		Query<Symbol,Word<String>> qry = new Query<>(ce);
-		oracle.processQueries(Collections.singleton(qry));
-		
-		learner.refineHypothesis(qry);
-		hyp = learner.getHypothesisModel();
-		
-		Assert.assertEquals(mealy.size(), hyp.size());
+		for(ObservationTableCEXHandler<Symbol,Word<String>> handler : cexHandlers) {
+			for(ClosingStrategy<Symbol,Word<String>> strategy : closingStrategies) {
+				LearningAlgorithm<MealyMachine<?,Symbol,?,String>,Symbol,Word<String>> learner
+				= new ExtensibleLStarMealy<>(alphabet, oracle, initSuffixes,
+						handler, strategy);
+				
+				testLearnModel(mealy, alphabet, learner);
+			}
+		}
 	}
 
 }

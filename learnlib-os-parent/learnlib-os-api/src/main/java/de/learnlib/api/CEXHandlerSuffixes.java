@@ -21,11 +21,26 @@ import java.util.Collection;
 import net.automatalib.words.Word;
 
 /**
+ * This interface specifies components that analize counterexamples
+ * and generate a collection of suffixes which can be used by 
+ * learning algorithms to produce a refined hypothesis. Some analysis
+ * strategies will produce additional membership queries to yield a result.
  *
  * @author Maik Merten <maikmerten@googlemail.com>
+ * 
+ * @param <I> input symbol class
+ * 
  */
 public interface CEXHandlerSuffixes<I> {
 
-	public void createSuffixes(Word<I> counterexample, Collection<Word<I>> suffixes);
+    /**
+     * Analize a counterexample and generate a set of counterexamples
+     * that effect refinement of the current hypothesis constructed by
+     * a learning algorithm.
+     * 
+     * @param counterexample A sequence of input symbols that produce diverging output between the current hypothesis and the system under learning
+     * @param suffixes A collection that shall be filled with the suffixes created during analysis
+     */
+    public void createSuffixes(Word<I> counterexample, Collection<Word<I>> suffixes);
 	
 }
