@@ -26,7 +26,7 @@ import java.util.Collection;
  * behavior (outputting a word, acceptance/rejection etc.).
  * 
  * @author Malte Isberner <malte.isberner@gmail.com>
- * @author merten
+ * @author Maik Merten <maikmerten@googlemail.com>
  * 
  * @see Query
  */

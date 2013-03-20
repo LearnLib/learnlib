@@ -24,7 +24,7 @@ package de.learnlib.api;
  * of an initial hypothesis, which is subsequently refined using counterexamples
  * (see {@link EquivalenceOracle}). 
  * 
- * @author merten
+ * @author Maik Merten <maikmerten@googlemail.com>
  * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <M> model class.

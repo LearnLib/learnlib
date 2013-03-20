@@ -25,7 +25,7 @@ import net.automatalib.words.Word;
  * @param <I> input symbol class.
  * @param <O> output class. 
  * 
- * @author merten
+ * @author Maik Merten <maikmerten@googlemail.com>
  */
 public class Query<I, O> {
 

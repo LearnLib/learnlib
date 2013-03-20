@@ -15,21 +15,25 @@
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
 
-package de.learnlib.logging.filter;
+package de.learnlib.logging;
 
-import java.util.EnumSet;
-
-import de.learnlib.logging.Category;
+import de.learnlib.statistics.StatisticData;
+import java.util.logging.Level;
 
 /**
- * No learning related output.
- * 
+ *
  * @author falkhowar
  */
-public class SystemOnlyFilter extends CategoryFilter {
+public class StatisticLogRecord extends LearnLogRecord {
 
-    public SystemOnlyFilter() {
-        super(EnumSet.of(Category.SYSTEM));
+    private StatisticData data;
+    
+    public StatisticLogRecord(Level lvl, StatisticData data, Category category) {
+        super(lvl, data.getSummary(), category);
     }
-        
+ 
+    public StatisticData getData() {
+        return data;
+    }
+    
 }

@@ -1,21 +1,23 @@
 /* Copyright (C) 2013 TU Dortmund
-   This file is part of LearnLib 
-
-   LearnLib is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License version 3.0 as published by the Free Software Foundation.
-
-   LearnLib is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with LearnLib; if not, see
-   <http://www.gnu.de/documents/lgpl.en.html>.  */
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ * 
+ * LearnLib is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 3.0 as published by the Free Software Foundation.
+ * 
+ * LearnLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with LearnLib; if not, see
+ * <http://www.gnu.de/documents/lgpl.en.html>.
+ */
 
 package de.learnlib.logging;
 
+import de.learnlib.statistics.StatisticData;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Filter;
 import java.util.logging.Handler;
@@ -137,8 +139,8 @@ public class LearnLogger extends Logger {
      * 
      * @param profiling 
      */
-    public void logProfilingInfo(String profiling) {
-        LearnLogRecord rec = new LearnLogRecord(Level.INFO, profiling, Category.PROFILING);
+    public void logProfilingInfo(StatisticData profiling) {
+        LearnLogRecord rec = new StatisticLogRecord(Level.INFO, profiling, Category.PROFILING);
         this.log(rec);
     }
     
@@ -147,15 +149,29 @@ public class LearnLogger extends Logger {
      * 
      * @param statistics 
      */
-    public void logStatistic(String statistics) {
-        LearnLogRecord rec = new LearnLogRecord(Level.INFO, statistics, Category.STATISTIC);
+    public void logStatistic(StatisticData statistics) {
+        LearnLogRecord rec = new StatisticLogRecord(Level.INFO, statistics, Category.STATISTIC);
         this.log(rec);        
     }
 
-    public void logModel() {
+    /**
+     * log a model
+     * 
+     * @param o 
+     */
+    public void logModel(Object o) {
+        LearnLogRecord rec = new PlottableLogRecord(Level.INFO, o, Category.MODEL);
+        this.log(rec);        
     }
     
-    public void logDataStructure() {
+    /**
+     * log a data structure
+     * 
+     * @param o 
+     */
+    public void logDataStructure(Object o) {
+        LearnLogRecord rec = new PlottableLogRecord(Level.INFO, o, Category.DATASTRUCTURE);
+        this.log(rec);        
     }
     
 }

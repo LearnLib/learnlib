@@ -15,21 +15,26 @@
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
 
-package de.learnlib.logging.filter;
+package de.learnlib.logging;
 
-import java.util.EnumSet;
-
-import de.learnlib.logging.Category;
+import java.util.logging.Level;
 
 /**
- * No learning related output.
+ * LogRecord with a piece of plottable data. Handlers are responsible
+ * for figuring out how to plot the plottable object.
  * 
  * @author falkhowar
  */
-public class SystemOnlyFilter extends CategoryFilter {
+public class PlottableLogRecord extends LearnLogRecord {
 
-    public SystemOnlyFilter() {
-        super(EnumSet.of(Category.SYSTEM));
+    private Object data;
+    
+    public PlottableLogRecord(Level lvl, Object data, Category category) {
+        super(lvl, data.toString(), category);
     }
-        
+ 
+    public Object getData() {
+        return data;
+    }
+    
 }
