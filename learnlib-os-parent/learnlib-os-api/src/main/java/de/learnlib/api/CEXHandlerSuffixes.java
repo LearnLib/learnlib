@@ -22,7 +22,7 @@ import net.automatalib.words.Word;
 
 /**
  *
- * @author merten
+ * @author Maik Merten <maikmerten@googlemail.com>
  */
 public interface CEXHandlerSuffixes<I> {
 

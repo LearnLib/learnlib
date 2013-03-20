@@ -34,7 +34,7 @@ import net.automatalib.words.Alphabet;
  * counterexamples, <b>BUT</b> a <tt>null</tt> result signalling no counterexample was found
  * does <b>not</b> mean that there can be none.
  * 
- * @author merten
+ * @author Maik Merten <maikmerten@googlemail.com>
  * @author Malte Isberner <malte.isberner@gmail.com>
  * 
  * @param <A> automaton class this equivalence oracle works on
