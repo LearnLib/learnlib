@@ -22,11 +22,9 @@ import java.util.List;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.automata.transout.impl.FastMealyState;
 import net.automatalib.examples.mealy.ExampleStack;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
 
 import org.junit.Test;
@@ -48,39 +46,9 @@ import de.learnlib.oracles.SimulatorOracle;
 
 public class LStarMealyTest extends LearningTest {
 
-	private final static Symbol in_a = new Symbol("a");
-    private final static Symbol in_b = new Symbol("b");
-    
-    private final static String out_ok = "ok";
-    private final static String out_error = "error";
-    
-    private FastMealy<Symbol, String> constructMachine() {
-        Alphabet<Symbol> alpha = new FastAlphabet<>();
-        alpha.add(in_a);
-        alpha.add(in_b);
-    
-        
-        FastMealy<Symbol, String> fm = new FastMealy<>(alpha);
-        
-        FastMealyState<String> s0 = fm.addInitialState(),
-                s1 = fm.addState(),
-                s2 = fm.addState();
-        
-        fm.addTransition(s0, in_a, s1, out_ok);
-        fm.addTransition(s0, in_b, s0, out_error);
-        
-        fm.addTransition(s1, in_a, s2, out_ok);
-        fm.addTransition(s1, in_b, s0, out_ok);
-        
-        fm.addTransition(s2, in_a, s2, out_error);
-        fm.addTransition(s2, in_b, s1, out_ok);
-        
-        return fm;
-    }
-    
 	@Test
 	public void testClassicLStarMealy() {
-		FastMealy<Symbol,String> mealy = constructMachine();
+		FastMealy<Symbol,String> mealy = ExampleStack.constructMachine();
 		Alphabet<Symbol> alphabet = mealy.getInputAlphabet();
 		
 		MembershipOracle<Symbol,Word<String>> oracle
@@ -115,7 +83,7 @@ public class LStarMealyTest extends LearningTest {
 	
 	@Test
 	public void testOptimizedLStarMealy() {
-		FastMealy<Symbol,String> mealy = ExampleStack.constructMachine(); // constructMachine()
+		FastMealy<Symbol,String> mealy = ExampleStack.constructMachine();
 		Alphabet<Symbol> alphabet = mealy.getInputAlphabet();
 		
 		MembershipOracle<Symbol,Word<String>> oracle
