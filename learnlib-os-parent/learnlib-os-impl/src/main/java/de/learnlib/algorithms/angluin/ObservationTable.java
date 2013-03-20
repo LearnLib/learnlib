@@ -69,22 +69,25 @@ public class ObservationTable<S> {
 	/**
 	 * Adds the result of a membership query to this table.
 	 *
-	 * @param word
-	 * 		The {@link Word} asked with the membership query.
+	 * @param prefix
+	 * 		The prefix of the {@link Word} asked with the membership query.
+	 * @param suffix
+	 * 		The prefix of the {@link Word} asked with the membership query.
 	 * @param result
 	 * 		The result of the query.
 	 */
-	void addResult(CombinedWord<S> word, boolean result) {
-		if (!suffixes.contains(word.getSuffix())) {
-			throw new IllegalStateException("Suffix " + word.getSuffix() + " is not part of the suffixes set");
+	void addResult(Word<S> prefix, Word<S> suffix, boolean result) {
+		if (!suffixes.contains(suffix)) {
+			throw new IllegalStateException("Suffix " + suffix + " is not part of the suffixes set");
 		}
 
-		if (results.containsKey(word.getWord()) && results.get(word.getWord()) != result) {
+		Word<S> word = prefix.concat(suffix);
+		if (results.containsKey(word) && results.get(word) != result) {
 			throw new IllegalStateException(
-					"New result " + results.get(word.getWord()) + " differs from old result " + result);
+					"New result " + results.get(word) + " differs from old result " + result);
 		}
 		else {
-			results.put(word.getWord(), result);
+			results.put(word, result);
 		}
 	}
 
@@ -158,10 +161,10 @@ public class ObservationTable<S> {
 		ObservationTableRow rowForSecondState = getRowForPrefix(secondState);
 		boolean valuesEqualWithoutPrefix = rowForFirstState.equals(rowForSecondState);
 
-		CombinedWord<S> extendedFirstState = new CombinedWord<>(firstState, alphabetSymbol);
-		CombinedWord<S> extendedSecondState = new CombinedWord<>(secondState, alphabetSymbol);
-		ObservationTableRow rowForExtendedFirstState = getRowForPrefix(extendedFirstState.getWord());
-		ObservationTableRow rowForExtendedSecondState = getRowForPrefix(extendedSecondState.getWord());
+		Word<S> extendedFirstState = firstState.append(alphabetSymbol);
+		Word<S> extendedSecondState = secondState.append(alphabetSymbol);
+		ObservationTableRow rowForExtendedFirstState = getRowForPrefix(extendedFirstState);
+		ObservationTableRow rowForExtendedSecondState = getRowForPrefix(extendedSecondState);
 
 		boolean valuesEqualWithPrefix = rowForExtendedFirstState.equals(rowForExtendedSecondState);
 
@@ -173,11 +176,11 @@ public class ObservationTable<S> {
 			throw new IllegalArgumentException("Dataholder must not be null!");
 		}
 
-		CombinedWord<S> firstState = new CombinedWord<>(dataHolder.getFirstState(), dataHolder.getDifferingSymbol());
-		CombinedWord<S> secondState = new CombinedWord<>(dataHolder.getSecondState(), dataHolder.getDifferingSymbol());
+		Word<S> firstState = dataHolder.getFirstState().append(dataHolder.getDifferingSymbol());
+		Word<S> secondState = dataHolder.getSecondState().append(dataHolder.getDifferingSymbol());
 
-		ObservationTableRow firstRow = getRowForPrefix(firstState.getWord());
-		ObservationTableRow secondRow = getRowForPrefix(secondState.getWord());
+		ObservationTableRow firstRow = getRowForPrefix(firstState);
+		ObservationTableRow secondRow = getRowForPrefix(secondState);
 
 		for (int i = 0; i < firstRow.getValues().size(); i++) {
 			if (firstRow.getValues().get(i) != secondRow.getValues().get(i)) {

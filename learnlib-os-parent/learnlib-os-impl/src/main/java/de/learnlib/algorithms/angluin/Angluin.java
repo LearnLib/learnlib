@@ -168,10 +168,10 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		InconsistencyDataHolder<S> dataHolder = observationTable.findInconsistentSymbol(alphabet);
 
 		Word<S> witness = observationTable.determineWitnessForInconsistency(dataHolder);
-		CombinedWord<S> newSuffix = new CombinedWord<>(Word.fromSymbols(dataHolder.getDifferingSymbol()), witness);
-		observationTable.getSuffixes().add(newSuffix.getWord());
+		Word<S> newSuffix = Word.fromSymbols(dataHolder.getDifferingSymbol()).concat(witness);
+		observationTable.getSuffixes().add(newSuffix);
 
-		List<Word<S>> singleSuffixList = Collections.singletonList(newSuffix.getWord());
+		List<Word<S>> singleSuffixList = Collections.singletonList(newSuffix);
 
 		processMembershipQueriesForStates(observationTable.getStates(), singleSuffixList);
 		processMembershipQueriesForStates(observationTable.getCandidates(), singleSuffixList);
@@ -191,8 +191,8 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		List<Query<S, Boolean>> queries = new ArrayList<>(states.size());
 		for (Word<S> state : states) {
 			for (Word<S> suffix : suffixes) {
-				CombinedWord<S> combinedWord = new CombinedWord<>(state, suffix);
-				queries.add(new Query<S, Boolean>(combinedWord.getWord()));
+				Word<S> combinedWord = state.concat(suffix);
+				queries.add(new Query<S, Boolean>(combinedWord));
 			}
 		}
 
@@ -206,8 +206,8 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 		for (Word<S> suffix : suffixes) {
 			for (Word<S> state : states) {
-				CombinedWord<S> combinedWord = new CombinedWord<>(state, suffix);
-				observationTable.addResult(combinedWord, results.get(combinedWord.getWord()));
+				Word<S> combinedWord = state.concat(suffix);
+				observationTable.addResult(state, suffix, results.get(combinedWord));
 			}
 		}
 	}
