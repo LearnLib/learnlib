@@ -16,6 +16,8 @@
  */
 package de.learnlib.lstar;
 
+import static net.automatalib.examples.dfa.ExamplePaulAndMary.constructMachine;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -42,8 +44,6 @@ import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.dfa.ExtensibleLStarDFA;
 import de.learnlib.oracles.SimulatorOracle;
 
-import static net.automatalib.examples.dfa.ExamplePaulAndMary.*;
-
 public class LStarDFATest extends LearningTest {
 
  
@@ -65,7 +65,8 @@ public class LStarDFATest extends LearningTest {
 					CloseRandomStrategy.<Symbol,Boolean>getInstance(),
 					CloseShortestStrategy.<Symbol,Boolean>getInstance());
 		
-		List<Word<Symbol>> suffixes = Collections.singletonList(Word.<Symbol>epsilon());
+		// Empty set of suffixes => minimum compliant set
+		List<Word<Symbol>> suffixes = Collections.emptyList();
 		
 		
 		for(ObservationTableCEXHandler<Symbol,Boolean> handler : cexHandlers) {

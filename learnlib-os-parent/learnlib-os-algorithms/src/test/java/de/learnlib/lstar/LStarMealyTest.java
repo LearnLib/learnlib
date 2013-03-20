@@ -98,8 +98,9 @@ public class LStarMealyTest extends LearningTest {
 					CloseShortestStrategy.<Symbol,String>getInstance());
 			
 		
-		List<Word<Symbol>> initSuffixes
-			= Collections.singletonList(Word.fromLetter(alphabet.getSymbol(0)));
+
+		// Empty list of suffixes => minimal compliant set
+		List<Word<Symbol>> initSuffixes = Collections.emptyList();
 		
 		for(ObservationTableCEXHandler<Symbol,String> handler : cexHandlers) {
 			for(ClosingStrategy<Symbol,String> strategy : closingStrategies) {
@@ -132,8 +133,8 @@ public class LStarMealyTest extends LearningTest {
 					CloseShortestStrategy.<Symbol,Word<String>>getInstance());
 			
 		
-		List<Word<Symbol>> initSuffixes
-			= Collections.singletonList(Word.fromLetter(alphabet.getSymbol(0)));
+		// Empty list of suffixes => minimal compliant set
+		List<Word<Symbol>> initSuffixes = Collections.emptyList();
 		
 		for(ObservationTableCEXHandler<Symbol,Word<String>> handler : cexHandlers) {
 			for(ClosingStrategy<Symbol,Word<String>> strategy : closingStrategies) {
