@@ -132,6 +132,7 @@ public class ObservationTable<S> {
 
 	/**
 	 * @param alphabet
+	 * 		The {@link Alphabet} for which the consistency is checked
 	 * @return if the observation table is consistent with the given alphabet.
 	 */
 	boolean isConsistentWithAlphabet(Alphabet<S> alphabet) {
