@@ -6,7 +6,6 @@ import de.learnlib.api.Query;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
 import org.junit.Assert;
 import org.testng.annotations.BeforeClass;
@@ -21,12 +20,9 @@ public class TestSimpleAutomaton {
 
 	@BeforeClass
 	public void setup() {
-		Alphabet<Symbol> alphabet = new FastAlphabet<>();
-		zero = new Symbol(0);
-		one = new Symbol(1);
-
-		alphabet.add(zero);
-		alphabet.add(one);
+		Alphabet<Symbol> alphabet = SimpleOracle.getAlphabet();
+		zero = alphabet.getSymbol(0);
+		one = alphabet.getSymbol(1);
 
 		angluin = new Angluin<>(alphabet, new SimpleOracle());
 	}
