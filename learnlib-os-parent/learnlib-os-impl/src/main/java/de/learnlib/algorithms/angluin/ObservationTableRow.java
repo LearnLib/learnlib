@@ -3,7 +3,7 @@ package de.learnlib.algorithms.angluin;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ObservationTableRow {
+class ObservationTableRow {
 
 	private final List<Boolean> rowData;
 
