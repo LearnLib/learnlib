@@ -30,7 +30,7 @@ public class SimpleOracle implements MembershipOracle<Symbol, Boolean> {
 
 	private Boolean determineOutput(Word<Symbol> input) {
 		if (input.size() == 3) {
-			return true;
+			return false;
 		}
 
 		for (Symbol symbol : input) {

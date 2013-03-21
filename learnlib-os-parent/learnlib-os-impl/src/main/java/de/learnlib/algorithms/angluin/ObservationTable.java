@@ -160,16 +160,17 @@ public class ObservationTable<S> {
 	private boolean checkInconsistency(Word<S> firstState, Word<S> secondState, S alphabetSymbol) {
 		ObservationTableRow rowForFirstState = getRowForPrefix(firstState);
 		ObservationTableRow rowForSecondState = getRowForPrefix(secondState);
-		boolean valuesEqualWithoutPrefix = rowForFirstState.equals(rowForSecondState);
+
+		if (!rowForFirstState.equals(rowForSecondState)) {
+			return false;
+		}
 
 		Word<S> extendedFirstState = firstState.append(alphabetSymbol);
 		Word<S> extendedSecondState = secondState.append(alphabetSymbol);
 		ObservationTableRow rowForExtendedFirstState = getRowForPrefix(extendedFirstState);
 		ObservationTableRow rowForExtendedSecondState = getRowForPrefix(extendedSecondState);
 
-		boolean valuesEqualWithPrefix = rowForExtendedFirstState.equals(rowForExtendedSecondState);
-
-		return valuesEqualWithoutPrefix && !valuesEqualWithPrefix;
+		return !rowForExtendedFirstState.equals(rowForExtendedSecondState);
 	}
 
 	Word<S> determineWitnessForInconsistency(InconsistencyDataHolder<S> dataHolder) {

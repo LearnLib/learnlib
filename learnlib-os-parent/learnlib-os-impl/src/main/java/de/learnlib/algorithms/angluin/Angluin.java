@@ -98,6 +98,12 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 			}
 		}
 
+		for (Word<S> newCandidate : newCandidates) {
+			if (!candidates.contains(newCandidate)) {
+				candidates.add(newCandidate);
+			}
+		}
+
 		processMembershipQueriesForStates(prefixes, observationTable.getSuffixes());
 		processMembershipQueriesForStates(newCandidates, observationTable.getSuffixes());
 
