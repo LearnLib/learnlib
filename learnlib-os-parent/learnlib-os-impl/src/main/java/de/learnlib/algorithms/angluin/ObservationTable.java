@@ -8,6 +8,7 @@ import net.automatalib.words.Word;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +20,8 @@ import java.util.Map;
  */
 public class ObservationTable<S> {
 
-	private List<Word<S>> states;     // S
-	private List<Word<S>> candidates; // SA
+	private LinkedHashSet<Word<S>> states;     // S
+	private LinkedHashSet<Word<S>> candidates; // SA
 	private List<Word<S>> suffixes;   // E
 
 	private Map<Word<S>, Boolean> results;
@@ -28,10 +29,10 @@ public class ObservationTable<S> {
 	public ObservationTable() {
 		Word<S> emptyWord = Word.epsilon();
 
-		states = new ArrayList<>();
+		states = new LinkedHashSet<>();
 		states.add(emptyWord);
 
-		candidates = new ArrayList<>();
+		candidates = new LinkedHashSet<>();
 
 		suffixes = new ArrayList<>();
 		suffixes.add(emptyWord);
@@ -44,7 +45,7 @@ public class ObservationTable<S> {
 	 *
 	 * @return The set of states.
 	 */
-	List<Word<S>> getStates() {
+	LinkedHashSet<Word<S>> getStates() {
 		return states;
 	}
 
@@ -53,7 +54,7 @@ public class ObservationTable<S> {
 	 *
 	 * @return The set of candidates.
 	 */
-	List<Word<S>> getCandidates() {
+	LinkedHashSet<Word<S>> getCandidates() {
 		return candidates;
 	}
 

@@ -8,9 +8,10 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -69,10 +70,10 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 			throw new IllegalStateException("Unable to refine hypothesis before first learn iteration!");
 		}
 
-		List<Word<S>> states = observationTable.getStates();
-		List<Word<S>> candidates = observationTable.getCandidates();
+		LinkedHashSet<Word<S>> states = observationTable.getStates();
+		LinkedHashSet<Word<S>> candidates = observationTable.getCandidates();
 
-		List<Word<S>> prefixes = new LinkedList<>();
+		LinkedHashSet<Word<S>> prefixes = new LinkedHashSet<>();
 		for (Word<S> prefix : prefixesOfWord(ceQuery.getInput())) {
 			if (!states.contains(prefix)) {
 				prefixes.add(prefix);
@@ -87,7 +88,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 			}
 		}
 
-		List<Word<S>> newCandidates = new LinkedList<>();
+		LinkedHashSet<Word<S>> newCandidates = new LinkedHashSet<>();
 
 		for (Word<S> prefix : prefixes) {
 			for (S alphabetSymbol : alphabet) {
@@ -98,11 +99,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 			}
 		}
 
-		for (Word<S> newCandidate : newCandidates) {
-			if (!candidates.contains(newCandidate)) {
-				candidates.add(newCandidate);
-			}
-		}
+		candidates.addAll(newCandidates);
 
 		processMembershipQueriesForStates(prefixes, observationTable.getSuffixes());
 		processMembershipQueriesForStates(newCandidates, observationTable.getSuffixes());
@@ -153,7 +150,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 			observationTable.getStates().add(candidate);
 			observationTable.getCandidates().remove(candidate);
 
-			List<Word<S>> newCandidates = new ArrayList<>(alphabet.size());
+			LinkedHashSet<Word<S>> newCandidates = new LinkedHashSet<>(alphabet.size());
 			for (S alphabetSymbol : alphabet) {
 				Word<S> newCandidate = candidate.append(alphabetSymbol);
 				newCandidates.add(newCandidate);
@@ -193,7 +190,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	 * @param suffixes
 	 * 		The suffixes which are appended to the states before sending the resulting word to the oracle.
 	 */
-	private void processMembershipQueriesForStates(List<Word<S>> states, List<Word<S>> suffixes) {
+	private void processMembershipQueriesForStates(LinkedHashSet<Word<S>> states, Collection<Word<S>> suffixes) {
 		List<Query<S, Boolean>> queries = new ArrayList<>(states.size());
 		for (Word<S> state : states) {
 			for (Word<S> suffix : suffixes) {
