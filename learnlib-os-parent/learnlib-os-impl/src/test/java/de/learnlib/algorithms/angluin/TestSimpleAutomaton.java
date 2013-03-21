@@ -61,8 +61,7 @@ public class TestSimpleAutomaton {
 	}
 
 	private Query<Symbol, Boolean> createCounterExample() {
-		Word<Symbol> counterExample = Word.epsilon();
-		counterExample = counterExample.append(one).append(one).append(zero);
+		Word<Symbol> counterExample = Word.fromSymbols(one, one, zero);
 		Query<Symbol, Boolean> query = new Query<>(counterExample);
 		query.setOutput(false);
 		return query;
