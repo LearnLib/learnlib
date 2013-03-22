@@ -39,8 +39,7 @@ import net.automatalib.examples.mealy.ExampleStack;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Symbol;
-import org.junit.Test;
-
+import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
