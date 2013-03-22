@@ -16,20 +16,6 @@
  */
 package de.learnlib.lstar;
 
-import static net.automatalib.examples.dfa.ExamplePaulAndMary.constructMachine;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.FastDFA;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
-
-import org.junit.Test;
-
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
@@ -45,6 +31,17 @@ import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.dfa.ExtensibleLStarDFA;
 import de.learnlib.oracles.SimulatorOracle;
 import de.learnlib.oracles.eq.SimulatorEQOracle;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.FastDFA;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.Symbol;
+import org.testng.annotations.Test;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static net.automatalib.examples.dfa.ExamplePaulAndMary.constructMachine;
 
 public class LStarDFATest extends LearningTest {
 
