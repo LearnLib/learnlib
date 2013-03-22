@@ -9,7 +9,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
-import org.junit.Assert;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
