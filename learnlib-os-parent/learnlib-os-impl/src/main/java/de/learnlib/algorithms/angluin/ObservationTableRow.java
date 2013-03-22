@@ -39,4 +39,9 @@ class ObservationTableRow {
 		return rowData.hashCode();
 	}
 
+	@Override
+	public String toString() {
+		return rowData.toString();
+	}
+
 }

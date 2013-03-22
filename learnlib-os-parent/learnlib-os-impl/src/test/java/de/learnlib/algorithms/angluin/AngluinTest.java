@@ -1,6 +1,5 @@
 package de.learnlib.algorithms.angluin;
 
-import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.Query;
 import de.learnlib.oracles.SafeOracle;
 import de.learnlib.oracles.SimulatorOracle;
@@ -21,7 +20,7 @@ public class AngluinTest {
 	private Symbol zero;
 	private Symbol one;
 
-	private LearningAlgorithm<DFA, Symbol, Boolean> angluin;
+	private Angluin<Symbol> angluin;
 
 	@BeforeClass
 	public void setup() {
@@ -53,6 +52,9 @@ public class AngluinTest {
 		angluin.startLearning();
 		DFA hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(hypothesis.getStates().size(), 2);
+
+		String observationTableOutput = angluin.getStringRepresentationOfObservationTable();
+		Assert.assertEquals(8, observationTableOutput.split("\n").length);
 	}
 
 	@Test(dependsOnMethods = "testFirstHypothesis", expectedExceptions = IllegalStateException.class)
@@ -72,6 +74,9 @@ public class AngluinTest {
 		angluin.refineHypothesis(createCounterExample(false, zero, one, zero));
 		DFA hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(4, hypothesis.getStates().size());
+
+		String observationTableOutput = angluin.getStringRepresentationOfObservationTable();
+		Assert.assertEquals(18, observationTableOutput.split("\n").length);
 	}
 
 	private Query<Symbol, Boolean> createCounterExample(boolean output, Symbol... symbols) {

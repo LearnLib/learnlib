@@ -231,4 +231,8 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 		return prefixes;
 	}
 
+	public String getStringRepresentationOfObservationTable() {
+		return ObservationTablePrinter.getPrintableStringRepresentation(observationTable);
+	}
+
 }
