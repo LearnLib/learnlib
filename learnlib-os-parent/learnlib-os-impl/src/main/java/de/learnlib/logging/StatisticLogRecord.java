@@ -17,9 +17,9 @@
 
 package de.learnlib.logging;
 
-import java.util.logging.Level;
-
 import de.learnlib.statistics.StatisticData;
+
+import java.util.logging.Level;
 
 /**
  *

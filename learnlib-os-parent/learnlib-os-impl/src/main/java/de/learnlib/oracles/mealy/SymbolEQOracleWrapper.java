@@ -16,12 +16,12 @@
  */
 package de.learnlib.oracles.mealy;
 
+import de.learnlib.api.EquivalenceOracle;
+import de.learnlib.api.Query;
 import net.automatalib.automata.concepts.SODetOutputAutomaton;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import de.learnlib.api.EquivalenceOracle;
-import de.learnlib.api.Query;
 
 public class SymbolEQOracleWrapper<A extends SODetOutputAutomaton<?,I,?,Word<O>>, I, O> implements
 		EquivalenceOracle<A, I, O> {

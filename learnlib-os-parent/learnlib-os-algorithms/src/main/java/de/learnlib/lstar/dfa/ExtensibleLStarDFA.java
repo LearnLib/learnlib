@@ -16,13 +16,6 @@
  */
 package de.learnlib.lstar.dfa;
 
-import java.util.Collections;
-import java.util.List;
-
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.lstar.ExtensibleAutomatonLStar;
 import de.learnlib.lstar.ce.ClassicLStarCEXHandler;
@@ -30,6 +23,13 @@ import de.learnlib.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.lstar.closing.CloseFirstStrategy;
 import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.table.Row;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
+import java.util.Collections;
+import java.util.List;
 
 
 /**

@@ -16,11 +16,11 @@
  */
 package de.learnlib.oracles.mealy;
 
-import java.util.Collection;
-
-import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
+import net.automatalib.words.Word;
+
+import java.util.Collection;
 
 
 /**

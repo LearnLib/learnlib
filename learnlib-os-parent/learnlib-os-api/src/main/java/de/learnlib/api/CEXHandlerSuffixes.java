@@ -16,9 +16,9 @@
  */
 package de.learnlib.api;
 
-import java.util.Collection;
-
 import net.automatalib.words.Word;
+
+import java.util.Collection;
 
 /**
  * This interface specifies components that analize counterexamples

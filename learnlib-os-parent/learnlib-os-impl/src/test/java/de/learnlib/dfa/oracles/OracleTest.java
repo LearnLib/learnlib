@@ -17,19 +17,17 @@
 
 package de.learnlib.dfa.oracles;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import de.learnlib.api.Query;
 import de.learnlib.oracles.SafeOracle;
 import de.learnlib.oracles.SimulatorOracle;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.Symbol;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static net.automatalib.examples.dfa.ExamplePaulAndMary.*;
 

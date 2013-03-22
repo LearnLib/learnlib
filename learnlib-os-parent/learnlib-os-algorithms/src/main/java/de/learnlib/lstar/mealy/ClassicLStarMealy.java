@@ -16,21 +16,21 @@
  */
 package de.learnlib.lstar.mealy;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.MutableMealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.lstar.ExtensibleAutomatonLStar;
 import de.learnlib.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.table.Row;
 import de.learnlib.oracles.mealy.SymbolOracleWrapper;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.MutableMealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An implementation of the L*Mealy algorithm for inferring Mealy machines, as described
