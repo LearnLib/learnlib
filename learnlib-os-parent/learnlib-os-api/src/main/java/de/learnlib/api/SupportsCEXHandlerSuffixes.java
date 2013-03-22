@@ -23,14 +23,17 @@ package de.learnlib.api;
  * inferface contract.
  * 
  * @author Maik Merten <maikmerten@googlemail.com>
+ * 
+ * @param <I> input symbol class
+ * @param <O> output symbol class
  */
-public interface SupportsCEXHandlerSuffixes {
+public interface SupportsCEXHandlerSuffixes<I, O> {
     /**
      * Provide a counterexample handling strategy as defined by
      * {@link CEXHandlerSuffixes}.
      * 
      * @param handler The counterexamle handling strategy
      */
-    public void setCEXHandlerSuffixes(CEXHandlerSuffixes handler);
+    public void setCEXHandlerSuffixes(CEXHandlerSuffixes<I, O> handler);
     
 }
