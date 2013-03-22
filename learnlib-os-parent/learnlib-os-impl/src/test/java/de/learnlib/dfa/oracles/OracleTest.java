@@ -23,13 +23,13 @@ import de.learnlib.oracles.SimulatorOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Symbol;
-import org.junit.Assert;
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static net.automatalib.examples.dfa.ExamplePaulAndMary.*;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  *
@@ -60,10 +60,10 @@ public class OracleTest {
         oracle.processQueries(queries);
         
         // Paul loves Mary...
-        Assert.assertEquals(queries.get(0).getOutput(), true);
+        Assert.assertEquals(queries.get(0).getOutput(), (Object)true);
         
         // ... but Mary does not love Paul :-(
-        Assert.assertEquals(queries.get(1).getOutput(), false);
+        Assert.assertEquals(queries.get(1).getOutput(), (Object)false);
         
     }
     
