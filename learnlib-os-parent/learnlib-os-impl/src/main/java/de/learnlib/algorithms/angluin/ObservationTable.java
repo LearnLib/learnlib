@@ -194,7 +194,7 @@ public class ObservationTable<S> {
 		throw new IllegalStateException("Both rows are identical, unable to determine a witness!");
 	}
 
-	private ObservationTableRow getRowForPrefix(Word<S> state) {
+	ObservationTableRow getRowForPrefix(Word<S> state) {
 		ObservationTableRow row = new ObservationTableRow();
 
 		for (Word<S> suffix : suffixes) {
@@ -217,6 +217,10 @@ public class ObservationTable<S> {
 				(int) (1.5 * states.size()));
 
 		for (Word<S> state : states) {
+			if (dfaStates.containsKey(getRowForPrefix(state))) {
+				continue;
+			}
+
 			FastDFAState dfaState;
 
 			if (state.isEmpty()) {
