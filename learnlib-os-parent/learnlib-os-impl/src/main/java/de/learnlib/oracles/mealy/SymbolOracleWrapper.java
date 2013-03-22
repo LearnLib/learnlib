@@ -14,13 +14,13 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package oracles.mealy;
+package de.learnlib.oracles.mealy;
 
-import java.util.Collection;
-
-import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
+import net.automatalib.words.Word;
+
+import java.util.Collection;
 
 
 /**

@@ -1,19 +1,18 @@
 package de.learnlib.lstar;
 
-import org.junit.Assert;
-
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.words.Alphabet;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.Query;
-import de.learnlib.oracles.eq.SimulatorEQOracle;
+import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.words.Alphabet;
+import org.junit.Assert;
 
 public class LearningTest {
 	
-	public static <M extends UniversalDeterministicAutomaton<?,I,?,?,?>,I,O,S,T,A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>> void testLearnModel(A target, Alphabet<I> alphabet, LearningAlgorithm<M, I, O> learner) {
-		EquivalenceOracle<M, I, O> eqOracle = new SimulatorEQOracle<M, I, O>(target);
-		
+	public static <I,O,M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> void testLearnModel(UniversalDeterministicAutomaton<?, I, ?, ?, ?> target,
+			Alphabet<I> alphabet,
+			LearningAlgorithm<M, I, O> learner,
+			EquivalenceOracle<? super M, I, O> eqOracle) {
 		int maxRounds = target.size();
 		
 		learner.startLearning();

@@ -16,20 +16,20 @@
  */
 package de.learnlib.lstar.mealy;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.lstar.ExtensibleAutomatonLStar;
 import de.learnlib.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.table.Row;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExtensibleLStarMealy<I, O> extends
 		ExtensibleAutomatonLStar<MealyMachine<?,I,?,O>, I, Word<O>, Integer, CompactMealyTransition<O>, Void, O, CompactMealy<I,O>> {
@@ -44,7 +44,7 @@ public class ExtensibleLStarMealy<I, O> extends
 			ObservationTableCEXHandler<I, Word<O>> cexHandler,
 			ClosingStrategy<I, Word<O>> closingStrategy) {
 		super(alphabet, oracle, new CompactMealy<I,O>(alphabet),
-				new ArrayList<Word<I>>(initialSuffixes),
+				LStarMealyUtil.ensureSuffixCompliancy(initialSuffixes, alphabet, cexHandler.needsConsistencyCheck()),
 				cexHandler,
 				closingStrategy);
 	}

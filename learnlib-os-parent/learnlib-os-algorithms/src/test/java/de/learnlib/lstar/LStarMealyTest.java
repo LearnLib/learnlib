@@ -16,20 +16,7 @@
  */
 package de.learnlib.lstar;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.automata.transout.impl.FastMealyState;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.FastAlphabet;
-import net.automatalib.words.impl.Symbol;
-
-import org.junit.Test;
-
+import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.lstar.ce.ClassicLStarCEXHandler;
@@ -44,42 +31,25 @@ import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.mealy.ClassicLStarMealy;
 import de.learnlib.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.oracles.SimulatorOracle;
+import de.learnlib.oracles.eq.SimulatorEQOracle;
+import de.learnlib.oracles.mealy.SymbolEQOracleWrapper;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.impl.FastMealy;
+import net.automatalib.examples.mealy.ExampleStack;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.Symbol;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class LStarMealyTest extends LearningTest {
 
-	private final static Symbol in_a = new Symbol("a");
-    private final static Symbol in_b = new Symbol("b");
-    
-    private final static String out_ok = "ok";
-    private final static String out_error = "error";
-    
-    private FastMealy<Symbol, String> constructMachine() {
-        Alphabet<Symbol> alpha = new FastAlphabet<>();
-        alpha.add(in_a);
-        alpha.add(in_b);
-    
-        
-        FastMealy<Symbol, String> fm = new FastMealy<>(alpha);
-        
-        FastMealyState<String> s0 = fm.addInitialState(),
-                s1 = fm.addState(),
-                s2 = fm.addState();
-        
-        fm.addTransition(s0, in_a, s1, out_ok);
-        fm.addTransition(s0, in_b, s0, out_error);
-        
-        fm.addTransition(s1, in_a, s2, out_ok);
-        fm.addTransition(s1, in_b, s0, out_ok);
-        
-        fm.addTransition(s2, in_a, s2, out_error);
-        fm.addTransition(s2, in_b, s1, out_ok);
-        
-        return fm;
-    }
-    
 	@Test
 	public void testClassicLStarMealy() {
-		FastMealy<Symbol,String> mealy = constructMachine();
+		FastMealy<Symbol,String> mealy = ExampleStack.constructMachine();
 		Alphabet<Symbol> alphabet = mealy.getInputAlphabet();
 		
 		MembershipOracle<Symbol,Word<String>> oracle
@@ -97,8 +67,15 @@ public class LStarMealyTest extends LearningTest {
 					CloseShortestStrategy.<Symbol,String>getInstance());
 			
 		
-		List<Word<Symbol>> initSuffixes
-			= Collections.singletonList(Word.fromLetter(alphabet.getSymbol(0)));
+
+		// Empty list of suffixes => minimal compliant set
+		List<Word<Symbol>> initSuffixes = Collections.emptyList();
+		
+		EquivalenceOracle<? super MealyMachine<?,Symbol,?,String>, Symbol, Word<String>> mealyEqOracle
+					= new SimulatorEQOracle<>(mealy);
+					
+		EquivalenceOracle<? super MealyMachine<?,Symbol,?,String>, Symbol, String> mealySymEqOracle
+			= new SymbolEQOracleWrapper<>(mealyEqOracle);
 		
 		for(ObservationTableCEXHandler<Symbol,String> handler : cexHandlers) {
 			for(ClosingStrategy<Symbol,String> strategy : closingStrategies) {
@@ -106,14 +83,14 @@ public class LStarMealyTest extends LearningTest {
 				= ClassicLStarMealy.createForWordOracle(alphabet, oracle, initSuffixes,
 						handler, strategy);
 				
-				testLearnModel(mealy, alphabet, learner);
+				testLearnModel(mealy, alphabet, learner, mealySymEqOracle);
 			}
 		}
 	}
 	
 	@Test
 	public void testOptimizedLStarMealy() {
-		FastMealy<Symbol,String> mealy = constructMachine();
+		FastMealy<Symbol,String> mealy = ExampleStack.constructMachine();
 		Alphabet<Symbol> alphabet = mealy.getInputAlphabet();
 		
 		MembershipOracle<Symbol,Word<String>> oracle
@@ -131,8 +108,11 @@ public class LStarMealyTest extends LearningTest {
 					CloseShortestStrategy.<Symbol,Word<String>>getInstance());
 			
 		
-		List<Word<Symbol>> initSuffixes
-			= Collections.singletonList(Word.fromLetter(alphabet.getSymbol(0)));
+		// Empty list of suffixes => minimal compliant set
+		List<Word<Symbol>> initSuffixes = Collections.emptyList();
+		
+		EquivalenceOracle<? super MealyMachine<?,Symbol,?,String>, Symbol, Word<String>> mealyEqOracle
+				= new SimulatorEQOracle<>(mealy);
 		
 		for(ObservationTableCEXHandler<Symbol,Word<String>> handler : cexHandlers) {
 			for(ClosingStrategy<Symbol,Word<String>> strategy : closingStrategies) {
@@ -140,7 +120,7 @@ public class LStarMealyTest extends LearningTest {
 				= new ExtensibleLStarMealy<>(alphabet, oracle, initSuffixes,
 						handler, strategy);
 				
-				testLearnModel(mealy, alphabet, learner);
+				testLearnModel(mealy, alphabet, learner, mealyEqOracle);
 			}
 		}
 	}

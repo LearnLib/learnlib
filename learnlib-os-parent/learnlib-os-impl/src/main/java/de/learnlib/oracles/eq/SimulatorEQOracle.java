@@ -16,30 +16,37 @@
  */
 package de.learnlib.oracles.eq;
 
+import de.learnlib.api.EquivalenceOracle;
+import de.learnlib.api.Query;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.automata.concepts.OutputAutomaton;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import de.learnlib.api.EquivalenceOracle;
-import de.learnlib.api.Query;
 
 
 
-public class SimulatorEQOracle<A extends UniversalDeterministicAutomaton<?,I,?,?,?>,I,O>
-	implements EquivalenceOracle<A, I, O> {
+public class SimulatorEQOracle<I,O>
+	implements EquivalenceOracle<UniversalDeterministicAutomaton<?, I, ?, ?, ?>, I, O> {
 	
 	private final UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference;
+	private final OutputAutomaton<?, I, ?, O> output;
 	
-	public SimulatorEQOracle(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference) {
+	public <S,T,R extends UniversalDeterministicAutomaton<S, I, T, ?, ?> & OutputAutomaton<S, I, T, O>>
+			SimulatorEQOracle(R reference) {
 		this.reference = reference;
+		this.output = reference;
 	}
 
 	@Override
-	public Query<I, O> findCounterExample(A hypothesis, Alphabet<I> alphabet) {
+	public Query<I, O> findCounterExample(UniversalDeterministicAutomaton<?, I, ?, ?, ?> hypothesis, Alphabet<I> alphabet) {
 		Word<I> sep = Automata.findSeparatingWord(reference, hypothesis, alphabet);
 		if(sep == null)
 			return null;
-		return new Query<>(sep); // FIXME: Output missing!
+		O out = output.computeOutput(sep);
+		Query<I,O> qry = new Query<>(sep);
+		qry.setOutput(out);
+		return qry;
 	}
 	
 }
