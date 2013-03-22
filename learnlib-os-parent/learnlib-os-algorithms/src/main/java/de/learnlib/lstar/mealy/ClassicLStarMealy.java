@@ -25,12 +25,12 @@ import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import oracles.mealy.SymbolOracleWrapper;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.lstar.ExtensibleAutomatonLStar;
 import de.learnlib.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.table.Row;
+import de.learnlib.oracles.mealy.SymbolOracleWrapper;
 
 /**
  * An implementation of the L*Mealy algorithm for inferring Mealy machines, as described

@@ -29,6 +29,7 @@ import net.automatalib.words.impl.Symbol;
 
 import org.junit.Test;
 
+import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.lstar.ce.ClassicLStarCEXHandler;
@@ -43,6 +44,8 @@ import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.mealy.ClassicLStarMealy;
 import de.learnlib.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.oracles.SimulatorOracle;
+import de.learnlib.oracles.eq.SimulatorEQOracle;
+import de.learnlib.oracles.mealy.SymbolEQOracleWrapper;
 
 public class LStarMealyTest extends LearningTest {
 
@@ -70,13 +73,19 @@ public class LStarMealyTest extends LearningTest {
 		// Empty list of suffixes => minimal compliant set
 		List<Word<Symbol>> initSuffixes = Collections.emptyList();
 		
+		EquivalenceOracle<? super MealyMachine<?,Symbol,?,String>, Symbol, Word<String>> mealyEqOracle
+					= new SimulatorEQOracle<>(mealy);
+					
+		EquivalenceOracle<? super MealyMachine<?,Symbol,?,String>, Symbol, String> mealySymEqOracle
+			= new SymbolEQOracleWrapper<>(mealyEqOracle);
+		
 		for(ObservationTableCEXHandler<Symbol,String> handler : cexHandlers) {
 			for(ClosingStrategy<Symbol,String> strategy : closingStrategies) {
 				LearningAlgorithm<MealyMachine<?,Symbol,?,String>,Symbol,String> learner
 				= ClassicLStarMealy.createForWordOracle(alphabet, oracle, initSuffixes,
 						handler, strategy);
 				
-				testLearnModel(mealy, alphabet, learner);
+				testLearnModel(mealy, alphabet, learner, mealySymEqOracle);
 			}
 		}
 	}
@@ -104,13 +113,16 @@ public class LStarMealyTest extends LearningTest {
 		// Empty list of suffixes => minimal compliant set
 		List<Word<Symbol>> initSuffixes = Collections.emptyList();
 		
+		EquivalenceOracle<? super MealyMachine<?,Symbol,?,String>, Symbol, Word<String>> mealyEqOracle
+				= new SimulatorEQOracle<>(mealy);
+		
 		for(ObservationTableCEXHandler<Symbol,Word<String>> handler : cexHandlers) {
 			for(ClosingStrategy<Symbol,Word<String>> strategy : closingStrategies) {
 				LearningAlgorithm<MealyMachine<?,Symbol,?,String>,Symbol,Word<String>> learner
 				= new ExtensibleLStarMealy<>(alphabet, oracle, initSuffixes,
 						handler, strategy);
 				
-				testLearnModel(mealy, alphabet, learner);
+				testLearnModel(mealy, alphabet, learner, mealyEqOracle);
 			}
 		}
 	}

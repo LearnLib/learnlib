@@ -30,6 +30,7 @@ import net.automatalib.words.impl.Symbol;
 
 import org.junit.Test;
 
+import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.lstar.ce.ClassicLStarCEXHandler;
@@ -43,6 +44,7 @@ import de.learnlib.lstar.closing.CloseShortestStrategy;
 import de.learnlib.lstar.closing.ClosingStrategy;
 import de.learnlib.lstar.dfa.ExtensibleLStarDFA;
 import de.learnlib.oracles.SimulatorOracle;
+import de.learnlib.oracles.eq.SimulatorEQOracle;
 
 public class LStarDFATest extends LearningTest {
 
@@ -68,6 +70,8 @@ public class LStarDFATest extends LearningTest {
 		// Empty set of suffixes => minimum compliant set
 		List<Word<Symbol>> suffixes = Collections.emptyList();
 		
+		EquivalenceOracle<? super DFA<?,Symbol>, Symbol, Boolean> eqOracle
+			= new SimulatorEQOracle<>(targetDFA);
 		
 		for(ObservationTableCEXHandler<Symbol,Boolean> handler : cexHandlers) {
 			for(ClosingStrategy<Symbol,Boolean> strategy : closingStrategies) {
@@ -76,7 +80,7 @@ public class LStarDFATest extends LearningTest {
 					= new ExtensibleLStarDFA<>(alphabet, dfaOracle, suffixes,
 							handler, strategy);
 					
-				testLearnModel(targetDFA, alphabet, learner);
+				testLearnModel(targetDFA, alphabet, learner, eqOracle);
 			}
 		}
 	}
