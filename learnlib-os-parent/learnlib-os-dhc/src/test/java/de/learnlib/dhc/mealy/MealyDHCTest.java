@@ -20,7 +20,7 @@ package de.learnlib.dhc.mealy;
 import de.learnlib.oracles.SimulatorOracle;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static net.automatalib.examples.mealy.ExampleGrid.*;
 import net.automatalib.words.Alphabet;
