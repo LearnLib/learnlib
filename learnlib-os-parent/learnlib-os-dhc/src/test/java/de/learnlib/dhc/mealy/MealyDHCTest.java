@@ -17,15 +17,19 @@
 
 package de.learnlib.dhc.mealy;
 
+import de.learnlib.api.Query;
 import de.learnlib.oracles.SimulatorOracle;
+import de.learnlib.oracles.eq.SimulatorEQOracle;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
 import org.testng.annotations.Test;
 
 import static net.automatalib.examples.mealy.ExampleGrid.*;
+import net.automatalib.examples.mealy.ExampleStack;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Symbol;
+import org.testng.Assert;
 
 /**
  *
@@ -34,18 +38,62 @@ import net.automatalib.words.impl.Symbol;
 public class MealyDHCTest {
     
     @Test
-    public void testMealyDHC() {
+    public void testMealyDHCGrid() {
         
-        FastMealy<Symbol, Integer> fm = constructMachine(1, 1);
+        final int xsize = 5;
+        final int ysize = 5;
+        
+        FastMealy<Symbol, Integer> fm = constructMachine(xsize, ysize);
         Alphabet<Symbol> alphabet = fm.getInputAlphabet();
         
         SimulatorOracle<Symbol, Word<Integer>> simoracle = new SimulatorOracle<>(fm);
         
-        MealyDHC dhc = new MealyDHC(alphabet, simoracle);
+        MealyDHC<Symbol, Integer> dhc = new MealyDHC<>(alphabet, simoracle);
         
         dhc.startLearning();
         MealyMachine<?, Symbol, ?, Integer> hypo = dhc.getHypothesisModel();
         
+        Assert.assertEquals(hypo.size(), (xsize * ysize), "Mismatch in size of learned hypothesis");
+        
+    }
+    
+    @Test
+    public void testMealyDHCStack() {
+        
+        FastMealy<Symbol, String> fm = ExampleStack.constructMachine();
+        Alphabet<Symbol> alphabet = fm.getInputAlphabet();
+        
+        SimulatorOracle<Symbol, Word<String>> simoracle = new SimulatorOracle<>(fm);
+        
+        MealyDHC<Symbol, String> dhc = new MealyDHC<>(alphabet, simoracle);
+        
+        dhc.startLearning();
+        
+        MealyMachine<?, Symbol, ?, String> hypo = dhc.getHypothesisModel();
+        
+        // for this example the first hypothesis should have two states
+        Assert.assertEquals(hypo.size(), 2, "Mismatch in size of learned hypothesis");
+        
+        SimulatorEQOracle<Symbol, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
+        
+        Query<Symbol, Word<String>> cexQuery = eqoracle.findCounterExample(hypo, alphabet);
+        
+        // a counterexample has to be found
+        Assert.assertNotNull(cexQuery, "No counterexample found for incomplete hypothesis");
+        
+        boolean refined = dhc.refineHypothesis(cexQuery);
+        
+        // the counterexample has to lead to a refinement
+        Assert.assertTrue(refined, "No refinement reported by learning algorithm");
+        
+        hypo = dhc.getHypothesisModel();
+        
+        // the refined hypothesis should now have the correct size
+        Assert.assertEquals(hypo.size(), fm.size(), "Refined hypothesis does not have correct size");
+
+        // no counterexample shall be found now
+        cexQuery = eqoracle.findCounterExample(hypo, alphabet);
+        Assert.assertNull(cexQuery, "Counterexample found despite correct model size");
         
         
     }

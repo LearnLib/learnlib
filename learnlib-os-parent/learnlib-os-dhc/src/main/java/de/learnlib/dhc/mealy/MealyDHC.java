@@ -16,9 +16,12 @@
  */
 package de.learnlib.dhc.mealy;
 
+import de.learnlib.api.CEXHandlerSuffixes;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
+import de.learnlib.api.SupportsCEXHandlerSuffixes;
+import de.learnlib.cexhandlers.CEXHandlerAllSuffixes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -36,12 +39,14 @@ import net.automatalib.words.impl.SimpleAlphabet;
  *
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>> {
+public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>>,
+        SupportsCEXHandlerSuffixes<I, Word<O>> {
 
     private Alphabet<I> alphabet;
     private MembershipOracle<I, Word<O>> oracle;
     private SimpleAlphabet<Word<I>> splitters = new SimpleAlphabet<>();
     private FastMealy<I, O> hypothesis;
+    private CEXHandlerSuffixes<I, Word<O>> cexhandler = new CEXHandlerAllSuffixes<>();
 
     public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
         this.alphabet = alphabet;
@@ -143,10 +148,23 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 
     @Override
     public boolean refineHypothesis(Query<I, Word<O>> ceQuery) {
-        // TODO: extract new splitters from counterexample
+        if (hypothesis == null) {
+            throw new IllegalStateException("No hypothesis learned yet");
+        }
+        
+        int oldsize = hypothesis.size();
+        
+        ArrayList<Word<I>> suffixes = new ArrayList<>();
+        cexhandler.createSuffixes(ceQuery, suffixes);
+        for(Word<I> suffix : suffixes) {
+            if(suffix.size() > 1 && !splitters.contains(suffix)) {
+                splitters.add(suffix);
+            }
+        }
 
         startLearning();
-        return true;
+
+        return oldsize != hypothesis.size();
     }
 
     @Override
@@ -172,6 +190,11 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
         } while (true);
 
         return Word.fromList(sequence);
+    }
+
+    @Override
+    public void setCEXHandlerSuffixes(CEXHandlerSuffixes<I, Word<O>> handler) {
+        this.cexhandler = handler;
     }
 
 
