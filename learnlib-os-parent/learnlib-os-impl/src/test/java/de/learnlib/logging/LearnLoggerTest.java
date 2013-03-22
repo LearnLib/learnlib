@@ -23,13 +23,11 @@ import static org.junit.Assert.assertNull;
 
 import java.util.EnumSet;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 import de.learnlib.logging.filter.CategoryFilter;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 /**
  *
@@ -48,13 +46,6 @@ public class LearnLoggerTest {
     public static void tearDownClass() {
     }
     
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of getLogger method, of class LearnLogger.
