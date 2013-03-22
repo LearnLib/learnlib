@@ -20,7 +20,8 @@
         <!-- core functionality -->
         <module>./learnlib-os-api</module>
         <module>./learnlib-os-impl</module>
-		<module>./learnlib-os-algorithms</module>
+	<module>./learnlib-os-algorithms</module>
+        <module>./learnlib-os-dhc</module>
   </modules>
 
     <!--  
