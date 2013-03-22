@@ -16,19 +16,6 @@
  */
 package de.learnlib.lstar;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.examples.mealy.ExampleStack;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
-
-import org.junit.Test;
-
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
@@ -46,6 +33,16 @@ import de.learnlib.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.oracles.SimulatorOracle;
 import de.learnlib.oracles.eq.SimulatorEQOracle;
 import de.learnlib.oracles.mealy.SymbolEQOracleWrapper;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.impl.FastMealy;
+import net.automatalib.examples.mealy.ExampleStack;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.Symbol;
+import org.testng.annotations.Test;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class LStarMealyTest extends LearningTest {
 

@@ -16,13 +16,13 @@
  */
 package de.learnlib.oracles.eq;
 
+import de.learnlib.api.EquivalenceOracle;
+import de.learnlib.api.Query;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.OutputAutomaton;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import de.learnlib.api.EquivalenceOracle;
-import de.learnlib.api.Query;
 
 
 

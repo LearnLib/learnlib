@@ -9,8 +9,8 @@
         <relativePath>../pom.xml</relativePath>        
     </parent>
 
-    <artifactId>learnlib-os-impl</artifactId>
-    <name>learnlib-os-impl</name>
+    <artifactId>learnlib-os-dhc</artifactId>
+    <name>learnlib-os-dhc</name>
     <build>
         <plugins>
             <plugin>
@@ -43,14 +43,20 @@
             <artifactId>automata-util</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
+        <dependency>
             <groupId>net.automatalib.supplemental</groupId>
             <artifactId>example-automata</artifactId>
             <version>0.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-os-impl</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     

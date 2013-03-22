@@ -91,13 +91,6 @@
             </plugin>
         </plugins>
 
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-webdav-jackrabbit</artifactId>
-                <version>1.0-beta-7</version>
-            </extension>
-        </extensions>
     </build>
 
     <profiles>
@@ -183,10 +176,10 @@
                 <version>0.3.0-SNAPSHOT</version>                        
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.11</version>
-                <scope>test</scope>
+                <groupId>org.testng</groupId>
+		<artifactId>testng</artifactId>
+		<version>6.8</version>
+		<scope>test</scope>
             </dependency>            
         </dependencies>
     </dependencyManagement>    
@@ -202,24 +195,11 @@
     ================================  REPOSITORIES ===============================  
     -->
     <repositories>
-        <repository>
-            <id>vulturius-webdav</id>
-            <name>jABC Repository</name>
-            <url>https://vulturius.cs.tu-dortmund.de/maven</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
+
     </repositories>
 
     <distributionManagement>
-        <repository>
-            <id>vulturius-webdav</id>
-            <name>jABC Repository</name>
-            <url>dav:https://ls5svn.cs.tu-dortmund.de/maven</url>
-            <uniqueVersion>false</uniqueVersion>
-        </repository>
+
     </distributionManagement>
 
 </project>
