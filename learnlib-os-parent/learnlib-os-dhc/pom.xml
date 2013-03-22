@@ -9,8 +9,8 @@
         <relativePath>../pom.xml</relativePath>        
     </parent>
 
-    <artifactId>learnlib-os-impl</artifactId>
-    <name>learnlib-os-impl</name>
+    <artifactId>learnlib-os-dhc</artifactId>
+    <name>learnlib-os-dhc</name>
     <build>
         <plugins>
             <plugin>
@@ -52,12 +52,12 @@
             <version>0.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>6.8</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-os-impl</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     
 </project>
