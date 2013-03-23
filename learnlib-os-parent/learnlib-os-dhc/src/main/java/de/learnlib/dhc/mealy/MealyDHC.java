@@ -51,7 +51,6 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
     public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
         this.alphabet = alphabet;
         this.oracle = oracle;
-
     }
 
     @Override
@@ -103,47 +102,63 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 
             if (signatures.keySet().contains(sig)) {
                 // this state does not possess a new output signature, remove
-                // state and rewire all transitions to it to the sibling
-                
-                FastMealyState<O> sibling = signatures.get(sig);
-                
-                FastMealyState<O> predecessor = predecessors.get(state);
-                I input = presymbols.get(state);
-                O output = hypothesis.getOutput(predecessor, input);
-                
-                predecessors.remove(state);
-                presymbols.remove(state);
-                
-                hypothesis.removeState(state);
-                
-                hypothesis.addTransition(predecessor, input, sibling, output);
-                
+                // state and rewire all transitions to it to the sibling                
+                redirectToSibling(state, sig, signatures, predecessors, presymbols);
             } else {
                 // this is actually an observably distinct state! Progress!
-                
                 signatures.put(sig, state);
-                
-                for (int i = 0; i < alphabet.size(); ++i) {
-                    // create successor
-                    FastMealyState<O> succ = hypothesis.addState();
-                    
-                    // retrieve I/O for transition
-                    I input = alphabet.getSymbol(i);
-                    O output = queries.get(i).getOutput().getSymbol(0);
-                    
-                    // establish transition
-                    hypothesis.addTransition(state, input, succ, output);
-                    predecessors.put(succ, state);
-                    presymbols.put(succ, input);
-
-                    // schedule successor for exploration
-                    queue.add(succ);
-                }
+                scheduleSuccessors(state, queries, queue, predecessors, presymbols);
             }
+        }
+    }
 
-
+    private Word<I> assembleAccessSequence(FastMealyState<O> state, Map<FastMealyState<O>, FastMealyState<O>> predecessors, Map<FastMealyState<O>, I> presymbols) {
+        List<I> sequence = new LinkedList<>();
+        
+        FastMealyState<O> pre = predecessors.get(state);
+        I sym = presymbols.get(state);
+        while(pre != null && sym != null) {
+            sequence.add(0, sym);
+            state = pre;
+            pre = predecessors.get(state);
+            sym = presymbols.get(state);
         }
 
+        return Word.fromList(sequence);
+    }
+
+    private void redirectToSibling(FastMealyState<O> state, List<Word<O>> sig, Map<List<Word<O>>, FastMealyState<O>> signatures, Map<FastMealyState<O>, FastMealyState<O>> predecessors, Map<FastMealyState<O>, I> presymbols) {
+        FastMealyState<O> sibling = signatures.get(sig);
+
+        FastMealyState<O> predecessor = predecessors.get(state);
+        I input = presymbols.get(state);
+        O output = hypothesis.getOutput(predecessor, input);
+
+        predecessors.remove(state);
+        presymbols.remove(state);
+
+        hypothesis.removeState(state);
+
+        hypothesis.addTransition(predecessor, input, sibling, output);
+    }
+
+    private void scheduleSuccessors(FastMealyState<O> state, ArrayList<Query<I, Word<O>>> queries, Queue<FastMealyState<O>> queue, Map<FastMealyState<O>, FastMealyState<O>> predecessors, Map<FastMealyState<O>, I> presymbols) throws IllegalArgumentException {
+        for (int i = 0; i < alphabet.size(); ++i) {
+            // create successor
+            FastMealyState<O> succ = hypothesis.addState();
+
+            // retrieve I/O for transition
+            I input = alphabet.getSymbol(i);
+            O output = queries.get(i).getOutput().getSymbol(0);
+
+            // establish transition
+            hypothesis.addTransition(state, input, succ, output);
+            predecessors.put(succ, state);
+            presymbols.put(succ, input);
+
+            // schedule successor for exploration
+            queue.add(succ);
+        }
     }
 
     @Override
@@ -151,13 +166,13 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
         if (hypothesis == null) {
             throw new IllegalStateException("No hypothesis learned yet");
         }
-        
+
         int oldsize = hypothesis.size();
-        
+
         ArrayList<Word<I>> suffixes = new ArrayList<>();
         cexhandler.createSuffixes(ceQuery, suffixes);
-        for(Word<I> suffix : suffixes) {
-            if(suffix.size() > 1 && !splitters.contains(suffix)) {
+        for (Word<I> suffix : suffixes) {
+            if (suffix.size() > 1 && !splitters.contains(suffix)) {
                 splitters.add(suffix);
             }
         }
@@ -175,27 +190,8 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
         return (MealyMachine<?, I, ?, O>) hypothesis;
     }
 
-    private Word<I> assembleAccessSequence(FastMealyState<O> state, Map<FastMealyState<O>, FastMealyState<O>> prestate, Map<FastMealyState<O>, I> presymbol) {
-        List<I> sequence = new LinkedList<>();
-
-        do {
-            FastMealyState<O> pre = prestate.get(state);
-            I sym = presymbol.get(state);
-            if (pre != null && sym != null) {
-                sequence.add(0, sym);
-                state = pre;
-            } else {
-                break;
-            }
-        } while (true);
-
-        return Word.fromList(sequence);
-    }
-
     @Override
     public void setCEXHandlerSuffixes(CEXHandlerSuffixes<I, Word<O>> handler) {
         this.cexhandler = handler;
     }
-
-
 }
