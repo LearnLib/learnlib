@@ -22,6 +22,7 @@ import de.learnlib.oracles.SimulatorOracle;
 import de.learnlib.oracles.eq.SimulatorEQOracle;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
+import net.automatalib.examples.mealy.ExampleCoffeeMachine;
 import org.testng.annotations.Test;
 
 import static net.automatalib.examples.mealy.ExampleGrid.*;
@@ -97,5 +98,36 @@ public class MealyDHCTest {
         
         
     }
+	
+	@Test
+    public void testMealyDHCCoffee() {
+        
+        FastMealy<Symbol, String> fm = ExampleCoffeeMachine.constructMachine();
+        Alphabet<Symbol> alphabet = fm.getInputAlphabet();
+        
+        SimulatorOracle<Symbol, Word<String>> simoracle = new SimulatorOracle<>(fm);
+        SimulatorEQOracle<Symbol, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
+		
+        MealyDHC<Symbol, String> dhc = new MealyDHC<>(alphabet, simoracle);
+        
+        int rounds = 0;
+		Query<Symbol, Word<String>> counterexample = null;
+		do {
+			if(counterexample == null) {
+				dhc.startLearning();
+			} else {
+				Assert.assertTrue(dhc.refineHypothesis(counterexample), "Counterexample did not refine hypothesis");
+			}
+			
+			counterexample = eqoracle.findCounterExample(dhc.getHypothesisModel(), alphabet);
+			
+			Assert.assertTrue(rounds++ < fm.size(), "Learning took more rounds than states in target model");
+			
+		} while(counterexample != null);
+		
+        Assert.assertEquals(dhc.getHypothesisModel().size(), fm.size(), "Mismatch in size of learned hypothesis and target model");
+            
+    }
+
     
 }
