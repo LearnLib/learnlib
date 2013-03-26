@@ -32,7 +32,22 @@
       <name>Malte Isberner</name>
       <email>malte.isberner@gmail.com</email>
     </developer>
-  </developers>   
+    <developer>
+      <id>stovocor</id>
+      <name>Stephan Windmüller</name>
+      <email>stephan.windmueller@tu-dortmund.de</email>
+    </developer>
+	<developer>
+	  <id>merten</id>
+	  <name>Maik Merten</name>
+	  <email>maikmerten@googlemail.com</email>
+	</developer>
+	<developer>
+		<id>oliverbauer</id>
+		<name>Oliver Bauer</name>
+		<email>oliver.bauer@tu-dortmund.de</email>
+	</developer>
+  </developers>
   
     <!--  
     ===============================  SCM =======================  
@@ -61,7 +76,7 @@
         <module>./algorithms</module>
 		<module>./eqtests</module>
         <module>./dsl</module>
-	<module>./simulator</module>
+		<module>./simulator</module>
         <module>./test-support</module>
     </modules>	
 

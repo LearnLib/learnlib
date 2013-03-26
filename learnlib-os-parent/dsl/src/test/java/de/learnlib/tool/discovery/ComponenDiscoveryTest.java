@@ -18,7 +18,7 @@ public class ComponenDiscoveryTest {
     @Test
     public void testDiscovery() {
         System.out.println("testDiscovery");
-        String className = "de.learnlib.tool.factories.CounterOracleFactory";
+        String className = "de.learnlib.oracles.CounterOracleFactory";
         ComponentDirectory instance = new ComponentDirectory();
         instance.discoverComponents();
         boolean result = instance.registerComponent(className);        

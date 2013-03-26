@@ -32,7 +32,7 @@ public class HistogramOracle<I,O> implements StatisticOracle<I,O> {
 
     private final HistogramDataSet dataSet;
     
-    private final MembershipOracle<I,O> nextOracle;
+    private MembershipOracle<I,O> nextOracle;
     
     public HistogramOracle(MembershipOracle<I,O> nextOracle, String name) {
         this.nextOracle = nextOracle;
@@ -54,5 +54,10 @@ public class HistogramOracle<I,O> implements StatisticOracle<I,O> {
     @Override
     public StatisticData getStatisticalData() {
         return this.dataSet;
+    }    
+    
+    @Override
+    public void setNext(MembershipOracle<I, O> next) {
+        this.nextOracle = next;
     }    
 }

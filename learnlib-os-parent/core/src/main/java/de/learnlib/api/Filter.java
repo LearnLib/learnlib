@@ -14,21 +14,21 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-
-package de.learnlib.statistics;
-
-import de.learnlib.api.Filter;
+package de.learnlib.api;
 
 /**
- * Common interface for oracles keeping statistics.
+ * A filter is an oracle that can be used as the middle 
+ * element in a chain of oracles.
  * 
  * @author falkhowar
  */
-public interface StatisticOracle<I,O> extends Filter<I, O> {
-    
+public interface Filter<I,O> extends MembershipOracle<I, O> {
+
     /**
+     * sets oracle for processing membership queries.
      * 
-     * @return the statistical data gathered by this oracle 
+     * @param next 
      */
-    public StatisticData getStatisticalData();
+    public void setNext(MembershipOracle<I,O> next);
+
 }
