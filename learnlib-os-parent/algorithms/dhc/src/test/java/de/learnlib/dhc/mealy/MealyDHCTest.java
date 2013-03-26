@@ -17,20 +17,21 @@
 
 package de.learnlib.dhc.mealy;
 
-import de.learnlib.api.Query;
-import de.learnlib.examples.mealy.ExampleCoffeeMachine;
-import de.learnlib.examples.mealy.ExampleStack;
-import de.learnlib.oracles.SimulatorOracle;
-import de.learnlib.oracles.eq.SimulatorEQOracle;
+import static de.learnlib.examples.mealy.ExampleGrid.constructMachine;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
-import org.testng.annotations.Test;
-
-import static de.learnlib.examples.mealy.ExampleGrid.*;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Symbol;
+
 import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import de.learnlib.api.Query;
+import de.learnlib.eqtests.basic.SimulatorEQOracle;
+import de.learnlib.examples.mealy.ExampleCoffeeMachine;
+import de.learnlib.examples.mealy.ExampleStack;
+import de.learnlib.oracles.SimulatorOracle;
 
 /**
  *

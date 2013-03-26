@@ -3,20 +3,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>learnlib-algorithms</artifactId>
+        <artifactId>learnlib-eqtests</artifactId>
         <groupId>de.learnlib</groupId>
         <version>0.9-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>        
     </parent>
 
-    <artifactId>learnlib-lstar-generic</artifactId>
-    <name>learnlib-lstar-generic</name>
-
+    <artifactId>learnlib-basic-eqtests</artifactId>
+    <name>learnlib-basic-eqtests</name>
+ 
     <dependencies>
-	<dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>learnlib-core</artifactId>
-        </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -29,20 +25,18 @@
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-core</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-test-support</artifactId>
         </dependency>
-		<dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>learnlib-basic-eqtests</artifactId>
-			<scope>test</scope>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
-    </dependencies>
-    
+    </dependencies>    
 </project>
 

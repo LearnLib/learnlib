@@ -19,6 +19,7 @@
         <!-- core functionality -->
         <module>./core</module>
         <module>./algorithms</module>
+		<module>./eqtests</module>
         <module>./test-support</module>
     </modules>	
 
@@ -148,7 +149,27 @@
                 <groupId>${project.groupId}</groupId>
                 <artifactId>learnlib-core</artifactId>
                 <version>${project.version}</version>
-            </dependency>                        
+            </dependency>
+			<dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>learnlib-lstar</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+			<dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>learnlib-lstar-generic</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+			<dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>learnlib-dhc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+			<dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>learnlib-basic-eqtests</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-api</artifactId>
