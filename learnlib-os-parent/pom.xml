@@ -12,11 +12,36 @@
     <name>learnlib-parent</name>
     <url>http://www.learnlib.de</url>
 
+    <description>LearnLib is a framework for automata learning and experimentation.</description>
+
+   <licenses>
+    <license>
+      <name>GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007</name>
+      <url>http://www.gnu.org/copyleft/lesser.html</url>
+    </license>
+  </licenses>
+
+   <developers>
+    <developer>
+      <id>falkhowar</id>
+      <name>Falk Howar</name>
+      <email>falk.howar@gmail.com</email>
+    </developer>
+  </developers>   
+
+    <!--  
+    =================================  SONTAPE PARENT ==============================  
+    -->
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
     <!--  
     =================================  MODULES ===================================  
     -->
     <modules>
-        <!-- core functionality -->
         <module>./core</module>
         <module>./algorithms</module>
         <module>./test-support</module>
@@ -32,8 +57,8 @@
         -->
         <automatalib.version>0.3.0-SNAPSHOT</automatalib.version>
         <testng.version>6.8</testng.version>
-		<attach-source.version>2.0.4</attach-source.version>
-		<attach-javadoc.version>2.3</attach-javadoc.version>
+        <attach-source.version>2.0.4</attach-source.version>
+        <attach-javadoc.version>2.3</attach-javadoc.version>
     </properties>
 
 
@@ -70,40 +95,10 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
-            <!-- 
-                attach source and javadoc jars
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-				<version>${attach-source.version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${attach-javadoc.version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 
-    <!--  
+   <!--  
     ===============================  PROFILES =======================  
     -->
     <profiles>
@@ -129,11 +124,56 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <!-- 
+                        attach source and javadoc jars
+                    -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${attach-source.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${attach-javadoc.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
-            
         
     <!--  
+    ===============================  SCM =======================  
+    -->
+  <!-- <scm>
+    <connection>scm:git:git@github.com:juven/git-demo.git</connection>
+    <developerConnection>scm:git:git@github.com:juven/git-demo.git</developerConnection>
+    <url>git@github.com:juven/git-demo.git</url>
+  </scm> -->                        
+
+
+  <!--  
     ===============================  DEFAULT DEP. VERSIONS =======================  
     -->
     <dependencyManagement>
