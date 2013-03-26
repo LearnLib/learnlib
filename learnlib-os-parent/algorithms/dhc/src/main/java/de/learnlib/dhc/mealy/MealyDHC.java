@@ -48,6 +48,21 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
     private SimpleAlphabet<Word<I>> splitters = new SimpleAlphabet<>();
     private FastMealy<I, O> hypothesis;
     private CEXHandlerSuffixes<I, Word<O>> cexhandler = new CEXHandlerAllSuffixes<>();
+	
+	private class QueueElement {
+		private FastMealyState<O> parentState;
+		private QueueElement parentElement;
+		private I transIn;
+		private O transOut;
+		
+		private QueueElement(FastMealyState<O> parentState, QueueElement parentElement, I transIn, O transOut) {
+			this.parentState = parentState;
+			this.parentElement = parentElement;
+			this.transIn = transIn;
+			this.transOut = transOut;
+		}
+	}
+	
 
     public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
         this.alphabet = alphabet;
@@ -68,23 +83,21 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
         // initialize structure to store state output signatures
         Map<List<Word<O>>, FastMealyState<O>> signatures = new HashMap<>();
 
-        // initialize structures for storing access sequences
-        Map<FastMealyState<O>, FastMealyState<O>> predecessors = new HashMap<>();
-        Map<FastMealyState<O>, I> presymbols = new HashMap<>();
-
         // set up new hypothesis machine
         hypothesis = new FastMealy<>(alphabet);
 
         // initialize exploration queue
-        Queue<FastMealyState<O>> queue = new LinkedList<>();
-        queue.add(hypothesis.addInitialState());
+        Queue<QueueElement> queue = new LinkedList<>();
+		
+		// first element to be explored represents the initial state with no predecessor
+        queue.add(new QueueElement(null, null, null, null));
 
         while (!queue.isEmpty()) {
-            // get state to be explored from queue
-            FastMealyState<O> state = queue.poll();
+            // get element to be explored from queue
+            QueueElement elem = queue.poll();
 
             // determine access sequence for state
-            Word<I> access = assembleAccessSequence(state, predecessors, presymbols);
+            Word<I> access = assembleAccessSequence(elem);
 
             // assemble queries
             ArrayList<DefaultQuery<I, Word<O>>> queries = new ArrayList<>(effectivealpha.size());
@@ -100,65 +113,49 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
             for (DefaultQuery<I, Word<O>> query : queries) {
                 sig.add(query.getOutput());
             }
+			
+			FastMealyState<O> sibling = signatures.get(sig);
 
-            if (signatures.keySet().contains(sig)) {
-                // this state does not possess a new output signature, remove
-                // state and rewire all transitions to it to the sibling                
-                redirectToSibling(state, sig, signatures, predecessors, presymbols);
+            if (sibling != null) {
+                // this element does not possess a new output signature
+				// create a transition from parent state to sibling
+				hypothesis.addTransition(elem.parentState, elem.transIn, sibling, elem.transOut);
             } else {
                 // this is actually an observably distinct state! Progress!
-                signatures.put(sig, state);
-                scheduleSuccessors(state, queries, queue, predecessors, presymbols);
+                // Create state and connect via transition to parent
+				FastMealyState<O> state = elem.parentElement == null ? hypothesis.addInitialState() : hypothesis.addState();
+				if(elem.parentElement != null) {
+					hypothesis.addTransition(elem.parentState, elem.transIn, state, elem.transOut);
+				}
+				signatures.put(sig, state);
+				
+                scheduleSuccessors(elem, state, queue, sig);
             }
         }
     }
 
-    private Word<I> assembleAccessSequence(FastMealyState<O> state, Map<FastMealyState<O>, FastMealyState<O>> predecessors, Map<FastMealyState<O>, I> presymbols) {
+    private Word<I> assembleAccessSequence(QueueElement elem) {
         List<I> sequence = new LinkedList<>();
         
-        FastMealyState<O> pre = predecessors.get(state);
-        I sym = presymbols.get(state);
+        QueueElement pre = elem.parentElement;
+        I sym = elem.transIn;
         while(pre != null && sym != null) {
             sequence.add(0, sym);
-            state = pre;
-            pre = predecessors.get(state);
-            sym = presymbols.get(state);
+			sym = pre.transIn;
+            pre = pre.parentElement;
         }
 
         return Word.fromList(sequence);
     }
 
-    private void redirectToSibling(FastMealyState<O> state, List<Word<O>> sig, Map<List<Word<O>>, FastMealyState<O>> signatures, Map<FastMealyState<O>, FastMealyState<O>> predecessors, Map<FastMealyState<O>, I> presymbols) {
-        FastMealyState<O> sibling = signatures.get(sig);
-
-        FastMealyState<O> predecessor = predecessors.get(state);
-        I input = presymbols.get(state);
-        O output = hypothesis.getOutput(predecessor, input);
-
-        predecessors.remove(state);
-        presymbols.remove(state);
-
-        hypothesis.removeState(state);
-
-        hypothesis.addTransition(predecessor, input, sibling, output);
-    }
-
-    private void scheduleSuccessors(FastMealyState<O> state, ArrayList<DefaultQuery<I, Word<O>>> queries, Queue<FastMealyState<O>> queue, Map<FastMealyState<O>, FastMealyState<O>> predecessors, Map<FastMealyState<O>, I> presymbols) throws IllegalArgumentException {
+    private void scheduleSuccessors(QueueElement elem, FastMealyState<O> state, Queue<QueueElement> queue, List<Word<O>> sig) throws IllegalArgumentException {
         for (int i = 0; i < alphabet.size(); ++i) {
-            // create successor
-            FastMealyState<O> succ = hypothesis.addState();
-
             // retrieve I/O for transition
             I input = alphabet.getSymbol(i);
-            O output = queries.get(i).getOutput().getSymbol(0);
-
-            // establish transition
-            hypothesis.addTransition(state, input, succ, output);
-            predecessors.put(succ, state);
-            presymbols.put(succ, input);
-
-            // schedule successor for exploration
-            queue.add(succ);
+            O output = sig.get(i).getSymbol(0);
+			
+            // create successor element and schedule for exploration
+            queue.add(new QueueElement(state, elem, input, output));
         }
     }
 
