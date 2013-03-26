@@ -18,11 +18,9 @@
 package de.learnlib.oracles;
 
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.HistogramOracle;
-import de.learnlib.api.LLComponentFactory;
-import de.learnlib.api.LLComponentParameter;
-import de.learnlib.api.LLComponent;
-import de.learnlib.api.LLComponentType;
+import de.learnlib.components.LLComponentFactory;
+import de.learnlib.components.LLComponentParameter;
+import de.learnlib.components.LLComponent;
 
 /**
  *
@@ -31,7 +29,7 @@ import de.learnlib.api.LLComponentType;
 @LLComponent(
     name = "HistogramOracle",
     description = "A simple oracle that collects infos about query sizes",
-    type = LLComponentType.MEMBERSHIP_ORACLE)
+    type = MembershipOracle.class)
 public class HistogramOracleFactory<I, O> implements LLComponentFactory<HistogramOracle<I, O>> {
 
     private MembershipOracle<I, O> next = null;

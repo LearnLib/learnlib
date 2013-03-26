@@ -37,6 +37,11 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-test-support</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-simulator</artifactId>
+            <scope>test</scope>
+        </dependency>        
     </dependencies>
     
 </project>

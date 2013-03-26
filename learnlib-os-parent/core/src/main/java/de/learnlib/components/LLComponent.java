@@ -14,18 +14,35 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.api;
+package de.learnlib.components;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * factories wrap instantiation of LearnLib components.
+ * marks learnlib components.
  * 
  * @author falkhowar
  */
-public interface LLComponentFactory<C> {
-       
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface LLComponent {
+    
     /**
-     * @return a new instance of C.
+     * @return type of this component (Oracle, Learner, etc.)
      */
-    public C instantiate();
+    Class<?> type();    
+    
+    /**
+     * @return unique name of this very kind of component
+     */
+    String name();
+    
+    /**
+     * @return tool tip or brief documentation
+     */
+    String description() default "";
     
 }

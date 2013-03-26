@@ -61,6 +61,7 @@
         <module>./algorithms</module>
 		<module>./eqtests</module>
         <module>./dsl</module>
+	<module>./simulator</module>
         <module>./test-support</module>
     </modules>	
 
@@ -213,6 +214,11 @@
 			<dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>learnlib-basic-eqtests</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>learnlib-simulator</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

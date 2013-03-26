@@ -9,21 +9,17 @@
         <relativePath>../pom.xml</relativePath>        
     </parent>
 
-    <artifactId>learnlib-core</artifactId>
-    <name>learnlib-core</name>
+    <artifactId>learnlib-simulator</artifactId>
+    <name>learnlib-simulator</name>
  
     <dependencies>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-api</artifactId>
+	<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
+	<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-test-support</artifactId>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>

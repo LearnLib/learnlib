@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.api;
+package de.learnlib.components;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,27 +22,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * marks learnlib components.
+ * marks setters of LLComponentFactory that set 
+ * named parameters of components.
  * 
  * @author falkhowar
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface LLComponent {
+@Target(ElementType.METHOD)
+public @interface LLComponentParameter {
     
     /**
-     * @return type of this component (Oracle, Learner, etc.)
-     */
-    LLComponentType type();    
-    
-    /**
-     * @return unique name of this very kind of component
+     * @return name of this parameter. Used, e.g., in the dsl
      */
     String name();
-    
+
     /**
-     * @return tool tip or brief documentation
+     * @return parameter help
      */
     String description() default "";
     
+    /**
+     * @return true if this parameter has to be set
+     */
+    boolean required() default false;
 }

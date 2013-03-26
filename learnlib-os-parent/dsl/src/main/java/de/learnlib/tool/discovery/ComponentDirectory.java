@@ -4,14 +4,12 @@
  */
 package de.learnlib.tool.discovery;
 
-import de.learnlib.api.LLComponent;
-import de.learnlib.api.LLComponentParameter;
-import de.learnlib.api.LLComponentType;
-import de.learnlib.api.LLComponentFactory;
+import de.learnlib.components.LLComponent;
+import de.learnlib.components.LLComponentFactory;
+import de.learnlib.components.LLComponentParameter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
@@ -97,14 +95,11 @@ public class ComponentDirectory {
         return this.components.get(name);
     }
     
-    public Collection<ComponentDescriptor> getDescriptors(LLComponentType type) {
-        return getDescriptors(EnumSet.of(type));
-    }
-
-        public Collection<ComponentDescriptor> getDescriptors(EnumSet<LLComponentType> types) {
+ 
+    public Collection<ComponentDescriptor> getDescriptors(Class<?> type) {
         List<ComponentDescriptor> dscs = new LinkedList<>();
         for (ComponentDescriptor d : this.components.values()) {
-            if (types.contains(d.componentInfo.type())) {
+            if (type.isAssignableFrom(d.componentInfo.type())) {
                 dscs.add(d);
             }
         }

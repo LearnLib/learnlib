@@ -1,8 +1,9 @@
 
 package de.learnlib.tool.discovery;
 
-import de.learnlib.api.LLComponentType;
-import de.learnlib.api.LLComponentParameter;
+
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.components.LLComponentParameter;
 import java.lang.reflect.Method;
 import java.util.Map;
 import org.testng.Assert;
@@ -25,7 +26,7 @@ public class ComponenDiscoveryTest {
         ComponentDirectory.ComponentDescriptor e = instance.getDescriptor("CounterOracle");
         Assert.assertNotNull(e);
         
-        for (ComponentDirectory.ComponentDescriptor d : instance.getDescriptors(LLComponentType.MEMBERSHIP_ORACLE)) {
+        for (ComponentDirectory.ComponentDescriptor d : instance.getDescriptors(MembershipOracle.class)) {
         
             System.out.println("  Component: " + d.componentInfo.name());
             System.out.println("  Description: " + d.componentInfo.description());

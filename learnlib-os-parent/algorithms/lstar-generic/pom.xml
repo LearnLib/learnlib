@@ -42,7 +42,11 @@
             <artifactId>learnlib-basic-eqtests</artifactId>
 			<scope>test</scope>
         </dependency>
-    </dependencies>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-simulator</artifactId>
+			<scope>test</scope>
+        </dependency>    </dependencies>
     
 </project>
 

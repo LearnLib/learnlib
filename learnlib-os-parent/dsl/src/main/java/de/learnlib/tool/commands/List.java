@@ -4,11 +4,9 @@
  */
 package de.learnlib.tool.commands;
 
-import de.learnlib.api.LLComponentParameter;
-import de.learnlib.api.LLComponentType;
+import de.learnlib.components.LLComponentParameter;
 import de.learnlib.tool.discovery.ComponentDirectory;
 import java.lang.reflect.Method;
-import java.util.EnumSet;
 import java.util.Map;
 
 /**
@@ -39,7 +37,7 @@ public class List implements Command {
         StringBuilder sb = new StringBuilder();
         if (parameter.length < 2) {
             for (ComponentDirectory.ComponentDescriptor d : 
-                    directory.getDescriptors(EnumSet.allOf(LLComponentType.class))) {
+                    directory.getDescriptors(Object.class)) {
                 sb.append(d.componentInfo.name()).append(" : ").
                         append(d.componentInfo.type()).append(System.getProperty("line.separator"));
             }

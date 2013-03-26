@@ -14,13 +14,18 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.api;
+package de.learnlib.components;
 
 /**
- * Possible types of LearnLib components.
+ * factories wrap instantiation of LearnLib components.
  * 
  * @author falkhowar
  */
-public enum LLComponentType {
-    LEARNING_ALGORITHM, EQUIVALENCE_TEST, MEMBERSHIP_ORACLE, RNG, LOGGING_APPENDER
+public interface LLComponentFactory<C> {
+       
+    /**
+     * @return a new instance of C.
+     */
+    public C instantiate();
+    
 }

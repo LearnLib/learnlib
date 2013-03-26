@@ -17,14 +17,12 @@
 
 package de.learnlib.logging;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import java.util.EnumSet;
 
 
 import de.learnlib.logging.filter.CategoryFilter;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -56,7 +54,7 @@ public class LearnLoggerTest {
         String name = LearnLoggerTest.class.getName();
         LearnLogger expResult = LearnLogger.getLogger(name);
         LearnLogger result = LearnLogger.getLogger(name);
-        assertEquals(expResult, result);
+        Assert.assertEquals(expResult, result);
     }
 
     /**
@@ -72,7 +70,7 @@ public class LearnLoggerTest {
         logger.addHandler(th);
         logger.logPhase("test phase");
         logger.removeHandler(th);
-        assertNotNull(th.getLastMessage());
+        Assert.assertNotNull(th.getLastMessage());
     }
 
     /**
@@ -88,6 +86,6 @@ public class LearnLoggerTest {
         logger.addHandler(th);
         logger.logQuery("test query");
         logger.removeHandler(th);
-        assertNull(th.getLastMessage());
+        Assert.assertNull(th.getLastMessage());
     }
 }

@@ -18,10 +18,9 @@
 package de.learnlib.oracles;
 
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.LLComponentFactory;
-import de.learnlib.api.LLComponentParameter;
-import de.learnlib.api.LLComponent;
-import de.learnlib.api.LLComponentType;
+import de.learnlib.components.LLComponentFactory;
+import de.learnlib.components.LLComponentParameter;
+import de.learnlib.components.LLComponent;
 
 /**
  *
@@ -30,7 +29,7 @@ import de.learnlib.api.LLComponentType;
     @LLComponent(
             name="CounterOracle", 
             description="A simple oracle that counts queries", 
-            type= LLComponentType.MEMBERSHIP_ORACLE)
+            type= MembershipOracle.class)
 public class CounterOracleFactory<I,O> implements LLComponentFactory<CounterOracle<I,O>> {
 
     private MembershipOracle<I,O> next = null;

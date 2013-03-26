@@ -15,7 +15,7 @@
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
 
-package de.learnlib.dfa.oracles;
+package de.learnlib.oracles;
 
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SafeOracle;
