@@ -37,6 +37,11 @@
       <name>Stephan Windmüller</name>
       <email>stephan.windmueller@tu-dortmund.de</email>
     </developer>
+	<developer>
+	  <id>merten</id>
+	  <name>Maik Merten</id>
+	  <email>maikmerten@googlemail.com</email>
+	</developer>
   </developers>
   
     <!--  
