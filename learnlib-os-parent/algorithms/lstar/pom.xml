@@ -4,7 +4,7 @@
 
     <parent>
         <artifactId>learnlib-algorithms</artifactId>
-        <groupId>de.ls5.learnlib</groupId>
+        <groupId>de.learnlib</groupId>
         <version>0.9-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>        
     </parent>
@@ -16,11 +16,6 @@
 	<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-core</artifactId>
-        </dependency>
-		<dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>learnlib-counterexamples</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>

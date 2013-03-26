@@ -1,5 +1,5 @@
-*/*~
-*/.project
-*/.settings
-*/.classpath
-*/hs_err_*
+*~
+.project
+.settings/
+.classpath
+hs_err_*

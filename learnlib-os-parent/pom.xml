@@ -5,7 +5,7 @@
     <!--  
     =================================  PROJECT INFO ==============================  
     -->
-    <groupId>de.ls5.learnlib</groupId>
+    <groupId>de.learnlib</groupId>
     <artifactId>learnlib-parent</artifactId>
     <version>0.9-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -20,7 +20,7 @@
         <module>./core</module>
         <module>./algorithms</module>
         <module>./test-support</module>
-    </modules>
+    </modules>	
 
     <!--  
     =================================  PROPERTIES ================================
@@ -30,8 +30,10 @@
         <!--
             dependency versions
         -->
-        <version.automatalib>0.3.0-SNAPSHOT</version.automatalib>
-        <version.testng>6.8</version.testng>
+        <automatalib.version>0.3.0-SNAPSHOT</automatalib.version>
+        <testng.version>6.8</testng.version>
+		<attach-source.version>2.0.4</attach-source.version>
+		<attach-javadoc.version>2.3</attach-javadoc.version>
     </properties>
 
 
@@ -69,14 +71,28 @@
                 </configuration>
             </plugin>
             <!-- 
-                attach source jars
+                attach source and javadoc jars
             -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+				<version>${attach-source.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${attach-javadoc.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -136,27 +152,27 @@
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-api</artifactId>
-                <version>${version.automatalib}</version>                        
+                <version>${automatalib.version}</version>                        
             </dependency>            
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-core</artifactId>
-                <version>${version.automatalib}</version>                        
+                <version>${automatalib.version}</version>                        
             </dependency>
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-util</artifactId>
-                <version>${version.automatalib}</version>                        
+                <version>${automatalib.version}</version>                        
             </dependency>
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-commons-dotutil</artifactId>
-                <version>${version.automatalib}</version>                        
+                <version>${automatalib.version}</version>                        
             </dependency>            
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>${version.testng}</version>
+                <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>            
         </dependencies>
@@ -166,3 +182,4 @@
     </distributionManagement>
 
 </project>
+

@@ -9,11 +9,11 @@
         <relativePath>../pom.xml</relativePath>        
     </parent>
 
-    <artifactId>learnlib-dhc</artifactId>
-    <name>learnlib-dhc</name>
+    <artifactId>learnlib-lstar-generic</artifactId>
+    <name>learnlib-lstar-generic</name>
 
     <dependencies>
-        <dependency>
+	<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-core</artifactId>
         </dependency>
