@@ -462,6 +462,6 @@ public class ObservationTable<I,O> {
 	public Alphabet<I> getInputAlphabet() {
 		return alphabet;
 	}
-	
+
 
 }

@@ -74,6 +74,7 @@ public class AngluinTest {
 		angluin.refineHypothesis(createCounterExample(false, zero, one, zero));
 		DFA hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(4, hypothesis.getStates().size());
+		
 
 		String observationTableOutput = angluin.getStringRepresentationOfObservationTable();
 		Assert.assertEquals(18, observationTableOutput.split("\n").length);

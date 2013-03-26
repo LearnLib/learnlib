@@ -117,14 +117,7 @@ public abstract class AbstractAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableD
 				continue;
 			}
 			
-			
-			SP prop = stateProperty(sp);
-			
-			S state = null;
-			if(id == 0)
-				state = internalHyp.addInitialState(prop);
-			else
-				state = internalHyp.addState(prop);
+			S state = createState((id == 0), sp);
 			
 			stateInfos.set(id, Pair.make(sp, state));
 		}
@@ -146,10 +139,21 @@ public abstract class AbstractAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableD
 				
 				S succState = stateInfos.get(succId).getSecond();
 				
-				TP prop = transitionProperty(sp, i);
-				internalHyp.setTransition(state, input, succState, prop);
+				setTransition(state, input, succState, sp, i, succ);
 			}
 		}
+	}
+	
+	protected S createState(boolean initial, Row<I> row) {
+		SP prop = stateProperty(row);
+		if(initial)
+			return internalHyp.addInitialState(prop);
+		return internalHyp.addState(prop);
+	}
+	
+	protected void setTransition(S from, I input, S to, Row<I> fromRow, int inputIdx, Row<I> toRow) {
+		TP prop = transitionProperty(fromRow, inputIdx);
+		internalHyp.setTransition(from, input, to, prop);
 	}
 	
 	public A getHypothesisModel() {

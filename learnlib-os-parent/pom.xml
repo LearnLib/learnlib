@@ -22,6 +22,7 @@
         <module>./learnlib-os-impl</module>
 	<module>./learnlib-os-algorithms</module>
         <module>./learnlib-os-dhc</module>
+		<module>./counterexamples</module>
   </modules>
 
     <!--  
