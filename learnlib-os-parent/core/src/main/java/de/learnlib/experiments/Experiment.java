@@ -20,6 +20,7 @@ import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.Query;
 import de.learnlib.logging.LearnLogger;
+import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.statistics.Counter;
 import de.learnlib.statistics.SimpleProfiler;
 import net.automatalib.words.Alphabet;
@@ -71,7 +72,7 @@ public class Experiment<A, I, O> {
 
             logger.logPhase("Searching for counterexample");
             profileStart("Searching for counterexample");
-            Query<I, O> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
+            DefaultQuery<I, O> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
             if (ce == null) {
                 done = true;
                 continue;
