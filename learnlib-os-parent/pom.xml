@@ -6,11 +6,10 @@
     =================================  PROJECT INFO ==============================  
     -->
     <groupId>de.ls5.learnlib</groupId>
-    <artifactId>learnlib-os-parent</artifactId>
-    <!-- this version is updated automatically on deployment -->
+    <artifactId>learnlib-parent</artifactId>
     <version>0.9-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>learnlib-os-parent</name>
+    <name>learnlib-parent</name>
     <url>http://www.learnlib.de</url>
 
     <!--  
@@ -18,12 +17,10 @@
     -->
     <modules>
         <!-- core functionality -->
-        <module>./learnlib-os-api</module>
-        <module>./learnlib-os-impl</module>
-	<module>./learnlib-os-algorithms</module>
-        <module>./learnlib-os-dhc</module>
-		<module>./counterexamples</module>
-  </modules>
+        <module>./core</module>
+        <module>./algorithms</module>
+        <module>./test-support</module>
+    </modules>
 
     <!--  
     =================================  PROPERTIES ================================
@@ -31,9 +28,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--
-            ls5 projects
+            dependency versions
         -->
-
+        <version.automatalib>0.3.0-SNAPSHOT</version.automatalib>
+        <version.testng>6.8</version.testng>
     </properties>
 
 
@@ -41,27 +39,6 @@
     =================================  BUILD PLUGINS =============================  
     -->
     <build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>com.sun.tools.xjc.maven2</groupId>
-					<artifactId>maven-jaxb-plugin</artifactId>
-					<executions>
-						<execution>
-							<goals>
-								<goal>generate</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<schemaDirectory>./src/main/resources</schemaDirectory>
-						<includeSchemas>
-							<includeSchema>**/*.xsd</includeSchema>
-						</includeSchemas>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 
         <plugins>
             <!-- 
@@ -91,70 +68,53 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
-        </plugins>
+            <!-- 
+                attach source jars
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
+        </plugins>
     </build>
 
+    <!--  
+    ===============================  PROFILES =======================  
+    -->
     <profiles>
         <profile>
-            <id>llrelease</id>
+            <id>netbeans-private-testng</id>
+            <activation>
+                <property>
+                    <name>netbeans.testng.action</name>
+                </property>
+            </activation>
             <build>
                 <plugins>
-                    <!-- 
-                        attach source jars
-                    -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <!-- 
-                        attach obfuscated jars
-                    -->
-                    <plugin>
-                        <groupId>com.pyx4me</groupId>
-                        <artifactId>proguard-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>proguard</goal>
-                                </goals>
-                            </execution>
-                        </executions>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.11</version>
                         <configuration>
-                            <injarNotExistsSkip>true</injarNotExistsSkip>
-                            <obfuscate>true</obfuscate>
-                            <!-- skip>true</skip-->
-                            <options>
-                                <!-- option>-allowaccessmodification</option -->
-                                <option>-dontshrink</option>
-                                <option>-dontoptimize</option>
-                                <option>-dontskipnonpubliclibraryclasses</option>
-                                <option>-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod</option>
-                                <option>-keep public class * { public protected *; }</option>
-                                <!-- option>-keepclasseswithmembernames class * { native <method>; }</option -->
-                                <option>-keepclassmembernames class * { java.lang.Class class$(java.lang.String);java.lang.Class class$(java.lang.String, boolean); }</option>
-                                <option>-keepclassmembers enum * { public static **[] values(); public static ** valueOf(java.lang.String); }</option>
-                                <option>-keepclassmembers class * implements java.io.Serializable { static final long serialVersionUID; private void writeObject(java.io.ObjectOutputStream); private void readObject(java.io.ObjectInputStream); java.lang.Object writeReplace(); java.lang.Object readResolve(); }</option>
-                            </options>
-                            <libs>
-                                <lib>${java.home}/lib/rt.jar</lib>
-                            </libs>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>target/nb-private/testng-suite.xml</suiteXmlFile>
+                            </suiteXmlFiles>
                         </configuration>
-                    </plugin>          
+                    </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
+
             
         
     <!--  
@@ -163,45 +123,46 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>learnlib-test-support</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>learnlib-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>                        
+            <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-api</artifactId>
-                <version>0.3.0-SNAPSHOT</version>                        
+                <version>${version.automatalib}</version>                        
             </dependency>            
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-core</artifactId>
-                <version>0.3.0-SNAPSHOT</version>                        
-            </dependency>
-			<dependency>
-                <groupId>net.automatalib</groupId>
-                <artifactId>automata-util</artifactId>
-                <version>0.3.0-SNAPSHOT</version>                        
+                <version>${version.automatalib}</version>                        
             </dependency>
             <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-util</artifactId>
+                <version>${version.automatalib}</version>                        
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-commons-dotutil</artifactId>
+                <version>${version.automatalib}</version>                        
+            </dependency>            
+            <dependency>
                 <groupId>org.testng</groupId>
-		<artifactId>testng</artifactId>
-		<version>6.8</version>
-		<scope>test</scope>
+                <artifactId>testng</artifactId>
+                <version>${version.testng}</version>
+                <scope>test</scope>
             </dependency>            
         </dependencies>
     </dependencyManagement>    
-    
-    <!--  
-    ================================  DEFAULT DEPENDENCIES =======================  
-    -->
-    <dependencies>
-		
-    </dependencies>
-    
-    <!--  
-    ================================  REPOSITORIES ===============================  
-    -->
-    <repositories>
-
-    </repositories>
-
+        
     <distributionManagement>
-
     </distributionManagement>
 
 </project>
