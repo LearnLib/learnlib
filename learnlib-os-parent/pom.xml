@@ -42,6 +42,11 @@
 	  <name>Maik Merten</name>
 	  <email>maikmerten@googlemail.com</email>
 	</developer>
+	<developer>
+		<id>oliverbauer</id>
+		<name>Oliver Bauer</name>
+		<email>oliver.bauer@tu-dortmund.de</email>
+	</developer>
   </developers>
   
     <!--  
@@ -71,7 +76,7 @@
         <module>./algorithms</module>
 		<module>./eqtests</module>
         <module>./dsl</module>
-	<module>./simulator</module>
+		<module>./simulator</module>
         <module>./test-support</module>
     </modules>	
 
