@@ -15,7 +15,7 @@
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
 
-package de.learnlib.oracles.eq;
+package de.learnlib.eqtests.basic;
 
 import java.util.Collections;
 import java.util.Random;

@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.oracles.eq;
+package de.learnlib.eqtests.basic;
 
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.Query;

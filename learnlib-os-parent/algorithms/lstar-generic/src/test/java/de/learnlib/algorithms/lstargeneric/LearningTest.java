@@ -1,11 +1,13 @@
 package de.learnlib.algorithms.lstargeneric;
 
+import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.words.Alphabet;
+
+import org.testng.Assert;
+
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.Query;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.words.Alphabet;
-import org.testng.Assert;
 
 public class LearningTest {
 	
