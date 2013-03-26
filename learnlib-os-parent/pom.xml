@@ -32,7 +32,12 @@
       <name>Malte Isberner</name>
       <email>malte.isberner@gmail.com</email>
     </developer>
-  </developers>   
+    <developer>
+      <id>stovocor</id>
+      <name>Stephan Windmüller</name>
+      <email>stephan.windmueller@tu-dortmund.de</email>
+    </developer>
+  </developers>
   
     <!--  
     ===============================  SCM =======================  
