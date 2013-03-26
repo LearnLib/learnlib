@@ -20,6 +20,11 @@ package de.learnlib.dhc.mealy;
 import static de.learnlib.examples.mealy.ExampleGrid.constructMachine;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
+import net.automatalib.automata.transout.impl.FastMealyState;
+import net.automatalib.commons.util.Pair;
+import net.automatalib.util.automata.Automata;
+import net.automatalib.util.minimizer.Block;
+import net.automatalib.util.minimizer.MinimizationResult;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Symbol;
@@ -47,6 +52,7 @@ public class MealyDHCTest {
         
         FastMealy<Symbol, Integer> fm = constructMachine(xsize, ysize);
         Alphabet<Symbol> alphabet = fm.getInputAlphabet();
+        
         
         SimulatorOracle<Symbol, Word<Integer>> simoracle = new SimulatorOracle<>(fm);
         

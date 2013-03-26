@@ -16,25 +16,25 @@
  */
 package de.learnlib.dhc.mealy;
 
-import de.learnlib.api.CEXHandlerSuffixes;
-import de.learnlib.api.LearningAlgorithm;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.SupportsCEXHandlerSuffixes;
-import de.learnlib.cexhandlers.CEXHandlerAllSuffixes;
-import de.learnlib.oracles.DefaultQuery;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
 import net.automatalib.automata.transout.impl.FastMealyState;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.SimpleAlphabet;
+import de.learnlib.api.CEXHandlerSuffixes;
+import de.learnlib.api.LearningAlgorithm;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.SupportsCEXHandlerSuffixes;
+import de.learnlib.cexhandlers.CEXHandlerAllSuffixes;
+import de.learnlib.oracles.DefaultQuery;
 
 /**
  *

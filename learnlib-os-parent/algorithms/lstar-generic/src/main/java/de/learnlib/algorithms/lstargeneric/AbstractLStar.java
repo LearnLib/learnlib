@@ -81,7 +81,7 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	 * @see de.learnlib.api.LearningAlgorithm#refineHypothesis(de.learnlib.api.Query)
 	 */
 	@Override
-	public final boolean refineHypothesis(DefaultQuery<I,O> ceQuery) {
+	public final boolean refineHypothesis(DefaultQuery<I, O> ceQuery) {
 		int oldDistinctRows = table.numDistinctRows();
 		doRefineHypothesis(ceQuery);
 		return (table.numDistinctRows() > oldDistinctRows);

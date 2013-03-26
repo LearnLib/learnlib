@@ -19,6 +19,7 @@ package de.learnlib.api;
 import de.learnlib.oracles.DefaultQuery;
 
 
+
 /**
  * Basic interface for a model inference algorithm.
  * 
@@ -52,7 +53,7 @@ public interface LearningAlgorithm<M, I, O> {
 	 * @return <tt>true</tt> if the counterexample triggered a refinement of the hypothesis,
 	 * <tt>false</tt> otherwise (i.e., it was no counterexample).
 	 */
-	public boolean refineHypothesis(DefaultQuery<I,O> ceQuery);
+	public boolean refineHypothesis(DefaultQuery<I, O> ceQuery);
 	
 	/**
 	 * Returns the current hypothesis model.

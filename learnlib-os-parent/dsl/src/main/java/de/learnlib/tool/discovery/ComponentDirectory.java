@@ -116,6 +116,9 @@ public class ComponentDirectory {
 		BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
 		String line;
 		while ((line = in.readLine()) != null) {
+			line = line.trim();
+			if("".equals(line))
+				continue;
                     registerComponent(line);
 		}            
             }            

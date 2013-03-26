@@ -16,14 +16,13 @@
  */
 package de.learnlib.experiments;
 
+import net.automatalib.words.Alphabet;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
-import de.learnlib.api.Query;
 import de.learnlib.logging.LearnLogger;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.statistics.Counter;
 import de.learnlib.statistics.SimpleProfiler;
-import net.automatalib.words.Alphabet;
 
 /**
  * runs a learning experiment. 

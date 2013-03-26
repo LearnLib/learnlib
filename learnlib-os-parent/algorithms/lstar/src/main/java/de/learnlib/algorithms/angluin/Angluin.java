@@ -1,12 +1,5 @@
 package de.learnlib.algorithms.angluin;
 
-import de.learnlib.api.LearningAlgorithm;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.DefaultQuery;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,6 +7,13 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import de.learnlib.api.LearningAlgorithm;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.oracles.DefaultQuery;
 
 /**
  * Implementation of the L* algorithm by Dana Angluin
