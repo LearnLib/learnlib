@@ -24,6 +24,7 @@ import de.learnlib.cexhandlers.CEXHandlerAllSuffixes;
 import de.learnlib.oracles.DefaultQuery;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -134,17 +135,18 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
         }
     }
 
-    private Word<I> assembleAccessSequence(QueueElement elem) {
-        List<I> sequence = new LinkedList<>();
+	private Word<I> assembleAccessSequence(QueueElement elem) {
+        List<I> sequence = new ArrayList<>();
         
         QueueElement pre = elem.parentElement;
         I sym = elem.transIn;
         while(pre != null && sym != null) {
-            sequence.add(0, sym);
+            sequence.add(sym);
 			sym = pre.transIn;
             pre = pre.parentElement;
         }
 
+		Collections.reverse(sequence);
         return Word.fromList(sequence);
     }
 
