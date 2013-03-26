@@ -33,7 +33,7 @@ public class CounterOracle<I,O> implements StatisticOracle<I,O> {
     
     private final Counter counter;
     
-    private final MembershipOracle<I,O> nextOracle;
+    private MembershipOracle<I,O> nextOracle;
     
     public CounterOracle(MembershipOracle<I,O> nextOracle, String name) {        
         this.nextOracle = nextOracle;
@@ -53,5 +53,10 @@ public class CounterOracle<I,O> implements StatisticOracle<I,O> {
     @Override
     public StatisticData getStatisticalData() {
         return this.counter;
+    }
+
+    @Override
+    public void setNext(MembershipOracle<I, O> next) {
+        this.nextOracle = next;
     }
 }

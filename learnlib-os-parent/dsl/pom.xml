@@ -17,6 +17,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-core</artifactId>
         </dependency>
+	<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-simulator</artifactId>
+        </dependency>        
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
