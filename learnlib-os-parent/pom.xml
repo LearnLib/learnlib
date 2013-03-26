@@ -55,6 +55,7 @@
         <module>./core</module>
         <module>./algorithms</module>
 		<module>./eqtests</module>
+        <module>./dsl</module>
         <module>./test-support</module>
     </modules>	
 
