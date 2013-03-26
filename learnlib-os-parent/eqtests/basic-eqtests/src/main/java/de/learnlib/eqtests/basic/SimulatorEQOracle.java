@@ -17,7 +17,7 @@
 package de.learnlib.eqtests.basic;
 
 import de.learnlib.api.EquivalenceOracle;
-import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.OutputAutomaton;
 import net.automatalib.util.automata.Automata;
@@ -39,13 +39,13 @@ public class SimulatorEQOracle<I,O>
 	}
 
 	@Override
-	public Query<I, O> findCounterExample(UniversalDeterministicAutomaton<?, I, ?, ?, ?> hypothesis, Alphabet<I> alphabet) {
+	public DefaultQuery<I, O> findCounterExample(UniversalDeterministicAutomaton<?, I, ?, ?, ?> hypothesis, Alphabet<I> alphabet) {
 		Word<I> sep = Automata.findSeparatingWord(reference, hypothesis, alphabet);
 		if(sep == null)
 			return null;
 		O out = output.computeOutput(sep);
-		Query<I,O> qry = new Query<>(sep);
-		qry.setOutput(out);
+		DefaultQuery<I,O> qry = new DefaultQuery<>(sep);
+		qry.answer(out);
 		return qry;
 	}
 	

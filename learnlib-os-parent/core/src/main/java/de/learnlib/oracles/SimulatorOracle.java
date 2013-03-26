@@ -31,10 +31,10 @@ public class SimulatorOracle<I, O> implements MembershipOracle<I, O> {
 	}
 	
 	@Override
-	public void processQueries(Collection<Query<I, O>> queries) {
+	public void processQueries(Collection<? extends Query<I, O>> queries) {
 		for(Query<I,O> q : queries) {
 			O output = automaton.computeSuffixOutput(q.getPrefix(), q.getSuffix());
-			q.setOutput(output);
+			q.answer(output);
 		}
 	}
 	

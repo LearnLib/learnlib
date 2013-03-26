@@ -18,7 +18,8 @@
 package de.learnlib.cexhandlers;
 
 import de.learnlib.api.CEXHandlerSuffixes;
-import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
+
 import java.util.Collection;
 import net.automatalib.words.Word;
 
@@ -30,7 +31,7 @@ import net.automatalib.words.Word;
 public class CEXHandlerAllSuffixes<I, O> implements CEXHandlerSuffixes<I, O>{
 
     @Override
-    public void createSuffixes(Query<I, O> ceQuery, Collection<Word<I>> suffixes) {
+    public void createSuffixes(DefaultQuery<I, O> ceQuery, Collection<Word<I>> suffixes) {
         Word<I> counterexample = ceQuery.getInput();
         
         for(int i = 1; i <= counterexample.size(); ++i) {

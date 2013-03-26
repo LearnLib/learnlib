@@ -41,7 +41,7 @@ public class CounterOracle<I,O> implements StatisticOracle<I,O> {
     }
 
     @Override
-    public void processQueries(Collection<Query<I, O>> queries) {
+    public void processQueries(Collection<? extends Query<I, O>> queries) {
         this.counter.increment(queries.size());
         nextOracle.processQueries(queries);
     }

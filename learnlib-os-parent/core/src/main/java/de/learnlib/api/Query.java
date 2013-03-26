@@ -18,88 +18,62 @@ package de.learnlib.api;
 
 import net.automatalib.words.Word;
 
-/**
- * A query is a container for tests a learning algorithms performs, containing
- * the actual test and the corresponding result.
- *
- * @param <I> input symbol class.
- * @param <O> output class. 
- * 
- * @author Maik Merten <maikmerten@googlemail.com>
- */
-public class Query<I, O> {
-
-    /**
-     * prefix portion of test
-     */
-    private final Word<I> prefix;
-    
-    /**
-     * suffix portion of test
-     */
-    private final Word<I> suffix;
-    
-    private O output;
-    
-    public Query(Word<I> prefix, Word<I> suffix) {
-        this.prefix = prefix;
-        this.suffix = suffix;
-    }
-    
-    public Query(Word<I> input) {
-    	this(Word.<I>epsilon(), input);
-    }
-    
-    public Query(Query<I,?> query) {
-    	this(query.getPrefix(), query.getSuffix());
-    }
-
-    public O getOutput() {
-        return output;
-    }
-
-    public void setOutput(O output) {
-        this.output = output;
-    }
-    
-    public Word<I> getPrefix() {
-    	return prefix;
-    }
-    
-    public Word<I> getSuffix() {
-    	return suffix;
-    }
-    
-    /** 
-     * @return prefix.suffix
-     */
-    public Word<I> getInput() {
-        return prefix.concat(suffix);
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 89 * hash + (this.prefix != null ? this.prefix.hashCode() : 0);
-        hash = 89 * hash + (this.suffix != null ? this.suffix.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Query<?, ?> other = (Query<?, ?>) obj;
-        if (this.prefix != other.prefix && (this.prefix == null || !this.prefix.equals(other.prefix))) {
-            return false;
-        }
-        if (this.suffix != other.suffix && (this.suffix == null || !this.suffix.equals(other.suffix))) {
-            return false;
-        }
-        return true;
-    }    
+public abstract class Query<I, O> {
+	
+	private int hashCode = 0;
+	
+	public abstract Word<I> getPrefix();
+	public abstract Word<I> getSuffix();
+	
+	public abstract void answer(O output);
+	
+	public final Word<I> getInput() {
+		return getPrefix().concat(getSuffix());
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public final boolean equals(Object o) {
+		if(this == o)
+			return true;
+		if(o == null)
+			return false;
+		if(!(o instanceof Query))
+			return false;
+		Query<?,?> other = (Query<?,?>)o;
+		
+		Word<I> thisPref = getPrefix();
+		Word<I> thisSuff = getSuffix();
+		
+		Word<?> otherPref = other.getPrefix();
+		Word<?> otherSuff = other.getSuffix();
+		
+		if(thisPref != otherPref && (thisPref == null || !thisPref.equals(otherPref)))
+			return false;
+		if(thisSuff != otherSuff && (thisSuff == null || !thisSuff.equals(otherSuff)))
+			return false;
+		
+		return true;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public final int hashCode() {
+		if(hashCode != 0)
+			return hashCode;
+		
+		Word<I> prefix = getPrefix(), suffix = getSuffix();
+		hashCode = 5;
+        hashCode = 89 * hashCode + (prefix != null ? prefix.hashCode() : 0);
+        hashCode = 89 * hashCode + (suffix != null ? suffix.hashCode() : 0);
+        return hashCode;
+	}
+	
 }

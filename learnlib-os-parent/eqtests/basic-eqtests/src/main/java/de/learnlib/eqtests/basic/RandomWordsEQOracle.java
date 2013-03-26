@@ -25,7 +25,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
 
 /**
  *
@@ -47,7 +47,7 @@ public class RandomWordsEQOracle<I,O, A extends OutputAutomaton<?,I,?,O>> implem
     
     
     @Override
-    public Query<I, O> findCounterExample(A hypothesis, Alphabet<I> alpha) {
+    public DefaultQuery<I, O> findCounterExample(A hypothesis, Alphabet<I> alpha) {
 
         for(int i = 0; i < maxTests; ++i) {
             int length = minLength + random.nextInt((maxLength - minLength) + 1);
@@ -59,7 +59,7 @@ public class RandomWordsEQOracle<I,O, A extends OutputAutomaton<?,I,?,O>> implem
                 testtrace.append(sym);
             }
             
-            Query<I, O> query = new Query<>(testtrace.toWord());
+            DefaultQuery<I, O> query = new DefaultQuery<>(testtrace.toWord());
             
             // query oracle
             oracle.processQueries(Collections.singletonList(query));

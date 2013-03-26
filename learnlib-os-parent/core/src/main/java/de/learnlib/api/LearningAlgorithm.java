@@ -16,6 +16,8 @@
  */
 package de.learnlib.api;
 
+import de.learnlib.oracles.DefaultQuery;
+
 
 /**
  * Basic interface for a model inference algorithm.
@@ -50,13 +52,13 @@ public interface LearningAlgorithm<M, I, O> {
 	 * @return <tt>true</tt> if the counterexample triggered a refinement of the hypothesis,
 	 * <tt>false</tt> otherwise (i.e., it was no counterexample).
 	 */
-	public boolean refineHypothesis(Query<I,O> ceQuery);
+	public boolean refineHypothesis(DefaultQuery<I,O> ceQuery);
 	
 	/**
 	 * Returns the current hypothesis model.
 	 * N.B.: By the contract of this interface, the model returned by this method may not be
 	 * modified (i.e., M generally should refer to an immutable interface), and its validity
-	 * is retained only until the next invocation of {@link #refineHypothesis(Query)}. If
+	 * is retained only until the next invocation of {@link #refineHypothesis(DefaultQuery)}. If
 	 * older hypotheses have to be maintained, a copy of the returned model must be made
 	 * Please note that it should be illegal to invoke this method before an initial invocation
 	 * of {@link #startLearning()}.

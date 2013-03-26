@@ -21,7 +21,7 @@ import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
@@ -74,21 +74,21 @@ public class ExtensibleLStarMealy<I, O> extends
 		if(newOutputs == 0)
 			return;
 		
-		List<Query<I,Word<O>>> outputQueries
-			= new ArrayList<Query<I,Word<O>>>(numOutputs);
+		List<DefaultQuery<I,Word<O>>> outputQueries
+			= new ArrayList<DefaultQuery<I,Word<O>>>(numOutputs);
 		
 		for(int i = numOutputs+1; i <= numTransRows; i++) {
 			Row<I> row = table.getRow(i);
 			Word<I> rowPrefix = row.getPrefix();
 			int prefixLen = rowPrefix.size();
-			outputQueries.add(new Query<I,Word<O>>(rowPrefix.prefix(prefixLen - 1),
+			outputQueries.add(new DefaultQuery<I,Word<O>>(rowPrefix.prefix(prefixLen - 1),
 					rowPrefix.suffix(1)));
 		}
 		
 		oracle.processQueries(outputQueries);
 		
 		for(int i = 0; i < newOutputs; i++) {
-			Query<I,Word<O>> query = outputQueries.get(i);
+			DefaultQuery<I,Word<O>> query = outputQueries.get(i);
 			O outSym = query.getOutput().getSymbol(0);
 			outputTable.add(outSym);
 		}

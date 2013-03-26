@@ -18,7 +18,7 @@ package de.learnlib.eqtests.basic;
 
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import de.learnlib.api.EquivalenceOracle;
-import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
 
 public class SimpleEQOracle<A extends InputAlphabetHolder<I>,I,O> {
 	
@@ -33,7 +33,7 @@ public class SimpleEQOracle<A extends InputAlphabetHolder<I>,I,O> {
 		this.eqOracle = eqOracle;
 	}
 	
-	public Query<I,O> findCounterExample(A hypothesis) {
+	public DefaultQuery<I,O> findCounterExample(A hypothesis) {
 		return eqOracle.findCounterExample(hypothesis, hypothesis.getInputAlphabet());
 	}
 }

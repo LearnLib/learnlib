@@ -1,7 +1,7 @@
 package de.learnlib.algorithms.angluin;
 
-import de.learnlib.api.Query;
 import de.learnlib.examples.dfa.ExampleAngluin;
+import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SafeOracle;
 import de.learnlib.oracles.SimulatorOracle;
 import net.automatalib.automata.fsa.DFA;
@@ -80,10 +80,10 @@ public class AngluinTest {
 		Assert.assertEquals(18, observationTableOutput.split("\n").length);
 	}
 
-	private Query<Symbol, Boolean> createCounterExample(boolean output, Symbol... symbols) {
+	private DefaultQuery<Symbol, Boolean> createCounterExample(boolean output, Symbol... symbols) {
 		Word<Symbol> counterExample = Word.fromSymbols(symbols);
-		Query<Symbol, Boolean> query = new Query<>(counterExample);
-		query.setOutput(output);
+		DefaultQuery<Symbol, Boolean> query = new DefaultQuery<>(counterExample);
+		query.answer(output);
 		return query;
 	}
 

@@ -51,8 +51,7 @@ public class ExampleCoffeeMachine {
      * Construct and return a machine representation of this example
      * 
      * @return a Mealy machine representing the coffee machine example
-     */
-    @SuppressWarnings("unchecked")
+     */   
     public static FastMealy<Symbol, String> constructMachine() {
 
         FastMealy<Symbol, String> fm = new FastMealy<>(alphabet);

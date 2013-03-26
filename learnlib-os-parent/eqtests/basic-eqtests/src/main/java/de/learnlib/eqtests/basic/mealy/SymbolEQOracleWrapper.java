@@ -14,10 +14,10 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.oracles.mealy;
+package de.learnlib.eqtests.basic.mealy;
 
 import de.learnlib.api.EquivalenceOracle;
-import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.concepts.SODetOutputAutomaton;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.words.Alphabet;
@@ -37,8 +37,8 @@ public class SymbolEQOracleWrapper<A extends SODetOutputAutomaton<?,I,?,Word<O>>
 	 * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, net.automatalib.words.Alphabet)
 	 */
 	@Override
-	public Query<I, O> findCounterExample(A hypothesis, Alphabet<I> alphabet) {
-		Query<I,Word<O>> wordCeQry = wordEqOracle.findCounterExample(hypothesis, alphabet);
+	public DefaultQuery<I, O> findCounterExample(A hypothesis, Alphabet<I> alphabet) {
+		DefaultQuery<I,Word<O>> wordCeQry = wordEqOracle.findCounterExample(hypothesis, alphabet);
 		if(wordCeQry == null)
 			return null;
 		
@@ -56,9 +56,9 @@ public class SymbolEQOracleWrapper<A extends SODetOutputAutomaton<?,I,?,Word<O>>
 			O hypSym = hypOut.getSymbol(i), ceSym = ceOut.getSymbol(i);
 			
 			if(!CmpUtil.equals(hypSym, ceSym)) {
-				Query<I,O> result = new Query<I,O>(wordCeQry.getPrefix(),
+				DefaultQuery<I,O> result = new DefaultQuery<I,O>(wordCeQry.getPrefix(),
 						wordCeQry.getSuffix().prefix(i+1));
-				result.setOutput(ceSym);
+				result.answer(ceSym);
 				return result;
 			}
 		}

@@ -20,6 +20,8 @@ import net.automatalib.words.Word;
 
 import java.util.Collection;
 
+import de.learnlib.oracles.DefaultQuery;
+
 /**
  * This interface specifies components that analize counterexamples
  * and generate a collection of suffixes which can be used by 
@@ -41,6 +43,6 @@ public interface CEXHandlerSuffixes<I, O> {
      * @param ceQuery A Query that produces diverging output between the current hypothesis and the system under learning
      * @param suffixes A collection that shall be filled with the suffixes created during analysis
      */
-    public void createSuffixes(Query<I, O> ceQuery, Collection<Word<I>> suffixes);
+    public void createSuffixes(DefaultQuery<I, O> ceQuery, Collection<Word<I>> suffixes);
 	
 }

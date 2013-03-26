@@ -7,7 +7,7 @@ import org.testng.Assert;
 
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
-import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
 
 public class LearningTest {
 	
@@ -22,7 +22,7 @@ public class LearningTest {
 		while(maxRounds-- > 0) {
 			M hyp = learner.getHypothesisModel();
 			
-			Query<I, O> ce = eqOracle.findCounterExample(hyp, alphabet);
+			DefaultQuery<I, O> ce = eqOracle.findCounterExample(hyp, alphabet);
 			
 			if(ce == null)
 				break;

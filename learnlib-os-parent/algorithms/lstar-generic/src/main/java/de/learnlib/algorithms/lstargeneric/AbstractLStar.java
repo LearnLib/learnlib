@@ -28,7 +28,7 @@ import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
 
 /**
  * An abstract base class for L*-style algorithms.
@@ -81,13 +81,13 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	 * @see de.learnlib.api.LearningAlgorithm#refineHypothesis(de.learnlib.api.Query)
 	 */
 	@Override
-	public final boolean refineHypothesis(Query<I,O> ceQuery) {
+	public final boolean refineHypothesis(DefaultQuery<I,O> ceQuery) {
 		int oldDistinctRows = table.numDistinctRows();
 		doRefineHypothesis(ceQuery);
 		return (table.numDistinctRows() > oldDistinctRows);
 	}
 	
-	protected void doRefineHypothesis(Query<I,O> ceQuery) {
+	protected void doRefineHypothesis(DefaultQuery<I,O> ceQuery) {
 		List<List<Row<I>>> unclosed = incorporateCounterExample(ceQuery);
 		completeConsistentTable(unclosed, ClassicLStarCEXHandler.getInstance().needsConsistencyCheck());
 	}
@@ -158,7 +158,7 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	 * @return the rows (equivalence classes) which became unclosed by
 	 * adding the information. 
 	 */
-	protected List<List<Row<I>>> incorporateCounterExample(Query<I,O> ce) {
+	protected List<List<Row<I>>> incorporateCounterExample(DefaultQuery<I,O> ce) {
 		return ClassicLStarCEXHandler.<I,O>getInstance().handleCounterexample(ce, table, oracle);
 	}
 	
