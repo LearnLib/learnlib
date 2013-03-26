@@ -2,7 +2,7 @@ package de.learnlib.algorithms.angluin;
 
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -65,7 +65,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	}
 
 	@Override
-	public boolean refineHypothesis(Query<S, Boolean> ceQuery) {
+	public boolean refineHypothesis(DefaultQuery<S, Boolean> ceQuery) {
 		if (!startLearningAlreadyCalled) {
 			throw new IllegalStateException("Unable to refine hypothesis before first learn iteration!");
 		}
@@ -191,11 +191,11 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	 * 		The suffixes which are appended to the states before sending the resulting word to the oracle.
 	 */
 	private void processMembershipQueriesForStates(LinkedHashSet<Word<S>> states, Collection<Word<S>> suffixes) {
-		List<Query<S, Boolean>> queries = new ArrayList<>(states.size());
+		List<DefaultQuery<S, Boolean>> queries = new ArrayList<>(states.size());
 		for (Word<S> state : states) {
 			for (Word<S> suffix : suffixes) {
 				Word<S> combinedWord = state.concat(suffix);
-				queries.add(new Query<S, Boolean>(combinedWord));
+				queries.add(new DefaultQuery<S, Boolean>(combinedWord));
 			}
 		}
 
@@ -203,7 +203,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 		Map<Word, Boolean> results = new HashMap<>((int) (1.5 * queries.size()));
 
-		for (Query<S, Boolean> query : queries) {
+		for (DefaultQuery<S, Boolean> query : queries) {
 			results.put(query.getInput(), query.getOutput());
 		}
 

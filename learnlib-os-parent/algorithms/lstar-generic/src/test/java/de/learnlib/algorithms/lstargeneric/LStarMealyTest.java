@@ -43,9 +43,9 @@ import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
+import de.learnlib.eqtests.basic.mealy.SymbolEQOracleWrapper;
 import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.oracles.SimulatorOracle;
-import de.learnlib.oracles.mealy.SymbolEQOracleWrapper;
 
 public class LStarMealyTest extends LearningTest {
 

@@ -26,7 +26,7 @@ import java.util.Map;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
 
 
 /**
@@ -110,7 +110,7 @@ public class ObservationTable<I,O> {
 		int numLps = alphabet.size();
 		int numPrefixes = 1 + numLps;
 		
-		List<Query<I,O>> queries = new ArrayList<Query<I,O>>(numPrefixes * numSuffixes);
+		List<DefaultQuery<I,O>> queries = new ArrayList<DefaultQuery<I,O>>(numPrefixes * numSuffixes);
 		
 		Word<I> eps = Word.epsilon();
 		Row<I> epsRow = createSpRow(Word.<I>epsilon());
@@ -127,7 +127,7 @@ public class ObservationTable<I,O> {
 		
 		oracle.processQueries(queries);
 		
-		Iterator<Query<I,O>> queryIt = queries.iterator();
+		Iterator<DefaultQuery<I,O>> queryIt = queries.iterator();
 		
 		List<O> firstRowContents = new ArrayList<O>(numSuffixes);
 		fetchResults(queryIt, firstRowContents, numSuffixes);
@@ -175,7 +175,7 @@ public class ObservationTable<I,O> {
 		int numSpRows = shortPrefixRows.size();
 		int rowCount = numSpRows + longPrefixRows.size();
 		
-		List<Query<I,O>> queries = new ArrayList<Query<I,O>>(rowCount * numNewSuffixes);
+		List<DefaultQuery<I,O>> queries = new ArrayList<DefaultQuery<I,O>>(rowCount * numNewSuffixes);
 		
 		for(Row<I> row : shortPrefixRows)
 			buildQueries(queries, row.getPrefix(), newSuffixes);
@@ -185,7 +185,7 @@ public class ObservationTable<I,O> {
 		
 		oracle.processQueries(queries);
 		
-		Iterator<Query<I,O>> queryIt = queries.iterator();
+		Iterator<DefaultQuery<I,O>> queryIt = queries.iterator();
 		
 		for(Row<I> row : shortPrefixRows) {
 			List<O> rowContents = allRowContents.get(row.getRowContentId());
@@ -272,12 +272,12 @@ public class ObservationTable<I,O> {
 		int numSuffixes = suffixes.size();
 		
 		int numFreshRows = freshSpRows.size() + freshLpRows.size();
-		List<Query<I,O>> queries = new ArrayList<Query<I,O>>(numFreshRows * numSuffixes);
+		List<DefaultQuery<I,O>> queries = new ArrayList<DefaultQuery<I,O>>(numFreshRows * numSuffixes);
 		buildRowQueries(queries, freshSpRows, suffixes);
 		buildRowQueries(queries, freshLpRows, suffixes);
 		
 		oracle.processQueries(queries);
-		Iterator<Query<I,O>> queryIt = queries.iterator();
+		Iterator<DefaultQuery<I,O>> queryIt = queries.iterator();
 		
 		for(Row<I> row : freshSpRows) {
 			List<O> contents = new ArrayList<O>(numSuffixes);
@@ -430,27 +430,27 @@ public class ObservationTable<I,O> {
 	}
 	
 	protected static <I,O>
-	void buildQueries(List<Query<I,O>> queryList, List<Word<I>> prefixes, List<Word<I>> suffixes) {
+	void buildQueries(List<DefaultQuery<I,O>> queryList, List<Word<I>> prefixes, List<Word<I>> suffixes) {
 		for(Word<I> prefix : prefixes)
 			buildQueries(queryList, prefix, suffixes);
 	}
 	
 	protected static <I,O>
-	void buildRowQueries(List<Query<I,O>> queryList, List<Row<I>> rows, List<Word<I>> suffixes) {
+	void buildRowQueries(List<DefaultQuery<I,O>> queryList, List<Row<I>> rows, List<Word<I>> suffixes) {
 		for(Row<I> row : rows)
 			buildQueries(queryList, row.getPrefix(), suffixes);
 	}
 	
 	protected static <I,O>
-	void buildQueries(List<Query<I,O>> queryList, Word<I> prefix, List<Word<I>> suffixes) {
+	void buildQueries(List<DefaultQuery<I,O>> queryList, Word<I> prefix, List<Word<I>> suffixes) {
 		for(Word<I> suffix : suffixes)
-			queryList.add(new Query<I,O>(prefix, suffix));
+			queryList.add(new DefaultQuery<I,O>(prefix, suffix));
 	}
 	
 	protected static <I,O>
-	void fetchResults(Iterator<Query<I,O>> queryIt, List<O> output, int numSuffixes) {
+	void fetchResults(Iterator<DefaultQuery<I,O>> queryIt, List<O> output, int numSuffixes) {
 		for(int j = 0; j  < numSuffixes; j++) {
-			Query<I,O> qry = queryIt.next();
+			DefaultQuery<I,O> qry = queryIt.next();
 			output.add(qry.getOutput());
 		}
 	}

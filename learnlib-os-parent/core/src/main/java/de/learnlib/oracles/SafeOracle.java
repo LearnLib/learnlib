@@ -36,7 +36,7 @@ public class SafeOracle<I,O> implements MembershipOracle<I,O> {
     
 
     @Override
-    public void processQueries(Collection<Query<I,O>> queries) {
+    public void processQueries(Collection<? extends Query<I, O>> queries) {
         // let the next oracle in chain process the queries
         nextOracle.processQueries(queries);
         
@@ -52,8 +52,11 @@ public class SafeOracle<I,O> implements MembershipOracle<I,O> {
             throw new RuntimeException("Query batch is incomplete, contains null query.");
         
         // is there actual output?
-        if(query.getOutput() == null)
-            throw new RuntimeException("Query batch is not answered, contains null answer for Query (" + query.getPrefix() + ", " + query.getSuffix() + ")");
+        // FIXME: Removed this because of Query interface change, but since we do not require outputs
+        //        to be alphabet symbols, I believe prohibiting null outputs is not a valid requirement?
+        //        -mi
+        //if(query.getOutput() == null)
+        //    throw new RuntimeException("Query batch is not answered, contains null answer for Query (" + query.getPrefix() + ", " + query.getSuffix() + ")");
     }
     
 }

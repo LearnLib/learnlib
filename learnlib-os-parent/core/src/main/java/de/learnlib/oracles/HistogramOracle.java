@@ -40,7 +40,7 @@ public class HistogramOracle<I,O> implements StatisticOracle<I,O> {
     }
 
     @Override
-    public void processQueries(Collection<Query<I, O>> queries) {
+    public void processQueries(Collection<? extends Query<I, O>> queries) {
         for (Query<I,O> q : queries) {
             this.dataSet.addDataPoint( (long) q.getInput().size());
         }

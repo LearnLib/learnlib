@@ -19,9 +19,10 @@ package de.learnlib.dhc.mealy;
 import de.learnlib.api.CEXHandlerSuffixes;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
 import de.learnlib.api.SupportsCEXHandlerSuffixes;
 import de.learnlib.cexhandlers.CEXHandlerAllSuffixes;
+import de.learnlib.oracles.DefaultQuery;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -86,9 +87,9 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
             Word<I> access = assembleAccessSequence(state, predecessors, presymbols);
 
             // assemble queries
-            ArrayList<Query<I, Word<O>>> queries = new ArrayList<>(effectivealpha.size());
+            ArrayList<DefaultQuery<I, Word<O>>> queries = new ArrayList<>(effectivealpha.size());
             for (Word<I> suffix : effectivealpha) {
-                queries.add(new Query<I, Word<O>>(access, suffix));
+                queries.add(new DefaultQuery<I, Word<O>>(access, suffix));
             }
 
             // retrieve answers
@@ -96,7 +97,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 
             // assemble output signature
             List<Word<O>> sig = new ArrayList<>(effectivealpha.size());
-            for (Query<I, Word<O>> query : queries) {
+            for (DefaultQuery<I, Word<O>> query : queries) {
                 sig.add(query.getOutput());
             }
 
@@ -142,7 +143,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
         hypothesis.addTransition(predecessor, input, sibling, output);
     }
 
-    private void scheduleSuccessors(FastMealyState<O> state, ArrayList<Query<I, Word<O>>> queries, Queue<FastMealyState<O>> queue, Map<FastMealyState<O>, FastMealyState<O>> predecessors, Map<FastMealyState<O>, I> presymbols) throws IllegalArgumentException {
+    private void scheduleSuccessors(FastMealyState<O> state, ArrayList<DefaultQuery<I, Word<O>>> queries, Queue<FastMealyState<O>> queue, Map<FastMealyState<O>, FastMealyState<O>> predecessors, Map<FastMealyState<O>, I> presymbols) throws IllegalArgumentException {
         for (int i = 0; i < alphabet.size(); ++i) {
             // create successor
             FastMealyState<O> succ = hypothesis.addState();
@@ -162,7 +163,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
     }
 
     @Override
-    public boolean refineHypothesis(Query<I, Word<O>> ceQuery) {
+    public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
         if (hypothesis == null) {
             throw new IllegalStateException("No hypothesis learned yet");
         }

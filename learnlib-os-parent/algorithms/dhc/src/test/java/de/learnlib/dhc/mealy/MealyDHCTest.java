@@ -27,10 +27,10 @@ import net.automatalib.words.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import de.learnlib.api.Query;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine;
 import de.learnlib.examples.mealy.ExampleStack;
+import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SimulatorOracle;
 
 /**
@@ -78,7 +78,7 @@ public class MealyDHCTest {
         
         SimulatorEQOracle<Symbol, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
         
-        Query<Symbol, Word<String>> cexQuery = eqoracle.findCounterExample(hypo, alphabet);
+        DefaultQuery<Symbol, Word<String>> cexQuery = eqoracle.findCounterExample(hypo, alphabet);
         
         // a counterexample has to be found
         Assert.assertNotNull(cexQuery, "No counterexample found for incomplete hypothesis");
@@ -112,7 +112,7 @@ public class MealyDHCTest {
         MealyDHC<Symbol, String> dhc = new MealyDHC<>(alphabet, simoracle);
         
         int rounds = 0;
-		Query<Symbol, Word<String>> counterexample = null;
+		DefaultQuery<Symbol, Word<String>> counterexample = null;
 		do {
 			if(counterexample == null) {
 				dhc.startLearning();

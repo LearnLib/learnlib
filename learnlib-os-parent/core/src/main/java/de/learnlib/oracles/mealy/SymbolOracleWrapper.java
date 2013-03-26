@@ -16,11 +16,13 @@
  */
 package de.learnlib.oracles.mealy;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import net.automatalib.words.Word;
-
-import java.util.Collection;
 
 
 /**
@@ -29,15 +31,37 @@ import java.util.Collection;
  * Wraps an oracle which uses {@link Word}s as its output to an oracle which only
  * yields the last symbol of each output.
  * 
- * CAVEAT: This class employs extremely evil black generics magic. It works fine for the
- * standard {@link Query} class, but might fail for any more specific subclasses.
- * 
  * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <I> input symbol class
  * @param <O> output symbol class
  */
 public class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
+	
+	private static final class LastSymbolQuery<I,O> extends Query<I,Word<O>> {
+		
+		private final Query<I,O> originalQuery;
+		
+		public LastSymbolQuery(Query<I,O> originalQuery) {
+			this.originalQuery = originalQuery;
+		}
+
+		@Override
+		public Word<I> getPrefix() {
+			return originalQuery.getPrefix();
+		}
+
+		@Override
+		public Word<I> getSuffix() {
+			return originalQuery.getSuffix();
+		}
+
+		@Override
+		public void answer(Word<O> output) {
+			originalQuery.answer(output.lastSymbol());
+		}
+		
+	}
 	
 	private final MembershipOracle<I,Word<O>> wordOracle;
 
@@ -54,19 +78,12 @@ public class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 	 * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
-	public void processQueries(Collection<Query<I, O>> queries) {
-		// FIXME might fail if we allow subclassing Query
-		// I am so going to hell for this, but it's the most efficient way
-		Collection<Query<I,Word<O>>> wordQueries = (Collection<Query<I,Word<O>>>)(Collection<?>)queries;
-		wordOracle.processQueries(wordQueries);
+	public void processQueries(Collection<? extends Query<I, O>> queries) {
+		List<LastSymbolQuery<I,O>> lsQueries = new ArrayList<LastSymbolQuery<I,O>>(queries.size());
+		for(Query<I,O> qry : queries)
+			lsQueries.add(new LastSymbolQuery<I,O>(qry));
 		
-		for(Query<I,Word<O>> wordQuery : wordQueries) {
-			Word<O> outWord = wordQuery.getOutput();
-			O outSym = outWord.getSymbol(outWord.size() - 1);
-			Query<I,O> symQuery = (Query<I,O>)(Query<?,?>)wordQuery;
-			symQuery.setOutput(outSym);
-		}
+		wordOracle.processQueries(lsQueries);
 	}
 
 }

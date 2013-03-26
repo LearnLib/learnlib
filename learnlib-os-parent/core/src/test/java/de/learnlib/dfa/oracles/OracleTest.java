@@ -17,7 +17,7 @@
 
 package de.learnlib.dfa.oracles;
 
-import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SafeOracle;
 import de.learnlib.oracles.SimulatorOracle;
 import net.automatalib.automata.fsa.DFA;
@@ -47,10 +47,10 @@ public class OracleTest {
         SimulatorOracle<Symbol,Boolean> dso = new SimulatorOracle<>(dfa);
         SafeOracle<Symbol,Boolean> oracle = new SafeOracle<>(dso);
         
-        List<Query<Symbol, Boolean>> queries = new ArrayList<>();
+        List<DefaultQuery<Symbol, Boolean>> queries = new ArrayList<>();
         
-        Query<Symbol, Boolean> q1 = new Query<>(Word.fromSymbols(in_paul, in_loves, in_mary));
-        Query<Symbol, Boolean> q2 = new Query<>(Word.fromSymbols(in_mary, in_loves, in_paul));
+        DefaultQuery<Symbol, Boolean> q1 = new DefaultQuery<>(Word.fromSymbols(in_paul, in_loves, in_mary));
+        DefaultQuery<Symbol, Boolean> q2 = new DefaultQuery<>(Word.fromSymbols(in_mary, in_loves, in_paul));
         queries.add(q1);
         queries.add(q2);
         

@@ -9,7 +9,7 @@ import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
 
 public abstract class ExtensibleAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableDeterministic<S,I,T,SP,TP>> extends
 AbstractAutomatonLStar<A, I, O,S,T,SP,TP,AI> {
@@ -30,7 +30,7 @@ AbstractAutomatonLStar<A, I, O,S,T,SP,TP,AI> {
 	}
 	
 	@Override
-	protected void doRefineHypothesis(Query<I, O> ceQuery) {
+	protected void doRefineHypothesis(DefaultQuery<I, O> ceQuery) {
 		List<List<Row<I>>> unclosed = cexHandler.handleCounterexample(ceQuery, table, oracle);
 		completeConsistentTable(unclosed, cexHandler.needsConsistencyCheck());
 	}
