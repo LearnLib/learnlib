@@ -17,13 +17,9 @@
 
 package de.learnlib.examples.dfa;
 
-import java.util.List;
-
 import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.automata.fsa.impl.FastDFAState;
-import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
 
@@ -68,10 +64,5 @@ public class ExampleAngluin {
 		return dfa;
 	}
 	
-	public static void main(String[] args) {
-		FastDFA<Symbol> dfa = constructMachine();
-		List<Word<Symbol>> cset = Automata.characterizingSet(dfa, dfa.getInputAlphabet());
-		System.err.println(cset);
-	}
 	
 }

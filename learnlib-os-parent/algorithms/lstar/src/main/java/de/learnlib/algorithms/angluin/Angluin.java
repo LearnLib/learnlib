@@ -21,7 +21,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <S>
  * 		state class.
  */
-public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
+public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 
 	private final Alphabet<S> alphabet;
 
@@ -110,7 +110,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 	}
 
 	@Override
-	public DFA getHypothesisModel() {
+	public DFA<?,S> getHypothesisModel() {
 		if (!startLearningAlreadyCalled) {
 			throw new IllegalStateException("Unable to get hypothesis model before first learn iteration!");
 		}
@@ -201,7 +201,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA, S, Boolean> {
 
 		oracle.processQueries(queries);
 
-		Map<Word, Boolean> results = new HashMap<>((int) (1.5 * queries.size()));
+		Map<Word<S>, Boolean> results = new HashMap<>((int) (1.5 * queries.size()));
 
 		for (DefaultQuery<S, Boolean> query : queries) {
 			results.put(query.getInput(), query.getOutput());

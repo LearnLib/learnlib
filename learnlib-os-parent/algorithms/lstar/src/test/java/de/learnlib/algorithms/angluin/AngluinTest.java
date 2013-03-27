@@ -50,7 +50,7 @@ public class AngluinTest {
 	@Test(dependsOnMethods = { "testGetHypothesisBeforeLearnIteration", "testRefinementBeforeLearnIteration" })
 	public void testFirstHypothesis() {
 		angluin.startLearning();
-		DFA hypothesis = angluin.getHypothesisModel();
+		DFA<?,Symbol> hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(hypothesis.getStates().size(), 2);
 
 		String observationTableOutput = angluin.getStringRepresentationOfObservationTable();
@@ -65,14 +65,14 @@ public class AngluinTest {
 	@Test(dependsOnMethods = "testDuplicateLearnInvocation")
 	public void testCounterExample() throws IOException {
 		angluin.refineHypothesis(createCounterExample(false, one, one, zero));
-		DFA hypothesis = angluin.getHypothesisModel();
+		DFA<?,Symbol> hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(3, hypothesis.getStates().size());
 	}
 
 	@Test(dependsOnMethods = "testCounterExample")
 	public void testSecondCounterExample() throws IOException {
 		angluin.refineHypothesis(createCounterExample(false, zero, one, zero));
-		DFA hypothesis = angluin.getHypothesisModel();
+		DFA<?,Symbol> hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(4, hypothesis.getStates().size());
 		
 

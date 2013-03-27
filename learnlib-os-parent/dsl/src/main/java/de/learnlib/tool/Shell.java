@@ -56,13 +56,15 @@ public class Shell {
     private void run() {        
         while (true) {        
             String command = readLine();
+            if (command == null) {
+                command = "exit";
+            }
+            
             if (command.length() < 1 || command.startsWith("//")) {
                 continue;
             }
             
-            if (command == null) {
-                command = "exit";
-            }
+            
             
             String[] parameters = command.split(" ");
             for (int i=0;i<parameters.length;i++) {

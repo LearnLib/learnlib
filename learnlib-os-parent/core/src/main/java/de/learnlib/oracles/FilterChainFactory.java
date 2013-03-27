@@ -33,6 +33,7 @@ import de.learnlib.components.LLComponentParameter;
         type=MembershipOracle.class)
 public class FilterChainFactory<I,O> implements LLComponentFactory<MembershipOracle<I,O>> {
 
+	@SuppressWarnings("unchecked")
     private Filter<I,O>[] chain = new Filter[0]; 
     
     private MembershipOracle<I,O> endpoint = null;

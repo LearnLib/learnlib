@@ -1,16 +1,16 @@
 package de.learnlib.algorithms.angluin;
 
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.FastDFA;
-import net.automatalib.automata.fsa.impl.FastDFAState;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.FastDFA;
+import net.automatalib.automata.fsa.impl.FastDFAState;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 
 /**
  * The internal storage mechanism for {@link Angluin}.
@@ -211,7 +211,7 @@ public class ObservationTable<S> {
 	 * 		The alphabet of the automaton.
 	 * @return The current hypothesis automaton.
 	 */
-	DFA toAutomaton(Alphabet<S> alphabet) {
+	DFA<?,S> toAutomaton(Alphabet<S> alphabet) {
 		FastDFA<S> automaton = new FastDFA<>(alphabet);
 		Map<ObservationTableRow, FastDFAState> dfaStates = new HashMap<>(
 				(int) (1.5 * states.size()));

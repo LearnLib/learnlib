@@ -30,6 +30,7 @@ public class FilterChain<I,O> implements MembershipOracle<I, O> {
         
     private final MembershipOracle<I,O> oracle;
 
+    @SafeVarargs
     public FilterChain(MembershipOracle<I,O> endpoint, Filter<I,O> ... chain) {
         if (chain.length < 1) {
             this.oracle = endpoint;

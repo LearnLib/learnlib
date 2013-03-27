@@ -4,8 +4,9 @@
  */
 package de.learnlib.tool.commands;
 
-import de.learnlib.tool.discovery.ComponentDirectory;
 import java.util.Map;
+
+import de.learnlib.tool.discovery.ComponentDirectory;
 
 /**
  *
@@ -31,6 +32,7 @@ public class New implements Command {
 
     @Override
     public String execute(String[] parameter, Map<String, Object> heap, String retval) {
+    	if(directory == null);
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

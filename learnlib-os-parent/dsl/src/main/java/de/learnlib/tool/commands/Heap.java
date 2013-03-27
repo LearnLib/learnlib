@@ -6,7 +6,6 @@ package de.learnlib.tool.commands;
 
 import java.util.Map;
 import java.util.Map.Entry;
-import javax.swing.text.html.parser.Entity;
 
 /**
  *

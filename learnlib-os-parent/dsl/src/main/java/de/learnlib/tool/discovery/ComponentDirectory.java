@@ -4,9 +4,6 @@
  */
 package de.learnlib.tool.discovery;
 
-import de.learnlib.components.LLComponent;
-import de.learnlib.components.LLComponentFactory;
-import de.learnlib.components.LLComponentParameter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,7 +11,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -22,6 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import de.learnlib.components.LLComponent;
+import de.learnlib.components.LLComponentFactory;
+import de.learnlib.components.LLComponentParameter;
 
 /**
  *
@@ -32,11 +32,11 @@ public class ComponentDirectory {
     public static class ComponentDescriptor {
     
         public final LLComponent componentInfo;
-        public final LLComponentFactory factory;        
+        public final LLComponentFactory<?> factory;        
         public final Method instantiator;
         public final Map<LLComponentParameter, Method> parameters = new HashMap<>();
         
-        public ComponentDescriptor(LLComponent componentInfo, LLComponentFactory factory) 
+        public ComponentDescriptor(LLComponent componentInfo, LLComponentFactory<?> factory) 
                 throws NoSuchMethodException {
             this.componentInfo = componentInfo;
             this.factory = factory;
@@ -70,7 +70,7 @@ public class ComponentDirectory {
                 return false;                        
             }
             
-            LLComponentFactory factory = (LLComponentFactory) instance;
+            LLComponentFactory<?> factory = (LLComponentFactory<?>) instance;
             LLComponent llComponent = (LLComponent) clazz.getAnnotation(LLComponent.class);
             if (this.components.containsKey(llComponent.name())) {
                 logger.log(Level.SEVERE, "Name {0} is already in use", 

@@ -4,8 +4,9 @@
  */
 package de.learnlib.tool.commands;
 
-import de.learnlib.experiments.Experiment;
 import java.util.Map;
+
+import de.learnlib.experiments.Experiment;
 
 /**
  *
@@ -26,7 +27,7 @@ public class Run implements Command {
     @Override
     public String execute(String[] parameter, Map<String, Object> heap, String retval) {
         
-        Experiment experiment = new Experiment(null, null, null);
+        Experiment<?, ?, ?> experiment = new Experiment<Object,Object,Object>(null, null, null);
         experiment.run();
         return null;
     }
