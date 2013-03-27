@@ -72,12 +72,13 @@
     =================================  MODULES ===================================  
     -->
     <modules>
+        <module>./test-support</module>
+	<module>./build-tools</module>
         <module>./core</module>
         <module>./algorithms</module>
 		<module>./eqtests</module>
         <module>./dsl</module>
 		<module>./simulator</module>
-        <module>./test-support</module>
     </modules>	
 
     <!--  
@@ -127,6 +128,27 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
+            </plugin>
+
+            <!-- 
+                check style
+            -->            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+		    <headerLocation>license-header.txt</headerLocation>
+		    <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+                </configuration>
+		<version>2.10</version>
+		<dependencies>
+		    <dependency>
+	                <groupId>${project.groupId}</groupId>
+			<artifactId>learnlib-build-tools</artifactId>
+			<version>${project.version}</version>
+		    </dependency>
+		</dependencies>
             </plugin>
         </plugins>
     </build>

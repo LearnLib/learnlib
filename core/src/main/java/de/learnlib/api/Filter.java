@@ -14,3 +14,24 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
+package de.learnlib.api;
+
+/**
+ * A filter is an oracle that can be used as the middle 
+ * element in a chain of oracles.
+ * 
+ * @param <I> input symbol class
+ * @param <O> output symbol class
+ * 
+ * @author falkhowar
+ */
+public interface Filter<I, O> extends MembershipOracle<I, O> {
+
+    /**
+     * sets oracle for processing membership queries.
+     * 
+     * @param next 
+     */
+    void setNext(MembershipOracle<I, O> next);
+
+}
