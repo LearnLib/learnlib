@@ -16,6 +16,7 @@
  */
 package de.learnlib.eqtests.basic;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -54,19 +55,43 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 	private <S> DefaultQuery<I,O> doFindCounterExample(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
 			Output<I,O> output, Collection<? extends I> inputs) {
 		
-		List<Word<I>> stateCover = Automata.stateCover(hypothesis, inputs);
+		List<Word<I>> stateCover = new ArrayList<Word<I>>(hypothesis.size());
+		List<Word<I>> transitions = new ArrayList<Word<I>>(hypothesis.size() * (inputs.size() - 1));
 		
+		Automata.cover(hypothesis, inputs, stateCover, transitions);
+		
+		List<Word<I>> globalSuffixes = Automata.characterizingSet(hypothesis, inputs);
+		if(globalSuffixes.isEmpty())
+			globalSuffixes = Collections.singletonList(Word.<I>epsilon());
+	
 		WordBuilder<I> wb = new WordBuilder<>();
 		
+		
+		// Phase 1: state cover * middle part * global suffixes
 		for(Word<I> as : stateCover) {
-			S state = hypothesis.getState(as);
-			List<Word<I>> charSuffixes = Automata.stateCharacterizingSet(hypothesis, inputs, state);
-			if(charSuffixes.isEmpty())
-				charSuffixes = Collections.singletonList(Word.<I>epsilon());
-			
-			for(Word<I> suffix : charSuffixes) {
+			for(Word<I> suffix : globalSuffixes) {
 				for(List<? extends I> middle : CollectionsUtil.allTuples(inputs, 1, maxDepth)) {
 					wb.append(as).append(middle).append(suffix);
+					Word<I> queryWord = wb.toWord();
+					wb.clear();
+					DefaultQuery<I,O> query = new DefaultQuery<>(queryWord);
+					O hypOutput = output.computeOutput(queryWord);
+					sulOracle.processQueries(Collections.singleton(query));
+					if(!CmpUtil.equals(hypOutput, query.getOutput()))
+						return query;
+				}
+			}
+		}
+		
+		// Phase 2: transitions (not in state cover) * middle part * local suffixes
+		for(Word<I> trans : transitions) {
+			S state = hypothesis.getState(trans);
+			List<Word<I>> localSuffixes = Automata.stateCharacterizingSet(hypothesis, inputs, state);
+			if(localSuffixes.isEmpty())
+				localSuffixes = Collections.singletonList(Word.<I>epsilon());
+			for(Word<I> suffix : localSuffixes) {
+				for(List<? extends I> middle : CollectionsUtil.allTuples(inputs, 1, maxDepth)) {
+					wb.append(trans).append(middle).append(suffix);
 					Word<I> queryWord = wb.toWord();
 					wb.clear();
 					DefaultQuery<I,O> query = new DefaultQuery<>(queryWord);
