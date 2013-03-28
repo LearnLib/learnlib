@@ -53,6 +53,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 	private SimpleAlphabet<Word<I>> splitters = new SimpleAlphabet<>();
 	private FastMealy<I, O> hypothesis;
 	private Map<FastMealyState<O>, QueueElement> accessSequences;
+	private SuffixFinder<I,Word<O>> suffixFinder;
 
 	private class QueueElement {
 		private FastMealyState<O> parentState;
@@ -71,6 +72,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 	public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
+		this.suffixFinder = SuffixFinders.getFindBinarySearch();
 	}
 
 	@Override
@@ -180,13 +182,17 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 
 		int oldsize = hypothesis.size();
 		
-		SuffixFinder<I,Word<O>> sf = SuffixFinders.getFindBinarySearch();
-		int idx = sf.findSuffixIndex(ceQuery, this, hypothesis, oracle);
+		int idx = suffixFinder.findSuffixIndex(ceQuery, this, hypothesis, oracle);
 		Word<I> qrySuffix = ceQuery.getSuffix();
 		Word<I> suffix = qrySuffix.subWord(idx, qrySuffix.length());
 		
-		splitters.add(suffix);
-		log.log(Level.FINE, "added suffix: {0}", suffix);
+		for(int l = suffixFinder.allSuffixes() ? 2 : suffix.size(); l <= suffix.size(); ++l) {
+			Word<I> suf = suffix.suffix(l);
+			if(!splitters.contains(suf)) {
+				splitters.add(suf);
+				log.log(Level.FINE, "added suffix: {0}", suf);
+			}
+		}
 
 		startLearning();
 
