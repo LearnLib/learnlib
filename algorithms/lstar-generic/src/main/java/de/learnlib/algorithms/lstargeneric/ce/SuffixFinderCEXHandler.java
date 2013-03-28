@@ -17,6 +17,7 @@
 package de.learnlib.algorithms.lstargeneric.ce;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.automata.concepts.SuffixOutput;
@@ -24,38 +25,43 @@ import net.automatalib.words.Word;
 import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.counterexamples.SuffixFinder;
 import de.learnlib.oracles.DefaultQuery;
 
-public class ClassicLStarCEXHandler<I, O> implements
+public class SuffixFinderCEXHandler<I, O> implements
 		ObservationTableCEXHandler<I, O> {
 	
-	private static final ClassicLStarCEXHandler<?,?> INSTANCE
-		= new ClassicLStarCEXHandler<Object,Object>();
+	private final SuffixFinder<I, O> suffixFinder;
 	
-	@SuppressWarnings("unchecked")
-	public static <I,O> ClassicLStarCEXHandler<I,O> getInstance() {
-		return (ClassicLStarCEXHandler<I,O>)INSTANCE;
+	public SuffixFinderCEXHandler(SuffixFinder<I,O> suffixFinder) {
+		this.suffixFinder = suffixFinder;
 	}
 
 	@Override
 	public List<List<Row<I>>> handleCounterexample(DefaultQuery<I, O> ceQuery,
-			ObservationTable<I, O> table, SuffixOutput<I,O> hypOutput, MembershipOracle<I, O> oracle) {
+			ObservationTable<I, O> table,
+			SuffixOutput<I,O> hypOutput,
+			MembershipOracle<I, O> oracle) {
 		
-		Word<I> ceWord = ceQuery.getInput();
+		int suffixIdx = suffixFinder.findSuffixIndex(ceQuery, table, hypOutput, oracle);
+		if(suffixIdx < 0)
+			return Collections.emptyList();
+	
+		Word<I> qrySuffix = ceQuery.getSuffix();
+		int suffixLen = qrySuffix.length();
+		if(!suffixFinder.allSuffixes())
+			return table.addSuffix(qrySuffix.subWord(suffixIdx, suffixLen), oracle);
 		
-		List<Word<I>> newPrefixes = new ArrayList<Word<I>>(ceWord.size() - 2);
+		List<Word<I>> suffixes = new ArrayList<Word<I>>(suffixLen - suffixIdx);
+		for(int i = suffixIdx; i < suffixLen; i++)
+			suffixes.add(qrySuffix.subWord(i, suffixLen));
 		
-		for(int i = 1; i <= ceWord.size(); i++) {
-			Word<I> prefix = ceWord.prefix(i);
-			newPrefixes.add(prefix);
-		}
-		
-		return table.addShortPrefixes(newPrefixes, oracle);
+		return table.addSuffixes(suffixes, oracle);
 	}
 
 	@Override
 	public boolean needsConsistencyCheck() {
-		return true;
+		return false;
 	}
 
 }

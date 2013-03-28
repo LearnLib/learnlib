@@ -19,6 +19,7 @@ package de.learnlib.algorithms.lstargeneric.ce;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Word;
 import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
@@ -37,7 +38,7 @@ public class ShahbazCEXHandler<I, O> implements ObservationTableCEXHandler<I, O>
 
 	@Override
 	public List<List<Row<I>>> handleCounterexample(DefaultQuery<I, O> ceQuery,
-			ObservationTable<I, O> table, MembershipOracle<I,O> oracle) {
+			ObservationTable<I, O> table, SuffixOutput<I,O> hypOutput, MembershipOracle<I,O> oracle) {
 		Word<I> ceWord = ceQuery.getInput();
 		
 		int ceLen = ceWord.length();

@@ -159,7 +159,7 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	 * adding the information. 
 	 */
 	protected List<List<Row<I>>> incorporateCounterExample(DefaultQuery<I,O> ce) {
-		return ClassicLStarCEXHandler.<I,O>getInstance().handleCounterexample(ce, table, oracle);
+		return ClassicLStarCEXHandler.<I,O>getInstance().handleCounterexample(ce, table, null, oracle);
 	}
 	
 	/**

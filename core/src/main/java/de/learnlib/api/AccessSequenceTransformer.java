@@ -14,20 +14,12 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.lstargeneric.ce;
+package de.learnlib.api;
 
-import java.util.List;
+import net.automatalib.words.Word;
 
-import net.automatalib.automata.concepts.SuffixOutput;
-import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
-import de.learnlib.algorithms.lstargeneric.table.Row;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.DefaultQuery;
-
-public interface ObservationTableCEXHandler<I, O> {
-	public List<List<Row<I>>> handleCounterexample(DefaultQuery<I,O> ceQuery,
-			ObservationTable<I,O> table,
-			SuffixOutput<I,O> hypOutput, MembershipOracle<I,O> oracle);
+public interface AccessSequenceTransformer<I> {
+	public Word<I> transformAccessSequence(Word<I> word);
 	
-	public boolean needsConsistencyCheck();
+	public boolean isAccessSequence(Word<I> word);
 }

@@ -79,6 +79,7 @@
 		<module>./eqtests</module>
         <module>./dsl</module>
 		<module>./simulator</module>
+		<module>./utils</module>
     </modules>	
 
     <!--  
@@ -256,6 +257,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>learnlib-simulator</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+			<dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>learnlib-counterexamples</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -23,6 +23,7 @@ import de.learnlib.algorithms.lstargeneric.closing.CloseFirstStrategy;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
+import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
@@ -109,6 +110,11 @@ public class ExtensibleLStarDFA<I>
 
 	@Override
 	protected DFA<?, I> exposeInternalHypothesis() {
+		return internalHyp;
+	}
+
+	@Override
+	protected SuffixOutput<I, Boolean> hypothesisOutput() {
 		return internalHyp;
 	}
 
