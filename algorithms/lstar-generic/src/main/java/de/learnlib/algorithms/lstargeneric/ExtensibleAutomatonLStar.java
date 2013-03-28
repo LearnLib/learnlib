@@ -19,6 +19,7 @@ package de.learnlib.algorithms.lstargeneric;
 import java.util.List;
 
 import net.automatalib.automata.MutableDeterministic;
+import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
@@ -47,7 +48,7 @@ AbstractAutomatonLStar<A, I, O,S,T,SP,TP,AI> {
 	
 	@Override
 	protected void doRefineHypothesis(DefaultQuery<I, O> ceQuery) {
-		List<List<Row<I>>> unclosed = cexHandler.handleCounterexample(ceQuery, table, oracle);
+		List<List<Row<I>>> unclosed = cexHandler.handleCounterexample(ceQuery, table, hypothesisOutput(), oracle);
 		completeConsistentTable(unclosed, cexHandler.needsConsistencyCheck());
 	}
 	
@@ -60,6 +61,8 @@ AbstractAutomatonLStar<A, I, O,S,T,SP,TP,AI> {
 	protected List<Word<I>> initialSuffixes() {
 		return initialSuffixes;
 	}
+	
+	protected abstract SuffixOutput<I,O> hypothesisOutput();
 	
 	
 }

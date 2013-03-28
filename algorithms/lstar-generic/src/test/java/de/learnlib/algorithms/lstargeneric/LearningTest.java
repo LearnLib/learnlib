@@ -23,6 +23,7 @@ import org.testng.Assert;
 
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
+import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
 public class LearningTest {
@@ -30,6 +31,7 @@ public class LearningTest {
 	public static <I,O,M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> void testLearnModel(UniversalDeterministicAutomaton<?, I, ?, ?, ?> target,
 			Alphabet<I> alphabet,
 			LearningAlgorithm<M, I, O> learner,
+			MembershipOracle<I, O> oracle,
 			EquivalenceOracle<? super M, I, O> eqOracle) {
 		int maxRounds = target.size();
 		
@@ -42,6 +44,7 @@ public class LearningTest {
 			
 			if(ce == null)
 				break;
+			
 			
 			Assert.assertNotEquals(maxRounds, 0);
 			

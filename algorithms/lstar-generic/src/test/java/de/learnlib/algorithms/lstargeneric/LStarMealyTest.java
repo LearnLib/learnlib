@@ -32,6 +32,7 @@ import de.learnlib.algorithms.lstargeneric.ce.ClassicLStarCEXHandler;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.ce.ShahbazCEXHandler;
 import de.learnlib.algorithms.lstargeneric.ce.Suffix1by1CEXHandler;
+import de.learnlib.algorithms.lstargeneric.ce.SuffixFinderCEXHandler;
 import de.learnlib.algorithms.lstargeneric.closing.CloseFirstStrategy;
 import de.learnlib.algorithms.lstargeneric.closing.CloseLexMinStrategy;
 import de.learnlib.algorithms.lstargeneric.closing.CloseRandomStrategy;
@@ -42,10 +43,12 @@ import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealy;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.counterexamples.SuffixFinders;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.eqtests.basic.mealy.SymbolEQOracleWrapper;
 import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.oracles.SimulatorOracle;
+import de.learnlib.oracles.mealy.SymbolOracleWrapper;
 
 public class LStarMealyTest extends LearningTest {
 
@@ -60,7 +63,12 @@ public class LStarMealyTest extends LearningTest {
 		List<ObservationTableCEXHandler<Symbol,String>> cexHandlers
 			= Arrays.asList(ClassicLStarCEXHandler.<Symbol,String>getInstance(),
 			ShahbazCEXHandler.<Symbol,String>getInstance(),
-			Suffix1by1CEXHandler.<Symbol,String>getInstance());
+			Suffix1by1CEXHandler.<Symbol,String>getInstance(),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,String>getFindLinear()),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,String>getFindLinearReverse()),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,String>getFindBinarySearch()),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,String>getFindMahlerInstance()),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,String>getFindShahbazInstance()));
 		
 		List<ClosingStrategy<Symbol,String>> closingStrategies
 			= Arrays.asList(CloseFirstStrategy.<Symbol,String>getInstance(),
@@ -85,7 +93,7 @@ public class LStarMealyTest extends LearningTest {
 				= ClassicLStarMealy.createForWordOracle(alphabet, oracle, initSuffixes,
 						handler, strategy);
 				
-				testLearnModel(mealy, alphabet, learner, mealySymEqOracle);
+				testLearnModel(mealy, alphabet, learner, new SymbolOracleWrapper<>(oracle), mealySymEqOracle);
 			}
 		}
 	}
@@ -101,7 +109,12 @@ public class LStarMealyTest extends LearningTest {
 		List<ObservationTableCEXHandler<Symbol,Word<String>>> cexHandlers
 			= Arrays.asList(ClassicLStarCEXHandler.<Symbol,Word<String>>getInstance(),
 			ShahbazCEXHandler.<Symbol,Word<String>>getInstance(),
-			Suffix1by1CEXHandler.<Symbol,Word<String>>getInstance());
+			Suffix1by1CEXHandler.<Symbol,Word<String>>getInstance(),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Word<String>>getFindLinear()),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Word<String>>getFindLinearReverse()),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Word<String>>getFindBinarySearch()),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Word<String>>getFindMahlerInstance()),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Word<String>>getFindShahbazInstance()));
 		
 		List<ClosingStrategy<Symbol,Word<String>>> closingStrategies
 			= Arrays.asList(CloseFirstStrategy.<Symbol,Word<String>>getInstance(),
@@ -122,7 +135,7 @@ public class LStarMealyTest extends LearningTest {
 				= new ExtensibleLStarMealy<>(alphabet, oracle, initSuffixes,
 						handler, strategy);
 				
-				testLearnModel(mealy, alphabet, learner, mealyEqOracle);
+				testLearnModel(mealy, alphabet, learner, oracle, mealyEqOracle);
 			}
 		}
 	}

@@ -19,6 +19,7 @@ package de.learnlib.algorithms.lstargeneric.ce;
 import java.util.Collections;
 import java.util.List;
 
+import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Word;
 import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
@@ -38,7 +39,7 @@ public class Suffix1by1CEXHandler<I, O> implements
 
 	@Override
 	public List<List<Row<I>>> handleCounterexample(DefaultQuery<I, O> ceQuery,
-			ObservationTable<I, O> table, MembershipOracle<I, O> oracle) {
+			ObservationTable<I, O> table, SuffixOutput<I,O> hypOutput, MembershipOracle<I, O> oracle) {
 		List<List<Row<I>>> unclosed = Collections.emptyList();
 		
 		List<Word<I>> suffixes = table.getSuffixes();

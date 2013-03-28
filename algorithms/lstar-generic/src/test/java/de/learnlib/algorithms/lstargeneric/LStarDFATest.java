@@ -35,6 +35,7 @@ import de.learnlib.algorithms.lstargeneric.ce.ClassicLStarCEXHandler;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.ce.ShahbazCEXHandler;
 import de.learnlib.algorithms.lstargeneric.ce.Suffix1by1CEXHandler;
+import de.learnlib.algorithms.lstargeneric.ce.SuffixFinderCEXHandler;
 import de.learnlib.algorithms.lstargeneric.closing.CloseFirstStrategy;
 import de.learnlib.algorithms.lstargeneric.closing.CloseLexMinStrategy;
 import de.learnlib.algorithms.lstargeneric.closing.CloseRandomStrategy;
@@ -44,6 +45,7 @@ import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.counterexamples.SuffixFinders;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.eqtests.basic.WMethodEQOracle;
 import de.learnlib.eqtests.basic.WpMethodEQOracle;
@@ -62,7 +64,12 @@ public class LStarDFATest extends LearningTest {
 		List<ObservationTableCEXHandler<Symbol,Boolean>> cexHandlers
 			= Arrays.asList(ClassicLStarCEXHandler.<Symbol,Boolean>getInstance(),
 			ShahbazCEXHandler.<Symbol,Boolean>getInstance(),
-			Suffix1by1CEXHandler.<Symbol,Boolean>getInstance());
+			Suffix1by1CEXHandler.<Symbol,Boolean>getInstance(),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Boolean>getFindLinear()),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Boolean>getFindLinearReverse()),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Boolean>getFindBinarySearch()),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Boolean>getFindMahlerInstance()),
+			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Boolean>getFindShahbazInstance()));
 		
 		List<ClosingStrategy<Symbol,Boolean>> closingStrategies
 			= Arrays.asList(CloseFirstStrategy.<Symbol,Boolean>getInstance(),
@@ -80,7 +87,9 @@ public class LStarDFATest extends LearningTest {
 		eqOracles.add(new WMethodEQOracle<>(3, dfaOracle));
 		eqOracles.add(new WpMethodEQOracle<>(3, dfaOracle));
 		
+		int i = 0;
 		for(ObservationTableCEXHandler<Symbol,Boolean> handler : cexHandlers) {
+			System.err.println(i++);
 			for(ClosingStrategy<Symbol,Boolean> strategy : closingStrategies) {
 					
 				for(EquivalenceOracle<? super DFA<?,Symbol>, Symbol, Boolean> eqOracle : eqOracles) {
@@ -88,7 +97,7 @@ public class LStarDFATest extends LearningTest {
 					= new ExtensibleLStarDFA<>(alphabet, dfaOracle, suffixes,
 							handler, strategy);
 					
-					testLearnModel(targetDFA, alphabet, learner, eqOracle);
+					testLearnModel(targetDFA, alphabet, learner, dfaOracle, eqOracle);
 				}
 			}
 		}
