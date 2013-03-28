@@ -1,6 +1,8 @@
 .settings/
 .classpath
+.idea/
 .project
 hs_err_*
 *~
+*.iml
 test-output/
