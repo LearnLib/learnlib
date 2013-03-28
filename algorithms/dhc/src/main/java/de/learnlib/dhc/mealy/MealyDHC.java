@@ -30,25 +30,22 @@ import net.automatalib.automata.transout.impl.FastMealyState;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.SimpleAlphabet;
-import de.learnlib.api.CEXHandlerSuffixes;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.SupportsCEXHandlerSuffixes;
-import de.learnlib.cexhandlers.CEXHandlerAllSuffixes;
+import de.learnlib.dhc.mealy.cex.CEXHandlerRivestShapire;
 import de.learnlib.oracles.DefaultQuery;
 
 /**
  *
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>>,
-		SupportsCEXHandlerSuffixes<I, Word<O>> {
+public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>> {
 
 	private Alphabet<I> alphabet;
 	private MembershipOracle<I, Word<O>> oracle;
 	private SimpleAlphabet<Word<I>> splitters = new SimpleAlphabet<>();
 	private FastMealy<I, O> hypothesis;
-	private CEXHandlerSuffixes<I, Word<O>> cexhandler = new CEXHandlerAllSuffixes<>();
+	private CEXHandlerRivestShapire<I, O> cexhandler;
 	private Map<FastMealyState<O>, QueueElement> accessSequences;
 
 	private class QueueElement {
@@ -68,6 +65,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 	public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
+		this.cexhandler = new CEXHandlerRivestShapire<>(this, oracle);
 	}
 
 	@Override
@@ -198,8 +196,4 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 		return assembleAccessSequence(accessSequences.get(state));
 	}
 
-	@Override
-	public void setCEXHandlerSuffixes(CEXHandlerSuffixes<I, Word<O>> handler) {
-		this.cexhandler = handler;
-	}
 }
