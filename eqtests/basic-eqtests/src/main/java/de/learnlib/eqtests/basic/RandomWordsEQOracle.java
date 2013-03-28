@@ -17,11 +17,13 @@
 
 package de.learnlib.eqtests.basic;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import net.automatalib.automata.concepts.OutputAutomaton;
-import net.automatalib.words.Alphabet;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
@@ -47,15 +49,21 @@ public class RandomWordsEQOracle<I,O, A extends OutputAutomaton<?,I,?,O>> implem
     
     
     @Override
-    public DefaultQuery<I, O> findCounterExample(A hypothesis, Alphabet<I> alpha) {
+    public DefaultQuery<I, O> findCounterExample(A hypothesis, Collection<? extends I> alpha) {
+    	
+    	List<? extends I> symbolList = null;
+    	if(alpha instanceof List)
+    		symbolList = (List<? extends I>)alpha;
+    	else
+    		symbolList = new ArrayList<I>(alpha);
 
         for(int i = 0; i < maxTests; ++i) {
             int length = minLength + random.nextInt((maxLength - minLength) + 1);
             
             WordBuilder<I> testtrace = new WordBuilder<>(length);
             for(int j = 0; j < length; ++j) {
-                int symidx = random.nextInt(alpha.size());
-                I sym = alpha.getSymbol(symidx);
+                int symidx = random.nextInt(symbolList.size());
+                I sym = symbolList.get(symidx);
                 testtrace.append(sym);
             }
             

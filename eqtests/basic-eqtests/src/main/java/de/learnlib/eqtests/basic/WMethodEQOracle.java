@@ -16,6 +16,7 @@
  */
 package de.learnlib.eqtests.basic;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,7 +25,6 @@ import net.automatalib.automata.concepts.Output;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.util.automata.Automata;
-import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.EquivalenceOracle;
@@ -44,10 +44,10 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
 
 	@Override
 	public DefaultQuery<I, O> findCounterExample(A hypothesis,
-			Alphabet<I> alphabet) {
+			Collection<? extends I> inputs) {
 		
-		List<Word<I>> transCover = Automata.transitionCover(hypothesis, alphabet);
-		List<Word<I>> charSuffixes = Automata.characterizingSet(hypothesis, alphabet);
+		List<Word<I>> transCover = Automata.transitionCover(hypothesis, inputs);
+		List<Word<I>> charSuffixes = Automata.characterizingSet(hypothesis, inputs);
 		
 		// Special case: List of characterizing suffixes may be empty,
 		// but in this case we still need to test!
@@ -57,7 +57,7 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
 		
 		WordBuilder<I> wb = new WordBuilder<>();
 		
-		for(List<I> middle : CollectionsUtil.allTuples(alphabet, 1, maxDepth)) {
+		for(List<? extends I> middle : CollectionsUtil.allTuples(inputs, 1, maxDepth)) {
 			for(Word<I> trans : transCover) {
 				for(Word<I> suffix : charSuffixes) {
 					wb.append(trans).append(middle).append(suffix);

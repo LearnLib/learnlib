@@ -16,11 +16,12 @@
  */
 package de.learnlib.eqtests.basic.mealy;
 
+import java.util.Collection;
+
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.concepts.SODetOutputAutomaton;
 import net.automatalib.commons.util.comparison.CmpUtil;
-import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 public class SymbolEQOracleWrapper<A extends SODetOutputAutomaton<?,I,?,Word<O>>, I, O> implements
@@ -37,8 +38,8 @@ public class SymbolEQOracleWrapper<A extends SODetOutputAutomaton<?,I,?,Word<O>>
 	 * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, net.automatalib.words.Alphabet)
 	 */
 	@Override
-	public DefaultQuery<I, O> findCounterExample(A hypothesis, Alphabet<I> alphabet) {
-		DefaultQuery<I,Word<O>> wordCeQry = wordEqOracle.findCounterExample(hypothesis, alphabet);
+	public DefaultQuery<I, O> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+		DefaultQuery<I,Word<O>> wordCeQry = wordEqOracle.findCounterExample(hypothesis, inputs);
 		if(wordCeQry == null)
 			return null;
 		

@@ -25,7 +25,6 @@ import net.automatalib.automata.concepts.Output;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.util.automata.Automata;
-import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.EquivalenceOracle;
@@ -45,10 +44,10 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 
 	@Override
 	public DefaultQuery<I, O> findCounterExample(A hypothesis,
-			Alphabet<I> alphabet) {
+			Collection<? extends I> inputs) {
 		UniversalDeterministicAutomaton<?, I, ?, ?, ?> aut = hypothesis;
 		Output<I,O> out = hypothesis;
-		return doFindCounterExample(aut, out, alphabet);
+		return doFindCounterExample(aut, out, inputs);
 	}
 	
 	
