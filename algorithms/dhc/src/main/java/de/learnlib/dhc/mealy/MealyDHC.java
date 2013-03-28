@@ -49,6 +49,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 	private SimpleAlphabet<Word<I>> splitters = new SimpleAlphabet<>();
 	private FastMealy<I, O> hypothesis;
 	private CEXHandlerSuffixes<I, Word<O>> cexhandler = new CEXHandlerAllSuffixes<>();
+	private Map<FastMealyState<O>, QueueElement> accessSequences;
 
 	private class QueueElement {
 		private FastMealyState<O> parentState;
@@ -88,6 +89,9 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 
 		// initialize exploration queue
 		Queue<QueueElement> queue = new LinkedList<>();
+		
+		// initialize storage for access sequences
+		accessSequences = new HashMap<>();
 
 		// first element to be explored represents the initial state with no predecessor
 		queue.add(new QueueElement(null, null, null, null));
@@ -128,6 +132,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 					hypothesis.addTransition(elem.parentState, elem.transIn, state, elem.transOut);
 				}
 				signatures.put(sig, state);
+				accessSequences.put(state, elem);
 
 				scheduleSuccessors(elem, state, queue, sig);
 			}
@@ -187,6 +192,10 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 			throw new IllegalStateException("No hypothesis learned yet");
 		}
 		return (MealyMachine<?, I, ?, O>) hypothesis;
+	}
+	
+	public Word<I> getAccessSequence(FastMealyState<O> state) {
+		return assembleAccessSequence(accessSequences.get(state));
 	}
 
 	@Override
