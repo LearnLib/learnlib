@@ -180,48 +180,23 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 
 		int oldsize = hypothesis.size();
 		
-		SuffixFinder<I,Word<O>> sf;
-		//sf = SuffixFinders.getFindLinear();
-		//sf = SuffixFinders.getFindLinearReverse();
-		sf = SuffixFinders.getFindBinarySearch();
+		SuffixFinder<I,Word<O>> sf = SuffixFinders.getFindBinarySearch();
 		int idx = sf.findSuffixIndex(ceQuery, this, hypothesis, oracle);
 		Word<I> qrySuffix = ceQuery.getSuffix();
 		Word<I> suffix = qrySuffix.subWord(idx, qrySuffix.length());
 		
 		splitters.add(suffix);
-		log.log(Level.INFO, "added suffix: {0}", suffix);
+		log.log(Level.FINE, "added suffix: {0}", suffix);
 
 		startLearning();
 
 		return oldsize != hypothesis.size();
 	}
-	/*
-	private SuffixOutput<I, O> hypothesisOutput() {
-		return new SuffixOutput<I,O>() {
-			@Override
-			public O computeOutput(Iterable<I> input) {
-				return computeSuffixOutput(Collections.<I>emptyList(), input);
-			}
-			@Override
-			public O computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
-				Word<O> wordOut = hypothesis.computeSuffixOutput(prefix, suffix);
-				if(wordOut.isEmpty())
-					return null;
-				return wordOut.lastSymbol();
-			}
-		};
-	}
-	*/
-
 
 	@Override
 	public MealyMachine<?, I, ?, O> getHypothesisModel() {
 		checkInternalState();
 		return (MealyMachine<?, I, ?, O>) hypothesis;
-	}
-	
-	public Word<I> getAccessSequence(FastMealyState<O> state) {
-		return assembleAccessSequence(accessSequences.get(state));
 	}
 	
 	@Override
