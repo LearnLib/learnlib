@@ -16,6 +16,7 @@
  */
 package de.learnlib.dhc.mealy;
 
+import de.learnlib.api.AccessSequenceTransformer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,7 +40,8 @@ import de.learnlib.oracles.DefaultQuery;
  *
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>> {
+public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>>,
+		AccessSequenceTransformer<I> {
 
 	private Alphabet<I> alphabet;
 	private MembershipOracle<I, Word<O>> oracle;
@@ -162,12 +164,16 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 			queue.add(new QueueElement(state, elem, input, output));
 		}
 	}
-
-	@Override
-	public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
+	
+	private void checkInternalState() {
 		if (hypothesis == null) {
 			throw new IllegalStateException("No hypothesis learned yet");
 		}
+	}
+
+	@Override
+	public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
+		checkInternalState();
 
 		int oldsize = hypothesis.size();
 
@@ -186,14 +192,26 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 
 	@Override
 	public MealyMachine<?, I, ?, O> getHypothesisModel() {
-		if (hypothesis == null) {
-			throw new IllegalStateException("No hypothesis learned yet");
-		}
+		checkInternalState();
 		return (MealyMachine<?, I, ?, O>) hypothesis;
 	}
 	
 	public Word<I> getAccessSequence(FastMealyState<O> state) {
 		return assembleAccessSequence(accessSequences.get(state));
+	}
+	
+	@Override
+	public Word<I> transformAccessSequence(Word<I> word) {
+		checkInternalState();
+		FastMealyState<O> state = hypothesis.getSuccessor(hypothesis.getInitialState(), word);
+		return assembleAccessSequence(accessSequences.get(state));
+	}
+
+	@Override
+	public boolean isAccessSequence(Word<I> word) {
+		checkInternalState();
+		Word<I> canonical = transformAccessSequence(word);
+		return canonical.equals(word);
 	}
 
 }
