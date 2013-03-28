@@ -17,7 +17,6 @@
 
 package de.learnlib.dhc.mealy.cex;
 
-import de.learnlib.api.CEXHandlerSuffixes;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.dhc.mealy.MealyDHC;
 import de.learnlib.oracles.DefaultQuery;
@@ -34,7 +33,7 @@ import net.automatalib.words.Word;
  *
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class CEXHandlerRivestShapire<I, O> implements CEXHandlerSuffixes<I, Word<O>>{
+public class CEXHandlerRivestShapire<I, O> {
 
 	private static final Logger log = Logger.getLogger( CEXHandlerRivestShapire.class.getName() );
 	
@@ -46,7 +45,6 @@ public class CEXHandlerRivestShapire<I, O> implements CEXHandlerSuffixes<I, Word
 		this.oracle = oracle;
 	}
 	
-	@Override
 	public void createSuffixes(DefaultQuery<I, Word<O>> ceQuery, Collection<Word<I>> suffixes) {
 		Word<I> cex = ceQuery.getInput();
 		FastMealy<I,O> hypo = (FastMealy<I,O>) dhc.getHypothesisModel();
