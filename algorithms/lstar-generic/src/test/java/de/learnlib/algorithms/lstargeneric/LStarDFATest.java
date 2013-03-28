@@ -18,6 +18,7 @@ package de.learnlib.algorithms.lstargeneric;
 
 import static de.learnlib.examples.dfa.ExamplePaulAndMary.constructMachine;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -44,6 +45,8 @@ import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
+import de.learnlib.eqtests.basic.WMethodEQOracle;
+import de.learnlib.eqtests.basic.WpMethodEQOracle;
 import de.learnlib.oracles.SimulatorOracle;
 
 public class LStarDFATest extends LearningTest {
@@ -70,17 +73,23 @@ public class LStarDFATest extends LearningTest {
 		// Empty set of suffixes => minimum compliant set
 		List<Word<Symbol>> suffixes = Collections.emptyList();
 		
-		EquivalenceOracle<? super DFA<?,Symbol>, Symbol, Boolean> eqOracle
-			= new SimulatorEQOracle<>(targetDFA);
+		List<EquivalenceOracle<? super DFA<?,Symbol>,Symbol,Boolean>> eqOracles
+				= new ArrayList<EquivalenceOracle<? super DFA<?,Symbol>,Symbol,Boolean>>();
+		
+		eqOracles.add(new SimulatorEQOracle<>(targetDFA));
+		eqOracles.add(new WMethodEQOracle<>(3, dfaOracle));
+		eqOracles.add(new WpMethodEQOracle<>(3, dfaOracle));
 		
 		for(ObservationTableCEXHandler<Symbol,Boolean> handler : cexHandlers) {
 			for(ClosingStrategy<Symbol,Boolean> strategy : closingStrategies) {
-				
-				LearningAlgorithm<? extends DFA<?,Symbol>,Symbol,Boolean> learner 
+					
+				for(EquivalenceOracle<? super DFA<?,Symbol>, Symbol, Boolean> eqOracle : eqOracles) {
+					LearningAlgorithm<? extends DFA<?,Symbol>,Symbol,Boolean> learner 
 					= new ExtensibleLStarDFA<>(alphabet, dfaOracle, suffixes,
 							handler, strategy);
 					
-				testLearnModel(targetDFA, alphabet, learner, eqOracle);
+					testLearnModel(targetDFA, alphabet, learner, eqOracle);
+				}
 			}
 		}
 	}

@@ -17,8 +17,11 @@
 
 package de.learnlib.examples.dfa;
 
+import java.util.Collection;
+
 import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.automata.fsa.impl.FastDFAState;
+import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
@@ -74,5 +77,4 @@ public class ExamplePaulAndMary {
 
         return dfa;
     }
-
 }

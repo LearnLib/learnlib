@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "$*" == "" ]; then
-	find . -name '*.java' | xargs "$0"
+	find .. -name '*.java' | xargs "$0"
 	exit
 fi
 

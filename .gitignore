@@ -1,0 +1,6 @@
+.settings/
+.classpath
+.project
+hs_err_*
+*~
+test-output/
