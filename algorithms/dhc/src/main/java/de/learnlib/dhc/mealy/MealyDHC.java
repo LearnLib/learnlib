@@ -16,7 +16,6 @@
  */
 package de.learnlib.dhc.mealy;
 
-import de.learnlib.api.AccessSequenceTransformer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +23,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
@@ -31,15 +32,12 @@ import net.automatalib.automata.transout.impl.FastMealyState;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.SimpleAlphabet;
+import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.counterexamples.SuffixFinder;
 import de.learnlib.counterexamples.SuffixFinders;
-import de.learnlib.dhc.mealy.cex.CEXHandlerRivestShapire;
 import de.learnlib.oracles.DefaultQuery;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.automatalib.automata.concepts.SuffixOutput;
 
 /**
  *
@@ -182,9 +180,13 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 
 		int oldsize = hypothesis.size();
 		
-		SuffixFinder sf = SuffixFinders.getFindLinear();
-		int idx = sf.findSuffixIndex(ceQuery, this, hypothesisOutput(), oracle);
-		Word<I> suffix = ceQuery.getSuffix().suffix(idx);
+		SuffixFinder<I,Word<O>> sf;
+		//sf = SuffixFinders.getFindLinear();
+		//sf = SuffixFinders.getFindLinearReverse();
+		sf = SuffixFinders.getFindBinarySearch();
+		int idx = sf.findSuffixIndex(ceQuery, this, hypothesis, oracle);
+		Word<I> qrySuffix = ceQuery.getSuffix();
+		Word<I> suffix = qrySuffix.subWord(idx, qrySuffix.length());
 		
 		splitters.add(suffix);
 		log.log(Level.INFO, "added suffix: {0}", suffix);
@@ -193,7 +195,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 
 		return oldsize != hypothesis.size();
 	}
-	
+	/*
 	private SuffixOutput<I, O> hypothesisOutput() {
 		return new SuffixOutput<I,O>() {
 			@Override
@@ -209,6 +211,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 			}
 		};
 	}
+	*/
 
 
 	@Override
