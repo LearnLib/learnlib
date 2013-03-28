@@ -33,8 +33,13 @@ import net.automatalib.words.Word;
 import net.automatalib.words.impl.SimpleAlphabet;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.counterexamples.SuffixFinder;
+import de.learnlib.counterexamples.SuffixFinders;
 import de.learnlib.dhc.mealy.cex.CEXHandlerRivestShapire;
 import de.learnlib.oracles.DefaultQuery;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.automatalib.automata.concepts.SuffixOutput;
 
 /**
  *
@@ -43,11 +48,12 @@ import de.learnlib.oracles.DefaultQuery;
 public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>>,
 		AccessSequenceTransformer<I> {
 
+	private static final Logger log = Logger.getLogger( MealyDHC.class.getName() );
+	
 	private Alphabet<I> alphabet;
 	private MembershipOracle<I, Word<O>> oracle;
 	private SimpleAlphabet<Word<I>> splitters = new SimpleAlphabet<>();
 	private FastMealy<I, O> hypothesis;
-	private CEXHandlerRivestShapire<I, O> cexhandler;
 	private Map<FastMealyState<O>, QueueElement> accessSequences;
 
 	private class QueueElement {
@@ -67,7 +73,6 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 	public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
-		this.cexhandler = new CEXHandlerRivestShapire<>(this, oracle);
 	}
 
 	@Override
@@ -176,19 +181,35 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 		checkInternalState();
 
 		int oldsize = hypothesis.size();
-
-		ArrayList<Word<I>> suffixes = new ArrayList<>();
-		cexhandler.createSuffixes(ceQuery, suffixes);
-		for (Word<I> suffix : suffixes) {
-			if (suffix.size() > 1 && !splitters.contains(suffix)) {
-				splitters.add(suffix);
-			}
-		}
+		
+		SuffixFinder sf = SuffixFinders.getFindLinear();
+		int idx = sf.findSuffixIndex(ceQuery, this, hypothesisOutput(), oracle);
+		Word<I> suffix = ceQuery.getSuffix().suffix(idx);
+		
+		splitters.add(suffix);
+		log.log(Level.INFO, "added suffix: {0}", suffix);
 
 		startLearning();
 
 		return oldsize != hypothesis.size();
 	}
+	
+	private SuffixOutput<I, O> hypothesisOutput() {
+		return new SuffixOutput<I,O>() {
+			@Override
+			public O computeOutput(Iterable<I> input) {
+				return computeSuffixOutput(Collections.<I>emptyList(), input);
+			}
+			@Override
+			public O computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+				Word<O> wordOut = hypothesis.computeSuffixOutput(prefix, suffix);
+				if(wordOut.isEmpty())
+					return null;
+				return wordOut.lastSymbol();
+			}
+		};
+	}
+
 
 	@Override
 	public MealyMachine<?, I, ?, O> getHypothesisModel() {
