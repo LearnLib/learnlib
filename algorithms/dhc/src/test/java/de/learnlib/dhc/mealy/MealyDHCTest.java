@@ -16,6 +16,7 @@
  */
 package de.learnlib.dhc.mealy;
 
+import de.learnlib.eqtests.basic.RandomWordsEQOracle;
 import static de.learnlib.examples.mealy.ExampleGrid.constructMachine;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
@@ -28,9 +29,12 @@ import org.testng.annotations.Test;
 
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine;
+import de.learnlib.examples.mealy.ExampleRandomlyGenerated;
 import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SimulatorOracle;
+import java.util.Random;
+import net.automatalib.words.impl.FastAlphabet;
 
 /**
  *
@@ -126,6 +130,50 @@ public class MealyDHCTest {
 
 		} while (counterexample != null);
 
+		Assert.assertEquals(dhc.getHypothesisModel().size(), fm.size(), "Mismatch in size of learned hypothesis and target model");
+
+	}
+	
+	
+	//@Test
+	public void testMealyDHCRandom() {
+		
+		Alphabet<Symbol> inputs = new FastAlphabet<>(
+				new Symbol("a"),
+				new Symbol("b"),
+				new Symbol("c"));
+		
+		Alphabet<Symbol> outputs = new FastAlphabet<>(
+				new Symbol("o1"),
+				new Symbol("o2"),
+				new Symbol("o3"));
+		
+
+		FastMealy<Symbol, Symbol> fm = ExampleRandomlyGenerated.constructMachine(inputs, outputs, new Random(1337), 100);
+		Alphabet<Symbol> alphabet = fm.getInputAlphabet();
+		
+		SimulatorOracle<Symbol, Word<Symbol>> simoracle = new SimulatorOracle<>(fm);
+		SimulatorEQOracle<Symbol, Word<Symbol>> eqoracle = new SimulatorEQOracle<>(fm);
+
+		MealyDHC<Symbol, Symbol> dhc = new MealyDHC<>(alphabet, simoracle);
+
+		int rounds = 0;
+		DefaultQuery<Symbol, Word<Symbol>> counterexample = null;
+		do {
+			if (counterexample == null) {
+				dhc.startLearning();
+			} else {
+				System.out.println("found counterexample: " + counterexample.getInput());
+				Assert.assertTrue(dhc.refineHypothesis(counterexample), "Counterexample did not refine hypothesis");
+			}
+
+			counterexample = eqoracle.findCounterExample(dhc.getHypothesisModel(), alphabet);
+			
+			Assert.assertTrue(rounds++ < fm.size(), "Learning took more rounds than states in target model");
+
+		} while (counterexample != null);
+
+	
 		Assert.assertEquals(dhc.getHypothesisModel().size(), fm.size(), "Mismatch in size of learned hypothesis and target model");
 
 	}

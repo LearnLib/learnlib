@@ -55,6 +55,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 	private Map<FastMealyState<O>, QueueElement> accessSequences;
 	private GlobalSuffixFinder<? super I,? super Word<O>> suffixFinder;
 
+
 	private class QueueElement {
 		private FastMealyState<O> parentState;
 		private QueueElement parentElement;
