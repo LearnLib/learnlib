@@ -20,16 +20,14 @@ package de.learnlib.examples.mealy;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+
 import net.automatalib.automata.transout.impl.FastMealy;
 import net.automatalib.automata.transout.impl.FastMealyState;
 import net.automatalib.commons.dotutil.DOT;
+import net.automatalib.util.automata.Automata;
 import net.automatalib.util.graphs.dot.GraphDOT;
-import net.automatalib.util.minimizer.Block;
-import net.automatalib.util.minimizer.MinimizationResult;
-import net.automatalib.util.minimizer.Minimizer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
@@ -80,17 +78,18 @@ public class ExampleRandomlyGenerated {
 		}
 		
 		// minimize automaton
-		MinimizationResult result = Minimizer.minimize(fm);
-		for(Object o : result.getBlocks()) {
-			Block b = (Block) o;
-			FastMealyState representative = (FastMealyState) result.getRepresentative(b);
-			Collection<FastMealyState> statesInBlock = result.getStatesInBlock(b);
-			for(FastMealyState s : statesInBlock) {
-				if(s != representative) {
-					fm.removeState(s, representative);
-				}
-			}
-		}
+		fm = Automata.minimize(fm, fm.getInputAlphabet(), new FastMealy<Symbol,Symbol>(fm.getInputAlphabet()));
+//		MinimizationResult result = Minimizer.minimize(fm);
+//		for(Object o : result.getBlocks()) {
+//			Block b = (Block) o;
+//			FastMealyState representative = (FastMealyState) result.getRepresentative(b);
+//			Collection<FastMealyState> statesInBlock = result.getStatesInBlock(b);
+//			for(FastMealyState s : statesInBlock) {
+//				if(s != representative) {
+//					fm.removeState(s, representative);
+//				}
+//			}
+//		}
 		
 		return fm;
 	}

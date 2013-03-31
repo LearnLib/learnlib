@@ -16,12 +16,16 @@
  */
 package de.learnlib.dhc.mealy;
 
-import de.learnlib.eqtests.basic.RandomWordsEQOracle;
 import static de.learnlib.examples.mealy.ExampleGrid.constructMachine;
+
+import java.util.Random;
+
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
+import net.automatalib.util.ts.TS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
 
 import org.testng.Assert;
@@ -33,8 +37,6 @@ import de.learnlib.examples.mealy.ExampleRandomlyGenerated;
 import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SimulatorOracle;
-import java.util.Random;
-import net.automatalib.words.impl.FastAlphabet;
 
 /**
  *
@@ -135,7 +137,8 @@ public class MealyDHCTest {
 	}
 	
 	
-	//@Test
+	@Test
+	@SuppressWarnings("unused")
 	public void testMealyDHCRandom() {
 		
 		Alphabet<Symbol> inputs = new FastAlphabet<>(
@@ -172,9 +175,13 @@ public class MealyDHCTest {
 			Assert.assertTrue(rounds++ < fm.size(), "Learning took more rounds than states in target model");
 
 		} while (counterexample != null);
+		
+		int numReachable = 0;
+		
+		for(Object s : TS.bfsOrder(fm, fm.getInputAlphabet()))
+			numReachable++;
 
-	
-		Assert.assertEquals(dhc.getHypothesisModel().size(), fm.size(), "Mismatch in size of learned hypothesis and target model");
+		Assert.assertEquals(dhc.getHypothesisModel().size(), numReachable, "Mismatch in size of learned hypothesis and target model");
 
 	}
 }
