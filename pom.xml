@@ -80,6 +80,7 @@
         <module>./dsl</module>
 		<module>./simulator</module>
 		<module>./utils</module>
+		<module>./filters</module>
     </modules>	
 
     <!--  
