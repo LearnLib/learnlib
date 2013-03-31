@@ -42,8 +42,8 @@ public class ExtensibleLStarMealy<I, O> extends
 	public ExtensibleLStarMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, Word<O>> oracle,
 			List<Word<I>> initialSuffixes,
-			ObservationTableCEXHandler<I, Word<O>> cexHandler,
-			ClosingStrategy<I, Word<O>> closingStrategy) {
+			ObservationTableCEXHandler<? super I, ? super Word<O>> cexHandler,
+			ClosingStrategy<? super I, ? super Word<O>> closingStrategy) {
 		super(alphabet, oracle, new CompactMealy<I,O>(alphabet),
 				LStarMealyUtil.ensureSuffixCompliancy(initialSuffixes, alphabet, cexHandler.needsConsistencyCheck()),
 				cexHandler,

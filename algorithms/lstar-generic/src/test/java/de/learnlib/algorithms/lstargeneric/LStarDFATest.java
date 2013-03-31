@@ -19,7 +19,6 @@ package de.learnlib.algorithms.lstargeneric;
 import static de.learnlib.examples.dfa.ExamplePaulAndMary.constructMachine;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,21 +30,12 @@ import net.automatalib.words.impl.Symbol;
 
 import org.testng.annotations.Test;
 
-import de.learnlib.algorithms.lstargeneric.ce.ClassicLStarCEXHandler;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
-import de.learnlib.algorithms.lstargeneric.ce.ShahbazCEXHandler;
-import de.learnlib.algorithms.lstargeneric.ce.Suffix1by1CEXHandler;
-import de.learnlib.algorithms.lstargeneric.ce.SuffixFinderCEXHandler;
-import de.learnlib.algorithms.lstargeneric.closing.CloseFirstStrategy;
-import de.learnlib.algorithms.lstargeneric.closing.CloseLexMinStrategy;
-import de.learnlib.algorithms.lstargeneric.closing.CloseRandomStrategy;
-import de.learnlib.algorithms.lstargeneric.closing.CloseShortestStrategy;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.counterexamples.SuffixFinders;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.eqtests.basic.WMethodEQOracle;
 import de.learnlib.eqtests.basic.WpMethodEQOracle;
@@ -60,22 +50,7 @@ public class LStarDFATest extends LearningTest {
 		Alphabet<Symbol> alphabet = targetDFA.getInputAlphabet();
 		
 		MembershipOracle<Symbol, Boolean> dfaOracle = new SimulatorOracle<>(targetDFA);
-		
-		List<ObservationTableCEXHandler<Symbol,Boolean>> cexHandlers
-			= Arrays.asList(ClassicLStarCEXHandler.<Symbol,Boolean>getInstance(),
-			ShahbazCEXHandler.<Symbol,Boolean>getInstance(),
-			Suffix1by1CEXHandler.<Symbol,Boolean>getInstance(),
-			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Boolean>getFindLinear()),
-			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Boolean>getFindLinearReverse()),
-			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Boolean>getFindBinarySearch()),
-			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Boolean>getFindMahlerInstance()),
-			new SuffixFinderCEXHandler<>(SuffixFinders.<Symbol,Boolean>getFindShahbazInstance()));
-		
-		List<ClosingStrategy<Symbol,Boolean>> closingStrategies
-			= Arrays.asList(CloseFirstStrategy.<Symbol,Boolean>getInstance(),
-					CloseLexMinStrategy.<Symbol,Boolean>getInstance(),
-					CloseRandomStrategy.<Symbol,Boolean>getInstance(),
-					CloseShortestStrategy.<Symbol,Boolean>getInstance());
+
 		
 		// Empty set of suffixes => minimum compliant set
 		List<Word<Symbol>> suffixes = Collections.emptyList();
@@ -87,10 +62,8 @@ public class LStarDFATest extends LearningTest {
 		eqOracles.add(new WMethodEQOracle<>(3, dfaOracle));
 		eqOracles.add(new WpMethodEQOracle<>(3, dfaOracle));
 		
-		int i = 0;
-		for(ObservationTableCEXHandler<Symbol,Boolean> handler : cexHandlers) {
-			System.err.println(i++);
-			for(ClosingStrategy<Symbol,Boolean> strategy : closingStrategies) {
+		for(ObservationTableCEXHandler<? super Symbol,? super Boolean> handler : LearningTest.CEX_HANDLERS) {
+			for(ClosingStrategy<? super Symbol,? super Boolean> strategy : LearningTest.CLOSING_STRATEGIES) {
 					
 				for(EquivalenceOracle<? super DFA<?,Symbol>, Symbol, Boolean> eqOracle : eqOracles) {
 					LearningAlgorithm<? extends DFA<?,Symbol>,Symbol,Boolean> learner 

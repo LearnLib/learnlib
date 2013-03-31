@@ -14,20 +14,28 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.lstargeneric.components.closing;
+package de.learnlib.components;
 
-import de.learnlib.algorithms.lstargeneric.closing.CloseFirstStrategy;
-import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
-import de.learnlib.components.LLComponent;
-import de.learnlib.components.LLComponentFactory;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@LLComponent(name = "CloseFirstStrategy", type = ClosingStrategy.class)
-public class CloseFirstStrategyFactory<I, O> implements
-		LLComponentFactory<CloseFirstStrategy<I, O>> {
-
-	@Override
-	public CloseFirstStrategy<I, O> instantiate() {
-		return CloseFirstStrategy.getInstance();
-	}
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD,ElementType.FIELD})
+public @interface LLGlobal {
+	/**
+     * @return type of this component (Oracle, Learner, etc.)
+     */
+    Class<?> type() default Void.class;     
+    
+    /**
+     * @return unique name of this very kind of component
+     */
+    String name();
+    
+    /**
+     * @return tool tip or brief documentation
+     */
+    String description() default "";
 }

@@ -22,7 +22,7 @@ import java.util.List;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import de.learnlib.algorithms.lstargeneric.ce.ClassicLStarCEXHandler;
+import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.table.Inconsistency;
 import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
@@ -89,7 +89,7 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	
 	protected void doRefineHypothesis(DefaultQuery<I,O> ceQuery) {
 		List<List<Row<I>>> unclosed = incorporateCounterExample(ceQuery);
-		completeConsistentTable(unclosed, ClassicLStarCEXHandler.getInstance().needsConsistencyCheck());
+		completeConsistentTable(unclosed, true);
 	}
 	
 	/**
@@ -159,7 +159,7 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	 * adding the information. 
 	 */
 	protected List<List<Row<I>>> incorporateCounterExample(DefaultQuery<I,O> ce) {
-		return ClassicLStarCEXHandler.<I,O>getInstance().handleCounterexample(ce, table, null, oracle);
+		return ObservationTableCEXHandlers.handleClassicLStar(ce, table, oracle);
 	}
 	
 	/**

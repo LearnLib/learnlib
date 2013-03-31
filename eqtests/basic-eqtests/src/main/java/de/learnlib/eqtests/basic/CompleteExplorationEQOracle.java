@@ -28,6 +28,15 @@ import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
+/**
+ * Implements an equivalence check by complete exploration up to a given depth, i.e.,
+ * by testing all possible sequences of a certain length within a specified range.
+ * 
+ * @author Malte Isberner <malte.isberner@gmail.com>
+ *
+ * @param <I> input symbol class
+ * @param <O> output class
+ */
 public class CompleteExplorationEQOracle<I, O> implements
 		EquivalenceOracle<DetOutputAutomaton<?, I, ?, O>, I, O> {
 	
@@ -35,10 +44,21 @@ public class CompleteExplorationEQOracle<I, O> implements
 	private int maxDepth;
 	private final MembershipOracle<I, O> sulOracle;
 	
+	/**
+	 * Constructor.
+	 * @param sulOracle interface to the system under learning
+	 * @param maxDepth maximum exploration depth
+	 */
 	public CompleteExplorationEQOracle(MembershipOracle<I, O> sulOracle, int maxDepth) {
 		this(sulOracle, 1, maxDepth);
 	}
 	
+	/**
+	 * Constructor.
+	 * @param sulOracle interface to the system under learning
+	 * @param minDepth minimum exploration depth
+	 * @param maxDepth maximum exploration depth
+	 */
 	public CompleteExplorationEQOracle(MembershipOracle<I, O> sulOracle, int minDepth, int maxDepth) {
 		if(maxDepth < minDepth)
 			maxDepth = minDepth;
@@ -49,6 +69,10 @@ public class CompleteExplorationEQOracle<I, O> implements
 		this.sulOracle = sulOracle;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
+	 */
 	@Override
 	public DefaultQuery<I, O> findCounterExample(DetOutputAutomaton<?,I,?,O> hypothesis,
 			Collection<? extends I> alphabet) {

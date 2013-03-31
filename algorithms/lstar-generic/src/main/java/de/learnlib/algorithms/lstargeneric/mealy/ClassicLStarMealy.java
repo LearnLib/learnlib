@@ -52,7 +52,7 @@ public class ClassicLStarMealy<I, O> extends
 			MembershipOracle<I,O> oracle,
 			List<Word<I>> initialSuffixes,
 			ObservationTableCEXHandler<I, O> cexHandler,
-			ClosingStrategy<I,O> closingStrategy) {
+			ClosingStrategy<? super I,? super O> closingStrategy) {
 		return new ClassicLStarMealy<>(alphabet, oracle,
 				initialSuffixes,
 				cexHandler,
@@ -63,8 +63,8 @@ public class ClassicLStarMealy<I, O> extends
 	ClassicLStarMealy<I,O> createForWordOracle(Alphabet<I> alphabet,
 			MembershipOracle<I,Word<O>> oracle,
 			List<Word<I>> initialSuffixes,
-			ObservationTableCEXHandler<I, O> cexHandler,
-			ClosingStrategy<I,O> closingStrategy) {
+			ObservationTableCEXHandler<? super I, ? super O> cexHandler,
+			ClosingStrategy<? super I,? super O> closingStrategy) {
 		return new ClassicLStarMealy<>(alphabet, new SymbolOracleWrapper<>(oracle),
 				initialSuffixes,
 				cexHandler,
@@ -80,8 +80,8 @@ public class ClassicLStarMealy<I, O> extends
 	public ClassicLStarMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, O> oracle,
 			List<Word<I>> initialSuffixes,
-			ObservationTableCEXHandler<I, O> cexHandler,
-			ClosingStrategy<I, O> closingStrategy) {
+			ObservationTableCEXHandler<? super I, ? super O> cexHandler,
+			ClosingStrategy<? super I, ? super O> closingStrategy) {
 		super(alphabet, oracle, new CompactMealy<I,O>(alphabet),
 				LStarMealyUtil.ensureSuffixCompliancy(initialSuffixes, alphabet, true),
 				cexHandler,

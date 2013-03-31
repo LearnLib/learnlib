@@ -15,6 +15,7 @@
 
     <modules>
         <module>./counterexamples</module>
+		<module>./parallelism</module>
     </modules>  
     
 </project>

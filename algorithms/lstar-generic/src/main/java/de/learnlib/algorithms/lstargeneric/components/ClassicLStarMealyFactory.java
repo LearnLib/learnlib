@@ -21,9 +21,9 @@ import java.util.List;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import de.learnlib.algorithms.lstargeneric.ce.ClassicLStarCEXHandler;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
-import de.learnlib.algorithms.lstargeneric.closing.CloseFirstStrategy;
+import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
+import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.mealy.ClassicLStarMealy;
 import de.learnlib.api.LearningAlgorithm;
@@ -38,8 +38,9 @@ public class ClassicLStarMealyFactory<I,O> implements LLComponentFactory<Classic
 	private Alphabet<I> alphabet;
 	private MembershipOracle<I, Word<O>> oracle;
 	private List<Word<I>> initialSuffixes = Collections.emptyList();
-	private ObservationTableCEXHandler<I, O> cexHandler = ClassicLStarCEXHandler.getInstance();
-	private ClosingStrategy<I, O> closingStrategy = CloseFirstStrategy.getInstance();
+	private ObservationTableCEXHandler<? super I, ? super O> cexHandler
+		= ObservationTableCEXHandlers.CLASSIC_LSTAR;
+	private ClosingStrategy<? super I, ? super O> closingStrategy = ClosingStrategies.CLOSE_FIRST;
 
 	
 	@LLComponentParameter(name = "alphabet", required = true)
@@ -58,12 +59,12 @@ public class ClassicLStarMealyFactory<I,O> implements LLComponentFactory<Classic
 	}
 	
 	@LLComponentParameter(name = "cexHandler")
-	public void setCEXHandler(ObservationTableCEXHandler<I, O> cexHandler) {
+	public void setCEXHandler(ObservationTableCEXHandler<? super I, ? super O> cexHandler) {
 		this.cexHandler = cexHandler;
 	}
 	
 	@LLComponentParameter(name = "closingStrategy")
-	public void setClosingStrategy(ClosingStrategy<I,O> closingStrategy) {
+	public void setClosingStrategy(ClosingStrategy<? super I,? super O> closingStrategy) {
 		this.closingStrategy = closingStrategy;
 	}
 	

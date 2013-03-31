@@ -25,9 +25,10 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
 public interface ObservationTableCEXHandler<I, O> {
-	public List<List<Row<I>>> handleCounterexample(DefaultQuery<I,O> ceQuery,
-			ObservationTable<I,O> table,
-			SuffixOutput<I,O> hypOutput, MembershipOracle<I,O> oracle);
+	public <RI extends I,RO extends O>
+	List<List<Row<RI>>> handleCounterexample(DefaultQuery<RI,RO> ceQuery,
+			ObservationTable<RI,RO> table,
+			SuffixOutput<RI,RO> hypOutput, MembershipOracle<RI, RO> oracle);
 	
 	public boolean needsConsistencyCheck();
 }

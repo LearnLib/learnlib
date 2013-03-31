@@ -21,12 +21,40 @@ import net.automatalib.words.Alphabet;
 
 import org.testng.Assert;
 
+import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
+import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
+import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
+import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
 public class LearningTest {
+	
+	@SuppressWarnings("unchecked")
+	public static ClosingStrategy<Object,Object>[] CLOSING_STRATEGIES
+		= (ClosingStrategy<Object,Object>[])new ClosingStrategy[]{
+		ClosingStrategies.CLOSE_FIRST,
+		ClosingStrategies.CLOSE_SHORTEST,
+		ClosingStrategies.CLOSE_LEX_MIN,
+		ClosingStrategies.CLOSE_RANDOM
+	};
+	
+	@SuppressWarnings("unchecked")
+	public static ObservationTableCEXHandler<Object,Object>[] CEX_HANDLERS
+		= (ObservationTableCEXHandler<Object,Object>[])new ObservationTableCEXHandler[]{
+		ObservationTableCEXHandlers.CLASSIC_LSTAR,
+		ObservationTableCEXHandlers.SUFFIX1BY1,
+		ObservationTableCEXHandlers.MAHLER_PNUELI,
+		ObservationTableCEXHandlers.SHAHBAZ,
+		ObservationTableCEXHandlers.FIND_LINEAR,
+		ObservationTableCEXHandlers.FIND_LINEAR_ALLSUFFIXES,
+		ObservationTableCEXHandlers.FIND_LINEAR_REVERSE,
+		ObservationTableCEXHandlers.FIND_LINEAR_REVERSE_ALLSUFFIXES,
+		ObservationTableCEXHandlers.RIVEST_SCHAPIRE,
+		ObservationTableCEXHandlers.RIVEST_SCHAPIRE_ALLSUFFIXES
+	};
 	
 	public static <I,O,M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> void testLearnModel(UniversalDeterministicAutomaton<?, I, ?, ?, ?> target,
 			Alphabet<I> alphabet,
