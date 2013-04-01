@@ -189,19 +189,6 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 				log.log(Level.FINE, "added suffix: {0}", suf);
 			}
 		}
-		/*
-		int idx = suffixFinder.findSuffixIndex(ceQuery, this, hypothesis, oracle);
-		Word<I> qrySuffix = ceQuery.getSuffix();
-		Word<I> suffix = qrySuffix.subWord(idx, qrySuffix.length());
-		
-		for(int l = suffixFinder.allSuffixes() ? 2 : suffix.size(); l <= suffix.size(); ++l) {
-			Word<I> suf = suffix.suffix(l);
-			if(!splitters.contains(suf)) {
-				splitters.add(suf);
-				log.log(Level.FINE, "added suffix: {0}", suf);
-			}
-		}
-		*/
 
 		startLearning();
 
