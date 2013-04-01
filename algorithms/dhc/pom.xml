@@ -47,10 +47,14 @@
             <artifactId>learnlib-simulator</artifactId>
             <scope>test</scope>
         </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-cache</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-counterexamples</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
     

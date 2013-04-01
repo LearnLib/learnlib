@@ -265,6 +265,11 @@
                 <artifactId>learnlib-counterexamples</artifactId>
                 <version>${project.version}</version>
             </dependency>
+			<dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>learnlib-cache</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-api</artifactId>
@@ -283,6 +288,11 @@
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-commons-dotutil</artifactId>
+                <version>${automatalib.version}</version>                        
+            </dependency>
+			<dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-incremental</artifactId>
                 <version>${automatalib.version}</version>                        
             </dependency>            
             <dependency>

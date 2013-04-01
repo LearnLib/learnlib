@@ -130,6 +130,8 @@ public class ParallelOracleTest {
 		ana = analyze(queries);
 		sanityCheck(ana);
 		Assert.assertEquals(ana.involvedOracles.size(), NUM_ORACLES);
+		
+		po.stop();
 	}
 	
 	private Analysis analyze(Collection<DefaultQuery<Integer,TestOutput>> queries) {

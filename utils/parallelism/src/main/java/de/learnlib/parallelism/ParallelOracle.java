@@ -16,6 +16,7 @@
  */
 package de.learnlib.parallelism;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +42,7 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 	private final int minBatchSize;
 	private final OracleWorker<I, O>[] workers;
 	private final Thread[] workerThreads;
+	private final MembershipOracle<I,O> thisThreadOracle;
 
 	/**
 	 * Constructor for using (potentially) <i>separate</i> oracles for each worker thread,
@@ -61,10 +63,15 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 	@SuppressWarnings("unchecked")
 	public ParallelOracle(List<? extends MembershipOracle<I,O>> oracles, int minBatchSize) {
 		int numOracles = oracles.size();
-		workers = new OracleWorker[numOracles];
-		workerThreads = new Thread[numOracles];
+		if(numOracles <= 0)
+			throw new IllegalArgumentException("Must provide at least one oracle");
+		workers = new OracleWorker[numOracles - 1];
+		workerThreads = new Thread[numOracles - 1];
+		Iterator<? extends MembershipOracle<I,O>> it = oracles.iterator();
+		thisThreadOracle = it.next();
 		int i = 0;
-		for(MembershipOracle<I,O> oracle : oracles) {
+		while(it.hasNext()) {
+			MembershipOracle<I,O> oracle = it.next();
 			OracleWorker<I,O> worker = new OracleWorker<>(oracle);
 			workers[i++] = worker;
 		}
@@ -90,8 +97,12 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 	 */
 	@SuppressWarnings("unchecked")
 	public ParallelOracle(MembershipOracle<I,O> sharedOracle, int numInstances, int minBatchSize) {
+		if(numInstances <= 0)
+			throw new IllegalArgumentException("Must have at least one oracle instance");
+		numInstances--;
 		workers = new OracleWorker[numInstances];
 		workerThreads = new Thread[numInstances];
+		thisThreadOracle = sharedOracle;
 		for(int i = 0; i < numInstances; i++) {
 			OracleWorker<I,O> worker = new OracleWorker<>(sharedOracle);
 			workers[i] = worker;
@@ -103,7 +114,7 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 	 * Starts all worker threads.
 	 */
 	public void start() {
-		if(workerThreads[0] != null)
+		if(workerThreads.length > 0 && workerThreads[0] != null)
 			throw new IllegalStateException("ParallelOracle already started");
 		
 		for(int i = 0; i < workers.length; i++) {
@@ -120,7 +131,7 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void processQueries(Collection<? extends Query<I, O>> queries) {
-		if(workerThreads[0] == null)
+		if(workerThreads.length > 0 && workerThreads[0] == null)
 			throw new IllegalStateException("ParallelOracle was not started");
 		
 		int num = queries.size();
@@ -128,18 +139,21 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 			return;
 		
 		int numBatches = (num - minBatchSize)/minBatchSize + 1;
-		if(numBatches > workers.length)
-			numBatches = workers.length;
+		if(numBatches > workers.length + 1)
+			numBatches = workers.length + 1;
 		
 		int fullBatchSize = (num - 1)/numBatches + 1;
 		int nonFullBatches = fullBatchSize*numBatches - num;
 		
 		Iterator<? extends Query<I,O>> queryIt = queries.iterator();
 		
-		CountDownLatch finishSignal = new CountDownLatch(numBatches);
+		
+		int externalBatches = numBatches - 1;
+		
+		CountDownLatch finishSignal = (externalBatches > 0) ? new CountDownLatch(externalBatches) : null;
 		
 		
-		for(int i = 0; i < numBatches; i++) {
+		for(int i = 0; i < externalBatches; i++) {
 			int bs = fullBatchSize;
 			if(i < nonFullBatches)
 				bs--;
@@ -150,10 +164,18 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 			workers[i].offerBatch(batch, finishSignal);
 		}
 		
-		try {
-			finishSignal.await();
-		} catch (InterruptedException e) {
-			throw new IllegalStateException(e);
+		Query<I,O>[] batch = new Query[fullBatchSize];
+		for(int j = 0; j < fullBatchSize; j++)
+			batch[j] = queryIt.next();
+		
+		thisThreadOracle.processQueries(Arrays.asList(batch));
+		
+		if(externalBatches > 0) {
+			try {
+				finishSignal.await();
+			} catch (InterruptedException e) {
+				throw new IllegalStateException(e);
+			}
 		}
 	}
 	
@@ -163,7 +185,7 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 	 * is made. 
 	 */
 	public void stop() {
-		if(workerThreads[0] == null)
+		if(workerThreads.length > 0 && workerThreads[0] == null)
 			throw new IllegalStateException("Parallel oracle was not started");
 		
 		for(int i = 0; i < workers.length; i++) {

@@ -36,6 +36,7 @@ import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.cache.dfa.DFACacheOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.eqtests.basic.WMethodEQOracle;
 import de.learnlib.eqtests.basic.WpMethodEQOracle;
@@ -66,8 +67,9 @@ public class LStarDFATest extends LearningTest {
 			for(ClosingStrategy<? super Symbol,? super Boolean> strategy : LearningTest.CLOSING_STRATEGIES) {
 					
 				for(EquivalenceOracle<? super DFA<?,Symbol>, Symbol, Boolean> eqOracle : eqOracles) {
+					DFACacheOracle<Symbol> cache = new DFACacheOracle<>(alphabet, dfaOracle);
 					LearningAlgorithm<? extends DFA<?,Symbol>,Symbol,Boolean> learner 
-					= new ExtensibleLStarDFA<>(alphabet, dfaOracle, suffixes,
+					= new ExtensibleLStarDFA<>(alphabet, cache, suffixes,
 							handler, strategy);
 					
 					testLearnModel(targetDFA, alphabet, learner, dfaOracle, eqOracle);

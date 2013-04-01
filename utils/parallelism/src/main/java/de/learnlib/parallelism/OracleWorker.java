@@ -32,7 +32,7 @@ import de.learnlib.api.Query;
  * @param <I> input symbol class
  * @param <O> output class
  */
-class OracleWorker<I,O> implements Runnable {
+final class OracleWorker<I,O> implements Runnable {
 	
 	private final MembershipOracle<I,O> oracle;
 	private final CyclicBarrier barrier = new CyclicBarrier(2);

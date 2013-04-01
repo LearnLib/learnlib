@@ -31,6 +31,8 @@ import net.automatalib.words.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.cache.mealy.MealyCacheOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine;
 import de.learnlib.examples.mealy.ExampleRandomlyGenerated;
@@ -55,8 +57,9 @@ public class MealyDHCTest {
 
 
 		SimulatorOracle<Symbol, Word<Integer>> simoracle = new SimulatorOracle<>(fm);
+		MembershipOracle<Symbol, Word<Integer>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
 
-		MealyDHC<Symbol, Integer> dhc = new MealyDHC<>(alphabet, simoracle);
+		MealyDHC<Symbol, Integer> dhc = new MealyDHC<>(alphabet, cache);
 
 		dhc.startLearning();
 		MealyMachine<?, Symbol, ?, Integer> hypo = dhc.getHypothesisModel();
@@ -72,8 +75,9 @@ public class MealyDHCTest {
 		Alphabet<Symbol> alphabet = fm.getInputAlphabet();
 
 		SimulatorOracle<Symbol, Word<String>> simoracle = new SimulatorOracle<>(fm);
+		MembershipOracle<Symbol,Word<String>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
 
-		MealyDHC<Symbol, String> dhc = new MealyDHC<>(alphabet, simoracle);
+		MealyDHC<Symbol, String> dhc = new MealyDHC<>(alphabet, cache);
 
 		dhc.startLearning();
 
@@ -115,7 +119,8 @@ public class MealyDHCTest {
 		SimulatorOracle<Symbol, Word<String>> simoracle = new SimulatorOracle<>(fm);
 		SimulatorEQOracle<Symbol, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
 
-		MealyDHC<Symbol, String> dhc = new MealyDHC<>(alphabet, simoracle);
+		MembershipOracle<Symbol,Word<String>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
+		MealyDHC<Symbol, String> dhc = new MealyDHC<>(alphabet, cache);
 
 		int rounds = 0;
 		DefaultQuery<Symbol, Word<String>> counterexample = null;
@@ -155,10 +160,12 @@ public class MealyDHCTest {
 		FastMealy<Symbol, Symbol> fm = ExampleRandomlyGenerated.constructMachine(inputs, outputs, new Random(1337), 100);
 		Alphabet<Symbol> alphabet = fm.getInputAlphabet();
 		
+		
 		SimulatorOracle<Symbol, Word<Symbol>> simoracle = new SimulatorOracle<>(fm);
+		MembershipOracle<Symbol,Word<Symbol>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
 		SimulatorEQOracle<Symbol, Word<Symbol>> eqoracle = new SimulatorEQOracle<>(fm);
 
-		MealyDHC<Symbol, Symbol> dhc = new MealyDHC<>(alphabet, simoracle);
+		MealyDHC<Symbol, Symbol> dhc = new MealyDHC<>(alphabet, cache);
 
 		int rounds = 0;
 		DefaultQuery<Symbol, Word<Symbol>> counterexample = null;
@@ -166,7 +173,7 @@ public class MealyDHCTest {
 			if (counterexample == null) {
 				dhc.startLearning();
 			} else {
-				System.out.println("found counterexample: " + counterexample.getInput());
+				System.out.println("found counterexample: " + counterexample.getInput() + " / " + counterexample.getOutput());
 				Assert.assertTrue(dhc.refineHypothesis(counterexample), "Counterexample did not refine hypothesis");
 			}
 
