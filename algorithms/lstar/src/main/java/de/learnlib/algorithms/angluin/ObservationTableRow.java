@@ -19,6 +19,10 @@ package de.learnlib.algorithms.angluin;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * A single row inside an {@link ObservationTable}, containing only the boolean values
+ * if a combination of state/candidate and suffix is accepted by the current hypothesis.
+ */
 class ObservationTableRow {
 
 	private final List<Boolean> rowData;

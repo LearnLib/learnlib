@@ -229,8 +229,7 @@ public class ObservationTable<S> {
 	 */
 	DFA<?,S> toAutomaton(Alphabet<S> alphabet) {
 		FastDFA<S> automaton = new FastDFA<>(alphabet);
-		Map<ObservationTableRow, FastDFAState> dfaStates = new HashMap<>(
-				(int) (1.5 * states.size()));
+		Map<ObservationTableRow, FastDFAState> dfaStates = new HashMap<>((int) (1.5 * states.size()));
 
 		for (Word<S> state : states) {
 			if (dfaStates.containsKey(getRowForPrefix(state))) {

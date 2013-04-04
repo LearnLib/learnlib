@@ -20,6 +20,10 @@ import net.automatalib.words.Word;
 
 import java.util.Collection;
 
+/**
+ * With this class the contents of an {@link ObservationTable} can be
+ * printed in a human-readable format.
+ */
 public class ObservationTablePrinter {
 
 	public static <S> String getPrintableStringRepresentation(ObservationTable<S> observationTable) {

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
@@ -61,8 +62,10 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 		this.oracle = oracle;
 		this.observationTable = new ObservationTable<>();
 
+		LinkedHashSet<Word<S>> initialCandidates = observationTable.getCandidates();
+
 		for (S alphabetSymbol : alphabet) {
-			observationTable.getCandidates().add(Word.fromSymbols(alphabetSymbol));
+			initialCandidates.add(Word.fromSymbols(alphabetSymbol));
 		}
 	}
 
@@ -72,8 +75,10 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 			throw new IllegalStateException("startLearning may only be called once!");
 		}
 
-		processMembershipQueriesForStates(observationTable.getStates(), observationTable.getSuffixes());
-		processMembershipQueriesForStates(observationTable.getCandidates(), observationTable.getSuffixes());
+		final List<Word<S>> allSuffixes = observationTable.getSuffixes();
+
+		processMembershipQueriesForStates(observationTable.getStates(), allSuffixes);
+		processMembershipQueriesForStates(observationTable.getCandidates(), allSuffixes);
 
 		makeTableClosedAndConsistent();
 
@@ -89,32 +94,12 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 		LinkedHashSet<Word<S>> states = observationTable.getStates();
 		LinkedHashSet<Word<S>> candidates = observationTable.getCandidates();
 
-		LinkedHashSet<Word<S>> prefixes = new LinkedHashSet<>();
-		for (Word<S> prefix : prefixesOfWord(ceQuery.getInput())) {
-			if (!states.contains(prefix)) {
-				prefixes.add(prefix);
-			}
-		}
+		LinkedHashSet<Word<S>> prefixes = prefixesOfWordNotInStates(ceQuery.getInput());
 
 		states.addAll(prefixes);
+		removeStatesFromCandidates();
 
-		for (Word<S> state : states) {
-			if (candidates.contains(state)) {
-				candidates.remove(state);
-			}
-		}
-
-		LinkedHashSet<Word<S>> newCandidates = new LinkedHashSet<>();
-
-		for (Word<S> prefix : prefixes) {
-			for (S alphabetSymbol : alphabet) {
-				Word<S> word = prefix.append(alphabetSymbol);
-				if (!states.contains(word)) {
-					newCandidates.add(word);
-				}
-			}
-		}
-
+		LinkedHashSet<Word<S>> newCandidates = getNewCandidatesFromPrefixes(prefixes);
 		candidates.addAll(newCandidates);
 
 		processMembershipQueriesForStates(prefixes, observationTable.getSuffixes());
@@ -123,6 +108,64 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 		makeTableClosedAndConsistent();
 
 		return true;
+	}
+
+	private LinkedHashSet<Word<S>> prefixesOfWordNotInStates(Word<S> word) {
+		LinkedHashSet<Word<S>> states = observationTable.getStates();
+
+		LinkedHashSet<Word<S>> prefixes = new LinkedHashSet<>();
+		for (Word<S> prefix : prefixesOfWord(word)) {
+			if (!states.contains(prefix)) {
+				prefixes.add(prefix);
+			}
+		}
+
+		return prefixes;
+	}
+
+	private void removeStatesFromCandidates() {
+		LinkedHashSet<Word<S>> states = observationTable.getStates();
+		LinkedHashSet<Word<S>> candidates = observationTable.getCandidates();
+
+		for (Word<S> state : states) {
+			if (candidates.contains(state)) {
+				candidates.remove(state);
+			}
+		}
+	}
+
+	private LinkedHashSet<Word<S>> getNewCandidatesFromPrefixes(LinkedHashSet<Word<S>> prefixes) {
+		LinkedHashSet<Word<S>> newCandidates = new LinkedHashSet<>();
+
+		for (Word<S> prefix : prefixes) {
+			Set<Word<S>> possibleCandidates = appendAlphabetSymbolsToWord(prefix);
+			for (Word<S> possibleCandidate :possibleCandidates) {
+				if (!observationTable.getStates().contains(possibleCandidate)) {
+					newCandidates.add(possibleCandidate);
+				}
+			}
+		}
+
+		return newCandidates;
+	}
+
+	/**
+	 * Appends each symbol of the alphabet (with size m) to the given word (with size w),
+	 * thus returning m words with a length of w+1.
+	 *
+	 * @param word
+	 *      The {@link Word} to which the {@link Alphabet} is appended.
+	 * @return
+	 *      A set with the size of the alphabet, containing each time the word
+	 *      appended with an alphabet symbol.
+	 */
+	private LinkedHashSet<Word<S>> appendAlphabetSymbolsToWord(Word<S> word) {
+		LinkedHashSet<Word<S>> newCandidates = new LinkedHashSet<>(alphabet.size());
+		for (S alphabetSymbol : alphabet) {
+			Word<S> newCandidate = word.append(alphabetSymbol);
+			newCandidates.add(newCandidate);
+		}
+		return newCandidates;
 	}
 
 	@Override
@@ -162,15 +205,10 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 		Word<S> candidate = observationTable.findUnclosedState();
 
 		while (candidate != null) {
-
 			observationTable.getStates().add(candidate);
 			observationTable.getCandidates().remove(candidate);
 
-			LinkedHashSet<Word<S>> newCandidates = new LinkedHashSet<>(alphabet.size());
-			for (S alphabetSymbol : alphabet) {
-				Word<S> newCandidate = candidate.append(alphabetSymbol);
-				newCandidates.add(newCandidate);
-			}
+			LinkedHashSet<Word<S>> newCandidates = appendAlphabetSymbolsToWord(candidate);
 
 			observationTable.getCandidates().addAll(newCandidates);
 
