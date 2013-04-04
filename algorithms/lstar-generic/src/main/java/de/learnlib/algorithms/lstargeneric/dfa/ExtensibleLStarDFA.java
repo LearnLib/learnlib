@@ -16,20 +16,19 @@
  */
 package de.learnlib.algorithms.lstargeneric.dfa;
 
-import de.learnlib.algorithms.lstargeneric.ExtensibleAutomatonLStar;
-import de.learnlib.algorithms.lstargeneric.ce.ClassicLStarCEXHandler;
-import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
-import de.learnlib.algorithms.lstargeneric.closing.CloseFirstStrategy;
-import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
-import de.learnlib.algorithms.lstargeneric.table.Row;
-import de.learnlib.api.MembershipOracle;
+import java.util.Collections;
+import java.util.List;
+
+import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-
-import java.util.Collections;
-import java.util.List;
+import de.learnlib.algorithms.lstargeneric.ExtensibleAutomatonLStar;
+import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
+import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
+import de.learnlib.algorithms.lstargeneric.table.Row;
+import de.learnlib.api.MembershipOracle;
 
 
 /**
@@ -44,18 +43,6 @@ public class ExtensibleLStarDFA<I>
 	extends ExtensibleAutomatonLStar<DFA<?,I>, I, Boolean, Integer, Integer, Boolean, Void, CompactDFA<I>> {
 
 	
-	public static <I> List<Word<I>> getDefaultInitialSuffixes() {
-		return Collections.singletonList(Word.<I>epsilon());
-	}
-	
-	public static <I> ObservationTableCEXHandler<I, Boolean> getDefaultCEXHandler() {
-		return ClassicLStarCEXHandler.getInstance();
-	}
-	
-	public static <I> ClosingStrategy<I,Boolean> getDefaultClosingStrategy() {
-		return CloseFirstStrategy.getInstance();
-	}
-	
 	/**
 	 * Constructor.
 	 * @param alphabet the learning alphabet.
@@ -63,18 +50,11 @@ public class ExtensibleLStarDFA<I>
 	 */
 	public ExtensibleLStarDFA(Alphabet<I> alphabet, MembershipOracle<I,Boolean> oracle,
 			List<Word<I>> initialSuffixes,
-			ObservationTableCEXHandler<I, Boolean> cexHandler,
-			ClosingStrategy<I, Boolean> closingStrategy) {
+			ObservationTableCEXHandler<? super I, ? super Boolean> cexHandler,
+			ClosingStrategy<? super I, ? super Boolean> closingStrategy) {
 		super(alphabet, oracle, new CompactDFA<I>(alphabet),
 				LStarDFAUtil.ensureSuffixCompliancy(initialSuffixes),
 				cexHandler, closingStrategy);
-	}
-	
-	public ExtensibleLStarDFA(Alphabet<I> alphabet, MembershipOracle<I,Boolean> oracle) {
-		this(alphabet, oracle,
-				ExtensibleLStarDFA.<I>getDefaultInitialSuffixes(),
-				ExtensibleLStarDFA.<I>getDefaultCEXHandler(),
-				ExtensibleLStarDFA.<I>getDefaultClosingStrategy());
 	}
 
 	
@@ -107,8 +87,21 @@ public class ExtensibleLStarDFA<I>
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.algorithms.lstargeneric.AbstractAutomatonLStar#exposeInternalHypothesis()
+	 */
 	@Override
 	protected DFA<?, I> exposeInternalHypothesis() {
+		return internalHyp;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.algorithms.lstargeneric.ExtensibleAutomatonLStar#hypothesisOutput()
+	 */
+	@Override
+	protected SuffixOutput<I, Boolean> hypothesisOutput() {
 		return internalHyp;
 	}
 

@@ -16,21 +16,23 @@
  */
 package de.learnlib.algorithms.lstargeneric.mealy;
 
-import de.learnlib.algorithms.lstargeneric.ExtensibleAutomatonLStar;
-import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
-import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
-import de.learnlib.algorithms.lstargeneric.table.Row;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.mealy.SymbolOracleWrapper;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-
-import java.util.ArrayList;
-import java.util.List;
+import de.learnlib.algorithms.lstargeneric.ExtensibleAutomatonLStar;
+import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
+import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
+import de.learnlib.algorithms.lstargeneric.table.Row;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.oracles.mealy.SymbolOracleWrapper;
 
 /**
  * An implementation of the L*Mealy algorithm for inferring Mealy machines, as described
@@ -50,7 +52,7 @@ public class ClassicLStarMealy<I, O> extends
 			MembershipOracle<I,O> oracle,
 			List<Word<I>> initialSuffixes,
 			ObservationTableCEXHandler<I, O> cexHandler,
-			ClosingStrategy<I,O> closingStrategy) {
+			ClosingStrategy<? super I,? super O> closingStrategy) {
 		return new ClassicLStarMealy<>(alphabet, oracle,
 				initialSuffixes,
 				cexHandler,
@@ -61,8 +63,8 @@ public class ClassicLStarMealy<I, O> extends
 	ClassicLStarMealy<I,O> createForWordOracle(Alphabet<I> alphabet,
 			MembershipOracle<I,Word<O>> oracle,
 			List<Word<I>> initialSuffixes,
-			ObservationTableCEXHandler<I, O> cexHandler,
-			ClosingStrategy<I,O> closingStrategy) {
+			ObservationTableCEXHandler<? super I, ? super O> cexHandler,
+			ClosingStrategy<? super I,? super O> closingStrategy) {
 		return new ClassicLStarMealy<>(alphabet, new SymbolOracleWrapper<>(oracle),
 				initialSuffixes,
 				cexHandler,
@@ -78,8 +80,8 @@ public class ClassicLStarMealy<I, O> extends
 	public ClassicLStarMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, O> oracle,
 			List<Word<I>> initialSuffixes,
-			ObservationTableCEXHandler<I, O> cexHandler,
-			ClosingStrategy<I, O> closingStrategy) {
+			ObservationTableCEXHandler<? super I, ? super O> cexHandler,
+			ClosingStrategy<? super I, ? super O> closingStrategy) {
 		super(alphabet, oracle, new CompactMealy<I,O>(alphabet),
 				LStarMealyUtil.ensureSuffixCompliancy(initialSuffixes, alphabet, true),
 				cexHandler,
@@ -127,6 +129,24 @@ public class ClassicLStarMealy<I, O> extends
 	@Override
 	protected MealyMachine<?, I, ?, O> exposeInternalHypothesis() {
 		return internalHyp;
+	}
+
+	@Override
+	protected SuffixOutput<I, O> hypothesisOutput() {
+		return new SuffixOutput<I,O>() {
+			@Override
+			public O computeOutput(Iterable<I> input) {
+				return computeSuffixOutput(Collections.<I>emptyList(), input);
+			}
+			@Override
+			public O computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+				Word<O> wordOut = internalHyp.computeSuffixOutput(prefix, suffix);
+				if(wordOut.isEmpty())
+					return null;
+				return wordOut.lastSymbol();
+			}
+			
+		};
 	}
 
 }

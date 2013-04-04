@@ -18,14 +18,17 @@ package de.learnlib.algorithms.lstargeneric.ce;
 
 import java.util.List;
 
+import net.automatalib.automata.concepts.SuffixOutput;
 import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
 public interface ObservationTableCEXHandler<I, O> {
-	public List<List<Row<I>>> handleCounterexample(DefaultQuery<I,O> ceQuery,
-			ObservationTable<I,O> table, MembershipOracle<I,O> oracle);
+	public <RI extends I,RO extends O>
+	List<List<Row<RI>>> handleCounterexample(DefaultQuery<RI,RO> ceQuery,
+			ObservationTable<RI,RO> table,
+			SuffixOutput<RI,RO> hypOutput, MembershipOracle<RI, RO> oracle);
 	
 	public boolean needsConsistencyCheck();
 }

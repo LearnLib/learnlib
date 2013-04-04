@@ -58,7 +58,7 @@ public class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 
 		@Override
 		public void answer(Word<O> output) {
-			originalQuery.answer(output.lastSymbol());
+			originalQuery.answer(output.isEmpty() ? null : output.lastSymbol());
 		}
 		
 	}

@@ -23,6 +23,7 @@ import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
 
 public interface ClosingStrategy<I, O> {
-	public List<Row<I>> selectClosingRows(List<List<Row<I>>> unclosedClasses, ObservationTable<I,O> table,
-			MembershipOracle<I,O> oracle);
+	public <RI extends I,RO extends O>
+	List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses, ObservationTable<RI,RO> table,
+			MembershipOracle<RI,RO> oracle);
 }

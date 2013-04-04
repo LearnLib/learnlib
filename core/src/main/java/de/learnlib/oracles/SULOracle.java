@@ -30,26 +30,32 @@ import net.automatalib.words.WordBuilder;
  */
 public class SULOracle<I, O> implements MembershipOracle<I, Word<O>> {
 
-    private final SUL<I, O> sul;
+	private final SUL<I, O> sul;
 
-    public SULOracle(SUL<I, O> sul) {
-	this.sul = sul;
-    }
-    
-    @Override
-    public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-	for (Query<I, Word<O>> query : queries) {
-	    answerQuery(query);
+	public SULOracle(SUL<I, O> sul) {
+		this.sul = sul;
 	}
-    }
-    
-    private void answerQuery(Query<I, Word<O>> query) {
-	WordBuilder<O> wb = new WordBuilder<>();
-	sul.reset();
-	for (I in : query.getInput()) {
-	    wb.add(sul.step(in));
+
+	@Override
+	public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
+		for (Query<I, Word<O>> query : queries) {
+			answerQuery(query);
+		}
 	}
-	query.answer(wb.toWord(query.getPrefix().length(), query.getInput().length()-1));
-    }
-    
+
+	private void answerQuery(Query<I, Word<O>> query) {
+		sul.reset();
+		// Prefix: Execute symbols, don't record output
+		for(I sym : query.getPrefix())
+			sul.step(sym);
+		
+		// Suffix: Execute symbols, outputs constitute output word
+		Word<I> suffix = query.getSuffix();
+		WordBuilder<O> wb = new WordBuilder<>(suffix.length());
+		for(I sym : suffix)
+			wb.add(sul.step(sym));
+		
+		query.answer(wb.toWord());
+	}
+
 }

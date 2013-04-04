@@ -16,20 +16,21 @@
  */
 package de.learnlib.algorithms.lstargeneric.mealy;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import de.learnlib.algorithms.lstargeneric.ExtensibleAutomatonLStar;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ExtensibleLStarMealy<I, O> extends
 		ExtensibleAutomatonLStar<MealyMachine<?,I,?,O>, I, Word<O>, Integer, CompactMealyTransition<O>, Void, O, CompactMealy<I,O>> {
@@ -41,8 +42,8 @@ public class ExtensibleLStarMealy<I, O> extends
 	public ExtensibleLStarMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, Word<O>> oracle,
 			List<Word<I>> initialSuffixes,
-			ObservationTableCEXHandler<I, Word<O>> cexHandler,
-			ClosingStrategy<I, Word<O>> closingStrategy) {
+			ObservationTableCEXHandler<? super I, ? super Word<O>> cexHandler,
+			ClosingStrategy<? super I, ? super Word<O>> closingStrategy) {
 		super(alphabet, oracle, new CompactMealy<I,O>(alphabet),
 				LStarMealyUtil.ensureSuffixCompliancy(initialSuffixes, alphabet, cexHandler.needsConsistencyCheck()),
 				cexHandler,
@@ -96,6 +97,11 @@ public class ExtensibleLStarMealy<I, O> extends
 
 	@Override
 	protected MealyMachine<?, I, ?, O> exposeInternalHypothesis() {
+		return internalHyp;
+	}
+	
+	@Override
+	protected SuffixOutput<I,Word<O>> hypothesisOutput() {
 		return internalHyp;
 	}
 

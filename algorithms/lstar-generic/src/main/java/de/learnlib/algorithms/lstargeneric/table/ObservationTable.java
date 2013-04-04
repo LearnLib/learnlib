@@ -25,6 +25,7 @@ import java.util.Map;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
@@ -58,7 +59,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <I> input symbol class
  * @param <O> output class
  */
-public class ObservationTable<I,O> {
+public class ObservationTable<I,O> implements AccessSequenceTransformer<I> {
 	
 	
 	private final Alphabet<I> alphabet;
@@ -73,6 +74,10 @@ public class ObservationTable<I,O> {
 	
 	private final List<List<O>> allRowContents
 		= new ArrayList<List<O>>();
+	
+	private final List<Row<I>> canonicalRows
+		= new ArrayList<Row<I>>();
+	
 	private final Map<List<O>,Integer> rowContentIds
 		= new HashMap<List<O>,Integer>();
 	
@@ -131,14 +136,14 @@ public class ObservationTable<I,O> {
 		
 		List<O> firstRowContents = new ArrayList<O>(numSuffixes);
 		fetchResults(queryIt, firstRowContents, numSuffixes);
-		processContents(epsRow, firstRowContents);
+		processContents(epsRow, firstRowContents, true);
 		
 		List<List<Row<I>>> unclosed = new ArrayList<List<Row<I>>>();
 		
 		for(Row<I> lpRow : longPrefixRows) {
 			List<O> rowContents = new ArrayList<O>(numSuffixes);
 			fetchResults(queryIt, rowContents, numSuffixes);
-			if(processContents(lpRow, rowContents))
+			if(processContents(lpRow, rowContents, false))
 				unclosed.add(new ArrayList<Row<I>>());
 			
 			int id = lpRow.getRowContentId();
@@ -198,7 +203,7 @@ public class ObservationTable<I,O> {
 				List<O> newContents = new ArrayList<O>(oldSuffixCount + numNewSuffixes);
 				newContents.addAll(rowContents.subList(0, oldSuffixCount));
 				fetchResults(queryIt, newContents, numNewSuffixes);
-				processContents(row, newContents);
+				processContents(row, newContents, true);
 			}
 		}
 		
@@ -216,7 +221,7 @@ public class ObservationTable<I,O> {
 				List<O> newContents = new ArrayList<O>(oldSuffixCount + numNewSuffixes);
 				newContents.addAll(rowContents.subList(0, oldSuffixCount));
 				fetchResults(queryIt, newContents, numNewSuffixes);
-				if(processContents(row, newContents))
+				if(processContents(row, newContents, false))
 					unclosed.add(new ArrayList<Row<I>>());
 				
 				int id = row.getRowContentId();
@@ -282,7 +287,7 @@ public class ObservationTable<I,O> {
 		for(Row<I> row : freshSpRows) {
 			List<O> contents = new ArrayList<O>(numSuffixes);
 			fetchResults(queryIt, contents, numSuffixes);
-			processContents(row, contents);
+			processContents(row, contents, true);
 		}
 		
 		int numSpRows = numDistinctRows();
@@ -291,7 +296,7 @@ public class ObservationTable<I,O> {
 		for(Row<I> row : freshLpRows) {
 			List<O> contents = new ArrayList<O>(numSuffixes);
 			fetchResults(queryIt, contents, numSuffixes);
-			if(processContents(row, contents))
+			if(processContents(row, contents, false))
 				unclosed.add(new ArrayList<Row<I>>());
 			
 			int id = row.getRowContentId();
@@ -357,6 +362,12 @@ public class ObservationTable<I,O> {
 		longPrefixRows.remove(row);
 		shortPrefixRows.add(row);
 		row.makeShort(alphabet.size());
+		
+		if(row.hasContents()) {
+			int cid = row.getRowContentId();
+			if(canonicalRows.get(cid) == null)
+				canonicalRows.set(cid, row);
+		}
 		return true;
 	}
 	
@@ -417,13 +428,17 @@ public class ObservationTable<I,O> {
 		return suffixes;
 	}
 	
-	protected boolean processContents(Row<I> row, List<O> rowContents) {
+	protected boolean processContents(Row<I> row, List<O> rowContents, boolean makeCanonical) {
 		Integer contentId = rowContentIds.get(rowContents);
 		boolean added = false;
 		if(contentId == null) {
 			rowContentIds.put(rowContents, contentId = numDistinctRows());
 			allRowContents.add(rowContents);
 			added = true;
+			if(makeCanonical)
+				canonicalRows.add(row);
+			else
+				canonicalRows.add(null);
 		}
 		row.setRowContentId(contentId);
 		return added;
@@ -461,6 +476,32 @@ public class ObservationTable<I,O> {
 
 	public Alphabet<I> getInputAlphabet() {
 		return alphabet;
+	}
+
+	@Override
+	public Word<I> transformAccessSequence(Word<I> word) {
+		Row<I> current = shortPrefixRows.get(0);
+		
+		for(I sym : word) {
+			current = getRowSuccessor(current, sym);
+			if(!current.isShortPrefix())
+				current = canonicalRows.get(current.getRowContentId());
+		}
+		
+		return current.getPrefix();
+	}
+
+	@Override
+	public boolean isAccessSequence(Word<I> word) {
+		Row<I> current = shortPrefixRows.get(0);
+		
+		for(I sym : word) {
+			current = getRowSuccessor(current, sym);
+			if(!current.isShortPrefix())
+				return false;
+		}
+		
+		return true;
 	}
 
 

@@ -17,6 +17,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-core</artifactId>
         </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-counterexamples</artifactId>
+        </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -40,6 +44,11 @@
 		<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-basic-eqtests</artifactId>
+			<scope>test</scope>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-cache</artifactId>
 			<scope>test</scope>
         </dependency>
 		<dependency>

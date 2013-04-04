@@ -24,15 +24,7 @@ import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
 
-public class CloseRandomStrategy<I,O> implements ClosingStrategy<I, O> {
-	
-	private static final CloseRandomStrategy<?,?> INSTANCE
-		= new CloseRandomStrategy<Object,Object>();
-	
-	@SuppressWarnings("unchecked")
-	public static <I,O> CloseRandomStrategy<I,O> getInstance() {
-		return (CloseRandomStrategy<I,O>)INSTANCE;
-	}
+public class CloseRandomStrategy implements ClosingStrategy<Object,Object> {
 	
 	private final Random random;
 	
@@ -45,11 +37,12 @@ public class CloseRandomStrategy<I,O> implements ClosingStrategy<I, O> {
 	}
 
 	@Override
-	public List<Row<I>> selectClosingRows(List<List<Row<I>>> unclosedClasses,
-			ObservationTable<I, O> table, MembershipOracle<I, O> oracle) {
-		List<Row<I>> result = new ArrayList<>(unclosedClasses.size());
+	public <RI,RO>
+	List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses,
+			ObservationTable<RI,RO> table, MembershipOracle<RI,RO> oracle) {
+		List<Row<RI>> result = new ArrayList<>(unclosedClasses.size());
 		
-		for(List<Row<I>> clazz : unclosedClasses) {
+		for(List<Row<RI>> clazz : unclosedClasses) {
 			int card = clazz.size();
 			result.add(clazz.get(random.nextInt(card)));
 		}

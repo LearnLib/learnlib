@@ -31,17 +31,37 @@ import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
+/**
+ * Implements an equivalence test by applying the W-method test on the given
+ * hypothesis automaton, as described in "Testing software design modelled by finite state machines"
+ * by T.S. Chow.
+ * 
+ * @author Malte Isberner <malte.isberner@gmail.com>
+ *
+ * @param <A> automaton class
+ * @param <I> input symbol class
+ * @param <O> output class
+ */
 public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?,?> & Output<I,O>, I, O>
 	implements EquivalenceOracle<A, I, O> {
 	
 	private int maxDepth;
 	private final MembershipOracle<I,O> sulOracle;
 	
+	/**
+	 * Constructor.
+	 * @param maxDepth the maximum length of the "middle" part of the test cases
+	 * @param sulOracle interface to the system under learning
+	 */
 	public WMethodEQOracle(int maxDepth, MembershipOracle<I,O> sulOracle) {
 		this.maxDepth = maxDepth;
 		this.sulOracle = sulOracle;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
+	 */
 	@Override
 	public DefaultQuery<I, O> findCounterExample(A hypothesis,
 			Collection<? extends I> inputs) {
