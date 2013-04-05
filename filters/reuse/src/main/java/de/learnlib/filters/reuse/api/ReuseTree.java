@@ -2,7 +2,6 @@ package de.learnlib.filters.reuse.api;
 
 import de.learnlib.logging.LearnLogger;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,26 +17,26 @@ import java.util.Set;
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  * @see SystemState
  */
-public class ReuseTree {
+public class ReuseTree<S,V> {
 	public static final String INPUT = "__PREFIX_INPUT__";
 	public static final String OUTPUT = "__PREFIX_OUTPUT__";
 
-	private ReuseNode root;
+	private ReuseNode<S,V> root;
 
 	private boolean useFailureOutputKnowledge = true;
 	private boolean useModelInvariantSymbols = true;
 
 	private final LearnLogger logger = LearnLogger.getLogger(ReuseTree.class.getName());
 
-	private Set<String> readOnlyInputSymbols;
-	private Set<String> failureOutputSymbols;
+	private Set<S> readOnlyInputSymbols;
+	private Set<V> failureOutputSymbols;
 
 	/**
 	 * Default constructor. Usage of domain knowledge about 'failure outputs' and
 	 * 'model invariant input symbols' is enabled.
 	 */
 	public ReuseTree() {
-		this.root = new ReuseNode("");
+		this.root = new ReuseNode<>("");
 		this.readOnlyInputSymbols = new HashSet<>();
 		this.failureOutputSymbols = new HashSet<>();
 	}
@@ -50,7 +49,7 @@ public class ReuseTree {
 	 * 		not allowed to be <code>null</code>.
 	 * @see #useModelInvariantSymbols(boolean)
 	 */
-	public void addReadOnlyInputSymbol(String input) {
+	public void addReadOnlyInputSymbol(S input) {
 		this.logger.info("Added read only symbol: " + input);
 		if (input == null) {
 			throw new IllegalArgumentException("Input is not allowed to be null.");
@@ -65,7 +64,7 @@ public class ReuseTree {
 	 * 		not allowed to be <code>null</code>.
 	 * @see #useFailureOutputKnowledge(boolean)
 	 */
-	public void addFailureOutputSymbol(String output) {
+	public void addFailureOutputSymbol(V output) {
 		this.logger.info("Added failure output: " + output);
 		if (output == null) {
 			throw new IllegalArgumentException("Output is not allowed to be null.");
@@ -82,7 +81,7 @@ public class ReuseTree {
 	 * the new query is a continuation of this query.
 	 *
 	 * @param b
-	 * @see #addFailureOutputSymbol(String)
+	 * @see #addFailureOutputSymbol(V)
 	 */
 	public void useFailureOutputKnowledge(boolean b) {
 		this.useFailureOutputKnowledge = b;
@@ -96,7 +95,7 @@ public class ReuseTree {
 	 * {@link ReuseEdge} in the {@link ReuseTree}.
 	 *
 	 * @param b
-	 * @see #addReadOnlyInputSymbol(String)
+	 * @see #addReadOnlyInputSymbol(S)
 	 */
 	public void useModelInvariantSymbols(boolean b) {
 		this.useModelInvariantSymbols = b;
@@ -107,7 +106,7 @@ public class ReuseTree {
 	 *
 	 * @return root The root of the tree, never <code>null</code>.
 	 */
-	public ReuseNode getRoot() {
+	public ReuseNode<S,V> getRoot() {
 		return this.root;
 	}
 
@@ -120,23 +119,23 @@ public class ReuseTree {
 	 * @return The output for <code>query</code> if already known from the
 	 *         {@link ReuseTree} or <code>null</code> if unknown.
 	 */
-	public Word<Symbol> getOutput(final Word<Symbol> query) {
+	public Word<V> getOutput(final Word<S> query) {
 		if (query == null) {
 			throw new IllegalArgumentException("Query is not allowed to be null.");
 		}
 
-		List<Symbol> output = new ArrayList<>(query.size());
+		List<V> output = new ArrayList<>(query.size());
 
-		ReuseNode sink = getRoot();
+		ReuseNode<S,V> sink = getRoot();
 		for (int i = 0; i <= query.size() - 1; i++) {
-			ReuseNode node = sink.getTargetNodeForInput(getSymbol(query, i));
-			ReuseEdge edge = sink.getEdgeWithInput(getSymbol(query, i));
+			ReuseNode<S,V> node = sink.getTargetNodeForInput(query.getSymbol(i));
+			ReuseEdge<S,V> edge = sink.getEdgeWithInput(query.getSymbol(i));
 
 			if (node == null) {
 				return null;
 			}
 
-			output.add(new Symbol(edge.getOutput()));
+			output.add(edge.getOutput());
 			sink = node;
 		}
 
@@ -151,32 +150,32 @@ public class ReuseTree {
 	 * 		Not allowed to be <code>null</code>.
 	 * @return Whether there exists a reuseable {@link SystemState} or not.
 	 */
-	public boolean hasReuseableSystemState(final Word<Symbol> query) {
+	public boolean hasReuseableSystemState(final Word<S> query) {
 		if (query == null) {
 			throw new IllegalArgumentException("Query not allowed to be null.");
 		}
 
 		int length = 0;
 
-		List<Symbol> prefixInput = new LinkedList<>();
-		List<Symbol> prefixOutout = new LinkedList<>();
+		List<S> prefixInput = new LinkedList<>();
+		List<V> prefixOutput = new LinkedList<>();
 
-		ReuseNode sink = getRoot();
+		ReuseNode<S,V> sink = getRoot();
 		ReuseNode lastState = null;
 		if (sink.hasState()) {
 			lastState = sink;
 		}
 
 		for (int i = 0; i <= query.size() - 1; i++) {
-			ReuseNode node = sink.getTargetNodeForInput(getSymbol(query, i));
-			ReuseEdge edge = sink.getEdgeWithInput(getSymbol(query, i));
+			ReuseNode<S,V> node = sink.getTargetNodeForInput(query.getSymbol(i));
+			ReuseEdge<S,V> edge = sink.getEdgeWithInput(query.getSymbol(i));
 
 			if (node == null) {
 				break;
 			}
 
 			prefixInput.add(query.getSymbol(i));
-			prefixOutout.add(new Symbol(edge.getOutput()));
+			prefixOutput.add(edge.getOutput());
 
 			sink = node;
 			if (sink.hasState()) {
@@ -201,32 +200,32 @@ public class ReuseTree {
 	 * @return
 	 * @see #hasReuseableSystemState(Word)
 	 */
-	public SystemState getReuseableSystemState(Word<Symbol> query) {
+	public SystemState getReuseableSystemState(Word<S> query) {
 		if (query == null) {
 			throw new IllegalArgumentException("Query is not allowed to be null.");
 		}
 
 		int length = 0;
 
-		List<Symbol> prefixInput = new LinkedList<>();
-		List<Symbol> prefixOutout = new LinkedList<>();
+		List<S> prefixInput = new LinkedList<>();
+		List<V> prefixOutput = new LinkedList<>();
 
-		ReuseNode sink = getRoot();
+		ReuseNode<S,V> sink = getRoot();
 		ReuseNode lastState = null;
 		if (sink.hasState()) {
 			lastState = sink;
 		}
 
 		for (int i = 0; i <= query.size() - 1; i++) {
-			ReuseNode node = sink.getTargetNodeForInput(getSymbol(query, i));
-			ReuseEdge edge = sink.getEdgeWithInput(getSymbol(query, i));
+			ReuseNode<S,V> node = sink.getTargetNodeForInput(query.getSymbol(i));
+			ReuseEdge<S,V> edge = sink.getEdgeWithInput(query.getSymbol(i));
 
 			if (node == null) {
 				break;
 			}
 
 			prefixInput.add(query.getSymbol(i));
-			prefixOutout.add(new Symbol(edge.getOutput()));
+			prefixOutput.add(edge.getOutput());
 
 			sink = node;
 			if (sink.hasState()) {
@@ -242,8 +241,8 @@ public class ReuseTree {
 		SystemState systemState = lastState.getSystemState();
 		lastState.setSystemState(null);
 
-		systemState.put(INPUT, Word.fromSymbols(prefixInput).prefix(length));
-		systemState.put(OUTPUT, Word.fromSymbols(prefixOutout).prefix(length));
+		systemState.put(INPUT, Word.fromList(prefixInput).prefix(length));
+		systemState.put(OUTPUT, Word.fromList(prefixOutput).prefix(length));
 
 		return systemState;
 	}
@@ -263,19 +262,19 @@ public class ReuseTree {
 			throw new IllegalArgumentException("The systemstate is not allowed to be null.");
 		}
 
-		ReuseNode sink = getRoot();
+		ReuseNode<S,V> sink = getRoot();
 
-		List<Symbol> suffixInput = new LinkedList<>();
-		List<Symbol> suffixOutput = new LinkedList<>();
+		List<S> suffixInput = new LinkedList<>();
+		List<V> suffixOutput = new LinkedList<>();
 
-		Word<Symbol> input = (Word) map.get(INPUT);
-		Word<Symbol> output = (Word) map.get(OUTPUT);
+		Word<S> input = (Word) map.get(INPUT);
+		Word<V> output = (Word) map.get(OUTPUT);
 
 		for (int i = 0; i <= input.size() - 1; i++) {
-			Symbol ii = input.getSymbol(i);
-			Symbol oi = output.getSymbol(i);
+			S ii = input.getSymbol(i);
+			V oi = output.getSymbol(i);
 
-			ReuseEdge e = sink.getEdgeWithInput(ii.toString().trim());
+			ReuseEdge e = sink.getEdgeWithInput(ii);
 			if (e != null) {
 				if (!e.getOutput().equals(oi.toString().trim())) {
 					StringBuilder sb = new StringBuilder();
@@ -294,7 +293,7 @@ public class ReuseTree {
 				}
 			}
 
-			ReuseNode n = sink.getTargetNodeForInput(ii.toString().trim());
+			ReuseNode<S,V> n = sink.getTargetNodeForInput(ii);
 			if (n == null) {
 				for (int j = i; j <= input.size() - 1; j++) {
 					suffixInput.add(input.getSymbol(j));
@@ -307,9 +306,9 @@ public class ReuseTree {
 		}
 
 		for (int i = 0; i <= suffixInput.size() - 1; i++) {
-			String in = getSymbol(Word.fromList(suffixInput), i);
-			String out = getSymbol(Word.fromList(suffixOutput), i);
-			ReuseNode rn;
+			S in = Word.fromList(suffixInput).getSymbol(i);
+			V out = Word.fromList(suffixOutput).getSymbol(i);
+			ReuseNode<S,V> rn;
 
 			if (useFailureOutputKnowledge) {
 				if (failureOutputSymbols.contains(out)) {
@@ -319,7 +318,7 @@ public class ReuseTree {
 					rn = sink;
 				}
 				else {
-					rn = new ReuseNode(sink.getName() + " " + in);
+					rn = new ReuseNode<>(sink.getName() + " " + in);
 				}
 			}
 			else {
@@ -328,18 +327,14 @@ public class ReuseTree {
 					rn = sink;
 				}
 				else {
-					rn = new ReuseNode(sink.getName() + " " + in);
+					rn = new ReuseNode<>(sink.getName() + " " + in);
 				}
 			}
 
-			sink.addEdge(new ReuseEdge(sink, rn, in, out));
+			sink.addEdge(new ReuseEdge<>(sink, rn, in, out));
 			sink = rn;
 		}
 
 		sink.setSystemState(map);
-	}
-
-	private String getSymbol(Word<Symbol> word, int index) {
-		return word.getSymbol(index).toString().trim();
 	}
 }

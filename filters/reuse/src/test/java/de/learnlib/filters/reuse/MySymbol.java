@@ -3,14 +3,12 @@ package de.learnlib.filters.reuse;
 import de.learnlib.filters.reuse.api.ExecutableSymbol;
 import de.learnlib.filters.reuse.api.SystemState;
 import de.learnlib.logging.LearnLogger;
-import net.automatalib.words.impl.Symbol;
 
-class MySymbol extends Symbol implements ExecutableSymbol {
+class MySymbol implements ExecutableSymbol<String> {
 	private int VAL;
 	private ReuseOracleTest reuseOracleTest;
 
 	public MySymbol(ReuseOracleTest reuseOracleTest, int value) {
-		super(value);
 		this.reuseOracleTest = reuseOracleTest;
 		this.VAL = value;
 	}

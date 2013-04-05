@@ -1,23 +1,21 @@
 package de.learnlib.filters.reuse;
 
-
 import de.learnlib.filters.reuse.api.ExecutableSymbol;
 import de.learnlib.filters.reuse.api.SystemState;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class ReuseOracleTest {
-	private final static Symbol ACK = new Symbol("ACK");
-	private final static Symbol NAK = new Symbol("NAK");
+	private final static String ACK = "ACK";
+	private final static String NAK = "NAK";
 
-	private final Symbol i1 = new Symbol(new MySymbol(this, 1));
-	private final Symbol i2 = new Symbol(new MySymbol(this, 2));
-	private final Symbol i3 = new Symbol(new MySymbol(this, 3));
+	private final MySymbol i1 = new MySymbol(this, 1);
+	private final MySymbol i2 = new MySymbol(this, 2);
+	private final MySymbol i3 = new MySymbol(this, 3);
 
-	private ReuseOracle reuseOracle;
+	private ReuseOracle<MySymbol,String> reuseOracle;
 
 	/**
 	 * {@inheritDoc}.
@@ -32,18 +30,18 @@ public class ReuseOracleTest {
 			}
 		};
 
-		ExecutableOracle executableOracle = new ExecutableOracle(reset);
+		ExecutableOracle<MySymbol,String> executableOracle = new ExecutableOracle<>(reset);
 
-		reuseOracle = new ReuseOracle(executableOracle);
+		reuseOracle = new ReuseOracle<>(executableOracle);
 	}
 
 	@Test
 	public void test() {
 		reuseOracle.getReuseTree().addFailureOutputSymbol("NAK");
 
-		Word<Symbol> query = Word.fromSymbols(i1);
+		Word<MySymbol> query = Word.fromSymbols(i1);
 		Assert.assertTrue(reuseOracle.analyzeQuery(query) == ReuseOracle.NeededAction.RESET_NECCESSARY);
-		Word<Symbol> output = reuseOracle.executeFullQuery(query); /* ACK */
+		Word<String> output = reuseOracle.executeFullQuery(query); /* ACK */
 		Assert.assertEquals(output, Word.fromSymbols(ACK));
 
 		query = Word.fromSymbols(i1, i3);

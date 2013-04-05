@@ -7,11 +7,13 @@ package de.learnlib.filters.reuse.api;
  *
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
-public class ReuseEdge {
-	private final ReuseNode source, target;
-	private final String input, output;
+public class ReuseEdge<S,V> {
+	private final ReuseNode<S,V> source;
+	private final ReuseNode<S,V> target;
+	private final S input;
+	private final V output;
 
-	public ReuseEdge(ReuseNode source, ReuseNode target, String input, String output) {
+	public ReuseEdge(ReuseNode<S,V> source, ReuseNode<S,V> target, S input, V output) {
 		if (source == null) {
 			throw new IllegalArgumentException("Source not allowed to be null.");
 		}
@@ -30,19 +32,19 @@ public class ReuseEdge {
 		this.output = output;
 	}
 
-	public ReuseNode getSource() {
+	public ReuseNode<S,V> getSource() {
 		return source;
 	}
 
-	public ReuseNode getTarget() {
+	public ReuseNode<S,V> getTarget() {
 		return target;
 	}
 
-	public String getInput() {
+	public S getInput() {
 		return input;
 	}
 
-	public String getOutput() {
+	public V getOutput() {
 		return output;
 	}
 

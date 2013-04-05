@@ -12,7 +12,7 @@ import java.util.Map;
  * @see {@link SystemState}, {@link ReuseEdge}, {@link ReuseNode}, {@link ReuseTree}.
  */
 public class SystemStateImpl implements SystemState {
-	private Map<String, Object> map = new HashMap<String, Object>();
+	private Map<String, Object> map = new HashMap<>();
 
 	@Override
 	public Object get(String key) {

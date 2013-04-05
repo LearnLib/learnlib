@@ -15,14 +15,14 @@ import java.util.Map;
  *
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
-public class ReuseNode {
+public class ReuseNode<S,V> {
 	private final String name;
-	private Map<String, ReuseEdge> edges;
+	private Map<S, ReuseEdge<S,V>> edges;
 	private SystemState avail;
 
 	public ReuseNode(String name) {
 		this.name = name;
-		this.edges = new HashMap<String, ReuseEdge>();
+		this.edges = new HashMap<>();
 	}
 
 	public boolean hasState() {
@@ -53,7 +53,7 @@ public class ReuseNode {
 	 *
 	 * @return
 	 */
-	public Collection<ReuseEdge> getEdges() {
+	public Collection<ReuseEdge<S,V>> getEdges() {
 		return this.edges.values();
 	}
 
@@ -62,7 +62,7 @@ public class ReuseNode {
 	 *
 	 * @param edge
 	 */
-	public void addEdge(ReuseEdge edge) {
+	public void addEdge(ReuseEdge<S,V> edge) {
 		this.edges.put(edge.getInput(), edge);
 	}
 
@@ -72,12 +72,12 @@ public class ReuseNode {
 	 * @param input
 	 * @return
 	 */
-	public ReuseEdge getEdgeWithInput(String input) {
+	public ReuseEdge<S,V> getEdgeWithInput(S input) {
 		return this.edges.get(input);
 	}
 
-	public ReuseNode getTargetNodeForInput(String input) {
-		ReuseEdge edge = this.getEdgeWithInput(input);
+	public ReuseNode<S,V> getTargetNodeForInput(S input) {
+		ReuseEdge<S,V> edge = this.getEdgeWithInput(input);
 		if (edge == null) {
 			return null;
 		}

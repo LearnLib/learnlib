@@ -8,15 +8,16 @@ import de.learnlib.filters.reuse.api.SystemState;
 import de.learnlib.filters.reuse.api.SystemStateImpl;
 import de.learnlib.logging.LearnLogger;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
 @SuppressWarnings("serial")
-public class ExecutableOracle implements MembershipOracle<Symbol, Word<Symbol>> {
+public class ExecutableOracle<S extends ExecutableSymbol<V>, V> implements MembershipOracle<S, Word<V>> {
 	private final LearnLogger logger = LearnLogger.getLogger(ExecutableOracle.class.getName());
 
 	private SystemState systemState;
@@ -50,9 +51,9 @@ public class ExecutableOracle implements MembershipOracle<Symbol, Word<Symbol>> 
 	}
 
 	@Override
-	public void processQueries(Collection<? extends Query<Symbol, Word<Symbol>>> queries) {
-		for (Query<Symbol, Word<Symbol>> query : queries) {
-			Word output = processQuery(query.getInput());
+	public void processQueries(Collection<? extends Query<S, Word<V>>> queries) {
+		for (Query<S, Word<V>> query : queries) {
+			Word<V> output = processQuery(query.getInput());
 			query.answer(output);
 		}
 	}
@@ -66,15 +67,15 @@ public class ExecutableOracle implements MembershipOracle<Symbol, Word<Symbol>> 
 	 * hold the trace with its output in variables
 	 * {@link ReuseTree#INPUT} and {@link ReuseTree#OUTPUT}.
 	 */
-	public Word<Symbol> processQuery(Word<Symbol> trace) {
-		Symbol outputs[] = new Symbol[trace.size()];
+	public Word<V> processQuery(Word<S> trace) {
+		List<V> outputs = new ArrayList<>(trace.size());
 		for (int i = 0; i <= trace.size() - 1; i++) {
-			ExecutableSymbol e = (ExecutableSymbol) trace.getSymbol(i).getUserObject();
-			String output = e.execute(systemState);
+			ExecutableSymbol<V> e = trace.getSymbol(i);
+			V output = e.execute(systemState);
 
-			outputs[i] = new Symbol(output);
+			outputs.add(output);
 		}
-		Word<Symbol> result = Word.fromSymbols(outputs);
+		Word<V> result = Word.fromList(outputs);
 
 		this.logger.info("Execute MQ " + (++mq) + " '" + trace + "' -> '" + result + "'");
 
@@ -93,20 +94,20 @@ public class ExecutableOracle implements MembershipOracle<Symbol, Word<Symbol>> 
 	 * hold the full trace with its full output in variables
 	 * {@link ReuseTree#INPUT} and {@link ReuseTree#OUTPUT}.
 	 */
-	public Word processQueryWithoutReset(Word<Symbol> trace) {
-		Word<Symbol> prefix = (Word) systemState.get(ReuseTree.INPUT);
-		Word<Symbol> prefixResult = (Word) systemState.get(ReuseTree.OUTPUT);
+	public Word<V> processQueryWithoutReset(Word<S> trace) {
+		Word<S> prefix = (Word) systemState.get(ReuseTree.INPUT);
+		Word<V> prefixResult = (Word) systemState.get(ReuseTree.OUTPUT);
 
 		this.logger.info("Execute " + (++mq) + " " + trace + " without reset on " + prefix);
 
-		Symbol outputs[] = new Symbol[trace.size()];
+		List<V> outputs = new ArrayList<>(trace.size());
 		for (int i = 0; i <= trace.size() - 1; i++) {
-			ExecutableSymbol e = (ExecutableSymbol) trace.getSymbol(i).getUserObject();
-			String output = e.execute(systemState);
-			outputs[i] = new Symbol(output);
+			ExecutableSymbol<V> e = trace.getSymbol(i);
+			V output = e.execute(systemState);
+			outputs.add(output);
 		}
 
-		Word<Symbol> result = Word.fromSymbols(outputs);
+		Word<V> result = Word.fromList(outputs);
 
 		this.systemState.put(ReuseTree.INPUT, prefix.concat(trace));
 		this.systemState.put(ReuseTree.OUTPUT, prefixResult.concat(result));

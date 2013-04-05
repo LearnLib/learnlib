@@ -8,6 +8,6 @@ package de.learnlib.filters.reuse.api;
  *
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
-public interface ExecutableSymbol {
-	String execute(SystemState state);
+public interface ExecutableSymbol<V> {
+	V execute(SystemState state);
 }
