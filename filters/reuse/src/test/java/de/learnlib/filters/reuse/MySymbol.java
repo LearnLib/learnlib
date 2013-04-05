@@ -5,7 +5,8 @@ import de.learnlib.filters.reuse.api.SystemState;
 import de.learnlib.logging.LearnLogger;
 
 class MySymbol implements ExecutableSymbol<String> {
-	private int VAL;
+
+	private final int VAL;
 	private ReuseOracleTest reuseOracleTest;
 
 	public MySymbol(ReuseOracleTest reuseOracleTest, int value) {
@@ -59,20 +60,13 @@ class MySymbol implements ExecutableSymbol<String> {
 		if (this == obj) {
 			return true;
 		}
-		if (!super.equals(obj)) {
+		if (!(obj instanceof MySymbol)) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		MySymbol other = (MySymbol) obj;
-		if (!getOuterType().equals(other.getOuterType())) {
-			return false;
-		}
-		if (VAL != other.VAL) {
-			return false;
-		}
-		return true;
+
+		MySymbol that = (MySymbol) obj;
+
+		return VAL == that.VAL && getOuterType().equals(that.getOuterType());
 	}
 
 	private ReuseOracleTest getOuterType() {
