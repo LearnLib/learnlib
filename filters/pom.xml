@@ -15,7 +15,8 @@
 
     <modules>
         <module>./cache</module>
-    </modules>  
+		<module>./reuse</module>
+    </modules>
     
 </project>
 

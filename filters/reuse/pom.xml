@@ -3,13 +3,12 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
-		<artifactId>filters</artifactId>
+		<artifactId>learnlib-filters</artifactId>
 		<groupId>de.learnlib</groupId>
 		<version>0.9-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-reuse</artifactId>
 	<name>learnlib-reuse</name>
 
