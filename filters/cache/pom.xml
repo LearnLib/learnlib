@@ -18,6 +18,15 @@
             <artifactId>learnlib-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-test-support</artifactId>
+        </dependency>
+		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-simulator</artifactId>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-incremental</artifactId>

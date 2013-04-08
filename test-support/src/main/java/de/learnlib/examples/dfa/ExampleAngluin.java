@@ -33,8 +33,8 @@ import net.automatalib.words.impl.Symbol;
  */
 public class ExampleAngluin {
 
-	private final static Symbol in_0 = new Symbol("0");
-	private final static Symbol in_1 = new Symbol("1");
+	public final static Symbol in_0 = new Symbol("0");
+	public final static Symbol in_1 = new Symbol("1");
 	
 	private final static Alphabet<Symbol> alphabet = new FastAlphabet<Symbol>(in_0, in_1);
 
