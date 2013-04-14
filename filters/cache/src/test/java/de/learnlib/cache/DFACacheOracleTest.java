@@ -19,6 +19,7 @@ package de.learnlib.cache;
 import static de.learnlib.examples.dfa.ExampleAngluin.in_0;
 import static de.learnlib.examples.dfa.ExampleAngluin.in_1;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import net.automatalib.automata.fsa.impl.FastDFA;
@@ -67,6 +68,8 @@ public class DFACacheOracleTest {
 
 		// we query against the DFA cache, duplicate queries should be filtered
 		oracle = new DFACacheOracle<>(alphabet, counterOracle);
+		
+		queries = new ArrayList<>();
 	}
 
 	@Test
