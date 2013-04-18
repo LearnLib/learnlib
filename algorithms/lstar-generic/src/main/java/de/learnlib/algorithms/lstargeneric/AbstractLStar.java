@@ -18,8 +18,8 @@ package de.learnlib.algorithms.lstargeneric;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
@@ -140,7 +140,7 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 		
 		for(int i = 0; i < numSuffixes; i++) {
 			O val1 = contents1.get(i), val2 = contents2.get(i);
-			if(!CmpUtil.equals(val1, val2)) {
+			if(!Objects.equals(val1, val2)) {
 				I sym = alphabet.getSymbol(inputIdx);
 				Word<I> suffix = table.getSuffixes().get(i);
 				return suffix.prepend(sym);

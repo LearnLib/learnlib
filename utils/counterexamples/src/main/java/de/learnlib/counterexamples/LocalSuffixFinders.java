@@ -16,8 +16,9 @@
  */
 package de.learnlib.counterexamples;
 
+import java.util.Objects;
+
 import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.words.Word;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.MembershipOracle;
@@ -123,7 +124,7 @@ public abstract class LocalSuffixFinders {
 			O hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
 			O mqOut = MQUtil.query(oracle, as, nextSuffix);
 			
-			if(CmpUtil.equals(hypOut, mqOut))
+			if(Objects.equals(hypOut, mqOut))
 				return i;
 		}
 		
@@ -167,7 +168,7 @@ public abstract class LocalSuffixFinders {
 			O hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
 			O mqOut = MQUtil.query(oracle, as, nextSuffix);
 			
-			if(!CmpUtil.equals(hypOut, mqOut))
+			if(!Objects.equals(hypOut, mqOut))
 				return i+1;
 		}
 		
@@ -216,7 +217,7 @@ public abstract class LocalSuffixFinders {
 			O hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
 			O ceOut = MQUtil.query(oracle, as, nextSuffix);
 			
-			if(!CmpUtil.equals(hypOut, ceOut))
+			if(!Objects.equals(hypOut, ceOut))
 				low = mid;
 			else
 				high = mid;

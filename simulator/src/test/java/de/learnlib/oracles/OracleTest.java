@@ -17,17 +17,18 @@
 
 package de.learnlib.oracles;
 
-import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.SafeOracle;
-import de.learnlib.oracles.SimulatorOracle;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
+import static de.learnlib.examples.dfa.ExamplePaulAndMary.constructMachine;
+import static de.learnlib.examples.dfa.ExamplePaulAndMary.in_loves;
+import static de.learnlib.examples.dfa.ExamplePaulAndMary.in_mary;
+import static de.learnlib.examples.dfa.ExamplePaulAndMary.in_paul;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.learnlib.examples.dfa.ExamplePaulAndMary.*;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.Symbol;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -58,6 +59,7 @@ public class OracleTest {
         Assert.assertEquals(queries.get(1).getInput().size(), 3);
         
         oracle.processQueries(queries);
+        
         
         // Paul loves Mary...
         Assert.assertEquals(queries.get(0).getOutput(), (Object)true);

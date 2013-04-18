@@ -22,7 +22,6 @@ import java.util.Random;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.util.ts.TS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.FastAlphabet;
@@ -143,7 +142,6 @@ public class MealyDHCTest {
 	
 	
 	@Test
-	@SuppressWarnings("unused")
 	public void testMealyDHCRandom() {
 		
 		Alphabet<Symbol> inputs = new FastAlphabet<>(
@@ -162,7 +160,7 @@ public class MealyDHCTest {
 		
 		
 		SimulatorOracle<Symbol, Word<Symbol>> simoracle = new SimulatorOracle<>(fm);
-		MembershipOracle<Symbol,Word<Symbol>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
+		MealyCacheOracle<Symbol,Symbol> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
 		SimulatorEQOracle<Symbol, Word<Symbol>> eqoracle = new SimulatorEQOracle<>(fm);
 
 		MealyDHC<Symbol, Symbol> dhc = new MealyDHC<>(alphabet, cache);
@@ -183,12 +181,9 @@ public class MealyDHCTest {
 
 		} while (counterexample != null);
 		
-		int numReachable = 0;
-		
-		for(Object s : TS.bfsOrder(fm, fm.getInputAlphabet()))
-			numReachable++;
-
-		Assert.assertEquals(dhc.getHypothesisModel().size(), numReachable, "Mismatch in size of learned hypothesis and target model");
+		Assert.assertEquals(dhc.getHypothesisModel().size(), fm.size(), "Mismatch in size of learned hypothesis and target model");
+		System.err.println("Hypothesis has " + dhc.getHypothesisModel().size() + " states");
+		System.err.println("Cache size is " + cache.getCacheSize());
 
 	}
 }

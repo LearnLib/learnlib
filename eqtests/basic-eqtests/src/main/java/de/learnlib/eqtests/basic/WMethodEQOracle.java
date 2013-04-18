@@ -19,11 +19,11 @@ package de.learnlib.eqtests.basic;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -86,7 +86,7 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
 					DefaultQuery<I,O> query = new DefaultQuery<>(queryWord);
 					O hypOutput = hypothesis.computeOutput(queryWord);
 					sulOracle.processQueries(Collections.singleton(query));
-					if(!CmpUtil.equals(hypOutput, query.getOutput()))
+					if(!Objects.equals(hypOutput, query.getOutput()))
 						return query;
 				}
 			}

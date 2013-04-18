@@ -32,12 +32,12 @@ import net.automatalib.words.Word;
  *
  * @param <I> input symbol class
  */
-public class Row<I> {
+public final class Row<I> {
 	private final Word<I> prefix;
 	private final int rowId;
 	
 	private int rowContentId = -1;
-	private boolean shortPrefix = false;
+	private int lpIndex = 0;
 	private Row<I>[] successors = null; 
 	
 	/**
@@ -69,9 +69,9 @@ public class Row<I> {
 	 */
 	@SuppressWarnings("unchecked")
 	public void makeShort(int alphabetSize) {
-		if(shortPrefix)
+		if(lpIndex == -1)
 			return;
-		shortPrefix = true;
+		lpIndex = -1;
 		this.successors = (Row<I>[])new Row<?>[alphabetSize];
 	}
 	
@@ -133,11 +133,19 @@ public class Row<I> {
 	 * @return <code>true</code> if this is a short prefix row, <code>false</code> otherwise.
 	 */
 	public boolean isShortPrefix() {
-		return shortPrefix;
+		return (lpIndex == -1);
 	}
 
 	public boolean hasContents() {
 		return (rowContentId != -1);
+	}
+	
+	int getLpIndex() {
+		return lpIndex;
+	}
+	
+	void setLpIndex(int lpIndex) {
+		this.lpIndex = lpIndex;
 	}
 	
 }

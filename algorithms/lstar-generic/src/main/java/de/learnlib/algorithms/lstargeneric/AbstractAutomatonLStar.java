@@ -156,6 +156,7 @@ public abstract class AbstractAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableD
 		internalHyp.setTransition(from, input, to, prop);
 	}
 	
+	@Override
 	public A getHypothesisModel() {
 		updateInternalHypothesis();
 		return exposeInternalHypothesis();

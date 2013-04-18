@@ -59,7 +59,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <I> input symbol class
  * @param <O> output class
  */
-public class ObservationTable<I,O> implements AccessSequenceTransformer<I> {
+public final class ObservationTable<I,O> implements AccessSequenceTransformer<I> {
 	
 	
 	private final Alphabet<I> alphabet;
@@ -358,8 +358,15 @@ public class ObservationTable<I,O> implements AccessSequenceTransformer<I> {
 		if(row.isShortPrefix())
 			return false;
 		
-		// TODO: Use DynamicList for O(1) removal/insertion
-		longPrefixRows.remove(row);
+		int lastIdx = longPrefixRows.size() - 1;
+		Row<I> last = longPrefixRows.get(lastIdx);
+		int rowIdx = row.getLpIndex();
+		longPrefixRows.remove(lastIdx);
+		if(last != row) {
+			longPrefixRows.set(rowIdx, last);
+			last.setLpIndex(rowIdx);
+		}
+		
 		shortPrefixRows.add(row);
 		row.makeShort(alphabet.size());
 		
@@ -375,7 +382,9 @@ public class ObservationTable<I,O> implements AccessSequenceTransformer<I> {
 		Row<I> newRow = new Row<I>(prefix, numRows++);
 		allRows.add(newRow);
 		rowMap.put(prefix, newRow);
+		int idx = longPrefixRows.size();
 		longPrefixRows.add(newRow);
+		newRow.setLpIndex(idx);
 		return newRow;
 	}
 	
@@ -464,7 +473,7 @@ public class ObservationTable<I,O> implements AccessSequenceTransformer<I> {
 	
 	protected static <I,O>
 	void fetchResults(Iterator<DefaultQuery<I,O>> queryIt, List<O> output, int numSuffixes) {
-		for(int j = 0; j  < numSuffixes; j++) {
+		for(int j = 0; j < numSuffixes; j++) {
 			DefaultQuery<I,O> qry = queryIt.next();
 			output.add(qry.getOutput());
 		}

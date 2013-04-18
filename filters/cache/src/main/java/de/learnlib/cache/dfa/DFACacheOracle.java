@@ -52,6 +52,10 @@ public class DFACacheOracle<I> implements MembershipOracle<I, Boolean> {
 		this.delegate = delegate;
 	}
 	
+	public int getCacheSize() {
+		return incDfa.size();
+	}
+	
 	/**
 	 * Creates an equivalence oracle that checks an hypothesis for consistency with the
 	 * contents of this cache. Note that the returned oracle is backed by the cache data structure,

@@ -78,7 +78,7 @@ public class ExampleRandomlyGenerated {
 		}
 		
 		// minimize automaton
-		fm = Automata.minimize(fm, fm.getInputAlphabet(), new FastMealy<Symbol,Symbol>(fm.getInputAlphabet()));
+		return Automata.invasiveMinimize(fm, fm.getInputAlphabet());
 //		MinimizationResult result = Minimizer.minimize(fm);
 //		for(Object o : result.getBlocks()) {
 //			Block b = (Block) o;
@@ -90,8 +90,6 @@ public class ExampleRandomlyGenerated {
 //				}
 //			}
 //		}
-		
-		return fm;
 	}
 	
 	

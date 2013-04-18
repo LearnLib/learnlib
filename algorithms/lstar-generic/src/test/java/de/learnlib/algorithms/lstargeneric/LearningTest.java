@@ -34,7 +34,7 @@ public class LearningTest {
 	
 	@SuppressWarnings("unchecked")
 	public static ClosingStrategy<Object,Object>[] CLOSING_STRATEGIES
-		= (ClosingStrategy<Object,Object>[])new ClosingStrategy[]{
+		= new ClosingStrategy[]{
 		ClosingStrategies.CLOSE_FIRST,
 		ClosingStrategies.CLOSE_SHORTEST,
 		ClosingStrategies.CLOSE_LEX_MIN,
@@ -43,7 +43,7 @@ public class LearningTest {
 	
 	@SuppressWarnings("unchecked")
 	public static ObservationTableCEXHandler<Object,Object>[] CEX_HANDLERS
-		= (ObservationTableCEXHandler<Object,Object>[])new ObservationTableCEXHandler[]{
+		= new ObservationTableCEXHandler[]{
 		ObservationTableCEXHandlers.CLASSIC_LSTAR,
 		ObservationTableCEXHandlers.SUFFIX1BY1,
 		ObservationTableCEXHandlers.MAHLER_PNUELI,

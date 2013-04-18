@@ -93,6 +93,10 @@ public class MealyCacheOracle<I, O> implements MembershipOracle<I, Word<O>> {
 		this.errorSyms = errorSyms;
 	}
 	
+	public int getCacheSize() {
+		return incMealy.size();
+	}
+	
 	/**
 	 * Creates an equivalence oracle that checks an hypothesis for consistency with the
 	 * contents of this cache. Note that the returned oracle is backed by the cache data structure,

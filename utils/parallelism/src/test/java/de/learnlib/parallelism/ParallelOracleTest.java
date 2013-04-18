@@ -134,7 +134,7 @@ public class ParallelOracleTest {
 		po.stop();
 	}
 	
-	private Analysis analyze(Collection<DefaultQuery<Integer,TestOutput>> queries) {
+	private static Analysis analyze(Collection<DefaultQuery<Integer,TestOutput>> queries) {
 		List<Integer> oracles = new ArrayList<>();
 		Map<Integer,List<Integer>> seqIds = new HashMap<>();
 		Map<Integer,Integer> incorrectAnswers = new HashMap<>();
@@ -174,7 +174,7 @@ public class ParallelOracleTest {
 		return new Analysis(oracles, seqIds, incorrectAnswers, minBatchSize, maxBatchSize);
 	}
 	
-	private void sanityCheck(Analysis analysis) {
+	private static void sanityCheck(Analysis analysis) {
 		for(Integer oracleId : analysis.involvedOracles) {
 			List<Integer> seqIds = analysis.sequenceIds.get(oracleId);
 			Assert.assertNotNull(seqIds);
@@ -194,7 +194,7 @@ public class ParallelOracleTest {
 		Assert.assertTrue(analysis.involvedOracles.size() <= 1 || analysis.minBatchSize >= MIN_BATCH_SIZE);
 	}
 	
-	private Word<Integer> createWord() {
+	private static Word<Integer> createWord() {
 		int length = random.nextInt(MAX_WORD_LEN);
 		Integer[] ints = new Integer[length];
 		for(int i = 0; i < ints.length; i++)
@@ -202,7 +202,7 @@ public class ParallelOracleTest {
 		return Word.fromSymbols(ints);
 	}
 	
-	private List<DefaultQuery<Integer,TestOutput>> createQueries(int num) {
+	private static List<DefaultQuery<Integer,TestOutput>> createQueries(int num) {
 		List<DefaultQuery<Integer,TestOutput>> result = new ArrayList<>(num);
 		for(int i = 0; i < num; i++) {
 			DefaultQuery<Integer,TestOutput> qry = new DefaultQuery<>(createWord(), createWord());

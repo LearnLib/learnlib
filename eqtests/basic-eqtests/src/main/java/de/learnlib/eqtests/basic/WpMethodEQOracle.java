@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
@@ -100,7 +100,7 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 					DefaultQuery<I,O> query = new DefaultQuery<>(queryWord);
 					O hypOutput = output.computeOutput(queryWord);
 					sulOracle.processQueries(Collections.singleton(query));
-					if(!CmpUtil.equals(hypOutput, query.getOutput()))
+					if(!Objects.equals(hypOutput, query.getOutput()))
 						return query;
 				}
 			}
@@ -108,7 +108,7 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 
 		// Phase 2: transitions (not in state cover) * middle part * local suffixes
 		MutableMapping<S,List<Word<I>>> localSuffixSets
-			= Automata.createFixedStateMapping(hypothesis);
+			= hypothesis.createStaticStateMapping();
 		
 		for(List<? extends I> middle : CollectionsUtil.allTuples(inputs, 1, maxDepth)) {
 			for(Word<I> trans : transitions) {
@@ -128,7 +128,7 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 					DefaultQuery<I,O> query = new DefaultQuery<>(queryWord);
 					O hypOutput = output.computeOutput(queryWord);
 					sulOracle.processQueries(Collections.singleton(query));
-					if(!CmpUtil.equals(hypOutput, query.getOutput()))
+					if(!Objects.equals(hypOutput, query.getOutput()))
 						return query;
 				}
 			}

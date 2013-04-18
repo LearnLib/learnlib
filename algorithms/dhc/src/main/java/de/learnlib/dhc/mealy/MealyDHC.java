@@ -198,7 +198,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 	@Override
 	public MealyMachine<?, I, ?, O> getHypothesisModel() {
 		checkInternalState();
-		return (MealyMachine<?, I, ?, O>) hypothesis;
+		return hypothesis;
 	}
 	
 	@Override

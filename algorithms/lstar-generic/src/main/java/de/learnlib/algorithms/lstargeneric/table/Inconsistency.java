@@ -28,7 +28,7 @@ package de.learnlib.algorithms.lstargeneric.table;
  * @param <I> input symbol class
  * @param <O> output class
  */
-public class Inconsistency<I, O> {
+public final class Inconsistency<I, O> {
 	private final Row<I> firstRow;
 	private final Row<I> secondRow;
 	private final int inputIndex;

@@ -17,12 +17,12 @@
 package de.learnlib.eqtests.basic.mealy;
 
 import java.util.Collection;
+import java.util.Objects;
 
+import net.automatalib.automata.concepts.SODetOutputAutomaton;
+import net.automatalib.words.Word;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.oracles.DefaultQuery;
-import net.automatalib.automata.concepts.SODetOutputAutomaton;
-import net.automatalib.commons.util.comparison.CmpUtil;
-import net.automatalib.words.Word;
 
 public class SymbolEQOracleWrapper<A extends SODetOutputAutomaton<?,I,?,Word<O>>, I, O> implements
 		EquivalenceOracle<A, I, O> {
@@ -56,7 +56,7 @@ public class SymbolEQOracleWrapper<A extends SODetOutputAutomaton<?,I,?,Word<O>>
 		for(int i = 0; i < len; i++) {
 			O hypSym = hypOut.getSymbol(i), ceSym = ceOut.getSymbol(i);
 			
-			if(!CmpUtil.equals(hypSym, ceSym)) {
+			if(!Objects.equals(hypSym, ceSym)) {
 				DefaultQuery<I,O> result = new DefaultQuery<I,O>(wordCeQry.getPrefix(),
 						wordCeQry.getSuffix().prefix(i+1));
 				result.answer(ceSym);
