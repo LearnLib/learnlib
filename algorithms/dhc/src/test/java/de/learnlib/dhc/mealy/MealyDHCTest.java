@@ -22,6 +22,7 @@ import java.util.Random;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
+import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.FastAlphabet;
@@ -34,7 +35,6 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.cache.mealy.MealyCacheOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine;
-import de.learnlib.examples.mealy.ExampleRandomlyGenerated;
 import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SimulatorOracle;
@@ -155,7 +155,7 @@ public class MealyDHCTest {
 				new Symbol("o3"));
 		
 
-		FastMealy<Symbol, Symbol> fm = ExampleRandomlyGenerated.constructMachine(inputs, outputs, new Random(1337), 100);
+		FastMealy<Symbol, Symbol> fm = RandomAutomata.randomDeterministic(new Random(1337), 100, inputs, null, outputs, new FastMealy<Symbol,Symbol>(inputs));
 		Alphabet<Symbol> alphabet = fm.getInputAlphabet();
 		
 		
