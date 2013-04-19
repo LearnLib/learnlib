@@ -38,9 +38,9 @@ public class ObservationTable<S> {
 
 	private LinkedHashSet<Word<S>> states;     // S
 	private LinkedHashSet<Word<S>> candidates; // SA
-	private List<Word<S>> suffixes;   // E
+	private List<Word<S>> suffixes;            // E
 
-	private Map<Word<S>, Boolean> results;
+	private Map<Word<S>, ObservationTableRow> rows;
 
 	public ObservationTable() {
 		Word<S> emptyWord = Word.epsilon();
@@ -53,7 +53,7 @@ public class ObservationTable<S> {
 		suffixes = new ArrayList<>();
 		suffixes.add(emptyWord);
 
-		results = new HashMap<>();
+		rows = new HashMap<>();
 	}
 
 	/**
@@ -98,13 +98,33 @@ public class ObservationTable<S> {
 			throw new IllegalStateException("Suffix " + suffix + " is not part of the suffixes set");
 		}
 
-		Word<S> word = prefix.concat(suffix);
-		if (results.containsKey(word) && results.get(word) != result) {
-			throw new IllegalStateException(
-					"New result " + results.get(word) + " differs from old result " + result);
+		final int suffixPosition = suffixes.indexOf(suffix);
+
+		if (rows.containsKey(prefix)) {
+			addResultToRow(result, suffixPosition, rows.get(prefix));
 		}
 		else {
-			results.put(word, result);
+			if (suffixPosition > 0) {
+				throw new IllegalStateException("Unable to set position " + suffixPosition + " for an empty row.");
+			}
+
+			ObservationTableRow row = new ObservationTableRow();
+			row.getValues().add(result);
+
+			rows.put(prefix, row);
+		}
+	}
+
+	private void addResultToRow(boolean result, int suffixPosition, ObservationTableRow row) {
+		final List<Boolean> values = row.getValues();
+		if (values.size() > suffixPosition) {
+			if (values.get(suffixPosition) != result) {
+				throw new IllegalStateException(
+						"New result " + values.get(suffixPosition) + " differs from old result " + result);
+			}
+		}
+		else {
+			values.add(result);
 		}
 	}
 
@@ -211,13 +231,7 @@ public class ObservationTable<S> {
 	}
 
 	ObservationTableRow getRowForPrefix(Word<S> state) {
-		ObservationTableRow row = new ObservationTableRow();
-
-		for (Word<S> suffix : suffixes) {
-			row.addValue(results.get(state.concat(suffix)));
-		}
-
-		return row;
+		return rows.get(state);
 	}
 
 	/**
@@ -245,7 +259,9 @@ public class ObservationTable<S> {
 				dfaState = automaton.addState();
 			}
 
-			dfaState.setAccepting(results.get(state));
+			Word<S> emptyWord = Word.epsilon();
+			int positionOfEmptyWord = suffixes.indexOf(emptyWord);
+			dfaState.setAccepting(rows.get(state).getValues().get(positionOfEmptyWord));
 			dfaStates.put(getRowForPrefix(state), dfaState);
 		}
 
