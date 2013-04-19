@@ -32,7 +32,7 @@ import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.mealy.SymbolOracleWrapper;
+import de.learnlib.mealy.MealyUtil;
 
 /**
  * An implementation of the L*Mealy algorithm for inferring Mealy machines, as described
@@ -65,7 +65,7 @@ public class ClassicLStarMealy<I, O> extends
 			List<Word<I>> initialSuffixes,
 			ObservationTableCEXHandler<? super I, ? super O> cexHandler,
 			ClosingStrategy<? super I,? super O> closingStrategy) {
-		return new ClassicLStarMealy<>(alphabet, new SymbolOracleWrapper<>(oracle),
+		return new ClassicLStarMealy<>(alphabet, MealyUtil.wrapWordOracle(oracle),
 				initialSuffixes,
 				cexHandler,
 				closingStrategy);

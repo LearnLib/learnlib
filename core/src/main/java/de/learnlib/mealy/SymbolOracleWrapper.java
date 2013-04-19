@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.oracles.mealy;
+package de.learnlib.mealy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +36,7 @@ import de.learnlib.api.Query;
  * @param <I> input symbol class
  * @param <O> output symbol class
  */
-public class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
+final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 	
 	private static final class LastSymbolQuery<I,O> extends Query<I,Word<O>> {
 		

@@ -37,8 +37,8 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.eqtests.basic.mealy.SymbolEQOracleWrapper;
 import de.learnlib.examples.mealy.ExampleStack;
+import de.learnlib.mealy.MealyUtil;
 import de.learnlib.oracles.SimulatorOracle;
-import de.learnlib.oracles.mealy.SymbolOracleWrapper;
 
 public class LStarMealyTest extends LearningTest {
 
@@ -65,7 +65,7 @@ public class LStarMealyTest extends LearningTest {
 				= ClassicLStarMealy.createForWordOracle(alphabet, oracle, initSuffixes,
 						handler, strategy);
 				
-				testLearnModel(mealy, alphabet, learner, new SymbolOracleWrapper<>(oracle), mealySymEqOracle);
+				testLearnModel(mealy, alphabet, learner, MealyUtil.wrapWordOracle(oracle), mealySymEqOracle);
 			}
 		}
 	}

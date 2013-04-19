@@ -47,6 +47,11 @@ public class DefaultQuery<I, O> extends Query<I,O> {
         this.suffix = suffix;
     }
     
+    public DefaultQuery(Word<I> prefix, Word<I> suffix, O output) {
+    	this(prefix, suffix);
+    	this.output = output;
+    }
+    
     public DefaultQuery(Word<I> input) {
     	this(Word.<I>epsilon(), input);
     }
