@@ -177,11 +177,18 @@ public class ObservationTable<S> {
 	}
 
 	InconsistencyDataHolder<S> findInconsistentSymbol(Alphabet<S> alphabet) {
+		List<Word<S>> allStates = new ArrayList<>(states);
+
 		for (S symbol : alphabet) {
-			for (Word<S> firstState : states) {
-				for (Word<S> secondState : states) {
+			for (int firstStateCounter = 0; firstStateCounter < states.size(); firstStateCounter++) {
+				Word<S> firstState = allStates.get(firstStateCounter);
+
+				for (int secondStateCounter = firstStateCounter + 1; secondStateCounter < states.size();
+				     secondStateCounter++) {
+					Word<S> secondState = allStates.get(secondStateCounter);
+
 					if (firstState.equals(secondState)) {
-						continue;
+						throw new IllegalStateException();
 					}
 
 					if (checkInconsistency(firstState, secondState, symbol)) {
