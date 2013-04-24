@@ -118,6 +118,7 @@ public class Shell {
                 } else {
                     logger.log(Level.SEVERE, "unknown command: {0}", cmd);
                 }
+                continue;
             }
             
             String output;

@@ -36,6 +36,8 @@ public class LearnLogger extends Logger {
     private LearnLogger(String name) {
         super(name,null);
     }
+    
+    
                     
     /**
      * get an instance of a logger for name. assumes that there is 
@@ -55,13 +57,27 @@ public class LearnLogger extends Logger {
     }
     
     /**
+     * Convenience method for easing the common practice of using a class name as
+     * the name for the logger. Calling this method is equivalent to
+     * <pre>
+     * LearnLogger.getLogger(clazz.getName())
+     * </pre>
+     * @param clazz the class from which to retrieve the name
+     * @return the logger for the given class name
+     */
+    public static LearnLogger getLogger(Class<?> clazz) {
+    	return getLogger(clazz.getName());
+    }
+    
+    /**
      * remove all handlers of root logger and add a console hander with
      * LLConsoleFormatter instead.
      * 
-     * The use of this method is discouraged as it interferes with 
+     * @deprecated The use of this method is discouraged as it interferes with 
      * (proper) file-based or class-based configuration of logging. 
      * 
      */
+    @Deprecated
     public static void defaultSetup() {
         ConsoleHandler handler = new ConsoleHandler();
         handler.setFormatter(new LLConsoleFormatter());

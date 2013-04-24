@@ -87,8 +87,8 @@ public class SimpleProfiler {
   public static String getResults() {
     StringBuilder sb = new StringBuilder();
     for (Entry<String, Counter> e : cumulated.entrySet()) {
-        sb.append(e.getValue().getSummary()).append(", (").append(e.getValue().getCount()/1000).
-                append(" s)").append(System.getProperty("line.separator"));
+        sb.append(e.getValue().getSummary()).append(", (").append(e.getValue().getCount()/1000.0).
+                append(" s)").append(System.lineSeparator());
     }
     return sb.toString();
   }

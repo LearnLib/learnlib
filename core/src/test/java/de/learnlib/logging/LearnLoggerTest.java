@@ -61,6 +61,7 @@ public class LearnLoggerTest {
      * Test of logPhase method, of class LearnLogger.
      */
     @Test
+    @SuppressWarnings("deprecation")
     public void testLogPhase() {
         System.out.println("logPhase");
         LearnLogger.defaultSetup();
@@ -77,6 +78,7 @@ public class LearnLoggerTest {
      * Test of logQuery method, of class LearnLogger.
      */
     @Test
+    @SuppressWarnings("deprecation")
     public void testLogQuery() {
         System.out.println("logQuery");
         LearnLogger.defaultSetup();

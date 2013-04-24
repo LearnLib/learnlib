@@ -69,7 +69,6 @@ public class MealyDHCTest {
 
 	@Test
 	public void testMealyDHCStack() {
-
 		FastMealy<Symbol, String> fm = ExampleStack.constructMachine();
 		Alphabet<Symbol> alphabet = fm.getInputAlphabet();
 

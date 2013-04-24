@@ -170,7 +170,7 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 		
 		thisThreadOracle.processQueries(Arrays.asList(batch));
 		
-		if(externalBatches > 0) {
+		if(finishSignal != null) {
 			try {
 				finishSignal.await();
 			} catch (InterruptedException e) {

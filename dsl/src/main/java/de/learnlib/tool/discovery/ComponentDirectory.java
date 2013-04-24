@@ -59,7 +59,7 @@ public class ComponentDirectory {
             this.instantiator = factory.getClass().getMethod("instantiate");
             for (Method m : factory.getClass().getDeclaredMethods()) {
                 if (m.isAnnotationPresent(LLComponentParameter.class)) {
-                    LLComponentParameter cp = (LLComponentParameter) m.getAnnotation(LLComponentParameter.class);
+                    LLComponentParameter cp = m.getAnnotation(LLComponentParameter.class);
                     this.parameters.put(cp, m);
                 }
             }
@@ -87,7 +87,7 @@ public class ComponentDirectory {
             }
             
             LLComponentFactory<?> factory = (LLComponentFactory<?>) instance;
-            LLComponent llComponent = (LLComponent) clazz.getAnnotation(LLComponent.class);
+            LLComponent llComponent = clazz.getAnnotation(LLComponent.class);
             if (this.components.containsKey(llComponent.name())) {
                 logger.log(Level.SEVERE, "Name {0} is already in use", 
                         llComponent.name());
