@@ -16,6 +16,7 @@
  */
 package de.learnlib.algorithms.angluin;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,8 +36,12 @@ class ObservationTableRow {
 		rowData.add(value);
 	}
 
+	void clear() {
+		rowData.clear();
+	}
+
 	List<Boolean> getValues() {
-		return rowData;
+		return Collections.unmodifiableList(rowData);
 	}
 
 	@Override

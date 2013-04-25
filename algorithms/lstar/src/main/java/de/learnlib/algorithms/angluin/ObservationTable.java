@@ -109,7 +109,7 @@ public class ObservationTable<S> {
 			}
 
 			ObservationTableRow row = new ObservationTableRow();
-			row.getValues().add(result);
+			row.addValue(result);
 
 			rows.put(prefix, row);
 		}
@@ -124,7 +124,7 @@ public class ObservationTable<S> {
 			}
 		}
 		else {
-			values.add(result);
+			row.addValue(result);
 		}
 	}
 
@@ -186,10 +186,6 @@ public class ObservationTable<S> {
 				for (int secondStateCounter = firstStateCounter + 1; secondStateCounter < states.size();
 				     secondStateCounter++) {
 					Word<S> secondState = allStates.get(secondStateCounter);
-
-					if (firstState.equals(secondState)) {
-						throw new IllegalStateException();
-					}
 
 					if (checkInconsistency(firstState, secondState, symbol)) {
 						return new InconsistencyDataHolder<>(firstState, secondState, symbol);

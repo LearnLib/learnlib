@@ -33,16 +33,16 @@ public class ObservationTableRowTest {
 		Assert.assertEquals(first, second);
 
 
-		first.getValues().add(true);
+		first.addValue(true);
 
 		Assert.assertNotEquals(first, second);
 
-		second.getValues().add(false);
+		second.addValue(false);
 
 		Assert.assertNotEquals(first, second);
 
-		second.getValues().clear();
-		second.getValues().add(true);
+		second.clear();
+		second.addValue(true);
 
 		Assert.assertEquals(first, second);
 	}
