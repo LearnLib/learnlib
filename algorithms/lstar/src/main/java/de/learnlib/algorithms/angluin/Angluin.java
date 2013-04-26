@@ -126,12 +126,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 	private void removeStatesFromCandidates() {
 		LinkedHashSet<Word<S>> states = observationTable.getStates();
 		LinkedHashSet<Word<S>> candidates = observationTable.getCandidates();
-
-		for (Word<S> state : states) {
-			if (candidates.contains(state)) {
-				candidates.remove(state);
-			}
-		}
+		candidates.removeAll(states);
 	}
 
 	private LinkedHashSet<Word<S>> getNewCandidatesFromPrefixes(LinkedHashSet<Word<S>> prefixes) {
