@@ -243,24 +243,16 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 		List<DefaultQuery<S, Boolean>> queries = new ArrayList<>(states.size());
 		for (Word<S> state : states) {
 			for (Word<S> suffix : suffixes) {
-				Word<S> combinedWord = state.concat(suffix);
-				queries.add(new DefaultQuery<S, Boolean>(combinedWord));
+				queries.add(new DefaultQuery<S, Boolean>(state, suffix));
 			}
 		}
 
 		oracle.processQueries(queries);
 
-		Map<Word<S>, Boolean> results = new HashMap<>((int) (1.5 * queries.size()));
-
 		for (DefaultQuery<S, Boolean> query : queries) {
-			results.put(query.getInput(), query.getOutput());
-		}
-
-		for (Word<S> suffix : suffixes) {
-			for (Word<S> state : states) {
-				Word<S> combinedWord = state.concat(suffix);
-				observationTable.addResult(state, suffix, results.get(combinedWord));
-			}
+			Word<S> state = query.getPrefix();
+			Word<S> suffix = query.getSuffix();
+			observationTable.addResult(state, suffix, query.getOutput());
 		}
 	}
 
