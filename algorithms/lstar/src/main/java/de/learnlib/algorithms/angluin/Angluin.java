@@ -19,10 +19,8 @@ package de.learnlib.algorithms.angluin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import net.automatalib.automata.fsa.DFA;
@@ -126,12 +124,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 	private void removeStatesFromCandidates() {
 		LinkedHashSet<Word<S>> states = observationTable.getStates();
 		LinkedHashSet<Word<S>> candidates = observationTable.getCandidates();
-
-		for (Word<S> state : states) {
-			if (candidates.contains(state)) {
-				candidates.remove(state);
-			}
-		}
+		candidates.removeAll(states);
 	}
 
 	private LinkedHashSet<Word<S>> getNewCandidatesFromPrefixes(LinkedHashSet<Word<S>> prefixes) {
@@ -248,27 +241,12 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 		List<DefaultQuery<S, Boolean>> queries = new ArrayList<>(states.size());
 		for (Word<S> state : states) {
 			for (Word<S> suffix : suffixes) {
-				//Word<S> combinedWord = state.concat(suffix);
 				queries.add(new DefaultQuery<S, Boolean>(state, suffix));
 			}
 		}
 
 		oracle.processQueries(queries);
 
-		/*
-		Map<Word<S>, Boolean> results = new HashMap<>((int) (1.5 * queries.size()));
-
-		for (DefaultQuery<S, Boolean> query : queries) {
-			results.put(query.getInput(), query.getOutput());
-		}
-
-		for (Word<S> suffix : suffixes) {
-			for (Word<S> state : states) {
-				Word<S> combinedWord = state.concat(suffix);
-				observationTable.addResult(state, suffix, results.get(combinedWord));
-			}
-		}
-		*/
 		
 		for(DefaultQuery<S,Boolean> query : queries) {
 			Word<S> state = query.getPrefix();

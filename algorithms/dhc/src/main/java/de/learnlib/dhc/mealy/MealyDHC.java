@@ -37,6 +37,7 @@ import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.counterexamples.GlobalSuffixFinder;
 import de.learnlib.counterexamples.GlobalSuffixFinders;
+import de.learnlib.dhc.Deduplicator;
 import de.learnlib.oracles.DefaultQuery;
 
 /**
@@ -102,6 +103,8 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 		// first element to be explored represents the initial state with no predecessor
 		queue.add(new QueueElement(null, null, null, null));
 
+		Deduplicator<Word<O>> wordDeduplicator = new Deduplicator<>();
+		
 		while (!queue.isEmpty()) {
 			// get element to be explored from queue
 			QueueElement elem = queue.poll();
@@ -121,7 +124,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 			// assemble output signature
 			List<Word<O>> sig = new ArrayList<>(effectivealpha.size());
 			for (DefaultQuery<I, Word<O>> query : queries) {
-				sig.add(query.getOutput());
+				sig.add(wordDeduplicator.deduplicate(query.getOutput()));
 			}
 
 			FastMealyState<O> sibling = signatures.get(sig);
