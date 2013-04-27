@@ -471,6 +471,13 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 			queryList.add(new DefaultQuery<I,O>(prefix, suffix));
 	}
 	
+	/**
+	 * Fetches the given number of query responses and adds them to the specified output list.
+	 * Also, the query iterator is advanced accordingly.
+	 * @param queryIt the query iterator
+	 * @param output the output list to write to
+	 * @param numSuffixes the number of suffixes (queries)
+	 */
 	protected static <I,O>
 	void fetchResults(Iterator<DefaultQuery<I,O>> queryIt, List<O> output, int numSuffixes) {
 		for(int j = 0; j < numSuffixes; j++) {
@@ -479,14 +486,26 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		}
 	}
 
+	/**
+	 * Checks whether this observation table has been initialized yet (i.e., contains any rows).
+	 * @return <tt>true</tt> iff the table has been initialized
+	 */
 	public boolean isInitialized() {
 		return (allRows.size() > 0);
 	}
 
+	/**
+	 * Retrieves the input alphabet used in this observation table.
+	 * @return the input alphabet
+	 */
 	public Alphabet<I> getInputAlphabet() {
 		return alphabet;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.AccessSequenceTransformer#transformAccessSequence(net.automatalib.words.Word)
+	 */
 	@Override
 	public Word<I> transformAccessSequence(Word<I> word) {
 		Row<I> current = shortPrefixRows.get(0);
@@ -500,6 +519,10 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		return current.getPrefix();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.AccessSequenceTransformer#isAccessSequence(net.automatalib.words.Word)
+	 */
 	@Override
 	public boolean isAccessSequence(Word<I> word) {
 		Row<I> current = shortPrefixRows.get(0);
@@ -512,6 +535,4 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		
 		return true;
 	}
-
-
 }
