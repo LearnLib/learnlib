@@ -27,8 +27,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.automata.transout.impl.FastMealyState;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.SimpleAlphabet;
@@ -52,22 +52,24 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 	private Alphabet<I> alphabet;
 	private MembershipOracle<I, Word<O>> oracle;
 	private SimpleAlphabet<Word<I>> splitters = new SimpleAlphabet<>();
-	private FastMealy<I, O> hypothesis;
-	private Map<FastMealyState<O>, QueueElement> accessSequences;
+	private CompactMealy<I, O> hypothesis;
+	private MutableMapping<Integer, QueueElement<I,O>> accessSequences;
 	private GlobalSuffixFinder<? super I,? super Word<O>> suffixFinder;
 
 
-	private class QueueElement {
-		private FastMealyState<O> parentState;
-		private QueueElement parentElement;
+	private static class QueueElement<I,O> {
+		private Integer parentState;
+		private QueueElement<I,O> parentElement;
 		private I transIn;
 		private O transOut;
+		private int depth;
 
-		private QueueElement(FastMealyState<O> parentState, QueueElement parentElement, I transIn, O transOut) {
+		private QueueElement(Integer parentState, QueueElement<I,O> parentElement, I transIn, O transOut) {
 			this.parentState = parentState;
 			this.parentElement = parentElement;
 			this.transIn = transIn;
 			this.transOut = transOut;
+			this.depth = (parentElement != null) ? parentElement.depth+1 : 0;
 		}
 	}
 
@@ -82,32 +84,32 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 
 		// the effective alphabet is the concatenation of the real alphabet
 		// wrapped in Words and the list of splitters
-		SimpleAlphabet<Word<I>> effectivealpha = new SimpleAlphabet<>();
+		List<Word<I>> effectivealpha = new ArrayList<>();
 		for (I input : alphabet) {
 			effectivealpha.add(Word.fromLetter(input));
 		}
 		effectivealpha.addAll(splitters);
 
 		// initialize structure to store state output signatures
-		Map<List<Word<O>>, FastMealyState<O>> signatures = new HashMap<>();
+		Map<List<Word<O>>, Integer> signatures = new HashMap<>();
 
 		// set up new hypothesis machine
-		hypothesis = new FastMealy<>(alphabet);
+		hypothesis = new CompactMealy<>(alphabet);
 
 		// initialize exploration queue
-		Queue<QueueElement> queue = new LinkedList<>();
+		Queue<QueueElement<I,O>> queue = new LinkedList<>();
 		
 		// initialize storage for access sequences
-		accessSequences = new HashMap<>();
+		accessSequences = hypothesis.createDynamicStateMapping();
 
 		// first element to be explored represents the initial state with no predecessor
-		queue.add(new QueueElement(null, null, null, null));
+		queue.add(new QueueElement<I,O>(null, null, null, null));
 
-		Deduplicator<Word<O>> wordDeduplicator = new Deduplicator<>();
+		Deduplicator<Word<O>> deduplicator = new Deduplicator<>();
 		
 		while (!queue.isEmpty()) {
 			// get element to be explored from queue
-			QueueElement elem = queue.poll();
+			QueueElement<I,O> elem = queue.poll();
 
 			// determine access sequence for state
 			Word<I> access = assembleAccessSequence(elem);
@@ -124,10 +126,10 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 			// assemble output signature
 			List<Word<O>> sig = new ArrayList<>(effectivealpha.size());
 			for (DefaultQuery<I, Word<O>> query : queries) {
-				sig.add(wordDeduplicator.deduplicate(query.getOutput()));
+				sig.add(deduplicator.deduplicate(query.getOutput()));
 			}
 
-			FastMealyState<O> sibling = signatures.get(sig);
+			Integer sibling = signatures.get(sig);
 
 			if (sibling != null) {
 				// this element does not possess a new output signature
@@ -136,7 +138,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 			} else {
 				// this is actually an observably distinct state! Progress!
 				// Create state and connect via transition to parent
-				FastMealyState<O> state = elem.parentElement == null ? hypothesis.addInitialState() : hypothesis.addState();
+				Integer state = elem.parentElement == null ? hypothesis.addInitialState() : hypothesis.addState();
 				if (elem.parentElement != null) {
 					hypothesis.addTransition(elem.parentState, elem.transIn, state, elem.transOut);
 				}
@@ -148,29 +150,29 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 		}
 	}
 
-	private Word<I> assembleAccessSequence(QueueElement elem) {
-		List<I> sequence = new ArrayList<>();
-
-		QueueElement pre = elem.parentElement;
+	private Word<I> assembleAccessSequence(QueueElement<I,O> elem) {
+		List<I> word = new ArrayList<I>(elem.depth);
+		
+		QueueElement<I,O> pre = elem.parentElement;
 		I sym = elem.transIn;
-		while (pre != null && sym != null) {
-			sequence.add(sym);
+		while(pre != null && sym != null) {
+			word.add(sym);
 			sym = pre.transIn;
 			pre = pre.parentElement;
 		}
-
-		Collections.reverse(sequence);
-		return Word.fromList(sequence);
+		
+		Collections.reverse(word);
+		return Word.fromList(word);
 	}
 
-	private void scheduleSuccessors(QueueElement elem, FastMealyState<O> state, Queue<QueueElement> queue, List<Word<O>> sig) throws IllegalArgumentException {
+	private void scheduleSuccessors(QueueElement<I,O> elem, Integer state, Queue<QueueElement<I,O>> queue, List<Word<O>> sig) throws IllegalArgumentException {
 		for (int i = 0; i < alphabet.size(); ++i) {
 			// retrieve I/O for transition
 			I input = alphabet.getSymbol(i);
 			O output = sig.get(i).getSymbol(0);
 
 			// create successor element and schedule for exploration
-			queue.add(new QueueElement(state, elem, input, output));
+			queue.add(new QueueElement<>(state, elem, input, output));
 		}
 	}
 	
@@ -207,7 +209,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 	@Override
 	public Word<I> transformAccessSequence(Word<I> word) {
 		checkInternalState();
-		FastMealyState<O> state = hypothesis.getSuccessor(hypothesis.getInitialState(), word);
+		Integer state = hypothesis.getSuccessor(hypothesis.getInitialState(), word);
 		return assembleAccessSequence(accessSequences.get(state));
 	}
 

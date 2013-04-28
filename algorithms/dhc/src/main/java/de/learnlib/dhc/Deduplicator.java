@@ -17,8 +17,8 @@
 
 package de.learnlib.dhc;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A utility class that deduplicates Objects regarding their equals
@@ -28,7 +28,8 @@ import java.util.List;
  */
 public class Deduplicator<C> {
 	
-	private List<C> cache = new ArrayList<>();
+	//private List<C> cache = new ArrayList<>();
+	private final Map<C,C> cache = new HashMap<>();
 	
 	/**
 	 * Find an equal representative object for the provided object.
@@ -36,13 +37,19 @@ public class Deduplicator<C> {
 	 * @return equal representative object or input object
 	 */
 	public C deduplicate(C instance) {
-		int idx = cache.indexOf(instance);
+		C cached = cache.get(instance);
+		if(cached != null)
+			return cached;
+		cache.put(instance, instance);
+		return instance;
+		/*int idx = cache.indexOf(instance);
 		if(idx == -1) {
 			cache.add(instance);
 			return instance;
 		} else {
 			return cache.get(idx);
 		}
+		*/
 	}
 	
 	
