@@ -28,7 +28,6 @@ import java.util.Map;
  */
 public class Deduplicator<C> {
 	
-	//private List<C> cache = new ArrayList<>();
 	private final Map<C,C> cache = new HashMap<>();
 	
 	/**
@@ -42,14 +41,6 @@ public class Deduplicator<C> {
 			return cached;
 		cache.put(instance, instance);
 		return instance;
-		/*int idx = cache.indexOf(instance);
-		if(idx == -1) {
-			cache.add(instance);
-			return instance;
-		} else {
-			return cache.get(idx);
-		}
-		*/
 	}
 	
 	
