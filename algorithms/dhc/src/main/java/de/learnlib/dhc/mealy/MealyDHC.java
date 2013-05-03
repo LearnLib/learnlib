@@ -151,7 +151,7 @@ public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O
 	}
 
 	private Word<I> assembleAccessSequence(QueueElement<I,O> elem) {
-		List<I> word = new ArrayList<I>(elem.depth);
+		List<I> word = new ArrayList<>(elem.depth);
 		
 		QueueElement<I,O> pre = elem.parentElement;
 		I sym = elem.transIn;
