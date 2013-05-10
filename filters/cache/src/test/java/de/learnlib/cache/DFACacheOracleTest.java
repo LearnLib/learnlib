@@ -16,8 +16,8 @@
  */
 package de.learnlib.cache;
 
-import static de.learnlib.examples.dfa.ExampleAngluin.in_0;
-import static de.learnlib.examples.dfa.ExampleAngluin.in_1;
+import static de.learnlib.examples.dfa.ExampleAngluin.IN_0;
+import static de.learnlib.examples.dfa.ExampleAngluin.IN_1;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -81,7 +81,7 @@ public class DFACacheOracleTest {
 
 	@Test(dependsOnMethods = { "testNoQueriesReceived" })
 	public void testFirstQuery() {
-		queries.add(new DefaultQuery<Symbol, Boolean>(Word.fromSymbols(in_0)));
+		queries.add(new DefaultQuery<Symbol, Boolean>(Word.fromSymbols(IN_0)));
 
 		Assert.assertTrue(queries.size() == 1);
 		oracle.processQueries(queries);
@@ -97,8 +97,8 @@ public class DFACacheOracleTest {
 
 	@Test(dependsOnMethods = { "testFirstDuplicate" })
 	public void testTwoQueriesOneDuplicate() {
-		queries.add(new DefaultQuery<Symbol, Boolean>(Word.fromSymbols(in_0,
-				in_0)));
+		queries.add(new DefaultQuery<Symbol, Boolean>(Word.fromSymbols(IN_0,
+				IN_0)));
 		Assert.assertTrue(queries.size() == 2);
 		oracle.processQueries(queries);
 		Assert.assertTrue(counterOracle.getCounter().getCount() == 2);
@@ -109,7 +109,7 @@ public class DFACacheOracleTest {
 		queries.clear();
 
 		Assert.assertTrue(queries.size() == 0);
-		queries.add(new DefaultQuery<Symbol, Boolean>(Word.fromSymbols(in_1)));
+		queries.add(new DefaultQuery<Symbol, Boolean>(Word.fromSymbols(IN_1)));
 		Assert.assertTrue(queries.size() == 1);
 		oracle.processQueries(queries);
 		count = counterOracle.getCounter().getCount();

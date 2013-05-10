@@ -18,18 +18,36 @@ package de.learnlib.oracles;
 
 import java.util.Collection;
 
-import net.automatalib.automata.concepts.SODetOutputAutomaton;
+import net.automatalib.automata.concepts.SuffixOutput;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 
+/**
+ * A membership oracle backed by an automaton. The automaton must implement
+ * the {@link SuffixOutput} concept, allowing to identify a suffix part in the output
+ * (relative to a prefix/suffix subdivision in the input).
+ *   
+ * @author Malte Isberner <malte.isberner@gmail.com>
+ *
+ * @param <I> input symbol class
+ * @param <O> (suffix) output class
+ */
 public class SimulatorOracle<I, O> implements MembershipOracle<I, O> {
 	
-	private final SODetOutputAutomaton<?, I, ?, O> automaton;
+	private final SuffixOutput<I, O> automaton;
 	
-	public SimulatorOracle(SODetOutputAutomaton<?,I,?,O> automaton) {
+	/**
+	 * Constructor.
+	 * @param automaton the suffix-observable automaton
+	 */
+	public SimulatorOracle(SuffixOutput<I,O> automaton) {
 		this.automaton = automaton;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
+	 */
 	@Override
 	public void processQueries(Collection<? extends Query<I, O>> queries) {
 		for(Query<I,O> q : queries) {

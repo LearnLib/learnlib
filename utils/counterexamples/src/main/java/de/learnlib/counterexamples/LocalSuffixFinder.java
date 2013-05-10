@@ -24,20 +24,20 @@ import de.learnlib.api.Query;
 
 /**
  * Suffix-based local counterexample analyzer.
- * 
+ * <p>
  * Given a query <tt>(u, v)</tt> which is a counterexample (i.e., the suffix-output for
  * <tt>(u,v)</tt> is distinct from the target system's output for <tt>(u,v)</tt>), it
  * calculates the index <tt>i</tt> of the suffix such that <tt>w[i:]</tt> (<tt>w = uv</tt>)
  * still allows to expose a behavioral difference for an adequate prefix. This adequate prefix
  * can be determined as <tt>{w[:i]}</tt>, where <tt>{.}</tt> denotes the access sequence of
  * the corresponding word.
- * 
+ * <p>
  * The effect of adding such a suffix can be described as follows: <tt>{w[:i]}</tt> and
  * <tt>{w[:i-1]}w[i-1]</tt> both lead to the same state in the hypothesis, but a local suffix finder
  * chooses the index i such that the output for <tt>({w[:i]}, w[i:])</tt> and
  * <tt>({w[:i-1]}w[i-1], w[i:])</tt> will differ. Hence, the transition to the state reached by
  * <tt>{w[:i]}</tt> from <tt>{w[:i-1]}</tt> is disproved.
- * 
+ * <p>
  * Please note that the type parameters of these class only constitute <i>upper</i> bounds
  * for the respective input symbol and output classes, denoting the requirements of the
  * process in general. A suffix finder which does not

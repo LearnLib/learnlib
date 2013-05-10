@@ -63,7 +63,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 		LinkedHashSet<Word<S>> initialCandidates = observationTable.getCandidates();
 
 		for (S alphabetSymbol : alphabet) {
-			initialCandidates.add(Word.fromSymbols(alphabetSymbol));
+			initialCandidates.add(Word.fromLetter(alphabetSymbol));
 		}
 	}
 
@@ -263,6 +263,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 	 * 		The word for which the prefixes should be returned.
 	 * @return A list of all prefixes for the given word.
 	 */
+	// This is superseded by Word.suffixes(boolean). Please adapt -misberner
 	private List<Word<S>> prefixesOfWord(Word<S> word) {
 		List<Word<S>> prefixes = new ArrayList<>(word.size());
 		for (int i = 1; i <= word.size(); i++) {

@@ -17,8 +17,10 @@
 
 package de.learnlib.examples.dfa;
 
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.FastDFA;
-import net.automatalib.automata.fsa.impl.FastDFAState;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
@@ -32,36 +34,52 @@ import net.automatalib.words.impl.Symbol;
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
 public class ExampleAngluin {
-
-	public final static Symbol in_0 = new Symbol("0");
-	public final static Symbol in_1 = new Symbol("1");
 	
-	private final static Alphabet<Symbol> alphabet = new FastAlphabet<Symbol>(in_0, in_1);
-
-	public static FastDFA<Symbol> constructMachine() {
+	private static final class InstanceHolder {
+		public static final DFA<?,Symbol> INSTANCE;
 		
+		static {
+			INSTANCE = constructMachine(new CompactDFA<>(ALPHABET));
+		}
+	}
 
-		FastDFA<Symbol> dfa = new FastDFA<>(alphabet);
+	public static final Symbol IN_0 = new Symbol(0);
+	public static final Symbol IN_1 = new Symbol(1);
+	
+	private static final Alphabet<Symbol> ALPHABET = new FastAlphabet<Symbol>(IN_0, IN_1);
 
-		FastDFAState q0 = dfa.addInitialState(true);
-		FastDFAState q1 = dfa.addState(false);
-		FastDFAState q2 = dfa.addState(false);
-		FastDFAState q3 = dfa.addState(false);
-
-		// see figure 10 (page 15) in the paper:
-		dfa.addTransition(q0, in_0, q1);
-		dfa.addTransition(q0, in_1, q2);
-
-		dfa.addTransition(q1, in_0, q0);
-		dfa.addTransition(q1, in_1, q3);
-
-		dfa.addTransition(q2, in_0, q3);
-		dfa.addTransition(q2, in_1, q0);
-
-		dfa.addTransition(q3, in_0, q2);
-		dfa.addTransition(q3, in_1, q1);
-
-		return dfa;
+	
+	public static Alphabet<Symbol> getAlphabet() {
+		return ALPHABET;
+	}
+	
+	public static DFA<?,Symbol> getInstance() {
+		return InstanceHolder.INSTANCE;
+	}
+	
+	
+	public static <A extends MutableDFA<S, ? super Symbol>,S>
+	A constructMachine(A machine) {
+		S q0 = machine.addInitialState(true);
+		S q1 = machine.addState(false), q2 = machine.addState(false), q3 = machine.addState(false);
+		
+		machine.addTransition(q0, IN_0, q1);
+		machine.addTransition(q0, IN_1, q2);
+		
+		machine.addTransition(q1, IN_0, q0);
+		machine.addTransition(q1, IN_1, q3);
+		
+		machine.addTransition(q2, IN_0, q3);
+		machine.addTransition(q2, IN_1, q0);
+		
+		machine.addTransition(q3, IN_0, q2);
+		machine.addTransition(q3, IN_1, q1);
+		
+		return machine;
+	}
+	
+	public static FastDFA<Symbol> constructMachine() {
+		return constructMachine(new FastDFA<>(ALPHABET));
 	}
 	
 	

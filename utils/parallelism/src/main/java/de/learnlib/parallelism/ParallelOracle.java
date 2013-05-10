@@ -142,17 +142,22 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 		if(numBatches > workers.length + 1)
 			numBatches = workers.length + 1;
 		
+		// Calculate the number of full and non-full batches. The difference in size
+		// will never exceed one (cf. pidgeonhole principle)
 		int fullBatchSize = (num - 1)/numBatches + 1;
 		int nonFullBatches = fullBatchSize*numBatches - num;
 		
 		Iterator<? extends Query<I,O>> queryIt = queries.iterator();
 		
-		
+		// One batch is always executed in the local thread. This saves the thread creation
+		// overhead for the common case where the batch size is quite small.
 		int externalBatches = numBatches - 1;
 		
+		// If we decide not to need any external threads, we can save initializing synchronization
+		// measures.
 		CountDownLatch finishSignal = (externalBatches > 0) ? new CountDownLatch(externalBatches) : null;
 		
-		
+		// Start the threads for the external batches
 		for(int i = 0; i < externalBatches; i++) {
 			int bs = fullBatchSize;
 			if(i < nonFullBatches)
@@ -164,12 +169,14 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 			workers[i].offerBatch(batch, finishSignal);
 		}
 		
+		// Finally, prepare and process the batch for the oracle executed in this thread.
 		Query<I,O>[] batch = new Query[fullBatchSize];
 		for(int j = 0; j < fullBatchSize; j++)
 			batch[j] = queryIt.next();
 		
 		thisThreadOracle.processQueries(Arrays.asList(batch));
 		
+		// FIXME: Needs deadlock prevention
 		if(finishSignal != null) {
 			try {
 				finishSignal.await();
