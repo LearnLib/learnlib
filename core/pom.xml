@@ -17,7 +17,7 @@
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
-     	<dependency>
+        <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
         </dependency>
