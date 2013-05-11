@@ -77,7 +77,6 @@
         <module>./core</module>
         <module>./algorithms</module>
 		<module>./eqtests</module>
-        <module>./dsl</module>
 		<module>./simulator</module>
 		<module>./utils</module>
 		<module>./filters</module>
