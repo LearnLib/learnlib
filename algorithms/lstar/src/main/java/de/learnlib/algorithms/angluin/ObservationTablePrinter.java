@@ -26,29 +26,29 @@ import java.util.Collection;
  */
 public class ObservationTablePrinter {
 
-	public static <S> String getPrintableStringRepresentation(ObservationTable<S> observationTable) {
+	public static <I> String getPrintableStringRepresentation(ObservationTable<I> observationTable) {
 		StringBuilder sb = new StringBuilder();
 
 		int firstColumnWidth = getFirstColumnWidth(observationTable);
 		int maxSuffixLength = getMaxWordLength(observationTable.getSuffixes()) + 3;
 
-		Word<S> emptyWord = Word.epsilon();
+		Word<I> emptyWord = Word.epsilon();
 		sb.append(paddedString(emptyWord.toString(), firstColumnWidth));
 		sb.append(" | ");
-		for (Word<S> suffix : observationTable.getSuffixes()) {
+		for (Word<I> suffix : observationTable.getSuffixes()) {
 			sb.append(paddedString(suffix.toString(), maxSuffixLength));
 		}
 
 		sb.append("\n\n");
 
-		for (Word<S> state : observationTable.getStates()) {
+		for (Word<I> state : observationTable.getStates()) {
 			sb.append(paddedString(state.toString(), firstColumnWidth)).append(" | ");
 			sb.append(stringPresentationOfRow(observationTable.getRowForPrefix(state), maxSuffixLength));
 			sb.append("\n");
 		}
 		sb.append("\n");
 
-		for (Word<S> candidate : observationTable.getCandidates()) {
+		for (Word<I> candidate : observationTable.getCandidates()) {
 			sb.append(paddedString(candidate.toString(), firstColumnWidth)).append(" | ");
 			sb.append(stringPresentationOfRow(observationTable.getRowForPrefix(candidate), maxSuffixLength));
 			sb.append("\n");

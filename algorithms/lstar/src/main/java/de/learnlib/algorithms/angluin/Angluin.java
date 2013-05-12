@@ -33,16 +33,16 @@ import de.learnlib.oracles.DefaultQuery;
 /**
  * Implementation of the L* algorithm by Dana Angluin
  *
- * @param <S>
- * 		state class.
+ * @param <I>
+ * 		input symbol class.
  */
-public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
+public class Angluin<I> implements LearningAlgorithm<DFA<?, I>, I, Boolean> {
 
-	private final Alphabet<S> alphabet;
+	private final Alphabet<I> alphabet;
 
-	private final MembershipOracle<S, Boolean> oracle;
+	private final MembershipOracle<I, Boolean> oracle;
 
-	private ObservationTable<S> observationTable;
+	private ObservationTable<I> observationTable;
 
 	private boolean startLearningAlreadyCalled;
 
@@ -55,14 +55,14 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 	 * @param oracle
 	 * 		The {@link MembershipOracle} which is used for membership queries.
 	 */
-	public Angluin(Alphabet<S> alphabet, MembershipOracle<S, Boolean> oracle) {
+	public Angluin(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		this.observationTable = new ObservationTable<>();
 
-		LinkedHashSet<Word<S>> initialCandidates = observationTable.getCandidates();
+		LinkedHashSet<Word<I>> initialCandidates = observationTable.getCandidates();
 
-		for (S alphabetSymbol : alphabet) {
+		for (I alphabetSymbol : alphabet) {
 			initialCandidates.add(Word.fromLetter(alphabetSymbol));
 		}
 	}
@@ -73,7 +73,7 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 			throw new IllegalStateException("startLearning may only be called once!");
 		}
 
-		final List<Word<S>> allSuffixes = observationTable.getSuffixes();
+		final List<Word<I>> allSuffixes = observationTable.getSuffixes();
 
 		processMembershipQueriesForStates(observationTable.getStates(), allSuffixes);
 		processMembershipQueriesForStates(observationTable.getCandidates(), allSuffixes);
@@ -84,20 +84,20 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 	}
 
 	@Override
-	public boolean refineHypothesis(DefaultQuery<S, Boolean> ceQuery) {
+	public boolean refineHypothesis(DefaultQuery<I, Boolean> ceQuery) {
 		if (!startLearningAlreadyCalled) {
 			throw new IllegalStateException("Unable to refine hypothesis before first learn iteration!");
 		}
 
-		LinkedHashSet<Word<S>> states = observationTable.getStates();
-		LinkedHashSet<Word<S>> candidates = observationTable.getCandidates();
+		LinkedHashSet<Word<I>> states = observationTable.getStates();
+		LinkedHashSet<Word<I>> candidates = observationTable.getCandidates();
 
-		LinkedHashSet<Word<S>> prefixes = prefixesOfWordNotInStates(ceQuery.getInput());
+		LinkedHashSet<Word<I>> prefixes = prefixesOfWordNotInStates(ceQuery.getInput());
 
 		states.addAll(prefixes);
 		removeStatesFromCandidates();
 
-		LinkedHashSet<Word<S>> newCandidates = getNewCandidatesFromPrefixes(prefixes);
+		LinkedHashSet<Word<I>> newCandidates = getNewCandidatesFromPrefixes(prefixes);
 		candidates.addAll(newCandidates);
 
 		processMembershipQueriesForStates(prefixes, observationTable.getSuffixes());
@@ -108,11 +108,11 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 		return true;
 	}
 
-	private LinkedHashSet<Word<S>> prefixesOfWordNotInStates(Word<S> word) {
-		LinkedHashSet<Word<S>> states = observationTable.getStates();
+	private LinkedHashSet<Word<I>> prefixesOfWordNotInStates(Word<I> word) {
+		LinkedHashSet<Word<I>> states = observationTable.getStates();
 
-		LinkedHashSet<Word<S>> prefixes = new LinkedHashSet<>();
-		for (Word<S> prefix : prefixesOfWord(word)) {
+		LinkedHashSet<Word<I>> prefixes = new LinkedHashSet<>();
+		for (Word<I> prefix : prefixesOfWord(word)) {
 			if (!states.contains(prefix)) {
 				prefixes.add(prefix);
 			}
@@ -122,17 +122,17 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 	}
 
 	private void removeStatesFromCandidates() {
-		LinkedHashSet<Word<S>> states = observationTable.getStates();
-		LinkedHashSet<Word<S>> candidates = observationTable.getCandidates();
+		LinkedHashSet<Word<I>> states = observationTable.getStates();
+		LinkedHashSet<Word<I>> candidates = observationTable.getCandidates();
 		candidates.removeAll(states);
 	}
 
-	private LinkedHashSet<Word<S>> getNewCandidatesFromPrefixes(LinkedHashSet<Word<S>> prefixes) {
-		LinkedHashSet<Word<S>> newCandidates = new LinkedHashSet<>();
+	private LinkedHashSet<Word<I>> getNewCandidatesFromPrefixes(LinkedHashSet<Word<I>> prefixes) {
+		LinkedHashSet<Word<I>> newCandidates = new LinkedHashSet<>();
 
-		for (Word<S> prefix : prefixes) {
-			Set<Word<S>> possibleCandidates = appendAlphabetSymbolsToWord(prefix);
-			for (Word<S> possibleCandidate :possibleCandidates) {
+		for (Word<I> prefix : prefixes) {
+			Set<Word<I>> possibleCandidates = appendAlphabetSymbolsToWord(prefix);
+			for (Word<I> possibleCandidate :possibleCandidates) {
 				if (!observationTable.getStates().contains(possibleCandidate)) {
 					newCandidates.add(possibleCandidate);
 				}
@@ -152,17 +152,17 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 	 *      A set with the size of the alphabet, containing each time the word
 	 *      appended with an alphabet symbol.
 	 */
-	private LinkedHashSet<Word<S>> appendAlphabetSymbolsToWord(Word<S> word) {
-		LinkedHashSet<Word<S>> newCandidates = new LinkedHashSet<>(alphabet.size());
-		for (S alphabetSymbol : alphabet) {
-			Word<S> newCandidate = word.append(alphabetSymbol);
+	private LinkedHashSet<Word<I>> appendAlphabetSymbolsToWord(Word<I> word) {
+		LinkedHashSet<Word<I>> newCandidates = new LinkedHashSet<>(alphabet.size());
+		for (I alphabetSymbol : alphabet) {
+			Word<I> newCandidate = word.append(alphabetSymbol);
 			newCandidates.add(newCandidate);
 		}
 		return newCandidates;
 	}
 
 	@Override
-	public DFA<?,S> getHypothesisModel() {
+	public DFA<?, I> getHypothesisModel() {
 		if (!startLearningAlreadyCalled) {
 			throw new IllegalStateException("Unable to get hypothesis model before first learn iteration!");
 		}
@@ -195,13 +195,13 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 	 * After calling this method the observation table is closed.
 	 */
 	private void closeTable() {
-		Word<S> candidate = observationTable.findUnclosedState();
+		Word<I> candidate = observationTable.findUnclosedState();
 
 		while (candidate != null) {
 			observationTable.getStates().add(candidate);
 			observationTable.getCandidates().remove(candidate);
 
-			LinkedHashSet<Word<S>> newCandidates = appendAlphabetSymbolsToWord(candidate);
+			LinkedHashSet<Word<I>> newCandidates = appendAlphabetSymbolsToWord(candidate);
 
 			observationTable.getCandidates().addAll(newCandidates);
 
@@ -215,13 +215,13 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 	 * After calling this method the observation table is consistent.
 	 */
 	private void ensureConsistency() {
-		InconsistencyDataHolder<S> dataHolder = observationTable.findInconsistentSymbol(alphabet);
+		InconsistencyDataHolder<I> dataHolder = observationTable.findInconsistentSymbol(alphabet);
 
-		Word<S> witness = observationTable.determineWitnessForInconsistency(dataHolder);
-		Word<S> newSuffix = Word.fromSymbols(dataHolder.getDifferingSymbol()).concat(witness);
+		Word<I> witness = observationTable.determineWitnessForInconsistency(dataHolder);
+		Word<I> newSuffix = Word.fromSymbols(dataHolder.getDifferingSymbol()).concat(witness);
 		observationTable.getSuffixes().add(newSuffix);
 
-		List<Word<S>> singleSuffixList = Collections.singletonList(newSuffix);
+		List<Word<I>> singleSuffixList = Collections.singletonList(newSuffix);
 
 		processMembershipQueriesForStates(observationTable.getStates(), singleSuffixList);
 		processMembershipQueriesForStates(observationTable.getCandidates(), singleSuffixList);
@@ -237,20 +237,20 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 	 * @param suffixes
 	 * 		The suffixes which are appended to the states before sending the resulting word to the oracle.
 	 */
-	private void processMembershipQueriesForStates(LinkedHashSet<Word<S>> states, Collection<Word<S>> suffixes) {
-		List<DefaultQuery<S, Boolean>> queries = new ArrayList<>(states.size());
-		for (Word<S> state : states) {
-			for (Word<S> suffix : suffixes) {
-				queries.add(new DefaultQuery<S, Boolean>(state, suffix));
+	private void processMembershipQueriesForStates(LinkedHashSet<Word<I>> states, Collection<Word<I>> suffixes) {
+		List<DefaultQuery<I, Boolean>> queries = new ArrayList<>(states.size());
+		for (Word<I> state : states) {
+			for (Word<I> suffix : suffixes) {
+				queries.add(new DefaultQuery<I, Boolean>(state, suffix));
 			}
 		}
 
 		oracle.processQueries(queries);
 
 		
-		for(DefaultQuery<S,Boolean> query : queries) {
-			Word<S> state = query.getPrefix();
-			Word<S> suffix = query.getSuffix();
+		for(DefaultQuery<I,Boolean> query : queries) {
+			Word<I> state = query.getPrefix();
+			Word<I> suffix = query.getSuffix();
 			observationTable.addResult(state, suffix, query.getOutput());
 		}
 	}
@@ -264,8 +264,8 @@ public class Angluin<S> implements LearningAlgorithm<DFA<?,S>, S, Boolean> {
 	 * @return A list of all prefixes for the given word.
 	 */
 	// This is superseded by Word.suffixes(boolean). Please adapt -misberner
-	private List<Word<S>> prefixesOfWord(Word<S> word) {
-		List<Word<S>> prefixes = new ArrayList<>(word.size());
+	private List<Word<I>> prefixesOfWord(Word<I> word) {
+		List<Word<I>> prefixes = new ArrayList<>(word.size());
 		for (int i = 1; i <= word.size(); i++) {
 			prefixes.add(word.prefix(i));
 		}
