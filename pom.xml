@@ -24,6 +24,11 @@
 		</license>
 	</licenses>
 
+	<issueManagement>
+		<url>https://bitbucket.org/fhowar/learnlib-os/issues</url>
+		<system>Bitbucket Issues</system>
+	</issueManagement>
+
 	<developers>
 		<developer>
 			<id>falkhowar</id>
