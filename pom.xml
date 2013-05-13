@@ -2,9 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     
-    <!--  
-    =================================  PROJECT INFO ==============================  
-    -->
     <groupId>de.learnlib</groupId>
     <artifactId>learnlib-parent</artifactId>
     <version>0.9-SNAPSHOT</version>
@@ -14,78 +11,65 @@
 
     <description>LearnLib is a framework for automata learning and experimentation.</description>
 
-   <licenses>
-    <license>
-      <name>GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007</name>
-      <url>http://www.gnu.org/copyleft/lesser.html</url>
-    </license>
-  </licenses>
+    <licenses>
+        <license>
+            <name>GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007</name>
+            <url>http://www.gnu.org/copyleft/lesser.html</url>
+        </license>
+    </licenses>
 
-   <developers>
-    <developer>
-      <id>falkhowar</id>
-      <name>Falk Howar</name>
-      <email>falk.howar@gmail.com</email>
-    </developer>
-    <developer>
-      <id>misberner</id>
-      <name>Malte Isberner</name>
-      <email>malte.isberner@gmail.com</email>
-    </developer>
-    <developer>
-      <id>stovocor</id>
-      <name>Stephan Windmüller</name>
-      <email>stephan.windmueller@tu-dortmund.de</email>
-    </developer>
-	<developer>
-	  <id>merten</id>
-	  <name>Maik Merten</name>
-	  <email>maikmerten@googlemail.com</email>
-	</developer>
-	<developer>
-		<id>oliverbauer</id>
-		<name>Oliver Bauer</name>
-		<email>oliver.bauer@tu-dortmund.de</email>
-	</developer>
-  </developers>
+    <developers>
+        <developer>
+            <id>falkhowar</id>
+            <name>Falk Howar</name>
+            <email>falk.howar@gmail.com</email>
+        </developer>
+        <developer>
+            <id>misberner</id>
+            <name>Malte Isberner</name>
+            <email>malte.isberner@gmail.com</email>
+        </developer>
+        <developer>
+            <id>stovocor</id>
+            <name>Stephan Windmüller</name>
+            <email>stephan.windmueller@tu-dortmund.de</email>
+        </developer>
+        <developer>
+            <id>merten</id>
+            <name>Maik Merten</name>
+            <email>maikmerten@googlemail.com</email>
+        </developer>
+        <developer>
+            <id>oliverbauer</id>
+            <name>Oliver Bauer</name>
+            <email>oliver.bauer@tu-dortmund.de</email>
+        </developer>
+    </developers>
   
-    <!--  
-    ===============================  SCM =======================  
-    -->
-  <!-- <scm>
-    <connection>scm:git:git@github.com:juven/git-demo.git</connection>
-    <developerConnection>scm:git:git@github.com:juven/git-demo.git</developerConnection>
-    <url>git@github.com:juven/git-demo.git</url>
-  </scm> -->                        
+    <!-- <scm>
+      <connection>scm:git:git@github.com:juven/git-demo.git</connection>
+      <developerConnection>scm:git:git@github.com:juven/git-demo.git</developerConnection>
+      <url>git@github.com:juven/git-demo.git</url>
+    </scm> -->                        
   
-
-    <!--  
-    =================================  SONTAPE PARENT ==============================  
-    -->
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
 
-    <!--  
-    =================================  MODULES ===================================  
-    -->
     <modules>
         <module>./test-support</module>
-		<module>./build-tools</module>
+        <module>./build-tools</module>
         <module>./core</module>
         <module>./algorithms</module>
-		<module>./eqtests</module>
-        <module>./dsl</module>
-		<module>./simulator</module>
-		<module>./utils</module>
-		<module>./filters</module>
+        <module>./eqtests</module>
+        <module>./simulator</module>
+        <module>./utils</module>
+        <module>./filters</module>
+        <module>./assembly</module>
     </modules>	
 
-    <!--  
-    =================================  PROPERTIES ================================
-    -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--
@@ -97,24 +81,20 @@
         <attach-javadoc.version>2.3</attach-javadoc.version>
     </properties>
 
-
-    <!--  
-    =================================  BUILD PLUGINS =============================  
-    -->
     <build>
 
         <plugins>
             <!-- 
                 default assembly config
             -->
-            <plugin>
+            <!-- plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                 </configuration>
-            </plugin>
+            </plugin -->
 
             <!-- 
                 compiler plugin config
@@ -140,24 +120,21 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
                     <configLocation>config/sun_checks.xml</configLocation>
-		    <headerLocation>license-header.txt</headerLocation>
-		    <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+                    <headerLocation>license-header.txt</headerLocation>
+                    <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
                 </configuration>
-		<version>2.10</version>
-		<dependencies>
-		    <dependency>
-	                <groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-build-tools</artifactId>
-			<version>${project.version}</version>
-		    </dependency>
-		</dependencies>
+                <version>2.10</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>learnlib-build-tools</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
 
-   <!--  
-    ===============================  PROFILES =======================  
-    -->
     <profiles>
         <profile>
             <id>netbeans-private-testng</id>
@@ -219,9 +196,6 @@
         </profile>
     </profiles>
 
-  <!--  
-    ===============================  DEFAULT DEP. VERSIONS =======================  
-    -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -235,22 +209,22 @@
                 <artifactId>learnlib-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>learnlib-lstar</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>learnlib-lstar-generic</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>learnlib-dhc</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>learnlib-basic-eqtests</artifactId>
                 <version>${project.version}</version>
@@ -260,12 +234,12 @@
                 <artifactId>learnlib-simulator</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>learnlib-counterexamples</artifactId>
                 <version>${project.version}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>learnlib-cache</artifactId>
                 <version>${project.version}</version>
@@ -290,7 +264,7 @@
                 <artifactId>automata-commons-dotutil</artifactId>
                 <version>${automatalib.version}</version>                        
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-incremental</artifactId>
                 <version>${automatalib.version}</version>                        
