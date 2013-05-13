@@ -1,22 +1,25 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <parent>
-        <artifactId>learnlib-parent</artifactId>
-        <groupId>de.learnlib</groupId>
-        <version>0.9-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>        
-    </parent>
+	<modelVersion>4.0.0</modelVersion>
 
-    <artifactId>learnlib-filters</artifactId>
-    <name>learnlib-filters</name>
-    <packaging>pom</packaging>
+	<parent>
+		<artifactId>learnlib-parent</artifactId>
+		<groupId>de.learnlib</groupId>
+		<version>0.9-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>        
+	</parent>
 
-    <modules>
-        <module>./cache</module>
-		<module>./reuse</module>
-    </modules>
-    
+	<artifactId>learnlib-filters</artifactId>
+	<name>LearnLib :: Filters</name>
+
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>./cache</module>
+	</modules>
+
 </project>
 

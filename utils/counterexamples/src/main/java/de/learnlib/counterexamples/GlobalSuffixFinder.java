@@ -29,7 +29,7 @@ import de.learnlib.api.Query;
  * Interface for a global suffix finder. A global suffix finder takes a counterexample
  * (plus other supplemental information), and returns a list of words that, when used
  * as distinguishing suffixes, will expose at least one additional state in the hypothesis.
- * 
+ * <p>
  * Please note that the type parameters of these class only constitute <i>upper</i> bounds
  * for the respective input symbol and output classes, denoting the requirements of the
  * process in general. A suffix finder which does not

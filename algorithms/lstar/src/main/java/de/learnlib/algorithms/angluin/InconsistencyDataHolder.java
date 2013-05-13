@@ -18,27 +18,27 @@ package de.learnlib.algorithms.angluin;
 
 import net.automatalib.words.Word;
 
-public class InconsistencyDataHolder<S> {
+public class InconsistencyDataHolder<I> {
 
-	private final Word<S> firstState;
-	private final Word<S> secondState;
-	private final S differingSymbol;
+	private final Word<I> firstState;
+	private final Word<I> secondState;
+	private final I differingSymbol;
 
-	public InconsistencyDataHolder(Word<S> firstState, Word<S> secondState, S differingSymbol) {
+	public InconsistencyDataHolder(Word<I> firstState, Word<I> secondState, I differingSymbol) {
 		this.firstState = firstState;
 		this.secondState = secondState;
 		this.differingSymbol = differingSymbol;
 	}
 
-	public Word<S> getFirstState() {
+	public Word<I> getFirstState() {
 		return firstState;
 	}
 
-	public Word<S> getSecondState() {
+	public Word<I> getSecondState() {
 		return secondState;
 	}
 
-	public S getDifferingSymbol() {
+	public I getDifferingSymbol() {
 		return differingSymbol;
 	}
 }

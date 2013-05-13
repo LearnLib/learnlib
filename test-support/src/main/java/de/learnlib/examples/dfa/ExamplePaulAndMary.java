@@ -17,8 +17,10 @@
 
 package de.learnlib.examples.dfa;
 
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.FastDFA;
-import net.automatalib.automata.fsa.impl.FastDFAState;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
@@ -29,12 +31,29 @@ import net.automatalib.words.impl.Symbol;
  * @author Maik Merten <maikmerten@googlemail.com>
  */
 public class ExamplePaulAndMary {
+	
+	private static final class InstanceHolder {
+		public static final DFA<?,Symbol> INSTANCE;
+		
+		static {
+			INSTANCE = constructMachine(new CompactDFA<>(ALPHABET));
+		}
+	}
     
-    public final static Symbol in_paul = new Symbol("Paul");
-    public final static Symbol in_loves = new Symbol("loves");
-    public final static Symbol in_mary = new Symbol("Mary");
+    public static final Symbol IN_PAUL = new Symbol("Paul");
+    public static final Symbol IN_LOVES = new Symbol("loves");
+    public static final Symbol IN_MARY = new Symbol("Mary");
     
-    public final static Alphabet<Symbol> alphabet = new FastAlphabet<>(in_paul, in_loves, in_mary);
+    private static final Alphabet<Symbol> ALPHABET = new FastAlphabet<>(IN_PAUL, IN_LOVES, IN_MARY);
+    
+  
+    public static DFA<?,Symbol> getInstance() {
+    	return InstanceHolder.INSTANCE;
+    }
+    
+    public static Alphabet<Symbol> getAlphabet() {
+    	return ALPHABET;
+    }
     
     
     /**
@@ -43,34 +62,36 @@ public class ExamplePaulAndMary {
      * @return machine instance of the example
      */
     public static FastDFA<Symbol> constructMachine() {
-        
-        FastDFA<Symbol> dfa = new FastDFA<>(alphabet);
-        
-        FastDFAState s0 = dfa.addInitialState(false),
-                s1 = dfa.addState(false),
-                s2 = dfa.addState(false),
-                s3 = dfa.addState(true),
-                s4 = dfa.addState(false);
+    	return constructMachine(new FastDFA<>(ALPHABET));
+    }
+     
+    public static <A extends MutableDFA<S,? super Symbol>,S>
+    A constructMachine(A dfa) {
+    	S s0 = dfa.addInitialState(false),
+          s1 = dfa.addState(false),
+          s2 = dfa.addState(false),
+          s3 = dfa.addState(true),
+          s4 = dfa.addState(false);
 
-        dfa.addTransition(s0, in_paul, s1);
-        dfa.addTransition(s0, in_loves, s4);
-        dfa.addTransition(s0, in_mary, s4);
+        dfa.addTransition(s0, IN_PAUL, s1);
+        dfa.addTransition(s0, IN_LOVES, s4);
+        dfa.addTransition(s0, IN_MARY, s4);
         
-        dfa.addTransition(s1, in_paul, s4);
-        dfa.addTransition(s1, in_loves, s2);
-        dfa.addTransition(s1, in_mary, s4);
+        dfa.addTransition(s1, IN_PAUL, s4);
+        dfa.addTransition(s1, IN_LOVES, s2);
+        dfa.addTransition(s1, IN_MARY, s4);
         
-        dfa.addTransition(s2, in_paul, s4);
-        dfa.addTransition(s2, in_loves, s4);
-        dfa.addTransition(s2, in_mary, s3);
+        dfa.addTransition(s2, IN_PAUL, s4);
+        dfa.addTransition(s2, IN_LOVES, s4);
+        dfa.addTransition(s2, IN_MARY, s3);
         
-        dfa.addTransition(s3, in_paul, s4);
-        dfa.addTransition(s3, in_loves, s4);
-        dfa.addTransition(s3, in_mary, s4);
+        dfa.addTransition(s3, IN_PAUL, s4);
+        dfa.addTransition(s3, IN_LOVES, s4);
+        dfa.addTransition(s3, IN_MARY, s4);
         
-        dfa.addTransition(s4, in_paul, s4);
-        dfa.addTransition(s4, in_loves, s4);
-        dfa.addTransition(s4, in_mary, s4);
+        dfa.addTransition(s4, IN_PAUL, s4);
+        dfa.addTransition(s4, IN_LOVES, s4);
+        dfa.addTransition(s4, IN_MARY, s4);
 
         return dfa;
     }

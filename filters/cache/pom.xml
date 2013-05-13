@@ -1,40 +1,43 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <parent>
-        <artifactId>learnlib-filters</artifactId>
-        <groupId>de.learnlib</groupId>
-        <version>0.9-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>        
-    </parent>
+	<modelVersion>4.0.0</modelVersion>
 
-    <artifactId>learnlib-cache</artifactId>
-    <name>learnlib-cache</name>
- 
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>learnlib-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>learnlib-test-support</artifactId>
-        </dependency>
+	<parent>
+		<artifactId>learnlib-filters</artifactId>
+		<groupId>de.learnlib</groupId>
+		<version>0.9-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>        
+	</parent>
+
+	<artifactId>learnlib-cache</artifactId>
+	<name>LearnLib :: Cache</name>
+
+	<dependencies>
 		<dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>learnlib-simulator</artifactId>
-            <scope>test</scope>
-        </dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>learnlib-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-incremental</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-        </dependency>
-    </dependencies>
-    
+			<groupId>${project.groupId}</groupId>
+			<artifactId>learnlib-test-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>learnlib-simulator</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-incremental</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+		</dependency>
+	</dependencies>
+
 </project>

@@ -23,7 +23,7 @@ import net.automatalib.words.Word;
  * A row in an observation table. Minimally, a row consists of a prefix (the row label)
  * and a unique identifier in its observation table which remains constant throughout the
  * whole process.
- * 
+ * <p>
  * Apart from that, a row is also associated with contents (via an integer id). The prefix of a row
  * may be either a short or long prefix. In the former case, the row will also have successor rows
  * (one-step futures) associated with it.

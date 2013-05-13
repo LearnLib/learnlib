@@ -18,9 +18,9 @@
 package de.learnlib.oracles;
 
 import static de.learnlib.examples.dfa.ExamplePaulAndMary.constructMachine;
-import static de.learnlib.examples.dfa.ExamplePaulAndMary.in_loves;
-import static de.learnlib.examples.dfa.ExamplePaulAndMary.in_mary;
-import static de.learnlib.examples.dfa.ExamplePaulAndMary.in_paul;
+import static de.learnlib.examples.dfa.ExamplePaulAndMary.IN_LOVES;
+import static de.learnlib.examples.dfa.ExamplePaulAndMary.IN_MARY;
+import static de.learnlib.examples.dfa.ExamplePaulAndMary.IN_PAUL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +50,8 @@ public class OracleTest {
         
         List<DefaultQuery<Symbol, Boolean>> queries = new ArrayList<>();
         
-        DefaultQuery<Symbol, Boolean> q1 = new DefaultQuery<>(Word.fromSymbols(in_paul, in_loves, in_mary));
-        DefaultQuery<Symbol, Boolean> q2 = new DefaultQuery<>(Word.fromSymbols(in_mary, in_loves, in_paul));
+        DefaultQuery<Symbol, Boolean> q1 = new DefaultQuery<>(Word.fromSymbols(IN_PAUL, IN_LOVES, IN_MARY));
+        DefaultQuery<Symbol, Boolean> q2 = new DefaultQuery<>(Word.fromSymbols(IN_MARY, IN_LOVES, IN_PAUL));
         queries.add(q1);
         queries.add(q2);
         

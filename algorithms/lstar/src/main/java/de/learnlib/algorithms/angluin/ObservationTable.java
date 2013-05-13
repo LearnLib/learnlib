@@ -31,19 +31,19 @@ import net.automatalib.words.Word;
 /**
  * The internal storage mechanism for {@link Angluin}.
  *
- * @param <S>
- * 		state class.
+ * @param <I>
+ * 		input symbol class.
  */
-public class ObservationTable<S> {
+public class ObservationTable<I> {
 
-	private LinkedHashSet<Word<S>> states;     // S
-	private LinkedHashSet<Word<S>> candidates; // SA
-	private List<Word<S>> suffixes;            // E
+	private LinkedHashSet<Word<I>> states;     // S
+	private LinkedHashSet<Word<I>> candidates; // SA
+	private List<Word<I>> suffixes;            // E
 
-	private Map<Word<S>, ObservationTableRow> rows;
+	private Map<Word<I>, ObservationTableRow> rows;
 
 	public ObservationTable() {
-		Word<S> emptyWord = Word.epsilon();
+		Word<I> emptyWord = Word.epsilon();
 
 		states = new LinkedHashSet<>();
 		states.add(emptyWord);
@@ -61,7 +61,7 @@ public class ObservationTable<S> {
 	 *
 	 * @return The set of states.
 	 */
-	LinkedHashSet<Word<S>> getStates() {
+	LinkedHashSet<Word<I>> getStates() {
 		return states;
 	}
 
@@ -70,7 +70,7 @@ public class ObservationTable<S> {
 	 *
 	 * @return The set of candidates.
 	 */
-	LinkedHashSet<Word<S>> getCandidates() {
+	LinkedHashSet<Word<I>> getCandidates() {
 		return candidates;
 	}
 
@@ -79,7 +79,7 @@ public class ObservationTable<S> {
 	 *
 	 * @return The set of candidates.
 	 */
-	List<Word<S>> getSuffixes() {
+	List<Word<I>> getSuffixes() {
 		return suffixes;
 	}
 
@@ -93,7 +93,7 @@ public class ObservationTable<S> {
 	 * @param result
 	 * 		The result of the query.
 	 */
-	void addResult(Word<S> prefix, Word<S> suffix, boolean result) {
+	void addResult(Word<I> prefix, Word<I> suffix, boolean result) {
 		if (!suffixes.contains(suffix)) {
 			throw new IllegalStateException("Suffix " + suffix + " is not part of the suffixes set");
 		}
@@ -141,14 +141,14 @@ public class ObservationTable<S> {
 	 * @return The next state for which the observation table needs to be closed. If the
 	 *         table is closed, this returns {@code null}.
 	 */
-	Word<S> findUnclosedState() {
+	Word<I> findUnclosedState() {
 		List<ObservationTableRow> stateRows = new ArrayList<>(states.size());
 
-		for (Word<S> state : states) {
+		for (Word<I> state : states) {
 			stateRows.add(getRowForPrefix(state));
 		}
 
-		for (Word<S> candidate : candidates) {
+		for (Word<I> candidate : candidates) {
 			boolean found = false;
 
 			ObservationTableRow row = getRowForPrefix(candidate);
@@ -172,20 +172,20 @@ public class ObservationTable<S> {
 	 * 		The {@link Alphabet} for which the consistency is checked
 	 * @return if the observation table is consistent with the given alphabet.
 	 */
-	boolean isConsistentWithAlphabet(Alphabet<S> alphabet) {
+	boolean isConsistentWithAlphabet(Alphabet<I> alphabet) {
 		return findInconsistentSymbol(alphabet) == null;
 	}
 
-	InconsistencyDataHolder<S> findInconsistentSymbol(Alphabet<S> alphabet) {
-		List<Word<S>> allStates = new ArrayList<>(states);
+	InconsistencyDataHolder<I> findInconsistentSymbol(Alphabet<I> alphabet) {
+		List<Word<I>> allStates = new ArrayList<>(states);
 
-		for (S symbol : alphabet) {
+		for (I symbol : alphabet) {
 			for (int firstStateCounter = 0; firstStateCounter < states.size(); firstStateCounter++) {
-				Word<S> firstState = allStates.get(firstStateCounter);
+				Word<I> firstState = allStates.get(firstStateCounter);
 
 				for (int secondStateCounter = firstStateCounter + 1; secondStateCounter < states.size();
 				     secondStateCounter++) {
-					Word<S> secondState = allStates.get(secondStateCounter);
+					Word<I> secondState = allStates.get(secondStateCounter);
 
 					if (checkInconsistency(firstState, secondState, symbol)) {
 						return new InconsistencyDataHolder<>(firstState, secondState, symbol);
@@ -197,7 +197,7 @@ public class ObservationTable<S> {
 		return null;
 	}
 
-	private boolean checkInconsistency(Word<S> firstState, Word<S> secondState, S alphabetSymbol) {
+	private boolean checkInconsistency(Word<I> firstState, Word<I> secondState, I alphabetSymbol) {
 		ObservationTableRow rowForFirstState = getRowForPrefix(firstState);
 		ObservationTableRow rowForSecondState = getRowForPrefix(secondState);
 
@@ -205,21 +205,21 @@ public class ObservationTable<S> {
 			return false;
 		}
 
-		Word<S> extendedFirstState = firstState.append(alphabetSymbol);
-		Word<S> extendedSecondState = secondState.append(alphabetSymbol);
+		Word<I> extendedFirstState = firstState.append(alphabetSymbol);
+		Word<I> extendedSecondState = secondState.append(alphabetSymbol);
 		ObservationTableRow rowForExtendedFirstState = getRowForPrefix(extendedFirstState);
 		ObservationTableRow rowForExtendedSecondState = getRowForPrefix(extendedSecondState);
 
 		return !rowForExtendedFirstState.equals(rowForExtendedSecondState);
 	}
 
-	Word<S> determineWitnessForInconsistency(InconsistencyDataHolder<S> dataHolder) {
+	Word<I> determineWitnessForInconsistency(InconsistencyDataHolder<I> dataHolder) {
 		if (dataHolder == null) {
 			throw new IllegalArgumentException("Dataholder must not be null!");
 		}
 
-		Word<S> firstState = dataHolder.getFirstState().append(dataHolder.getDifferingSymbol());
-		Word<S> secondState = dataHolder.getSecondState().append(dataHolder.getDifferingSymbol());
+		Word<I> firstState = dataHolder.getFirstState().append(dataHolder.getDifferingSymbol());
+		Word<I> secondState = dataHolder.getSecondState().append(dataHolder.getDifferingSymbol());
 
 		ObservationTableRow firstRow = getRowForPrefix(firstState);
 		ObservationTableRow secondRow = getRowForPrefix(secondState);
@@ -233,7 +233,7 @@ public class ObservationTable<S> {
 		throw new IllegalStateException("Both rows are identical, unable to determine a witness!");
 	}
 
-	ObservationTableRow getRowForPrefix(Word<S> state) {
+	ObservationTableRow getRowForPrefix(Word<I> state) {
 		return rows.get(state);
 	}
 
@@ -244,11 +244,11 @@ public class ObservationTable<S> {
 	 * 		The alphabet of the automaton.
 	 * @return The current hypothesis automaton.
 	 */
-	DFA<?,S> toAutomaton(Alphabet<S> alphabet) {
-		FastDFA<S> automaton = new FastDFA<>(alphabet);
+	DFA<?, I> toAutomaton(Alphabet<I> alphabet) {
+		FastDFA<I> automaton = new FastDFA<>(alphabet);
 		Map<ObservationTableRow, FastDFAState> dfaStates = new HashMap<>((int) (1.5 * states.size()));
 
-		for (Word<S> state : states) {
+		for (Word<I> state : states) {
 			if (dfaStates.containsKey(getRowForPrefix(state))) {
 				continue;
 			}
@@ -262,16 +262,16 @@ public class ObservationTable<S> {
 				dfaState = automaton.addState();
 			}
 
-			Word<S> emptyWord = Word.epsilon();
+			Word<I> emptyWord = Word.epsilon();
 			int positionOfEmptyWord = suffixes.indexOf(emptyWord);
 			dfaState.setAccepting(rows.get(state).getValues().get(positionOfEmptyWord));
 			dfaStates.put(getRowForPrefix(state), dfaState);
 		}
 
-		for (Word<S> state : states) {
+		for (Word<I> state : states) {
 			FastDFAState dfaState = dfaStates.get(getRowForPrefix(state));
-			for (S alphabetSymbol : alphabet) {
-				Word<S> word = state.append(alphabetSymbol);
+			for (I alphabetSymbol : alphabet) {
+				Word<I> word = state.append(alphabetSymbol);
 
 				final int index = alphabet.getSymbolIndex(alphabetSymbol);
 				dfaState.setTransition(index, dfaStates.get(getRowForPrefix(word)));
