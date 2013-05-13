@@ -121,7 +121,7 @@
 			</plugin>
 
 			<!-- 
-					compiler plugin config
+				compiler plugin config
 			-->						
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -137,7 +137,7 @@
 			</plugin>
 
 			<!-- 
-					check style
+				check style
 			-->						
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -156,6 +156,23 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-descriptor</id>
+						<goals>
+							<goal>attach-descriptor</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 
@@ -223,7 +240,7 @@
 		</profile>
 	</profiles>
 
-					<!--	
+	<!--	
 	===============================	DEFAULT DEP. VERSIONS =======================	
 	-->
 	<dependencyManagement>
