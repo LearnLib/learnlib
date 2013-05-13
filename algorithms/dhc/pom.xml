@@ -13,7 +13,7 @@
 	</parent>
 
 	<artifactId>learnlib-dhc</artifactId>
-	<name>learnlib-dhc</name>
+	<name>LearnLib :: DHC</name>
 
 	<dependencies>
 		<dependency>

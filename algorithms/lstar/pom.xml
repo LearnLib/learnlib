@@ -13,7 +13,7 @@
 	</parent>
 
 	<artifactId>learnlib-lstar</artifactId>
-	<name>learnlib-lstar</name>
+	<name>LearnLib :: L-Star</name>
 
 	<dependencies>
 		<dependency>

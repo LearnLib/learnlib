@@ -13,7 +13,7 @@
 	</parent>
 
 	<artifactId>learnlib-counterexamples</artifactId>
-	<name>learnlib-counterexamples</name>
+	<name>LearnLib :: Counter Examples</name>
 
 	<dependencies>
 		<dependency>

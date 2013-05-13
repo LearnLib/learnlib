@@ -12,7 +12,7 @@
 	</parent>
 
 	<artifactId>learnlib-test-support</artifactId>
-	<name>learnlib-test-support</name>
+	<name>LearnLib :: Test Support</name>
 
 	<dependencies>
 		<dependency>

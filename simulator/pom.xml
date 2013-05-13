@@ -13,7 +13,7 @@
 	</parent>
 
 	<artifactId>learnlib-simulator</artifactId>
-	<name>learnlib-simulator</name>
+	<name>LearnLib :: Simulator</name>
 
 	<dependencies>
 		<dependency>

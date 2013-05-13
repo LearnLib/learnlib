@@ -13,6 +13,6 @@
 	</parent>
 
 	<artifactId>learnlib-build-tools</artifactId>
-	<name>learnlib-build-tools</name>
+	<name>LearnLib :: Build Tools</name>
 
 </project>

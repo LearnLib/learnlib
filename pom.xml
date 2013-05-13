@@ -12,7 +12,7 @@
 	<artifactId>learnlib-parent</artifactId>
 	<version>0.9-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>learnlib-parent</name>
+	<name>LearnLib</name>
 	<url>http://www.learnlib.de</url>
 
 	<description>LearnLib is a framework for automata learning and experimentation.</description>

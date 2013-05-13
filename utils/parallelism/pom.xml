@@ -13,7 +13,7 @@
 	</parent>
 
 	<artifactId>learnlib-parallelism</artifactId>
-	<name>learnlib-parallelism</name>
+	<name>LearnLib :: Parallelism</name>
 
 	<dependencies>
 		<dependency>

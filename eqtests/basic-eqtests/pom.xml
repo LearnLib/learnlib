@@ -13,7 +13,7 @@
 	</parent>
 
 	<artifactId>learnlib-basic-eqtests</artifactId>
-	<name>learnlib-basic-eqtests</name>
+	<name>LearnLib :: Basic EQ-Tests</name>
 
 	<dependencies>
 		<dependency>

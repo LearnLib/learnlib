@@ -13,7 +13,8 @@
 	</parent>
 
 	<artifactId>learnlib-utils</artifactId>
-	<name>learnlib-utils</name>
+	<name>LearnLib :: Utils</name>
+
 	<packaging>pom</packaging>
 
 	<modules>

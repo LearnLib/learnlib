@@ -13,7 +13,7 @@
 	</parent>
 
 	<artifactId>learnlib-core</artifactId>
-	<name>learnlib-core</name>
+	<name>LearnLib :: Core</name>
 
 	<dependencies>
 		<dependency>
