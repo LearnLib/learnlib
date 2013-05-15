@@ -23,28 +23,36 @@
             <includes>
                 <include>*.jar</include>
             </includes>
-            <excludes>
-                <exclude>learnlib-assembly*.jar</exclude>
-            </excludes>
         </fileSet>  
         <fileSet>
             <directory>./</directory>
             <outputDirectory>/</outputDirectory>
             <includes>
-                <include>*.txt</include>
+                <include>COPYING.txt</include>
+                <include>readme.txt</include>
             </includes>
         </fileSet>   
     </fileSets>
 
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>/src</outputDirectory>
-            <unpack>true</unpack>
-            <useTransitiveDependencies>false</useTransitiveDependencies>
+    <!-- what about generated sources and resources? -->
+    <moduleSets>
+        <moduleSet>
             <includes>
-                <include>*:sources</include>
-            </includes>            
-        </dependencySet>
-    </dependencySets>
-      
+                <include>*:jar:*</include>
+            </includes>
+            <sources>
+                <includeModuleDirectory>false</includeModuleDirectory>
+                <fileSets>
+                    <fileSet>
+                        <directory>src/main/java</directory>
+                        <outputDirectory>/src</outputDirectory>
+                        <includes>
+                            <include>**/*</include>
+                        </includes>
+                    </fileSet>
+                </fileSets>
+            </sources>
+        </moduleSet>
+    </moduleSets>
+    
 </assembly>

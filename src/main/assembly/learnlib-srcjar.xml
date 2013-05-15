@@ -14,19 +14,30 @@
             <directory>./</directory>
             <outputDirectory>/</outputDirectory>
             <includes>
-                <include>*.txt</include>
+                <include>COPYING.txt</include>
+                <include>readme.txt</include>
             </includes>
         </fileSet>   
     </fileSets>
 
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>/</outputDirectory>
-            <unpack>true</unpack>
-            <useTransitiveDependencies>false</useTransitiveDependencies>
+    <moduleSets>
+        <moduleSet>
             <includes>
-                <include>*:sources</include>
-            </includes>            
-        </dependencySet>
-    </dependencySets>
+                <include>*:jar:*</include>
+            </includes>
+            <sources>
+                <includeModuleDirectory>false</includeModuleDirectory>
+                <fileSets>
+                    <fileSet>
+                        <directory>src/main/java</directory>
+                        <outputDirectory>/</outputDirectory>
+                        <includes>
+                            <include>**/*</include>
+                        </includes>
+                    </fileSet>
+                </fileSets>
+            </sources>
+        </moduleSet>
+    </moduleSets>
+
 </assembly>
