@@ -25,8 +25,8 @@
 	</licenses>
 
 	<issueManagement>
-		<url>https://bitbucket.org/fhowar/learnlib-os/issues</url>
-		<system>Bitbucket Issues</system>
+		<url>https://github.com/LearnLib/learnlib/issues</url>
+		<system>GitHub Issues</system>
 	</issueManagement>
 
 	<developers>
@@ -63,7 +63,7 @@
 	<scm>
 		<connection>scm:git:git@github.com:LearnLib/learnlib.git</connection>
 		<developerConnection>scm:git:git@github.com:LearnLib/learnlib.git</developerConnection>
-		<url>https://github.com/LearnLib/learnlib</url>
+		<url>https://github.com/LearnLib/learnlib/tree/develop</url>
 	</scm>
 
 
@@ -82,15 +82,15 @@
 	=================================	MODULES ===================================	
 	-->
 	<modules>
-		<module>./test-support</module>
-		<module>./build-tools</module>
-		<module>./core</module>
-		<module>./algorithms</module>
-		<module>./eqtests</module>
-		<module>./simulator</module>
-		<module>./utils</module>
-		<module>./filters</module>
-		<module>./archetypes</module>
+		<module>test-support</module>
+		<module>build-tools</module>
+		<module>core</module>
+		<module>algorithms</module>
+		<module>eqtests</module>
+		<module>simulator</module>
+		<module>utils</module>
+		<module>filters</module>
+		<module>archetypes</module>
 	</modules>	
 
 	<!--	
