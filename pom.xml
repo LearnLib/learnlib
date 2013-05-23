@@ -101,12 +101,15 @@
 		<!--
 			dependency versions
 		-->
-			<automatalib.version>0.3.0-SNAPSHOT</automatalib.version>
-			<testng.version>6.8</testng.version>
-			<attach-source.version>2.0.4</attach-source.version>
-			<attach-javadoc.version>2.3</attach-javadoc.version>
-			<javadoc-plugin.version>2.9</javadoc-plugin.version>
-		</properties>
+		<automatalib.version>0.3.0-SNAPSHOT</automatalib.version>
+		<testng.version>6.8</testng.version>
+		<attach-source.version>2.0.4</attach-source.version>
+		<attach-javadoc.version>2.3</attach-javadoc.version>
+		<javadoc-plugin.version>2.9</javadoc-plugin.version>
+
+		<!-- Sonatype OSS snapshots repository -->
+		<sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
+	</properties>
 
 
 	<!--	
@@ -398,4 +401,25 @@
 		</dependencies>
 	</dependencyManagement>		
 
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>${sonatypeOssDistMgmtSnapshotsUrl}</url>
+		</snapshotRepository>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Nexus Release Repository</name>
+			<url>
+				https://oss.sonatype.org/service/local/staging/deploy/maven2/
+			</url>
+		</repository>
+
+		<!-- Dummy - this will NOT actually be used -->
+		<site>
+			<id>local</id>
+			<url>file://${site.tmpDeployDirectory}</url>
+		</site>
+	</distributionManagement>
 </project>
