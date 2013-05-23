@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+	http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -15,7 +16,9 @@
 	<name>LearnLib</name>
 	<url>http://www.learnlib.de</url>
 
-	<description>LearnLib is a framework for automata learning and experimentation.</description>
+	<description>
+		LearnLib is a framework for automata learning and experimentation.
+	</description>
 
 	<licenses>
 		<license>
@@ -91,7 +94,17 @@
 		<module>utils</module>
 		<module>filters</module>
 		<module>archetypes</module>
-	</modules>	
+	</modules>
+		<module>./test-support</module>
+		<module>./build-tools</module>
+		<module>./core</module>
+		<module>./algorithms</module>
+		<module>./eqtests</module>
+		<module>./simulator</module>
+		<module>./utils</module>
+		<module>./filters</module>
+		<module>./archetypes</module>
+	</modules>
 
 	<!--	
 	=================================	PROPERTIES ================================
@@ -103,9 +116,16 @@
 		-->
 		<automatalib.version>0.3.0-SNAPSHOT</automatalib.version>
 		<testng.version>6.8</testng.version>
-		<attach-source.version>2.0.4</attach-source.version>
-		<attach-javadoc.version>2.3</attach-javadoc.version>
+		<attach-source.version>2.1.2</attach-source.version>
+		<attach-javadoc.version>2.9</attach-javadoc.version>
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
+		<compiler-plugin.version>2.0.2</compiler-plugin.version>
+		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
+		<site-plugin.version>3.2</site-plugin.version>
+		<reports-plugin.version>2.6</reports-plugin.version>
+		<surefire-plugin.version>2.11</surefire-plugin.version>
+		<assembly-plugin.version>2.2.2</assembly-plugin.version>
+		
 
 		<!-- Sonatype OSS snapshots repository -->
 		<sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
@@ -129,24 +149,12 @@
 
 		<plugins>
 			<!-- 
-				default assembly config
-			-->
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-			</plugin>
-
-			<!-- 
 				compiler plugin config
-			-->						
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
+				<version>${compiler-plugin.version}</version>
 				<configuration>
 					<fork>true</fork>
 					<meminitial>128m</meminitial>
@@ -158,7 +166,7 @@
 
 			<!-- 
 				check style
-			-->						
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -167,7 +175,7 @@
 					<headerLocation>license-header.txt</headerLocation>
 					<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
 				</configuration>
-				<version>2.10</version>
+				<version>${checkstyle-plugin.version}</version>
 				<dependencies>
 					<dependency>
 						<groupId>${project.groupId}</groupId>
@@ -180,7 +188,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<version>3.2</version>
+				<version>${site-plugin.version}</version>
 				<configuration>
 				</configuration>
 				<executions>
@@ -219,7 +227,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.6</version>
+				<version>${reports-plugin.version}</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -258,7 +266,7 @@
 						</reports>
 					</reportSet>
 				</reportSets>
-		</plugin>
+			</plugin>
 		</plugins>
 	</reporting>
 	<!--	
@@ -277,7 +285,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
-						<version>2.11</version>
+						<version>${surefire-plugin.version}</version>
 						<configuration>
 							<suiteXmlFiles>
 								<suiteXmlFile>target/nb-private/testng-suite.xml</suiteXmlFile>
@@ -320,6 +328,99 @@
 							</execution>
 						</executions>
 					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>binary-release</id>
+			<build>
+				<plugins>
+					<!--  aggregate javadoc of modules in one jar -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${attach-javadoc.version}</version>
+						<inherited>false</inherited>
+						<configuration>
+							<maxmemory>512</maxmemory>
+							<quiet>false</quiet>
+							<source>1.7</source>
+							<verbose>true</verbose>
+							<linksource>true</linksource>
+							<links>
+								<link>http://docs.oracle.com/javase/7/docs/api/</link>
+							</links>
+							<finalName>learnlib-${project.version}</finalName>
+						</configuration>
+						<executions>
+							<execution>
+								<id>aggregate</id>
+								<goals>
+									<goal>aggregate-jar</goal>
+								</goals>
+								<phase>site</phase>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- 
+                        build assemblies
+                    -->
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>${assembly-plugin.version}</version>
+						<inherited>false</inherited>
+						<configuration>
+							<finalName>learnlib-${project.version}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+						</configuration>
+						<executions>
+							<!--  sources jar -->
+							<execution>
+								<id>src</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/main/assembly/learnlib-srcjar.xml</descriptor>
+									</descriptors>
+									<finalName>learnlib-${project.version}-sources</finalName>
+								</configuration>
+							</execution>
+							<!-- 
+                                binary jar
+                            -->
+							<execution>
+								<id>jar</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/main/assembly/learnlib-jar.xml</descriptor>
+									</descriptors>
+								</configuration>
+							</execution>
+							<!-- 
+                                bin
+                            -->
+							<execution>
+								<id>bin</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/main/assembly/learnlib-bin.xml</descriptor>
+									</descriptors>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
 				</plugins>
 			</build>
 		</profile>
@@ -390,16 +491,16 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			
-			<!-- TestNG -->				
+
+			<!-- TestNG -->
 			<dependency>
 				<groupId>org.testng</groupId>
 				<artifactId>testng</artifactId>
 				<version>${testng.version}</version>
 				<scope>test</scope>
-			</dependency>						
+			</dependency>
 		</dependencies>
-	</dependencyManagement>		
+	</dependencyManagement>
 
 
 	<distributionManagement>
