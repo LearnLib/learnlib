@@ -32,27 +32,28 @@ import de.learnlib.oracles.DefaultQuery;
 
 /**
  * Observation table class.
- * 
+ * <p>
  * An observation table (OT) is the central data structure used by Angluin's L* algorithm,
  * as described in the paper "Learning Regular Sets from Queries and Counterexamples".
- * 
+ * <p>
  * An observation table is a two-dimensional table, with rows indexed by prefixes,
  * and columns indexed by suffixes. For a prefix <code>u</code> and a suffix <code>v</code>,
  * the respective cell contains the result of the membership query <code>(u, v)</code>.
- * 
+ * <p>
  * The set of prefixes (row labels) is divided into two disjoint sets: short and long prefixes.
  * Each long prefix is a one-letter extension of a short prefix; conversely, every time a
  * prefix is added to the set of short prefixes, all possible one-letter extensions are added
  * to the set of long prefixes.
- * 
+ * <p>
  * In order to derive a well-defined hypothesis from an observation table, it must satisfy two
  * properties: closedness and consistency.
- * 
- * - An observation table is <b>closed</b> iff for each long prefix <code>u</code> there exists
+ * <ul>
+ * <li>An observation table is <b>closed</b> iff for each long prefix <code>u</code> there exists
  * a short prefix <code>u'</code> such that the row contents for both prefixes are equal.
- * - An observation table is <b>consistent</b> iff for every two short prefixes <code>u</code> and
+ * <li>An observation table is <b>consistent</b> iff for every two short prefixes <code>u</code> and
  * <code>u'</code> with identical row contents, it holds that for every input symbol <code>a</code>
  * the rows indexed by <code>ua</code> and <code>u'a</code> also have identical contents.  
+ * </ul>
  * 
  * @author Malte Isberner <malte.isberner@gmail.com>
  *

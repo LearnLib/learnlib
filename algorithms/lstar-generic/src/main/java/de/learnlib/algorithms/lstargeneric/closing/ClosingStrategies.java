@@ -26,11 +26,26 @@ import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
 
+/**
+ * Collection of predefined observation table closing strategies.
+ * 
+ * @see ClosingStrategy
+ * 
+ * @author Malte Isberner <malte.isberner@gmail.com>
+ *
+ */
 public class ClosingStrategies {
 	
+	/**
+	 * Closing strategy that randomly selects one representative row to close from each equivalence
+	 * class.
+	 */
 	public static final ClosingStrategy<Object,Object> CLOSE_RANDOM
 		= new CloseRandomStrategy();
 	
+	/**
+	 * Closing strategy that selects the first row from each equivalence class as representative.
+	 */
 	public static final ClosingStrategy<Object,Object> CLOSE_FIRST
 		= new ClosingStrategy<Object,Object>() {
 			@Override
@@ -45,6 +60,10 @@ public class ClosingStrategies {
 			}
 	};
 	
+	/**
+	 * Closing strategy that selects the shortest row of each equivalence class (more precisely:
+	 * a row which's prefix has minimal length in the respective class) as representative. 
+	 */
 	public static final ClosingStrategy<Object,Object> CLOSE_SHORTEST
 		= new ClosingStrategy<Object,Object>() {
 			@Override
@@ -70,6 +89,10 @@ public class ClosingStrategies {
 			}
 	};
 	
+	/**
+	 * Closing strategy that selects the lexicographically minimal row (wrt. its prefix)
+	 * of each equivalence class as representative.
+	 */
 	public static final ClosingStrategy<Object,Object> CLOSE_LEX_MIN
 		= new ClosingStrategy<Object,Object>() {
 			@Override
