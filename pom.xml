@@ -95,16 +95,6 @@
 		<module>filters</module>
 		<module>archetypes</module>
 	</modules>
-		<module>./test-support</module>
-		<module>./build-tools</module>
-		<module>./core</module>
-		<module>./algorithms</module>
-		<module>./eqtests</module>
-		<module>./simulator</module>
-		<module>./utils</module>
-		<module>./filters</module>
-		<module>./archetypes</module>
-	</modules>
 
 	<!--	
 	=================================	PROPERTIES ================================
@@ -291,42 +281,6 @@
 								<suiteXmlFile>target/nb-private/testng-suite.xml</suiteXmlFile>
 							</suiteXmlFiles>
 						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>release</id>
-			<build>
-				<plugins>
-					<!-- 
-						attach source and javadoc jars
-					-->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<version>${attach-source.version}</version>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${attach-javadoc.version}</version>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
 					</plugin>
 				</plugins>
 			</build>
