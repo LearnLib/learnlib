@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>de.learnlib.archetypes</groupId>
+	<artifactId>learnlib-archetypes-parent</artifactId>
+	<packaging>pom</packaging>
+
+	<name>LearnLib :: Archetypes</name>
+	<description>
+		Parent metaproject for archetypes that facilitate getting started with LearnLib.
+	</description>
+
+	<parent>
+		<groupId>de.learnlib</groupId>
+		<artifactId>learnlib-parent</artifactId>
+		<version>0.9-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<properties>
+		<maven-archetype.version>2.2</maven-archetype.version>
+	</properties>
+
+	<modules>
+		<module>./core</module>
+		<module>./typical</module>
+		<module>./complete</module>
+	</modules>
+
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.archetype</groupId>
+				<artifactId>archetype-packaging</artifactId>
+				<version>${maven-archetype.version}</version>
+			</extension>
+		</extensions>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-archetype-plugin</artifactId>
+					<version>${maven-archetype.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>
+

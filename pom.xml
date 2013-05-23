@@ -90,6 +90,7 @@
 		<module>./simulator</module>
 		<module>./utils</module>
 		<module>./filters</module>
+		<module>./archetypes</module>
 	</modules>	
 
 	<!--	
@@ -373,30 +374,21 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>net.automatalib</groupId>
-				<artifactId>automata-api</artifactId>
-				<version>${automatalib.version}</version>												
-			</dependency>						
-			<dependency>
-				<groupId>net.automatalib</groupId>
-				<artifactId>automata-core</artifactId>
-				<version>${automatalib.version}</version>												
+				<groupId>${project.groupId}</groupId>
+				<artifactId>learnlib-parallelism</artifactId>
+				<version>${project.version}</version>
 			</dependency>
+
+			<!-- Import AutomataLib dependencies -->
 			<dependency>
 				<groupId>net.automatalib</groupId>
-				<artifactId>automata-util</artifactId>
-				<version>${automatalib.version}</version>												
+				<artifactId>automata-parent</artifactId>
+				<version>${automatalib.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
-			<dependency>
-				<groupId>net.automatalib</groupId>
-				<artifactId>automata-commons-dotutil</artifactId>
-				<version>${automatalib.version}</version>												
-			</dependency>
-			<dependency>
-				<groupId>net.automatalib</groupId>
-				<artifactId>automata-incremental</artifactId>
-				<version>${automatalib.version}</version>												
-			</dependency>						
+			
+			<!-- TestNG -->				
 			<dependency>
 				<groupId>org.testng</groupId>
 				<artifactId>testng</artifactId>
