@@ -18,9 +18,9 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>./dhc</module>
-		<module>./lstar-generic</module>
-		<module>./lstar</module>
+		<module>dhc</module>
+		<module>lstar-generic</module>
+		<module>lstar</module>
 	</modules>  
 
 </project>

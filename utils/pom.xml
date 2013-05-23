@@ -18,8 +18,8 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>./counterexamples</module>
-		<module>./parallelism</module>
+		<module>counterexamples</module>
+		<module>parallelism</module>
 	</modules>  
 
 </project>

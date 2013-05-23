@@ -24,9 +24,9 @@
 	</properties>
 
 	<modules>
-		<module>./core</module>
-		<module>./typical</module>
-		<module>./complete</module>
+		<module>core</module>
+		<module>typical</module>
+		<module>complete</module>
 	</modules>
 
 	<build>

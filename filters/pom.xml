@@ -18,7 +18,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>./cache</module>
+		<module>cache</module>
 	</modules>
 
 </project>
