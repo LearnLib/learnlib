@@ -94,6 +94,7 @@
 		<module>utils</module>
 		<module>filters</module>
 		<module>archetypes</module>
+		<module>examples</module>
 	</modules>
 
 	<!--	
