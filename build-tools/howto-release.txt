@@ -1,0 +1,12 @@
+
+1) Release to sonatype repository
+
+...
+
+2) Build binary release 
+
+$ mvn -Pbinary-release clean compile javadoc:aggregate-jar package
+
+3) Deploy
+
+copy target/learnlib-${project.version}.zip to ... 
