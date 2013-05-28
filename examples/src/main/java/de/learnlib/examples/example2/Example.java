@@ -176,8 +176,8 @@ public class Example {
         // construct lstar instance (almost classic Mealy version)
         // almost: we use words (Word<String>) in cells of the table 
         // instead of single outputs.
-        LearningAlgorithm<MealyMachine<Object, BSQInput, ?, String>, BSQInput, Word<String>> lstar =
-                new ExtensibleLStarMealy(
+        LearningAlgorithm<? extends MealyMachine<?, BSQInput, ?, String>, BSQInput, Word<String>> lstar =
+                new ExtensibleLStarMealy<>(
                 inputs, // input alphabet
                 mqOracle, // mq oracle
                 suffixes, // initial suffixes
@@ -186,7 +186,7 @@ public class Example {
                 );
 
         // create random walks equivalence test
-        EquivalenceOracle<MealyMachine<Object, BSQInput, ?, String>, BSQInput, Word<String>> randomWalks =
+        EquivalenceOracle<MealyMachine<?, BSQInput, ?, String>, BSQInput, Word<String>> randomWalks =
                 new RandomWalkEQOracle<>(
                 0.05, // reset sul w/ this probability before a step 
                 10000, // max steps (overall)
@@ -199,7 +199,7 @@ public class Example {
         // the learniong algrithm and the random walks test.
         // The experiment will execute the main loop of
         // active learning
-        Experiment<MealyMachine<Object, BSQInput, ?, String>, BSQInput, Word<String>> experiment =
+        Experiment<MealyMachine<?, BSQInput, ?, String>, BSQInput, Word<String>> experiment =
                 new Experiment<>(lstar, randomWalks, inputs);
 
         // turn on time profiling

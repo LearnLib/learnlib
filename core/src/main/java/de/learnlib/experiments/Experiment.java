@@ -35,14 +35,14 @@ import de.learnlib.statistics.SimpleProfiler;
 public class Experiment<A, I, O> {
 
     private static LearnLogger logger = LearnLogger.getLogger(Experiment.class.getName());
-    private LearningAlgorithm<A, I, O> learningAlgorithm;
-    private EquivalenceOracle<A, I, O> equivalenceAlgorithm;
+    private LearningAlgorithm<? extends A, I, O> learningAlgorithm;
+    private EquivalenceOracle<? super A, I, O> equivalenceAlgorithm;
     private Alphabet<I> inputs;
     private boolean logModels = false;
     private boolean profile = false;
     private Counter rounds = new Counter("rounds", "#");
 
-    public Experiment(LearningAlgorithm<A, I, O> learningAlgorithm, EquivalenceOracle<A, I, O> equivalenceAlgorithm, Alphabet<I> inputs) {
+    public Experiment(LearningAlgorithm<? extends A, I, O> learningAlgorithm, EquivalenceOracle<? super A, I, O> equivalenceAlgorithm, Alphabet<I> inputs) {
         this.learningAlgorithm = learningAlgorithm;
         this.equivalenceAlgorithm = equivalenceAlgorithm;
         this.inputs = inputs;
