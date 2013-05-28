@@ -1,15 +1,15 @@
 /* Copyright (C) 2013 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- * 
+ *
  * LearnLib is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3.0 as published by the Free Software Foundation.
- * 
+ *
  * LearnLib is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
@@ -35,85 +35,86 @@ import net.automatalib.words.impl.Symbol;
 
 /**
  * This example shows the usage of a learning algorithm and an equivalence test
- * as part of an experiment in order to learn a simulated SUL.
- * 
+ * as part of an experiment in order to learn a simulated SUL (system under
+ * learning).
+ *
  * @author falkhowar
  */
 public class Example {
-    
+
     public static void main(String[] args) throws IOException {
-            
+
         // load DFA and alphabet
-        // the ? leaves open the state implementation since we do not 
+        // the ? leaves open the state implementation since we do not
         // need to know it explicitly
         DFA<?, Symbol>  target = ExampleAngluin.constructMachine();
         Alphabet<Symbol> inputs = ExampleAngluin.getAlphabet();
 
-        // typed empty word 
+        // typed empty word
         Word<Symbol> epsilon = Word.epsilon();
-        
+
         // construct a simulator membership query oracle
         // input  - Symbol  (determined by example)
         // output - Boolean (determined by DFA)
         SimulatorOracle<Symbol, Boolean> sul = new SimulatorOracle<>(target);
-        
-        // oracle for counting queries wraps sul
-        CounterOracle<Symbol, Boolean> mqOracle = 
+
+        // oracle for counting queries wraps SUL
+        CounterOracle<Symbol, Boolean> mqOracle =
                 new CounterOracle<>(sul, "membership queries");
-        
-        // construct lstar instance
+
+        // construct L* instance
         ExtensibleLStarDFA<Symbol> lstar = new ExtensibleLStarDFA<>(
                 inputs,                                     // input alphabet
                 mqOracle,                                   // mq oracle
                 Collections.singletonList(epsilon),         // initial suffixes
                 ObservationTableCEXHandlers.CLASSIC_LSTAR,  // handling of counterexamples
-                ClosingStrategies.CLOSE_FIRST               // always choose first unclosedness found 
+                ClosingStrategies.CLOSE_FIRST               // always choose first unclosedness found
                 );
-                
-        // construct a wMethod conformance test
-        // exploring the system up to depth 4 from 
+
+        // construct a W-method conformance test
+        // exploring the system up to depth 4 from
         // every state of a hypothesis
-        WMethodEQOracle<DFA<?, Symbol>, Symbol, Boolean> wMethod = 
+        WMethodEQOracle<DFA<?, Symbol>, Symbol, Boolean> wMethod =
                 new WMethodEQOracle<>(4, mqOracle);
-        
+
         // construct a learning experiment from
-        // the learniong algrithm and the conformance test.
+        // the learning algorithm and the conformance test.
         // The experiment will execute the main loop of
         // active learning
-        Experiment<DFA<?, Symbol>, Symbol, Boolean> experiment = 
+        Experiment<DFA<?, Symbol>, Symbol, Boolean> experiment =
                 new Experiment<>(lstar, wMethod, inputs);
-        
+
         // turn on time profiling
         experiment.setProfile(true);
-        
+
         // enable logging of models
         experiment.setLogModels(true);
-        
+
         // run experiment
         experiment.run();
-        
+
         // get learned model
         DFA<?, Symbol> result = lstar.getHypothesisModel();
-        
+
         // report results
         System.out.println("-------------------------------------------------------");
-                
+
         // profiling
         System.out.println(SimpleProfiler.getResults());
 
         // learning statistics
         System.out.println(experiment.getRounds().getSummary());
         System.out.println(mqOracle.getCounter().getSummary());
-        
+
         // model statistics
         System.out.println("States: " + result.size());
         System.out.println("Sigma: " + inputs.size());
-                
+
         // show model
         System.out.println();
         System.out.println("Model: ");
         GraphDOT.write(result, inputs, System.out); // may throw IOException!
-                
-        System.out.println("-------------------------------------------------------");        
+
+        System.out.println("-------------------------------------------------------");
     }
 }
