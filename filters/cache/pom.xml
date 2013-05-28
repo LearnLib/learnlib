@@ -33,6 +33,7 @@
 		<dependency>
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-incremental</artifactId>
+			<version>${automatalib.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
