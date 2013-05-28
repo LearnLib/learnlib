@@ -43,8 +43,8 @@ import net.automatalib.words.Word;
 import net.automatalib.words.impl.SimpleAlphabet;
 
 /**
- * This example shows how a model of a java class can be learned using the SUT
- * interfaces and the random walks equivalence test.
+ * This example shows how a model of a Java class can be learned using the SUL
+ * (system under learning) interfaces and the random walks equivalence test.
  *
  * @author falkhowar
  */
@@ -110,14 +110,14 @@ public class Example {
         // system under learning
         private BoundedStringQueue sul;
 
-        // reset the sul
+        // reset the SUL
         @Override
         public void reset() {
             // we just create a new instance
             sul = new BoundedStringQueue();
         }
 
-        // execute one input on the sul
+        // execute one input on the SUL
         @Override
         public String step(BSQInput in) {
             try {
@@ -173,7 +173,7 @@ public class Example {
         suffixes.add(Word.fromSymbols(offer_b));
         suffixes.add(Word.fromSymbols(poll));
 
-        // construct lstar instance (almost classic Mealy version)
+        // construct L* instance (almost classic Mealy version)
         // almost: we use words (Word<String>) in cells of the table 
         // instead of single outputs.
         LearningAlgorithm<MealyMachine<Object, BSQInput, ?, String>, BSQInput, Word<String>> lstar =
@@ -188,7 +188,7 @@ public class Example {
         // create random walks equivalence test
         EquivalenceOracle<MealyMachine<Object, BSQInput, ?, String>, BSQInput, Word<String>> randomWalks =
                 new RandomWalkEQOracle<>(
-                0.05, // reset sul w/ this probability before a step 
+                0.05, // reset SUL w/ this probability before a step 
                 10000, // max steps (overall)
                 false, // reset step count after counterexample 
                 new Random(46346293), // make results reproducible 
@@ -196,7 +196,7 @@ public class Example {
                 );
 
         // construct a learning experiment from
-        // the learniong algrithm and the random walks test.
+        // the learning algorithm and the random walks test.
         // The experiment will execute the main loop of
         // active learning
         Experiment<MealyMachine<Object, BSQInput, ?, String>, BSQInput, Word<String>> experiment =
