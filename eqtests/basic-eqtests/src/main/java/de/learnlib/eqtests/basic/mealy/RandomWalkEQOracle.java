@@ -116,8 +116,8 @@ public class RandomWalkEQOracle<A extends MealyMachine<Object, I, ?, O>, I, O>
 
 	    // restart?
 	    double restart = random.nextDouble();
-	    if (restart > restartProbability || restartProbability == 1.0) {
-		sul.reset();
+	    if (restart < restartProbability) {
+                sul.reset();
 		cur = hypothesis.getInitialState();
 		wbIn.clear();
 		wbOut.clear();
