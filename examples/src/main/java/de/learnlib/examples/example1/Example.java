@@ -16,6 +16,16 @@
  */
 package de.learnlib.examples.example1;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Collections;
+
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.commons.dotutil.DOT;
+import net.automatalib.util.graphs.dot.GraphDOT;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.Symbol;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
@@ -25,13 +35,6 @@ import de.learnlib.experiments.Experiment;
 import de.learnlib.oracles.CounterOracle;
 import de.learnlib.oracles.SimulatorOracle;
 import de.learnlib.statistics.SimpleProfiler;
-import java.io.IOException;
-import java.util.Collections;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.util.graphs.dot.GraphDOT;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
 
 /**
  * This example shows the usage of a learning algorithm and an equivalence test
@@ -81,7 +84,7 @@ public class Example {
         // the learning algorithm and the conformance test.
         // The experiment will execute the main loop of
         // active learning
-        Experiment<DFA<?, Symbol>, Symbol, Boolean> experiment =
+        Experiment<DFA<?, Symbol>> experiment =
                 new Experiment<>(lstar, wMethod, inputs);
 
         // turn on time profiling
@@ -94,7 +97,7 @@ public class Example {
         experiment.run();
 
         // get learned model
-        DFA<?, Symbol> result = lstar.getHypothesisModel();
+        DFA<?, Symbol> result = experiment.getFinalHypothesis();
 
         // report results
         System.out.println("-------------------------------------------------------");
@@ -114,6 +117,10 @@ public class Example {
         System.out.println();
         System.out.println("Model: ");
         GraphDOT.write(result, inputs, System.out); // may throw IOException!
+        
+        Writer w = DOT.createDotWriter(true);
+        GraphDOT.write(result, inputs, w);
+        w.close();
 
         System.out.println("-------------------------------------------------------");
     }

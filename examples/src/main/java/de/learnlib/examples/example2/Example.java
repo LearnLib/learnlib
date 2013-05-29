@@ -16,6 +16,23 @@
  */
 package de.learnlib.examples.example2;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Queue;
+import java.util.Random;
+
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.commons.dotutil.DOT;
+import net.automatalib.util.graphs.dot.GraphDOT;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.SimpleAlphabet;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealy;
@@ -27,20 +44,6 @@ import de.learnlib.experiments.Experiment;
 import de.learnlib.oracles.CounterOracle;
 import de.learnlib.oracles.SULOracle;
 import de.learnlib.statistics.SimpleProfiler;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
-import java.util.Random;
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.util.graphs.dot.GraphDOT;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
 
 /**
  * This example shows how a model of a Java class can be learned using the SUL
@@ -199,7 +202,7 @@ public class Example {
         // the learning algorithm and the random walks test.
         // The experiment will execute the main loop of
         // active learning
-        Experiment<MealyMachine<?, BSQInput, ?, String>, BSQInput, Word<String>> experiment =
+        Experiment<MealyMachine<?,BSQInput,?,String>> experiment =
                 new Experiment<>(lstar, randomWalks, inputs);
 
         // turn on time profiling
@@ -212,7 +215,7 @@ public class Example {
         experiment.run();
 
         // get learned model
-        MealyMachine<?, BSQInput, ?, String> result = lstar.getHypothesisModel();
+        MealyMachine<?, BSQInput, ?, String> result = experiment.getFinalHypothesis();
 
         // report results
         System.out.println("-------------------------------------------------------");
@@ -231,7 +234,11 @@ public class Example {
         // show model
         System.out.println();
         System.out.println("Model: ");
+        
         GraphDOT.write(result, inputs, System.out); // may throw IOException!
+        Writer w = DOT.createDotWriter(true);
+        GraphDOT.write(result, inputs, w);
+        w.close();
 
         System.out.println("-------------------------------------------------------");
 
