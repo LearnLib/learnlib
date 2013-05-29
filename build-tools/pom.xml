@@ -14,5 +14,6 @@
 
 	<artifactId>learnlib-build-tools</artifactId>
 	<name>LearnLib :: Build Tools</name>
+	<description>Tools and resources required for building LearnLib</description>
 
 </project>

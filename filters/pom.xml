@@ -14,12 +14,12 @@
 
 	<artifactId>learnlib-filters</artifactId>
 	<name>LearnLib :: Filters</name>
+	<description>Parent module for queries that can be used to speed up the learning process</description>
 
 	<packaging>pom</packaging>
 
 	<modules>
 		<module>cache</module>
 	</modules>
-
 </project>
 

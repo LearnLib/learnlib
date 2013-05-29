@@ -13,7 +13,8 @@
 	</parent>
 
 	<artifactId>learnlib-basic-eqtests</artifactId>
-	<name>LearnLib :: Basic EQ-Tests</name>
+	<name>LearnLib :: Equivalence Tests :: Basic Tests</name>
+	<description>A collection of basic algorithm for approximating equivalence queries</description>
 
 	<dependencies>
 		<dependency>

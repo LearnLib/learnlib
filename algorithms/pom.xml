@@ -14,6 +14,7 @@
 
 	<artifactId>learnlib-algorithms</artifactId>
 	<name>LearnLib :: Algorithms</name>
+	<description>Parent module for automata learning algorithms shipped with LearnLib</description>
 
 	<packaging>pom</packaging>
 

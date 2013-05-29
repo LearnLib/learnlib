@@ -14,6 +14,7 @@
 
 	<artifactId>learnlib-simulator</artifactId>
 	<name>LearnLib :: Simulator</name>
+	<description>Membership and equivalence oracles using an automaton model as backend</description>
 
 	<dependencies>
 		<dependency>

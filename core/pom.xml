@@ -14,6 +14,7 @@
 
 	<artifactId>learnlib-core</artifactId>
 	<name>LearnLib :: Core</name>
+	<description>Infrastructure and core functionalities of LearnLib</description>
 
 	<dependencies>
 		<dependency>
@@ -33,5 +34,4 @@
 			<artifactId>testng</artifactId>
 		</dependency>
 	</dependencies>
-
 </project>

@@ -8,6 +8,7 @@
 	<packaging>maven-archetype</packaging>
 
 	<name>LearnLib :: Archetypes :: Core</name>
+	<description>Archetype providing dependencies for core functionalities of LearnLib</description>
 
 	<parent>
 		<groupId>de.learnlib.archetypes</groupId>

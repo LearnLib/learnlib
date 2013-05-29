@@ -13,12 +13,12 @@
 	</parent>
 
 	<artifactId>learnlib-eqtests</artifactId>
-	<name>LearnLib :: EQ-Tests</name>
+	<name>LearnLib :: Equivalence Tests</name>
+	<description>Parent module for equivalence testing algorithms shipped with LearnLib</description>
 
 	<packaging>pom</packaging>
 
 	<modules>
 		<module>basic-eqtests</module>
-	</modules>  
-
+	</modules>
 </project>

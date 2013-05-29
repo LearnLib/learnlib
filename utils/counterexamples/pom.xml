@@ -13,7 +13,8 @@
 	</parent>
 
 	<artifactId>learnlib-counterexamples</artifactId>
-	<name>LearnLib :: Counter Examples</name>
+	<name>LearnLib :: Utilities :: Counterexamples</name>
+	<description>A collection of standard algorithms for handling counterexamples in automata learning</description>
 
 	<dependencies>
 		<dependency>
@@ -30,5 +31,4 @@
 			<artifactId>testng</artifactId>
 		</dependency>
 	</dependencies>
-
 </project>

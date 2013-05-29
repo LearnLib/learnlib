@@ -13,7 +13,8 @@
 	</parent>
 
 	<artifactId>learnlib-parallelism</artifactId>
-	<name>LearnLib :: Parallelism</name>
+	<name>LearnLib :: Utilities :: Parallelism</name>
+	<description>Support for parallelizing membership queries</description>
 
 	<dependencies>
 		<dependency>
@@ -26,5 +27,4 @@
 			<artifactId>testng</artifactId>
 		</dependency>
 	</dependencies>
-
 </project>

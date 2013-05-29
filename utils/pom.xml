@@ -13,14 +13,14 @@
 	</parent>
 
 	<artifactId>learnlib-utils</artifactId>
-	<name>LearnLib :: Utils</name>
+	<name>LearnLib :: Utilities</name>
+	<description>Parent module for LearnLib utilities</description>
 
 	<packaging>pom</packaging>
 
 	<modules>
 		<module>counterexamples</module>
 		<module>parallelism</module>
-	</modules>  
-
+	</modules>
 </project>
 

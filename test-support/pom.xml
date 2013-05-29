@@ -13,6 +13,7 @@
 
 	<artifactId>learnlib-test-support</artifactId>
 	<name>LearnLib :: Test Support</name>
+	<description>Functionality to ease writing test cases for LearnLib</description>
 
 	<dependencies>
 		<dependency>
@@ -28,5 +29,4 @@
 			<artifactId>automata-commons-dotutil</artifactId>
 		</dependency>
 	</dependencies>
-
 </project>
