@@ -19,7 +19,6 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>learnlib-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -33,7 +32,6 @@
 		<dependency>
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-incremental</artifactId>
-			<version>${automatalib.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
