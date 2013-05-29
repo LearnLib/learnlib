@@ -44,6 +44,7 @@ import de.learnlib.experiments.Experiment;
 import de.learnlib.oracles.CounterOracle;
 import de.learnlib.oracles.SULOracle;
 import de.learnlib.statistics.SimpleProfiler;
+import java.util.Deque;
 
 /**
  * This example shows how a model of a Java class can be learned using the SUL
@@ -58,18 +59,21 @@ public class Example {
      * infer a model. It wraps an ordinary queue of Strings, limiting
      * its size to MAX_SIZE (3). Once the queue is full, additional 
      * offers will be ignored.
+     * <p>
+     * However, the implementation uses the underlying queue in a strange
+     * way as the model will reveal.
      */
     public static class BoundedStringQueue {
 
         // capacity
         public static final int MAX_SIZE = 3;
         // storage
-        private Queue<String> data = new ArrayDeque<>(3);
+        private Deque<String> data = new ArrayDeque<>(3);
 
         // add a String to the queue if capacity allows
         public void offer(String s) {
             if (data.size() < MAX_SIZE) {
-                data.offer(s);
+                data.offerFirst(s);
             }
         }
 

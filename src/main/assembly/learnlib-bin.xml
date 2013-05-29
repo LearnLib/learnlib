@@ -40,6 +40,9 @@
             <includes>
                 <include>*:jar:*</include>
             </includes>
+            <excludes>
+                <exclude>de.learnlib:learnlib-test-support</exclude>
+            </excludes>                
             <sources>
                 <includeModuleDirectory>false</includeModuleDirectory>
                 <fileSets>

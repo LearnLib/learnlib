@@ -30,11 +30,13 @@ import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
 import de.learnlib.eqtests.basic.WMethodEQOracle;
-import de.learnlib.examples.dfa.ExampleAngluin;
 import de.learnlib.experiments.Experiment;
 import de.learnlib.oracles.CounterOracle;
 import de.learnlib.oracles.SimulatorOracle;
 import de.learnlib.statistics.SimpleProfiler;
+import net.automatalib.automata.fsa.impl.FastDFA;
+import net.automatalib.automata.fsa.impl.FastDFAState;
+import net.automatalib.words.impl.FastAlphabet;
 
 /**
  * This example shows the usage of a learning algorithm and an equivalence test
@@ -45,13 +47,44 @@ import de.learnlib.statistics.SimpleProfiler;
  */
 public class Example {
 
+    /**
+     * creates example from Angluin's seminal paper.
+     * 
+     * @return example dfa
+     */
+    private static FastDFA<Symbol> constructSUL() {
+        // create inputs
+        Symbol a = new Symbol("a");
+        Symbol b = new Symbol("b");
+        Alphabet<Symbol> sigma = new FastAlphabet<>(a, b);
+
+        // create states
+        FastDFA<Symbol> dfa = new FastDFA<>(sigma);
+        FastDFAState q0 = dfa.addInitialState(true);
+        FastDFAState q1 = dfa.addState(false);
+        FastDFAState q2 = dfa.addState(false);
+        FastDFAState q3 = dfa.addState(false);
+
+        // create transitions
+        dfa.addTransition(q0, a, q1);
+        dfa.addTransition(q0, b, q2);
+        dfa.addTransition(q1, a, q0);
+        dfa.addTransition(q1, b, q3);
+        dfa.addTransition(q2, a, q3);
+        dfa.addTransition(q2, b, q0);
+        dfa.addTransition(q3, a, q2);
+        dfa.addTransition(q3, b, q1);
+
+        return dfa;
+    }
+
     public static void main(String[] args) throws IOException {
 
         // load DFA and alphabet
         // the ? leaves open the state implementation since we do not
         // need to know it explicitly
-        DFA<?, Symbol>  target = ExampleAngluin.constructMachine();
-        Alphabet<Symbol> inputs = ExampleAngluin.getAlphabet();
+        FastDFA<Symbol> target = constructSUL();
+        Alphabet<Symbol> inputs = target.getInputAlphabet();
 
         // typed empty word
         Word<Symbol> epsilon = Word.epsilon();
@@ -67,11 +100,11 @@ public class Example {
 
         // construct L* instance
         ExtensibleLStarDFA<Symbol> lstar = new ExtensibleLStarDFA<>(
-                inputs,                                     // input alphabet
-                mqOracle,                                   // mq oracle
-                Collections.singletonList(epsilon),         // initial suffixes
-                ObservationTableCEXHandlers.CLASSIC_LSTAR,  // handling of counterexamples
-                ClosingStrategies.CLOSE_FIRST               // always choose first unclosedness found
+                inputs, // input alphabet
+                mqOracle, // mq oracle
+                Collections.singletonList(epsilon), // initial suffixes
+                ObservationTableCEXHandlers.CLASSIC_LSTAR, // handling of counterexamples
+                ClosingStrategies.CLOSE_FIRST // always choose first unclosedness found
                 );
 
         // construct a W-method conformance test
@@ -117,7 +150,7 @@ public class Example {
         System.out.println();
         System.out.println("Model: ");
         GraphDOT.write(result, inputs, System.out); // may throw IOException!
-        
+
         Writer w = DOT.createDotWriter(true);
         GraphDOT.write(result, inputs, w);
         w.close();
