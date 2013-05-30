@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.dhc.mealy;
+package de.learnlib.algorithms.dhc.mealy;
 
 import static de.learnlib.examples.mealy.ExampleGrid.constructMachine;
 
@@ -31,6 +31,7 @@ import net.automatalib.words.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import de.learnlib.algorithms.dhc.mealy.MealyDHC;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.cache.mealy.MealyCacheOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;

@@ -14,31 +14,34 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.angluin;
 
-import net.automatalib.words.Word;
+package de.learnlib.algorithms.dhc;
 
-public class InconsistencyDataHolder<I> {
+import java.util.HashMap;
+import java.util.Map;
 
-	private final Word<I> firstState;
-	private final Word<I> secondState;
-	private final I differingSymbol;
-
-	public InconsistencyDataHolder(Word<I> firstState, Word<I> secondState, I differingSymbol) {
-		this.firstState = firstState;
-		this.secondState = secondState;
-		this.differingSymbol = differingSymbol;
+/**
+ * A utility class that deduplicates Objects regarding their equals
+ * function.
+ * 
+ * @author Maik Merten <maikmerten@googlemail.com>
+ */
+public class Deduplicator<C> {
+	
+	private final Map<C,C> cache = new HashMap<>();
+	
+	/**
+	 * Find an equal representative object for the provided object.
+	 * @param instance object which should be deduplicated
+	 * @return equal representative object or input object
+	 */
+	public C deduplicate(C instance) {
+		C cached = cache.get(instance);
+		if(cached != null)
+			return cached;
+		cache.put(instance, instance);
+		return instance;
 	}
-
-	public Word<I> getFirstState() {
-		return firstState;
-	}
-
-	public Word<I> getSecondState() {
-		return secondState;
-	}
-
-	public I getDifferingSymbol() {
-		return differingSymbol;
-	}
+	
+	
 }

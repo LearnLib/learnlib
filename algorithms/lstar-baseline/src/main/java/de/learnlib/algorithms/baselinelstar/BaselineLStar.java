@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.angluin;
+package de.learnlib.algorithms.baselinelstar;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +36,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <I>
  * 		input symbol class.
  */
-public class Angluin<I> implements LearningAlgorithm<DFA<?, I>, I, Boolean> {
+public class BaselineLStar<I> implements LearningAlgorithm<DFA<?, I>, I, Boolean> {
 
 	private final Alphabet<I> alphabet;
 
@@ -47,7 +47,7 @@ public class Angluin<I> implements LearningAlgorithm<DFA<?, I>, I, Boolean> {
 	private boolean startLearningAlreadyCalled;
 
 	/**
-	 * Initializes a newly created Angluin implementation. After this, the method
+	 * Initializes a newly created baseline L* implementation. After this, the method
 	 * {@link #startLearning()} may be called once.
 	 *
 	 * @param alphabet
@@ -55,7 +55,7 @@ public class Angluin<I> implements LearningAlgorithm<DFA<?, I>, I, Boolean> {
 	 * @param oracle
 	 * 		The {@link MembershipOracle} which is used for membership queries.
 	 */
-	public Angluin(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
+	public BaselineLStar(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		this.observationTable = new ObservationTable<>();
@@ -263,8 +263,8 @@ public class Angluin<I> implements LearningAlgorithm<DFA<?, I>, I, Boolean> {
 	 * 		The word for which the prefixes should be returned.
 	 * @return A list of all prefixes for the given word.
 	 */
-	// This is superseded by Word.suffixes(boolean). Please adapt -misberner
-	private List<Word<I>> prefixesOfWord(Word<I> word) {
+	// FIXME: This is superseded by Word.suffixes(boolean). Please adapt -misberner
+	private static <I> List<Word<I>> prefixesOfWord(Word<I> word) {
 		List<Word<I>> prefixes = new ArrayList<>(word.size());
 		for (int i = 1; i <= word.size(); i++) {
 			prefixes.add(word.prefix(i));

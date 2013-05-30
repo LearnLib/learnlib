@@ -14,10 +14,12 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.angluin;
+package de.learnlib.algorithms.baselinelstar;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import de.learnlib.algorithms.baselinelstar.ObservationTableRow;
 
 public class ObservationTableRowTest {
 

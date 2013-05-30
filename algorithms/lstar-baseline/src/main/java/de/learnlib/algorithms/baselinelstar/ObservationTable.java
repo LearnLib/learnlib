@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.angluin;
+package de.learnlib.algorithms.baselinelstar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 /**
- * The internal storage mechanism for {@link Angluin}.
+ * The internal storage mechanism for {@link BaselineLStar}.
  *
  * @param <I>
  * 		input symbol class.
@@ -115,7 +115,7 @@ public class ObservationTable<I> {
 		}
 	}
 
-	private void addResultToRow(boolean result, int suffixPosition, ObservationTableRow row) {
+	private static void addResultToRow(boolean result, int suffixPosition, ObservationTableRow row) {
 		final List<Boolean> values = row.getValues();
 		if (values.size() > suffixPosition) {
 			if (values.get(suffixPosition) != result) {

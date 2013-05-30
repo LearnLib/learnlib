@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.dhc.mealy;
+package de.learnlib.algorithms.dhc.mealy;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,12 +32,12 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.SimpleAlphabet;
+import de.learnlib.algorithms.dhc.Deduplicator;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.counterexamples.GlobalSuffixFinder;
 import de.learnlib.counterexamples.GlobalSuffixFinders;
-import de.learnlib.dhc.Deduplicator;
 import de.learnlib.oracles.DefaultQuery;
 
 /**

@@ -14,8 +14,9 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.angluin;
+package de.learnlib.algorithms.baselinelstar;
 
+import de.learnlib.algorithms.baselinelstar.BaselineLStar;
 import de.learnlib.examples.dfa.ExampleAngluin;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SafeOracle;
@@ -31,12 +32,12 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-public class AngluinTest {
+public class BaselineLStarTest {
 
 	private Symbol zero;
 	private Symbol one;
 
-	private Angluin<Symbol> angluin;
+	private BaselineLStar<Symbol> angluin;
 
 	@BeforeClass
 	public void setup() {
@@ -50,7 +51,7 @@ public class AngluinTest {
 		SimulatorOracle<Symbol, Boolean> dso = new SimulatorOracle<>(dfa);
 		SafeOracle<Symbol, Boolean> oracle = new SafeOracle<>(dso);
 
-		angluin = new Angluin<>(alphabet, oracle);
+		angluin = new BaselineLStar<>(alphabet, oracle);
 	}
 
 	@Test(expectedExceptions = IllegalStateException.class)
@@ -96,7 +97,7 @@ public class AngluinTest {
 		Assert.assertEquals(18, observationTableOutput.split("\n").length);
 	}
 
-	private DefaultQuery<Symbol, Boolean> createCounterExample(boolean output, Symbol... symbols) {
+	private static DefaultQuery<Symbol, Boolean> createCounterExample(boolean output, Symbol... symbols) {
 		Word<Symbol> counterExample = Word.fromSymbols(symbols);
 		DefaultQuery<Symbol, Boolean> query = new DefaultQuery<>(counterExample);
 		query.answer(output);

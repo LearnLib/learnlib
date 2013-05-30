@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.angluin;
+package de.learnlib.algorithms.baselinelstar;
 
 import java.util.Collections;
 import java.util.LinkedList;

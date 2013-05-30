@@ -12,8 +12,8 @@
 		<relativePath>../pom.xml</relativePath>        
 	</parent>
 
-	<artifactId>learnlib-lstar</artifactId>
-	<name>LearnLib :: Algorithms :: L-Star</name>
+	<artifactId>learnlib-lstar-baseline</artifactId>
+	<name>LearnLib :: Algorithms :: Baseline L*</name>
 	<description>A simple, straightforward implementation of Dana Angluin's L* algorithm</description>
 
 	<dependencies>

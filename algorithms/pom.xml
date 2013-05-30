@@ -21,7 +21,7 @@
 	<modules>
 		<module>dhc</module>
 		<module>lstar-generic</module>
-		<module>lstar</module>
+		<module>lstar-baseline</module>
 	</modules>  
 
 </project>

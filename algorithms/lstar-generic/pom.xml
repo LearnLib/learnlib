@@ -13,7 +13,7 @@
 	</parent>
 
 	<artifactId>learnlib-lstar-generic</artifactId>
-	<name>LearnLib :: Algorithms :: Generic L-Star</name>
+	<name>LearnLib :: Algorithms :: Generic L*</name>
 	<description>A flexible, optimized version of Dana Angluin's L* algorithm</description>
 
 	<dependencies>
