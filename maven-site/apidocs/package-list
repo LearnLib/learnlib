@@ -1,4 +1,6 @@
-de.learnlib.algorithms.angluin
+de.learnlib.algorithms.baselinelstar
+de.learnlib.algorithms.dhc
+de.learnlib.algorithms.dhc.mealy
 de.learnlib.algorithms.lstargeneric
 de.learnlib.algorithms.lstargeneric.ce
 de.learnlib.algorithms.lstargeneric.closing
@@ -9,8 +11,6 @@ de.learnlib.api
 de.learnlib.cache.dfa
 de.learnlib.cache.mealy
 de.learnlib.counterexamples
-de.learnlib.dhc
-de.learnlib.dhc.mealy
 de.learnlib.eqtests.basic
 de.learnlib.eqtests.basic.mealy
 de.learnlib.examples.dfa
