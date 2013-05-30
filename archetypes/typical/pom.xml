@@ -25,11 +25,12 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<packaging>maven-archetype</packaging>
 
 	<name>LearnLib :: Archetypes :: Typical</name>
+	<description>Archetype for a typical LearnLib setup, including the most commonly used dependencies</description>
 
 	<parent>
 		<groupId>de.learnlib.archetypes</groupId>
 		<artifactId>learnlib-archetypes-parent</artifactId>
-		<version>0.9-SNAPSHOT</version>
+		<version>0.9.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 </project>

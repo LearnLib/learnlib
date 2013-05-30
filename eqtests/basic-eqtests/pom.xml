@@ -8,12 +8,13 @@
 	<parent>
 		<artifactId>learnlib-eqtests</artifactId>
 		<groupId>de.learnlib</groupId>
-		<version>0.9-SNAPSHOT</version>
+		<version>0.9.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>        
 	</parent>
 
 	<artifactId>learnlib-basic-eqtests</artifactId>
-	<name>LearnLib :: Basic EQ-Tests</name>
+	<name>LearnLib :: Equivalence Tests :: Basic Tests</name>
+	<description>A collection of basic algorithm for approximating equivalence queries</description>
 
 	<dependencies>
 		<dependency>

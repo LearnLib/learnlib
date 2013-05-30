@@ -6,24 +6,21 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<!--	
-	=================================	PROJECT INFO ==============================	
+	<!--
+	================================= PROJECT INFO ==============================	
 	-->
 	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-parent</artifactId>
-	<version>0.9-SNAPSHOT</version>
+	<version>0.9.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
-	<url>http://www.learnlib.de</url>
-
-	<description>
-		LearnLib is a framework for automata learning and experimentation.
-	</description>
+	<url>http://learnlib.github.io/learnlib/maven-site/</url>
+	<description>A framework for active automata learning and experimentation</description>
 
 	<licenses>
 		<license>
 			<name>GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007</name>
-			<url>http://www.gnu.org/copyleft/lesser.html</url>
+			<url>http://www.gnu.org/licenses/lgpl-3.0-standalone.html</url>
 		</license>
 	</licenses>
 
@@ -54,7 +51,7 @@
 			<email>maikmerten@googlemail.com</email>
 		</developer>
 		<developer>
-			<id>oliverbauer</id>
+			<id>oliverbauer8</id>
 			<name>Oliver Bauer</name>
 			<email>oliver.bauer@tu-dortmund.de</email>
 		</developer>
@@ -71,18 +68,16 @@
 
 
 	<!--	
-	================================	SONATYPE PARENT ==============================	
+	================================ SONATYPE PARENT ==============================	
 	-->
-	<!-- FIXME: Disabled as it's causing mvn site to fail!
 	<parent>
 			<groupId>org.sonatype.oss</groupId>
 			<artifactId>oss-parent</artifactId>
 			<version>7</version>
 	</parent>
-	-->
 
 	<!--	
-	=================================	MODULES ===================================	
+	================================= MODULES ===================================	
 	-->
 	<modules>
 		<module>test-support</module>
@@ -94,10 +89,11 @@
 		<module>utils</module>
 		<module>filters</module>
 		<module>archetypes</module>
+		<module>examples</module>
 	</modules>
 
 	<!--	
-	=================================	PROPERTIES ================================
+	================================= PROPERTIES ================================
 	-->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -106,112 +102,101 @@
 		-->
 		<automatalib.version>0.3.0-SNAPSHOT</automatalib.version>
 		<testng.version>6.8</testng.version>
-		<attach-source.version>2.1.2</attach-source.version>
-		<attach-javadoc.version>2.9</attach-javadoc.version>
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
-		<compiler-plugin.version>2.0.2</compiler-plugin.version>
+		<compiler-plugin.version>3.1</compiler-plugin.version>
 		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
-		<site-plugin.version>3.2</site-plugin.version>
-		<reports-plugin.version>2.6</reports-plugin.version>
-		<surefire-plugin.version>2.11</surefire-plugin.version>
-		<assembly-plugin.version>2.2.2</assembly-plugin.version>
+		<site-plugin.version>3.3</site-plugin.version>
+		<reports-plugin.version>2.7</reports-plugin.version>
+		<surefire-plugin.version>2.14.1</surefire-plugin.version>
+		<assembly-plugin.version>2.4</assembly-plugin.version>
 		
-
-		<!-- Sonatype OSS snapshots repository -->
-		<sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
+		<!-- Javadoc links -->
+		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
+		<automatalib.apidocs>http://misberner.github.io/automatalib/maven-site/apidocs/</automatalib.apidocs>
 	</properties>
 
 
 	<!--	
-	=================================	BUILD PLUGINS =============================	
+	================================= BUILD PLUGINS =============================	
 	-->
 	<build>
-
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${compiler-plugin.version}</version>
+					<configuration>
+						<fork>true</fork>
+						<meminitial>128m</meminitial>
+						<maxmem>512m</maxmem>
+						<source>1.7</source>
+						<target>1.7</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>${javadoc-plugin.version}</version>
+					<configuration>
+						<maxmemory>512</maxmemory>
+						<quiet>false</quiet>
+						<source>1.7</source>
+						<verbose>true</verbose>
+						<linksource>true</linksource>
+						<links>
+							<link>${java7.apidocs}</link>
+							<link>${automatalib.apidocs}</link>
+						</links>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>${checkstyle-plugin.version}</version>
+					<configuration>
+						<configLocation>config/sun_checks.xml</configLocation>
+						<headerLocation>license-header.txt</headerLocation>
+						<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>learnlib-build-tools</artifactId>
+							<version>${project.version}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${site-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>attach-descriptor</id>
+							<goals>
+								<goal>attach-descriptor</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${assembly-plugin.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
-
-		<plugins>
-			<!-- 
-				compiler plugin config
-			-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${compiler-plugin.version}</version>
-				<configuration>
-					<fork>true</fork>
-					<meminitial>128m</meminitial>
-					<maxmem>512m</maxmem>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-
-			<!-- 
-				check style
-			-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<configuration>
-					<configLocation>config/sun_checks.xml</configLocation>
-					<headerLocation>license-header.txt</headerLocation>
-					<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
-				</configuration>
-				<version>${checkstyle-plugin.version}</version>
-				<dependencies>
-					<dependency>
-						<groupId>${project.groupId}</groupId>
-						<artifactId>learnlib-build-tools</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>${site-plugin.version}</version>
-				<configuration>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-descriptor</id>
-						<goals>
-							<goal>attach-descriptor</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>aggregate</id>
-						<inherited>false</inherited>
-						<goals>
-							<goal>aggregate</goal>
-						</goals>
-						<phase>site</phase>
-						<configuration>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-		</plugins>
-
 	</build>
 
+	<!--
+	================================= REPORTING PLUGINS ==============================	
+	-->
 	<reporting>
 		<plugins>
 			<plugin>
@@ -234,16 +219,24 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${javadoc-plugin.version}</version>
+				<configuration>
+					<maxmemory>512</maxmemory>
+					<quiet>false</quiet>
+					<source>1.7</source>
+					<verbose>true</verbose>
+					<linksource>true</linksource>
+					<links>
+						<link>${java7.apidocs}</link>
+						<link>${automatalib.apidocs}</link>
+					</links>
+				</configuration>
 				<reportSets>
 					<reportSet>
 						<id>non-aggregate</id>
-						<configuration>
-						</configuration>
 						<reports>
 							<report>javadoc</report>
 						</reports>
@@ -259,6 +252,7 @@
 			</plugin>
 		</plugins>
 	</reporting>
+
 	<!--	
 	===============================	PROFILES =======================	
 	-->
@@ -275,7 +269,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
-						<version>${surefire-plugin.version}</version>
 						<configuration>
 							<suiteXmlFiles>
 								<suiteXmlFile>target/nb-private/testng-suite.xml</suiteXmlFile>
@@ -293,17 +286,8 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${attach-javadoc.version}</version>
 						<inherited>false</inherited>
 						<configuration>
-							<maxmemory>512</maxmemory>
-							<quiet>false</quiet>
-							<source>1.7</source>
-							<verbose>true</verbose>
-							<linksource>true</linksource>
-							<links>
-								<link>http://docs.oracle.com/javase/7/docs/api/</link>
-							</links>
 							<finalName>learnlib-${project.version}</finalName>
 						</configuration>
 						<executions>
@@ -321,7 +305,6 @@
                     -->
 					<plugin>
 						<artifactId>maven-assembly-plugin</artifactId>
-						<version>${assembly-plugin.version}</version>
 						<inherited>false</inherited>
 						<configuration>
 							<finalName>learnlib-${project.version}</finalName>
@@ -374,7 +357,6 @@
 							</execution>
 						</executions>
 					</plugin>
-
 				</plugins>
 			</build>
 		</profile>
@@ -456,25 +438,15 @@
 		</dependencies>
 	</dependencyManagement>
 
-
+	<!--
+	================================= DISTRIBUTION ==============================	
+	-->
 	<distributionManagement>
-		<snapshotRepository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>Sonatype Nexus Snapshots</name>
-			<url>${sonatypeOssDistMgmtSnapshotsUrl}</url>
-		</snapshotRepository>
-		<repository>
-			<id>sonatype-nexus-staging</id>
-			<name>Nexus Release Repository</name>
-			<url>
-				https://oss.sonatype.org/service/local/staging/deploy/maven2/
-			</url>
-		</repository>
-
-		<!-- Dummy - this will NOT actually be used -->
+		<!-- Dummy - this will NOT actually be used, but is required for mvn site:stage -->
+		<!-- Use build-tools/deploy-site.sh for site deployment on GitHub pages -->
 		<site>
 			<id>local</id>
-			<url>file://${site.tmpDeployDirectory}</url>
+			<url>file://${user.home}/learnlib-site</url>
 		</site>
 	</distributionManagement>
 </project>

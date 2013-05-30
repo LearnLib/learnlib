@@ -8,12 +8,13 @@
 	<parent>
 		<artifactId>learnlib-utils</artifactId>
 		<groupId>de.learnlib</groupId>
-		<version>0.9-SNAPSHOT</version>
+		<version>0.9.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>        
 	</parent>
 
 	<artifactId>learnlib-parallelism</artifactId>
-	<name>LearnLib :: Parallelism</name>
+	<name>LearnLib :: Utilities :: Parallelism</name>
+	<description>Support for parallelizing membership queries</description>
 
 	<dependencies>
 		<dependency>
@@ -26,5 +27,4 @@
 			<artifactId>testng</artifactId>
 		</dependency>
 	</dependencies>
-
 </project>

@@ -8,12 +8,13 @@
 	<parent>
 		<artifactId>learnlib-algorithms</artifactId>
 		<groupId>de.learnlib</groupId>
-		<version>0.9-SNAPSHOT</version>
+		<version>0.9.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>        
 	</parent>
 
 	<artifactId>learnlib-dhc</artifactId>
-	<name>LearnLib :: DHC</name>
+	<name>LearnLib :: Algorithms :: DHC</name>
+	<description>The Direct Hypothesis Construction algorithm for active learning of Mealy machines</description>
 
 	<dependencies>
 		<dependency>

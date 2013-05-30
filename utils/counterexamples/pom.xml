@@ -8,12 +8,13 @@
 	<parent>
 		<artifactId>learnlib-utils</artifactId>
 		<groupId>de.learnlib</groupId>
-		<version>0.9-SNAPSHOT</version>
+		<version>0.9.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>        
 	</parent>
 
 	<artifactId>learnlib-counterexamples</artifactId>
-	<name>LearnLib :: Counter Examples</name>
+	<name>LearnLib :: Utilities :: Counterexamples</name>
+	<description>A collection of standard algorithms for handling counterexamples in automata learning</description>
 
 	<dependencies>
 		<dependency>
@@ -30,5 +31,4 @@
 			<artifactId>testng</artifactId>
 		</dependency>
 	</dependencies>
-
 </project>

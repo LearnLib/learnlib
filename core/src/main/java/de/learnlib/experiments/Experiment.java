@@ -32,63 +32,83 @@ import de.learnlib.statistics.SimpleProfiler;
  * @param <I>
  * @param <O> 
  */
-public class Experiment<A, I, O> {
+public class Experiment<A> {
+	
+	private final class ExperimentImpl<I,O> {
+		private final LearningAlgorithm<? extends A, I, O> learningAlgorithm;
+	    private final EquivalenceOracle<? super A, I, O> equivalenceAlgorithm;
+	    private final Alphabet<I> inputs;
+	    
+	    public ExperimentImpl(LearningAlgorithm<? extends A, I, O> learningAlgorithm, EquivalenceOracle<? super A, I, O> equivalenceAlgorithm, Alphabet<I> inputs) {
+	        this.learningAlgorithm = learningAlgorithm;
+	        this.equivalenceAlgorithm = equivalenceAlgorithm;
+	        this.inputs = inputs;
+	    }
+	    
+	    public A run() {
+	        rounds.increment();
+	        logger.logPhase("Starting round " + rounds.getCount());
+	        logger.logPhase("Learning");
+	        profileStart("Learning");
+	        learningAlgorithm.startLearning();
+	        profileStop("Learning");
 
-    private static LearnLogger logger = LearnLogger.getLogger(Experiment.class.getName());
-    private LearningAlgorithm<A, I, O> learningAlgorithm;
-    private EquivalenceOracle<A, I, O> equivalenceAlgorithm;
-    private Alphabet<I> inputs;
+	        boolean done = false;
+	        A hyp = null;
+	        while (!done) {
+	        	hyp = learningAlgorithm.getHypothesisModel();
+	            if (logModels) {
+	                logger.logModel(hyp);
+	            }
+
+	            logger.logPhase("Searching for counterexample");
+	            profileStart("Searching for counterexample");
+	            DefaultQuery<I, O> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
+	            if (ce == null) {
+	                done = true;
+	                continue;
+	            }
+	            profileStop("Searching for counterexample");
+	            
+	            logger.logCounterexample(ce.getInput().toString());
+
+	            // next round ...
+	            rounds.increment();
+	            logger.logPhase("Starting round " + rounds.getCount());
+	            logger.logPhase("Learning");
+	            profileStart("Learning");
+	            learningAlgorithm.refineHypothesis(ce);
+	            profileStop("Learning");
+	        }
+
+	        return hyp;
+	    }
+	}
+
+    private static LearnLogger logger = LearnLogger.getLogger(Experiment.class);
+    
     private boolean logModels = false;
     private boolean profile = false;
     private Counter rounds = new Counter("rounds", "#");
+    private A finalHypothesis = null;
+    private final ExperimentImpl<?,?> impl;
 
-    public Experiment(LearningAlgorithm<A, I, O> learningAlgorithm, EquivalenceOracle<A, I, O> equivalenceAlgorithm, Alphabet<I> inputs) {
-        this.learningAlgorithm = learningAlgorithm;
-        this.equivalenceAlgorithm = equivalenceAlgorithm;
-        this.inputs = inputs;
+    public <I,O> Experiment(LearningAlgorithm<? extends A, I, O> learningAlgorithm, EquivalenceOracle<? super A, I, O> equivalenceAlgorithm, Alphabet<I> inputs) {
+        this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs);
     }
+    
 
     
     /**
      * 
      */
-    public void run() {
-
-        rounds.increment();
-        logger.logPhase("Starting round " + rounds.getCount());
-        logger.logPhase("Learning");
-        profileStart("Learning");
-        learningAlgorithm.startLearning();
-        profileStop("Learning");
-
-        boolean done = false;
-        while (!done) {
-
-            A hyp = learningAlgorithm.getHypothesisModel();
-            if (logModels) {
-                logger.logModel(hyp);
-            }
-
-            logger.logPhase("Searching for counterexample");
-            profileStart("Searching for counterexample");
-            DefaultQuery<I, O> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
-            if (ce == null) {
-                done = true;
-                continue;
-            }
-            profileStop("Searching for counterexample");
-            
-            logger.logCounterexample(ce.getInput().toString());
-
-            // next round ...
-            rounds.increment();
-            logger.logPhase("Starting round " + rounds.getCount());
-            logger.logPhase("Learning");
-            profileStart("Learning");
-            learningAlgorithm.refineHypothesis(ce);
-            profileStop("Learning");
-        }
-
+    public A run() {
+    	finalHypothesis = impl.run();
+    	return finalHypothesis;
+    }
+    
+    public A getFinalHypothesis() {
+    	return finalHypothesis;
     }
 
     

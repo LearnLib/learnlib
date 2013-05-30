@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>learnlib-parent</artifactId>
+		<groupId>de.learnlib</groupId>
+		<version>0.9.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>        
+	</parent>
+
+	<artifactId>learnlib-examples</artifactId>
+	<name>LearnLib :: Examples</name>
+	<description>A collection of examples of how to use LearnLib</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-commons-dotutil</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>learnlib-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>learnlib-lstar-generic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>learnlib-basic-eqtests</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>learnlib-simulator</artifactId>
+		</dependency>                 
+    </dependencies>
+</project>
