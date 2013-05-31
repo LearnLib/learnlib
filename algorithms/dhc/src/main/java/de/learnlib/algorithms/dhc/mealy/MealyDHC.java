@@ -34,7 +34,7 @@ import net.automatalib.words.Word;
 import net.automatalib.words.impl.SimpleAlphabet;
 import de.learnlib.algorithms.dhc.Deduplicator;
 import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.LearningAlgorithm;
+import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.counterexamples.GlobalSuffixFinder;
 import de.learnlib.counterexamples.GlobalSuffixFinders;
@@ -44,7 +44,7 @@ import de.learnlib.oracles.DefaultQuery;
  *
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class MealyDHC<I, O> implements LearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>>,
+public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		AccessSequenceTransformer<I> {
 
 	private static final Logger log = Logger.getLogger( MealyDHC.class.getName() );

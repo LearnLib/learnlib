@@ -23,8 +23,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
-import java.util.Queue;
 import java.util.Random;
 
 import net.automatalib.automata.transout.MealyMachine;
@@ -44,7 +44,6 @@ import de.learnlib.experiments.Experiment;
 import de.learnlib.oracles.CounterOracle;
 import de.learnlib.oracles.SULOracle;
 import de.learnlib.statistics.SimpleProfiler;
-import java.util.Deque;
 
 /**
  * This example shows how a model of a Java class can be learned using the SUL

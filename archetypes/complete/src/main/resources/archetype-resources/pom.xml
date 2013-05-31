@@ -52,7 +52,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-lstar</artifactId>
+			<artifactId>learnlib-lstar-baseline</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>de.learnlib</groupId>

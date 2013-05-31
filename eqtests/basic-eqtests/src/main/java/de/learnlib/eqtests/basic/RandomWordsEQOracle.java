@@ -55,13 +55,15 @@ public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> im
 		} else {
 			symbolList = new ArrayList<>(alpha);
 		}
+		
+		int numSyms = symbolList.size();
 
 		for (int i = 0; i < maxTests; ++i) {
 			int length = minLength + random.nextInt((maxLength - minLength) + 1);
 
 			WordBuilder<I> testtrace = new WordBuilder<>(length);
 			for (int j = 0; j < length; ++j) {
-				int symidx = random.nextInt(symbolList.size());
+				int symidx = random.nextInt(numSyms);
 				I sym = symbolList.get(symidx);
 				testtrace.append(sym);
 			}
