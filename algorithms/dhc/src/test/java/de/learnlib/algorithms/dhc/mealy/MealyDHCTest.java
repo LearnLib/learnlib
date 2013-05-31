@@ -31,7 +31,6 @@ import net.automatalib.words.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import de.learnlib.algorithms.dhc.mealy.MealyDHC;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.cache.mealy.MealyCacheOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
@@ -45,6 +44,25 @@ import de.learnlib.oracles.SimulatorOracle;
  * @author merten
  */
 public class MealyDHCTest {
+	
+	@Test
+	public void testMealyDHCInternalSate() {
+		FastMealy<Symbol, String> fm = ExampleStack.constructMachine();
+		Alphabet<Symbol> alphabet = fm.getInputAlphabet();
+		SimulatorOracle<Symbol, Word<String>> simoracle = new SimulatorOracle<>(fm);
+		MealyDHC<Symbol, String> dhc = new MealyDHC<>(alphabet, simoracle);
+		
+		Exception exception = null;
+		try {
+			// nothing learned yet, this should throw an exception!
+			dhc.getHypothesisModel();
+		} catch(Exception e) {
+			exception = e;
+		}
+		
+		Assert.assertNotNull(exception, "Expected an exception regarding the illegal state of the learning algorithm!");
+	}
+	
 
 	@Test
 	public void testMealyDHCGrid() {
