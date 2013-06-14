@@ -16,16 +16,16 @@
  */
 package de.learnlib.algorithms.dhc.mealy;
 
-import static de.learnlib.examples.mealy.ExampleGrid.constructMachine;
-
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.FastMealy;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.FastAlphabet;
+import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.Symbol;
 
 import org.testng.Assert;
@@ -35,6 +35,7 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.cache.mealy.MealyCacheOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine;
+import de.learnlib.examples.mealy.ExampleGrid;
 import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SimulatorOracle;
@@ -45,22 +46,15 @@ import de.learnlib.oracles.SimulatorOracle;
  */
 public class MealyDHCTest {
 	
-	@Test
+	@Test(expectedExceptions = Exception.class)
 	public void testMealyDHCInternalSate() {
-		FastMealy<Symbol, String> fm = ExampleStack.constructMachine();
-		Alphabet<Symbol> alphabet = fm.getInputAlphabet();
+		MealyMachine<?,Symbol,?,String> fm = ExampleStack.getInstance();
+		Alphabet<Symbol> alphabet = ExampleStack.getInputAlphabet();
 		SimulatorOracle<Symbol, Word<String>> simoracle = new SimulatorOracle<>(fm);
 		MealyDHC<Symbol, String> dhc = new MealyDHC<>(alphabet, simoracle);
 		
-		Exception exception = null;
-		try {
-			// nothing learned yet, this should throw an exception!
-			dhc.getHypothesisModel();
-		} catch(Exception e) {
-			exception = e;
-		}
-		
-		Assert.assertNotNull(exception, "Expected an exception regarding the illegal state of the learning algorithm!");
+		// nothing learned yet, this should throw an exception!
+		dhc.getHypothesisModel();
 	}
 	
 
@@ -70,17 +64,17 @@ public class MealyDHCTest {
 		final int xsize = 5;
 		final int ysize = 5;
 
-		FastMealy<Symbol, Integer> fm = constructMachine(xsize, ysize);
-		Alphabet<Symbol> alphabet = fm.getInputAlphabet();
+		MealyMachine<?,Character,?,Integer> fm = ExampleGrid.constructMachine(xsize, ysize);
+		Alphabet<Character> alphabet = ExampleGrid.getInputAlphabet();
 
 
-		SimulatorOracle<Symbol, Word<Integer>> simoracle = new SimulatorOracle<>(fm);
-		MembershipOracle<Symbol, Word<Integer>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
+		SimulatorOracle<Character, Word<Integer>> simoracle = new SimulatorOracle<>(fm);
+		MembershipOracle<Character, Word<Integer>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
 
-		MealyDHC<Symbol, Integer> dhc = new MealyDHC<>(alphabet, cache);
+		MealyDHC<Character, Integer> dhc = new MealyDHC<>(alphabet, cache);
 
 		dhc.startLearning();
-		MealyMachine<?, Symbol, ?, Integer> hypo = dhc.getHypothesisModel();
+		MealyMachine<?, Character, ?, Integer> hypo = dhc.getHypothesisModel();
 
 		Assert.assertEquals(hypo.size(), (xsize * ysize), "Mismatch in size of learned hypothesis");
 
@@ -88,8 +82,8 @@ public class MealyDHCTest {
 
 	@Test
 	public void testMealyDHCStack() {
-		FastMealy<Symbol, String> fm = ExampleStack.constructMachine();
-		Alphabet<Symbol> alphabet = fm.getInputAlphabet();
+		MealyMachine<?,Symbol,?,String> fm = ExampleStack.getInstance();
+		Alphabet<Symbol> alphabet = ExampleStack.getInputAlphabet();
 
 		SimulatorOracle<Symbol, Word<String>> simoracle = new SimulatorOracle<>(fm);
 		MembershipOracle<Symbol,Word<String>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
@@ -130,8 +124,8 @@ public class MealyDHCTest {
 	@Test
 	public void testMealyDHCCoffee() {
 
-		FastMealy<Symbol, String> fm = ExampleCoffeeMachine.constructMachine();
-		Alphabet<Symbol> alphabet = fm.getInputAlphabet();
+		MealyMachine<?,Symbol,?,String> fm = ExampleCoffeeMachine.getInstance();
+		Alphabet<Symbol> alphabet = ExampleCoffeeMachine.getInputAlphabet();
 
 		SimulatorOracle<Symbol, Word<String>> simoracle = new SimulatorOracle<>(fm);
 		SimulatorEQOracle<Symbol, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
@@ -162,29 +156,21 @@ public class MealyDHCTest {
 	@Test
 	public void testMealyDHCRandom() {
 		
-		Alphabet<Symbol> inputs = new FastAlphabet<>(
-				new Symbol("a"),
-				new Symbol("b"),
-				new Symbol("c"));
+		Alphabet<Character> inputs = Alphabets.characters('a', 'c');
 		
-		Alphabet<Symbol> outputs = new FastAlphabet<>(
-				new Symbol("o1"),
-				new Symbol("o2"),
-				new Symbol("o3"));
-		
+		List<String> outputs = Arrays.asList("o1", "o2", "o3");
 
-		FastMealy<Symbol, Symbol> fm = RandomAutomata.randomDeterministic(new Random(1337), 100, inputs, null, outputs, new FastMealy<Symbol,Symbol>(inputs));
-		Alphabet<Symbol> alphabet = fm.getInputAlphabet();
+		CompactMealy<Character, String> fm = RandomAutomata.randomDeterministic(new Random(1337), 100, inputs, null, outputs, new CompactMealy<Character,String>(inputs));
 		
 		
-		SimulatorOracle<Symbol, Word<Symbol>> simoracle = new SimulatorOracle<>(fm);
-		MealyCacheOracle<Symbol,Symbol> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
-		SimulatorEQOracle<Symbol, Word<Symbol>> eqoracle = new SimulatorEQOracle<>(fm);
+		SimulatorOracle<Character, Word<String>> simoracle = new SimulatorOracle<>(fm);
+		MealyCacheOracle<Character,String> cache = new MealyCacheOracle<>(inputs, null, simoracle);
+		SimulatorEQOracle<Character, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
 
-		MealyDHC<Symbol, Symbol> dhc = new MealyDHC<>(alphabet, cache);
+		MealyDHC<Character, String> dhc = new MealyDHC<>(inputs, cache);
 
 		int rounds = 0;
-		DefaultQuery<Symbol, Word<Symbol>> counterexample = null;
+		DefaultQuery<Character, Word<String>> counterexample = null;
 		do {
 			if (counterexample == null) {
 				dhc.startLearning();
@@ -193,7 +179,7 @@ public class MealyDHCTest {
 				Assert.assertTrue(dhc.refineHypothesis(counterexample), "Counterexample did not refine hypothesis");
 			}
 
-			counterexample = eqoracle.findCounterExample(dhc.getHypothesisModel(), alphabet);
+			counterexample = eqoracle.findCounterExample(dhc.getHypothesisModel(), inputs);
 			
 			Assert.assertTrue(rounds++ < fm.size(), "Learning took more rounds than states in target model");
 

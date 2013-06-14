@@ -17,8 +17,9 @@
 
 package de.learnlib.examples.mealy;
 
-import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.automata.transout.impl.FastMealyState;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.MutableMealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
@@ -31,25 +32,40 @@ import net.automatalib.words.impl.Symbol;
  * @author Maik Merten <maikmerten@googlemail.com>
  */
 public class ExampleStack {
-    private final static Symbol in_push = new Symbol("push");
-    private final static Symbol in_pop = new Symbol("pop");
-    private final static Alphabet<Symbol> alphabet = new FastAlphabet<>(in_push, in_pop); 
+	private static final class InstanceHolder {
+		public static final MealyMachine<?,Symbol,?,String> INSTANCE;
+		
+		static {
+			INSTANCE = constructMachine();
+		}
+	}
+	
+    public final static Symbol in_push = new Symbol("push");
+    public final static Symbol in_pop = new Symbol("pop");
+    
+    private final static Alphabet<Symbol> ALPHABET = new FastAlphabet<>(in_push, in_pop); 
     
     private final static String out_ok = "ok";
     private final static String out_empty = "empty";
     private final static String out_full = "full";
     
     
+    public static Alphabet<Symbol> getInputAlphabet() {
+    	return ALPHABET;
+    }
+    
+    public static MealyMachine<?,Symbol,?,String> getInstance() {
+    	return InstanceHolder.INSTANCE;
+    }
+    
     /**
      * Construct and return a machine representation of this example
      * 
      * @return machine instance of the example
      */
-    public static FastMealy<Symbol, String> constructMachine() {
-
-        FastMealy<Symbol, String> fm = new FastMealy<>(alphabet);
-        
-        FastMealyState<String> s0 = fm.addInitialState(),
+    public static <S,A extends MutableMealyMachine<S,Symbol,?,String>> 
+    A constructMachine(A fm) {
+        S s0 = fm.addInitialState(),
                 s1 = fm.addState(),
                 s2 = fm.addState(),
                 s3 = fm.addState();
@@ -67,6 +83,10 @@ public class ExampleStack {
         fm.addTransition(s3, in_pop, s2, out_ok);
         
         return fm;
+    }
+    
+    public static CompactMealy<Symbol, String> constructMachine() {
+    	return constructMachine(new CompactMealy<Symbol,String>(ALPHABET));
     }
     
 }

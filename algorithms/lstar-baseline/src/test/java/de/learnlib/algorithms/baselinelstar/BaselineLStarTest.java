@@ -16,40 +16,32 @@
  */
 package de.learnlib.algorithms.baselinelstar;
 
-import de.learnlib.algorithms.baselinelstar.BaselineLStar;
-import de.learnlib.examples.dfa.ExampleAngluin;
-import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.SafeOracle;
-import de.learnlib.oracles.SimulatorOracle;
+import java.io.IOException;
+
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.FastAlphabet;
-import net.automatalib.words.impl.Symbol;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
+import de.learnlib.examples.dfa.ExampleAngluin;
+import de.learnlib.oracles.DefaultQuery;
+import de.learnlib.oracles.SafeOracle;
+import de.learnlib.oracles.SimulatorOracle;
 
 public class BaselineLStarTest {
 
-	private Symbol zero;
-	private Symbol one;
-
-	private BaselineLStar<Symbol> angluin;
+	private BaselineLStar<Integer> angluin;
 
 	@BeforeClass
 	public void setup() {
-		zero = new Symbol("0");
-		one = new Symbol("1");
+		DFA<?, Integer> dfa = ExampleAngluin.getInstance();
+		Alphabet<Integer> alphabet = ExampleAngluin.getInputAlphabet();
 
-		Alphabet<Symbol> alphabet = new FastAlphabet<>(zero, one);
-
-		DFA<?, Symbol> dfa = ExampleAngluin.constructMachine();
-
-		SimulatorOracle<Symbol, Boolean> dso = new SimulatorOracle<>(dfa);
-		SafeOracle<Symbol, Boolean> oracle = new SafeOracle<>(dso);
+		SimulatorOracle<Integer, Boolean> dso = new SimulatorOracle<>(dfa);
+		SafeOracle<Integer, Boolean> oracle = new SafeOracle<>(dso);
 
 		angluin = new BaselineLStar<>(alphabet, oracle);
 	}
@@ -61,13 +53,13 @@ public class BaselineLStarTest {
 
 	@Test(expectedExceptions = IllegalStateException.class)
 	public void testRefinementBeforeLearnIteration() {
-		angluin.refineHypothesis(createCounterExample(false, one));
+		angluin.refineHypothesis(createCounterExample(false, 1));
 	}
 
 	@Test(dependsOnMethods = { "testGetHypothesisBeforeLearnIteration", "testRefinementBeforeLearnIteration" })
 	public void testFirstHypothesis() {
 		angluin.startLearning();
-		DFA<?,Symbol> hypothesis = angluin.getHypothesisModel();
+		DFA<?,Integer> hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(hypothesis.getStates().size(), 2);
 
 		String observationTableOutput = angluin.getStringRepresentationOfObservationTable();
@@ -81,15 +73,15 @@ public class BaselineLStarTest {
 
 	@Test(dependsOnMethods = "testDuplicateLearnInvocation")
 	public void testCounterExample() throws IOException {
-		angluin.refineHypothesis(createCounterExample(false, one, one, zero));
-		DFA<?,Symbol> hypothesis = angluin.getHypothesisModel();
+		angluin.refineHypothesis(createCounterExample(false, 1, 1, 0));
+		DFA<?,Integer> hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(3, hypothesis.getStates().size());
 	}
 
 	@Test(dependsOnMethods = "testCounterExample")
 	public void testSecondCounterExample() throws IOException {
-		angluin.refineHypothesis(createCounterExample(false, zero, one, zero));
-		DFA<?,Symbol> hypothesis = angluin.getHypothesisModel();
+		angluin.refineHypothesis(createCounterExample(false, 0, 1, 0));
+		DFA<?,Integer> hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(4, hypothesis.getStates().size());
 		
 
@@ -97,9 +89,9 @@ public class BaselineLStarTest {
 		Assert.assertEquals(18, observationTableOutput.split("\n").length);
 	}
 
-	private static DefaultQuery<Symbol, Boolean> createCounterExample(boolean output, Symbol... symbols) {
-		Word<Symbol> counterExample = Word.fromSymbols(symbols);
-		DefaultQuery<Symbol, Boolean> query = new DefaultQuery<>(counterExample);
+	private static DefaultQuery<Integer, Boolean> createCounterExample(boolean output, Integer... symbols) {
+		Word<Integer> counterExample = Word.fromSymbols(symbols);
+		DefaultQuery<Integer, Boolean> query = new DefaultQuery<>(counterExample);
 		query.answer(output);
 		return query;
 	}

@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.FastMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Symbol;
@@ -44,8 +43,8 @@ public class LStarMealyTest extends LearningTest {
 
 	@Test
 	public void testClassicLStarMealy() {
-		FastMealy<Symbol,String> mealy = ExampleStack.constructMachine();
-		Alphabet<Symbol> alphabet = mealy.getInputAlphabet();
+		MealyMachine<?,Symbol,?,String> mealy = ExampleStack.getInstance();
+		Alphabet<Symbol> alphabet = ExampleStack.getInputAlphabet();
 		
 		MembershipOracle<Symbol,Word<String>> oracle
 			= new SimulatorOracle<>(mealy);
@@ -72,8 +71,8 @@ public class LStarMealyTest extends LearningTest {
 	
 	@Test
 	public void testOptimizedLStarMealy() {
-		FastMealy<Symbol,String> mealy = ExampleStack.constructMachine();
-		Alphabet<Symbol> alphabet = mealy.getInputAlphabet();
+		MealyMachine<?,Symbol,?,String> mealy = ExampleStack.getInstance();
+		Alphabet<Symbol> alphabet = ExampleStack.getInputAlphabet();
 		
 		MembershipOracle<Symbol,Word<String>> oracle
 			= new SimulatorOracle<>(mealy);
