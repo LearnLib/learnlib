@@ -34,7 +34,7 @@ Resources
 [3]: http://www.learnlib.de
 [4]: https://github.com/misberner
 [5]: http://learnlib.github.io/learnlib/maven-site/
-[6]: (still missing)
+[6]: http://learnlib.github.io/learnlib/maven-site/apidocs/
 [7]: https://groups.google.com/forum/?fromgroups#!forum/learnlib-qa
 [8]: mailto:learnlib-qa@googlegroups.com
 [9]: https://groups.google.com/forum/?fromgroups#!forum/learnlib-discussion
