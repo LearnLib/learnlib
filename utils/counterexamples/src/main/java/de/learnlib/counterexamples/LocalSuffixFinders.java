@@ -122,7 +122,7 @@ public abstract class LocalSuffixFinders {
 			Word<I> nextSuffix = queryWord.subWord(i);
 			
 			O hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
-			O mqOut = MQUtil.query(oracle, as, nextSuffix);
+			O mqOut = MQUtil.output(oracle, as, nextSuffix);
 			
 			if(Objects.equals(hypOut, mqOut))
 				return i;
@@ -166,7 +166,7 @@ public abstract class LocalSuffixFinders {
 			Word<I> nextSuffix = queryWord.subWord(i);
 			
 			O hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
-			O mqOut = MQUtil.query(oracle, as, nextSuffix);
+			O mqOut = MQUtil.output(oracle, as, nextSuffix);
 			
 			if(!Objects.equals(hypOut, mqOut))
 				return i+1;
@@ -215,7 +215,7 @@ public abstract class LocalSuffixFinders {
 			Word<I> nextSuffix = queryWord.subWord(mid);
 			
 			O hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
-			O ceOut = MQUtil.query(oracle, as, nextSuffix);
+			O ceOut = MQUtil.output(oracle, as, nextSuffix);
 			
 			if(!Objects.equals(hypOut, ceOut))
 				low = mid;

@@ -23,15 +23,21 @@ import de.learnlib.api.MembershipOracle;
 
 public abstract class MQUtil {
 	
-	public static <I,O> O query(MembershipOracle<I,O> oracle, Word<I> queryWord) {
-		DefaultQuery<I,O> qry = new DefaultQuery<>(queryWord);
-		oracle.processQueries(Collections.singleton(qry));
-		return qry.getOutput();
+	public static <I,O> O output(MembershipOracle<I,O> oracle, Word<I> queryWord) {
+		return query(oracle, queryWord).getOutput();
 	}
 	
-	public static <I,O> O query(MembershipOracle<I,O> oracle, Word<I> prefix, Word<I> suffix) {
+	public static <I,O> O output(MembershipOracle<I,O> oracle, Word<I> prefix, Word<I> suffix) {
+		return query(oracle, prefix, suffix).getOutput();
+	}
+	
+	public static <I,O> DefaultQuery<I,O> query(MembershipOracle<I,O> oracle, Word<I> prefix, Word<I> suffix) {
 		DefaultQuery<I,O> qry = new DefaultQuery<>(prefix, suffix);
 		oracle.processQueries(Collections.singleton(qry));
-		return qry.getOutput();
+		return qry;
+	}
+	
+	public static <I,O> DefaultQuery<I,O> query(MembershipOracle<I,O> oracle, Word<I> queryWord) {
+		return query(oracle, Word.<I>epsilon(), queryWord);
 	}
 }

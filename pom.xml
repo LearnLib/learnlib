@@ -97,7 +97,7 @@
 		<!--
 			dependency versions
 		-->
-		<automatalib.version>0.3.0</automatalib.version>
+		<automatalib.version>0.3.1-SNAPSHOT</automatalib.version>
 		<testng.version>6.8</testng.version>
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
