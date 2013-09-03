@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>learnlib-eqtests</artifactId>
 		<groupId>de.learnlib</groupId>
-		<version>0.9.0</version>
+		<version>0.9.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>        
 	</parent>
 
