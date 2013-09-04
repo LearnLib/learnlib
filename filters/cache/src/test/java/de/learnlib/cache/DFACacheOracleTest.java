@@ -72,7 +72,7 @@ public class DFACacheOracleTest {
 	public void testNoQueriesReceived() {
 		Assert.assertTrue(queries.size() == 0);
 		oracle.processQueries(queries);
-		Assert.assertTrue(counterOracle.getCounter().getCount() == 0);
+		Assert.assertTrue(counterOracle.getStatisticalData().getCount() == 0);
 	}
 
 	@Test(dependsOnMethods = { "testNoQueriesReceived" })
@@ -81,14 +81,14 @@ public class DFACacheOracleTest {
 
 		Assert.assertTrue(queries.size() == 1);
 		oracle.processQueries(queries);
-		Assert.assertTrue(counterOracle.getCounter().getCount() == 1);
+		Assert.assertTrue(counterOracle.getStatisticalData().getCount() == 1);
 	}
 
 	@Test(dependsOnMethods = { "testFirstQuery" })
 	public void testFirstDuplicate() {
 		Assert.assertTrue(queries.size() == 1);
 		oracle.processQueries(queries);
-		Assert.assertTrue(counterOracle.getCounter().getCount() == 1);
+		Assert.assertTrue(counterOracle.getStatisticalData().getCount() == 1);
 	}
 
 	@Test(dependsOnMethods = { "testFirstDuplicate" })
@@ -97,7 +97,7 @@ public class DFACacheOracleTest {
 				0)));
 		Assert.assertTrue(queries.size() == 2);
 		oracle.processQueries(queries);
-		Assert.assertTrue(counterOracle.getCounter().getCount() == 2);
+		Assert.assertTrue(counterOracle.getStatisticalData().getCount() == 2);
 	}
 
 	@Test(dependsOnMethods = { "testTwoQueriesOneDuplicate" })
@@ -108,7 +108,7 @@ public class DFACacheOracleTest {
 		queries.add(new DefaultQuery<Integer, Boolean>(Word.fromLetter(1)));
 		Assert.assertTrue(queries.size() == 1);
 		oracle.processQueries(queries);
-		count = counterOracle.getCounter().getCount();
+		count = counterOracle.getStatisticalData().getCount();
 		Assert.assertTrue(count == 3);
 	}
 }

@@ -21,22 +21,21 @@ import java.io.Writer;
 import java.util.Collections;
 
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
+import net.automatalib.words.impl.Alphabets;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
-import de.learnlib.eqtests.basic.WMethodEQOracle;
-import de.learnlib.experiments.Experiment;
-import de.learnlib.oracles.CounterOracle;
-import de.learnlib.oracles.SimulatorOracle;
+import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.eqtests.basic.WMethodEQOracle.DFAWMethodEQOracle;
+import de.learnlib.experiments.Experiment.DFAExperiment;
+import de.learnlib.oracles.CounterOracle.DFACounterOracle;
+import de.learnlib.oracles.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.statistics.SimpleProfiler;
-import net.automatalib.automata.fsa.impl.FastDFA;
-import net.automatalib.automata.fsa.impl.FastDFAState;
-import net.automatalib.words.impl.FastAlphabet;
 
 /**
  * This example shows the usage of a learning algorithm and an equivalence test
@@ -52,28 +51,26 @@ public class Example {
      * 
      * @return example dfa
      */
-    private static FastDFA<Symbol> constructSUL() {
-        // create inputs
-        Symbol a = new Symbol("a");
-        Symbol b = new Symbol("b");
-        Alphabet<Symbol> sigma = new FastAlphabet<>(a, b);
+    private static CompactDFA<Character> constructSUL() {
+        // input alphabet contains characters 'a'..'b'
+    	Alphabet<Character> sigma = Alphabets.characters('a', 'b');
 
         // create states
-        FastDFA<Symbol> dfa = new FastDFA<>(sigma);
-        FastDFAState q0 = dfa.addInitialState(true);
-        FastDFAState q1 = dfa.addState(false);
-        FastDFAState q2 = dfa.addState(false);
-        FastDFAState q3 = dfa.addState(false);
+        CompactDFA<Character> dfa = new CompactDFA<>(sigma);
+        int q0 = dfa.addInitialState(true);
+        int q1 = dfa.addState(false);
+        int q2 = dfa.addState(false);
+        int q3 = dfa.addState(false);
 
         // create transitions
-        dfa.addTransition(q0, a, q1);
-        dfa.addTransition(q0, b, q2);
-        dfa.addTransition(q1, a, q0);
-        dfa.addTransition(q1, b, q3);
-        dfa.addTransition(q2, a, q3);
-        dfa.addTransition(q2, b, q0);
-        dfa.addTransition(q3, a, q2);
-        dfa.addTransition(q3, b, q1);
+        dfa.addTransition(q0, 'a', q1);
+        dfa.addTransition(q0, 'b', q2);
+        dfa.addTransition(q1, 'a', q0);
+        dfa.addTransition(q1, 'b', q3);
+        dfa.addTransition(q2, 'a', q3);
+        dfa.addTransition(q2, 'b', q0);
+        dfa.addTransition(q3, 'a', q2);
+        dfa.addTransition(q3, 'b', q1);
 
         return dfa;
     }
@@ -81,25 +78,22 @@ public class Example {
     public static void main(String[] args) throws IOException {
 
         // load DFA and alphabet
-        // the ? leaves open the state implementation since we do not
-        // need to know it explicitly
-        FastDFA<Symbol> target = constructSUL();
-        Alphabet<Symbol> inputs = target.getInputAlphabet();
+        CompactDFA<Character> target = constructSUL();
+        Alphabet<Character> inputs = target.getInputAlphabet();
 
         // typed empty word
-        Word<Symbol> epsilon = Word.epsilon();
+        Word<Character> epsilon = Word.epsilon();
 
         // construct a simulator membership query oracle
-        // input  - Symbol  (determined by example)
-        // output - Boolean (determined by DFA)
-        SimulatorOracle<Symbol, Boolean> sul = new SimulatorOracle<>(target);
+        // input  - Character (determined by example)
+        DFAMembershipOracle<Character> sul = new DFASimulatorOracle<>(target);
 
         // oracle for counting queries wraps SUL
-        CounterOracle<Symbol, Boolean> mqOracle =
-                new CounterOracle<>(sul, "membership queries");
+        DFACounterOracle<Character> mqOracle =
+                new DFACounterOracle<>(sul, "membership queries");
 
         // construct L* instance
-        ExtensibleLStarDFA<Symbol> lstar = new ExtensibleLStarDFA<>(
+        ExtensibleLStarDFA<Character> lstar = new ExtensibleLStarDFA<>(
                 inputs, // input alphabet
                 mqOracle, // mq oracle
                 Collections.singletonList(epsilon), // initial suffixes
@@ -110,15 +104,15 @@ public class Example {
         // construct a W-method conformance test
         // exploring the system up to depth 4 from
         // every state of a hypothesis
-        WMethodEQOracle<DFA<?, Symbol>, Symbol, Boolean> wMethod =
-                new WMethodEQOracle<>(4, mqOracle);
+        DFAWMethodEQOracle<Character> wMethod =
+                new DFAWMethodEQOracle<>(4, mqOracle);
 
         // construct a learning experiment from
         // the learning algorithm and the conformance test.
         // The experiment will execute the main loop of
         // active learning
-        Experiment<DFA<?, Symbol>> experiment =
-                new Experiment<>(lstar, wMethod, inputs);
+        DFAExperiment<Character> experiment =
+                new DFAExperiment<>(lstar, wMethod, inputs);
 
         // turn on time profiling
         experiment.setProfile(true);
@@ -130,7 +124,7 @@ public class Example {
         experiment.run();
 
         // get learned model
-        DFA<?, Symbol> result = experiment.getFinalHypothesis();
+        DFA<?, Character> result = experiment.getFinalHypothesis();
 
         // report results
         System.out.println("-------------------------------------------------------");
@@ -140,7 +134,7 @@ public class Example {
 
         // learning statistics
         System.out.println(experiment.getRounds().getSummary());
-        System.out.println(mqOracle.getCounter().getSummary());
+        System.out.println(mqOracle.getStatisticalData().getSummary());
 
         // model statistics
         System.out.println("States: " + result.size());

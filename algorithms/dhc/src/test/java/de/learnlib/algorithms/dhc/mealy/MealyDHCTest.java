@@ -31,6 +31,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.cache.mealy.MealyCacheOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine;
@@ -38,6 +39,7 @@ import de.learnlib.examples.mealy.ExampleGrid;
 import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SimulatorOracle;
+import de.learnlib.oracles.SimulatorOracle.MealySimulatorOracle;
 
 /**
  *
@@ -49,7 +51,7 @@ public class MealyDHCTest {
 	public void testMealyDHCInternalSate() {
 		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> fm = ExampleStack.getInstance();
 		Alphabet<ExampleStack.Input> alphabet = ExampleStack.getInputAlphabet();
-		SimulatorOracle<ExampleStack.Input, Word<ExampleStack.Output>> simoracle = new SimulatorOracle<>(fm);
+		MealySimulatorOracle<ExampleStack.Input,ExampleStack.Output> simoracle = new MealySimulatorOracle<>(fm);
 		MealyDHC<ExampleStack.Input, ExampleStack.Output> dhc = new MealyDHC<>(alphabet, simoracle);
 		
 		// nothing learned yet, this should throw an exception!
@@ -67,8 +69,8 @@ public class MealyDHCTest {
 		Alphabet<Character> alphabet = ExampleGrid.getInputAlphabet();
 
 
-		SimulatorOracle<Character, Word<Integer>> simoracle = new SimulatorOracle<>(fm);
-		MembershipOracle<Character, Word<Integer>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
+		MealySimulatorOracle<Character,Integer> simoracle = new MealySimulatorOracle<>(fm);
+		MealyMembershipOracle<Character,Integer> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
 
 		MealyDHC<Character, Integer> dhc = new MealyDHC<>(alphabet, cache);
 
@@ -84,8 +86,8 @@ public class MealyDHCTest {
 		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> fm = ExampleStack.getInstance();
 		Alphabet<ExampleStack.Input> alphabet = ExampleStack.getInputAlphabet();
 
-		SimulatorOracle<ExampleStack.Input, Word<ExampleStack.Output>> simoracle = new SimulatorOracle<>(fm);
-		MembershipOracle<ExampleStack.Input,Word<ExampleStack.Output>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
+		MealySimulatorOracle<ExampleStack.Input,ExampleStack.Output> simoracle = new MealySimulatorOracle<>(fm);
+		MealyMembershipOracle<ExampleStack.Input,ExampleStack.Output> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
 
 		MealyDHC<ExampleStack.Input, ExampleStack.Output> dhc = new MealyDHC<>(alphabet, cache);
 

@@ -26,7 +26,7 @@ import java.util.Set;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import de.learnlib.api.LearningAlgorithm;
+import de.learnlib.api.LearningAlgorithm.DFALearner;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
@@ -36,7 +36,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <I>
  * 		input symbol class.
  */
-public class BaselineLStar<I> implements LearningAlgorithm<DFA<?, I>, I, Boolean> {
+public class BaselineLStar<I> implements DFALearner<I> {
 
 	private final Alphabet<I> alphabet;
 

@@ -21,10 +21,38 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.words.Word;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.oracles.DefaultQuery;
 
 public class EQOracleChain<A, I, O> implements EquivalenceOracle<A, I, O> {
+	
+	public static class DFAEQOracleChain<I> extends EQOracleChain<DFA<?,I>,I,Boolean>
+			implements DFAEquivalenceOracle<I> {
+		@SafeVarargs
+		public DFAEQOracleChain(
+				EquivalenceOracle<? super DFA<?, I>, I, Boolean>... oracles) {
+			super(oracles);
+		}
+		public DFAEQOracleChain(
+				List<? extends EquivalenceOracle<? super DFA<?, I>, I, Boolean>> oracles) {
+			super(oracles);
+		}
+	}
+	
+	public static class MealyEQOracleChain<I,O> extends EQOracleChain<MealyMachine<?,I,?,O>,I,Word<O>> {
+		@SafeVarargs
+		public MealyEQOracleChain(
+				EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>>... oracles) {
+			super(oracles);
+		}
+		public MealyEQOracleChain(
+				List<? extends EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>>> oracles) {
+			super(oracles);
+		}
+	}
 	
 	private final List<EquivalenceOracle<? super A, I, O>> oracles;
 

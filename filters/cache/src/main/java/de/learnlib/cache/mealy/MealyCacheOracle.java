@@ -30,6 +30,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.Query;
 
 /**
@@ -51,7 +52,7 @@ import de.learnlib.api.Query;
  * @param <I> input symbol class
  * @param <O> output symbol class
  */
-public class MealyCacheOracle<I, O> implements MembershipOracle<I, Word<O>> {
+public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
 	
 	private static final class ReverseLexCmp<I> implements Comparator<Query<I,?>> {
 		private final Alphabet<I> alphabet;

@@ -24,7 +24,7 @@ import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import de.learnlib.api.EquivalenceOracle;
+import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.SUL;
 import de.learnlib.oracles.DefaultQuery;
 
@@ -44,7 +44,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @author falkhowar
  */
 public class RandomWalkEQOracle<I, O>
-		implements EquivalenceOracle<MealyMachine<?,I,?,O>, I, Word<O>> {
+		implements MealyEquivalenceOracle<I,O> {
 
 	/**
 	 * probability to restart before step.

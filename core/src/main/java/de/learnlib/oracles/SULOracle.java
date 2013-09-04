@@ -18,6 +18,7 @@ package de.learnlib.oracles;
 
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.SUL;
 
 /**
@@ -25,7 +26,7 @@ import de.learnlib.api.SUL;
  * 
  * @author falkhowar
  */
-public class SULOracle<I, O> extends AbstractSingleQueryOracle<I, Word<O>> {
+public class SULOracle<I, O> extends AbstractSingleQueryOracle<I, Word<O>> implements MealyMembershipOracle<I,O> {
 
 	private final SUL<I, O> sul;
 

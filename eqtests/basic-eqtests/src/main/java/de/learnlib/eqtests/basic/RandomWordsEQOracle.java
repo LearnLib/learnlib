@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Random;
 
 import net.automatalib.automata.concepts.OutputAutomaton;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
@@ -33,6 +36,22 @@ import de.learnlib.oracles.DefaultQuery;
  * @author Maik Merten <maikmerten@googlemail.com>
  */
 public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> implements EquivalenceOracle<A, I, O> {
+	
+	public static class DFARandomWordsEQOracle<I> extends RandomWordsEQOracle<I,Boolean,DFA<?,I>>
+			implements DFAEquivalenceOracle<I> {
+		public DFARandomWordsEQOracle(MembershipOracle<I, Boolean> mqOracle,
+				int minLength, int maxLength, int maxTests, Random random) {
+			super(mqOracle, minLength, maxLength, maxTests, random);
+		}
+	}
+	
+	public static class MealyRandomWordsEQOracle<I,O> extends RandomWordsEQOracle<I,Word<O>,MealyMachine<?,I,?,O>>
+			implements MealyEquivalenceOracle<I,O> {
+		public MealyRandomWordsEQOracle(MembershipOracle<I, Word<O>> mqOracle,
+				int minLength, int maxLength, int maxTests, Random random) {
+			super(mqOracle, minLength, maxLength, maxTests, random);
+		}
+	}
 
 	private MembershipOracle<I, O> oracle;
 	private int maxTests, minLength, maxLength;

@@ -17,6 +17,8 @@
 package de.learnlib.oracles;
 
 import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Word;
 
 /**
@@ -30,6 +32,22 @@ import net.automatalib.words.Word;
  * @param <O> (suffix) output class
  */
 public class SimulatorOracle<I, O> extends AbstractSingleQueryOracle<I, O> {
+	
+	
+	public static class DFASimulatorOracle<I> extends SimulatorOracle<I,Boolean>
+			implements DFAMembershipOracle<I> {
+		public DFASimulatorOracle(DFA<?,I> dfa) {
+			super(dfa);
+		}
+	}
+	
+	public static class MealySimulatorOracle<I,O> extends SimulatorOracle<I,Word<O>>
+			implements MealyMembershipOracle<I,O> {
+		public MealySimulatorOracle(MealyMachine<?,I,?,O> mealy) {
+			super(mealy);
+		}
+	}
+	
 	
 	private final SuffixOutput<I, O> automaton;
 	

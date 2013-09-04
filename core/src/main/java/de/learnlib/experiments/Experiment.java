@@ -16,7 +16,10 @@
  */
 package de.learnlib.experiments;
 
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.logging.LearnLogger;
@@ -33,6 +36,25 @@ import de.learnlib.statistics.SimpleProfiler;
  * @param <O> 
  */
 public class Experiment<A> {
+	
+	public static class DFAExperiment<I> extends Experiment<DFA<?,I>> {
+		public DFAExperiment(
+				LearningAlgorithm<? extends DFA<?, I>, I, Boolean> learningAlgorithm,
+				EquivalenceOracle<? super DFA<?, I>, I, Boolean> equivalenceAlgorithm,
+				Alphabet<I> inputs) {
+			super(learningAlgorithm, equivalenceAlgorithm, inputs);
+		}
+	}
+	
+	public static class MealyExperiment<I,O> extends Experiment<MealyMachine<?,I,?,O>> {
+		public MealyExperiment(
+				LearningAlgorithm<? extends MealyMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
+				EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
+				Alphabet<I> inputs) {
+			super(learningAlgorithm, equivalenceAlgorithm, inputs);
+		}
+		
+	}
 	
 	private final class ExperimentImpl<I,O> {
 		private final LearningAlgorithm<? extends A, I, O> learningAlgorithm;

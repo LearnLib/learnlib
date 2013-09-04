@@ -16,10 +16,11 @@
  */
 package de.learnlib.algorithms.dhc.mealy;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -31,7 +32,6 @@ import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
 import de.learnlib.algorithms.dhc.Deduplicator;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
@@ -49,9 +49,9 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 
 	private static final Logger log = Logger.getLogger( MealyDHC.class.getName() );
 	
-	private Alphabet<I> alphabet;
-	private MembershipOracle<I, Word<O>> oracle;
-	private SimpleAlphabet<Word<I>> splitters = new SimpleAlphabet<>();
+	private final Alphabet<I> alphabet;
+	private final MembershipOracle<I, Word<O>> oracle;
+	private LinkedHashSet<Word<I>> splitters = new LinkedHashSet<>();
 	private CompactMealy<I, O> hypothesis;
 	private MutableMapping<Integer, QueueElement<I,O>> accessSequences;
 	private GlobalSuffixFinder<? super I,? super Word<O>> suffixFinder;
@@ -77,19 +77,13 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		this.suffixFinder = GlobalSuffixFinders.RIVEST_SCHAPIRE;
+		for(I symbol : alphabet) {
+			splitters.add(Word.fromLetter(symbol));
+		}
 	}
 
 	@Override
 	public void startLearning() {
-
-		// the effective alphabet is the concatenation of the real alphabet
-		// wrapped in Words and the list of splitters
-		List<Word<I>> effectivealpha = new ArrayList<>();
-		for (I input : alphabet) {
-			effectivealpha.add(Word.fromLetter(input));
-		}
-		effectivealpha.addAll(splitters);
-
 		// initialize structure to store state output signatures
 		Map<List<Word<O>>, Integer> signatures = new HashMap<>();
 
@@ -97,7 +91,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		hypothesis = new CompactMealy<>(alphabet);
 
 		// initialize exploration queue
-		Queue<QueueElement<I,O>> queue = new LinkedList<>();
+		Queue<QueueElement<I,O>> queue = new ArrayDeque<>();
 		
 		// initialize storage for access sequences
 		accessSequences = hypothesis.createDynamicStateMapping();
@@ -115,8 +109,8 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 			Word<I> access = assembleAccessSequence(elem);
 
 			// assemble queries
-			ArrayList<DefaultQuery<I, Word<O>>> queries = new ArrayList<>(effectivealpha.size());
-			for (Word<I> suffix : effectivealpha) {
+			ArrayList<DefaultQuery<I, Word<O>>> queries = new ArrayList<>(splitters.size());
+			for (Word<I> suffix : splitters) {
 				queries.add(new DefaultQuery<I, Word<O>>(access, suffix));
 			}
 
@@ -124,7 +118,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 			oracle.processQueries(queries);
 
 			// assemble output signature
-			List<Word<O>> sig = new ArrayList<>(effectivealpha.size());
+			List<Word<O>> sig = new ArrayList<>(splitters.size());
 			for (DefaultQuery<I, Word<O>> query : queries) {
 				sig.add(deduplicator.deduplicate(query.getOutput()));
 			}
