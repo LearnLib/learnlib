@@ -16,11 +16,8 @@
  */
 package de.learnlib.oracles;
 
-import java.util.Collection;
-
 import net.automatalib.automata.concepts.SuffixOutput;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
+import net.automatalib.words.Word;
 
 /**
  * A membership oracle backed by an automaton. The automaton must implement
@@ -32,7 +29,7 @@ import de.learnlib.api.Query;
  * @param <I> input symbol class
  * @param <O> (suffix) output class
  */
-public class SimulatorOracle<I, O> implements MembershipOracle<I, O> {
+public class SimulatorOracle<I, O> extends AbstractSingleQueryOracle<I, O> {
 	
 	private final SuffixOutput<I, O> automaton;
 	
@@ -49,11 +46,8 @@ public class SimulatorOracle<I, O> implements MembershipOracle<I, O> {
 	 * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
 	 */
 	@Override
-	public void processQueries(Collection<? extends Query<I, O>> queries) {
-		for(Query<I,O> q : queries) {
-			O output = automaton.computeSuffixOutput(q.getPrefix(), q.getSuffix());
-			q.answer(output);
-		}
+	public O answerQuery(Word<I> prefix, Word<I> suffix) {
+		return automaton.computeSuffixOutput(prefix, suffix);
 	}
 	
 }

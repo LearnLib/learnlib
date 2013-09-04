@@ -26,7 +26,6 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.Symbol;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -48,10 +47,10 @@ public class MealyDHCTest {
 	
 	@Test(expectedExceptions = Exception.class)
 	public void testMealyDHCInternalSate() {
-		MealyMachine<?,Symbol,?,String> fm = ExampleStack.getInstance();
-		Alphabet<Symbol> alphabet = ExampleStack.getInputAlphabet();
-		SimulatorOracle<Symbol, Word<String>> simoracle = new SimulatorOracle<>(fm);
-		MealyDHC<Symbol, String> dhc = new MealyDHC<>(alphabet, simoracle);
+		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> fm = ExampleStack.getInstance();
+		Alphabet<ExampleStack.Input> alphabet = ExampleStack.getInputAlphabet();
+		SimulatorOracle<ExampleStack.Input, Word<ExampleStack.Output>> simoracle = new SimulatorOracle<>(fm);
+		MealyDHC<ExampleStack.Input, ExampleStack.Output> dhc = new MealyDHC<>(alphabet, simoracle);
 		
 		// nothing learned yet, this should throw an exception!
 		dhc.getHypothesisModel();
@@ -82,24 +81,24 @@ public class MealyDHCTest {
 
 	@Test
 	public void testMealyDHCStack() {
-		MealyMachine<?,Symbol,?,String> fm = ExampleStack.getInstance();
-		Alphabet<Symbol> alphabet = ExampleStack.getInputAlphabet();
+		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> fm = ExampleStack.getInstance();
+		Alphabet<ExampleStack.Input> alphabet = ExampleStack.getInputAlphabet();
 
-		SimulatorOracle<Symbol, Word<String>> simoracle = new SimulatorOracle<>(fm);
-		MembershipOracle<Symbol,Word<String>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
+		SimulatorOracle<ExampleStack.Input, Word<ExampleStack.Output>> simoracle = new SimulatorOracle<>(fm);
+		MembershipOracle<ExampleStack.Input,Word<ExampleStack.Output>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
 
-		MealyDHC<Symbol, String> dhc = new MealyDHC<>(alphabet, cache);
+		MealyDHC<ExampleStack.Input, ExampleStack.Output> dhc = new MealyDHC<>(alphabet, cache);
 
 		dhc.startLearning();
 
-		MealyMachine<?, Symbol, ?, String> hypo = dhc.getHypothesisModel();
+		MealyMachine<?, ExampleStack.Input, ?, ExampleStack.Output> hypo = dhc.getHypothesisModel();
 
 		// for this example the first hypothesis should have two states
 		Assert.assertEquals(hypo.size(), 2, "Mismatch in size of learned hypothesis");
 
-		SimulatorEQOracle<Symbol, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
+		SimulatorEQOracle<ExampleStack.Input, Word<ExampleStack.Output>> eqoracle = new SimulatorEQOracle<>(fm);
 
-		DefaultQuery<Symbol, Word<String>> cexQuery = eqoracle.findCounterExample(hypo, alphabet);
+		DefaultQuery<ExampleStack.Input, Word<ExampleStack.Output>> cexQuery = eqoracle.findCounterExample(hypo, alphabet);
 
 		// a counterexample has to be found
 		Assert.assertNotNull(cexQuery, "No counterexample found for incomplete hypothesis");
@@ -124,17 +123,17 @@ public class MealyDHCTest {
 	@Test
 	public void testMealyDHCCoffee() {
 
-		MealyMachine<?,Symbol,?,String> fm = ExampleCoffeeMachine.getInstance();
-		Alphabet<Symbol> alphabet = ExampleCoffeeMachine.getInputAlphabet();
+		MealyMachine<?,ExampleCoffeeMachine.Input,?,String> fm = ExampleCoffeeMachine.getInstance();
+		Alphabet<ExampleCoffeeMachine.Input> alphabet = ExampleCoffeeMachine.getInputAlphabet();
 
-		SimulatorOracle<Symbol, Word<String>> simoracle = new SimulatorOracle<>(fm);
-		SimulatorEQOracle<Symbol, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
+		SimulatorOracle<ExampleCoffeeMachine.Input, Word<String>> simoracle = new SimulatorOracle<>(fm);
+		SimulatorEQOracle<ExampleCoffeeMachine.Input, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
 
-		MembershipOracle<Symbol,Word<String>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
-		MealyDHC<Symbol, String> dhc = new MealyDHC<>(alphabet, cache);
+		MembershipOracle<ExampleCoffeeMachine.Input,Word<String>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
+		MealyDHC<ExampleCoffeeMachine.Input, String> dhc = new MealyDHC<>(alphabet, cache);
 
 		int rounds = 0;
-		DefaultQuery<Symbol, Word<String>> counterexample = null;
+		DefaultQuery<ExampleCoffeeMachine.Input, Word<String>> counterexample = null;
 		do {
 			if (counterexample == null) {
 				dhc.startLearning();

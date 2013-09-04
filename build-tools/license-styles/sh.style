@@ -1,0 +1,4 @@
+file_pattern="\.sh$"
+file_header=1
+line_prefix="# "
+

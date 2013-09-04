@@ -16,19 +16,16 @@
  */
 package de.learnlib.oracles;
 
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
-import de.learnlib.api.SUL;
-import java.util.Collection;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import de.learnlib.api.SUL;
 
 /**
  * A wrapper around a system under learning (SUL).
  * 
  * @author falkhowar
  */
-public class SULOracle<I, O> implements MembershipOracle<I, Word<O>> {
+public class SULOracle<I, O> extends AbstractSingleQueryOracle<I, Word<O>> {
 
 	private final SUL<I, O> sul;
 
@@ -37,25 +34,18 @@ public class SULOracle<I, O> implements MembershipOracle<I, Word<O>> {
 	}
 
 	@Override
-	public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-		for (Query<I, Word<O>> query : queries) {
-			answerQuery(query);
-		}
-	}
-
-	private void answerQuery(Query<I, Word<O>> query) {
+	public Word<O> answerQuery(Word<I> prefix, Word<I> suffix) {
 		sul.reset();
 		// Prefix: Execute symbols, don't record output
-		for(I sym : query.getPrefix())
+		for(I sym : prefix)
 			sul.step(sym);
 		
 		// Suffix: Execute symbols, outputs constitute output word
-		Word<I> suffix = query.getSuffix();
 		WordBuilder<O> wb = new WordBuilder<>(suffix.length());
 		for(I sym : suffix)
 			wb.add(sul.step(sym));
 		
-		query.answer(wb.toWord());
+		return wb.toWord();
 	}
 
 }

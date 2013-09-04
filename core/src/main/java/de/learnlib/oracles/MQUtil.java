@@ -16,10 +16,13 @@
  */
 package de.learnlib.oracles;
 
+import java.util.Collection;
 import java.util.Collections;
 
 import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.Query;
+import de.learnlib.api.QueryAnswerer;
 
 public abstract class MQUtil {
 	
@@ -39,5 +42,14 @@ public abstract class MQUtil {
 	
 	public static <I,O> DefaultQuery<I,O> query(MembershipOracle<I,O> oracle, Word<I> queryWord) {
 		return query(oracle, Word.<I>epsilon(), queryWord);
+	}
+	
+	public static <I,O> void answerQueries(QueryAnswerer<I,O> answerer, Collection<? extends Query<I,O>> queries) {
+		for(Query<I,O> query : queries) {
+			Word<I> prefix = query.getPrefix();
+			Word<I> suffix = query.getSuffix();
+			O answer = answerer.answerQuery(prefix, suffix);
+			query.answer(answer);
+		}
 	}
 }
