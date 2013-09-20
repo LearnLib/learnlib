@@ -123,12 +123,19 @@ public class RandomWalkEQOracle<I, O>
 		WordBuilder<I> wbIn = new WordBuilder<>();
 		WordBuilder<O> wbOut = new WordBuilder<>();
 
+                boolean first = true;
 		while (steps < maxSteps) {
 
 			// restart?
 			double restart = random.nextDouble();
 			if (restart < restartProbability) {
-				sul.reset();
+				if (first) {
+                                    first = false;
+                                }
+                                else {
+                                    sul.post();
+                                }
+                                sul.pre();
 				cur = hypothesis.getInitialState();
 				wbIn.clear();
 				wbOut.clear();
@@ -147,11 +154,12 @@ public class RandomWalkEQOracle<I, O>
 			if (!outSul.equals(outHyp)) {
 				DefaultQuery<I, Word<O>> ce = new DefaultQuery<>(wbIn.toWord());
 				ce.answer(wbOut.toWord());
+                                sul.post();
 				return ce;
 			}
 			cur = hypothesis.getSuccessor(cur, in);
 		}
-
+                sul.post();
 		return null;
 	}
 }

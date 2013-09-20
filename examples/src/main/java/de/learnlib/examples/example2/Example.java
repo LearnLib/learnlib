@@ -40,12 +40,15 @@ import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.SUL;
 import de.learnlib.cache.Caches;
+import de.learnlib.drivers.api.SULInput;
+import de.learnlib.drivers.objects.TestDriver;
 import de.learnlib.eqtests.basic.mealy.RandomWalkEQOracle;
 import de.learnlib.experiments.Experiment.MealyExperiment;
 import de.learnlib.oracles.ResetCounterSUL;
 import de.learnlib.oracles.SULOracle;
 import de.learnlib.statistics.SimpleProfiler;
 import de.learnlib.statistics.StatisticSUL;
+import java.lang.reflect.Constructor;
 
 /**
  * This example shows how a model of a Java class can be learned using the SUL
@@ -83,104 +86,44 @@ public class Example {
             return data.poll();
         }
     }
-
-    /*
-     * We use the BSQInput class to wrap concrete method invocations
-     * and use these as alphabet symbols for the learning algorithm
-     */
-    public static class BSQInput {
-
-        // method to invoke
-        public final Method action;
-        
-        // method parameter values
-        public final Object[] data;
-
-        public BSQInput(Method action, Object[] data) {
-            this.action = action;
-            this.data = data;
-        }
-
-        // this will be used for printing when 
-        // logging or exporting automata
-        @Override
-        public String toString() {
-            return action.getName() + Arrays.toString(data);
-        }
-    }
-
-    /*
-     * The BSQAdapter 
-     * 
-     */
-    public static class BSQAdapter implements SUL<BSQInput, String> {
-
-        // system under learning
-        private BoundedStringQueue sul;
-
-        // reset the SUL
-        @Override
-        public void reset() {
-            // we just create a new instance
-            sul = new BoundedStringQueue();
-        }
-
-        // execute one input on the SUL
-        @Override
-        public String step(BSQInput in) {
-            try {
-                // invoke the method wrapped by in
-                Object ret = in.action.invoke(sul, in.data);
-                // make sure that we return a string
-                return ret == null ? "" : (String) ret;
-            } 
-            catch (IllegalAccessException | 
-                    IllegalArgumentException | 
-                    InvocationTargetException e) {
-                // This should never happen. In a real experiment
-                // this would be the point when we want to issue
-                // a warning or stop the learning.
-                return "err";
-            }
-        }
-    }
-
+    
+    
     public static void main(String[] args) throws NoSuchMethodException, IOException {
 
+        // instantiate test driver
+        TestDriver driver = new TestDriver(
+                BoundedStringQueue.class.getConstructor());
+                
         // create learning alphabet
-        
-        // offer(a)
-        BSQInput offer_a = new BSQInput(BoundedStringQueue.class.getMethod(
-                "offer", new Class<?>[]{String.class}), new Object[]{"a"});
+        Method mOffer = BoundedStringQueue.class.getMethod(
+                "offer", new Class<?>[]{String.class});
+        Method mPoll = BoundedStringQueue.class.getMethod(
+                "poll", new Class<?>[]{});
+                
+        // offer
+        SULInput offer_a = driver.addInput("offer_a", mOffer, "a");
+        SULInput offer_b = driver.addInput("offer_b", mOffer, "b");
 
-        // offer(b)
-        BSQInput offer_b = new BSQInput(BoundedStringQueue.class.getMethod(
-                "offer", new Class<?>[]{String.class}), new Object[]{"b"});
+        // poll
+        SULInput poll = driver.addInput("poll", mPoll);
 
-        // poll()
-        BSQInput poll = new BSQInput(BoundedStringQueue.class.getMethod(
-                "poll", new Class<?>[]{}), new Object[]{});
-
-        Alphabet<BSQInput> inputs = new SimpleAlphabet<>();
+        Alphabet<SULInput> inputs = new SimpleAlphabet<>();
         inputs.add(offer_a);
         inputs.add(offer_b);
         inputs.add(poll);
 
-        // create an oracle that can answer membership queries
-        // using the BSQAdapter
-        SUL<BSQInput,String> sul = new BSQAdapter();
-        
         // oracle for counting queries wraps sul
-        StatisticSUL<BSQInput, String> statisticSul = new ResetCounterSUL<>("membership queries", sul);
+        StatisticSUL<SULInput, Object> statisticSul = 
+                new ResetCounterSUL<>("membership queries", driver);
         
-        SUL<BSQInput,String> effectiveSul = statisticSul;
+        SUL<SULInput, Object> effectiveSul = statisticSul;
         // use caching in order to avoid duplicate queries
         effectiveSul = Caches.createSULCache(inputs, effectiveSul);
         
-        SULOracle<BSQInput, String> mqOracle = new SULOracle<>(effectiveSul);
+        SULOracle<SULInput, Object> mqOracle = new SULOracle<>(effectiveSul);
 
         // create initial set of suffixes
-        List<Word<BSQInput>> suffixes = new ArrayList<>();
+        List<Word<SULInput>> suffixes = new ArrayList<>();
         suffixes.add(Word.fromSymbols(offer_a));
         suffixes.add(Word.fromSymbols(offer_b));
         suffixes.add(Word.fromSymbols(poll));
@@ -188,7 +131,7 @@ public class Example {
         // construct L* instance (almost classic Mealy version)
         // almost: we use words (Word<String>) in cells of the table 
         // instead of single outputs.
-        MealyLearner<BSQInput,String> lstar =
+        MealyLearner<SULInput, Object> lstar =
                 new ExtensibleLStarMealy<>(
                 inputs, // input alphabet
                 mqOracle, // mq oracle
@@ -198,20 +141,20 @@ public class Example {
                 );
 
         // create random walks equivalence test
-        MealyEquivalenceOracle<BSQInput,String> randomWalks =
+        MealyEquivalenceOracle<SULInput, Object> randomWalks =
                 new RandomWalkEQOracle<>(
                 0.05, // reset SUL w/ this probability before a step 
                 10000, // max steps (overall)
                 false, // reset step count after counterexample 
                 new Random(46346293), // make results reproducible 
-                sul // system under learning
+                driver // system under learning
                 );
 
         // construct a learning experiment from
         // the learning algorithm and the random walks test.
         // The experiment will execute the main loop of
         // active learning
-        MealyExperiment<BSQInput,String> experiment =
+        MealyExperiment<SULInput, Object> experiment =
                 new MealyExperiment<>(lstar, randomWalks, inputs);
 
         // turn on time profiling
@@ -224,7 +167,7 @@ public class Example {
         experiment.run();
 
         // get learned model
-        MealyMachine<?, BSQInput, ?, String> result = experiment.getFinalHypothesis();
+        MealyMachine<?, SULInput, ?, Object> result = experiment.getFinalHypothesis();
 
         // report results
         System.out.println("-------------------------------------------------------");

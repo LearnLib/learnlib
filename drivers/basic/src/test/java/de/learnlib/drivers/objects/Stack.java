@@ -14,34 +14,33 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.api;
+package de.learnlib.drivers.objects;
+
+import java.util.LinkedList;
 
 /**
- * Interface for a system under learning (SUL) that can make single steps.
- *
- * @param <I> input symbols
- * @param <O> output symbols
  *
  * @author falkhowar
  */
-public interface SUL<I, O> {
-
-    /**
-     * setup SUL.
-     */
-    void pre();
-
-    /**
-     * shut down SUL.
-     */
-    void post();
+public class Stack {
     
-    /**
-     * make one step on the SUL.
-     *
-     * @param in input to the SUL
-     * @return output of SUL
-     */
-    O step(I in);
+    private final int capacity;
 
+    private final LinkedList<Object> back = new LinkedList<>();
+    
+    public Stack(int capacity) {
+        this.capacity = capacity;
+    }
+    
+    public void push(Object o) {
+        if (back.size()>= capacity) {
+            throw new IllegalStateException("capacity exceeded");
+        }
+        back.push(o);
+    }
+    
+    public Object pop() {
+        return back.pop();
+    } 
+    
 }

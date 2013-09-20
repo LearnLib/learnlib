@@ -14,34 +14,26 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.api;
+package de.learnlib.drivers.objects;
 
 /**
- * Interface for a system under learning (SUL) that can make single steps.
- *
- * @param <I> input symbols
- * @param <O> output symbols
- *
+ * Unobserved indicates that the corresponding input was
+ * not executed on the system. This usually happens after
+ * an exception occurred.
+ * 
  * @author falkhowar
  */
-public interface SUL<I, O> {
-
-    /**
-     * setup SUL.
-     */
-    void pre();
-
-    /**
-     * shut down SUL.
-     */
-    void post();
+public class Unobserved {
     
-    /**
-     * make one step on the SUL.
-     *
-     * @param in input to the SUL
-     * @return output of SUL
-     */
-    O step(I in);
+    public static final Unobserved INSTANCE = new Unobserved();
+    
+    private Unobserved() {
+    }
 
+    @Override
+    public String toString() {
+        return "unobserved"; 
+    }
+
+    
 }

@@ -36,7 +36,7 @@ public class SULOracle<I, O> extends AbstractSingleQueryOracle<I, Word<O>> imple
 
 	@Override
 	public Word<O> answerQuery(Word<I> prefix, Word<I> suffix) {
-		sul.reset();
+		sul.pre();
 		// Prefix: Execute symbols, don't record output
 		for(I sym : prefix)
 			sul.step(sym);
@@ -46,6 +46,7 @@ public class SULOracle<I, O> extends AbstractSingleQueryOracle<I, Word<O>> imple
 		for(I sym : suffix)
 			wb.add(sul.step(sym));
 		
+                sul.post();
 		return wb.toWord();
 	}
 

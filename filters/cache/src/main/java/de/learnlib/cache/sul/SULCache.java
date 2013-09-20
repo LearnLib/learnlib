@@ -23,7 +23,7 @@ public class SULCache<I, O> implements SUL<I, O> {
 	}
 
 	@Override
-	public void reset() {
+	public void pre() {
 		if(outputWord != null) {
 			incMealy.insert(inputWord.toWord(), outputWord.toWord());
 		}
@@ -48,7 +48,7 @@ public class SULCache<I, O> implements SUL<I, O> {
 			else {
 				current = null;
 				outputWord = new WordBuilder<>();
-				delegate.reset();
+				delegate.pre();
 				for(I prevSym : inputWord) {
 					outputWord.append(delegate.step(prevSym));
 				}
@@ -68,6 +68,11 @@ public class SULCache<I, O> implements SUL<I, O> {
 	public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
 		return new MealyCacheConsistencyTest<>(incMealy);
 	}
+
+    @Override
+    public void post() {
+        delegate.post();
+    }
 
 
 }

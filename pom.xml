@@ -102,6 +102,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<module>simulator</module>
 		<module>utils</module>
 		<module>filters</module>
+		<module>drivers</module>
 		<module>archetypes</module>
 		<module>examples</module>
 	</modules>
@@ -428,6 +429,10 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>learnlib-drivers-basic</artifactId>
+				<version>${project.version}</version>
+			</dependency>			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>learnlib-parallelism</artifactId>
 				<version>${project.version}</version>
