@@ -14,9 +14,11 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.api;
+package de.learnlib.drivers.objects;
 
-import java.lang.reflect.Method;
+import de.learnlib.drivers.api.ExecutableInput;
+import de.learnlib.drivers.api.SULException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -25,12 +27,12 @@ import java.util.Map;
  * 
  * @author falkhowar
  */
-final public class ConcreteInput {
+final class ConcreteMethodInput implements ExecutableInput<Object> {
     
     /**
      * corresponding abstract input
      */
-    private final SULInput input;
+    private final AbstractMethodInput input;
     
     /**
      * parameter values
@@ -42,27 +44,39 @@ final public class ConcreteInput {
      */
     private final Object target;
 
-    public ConcreteInput(SULInput input, Map<String, Object> values, Object target) {
+    public ConcreteMethodInput(AbstractMethodInput input, Map<String, Object> values, Object target) {
         this.input = input;
         this.values = values;
         this.target = target;
     }    
 
-    public Method getMethod() {
-        return this.input.getMethod();
-    }
-
-    public Object[] getParameterValues() {
+    private Object[] getParameterValues() {
         return this.input.getParameters(values);
-    }
-
-    public Object getTarget() {
-        return target;
     }
 
     @Override
     public String toString() {
         return target + "." + this.input.getMethod().getName() + Arrays.toString(getParameterValues());
+    }
+  
+    @Override
+    public Object execute() throws SULException {
+        Object out = null;
+        try {                        
+            Object ret = this.input.getMethod().invoke(this.target, getParameterValues());
+            if (this.input.getMethod().getReturnType().equals(Void.TYPE)) {
+                out = Void.TYPE;
+            } else {            
+                out = ret;
+            }
+        } 
+        catch (IllegalAccessException | IllegalArgumentException e) {
+            throw new RuntimeException(e);
+        } 
+        catch (InvocationTargetException e) {
+            throw new SULException(e.getCause());
+        }        
+        return out;                
     }
     
 }

@@ -17,23 +17,10 @@
 package de.learnlib.drivers.objects;
 
 /**
- * Unobserved indicates that the corresponding input was
- * not executed on the system. This usually happens after
- * an exception occurred.
+ * abstract output of a method.
  * 
- * @author falkhowar
+ * @author falk
  */
-public class Unobserved extends AbstractMethodOutput {
-    
-    public static final Unobserved INSTANCE = new Unobserved();
-    
-    private Unobserved() {
-    }
-
-    @Override
-    public String toString() {
-        return "unobserved"; 
-    }
-
+public class AbstractMethodOutput {
     
 }

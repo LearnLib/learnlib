@@ -14,26 +14,18 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.objects;
+package de.learnlib.drivers.api;
+
 
 /**
- * Unobserved indicates that the corresponding input was
- * not executed on the system. This usually happens after
- * an exception occurred.
+ * Thrown by executable inputs on SUL errors.
  * 
  * @author falkhowar
  */
-public class Unobserved extends AbstractMethodOutput {
+public class SULException extends Exception {
     
-    public static final Unobserved INSTANCE = new Unobserved();
-    
-    private Unobserved() {
+    public SULException(Throwable cause) {
+        super(cause);
     }
-
-    @Override
-    public String toString() {
-        return "unobserved"; 
-    }
-
     
 }

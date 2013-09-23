@@ -17,7 +17,6 @@
 package de.learnlib.drivers.objects;
 
 import de.learnlib.api.Query;
-import de.learnlib.drivers.api.SULInput;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SULOracle;
 import java.lang.reflect.Constructor;
@@ -44,23 +43,22 @@ public class ObjectTest {
      public void testDriver() throws Exception {
      
          Constructor c = Stack.class.getConstructor(int.class);
-         TestDriver driver = new TestDriver(c, 2);
-         SULOracle<SULInput, Object> oracle = new SULOracle<>(driver);
+         SimplePOJOTestDriver driver = new SimplePOJOTestDriver(c, 2);
+         SULOracle<AbstractMethodInput, AbstractMethodOutput> oracle = new SULOracle<>(driver);
          
          Method push = Stack.class.getMethod("push", new Class<?>[] {Object.class});
-         SULInput push_1 = driver.addInput("push_1", push, 1);
-         SULInput push_2 = driver.addInput("push_2", push, 2);
+         AbstractMethodInput push_1 = driver.addInput("push_1", push, 1);
+         AbstractMethodInput push_2 = driver.addInput("push_2", push, 2);
          
          Method _pop = Stack.class.getMethod("pop", new Class<?>[] {});
-         SULInput pop = driver.addInput("pop", _pop, new Object[] {});
+         AbstractMethodInput pop = driver.addInput("pop", _pop, new Object[] {});
                   
-         DefaultQuery<SULInput, Word<Object>> query1 = new DefaultQuery<>(
+         DefaultQuery<AbstractMethodInput, Word<AbstractMethodOutput>> query1 = new DefaultQuery<>(
                 Word.fromSymbols(push_1, push_2, pop, pop, pop, pop));
-         DefaultQuery<SULInput, Word<Object>> query2 = new DefaultQuery<>(
+         DefaultQuery<AbstractMethodInput, Word<AbstractMethodOutput>> query2 = new DefaultQuery<>(
                 Word.fromSymbols(push_1, push_2, push_1, pop));
          
-         Collection<Query<SULInput, Word<Object>>> queries = new ArrayList<>();
-         queries.add(new DefaultQuery<SULInput, Word<Object>>(query1));
+         Collection<Query<AbstractMethodInput, Word<AbstractMethodOutput>>> queries = new ArrayList<>();
          queries.add(query1);
          queries.add(query2);
          

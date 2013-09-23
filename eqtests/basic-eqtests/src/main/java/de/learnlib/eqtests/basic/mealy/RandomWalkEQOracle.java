@@ -124,6 +124,7 @@ public class RandomWalkEQOracle<I, O>
 		WordBuilder<O> wbOut = new WordBuilder<>();
 
                 boolean first = true;
+                sul.pre();
 		while (steps < maxSteps) {
 
 			// restart?

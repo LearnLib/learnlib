@@ -16,28 +16,30 @@
  */
 package de.learnlib.drivers.objects;
 
-import de.learnlib.drivers.api.SULInput;
+import de.learnlib.drivers.api.TestDriver;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 /**
- *
+ * Simple test driver for plain java objects. Uses a very simple data mapper
+ * without state or storage. Inputs cannot have abstract parameters.
+ * 
  * @author falkhowar
  */
-public class TestDriver extends de.learnlib.drivers.api.TestDriver<Object> {
+public final class SimplePOJOTestDriver extends 
+        TestDriver<AbstractMethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
  
-    private final Collection<SULInput> inputs;
+    private final SimpleAlphabet<AbstractMethodInput> inputs = new SimpleAlphabet<>();
     
-    public TestDriver(Constructor c, Object ... cParams) {
-        super(new DataMapper(c, cParams));
-        this.inputs = new LinkedList<>();
+    public SimplePOJOTestDriver(Constructor c, Object ... cParams) {
+        super(new SimplePOJODataMapper(c, cParams));
     }
     
-    public SULInput addInput(String name, Method m, Object ... params) {
-        SULInput i = new SULInput(name, m, new HashMap<String, Integer>(), params);
+    public AbstractMethodInput addInput(String name, Method m, Object ... params) {
+        AbstractMethodInput i = new AbstractMethodInput(name, m, new HashMap<String, Integer>(), params);
         inputs.add(i);
         return i;
     }
@@ -45,8 +47,8 @@ public class TestDriver extends de.learnlib.drivers.api.TestDriver<Object> {
     /**
      * @return the inputs
      */
-    public Collection<SULInput> getInputs() {
-        return inputs;
+    public Alphabet<AbstractMethodInput> getInputs() {
+        return this.inputs;
     }
     
 }

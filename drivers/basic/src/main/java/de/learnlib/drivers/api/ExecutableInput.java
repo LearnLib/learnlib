@@ -14,26 +14,23 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.objects;
+package de.learnlib.drivers.api;
 
 /**
- * Unobserved indicates that the corresponding input was
- * not executed on the system. This usually happens after
- * an exception occurred.
+ * An executable input is a concrete input produced by a data mapper
+ * and can be executed directly. 
  * 
  * @author falkhowar
+ * 
+ * @param <CO> concrete output 
  */
-public class Unobserved extends AbstractMethodOutput {
-    
-    public static final Unobserved INSTANCE = new Unobserved();
-    
-    private Unobserved() {
-    }
-
-    @Override
-    public String toString() {
-        return "unobserved"; 
-    }
-
+public interface ExecutableInput<CO> {
+   
+    /**
+     * executes the input.
+     * 
+     * @return concrete output for this input 
+     */
+    public CO execute() throws SULException;
     
 }

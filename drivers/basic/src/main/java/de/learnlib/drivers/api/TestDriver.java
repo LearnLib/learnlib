@@ -16,13 +16,7 @@
  */
 package de.learnlib.drivers.api;
 
-import de.learnlib.api.Query;
 import de.learnlib.api.SUL;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import net.automatalib.words.Word;
 
 /**
  * A test driver executes
@@ -30,38 +24,29 @@ import net.automatalib.words.Word;
  * 
  * @author falkhowar
  * 
- * @param <O> abstract output type
+ * @param <AI> abstract input type
+ * @param <CI> concrete input type
+ * @param <AO> abstract output type
+ * @param <CO> concrete output type
  */
-public class TestDriver<O> implements SUL<SULInput, O> {
+public class TestDriver<AI, AO, CI extends ExecutableInput<CO>, CO> implements SUL<AI, AO> {
 
-    private final DataMapper<O> mapper;
+    private final DataMapper<AI, AO, CI, CO> mapper;
 
-    public TestDriver(DataMapper<O> mapper) {
+    public TestDriver(DataMapper<AI, AO, CI, CO> mapper) {
         this.mapper = mapper;
     }    
     
     @Override
-    public O step(SULInput i) {
-        ConcreteInput ci = this.mapper.input(i);
-        O out = null;
+    public AO step(AI i) {
+        ExecutableInput<CO> ci = this.mapper.input(i);
         try {
-            Object ret = ci.getMethod().invoke(ci.getTarget(), ci.getParameterValues());
-            if (ci.getMethod().getReturnType().equals(Void.TYPE)) {
-                out = this.mapper.output(Void.TYPE);
-            } else {            
-                out = this.mapper.output(ret);
-            }
-        } catch (IllegalAccessException | IllegalArgumentException e) {
-            // catch exceptions specific to invocation
-            // TODO: check that the exception really originated here.
-            throw new RuntimeException(e);
-        } catch (Throwable t) {
-            if (t instanceof InvocationTargetException) {
-                t = t.getCause();
-            }
-            out = this.mapper.exception(t);
+            CO out = ci.execute();
+            return this.mapper.output(out);
+        } 
+        catch (SULException e) {
+            return this.mapper.exception(e);
         }        
-        return out;
     }
 
     @Override

@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.api;
+package de.learnlib.drivers.objects;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -24,11 +24,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * 
+ * abstract method input, may have abstract parameters.
  * 
  * @author falkhowar
  */
-public final class SULInput {
+public final class AbstractMethodInput {
     
     private final String name;
     
@@ -38,7 +38,7 @@ public final class SULInput {
 
     private final Object[] values;
 
-    public SULInput(String name, Method method, Map<String, Integer> parameters, Object[] values) {
+    public AbstractMethodInput(String name, Method method, Map<String, Integer> parameters, Object[] values) {
         this.name = name;
         this.method = method;
         this.parameters = parameters;

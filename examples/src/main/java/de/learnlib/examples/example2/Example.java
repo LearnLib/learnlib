@@ -18,11 +18,9 @@ package de.learnlib.examples.example2;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 import java.util.Random;
@@ -30,9 +28,7 @@ import java.util.Random;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.util.graphs.dot.GraphDOT;
-import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealy;
@@ -40,15 +36,15 @@ import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.SUL;
 import de.learnlib.cache.Caches;
-import de.learnlib.drivers.api.SULInput;
-import de.learnlib.drivers.objects.TestDriver;
+import de.learnlib.drivers.objects.AbstractMethodInput;
+import de.learnlib.drivers.objects.AbstractMethodOutput;
+import de.learnlib.drivers.objects.SimplePOJOTestDriver;
 import de.learnlib.eqtests.basic.mealy.RandomWalkEQOracle;
 import de.learnlib.experiments.Experiment.MealyExperiment;
 import de.learnlib.oracles.ResetCounterSUL;
 import de.learnlib.oracles.SULOracle;
 import de.learnlib.statistics.SimpleProfiler;
 import de.learnlib.statistics.StatisticSUL;
-import java.lang.reflect.Constructor;
 
 /**
  * This example shows how a model of a Java class can be learned using the SUL
@@ -91,7 +87,7 @@ public class Example {
     public static void main(String[] args) throws NoSuchMethodException, IOException {
 
         // instantiate test driver
-        TestDriver driver = new TestDriver(
+        SimplePOJOTestDriver driver = new SimplePOJOTestDriver(
                 BoundedStringQueue.class.getConstructor());
                 
         // create learning alphabet
@@ -101,29 +97,24 @@ public class Example {
                 "poll", new Class<?>[]{});
                 
         // offer
-        SULInput offer_a = driver.addInput("offer_a", mOffer, "a");
-        SULInput offer_b = driver.addInput("offer_b", mOffer, "b");
+        AbstractMethodInput offer_a = driver.addInput("offer_a", mOffer, "a");
+        AbstractMethodInput offer_b = driver.addInput("offer_b", mOffer, "b");
 
         // poll
-        SULInput poll = driver.addInput("poll", mPoll);
-
-        Alphabet<SULInput> inputs = new SimpleAlphabet<>();
-        inputs.add(offer_a);
-        inputs.add(offer_b);
-        inputs.add(poll);
+        AbstractMethodInput poll = driver.addInput("poll", mPoll);
 
         // oracle for counting queries wraps sul
-        StatisticSUL<SULInput, Object> statisticSul = 
+        StatisticSUL<AbstractMethodInput, AbstractMethodOutput> statisticSul = 
                 new ResetCounterSUL<>("membership queries", driver);
         
-        SUL<SULInput, Object> effectiveSul = statisticSul;
+        SUL<AbstractMethodInput, AbstractMethodOutput> effectiveSul = statisticSul;
         // use caching in order to avoid duplicate queries
-        effectiveSul = Caches.createSULCache(inputs, effectiveSul);
+        effectiveSul = Caches.createSULCache(driver.getInputs(), effectiveSul);
         
-        SULOracle<SULInput, Object> mqOracle = new SULOracle<>(effectiveSul);
+        SULOracle<AbstractMethodInput, AbstractMethodOutput> mqOracle = new SULOracle<>(effectiveSul);
 
         // create initial set of suffixes
-        List<Word<SULInput>> suffixes = new ArrayList<>();
+        List<Word<AbstractMethodInput>> suffixes = new ArrayList<>();
         suffixes.add(Word.fromSymbols(offer_a));
         suffixes.add(Word.fromSymbols(offer_b));
         suffixes.add(Word.fromSymbols(poll));
@@ -131,9 +122,9 @@ public class Example {
         // construct L* instance (almost classic Mealy version)
         // almost: we use words (Word<String>) in cells of the table 
         // instead of single outputs.
-        MealyLearner<SULInput, Object> lstar =
+        MealyLearner<AbstractMethodInput, AbstractMethodOutput> lstar =
                 new ExtensibleLStarMealy<>(
-                inputs, // input alphabet
+                driver.getInputs(), // input alphabet
                 mqOracle, // mq oracle
                 suffixes, // initial suffixes
                 ObservationTableCEXHandlers.CLASSIC_LSTAR, // handling of counterexamples
@@ -141,7 +132,7 @@ public class Example {
                 );
 
         // create random walks equivalence test
-        MealyEquivalenceOracle<SULInput, Object> randomWalks =
+        MealyEquivalenceOracle<AbstractMethodInput, AbstractMethodOutput> randomWalks =
                 new RandomWalkEQOracle<>(
                 0.05, // reset SUL w/ this probability before a step 
                 10000, // max steps (overall)
@@ -154,8 +145,8 @@ public class Example {
         // the learning algorithm and the random walks test.
         // The experiment will execute the main loop of
         // active learning
-        MealyExperiment<SULInput, Object> experiment =
-                new MealyExperiment<>(lstar, randomWalks, inputs);
+        MealyExperiment<AbstractMethodInput, AbstractMethodOutput> experiment =
+                new MealyExperiment<>(lstar, randomWalks, driver.getInputs());
 
         // turn on time profiling
         experiment.setProfile(true);
@@ -167,7 +158,8 @@ public class Example {
         experiment.run();
 
         // get learned model
-        MealyMachine<?, SULInput, ?, Object> result = experiment.getFinalHypothesis();
+        MealyMachine<?, AbstractMethodInput, ?, AbstractMethodOutput> result = 
+                experiment.getFinalHypothesis();
 
         // report results
         System.out.println("-------------------------------------------------------");
@@ -181,15 +173,15 @@ public class Example {
 
         // model statistics
         System.out.println("States: " + result.size());
-        System.out.println("Sigma: " + inputs.size());
+        System.out.println("Sigma: " + driver.getInputs().size());
 
         // show model
         System.out.println();
         System.out.println("Model: ");
         
-        GraphDOT.write(result, inputs, System.out); // may throw IOException!
+        GraphDOT.write(result, driver.getInputs(), System.out); // may throw IOException!
         Writer w = DOT.createDotWriter(true);
-        GraphDOT.write(result, inputs, w);
+        GraphDOT.write(result, driver.getInputs(), w);
         w.close();
 
         System.out.println("-------------------------------------------------------");

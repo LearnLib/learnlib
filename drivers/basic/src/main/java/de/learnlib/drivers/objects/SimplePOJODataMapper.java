@@ -16,8 +16,8 @@
  */
 package de.learnlib.drivers.objects;
 
-import de.learnlib.drivers.api.ConcreteInput;
-import de.learnlib.drivers.api.SULInput;
+import de.learnlib.drivers.api.DataMapper;
+import de.learnlib.drivers.api.SULException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,21 +29,21 @@ import java.util.Map;
  * 
  * @author falkhowar
  */
-public class DataMapper implements de.learnlib.drivers.api.DataMapper<Object> {
+final class SimplePOJODataMapper implements DataMapper<AbstractMethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
 
     private final Constructor initMethod;
     private final Object[] initParams;
-    private final SULInput doNothing;
+    private final AbstractMethodInput doNothing;
                 
     private Object _this;    
     private boolean error;
 
-    DataMapper(Constructor initMethod, Object[] initParams) {
+    SimplePOJODataMapper(Constructor initMethod, Object[] initParams) {
         this.initMethod = initMethod;
         this.initParams = initParams;
         try {
             Method dn = this.getClass().getMethod("doNothing", new Class<?>[] {});
-            this.doNothing = new SULInput("dn", dn, new HashMap<String, Integer>(), new Object[] {});            
+            this.doNothing = new AbstractMethodInput("dn", dn, new HashMap<String, Integer>(), new Object[] {});            
         } catch (NoSuchMethodException | SecurityException ex) {
             throw new IllegalStateException(ex);
         }
@@ -66,18 +66,18 @@ public class DataMapper implements de.learnlib.drivers.api.DataMapper<Object> {
     }
 
     @Override
-    public ConcreteInput input(SULInput i) {
+    public ConcreteMethodInput input(AbstractMethodInput i) {
         Map<String, Object> params = new HashMap<>();
         
         if (this.error) {
-            return new ConcreteInput(doNothing, params, null);
+            return new ConcreteMethodInput(doNothing, params, null);
         }
         
-        return new ConcreteInput(i, params, _this);
+        return new ConcreteMethodInput(i, params, _this);
     }
 
     @Override
-    public Object output(Object o) {        
+    public AbstractMethodOutput output(Object o) {        
         if (this.error) {
             return Unobserved.INSTANCE;
         }
@@ -86,13 +86,13 @@ public class DataMapper implements de.learnlib.drivers.api.DataMapper<Object> {
     }
 
     @Override
-    public Object exception(Throwable t) {
+    public AbstractMethodOutput exception(SULException e) {
         if (this.error) {
             return Unobserved.INSTANCE;
         }
 
         this.error = true;
-        return new Error(t);
+        return new Error(e.getCause());
     }
     
     

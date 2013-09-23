@@ -23,9 +23,12 @@ package de.learnlib.drivers.api;
  * 
  * @author falkhowar
  * 
- * @param <O> abstract output type
+ * @param <AI> abstract input type
+ * @param <CI> concrete input type
+ * @param <AO> abstract output type
+ * @param <CO> concrete output type
  */
-public interface DataMapper<O> {
+public interface DataMapper<AI, AO, CI extends ExecutableInput<CO>, CO> {
 
     /**
      * called by a test driver before execution of a test case
@@ -40,16 +43,16 @@ public interface DataMapper<O> {
     /**
      * called to transform an abstract into a concrete input
      */
-    public ConcreteInput input(SULInput i);
+    public CI input(AI i);
     
     /**
      * called to transform a concrete output into an abstract one
      */
-    public O output(Object o);
+    public AO output(CO o);
     
     /**
      * called to transform a concrete error into an abstract one
      */
-    public O exception(Throwable t);
+    public AO exception(SULException t);
     
 }
