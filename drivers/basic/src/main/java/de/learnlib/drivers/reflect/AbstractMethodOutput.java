@@ -14,13 +14,13 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.objects;
+package de.learnlib.drivers.reflect;
 
 /**
  * abstract output of a method.
  * 
  * @author falk
  */
-public class AbstractMethodOutput {
+public abstract class AbstractMethodOutput {
     
 }

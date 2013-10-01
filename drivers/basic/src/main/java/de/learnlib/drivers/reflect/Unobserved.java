@@ -14,33 +14,26 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.objects;
-
-import java.util.LinkedList;
+package de.learnlib.drivers.reflect;
 
 /**
- *
+ * Unobserved indicates that the corresponding input was
+ * not executed on the system. This usually happens after
+ * an exception occurred.
+ * 
  * @author falkhowar
  */
-public class Stack {
+public class Unobserved extends AbstractMethodOutput {
     
-    private final int capacity;
+    public static final Unobserved INSTANCE = new Unobserved();
+    
+    private Unobserved() {
+    }
 
-    private final LinkedList<Object> back = new LinkedList<>();
-    
-    public Stack(int capacity) {
-        this.capacity = capacity;
+    @Override
+    public String toString() {
+        return "unobserved"; 
     }
-    
-    public void push(Object o) {
-        if (back.size()>= capacity) {
-            throw new IllegalStateException("capacity exceeded");
-        }
-        back.push(o);
-    }
-    
-    public Object pop() {
-        return back.pop();
-    } 
+
     
 }

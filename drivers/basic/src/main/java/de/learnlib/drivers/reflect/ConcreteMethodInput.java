@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.objects;
+package de.learnlib.drivers.reflect;
 
 import de.learnlib.drivers.api.ExecutableInput;
 import de.learnlib.drivers.api.SULException;

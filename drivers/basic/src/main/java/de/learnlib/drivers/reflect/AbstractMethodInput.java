@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.objects;
+package de.learnlib.drivers.reflect;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;

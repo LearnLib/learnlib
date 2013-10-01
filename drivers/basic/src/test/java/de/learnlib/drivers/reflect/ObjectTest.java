@@ -14,8 +14,11 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.objects;
+package de.learnlib.drivers.reflect;
 
+import de.learnlib.drivers.reflect.AbstractMethodInput;
+import de.learnlib.drivers.reflect.SimplePOJOTestDriver;
+import de.learnlib.drivers.reflect.AbstractMethodOutput;
 import de.learnlib.api.Query;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SULOracle;
