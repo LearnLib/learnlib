@@ -40,6 +40,7 @@ import de.learnlib.mealy.MealyUtil;
 import de.learnlib.oracles.SimulatorOracle;
 import de.learnlib.oracles.SimulatorOracle.MealySimulatorOracle;
 
+@Test
 public class LStarMealyTest extends LearningTest {
 
 	@Test

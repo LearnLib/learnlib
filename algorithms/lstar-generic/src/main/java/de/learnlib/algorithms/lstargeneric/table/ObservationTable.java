@@ -16,6 +16,9 @@
  */
 package de.learnlib.algorithms.lstargeneric.table;
 
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,6 +65,9 @@ import de.learnlib.oracles.DefaultQuery;
  */
 public final class ObservationTable<I,O> implements AccessSequenceTransformer<I> {
 	
+	// private static final Integer NO_ENTRY = null;
+	private static final int NO_ENTRY = -1;
+	
 	
 	private final Alphabet<I> alphabet;
 	
@@ -79,8 +85,13 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	private final List<Row<I>> canonicalRows
 		= new ArrayList<Row<I>>();
 	
+	/*
 	private final Map<List<O>,Integer> rowContentIds
 		= new HashMap<List<O>,Integer>();
+	*/
+	
+	private final TObjectIntMap<List<O>> rowContentIds
+		= new TObjectIntHashMap<>(10, 0.75f, NO_ENTRY);
 	
 	private final Map<Word<I>,Row<I>> rowMap
 		= new HashMap<Word<I>,Row<I>>();
@@ -439,9 +450,10 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	}
 	
 	protected boolean processContents(Row<I> row, List<O> rowContents, boolean makeCanonical) {
-		Integer contentId = rowContentIds.get(rowContents);
+		// Integer contentId;
+		int contentId;
 		boolean added = false;
-		if(contentId == null) {
+		if((contentId = rowContentIds.get(rowContents)) == NO_ENTRY) {
 			rowContentIds.put(rowContents, contentId = numDistinctRows());
 			allRowContents.add(rowContents);
 			added = true;

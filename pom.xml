@@ -123,6 +123,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<reports-plugin.version>2.7</reports-plugin.version>
 		<surefire-plugin.version>2.14.1</surefire-plugin.version>
 		<assembly-plugin.version>2.4</assembly-plugin.version>
+		<trove4j.version>3.0.3</trove4j.version>
 		
 		<!-- Javadoc links -->
 		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
@@ -448,6 +449,14 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>testng</artifactId>
 				<version>${testng.version}</version>
 				<scope>test</scope>
+			</dependency>
+
+
+			<!-- GNU Trove -->
+			<dependency>
+				<groupId>net.sf.trove4j</groupId>
+				<artifactId>trove4j</artifactId>
+				<version>${trove4j.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
