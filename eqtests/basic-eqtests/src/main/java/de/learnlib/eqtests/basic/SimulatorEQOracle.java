@@ -19,7 +19,7 @@ package de.learnlib.eqtests.basic;
 import java.util.Collection;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.OutputAutomaton;
+import net.automatalib.automata.concepts.Output;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
 import de.learnlib.api.EquivalenceOracle;
@@ -31,9 +31,9 @@ public class SimulatorEQOracle<I,O>
 	implements EquivalenceOracle<UniversalDeterministicAutomaton<?, I, ?, ?, ?>, I, O> {
 	
 	private final UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference;
-	private final OutputAutomaton<?, I, ?, O> output;
+	private final Output<I, O> output;
 	
-	public <S,T,R extends UniversalDeterministicAutomaton<S, I, T, ?, ?> & OutputAutomaton<S, I, T, O>>
+	public <S,T,R extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, O>>
 			SimulatorEQOracle(R reference) {
 		this.reference = reference;
 		this.output = reference;
