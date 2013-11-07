@@ -102,7 +102,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<module>simulator</module>
 		<module>utils</module>
 		<module>filters</module>
-		<module>archetypes</module>
 		<module>examples</module>
 	</modules>
 
