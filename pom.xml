@@ -25,7 +25,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	-->
 	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-parent</artifactId>
-	<version>0.9.1-SNAPSHOT</version>
+	<version>0.9.1</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
 	<url>http://learnlib.github.io/learnlib/maven-site/</url>
@@ -209,18 +209,14 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>${release-plugin.version}</version>
+					<!-- <version>${release-plugin.version}</version> -->
 					<configuration>
 						<!-- False to allow rebasing in case of errors -->
 						<pushChanges>false</pushChanges>
-						<!-- Do not update working copy versions, since they would be commited into the master branch -->
-						<updateWorkingCopyVersions>false</updateWorkingCopyVersions>
-						<!-- Same for dependency versions -->
-						<updateDependencies>false</updateDependencies>
 						<!-- Automatically use the parent version for all submodules, do not prompt for each one -->
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<!-- Use prefix learnlib, not learnlib-parent -->
-						<tagNameFormat>learnlib-@{project.version}</tagNameFormat>
+						<!-- <tagNameFormat>learnlib-@{project.version}</tagNameFormat> -->
 					</configuration>
 				</plugin>
 			</plugins>
