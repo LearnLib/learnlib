@@ -21,7 +21,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<requiredProperties>
 		<requiredProperty key="learnlibVersion">
-			<defaultValue>0.9.1-SNAPSHOT</defaultValue>
+			<defaultValue>${project.version}</defaultValue>
 		</requiredProperty>
 	</requiredProperties>
 

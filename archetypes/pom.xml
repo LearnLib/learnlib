@@ -45,6 +45,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<module>complete</module>
 	</modules>
 
+
 	<build>
 		<extensions>
 			<extension>
@@ -53,6 +54,46 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<version>${maven-archetype.version}</version>
 			</extension>
 		</extensions>
+
+
+		<!-- Custom resource rules:
+		We use the ${project.version} property in
+		- src/main/resources/META-INF/maven/archetype-metadata.xml
+		- src/test/resources/projects/*/archetype.properties
+		These must hence be filtered!
+		-->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>META-INF/maven/archetype-metadata.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>META-INF/maven/archetype-metadata.xml</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/archetype.properties</include>
+				</includes>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>**/archetype.properties</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
 
 		<pluginManagement>
 			<plugins>
