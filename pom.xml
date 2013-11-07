@@ -103,6 +103,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<module>utils</module>
 		<module>filters</module>
 		<module>examples</module>
+		<module>archetypes</module>
 	</modules>
 
 	<!--	
