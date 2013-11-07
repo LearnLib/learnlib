@@ -16,16 +16,10 @@
  */
 package de.learnlib.examples.mealy;
 
-import java.io.IOException;
-import java.io.Writer;
-
-import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.automata.transout.impl.FastMealyState;
-import net.automatalib.commons.dotutil.DOT;
-import net.automatalib.util.graphs.dot.GraphDOT;
+import net.automatalib.automata.transout.MutableMealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.FastAlphabet;
-import net.automatalib.words.impl.Symbol;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * This class generates a Mealy machine consisting of a two-dimensional grid of
@@ -35,9 +29,12 @@ import net.automatalib.words.impl.Symbol;
  */
 public class ExampleGrid {
 
-    public final static Symbol in_x = new Symbol("x");
-    public final static Symbol in_y = new Symbol("y");
-    public final static Alphabet<Symbol> alphabet = new FastAlphabet<>(in_x, in_y);
+    private final static Alphabet<Character> ALPHABET = Alphabets.characters('x', 'y');
+    
+    public static Alphabet<Character> getInputAlphabet() {
+    	return ALPHABET;
+    }
+    
 
     /**
      * Construct and return a machine representation of this example
@@ -47,13 +44,12 @@ public class ExampleGrid {
      * @return a Mealy machine with (xsize * ysize) states
      */
     @SuppressWarnings("unchecked")
-    public static FastMealy<Symbol, Integer> constructMachine(int xsize, int ysize) {
-
-        FastMealy<Symbol, Integer> fm = new FastMealy<>(alphabet);
+    public static <S,A extends MutableMealyMachine<S,Character,?,Integer>>
+    A constructMachine(A fm, int xsize, int ysize) {
 
         // create 2D grid of states
-        FastMealyState<Integer>[][] stategrid
-        	= (FastMealyState<Integer>[][])new FastMealyState<?>[xsize][ysize];
+        S[][] stategrid
+        	= (S[][])new Object[xsize][ysize];
         for (int x = 0; x < xsize; ++x) {
             for (int y = 0; y < ysize; ++y) {
                 stategrid[x][y] = (x == 0 && y == 0) ? fm.addInitialState() : fm.addState();
@@ -69,21 +65,16 @@ public class ExampleGrid {
                 int succ_y = y < (ysize - 1) ? y + 1 : y;
 
                 // transition in x direction
-                fm.addTransition(stategrid[x][y], in_x, stategrid[succ_x][y], output++);
+                fm.addTransition(stategrid[x][y], 'x', stategrid[succ_x][y], output++);
                 // transition in y direction
-                fm.addTransition(stategrid[x][y], in_y, stategrid[x][succ_y], output++);
+                fm.addTransition(stategrid[x][y], 'y', stategrid[x][succ_y], output++);
             }
         }
 
         return fm;
     }
-
-    public static void main(String[] args) throws IOException {
-
-        FastMealy<Symbol, Integer> fm = constructMachine(6, 3);
-
-        Writer w = DOT.createDotWriter(true);
-        GraphDOT.write(fm, fm.getInputAlphabet(), w);
-        w.close();
+    
+    public static CompactMealy<Character, Integer> constructMachine(int xsize, int ysize) {
+    	return constructMachine(new CompactMealy<Character,Integer>(ALPHABET), xsize, ysize);
     }
 }

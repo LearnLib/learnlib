@@ -17,15 +17,15 @@
 
 package de.learnlib.examples.mealy;
 
-import java.io.IOException;
-import java.io.Writer;
-import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.automata.transout.impl.FastMealyState;
-import net.automatalib.commons.dotutil.DOT;
-import net.automatalib.util.graphs.dot.GraphDOT;
+import static de.learnlib.examples.mealy.ExampleCoffeeMachine.Input.BUTTON;
+import static de.learnlib.examples.mealy.ExampleCoffeeMachine.Input.CLEAN;
+import static de.learnlib.examples.mealy.ExampleCoffeeMachine.Input.POD;
+import static de.learnlib.examples.mealy.ExampleCoffeeMachine.Input.WATER;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.MutableMealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.FastAlphabet;
-import net.automatalib.words.impl.Symbol;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * This example represents the Coffee Machine example from
@@ -36,74 +36,88 @@ import net.automatalib.words.impl.Symbol;
  */
 public class ExampleCoffeeMachine {
 	
-	public final static Symbol in_water = new Symbol("water");
-	public final static Symbol in_pod = new Symbol("pod");
-	public final static Symbol in_button = new Symbol("button");
-	public final static Symbol in_clean = new Symbol("clean");
+	private static final class InstanceHolder {
+		public static final MealyMachine<?,Input,?,String> INSTANCE;
+		
+		static {
+			INSTANCE = constructMachine();
+		}
+	}
+	
+	public enum Input {
+		WATER,
+		POD,
+		BUTTON,
+		CLEAN
+	}
 	
 	public final static String out_ok = "ok";
 	public final static String out_error = "error";
 	public final static String out_coffee = "coffee!";
 	
-	public final static Alphabet<Symbol> alphabet = new FastAlphabet<>(in_water, in_pod, in_button, in_clean);
+	private final static Alphabet<Input> ALPHABET = Alphabets.fromEnum(Input.class);
+	
+	
+	public static Alphabet<Input> getInputAlphabet() {
+		return ALPHABET;
+	}
+	
+	public static MealyMachine<?,Input,?,String> getInstance() {
+		return InstanceHolder.INSTANCE;
+	}
+	
 	
     /**
      * Construct and return a machine representation of this example
      * 
      * @return a Mealy machine representing the coffee machine example
      */   
-    public static FastMealy<Symbol, String> constructMachine() {
-
-        FastMealy<Symbol, String> fm = new FastMealy<>(alphabet);
+    public static <S,A extends MutableMealyMachine<S,Input,?,String>>
+    A constructMachine(A machine) {
 		
-		FastMealyState<String> a = fm.addInitialState(),
-				b = fm.addState(),
-				c = fm.addState(),
-				d = fm.addState(),
-				e = fm.addState(),
-				f = fm.addState();
+		S a = machine.addInitialState(),
+				b = machine.addState(),
+				c = machine.addState(),
+				d = machine.addState(),
+				e = machine.addState(),
+				f = machine.addState();
 		
-		fm.addTransition(a, in_water, c, out_ok);
-		fm.addTransition(a, in_pod, b, out_ok);
-		fm.addTransition(a, in_button, f, out_error);
-		fm.addTransition(a, in_clean, a, out_ok);
+		machine.addTransition(a, WATER, c, out_ok);
+		machine.addTransition(a, POD, b, out_ok);
+		machine.addTransition(a, BUTTON, f, out_error);
+		machine.addTransition(a, CLEAN, a, out_ok);
 
-		fm.addTransition(b, in_water, d, out_ok);
-		fm.addTransition(b, in_pod, b, out_ok);
-		fm.addTransition(b, in_button, f, out_error);
-		fm.addTransition(b, in_clean, a, out_ok);
+		machine.addTransition(b, WATER, d, out_ok);
+		machine.addTransition(b, POD, b, out_ok);
+		machine.addTransition(b, BUTTON, f, out_error);
+		machine.addTransition(b, CLEAN, a, out_ok);
 
-		fm.addTransition(c, in_water, c, out_ok);
-		fm.addTransition(c, in_pod, d, out_ok);
-		fm.addTransition(c, in_button, f, out_error);
-		fm.addTransition(c, in_clean, a, out_ok);
+		machine.addTransition(c, WATER, c, out_ok);
+		machine.addTransition(c, POD, d, out_ok);
+		machine.addTransition(c, BUTTON, f, out_error);
+		machine.addTransition(c, CLEAN, a, out_ok);
 
-		fm.addTransition(d, in_water, d, out_ok);
-		fm.addTransition(d, in_pod, d, out_ok);
-		fm.addTransition(d, in_button, e, out_coffee);
-		fm.addTransition(d, in_clean, a, out_ok);
+		machine.addTransition(d, WATER, d, out_ok);
+		machine.addTransition(d, POD, d, out_ok);
+		machine.addTransition(d, BUTTON, e, out_coffee);
+		machine.addTransition(d, CLEAN, a, out_ok);
 
-		fm.addTransition(e, in_water, f, out_error);
-		fm.addTransition(e, in_pod, f, out_error);
-		fm.addTransition(e, in_button, f, out_error);
-		fm.addTransition(e, in_clean, a, out_ok);
+		machine.addTransition(e, WATER, f, out_error);
+		machine.addTransition(e, POD, f, out_error);
+		machine.addTransition(e, BUTTON, f, out_error);
+		machine.addTransition(e, CLEAN, a, out_ok);
 		
-		fm.addTransition(f, in_water, f, out_error);
-		fm.addTransition(f, in_pod, f, out_error);
-		fm.addTransition(f, in_button, f, out_error);
-		fm.addTransition(f, in_clean, f, out_error);
+		machine.addTransition(f, WATER, f, out_error);
+		machine.addTransition(f, POD, f, out_error);
+		machine.addTransition(f, BUTTON, f, out_error);
+		machine.addTransition(f, CLEAN, f, out_error);
+		
 
-        return fm;
+        return machine;
     }
-
-    public static void main(String[] args) throws IOException {
-
-        FastMealy<Symbol, String> fm = constructMachine();
-
-        Writer w = DOT.createDotWriter(true);
-        GraphDOT.write(fm, fm.getInputAlphabet(), w);
-        w.close();
+    
+    public static CompactMealy<Input,String> constructMachine() {
+    	return constructMachine(new CompactMealy<Input,String>(ALPHABET));
     }
-
 	
 }

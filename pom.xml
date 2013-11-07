@@ -1,32 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!--
+Copyright (C) 2013 TU Dortmund
+This file is part of LearnLib, http://www.learnlib.de/.
+
+LearnLib is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License version 3.0 as published by the Free Software Foundation.
+
+LearnLib is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with LearnLib; if not, see
+http://www.gnu.de/documents/lgpl.en.html.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<!--	
-	=================================	PROJECT INFO ==============================	
+	<!--
+	================================= PROJECT INFO ==============================	
 	-->
 	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-parent</artifactId>
-	<version>0.9-SNAPSHOT</version>
+	<version>0.9.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
-	<url>http://www.learnlib.de</url>
-
-	<description>LearnLib is a framework for automata learning and experimentation.</description>
+	<url>http://learnlib.github.io/learnlib/maven-site/</url>
+	<description>A framework for active automata learning and experimentation</description>
 
 	<licenses>
 		<license>
 			<name>GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007</name>
-			<url>http://www.gnu.org/copyleft/lesser.html</url>
+			<url>http://www.gnu.org/licenses/lgpl-3.0-standalone.html</url>
 		</license>
 	</licenses>
 
 	<issueManagement>
-		<url>https://bitbucket.org/fhowar/learnlib-os/issues</url>
-		<system>Bitbucket Issues</system>
+		<url>https://github.com/LearnLib/learnlib/issues</url>
+		<system>GitHub Issues</system>
 	</issueManagement>
 
 	<developers>
@@ -51,7 +65,7 @@
 			<email>maikmerten@googlemail.com</email>
 		</developer>
 		<developer>
-			<id>oliverbauer</id>
+			<id>oliverbauer8</id>
 			<name>Oliver Bauer</name>
 			<email>oliver.bauer@tu-dortmund.de</email>
 		</developer>
@@ -60,162 +74,167 @@
 	<!--	
 	===============================	SCM =======================	
 	-->
-	<!-- <scm>
-		<connection>scm:git:git@github.com:juven/git-demo.git</connection>
-		<developerConnection>scm:git:git@github.com:juven/git-demo.git</developerConnection>
-		<url>git@github.com:juven/git-demo.git</url>
-	</scm> -->												
+	<scm>
+		<connection>scm:git:git@github.com:LearnLib/learnlib.git</connection>
+		<developerConnection>scm:git:git@github.com:LearnLib/learnlib.git</developerConnection>
+		<url>https://github.com/LearnLib/learnlib/tree/develop</url>
+	</scm>
 
 
 	<!--	
-	================================	SONATYPE PARENT ==============================	
+	================================ SONATYPE PARENT ==============================	
 	-->
-	<!-- FIXME: Disabled as it's causing mvn site to fail!
 	<parent>
 			<groupId>org.sonatype.oss</groupId>
 			<artifactId>oss-parent</artifactId>
 			<version>7</version>
 	</parent>
-	-->
 
 	<!--	
-	=================================	MODULES ===================================	
+	================================= MODULES ===================================	
 	-->
 	<modules>
-		<module>./test-support</module>
-		<module>./build-tools</module>
-		<module>./core</module>
-		<module>./algorithms</module>
-		<module>./eqtests</module>
-		<module>./simulator</module>
-		<module>./utils</module>
-		<module>./filters</module>
-	</modules>	
+		<module>test-support</module>
+		<module>build-tools</module>
+		<module>core</module>
+		<module>algorithms</module>
+		<module>eqtests</module>
+		<module>simulator</module>
+		<module>utils</module>
+		<module>filters</module>
+		<module>archetypes</module>
+		<module>examples</module>
+	</modules>
 
 	<!--	
-	=================================	PROPERTIES ================================
+	================================= PROPERTIES ================================
 	-->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!--
 			dependency versions
 		-->
-			<automatalib.version>0.3.0-SNAPSHOT</automatalib.version>
-			<testng.version>6.8</testng.version>
-			<attach-source.version>2.0.4</attach-source.version>
-			<attach-javadoc.version>2.3</attach-javadoc.version>
-			<javadoc-plugin.version>2.9</javadoc-plugin.version>
-		</properties>
+		<automatalib.version>0.3.1</automatalib.version>
+		<testng.version>6.8</testng.version>
+		<javadoc-plugin.version>2.9</javadoc-plugin.version>
+		<compiler-plugin.version>3.1</compiler-plugin.version>
+		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
+		<site-plugin.version>3.3</site-plugin.version>
+		<reports-plugin.version>2.7</reports-plugin.version>
+		<surefire-plugin.version>2.14.1</surefire-plugin.version>
+		<assembly-plugin.version>2.4</assembly-plugin.version>
+		<resources-plugin.version>2.6</resources-plugin.version>
+		<trove4j.version>3.0.3</trove4j.version>
+		
+		<!-- Javadoc links -->
+		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
+		<automatalib.apidocs>http://misberner.github.io/automatalib/maven-site/apidocs/</automatalib.apidocs>
+	</properties>
 
 
 	<!--	
-	=================================	BUILD PLUGINS =============================	
+	================================= BUILD PLUGINS =============================	
 	-->
 	<build>
-
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${compiler-plugin.version}</version>
+					<configuration>
+						<fork>true</fork>
+						<meminitial>128m</meminitial>
+						<maxmem>512m</maxmem>
+						<source>1.7</source>
+						<target>1.7</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>${javadoc-plugin.version}</version>
+					<configuration>
+						<maxmemory>512</maxmemory>
+						<quiet>false</quiet>
+						<source>1.7</source>
+						<verbose>true</verbose>
+						<linksource>true</linksource>
+						<links>
+							<link>${java7.apidocs}</link>
+							<link>${automatalib.apidocs}</link>
+						</links>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>${checkstyle-plugin.version}</version>
+					<configuration>
+						<configLocation>config/sun_checks.xml</configLocation>
+						<headerLocation>license-header.txt</headerLocation>
+						<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>learnlib-build-tools</artifactId>
+							<version>${project.version}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${site-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>attach-descriptor</id>
+							<goals>
+								<goal>attach-descriptor</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${assembly-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<configuration>
+						<!-- False to allow rebasing in case of errors -->
+						<pushChanges>false</pushChanges>
+						<!-- Do not update working copy versions, since they would be commited into the master branch -->
+						<updateWorkingCopyVersions>false</updateWorkingCopyVersions>
+						<!-- Same for dependency versions -->
+						<updateDependencies>false</updateDependencies>
+						<!-- Automatically use the parent version for all submodules, do not prompt for each one -->
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<!-- Use prefix learnlib, not learnlib-parent -->
+						<tagNameFormat>learnlib-@{version}</tagNameFormat>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
-
-		<plugins>
-			<!-- 
-				default assembly config
-			-->
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-			</plugin>
-
-			<!-- 
-				compiler plugin config
-			-->						
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
-				<configuration>
-					<fork>true</fork>
-					<meminitial>128m</meminitial>
-					<maxmem>512m</maxmem>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-
-			<!-- 
-				check style
-			-->						
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<configuration>
-					<configLocation>config/sun_checks.xml</configLocation>
-					<headerLocation>license-header.txt</headerLocation>
-					<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
-				</configuration>
-				<version>2.10</version>
-				<dependencies>
-					<dependency>
-						<groupId>${project.groupId}</groupId>
-						<artifactId>learnlib-build-tools</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>3.2</version>
-				<configuration>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-descriptor</id>
-						<goals>
-							<goal>attach-descriptor</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>aggregate</id>
-						<inherited>false</inherited>
-						<goals>
-							<goal>aggregate</goal>
-						</goals>
-						<phase>site</phase>
-						<configuration>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-		</plugins>
-
 	</build>
 
+	<!--
+	================================= REPORTING PLUGINS ==============================	
+	-->
 	<reporting>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.6</version>
+				<version>${reports-plugin.version}</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -232,16 +251,24 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${javadoc-plugin.version}</version>
+				<configuration>
+					<maxmemory>512</maxmemory>
+					<quiet>false</quiet>
+					<source>1.7</source>
+					<verbose>true</verbose>
+					<linksource>true</linksource>
+					<links>
+						<link>${java7.apidocs}</link>
+						<link>${automatalib.apidocs}</link>
+					</links>
+				</configuration>
 				<reportSets>
 					<reportSet>
 						<id>non-aggregate</id>
-						<configuration>
-						</configuration>
 						<reports>
 							<report>javadoc</report>
 						</reports>
@@ -254,9 +281,10 @@
 						</reports>
 					</reportSet>
 				</reportSets>
-		</plugin>
+			</plugin>
 		</plugins>
 	</reporting>
+
 	<!--	
 	===============================	PROFILES =======================	
 	-->
@@ -273,7 +301,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
-						<version>2.11</version>
 						<configuration>
 							<suiteXmlFiles>
 								<suiteXmlFile>target/nb-private/testng-suite.xml</suiteXmlFile>
@@ -284,35 +311,81 @@
 			</build>
 		</profile>
 		<profile>
-			<id>release</id>
+			<id>binary-release</id>
 			<build>
 				<plugins>
-					<!-- 
-						attach source and javadoc jars
-					-->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<version>${attach-source.version}</version>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
+					<!--  aggregate javadoc of modules in one jar -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${attach-javadoc.version}</version>
+						<inherited>false</inherited>
+						<configuration>
+							<finalName>learnlib-${project.version}</finalName>
+						</configuration>
 						<executions>
 							<execution>
-								<id>attach-javadocs</id>
+								<id>aggregate</id>
 								<goals>
-									<goal>jar</goal>
+									<goal>aggregate-jar</goal>
 								</goals>
+								<phase>site</phase>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- 
+                        build assemblies
+                    -->
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<inherited>false</inherited>
+						<configuration>
+							<finalName>learnlib-${project.version}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+						</configuration>
+						<executions>
+							<!--  sources jar -->
+							<execution>
+								<id>src</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/main/assembly/learnlib-srcjar.xml</descriptor>
+									</descriptors>
+									<finalName>learnlib-${project.version}-sources</finalName>
+								</configuration>
+							</execution>
+							<!-- 
+                                binary jar
+                            -->
+							<execution>
+								<id>jar</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/main/assembly/learnlib-jar.xml</descriptor>
+									</descriptors>
+								</configuration>
+							</execution>
+							<!-- 
+                                bin
+                            -->
+							<execution>
+								<id>bin</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/main/assembly/learnlib-bin.xml</descriptor>
+									</descriptors>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
@@ -327,83 +400,93 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-test-support</artifactId>
 				<version>${project.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>learnlib-lstar</artifactId>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-lstar-baseline</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-lstar-generic</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-dhc</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-basic-eqtests</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-simulator</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-counterexamples</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-cache</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>net.automatalib</groupId>
-				<artifactId>automata-api</artifactId>
-				<version>${automatalib.version}</version>												
-			</dependency>						
-			<dependency>
-				<groupId>net.automatalib</groupId>
-				<artifactId>automata-core</artifactId>
-				<version>${automatalib.version}</version>												
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-parallelism</artifactId>
+				<version>${project.version}</version>
 			</dependency>
+
+			<!-- Import AutomataLib dependencies -->
 			<dependency>
 				<groupId>net.automatalib</groupId>
-				<artifactId>automata-util</artifactId>
-				<version>${automatalib.version}</version>												
+				<artifactId>automata-parent</artifactId>
+				<version>${automatalib.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
-			<dependency>
-				<groupId>net.automatalib</groupId>
-				<artifactId>automata-commons-dotutil</artifactId>
-				<version>${automatalib.version}</version>												
-			</dependency>
-			<dependency>
-				<groupId>net.automatalib</groupId>
-				<artifactId>automata-incremental</artifactId>
-				<version>${automatalib.version}</version>												
-			</dependency>						
+
+			<!-- TestNG -->
 			<dependency>
 				<groupId>org.testng</groupId>
 				<artifactId>testng</artifactId>
 				<version>${testng.version}</version>
 				<scope>test</scope>
-			</dependency>						
-		</dependencies>
-	</dependencyManagement>		
+			</dependency>
 
+
+			<!-- GNU Trove -->
+			<dependency>
+				<groupId>net.sf.trove4j</groupId>
+				<artifactId>trove4j</artifactId>
+				<version>${trove4j.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<!--
+	================================= DISTRIBUTION ==============================	
+	-->
+	<distributionManagement>
+		<!-- Dummy - this will NOT actually be used, but is required for mvn site:stage -->
+		<!-- Use build-tools/deploy-site.sh for site deployment on GitHub pages -->
+		<site>
+			<id>local</id>
+			<url>file://${user.home}/learnlib-site</url>
+		</site>
+	</distributionManagement>
 </project>

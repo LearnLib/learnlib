@@ -24,6 +24,8 @@ import java.util.Objects;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.util.automata.Automata;
@@ -45,6 +47,21 @@ import de.learnlib.oracles.DefaultQuery;
  */
 public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I,O>,I,O>
 		implements EquivalenceOracle<A, I, O> {
+	
+	public static class DFAWpMethodEQOracle<I> extends WpMethodEQOracle<DFA<?,I>,I,Boolean>
+			implements DFAEquivalenceOracle<I> {
+		public DFAWpMethodEQOracle(int maxDepth,
+				MembershipOracle<I, Boolean> sulOracle) {
+			super(maxDepth, sulOracle);
+		}
+	}
+	
+	public static class MealyWpMethodEQOracle<I,O> extends WpMethodEQOracle<MealyMachine<?,I,?,O>,I,Word<O>> {
+		public MealyWpMethodEQOracle(int maxDepth,
+				MembershipOracle<I, Word<O>> sulOracle) {
+			super(maxDepth, sulOracle);
+		}
+	}
 	
 	private final int maxDepth;
 	private final MembershipOracle<I, O> sulOracle;

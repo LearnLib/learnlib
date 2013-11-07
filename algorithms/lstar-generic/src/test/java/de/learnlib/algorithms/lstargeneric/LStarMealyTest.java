@@ -20,10 +20,8 @@ import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.FastMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
 
 import org.testng.annotations.Test;
 
@@ -34,34 +32,37 @@ import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealy;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.eqtests.basic.mealy.SymbolEQOracleWrapper;
 import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.mealy.MealyUtil;
 import de.learnlib.oracles.SimulatorOracle;
+import de.learnlib.oracles.SimulatorOracle.MealySimulatorOracle;
 
+@Test
 public class LStarMealyTest extends LearningTest {
 
 	@Test
 	public void testClassicLStarMealy() {
-		FastMealy<Symbol,String> mealy = ExampleStack.constructMachine();
-		Alphabet<Symbol> alphabet = mealy.getInputAlphabet();
+		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> mealy = ExampleStack.getInstance();
+		Alphabet<ExampleStack.Input> alphabet = ExampleStack.getInputAlphabet();
 		
-		MembershipOracle<Symbol,Word<String>> oracle
-			= new SimulatorOracle<>(mealy);
+		MealyMembershipOracle<ExampleStack.Input,ExampleStack.Output> oracle
+			= new MealySimulatorOracle<>(mealy);
 
 		// Empty list of suffixes => minimal compliant set
-		List<Word<Symbol>> initSuffixes = Collections.emptyList();
+		List<Word<ExampleStack.Input>> initSuffixes = Collections.emptyList();
 		
-		EquivalenceOracle<? super MealyMachine<?,Symbol,?,String>, Symbol, Word<String>> mealyEqOracle
+		EquivalenceOracle<? super MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output>, ExampleStack.Input, Word<ExampleStack.Output>> mealyEqOracle
 					= new SimulatorEQOracle<>(mealy);
 					
-		EquivalenceOracle<? super MealyMachine<?,Symbol,?,String>, Symbol, String> mealySymEqOracle
+		EquivalenceOracle<? super MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output>, ExampleStack.Input, ExampleStack.Output> mealySymEqOracle
 			= new SymbolEQOracleWrapper<>(mealyEqOracle);
 		
-		for(ObservationTableCEXHandler<? super Symbol,? super String> handler : LearningTest.CEX_HANDLERS) {
-			for(ClosingStrategy<? super Symbol,? super String> strategy : LearningTest.CLOSING_STRATEGIES) {
-				LearningAlgorithm<MealyMachine<?,Symbol,?,String>,Symbol,String> learner
+		for(ObservationTableCEXHandler<? super ExampleStack.Input,? super ExampleStack.Output> handler : LearningTest.CEX_HANDLERS) {
+			for(ClosingStrategy<? super ExampleStack.Input,? super ExampleStack.Output> strategy : LearningTest.CLOSING_STRATEGIES) {
+				LearningAlgorithm<MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output>,ExampleStack.Input,ExampleStack.Output> learner
 				= ClassicLStarMealy.createForWordOracle(alphabet, oracle, initSuffixes,
 						handler, strategy);
 				
@@ -72,22 +73,22 @@ public class LStarMealyTest extends LearningTest {
 	
 	@Test
 	public void testOptimizedLStarMealy() {
-		FastMealy<Symbol,String> mealy = ExampleStack.constructMachine();
-		Alphabet<Symbol> alphabet = mealy.getInputAlphabet();
+		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> mealy = ExampleStack.getInstance();
+		Alphabet<ExampleStack.Input> alphabet = ExampleStack.getInputAlphabet();
 		
-		MembershipOracle<Symbol,Word<String>> oracle
+		MembershipOracle<ExampleStack.Input,Word<ExampleStack.Output>> oracle
 			= new SimulatorOracle<>(mealy);
 	
 		
 		// Empty list of suffixes => minimal compliant set
-		List<Word<Symbol>> initSuffixes = Collections.emptyList();
+		List<Word<ExampleStack.Input>> initSuffixes = Collections.emptyList();
 		
-		EquivalenceOracle<? super MealyMachine<?,Symbol,?,String>, Symbol, Word<String>> mealyEqOracle
+		EquivalenceOracle<? super MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output>, ExampleStack.Input, Word<ExampleStack.Output>> mealyEqOracle
 				= new SimulatorEQOracle<>(mealy);
 		
-		for(ObservationTableCEXHandler<? super Symbol,? super Word<String>> handler : LearningTest.CEX_HANDLERS) {
-			for(ClosingStrategy<? super Symbol,? super Word<String>> strategy : LearningTest.CLOSING_STRATEGIES) {
-				LearningAlgorithm<MealyMachine<?,Symbol,?,String>,Symbol,Word<String>> learner
+		for(ObservationTableCEXHandler<? super ExampleStack.Input,? super Word<ExampleStack.Output>> handler : LearningTest.CEX_HANDLERS) {
+			for(ClosingStrategy<? super ExampleStack.Input,? super Word<ExampleStack.Output>> strategy : LearningTest.CLOSING_STRATEGIES) {
+				LearningAlgorithm<MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output>,ExampleStack.Input,Word<ExampleStack.Output>> learner
 				= new ExtensibleLStarMealy<>(alphabet, oracle, initSuffixes,
 						handler, strategy);
 				

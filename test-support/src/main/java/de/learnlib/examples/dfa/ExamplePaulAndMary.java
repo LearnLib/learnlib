@@ -19,7 +19,6 @@ package de.learnlib.examples.dfa;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
-import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.FastAlphabet;
@@ -36,7 +35,7 @@ public class ExamplePaulAndMary {
 		public static final DFA<?,Symbol> INSTANCE;
 		
 		static {
-			INSTANCE = constructMachine(new CompactDFA<>(ALPHABET));
+			INSTANCE = constructMachine();
 		}
 	}
     
@@ -51,7 +50,7 @@ public class ExamplePaulAndMary {
     	return InstanceHolder.INSTANCE;
     }
     
-    public static Alphabet<Symbol> getAlphabet() {
+    public static Alphabet<Symbol> getInputAlphabet() {
     	return ALPHABET;
     }
     
@@ -61,8 +60,8 @@ public class ExamplePaulAndMary {
      * 
      * @return machine instance of the example
      */
-    public static FastDFA<Symbol> constructMachine() {
-    	return constructMachine(new FastDFA<>(ALPHABET));
+    public static CompactDFA<Symbol> constructMachine() {
+    	return constructMachine(new CompactDFA<>(ALPHABET));
     }
      
     public static <A extends MutableDFA<S,? super Symbol>,S>

@@ -16,14 +16,11 @@
  */
 package de.learnlib.algorithms.lstargeneric;
 
-import static de.learnlib.examples.dfa.ExamplePaulAndMary.constructMachine;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Symbol;
@@ -35,29 +32,31 @@ import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
-import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.cache.dfa.DFACacheOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.eqtests.basic.WMethodEQOracle;
 import de.learnlib.eqtests.basic.WpMethodEQOracle;
-import de.learnlib.oracles.SimulatorOracle;
+import de.learnlib.examples.dfa.ExamplePaulAndMary;
+import de.learnlib.oracles.SimulatorOracle.DFASimulatorOracle;
 
+@Test
 public class LStarDFATest extends LearningTest {
 
  
 	@Test
 	public void testLStar() {
-		FastDFA<Symbol> targetDFA = constructMachine();
-		Alphabet<Symbol> alphabet = targetDFA.getInputAlphabet();
+		DFA<?,Symbol> targetDFA = ExamplePaulAndMary.getInstance();
+		Alphabet<Symbol> alphabet = ExamplePaulAndMary.getInputAlphabet();
 		
-		MembershipOracle<Symbol, Boolean> dfaOracle = new SimulatorOracle<>(targetDFA);
+		DFAMembershipOracle<Symbol> dfaOracle = new DFASimulatorOracle<>(targetDFA);
 
 		
 		// Empty set of suffixes => minimum compliant set
 		List<Word<Symbol>> suffixes = Collections.emptyList();
 		
 		List<EquivalenceOracle<? super DFA<?,Symbol>,Symbol,Boolean>> eqOracles
-				= new ArrayList<EquivalenceOracle<? super DFA<?,Symbol>,Symbol,Boolean>>();
+				= new ArrayList<>();
 		
 		eqOracles.add(new SimulatorEQOracle<>(targetDFA));
 		eqOracles.add(new WMethodEQOracle<>(3, dfaOracle));

@@ -36,6 +36,8 @@ import de.learnlib.api.Query;
  */
 public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 	
+	
+	
 	// TODO Does this number make sense?
 	public static int DEFAULT_MIN_BATCH_SIZE = 10;
 	

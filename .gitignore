@@ -5,5 +5,8 @@
 hs_err_*
 *~
 *.iml
+pom.xml.versionsBackup
 test-output/
 importers/
+/target/
+

@@ -16,22 +16,40 @@
  */
 package de.learnlib.oracles;
 
+import java.util.Collection;
 import java.util.Collections;
 
 import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.Query;
+import de.learnlib.api.QueryAnswerer;
 
 public abstract class MQUtil {
 	
-	public static <I,O> O query(MembershipOracle<I,O> oracle, Word<I> queryWord) {
-		DefaultQuery<I,O> qry = new DefaultQuery<>(queryWord);
-		oracle.processQueries(Collections.singleton(qry));
-		return qry.getOutput();
+	public static <I,O> O output(MembershipOracle<I,O> oracle, Word<I> queryWord) {
+		return query(oracle, queryWord).getOutput();
 	}
 	
-	public static <I,O> O query(MembershipOracle<I,O> oracle, Word<I> prefix, Word<I> suffix) {
+	public static <I,O> O output(MembershipOracle<I,O> oracle, Word<I> prefix, Word<I> suffix) {
+		return query(oracle, prefix, suffix).getOutput();
+	}
+	
+	public static <I,O> DefaultQuery<I,O> query(MembershipOracle<I,O> oracle, Word<I> prefix, Word<I> suffix) {
 		DefaultQuery<I,O> qry = new DefaultQuery<>(prefix, suffix);
 		oracle.processQueries(Collections.singleton(qry));
-		return qry.getOutput();
+		return qry;
+	}
+	
+	public static <I,O> DefaultQuery<I,O> query(MembershipOracle<I,O> oracle, Word<I> queryWord) {
+		return query(oracle, Word.<I>epsilon(), queryWord);
+	}
+	
+	public static <I,O> void answerQueries(QueryAnswerer<I,O> answerer, Collection<? extends Query<I,O>> queries) {
+		for(Query<I,O> query : queries) {
+			Word<I> prefix = query.getPrefix();
+			Word<I> suffix = query.getSuffix();
+			O answer = answerer.answerQuery(prefix, suffix);
+			query.answer(answer);
+		}
 	}
 }

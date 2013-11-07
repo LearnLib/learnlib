@@ -23,6 +23,7 @@ import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.EquivalenceOracle;
+import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracles.DefaultQuery;
 
 /**
@@ -35,7 +36,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <O> output symbol class
  */
 public class MealyCacheConsistencyTest<I, O> implements
-		EquivalenceOracle<MealyMachine<?,I,?,O>, I, Word<O>> {
+		MealyEquivalenceOracle<I,O> {
 	
 	private final IncrementalMealyBuilder<I, O> incMealy;
 	
