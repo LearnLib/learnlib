@@ -15,11 +15,20 @@ public class SymbolCounterSUL<I, O> implements StatisticSUL<I,O> {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.learnlib.api.SUL#reset()
+	 * @see de.learnlib.api.SUL#pre()
 	 */
 	@Override
-	public void reset() {
-		sul.reset();
+	public void pre() {
+		sul.pre();
+	}
+
+
+	/* (non-Javadoc)
+	 * @see de.learnlib.api.SUL#post()
+	 */
+        @Override
+	public void post() {
+		sul.post();
 	}
 
 	/* (non-Javadoc)

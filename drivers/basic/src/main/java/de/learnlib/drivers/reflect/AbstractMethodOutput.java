@@ -14,34 +14,13 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.api;
+package de.learnlib.drivers.reflect;
 
 /**
- * Interface for a system under learning (SUL) that can make single steps.
- *
- * @param <I> input symbols
- * @param <O> output symbols
- *
- * @author falkhowar
+ * abstract output of a method.
+ * 
+ * @author falk
  */
-public interface SUL<I, O> {
-
-    /**
-     * setup SUL.
-     */
-    void pre();
-
-    /**
-     * shut down SUL.
-     */
-    void post();
+public abstract class AbstractMethodOutput {
     
-    /**
-     * make one step on the SUL.
-     *
-     * @param in input to the SUL
-     * @return output of SUL
-     */
-    O step(I in);
-
 }

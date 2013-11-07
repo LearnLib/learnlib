@@ -14,12 +14,17 @@ public class ResetCounterSUL<I, O> implements StatisticSUL<I, O> {
 		this.counter = new Counter(name, "resets");
 	}
 
-	@Override
-	public void reset() {
-		counter.increment();
-		sul.reset();
-	}
+            @Override
+            public void pre() {
+                    counter.increment();
+                    sul.pre();
+            }
 
+            @Override
+            public void post() {
+                    sul.post();
+            }
+        
 	@Override
 	public O step(I in) {
 		return sul.step(in);

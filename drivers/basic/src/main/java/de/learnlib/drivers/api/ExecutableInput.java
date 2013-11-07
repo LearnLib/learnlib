@@ -14,34 +14,23 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.api;
+package de.learnlib.drivers.api;
 
 /**
- * Interface for a system under learning (SUL) that can make single steps.
- *
- * @param <I> input symbols
- * @param <O> output symbols
- *
+ * An executable input is a concrete input produced by a data mapper
+ * and can be executed directly. 
+ * 
  * @author falkhowar
+ * 
+ * @param <CO> concrete output 
  */
-public interface SUL<I, O> {
-
+public interface ExecutableInput<CO> {
+   
     /**
-     * setup SUL.
+     * executes the input.
+     * 
+     * @return concrete output for this input 
      */
-    void pre();
-
-    /**
-     * shut down SUL.
-     */
-    void post();
+    public CO execute() throws SULException;
     
-    /**
-     * make one step on the SUL.
-     *
-     * @param in input to the SUL
-     * @return output of SUL
-     */
-    O step(I in);
-
 }
