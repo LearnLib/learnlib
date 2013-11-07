@@ -25,7 +25,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	-->
 	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-parent</artifactId>
-	<version>0.9.1-SNAPSHOT</version>
+	<version>0.10.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
 	<url>http://learnlib.github.io/learnlib/maven-site/</url>
@@ -102,7 +102,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<module>simulator</module>
 		<module>utils</module>
 		<module>filters</module>
-		<module>archetypes</module>
 		<module>examples</module>
 	</modules>
 
@@ -124,6 +123,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<surefire-plugin.version>2.14.1</surefire-plugin.version>
 		<assembly-plugin.version>2.4</assembly-plugin.version>
 		<resources-plugin.version>2.6</resources-plugin.version>
+		<release-plugin.version>2.2</release-plugin.version> <!-- overrides OSS parent! -->
 		<trove4j.version>3.0.3</trove4j.version>
 		
 		<!-- Javadoc links -->
@@ -209,17 +209,15 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
+					<!-- <version>${release-plugin.version}</version> -->
 					<configuration>
 						<!-- False to allow rebasing in case of errors -->
 						<pushChanges>false</pushChanges>
-						<!-- Do not update working copy versions, since they would be commited into the master branch -->
-						<updateWorkingCopyVersions>false</updateWorkingCopyVersions>
-						<!-- Same for dependency versions -->
-						<updateDependencies>false</updateDependencies>
 						<!-- Automatically use the parent version for all submodules, do not prompt for each one -->
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<!-- Use prefix learnlib, not learnlib-parent -->
-						<tagNameFormat>learnlib-@{version}</tagNameFormat>
+						<!-- <tagNameFormat>learnlib-@{project.version}</tagNameFormat> -->
+						<preparationGoals>clean install</preparationGoals>
 					</configuration>
 				</plugin>
 			</plugins>
