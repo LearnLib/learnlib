@@ -58,40 +58,28 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 		<!-- Custom resource rules:
 		We use the ${project.version} property in
-		- src/main/resources/META-INF/maven/archetype-metadata.xml
-		- src/test/resources/projects/*/archetype.properties
+		- src/main/resources-template/META-INF/maven/archetype-metadata.xml
+		- src/test/resources-template/projects/*/archetype.properties
 		These must hence be filtered!
 		-->
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>META-INF/maven/archetype-metadata.xml</include>
-				</includes>
+				<filtering>false</filtering>
 			</resource>
 			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
-				<excludes>
-					<exclude>META-INF/maven/archetype-metadata.xml</exclude>
-				</excludes>
+				<directory>src/main/resources-template</directory>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 		<testResources>
 			<testResource>
 				<directory>src/test/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>**/archetype.properties</include>
-				</includes>
+				<filtering>false</filtering>
 			</testResource>
 			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>false</filtering>
-				<excludes>
-					<exclude>**/archetype.properties</exclude>
-				</excludes>
+				<directory>src/test/resources-template</directory>
+				<filtering>true</filtering>
 			</testResource>
 		</testResources>
 

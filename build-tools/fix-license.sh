@@ -65,18 +65,22 @@ LICENSE_FILE="license-header.txt"
 license_firstline_expect=`head -n 1 license-header.txt | sed -re 's^.*^'"$firstline_rep"'^g'`
 
 for i in $FILES; do
-	header_found=`head -n $peek "$i" | tail -n 1 | grep -c "$license_firstline_expect"`
-	if [ "$header_found" -lt "1" ]; then
-		echo "File $i misses license header, fixing ..."
-		head -n $file_header "$i" >.tmp
-		echo -n "$preamble" >>.tmp
-		head -n 1 "$LICENSE_FILE" | sed -re 's^.*^'"$firstline_rep"'^g' >>.tmp
-		tail -n +2 "$LICENSE_FILE" | head -n -1 | sed -re 's^.*^'"$line_rep"'^g' >>.tmp
-		tail -n 1 "$LICENSE_FILE" | sed -re 's^.*^'"$lastline_rep"'^g' >>.tmp
-		echo -n "$postamble" >>.tmp
-		skip=$((file_header + 1))
-		tail -n +$skip "$i" >>.tmp
-		mv .tmp "$i"
+	if [ ! -f "$i" ]; then
+		echo "Warning: File $i exists in git tree, but not on filesystem! Ignoring ..."
+	else
+		header_found=`head -n $peek "$i" | tail -n 1 | grep -c "$license_firstline_expect"`
+		if [ "$header_found" -lt "1" ]; then
+			echo "File $i misses license header, fixing ..."
+			head -n $file_header "$i" >.tmp
+			echo -n "$preamble" >>.tmp
+			head -n 1 "$LICENSE_FILE" | sed -re 's^.*^'"$firstline_rep"'^g' >>.tmp
+			tail -n +2 "$LICENSE_FILE" | head -n -1 | sed -re 's^.*^'"$line_rep"'^g' >>.tmp
+			tail -n 1 "$LICENSE_FILE" | sed -re 's^.*^'"$lastline_rep"'^g' >>.tmp
+			echo -n "$postamble" >>.tmp
+			skip=$((file_header + 1))
+			tail -n +$skip "$i" >>.tmp
+			mv .tmp "$i"
+		fi
 	fi
 
 #	license=`head -n 1 "$i" | grep -c "/* Copyright (C)"`

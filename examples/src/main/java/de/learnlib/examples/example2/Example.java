@@ -29,9 +29,7 @@ import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Word;
-import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
-import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
-import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealy;
+import de.learnlib.algorithms.lstargeneric.mealy.factory.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.SUL;
@@ -122,14 +120,12 @@ public class Example {
         // construct L* instance (almost classic Mealy version)
         // almost: we use words (Word<String>) in cells of the table 
         // instead of single outputs.
-        MealyLearner<AbstractMethodInput, AbstractMethodOutput> lstar =
-                new ExtensibleLStarMealy<>(
-                driver.getInputs(), // input alphabet
-                mqOracle, // mq oracle
-                suffixes, // initial suffixes
-                ObservationTableCEXHandlers.CLASSIC_LSTAR, // handling of counterexamples
-                ClosingStrategies.CLOSE_FIRST // always choose first unclosedness found 
-                );
+        MealyLearner<AbstractMethodInput, AbstractMethodOutput> lstar
+        	= new ExtensibleLStarMealyBuilder<AbstractMethodInput,AbstractMethodOutput>()
+        		.withAlphabet(driver.getInputs()) // input alphabet
+        		.withOracle(mqOracle)			  // membership oracle
+        		.create();
+                
 
         // create random walks equivalence test
         MealyEquivalenceOracle<AbstractMethodInput, AbstractMethodOutput> randomWalks =

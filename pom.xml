@@ -115,7 +115,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<!--
 			dependency versions
 		-->
-		<automatalib.version>0.3.1</automatalib.version>
+		<automatalib.version>0.4.0-SNAPSHOT</automatalib.version>
 		<testng.version>6.8</testng.version>
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
@@ -125,8 +125,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<surefire-plugin.version>2.14.1</surefire-plugin.version>
 		<assembly-plugin.version>2.4</assembly-plugin.version>
 		<resources-plugin.version>2.6</resources-plugin.version>
-		<release-plugin.version>2.2</release-plugin.version> <!-- overrides OSS parent! -->
 		<trove4j.version>3.0.3</trove4j.version>
+		<guava.version>15.0</guava.version>
 		
 		<!-- Javadoc links -->
 		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
@@ -219,6 +219,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<!-- Use prefix learnlib, not learnlib-parent -->
 						<!-- <tagNameFormat>learnlib-@{project.version}</tagNameFormat> -->
+						<!-- The default "clean verify" causes javadoc and archetype integration tests to fail -->
 						<preparationGoals>clean install</preparationGoals>
 					</configuration>
 				</plugin>
@@ -479,6 +480,13 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<groupId>net.sf.trove4j</groupId>
 				<artifactId>trove4j</artifactId>
 				<version>${trove4j.version}</version>
+			</dependency>
+
+			<!-- Guava -->
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
