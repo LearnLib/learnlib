@@ -24,6 +24,7 @@ import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.words.Word;
 import de.learnlib.api.EquivalenceOracle;
+import de.learnlib.api.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.oracles.DefaultQuery;
 
 /**
@@ -34,8 +35,8 @@ import de.learnlib.oracles.DefaultQuery;
  *
  * @param <I> input symbol class
  */
-public class DFACacheConsistencyTest<I> implements
-		EquivalenceOracle<DFA<?,I>, I, Boolean> {
+public final class DFACacheConsistencyTest<I> implements
+		DFAEquivalenceOracle<I> {
 	
 	private final AbstractIncrementalDFABuilder<I> incDfa;
 	

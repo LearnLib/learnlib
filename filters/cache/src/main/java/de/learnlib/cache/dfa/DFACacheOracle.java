@@ -24,6 +24,7 @@ import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.words.Alphabet;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.Query;
 
 
@@ -37,7 +38,7 @@ import de.learnlib.api.Query;
  *
  * @param <I> input symbol class
  */
-public class DFACacheOracle<I> implements MembershipOracle<I, Boolean> {
+public class DFACacheOracle<I> implements DFAMembershipOracle<I> {
 	
 	private final IncrementalDFABuilder<I> incDfa;
 	private final MembershipOracle<I,Boolean> delegate;

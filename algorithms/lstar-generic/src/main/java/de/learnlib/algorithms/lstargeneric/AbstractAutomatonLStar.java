@@ -19,7 +19,6 @@ package de.learnlib.algorithms.lstargeneric;
 import java.util.ArrayList;
 
 import net.automatalib.automata.MutableDeterministic;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
 import de.learnlib.algorithms.lstargeneric.table.Row;
@@ -43,10 +42,30 @@ import de.learnlib.api.MembershipOracle;
  */
 public abstract class AbstractAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableDeterministic<S,I,T,SP,TP>> extends
 		AbstractLStar<A, I, O> {
+	
+	private static final class StateInfo<S,I> {
+		private final Row<I> row;
+		private final S state;
+		
+		public StateInfo(Row<I> row, S state) {
+			this.row = row;
+			this.state = state;
+		}
+		
+		public Row<I> getRow() {
+			return row;
+		}
+		
+		public S getState() {
+			return state;
+		}
+		
+		// IDENTITY SEMANTICS!
+	}
 
 	protected final AI internalHyp;
-	protected final ArrayList<Pair<Row<I>,S>> stateInfos
-		= new ArrayList<Pair<Row<I>,S>>();
+	protected final ArrayList<StateInfo<S,I>> stateInfos
+		= new ArrayList<>();
 	
 	/**
 	 * Constructor.
@@ -102,31 +121,31 @@ public abstract class AbstractAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableD
 		if(newStates <= 0)
 			return;
 		
-		stateInfos.addAll(CollectionsUtil.<Pair<Row<I>,S>>nullList(newStates));
+		stateInfos.addAll(CollectionsUtil.<StateInfo<S,I>>nullList(newStates));
 		
 		
 		// TODO: Is there a quicker way than iterating over *all* rows?
 		// FIRST PASS: Create new hypothesis states
 		for(Row<I> sp : table.getShortPrefixRows()) {
 			int id = sp.getRowContentId();
-			Pair<Row<I>,S> info = stateInfos.get(id);
+			StateInfo<S,I> info = stateInfos.get(id);
 			if(info != null) {
 				// State from previous hypothesis, property might have changed
-				if(info.getFirst() == sp)
-					internalHyp.setStateProperty(info.getSecond(), stateProperty(sp));
+				if(info.getRow() == sp)
+					internalHyp.setStateProperty(info.getState(), stateProperty(sp));
 				continue;
 			}
 			
 			S state = createState((id == 0), sp);
 			
-			stateInfos.set(id, Pair.make(sp, state));
+			stateInfos.set(id, new StateInfo<>(sp, state));
 		}
 		
 		// SECOND PASS: Create hypothesis transitions
-		for(Pair<Row<I>,S> info : stateInfos) {
-			Row<I> sp = info.getFirst();
+		for(StateInfo<S,I> info : stateInfos) {
+			Row<I> sp = info.getRow();
 			int rowId = sp.getRowContentId();
-			S state = info.getSecond();
+			S state = info.getState();
 			
 			for(int i = 0; i < alphabet.size(); i++) {
 				I input = alphabet.getSymbol(i);
@@ -137,7 +156,7 @@ public abstract class AbstractAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableD
 				if(rowId < oldStates && succId < oldStates)
 					continue;
 				
-				S succState = stateInfos.get(succId).getSecond();
+				S succState = stateInfos.get(succId).getState();
 				
 				setTransition(state, input, succState, sp, i, succ);
 			}

@@ -28,6 +28,7 @@ import de.learnlib.algorithms.lstargeneric.ExtensibleAutomatonLStar;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.table.Row;
+import de.learnlib.api.LearningAlgorithm.DFALearner;
 import de.learnlib.api.MembershipOracle;
 
 
@@ -40,7 +41,7 @@ import de.learnlib.api.MembershipOracle;
  * @param <I> input symbol class.
  */
 public class ExtensibleLStarDFA<I>
-	extends ExtensibleAutomatonLStar<DFA<?,I>, I, Boolean, Integer, Integer, Boolean, Void, CompactDFA<I>> {
+	extends ExtensibleAutomatonLStar<DFA<?,I>, I, Boolean, Integer, Integer, Boolean, Void, CompactDFA<I>> implements DFALearner<I> {
 
 	
 	/**

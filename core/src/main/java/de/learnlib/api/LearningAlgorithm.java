@@ -16,6 +16,9 @@
  */
 package de.learnlib.api;
 
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.words.Word;
 import de.learnlib.oracles.DefaultQuery;
 
 
@@ -35,6 +38,9 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <O> output class.
  */
 public interface LearningAlgorithm<M, I, O> {
+	
+	public static interface DFALearner<I> extends LearningAlgorithm<DFA<?,I>,I,Boolean> {}
+	public static interface MealyLearner<I,O> extends LearningAlgorithm<MealyMachine<?,I,?,O>,I,Word<O>> {}
 	
 	/**
 	 * Starts the model inference process, creating an initial hypothesis in the provided
@@ -57,6 +63,7 @@ public interface LearningAlgorithm<M, I, O> {
 	
 	/**
 	 * Returns the current hypothesis model.
+	 * <p>
 	 * N.B.: By the contract of this interface, the model returned by this method may not be
 	 * modified (i.e., M generally should refer to an immutable interface), and its validity
 	 * is retained only until the next invocation of {@link #refineHypothesis(DefaultQuery)}. If

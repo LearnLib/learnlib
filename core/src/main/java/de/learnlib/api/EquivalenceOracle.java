@@ -18,6 +18,9 @@ package de.learnlib.api;
 
 import java.util.Collection;
 
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.words.Word;
 import de.learnlib.oracles.DefaultQuery;
 
 
@@ -43,6 +46,10 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <O> output class
  */
 public interface EquivalenceOracle<A, I, O> {
+	
+	public static interface DFAEquivalenceOracle<I> extends EquivalenceOracle<DFA<?,I>,I,Boolean> {}
+	public static interface MealyEquivalenceOracle<I,O> extends EquivalenceOracle<MealyMachine<?,I,?,O>,I,Word<O>> {}
+	
 	
 	/**
 	 * Searches for a counterexample disproving the subjected hypothesis.

@@ -18,6 +18,7 @@ package de.learnlib.api;
 
 import java.util.Collection;
 
+import net.automatalib.words.Word;
 import de.learnlib.oracles.DefaultQuery;
 
 /**
@@ -33,6 +34,10 @@ import de.learnlib.oracles.DefaultQuery;
  * @see DefaultQuery
  */
 public interface MembershipOracle<I, O> {
+	
+	public static interface DFAMembershipOracle<I> extends MembershipOracle<I,Boolean> {}
+	public static interface MealyMembershipOracle<I,O> extends MembershipOracle<I,Word<O>> {}
+	
 	/**
 	 * Processes the specified collection of queries. When this method returns,
 	 * the output field of each of the contained queries should reflect the SUL

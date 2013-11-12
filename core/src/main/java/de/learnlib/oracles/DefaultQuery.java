@@ -28,23 +28,12 @@ import de.learnlib.api.Query;
  * 
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class DefaultQuery<I, O> extends Query<I,O> {
-
-    /**
-     * prefix portion of test
-     */
-    private final Word<I> prefix;
-    
-    /**
-     * suffix portion of test
-     */
-    private final Word<I> suffix;
+public class DefaultQuery<I, O> extends AbstractQuery<I,O> {
     
     private O output;
     
     public DefaultQuery(Word<I> prefix, Word<I> suffix) {
-        this.prefix = prefix;
-        this.suffix = suffix;
+        super(prefix, suffix);
     }
     
     public DefaultQuery(Word<I> prefix, Word<I> suffix, O output) {
@@ -53,11 +42,16 @@ public class DefaultQuery<I, O> extends Query<I,O> {
     }
     
     public DefaultQuery(Word<I> input) {
-    	this(Word.<I>epsilon(), input);
+    	super(input);
     }
     
-    public DefaultQuery(DefaultQuery<I,?> query) {
-    	this(query.getPrefix(), query.getSuffix());
+    public DefaultQuery(Word<I> input, O output) {
+    	super(input);
+    	this.output = output;
+    }
+    
+    public DefaultQuery(Query<I,?> query) {
+    	super(query);
     }
 
     public O getOutput() {
@@ -71,23 +65,5 @@ public class DefaultQuery<I, O> extends Query<I,O> {
     @Override
     public void answer(O output) {
         this.output = output;
-    }
-    
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.Query#getPrefix()
-     */
-    @Override
-    public Word<I> getPrefix() {
-    	return prefix;
-    }
-    
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.Query#getSuffix()
-     */
-    @Override
-    public Word<I> getSuffix() {
-    	return suffix;
     }
 }

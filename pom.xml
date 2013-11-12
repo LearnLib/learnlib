@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-	http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!--
+Copyright (C) 2013 TU Dortmund
+This file is part of LearnLib, http://www.learnlib.de/.
+
+LearnLib is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License version 3.0 as published by the Free Software Foundation.
+
+LearnLib is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with LearnLib; if not, see
+http://www.gnu.de/documents/lgpl.en.html.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -11,7 +25,7 @@
 	-->
 	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-parent</artifactId>
-	<version>0.9.0-SNAPSHOT</version>
+	<version>0.9.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
 	<url>http://learnlib.github.io/learnlib/maven-site/</url>
@@ -100,7 +114,7 @@
 		<!--
 			dependency versions
 		-->
-		<automatalib.version>0.3.0-SNAPSHOT</automatalib.version>
+		<automatalib.version>0.3.1-SNAPSHOT</automatalib.version>
 		<testng.version>6.8</testng.version>
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
@@ -380,7 +394,7 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>learnlib-lstar</artifactId>
+				<artifactId>learnlib-lstar-baseline</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

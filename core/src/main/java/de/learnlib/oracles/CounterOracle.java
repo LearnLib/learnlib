@@ -17,12 +17,13 @@
 
 package de.learnlib.oracles;
 
+import java.util.Collection;
+
+import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.statistics.Counter;
-import de.learnlib.statistics.StatisticData;
 import de.learnlib.statistics.StatisticOracle;
-import java.util.Collection;
 
 /**
  * Counts queries.
@@ -30,6 +31,22 @@ import java.util.Collection;
  * @author falkhowar
  */
 public class CounterOracle<I,O> implements StatisticOracle<I,O> {
+	
+	public static class DFACounterOracle<I> extends CounterOracle<I,Boolean>
+			implements DFAMembershipOracle<I> {
+		public DFACounterOracle(MembershipOracle<I, Boolean> nextOracle,
+				String name) {
+			super(nextOracle, name);
+		}
+	}
+	
+	public static class MealyCounterOracle<I,O> extends CounterOracle<I,Word<O>>
+			implements MealyMembershipOracle<I,O> {
+		public MealyCounterOracle(MembershipOracle<I, Word<O>> nextOracle,
+				String name) {
+			super(nextOracle, name);
+		}
+	}
     
     private final Counter counter;
     
@@ -45,13 +62,9 @@ public class CounterOracle<I,O> implements StatisticOracle<I,O> {
         this.counter.increment(queries.size());
         nextOracle.processQueries(queries);
     }
-    
-    public Counter getCounter() {
-        return this.counter;
-    }
 
     @Override
-    public StatisticData getStatisticalData() {
+    public Counter getStatisticalData() {
         return this.counter;
     }
 

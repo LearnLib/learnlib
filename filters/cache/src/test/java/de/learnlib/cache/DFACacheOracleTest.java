@@ -16,16 +16,12 @@
  */
 package de.learnlib.cache;
 
-import static de.learnlib.examples.dfa.ExampleAngluin.IN_0;
-import static de.learnlib.examples.dfa.ExampleAngluin.IN_1;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.automatalib.automata.fsa.impl.FastDFA;
+import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -47,19 +43,19 @@ import de.learnlib.oracles.SimulatorOracle;
 // TODO CounterOracle needs a test,
 public class DFACacheOracleTest {
 
-	private MembershipOracle<Symbol, Boolean> oracle;
-	private CounterOracle<Symbol, Boolean> counterOracle;
-	private Collection<Query<Symbol, Boolean>> queries;
+	private MembershipOracle<Integer, Boolean> oracle;
+	private CounterOracle<Integer, Boolean> counterOracle;
+	private Collection<Query<Integer, Boolean>> queries;
 	private long count;
 
 	@BeforeClass
 	public void setup() {
 		// use angluin's example
-		FastDFA<Symbol> fm = ExampleAngluin.constructMachine();
-		Alphabet<Symbol> alphabet = fm.getInputAlphabet();
+		DFA<?,Integer> fm = ExampleAngluin.getInstance();
+		Alphabet<Integer> alphabet = ExampleAngluin.getInputAlphabet();
 
 		// use simulated environment
-		SimulatorOracle<Symbol, Boolean> simulatorOracle = new SimulatorOracle<>(
+		SimulatorOracle<Integer, Boolean> simulatorOracle = new SimulatorOracle<>(
 				fm);
 
 		// we count the number of delegated queries from the cache to this
@@ -76,32 +72,32 @@ public class DFACacheOracleTest {
 	public void testNoQueriesReceived() {
 		Assert.assertTrue(queries.size() == 0);
 		oracle.processQueries(queries);
-		Assert.assertTrue(counterOracle.getCounter().getCount() == 0);
+		Assert.assertTrue(counterOracle.getStatisticalData().getCount() == 0);
 	}
 
 	@Test(dependsOnMethods = { "testNoQueriesReceived" })
 	public void testFirstQuery() {
-		queries.add(new DefaultQuery<Symbol, Boolean>(Word.fromSymbols(IN_0)));
+		queries.add(new DefaultQuery<Integer, Boolean>(Word.fromLetter(0)));
 
 		Assert.assertTrue(queries.size() == 1);
 		oracle.processQueries(queries);
-		Assert.assertTrue(counterOracle.getCounter().getCount() == 1);
+		Assert.assertTrue(counterOracle.getStatisticalData().getCount() == 1);
 	}
 
 	@Test(dependsOnMethods = { "testFirstQuery" })
 	public void testFirstDuplicate() {
 		Assert.assertTrue(queries.size() == 1);
 		oracle.processQueries(queries);
-		Assert.assertTrue(counterOracle.getCounter().getCount() == 1);
+		Assert.assertTrue(counterOracle.getStatisticalData().getCount() == 1);
 	}
 
 	@Test(dependsOnMethods = { "testFirstDuplicate" })
 	public void testTwoQueriesOneDuplicate() {
-		queries.add(new DefaultQuery<Symbol, Boolean>(Word.fromSymbols(IN_0,
-				IN_0)));
+		queries.add(new DefaultQuery<Integer, Boolean>(Word.fromSymbols(0,
+				0)));
 		Assert.assertTrue(queries.size() == 2);
 		oracle.processQueries(queries);
-		Assert.assertTrue(counterOracle.getCounter().getCount() == 2);
+		Assert.assertTrue(counterOracle.getStatisticalData().getCount() == 2);
 	}
 
 	@Test(dependsOnMethods = { "testTwoQueriesOneDuplicate" })
@@ -109,10 +105,10 @@ public class DFACacheOracleTest {
 		queries.clear();
 
 		Assert.assertTrue(queries.size() == 0);
-		queries.add(new DefaultQuery<Symbol, Boolean>(Word.fromSymbols(IN_1)));
+		queries.add(new DefaultQuery<Integer, Boolean>(Word.fromLetter(1)));
 		Assert.assertTrue(queries.size() == 1);
 		oracle.processQueries(queries);
-		count = counterOracle.getCounter().getCount();
+		count = counterOracle.getStatisticalData().getCount();
 		Assert.assertTrue(count == 3);
 	}
 }

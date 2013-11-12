@@ -17,11 +17,16 @@
 
 package de.learnlib.examples.mealy;
 
-import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.automata.transout.impl.FastMealyState;
+import static de.learnlib.examples.mealy.ExampleStack.Input.POP;
+import static de.learnlib.examples.mealy.ExampleStack.Input.PUSH;
+import static de.learnlib.examples.mealy.ExampleStack.Output.EMPTY;
+import static de.learnlib.examples.mealy.ExampleStack.Output.FULL;
+import static de.learnlib.examples.mealy.ExampleStack.Output.OK;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.MutableMealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.FastAlphabet;
-import net.automatalib.words.impl.Symbol;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * This example encodes a small stack with a capacity of three elements
@@ -31,42 +36,66 @@ import net.automatalib.words.impl.Symbol;
  * @author Maik Merten <maikmerten@googlemail.com>
  */
 public class ExampleStack {
-    private final static Symbol in_push = new Symbol("push");
-    private final static Symbol in_pop = new Symbol("pop");
-    private final static Alphabet<Symbol> alphabet = new FastAlphabet<>(in_push, in_pop); 
+	private static final class InstanceHolder {
+		public static final MealyMachine<?,Input,?,Output> INSTANCE;
+		
+		static {
+			INSTANCE = constructMachine();
+		}
+	}
+	
+	public enum Input {
+		PUSH,
+		POP
+	}
+	
+	public enum Output {
+		OK,
+		EMPTY,
+		FULL
+	}
+
     
-    private final static String out_ok = "ok";
-    private final static String out_empty = "empty";
-    private final static String out_full = "full";
+    private final static Alphabet<Input> ALPHABET = Alphabets.fromEnum(Input.class); 
     
+    
+    public static Alphabet<Input> getInputAlphabet() {
+    	return ALPHABET;
+    }
+    
+    public static MealyMachine<?,Input,?,Output> getInstance() {
+    	return InstanceHolder.INSTANCE;
+    }
     
     /**
      * Construct and return a machine representation of this example
      * 
      * @return machine instance of the example
      */
-    public static FastMealy<Symbol, String> constructMachine() {
-
-        FastMealy<Symbol, String> fm = new FastMealy<>(alphabet);
-        
-        FastMealyState<String> s0 = fm.addInitialState(),
+    public static <S,A extends MutableMealyMachine<S,Input,?,Output>> 
+    A constructMachine(A fm) {
+        S s0 = fm.addInitialState(),
                 s1 = fm.addState(),
                 s2 = fm.addState(),
                 s3 = fm.addState();
         
-        fm.addTransition(s0, in_push, s1, out_ok);
-        fm.addTransition(s0, in_pop, s0, out_empty);
+        fm.addTransition(s0, PUSH, s1, OK);
+        fm.addTransition(s0, POP, s0, EMPTY);
         
-        fm.addTransition(s1, in_push, s2, out_ok);
-        fm.addTransition(s1, in_pop, s0, out_ok);
+        fm.addTransition(s1, PUSH, s2, OK);
+        fm.addTransition(s1, POP, s0, OK);
         
-        fm.addTransition(s2, in_push, s3, out_ok);
-        fm.addTransition(s2, in_pop, s1, out_ok);
+        fm.addTransition(s2, PUSH, s3, OK);
+        fm.addTransition(s2, POP, s1, OK);
         
-        fm.addTransition(s3, in_push, s3, out_full);
-        fm.addTransition(s3, in_pop, s2, out_ok);
+        fm.addTransition(s3, PUSH, s3, FULL);
+        fm.addTransition(s3, POP, s2, OK);
         
         return fm;
+    }
+    
+    public static CompactMealy<Input, Output> constructMachine() {
+    	return constructMachine(new CompactMealy<Input,Output>(ALPHABET));
     }
     
 }

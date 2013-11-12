@@ -1,0 +1,8 @@
+file_pattern="\.xml$"
+ignore_pattern=archetype-resources/pom\.xml$
+file_header=1
+preamble="<!--
+"
+postamble="-->
+"
+

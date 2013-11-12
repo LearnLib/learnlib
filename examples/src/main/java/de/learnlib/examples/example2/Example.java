@@ -23,8 +23,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
-import java.util.Queue;
 import java.util.Random;
 
 import net.automatalib.automata.transout.MealyMachine;
@@ -36,15 +36,16 @@ import net.automatalib.words.impl.SimpleAlphabet;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealy;
-import de.learnlib.api.EquivalenceOracle;
-import de.learnlib.api.LearningAlgorithm;
+import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.SUL;
+import de.learnlib.cache.Caches;
 import de.learnlib.eqtests.basic.mealy.RandomWalkEQOracle;
-import de.learnlib.experiments.Experiment;
-import de.learnlib.oracles.CounterOracle;
+import de.learnlib.experiments.Experiment.MealyExperiment;
+import de.learnlib.oracles.ResetCounterSUL;
 import de.learnlib.oracles.SULOracle;
 import de.learnlib.statistics.SimpleProfiler;
-import java.util.Deque;
+import de.learnlib.statistics.StatisticSUL;
 
 /**
  * This example shows how a model of a Java class can be learned using the SUL
@@ -167,12 +168,16 @@ public class Example {
 
         // create an oracle that can answer membership queries
         // using the BSQAdapter
-        SUL<BSQInput, String> sul = new BSQAdapter();
-        SULOracle<BSQInput, String> backOracle = new SULOracle<>(sul);
-
+        SUL<BSQInput,String> sul = new BSQAdapter();
+        
         // oracle for counting queries wraps sul
-        CounterOracle<BSQInput, Word<String>> mqOracle =
-                new CounterOracle<>(backOracle, "membership queries");
+        StatisticSUL<BSQInput, String> statisticSul = new ResetCounterSUL<>("membership queries", sul);
+        
+        SUL<BSQInput,String> effectiveSul = statisticSul;
+        // use caching in order to avoid duplicate queries
+        effectiveSul = Caches.createSULCache(inputs, effectiveSul);
+        
+        SULOracle<BSQInput, String> mqOracle = new SULOracle<>(effectiveSul);
 
         // create initial set of suffixes
         List<Word<BSQInput>> suffixes = new ArrayList<>();
@@ -183,7 +188,7 @@ public class Example {
         // construct L* instance (almost classic Mealy version)
         // almost: we use words (Word<String>) in cells of the table 
         // instead of single outputs.
-        LearningAlgorithm<? extends MealyMachine<?, BSQInput, ?, String>, BSQInput, Word<String>> lstar =
+        MealyLearner<BSQInput,String> lstar =
                 new ExtensibleLStarMealy<>(
                 inputs, // input alphabet
                 mqOracle, // mq oracle
@@ -193,7 +198,7 @@ public class Example {
                 );
 
         // create random walks equivalence test
-        EquivalenceOracle<MealyMachine<?, BSQInput, ?, String>, BSQInput, Word<String>> randomWalks =
+        MealyEquivalenceOracle<BSQInput,String> randomWalks =
                 new RandomWalkEQOracle<>(
                 0.05, // reset SUL w/ this probability before a step 
                 10000, // max steps (overall)
@@ -206,8 +211,8 @@ public class Example {
         // the learning algorithm and the random walks test.
         // The experiment will execute the main loop of
         // active learning
-        Experiment<MealyMachine<?,BSQInput,?,String>> experiment =
-                new Experiment<>(lstar, randomWalks, inputs);
+        MealyExperiment<BSQInput,String> experiment =
+                new MealyExperiment<>(lstar, randomWalks, inputs);
 
         // turn on time profiling
         experiment.setProfile(true);
@@ -229,7 +234,7 @@ public class Example {
 
         // learning statistics
         System.out.println(experiment.getRounds().getSummary());
-        System.out.println(mqOracle.getCounter().getSummary());
+        System.out.println(statisticSul.getStatisticalData().getSummary());
 
         // model statistics
         System.out.println("States: " + result.size());
