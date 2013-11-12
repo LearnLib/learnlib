@@ -138,27 +138,10 @@ public class ObservationTableCEXHandlers {
 	public static <I,O>
 	List<List<Row<I>>> handleClassicLStar(DefaultQuery<I, O> ceQuery,
 			ObservationTable<I, O> table, MembershipOracle<I, O> oracle) {
-		List<List<Row<I>>> unclosed = Collections.emptyList();
 		
-		List<Word<I>> suffixes = table.getSuffixes();
+		List<Word<I>> prefixes = ceQuery.getInput().prefixes(false);
 		
-		Word<I> ceWord = ceQuery.getInput();
-		int ceLen = ceWord.length();
-		
-		for(int i = 1; i <= ceLen; i++) {
-			Word<I> suffix = ceWord.suffix(i);
-			if(suffixes != null) {
-				if(suffixes.contains(suffix))
-					continue;
-				suffixes = null;
-			}
-			
-			unclosed = table.addSuffix(suffix, oracle);
-			if(!unclosed.isEmpty())
-				break;
-		}
-		
-		return unclosed;
+		return table.addShortPrefixes(prefixes, oracle);
 	}
 	
 	public static <I,O>

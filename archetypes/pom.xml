@@ -31,7 +31,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<groupId>de.learnlib</groupId>
 		<artifactId>learnlib-parent</artifactId>
-		<version>0.9.1-SNAPSHOT</version>
+		<version>0.10.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -45,6 +45,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<module>complete</module>
 	</modules>
 
+
 	<build>
 		<extensions>
 			<extension>
@@ -53,6 +54,34 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<version>${maven-archetype.version}</version>
 			</extension>
 		</extensions>
+
+
+		<!-- Custom resource rules:
+		We use the ${project.version} property in
+		- src/main/resources-template/META-INF/maven/archetype-metadata.xml
+		- src/test/resources-template/projects/*/archetype.properties
+		These must hence be filtered!
+		-->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources-template</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>false</filtering>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources-template</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
 
 		<pluginManagement>
 			<plugins>

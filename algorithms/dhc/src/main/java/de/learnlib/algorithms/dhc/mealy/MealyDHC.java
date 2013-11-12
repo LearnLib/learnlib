@@ -32,7 +32,10 @@ import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import de.learnlib.algorithms.dhc.Deduplicator;
+
+import com.google.common.collect.Interner;
+import com.google.common.collect.Interners;
+
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle;
@@ -99,7 +102,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		// first element to be explored represents the initial state with no predecessor
 		queue.add(new QueueElement<I,O>(null, null, null, null));
 
-		Deduplicator<Word<O>> deduplicator = new Deduplicator<>();
+		Interner<Word<O>> deduplicator = Interners.newStrongInterner();
 		
 		while (!queue.isEmpty()) {
 			// get element to be explored from queue
@@ -120,7 +123,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 			// assemble output signature
 			List<Word<O>> sig = new ArrayList<>(splitters.size());
 			for (DefaultQuery<I, Word<O>> query : queries) {
-				sig.add(deduplicator.deduplicate(query.getOutput()));
+				sig.add(deduplicator.intern(query.getOutput()));
 			}
 
 			Integer sibling = signatures.get(sig);

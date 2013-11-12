@@ -40,6 +40,7 @@ import de.learnlib.eqtests.basic.WpMethodEQOracle;
 import de.learnlib.examples.dfa.ExamplePaulAndMary;
 import de.learnlib.oracles.SimulatorOracle.DFASimulatorOracle;
 
+@Test
 public class LStarDFATest extends LearningTest {
 
  

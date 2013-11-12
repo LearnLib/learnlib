@@ -27,10 +27,15 @@ package de.learnlib.api;
 public interface SUL<I, O> {
 
     /**
-     * perform reset to initial state.
+     * setup SUL.
      */
-    void reset();
+    void pre();
 
+    /**
+     * shut down SUL.
+     */
+    void post();
+    
     /**
      * make one step on the SUL.
      *
