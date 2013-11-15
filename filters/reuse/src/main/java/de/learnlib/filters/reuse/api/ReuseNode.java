@@ -1,12 +1,29 @@
+/* Copyright (C) 2013 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ * 
+ * LearnLib is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 3.0 as published by the Free Software Foundation.
+ * 
+ * LearnLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with LearnLib; if not, see
+ * <http://www.gnu.de/documents/lgpl.en.html>.
+ */
 package de.learnlib.filters.reuse.api;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.learnlib.filters.reuse.ReuseTreeImpl;
 
 /**
- * A {@link ReuseNode} is a vertex in the {@link ReuseTree} that
+ * A {@link ReuseNode} is a vertex in the {@link ReuseTreeImpl} that
  * contains (a possible empty) set of outgoing {@link ReuseEdge}s.
  * Each {@link ReuseNode} may contain a {@link SystemState} holding
  * relevant informations (e.g. database identifiers) that belongs
@@ -15,10 +32,10 @@ import java.util.Map;
  *
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
-public class ReuseNode<S,V> {
-	private final String name;
-	private Map<S, ReuseEdge<S,V>> edges;
-	private SystemState avail;
+public class ReuseNode<S, I, O> {
+	private String name;
+	private Map<I, ReuseEdge<S, I, O>> edges;
+	private S systemstate;
 
 	public ReuseNode(String name) {
 		this.name = name;
@@ -26,7 +43,7 @@ public class ReuseNode<S,V> {
 	}
 
 	public boolean hasState() {
-		return avail != null;
+		return systemstate != null;
 	}
 
 	/**
@@ -34,12 +51,12 @@ public class ReuseNode<S,V> {
 	 *
 	 * @return
 	 */
-	public SystemState getSystemState() {
-		return avail;
+	public S getSystemState() {
+		return systemstate;
 	}
 
-	public void setSystemState(SystemState state) {
-		this.avail = state;
+	public void setSystemState(S state) {
+		this.systemstate = state;
 	}
 
 	public String getName() {
@@ -53,7 +70,7 @@ public class ReuseNode<S,V> {
 	 *
 	 * @return
 	 */
-	public Collection<ReuseEdge<S,V>> getEdges() {
+	public Collection<ReuseEdge<S, I, O>> getEdges() {
 		return this.edges.values();
 	}
 
@@ -62,7 +79,7 @@ public class ReuseNode<S,V> {
 	 *
 	 * @param edge
 	 */
-	public void addEdge(ReuseEdge<S,V> edge) {
+	public void addEdge(ReuseEdge<S, I, O> edge) {
 		this.edges.put(edge.getInput(), edge);
 	}
 
@@ -72,12 +89,12 @@ public class ReuseNode<S,V> {
 	 * @param input
 	 * @return
 	 */
-	public ReuseEdge<S,V> getEdgeWithInput(S input) {
+	public ReuseEdge<S, I,O> getEdgeWithInput(I input) {
 		return this.edges.get(input);
 	}
 
-	public ReuseNode<S,V> getTargetNodeForInput(S input) {
-		ReuseEdge<S,V> edge = this.getEdgeWithInput(input);
+	public ReuseNode<S, I, O> getTargetNodeForInput(I input) {
+		ReuseEdge<S, I, O> edge = this.getEdgeWithInput(input);
 		if (edge == null) {
 			return null;
 		}
