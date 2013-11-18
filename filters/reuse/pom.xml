@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>learnlib-reuse</artifactId>
-	<name>learnlib-reuse</name>
+	<name>LearnLib :: Filters :: Reuse</name>
 
 	<modelVersion>4.0.0</modelVersion>
 
