@@ -24,7 +24,6 @@ import de.learnlib.drivers.api.ExecutableInput;
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  *
  * @param <S>
- * @param <I>
  * @param <O>
  */
 public interface InjectableSystemStateRef<S, O> extends ExecutableInput<O> {
