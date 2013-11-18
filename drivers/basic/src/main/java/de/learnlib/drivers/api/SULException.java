@@ -23,6 +23,8 @@ package de.learnlib.drivers.api;
  * @author falkhowar
  */
 public class SULException extends Exception {
+	
+	private static final long serialVersionUID = 1L;
     
     public SULException(Throwable cause) {
         super(cause);

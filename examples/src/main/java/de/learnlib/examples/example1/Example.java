@@ -26,7 +26,7 @@ import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
-import de.learnlib.algorithms.lstargeneric.dfa.factory.ExtensibleLStarDFABuilder;
+import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFABuilder;
 import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.eqtests.basic.WMethodEQOracle.DFAWMethodEQOracle;
 import de.learnlib.experiments.Experiment.DFAExperiment;

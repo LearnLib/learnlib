@@ -16,9 +16,12 @@
  */
 package de.learnlib.algorithms.lstargeneric.mealy;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.transout.MealyMachine;
@@ -77,6 +80,7 @@ public class ClassicLStarMealy<I, O> extends
 	 * @param alphabet the learning alphabet
 	 * @param oracle the (Mealy) oracle
 	 */
+	@GenerateBuilder(defaults = ExtensibleAutomatonLStar.BuilderDefaults.class)
 	public ClassicLStarMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, O> oracle,
 			List<Word<I>> initialSuffixes,

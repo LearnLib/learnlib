@@ -16,6 +16,7 @@
  */
 package de.learnlib.algorithms.lstargeneric;
 
+import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.automata.MutableDeterministic;
@@ -23,6 +24,8 @@ import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
+import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
+import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
@@ -30,6 +33,21 @@ import de.learnlib.oracles.DefaultQuery;
 
 public abstract class ExtensibleAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableDeterministic<S,I,T,SP,TP>> extends
 AbstractAutomatonLStar<A, I, O,S,T,SP,TP,AI> {
+	
+	public static final class BuilderDefaults {
+		public static final <I> List<Word<I>> initialSuffixes() {
+			return Collections.emptyList();
+		}
+		
+		public static final <I,O> ObservationTableCEXHandler<? super I, ? super O> cexHandler() {
+			return ObservationTableCEXHandlers.CLASSIC_LSTAR;
+		}
+		
+		public static final <I,O> ClosingStrategy<? super I, ? super O> closingStrategy() {
+			return ClosingStrategies.CLOSE_FIRST;
+		}
+		
+	}
 	
 	protected final ObservationTableCEXHandler<? super I, ? super O> cexHandler;
 	protected final ClosingStrategy<? super I, ? super O> closingStrategy;
