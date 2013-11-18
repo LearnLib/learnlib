@@ -37,7 +37,7 @@ import de.learnlib.filters.reuse.symbols.KeyValueSymbol;
 public class KeyValueLearningTest {
 	private ReuseOracleImpl<SystemStateRef<Map<Integer, Object>, KeyValueSymbol, String>, KeyValueSymbol, String> createOracle() {
 
-		InjectableSystemStateRef<SystemStateRef<Map<Integer, Object>, KeyValueSymbol, String>, KeyValueSymbol, String> reset = null;
+		InjectableSystemStateRef<SystemStateRef<Map<Integer, Object>, KeyValueSymbol, String>, String> reset = null;
 		reset = new KeyValueResetSymbol();
 
 		ExecutableOracleImpl<SystemStateRef<Map<Integer, Object>, KeyValueSymbol, String>, KeyValueSymbol, String> executableOracle = null;

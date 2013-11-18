@@ -45,7 +45,7 @@ public class IntegerReuseOracleTest {
 	 */
 	@BeforeClass
 	protected void setUp() {
-		InjectableSystemStateRef<IntegerSystemStateRef<IntegerSymbol, String>, IntegerSymbol, String> op = null;
+		InjectableSystemStateRef<IntegerSystemStateRef<IntegerSymbol, String>, String> op = null;
 		op = new IntegerResetSymbol();
 
 		ExecutableOracleImpl<IntegerSystemStateRef<IntegerSymbol, String>, IntegerSymbol, String> executableOracle = null;

@@ -9,7 +9,7 @@ import de.learnlib.filters.reuse.api.SystemStateRef;
 
 public class KeyValueResetSymbol
 		implements
-		InjectableSystemStateRef<SystemStateRef<Map<Integer, Object>, KeyValueSymbol, String>, KeyValueSymbol, String> {
+		InjectableSystemStateRef<SystemStateRef<Map<Integer, Object>, KeyValueSymbol, String>, String> {
 
 	private SystemStateRef<Map<Integer, Object>, KeyValueSymbol, String> ssr;
 

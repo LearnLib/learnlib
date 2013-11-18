@@ -27,7 +27,7 @@ import de.learnlib.drivers.api.ExecutableInput;
  * @param <I>
  * @param <O>
  */
-public interface InjectableSystemStateRef<S, I, O> extends ExecutableInput<O> {
+public interface InjectableSystemStateRef<S, O> extends ExecutableInput<O> {
 	void inject(S ssr);
 	S retrieve();
 }

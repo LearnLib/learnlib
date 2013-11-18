@@ -4,7 +4,7 @@ import de.learnlib.drivers.api.SULException;
 import de.learnlib.filters.reuse.api.InjectableSystemStateRef;
 import de.learnlib.filters.reuse.ssrs.IntegerSystemStateRef;
 
-public class IntegerResetSymbol implements InjectableSystemStateRef<IntegerSystemStateRef<IntegerSymbol, String>, IntegerSymbol, String>{
+public class IntegerResetSymbol implements InjectableSystemStateRef<IntegerSystemStateRef<IntegerSymbol, String>, String>{
 	private IntegerSystemStateRef<IntegerSymbol, String> ssr;
 
 	@Override

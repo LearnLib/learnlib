@@ -31,7 +31,7 @@ import de.learnlib.filters.reuse.api.SystemStateRef;
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
-public class ReuseOracleImpl<S extends SystemStateRef<?, I, O>, I extends InjectableSystemStateRef<S, I, O>, O>
+public class ReuseOracleImpl<S extends SystemStateRef<?, I, O>, I extends InjectableSystemStateRef<S, O>, O>
 		implements MealyMembershipOracle<I, O> {
 
 	public enum NeededAction {

@@ -34,13 +34,13 @@ import de.learnlib.logging.LearnLogger;
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
 @SuppressWarnings("serial")
-public class ExecutableOracleImpl<S extends SystemStateRef<?, I, O>, I extends InjectableSystemStateRef<S,I,O>, O> implements MembershipOracle<I, Word<O>> {
+public class ExecutableOracleImpl<S extends SystemStateRef<?, I, O>, I extends InjectableSystemStateRef<S, O>, O> implements MembershipOracle<I, Word<O>> {
 	private final LearnLogger logger = LearnLogger.getLogger(ExecutableOracleImpl.class.getName());
 
 	private S systemState;
 
 	private int mq = 0;
-	private InjectableSystemStateRef<S, I, O> reset;
+	private InjectableSystemStateRef<S, O> reset;
 
 	/**
 	 * Default constructor.
@@ -49,7 +49,7 @@ public class ExecutableOracleImpl<S extends SystemStateRef<?, I, O>, I extends I
 	 *
 	 * @param reset
 	 */
-	public ExecutableOracleImpl(InjectableSystemStateRef<S,I,O> reset) {
+	public ExecutableOracleImpl(InjectableSystemStateRef<S, O> reset) {
 		this.logger.warning("Changed logger level to INFO...");
 
 		if (reset == null) {

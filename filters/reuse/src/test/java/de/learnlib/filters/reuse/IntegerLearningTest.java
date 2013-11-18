@@ -49,9 +49,8 @@ public class IntegerLearningTest {
 	@BeforeClass
 	protected void setUp() {
 		InjectableSystemStateRef<
-			IntegerSystemStateRef<IntegerSymbol, String>, 
-			IntegerSymbol, 
-			String
+			IntegerSystemStateRef<IntegerSymbol, String>,
+				String
 		> reset = null;
 		reset = new IntegerResetSymbol();
 

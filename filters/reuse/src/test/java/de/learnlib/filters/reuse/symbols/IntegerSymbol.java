@@ -22,7 +22,7 @@ import de.learnlib.filters.reuse.ssrs.IntegerSystemStateRef;
 
 public class IntegerSymbol
 		implements
-		InjectableSystemStateRef<IntegerSystemStateRef<IntegerSymbol, String>, IntegerSymbol, String> {
+		InjectableSystemStateRef<IntegerSystemStateRef<IntegerSymbol, String>, String> {
 	private final int VAL;
 	private IntegerSystemStateRef<IntegerSymbol, String> ssr;
 
