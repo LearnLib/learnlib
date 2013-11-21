@@ -14,19 +14,26 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.filters.reuse.ssrs;
-
-import de.learnlib.filters.reuse.api.SystemStateRef;
+package de.learnlib.filters.reuse.tree;
 
 /**
- * Simple {@link SystemStateRef} that is used for some unit tests that stores
- * just an integer.
+ * A implementation of this interface that is set to the {@link ReuseTree} (see
+ * {@link ReuseTree#setSystemStateHandler(SystemStateHandler)}) will be informed
+ * about all removed system states whenever
+ * {@link ReuseTree#disposeSystemstates()} gets called.
+ * 
+ * The objective of this handler is that clearing system states from the reuse
+ * tree may also be resulting in cleaning up the SUL by e.g. perform tasks like
+ * removing persisted entities from a database.
+ * 
+ * Please note that the normal removal of system states (by sifting them down in
+ * the reuse tree by executing only suffixes of a query) is not be seen as a
+ * disposing.
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
- *
- * @param <I>
- * @param <O>
+ * 
+ * @param <S>
  */
-public class IntegerSystemStateRef<I, O> extends SystemStateRef<Integer, I, O> {
-
+public interface SystemStateHandler<S> {
+	void dispose(S state);
 }

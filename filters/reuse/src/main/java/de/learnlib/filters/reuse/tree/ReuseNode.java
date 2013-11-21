@@ -14,31 +14,32 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.filters.reuse.api;
+package de.learnlib.filters.reuse.tree;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.learnlib.filters.reuse.ReuseTreeImpl;
+import net.automatalib.words.Word;
 
 /**
- * A {@link ReuseNode} is a vertex in the {@link ReuseTreeImpl} that
- * contains (a possible empty) set of outgoing {@link ReuseEdge}s.
- * Each {@link ReuseNode} may contain a {@link SystemState} holding
- * relevant informations (e.g. database identifiers) that belongs
- * to the system state that 'represents' the system state after executing
- * a membership query.
- *
+ * A {@link ReuseNode} is a vertex in the {@link ReuseTree} that contains (a
+ * possible empty) set of outgoing {@link ReuseEdge}s. Each {@link ReuseNode}
+ * may contain a {@link SystemState} holding relevant informations (e.g.
+ * database identifiers) that belongs to the system state that 'represents' the
+ * system state after executing a membership query.
+ * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
 public class ReuseNode<S, I, O> {
-	private String name;
-	private Map<I, ReuseEdge<S, I, O>> edges;
+	private final Word<I> prefixInput;
+	private final Word<O> prefixOutput;
+	private final Map<I, ReuseEdge<S, I, O>> edges;
 	private S systemstate;
 
-	public ReuseNode(String name) {
-		this.name = name;
+	public ReuseNode(final Word<I> prefix, final Word<O> prefixOutput) {
+		this.prefixInput = prefix;
+		this.prefixOutput = prefixOutput;
 		this.edges = new HashMap<>();
 	}
 
@@ -48,7 +49,7 @@ public class ReuseNode<S, I, O> {
 
 	/**
 	 * The {@link SystemState}, maybe <code>null</code>.
-	 *
+	 * 
 	 * @return
 	 */
 	public S getSystemState() {
@@ -59,15 +60,19 @@ public class ReuseNode<S, I, O> {
 		this.systemstate = state;
 	}
 
-	public String getName() {
-		return this.name;
+	public final Word<I> getPrefixInput() {
+		return this.prefixInput;
+	}
+
+	public final Word<O> getPrefixOutput() {
+		return this.prefixOutput;
 	}
 
 	/**
-	 * Returns all outgoing {@link ReuseEdge}s from this {@link ReuseNode}.
-	 * If there are none the returned {@link java.util.Collection} will be empty (but never
-	 * <code>null</code>).
-	 *
+	 * Returns all outgoing {@link ReuseEdge}s from this {@link ReuseNode}. If
+	 * there are none the returned {@link java.util.Collection} will be empty
+	 * (but never <code>null</code>).
+	 * 
 	 * @return
 	 */
 	public Collection<ReuseEdge<S, I, O>> getEdges() {
@@ -75,8 +80,8 @@ public class ReuseNode<S, I, O> {
 	}
 
 	/**
-	 * Adds a ougoing {@link ReuseEdge} to this {@link ReuseNode}.
-	 *
+	 * Adds an outgoing {@link ReuseEdge} to this {@link ReuseNode}.
+	 * 
 	 * @param edge
 	 */
 	public void addEdge(ReuseEdge<S, I, O> edge) {
@@ -85,11 +90,11 @@ public class ReuseNode<S, I, O> {
 
 	/**
 	 * Maybe <code>null</code>.
-	 *
+	 * 
 	 * @param input
 	 * @return
 	 */
-	public ReuseEdge<S, I,O> getEdgeWithInput(I input) {
+	public ReuseEdge<S, I, O> getEdgeWithInput(I input) {
 		return this.edges.get(input);
 	}
 
@@ -101,8 +106,12 @@ public class ReuseNode<S, I, O> {
 		return edge.getTarget();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
-	public String toString() {
-		return this.name;
+	public final String toString() {
+		return this.prefixInput.toString();
 	}
 }

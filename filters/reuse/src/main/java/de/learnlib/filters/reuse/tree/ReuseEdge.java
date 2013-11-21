@@ -14,23 +14,22 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.filters.reuse.api;
-
-import de.learnlib.filters.reuse.ReuseTreeImpl;
+package de.learnlib.filters.reuse.tree;
 
 /**
- * A {@link ReuseEdge} connects two vertices in the {@link ReuseTreeImpl} and is
- * labeled with input and output behaviour.
- *
+ * A {@link ReuseEdge} connects two {@link ReuseNode}'s in the {@link ReuseTree}
+ * and is labeled with input and output behaviour.
+ * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
 public class ReuseEdge<S, I, O> {
-	private ReuseNode<S, I, O> source;
-	private ReuseNode<S, I, O> target;
-	private I input;
-	private O output;
+	private final ReuseNode<S, I, O> source;
+	private final ReuseNode<S, I, O> target;
+	private final I input;
+	private final O output;
 
-	public ReuseEdge(ReuseNode<S, I, O> source, ReuseNode<S, I, O> target, I input, O output) {
+	public ReuseEdge(final ReuseNode<S, I, O> source,
+			final ReuseNode<S, I, O> target, final I input, final O output) {
 		if (source == null) {
 			throw new IllegalArgumentException("Source not allowed to be null.");
 		}
@@ -49,24 +48,29 @@ public class ReuseEdge<S, I, O> {
 		this.output = output;
 	}
 
-	public ReuseNode<S, I, O> getSource() {
+	public final ReuseNode<S, I, O> getSource() {
 		return source;
 	}
 
-	public ReuseNode<S, I, O> getTarget() {
+	public final ReuseNode<S, I, O> getTarget() {
 		return target;
 	}
 
-	public I getInput() {
+	public final I getInput() {
 		return input;
 	}
 
-	public O getOutput() {
+	public final O getOutput() {
 		return output;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
-	public String toString() {
+	public final String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(source.toString());
 		sb.append(" -> ");
