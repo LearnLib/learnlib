@@ -34,7 +34,7 @@ public final class SimplePOJOTestDriver extends
  
     private final SimpleAlphabet<AbstractMethodInput> inputs = new SimpleAlphabet<>();
     
-    public SimplePOJOTestDriver(Constructor c, Object ... cParams) {
+    public SimplePOJOTestDriver(Constructor<?> c, Object ... cParams) {
         super(new SimplePOJODataMapper(c, cParams));
     }
     

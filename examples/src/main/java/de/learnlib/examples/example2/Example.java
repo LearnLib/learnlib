@@ -29,7 +29,7 @@ import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Word;
-import de.learnlib.algorithms.lstargeneric.mealy.factory.ExtensibleLStarMealyBuilder;
+import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.SUL;

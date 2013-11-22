@@ -16,6 +16,7 @@
  */
 package de.learnlib.algorithms.lstargeneric.mealy;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,9 @@ import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+
+import com.github.misberner.buildergen.annotations.GenerateBuilder;
+
 import de.learnlib.algorithms.lstargeneric.ExtensibleAutomatonLStar;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
@@ -41,6 +45,7 @@ public class ExtensibleLStarMealy<I, O> extends
 		= new ArrayList<O>();
 	
 
+	@GenerateBuilder(defaults = ExtensibleAutomatonLStar.BuilderDefaults.class)
 	public ExtensibleLStarMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, Word<O>> oracle,
 			List<Word<I>> initialSuffixes,
@@ -53,13 +58,18 @@ public class ExtensibleLStarMealy<I, O> extends
 	}
 
 	@Override
+	protected void updateInternalHypothesis() {
+		updateOutputs();
+		super.updateInternalHypothesis();
+	}
+
+	@Override
 	protected Void stateProperty(Row<I> stateRow) {
 		return null;
 	}
 
 	@Override
 	protected O transitionProperty(Row<I> stateRow, int inputIdx) {
-		updateOutputs();
 		Row<I> transRow = stateRow.getSuccessor(inputIdx);
 		return outputTable.get(transRow.getRowId() - 1);
 	}

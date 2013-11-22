@@ -127,6 +127,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<resources-plugin.version>2.6</resources-plugin.version>
 		<trove4j.version>3.0.3</trove4j.version>
 		<guava.version>15.0</guava.version>
+		<!-- TODO: Change to 0.1 as soon as buildergen release is synced to Maven central -->
+		<buildergen.version>0.1.1-SNAPSHOT</buildergen.version>
 		
 		<!-- Javadoc links -->
 		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
@@ -492,6 +494,15 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>
+			</dependency>
+
+			<!-- BuilderGen -->
+			<dependency>
+				<groupId>com.github.misberner.buildergen</groupId>
+				<artifactId>buildergen</artifactId>
+				<version>${buildergen.version}</version>
+				<!-- Compile-time only -->
+				<scope>provided</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
