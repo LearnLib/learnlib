@@ -24,7 +24,7 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import de.learnlib.algorithms.lstargeneric.mealy.factory.ExtensibleLStarMealyBuilder;
+import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
