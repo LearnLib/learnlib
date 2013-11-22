@@ -130,7 +130,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 			int index = 0;
 			WordBuilder<O> prefixOutput = new WordBuilder<>();
 			List<I> prefixInput = new LinkedList<>();
-			for (int i = 0; i <= inputQuery.size() - 1; i++) {
+			for (int i = 0; i < inputQuery.size(); i++) {
 
 				I a = inputQuery.getSymbol(i);
 				I q = query.getSymbol(index);

@@ -167,7 +167,7 @@ public class ReuseTree<S, I, O> {
 		WordBuilder<O> output = new WordBuilder<>();
 
 		ReuseNode<S, I, O> sink = getRoot();
-		for (int i = 0; i <= query.size() - 1; i++) {
+		for (int i = 0; i < query.size(); i++) {
 			ReuseNode<S, I, O> node = sink.getTargetNodeForInput(query
 					.getSymbol(i));
 			ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(query.getSymbol(i));
@@ -246,7 +246,7 @@ public class ReuseTree<S, I, O> {
 			lastState = sink;
 		}
 
-		for (int i = 0; i <= query.size() - 1; i++) {
+		for (int i = 0; i < query.size(); i++) {
 			ReuseNode<S, I, O> node = sink.getTargetNodeForInput(query
 					.getSymbol(i));
 			ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(query.getSymbol(i));
@@ -335,7 +335,7 @@ public class ReuseTree<S, I, O> {
 			sink.setSystemState(null);
 		}
 
-		for (int i = 0; i <= query.size() - 1; i++) {
+		for (int i = 0; i < query.size(); i++) {
 			I in = query.getSymbol(i);
 			O out = queryResult.output.getSymbol(i);
 			ReuseNode<S, I, O> rn;
@@ -370,7 +370,7 @@ public class ReuseTree<S, I, O> {
 					treeOutput.add(node.getEdgeWithInput(inp).getOutput());
 					node = node.getEdgeWithInput(inp).getTarget();
 				}
-				for (int j = 0; j <= i - 1; j++) {
+				for (int j = 0; j < i; j++) {
 					I inp = query.getSymbol(j);
 					O outp = node.getEdgeWithInput(inp).getOutput();
 					treeInput.add(inp);
