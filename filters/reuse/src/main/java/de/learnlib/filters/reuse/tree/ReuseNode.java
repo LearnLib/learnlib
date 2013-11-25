@@ -20,8 +20,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.automatalib.words.Word;
-
 /**
  * A {@link ReuseNode} is a vertex in the {@link ReuseTree} that contains (a
  * possible empty) set of outgoing {@link ReuseEdge}s. Each {@link ReuseNode}
@@ -32,15 +30,20 @@ import net.automatalib.words.Word;
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
 public class ReuseNode<S, I, O> {
-	private final Word<I> prefixInput;
-	private final Word<O> prefixOutput;
 	private final Map<I, ReuseEdge<S, I, O>> edges;
 	private S systemstate;
-
-	public ReuseNode(final Word<I> prefix, final Word<O> prefixOutput) {
-		this.prefixInput = prefix;
-		this.prefixOutput = prefixOutput;
+	private int index = -1;
+	
+	public ReuseNode() {
 		this.edges = new HashMap<>();
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public boolean hasState() {
@@ -59,15 +62,6 @@ public class ReuseNode<S, I, O> {
 	public void setSystemState(S state) {
 		this.systemstate = state;
 	}
-
-	public final Word<I> getPrefixInput() {
-		return this.prefixInput;
-	}
-
-	public final Word<O> getPrefixOutput() {
-		return this.prefixOutput;
-	}
-
 	/**
 	 * Returns all outgoing {@link ReuseEdge}s from this {@link ReuseNode}. If
 	 * there are none the returned {@link java.util.Collection} will be empty
@@ -104,14 +98,5 @@ public class ReuseNode<S, I, O> {
 			return null;
 		}
 		return edge.getTarget();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public final String toString() {
-		return this.prefixInput.toString();
 	}
 }

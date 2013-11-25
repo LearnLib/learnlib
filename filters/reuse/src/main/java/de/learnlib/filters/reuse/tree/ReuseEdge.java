@@ -39,9 +39,6 @@ public class ReuseEdge<S, I, O> {
 		if (input == null) {
 			throw new IllegalArgumentException("Input not allowed to be null.");
 		}
-		if (output == null) {
-			throw new IllegalArgumentException("Output not allowed to be null.");
-		}
 		this.source = source;
 		this.target = target;
 		this.input = input;

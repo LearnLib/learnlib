@@ -159,7 +159,7 @@ public class ReuseOracleTest {
 		// now we check query 112, reuse possible in 11
 		ReuseNode<Integer, Integer, String> node = reuseOracle.getReuseTree().getReuseableSystemState(getInput(1,1,2));
 		Assert.assertNotNull(node);
-		Assert.assertTrue(node.getPrefixInput().size() == 2); // query '1 1'
+		Assert.assertTrue(node.getIndex() == 2); // query '1 1'
 
 		qr = new QueryResult<Integer, String>(getOutput("ok"), 4, true);
 		reuseOracle.getReuseTree().insert(getInput(2), node, qr);
@@ -201,7 +201,7 @@ public class ReuseOracleTest {
 		// now we check query 112, reuse possible in 11
 		ReuseNode<Integer, Integer, String> node = reuseOracle.getReuseTree().getReuseableSystemState(getInput(1,1,2));
 		Assert.assertNotNull(node);
-		Assert.assertTrue(node.getPrefixInput().size() == 2); // query "1 1"
+		Assert.assertTrue(node.getIndex() == 2); // query "1 1"
 
 		// now we dont't(!) invalidate the system state, so in "1 1" there remains "2"
 		qr = new QueryResult<Integer, String>(getOutput("ok"), 4, false);
@@ -221,10 +221,12 @@ public class ReuseOracleTest {
 		// we check that "1 1 3" has reusable prefix, since we have not invalidated the system state in "1 1":
 		node = reuseOracle.getReuseTree().getReuseableSystemState(getInput(1,1,3));
 		Assert.assertNotNull(node);
+		Assert.assertTrue(node.getIndex() == 2); // query "1 1"
 
 		// but "1 1 2 3" should although have a reusable prefix via the new "1 1 2"
 		node = reuseOracle.getReuseTree().getReuseableSystemState(getInput(1,1,2,3));
 		Assert.assertNotNull(node);
+		Assert.assertTrue(node.getIndex() == 3); // query "1 1 2"
 		
 		// we query "1 1 4" and invalidate the system state in "1 1"
 		node = reuseOracle.getReuseTree().getReuseableSystemState(getInput(1,1,4));
@@ -251,10 +253,12 @@ public class ReuseOracleTest {
 		// now "1 1 4 1" should 
 		node = reuseOracle.getReuseTree().getReuseableSystemState(getInput(1,1,4,1));
 		Assert.assertNotNull(node);
+		Assert.assertTrue(node.getIndex() == 3); // query "1 1 4"
 
 		// now "1 1 2 8" should 
 		node = reuseOracle.getReuseTree().getReuseableSystemState(getInput(1,1,2,8));
 		Assert.assertNotNull(node);
+		Assert.assertTrue(node.getIndex() == 3); // query "1 1 2"
 	}
 	
 	@Test(
@@ -290,11 +294,10 @@ public class ReuseOracleTest {
 		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok","ok","ok"), 2, true);
 		reuseOracle.getReuseTree().insert(getInput(1, 0, 1), qr);
 		
-		
 		Word<Integer> input = getInput(1,0,1,1);
 		ReuseNode<Integer, Integer, String> node = reuseOracle.getReuseTree().getReuseableSystemState(input);
 
-		Assert.assertTrue(node.getPrefixInput().size() == 2); // invariant input is trimmed
+		Assert.assertTrue(node.getIndex() == 3); // ''1 0 1''
 		// reuse the prefix
 		qr = new QueryResult<Integer, String>(getOutput("ok"), 3, true);
 		reuseOracle.getReuseTree().insert(getInput(1), node, qr);
@@ -306,18 +309,17 @@ public class ReuseOracleTest {
 		// There should be a "1 1 1" system state, even this query was never seen
 		node = reuseOracle.getReuseTree().getReuseableSystemState(getInput(1,1,1));
 		Assert.assertNotNull(node);
+		Assert.assertTrue(node.getIndex() == 3); // query "1 1 1"
 		
 		// There should be a "1 0 0 0 0 1 1" system state, even this query was never seen
 		node = reuseOracle.getReuseTree().getReuseableSystemState(getInput(1,0,0,0,0,1,1));
 		Assert.assertNotNull(node);
+		Assert.assertTrue(node.getIndex() == 7);
 		
-		// The output should also be known, but the node contains only the prefix without
-		// model invariant outputs
-		Word<String> output = getOutput("ok", "ok", "ok");
-		Assert.assertEquals(node.getPrefixOutput(), output);
-		
-		output = reuseOracle.getReuseTree().getOutput(getInput(1,0,0,0,0,1,1));
-		Assert.assertEquals(output, getOutput("ok", "ok", "ok", "ok", "ok", "ok", "ok"));
+		// There should be a system state for "1 0 0 0 0 1 1", even this query was never seen
+		node = reuseOracle.getReuseTree().getReuseableSystemState(getInput(1,0,0,0,0,1,1,0,1));
+		Assert.assertNotNull(node);
+		Assert.assertTrue(node.getIndex() == 7); // so remaining 2 symbols
 	}
 	
 	private Word<Integer> getInput(Integer... param){

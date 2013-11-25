@@ -30,7 +30,14 @@ import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
 import de.learnlib.filters.reuse.tree.ReuseNode;
 
-public class LearningTest {
+/**
+ * Similar to the {@link LearningTest} but this time with quiescence. The purpose
+ * of this test is just to check that the reuse filter is able to work with
+ * <code>null</code> outputs.
+ * 
+ * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ */
+public class QuiescenceTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;
 
 	/**
@@ -68,11 +75,14 @@ public class LearningTest {
 
 			WordBuilder<String> output = new WordBuilder<>();
 			for (Integer symbol : trace) {
-				if (integer + symbol <= threshold) {
+				if (integer + symbol < threshold) {
 					integer += symbol;
 					output.add("ok");
+				} else if (integer + symbol == threshold) {
+					integer += symbol;
+					output.add("done");
 				} else {
-					output.add("error");
+					output.add(null); // quiescence
 				}
 			}
 
@@ -88,11 +98,14 @@ public class LearningTest {
 			Integer integer = new Integer(0);
 			WordBuilder<String> output = new WordBuilder<>();
 			for (Integer symbol : trace) {
-				if (integer + symbol <= threshold) {
+				if (integer + symbol < threshold) {
 					integer += symbol;
 					output.add("ok");
+				} else if (integer + symbol == threshold) {
+					integer += symbol;
+					output.add("done");
 				} else {
-					output.add("error");
+					output.add(null); // quiescence
 				}
 			}
 

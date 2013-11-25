@@ -17,8 +17,7 @@
 package de.learnlib.filters.reuse.tree;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +25,7 @@ import java.util.logging.Logger;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
+import de.learnlib.filters.reuse.ReuseOracle;
 
 /**
  * TODO JavaDoc.
@@ -54,7 +54,7 @@ public class ReuseTree<S, I, O> {
 	 * and 'model invariant input symbols' is enabled.
 	 */
 	public ReuseTree() {
-		this.root = new ReuseNode<>(Word.<I> epsilon(), Word.<O> epsilon());
+		this.root = new ReuseNode<>();
 		this.invariantInputSymbols = new HashSet<>();
 		this.failureOutputSymbols = new HashSet<>();
 		this.systemStateHandler = new SystemStateHandler<S>() {
@@ -115,8 +115,8 @@ public class ReuseTree<S, I, O> {
 	 * Whether to use domain knowledge about 'failure' outputs. If a membership
 	 * query MQ is answered with some specific 'failure' output, the
 	 * {@link SystemState} can be reused for the direct prefix of this query
-	 * (indicated by a reflexive {@link ReuseEdge} in the {@link ReuseTree}
-	 * ), otherwise only if the MQ ends with a 'model invariant input symbol' or
+	 * (indicated by a reflexive {@link ReuseEdge} in the {@link ReuseTree} ),
+	 * otherwise only if the MQ ends with a 'model invariant input symbol' or
 	 * the new query is a continuation of this query.
 	 * 
 	 * @param b
@@ -216,7 +216,7 @@ public class ReuseTree<S, I, O> {
 	 * informed about any disposings.
 	 */
 	public void clearTree() {
-		this.root = new ReuseNode<>(Word.<I> epsilon(), Word.<O> epsilon());
+		this.root = new ReuseNode<>();
 		this.invariantInputSymbols.clear();
 		this.failureOutputSymbols.clear();
 	}
@@ -237,26 +237,20 @@ public class ReuseTree<S, I, O> {
 
 		int length = 0;
 
-		List<I> prefixInput = new LinkedList<>();
-		List<O> prefixOutput = new LinkedList<>();
-
 		ReuseNode<S, I, O> sink = getRoot();
 		ReuseNode<S, I, O> lastState = null;
 		if (sink.hasState()) {
 			lastState = sink;
 		}
 
+		ReuseNode<S, I, O> node;
 		for (int i = 0; i < query.size(); i++) {
-			ReuseNode<S, I, O> node = sink.getTargetNodeForInput(query
-					.getSymbol(i));
-			ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(query.getSymbol(i));
+			node = sink.getTargetNodeForInput(query.getSymbol(i));
 
 			if (node == null) {
+				// we have reached longest known prefix
 				break;
 			}
-
-			prefixInput.add(query.getSymbol(i));
-			prefixOutput.add(edge.getOutput());
 
 			sink = node;
 			if (sink.hasState()) {
@@ -265,10 +259,12 @@ public class ReuseTree<S, I, O> {
 			}
 		}
 
-		if (length == 0 && lastState == null) {
+		if (lastState == null) {
 			return null;
+		} else {
+			lastState.setIndex(length);
+			return lastState;
 		}
-		return lastState;
 	}
 
 	/**
@@ -342,7 +338,7 @@ public class ReuseTree<S, I, O> {
 
 			ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(in);
 			if (edge != null) {
-				if (edge.getOutput().equals(out)) {
+				if (Objects.equals(edge.getOutput(), out)) {
 					sink = edge.getTarget();
 					continue;
 				}
@@ -361,27 +357,7 @@ public class ReuseTree<S, I, O> {
 				sb.append("\n  output symbol ").append(out);
 				sb.append("\n  but tree contains output symbol ");
 				sb.append(edge.getOutput());
-				sb.append("\n\n  full prefix input/output in tree:\n ");
-				WordBuilder<I> treeInput = new WordBuilder<>();
-				WordBuilder<O> treeOutput = new WordBuilder<>();
-				ReuseNode<S, I, O> node = getRoot();
-				for (I inp : sink.getPrefixInput()) {
-					treeInput.add(inp);
-					treeOutput.add(node.getEdgeWithInput(inp).getOutput());
-					node = node.getEdgeWithInput(inp).getTarget();
-				}
-				for (int j = 0; j < i; j++) {
-					I inp = query.getSymbol(j);
-					O outp = node.getEdgeWithInput(inp).getOutput();
-					treeInput.add(inp);
-					treeOutput.add(outp);
-					node = node.getTargetNodeForInput(inp);
-				}
-				sb.append(" ");
-				sb.append(treeInput.toWord());
-				sb.append("/");
-				sb.append(treeOutput.toWord());
-				sb.append("\n");
+
 				throw new RuntimeException(sb.toString());
 			}
 
@@ -392,16 +368,14 @@ public class ReuseTree<S, I, O> {
 						&& invariantInputSymbols.contains(in)) {
 					rn = sink;
 				} else {
-					rn = new ReuseNode<>(sink.getPrefixInput().append(in), sink
-							.getPrefixOutput().append(out));
+					rn = new ReuseNode<>();
 				}
 			} else {
 				if (useModelInvariantSymbols
 						&& invariantInputSymbols.contains(in)) {
 					rn = sink;
 				} else {
-					rn = new ReuseNode<>(sink.getPrefixInput().append(in), sink
-							.getPrefixOutput().append(out));
+					rn = new ReuseNode<>();
 				}
 			}
 

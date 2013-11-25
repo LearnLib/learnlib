@@ -17,11 +17,8 @@
 package de.learnlib.filters.reuse;
 
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
@@ -124,56 +121,12 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 
 			return res.output;
 		} else {
-			Word<I> inputQuery = node.getPrefixInput();
-			Word<O> outputQuery = node.getPrefixOutput();
-
-			int index = 0;
-			WordBuilder<O> prefixOutput = new WordBuilder<>();
-			List<I> prefixInput = new LinkedList<>();
-			for (int i = 0; i < inputQuery.size(); i++) {
-
-				I a = inputQuery.getSymbol(i);
-				I q = query.getSymbol(index);
-
-				if (a.equals(q)) {
-					prefixOutput.add(outputQuery.getSymbol(i));
-					prefixInput.add(query.getSymbol(index));
-
-					index++;
-				}
-			}
-
-			Word<I> suffix = query.suffix(query.size() - index);
-			QueryResult<S, O> res = reuseCapableOracle.continueQuery(suffix,
-					node);
+			Word<I> suffix = query.suffix(query.size() - node.getIndex());
+			QueryResult<S, O> res;
+			res = reuseCapableOracle.continueQuery(suffix, node);
 
 			this.tree.insert(suffix, node, res);
-
-			// Make sure the whole output will be returned not just that for the
-			// executed suffix!
-
-			/*
-			 * suppose: inserted 101 okokok and 0 is reflexive
-			 * 
-			 * now query 1011 so reuse is 101 but prefix of node is 11 so we
-			 * execute suffix 1 and prepend known output of 101 before returning
-			 * full output.
-			 */
-
-			Word<O> prefixOut = getReuseTree().getOutput(query.prefix(index));
-			WordBuilder<O> wbOut = new WordBuilder<>(prefixOut);
-			for (O o : res.output) {
-				wbOut.append(o);
-			}
-
-			if (wbOut.toWord().size() != query.size()) {
-				throw new IllegalArgumentException("Inputlength "
-						+ query.size() + " does not equal outputlength "
-						+ wbOut.toWord().size() + ": " + query + "/"
-						+ wbOut.toWord());
-			}
-
-			return wbOut.toWord();
+			return res.output;
 		}
 	}
 
