@@ -46,10 +46,6 @@ public class ReuseNode<S, I, O> {
 		this.index = index;
 	}
 
-	public boolean hasState() {
-		return systemstate != null;
-	}
-
 	/**
 	 * The {@link SystemState}, maybe <code>null</code>.
 	 * 

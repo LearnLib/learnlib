@@ -28,7 +28,27 @@ import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.ReuseOracle;
 
 /**
- * TODO JavaDoc.
+ * The {@link ReuseTree} is a tree like structure consisting of nodes (see
+ * {@link ReuseNode}) and edges (see {@link ReuseEdge}) that is used by the
+ * {@link ReuseOracle}:
+ * <ul>
+ * <li>Nodes may contain a system state (see {@link ReuseNode#getSystemState()})
+ * that could be used for executing suffixes of membership queries. Each node
+ * consists of a (possible empty) set of outgoing edges.
+ * <li>Edges consists beside source and target node of input and output
+ * behaviour.
+ * </ul>
+ * The {@link ReuseTree} is the central data structure that maintains observed
+ * behaviour from the SUL and maintains also available system states. The
+ * {@link ReuseTree} is only 'tree like' since it may contain reflexive edges at
+ * nodes (only possible if {@link #useFailureOutputKnowledge(boolean)} is set to
+ * <code>true</code> and and {@link #failureOutputSymbols} is not empty or
+ * {@link #useModelInvariantSymbols(boolean)} is set to <code>true</code> and
+ * {@link #invariantInputSymbols} is not empty).
+ * <p>
+ * The {@link ReuseTree} is not meant to be used directly! It should only be
+ * configured once (retrieved via {@link ReuseOracle#getReuseTree()}) or
+ * resetted via {@link #clearTree()} or {@link #disposeSystemstates()}.
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  * 
@@ -167,10 +187,11 @@ public class ReuseTree<S, I, O> {
 		WordBuilder<O> output = new WordBuilder<>();
 
 		ReuseNode<S, I, O> sink = getRoot();
+		ReuseNode<S, I, O> node;
+		ReuseEdge<S, I, O> edge;
 		for (int i = 0; i < query.size(); i++) {
-			ReuseNode<S, I, O> node = sink.getTargetNodeForInput(query
-					.getSymbol(i));
-			ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(query.getSymbol(i));
+			node = sink.getTargetNodeForInput(query.getSymbol(i));
+			edge = sink.getEdgeWithInput(query.getSymbol(i));
 
 			if (node == null) {
 				return null;
@@ -239,7 +260,7 @@ public class ReuseTree<S, I, O> {
 
 		ReuseNode<S, I, O> sink = getRoot();
 		ReuseNode<S, I, O> lastState = null;
-		if (sink.hasState()) {
+		if (sink.getSystemState() != null) {
 			lastState = sink;
 		}
 
@@ -253,7 +274,7 @@ public class ReuseTree<S, I, O> {
 			}
 
 			sink = node;
-			if (sink.hasState()) {
+			if (sink.getSystemState() != null) {
 				lastState = sink;
 				length = i + 1;
 			}
