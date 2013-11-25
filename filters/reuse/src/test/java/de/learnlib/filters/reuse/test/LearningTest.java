@@ -32,7 +32,8 @@ import de.learnlib.filters.reuse.tree.ReuseNode;
 
 public class LearningTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;
-
+	private Alphabet<Integer> sigma;
+	
 	/**
 	 * {@inheritDoc}.
 	 */
@@ -40,12 +41,12 @@ public class LearningTest {
 	protected void setUp() {
 		ReuseCapableOracle<Integer, Integer, String> reuseCapableOracle = new TestOracle(
 				3);
-		reuseOracle = new ReuseOracle<>(reuseCapableOracle);
+		sigma = Alphabets.integers(0, 3);
+		reuseOracle = new ReuseOracle<>(sigma, reuseCapableOracle);
 	}
 
 	@Test
 	public void simpleTest() {
-		Alphabet<Integer> sigma = Alphabets.integers(0, 3);
 
 		MealyLearner<Integer, String> learner = new ExtensibleLStarMealyBuilder<Integer, String>()
 				.withAlphabet(sigma).withOracle(reuseOracle).create();

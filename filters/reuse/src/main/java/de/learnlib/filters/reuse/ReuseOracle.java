@@ -18,6 +18,7 @@ package de.learnlib.filters.reuse;
 
 import java.util.Collection;
 
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.Query;
@@ -76,9 +77,9 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	 *            An instance of {@link ReuseCapableOracle} to delegate queries
 	 *            to.
 	 */
-	public ReuseOracle(ReuseCapableOracle<S, I, O> sut) {
+	public ReuseOracle(Alphabet<I> alphabet, ReuseCapableOracle<S, I, O> sut) {
 		this.reuseCapableOracle = sut;
-		this.tree = new ReuseTree<>();
+		this.tree = new ReuseTree<>(alphabet);
 	}
 
 	/**
@@ -121,7 +122,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 
 			return res.output;
 		} else {
-			Word<I> suffix = query.suffix(query.size() - node.getIndex());
+			Word<I> suffix = query.suffix(query.size() - node.getPrefixLength());
 			QueryResult<S, O> res;
 			res = reuseCapableOracle.continueQuery(suffix, node);
 

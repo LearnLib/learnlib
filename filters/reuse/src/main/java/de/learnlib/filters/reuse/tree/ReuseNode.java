@@ -16,9 +16,8 @@
  */
 package de.learnlib.filters.reuse.tree;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A {@link ReuseNode} is a vertex in the {@link ReuseTree} that contains (a
@@ -30,20 +29,27 @@ import java.util.Map;
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
 public class ReuseNode<S, I, O> {
-	private final Map<I, ReuseEdge<S, I, O>> edges;
+	private final ReuseEdge<S,I,O>[] edges;
 	private S systemstate;
-	private int index = -1;
+	private int prefixLength = -1;
 	
-	public ReuseNode() {
-		this.edges = new HashMap<>();
+	@SuppressWarnings("unchecked")
+	public ReuseNode(int alphabetSize) {
+		edges = new ReuseEdge[alphabetSize];
 	}
 
-	public int getIndex() {
-		return index;
+	/**
+	 * Returns the prefix length for a membership query that leads to
+	 * a node in the reuse tree that contains a system state.
+	 * 
+	 * @return
+	 */
+	public int getPrefixLength() {
+		return prefixLength;
 	}
 
-	public void setIndex(int index) {
-		this.index = index;
+	public void setPrefixLength(int prefixLength) {
+		this.prefixLength = prefixLength;
 	}
 
 	/**
@@ -66,7 +72,7 @@ public class ReuseNode<S, I, O> {
 	 * @return
 	 */
 	public Collection<ReuseEdge<S, I, O>> getEdges() {
-		return this.edges.values();
+		return Arrays.asList(edges);
 	}
 
 	/**
@@ -74,8 +80,8 @@ public class ReuseNode<S, I, O> {
 	 * 
 	 * @param edge
 	 */
-	public void addEdge(ReuseEdge<S, I, O> edge) {
-		this.edges.put(edge.getInput(), edge);
+	public void addEdge(int index, ReuseEdge<S, I, O> edge) {
+		this.edges[index] = edge;
 	}
 
 	/**
@@ -84,12 +90,12 @@ public class ReuseNode<S, I, O> {
 	 * @param input
 	 * @return
 	 */
-	public ReuseEdge<S, I, O> getEdgeWithInput(I input) {
-		return this.edges.get(input);
+	public ReuseEdge<S, I, O> getEdgeWithInput(int index) {
+		return this.edges[index];
 	}
 
-	public ReuseNode<S, I, O> getTargetNodeForInput(I input) {
-		ReuseEdge<S, I, O> edge = this.getEdgeWithInput(input);
+	public ReuseNode<S, I, O> getTargetNodeForInput(int index) {
+		ReuseEdge<S, I, O> edge = this.getEdgeWithInput(index);
 		if (edge == null) {
 			return null;
 		}

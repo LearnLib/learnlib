@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
@@ -58,7 +59,9 @@ import de.learnlib.filters.reuse.ReuseOracle;
  */
 public class ReuseTree<S, I, O> {
 	private ReuseNode<S, I, O> root;
-
+	private Alphabet<I> alphabet;
+	private int alphabetSize;
+	
 	private boolean useFailureOutputKnowledge = true;
 	private boolean useModelInvariantSymbols = true;
 
@@ -73,8 +76,10 @@ public class ReuseTree<S, I, O> {
 	 * Default constructor. Usage of domain knowledge about 'failure outputs'
 	 * and 'model invariant input symbols' is enabled.
 	 */
-	public ReuseTree() {
-		this.root = new ReuseNode<>();
+	public ReuseTree(Alphabet<I> alphabet) {
+		this.alphabet = alphabet;
+		this.alphabetSize = alphabet.size();
+		this.root = new ReuseNode<>(alphabetSize);
 		this.invariantInputSymbols = new HashSet<>();
 		this.failureOutputSymbols = new HashSet<>();
 		this.systemStateHandler = new SystemStateHandler<S>() {
@@ -190,13 +195,14 @@ public class ReuseTree<S, I, O> {
 		ReuseNode<S, I, O> node;
 		ReuseEdge<S, I, O> edge;
 		for (int i = 0; i < query.size(); i++) {
-			node = sink.getTargetNodeForInput(query.getSymbol(i));
-			edge = sink.getEdgeWithInput(query.getSymbol(i));
+			int index = alphabet.getSymbolIndex(query.getSymbol(i));
+			edge = sink.getEdgeWithInput(index);
 
-			if (node == null) {
+			if (edge == null) {
 				return null;
 			}
 
+			node = edge.getTarget();
 			output.add(edge.getOutput());
 			sink = node;
 		}
@@ -237,7 +243,7 @@ public class ReuseTree<S, I, O> {
 	 * informed about any disposings.
 	 */
 	public void clearTree() {
-		this.root = new ReuseNode<>();
+		this.root = new ReuseNode<>(alphabetSize);
 		this.invariantInputSymbols.clear();
 		this.failureOutputSymbols.clear();
 	}
@@ -266,7 +272,7 @@ public class ReuseTree<S, I, O> {
 
 		ReuseNode<S, I, O> node;
 		for (int i = 0; i < query.size(); i++) {
-			node = sink.getTargetNodeForInput(query.getSymbol(i));
+			node = sink.getTargetNodeForInput(alphabet.getSymbolIndex(query.getSymbol(i)));
 
 			if (node == null) {
 				// we have reached longest known prefix
@@ -283,7 +289,7 @@ public class ReuseTree<S, I, O> {
 		if (lastState == null) {
 			return null;
 		} else {
-			lastState.setIndex(length);
+			lastState.setPrefixLength(length);
 			return lastState;
 		}
 	}
@@ -357,7 +363,7 @@ public class ReuseTree<S, I, O> {
 			O out = queryResult.output.getSymbol(i);
 			ReuseNode<S, I, O> rn;
 
-			ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(in);
+			ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(alphabet.getSymbolIndex(in));
 			if (edge != null) {
 				if (Objects.equals(edge.getOutput(), out)) {
 					sink = edge.getTarget();
@@ -389,18 +395,19 @@ public class ReuseTree<S, I, O> {
 						&& invariantInputSymbols.contains(in)) {
 					rn = sink;
 				} else {
-					rn = new ReuseNode<>();
+					rn = new ReuseNode<>(alphabetSize);
 				}
 			} else {
 				if (useModelInvariantSymbols
 						&& invariantInputSymbols.contains(in)) {
 					rn = sink;
 				} else {
-					rn = new ReuseNode<>();
+					rn = new ReuseNode<>(alphabetSize);
 				}
 			}
 
-			sink.addEdge(new ReuseEdge<>(sink, rn, in, out));
+			int index = alphabet.getSymbolIndex(in);
+			sink.addEdge(index, new ReuseEdge<>(sink, rn, in, out));
 			sink = rn;
 		}
 		sink.setSystemState(queryResult.newState);
