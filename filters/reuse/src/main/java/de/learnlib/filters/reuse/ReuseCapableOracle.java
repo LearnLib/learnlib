@@ -1,7 +1,6 @@
 package de.learnlib.filters.reuse;
 
 import net.automatalib.words.Word;
-import de.learnlib.filters.reuse.tree.ReuseNode;
 
 /**
  * TODO JavaDoc.
@@ -30,7 +29,7 @@ public interface ReuseCapableOracle<S,I,O> {
 	 * @param s
 	 * @return
 	 */
-	QueryResult<S, O> continueQuery(Word<I> trace, ReuseNode<S, I, O> s);
+	QueryResult<S, O> continueQuery(Word<I> trace, S s);
 	
 	/**
 	 * Implementation needs to provide a fresh system state, process the whole

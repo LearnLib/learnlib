@@ -28,7 +28,6 @@ import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
-import de.learnlib.filters.reuse.tree.ReuseNode;
 
 public class LearningTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;
@@ -63,9 +62,9 @@ public class LearningTest {
 
 		@Override
 		public QueryResult<Integer, String> continueQuery(Word<Integer> trace,
-				ReuseNode<Integer, Integer, String> s) {
+				Integer s) {
 
-			Integer integer = s.getSystemState();
+			Integer integer = s;
 
 			WordBuilder<String> output = new WordBuilder<>();
 			for (Integer symbol : trace) {

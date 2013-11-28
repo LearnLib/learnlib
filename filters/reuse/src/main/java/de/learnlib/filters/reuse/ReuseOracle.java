@@ -25,6 +25,7 @@ import de.learnlib.api.Query;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.tree.ReuseNode;
 import de.learnlib.filters.reuse.tree.ReuseTree;
+import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 
 /**
  * The reuse oracle is a {@link MealyMembershipOracle} that is able to
@@ -114,7 +115,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 			return knownOutput;
 		}
 
-		ReuseNode<S, I, O> node = tree.getReuseableSystemState(query);
+		NodeResult<S,I,O> node = tree.getReuseableSystemState(query);
 
 		if (node == null) {
 			QueryResult<S, O> res = reuseCapableOracle.processQuery(query);
@@ -122,11 +123,11 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 
 			return res.output;
 		} else {
-			Word<I> suffix = query.suffix(query.size() - node.getPrefixLength());
+			Word<I> suffix = query.suffix(query.size() - node.prefixLength);
 			QueryResult<S, O> res;
-			res = reuseCapableOracle.continueQuery(suffix, node);
+			res = reuseCapableOracle.continueQuery(suffix, node.s.getSystemState());
 
-			this.tree.insert(suffix, node, res);
+			this.tree.insert(suffix, node.s, res);
 			return res.output;
 		}
 	}

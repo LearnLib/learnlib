@@ -28,7 +28,6 @@ import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
-import de.learnlib.filters.reuse.tree.ReuseNode;
 
 /**
  * Similar to the {@link LearningTest} but this time with quiescence. The purpose
@@ -70,9 +69,9 @@ public class QuiescenceTest {
 
 		@Override
 		public QueryResult<Integer, String> continueQuery(Word<Integer> trace,
-				ReuseNode<Integer, Integer, String> s) {
+				Integer s) {
 
-			Integer integer = s.getSystemState();
+			Integer integer = s;
 
 			WordBuilder<String> output = new WordBuilder<>();
 			for (Integer symbol : trace) {

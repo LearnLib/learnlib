@@ -25,8 +25,9 @@ import java.util.logging.Logger;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.ReuseOracle;
+import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
+import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 
 /**
  * The {@link ReuseTree} is a tree like structure consisting of nodes (see
@@ -256,7 +257,7 @@ public class ReuseTree<S, I, O> {
 	 *            Not allowed to be <code>null</code>.
 	 * @return
 	 */
-	public ReuseNode<S, I, O> getReuseableSystemState(Word<I> query) {
+	public NodeResult<S,I,O> getReuseableSystemState(Word<I> query) {
 		if (query == null) {
 			String msg = "Query is not allowed to be null.";
 			throw new IllegalArgumentException(msg);
@@ -289,8 +290,7 @@ public class ReuseTree<S, I, O> {
 		if (lastState == null) {
 			return null;
 		} else {
-			lastState.setPrefixLength(length);
-			return lastState;
+			return new NodeResult<>(lastState, length);
 		}
 	}
 

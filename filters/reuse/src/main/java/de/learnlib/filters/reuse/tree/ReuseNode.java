@@ -29,27 +29,26 @@ import java.util.Collection;
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
 public class ReuseNode<S, I, O> {
+	public static final class NodeResult<S,I,O> {
+		public final ReuseNode<S, I, O> s;
+		/**
+		 * The prefix length for a membership query that leads to
+		 * the {@link ReuseNode} in the reuse tree.
+		 */
+		public final int prefixLength;
+		public NodeResult(ReuseNode<S, I, O> s, int prefixLength) {
+			super();
+			this.s = s;
+			this.prefixLength = prefixLength;
+		}
+	}
+	
 	private final ReuseEdge<S,I,O>[] edges;
 	private S systemstate;
-	private int prefixLength = -1;
-	
+
 	@SuppressWarnings("unchecked")
 	public ReuseNode(int alphabetSize) {
 		edges = new ReuseEdge[alphabetSize];
-	}
-
-	/**
-	 * Returns the prefix length for a membership query that leads to
-	 * a node in the reuse tree that contains a system state.
-	 * 
-	 * @return
-	 */
-	public int getPrefixLength() {
-		return prefixLength;
-	}
-
-	public void setPrefixLength(int prefixLength) {
-		this.prefixLength = prefixLength;
 	}
 
 	/**
