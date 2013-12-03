@@ -47,8 +47,8 @@ import de.learnlib.oracles.DefaultQuery;
  */
 public interface EquivalenceOracle<A, I, O> {
 	
-	public static interface DFAEquivalenceOracle<I> extends EquivalenceOracle<DFA<?,I>,I,Boolean> {}
-	public static interface MealyEquivalenceOracle<I,O> extends EquivalenceOracle<MealyMachine<?,I,?,O>,I,Word<O>> {}
+	static interface DFAEquivalenceOracle<I> extends EquivalenceOracle<DFA<?,I>,I,Boolean> {}
+	static interface MealyEquivalenceOracle<I,O> extends EquivalenceOracle<MealyMachine<?,I,?,O>,I,Word<O>> {}
 	
 	
 	/**
@@ -63,6 +63,6 @@ public interface EquivalenceOracle<A, I, O> {
 	 * could be found. In case a non-<tt>null</tt> value is returned, the output field
 	 * in the {@link DefaultQuery} contains the SUL output for the respective query.
 	 */
-	public DefaultQuery<I, O> findCounterExample(A hypothesis, Collection<? extends I> inputs);  
+	DefaultQuery<I, O> findCounterExample(A hypothesis, Collection<? extends I> inputs);  
 	
 }

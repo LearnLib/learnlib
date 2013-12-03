@@ -33,26 +33,26 @@ public interface DataMapper<AI, AO, CI extends ExecutableInput<CO>, CO> {
     /**
      * called by a test driver before execution of a test case
      */
-    public void pre();
+    void pre();
     
     /**
      * called by a test driver after execution of a test case
      */
-    public void post();
+    void post();
 
     /**
      * called to transform an abstract into a concrete input
      */
-    public CI input(AI i);
+    CI input(AI i);
     
     /**
      * called to transform a concrete output into an abstract one
      */
-    public AO output(CO o);
+    AO output(CO o);
     
     /**
      * called to transform a concrete error into an abstract one
      */
-    public AO exception(SULException t);
+    AO exception(SULException t);
     
 }

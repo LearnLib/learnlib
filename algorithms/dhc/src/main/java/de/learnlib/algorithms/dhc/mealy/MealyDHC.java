@@ -76,10 +76,15 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		}
 	}
 
+	
 	public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
+		this(alphabet, oracle, GlobalSuffixFinders.RIVEST_SCHAPIRE);
+	}
+	
+	public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle, GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
-		this.suffixFinder = GlobalSuffixFinders.RIVEST_SCHAPIRE;
+		this.suffixFinder = suffixFinder;
 		for(I symbol : alphabet) {
 			splitters.add(Word.fromLetter(symbol));
 		}

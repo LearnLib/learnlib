@@ -19,7 +19,7 @@ package de.learnlib.api;
 import net.automatalib.words.Word;
 
 public interface AccessSequenceTransformer<I> {
-	public Word<I> transformAccessSequence(Word<I> word);
+	Word<I> transformAccessSequence(Word<I> word);
 	
-	public boolean isAccessSequence(Word<I> word);
+	boolean isAccessSequence(Word<I> word);
 }

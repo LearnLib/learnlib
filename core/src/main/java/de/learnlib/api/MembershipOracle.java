@@ -35,8 +35,8 @@ import de.learnlib.oracles.DefaultQuery;
  */
 public interface MembershipOracle<I, O> {
 	
-	public static interface DFAMembershipOracle<I> extends MembershipOracle<I,Boolean> {}
-	public static interface MealyMembershipOracle<I,O> extends MembershipOracle<I,Word<O>> {}
+	static interface DFAMembershipOracle<I> extends MembershipOracle<I,Boolean> {}
+	static interface MealyMembershipOracle<I,O> extends MembershipOracle<I,Word<O>> {}
 	
 	/**
 	 * Processes the specified collection of queries. When this method returns,
@@ -46,5 +46,5 @@ public interface MembershipOracle<I, O> {
 	 * @param queries the queries to process
 	 * @see DefaultQuery#getOutput()
 	 */
-	public void processQueries(Collection<? extends Query<I, O>> queries);
+	void processQueries(Collection<? extends Query<I, O>> queries);
 }

@@ -62,7 +62,7 @@ public interface GlobalSuffixFinder<I,O> {
 	 * @return a set of distinguishing suffixes, or the empty set if the counterexample
 	 * could not be analyzed.
 	 */
-	public <RI extends I,RO extends O>
+	<RI extends I,RO extends O>
 	List<Word<RI>> findSuffixes(Query<RI,RO> ceQuery,
 			AccessSequenceTransformer<RI> asTransformer,
 			SuffixOutput<RI,RO> hypOutput,

@@ -39,14 +39,14 @@ import de.learnlib.oracles.DefaultQuery;
  */
 public interface LearningAlgorithm<M, I, O> {
 	
-	public static interface DFALearner<I> extends LearningAlgorithm<DFA<?,I>,I,Boolean> {}
-	public static interface MealyLearner<I,O> extends LearningAlgorithm<MealyMachine<?,I,?,O>,I,Word<O>> {}
+	static interface DFALearner<I> extends LearningAlgorithm<DFA<?,I>,I,Boolean> {}
+	static interface MealyLearner<I,O> extends LearningAlgorithm<MealyMachine<?,I,?,O>,I,Word<O>> {}
 	
 	/**
 	 * Starts the model inference process, creating an initial hypothesis in the provided
 	 * model object. Please note that it should be illegal to invoke this method twice.
 	 */
-	public void startLearning();
+	void startLearning();
 	
 	/**
 	 * Triggers a refinement of the model by providing a counterexample.
@@ -59,7 +59,7 @@ public interface LearningAlgorithm<M, I, O> {
 	 * @return <tt>true</tt> if the counterexample triggered a refinement of the hypothesis,
 	 * <tt>false</tt> otherwise (i.e., it was no counterexample).
 	 */
-	public boolean refineHypothesis(DefaultQuery<I, O> ceQuery);
+	boolean refineHypothesis(DefaultQuery<I, O> ceQuery);
 	
 	/**
 	 * Returns the current hypothesis model.
@@ -72,5 +72,5 @@ public interface LearningAlgorithm<M, I, O> {
 	 * of {@link #startLearning()}.
 	 * @return the current hypothesis model.
 	 */
-	public M getHypothesisModel();
+	M getHypothesisModel();
 }

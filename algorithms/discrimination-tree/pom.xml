@@ -32,9 +32,14 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-counterexamples</artifactId>
+		</dependency>
+		
 		<dependency>
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-api</artifactId>
@@ -47,33 +52,33 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-util</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.github.misberner.buildergen</groupId>
+			<artifactId>buildergen</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- Test dependencies -->
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-test-support</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-basic-eqtests</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-simulator</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-cache</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-counterexamples</artifactId>
-		</dependency>
 	</dependencies>
-
 </project>

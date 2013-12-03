@@ -31,6 +31,6 @@ public interface ExecutableInput<CO> {
      * 
      * @return concrete output for this input 
      */
-    public CO execute() throws SULException;
+    CO execute() throws SULException;
     
 }
