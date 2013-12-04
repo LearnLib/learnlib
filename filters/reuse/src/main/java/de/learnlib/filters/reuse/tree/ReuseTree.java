@@ -224,12 +224,16 @@ public class ReuseTree<S, I, O> {
 	}
 
 	private void disposeSystemstates(ReuseNode<S, I, O> node) {
-		systemStateHandler.dispose(node.getSystemState());
+		if (node.getSystemState() != null) {
+			systemStateHandler.dispose(node.getSystemState());
+		}
 		node.setSystemState(null);
 		for (ReuseEdge<S, I, O> edge : node.getEdges()) {
-			if (!edge.getTarget().equals(node)) {
-				// only for non reflexive edges, there are no circles in a tree
-				disposeSystemstates(edge.getTarget());
+			if (edge != null) {
+				if (!edge.getTarget().equals(node)) {
+					// only for non reflexive edges, there are no circles in a tree
+					disposeSystemstates(edge.getTarget());
+				}
 			}
 		}
 	}

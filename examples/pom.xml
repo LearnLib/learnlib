@@ -71,6 +71,10 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>learnlib-simulator</artifactId>
-		</dependency>                 
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>learnlib-reuse</artifactId>
+		</dependency>  
     </dependencies>
 </project>

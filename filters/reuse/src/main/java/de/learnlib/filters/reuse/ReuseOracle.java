@@ -20,12 +20,13 @@ import java.util.Collection;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.tree.ReuseNode;
-import de.learnlib.filters.reuse.tree.ReuseTree;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
+import de.learnlib.filters.reuse.tree.ReuseTree;
 
 /**
  * The reuse oracle is a {@link MealyMembershipOracle} that is able to
@@ -70,16 +71,16 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	private ReuseCapableOracle<S, I, O> reuseCapableOracle;
 
 	private ReuseTree<S, I, O> tree;
-
+	
 	/**
 	 * Default constructor.
 	 * 
-	 * @param sut
+	 * @param sul
 	 *            An instance of {@link ReuseCapableOracle} to delegate queries
 	 *            to.
 	 */
-	public ReuseOracle(Alphabet<I> alphabet, ReuseCapableOracle<S, I, O> sut) {
-		this.reuseCapableOracle = sut;
+	public ReuseOracle(Alphabet<I> alphabet, ReuseCapableOracle<S, I, O> sul) {
+		this.reuseCapableOracle = sul;
 		this.tree = new ReuseTree<>(alphabet);
 	}
 
@@ -95,7 +96,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	}
 
 	/**
-	 * This methods returns with a result of same length as the input query.
+	 * This methods returns the full output to the input query.
 	 * <p>
 	 * It is possible that the query is already known (answer provided by
 	 * {@link ReuseTree#getOutput(Word)}, the query is new and no system state
@@ -126,9 +127,10 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 			Word<I> suffix = query.suffix(query.size() - node.prefixLength);
 			QueryResult<S, O> res;
 			res = reuseCapableOracle.continueQuery(suffix, node.s.getSystemState());
-
 			this.tree.insert(suffix, node.s, res);
-			return res.output;
+			
+			Word<O> prefixOutput = tree.getOutput(query.prefix(node.prefixLength)); // TODO don't compute twice
+			return new WordBuilder<>(prefixOutput).append(res.output).toWord();
 		}
 	}
 
