@@ -16,17 +16,23 @@
  */
 package de.learnlib.filters.reuse.tree;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.automatalib.graphs.abstractimpl.AbstractGraph;
+import net.automatalib.graphs.dot.DOTPlottableGraph;
+import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import de.learnlib.filters.reuse.ReuseOracle;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
+import de.learnlib.filters.reuse.ReuseException;
+import de.learnlib.filters.reuse.ReuseOracle;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 
 /**
@@ -58,7 +64,9 @@ import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
  * @param <I>
  * @param <O>
  */
-public class ReuseTree<S, I, O> {
+public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseEdge<S, I, O>>
+	implements DOTPlottableGraph<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
+	
 	private ReuseNode<S, I, O> root;
 	private Alphabet<I> alphabet;
 	private int alphabetSize;
@@ -72,7 +80,8 @@ public class ReuseTree<S, I, O> {
 	private Set<O> failureOutputSymbols;
 
 	private SystemStateHandler<S> systemStateHandler;
-
+	private int nodeCount = 0;
+	
 	/**
 	 * Default constructor. Usage of domain knowledge about 'failure outputs'
 	 * and 'model invariant input symbols' is enabled.
@@ -80,7 +89,7 @@ public class ReuseTree<S, I, O> {
 	public ReuseTree(Alphabet<I> alphabet) {
 		this.alphabet = alphabet;
 		this.alphabetSize = alphabet.size();
-		this.root = new ReuseNode<>(alphabetSize);
+		this.root = new ReuseNode<>(nodeCount++, alphabetSize);
 		this.invariantInputSymbols = new HashSet<>();
 		this.failureOutputSymbols = new HashSet<>();
 		this.systemStateHandler = new SystemStateHandler<S>() {
@@ -195,8 +204,8 @@ public class ReuseTree<S, I, O> {
 		ReuseNode<S, I, O> sink = getRoot();
 		ReuseNode<S, I, O> node;
 		ReuseEdge<S, I, O> edge;
-		for (int i = 0; i < query.size(); i++) {
-			int index = alphabet.getSymbolIndex(query.getSymbol(i));
+		for (I symbol : query) {
+			int index = alphabet.getSymbolIndex(symbol);
 			edge = sink.getEdgeWithInput(index);
 
 			if (edge == null) {
@@ -248,7 +257,7 @@ public class ReuseTree<S, I, O> {
 	 * informed about any disposings.
 	 */
 	public void clearTree() {
-		this.root = new ReuseNode<>(alphabetSize);
+		this.root = new ReuseNode<>(nodeCount++, alphabetSize);
 		this.invariantInputSymbols.clear();
 		this.failureOutputSymbols.clear();
 	}
@@ -315,6 +324,8 @@ public class ReuseTree<S, I, O> {
 	 * 
 	 * @param query
 	 * @param queryResult
+	 * 
+	 * @throws ReuseException if non deterministic behavior is detected
 	 */
 	public void insert(Word<I> query, QueryResult<S, O> queryResult) {
 		insert(query, getRoot(), queryResult);
@@ -340,6 +351,8 @@ public class ReuseTree<S, I, O> {
 	 * @param query
 	 * @param sink
 	 * @param queryResult
+	 * 
+	 * @throws ReuseException if non deterministic behavior is detected
 	 */
 	public void insert(Word<I> query, ReuseNode<S, I, O> sink,
 			QueryResult<S, O> queryResult) {
@@ -356,7 +369,6 @@ public class ReuseTree<S, I, O> {
 			throw new IllegalArgumentException(msg);
 		}
 
-		S oldSystemState = sink.getSystemState();
 		if (queryResult.oldInvalidated) {
 			// systemStateHandler.dispose(oldSystemState);
 			sink.setSystemState(null);
@@ -374,22 +386,13 @@ public class ReuseTree<S, I, O> {
 					continue;
 				}
 
-				// TODO use own exception, override getMessage
-				// there is a conflict!!!
 				StringBuilder sb = new StringBuilder();
-				sb.append("Prefixoutput mitmatch!:\n  adding query input ");
-				sb.append(query).append("\n  with query output ");
-				sb.append(queryResult.output).append("\n  on system state ");
-				sb.append(oldSystemState).append(
-						"\n  revealing in system state ");
-				sb.append(queryResult.newState).append(
-						"\n\n  mismatch on index ");
-				sb.append(i).append(":\n  input symbol ").append(in);
-				sb.append("\n  output symbol ").append(out);
-				sb.append("\n  but tree contains output symbol ");
-				sb.append(edge.getOutput());
-
-				throw new RuntimeException(sb.toString());
+				sb.append("Conflict: input '");
+				sb.append(query).append("', output '");
+				sb.append(queryResult.output).append("', i=");
+				sb.append(i).append(", cached output '");
+				sb.append(edge.getOutput()).append("'");
+				throw new ReuseException(sb.toString());
 			}
 
 			if (useFailureOutputKnowledge) {
@@ -399,14 +402,14 @@ public class ReuseTree<S, I, O> {
 						&& invariantInputSymbols.contains(in)) {
 					rn = sink;
 				} else {
-					rn = new ReuseNode<>(alphabetSize);
+					rn = new ReuseNode<>(nodeCount++, alphabetSize);
 				}
 			} else {
 				if (useModelInvariantSymbols
 						&& invariantInputSymbols.contains(in)) {
 					rn = sink;
 				} else {
-					rn = new ReuseNode<>(alphabetSize);
+					rn = new ReuseNode<>(nodeCount++, alphabetSize);
 				}
 			}
 
@@ -415,5 +418,58 @@ public class ReuseTree<S, I, O> {
 			sink = rn;
 		}
 		sink.setSystemState(queryResult.newState);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.graphs.Graph#getNodes()
+	 */
+	@Override
+	public Collection<ReuseNode<S, I, O>> getNodes() {
+		Collection<ReuseNode<S, I, O>> collection = new ArrayList<>();
+		recursiveNoder(collection, getRoot());
+		return collection;
+	}
+	
+	private void recursiveNoder(Collection<ReuseNode<S, I, O>> nodes, ReuseNode<S, I, O> current) {
+		nodes.add(current);
+		for (int i=0; i<alphabetSize; i++) {
+			ReuseEdge<S, I, O> reuseEdge = current.getEdgeWithInput(i);
+			if (reuseEdge == null) {
+				continue;
+			}
+			if (!current.equals(reuseEdge.getTarget())) {
+				recursiveNoder(nodes, reuseEdge.getTarget());
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.graphs.IndefiniteGraph#getOutgoingEdges(java.lang.Object)
+	 */
+	@Override
+	public Collection<ReuseEdge<S, I, O>> getOutgoingEdges(	ReuseNode<S, I, O> node) {
+		return node.getEdges();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.graphs.IndefiniteGraph#getTarget(java.lang.Object)
+	 */
+	@Override
+	public ReuseNode<S, I, O> getTarget(ReuseEdge<S, I, O> edge) {
+		if (edge != null)
+			return edge.getTarget();
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.graphs.dot.DOTPlottableGraph#getGraphDOTHelper()
+	 */
+	@Override
+	public GraphDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> getGraphDOTHelper() {
+		return new ReuseTreeDotHelper<>();
 	}
 }

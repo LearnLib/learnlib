@@ -27,6 +27,7 @@ import org.testng.annotations.Test;
 
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
+import de.learnlib.filters.reuse.ReuseException;
 import de.learnlib.filters.reuse.ReuseOracle;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 
@@ -278,7 +279,7 @@ public class ReuseOracleTest {
 	}
 	
 	@Test(
-			expectedExceptions= {RuntimeException.class},
+			expectedExceptions= {ReuseException.class},
 			dependsOnMethods={"testReusePossibleWithoutInvalidation"})	
 	public void testConflictException() {
 		/**
@@ -299,11 +300,11 @@ public class ReuseOracleTest {
 		qr = new QueryResult<Integer, String>(getOutput("ok","ok","ok"), 4, true);
 		reuseOracle.getReuseTree().insert(getInput(1, 1, 2), qr);
 		
-		// Here reuse tree should throw an exception when adding (113/ok differentout notimportant)
+		// Here reuse tree should throw a reuse exception when adding (113/ok differentout notimportant)
 		qr = new QueryResult<Integer, String>(getOutput("ok","different","notimp"), 5, true);
 		reuseOracle.getReuseTree().insert(getInput(1, 1, 3), qr);
 	}
-
+	
 	@Test(dependsOnMethods = {"testNoReusePossible"})
 	public void testReuseNodePrefixWhileReusing() {
 		reuseOracle.getReuseTree().useModelInvariantSymbols(true);

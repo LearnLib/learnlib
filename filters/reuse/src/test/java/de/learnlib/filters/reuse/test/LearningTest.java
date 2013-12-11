@@ -16,6 +16,11 @@
  */
 package de.learnlib.filters.reuse.test;
 
+import java.io.IOException;
+import java.io.StringReader;
+
+import net.automatalib.commons.dotutil.DOT;
+import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -28,6 +33,7 @@ import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
+import de.learnlib.filters.reuse.tree.ReuseTree;
 
 public class LearningTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;
@@ -42,15 +48,25 @@ public class LearningTest {
 				3);
 		sigma = Alphabets.integers(0, 3);
 		reuseOracle = new ReuseOracle<>(sigma, reuseCapableOracle);
+		reuseOracle.getReuseTree().addInvariantInputSymbol(0);
+		reuseOracle.getReuseTree().addFailureOutputSymbol("error");
 	}
 
 	@Test
-	public void simpleTest() {
+	public void simpleTest() throws IOException {
 
 		MealyLearner<Integer, String> learner = new ExtensibleLStarMealyBuilder<Integer, String>()
 				.withAlphabet(sigma).withOracle(reuseOracle).create();
 
 		learner.startLearning();
+		
+		ReuseTree<Integer, Integer, String> reuseTree = reuseOracle.getReuseTree();
+		
+		// render the reuse tree for this example
+		Appendable sb = new StringBuffer();
+		GraphDOT.write(reuseTree, reuseTree.getGraphDOTHelper(), sb);
+		StringReader sr = new StringReader(sb.toString());
+		DOT.renderDOT(sr, true);
 	}
 
 	class TestOracle implements ReuseCapableOracle<Integer, Integer, String> {

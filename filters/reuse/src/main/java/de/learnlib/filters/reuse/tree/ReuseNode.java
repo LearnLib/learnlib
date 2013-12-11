@@ -45,10 +45,12 @@ public class ReuseNode<S, I, O> {
 	
 	private final ReuseEdge<S,I,O>[] edges;
 	private S systemstate;
-
+	private int id = -1;
+	
 	@SuppressWarnings("unchecked")
-	public ReuseNode(int alphabetSize) {
-		edges = new ReuseEdge[alphabetSize];
+	public ReuseNode(int id, int alphabetSize) {
+		this.edges = new ReuseEdge[alphabetSize];
+		this.id = id;
 	}
 
 	/**
@@ -99,5 +101,27 @@ public class ReuseNode<S, I, O> {
 			return null;
 		}
 		return edge.getTarget();
+	}
+
+	public int getId() {
+		return this.id;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ReuseNode) {
+			@SuppressWarnings("unchecked")
+			ReuseNode<S, I, O> other = ((ReuseNode<S,I,O>)obj);
+			return other.id == id;
+		}
+		return false;
 	}
 }
