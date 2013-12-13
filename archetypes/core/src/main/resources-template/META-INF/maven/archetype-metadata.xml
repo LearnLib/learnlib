@@ -17,11 +17,11 @@ License along with LearnLib; if not, see
 http://www.gnu.de/documents/lgpl.en.html.
 -->
 <archetype-descriptor xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd"
-	name="LearnLib Typical Project" partial="true" xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0"
+	name="LearnLib Core Project" partial="true" xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<requiredProperties>
 		<requiredProperty key="learnlibVersion">
-			<defaultValue>0.9.1-ase2013-tutorial</defaultValue>
+			<defaultValue>${project.version}</defaultValue>
 		</requiredProperty>
 	</requiredProperties>
 

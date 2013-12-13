@@ -29,8 +29,17 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<groupId>de.learnlib.archetypes</groupId>
 		<artifactId>learnlib-archetypes-parent</artifactId>
-		<version>0.9.1-ase2013-tutorial-SNAPSHOT</version>
+		<version>0.3.1-ase2013-tutorial-r1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
+
+	<dependencies>
+		<!-- LearnLib core required for integration test -->
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
 

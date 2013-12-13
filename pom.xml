@@ -25,7 +25,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	-->
 	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-parent</artifactId>
-	<version>0.9.1-ase2013-tutorial-SNAPSHOT</version>
+	<version>0.3.1-ase2013-tutorial-r1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
 	<url>http://learnlib.github.io/learnlib/maven-site/</url>
@@ -115,7 +115,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<!--
 			dependency versions
 		-->
-		<automatalib.version>0.3.1-ase2013-tutorial</automatalib.version>
+		<automatalib.version>0.3.1-ase2013-tutorial-r1</automatalib.version>
 		<testng.version>6.8</testng.version>
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
@@ -205,6 +205,18 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>${assembly-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<configuration>
+						<!-- False to allow adjustment to branching model -->
+						<pushChanges>false</pushChanges>
+						<!-- Automatically use the parent version for all submodules, do not prompt for each one -->
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<!-- Perform an install into the local repository, otherwise the javadoc plugin and archetype integration tests will fail -->
+						<preparationGoals>clean install</preparationGoals>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -384,57 +396,58 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-test-support</artifactId>
 				<version>${project.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-lstar-baseline</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-lstar-generic</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-dhc</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-basic-eqtests</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-simulator</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-counterexamples</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-cache</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-drivers-basic</artifactId>
 				<version>${project.version}</version>
-			</dependency>			<dependency>
-				<groupId>${project.groupId}</groupId>
+			</dependency>
+			<dependency>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-parallelism</artifactId>
 				<version>${project.version}</version>
 			</dependency>
