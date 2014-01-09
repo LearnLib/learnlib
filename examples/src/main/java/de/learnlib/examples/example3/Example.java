@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.learnlib.filters.reuse.ReuseCapableOracleFactory;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
@@ -124,9 +125,9 @@ public class Example {
 	public MealyMachine<?, String, ?, String> runExperiment2() throws Exception {
 		// This time we use the reuse filter to avoid some resets and
 		// save execution of symbols
-		ReuseCapableImpl reuseCapableOracle = new ReuseCapableImpl();
+		ReuseCapableImplFactory factory = new ReuseCapableImplFactory();
 		ReuseOracle<BoundedStringQueue, String, String> reuseOracle;
-		reuseOracle = new ReuseOracle<>(sigma, reuseCapableOracle);
+		reuseOracle = new ReuseOracle<>(sigma, factory);
 
 		// construct L* instance (almost classic Mealy version)
 		// almost: we use words (Word<String>) in cells of the table
@@ -147,6 +148,7 @@ public class Example {
 		MySystemStateHandler ssh = new MySystemStateHandler();
 		reuseOracle.getReuseTree().setSystemStateHandler(ssh);
 		reuseOracle.getReuseTree().disposeSystemstates();
+		ReuseCapableImpl reuseCapableOracle = (ReuseCapableImpl) reuseOracle.getReuseCapableOracle();
 		System.out.println("Resets:   " + reuseCapableOracle.fullQueries);
 		System.out.println("Reused:   " + reuseCapableOracle.reused);
 		System.out.println("Symbols:  " + reuseCapableOracle.symbols);
@@ -201,6 +203,14 @@ public class Example {
 
 				query.answer(output.toWord().suffix(query.getSuffix().size()));
 			}
+		}
+	}
+
+	class ReuseCapableImplFactory implements ReuseCapableOracleFactory<BoundedStringQueue, String, String> {
+
+		@Override
+		public ReuseCapableOracle<BoundedStringQueue, String, String> createOracle() {
+			return new ReuseCapableImpl();
 		}
 	}
 

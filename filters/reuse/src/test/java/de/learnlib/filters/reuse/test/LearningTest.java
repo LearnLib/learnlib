@@ -19,6 +19,7 @@ package de.learnlib.filters.reuse.test;
 import java.io.IOException;
 import java.io.StringReader;
 
+import de.learnlib.filters.reuse.ReuseCapableOracleFactory;
 import junit.framework.Assert;
 import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.util.graphs.dot.GraphDOT;
@@ -45,10 +46,8 @@ public class LearningTest {
 	 */
 	@BeforeClass
 	protected void setUp() {
-		ReuseCapableOracle<Integer, Integer, String> reuseCapableOracle = new TestOracle(
-				3);
 		sigma = Alphabets.integers(0, 3);
-		reuseOracle = new ReuseOracle<>(sigma, reuseCapableOracle);
+		reuseOracle = new ReuseOracle<>(sigma, new TestOracleFactory());
 		reuseOracle.getReuseTree().addInvariantInputSymbol(0);
 		reuseOracle.getReuseTree().addFailureOutputSymbol("error");
 	}
@@ -66,6 +65,14 @@ public class LearningTest {
 		Appendable sb = new StringBuffer();
 		GraphDOT.write(reuseTree, reuseTree.getGraphDOTHelper(), sb);
 		Assert.assertTrue(sb.toString().startsWith("digraph g"));
+	}
+
+	class TestOracleFactory implements ReuseCapableOracleFactory<Integer, Integer, String> {
+
+		@Override
+		public ReuseCapableOracle<Integer, Integer, String> createOracle() {
+			return new TestOracle(3);
+		}
 	}
 
 	class TestOracle implements ReuseCapableOracle<Integer, Integer, String> {

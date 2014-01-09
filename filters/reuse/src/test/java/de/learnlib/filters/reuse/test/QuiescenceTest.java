@@ -16,6 +16,7 @@
  */
 package de.learnlib.filters.reuse.test;
 
+import de.learnlib.filters.reuse.ReuseCapableOracleFactory;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -45,10 +46,8 @@ public class QuiescenceTest {
 	 */
 	@BeforeClass
 	protected void setUp() {
-		ReuseCapableOracle<Integer, Integer, String> reuseCapableOracle = new TestOracle(
-				3);
 		sigma = Alphabets.integers(0, 3);
-		reuseOracle = new ReuseOracle<>(sigma, reuseCapableOracle);
+		reuseOracle = new ReuseOracle<>(sigma, new TestOracleFactory());
 	}
 
 	@Test
@@ -58,6 +57,15 @@ public class QuiescenceTest {
 				.withAlphabet(sigma).withOracle(reuseOracle).create();
 
 		learner.startLearning();
+	}
+
+	class TestOracleFactory implements ReuseCapableOracleFactory<Integer, Integer, String> {
+
+		@Override
+		public ReuseCapableOracle<Integer, Integer, String> createOracle() {
+			return new TestOracle(3);
+		}
+
 	}
 
 	class TestOracle implements ReuseCapableOracle<Integer, Integer, String> {

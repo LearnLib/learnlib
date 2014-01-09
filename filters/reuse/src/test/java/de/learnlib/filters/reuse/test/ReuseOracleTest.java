@@ -16,6 +16,7 @@
  */
 package de.learnlib.filters.reuse.test;
 
+import de.learnlib.filters.reuse.ReuseCapableOracleFactory;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -40,7 +41,8 @@ public class ReuseOracleTest {
 	@BeforeMethod
 	protected void setUp() {
 		// We don't use this oracle, we directly test against the reuse tree!
-		ReuseCapableOracle<Integer, Integer, String> reuseCapableOracle = new ReuseCapableOracle<Integer, Integer, String>() {
+		final ReuseCapableOracle<Integer, Integer, String> reuseCapableOracle =
+				new ReuseCapableOracle<Integer, Integer, String>() {
 
 			@Override
 			public QueryResult<Integer, String> continueQuery(
@@ -54,9 +56,18 @@ public class ReuseOracleTest {
 				return null;
 			}
 		};
+
+		ReuseCapableOracleFactory<Integer, Integer, String> factory =
+				new ReuseCapableOracleFactory<Integer, Integer, String>() {
+
+			@Override
+			public ReuseCapableOracle<Integer, Integer, String> createOracle() {
+				return reuseCapableOracle;
+			}
+		};
 		
 		Alphabet<Integer> alphabet = Alphabets.integers(0, 10);
-		reuseOracle = new ReuseOracle<>(alphabet, reuseCapableOracle);
+		reuseOracle = new ReuseOracle<>(alphabet, factory);
 	}
 	
 	@Test
