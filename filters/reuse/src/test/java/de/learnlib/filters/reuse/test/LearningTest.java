@@ -19,6 +19,7 @@ package de.learnlib.filters.reuse.test;
 import java.io.IOException;
 import java.io.StringReader;
 
+import junit.framework.Assert;
 import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Alphabet;
@@ -62,11 +63,9 @@ public class LearningTest {
 		
 		ReuseTree<Integer, Integer, String> reuseTree = reuseOracle.getReuseTree();
 		
-		// render the reuse tree for this example
 		Appendable sb = new StringBuffer();
 		GraphDOT.write(reuseTree, reuseTree.getGraphDOTHelper(), sb);
-		StringReader sr = new StringReader(sb.toString());
-		DOT.renderDOT(sr, true);
+		Assert.assertTrue(sb.toString().startsWith("digraph g"));
 	}
 
 	class TestOracle implements ReuseCapableOracle<Integer, Integer, String> {
