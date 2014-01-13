@@ -40,10 +40,11 @@ public class SimulatorEQOracle<I,O>
 	}
 
 	@Override
-	public DefaultQuery<I, O> findCounterExample(UniversalDeterministicAutomaton<?, I, ?, ?, ?> hypothesis, Collection<? extends I> alphabet) {
-		Word<I> sep = Automata.findSeparatingWord(reference, hypothesis, alphabet);
-		if(sep == null)
+	public DefaultQuery<I, O> findCounterExample(UniversalDeterministicAutomaton<?, I, ?, ?, ?> hypothesis, Collection<? extends I> inputs) {
+		Word<I> sep = Automata.findSeparatingWord(reference, hypothesis, inputs);
+		if(sep == null) {
 			return null;
+		}
 		O out = output.computeOutput(sep);
 		DefaultQuery<I,O> qry = new DefaultQuery<>(sep);
 		qry.answer(out);
