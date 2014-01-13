@@ -16,6 +16,17 @@
  */
 package de.learnlib.filters.reuse.tree;
 
+import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
+import de.learnlib.filters.reuse.ReuseException;
+import de.learnlib.filters.reuse.ReuseOracle;
+import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
+import net.automatalib.graphs.abstractimpl.AbstractGraph;
+import net.automatalib.graphs.dot.DOTPlottableGraph;
+import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,17 +34,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import net.automatalib.graphs.abstractimpl.AbstractGraph;
-import net.automatalib.graphs.dot.DOTPlottableGraph;
-import net.automatalib.graphs.dot.GraphDOTHelper;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
-import de.learnlib.filters.reuse.ReuseException;
-import de.learnlib.filters.reuse.ReuseOracle;
-import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 
 /**
  * The {@link ReuseTree} is a tree like structure consisting of nodes (see
@@ -180,7 +180,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * 
 	 * @return root The root of the tree, never <code>null</code>.
 	 */
-	public final ReuseNode<S, I, O> getRoot() {
+	public final synchronized ReuseNode<S, I, O> getRoot() {
 		return this.root;
 	}
 
@@ -193,7 +193,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * @return The output for <code>query</code> if already known from the
 	 *         {@link ReuseTree} or <code>null</code> if unknown.
 	 */
-	public final Word<O> getOutput(final Word<I> query) {
+	public final synchronized Word<O> getOutput(final Word<I> query) {
 		if (query == null) {
 			String msg = "Query is not allowed to be null.";
 			throw new IllegalArgumentException(msg);
@@ -228,7 +228,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * {@link #setSystemStateHandler(SystemStateHandler)}) will be informed
 	 * about all disposings.
 	 */
-	public final void disposeSystemstates() {
+	public final synchronized void disposeSystemstates() {
 		disposeSystemstates(getRoot());
 	}
 
@@ -256,7 +256,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * {@link #setSystemStateHandler(SystemStateHandler)}) will <b>not</b> be
 	 * informed about any disposings.
 	 */
-	public void clearTree() {
+	public synchronized void clearTree() {
 		this.root = new ReuseNode<>(nodeCount++, alphabetSize);
 		this.invariantInputSymbols.clear();
 		this.failureOutputSymbols.clear();
@@ -270,7 +270,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 *            Not allowed to be <code>null</code>.
 	 * @return
 	 */
-	public NodeResult<S,I,O> getReuseableSystemState(Word<I> query) {
+	public synchronized NodeResult<S, I, O> getReuseableSystemState(Word<I> query) {
 		if (query == null) {
 			String msg = "Query is not allowed to be null.";
 			throw new IllegalArgumentException(msg);
@@ -327,7 +327,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * 
 	 * @throws ReuseException if non deterministic behavior is detected
 	 */
-	public void insert(Word<I> query, QueryResult<S, O> queryResult) {
+	public synchronized void insert(Word<I> query, QueryResult<S, O> queryResult) {
 		insert(query, getRoot(), queryResult);
 	}
 
@@ -354,7 +354,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * 
 	 * @throws ReuseException if non deterministic behavior is detected
 	 */
-	public void insert(Word<I> query, ReuseNode<S, I, O> sink,
+	public synchronized void insert(Word<I> query, ReuseNode<S, I, O> sink,
 			QueryResult<S, O> queryResult) {
 		if (queryResult == null) {
 			String msg = "The queryResult is not allowed to be null.";
@@ -449,7 +449,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * @see net.automatalib.graphs.IndefiniteGraph#getOutgoingEdges(java.lang.Object)
 	 */
 	@Override
-	public Collection<ReuseEdge<S, I, O>> getOutgoingEdges(	ReuseNode<S, I, O> node) {
+	public synchronized Collection<ReuseEdge<S, I, O>> getOutgoingEdges(ReuseNode<S, I, O> node) {
 		return node.getEdges();
 	}
 
@@ -458,7 +458,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * @see net.automatalib.graphs.IndefiniteGraph#getTarget(java.lang.Object)
 	 */
 	@Override
-	public ReuseNode<S, I, O> getTarget(ReuseEdge<S, I, O> edge) {
+	public synchronized ReuseNode<S, I, O> getTarget(ReuseEdge<S, I, O> edge) {
 		if (edge != null)
 			return edge.getTarget();
 		return null;
@@ -469,7 +469,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * @see net.automatalib.graphs.dot.DOTPlottableGraph#getGraphDOTHelper()
 	 */
 	@Override
-	public GraphDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> getGraphDOTHelper() {
+	public synchronized GraphDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> getGraphDOTHelper() {
 		return new ReuseTreeDotHelper<>();
 	}
 }
