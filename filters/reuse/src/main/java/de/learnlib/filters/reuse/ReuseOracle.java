@@ -16,17 +16,17 @@
  */
 package de.learnlib.filters.reuse;
 
-import java.util.Collection;
-
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.tree.ReuseNode;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 import de.learnlib.filters.reuse.tree.ReuseTree;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
+
+import java.util.Collection;
 
 /**
  * The reuse oracle is a {@link MealyMembershipOracle} that is able to
@@ -66,69 +66,69 @@ import de.learnlib.filters.reuse.tree.ReuseTree;
 public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	private final ReuseCapableOracleFactory<S, I, O> factory;
 
-private final ThreadLocal<ReuseCapableOracle<S,I,O>> executableOracles = new ThreadLocal<>();
+	private final ThreadLocal<ReuseCapableOracle<S, I, O>> executableOracles = new ThreadLocal<>();
 
-private final ReuseTree<S, I, O> tree;
+	private final ReuseTree<S, I, O> tree;
 
-/**
- * Default constructor.
- *
- * @param alphabet
- * @param factory
- *            A factory which is able to create multiple {@link ReuseCapableOracle}s
- */
-public ReuseOracle(Alphabet<I> alphabet, ReuseCapableOracleFactory<S, I, O> factory) {
-	this.factory = factory;
-	this.tree = new ReuseTree<>(alphabet);
-}
-
-/**
- * {@inheritDoc}.
- */
-@Override
-public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-	for (Query<I, Word<O>> query : queries) {
-		Word<O> output = processQuery(query.getInput());
-		query.answer(output.suffix(query.getSuffix().size()));
-	}
-}
-
-/**
- * This methods returns the full output to the input query.
- * <p>
- * It is possible that the query is already known (answer provided by
- * {@link ReuseTree#getOutput(Word)}, the query is new and no system state
- * could be found for reusage ({@link ReuseCapableOracle#processQuery(Word)}
- * will be invoked) or there exists a prefix that (maybe epsilon) could be
- * reused so save reset invocation (
- * {@link ReuseCapableOracle#continueQuery(Word, Object)} will be invoked
- * with remaining suffix and the corresponding {@link ReuseNode} of the
- * {@link ReuseTree}).
- * 
- * @param query
- * @return
- */
-private Word<O> processQuery(final Word<I> query) {
-	Word<O> knownOutput;
-
-	synchronized (tree) {
-		knownOutput = tree.getOutput(query);
+	/**
+	 * Default constructor.
+	 *
+	 * @param alphabet
+	 * @param factory
+	 * 		A factory which is able to create multiple {@link ReuseCapableOracle}s
+	 */
+	public ReuseOracle(Alphabet<I> alphabet, ReuseCapableOracleFactory<S, I, O> factory) {
+		this.factory = factory;
+		this.tree = new ReuseTree<>(alphabet);
 	}
 
-	if (knownOutput != null) {
-		return knownOutput;
+	/**
+	 * {@inheritDoc}.
+	 */
+	@Override
+	public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
+		for (Query<I, Word<O>> query : queries) {
+			Word<O> output = processQuery(query.getInput());
+			query.answer(output.suffix(query.getSuffix().size()));
+		}
 	}
 
-	NodeResult<S,I,O> node;
+	/**
+	 * This methods returns the full output to the input query.
+	 * <p>
+	 * It is possible that the query is already known (answer provided by
+	 * {@link ReuseTree#getOutput(Word)}, the query is new and no system state
+	 * could be found for reusage ({@link ReuseCapableOracle#processQuery(Word)}
+	 * will be invoked) or there exists a prefix that (maybe epsilon) could be
+	 * reused so save reset invocation (
+	 * {@link ReuseCapableOracle#continueQuery(Word, Object)} will be invoked
+	 * with remaining suffix and the corresponding {@link ReuseNode} of the
+	 * {@link ReuseTree}).
+	 *
+	 * @param query
+	 * @return
+	 */
+	private Word<O> processQuery(final Word<I> query) {
+		Word<O> knownOutput;
 
-	synchronized (tree) {
-		node = tree.getReuseableSystemState(query);
-	}
+		synchronized (tree) {
+			knownOutput = tree.getOutput(query);
+		}
 
-	ReuseCapableOracle<S, I, O> oracle = getReuseCapableOracle();
+		if (knownOutput != null) {
+			return knownOutput;
+		}
 
-	if (node == null) {
-		QueryResult<S, O> res = oracle.processQuery(query);
+		NodeResult<S, I, O> node;
+
+		synchronized (tree) {
+			node = tree.getReuseableSystemState(query);
+		}
+
+		ReuseCapableOracle<S, I, O> oracle = getReuseCapableOracle();
+
+		if (node == null) {
+			QueryResult<S, O> res = oracle.processQuery(query);
 			synchronized (tree) {
 				tree.insert(query, res);
 			}
@@ -154,7 +154,7 @@ private Word<O> processQuery(final Word<I> query) {
 
 	/**
 	 * Returns the {@link ReuseTree} used by this instance.
-	 * 
+	 *
 	 * @return
 	 */
 	public ReuseTree<S, I, O> getReuseTree() {
@@ -163,7 +163,7 @@ private Word<O> processQuery(final Word<I> query) {
 
 	/**
 	 * Returns the {@link ReuseCapableOracle} used by this instance.
-	 * 
+	 *
 	 * @return
 	 */
 	public ReuseCapableOracle<S, I, O> getReuseCapableOracle() {
