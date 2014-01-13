@@ -30,15 +30,17 @@ import java.util.Collection;
  */
 public class ReuseNode<S, I, O> {
 	public static final class NodeResult<S,I,O> {
-		public final ReuseNode<S, I, O> s;
+		public final ReuseNode<S, I, O> reuseNode;
+		public final S systemState;
 		/**
 		 * The prefix length for a membership query that leads to
 		 * the {@link ReuseNode} in the reuse tree.
 		 */
 		public final int prefixLength;
-		public NodeResult(ReuseNode<S, I, O> s, int prefixLength) {
+		public NodeResult(ReuseNode<S, I, O> reuseNode, S systemState, int prefixLength) {
 			super();
-			this.s = s;
+			this.reuseNode = reuseNode;
+			this.systemState = systemState;
 			this.prefixLength = prefixLength;
 		}
 	}

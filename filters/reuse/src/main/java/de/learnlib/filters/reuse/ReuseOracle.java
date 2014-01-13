@@ -71,7 +71,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	private ReuseCapableOracle<S, I, O> reuseCapableOracle;
 
 	private ReuseTree<S, I, O> tree;
-	
+
 	/**
 	 * Default constructor.
 	 * 
@@ -79,9 +79,10 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	 *            An instance of {@link ReuseCapableOracle} to delegate queries
 	 *            to.
 	 */
-	public ReuseOracle(Alphabet<I> alphabet, ReuseCapableOracle<S, I, O> sul) {
+	public ReuseOracle(Alphabet<I> alphabet, ReuseCapableOracle<S, I, O> sul,
+			boolean invalidateSystemstates) {
 		this.reuseCapableOracle = sul;
-		this.tree = new ReuseTree<>(alphabet);
+		this.tree = new ReuseTree<>(alphabet, invalidateSystemstates);
 	}
 
 	/**
@@ -116,21 +117,27 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 			return knownOutput;
 		}
 
-		NodeResult<S,I,O> node = tree.getReuseableSystemState(query);
-
-		if (node == null) {
+		NodeResult<S,I,O> nodeResult = tree.fetchSystemState(query);
+		
+		if (nodeResult == null) {
 			QueryResult<S, O> res = reuseCapableOracle.processQuery(query);
 			tree.insert(query, res);
 
 			return res.output;
 		} else {
-			Word<I> suffix = query.suffix(query.size() - node.prefixLength);
-			QueryResult<S, O> res;
-			res = reuseCapableOracle.continueQuery(suffix, node.s.getSystemState());
-			this.tree.insert(suffix, node.s, res);
+			Word<I> suffix = query.suffix(query.size() - nodeResult.prefixLength);
+			Word<I> prefix = query.prefix(nodeResult.prefixLength);
 			
-			Word<O> prefixOutput = tree.getOutput(query.prefix(node.prefixLength)); // TODO don't compute twice
-			return new WordBuilder<>(prefixOutput).append(res.output).toWord();
+			ReuseNode<S, I, O> reuseNode = nodeResult.reuseNode;
+			S systemState = nodeResult.systemState;
+			
+			QueryResult<S, O> queryResult;
+			queryResult = reuseCapableOracle.continueQuery(suffix, systemState);
+			this.tree.insert(suffix, reuseNode, queryResult);
+			
+			Word<O> prefixOutput = tree.getOutput(prefix); // TODO don't compute twice
+			Word<O> suffixOutput = queryResult.output;
+			return new WordBuilder<>(prefixOutput).append(suffixOutput).toWord();
 		}
 	}
 

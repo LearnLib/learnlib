@@ -48,12 +48,11 @@ public class QuiescenceTest {
 		ReuseCapableOracle<Integer, Integer, String> reuseCapableOracle = new TestOracle(
 				3);
 		sigma = Alphabets.integers(0, 3);
-		reuseOracle = new ReuseOracle<>(sigma, reuseCapableOracle);
+		reuseOracle = new ReuseOracle<>(sigma, reuseCapableOracle, true);
 	}
 
 	@Test
 	public void simpleTest() {
-
 		MealyLearner<Integer, String> learner = new ExtensibleLStarMealyBuilder<Integer, String>()
 				.withAlphabet(sigma).withOracle(reuseOracle).create();
 
@@ -87,8 +86,7 @@ public class QuiescenceTest {
 			}
 
 			QueryResult<Integer, String> result;
-			result = new QueryResult<Integer, String>(output.toWord(), integer,
-					true);
+			result = new QueryResult<Integer, String>(output.toWord(), integer);
 
 			return result;
 		}
@@ -110,8 +108,7 @@ public class QuiescenceTest {
 			}
 
 			QueryResult<Integer, String> result;
-			result = new QueryResult<Integer, String>(output.toWord(), integer,
-					true);
+			result = new QueryResult<Integer, String>(output.toWord(), integer);
 
 			return result;
 		}

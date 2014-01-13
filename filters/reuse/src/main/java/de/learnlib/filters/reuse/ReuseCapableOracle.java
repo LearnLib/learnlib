@@ -14,12 +14,10 @@ public interface ReuseCapableOracle<S,I,O> {
 	public static final class QueryResult<S, O> {
 		public final Word<O> output;
 		public final S newState;
-		public final boolean oldInvalidated;
-		public QueryResult(Word<O> output, S newState, boolean oldInvalidated) {
+		public QueryResult(Word<O> output, S newState) {
 			super();
 			this.output = output;
 			this.newState = newState;
-			this.oldInvalidated = oldInvalidated;
 		}
 	}
 	
@@ -32,10 +30,10 @@ public interface ReuseCapableOracle<S,I,O> {
 	QueryResult<S, O> continueQuery(Word<I> trace, S s);
 	
 	/**
-	 * Implementation needs to provide a fresh system state, process the whole
-	 * query and return a {@link QueryResult} with the resulting system state,
-	 * the SUL output to that query. The {@link QueryResult#oldInvalidated} will
-	 * not be interpreted.
+	 * An implementation needs to provide a fresh system state, process the whole
+	 * query and return a {@link QueryResult} with the resulting system state 
+	 * ({@link QueryResult#newState}) and the SUL output to that query 
+	 * ({@link QueryResult#output}).
 	 * 
 	 * @param trace
 	 * @return

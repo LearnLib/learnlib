@@ -44,10 +44,10 @@ import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
  * that could be used for executing suffixes of membership queries. Each node
  * consists of a (possible empty) set of outgoing edges.
  * <li>Edges consists beside source and target node of input and output
- * behaviour.
+ * behavior.
  * </ul>
  * The {@link ReuseTree} is the central data structure that maintains observed
- * behaviour from the SUL and maintains also available system states. The
+ * behavior from the SUL and maintains also available system states. The
  * {@link ReuseTree} is only 'tree like' since it may contain reflexive edges at
  * nodes (only possible if {@link #useFailureOutputKnowledge(boolean)} is set to
  * <code>true</code> and and {@link #failureOutputSymbols} is not empty or
@@ -56,7 +56,7 @@ import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
  * <p>
  * The {@link ReuseTree} is not meant to be used directly! It should only be
  * configured once (retrieved via {@link ReuseOracle#getReuseTree()}) or
- * resetted via {@link #clearTree()} or {@link #disposeSystemstates()}.
+ * reseted via {@link #clearTree()} or {@link #disposeSystemstates()}.
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  * 
@@ -79,6 +79,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	private Set<I> invariantInputSymbols;
 	private Set<O> failureOutputSymbols;
 
+	private final boolean invalidateSystemstates;
 	private SystemStateHandler<S> systemStateHandler;
 	private int nodeCount = 0;
 	
@@ -86,8 +87,9 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * Default constructor. Usage of domain knowledge about 'failure outputs'
 	 * and 'model invariant input symbols' is enabled.
 	 */
-	public ReuseTree(Alphabet<I> alphabet) {
+	public ReuseTree(Alphabet<I> alphabet, boolean invalidateSystemstates) {
 		this.alphabet = alphabet;
+		this.invalidateSystemstates = invalidateSystemstates;
 		this.alphabetSize = alphabet.size();
 		this.root = new ReuseNode<>(nodeCount++, alphabetSize);
 		this.invariantInputSymbols = new HashSet<>();
@@ -263,14 +265,17 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	}
 
 	/**
-	 * Returns a reuseable {@link ReuseNode} or <code>null</code> if none such
-	 * exists.
+	 * Returns a reuseable {@link NodeResult} with system state 
+	 * or <code>null</code> if none such exists. If
+	 * ''oldInvalidated'' was set to <code>true</code> (in the {@link ReuseOracle})
+	 * the system state is already removed from the tree whenever
+	 * one was available.
 	 * 
 	 * @param query
 	 *            Not allowed to be <code>null</code>.
 	 * @return
 	 */
-	public NodeResult<S,I,O> getReuseableSystemState(Word<I> query) {
+	public NodeResult<S,I,O> fetchSystemState(Word<I> query) {
 		if (query == null) {
 			String msg = "Query is not allowed to be null.";
 			throw new IllegalArgumentException(msg);
@@ -303,7 +308,11 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 		if (lastState == null) {
 			return null;
 		} else {
-			return new NodeResult<>(lastState, length);
+			S systemState = lastState.getSystemState();
+			if (invalidateSystemstates) {
+				lastState.setSystemState(null);
+			}
+			return new NodeResult<>(lastState, systemState, length);
 		}
 	}
 
@@ -340,9 +349,10 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * <p>
 	 * Will be called from the {@link ReuseOracle} if an available system state
 	 * was reused for the query (otherwise {@link #insert(Word, QueryResult)}
-	 * would be called). If {@link QueryResult#oldInvalidated} is
-	 * <code>true</code> the used system state could not be reused again, only
-	 * the new fined in {@link QueryResult#newState}.
+	 * would be called). The old system state was already removed from the
+	 * {@link ReuseNode} (through {@link #fetchSystemState(Word)}) 
+	 * if the ''invalidateSystemstates'' flag in the {@link ReuseOracle}
+	 * was set to <code>true</code>.
 	 * <p>
 	 * This method should only be invoked internally from the
 	 * {@link ReuseOracle} unless you know exactly what you are doing (you may
@@ -367,11 +377,6 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 		if (query.size() != queryResult.output.size()) {
 			String msg = "Size mismatch: " + query + "/" + queryResult.output;
 			throw new IllegalArgumentException(msg);
-		}
-
-		if (queryResult.oldInvalidated) {
-			// systemStateHandler.dispose(oldSystemState);
-			sink.setSystemState(null);
 		}
 
 		for (int i = 0; i < query.size(); i++) {

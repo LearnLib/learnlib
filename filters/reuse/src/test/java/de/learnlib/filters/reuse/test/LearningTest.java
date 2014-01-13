@@ -17,10 +17,8 @@
 package de.learnlib.filters.reuse.test;
 
 import java.io.IOException;
-import java.io.StringReader;
 
 import junit.framework.Assert;
-import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -48,7 +46,7 @@ public class LearningTest {
 		ReuseCapableOracle<Integer, Integer, String> reuseCapableOracle = new TestOracle(
 				3);
 		sigma = Alphabets.integers(0, 3);
-		reuseOracle = new ReuseOracle<>(sigma, reuseCapableOracle);
+		reuseOracle = new ReuseOracle<>(sigma, reuseCapableOracle, true);
 		reuseOracle.getReuseTree().addInvariantInputSymbol(0);
 		reuseOracle.getReuseTree().addFailureOutputSymbol("error");
 	}
@@ -92,8 +90,7 @@ public class LearningTest {
 			}
 
 			QueryResult<Integer, String> result;
-			result = new QueryResult<Integer, String>(output.toWord(), integer,
-					true);
+			result = new QueryResult<Integer, String>(output.toWord(), integer);
 
 			return result;
 		}
@@ -112,8 +109,7 @@ public class LearningTest {
 			}
 
 			QueryResult<Integer, String> result;
-			result = new QueryResult<Integer, String>(output.toWord(), integer,
-					true);
+			result = new QueryResult<Integer, String>(output.toWord(), integer);
 
 			return result;
 		}
