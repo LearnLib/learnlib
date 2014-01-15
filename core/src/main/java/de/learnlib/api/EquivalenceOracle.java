@@ -27,11 +27,11 @@ import de.learnlib.oracles.DefaultQuery;
 /**
  * An equivalence oracle, which checks hypothesis automata against the (possibly unknown)
  * system under learning (SUL).
- * 
+ * <p>
  * Please note that equivalence oracles are implicitly connected to a SUL, there is no explicit
  * references in terms of a {@link MembershipOracle} or such. However, this might be different
  * in implementing classes.
- * 
+ * <p>
  * <b>CAVEAT:</b> Equivalence oracles serve as an abstraction to tackle the (generally undecidable)
  * problem of black-box equivalence testing. The contract imposed by this interface is that
  * results returned by the {@link #findCounterExample(Object, Collection)} method are in fact

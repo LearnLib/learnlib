@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@ package de.learnlib.algorithms.dhc.mealy;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -49,6 +50,18 @@ import de.learnlib.oracles.DefaultQuery;
  */
 public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		AccessSequenceTransformer<I> {
+	
+	
+	public static class BuilderDefaults {
+		public <I,O>
+		GlobalSuffixFinder<? super I,? super Word<O>> suffixFinder() {
+			return GlobalSuffixFinders.RIVEST_SCHAPIRE; 
+		}
+		public static <I,O>
+		Collection<? extends Word<I>> initialSplitters() {
+			return null;
+		}
+	}
 
 	private static final Logger log = Logger.getLogger( MealyDHC.class.getName() );
 	
@@ -75,16 +88,46 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 			this.depth = (parentElement != null) ? parentElement.depth+1 : 0;
 		}
 	}
+	
+	/**
+	 * Constructor, provided for backwards compatibility reasons.
+	 *  
+	 * @param alphabet the learning alphabet
+	 * @param oracle the learning membership oracle
+	 */
+	public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I,Word<O>> oracle) {
+		this(alphabet, oracle, GlobalSuffixFinders.RIVEST_SCHAPIRE, null);
+	}
 
-	public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
+	/**
+	 * Constructor.
+	 * @param alphabet the learning alphabet
+	 * @param oracle the learning membership oracle
+	 * @param suffixFinder the {@link GlobalSuffixFinder suffix finder} to use for analyzing counterexamples
+	 * @param initialSplitters the initial set of splitters, {@code null} or an empty collection will result
+	 * in the set of splitters being initialized as the set of alphabet symbols (interpreted as {@link Word}s) 
+	 */
+	public MealyDHC(Alphabet<I> alphabet,
+			MembershipOracle<I, Word<O>> oracle,
+			GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
+			Collection<? extends Word<I>> initialSplitters) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
-		this.suffixFinder = GlobalSuffixFinders.RIVEST_SCHAPIRE;
-		for(I symbol : alphabet) {
-			splitters.add(Word.fromLetter(symbol));
+		this.suffixFinder = suffixFinder;
+		if(initialSplitters == null || initialSplitters.isEmpty()) {
+			for(I symbol : alphabet) {
+				splitters.add(Word.fromLetter(symbol));
+			}
+		}
+		else {
+			splitters.addAll(initialSplitters);
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.LearningAlgorithm#startLearning()
+	 */
 	@Override
 	public void startLearning() {
 		// initialize structure to store state output signatures
@@ -179,6 +222,10 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.LearningAlgorithm#refineHypothesis(de.learnlib.oracles.DefaultQuery)
+	 */
 	@Override
 	public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
 		checkInternalState();
@@ -197,12 +244,20 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		return oldsize != hypothesis.size();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.LearningAlgorithm#getHypothesisModel()
+	 */
 	@Override
 	public MealyMachine<?, I, ?, O> getHypothesisModel() {
 		checkInternalState();
 		return hypothesis;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.AccessSequenceTransformer#transformAccessSequence(net.automatalib.words.Word)
+	 */
 	@Override
 	public Word<I> transformAccessSequence(Word<I> word) {
 		checkInternalState();
@@ -210,6 +265,10 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		return assembleAccessSequence(accessSequences.get(state));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.AccessSequenceTransformer#isAccessSequence(net.automatalib.words.Word)
+	 */
 	@Override
 	public boolean isAccessSequence(Word<I> word) {
 		checkInternalState();

@@ -25,7 +25,7 @@ import de.learnlib.oracles.DefaultQuery;
 
 /**
  * Basic interface for a model inference algorithm.
- * 
+ * <p>
  * Actively inferring models (such as DFAs or Mealy machines) consists of the construction
  * of an initial hypothesis, which is subsequently refined using counterexamples
  * (see {@link EquivalenceOracle}). 
