@@ -36,11 +36,11 @@ public class ReuseEdge<S, I, O> {
 
 	/**
 	 * Default constructor.
-	 * 
-	 * @param source, not allowed to be <code>null</code>.
-	 * @param target, not allowed to be <code>null</code>.
-	 * @param input, not allowed to be <code>null</code>.
-	 * @param output, in case of quiescence maybe <code>null</code>.
+	 *
+	 * @param source, not allowed to be {@code null}.
+	 * @param target, not allowed to be {@code null}.
+	 * @param input, not allowed to be {@code null}.
+	 * @param output, in case of quiescence maybe {@code null}.
 	 */
 	public ReuseEdge(final ReuseNode<S, I, O> source,
 			final ReuseNode<S, I, O> target, final I input, final O output) {
@@ -61,8 +61,8 @@ public class ReuseEdge<S, I, O> {
 
 	/**
 	 * The source node from this edge.
-	 * 
-	 * @return source, never <code>null</code>.
+	 *
+	 * @return source, never {@code null}.
 	 */
 	public final ReuseNode<S, I, O> getSource() {
 		return source;
@@ -70,15 +70,15 @@ public class ReuseEdge<S, I, O> {
 
 	/**
 	 * The target node from this edge.
-	 * 
-	 * @return target, never <code>null</code>.
+	 *
+	 * @return target, never {@code null}.
 	 */
 	public final ReuseNode<S, I, O> getTarget() {
 		return target;
 	}
 
 	/**
-	 * The respective input on this edge, never <code>null</code>.
+	 * The respective input on this edge, never {@code null}.
 	 * 
 	 * @return input, not <code>null</node>
 	 */
@@ -88,7 +88,7 @@ public class ReuseEdge<S, I, O> {
 
 	/**
 	 * The respective output on this edge. In case of quiescence the
-	 * output is <code>null</code>.
+	 * output is {@code null}.
 	 * 
 	 * @return output
 	 */
@@ -103,14 +103,6 @@ public class ReuseEdge<S, I, O> {
 	 */
 	@Override
 	public final String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(source.toString());
-		sb.append(" -> ");
-		sb.append(target.toString());
-		sb.append(" i/o ");
-		sb.append(input);
-		sb.append("/");
-		sb.append(output);
-		return sb.toString();
+		return source.toString() + " -> " + target.toString() + " i/o " + input + "/" + output;
 	}
 }

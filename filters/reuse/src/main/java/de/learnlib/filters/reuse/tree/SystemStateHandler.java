@@ -39,8 +39,9 @@ import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
 public interface SystemStateHandler<S> {
 	/**
 	 * The system state S will be removed from the {@link ReuseTree}.
-	 *  
-	 * @param <S> system state class
+	 *
+	 * @param state
+	 *      The state to remove.
 	 */
 	void dispose(S state);
 }

@@ -16,10 +16,10 @@
  */
 package de.learnlib.filters.reuse.tree;
 
-import java.util.Map;
-
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
+
+import java.util.Map;
 
 /**
  * {@link GraphDOTHelper} implementation for the {@link ReuseTree} that renders
@@ -33,8 +33,8 @@ import net.automatalib.graphs.dot.GraphDOTHelper;
  * @param <I> input symbol class
  * @param <O> output symbol class
  */
-public class ReuseTreeDotHelper<S, I, O> extends
-		DefaultDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
+class ReuseTreeDotHelper<S, I, O> extends
+DefaultDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
 	/*
 	 * (non-Javadoc)
 	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#getNodeProperties(java.lang.Object, java.util.Map)
