@@ -23,6 +23,8 @@ package de.learnlib.filters.reuse;
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
 public class ReuseException extends IllegalArgumentException {
+	private static final long serialVersionUID = 3661716306694750282L;
+
 	public ReuseException(String string) {
 		super(string);
 	}

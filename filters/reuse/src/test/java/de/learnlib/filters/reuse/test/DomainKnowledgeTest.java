@@ -64,7 +64,7 @@ public class DomainKnowledgeTest {
 		
 		Alphabet<Integer> alphabet = Alphabets.integers(0, 10);
 		
-		reuseOracle = new ReuseOracleBuilder<Integer, Integer, String>(alphabet,reuseCapableOracle,true)
+		reuseOracle = new ReuseOracleBuilder<>(alphabet,reuseCapableOracle)
 				.withInvariantInputs(Sets.newHashSet(0))
 				.build();
 	}
@@ -72,7 +72,7 @@ public class DomainKnowledgeTest {
 	@Test
 	public void testPumpSymbolsSimple() {
 		// Add one entry (0,ok) where 0 is model invariant (reflexive edge)
-		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok"), 0);
+		QueryResult<Integer, String> qr = new QueryResult<>(getOutput("ok"), 0);
 		reuseOracle.getReuseTree().insert(getInput(0), qr);
 
 		Word<String> known = reuseOracle.getReuseTree().getOutput(getInput(0,0,0,0));
@@ -84,7 +84,7 @@ public class DomainKnowledgeTest {
 	@Test(dependsOnMethods={"testPumpSymbolsSimple"})
 	public void testPumpSymbolsComplex() {
 		// Add one entry (101,ok1 ok0 ok1) where 0 is model invariant
-		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok1","ok0","ok1"), 2);
+		QueryResult<Integer, String> qr = new QueryResult<>(getOutput("ok1","ok0","ok1"), 2);
 		reuseOracle.getReuseTree().insert(getInput(1,0,1), qr);
 		
 		Word<String> known = reuseOracle.getReuseTree().getOutput(getInput(1,0,0,0,0,1));
@@ -95,7 +95,7 @@ public class DomainKnowledgeTest {
 
 	@Test
 	public void testReuseNodePrefixWhileReusing() {
-		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok","ok","ok"), 2);
+		QueryResult<Integer, String> qr = new QueryResult<>(getOutput("ok","ok","ok"), 2);
 		reuseOracle.getReuseTree().insert(getInput(1, 0, 1), qr);
 		
 		Word<Integer> input = getInput(1,0,1,1);
@@ -103,7 +103,7 @@ public class DomainKnowledgeTest {
 
 		Assert.assertTrue(node.prefixLength == 3); // ''1 0 1''
 		// reuse the prefix
-		qr = new QueryResult<Integer, String>(getOutput("ok"), 3);
+		qr = new QueryResult<>(getOutput("ok"), 3);
 		reuseOracle.getReuseTree().insert(getInput(1), node.reuseNode, qr);
 		
 		// The "1 1" system state should not be available:

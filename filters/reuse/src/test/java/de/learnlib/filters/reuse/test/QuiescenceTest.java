@@ -49,7 +49,7 @@ public class QuiescenceTest {
 		ReuseCapableOracle<Integer, Integer, String> reuseCapableOracle = new TestOracle(
 				3);
 		sigma = Alphabets.integers(0, 3);
-		reuseOracle = new ReuseOracleBuilder<Integer, Integer, String>(sigma,reuseCapableOracle,true)
+		reuseOracle = new ReuseOracleBuilder<>(sigma,reuseCapableOracle)
 				.build();
 	}
 
@@ -88,7 +88,7 @@ public class QuiescenceTest {
 			}
 
 			QueryResult<Integer, String> result;
-			result = new QueryResult<Integer, String>(output.toWord(), integer);
+			result = new QueryResult<>(output.toWord(), integer);
 
 			return result;
 		}
@@ -110,7 +110,7 @@ public class QuiescenceTest {
 			}
 
 			QueryResult<Integer, String> result;
-			result = new QueryResult<Integer, String>(output.toWord(), integer);
+			result = new QueryResult<>(output.toWord(), integer);
 
 			return result;
 		}

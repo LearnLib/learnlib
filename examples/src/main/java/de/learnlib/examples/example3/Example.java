@@ -129,7 +129,7 @@ public class Example {
 		// save execution of symbols
 		ReuseCapableImpl reuseCapableOracle = new ReuseCapableImpl();
 		ReuseOracle<BoundedStringQueue, String, String> reuseOracle;
-		reuseOracle = new ReuseOracleBuilder<BoundedStringQueue, String, String>(sigma,reuseCapableOracle,true)
+		reuseOracle = new ReuseOracleBuilder<>(sigma,reuseCapableOracle)
 				.withSystemStateHandler(ssh)
 				.build();
 		// construct L* instance (almost classic Mealy version)
@@ -234,8 +234,7 @@ public class Example {
 			}
 
 			QueryResult<BoundedStringQueue, String> result;
-			result = new QueryResult<BoundedStringQueue, String>(
-					output.toWord(), s);
+			result = new QueryResult<>(output.toWord(), s);
 
 			return result;
 		}
@@ -256,8 +255,7 @@ public class Example {
 			}
 
 			QueryResult<BoundedStringQueue, String> result;
-			result = new QueryResult<BoundedStringQueue, String>(
-					output.toWord(), s);
+			result = new QueryResult<>(output.toWord(), s);
 
 			return result;
 		}

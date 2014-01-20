@@ -63,7 +63,7 @@ public class ReuseOracleTest {
 		
 		Alphabet<Integer> alphabet = Alphabets.integers(0, 10);
 		
-		reuseOracle = new ReuseOracleBuilder<Integer, Integer, String>(alphabet,reuseCapableOracle,true)
+		reuseOracle = new ReuseOracleBuilder<>(alphabet,reuseCapableOracle)
 				.build();
 	}
 	
@@ -84,7 +84,7 @@ public class ReuseOracleTest {
 	@Test(dependsOnMethods={"testTreeIsEmpty"})
 	public void testTreeIsAbleToCache() {
 		// Add one entry (1,ok)
-		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok"), 1);
+		QueryResult<Integer, String> qr = new QueryResult<>(getOutput("ok"), 1);
 		reuseOracle.getReuseTree().insert(getInput(1), qr);
 		
 		// check that query (1) is already known and has same output than before
@@ -97,7 +97,7 @@ public class ReuseOracleTest {
 			"testTreeIsAbleToCache"})
 	public void testTreeDoesNotPump() {
 		// Add one entry (0,ok) 
-		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok"), 0);
+		QueryResult<Integer, String> qr = new QueryResult<>(getOutput("ok"), 0);
 		reuseOracle.getReuseTree().insert(getInput(0), qr);
 		
 		Word<String> known = reuseOracle.getReuseTree().getOutput(getInput(0,0,0,0));
@@ -107,7 +107,7 @@ public class ReuseOracleTest {
 	
 	@Test
 	public void testNoReusePossible() {
-		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok","ok"), 2);
+		QueryResult<Integer, String> qr = new QueryResult<>(getOutput("ok","ok"), 2);
 		reuseOracle.getReuseTree().insert(getInput(1, 1), qr);
 		/**
 		 * Should result in
@@ -126,7 +126,7 @@ public class ReuseOracleTest {
 	
 	@Test
 	public void testReusePossible() {
-		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok","ok"), 2);
+		QueryResult<Integer, String> qr = new QueryResult<>(getOutput("ok","ok"), 2);
 		reuseOracle.getReuseTree().insert(getInput(1, 1), qr);
 		
 		/**
@@ -159,7 +159,7 @@ public class ReuseOracleTest {
 	
 	@Test(dependsOnMethods = {"testNoReusePossible"})
 	public void testReusePossibleWithInvalidation() {
-		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok","ok"), 2);
+		QueryResult<Integer, String> qr = new QueryResult<>(getOutput("ok","ok"), 2);
 		reuseOracle.getReuseTree().insert(getInput(1, 1), qr);
 		
 		/**
@@ -178,7 +178,7 @@ public class ReuseOracleTest {
 		Assert.assertNotNull(node);
 		Assert.assertTrue(node.prefixLength == 2); // query '1 1'
 
-		qr = new QueryResult<Integer, String>(getOutput("ok"), 4);
+		qr = new QueryResult<>(getOutput("ok"), 4);
 		reuseOracle.getReuseTree().insert(getInput(2), node.reuseNode, qr);
 		
 		/**
@@ -217,14 +217,14 @@ public class ReuseOracleTest {
 		 *  *         *
 		 * </pre>
 		 */		
-		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok","ok","ok"), 6);
+		QueryResult<Integer, String> qr = new QueryResult<>(getOutput("ok","ok","ok"), 6);
 		reuseOracle.getReuseTree().insert(getInput(1, 1, 4), qr);
 		
-		qr = new QueryResult<Integer, String>(getOutput("ok","ok","ok"), 4);
+		qr = new QueryResult<>(getOutput("ok","ok","ok"), 4);
 		reuseOracle.getReuseTree().insert(getInput(1, 1, 2), qr);
 		
 		// Here reuse tree should throw a reuse exception when adding (113/ok differentout notimportant)
-		qr = new QueryResult<Integer, String>(getOutput("ok","different","notimp"), 5);
+		qr = new QueryResult<>(getOutput("ok","different","notimp"), 5);
 		reuseOracle.getReuseTree().insert(getInput(1, 1, 3), qr);
 	}
 	

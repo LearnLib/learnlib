@@ -55,7 +55,7 @@ public class LearningTest {
 				3);
 		sigma = Alphabets.integers(0, 3);
 		
-		reuseOracle = new ReuseOracleBuilder<Integer, Integer, String>(sigma,reuseCapableOracle,true)
+		reuseOracle = new ReuseOracleBuilder<>(sigma,reuseCapableOracle)
 				.withFailureOutputs(Sets.newHashSet("error"))
 				.withInvariantInputs(Sets.newHashSet(0))
 				.build();
@@ -100,7 +100,7 @@ public class LearningTest {
 			}
 
 			QueryResult<Integer, String> result;
-			result = new QueryResult<Integer, String>(output.toWord(), integer);
+			result = new QueryResult<>(output.toWord(), integer);
 
 			return result;
 		}
@@ -119,7 +119,7 @@ public class LearningTest {
 			}
 
 			QueryResult<Integer, String> result;
-			result = new QueryResult<Integer, String>(output.toWord(), integer);
+			result = new QueryResult<>(output.toWord(), integer);
 
 			return result;
 		}
