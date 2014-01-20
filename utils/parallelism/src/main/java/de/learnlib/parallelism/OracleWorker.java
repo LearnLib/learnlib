@@ -87,6 +87,7 @@ final class OracleWorker<I,O> implements Runnable {
 						}
 					}
 					oracle.processQueries(Arrays.asList(batch));
+					batch = null;
 					finishSignal.countDown();
 				}
 			} while(true);

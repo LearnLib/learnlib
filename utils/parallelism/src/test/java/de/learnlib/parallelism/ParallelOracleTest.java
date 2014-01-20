@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -84,8 +84,9 @@ public class ParallelOracleTest {
 		public void processQueries(
 				Collection<? extends Query<Integer, TestOutput>> queries) {
 			int batchSeqId = 0;
-			for(Query<Integer,TestOutput> qry : queries)
+			for(Query<Integer,TestOutput> qry : queries) {
 				qry.answer(new TestOutput(oracleId, batchSeqId++, qry.getPrefix(), qry.getSuffix()));
+			}
 		}
 		
 	}
