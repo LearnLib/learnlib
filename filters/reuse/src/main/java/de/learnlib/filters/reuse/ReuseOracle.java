@@ -66,7 +66,13 @@ import java.util.Set;
 public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	private final Supplier<ReuseCapableOracle<S, I, O>> oracleSupplier;
 
-	private final ThreadLocal<ReuseCapableOracle<S, I, O>> executableOracles = new ThreadLocal<>();
+	private final ThreadLocal<ReuseCapableOracle<S, I, O>> executableOracles =
+			new ThreadLocal<ReuseCapableOracle<S, I, O>>() {
+				@Override
+				protected ReuseCapableOracle<S, I, O> initialValue() {
+					return ReuseOracle.this.oracleSupplier.get();
+				}
+			};
 
 	private final ReuseTree<S, I, O> tree;
 
@@ -198,11 +204,6 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	 * @return
 	 */
 	public ReuseCapableOracle<S, I, O> getReuseCapableOracle() {
-		synchronized (this) {
-			if (executableOracles.get() == null) {
-				executableOracles.set(oracleSupplier.get());
-			}
-		}
 		return executableOracles.get();
 	}
 
