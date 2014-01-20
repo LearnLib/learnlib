@@ -174,7 +174,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 			S systemState = nodeResult.systemState;
 			
 			QueryResult<S, O> queryResult;
-			queryResult = getReuseCapableOracle().continueQuery(suffix, systemState);
+			queryResult = oracle.continueQuery(suffix, systemState);
 			this.tree.insert(suffix, reuseNode, queryResult);
 			
 			Word<O> prefixOutput = tree.getOutput(prefix); // TODO don't compute twice
