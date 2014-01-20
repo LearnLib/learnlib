@@ -16,19 +16,18 @@
  */
 package de.learnlib.filters.reuse.test;
 
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.Alphabets;
-
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
+import com.google.common.base.Supplier;
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
 import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
+import net.automatalib.words.impl.Alphabets;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 /**
  * Similar to the {@link LearningTest} but this time with quiescence in outputs. 
@@ -46,11 +45,8 @@ public class QuiescenceTest {
 	 */
 	@BeforeClass
 	protected void setUp() {
-		ReuseCapableOracle<Integer, Integer, String> reuseCapableOracle = new TestOracle(
-				3);
 		sigma = Alphabets.integers(0, 3);
-		reuseOracle = new ReuseOracleBuilder<>(sigma,reuseCapableOracle)
-				.build();
+		reuseOracle = new ReuseOracleBuilder<>(sigma, new TestOracleFactory()).build();
 	}
 
 	@Test
@@ -59,6 +55,15 @@ public class QuiescenceTest {
 				.withAlphabet(sigma).withOracle(reuseOracle).create();
 
 		learner.startLearning();
+	}
+
+	class TestOracleFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
+
+		@Override
+		public ReuseCapableOracle<Integer, Integer, String> get() {
+			return new TestOracle(3);
+		}
+
 	}
 
 	class TestOracle implements ReuseCapableOracle<Integer, Integer, String> {

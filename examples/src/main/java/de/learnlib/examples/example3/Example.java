@@ -16,16 +16,7 @@
  */
 package de.learnlib.examples.example3;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.SimpleAlphabet;
+import com.google.common.base.Supplier;
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
@@ -35,6 +26,16 @@ import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
 import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
 import de.learnlib.filters.reuse.tree.SystemStateHandler;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.util.automata.Automata;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
+import net.automatalib.words.impl.SimpleAlphabet;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * This example shows how to use the reuse filter on the
@@ -127,11 +128,12 @@ public class Example {
 
 		// This time we use the reuse filter to avoid some resets and
 		// save execution of symbols
-		ReuseCapableImpl reuseCapableOracle = new ReuseCapableImpl();
+		ReuseCapableImplFactory factory = new ReuseCapableImplFactory();
 		ReuseOracle<BoundedStringQueue, String, String> reuseOracle;
-		reuseOracle = new ReuseOracleBuilder<>(sigma,reuseCapableOracle)
+		reuseOracle = new ReuseOracleBuilder<>(sigma, factory)
 				.withSystemStateHandler(ssh)
 				.build();
+
 		// construct L* instance (almost classic Mealy version)
 		// almost: we use words (Word<String>) in cells of the table
 		// instead of single outputs.
@@ -150,6 +152,7 @@ public class Example {
 		// now invalidate all system states and count the number of disposed
 		// queues (equals number of resets)
 		reuseOracle.getReuseTree().disposeSystemstates();
+		ReuseCapableImpl reuseCapableOracle = (ReuseCapableImpl) reuseOracle.getReuseCapableOracle();
 		System.out.println("Resets:   " + reuseCapableOracle.fullQueries);
 		System.out.println("Reused:   " + reuseCapableOracle.reused);
 		System.out.println("Symbols:  " + reuseCapableOracle.symbols);
@@ -204,6 +207,14 @@ public class Example {
 
 				query.answer(output.toWord().suffix(query.getSuffix().size()));
 			}
+		}
+	}
+
+	class ReuseCapableImplFactory implements Supplier<ReuseCapableOracle<BoundedStringQueue, String, String>> {
+
+		@Override
+		public ReuseCapableOracle<BoundedStringQueue, String, String> get() {
+			return new ReuseCapableImpl();
 		}
 	}
 

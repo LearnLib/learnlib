@@ -16,20 +16,21 @@
  */
 package de.learnlib.filters.reuse;
 
-import java.util.Collection;
-import java.util.Set;
-
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import com.google.common.base.Supplier;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.tree.ReuseNode;
-import de.learnlib.filters.reuse.tree.SystemStateHandler;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
-import de.learnlib.filters.reuse.tree.ReuseTree.ReuseTreeBuilder;
 import de.learnlib.filters.reuse.tree.ReuseTree;
+import de.learnlib.filters.reuse.tree.ReuseTree.ReuseTreeBuilder;
+import de.learnlib.filters.reuse.tree.SystemStateHandler;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
+
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * The reuse oracle is a {@link MealyMembershipOracle} that is able to
@@ -48,7 +49,7 @@ import de.learnlib.filters.reuse.tree.ReuseTree;
  * oracle is able to reuse the available system state and only process the
  * remaining suffix. Whether or not a system state will be removed after it is
  * used is decided upon construction 
- * (see {@link ReuseOracleBuilder#ReuseOracleBuilder(Alphabet, ReuseCapableOracle, boolean)} .</li>
+ * (see {@link ReuseOracleBuilder#ReuseOracleBuilder(Alphabet, Supplier)}.</li>
  * </ul>
  * through an internal {@link ReuseTree}.
  * 
@@ -63,20 +64,32 @@ import de.learnlib.filters.reuse.tree.ReuseTree;
  * @param <O> output symbol class
  */
 public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
+	private final Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier;
+
+	private final ThreadLocal<ReuseCapableOracle<S, I, O>> executableOracles =
+			new ThreadLocal<ReuseCapableOracle<S, I, O>>() {
+				@Override
+				protected ReuseCapableOracle<S, I, O> initialValue() {
+					return ReuseOracle.this.oracleSupplier.get();
+				}
+			};
+
+	private final ReuseTree<S, I, O> tree;
+
 	public static class ReuseOracleBuilder<S,I,O> {
 		private final Alphabet<I> alphabet;
-		private final ReuseCapableOracle<S,I,O> sul;
-		
+		private final Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier;
+
 		private boolean invalidateSystemstates = true;
 		private SystemStateHandler<S> systemStateHandler;
 		private Set<I> invariantInputSymbols;
 		private Set<O> failureOutputSymbols;	
 		
 		public ReuseOracleBuilder(
-				Alphabet<I> alphabet, 
-				ReuseCapableOracle<S, I, O> sul) {
+				Alphabet<I> alphabet,
+				Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier) {
 			this.alphabet = alphabet;
-			this.sul = sul;
+			this.oracleSupplier = oracleSupplier;
 		}
 		
 		public ReuseOracleBuilder<S,I,O> withSystemStateHandler(SystemStateHandler<S> systemStateHandler) {
@@ -105,22 +118,10 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	}
 	
 	/**
-	 * The {@link ReuseCapableOracle} to execute the query (or any suffix of a
-	 * query).
-	 */
-	private ReuseCapableOracle<S, I, O> reuseCapableOracle;
-
-	private ReuseTree<S, I, O> tree;
-
-	/**
 	 * Default constructor.
-	 * 
-	 * @param sul
-	 *            An instance of {@link ReuseCapableOracle} to delegate queries
-	 *            to.
 	 */
 	private ReuseOracle(ReuseOracleBuilder<S,I,O> builder) {
-		this.reuseCapableOracle = builder.sul;
+		this.oracleSupplier = builder.oracleSupplier;
 		this.tree = new ReuseTreeBuilder<S,I,O>(builder.alphabet)
 				.withSystemStateHandler(builder.systemStateHandler)
 				.withFailureOutputs(builder.failureOutputSymbols)
@@ -148,23 +149,26 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	 * could be found for reusage ({@link ReuseCapableOracle#processQuery(Word)}
 	 * will be invoked) or there exists a prefix that (maybe epsilon) could be
 	 * reused so save reset invocation (
-	 * {@link ReuseCapableOracle#continueQuery(Word, ReuseNode)} will be invoked
+	 * {@link ReuseCapableOracle#continueQuery(Word, Object)} will be invoked
 	 * with remaining suffix and the corresponding {@link ReuseNode} of the
 	 * {@link ReuseTree}).
-	 * 
+	 *
 	 * @param query
 	 * @return
 	 */
-	private synchronized final Word<O> processQuery(final Word<I> query) {
+	private Word<O> processQuery(final Word<I> query) {
 		Word<O> knownOutput = tree.getOutput(query);
+
 		if (knownOutput != null) {
 			return knownOutput;
 		}
 
 		NodeResult<S,I,O> nodeResult = tree.fetchSystemState(query);
-		
+
+		ReuseCapableOracle<S, I, O> oracle = getReuseCapableOracle();
+
 		if (nodeResult == null) {
-			QueryResult<S, O> res = reuseCapableOracle.processQuery(query);
+			QueryResult<S, O> res = oracle.processQuery(query);
 			tree.insert(query, res);
 
 			return res.output;
@@ -176,7 +180,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 			S systemState = nodeResult.systemState;
 			
 			QueryResult<S, O> queryResult;
-			queryResult = reuseCapableOracle.continueQuery(suffix, systemState);
+			queryResult = oracle.continueQuery(suffix, systemState);
 			this.tree.insert(suffix, reuseNode, queryResult);
 			
 			Word<O> prefixOutput = tree.getOutput(prefix); // TODO don't compute twice
@@ -187,7 +191,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 
 	/**
 	 * Returns the {@link ReuseTree} used by this instance.
-	 * 
+	 *
 	 * @return
 	 */
 	public ReuseTree<S, I, O> getReuseTree() {
@@ -196,10 +200,11 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 
 	/**
 	 * Returns the {@link ReuseCapableOracle} used by this instance.
-	 * 
+	 *
 	 * @return
 	 */
 	public ReuseCapableOracle<S, I, O> getReuseCapableOracle() {
-		return this.reuseCapableOracle;
+		return executableOracles.get();
 	}
+
 }
