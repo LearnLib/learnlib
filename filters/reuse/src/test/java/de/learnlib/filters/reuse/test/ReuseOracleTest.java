@@ -16,22 +16,20 @@
  */
 package de.learnlib.filters.reuse.test;
 
-import de.learnlib.filters.reuse.ReuseCapableOracleFactory;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.Alphabets;
-
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
+import com.google.common.base.Supplier;
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.ReuseException;
 import de.learnlib.filters.reuse.ReuseOracle;
 import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
+import net.automatalib.words.impl.Alphabets;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * Simple tests for the reuse oracle without domain knowledge.
@@ -63,18 +61,17 @@ public class ReuseOracleTest {
 			}
 		};
 
-		ReuseCapableOracleFactory<Integer, Integer, String> factory =
-				new ReuseCapableOracleFactory<Integer, Integer, String>() {
+		Supplier<ReuseCapableOracle<Integer, Integer, String>> oracleSupplier =
+				new Supplier<ReuseCapableOracle<Integer, Integer, String>>() {
+					@Override
+					public ReuseCapableOracle<Integer, Integer, String> get() {
+						return reuseCapableOracle;
+					}
+				};
 
-			@Override
-			public ReuseCapableOracle<Integer, Integer, String> createOracle() {
-				return reuseCapableOracle;
-			}
-		};
-		
 		Alphabet<Integer> alphabet = Alphabets.integers(0, 10);
 
-		reuseOracle = new ReuseOracleBuilder<>(alphabet, factory)
+		reuseOracle = new ReuseOracleBuilder<>(alphabet, oracleSupplier)
 				.build();
 	}
 	

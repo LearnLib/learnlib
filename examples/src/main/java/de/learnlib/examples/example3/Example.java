@@ -16,17 +16,7 @@
  */
 package de.learnlib.examples.example3;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import de.learnlib.filters.reuse.ReuseCapableOracleFactory;
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.SimpleAlphabet;
+import com.google.common.base.Supplier;
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
@@ -36,6 +26,16 @@ import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
 import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
 import de.learnlib.filters.reuse.tree.SystemStateHandler;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.util.automata.Automata;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
+import net.automatalib.words.impl.SimpleAlphabet;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * This example shows how to use the reuse filter on the
@@ -210,10 +210,10 @@ public class Example {
 		}
 	}
 
-	class ReuseCapableImplFactory implements ReuseCapableOracleFactory<BoundedStringQueue, String, String> {
+	class ReuseCapableImplFactory implements Supplier<ReuseCapableOracle<BoundedStringQueue, String, String>> {
 
 		@Override
-		public ReuseCapableOracle<BoundedStringQueue, String, String> createOracle() {
+		public ReuseCapableOracle<BoundedStringQueue, String, String> get() {
 			return new ReuseCapableImpl();
 		}
 	}

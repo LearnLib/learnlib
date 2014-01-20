@@ -16,27 +16,24 @@
  */
 package de.learnlib.filters.reuse.test;
 
-import java.io.IOException;
-
-import de.learnlib.filters.reuse.ReuseCapableOracleFactory;
-import junit.framework.Assert;
-import net.automatalib.util.graphs.dot.GraphDOT;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.Alphabets;
-
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
+import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
-
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
 import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
 import de.learnlib.filters.reuse.tree.ReuseTree;
+import junit.framework.Assert;
+import net.automatalib.util.graphs.dot.GraphDOT;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
+import net.automatalib.words.impl.Alphabets;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
 
 /**
  * Simple learning test that shows who to use the reuse oracle.
@@ -75,10 +72,10 @@ public class LearningTest {
 		Assert.assertTrue(sb.toString().startsWith("digraph g"));
 	}
 
-	class TestOracleFactory implements ReuseCapableOracleFactory<Integer, Integer, String> {
+	class TestOracleFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
 
 		@Override
-		public ReuseCapableOracle<Integer, Integer, String> createOracle() {
+		public ReuseCapableOracle<Integer, Integer, String> get() {
 			return new TestOracle(3);
 		}
 	}

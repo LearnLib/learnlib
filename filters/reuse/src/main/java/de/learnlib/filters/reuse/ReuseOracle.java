@@ -16,6 +16,7 @@
  */
 package de.learnlib.filters.reuse;
 
+import com.google.common.base.Supplier;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
@@ -48,7 +49,7 @@ import java.util.Set;
  * oracle is able to reuse the available system state and only process the
  * remaining suffix. Whether or not a system state will be removed after it is
  * used is decided upon construction 
- * (see {@link ReuseOracleBuilder#ReuseOracleBuilder(Alphabet, ReuseCapableOracleFactory)}.</li>
+ * (see {@link ReuseOracleBuilder#ReuseOracleBuilder(Alphabet, Supplier)}.</li>
  * </ul>
  * through an internal {@link ReuseTree}.
  * 
@@ -63,7 +64,7 @@ import java.util.Set;
  * @param <O> output symbol class
  */
 public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
-	private final ReuseCapableOracleFactory<S, I, O> factory;
+	private final Supplier<ReuseCapableOracle<S, I, O>> oracleSupplier;
 
 	private final ThreadLocal<ReuseCapableOracle<S, I, O>> executableOracles = new ThreadLocal<>();
 
@@ -71,7 +72,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 
 	public static class ReuseOracleBuilder<S,I,O> {
 		private final Alphabet<I> alphabet;
-		private final ReuseCapableOracleFactory<S,I,O> factory;
+		private final Supplier<ReuseCapableOracle<S, I, O>> oracleSupplier;
 
 		private boolean invalidateSystemstates = true;
 		private SystemStateHandler<S> systemStateHandler;
@@ -79,10 +80,10 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 		private Set<O> failureOutputSymbols;	
 		
 		public ReuseOracleBuilder(
-				Alphabet<I> alphabet, 
-				ReuseCapableOracleFactory<S, I, O> factory) {
+				Alphabet<I> alphabet,
+				Supplier<ReuseCapableOracle<S, I, O>> oracleSupplier) {
 			this.alphabet = alphabet;
-			this.factory = factory;
+			this.oracleSupplier = oracleSupplier;
 		}
 		
 		public ReuseOracleBuilder<S,I,O> withSystemStateHandler(SystemStateHandler<S> systemStateHandler) {
@@ -114,7 +115,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	 * Default constructor.
 	 */
 	private ReuseOracle(ReuseOracleBuilder<S,I,O> builder) {
-		this.factory = builder.factory;
+		this.oracleSupplier = builder.oracleSupplier;
 		this.tree = new ReuseTreeBuilder<S,I,O>(builder.alphabet)
 				.withSystemStateHandler(builder.systemStateHandler)
 				.withFailureOutputs(builder.failureOutputSymbols)
@@ -199,7 +200,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	public ReuseCapableOracle<S, I, O> getReuseCapableOracle() {
 		synchronized (this) {
 			if (executableOracles.get() == null) {
-				executableOracles.set(factory.createOracle());
+				executableOracles.set(oracleSupplier.get());
 			}
 		}
 		return executableOracles.get();

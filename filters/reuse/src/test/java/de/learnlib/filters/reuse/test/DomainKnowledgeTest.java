@@ -16,23 +16,20 @@
  */
 package de.learnlib.filters.reuse.test;
 
-import de.learnlib.filters.reuse.ReuseCapableOracleFactory;
+import com.google.common.base.Supplier;
+import com.google.common.collect.Sets;
+import de.learnlib.filters.reuse.ReuseCapableOracle;
+import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
+import de.learnlib.filters.reuse.ReuseOracle;
+import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
+import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.Sets;
-
-import de.learnlib.filters.reuse.ReuseCapableOracle;
-import de.learnlib.filters.reuse.ReuseOracle;
-import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
-import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
-import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 
 /**
  * Reuse oracle test that uses invariant input symbols.
@@ -42,10 +39,10 @@ import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 public class DomainKnowledgeTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;
 
-	class NullReuseCapableFactory implements ReuseCapableOracleFactory<Integer, Integer, String> {
+	class NullReuseCapableFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
 
 		@Override
-		public ReuseCapableOracle<Integer, Integer, String> createOracle() {
+		public ReuseCapableOracle<Integer, Integer, String> get() {
 			return new ReuseCapableOracle<Integer, Integer, String>() {
 				@Override
 				public QueryResult<Integer, String> continueQuery(Word<Integer> trace, Integer integer) {
