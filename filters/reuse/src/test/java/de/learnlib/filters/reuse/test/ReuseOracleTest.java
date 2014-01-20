@@ -31,6 +31,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
+
 /**
  * Simple tests for the reuse oracle without domain knowledge.
  *  
@@ -77,7 +79,7 @@ public class ReuseOracleTest {
 	
 	@Test
 	public void testTreeIsEmpty() {
-		NodeResult<Integer, Integer, String> node = null;
+		NodeResult<Integer, Integer, String> node;
 
 		node = reuseOracle.getReuseTree().fetchSystemState(getInput(0));
 		Assert.assertNull(node);
@@ -238,17 +240,13 @@ public class ReuseOracleTest {
 	
 	private Word<Integer> getInput(Integer... param){
 		WordBuilder<Integer> wb = new WordBuilder<>();
-		for (int j=0; j<param.length; j++) {
-			wb.add(param[j]);
-		}
+		Collections.addAll(wb, param);
 		return wb.toWord();
 	}
 	
 	private Word<String> getOutput(String... param){
 		WordBuilder<String> wb = new WordBuilder<>();
-		for (int j=0; j<param.length; j++) {
-			wb.add(param[j]);
-		}
+		Collections.addAll(wb, param);
 		return wb.toWord();
 	}
 }

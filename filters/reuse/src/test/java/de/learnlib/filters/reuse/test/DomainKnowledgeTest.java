@@ -31,6 +31,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
+
 /**
  * Reuse oracle test that uses invariant input symbols.
  *  
@@ -39,7 +41,7 @@ import org.testng.annotations.Test;
 public class DomainKnowledgeTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;
 
-	class NullReuseCapableFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
+	private class NullReuseCapableFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
 
 		@Override
 		public ReuseCapableOracle<Integer, Integer, String> get() {
@@ -128,17 +130,13 @@ public class DomainKnowledgeTest {
 	
 	private Word<Integer> getInput(Integer... param){
 		WordBuilder<Integer> wb = new WordBuilder<>();
-		for (int j=0; j<param.length; j++) {
-			wb.add(param[j]);
-		}
+		Collections.addAll(wb, param);
 		return wb.toWord();
 	}
 	
 	private Word<String> getOutput(String... param){
 		WordBuilder<String> wb = new WordBuilder<>();
-		for (int j=0; j<param.length; j++) {
-			wb.add(param[j]);
-		}
+		Collections.addAll(wb, param);
 		return wb.toWord();
 	}
 	

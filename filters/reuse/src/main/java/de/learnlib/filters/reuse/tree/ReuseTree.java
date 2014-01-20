@@ -64,7 +64,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 		private final Alphabet<I> alphabet;
 		
 		// optional
-		private boolean invalidateSystemstates = true;;
+		private boolean invalidateSystemstates = true;
 		private SystemStateHandler<S> systemStateHandler;
 		private Set<I> invariantInputSymbols;
 		private Set<O> failureOutputSymbols;		
@@ -133,21 +133,21 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 
 	/**
 	 * Returns the root {@link ReuseNode} of the {@link ReuseTree}.
-	 * 
-	 * @return root The root of the tree, never <code>null</code>.
+	 *
+	 * @return root The root of the tree, never {@code null}.
 	 */
 	public final ReuseNode<S, I, O> getRoot() {
 		return this.root;
 	}
 
 	/**
-	 * Returns the known output for the given query or <code>null</code> if not
+	 * Returns the known output for the given query or {@code null} if not
 	 * known.
 	 * 
 	 * @param query
-	 *            Not allowed to be <code>null</code>.
-	 * @return The output for <code>query</code> if already known from the
-	 *         {@link ReuseTree} or <code>null</code> if unknown.
+	 *            Not allowed to be {@code null}.
+	 * @return The output for {@code query} if already known from the
+	 *         {@link ReuseTree} or {@code null} if unknown.
 	 */
 	public final synchronized Word<O> getOutput(final Word<I> query) {
 		if (query == null) {
@@ -221,13 +221,13 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 
 	/**
 	 * Returns a reuseable {@link NodeResult} with system state 
-	 * or <code>null</code> if none such exists. If
-	 * ''oldInvalidated'' was set to <code>true</code> (in the {@link ReuseOracle})
+	 * or {@code null} if none such exists. If
+	 * ''oldInvalidated'' was set to {@code true} (in the {@link ReuseOracle})
 	 * the system state is already removed from the tree whenever
 	 * one was available.
 	 * 
 	 * @param query
-	 *            Not allowed to be <code>null</code>.
+	 *            Not allowed to be {@code null}.
 	 * @return
 	 */
 	public synchronized NodeResult<S,I,O> fetchSystemState(Word<I> query) {
@@ -307,7 +307,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * would be called). The old system state was already removed from the
 	 * {@link ReuseNode} (through {@link #fetchSystemState(Word)}) 
 	 * if the ''invalidateSystemstates'' flag in the {@link ReuseOracle}
-	 * was set to <code>true</code>.
+	 * was set to {@code true}.
 	 * <p>
 	 * This method should only be invoked internally from the
 	 * {@link ReuseOracle} unless you know exactly what you are doing (you may
@@ -346,13 +346,9 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 					continue;
 				}
 
-				StringBuilder sb = new StringBuilder();
-				sb.append("Conflict: input '");
-				sb.append(query).append("', output '");
-				sb.append(queryResult.output).append("', i=");
-				sb.append(i).append(", cached output '");
-				sb.append(edge.getOutput()).append("'");
-				throw new ReuseException(sb.toString());
+				throw new ReuseException(
+						"Conflict: input '" + query + "', output '" + queryResult.output + "', i=" + i +
+								", cached output '" + edge.getOutput() + "'");
 			}
 
 			if (failureOutputSymbols != null && failureOutputSymbols.contains(out)) {

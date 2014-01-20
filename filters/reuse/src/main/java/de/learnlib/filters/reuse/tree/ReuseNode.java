@@ -22,7 +22,7 @@ import java.util.Collection;
 /**
  * A {@link ReuseNode} is a vertex in the {@link ReuseTree} that contains (a
  * possible empty) set of outgoing {@link ReuseEdge}s. Each {@link ReuseNode}
- * may contain a {@link SystemState} holding relevant informations (e.g.
+ * may contain a system state holding relevant informations (e.g.
  * database identifiers or an object) that belongs to the system state that 
  * 'represents' the system state after executing a membership query.
  * 
@@ -51,8 +51,8 @@ public class ReuseNode<S, I, O> {
 	
 	private final ReuseEdge<S,I,O>[] edges;
 	private S systemstate;
-	private int id = -1;
-	
+	private final int id;
+
 	@SuppressWarnings("unchecked")
 	public ReuseNode(int id, int alphabetSize) {
 		this.edges = new ReuseEdge[alphabetSize];
@@ -60,7 +60,7 @@ public class ReuseNode<S, I, O> {
 	}
 
 	/**
-	 * The {@link SystemState}, maybe <code>null</code>.
+	 * The system state, may be {@code null}.
 	 * 
 	 * @return
 	 */
@@ -74,7 +74,7 @@ public class ReuseNode<S, I, O> {
 	/**
 	 * Returns all outgoing {@link ReuseEdge}s from this {@link ReuseNode}. If
 	 * there are none the returned {@link java.util.Collection} will be empty
-	 * (but never <code>null</code>).
+	 * (but never {@code null}).
 	 * 
 	 * @return
 	 */
@@ -92,9 +92,9 @@ public class ReuseNode<S, I, O> {
 	}
 
 	/**
-	 * Maybe <code>null</code>.
-	 * 
-	 * @param input
+	 * May be {@code null}.
+	 *
+	 * @param index
 	 * @return
 	 */
 	public ReuseEdge<S, I, O> getEdgeWithInput(int index) {

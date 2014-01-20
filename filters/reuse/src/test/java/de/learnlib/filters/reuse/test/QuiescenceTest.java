@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 /**
  * Similar to the {@link LearningTest} but this time with quiescence in outputs. 
  * The purpose of this test is just to check that the reuse filter is able to work with
- * <code>null</code> outputs.
+ * {@code null} outputs.
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
@@ -57,21 +57,17 @@ public class QuiescenceTest {
 		learner.startLearning();
 	}
 
-	class TestOracleFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
+	private class TestOracleFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
 
 		@Override
 		public ReuseCapableOracle<Integer, Integer, String> get() {
-			return new TestOracle(3);
+			return new TestOracle();
 		}
 
 	}
 
 	class TestOracle implements ReuseCapableOracle<Integer, Integer, String> {
-		private int threshold;
-
-		public TestOracle(int threshold) {
-			this.threshold = threshold;
-		}
+		private final int threshold = 3;
 
 		@Override
 		public QueryResult<Integer, String> continueQuery(Word<Integer> trace,
@@ -100,7 +96,7 @@ public class QuiescenceTest {
 
 		@Override
 		public QueryResult<Integer, String> processQuery(Word<Integer> trace) {
-			Integer integer = new Integer(0);
+			Integer integer = 0;
 			WordBuilder<String> output = new WordBuilder<>();
 			for (Integer symbol : trace) {
 				if (integer + symbol < threshold) {
