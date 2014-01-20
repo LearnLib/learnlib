@@ -17,6 +17,7 @@
 package de.learnlib.filters.reuse;
 
 import java.util.Collection;
+import java.util.Set;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -25,7 +26,9 @@ import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.tree.ReuseNode;
+import de.learnlib.filters.reuse.tree.SystemStateHandler;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
+import de.learnlib.filters.reuse.tree.ReuseTree.ReuseTreeBuilder;
 import de.learnlib.filters.reuse.tree.ReuseTree;
 
 /**
@@ -35,35 +38,69 @@ import de.learnlib.filters.reuse.tree.ReuseTree;
  * the answer will be retrieved from the {@link ReuseTree})</li>
  * <li>Pump queries: If the {@link ReuseTree} is configured to know which
  * symbols are model invariant input symbols via
- * {@link ReuseTree#addInvariantInputSymbol(Object)} (like a read from a
+ * {@link ReuseOracleBuilder#withInvariantInputs(Set)} (like a read from a
  * database which does not change the SUL) or configured for failure output
- * symbols via {@link ReuseTree#addFailureOutputSymbol(Object)} (e.g. a roll
+ * symbols via {@link ReuseOracleBuilder#withFailureOutputs(Set)} (e.g. a roll
  * back mechanism exists for the invoked symbol) the oracle could ''pump'' those
  * symbols inside a query once seen.</li>
  * <li>Reuse system states: There are a lot of situations where a prefix of a
  * query is already known and a system state is available. In this situation the
  * oracle is able to reuse the available system state and only process the
  * remaining suffix. Whether or not a system state will be removed after it is
- * used is decided by {@link QueryResult#oldInvalidated}.</li>
+ * used is decided upon construction 
+ * (see {@link ReuseOracleBuilder#ReuseOracleBuilder(Alphabet, ReuseCapableOracle, boolean)} .</li>
  * </ul>
  * through an internal {@link ReuseTree}.
  * 
  * The usage of model invariant input symbols and failure output symbols is
- * enabled by default but will only be used if symbols are provided via
- * {@link ReuseTree#addFailureOutputSymbol(Object)} or
- * {@link ReuseTree#addInvariantInputSymbol(Object)}.
+ * disabled by default and can be enabled upon construction (see {@link ReuseOracleBuilder#withFailureOutputs(Set)} and
+ * {@link ReuseOracleBuilder#withInvariantInputs(Set)}).
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  * 
- * @param <S>
- *            The type of used system state, e.g. Integer, Map<String,Object>
- *            etc.
- * @param <I>
- *            The type of input symbols used.
- * @param <O>
- *            The type of output symbols used.
+ * @param <S> system state class
+ * @param <I> input symbol class
+ * @param <O> output symbol class
  */
 public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
+	public static class ReuseOracleBuilder<S,I,O> {
+		private final Alphabet<I> alphabet;
+		private final ReuseCapableOracle<S,I,O> sul;
+		private final boolean invalidateSystemstates;
+		
+		private SystemStateHandler<S> systemStateHandler;
+		private Set<I> invariantInputSymbols;
+		private Set<O> failureOutputSymbols;	
+		
+		public ReuseOracleBuilder(
+				Alphabet<I> alphabet, 
+				ReuseCapableOracle<S, I, O> sul,
+				boolean invalidateSystemstates) {
+			this.alphabet = alphabet;
+			this.sul = sul;
+			this.invalidateSystemstates = invalidateSystemstates;
+		}
+		
+		public ReuseOracleBuilder<S,I,O> withSystemStateHandler(SystemStateHandler<S> systemStateHandler) {
+			this.systemStateHandler = systemStateHandler;
+			return this;
+		}
+		
+		public ReuseOracleBuilder<S,I,O> withInvariantInputs(Set<I> inputs) {
+			this.invariantInputSymbols = inputs;
+			return this;
+		}
+		
+		public ReuseOracleBuilder<S,I,O> withFailureOutputs(Set<O> outputs) {
+			this.failureOutputSymbols = outputs;
+			return this;
+		}
+		
+		public ReuseOracle<S, I, O> build() {
+			return new ReuseOracle<>(this);
+		}
+	}
+	
 	/**
 	 * The {@link ReuseCapableOracle} to execute the query (or any suffix of a
 	 * query).
@@ -79,10 +116,13 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	 *            An instance of {@link ReuseCapableOracle} to delegate queries
 	 *            to.
 	 */
-	public ReuseOracle(Alphabet<I> alphabet, ReuseCapableOracle<S, I, O> sul,
-			boolean invalidateSystemstates) {
-		this.reuseCapableOracle = sul;
-		this.tree = new ReuseTree<>(alphabet, invalidateSystemstates);
+	private ReuseOracle(ReuseOracleBuilder<S,I,O> builder) {
+		this.reuseCapableOracle = builder.sul;
+		this.tree = new ReuseTreeBuilder<S,I,O>(builder.alphabet, builder.invalidateSystemstates)
+				.withSystemStateHandler(builder.systemStateHandler)
+				.withFailureOutputs(builder.failureOutputSymbols)
+				.withInvariantInputs(builder.invariantInputSymbols)
+				.build();
 	}
 
 	/**

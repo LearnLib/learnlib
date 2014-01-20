@@ -33,6 +33,7 @@ import de.learnlib.api.Query;
 import de.learnlib.examples.example2.Example.BoundedStringQueue;
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
+import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
 import de.learnlib.filters.reuse.tree.SystemStateHandler;
 
 /**
@@ -122,19 +123,23 @@ public class Example {
 	 * Scenario with reuse filter technique.
 	 */
 	public MealyMachine<?, String, ?, String> runExperiment2() throws Exception {
+		MySystemStateHandler ssh = new MySystemStateHandler();
+
 		// This time we use the reuse filter to avoid some resets and
 		// save execution of symbols
 		ReuseCapableImpl reuseCapableOracle = new ReuseCapableImpl();
 		ReuseOracle<BoundedStringQueue, String, String> reuseOracle;
-		reuseOracle = new ReuseOracle<>(sigma, reuseCapableOracle, true);
-
+		reuseOracle = new ReuseOracleBuilder<BoundedStringQueue, String, String>(sigma,reuseCapableOracle,true)
+				.withSystemStateHandler(ssh)
+				.build();
 		// construct L* instance (almost classic Mealy version)
 		// almost: we use words (Word<String>) in cells of the table
 		// instead of single outputs.
 
 		MealyLearner<String, String> lstar = null;
 		lstar = new ExtensibleLStarMealyBuilder<String, String>()
-				.withAlphabet(sigma).withInitialSuffixes(initialSuffixes)
+				.withAlphabet(sigma)
+				.withInitialSuffixes(initialSuffixes)
 				.withOracle(reuseOracle).create();
 
 		lstar.startLearning();
@@ -144,8 +149,6 @@ public class Example {
 
 		// now invalidate all system states and count the number of disposed
 		// queues (equals number of resets)
-		MySystemStateHandler ssh = new MySystemStateHandler();
-		reuseOracle.getReuseTree().setSystemStateHandler(ssh);
 		reuseOracle.getReuseTree().disposeSystemstates();
 		System.out.println("Resets:   " + reuseCapableOracle.fullQueries);
 		System.out.println("Reused:   " + reuseCapableOracle.reused);

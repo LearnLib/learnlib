@@ -23,10 +23,14 @@ import java.util.Collection;
  * A {@link ReuseNode} is a vertex in the {@link ReuseTree} that contains (a
  * possible empty) set of outgoing {@link ReuseEdge}s. Each {@link ReuseNode}
  * may contain a {@link SystemState} holding relevant informations (e.g.
- * database identifiers) that belongs to the system state that 'represents' the
- * system state after executing a membership query.
+ * database identifiers or an object) that belongs to the system state that 
+ * 'represents' the system state after executing a membership query.
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * 
+ * @param <S> system state class
+ * @param <I> input symbol class
+ * @param <O> output symbol class
  */
 public class ReuseNode<S, I, O> {
 	public static final class NodeResult<S,I,O> {

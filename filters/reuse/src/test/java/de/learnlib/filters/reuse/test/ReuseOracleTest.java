@@ -29,8 +29,14 @@ import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.ReuseException;
 import de.learnlib.filters.reuse.ReuseOracle;
+import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 
+/**
+ * Simple tests for the reuse oracle without domain knowledge.
+ *  
+ * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ */
 public class ReuseOracleTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;
 
@@ -56,7 +62,9 @@ public class ReuseOracleTest {
 		};
 		
 		Alphabet<Integer> alphabet = Alphabets.integers(0, 10);
-		reuseOracle = new ReuseOracle<>(alphabet, reuseCapableOracle, true);
+		
+		reuseOracle = new ReuseOracleBuilder<Integer, Integer, String>(alphabet,reuseCapableOracle,true)
+				.build();
 	}
 	
 	@Test
@@ -85,39 +93,8 @@ public class ReuseOracleTest {
 		Assert.assertEquals(known, getOutput("ok"));
 	}
 	
-	@Test(dependsOnMethods={"testTreeIsAbleToCache"})
-	public void testTreeIsAbleToPumpModelInvariantSymbolsSimple() {
-		reuseOracle.getReuseTree().addInvariantInputSymbol(0);
-		reuseOracle.getReuseTree().useModelInvariantSymbols(true);
-		
-		// Add one entry (0,ok) where 0 is model invariant (reflexive edge)
-		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok"), 0);
-		reuseOracle.getReuseTree().insert(getInput(0), qr);
-		
-		Word<String> known = reuseOracle.getReuseTree().getOutput(getInput(0,0,0,0));
-		Assert.assertNotNull(known);
-		Assert.assertEquals(known.size(), 4);
-		Assert.assertEquals(known, getOutput("ok","ok","ok","ok"));
-	}
-	
-	@Test(dependsOnMethods={"testTreeIsAbleToPumpModelInvariantSymbolsSimple"})
-	public void testTreeIsAbleToPumpModelInvariantSymbolsComplex() {
-		reuseOracle.getReuseTree().addInvariantInputSymbol(0);
-		reuseOracle.getReuseTree().useModelInvariantSymbols(true);
-		
-		// Add one entry (101,ok1 ok0 ok1) where 0 is model invariant
-		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok1","ok0","ok1"), 2);
-		reuseOracle.getReuseTree().insert(getInput(1,0,1), qr);
-		
-		Word<String> known = reuseOracle.getReuseTree().getOutput(getInput(1,0,0,0,0,1));
-		Assert.assertNotNull(known);
-		Assert.assertEquals(known.size(), 6);
-		Assert.assertEquals(known, getOutput("ok1","ok0","ok0","ok0","ok0","ok1"));
-	}
-	
 	@Test(dependsOnMethods={
-			"testTreeIsAbleToPumpModelInvariantSymbolsSimple",
-			"testTreeIsAbleToPumpModelInvariantSymbolsComplex"})
+			"testTreeIsAbleToCache"})
 	public void testTreeDoesNotPump() {
 		// Add one entry (0,ok) 
 		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok"), 0);
@@ -249,41 +226,6 @@ public class ReuseOracleTest {
 		// Here reuse tree should throw a reuse exception when adding (113/ok differentout notimportant)
 		qr = new QueryResult<Integer, String>(getOutput("ok","different","notimp"), 5);
 		reuseOracle.getReuseTree().insert(getInput(1, 1, 3), qr);
-	}
-	
-	@Test(dependsOnMethods = {"testNoReusePossible"})
-	public void testReuseNodePrefixWhileReusing() {
-		reuseOracle.getReuseTree().useModelInvariantSymbols(true);
-		reuseOracle.getReuseTree().addInvariantInputSymbol(0);
-		
-		QueryResult<Integer, String> qr = new QueryResult<Integer, String>(getOutput("ok","ok","ok"), 2);
-		reuseOracle.getReuseTree().insert(getInput(1, 0, 1), qr);
-		
-		Word<Integer> input = getInput(1,0,1,1);
-		NodeResult<Integer, Integer, String> node = reuseOracle.getReuseTree().fetchSystemState(input);
-
-		Assert.assertTrue(node.prefixLength == 3); // ''1 0 1''
-		// reuse the prefix
-		qr = new QueryResult<Integer, String>(getOutput("ok"), 3);
-		reuseOracle.getReuseTree().insert(getInput(1), node.reuseNode, qr);
-		
-		// The "1 1" system state should not be available:
-		node = reuseOracle.getReuseTree().fetchSystemState(getInput(1,1));
-		Assert.assertNull(node);
-		
-		// There should be a "1 1 1" system state, even this query was never seen
-		node = reuseOracle.getReuseTree().fetchSystemState(getInput(1,1,1));
-		Assert.assertNotNull(node);
-		Assert.assertTrue(node.prefixLength == 3); // query "1 1 1"
-		
-		// The system state is invalidated, so querying again "1 1 1" reveals null this time
-		node = reuseOracle.getReuseTree().fetchSystemState(getInput(1,1,1));
-		Assert.assertNull(node);
-		
-		// The output of "1 0 0 0 0 1 1" should be known, even the query was never seen
-		Word<String> output = reuseOracle.getReuseTree().getOutput(getInput(1,0,0,0,0,1,1));
-		Assert.assertNotNull(output);
-		Assert.assertTrue(output.size() == 7);
 	}
 	
 	private Word<Integer> getInput(Integer... param){

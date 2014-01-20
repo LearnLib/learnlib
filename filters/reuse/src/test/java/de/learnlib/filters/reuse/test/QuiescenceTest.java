@@ -28,10 +28,11 @@ import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
+import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
 
 /**
- * Similar to the {@link LearningTest} but this time with quiescence. The purpose
- * of this test is just to check that the reuse filter is able to work with
+ * Similar to the {@link LearningTest} but this time with quiescence in outputs. 
+ * The purpose of this test is just to check that the reuse filter is able to work with
  * <code>null</code> outputs.
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
@@ -48,7 +49,8 @@ public class QuiescenceTest {
 		ReuseCapableOracle<Integer, Integer, String> reuseCapableOracle = new TestOracle(
 				3);
 		sigma = Alphabets.integers(0, 3);
-		reuseOracle = new ReuseOracle<>(sigma, reuseCapableOracle, true);
+		reuseOracle = new ReuseOracleBuilder<Integer, Integer, String>(sigma,reuseCapableOracle,true)
+				.build();
 	}
 
 	@Test

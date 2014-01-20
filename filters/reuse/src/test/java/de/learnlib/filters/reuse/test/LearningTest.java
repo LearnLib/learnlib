@@ -28,12 +28,20 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.Sets;
+
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
+import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
 import de.learnlib.filters.reuse.tree.ReuseTree;
 
+/**
+ * Simple learning test that shows who to use the reuse oracle.
+ *  
+ * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ */
 public class LearningTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;
 	private Alphabet<Integer> sigma;
@@ -46,9 +54,11 @@ public class LearningTest {
 		ReuseCapableOracle<Integer, Integer, String> reuseCapableOracle = new TestOracle(
 				3);
 		sigma = Alphabets.integers(0, 3);
-		reuseOracle = new ReuseOracle<>(sigma, reuseCapableOracle, true);
-		reuseOracle.getReuseTree().addInvariantInputSymbol(0);
-		reuseOracle.getReuseTree().addFailureOutputSymbol("error");
+		
+		reuseOracle = new ReuseOracleBuilder<Integer, Integer, String>(sigma,reuseCapableOracle,true)
+				.withFailureOutputs(Sets.newHashSet("error"))
+				.withInvariantInputs(Sets.newHashSet(0))
+				.build();
 	}
 
 	@Test

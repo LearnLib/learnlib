@@ -21,8 +21,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.automatalib.graphs.abstractimpl.AbstractGraph;
 import net.automatalib.graphs.dot.DOTPlottableGraph;
@@ -49,132 +47,84 @@ import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
  * The {@link ReuseTree} is the central data structure that maintains observed
  * behavior from the SUL and maintains also available system states. The
  * {@link ReuseTree} is only 'tree like' since it may contain reflexive edges at
- * nodes (only possible if {@link #useFailureOutputKnowledge(boolean)} is set to
- * <code>true</code> and and {@link #failureOutputSymbols} is not empty or
- * {@link #useModelInvariantSymbols(boolean)} is set to <code>true</code> and
- * {@link #invariantInputSymbols} is not empty).
- * <p>
- * The {@link ReuseTree} is not meant to be used directly! It should only be
- * configured once (retrieved via {@link ReuseOracle#getReuseTree()}) or
- * reseted via {@link #clearTree()} or {@link #disposeSystemstates()}.
+ * nodes (only possible if {@link ReuseTreeBuilder#withFailureOutputs(Set)} or
+ * {@link ReuseTreeBuilder#withInvariantInputs(Set)} is set).
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  * 
- * @param <S>
- * @param <I>
- * @param <O>
+ * @param <S> system state class
+ * @param <I> input symbol class
+ * @param <O> output symbol class
  */
 public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseEdge<S, I, O>>
 	implements DOTPlottableGraph<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
 	
-	private ReuseNode<S, I, O> root;
-	private Alphabet<I> alphabet;
-	private int alphabetSize;
+	public static class ReuseTreeBuilder<S,I,O> {
+		// mandatory
+		private Alphabet<I> alphabet;
+		private boolean invalidateSystemstates;
+		
+		// optional
+		private SystemStateHandler<S> systemStateHandler;
+		private Set<I> invariantInputSymbols;
+		private Set<O> failureOutputSymbols;		
+		
+		public ReuseTreeBuilder(Alphabet<I> alphabet, boolean invalidateSystemstates) {
+			this.alphabet = alphabet;
+			this.invalidateSystemstates = invalidateSystemstates;
+			this.systemStateHandler = new SystemStateHandler<S>() {
+				@Override
+				public void dispose(final S state) {
+				}
+			};
+			this.invariantInputSymbols = new HashSet<>();
+			this.failureOutputSymbols = new HashSet<>();
+		}
+		
+		public ReuseTreeBuilder<S,I,O> withSystemStateHandler(SystemStateHandler<S> systemStateHandler) {
+			this.systemStateHandler = systemStateHandler;
+			return this;
+		}
+		
+		public ReuseTreeBuilder<S,I,O> withInvariantInputs(Set<I> inputs) {
+			this.invariantInputSymbols = inputs;
+			return this;
+		}
+		
+		public ReuseTreeBuilder<S,I,O> withFailureOutputs(Set<O> outputs) {
+			this.failureOutputSymbols = outputs;
+			return this;
+		}
+		
+		public ReuseTree<S, I, O> build() {
+			return new ReuseTree<>(this);
+		}
+	}
 	
-	private boolean useFailureOutputKnowledge = true;
-	private boolean useModelInvariantSymbols = true;
-
-	private final Logger logger = Logger.getLogger(getClass().getName());
-
-	private Set<I> invariantInputSymbols;
-	private Set<O> failureOutputSymbols;
+	private final Alphabet<I> alphabet;
+	private final int alphabetSize;
+	
+	private final Set<I> invariantInputSymbols;
+	private final Set<O> failureOutputSymbols;
 
 	private final boolean invalidateSystemstates;
-	private SystemStateHandler<S> systemStateHandler;
+	private final SystemStateHandler<S> systemStateHandler;
+
+	/** Maybe reset to zero, see {@link ReuseTree#clearTree()} */
 	private int nodeCount = 0;
+	/** Maybe reinitialized , see {@link ReuseTree#clearTree()} */
+	private ReuseNode<S, I, O> root;
 	
-	/**
-	 * Default constructor. Usage of domain knowledge about 'failure outputs'
-	 * and 'model invariant input symbols' is enabled.
-	 */
-	public ReuseTree(Alphabet<I> alphabet, boolean invalidateSystemstates) {
-		this.alphabet = alphabet;
-		this.invalidateSystemstates = invalidateSystemstates;
+	private ReuseTree(ReuseTreeBuilder<S,I,O> builder) {
+		this.alphabet = builder.alphabet;
+		this.invalidateSystemstates = builder.invalidateSystemstates;
+		this.systemStateHandler = builder.systemStateHandler;
+		this.invariantInputSymbols = builder.invariantInputSymbols;
+		this.failureOutputSymbols = builder.failureOutputSymbols;
+		
+		// local and not configurable
 		this.alphabetSize = alphabet.size();
 		this.root = new ReuseNode<>(nodeCount++, alphabetSize);
-		this.invariantInputSymbols = new HashSet<>();
-		this.failureOutputSymbols = new HashSet<>();
-		this.systemStateHandler = new SystemStateHandler<S>() {
-			@Override
-			public void dispose(final S state) {
-			}
-		};
-	}
-
-	/**
-	 * Sets a specific implementation of a system state handler that could
-	 * handle concrete disposings of system states.
-	 * 
-	 * @param handler
-	 */
-	public final void setSystemStateHandler(final SystemStateHandler<S> handler) {
-		this.systemStateHandler = handler;
-	}
-
-	/**
-	 * Adds a 'model invariant' input symbol to the set of 'read only' input
-	 * symbols.
-	 * 
-	 * @param input
-	 *            not allowed to be <code>null</code>.
-	 * @see #useModelInvariantSymbols(boolean)
-	 */
-	public final void addInvariantInputSymbol(final I input) {
-		if (input == null) {
-			String msg = "Input is not allowed to be null.";
-			throw new IllegalArgumentException(msg);
-		}
-		if (this.logger.isLoggable(Level.FINE)) {
-			this.logger.fine("Added invariant input symbol: " + input);
-		}
-		this.invariantInputSymbols.add(input);
-	}
-
-	/**
-	 * Adds a 'failure output' symbol to the set of failure output symbols.
-	 * 
-	 * @param output
-	 *            not allowed to be <code>null</code>.
-	 * @see #useFailureOutputKnowledge(boolean)
-	 */
-	public final void addFailureOutputSymbol(final O output) {
-		if (output == null) {
-			String msg = "Output is not allowed to be null.";
-			throw new IllegalArgumentException(msg);
-		}
-		if (this.logger.isLoggable(Level.FINE)) {
-			this.logger.fine("Added failure output: " + output);
-		}
-		this.failureOutputSymbols.add(output);
-	}
-
-	/**
-	 * Whether to use domain knowledge about 'failure' outputs. If a membership
-	 * query MQ is answered with some specific 'failure' output, the
-	 * {@link SystemState} can be reused for the direct prefix of this query
-	 * (indicated by a reflexive {@link ReuseEdge} in the {@link ReuseTree} ),
-	 * otherwise only if the MQ ends with a 'model invariant input symbol' or
-	 * the new query is a continuation of this query.
-	 * 
-	 * @param b
-	 * @see #addFailureOutputSymbol(V)
-	 */
-	public final void useFailureOutputKnowledge(final boolean b) {
-		this.useFailureOutputKnowledge = b;
-	}
-
-	/**
-	 * Whether to use domain knowledge about 'model invariant' input symbols.
-	 * Symbols are 'model invariant' if they never changes a state of the
-	 * inferred model (independently from the output), i.e all transitions under
-	 * the input are reflexive. This will be reflected by a reflexive
-	 * {@link ReuseEdge} in the {@link ReuseTree}.
-	 * 
-	 * @param b
-	 * @see #addInvariantInputSymbol(S)
-	 */
-	public final void useModelInvariantSymbols(final boolean b) {
-		this.useModelInvariantSymbols = b;
 	}
 
 	/**
@@ -259,6 +209,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * informed about any disposings.
 	 */
 	public void clearTree() {
+		this.nodeCount = 0;
 		this.root = new ReuseNode<>(nodeCount++, alphabetSize);
 		this.invariantInputSymbols.clear();
 		this.failureOutputSymbols.clear();
@@ -400,22 +351,12 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 				throw new ReuseException(sb.toString());
 			}
 
-			if (useFailureOutputKnowledge) {
-				if (failureOutputSymbols.contains(out)) {
-					rn = sink;
-				} else if (useModelInvariantSymbols
-						&& invariantInputSymbols.contains(in)) {
-					rn = sink;
-				} else {
-					rn = new ReuseNode<>(nodeCount++, alphabetSize);
-				}
+			if (failureOutputSymbols != null && failureOutputSymbols.contains(out)) {
+				rn = sink;
+			} else if (invariantInputSymbols != null && invariantInputSymbols.contains(in)) {
+				rn = sink;
 			} else {
-				if (useModelInvariantSymbols
-						&& invariantInputSymbols.contains(in)) {
-					rn = sink;
-				} else {
-					rn = new ReuseNode<>(nodeCount++, alphabetSize);
-				}
+				rn = new ReuseNode<>(nodeCount++, alphabetSize);
 			}
 
 			int index = alphabet.getSymbolIndex(in);
@@ -432,11 +373,11 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	@Override
 	public Collection<ReuseNode<S, I, O>> getNodes() {
 		Collection<ReuseNode<S, I, O>> collection = new ArrayList<>();
-		recursiveNoder(collection, getRoot());
+		appendNodesRecursively(collection, getRoot());
 		return collection;
 	}
 	
-	private void recursiveNoder(Collection<ReuseNode<S, I, O>> nodes, ReuseNode<S, I, O> current) {
+	private void appendNodesRecursively(Collection<ReuseNode<S, I, O>> nodes, ReuseNode<S, I, O> current) {
 		nodes.add(current);
 		for (int i=0; i<alphabetSize; i++) {
 			ReuseEdge<S, I, O> reuseEdge = current.getEdgeWithInput(i);
@@ -444,7 +385,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 				continue;
 			}
 			if (!current.equals(reuseEdge.getTarget())) {
-				recursiveNoder(nodes, reuseEdge.getTarget());
+				appendNodesRecursively(nodes, reuseEdge.getTarget());
 			}
 		}
 	}
