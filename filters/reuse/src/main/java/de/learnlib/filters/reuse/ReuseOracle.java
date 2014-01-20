@@ -16,25 +16,20 @@
  */
 package de.learnlib.filters.reuse;
 
-import java.util.Collection;
-import java.util.Set;
-
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.tree.ReuseNode;
-import de.learnlib.filters.reuse.tree.SystemStateHandler;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
-import de.learnlib.filters.reuse.tree.ReuseTree.ReuseTreeBuilder;
 import de.learnlib.filters.reuse.tree.ReuseTree;
+import de.learnlib.filters.reuse.tree.ReuseTree.ReuseTreeBuilder;
+import de.learnlib.filters.reuse.tree.SystemStateHandler;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * The reuse oracle is a {@link MealyMembershipOracle} that is able to
@@ -53,7 +48,7 @@ import java.util.Collection;
  * oracle is able to reuse the available system state and only process the
  * remaining suffix. Whether or not a system state will be removed after it is
  * used is decided upon construction 
- * (see {@link ReuseOracleBuilder#ReuseOracleBuilder(Alphabet, ReuseCapableOracleFactory, boolean)}.</li>
+ * (see {@link ReuseOracleBuilder#ReuseOracleBuilder(Alphabet, ReuseCapableOracleFactory)}.</li>
  * </ul>
  * through an internal {@link ReuseTree}.
  * 
