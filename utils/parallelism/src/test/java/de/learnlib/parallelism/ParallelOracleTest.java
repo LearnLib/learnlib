@@ -99,7 +99,7 @@ public class ParallelOracleTest {
 		
 		ParallelOracle<Integer,TestOutput> po = new ParallelOracle<Integer,TestOutput>(oracles, MIN_BATCH_SIZE);
 		
-		po.start();
+		po.startWorkers();
 		
 		List<DefaultQuery<Integer,TestOutput>> queries = createQueries(MIN_BATCH_SIZE - 1);
 		po.processQueries(queries);
@@ -131,7 +131,7 @@ public class ParallelOracleTest {
 		sanityCheck(ana);
 		Assert.assertEquals(ana.involvedOracles.size(), NUM_ORACLES);
 		
-		po.stop();
+		po.stopWorkers();
 	}
 	
 	private static Analysis analyze(Collection<DefaultQuery<Integer,TestOutput>> queries) {

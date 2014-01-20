@@ -24,6 +24,24 @@ import net.automatalib.words.WordBuilder;
 import de.learnlib.api.SUL;
 import de.learnlib.cache.mealy.MealyCacheConsistencyTest;
 
+/**
+ * A cache to be used with a {@link SUL}.
+ * <p>
+ * Because on a {@link SUL}, a query is executed step-by-step, it is impossible
+ * to determine in advance whether the cached information is sufficient to answer
+ * the complete query. However, in general it is undesired to execute any actions
+ * on the underlying SUL as long as the requested information can be provided from
+ * the cache.
+ * <p>
+ * This class therefore defers any real execution to the point where the cached information
+ * is definitely insufficient; if such a point is not reached before a call to {@link #post()}
+ * is made, the underlying SUL is not queried.
+ * 
+ * @author Malte Isberner <malte.isberner@gmail.com>
+ *
+ * @param <I> input symbol type
+ * @param <O> output symbol type
+ */
 public class SULCache<I, O> implements SUL<I, O> {
 	
 	private final IncrementalMealyBuilder<I, O> incMealy;
@@ -38,6 +56,10 @@ public class SULCache<I, O> implements SUL<I, O> {
 		this.delegate = sul;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.SUL#pre()
+	 */
 	@Override
 	public void pre() {
 		if(outputWord != null) {
@@ -49,6 +71,10 @@ public class SULCache<I, O> implements SUL<I, O> {
 		current = incMealy.getInitialState();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.SUL#step(java.lang.Object)
+	 */
 	@Override
 	public O step(I in) {
 		O out = null;
@@ -85,6 +111,10 @@ public class SULCache<I, O> implements SUL<I, O> {
 		return new MealyCacheConsistencyTest<>(incMealy);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.SUL#post()
+	 */
     @Override
     public void post() {
         delegate.post();

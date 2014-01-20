@@ -115,7 +115,7 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 	/**
 	 * Starts all worker threads.
 	 */
-	public void start() {
+	public synchronized void startWorkers() {
 		if(workerThreads.length > 0 && workerThreads[0] != null)
 			throw new IllegalStateException("ParallelOracle already started");
 		
@@ -126,13 +126,22 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 		}
 	}
 	
+	/**
+	 * Starts all worker threads.
+	 * @deprecated since 2014-01-13. Prefer {@link #startWorkers()} as it is more explicit.
+	 */
+	@Deprecated
+	public void start() {
+		startWorkers();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public void processQueries(Collection<? extends Query<I, O>> queries) {
+	public synchronized void processQueries(Collection<? extends Query<I, O>> queries) {
 		if(workerThreads.length > 0 && workerThreads[0] == null)
 			throw new IllegalStateException("ParallelOracle was not started");
 		
@@ -190,12 +199,13 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 	
 	/**
 	 * Stop all worker threads. After this method has been called, invoking {@link #processQueries(Collection)}
-	 * will result in an {@link IllegalStateException} until the next call to {@link #start()}
+	 * will result in an {@link IllegalStateException} until the next call to {@link #startWorkers()}
 	 * is made. 
 	 */
-	public void stop() {
-		if(workerThreads.length > 0 && workerThreads[0] == null)
+	public synchronized void stopWorkers() {
+		if(workerThreads.length > 0 && workerThreads[0] == null) {
 			throw new IllegalStateException("Parallel oracle was not started");
+		}
 		
 		for(int i = 0; i < workers.length; i++) {
 			workers[i].stop();
@@ -209,6 +219,16 @@ public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
 			}
 			workerThreads[i] = null;
 		}
+	}
+	
+	/**
+	 * Stop all worker threads; cf. {@link #stopWorkers()}.
+	 * 
+	 * @deprecated since 2014-01-13. Prefer {@link #stopWorkers()} as it is more explicit
+	 */
+	@Deprecated
+	public void stop() {
+		stopWorkers();
 	}
 
 }

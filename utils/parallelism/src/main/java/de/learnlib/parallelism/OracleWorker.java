@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -17,9 +17,8 @@
 package de.learnlib.parallelism;
 
 import java.util.Arrays;
-import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
+import java.util.logging.Logger;
 
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
@@ -34,10 +33,13 @@ import de.learnlib.api.Query;
  */
 final class OracleWorker<I,O> implements Runnable {
 	
+	
+	private static final Logger LOGGER = Logger.getLogger(OracleWorker.class.getName());
+	
 	private final MembershipOracle<I,O> oracle;
-	private final CyclicBarrier barrier = new CyclicBarrier(2);
 	private Query<I,O>[] batch;
 	private CountDownLatch finishSignal;
+	private boolean stop = false;
 	
 	public OracleWorker(MembershipOracle<I,O> oracle) {
 		this.oracle = oracle;
@@ -48,28 +50,18 @@ final class OracleWorker<I,O> implements Runnable {
 	 * @param batch the batch to offer
 	 * @param finishSignal the latch to countDown upon finishing processing of the batch
 	 */
-	public void offerBatch(Query<I,O>[] batch, CountDownLatch finishSignal) {
+	public synchronized void offerBatch(Query<I,O>[] batch, CountDownLatch finishSignal) {
 		this.batch = batch;
 		this.finishSignal = finishSignal;
-		try {
-			barrier.await();
-		} catch (InterruptedException | BrokenBarrierException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		notify();
 	}
 	
 	/**
 	 * Stops this worker.
 	 */
-	public void stop() {
-		this.batch = null;
-		try {
-			barrier.await();
-		} catch (InterruptedException | BrokenBarrierException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public synchronized void stop() {
+		this.stop = true;
+		notify();
 	}
 
 	/*
@@ -80,15 +72,28 @@ final class OracleWorker<I,O> implements Runnable {
 	public void run() {
 		try {
 			do {
-				barrier.await();
-				if(batch == null)
-					return;
-				oracle.processQueries(Arrays.asList(batch));
-				finishSignal.countDown();
+				synchronized(this) {
+					if(stop) {
+						return;
+					}
+					if(batch == null) {
+						wait();
+						if(stop) {
+							return;
+						}
+						if(batch == null) {
+							LOGGER.warning("Worker thread of ParallelOracle was notified, but no query batch was provided.");
+							continue;
+						}
+					}
+					oracle.processQueries(Arrays.asList(batch));
+					finishSignal.countDown();
+				}
 			} while(true);
 		}
-		catch(InterruptedException | BrokenBarrierException ex) {
-			ex.printStackTrace(); // TODO
+		catch(InterruptedException ex) {
+			LOGGER.severe("Worker thread of ParallelOracle interrupted: " + ex.getMessage());
+			LOGGER.severe("Exiting worker thread ...");
 		}
 	}
 

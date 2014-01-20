@@ -114,8 +114,9 @@ public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
 	 */
 	@Override
 	public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-		if(queries.isEmpty())
+		if(queries.isEmpty()) {
 			return;
+		}
 		
 		List<Query<I,Word<O>>> qrys = new ArrayList<Query<I,Word<O>>>(queries);
 		Collections.sort(qrys, queryCmp);
@@ -174,15 +175,18 @@ public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
 	
 	private MasterQuery<I,O> createMasterQuery(Word<I> word) {
 		WordBuilder<O> wb = new WordBuilder<O>();
-		if(incMealy.lookup(word, wb))
+		if(incMealy.lookup(word, wb)) {
 			return new MasterQuery<>(word, wb.toWord());
+		}
 		
-		if(errorSyms == null)
+		if(errorSyms == null) {
 			return new MasterQuery<>(word);
+		}
 		int wbSize = wb.size();
 		O repSym;
-		if(wbSize == 0 || (repSym = errorSyms.get(wb.getSymbol(wbSize - 1))) == null)
+		if(wbSize == 0 || (repSym = errorSyms.get(wb.getSymbol(wbSize - 1))) == null) {
 			return new MasterQuery<>(word, errorSyms);
+		}
 		
 		wb.repeatAppend(word.length() - wbSize, repSym);
 		return new MasterQuery<>(word, wb.toWord());

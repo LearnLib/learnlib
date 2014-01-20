@@ -27,11 +27,11 @@ import de.learnlib.oracles.DefaultQuery;
 /**
  * An equivalence oracle, which checks hypothesis automata against the (possibly unknown)
  * system under learning (SUL).
- * 
+ * <p>
  * Please note that equivalence oracles are implicitly connected to a SUL, there is no explicit
  * references in terms of a {@link MembershipOracle} or such. However, this might be different
  * in implementing classes.
- * 
+ * <p>
  * <b>CAVEAT:</b> Equivalence oracles serve as an abstraction to tackle the (generally undecidable)
  * problem of black-box equivalence testing. The contract imposed by this interface is that
  * results returned by the {@link #findCounterExample(Object, Collection)} method are in fact
@@ -47,7 +47,23 @@ import de.learnlib.oracles.DefaultQuery;
  */
 public interface EquivalenceOracle<A, I, O> {
 	
+	/**
+	 * A specialization of the {@link EquivalenceOracle} interface for a DFA learning scenario.
+	 * 
+	 * @author Malte Isberner <malte.isberner@gmail.com>
+	 *
+	 * @param <I> input symbol class
+	 */
 	public static interface DFAEquivalenceOracle<I> extends EquivalenceOracle<DFA<?,I>,I,Boolean> {}
+	
+	/**
+	 * A specialization of the {@link EquivalenceOracle} interface for a Mealy learning scenario.
+	 * 
+	 * @author Malte Isberner <malte.isberner@gmail.com>
+	 *
+	 * @param <I> input symbol class
+	 * @param <O> output symbol class
+	 */
 	public static interface MealyEquivalenceOracle<I,O> extends EquivalenceOracle<MealyMachine<?,I,?,O>,I,Word<O>> {}
 	
 	
@@ -58,7 +74,8 @@ public interface EquivalenceOracle<A, I, O> {
 	 * not necessarily mean that none exists), <code>null</code> is returned.
 	 * 
 	 * @param hypothesis the conjecture
-	 * @param inputs the set of inputs to consider
+	 * @param inputs the set of inputs to consider, this should be a subset of the input alphabet
+	 * of the provided hypothesis
 	 * @return a query exposing different behavior, or <tt>null</tt> if no counterexample
 	 * could be found. In case a non-<tt>null</tt> value is returned, the output field
 	 * in the {@link DefaultQuery} contains the SUL output for the respective query.
