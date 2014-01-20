@@ -61,17 +61,16 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	
 	public static class ReuseTreeBuilder<S,I,O> {
 		// mandatory
-		private Alphabet<I> alphabet;
-		private boolean invalidateSystemstates;
+		private final Alphabet<I> alphabet;
 		
 		// optional
+		private boolean invalidateSystemstates = true;;
 		private SystemStateHandler<S> systemStateHandler;
 		private Set<I> invariantInputSymbols;
 		private Set<O> failureOutputSymbols;		
 		
-		public ReuseTreeBuilder(Alphabet<I> alphabet, boolean invalidateSystemstates) {
+		public ReuseTreeBuilder(Alphabet<I> alphabet) {
 			this.alphabet = alphabet;
-			this.invalidateSystemstates = invalidateSystemstates;
 			this.systemStateHandler = new SystemStateHandler<S>() {
 				@Override
 				public void dispose(final S state) {
@@ -83,6 +82,11 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 		
 		public ReuseTreeBuilder<S,I,O> withSystemStateHandler(SystemStateHandler<S> systemStateHandler) {
 			this.systemStateHandler = systemStateHandler;
+			return this;
+		}
+
+		public ReuseTreeBuilder<S,I,O> withEnabledSystemstateInvalidation(boolean invalidate) {
+			this.invalidateSystemstates = invalidate;
 			return this;
 		}
 		

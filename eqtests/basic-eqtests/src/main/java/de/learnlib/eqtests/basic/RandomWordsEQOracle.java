@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import net.automatalib.automata.concepts.OutputAutomaton;
 import net.automatalib.automata.fsa.DFA;
@@ -52,6 +53,8 @@ public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> im
 			super(mqOracle, minLength, maxLength, maxTests, random);
 		}
 	}
+	
+	private static final Logger LOGGER = Logger.getLogger(RandomWordsEQOracle.class.getName());
 
 	private MembershipOracle<I, O> oracle;
 	private int maxTests, minLength, maxLength;
@@ -66,13 +69,18 @@ public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> im
 	}
 
 	@Override
-	public DefaultQuery<I, O> findCounterExample(A hypothesis, Collection<? extends I> alpha) {
-
+	public DefaultQuery<I, O> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+		// Fail fast on empty inputs
+		if(inputs.isEmpty()) {
+			LOGGER.warning("Passed empty set of inputs to equivalence oracle; no counterexample can be found!");
+			return null;
+		}
+		
 		List<? extends I> symbolList;
-		if (alpha instanceof List) {
-			symbolList = (List<? extends I>) alpha;
+		if (inputs instanceof List) {
+			symbolList = (List<? extends I>) inputs;
 		} else {
-			symbolList = new ArrayList<>(alpha);
+			symbolList = new ArrayList<>(inputs);
 		}
 		
 		int numSyms = symbolList.size();

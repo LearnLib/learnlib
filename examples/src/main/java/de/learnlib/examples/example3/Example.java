@@ -130,7 +130,7 @@ public class Example {
 		// save execution of symbols
 		ReuseCapableImplFactory factory = new ReuseCapableImplFactory();
 		ReuseOracle<BoundedStringQueue, String, String> reuseOracle;
-		reuseOracle = new ReuseOracleBuilder<>(sigma, factory, true)
+		reuseOracle = new ReuseOracleBuilder<>(sigma, factory)
 				.withSystemStateHandler(ssh)
 				.build();
 
@@ -245,8 +245,7 @@ public class Example {
 			}
 
 			QueryResult<BoundedStringQueue, String> result;
-			result = new QueryResult<>(
-					output.toWord(), s);
+			result = new QueryResult<>(output.toWord(), s);
 
 			return result;
 		}
@@ -267,8 +266,7 @@ public class Example {
 			}
 
 			QueryResult<BoundedStringQueue, String> result;
-			result = new QueryResult<>(
-					output.toWord(), s);
+			result = new QueryResult<>(output.toWord(), s);
 
 			return result;
 		}

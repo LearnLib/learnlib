@@ -77,23 +77,26 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	public static class ReuseOracleBuilder<S,I,O> {
 		private final Alphabet<I> alphabet;
 		private final ReuseCapableOracleFactory<S,I,O> factory;
-		private final boolean invalidateSystemstates;
-		
+
+		private boolean invalidateSystemstates = true;
 		private SystemStateHandler<S> systemStateHandler;
 		private Set<I> invariantInputSymbols;
 		private Set<O> failureOutputSymbols;	
 		
 		public ReuseOracleBuilder(
 				Alphabet<I> alphabet, 
-				ReuseCapableOracleFactory<S, I, O> factory,
-				boolean invalidateSystemstates) {
+				ReuseCapableOracleFactory<S, I, O> factory) {
 			this.alphabet = alphabet;
 			this.factory = factory;
-			this.invalidateSystemstates = invalidateSystemstates;
 		}
 		
 		public ReuseOracleBuilder<S,I,O> withSystemStateHandler(SystemStateHandler<S> systemStateHandler) {
 			this.systemStateHandler = systemStateHandler;
+			return this;
+		}
+
+		public ReuseOracleBuilder<S,I,O> withEnabledSystemstateInvalidation(boolean invalidate) {
+			this.invalidateSystemstates = invalidate;
 			return this;
 		}
 		
@@ -117,10 +120,11 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 	 */
 	private ReuseOracle(ReuseOracleBuilder<S,I,O> builder) {
 		this.factory = builder.factory;
-		this.tree = new ReuseTreeBuilder<S,I,O>(builder.alphabet, builder.invalidateSystemstates)
+		this.tree = new ReuseTreeBuilder<S,I,O>(builder.alphabet)
 				.withSystemStateHandler(builder.systemStateHandler)
 				.withFailureOutputs(builder.failureOutputSymbols)
 				.withInvariantInputs(builder.invariantInputSymbols)
+				.withEnabledSystemstateInvalidation(builder.invalidateSystemstates)
 				.build();
 	}
 
