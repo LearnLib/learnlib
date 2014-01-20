@@ -16,10 +16,12 @@
  */
 package de.learnlib.filters.reuse.tree;
 
+import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
+
 /**
- * A implementation of this interface that is set to the {@link ReuseTree} (see
- * {@link ReuseTree#setSystemStateHandler(SystemStateHandler)}) will be informed
- * about all removed system states whenever
+ * A implementation of this interface that is set to the {@link ReuseTree} 
+ * (see {@link ReuseOracleBuilder#withSystemStateHandler(SystemStateHandler)}) 
+ * will be informed about all removed system states whenever
  * {@link ReuseTree#disposeSystemstates()} gets called.
  * 
  * The objective of this handler is that clearing system states from the reuse
@@ -32,8 +34,13 @@ package de.learnlib.filters.reuse.tree;
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  * 
- * @param <S>
+ * @param <S> system state class
  */
 public interface SystemStateHandler<S> {
+	/**
+	 * The system state S will be removed from the {@link ReuseTree}.
+	 *  
+	 * @param <S> system state class
+	 */
 	void dispose(S state);
 }

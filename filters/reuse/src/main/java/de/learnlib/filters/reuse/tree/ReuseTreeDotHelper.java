@@ -29,9 +29,9 @@ import net.automatalib.graphs.dot.GraphDOTHelper;
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  *
- * @param <S>
- * @param <I>
- * @param <O>
+ * @param <S> system state class
+ * @param <I> input symbol class
+ * @param <O> output symbol class
  */
 public class ReuseTreeDotHelper<S, I, O> extends
 		DefaultDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {

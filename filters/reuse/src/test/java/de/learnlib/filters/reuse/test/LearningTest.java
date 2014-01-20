@@ -17,11 +17,9 @@
 package de.learnlib.filters.reuse.test;
 
 import java.io.IOException;
-import java.io.StringReader;
 
 import de.learnlib.filters.reuse.ReuseCapableOracleFactory;
 import junit.framework.Assert;
-import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -31,12 +29,20 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.Sets;
+
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseOracle;
+import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
 import de.learnlib.filters.reuse.tree.ReuseTree;
 
+/**
+ * Simple learning test that shows who to use the reuse oracle.
+ *  
+ * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ */
 public class LearningTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;
 	private Alphabet<Integer> sigma;
@@ -47,9 +53,11 @@ public class LearningTest {
 	@BeforeClass
 	protected void setUp() {
 		sigma = Alphabets.integers(0, 3);
-		reuseOracle = new ReuseOracle<>(sigma, new TestOracleFactory());
-		reuseOracle.getReuseTree().addInvariantInputSymbol(0);
-		reuseOracle.getReuseTree().addFailureOutputSymbol("error");
+
+		reuseOracle = new ReuseOracleBuilder<>(sigma, new TestOracleFactory() ,true)
+				.withFailureOutputs(Sets.newHashSet("error"))
+				.withInvariantInputs(Sets.newHashSet(0))
+				.build();
 	}
 
 	@Test
@@ -99,8 +107,7 @@ public class LearningTest {
 			}
 
 			QueryResult<Integer, String> result;
-			result = new QueryResult<Integer, String>(output.toWord(), integer,
-					true);
+			result = new QueryResult<Integer, String>(output.toWord(), integer);
 
 			return result;
 		}
@@ -119,8 +126,7 @@ public class LearningTest {
 			}
 
 			QueryResult<Integer, String> result;
-			result = new QueryResult<Integer, String>(output.toWord(), integer,
-					true);
+			result = new QueryResult<Integer, String>(output.toWord(), integer);
 
 			return result;
 		}
