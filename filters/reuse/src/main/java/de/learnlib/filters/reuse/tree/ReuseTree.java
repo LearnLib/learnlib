@@ -136,7 +136,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * 
 	 * @return root The root of the tree, never <code>null</code>.
 	 */
-	public final synchronized ReuseNode<S, I, O> getRoot() {
+	public final ReuseNode<S, I, O> getRoot() {
 		return this.root;
 	}
 
