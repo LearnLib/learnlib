@@ -64,7 +64,7 @@ import java.util.Set;
  * @param <O> output symbol class
  */
 public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
-	private final Supplier<ReuseCapableOracle<S, I, O>> oracleSupplier;
+	private final Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier;
 
 	private final ThreadLocal<ReuseCapableOracle<S, I, O>> executableOracles =
 			new ThreadLocal<ReuseCapableOracle<S, I, O>>() {
@@ -78,7 +78,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 
 	public static class ReuseOracleBuilder<S,I,O> {
 		private final Alphabet<I> alphabet;
-		private final Supplier<ReuseCapableOracle<S, I, O>> oracleSupplier;
+		private final Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier;
 
 		private boolean invalidateSystemstates = true;
 		private SystemStateHandler<S> systemStateHandler;
@@ -87,7 +87,7 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 		
 		public ReuseOracleBuilder(
 				Alphabet<I> alphabet,
-				Supplier<ReuseCapableOracle<S, I, O>> oracleSupplier) {
+				Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier) {
 			this.alphabet = alphabet;
 			this.oracleSupplier = oracleSupplier;
 		}

@@ -61,7 +61,7 @@ public class ReuseOracleTest {
 			}
 		};
 
-		Supplier<ReuseCapableOracle<Integer, Integer, String>> oracleSupplier =
+		Supplier<? extends ReuseCapableOracle<Integer, Integer, String>> oracleSupplier =
 				new Supplier<ReuseCapableOracle<Integer, Integer, String>>() {
 					@Override
 					public ReuseCapableOracle<Integer, Integer, String> get() {
