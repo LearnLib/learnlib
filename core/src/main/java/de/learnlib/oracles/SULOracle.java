@@ -38,15 +38,17 @@ public class SULOracle<I, O> extends AbstractSingleQueryOracle<I, Word<O>> imple
 	public Word<O> answerQuery(Word<I> prefix, Word<I> suffix) {
 		sul.pre();
 		// Prefix: Execute symbols, don't record output
-		for(I sym : prefix)
+		for(I sym : prefix) {
 			sul.step(sym);
+		}
 		
 		// Suffix: Execute symbols, outputs constitute output word
 		WordBuilder<O> wb = new WordBuilder<>(suffix.length());
-		for(I sym : suffix)
+		for(I sym : suffix) {
 			wb.add(sul.step(sym));
+		}
 		
-                sul.post();
+        sul.post();
 		return wb.toWord();
 	}
 

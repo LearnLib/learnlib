@@ -108,24 +108,24 @@ final class MasterQuery<I,O> extends Query<I,Word<O>> {
 	}
 	
 	private Word<O> truncateOutput(Word<O> output) {
-		if(errorSyms == null)
+		if(errorSyms == null) {
 			return output;
+		}
 		
 		int maxLen = output.length() - 1;
 		int i = 0;
 		O repSym = null;
 		
-		while(i < maxLen) {
+		while(i < maxLen && repSym == null) {
 			O sym = output.getSymbol(i++);
 			repSym = errorSyms.get(sym);
-			if(repSym != null)
-				break;
 		}
 		
-		if(repSym == null)
+		if(repSym == null) {
 			return output;
+		}
 		
-		WordBuilder<O> wb = new WordBuilder<O>(maxLen + 1);
+		WordBuilder<O> wb = new WordBuilder<>(maxLen + 1);
 		wb.append(output.prefix(i));
 		wb.repeatAppend(1 + maxLen - i, repSym);
 		

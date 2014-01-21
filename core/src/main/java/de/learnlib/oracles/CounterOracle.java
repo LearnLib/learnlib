@@ -67,6 +67,14 @@ public class CounterOracle<I,O> implements StatisticOracle<I,O> {
     public Counter getStatisticalData() {
         return this.counter;
     }
+    
+    public Counter getCounter() {
+    	return this.counter;
+    }
+    
+    public long getCount() {
+    	return counter.getCount();
+    }
 
     @Override
     public void setNext(MembershipOracle<I, O> next) {
