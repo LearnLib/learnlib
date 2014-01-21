@@ -28,6 +28,12 @@ import java.util.Map;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+
+import de.learnlib.algorithms.features.observationtable.AbstractObservationTable;
+import de.learnlib.algorithms.features.observationtable.AbstractObservationTable.AbstractRow;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
@@ -547,5 +553,61 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		}
 		
 		return true;
+	}
+	
+	private class StandardRowWrapper extends AbstractRow<I, O> {
+		private final Row<I> internalRow;
+		
+		public StandardRowWrapper(Row<I> internalRow) {
+			this.internalRow = internalRow;
+		}
+		@Override
+		public Word<I> getLabel() {
+			return internalRow.getPrefix();
+		}
+		@Override
+		public boolean isShortPrefixRow() {
+			return internalRow.isShortPrefix();
+		}
+		@Override
+		public List<O> getValues() {
+			return Collections.unmodifiableList(allRowContents.get(internalRow.getRowContentId()));
+		}
+	}
+	
+	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, O> asStandardTable() {
+		final Function<Row<I>,StandardRowWrapper> wrapRow = new Function<Row<I>,StandardRowWrapper>() {
+			@Override
+			public StandardRowWrapper apply(Row<I> internalRow) {
+				return new StandardRowWrapper(internalRow);
+			}
+		};
+		
+		return new AbstractObservationTable<I, O>() {
+			@Override
+			public List<? extends Word<I>> getSuffixes() {
+				return Collections.unmodifiableList(suffixes);
+			}
+			@Override
+			public List<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getShortPrefixRows() {
+				return Collections.unmodifiableList(Lists.transform(shortPrefixRows, wrapRow));
+			}
+
+			@Override
+			public List<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getLongPrefixRows() {
+				return Collections.unmodifiableList(Lists.transform(longPrefixRows, wrapRow));
+			}
+
+			@Override
+			public de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O> getSuccessorRow(
+					de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O> spRow,
+					I symbol) {
+				if(!(spRow instanceof ObservationTable.StandardRowWrapper)) {
+					throw new IllegalArgumentException("Invalid observation table row");
+				}
+				StandardRowWrapper wrapped = (StandardRowWrapper)spRow;
+				return new StandardRowWrapper(getRowSuccessor(wrapped.internalRow, symbol));
+			}
+		};
 	}
 }

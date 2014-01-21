@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
-
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
@@ -30,6 +28,9 @@ import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+
+import com.github.misberner.buildergen.annotations.GenerateBuilder;
+
 import de.learnlib.algorithms.lstargeneric.ExtensibleAutomatonLStar;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;

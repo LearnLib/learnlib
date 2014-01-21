@@ -25,6 +25,7 @@ import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import de.learnlib.algorithms.features.observationtable.OTUtils;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFABuilder;
 import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
@@ -143,5 +144,9 @@ public class Example {
         w.close();
 
         System.out.println("-------------------------------------------------------");
+        
+        System.out.println("Final observation table:");
+        OTUtils.writeASCIIToSysout(lstar.getObservationTable());
+        OTUtils.displayHTMLInBrowser(lstar.getObservationTable());
     }
 }

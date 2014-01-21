@@ -22,11 +22,11 @@ import java.util.Objects;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import de.learnlib.algorithms.features.observationtable.OTLearner;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.table.Inconsistency;
 import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
-import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
@@ -43,7 +43,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <I> input symbol class.
  * @param <O> output class.
  */
-public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, O> {
+public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O> {
 	
 	protected final Alphabet<? extends I> alphabet;
 	protected final MembershipOracle<I, O> oracle;
@@ -187,5 +187,11 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	 * @return the list of initial suffixes.
 	 */
 	protected abstract List<Word<I>> initialSuffixes();
-
+	
+	
+	
+	@Override
+	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, O> getObservationTable() {
+		return table.asStandardTable();
+	}
 }

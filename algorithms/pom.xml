@@ -34,6 +34,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>features</module>
 		<module>dhc</module>
 		<module>lstar-generic</module>
 		<module>lstar-baseline</module>
