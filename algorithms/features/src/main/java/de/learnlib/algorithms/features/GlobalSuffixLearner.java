@@ -16,20 +16,26 @@
  */
 package de.learnlib.algorithms.features;
 
-import java.util.Collection;
-
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Word;
 import de.learnlib.api.LearningAlgorithm;
 
-public interface GlobalSuffixLearner<M, I, O> extends LearningAlgorithm<M, I, O> {
+/**
+ * Common interface for learning algorithms that use a global suffix set. These are mostly
+ * algorithms using an <em>observation table</em>, such as Dana Angluin's L* and its
+ * derivatives.
+ *  
+ * @author Malte Isberner <malte.isberner@gmail.com>
+ *
+ * @param <M> hypothesis model type
+ * @param <I> input symbol type
+ * @param <O> output type
+ */
+public interface GlobalSuffixLearner<M, I, O> extends LearningAlgorithm<M, I, O>, GlobalSuffixFeature<I> {
 	
 	public static interface GlobalSuffixLearnerDFA<I> extends GlobalSuffixLearner<DFA<?,I>,I,Boolean> {
 	}
 	public static interface GlobalSuffixLearnerMealy<I,O> extends GlobalSuffixLearner<MealyMachine<?,I,?,O>,I,Word<O>> {
 	}
-	
-	public Collection<? extends Word<I>> getGlobalSuffixes();
-	public void addGlobalSuffixes(Collection<? extends Word<I>> globalSuffixes);
 }

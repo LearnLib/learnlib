@@ -26,6 +26,7 @@ import java.util.Set;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import de.learnlib.algorithms.features.GlobalSuffixLearner.GlobalSuffixLearnerDFA;
 import de.learnlib.api.LearningAlgorithm.DFALearner;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
@@ -36,7 +37,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <I>
  * 		input symbol class.
  */
-public class BaselineLStar<I> implements DFALearner<I> {
+public class BaselineLStar<I> implements DFALearner<I>, GlobalSuffixLearnerDFA<I> {
 
 	private final Alphabet<I> alphabet;
 
@@ -237,7 +238,7 @@ public class BaselineLStar<I> implements DFALearner<I> {
 	 * @param suffixes
 	 * 		The suffixes which are appended to the states before sending the resulting word to the oracle.
 	 */
-	private void processMembershipQueriesForStates(LinkedHashSet<Word<I>> states, Collection<Word<I>> suffixes) {
+	private void processMembershipQueriesForStates(LinkedHashSet<Word<I>> states, Collection<? extends Word<I>> suffixes) {
 		List<DefaultQuery<I, Boolean>> queries = new ArrayList<>(states.size());
 		for (Word<I> state : states) {
 			for (Word<I> suffix : suffixes) {
@@ -274,6 +275,26 @@ public class BaselineLStar<I> implements DFALearner<I> {
 
 	public String getStringRepresentationOfObservationTable() {
 		return ObservationTablePrinter.getPrintableStringRepresentation(observationTable);
+	}
+
+	@Override
+	public Collection<? extends Word<I>> getGlobalSuffixes() {
+		return Collections.unmodifiableCollection(observationTable.getSuffixes());
+	}
+
+	@Override
+	public boolean addGlobalSuffixes(
+			Collection<? extends Word<I>> newGlobalSuffixes) {
+		observationTable.getSuffixes().addAll(newGlobalSuffixes);
+		
+		int numStatesOld = observationTable.getStates().size();
+		
+		processMembershipQueriesForStates(observationTable.getStates(), newGlobalSuffixes);
+		processMembershipQueriesForStates(observationTable.getCandidates(), newGlobalSuffixes);
+		
+		closeTable();
+		
+		return (observationTable.getStates().size() != numStatesOld);
 	}
 
 }

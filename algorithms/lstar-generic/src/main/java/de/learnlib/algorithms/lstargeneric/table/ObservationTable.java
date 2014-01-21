@@ -20,6 +20,7 @@ import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -191,9 +192,18 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	 * @param oracle the membership oracle
 	 * @return a list of equivalence classes of unclosed rows
 	 */
-	public List<List<Row<I>>> addSuffixes(List<Word<I>> newSuffixes, MembershipOracle<I, O> oracle) {
+	public List<List<Row<I>>> addSuffixes(Collection<? extends Word<I>> newSuffixes, MembershipOracle<I, O> oracle) {
 		int oldSuffixCount = suffixes.size();
-		int numNewSuffixes = newSuffixes.size();
+		// we need a stable iteration order, and only List guarantees this
+		List<? extends Word<I>> newSuffixList;
+		if(newSuffixes instanceof List) {
+			newSuffixList = (List<? extends Word<I>>)newSuffixes;
+		}
+		else {
+			newSuffixList = new ArrayList<>(newSuffixes);
+		}
+		
+		int numNewSuffixes = newSuffixList.size();
 		
 		int numSpRows = shortPrefixRows.size();
 		int rowCount = numSpRows + longPrefixRows.size();
@@ -201,10 +211,10 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		List<DefaultQuery<I,O>> queries = new ArrayList<DefaultQuery<I,O>>(rowCount * numNewSuffixes);
 		
 		for(Row<I> row : shortPrefixRows)
-			buildQueries(queries, row.getPrefix(), newSuffixes);
+			buildQueries(queries, row.getPrefix(), newSuffixList);
 		
 		for(Row<I> row : longPrefixRows)
-			buildQueries(queries, row.getPrefix(), newSuffixes);
+			buildQueries(queries, row.getPrefix(), newSuffixList);
 		
 		oracle.processQueries(queries);
 		
@@ -248,7 +258,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 			}	
 		}
 		
-		this.suffixes.addAll(newSuffixes);
+		this.suffixes.addAll(newSuffixList);
 		
 		return unclosed;
 	}
@@ -473,19 +483,19 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	}
 	
 	protected static <I,O>
-	void buildQueries(List<DefaultQuery<I,O>> queryList, List<Word<I>> prefixes, List<Word<I>> suffixes) {
+	void buildQueries(List<DefaultQuery<I,O>> queryList, List<Word<I>> prefixes, List<? extends Word<I>> suffixes) {
 		for(Word<I> prefix : prefixes)
 			buildQueries(queryList, prefix, suffixes);
 	}
 	
 	protected static <I,O>
-	void buildRowQueries(List<DefaultQuery<I,O>> queryList, List<Row<I>> rows, List<Word<I>> suffixes) {
+	void buildRowQueries(List<DefaultQuery<I,O>> queryList, List<Row<I>> rows, List<? extends Word<I>> suffixes) {
 		for(Row<I> row : rows)
 			buildQueries(queryList, row.getPrefix(), suffixes);
 	}
 	
 	protected static <I,O>
-	void buildQueries(List<DefaultQuery<I,O>> queryList, Word<I> prefix, List<Word<I>> suffixes) {
+	void buildQueries(List<DefaultQuery<I,O>> queryList, Word<I> prefix, List<? extends Word<I>> suffixes) {
 		for(Word<I> suffix : suffixes)
 			queryList.add(new DefaultQuery<I,O>(prefix, suffix));
 	}

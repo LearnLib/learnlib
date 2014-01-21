@@ -22,6 +22,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.FutureTask;
 
 import net.automatalib.words.Word;
 
@@ -72,9 +73,27 @@ public abstract class OTUtils {
 			ObservationTable<I,O> table,
 			Function<? super Word<I>,? extends String> wordToString,
 			Function<? super O,? extends String> outputToString) throws IOException, HeadlessException, UnsupportedOperationException {
-		File tempFile = File.createTempFile("learnlib-ot" , ".html");
+		final File tempFile = File.createTempFile("learnlib-ot" , ".html");
 		writeHTMLToFile(table, tempFile, wordToString, outputToString);
-		Desktop.getDesktop().browse(tempFile.toURI());
+		final Desktop desktop = Desktop.getDesktop();
+		
+		// Perform asynchronously
+		// Reason: If a browser instance is running, Desktop.browse() will return
+		// immediately; otherwise, it will block until the newly opened browser window
+		// is closed. However, whether or not a method blocks should not depend on
+		// external conditions.
+		Runnable taskBody = new Runnable() {
+			@Override
+			public void run() {
+				try {
+					desktop.browse(tempFile.toURI());
+				}
+				catch(IOException ex) {
+					ex.printStackTrace(); // not much we can do here
+				}
+			}
+		};
+		new FutureTask<>(taskBody, null).run();
 	}
 	
 	public static <I,O>
