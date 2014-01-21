@@ -18,6 +18,7 @@ package de.learnlib.algorithms.features.observationtable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,7 +28,9 @@ import java.util.Set;
 
 import net.automatalib.words.Word;
 
+import com.google.common.base.Function;
 import com.google.common.base.Objects;
+import com.google.common.collect.Collections2;
 
 public abstract class AbstractObservationTable<I, O> implements ObservationTable<I, O> {
 	
@@ -35,7 +38,7 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 
 		@Override
 		public Iterator<O> iterator() {
-			return getValues().iterator();
+			return Collections.unmodifiableCollection(getValues()).iterator();
 		}
 
 		@Override
@@ -49,31 +52,31 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 		}
 		
 	}
+	
+	private final Function<Row<I,O>,Word<I>> getLabel
+		= new Function<Row<I,O>,Word<I>>() {
+		@Override
+		public Word<I> apply(Row<I,O> row) {
+			return row.getLabel();
+		}
+	};
 
 	@Override
-	public List<? extends Word<I>> getShortPrefixes() {
-		List<? extends Row<I,O>> spRows = getShortPrefixRows();
-		List<Word<I>> result = new ArrayList<>(spRows.size());
-		for(Row<I,O> row : spRows) {
-			result.add(row.getLabel());
-		}
-		return result;
+	public Collection<? extends Word<I>> getShortPrefixes() {
+		Collection<? extends Row<I,O>> spRows = getShortPrefixRows();
+		return Collections2.transform(spRows, getLabel);
 	}
 	
 	@Override
-	public List<? extends Word<I>> getLongPrefixes() {
-		List<? extends Row<I,O>> lpRows = getLongPrefixRows();
-		List<Word<I>> result = new ArrayList<>(lpRows.size());
-		for(Row<I,O> row : lpRows) {
-			result.add(row.getLabel());
-		}
-		return result;
+	public Collection<? extends Word<I>> getLongPrefixes() {
+		Collection<? extends Row<I,O>> lpRows = getLongPrefixRows();
+		return Collections2.transform(lpRows, getLabel);
 	}
 	
 	@Override
-	public List<? extends Word<I>> getAllPrefixes() {
-		List<? extends Word<I>> shortPrefixes = getShortPrefixes();
-		List<? extends Word<I>> longPrefixes = getLongPrefixes();
+	public Collection<? extends Word<I>> getAllPrefixes() {
+		Collection<? extends Word<I>> shortPrefixes = getShortPrefixes();
+		Collection<? extends Word<I>> longPrefixes = getLongPrefixes();
 		List<Word<I>> result = new ArrayList<>(shortPrefixes.size() + longPrefixes.size());
 		
 		result.addAll(shortPrefixes);
@@ -83,9 +86,9 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 	}
 
 	@Override
-	public List<Row<I, O>> getAllRows() {
-		List<? extends Row<I,O>> spRows = getShortPrefixRows();
-		List<? extends Row<I,O>> lpRows = getLongPrefixRows();
+	public List<? extends Row<I, O>> getAllRows() {
+		Collection<? extends Row<I,O>> spRows = getShortPrefixRows();
+		Collection<? extends Row<I,O>> lpRows = getLongPrefixRows();
 		
 		List<Row<I,O>> result = new ArrayList<>(spRows.size() + lpRows.size());
 		result.addAll(spRows);

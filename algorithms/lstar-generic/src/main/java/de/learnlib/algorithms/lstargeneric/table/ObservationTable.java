@@ -359,14 +359,14 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	
 	@SuppressWarnings("unchecked")
 	public Inconsistency<I,O> findInconsistency() {
-		Row<I>[] canonicRows = (Row<I>[])new Row<?>[numDistinctRows()];
+		Row<I>[] canonicalRows = (Row<I>[])new Row<?>[numDistinctRows()];
 		
 		for(Row<I> spRow : shortPrefixRows) {
 			int contentId = spRow.getRowContentId();
 			
-			Row<I> canRow = canonicRows[contentId];
+			Row<I> canRow = canonicalRows[contentId];
 			if(canRow == null) {
-				canonicRows[contentId] = spRow;
+				canonicalRows[contentId] = spRow;
 				continue;
 			}
 			
@@ -585,11 +585,18 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		}
 	}
 	
+	private StandardRowWrapper wrapRow(Row<I> internalRow) {
+		if(internalRow != null) {
+			return new StandardRowWrapper(internalRow);
+		}
+		return null;
+	}
+	
 	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, O> asStandardTable() {
 		final Function<Row<I>,StandardRowWrapper> wrapRow = new Function<Row<I>,StandardRowWrapper>() {
 			@Override
 			public StandardRowWrapper apply(Row<I> internalRow) {
-				return new StandardRowWrapper(internalRow);
+				return wrapRow(internalRow);
 			}
 		};
 		
@@ -599,12 +606,12 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 				return Collections.unmodifiableList(suffixes);
 			}
 			@Override
-			public List<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getShortPrefixRows() {
+			public Collection<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getShortPrefixRows() {
 				return Collections.unmodifiableList(Lists.transform(shortPrefixRows, wrapRow));
 			}
 
 			@Override
-			public List<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getLongPrefixRows() {
+			public Collection<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getLongPrefixRows() {
 				return Collections.unmodifiableList(Lists.transform(longPrefixRows, wrapRow));
 			}
 
@@ -616,8 +623,23 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 					throw new IllegalArgumentException("Invalid observation table row");
 				}
 				StandardRowWrapper wrapped = (StandardRowWrapper)spRow;
-				return new StandardRowWrapper(getRowSuccessor(wrapped.internalRow, symbol));
+				return wrapRow(getRowSuccessor(wrapped.internalRow, symbol));
 			}
+			@Override
+			public List<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getAllRows() {
+				return Collections.unmodifiableList(Lists.transform(allRows, wrapRow));
+			}
+			@Override
+			public de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O> getRow(
+					Word<I> prefix) {
+				return wrapRow(rowMap.get(prefix));
+			}
+			@Override
+			public Collection<? extends Word<I>> getAllPrefixes() {
+				return Collections.unmodifiableSet(rowMap.keySet());
+			}
+			
+			
 		};
 	}
 }

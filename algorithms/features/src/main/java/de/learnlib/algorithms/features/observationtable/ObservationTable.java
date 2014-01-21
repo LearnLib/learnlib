@@ -27,7 +27,7 @@ public interface ObservationTable<I, O> {
 		public Word<I> getLabel();
 		public boolean isShortPrefixRow();
 		
-		public List<O> getValues();
+		public List<? extends O> getValues();
 		public int size();
 		
 		public O getValue(int index);
@@ -57,16 +57,16 @@ public interface ObservationTable<I, O> {
 		}
 	}
 	
-	public List<? extends Word<I>> getShortPrefixes();
-	public List<? extends Word<I>> getLongPrefixes();
+	public Collection<? extends Word<I>> getShortPrefixes();
+	public Collection<? extends Word<I>> getLongPrefixes();
 	
-	public List<? extends Word<I>> getAllPrefixes();
+	public Collection<? extends Word<I>> getAllPrefixes();
 	
 	public List<? extends Word<I>> getSuffixes();
 	
-	public List<? extends Row<I,O>> getShortPrefixRows();
-	public List<? extends Row<I,O>> getLongPrefixRows();
-	public List<? extends Row<I,O>> getAllRows();
+	public Collection<? extends Row<I,O>> getShortPrefixRows();
+	public Collection<? extends Row<I,O>> getLongPrefixRows();
+	public Collection<? extends Row<I,O>> getAllRows();
 	
 	public Row<I,O> getRow(Word<I> prefix);				
 	
