@@ -16,22 +16,22 @@
  */
 package de.learnlib.filters.reuse.tree;
 
-import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
-import de.learnlib.filters.reuse.ReuseException;
-import de.learnlib.filters.reuse.ReuseOracle;
-import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import net.automatalib.graphs.abstractimpl.AbstractGraph;
 import net.automatalib.graphs.dot.DOTPlottableGraph;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
+import de.learnlib.filters.reuse.ReuseException;
+import de.learnlib.filters.reuse.ReuseOracle;
+import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 
 /**
  * The {@link ReuseTree} is a tree like structure consisting of nodes (see
@@ -71,11 +71,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 		
 		public ReuseTreeBuilder(Alphabet<I> alphabet) {
 			this.alphabet = alphabet;
-			this.systemStateHandler = new SystemStateHandler<S>() {
-				@Override
-				public void dispose(final S state) {
-				}
-			};
+			this.systemStateHandler = null;
 			this.invariantInputSymbols = new HashSet<>();
 			this.failureOutputSymbols = new HashSet<>();
 		}
@@ -122,7 +118,16 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	private ReuseTree(ReuseTreeBuilder<S,I,O> builder) {
 		this.alphabet = builder.alphabet;
 		this.invalidateSystemstates = builder.invalidateSystemstates;
-		this.systemStateHandler = builder.systemStateHandler;
+		SystemStateHandler<S> handler = builder.systemStateHandler;
+		// If the specified handler is null, no action is required
+		if(handler == null) {
+			handler = new SystemStateHandler<S>() {
+				@Override
+				public void dispose(S state) {
+				}
+			};
+		}
+		this.systemStateHandler = handler;
 		this.invariantInputSymbols = builder.invariantInputSymbols;
 		this.failureOutputSymbols = builder.failureOutputSymbols;
 		
@@ -262,13 +267,12 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 
 		if (lastState == null) {
 			return null;
-		} else {
-			S systemState = lastState.getSystemState();
-			if (invalidateSystemstates) {
-				lastState.setSystemState(null);
-			}
-			return new NodeResult<>(lastState, systemState, length);
 		}
+		S systemState = lastState.getSystemState();
+		if (invalidateSystemstates) {
+			lastState.setSystemState(null);
+		}
+		return new NodeResult<>(lastState, systemState, length);
 	}
 
 	/**
@@ -362,6 +366,13 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 			int index = alphabet.getSymbolIndex(in);
 			sink.addEdge(index, new ReuseEdge<>(sink, rn, in, out));
 			sink = rn;
+		}
+		
+		// If there already is a state stored at this node, overwrite it (but dispose it beforehand)
+		// TODO: Allow storing multiple states at a node
+		S oldState = sink.getSystemState();
+		if(oldState != null) {
+			systemStateHandler.dispose(oldState);
 		}
 		sink.setSystemState(queryResult.newState);
 	}

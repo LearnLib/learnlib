@@ -172,21 +172,21 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 			tree.insert(query, res);
 
 			return res.output;
-		} else {
-			Word<I> suffix = query.suffix(query.size() - nodeResult.prefixLength);
-			Word<I> prefix = query.prefix(nodeResult.prefixLength);
-			
-			ReuseNode<S, I, O> reuseNode = nodeResult.reuseNode;
-			S systemState = nodeResult.systemState;
-			
-			QueryResult<S, O> queryResult;
-			queryResult = oracle.continueQuery(suffix, systemState);
-			this.tree.insert(suffix, reuseNode, queryResult);
-			
-			Word<O> prefixOutput = tree.getOutput(prefix); // TODO don't compute twice
-			Word<O> suffixOutput = queryResult.output;
-			return new WordBuilder<>(prefixOutput).append(suffixOutput).toWord();
 		}
+		
+		Word<I> suffix = query.suffix(query.size() - nodeResult.prefixLength);
+		Word<I> prefix = query.prefix(nodeResult.prefixLength);
+		
+		ReuseNode<S, I, O> reuseNode = nodeResult.reuseNode;
+		S systemState = nodeResult.systemState;
+		
+		QueryResult<S, O> queryResult;
+		queryResult = oracle.continueQuery(suffix, systemState);
+		this.tree.insert(suffix, reuseNode, queryResult);
+		
+		Word<O> prefixOutput = tree.getOutput(prefix); // TODO don't compute twice
+		Word<O> suffixOutput = queryResult.output;
+		return new WordBuilder<>(prefixOutput).append(suffixOutput).toWord();
 	}
 
 	/**
