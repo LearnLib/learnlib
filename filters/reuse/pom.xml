@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>learnlib-filters</artifactId>
+		<groupId>de.learnlib</groupId>
+		<version>0.10.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>learnlib-reuse</artifactId>
+	<name>LearnLib :: Filters :: Reuse</name>
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>learnlib-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-lstar-generic</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-commons-dotutil</artifactId>
+			<scope>test</scope>
+		</dependency> 
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>

@@ -35,6 +35,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 	<modules>
 		<module>cache</module>
+		<module>reuse</module>
 	</modules>
 </project>
 

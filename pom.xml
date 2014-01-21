@@ -450,6 +450,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 			</dependency>
 			<dependency>
 				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-reuse</artifactId>
+				<version>${project.version}</version>
+			</dependency>			
+			<dependency>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-drivers-basic</artifactId>
 				<version>${project.version}</version>
 			</dependency>

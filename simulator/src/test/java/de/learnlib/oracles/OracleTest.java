@@ -62,10 +62,10 @@ public class OracleTest {
         
         
         // Paul loves Mary...
-        Assert.assertEquals(queries.get(0).getOutput(), (Object)true);
+        Assert.assertEquals(queries.get(0).getOutput(), Boolean.TRUE);
         
         // ... but Mary does not love Paul :-(
-        Assert.assertEquals(queries.get(1).getOutput(), (Object)false);
+        Assert.assertEquals(queries.get(1).getOutput(), Boolean.FALSE);
         
     }
     
