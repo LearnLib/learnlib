@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.features.observationtable;
+package de.learnlib.algorithms.features.observationtable.writer;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,60 +22,56 @@ import java.util.List;
 import net.automatalib.words.Word;
 
 import com.google.common.base.Function;
-import com.google.common.base.Functions;
 
+import de.learnlib.algorithms.features.observationtable.ObservationTable;
 import de.learnlib.algorithms.features.observationtable.ObservationTable.Row;
 
-public class ObservationTableHTMLWriter<I, O> {
+/**
+ * Writes an observation table as a HTML table.
+ * <p>
+ * 
+ * @author Malte Isberner <malte.isberner@gmail.com>
+ *
+ * @param <I> input symbol type (upper bound)
+ * @param <O> output symbol type (upper bound)
+ */
+public class ObservationTableHTMLWriter<I, O> extends AbstractObservationTableWriter<I,O> {
 	
-	private final Appendable out;
-	private final Function<? super Word<I>,? extends String> wordToString;
-	private final Function<? super O,? extends String> outputToString;
-	
-	
-	public ObservationTableHTMLWriter(Appendable out,
-			Function<? super Word<I>,? extends String> wordToString,
+	public ObservationTableHTMLWriter(
+			Function<? super Word<? extends I>,? extends String> wordToString,
 			Function<? super O,? extends String> outputToString) {
-		if(wordToString == null) {
-			wordToString = Functions.toStringFunction();
-		}
-		if(outputToString == null) {
-			outputToString = Functions.toStringFunction();
-		}
-		
-		this.out = out;
-		this.wordToString = wordToString;
-		this.outputToString = outputToString;
+		super(wordToString, outputToString);
 	}
 	
-	public void write(ObservationTable<I,O> table) throws IOException {
-		List<? extends Word<I>> suffixes = table.getSuffixes();
+	@Override
+	public void write(Appendable out, ObservationTable<? extends I,? extends O> table) throws IOException {
+		List<? extends Word<? extends I>> suffixes = table.getSuffixes();
 		
 		out.append("<table class=\"learnlib-observationtable\">\n");
 		out.append("	<thead>\n");
 		out.append("		<tr><th rowspan=\"2\" class=\"prefix\">Prefix</th><th colspan=\"").append(Integer.toString(suffixes.size())).append("\" class=\"suffixes-header\">Suffixes</th></tr>\n");
 		out.append("		<tr>");
-		for(Word<I> suffix : suffixes) {
-			out.append("<td>").append(wordToString.apply(suffix)).append("</td>");
+		for(Word<? extends I> suffix : suffixes) {
+			out.append("<td>").append(wordToString(suffix)).append("</td>");
 		}
 		out.append("</tr>\n");
 		out.append("	</thead>\n");
 		out.append("	<tbody>\n");
 		
-		for(Row<I,O> row : table.getShortPrefixRows()) {
-			out.append("		<tr class=\"short-prefix\"><td class=\"prefix\">").append(wordToString.apply(row.getLabel())).append("</td>");
-			for(O value : row.getValues()) {
-				out.append("<td class=\"suffix-column\">").append(outputToString.apply(value)).append("</td>");
+		for(Row<? extends I,? extends O> row : table.getShortPrefixRows()) {
+			out.append("		<tr class=\"short-prefix\"><td class=\"prefix\">").append(wordToString(row.getLabel())).append("</td>");
+			for(O value : row) {
+				out.append("<td class=\"suffix-column\">").append(outputToString(value)).append("</td>");
 			}
 			out.append("</tr>\n");
 		}
 		
 		out.append("		<tr><td colspan=\"").append(Integer.toString(suffixes.size() + 1)).append("\"></td></tr>\n");
 		
-		for(Row<I,O> row : table.getLongPrefixRows()) {
-			out.append("		<tr class=\"long-prefix\"><td>").append(wordToString.apply(row.getLabel())).append("</td>");
-			for(O value : row.getValues()) {
-				out.append("<td class=\"suffix-column\">").append(outputToString.apply(value)).append("</td>");
+		for(Row<? extends I,? extends O> row : table.getLongPrefixRows()) {
+			out.append("		<tr class=\"long-prefix\"><td>").append(wordToString(row.getLabel())).append("</td>");
+			for(O value : row) {
+				out.append("<td class=\"suffix-column\">").append(outputToString(value)).append("</td>");
 			}
 			out.append("</tr>\n");
 		}

@@ -29,7 +29,13 @@ import net.automatalib.words.Word;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 
+import de.learnlib.algorithms.features.observationtable.writer.ObservationTableASCIIWriter;
+import de.learnlib.algorithms.features.observationtable.writer.ObservationTableHTMLWriter;
+import de.learnlib.algorithms.features.observationtable.writer.ObservationTableWriter;
+
 public abstract class OTUtils {
+	
+	private static final long BROWSER_STARTUP_DELAY = 5000; // milliseconds
 
 	private static final String HTML_FILE_HEADER = "<html><head>\n"
 			+ "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n"
@@ -43,6 +49,43 @@ public abstract class OTUtils {
 			+ "</style></head>\n"
 			+ "<body>\n";
 	private static final String HTML_FILE_FOOTER = "</body></html>\n";
+	
+	public static <I,O>
+	void writeToSysout(
+			ObservationTable<? extends I,? extends O> table,
+			ObservationTableWriter<I,O> writer) {
+		try {
+			writer.write(System.out, table);
+		}
+		catch(IOException ex) {
+			throw new IllegalStateException("Writing to System.out must not throw", ex);
+		}
+	}
+	
+	public static <I,O>
+	void writeToFile(
+			ObservationTable<? extends I,? extends O> table,
+			ObservationTableWriter<I,O> writer,
+			File file) throws IOException {
+		try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+			writer.write(bw, table);
+		}
+	}
+	
+	public static <I,O>
+	void toString(
+			ObservationTable<? extends I,? extends O> table,
+			ObservationTableWriter<I,O> writer) {
+		try {
+			StringBuilder sb = new StringBuilder();
+			writer.write(sb, table);
+		}
+		catch(IOException ex) {
+			throw new IllegalStateException("Writing to StringBuilder must not throw", ex);
+		}
+	}
+	
+	
 	
 	
 	public static <I,O>
@@ -68,32 +111,53 @@ public abstract class OTUtils {
 		writeHTMLToFile(table, file, Functions.toStringFunction(), Functions.toStringFunction());
 	}
 	
+	/**
+	 * Displays the observation table as a HTML document in the default browser.
+	 * <p>
+	 * This method internally relies on {@link Desktop#browse(java.net.URI)}, hence it will not
+	 * work if {@link Desktop} is not supported, or if the application is running in headless mode.
+	 * <p>
+	 * <b>IMPORTANT NOTE:</b> Calling this method may delay the termination of the JVM by up to 5 seconds.
+	 * This is due to the fact that the temporary file created in this method is marked for deletion
+	 * upon JVM termination. If the JVM terminates too early, it might be deleted before it was loaded
+	 * by the browser.
+	 *   
+	 * @param table the observation table to display
+	 * @param wordToString the transformation from words to strings. This transformation is <b>not</b> required
+	 * nor expected to escape HTML entities
+	 * @param outputToString the transformation from outputs to strings. This transformation is <b>not</b> required
+	 * nor expected to escape HTML entities
+	 * @throws IOException if creating or writing to the temporary file fails 
+	 * @throws HeadlessException if the JVM is running in headless mode
+	 * @throws UnsupportedOperationException if {@link Desktop#getDesktop()} is not supported by the system
+	 */
 	public static <I,O>
 	void displayHTMLInBrowser(
 			ObservationTable<I,O> table,
 			Function<? super Word<I>,? extends String> wordToString,
 			Function<? super O,? extends String> outputToString) throws IOException, HeadlessException, UnsupportedOperationException {
-		final File tempFile = File.createTempFile("learnlib-ot" , ".html");
+		File tempFile = File.createTempFile("learnlib-ot" , ".html");
+		tempFile.deleteOnExit();
 		writeHTMLToFile(table, tempFile, wordToString, outputToString);
-		final Desktop desktop = Desktop.getDesktop();
 		
-		// Perform asynchronously
-		// Reason: If a browser instance is running, Desktop.browse() will return
-		// immediately; otherwise, it will block until the newly opened browser window
-		// is closed. However, whether or not a method blocks should not depend on
-		// external conditions.
-		Runnable taskBody = new Runnable() {
+		Desktop desktop = Desktop.getDesktop();
+		// We use browse() instead of open() because, e.g., web developers may have
+		// an HTML editor set up as their default application to open HTML files
+		desktop.browse(tempFile.toURI());
+		
+		// Enforce a delayed shutdown of the JVM, in order to make sure
+		// tempFile doesn't get deleted prematurely
+		new FutureTask<>(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					desktop.browse(tempFile.toURI());
+					Thread.sleep(BROWSER_STARTUP_DELAY);
 				}
-				catch(IOException ex) {
+				catch(InterruptedException ex) {
 					ex.printStackTrace(); // not much we can do here
 				}
 			}
-		};
-		new FutureTask<>(taskBody, null).run();
+		}, null).run();
 	}
 	
 	public static <I,O>
@@ -123,47 +187,21 @@ public abstract class OTUtils {
 		writeASCIIToFile(table, file, Functions.toStringFunction(), Functions.toStringFunction());
 	}
 	
-	public static <I,O>
-	void writeASCII(
-			ObservationTable<I, O> table,
-			Appendable out,
-			Function<? super Word<I>,? extends String> wordToString,
-			Function<? super O,? extends String> outputToString) throws IOException {
-		
-		ObservationTableASCIIWriter<I, O> otWriter
-			= new ObservationTableASCIIWriter<>(out, true, wordToString, outputToString);
-		otWriter.write(table);
-	}
 	
-	public static <I,O>
-	void writeASCII(
-			ObservationTable<I, O> table,
-			Appendable out) throws IOException {
-		
-		ObservationTableASCIIWriter<I, O> otWriter
-			= new ObservationTableASCIIWriter<>(out, true);
-		otWriter.write(table);
-	}
 	
 	public static <I,O>
 	void writeASCIIToSysout(
 			ObservationTable<I, O> table,
-			Function<? super Word<I>,? extends String> wordToString,
+			Function<? super Word<? extends I>,? extends String> wordToString,
 			Function<? super O,? extends String> outputToString) {
 		
-		ObservationTableASCIIWriter<I, O> otWriter
-			= new ObservationTableASCIIWriter<>(System.out, true, wordToString, outputToString);
-		try {
-			otWriter.write(table);
-		}
-		catch(IOException ex) {
-			throw new IllegalStateException("Writing to System.out must not throw");
-		}
+		ObservationTableWriter<I, O> otWriter
+			= new ObservationTableASCIIWriter<>(wordToString, outputToString, true);
+		writeToSysout(table, otWriter);
 	}
 	
 	public static <I,O>
-	void writeASCIIToSysout(
-			ObservationTable<I, O> table) {
+	void writeASCIIToSysout(ObservationTable<I, O> table) {
 		writeASCIIToSysout(table, Functions.toStringFunction(), Functions.toStringFunction());
 	}
 	

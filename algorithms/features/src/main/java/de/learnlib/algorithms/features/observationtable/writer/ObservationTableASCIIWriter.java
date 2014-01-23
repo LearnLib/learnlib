@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.features.observationtable;
+package de.learnlib.algorithms.features.observationtable.writer;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,65 +22,56 @@ import java.util.List;
 import net.automatalib.words.Word;
 
 import com.google.common.base.Function;
-import com.google.common.base.Functions;
 
+import de.learnlib.algorithms.features.observationtable.ObservationTable;
 import de.learnlib.algorithms.features.observationtable.ObservationTable.Row;
 
-public class ObservationTableASCIIWriter<I,O> {
+public class ObservationTableASCIIWriter<I,O> extends AbstractObservationTableWriter<I,O> {
 	
-	private final Appendable out;
-	private final boolean rowSeparators;
-	private final Function<? super Word<I>,? extends String> wordToString;
-	private final Function<? super O,? extends String> outputToString;
+	private boolean rowSeparators;
 	
 	public ObservationTableASCIIWriter(
-			Appendable out,
-			boolean rowSeparators,
-			Function<? super Word<I>,? extends String> wordToString,
-			Function<? super O,? extends String> outputToString) {
-		
-		if(wordToString == null) {
-			wordToString = Functions.toStringFunction();
-		}
-		if(outputToString == null) {
-			outputToString = Functions.toStringFunction();
-		}
-		
-		this.out = out;
+			Function<? super Word<? extends I>,? extends String> wordToString,
+			Function<? super O,? extends String> outputToString,
+			boolean rowSeparators) {
+		super(wordToString, outputToString);
 		this.rowSeparators = rowSeparators;
-		this.wordToString = wordToString;
-		this.outputToString = outputToString;
 	}
 	
-	public ObservationTableASCIIWriter(Appendable out, boolean rowSeparators) {
-		this(out, rowSeparators, Functions.toStringFunction(), Functions.toStringFunction());
+	public ObservationTableASCIIWriter(boolean rowSeparators) {
+		this.rowSeparators = rowSeparators;
 	}
 	
-	public ObservationTableASCIIWriter(Appendable out) {
-		this(out, true);
+	public ObservationTableASCIIWriter() {
+		this(true);
+	}
+	
+	public void setRowSeparators(boolean rowSeparators) {
+		this.rowSeparators = rowSeparators;
 	}
 	
 	
-	public void write(ObservationTable<I,O> table) throws IOException {
-		List<? extends Word<I>> suffixes = table.getSuffixes();
+	@Override
+	public void write(Appendable out, ObservationTable<? extends I,? extends O> table) throws IOException {
+		List<? extends Word<? extends I>> suffixes = table.getSuffixes();
 		int numSuffixes = suffixes.size();
 		
 		int[] colWidth = new int[numSuffixes + 1];
 		
 		int i = 1;
-		for(Word<I> suffix : suffixes) {
-			colWidth[i++] = wordToString.apply(suffix).length();
+		for(Word<? extends I> suffix : suffixes) {
+			colWidth[i++] = wordToString(suffix).length();
 		}
 		
-		for(Row<I,O> row : table.getAllRows()) {
-			int thisWidth = wordToString.apply(row.getLabel()).length();
+		for(Row<? extends I,? extends O> row : table.getAllRows()) {
+			int thisWidth = wordToString(row.getLabel()).length();
 			if(thisWidth > colWidth[0]) {
 				colWidth[0] = thisWidth;
 			}
 			
 			i = 1;
-			for(O value : row.getValues()) {
-				thisWidth = outputToString.apply(value).length();
+			for(O value : row) {
+				thisWidth = outputToString(value).length();
 				if(thisWidth > colWidth[i]) {
 					colWidth[i] = thisWidth;
 				}
@@ -95,24 +86,24 @@ public class ObservationTableASCIIWriter<I,O> {
 		// Header
 		content[0] = "";
 		i = 1;
-		for(Word<I> suffix : suffixes) {
-			content[i++] = wordToString.apply(suffix);
+		for(Word<? extends I> suffix : suffixes) {
+			content[i++] = wordToString(suffix);
 		}
 		appendContentRow(out, content, colWidth);
 		appendSeparatorRow(out, '=', colWidth);
 		
 		boolean first = true;
-		for(Row<I,O> spRow : table.getShortPrefixRows()) {
+		for(Row<? extends I,? extends O> spRow : table.getShortPrefixRows()) {
 			if(first) {
 				first = false;
 			}
 			else if(rowSeparators) {
 				appendSeparatorRow(out, '-', colWidth);
 			}
-			content[0] = wordToString.apply(spRow.getLabel());
+			content[0] = wordToString(spRow.getLabel());
 			i = 1;
-			for(O value : spRow.getValues()) {
-				content[i++] = outputToString.apply(value);
+			for(O value : spRow) {
+				content[i++] = outputToString(value);
 			}
 			appendContentRow(out, content, colWidth);
 		}
@@ -120,17 +111,17 @@ public class ObservationTableASCIIWriter<I,O> {
 		appendSeparatorRow(out, '=', colWidth);
 		
 		first = true;
-		for(Row<I,O> lpRow : table.getLongPrefixRows()) {
+		for(Row<? extends I,? extends O> lpRow : table.getLongPrefixRows()) {
 			if(first) {
 				first = false;
 			}
 			else if(rowSeparators) {
 				appendSeparatorRow(out, '-', colWidth);
 			}
-			content[0] = wordToString.apply(lpRow.getLabel());
+			content[0] = wordToString(lpRow.getLabel());
 			i = 1;
 			for(O value : lpRow.getValues()) {
-				content[i++] = outputToString.apply(value);
+				content[i++] = outputToString(value);
 			}
 			appendContentRow(out, content, colWidth);
 		}
@@ -169,4 +160,5 @@ public class ObservationTableASCIIWriter<I,O> {
 			a.append(c);
 		}
 	}
+	
 }
