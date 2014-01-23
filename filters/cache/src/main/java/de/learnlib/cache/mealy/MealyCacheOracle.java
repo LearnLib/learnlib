@@ -26,6 +26,8 @@ import java.util.List;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
+import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
+import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -67,16 +69,48 @@ public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
 		}
 	}
 	
+	public static <I,O>
+	MealyCacheOracle<I,O> createDAGCacheOracle(Alphabet<I> inputAlphabet, MembershipOracle<I,Word<O>> delegate) {
+		return createDAGCacheOracle(inputAlphabet, null, delegate);
+	}
+	
+	public static <I,O>
+	MealyCacheOracle<I,O> createDAGCacheOracle(
+			Alphabet<I> inputAlphabet, Mapping<? super O,? extends O> errorSyms, MembershipOracle<I,Word<O>> delegate) {
+		IncrementalMealyBuilder<I,O> incrementalBuilder = new IncrementalMealyDAGBuilder<>(inputAlphabet);
+		return new MealyCacheOracle<>(incrementalBuilder, errorSyms, delegate);
+	}
+	
+	public static <I,O>
+	MealyCacheOracle<I,O> createTreeCacheOracle(Alphabet<I> inputAlphabet, MembershipOracle<I,Word<O>> delegate) {
+		return createTreeCacheOracle(inputAlphabet, null, delegate);
+	}
+	
+	public static <I,O>
+	MealyCacheOracle<I,O> createTreeCacheOracle(Alphabet<I> inputAlphabet, Mapping<? super O,? extends O> errorSyms, MembershipOracle<I,Word<O>> delegate) {
+		IncrementalMealyBuilder<I,O> incrementalBuilder = new IncrementalMealyTreeBuilder<>(inputAlphabet);
+		return new MealyCacheOracle<>(incrementalBuilder, errorSyms, delegate);
+	}
+	
 	private final MembershipOracle<I,Word<O>> delegate;
 	private final IncrementalMealyBuilder<I, O> incMealy;
 	private final Comparator<? super Query<I,?>> queryCmp;
 	private final Mapping<? super O,? extends O> errorSyms;
 	
+	
+	public MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder, Mapping<? super O,? extends O> errorSyms, MembershipOracle<I,Word<O>> delegate) {
+		this.incMealy = incrementalBuilder;
+		this.queryCmp = new ReverseLexCmp<>(incrementalBuilder.getInputAlphabet());
+		this.errorSyms = errorSyms;
+		this.delegate = delegate;
+	}
 	/**
 	 * Constructor.
 	 * @param alphabet the input alphabet for the cache
 	 * @param delegate the delegate Mealy oracle
+	 * @deprecated since 2014-01-23. Use {@link #createDAGCacheOracle(Alphabet, MembershipOracle)} to reproduce old behavior.
 	 */
+	@Deprecated
 	public MealyCacheOracle(Alphabet<I> alphabet, MembershipOracle<I,Word<O>> delegate) {
 		this(alphabet, null, delegate);
 	}
@@ -86,12 +120,12 @@ public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
 	 * @param alphabet the input alphabet for the cache
 	 * @param errorSyms the error symbol mapping (see class description)
 	 * @param delegate the delegate Mealy oracle
+	 * @deprecated since 2014-01-23. Use {@link #createDAGCacheOracle(Alphabet, Mapping, MembershipOracle)} to reproduce old
+	 * behavior.
 	 */
+	@Deprecated
 	public MealyCacheOracle(Alphabet<I> alphabet, Mapping<? super O, ? extends O> errorSyms, MembershipOracle<I,Word<O>> delegate) {
-		this.delegate = delegate;
-		this.incMealy = new IncrementalMealyBuilder<>(alphabet);
-		this.queryCmp = new ReverseLexCmp<>(alphabet);
-		this.errorSyms = errorSyms;
+		this(new IncrementalMealyDAGBuilder<I,O>(alphabet), errorSyms, delegate);
 	}
 	
 	public int getCacheSize() {

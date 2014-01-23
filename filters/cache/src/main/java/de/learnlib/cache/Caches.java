@@ -32,7 +32,7 @@ public abstract class Caches {
 	}
 	
 	public static <I,O> MealyCacheOracle<I, O> createMealyCache(Alphabet<I> alphabet, MembershipOracle<I,Word<O>> mqOracle) {
-		return new MealyCacheOracle<>(alphabet, mqOracle);
+		return MealyCacheOracle.createDAGCacheOracle(alphabet, mqOracle);
 	}
 	
 	public static <I,O> SULCache<I,O> createSULCache(Alphabet<I> alphabet, SUL<I,O> sul) {

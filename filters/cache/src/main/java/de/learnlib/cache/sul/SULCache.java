@@ -16,9 +16,10 @@
  */
 package de.learnlib.cache.sul;
 
-import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
-import net.automatalib.incremental.mealy.State;
-import net.automatalib.incremental.mealy.TransitionRecord;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
+import net.automatalib.incremental.mealy.dag.State;
+import net.automatalib.incremental.mealy.dag.TransitionRecord;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.SUL;
@@ -44,7 +45,8 @@ import de.learnlib.cache.mealy.MealyCacheConsistencyTest;
  */
 public class SULCache<I, O> implements SUL<I, O> {
 	
-	private final IncrementalMealyBuilder<I, O> incMealy;
+	private final IncrementalMealyDAGBuilder<I, O> incMealy;
+	private final MealyMachine<State,I,TransitionRecord,O> mealyView;
 	private final SUL<I,O> delegate;
 	
 	private State current;
@@ -52,7 +54,8 @@ public class SULCache<I, O> implements SUL<I, O> {
 	private WordBuilder<O> outputWord;
 
 	public SULCache(Alphabet<I> alphabet, SUL<I,O> sul) {
-		this.incMealy = new IncrementalMealyBuilder<>(alphabet);
+		this.incMealy = new IncrementalMealyDAGBuilder<>(alphabet);
+		this.mealyView = incMealy.asAutomaton();
 		this.delegate = sul;
 	}
 
@@ -68,7 +71,7 @@ public class SULCache<I, O> implements SUL<I, O> {
 		
 		inputWord.clear();
 		outputWord = null;
-		current = incMealy.getInitialState();
+		current = mealyView.getInitialState();
 	}
 
 	/*
@@ -80,11 +83,11 @@ public class SULCache<I, O> implements SUL<I, O> {
 		O out = null;
 		
 		if(current != null) {
-			TransitionRecord trans = incMealy.getTransition(current, in);
+			TransitionRecord trans = mealyView.getTransition(current, in);
 			
 			if(trans != null) {
-				out = incMealy.getTransitionOutput(trans);
-				current = incMealy.getSuccessor(trans);
+				out = mealyView.getTransitionOutput(trans);
+				current = mealyView.getSuccessor(trans);
 				assert current != null;
 			}
 			else {
