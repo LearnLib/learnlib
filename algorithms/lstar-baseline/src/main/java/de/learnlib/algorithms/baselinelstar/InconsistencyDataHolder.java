@@ -18,26 +18,37 @@ package de.learnlib.algorithms.baselinelstar;
 
 import net.automatalib.words.Word;
 
+import javax.annotation.Nonnull;
+
 public class InconsistencyDataHolder<I> {
 
+	@Nonnull
 	private final Word<I> firstState;
+
+	@Nonnull
 	private final Word<I> secondState;
+
+	@Nonnull
 	private final I differingSymbol;
 
-	public InconsistencyDataHolder(Word<I> firstState, Word<I> secondState, I differingSymbol) {
+	public InconsistencyDataHolder(@Nonnull Word<I> firstState, @Nonnull Word<I> secondState,
+			@Nonnull I differingSymbol) {
 		this.firstState = firstState;
 		this.secondState = secondState;
 		this.differingSymbol = differingSymbol;
 	}
 
+	@Nonnull
 	public Word<I> getFirstState() {
 		return firstState;
 	}
 
+	@Nonnull
 	public Word<I> getSecondState() {
 		return secondState;
 	}
 
+	@Nonnull
 	public I getDifferingSymbol() {
 		return differingSymbol;
 	}

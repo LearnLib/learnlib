@@ -27,6 +27,7 @@ import net.automatalib.automata.fsa.impl.FastDFAState;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,11 +44,14 @@ import java.util.Set;
  */
 public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, GlobalSuffixLearnerDFA<I> {
 
+	@Nonnull
 	private final Alphabet<I> alphabet;
 
+	@Nonnull
 	private final MembershipOracle<I, Boolean> oracle;
 
-	private ObservationTable<I, Boolean> observationTable;
+	@Nonnull
+	private final ObservationTable<I, Boolean> observationTable;
 
 	private boolean startLearningAlreadyCalled;
 
@@ -60,7 +64,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	 * @param oracle
 	 * 		The {@link MembershipOracle} which is used for membership queries.
 	 */
-	public BaselineLStar(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
+	public BaselineLStar(@Nonnull Alphabet<I> alphabet, @Nonnull MembershipOracle<I, Boolean> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		this.observationTable = new ObservationTable<>();
@@ -87,7 +91,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	}
 
 	@Override
-	public boolean refineHypothesis(DefaultQuery<I, Boolean> ceQuery) {
+	public boolean refineHypothesis(@Nonnull DefaultQuery<I, Boolean> ceQuery) {
 		if (!startLearningAlreadyCalled) {
 			throw new IllegalStateException("Unable to refine hypothesis before first learn iteration!");
 		}
@@ -114,7 +118,8 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 		return true;
 	}
 
-	private LinkedHashSet<Word<I>> prefixesOfWordNotInStates(Word<I> word) {
+	@Nonnull
+	private LinkedHashSet<Word<I>> prefixesOfWordNotInStates(@Nonnull Word<I> word) {
 		List<Word<I>> states = observationTable.getShortPrefixLabels();
 
 		LinkedHashSet<Word<I>> prefixes = new LinkedHashSet<>();
@@ -127,7 +132,8 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 		return prefixes;
 	}
 
-	private LinkedHashSet<Word<I>> getNewCandidatesFromPrefixes(LinkedHashSet<Word<I>> prefixes) {
+	@Nonnull
+	private LinkedHashSet<Word<I>> getNewCandidatesFromPrefixes(@Nonnull LinkedHashSet<Word<I>> prefixes) {
 		LinkedHashSet<Word<I>> newCandidates = new LinkedHashSet<>();
 
 		for (Word<I> prefix : prefixes) {
@@ -152,7 +158,8 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	 *      A set with the size of the alphabet, containing each time the word
 	 *      appended with an alphabet symbol.
 	 */
-	private LinkedHashSet<Word<I>> appendAlphabetSymbolsToWord(Word<I> word) {
+	@Nonnull
+	private LinkedHashSet<Word<I>> appendAlphabetSymbolsToWord(@Nonnull Word<I> word) {
 		LinkedHashSet<Word<I>> newCandidates = new LinkedHashSet<>(alphabet.size());
 		for (I alphabetSymbol : alphabet) {
 			Word<I> newCandidate = word.append(alphabetSymbol);
@@ -251,6 +258,11 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	private void ensureConsistency() {
 		InconsistencyDataHolder<I> dataHolder = observationTable.findInconsistentSymbol(alphabet);
 
+		if (dataHolder == null) {
+			// It seems like this method has been called without checking if table is inconsistent first
+			return;
+		}
+
 		Word<I> witness = observationTable.determineWitnessForInconsistency(dataHolder);
 		Word<I> newSuffix = Word.fromSymbols(dataHolder.getDifferingSymbol()).concat(witness);
 		observationTable.addSuffix(newSuffix);
@@ -271,7 +283,8 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	 * @param suffixes
 	 * 		The suffixes which are appended to the states before sending the resulting word to the oracle.
 	 */
-	private void processMembershipQueriesForStates(Collection<Word<I>> states, Collection<? extends Word<I>> suffixes) {
+	private void processMembershipQueriesForStates(@Nonnull Collection<Word<I>> states,
+			@Nonnull Collection<? extends Word<I>> suffixes) {
 		List<DefaultQuery<I, Boolean>> queries = new ArrayList<>(states.size());
 		for (Word<I> label : states) {
 			for (Word<I> suffix : suffixes) {
@@ -289,18 +302,19 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 		}
 	}
 
+	@Nonnull
 	public String getStringRepresentationOfObservationTable() {
 		return ObservationTablePrinter.getPrintableStringRepresentation(observationTable);
 	}
 
 	@Override
+	@Nonnull
 	public Collection<? extends Word<I>> getGlobalSuffixes() {
 		return Collections.unmodifiableCollection(observationTable.getSuffixes());
 	}
 
 	@Override
-	public boolean addGlobalSuffixes(
-			Collection<? extends Word<I>> newGlobalSuffixes) {
+	public boolean addGlobalSuffixes(@Nonnull Collection<? extends Word<I>> newGlobalSuffixes) {
 		observationTable.getSuffixes().addAll(newGlobalSuffixes);
 
 		int numStatesOld = observationTable.getShortPrefixRows().size();
@@ -314,6 +328,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	}
 
 	@Override
+	@Nonnull
 	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, Boolean> getObservationTable() {
 		return observationTable;
 	}

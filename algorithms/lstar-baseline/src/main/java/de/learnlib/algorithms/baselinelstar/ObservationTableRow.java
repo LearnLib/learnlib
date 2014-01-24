@@ -19,6 +19,7 @@ package de.learnlib.algorithms.baselinelstar;
 import de.learnlib.algorithms.features.observationtable.AbstractObservationTable;
 import net.automatalib.words.Word;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,11 +30,15 @@ import java.util.List;
  */
 class ObservationTableRow<I, O> extends AbstractObservationTable.AbstractRow<I, O> {
 
+	@Nonnull
 	private final Word<I> label;
+
+	@Nonnull
 	private final List<O> rowData;
+
 	private boolean shortPrefixRow;
 
-	ObservationTableRow(Word<I> label) {
+	ObservationTableRow(@Nonnull Word<I> label) {
 		this.label = label;
 		rowData = new LinkedList<>();
 	}
@@ -55,6 +60,7 @@ class ObservationTableRow<I, O> extends AbstractObservationTable.AbstractRow<I, 
 	}
 
 	@Override
+	@Nonnull
 	public Word<I> getLabel() {
 		return label;
 	}
@@ -65,6 +71,7 @@ class ObservationTableRow<I, O> extends AbstractObservationTable.AbstractRow<I, 
 	}
 
 	@Override
+	@Nonnull
 	public List<O> getValues() {
 		return Collections.unmodifiableList(rowData);
 	}
