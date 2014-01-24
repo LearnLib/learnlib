@@ -118,7 +118,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 		List<Word<I>> states = observationTable.getShortPrefixLabels();
 
 		LinkedHashSet<Word<I>> prefixes = new LinkedHashSet<>();
-		for (Word<I> prefix : prefixesOfWord(word)) {
+		for (Word<I> prefix : word.prefixes(false)) {
 			if (!states.contains(prefix)) {
 				prefixes.add(prefix);
 			}
@@ -287,23 +287,6 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 			Word<I> suffix = query.getSuffix();
 			observationTable.addResult(state, suffix, query.getOutput());
 		}
-	}
-
-	/**
-	 * A {@link Word} of the length n may have n prefixes of the length 1-n.
-	 * This method returns all of them.
-	 *
-	 * @param word
-	 * 		The word for which the prefixes should be returned.
-	 * @return A list of all prefixes for the given word.
-	 */
-	// FIXME: This is superseded by Word.suffixes(boolean). Please adapt -misberner
-	private static <I> List<Word<I>> prefixesOfWord(Word<I> word) {
-		List<Word<I>> prefixes = new ArrayList<>(word.size());
-		for (int i = 1; i <= word.size(); i++) {
-			prefixes.add(word.prefix(i));
-		}
-		return prefixes;
 	}
 
 	public String getStringRepresentationOfObservationTable() {
