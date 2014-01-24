@@ -16,62 +16,45 @@
  */
 package de.learnlib.algorithms.baselinelstar;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.FastDFA;
-import net.automatalib.automata.fsa.impl.FastDFAState;
+import com.google.common.collect.Lists;
+import de.learnlib.algorithms.features.observationtable.AbstractObservationTable;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * The internal storage mechanism for {@link BaselineLStar}.
  *
  * @param <I>
  * 		input symbol class.
+ * @param <O>
+ * 		output symbol class.
  */
-public class ObservationTable<I> {
+public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 
-	private LinkedHashSet<Word<I>> states;     // S
-	private LinkedHashSet<Word<I>> candidates; // SA
-	private List<Word<I>> suffixes;            // E
+	private List<ObservationTableRow<I, O>> shortPrefixRows; // S
+	private List<ObservationTableRow<I, O>> longPrefixRows;  // SA
+	private List<Word<I>> suffixes;                          // E
 
-	private Map<Word<I>, ObservationTableRow> rows;
 
 	public ObservationTable() {
 		Word<I> emptyWord = Word.epsilon();
 
-		states = new LinkedHashSet<>();
-		states.add(emptyWord);
-
-		candidates = new LinkedHashSet<>();
-
 		suffixes = new ArrayList<>();
 		suffixes.add(emptyWord);
 
-		rows = new HashMap<>();
-	}
+		Word<I> epsiplon = Word.epsilon();
+		ObservationTableRow<I, O> initialRow = new ObservationTableRow<>(epsiplon);
+		initialRow.setShortPrefixRow();
+		shortPrefixRows = new LinkedList<>();
+		shortPrefixRows.add(initialRow);
 
-	/**
-	 * The set of states in the observation table, often called "S".
-	 *
-	 * @return The set of states.
-	 */
-	LinkedHashSet<Word<I>> getStates() {
-		return states;
-	}
-
-	/**
-	 * The set of states in the observation table, often called "SA" or "S Sigma".
-	 *
-	 * @return The set of candidates.
-	 */
-	LinkedHashSet<Word<I>> getCandidates() {
-		return candidates;
+		longPrefixRows = new LinkedList<>();
 	}
 
 	/**
@@ -79,8 +62,87 @@ public class ObservationTable<I> {
 	 *
 	 * @return The set of candidates.
 	 */
-	List<Word<I>> getSuffixes() {
-		return suffixes;
+	@Override
+	public List<Word<I>> getSuffixes() {
+		return Collections.unmodifiableList(suffixes);
+	}
+
+	void addSuffix(Word<I> suffix) {
+		suffixes.add(suffix);
+	}
+
+	@Override
+	public Collection<ObservationTableRow<I, O>> getShortPrefixRows() {
+		return Collections.unmodifiableCollection(shortPrefixRows);
+	}
+
+	public List<Word<I>> getShortPrefixLabels() {
+		List<Word<I>> labels = Lists.newArrayListWithExpectedSize(shortPrefixRows.size());
+		for (ObservationTableRow<I, O> row : shortPrefixRows) {
+			labels.add(row.getLabel());
+		}
+		return labels;
+	}
+
+	@Override
+	public Collection<ObservationTableRow<I, O>> getLongPrefixRows() {
+		return Collections.unmodifiableCollection(longPrefixRows);
+	}
+
+	public List<Word<I>> getLongPrefixLabels() {
+		List<Word<I>> labels = Lists.newArrayListWithExpectedSize(longPrefixRows.size());
+		for (ObservationTableRow<I, O> row : longPrefixRows) {
+			labels.add(row.getLabel());
+		}
+		return labels;
+	}
+
+	@Override
+	public Row<I, O> getSuccessorRow(Row<I, O> spRow, I symbol) {
+		//noinspection SuspiciousMethodCalls
+		if (!shortPrefixRows.contains(spRow)) {
+			throw new IllegalArgumentException("Row '" + spRow + "' is not part of short prefix rows!");
+		}
+
+		Word<I> successorLabel = spRow.getLabel().append(symbol);
+
+		Row<I, O> successor = null;
+
+		for (Row<I, O> row : getAllRows()) {
+			if (row.getLabel().equals(successorLabel)) {
+				successor = row;
+				break;
+			}
+		}
+
+		return successor;
+	}
+
+	void addShortPrefix(Word<I> shortPrefix) {
+		final ObservationTableRow<I, O> row = new ObservationTableRow<>(shortPrefix);
+		row.setShortPrefixRow();
+		shortPrefixRows.add(row);
+	}
+
+	void addLongPrefix(Word<I> longPrefix) {
+		final ObservationTableRow<I, O> row = new ObservationTableRow<>(longPrefix);
+		row.setLongPrefixRow();
+		longPrefixRows.add(row);
+	}
+
+	void removeShortPrefixesFromLongPrefixes() {
+		List<Word<I>> longPrefixLabels = getLongPrefixLabels();
+		longPrefixLabels.retainAll(getShortPrefixLabels());
+
+		List<ObservationTableRow<I, O>> rowsToRemove = Lists.newArrayListWithCapacity(longPrefixLabels.size());
+
+		for (ObservationTableRow<I, O> row : longPrefixRows) {
+			if (longPrefixLabels.contains(row.getLabel())) {
+				rowsToRemove.add(row);
+			}
+		}
+
+		longPrefixRows.removeAll(rowsToRemove);
 	}
 
 	/**
@@ -93,32 +155,34 @@ public class ObservationTable<I> {
 	 * @param result
 	 * 		The result of the query.
 	 */
-	void addResult(Word<I> prefix, Word<I> suffix, boolean result) {
+	void addResult(Word<I> prefix, Word<I> suffix, O result) {
 		if (!suffixes.contains(suffix)) {
-			throw new IllegalStateException("Suffix " + suffix + " is not part of the suffixes set");
+			throw new IllegalArgumentException("Suffix '" + suffix + "' is not part of the suffixes set");
 		}
 
 		final int suffixPosition = suffixes.indexOf(suffix);
+		ObservationTableRow<I, O> row = getRowForPrefix(prefix);
 
-		if (rows.containsKey(prefix)) {
-			addResultToRow(result, suffixPosition, rows.get(prefix));
+		if (row != null) {
+			addResultToRow(result, suffixPosition, row);
 		}
 		else {
 			if (suffixPosition > 0) {
-				throw new IllegalStateException("Unable to set position " + suffixPosition + " for an empty row.");
+				throw new IllegalStateException("Unable to set position '" + suffixPosition + "' for an empty row.");
 			}
 
-			ObservationTableRow row = new ObservationTableRow();
-			row.addValue(result);
+			ObservationTableRow<I, O> newRow = new ObservationTableRow<>(prefix);
+			newRow.addValue(result);
+			newRow.setLongPrefixRow();
 
-			rows.put(prefix, row);
+			longPrefixRows.add(newRow);
 		}
 	}
 
-	private static void addResultToRow(boolean result, int suffixPosition, ObservationTableRow row) {
-		final List<Boolean> values = row.getValues();
+	private void addResultToRow(O result, int suffixPosition, ObservationTableRow<I, O> row) {
+		final List<O> values = row.getValues();
 		if (values.size() > suffixPosition) {
-			if (values.get(suffixPosition) != result) {
+			if (!values.get(suffixPosition).equals(result)) {
 				throw new IllegalStateException(
 						"New result " + values.get(suffixPosition) + " differs from old result " + result);
 			}
@@ -129,38 +193,24 @@ public class ObservationTable<I> {
 	}
 
 	/**
-	 * @return if the table is currently closed.
-	 */
-	boolean isClosed() {
-		return findUnclosedState() == null;
-	}
-
-	/**
 	 * Determines the next state for which the observation table needs to be closed.
 	 *
 	 * @return The next state for which the observation table needs to be closed. If the
-	 *         table is closed, this returns {@code null}.
+	 * table is closed, this returns {@code null}.
 	 */
 	Word<I> findUnclosedState() {
-		List<ObservationTableRow> stateRows = new ArrayList<>(states.size());
-
-		for (Word<I> state : states) {
-			stateRows.add(getRowForPrefix(state));
-		}
-
-		for (Word<I> candidate : candidates) {
+		for (ObservationTableRow<I, O> candidate : longPrefixRows) {
 			boolean found = false;
 
-			ObservationTableRow row = getRowForPrefix(candidate);
-			for (ObservationTableRow stateRow : stateRows) {
-				if (row.equals(stateRow)) {
+			for (ObservationTableRow<I, O> stateRow : shortPrefixRows) {
+				if (candidate.getValues().equals(stateRow.getValues())) {
 					found = true;
 					break;
 				}
 			}
 
 			if (!found) {
-				return candidate;
+				return candidate.getLabel();
 			}
 		}
 
@@ -177,15 +227,13 @@ public class ObservationTable<I> {
 	}
 
 	InconsistencyDataHolder<I> findInconsistentSymbol(Alphabet<I> alphabet) {
-		List<Word<I>> allStates = new ArrayList<>(states);
-
 		for (I symbol : alphabet) {
-			for (int firstStateCounter = 0; firstStateCounter < states.size(); firstStateCounter++) {
-				Word<I> firstState = allStates.get(firstStateCounter);
+			for (int firstStateCounter = 0; firstStateCounter < shortPrefixRows.size(); firstStateCounter++) {
+				Word<I> firstState = shortPrefixRows.get(firstStateCounter).getLabel();
 
-				for (int secondStateCounter = firstStateCounter + 1; secondStateCounter < states.size();
+				for (int secondStateCounter = firstStateCounter + 1; secondStateCounter < shortPrefixRows.size();
 				     secondStateCounter++) {
-					Word<I> secondState = allStates.get(secondStateCounter);
+					Word<I> secondState = shortPrefixRows.get(secondStateCounter).getLabel();
 
 					if (checkInconsistency(firstState, secondState, symbol)) {
 						return new InconsistencyDataHolder<>(firstState, secondState, symbol);
@@ -198,10 +246,10 @@ public class ObservationTable<I> {
 	}
 
 	private boolean checkInconsistency(Word<I> firstState, Word<I> secondState, I alphabetSymbol) {
-		ObservationTableRow rowForFirstState = getRowForPrefix(firstState);
-		ObservationTableRow rowForSecondState = getRowForPrefix(secondState);
+		ObservationTableRow<I, O> rowForFirstState = getRowForPrefix(firstState);
+		ObservationTableRow<I, O> rowForSecondState = getRowForPrefix(secondState);
 
-		if (!rowForFirstState.equals(rowForSecondState)) {
+		if (!rowForFirstState.getValues().equals(rowForSecondState.getValues())) {
 			return false;
 		}
 
@@ -210,7 +258,7 @@ public class ObservationTable<I> {
 		ObservationTableRow rowForExtendedFirstState = getRowForPrefix(extendedFirstState);
 		ObservationTableRow rowForExtendedSecondState = getRowForPrefix(extendedSecondState);
 
-		return !rowForExtendedFirstState.equals(rowForExtendedSecondState);
+		return !rowForExtendedFirstState.getValues().equals(rowForExtendedSecondState.getValues());
 	}
 
 	Word<I> determineWitnessForInconsistency(InconsistencyDataHolder<I> dataHolder) {
@@ -221,11 +269,13 @@ public class ObservationTable<I> {
 		Word<I> firstState = dataHolder.getFirstState().append(dataHolder.getDifferingSymbol());
 		Word<I> secondState = dataHolder.getSecondState().append(dataHolder.getDifferingSymbol());
 
-		ObservationTableRow firstRow = getRowForPrefix(firstState);
-		ObservationTableRow secondRow = getRowForPrefix(secondState);
+		ObservationTableRow<I, O> firstRow = getRowForPrefix(firstState);
+		ObservationTableRow<I, O> secondRow = getRowForPrefix(secondState);
 
 		for (int i = 0; i < firstRow.getValues().size(); i++) {
-			if (firstRow.getValues().get(i) != secondRow.getValues().get(i)) {
+			O symbolFirstRow = firstRow.getValues().get(i);
+			O symbolSecondRow = secondRow.getValues().get(i);
+			if (!symbolFirstRow.equals(symbolSecondRow)) {
 				return suffixes.get(i);
 			}
 		}
@@ -233,51 +283,45 @@ public class ObservationTable<I> {
 		throw new IllegalStateException("Both rows are identical, unable to determine a witness!");
 	}
 
-	ObservationTableRow getRowForPrefix(Word<I> state) {
-		return rows.get(state);
+	ObservationTableRow<I, O> getRowForPrefix(Word<I> state) {
+		for (ObservationTableRow<I, O> row : shortPrefixRows) {
+			if (row.getLabel().equals(state)) {
+				return row;
+			}
+		}
+
+		for (ObservationTableRow<I, O> row : longPrefixRows) {
+			if (row.getLabel().equals(state)) {
+				return row;
+			}
+		}
+
+		return null;
 	}
 
 	/**
-	 * Creates a hypothesis automaton based on the current state of the observation table.
+	 * Moves a single row from long prefix rows to short prefix rows.
 	 *
-	 * @param alphabet
-	 * 		The alphabet of the automaton.
-	 * @return The current hypothesis automaton.
+	 * @param longPrefix
+	 * 		A row which must be part of the long prefix rows and
+	 * 		should be moved to the short prefix rows.
 	 */
-	DFA<?, I> toAutomaton(Alphabet<I> alphabet) {
-		FastDFA<I> automaton = new FastDFA<>(alphabet);
-		Map<ObservationTableRow, FastDFAState> dfaStates = new HashMap<>((int) (1.5 * states.size()));
+	void moveLongPrefixToShortPrefixes(Word<I> longPrefix) {
+		ObservationTableRow<I, O> rowToMove = null;
 
-		for (Word<I> state : states) {
-			if (dfaStates.containsKey(getRowForPrefix(state))) {
-				continue;
-			}
-
-			FastDFAState dfaState;
-
-			if (state.isEmpty()) {
-				dfaState = automaton.addInitialState();
-			}
-			else {
-				dfaState = automaton.addState();
-			}
-
-			Word<I> emptyWord = Word.epsilon();
-			int positionOfEmptyWord = suffixes.indexOf(emptyWord);
-			dfaState.setAccepting(rows.get(state).getValues().get(positionOfEmptyWord));
-			dfaStates.put(getRowForPrefix(state), dfaState);
-		}
-
-		for (Word<I> state : states) {
-			FastDFAState dfaState = dfaStates.get(getRowForPrefix(state));
-			for (I alphabetSymbol : alphabet) {
-				Word<I> word = state.append(alphabetSymbol);
-
-				final int index = alphabet.getSymbolIndex(alphabetSymbol);
-				dfaState.setTransition(index, dfaStates.get(getRowForPrefix(word)));
+		for (ObservationTableRow<I, O> row : longPrefixRows) {
+			if (row.getLabel().equals(longPrefix)) {
+				rowToMove = row;
+				break;
 			}
 		}
 
-		return automaton;
+		if (rowToMove == null) {
+			throw new IllegalArgumentException("Word '" + longPrefix + "' not part of long prefixes");
+		}
+
+		longPrefixRows.remove(rowToMove);
+		rowToMove.setShortPrefixRow();
+		shortPrefixRows.add(rowToMove);
 	}
 }

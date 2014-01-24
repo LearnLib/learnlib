@@ -16,6 +16,11 @@
  */
 package de.learnlib.algorithms.features.observationtable;
 
+import com.google.common.base.Function;
+import com.google.common.base.Objects;
+import com.google.common.collect.Collections2;
+import net.automatalib.words.Word;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,14 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.automatalib.words.Word;
-
-import com.google.common.base.Function;
-import com.google.common.base.Objects;
-import com.google.common.collect.Collections2;
-
 public abstract class AbstractObservationTable<I, O> implements ObservationTable<I, O> {
-	
+
 	public static abstract class AbstractRow<I,O> implements Row<I,O> {
 
 		@Override
