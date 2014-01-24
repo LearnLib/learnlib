@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -24,8 +24,8 @@ import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.words.Alphabet;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.Query;
+import de.learnlib.cache.LearningCacheOracle.DFALearningCacheOracle;
 
 
 /**
@@ -38,7 +38,7 @@ import de.learnlib.api.Query;
  *
  * @param <I> input symbol class
  */
-public class DFACacheOracle<I> implements DFAMembershipOracle<I> {
+public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
 	
 	private final IncrementalDFABuilder<I> incDfa;
 	private final MembershipOracle<I,Boolean> delegate;
@@ -63,6 +63,7 @@ public class DFACacheOracle<I> implements DFAMembershipOracle<I> {
 	 * i.e., it is sufficient to call this method once after creation of the cache.
 	 * @return the cache consistency test backed by the contents of this cache.
 	 */
+	@Override
 	public DFACacheConsistencyTest<I> createCacheConsistencyTest() {
 		return new DFACacheConsistencyTest<>(incDfa);
 	}

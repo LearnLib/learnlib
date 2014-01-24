@@ -127,6 +127,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<resources-plugin.version>2.6</resources-plugin.version>
 		<trove4j.version>3.0.3</trove4j.version>
 		<guava.version>15.0</guava.version>
+		<findbugs.version>2.0.2</findbugs.version>
 		<!-- TODO: Change to 0.1 as soon as buildergen release is synced to Maven central -->
 		<buildergen.version>0.1.1-SNAPSHOT</buildergen.version>
 		
@@ -494,6 +495,13 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>
+			</dependency>
+
+			<!-- FindBugs - JSR 305 Annotations -->
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>${findbugs.version}</version>
 			</dependency>
 
 			<!-- BuilderGen -->

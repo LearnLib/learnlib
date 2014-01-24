@@ -32,8 +32,8 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.Query;
+import de.learnlib.cache.LearningCacheOracle.MealyLearningCacheOracle;
 
 /**
  * Mealy cache. This cache is implemented as a membership oracle: upon construction, it is
@@ -54,7 +54,7 @@ import de.learnlib.api.Query;
  * @param <I> input symbol class
  * @param <O> output symbol class
  */
-public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
+public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 	
 	private static final class ReverseLexCmp<I> implements Comparator<Query<I,?>> {
 		private final Alphabet<I> alphabet;
@@ -132,12 +132,11 @@ public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
 		return incMealy.size();
 	}
 	
-	/**
-	 * Creates an equivalence oracle that checks an hypothesis for consistency with the
-	 * contents of this cache. Note that the returned oracle is backed by the cache data structure,
-	 * i.e., it is sufficient to call this method once after creation of the cache.
-	 * @return the cache consistency test backed by the contents of this cache.
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.cache.LearningCache#createCacheConsistencyTest()
 	 */
+	@Override
 	public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
 		return new MealyCacheConsistencyTest<>(incMealy);
 	}

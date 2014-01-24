@@ -17,12 +17,13 @@
 package de.learnlib.cache.sul;
 
 import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
-import net.automatalib.incremental.mealy.dag.State;
-import net.automatalib.incremental.mealy.dag.TransitionRecord;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.SUL;
+import de.learnlib.cache.Caches;
+import de.learnlib.cache.LearningCache.MealyLearningCache;
 import de.learnlib.cache.mealy.MealyCacheConsistencyTest;
 
 /**
@@ -43,20 +44,99 @@ import de.learnlib.cache.mealy.MealyCacheConsistencyTest;
  * @param <I> input symbol type
  * @param <O> output symbol type
  */
-public class SULCache<I, O> implements SUL<I, O> {
+public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 	
-	private final IncrementalMealyDAGBuilder<I, O> incMealy;
-	private final MealyMachine<State,I,TransitionRecord,O> mealyView;
-	private final SUL<I,O> delegate;
+	/**
+	 * Implementation class; we need this to bind the {@code T} and {@code S}
+	 * type parameters of the transition system returned by
+	 * {@link IncrementalMealyBuilder#asTransitionSystem()}.
+	 * 
+	 * @author Malte Isberner <malte.isberner@gmail.com>
+	 *
+	 * @param <S> transition system state type
+	 * @param <I> input symbol type
+	 * @param <T> transition system transition type
+	 * @param <O> output symbol type
+	 */
+	private static final class SULCacheImpl<S,I,T,O> {
+		private final IncrementalMealyBuilder<I, O> incMealy;
+		private final MealyMachine<S,I,T,O> mealyTs;
+		private final SUL<I,O> delegate;
+		
+		private S current;
+		private final WordBuilder<I> inputWord = new WordBuilder<>();
+		private WordBuilder<O> outputWord;
+		
+		public SULCacheImpl(IncrementalMealyBuilder<I,O> incMealy, MealyMachine<S,I,T,O> mealyTs, SUL<I,O> sul) {
+			this.incMealy = incMealy;
+			this.mealyTs = mealyTs;
+			this.delegate = sul;
+		}
+		
+		public void pre() {
+			this.current = mealyTs.getInitialState();
+		}
+		
+		public O step(I in) {
+			O out = null;
+			
+			if(current != null) {
+				T trans = mealyTs.getTransition(current, in);
+				
+				if(trans != null) {
+					out = mealyTs.getTransitionOutput(trans);
+					current = mealyTs.getSuccessor(trans);
+					assert current != null;
+				}
+				else {
+					current = null;
+					outputWord = new WordBuilder<>();
+					delegate.pre();
+					for(I prevSym : inputWord) {
+						outputWord.append(delegate.step(prevSym));
+					}
+				}
+			}
+			
+			inputWord.append(in);
+			
+			if(current == null) {
+				out = delegate.step(in);
+				outputWord.add(out);
+			}
+			
+			return out;
+		}
+		
+		public void post() {
+			if(outputWord != null) {
+				incMealy.insert(inputWord.toWord(), outputWord.toWord());
+			}
+			
+			inputWord.clear();
+			outputWord = null;
+			current = null;
+		}
+		
+		public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
+			return new MealyCacheConsistencyTest<>(incMealy);
+		}
+	}
 	
-	private State current;
-	private final WordBuilder<I> inputWord = new WordBuilder<>();
-	private WordBuilder<O> outputWord;
+	private final SULCacheImpl<?,I,?,O> impl;
 
+	/**
+	 * Constructor.
+	 * @param alphabet the input alphabet
+	 * @param sul the system under learning
+	 * @deprecated since 2014-01-24. Use {@link Caches#createSULCache(Alphabet, SUL)}
+	 */
+	@Deprecated
 	public SULCache(Alphabet<I> alphabet, SUL<I,O> sul) {
-		this.incMealy = new IncrementalMealyDAGBuilder<>(alphabet);
-		this.mealyView = incMealy.asAutomaton();
-		this.delegate = sul;
+		this(new IncrementalMealyDAGBuilder<I,O>(alphabet), sul);
+	}
+	public SULCache(IncrementalMealyBuilder<I, O> incMealy, SUL<I,O> sul) {
+		this.impl = new SULCacheImpl<>(incMealy, incMealy.toAutomaton(), sul);
 	}
 
 	/*
@@ -65,13 +145,7 @@ public class SULCache<I, O> implements SUL<I, O> {
 	 */
 	@Override
 	public void pre() {
-		if(outputWord != null) {
-			incMealy.insert(inputWord.toWord(), outputWord.toWord());
-		}
-		
-		inputWord.clear();
-		outputWord = null;
-		current = mealyView.getInitialState();
+		impl.pre();
 	}
 
 	/*
@@ -80,38 +154,16 @@ public class SULCache<I, O> implements SUL<I, O> {
 	 */
 	@Override
 	public O step(I in) {
-		O out = null;
-		
-		if(current != null) {
-			TransitionRecord trans = mealyView.getTransition(current, in);
-			
-			if(trans != null) {
-				out = mealyView.getTransitionOutput(trans);
-				current = mealyView.getSuccessor(trans);
-				assert current != null;
-			}
-			else {
-				current = null;
-				outputWord = new WordBuilder<>();
-				delegate.pre();
-				for(I prevSym : inputWord) {
-					outputWord.append(delegate.step(prevSym));
-				}
-			}
-		}
-		
-		inputWord.append(in);
-		
-		if(current == null) {
-			out = delegate.step(in);
-			outputWord.add(out);
-		}
-		
-		return out;
+		return impl.step(in);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.cache.LearningCache#createCacheConsistencyTest()
+	 */
+	@Override
 	public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
-		return new MealyCacheConsistencyTest<>(incMealy);
+		return impl.createCacheConsistencyTest();
 	}
 
 	/*
@@ -120,7 +172,7 @@ public class SULCache<I, O> implements SUL<I, O> {
 	 */
     @Override
     public void post() {
-        delegate.post();
+        impl.post();
     }
 
 
