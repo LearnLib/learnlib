@@ -100,7 +100,7 @@ public class ObservationTableCEXHandlers {
 			List<List<Row<RI>>> handleCounterexample(
 					DefaultQuery<RI,RO> ceQuery, ObservationTable<RI,RO> table,
 					SuffixOutput<RI,RO> hypOutput, MembershipOracle<RI,RO> oracle) {
-				List<Word<RI>> suffixes = globalFinder.findSuffixes(ceQuery, table, hypOutput, oracle);
+				List<? extends Word<RI>> suffixes = globalFinder.findSuffixes(ceQuery, table, hypOutput, oracle);
 				return handleGlobalSuffixes(table, suffixes, oracle);
 			}
 			@Override
@@ -139,7 +139,7 @@ public class ObservationTableCEXHandlers {
 	List<List<Row<I>>> handleClassicLStar(DefaultQuery<I, O> ceQuery,
 			ObservationTable<I, O> table, MembershipOracle<I, O> oracle) {
 		
-		List<Word<I>> prefixes = ceQuery.getInput().prefixes(false);
+		List<? extends Word<I>> prefixes = ceQuery.getInput().prefixes(false);
 		
 		return table.addShortPrefixes(prefixes, oracle);
 	}
@@ -171,7 +171,7 @@ public class ObservationTableCEXHandlers {
 	}
 	
 	public static <I,O>
-	List<List<Row<I>>> handleGlobalSuffixes(ObservationTable<I,O> table, List<Word<I>> suffixes,
+	List<List<Row<I>>> handleGlobalSuffixes(ObservationTable<I,O> table, List<? extends Word<I>> suffixes,
 			MembershipOracle<I,O> oracle) {
 		return table.addSuffixes(suffixes, oracle);
 	}
@@ -179,7 +179,7 @@ public class ObservationTableCEXHandlers {
 	public static <I,O>
 	List<List<Row<I>>> handleLocalSuffix(Query<I,O> ceQuery, ObservationTable<I,O> table,
 			int suffixIndex, boolean allSuffixes, MembershipOracle<I,O> oracle) {
-		List<Word<I>> suffixes
+		List<? extends Word<I>> suffixes
 			= GlobalSuffixFinders.suffixesForLocalOutput(ceQuery, suffixIndex, allSuffixes);
 		return handleGlobalSuffixes(table, suffixes, oracle);
 	}

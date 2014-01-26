@@ -16,22 +16,22 @@
  */
 package de.learnlib.drivers.reflect;
 
-import de.learnlib.drivers.reflect.AbstractMethodInput;
-import de.learnlib.drivers.reflect.SimplePOJOTestDriver;
-import de.learnlib.drivers.reflect.AbstractMethodOutput;
-import de.learnlib.api.Query;
-import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.SULOracle;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+
 import net.automatalib.words.Word;
+
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
+import de.learnlib.oracles.SULOracle;
 
 /**
  *
@@ -45,7 +45,7 @@ public class ObjectTest {
      @Test
      public void testDriver() throws Exception {
      
-         Constructor c = Stack.class.getConstructor(int.class);
+         Constructor<?> c = Stack.class.getConstructor(int.class);
          SimplePOJOTestDriver driver = new SimplePOJOTestDriver(c, 2);
          SULOracle<AbstractMethodInput, AbstractMethodOutput> oracle = new SULOracle<>(driver);
          

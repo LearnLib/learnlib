@@ -16,22 +16,22 @@
  */
 package de.learnlib.filters.reuse.test;
 
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.Alphabets;
+
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import com.google.common.base.Supplier;
+
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.ReuseException;
 import de.learnlib.filters.reuse.ReuseOracle;
 import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.Alphabets;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 /**
  * Simple tests for the reuse oracle without domain knowledge.
@@ -238,15 +238,11 @@ public class ReuseOracleTest {
 		reuseOracle.getReuseTree().insert(getInput(1, 1, 3), qr);
 	}
 	
-	private Word<Integer> getInput(Integer... param){
-		WordBuilder<Integer> wb = new WordBuilder<>();
-		Collections.addAll(wb, param);
-		return wb.toWord();
+	private static Word<Integer> getInput(Integer... param){
+		return Word.fromSymbols(param);
 	}
 	
-	private Word<String> getOutput(String... param){
-		WordBuilder<String> wb = new WordBuilder<>();
-		Collections.addAll(wb, param);
-		return wb.toWord();
+	private static Word<String> getOutput(String... param){
+		return Word.fromSymbols(param);
 	}
 }

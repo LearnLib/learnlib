@@ -185,7 +185,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	 * @param oracle the membership oracle
 	 * @return a list of equivalence classes of unclosed rows
 	 */
-	public List<List<Row<I>>> addSuffixes(List<Word<I>> newSuffixes, MembershipOracle<I, O> oracle) {
+	public List<List<Row<I>>> addSuffixes(List<? extends Word<I>> newSuffixes, MembershipOracle<I, O> oracle) {
 		int oldSuffixCount = suffixes.size();
 		int numNewSuffixes = newSuffixes.size();
 		
@@ -323,7 +323,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		return row.getSuccessor(alphabet.getSymbolIndex(sym));
 	}
 	
-	public List<List<Row<I>>> addShortPrefixes(List<Word<I>> shortPrefixes, MembershipOracle<I,O> oracle) {	
+	public List<List<Row<I>>> addShortPrefixes(List<? extends Word<I>> shortPrefixes, MembershipOracle<I,O> oracle) {	
 		List<Row<I>> toSpRows = new ArrayList<Row<I>>();
 		
 		for(Word<I> sp : shortPrefixes) {
@@ -467,19 +467,19 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	}
 	
 	protected static <I,O>
-	void buildQueries(List<DefaultQuery<I,O>> queryList, List<Word<I>> prefixes, List<Word<I>> suffixes) {
+	void buildQueries(List<DefaultQuery<I,O>> queryList, List<? extends Word<I>> prefixes, List<? extends Word<I>> suffixes) {
 		for(Word<I> prefix : prefixes)
 			buildQueries(queryList, prefix, suffixes);
 	}
 	
 	protected static <I,O>
-	void buildRowQueries(List<DefaultQuery<I,O>> queryList, List<Row<I>> rows, List<Word<I>> suffixes) {
+	void buildRowQueries(List<DefaultQuery<I,O>> queryList, List<Row<I>> rows, List<? extends Word<I>> suffixes) {
 		for(Row<I> row : rows)
 			buildQueries(queryList, row.getPrefix(), suffixes);
 	}
 	
 	protected static <I,O>
-	void buildQueries(List<DefaultQuery<I,O>> queryList, Word<I> prefix, List<Word<I>> suffixes) {
+	void buildQueries(List<DefaultQuery<I,O>> queryList, Word<I> prefix, List<? extends Word<I>> suffixes) {
 		for(Word<I> suffix : suffixes)
 			queryList.add(new DefaultQuery<I,O>(prefix, suffix));
 	}

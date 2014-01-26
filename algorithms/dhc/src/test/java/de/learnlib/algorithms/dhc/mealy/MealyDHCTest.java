@@ -30,9 +30,6 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.cache.mealy.MealyCacheOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine;
 import de.learnlib.examples.mealy.ExampleGrid;
@@ -70,9 +67,8 @@ public class MealyDHCTest {
 
 
 		MealySimulatorOracle<Character,Integer> simoracle = new MealySimulatorOracle<>(fm);
-		MealyMembershipOracle<Character,Integer> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
 
-		MealyDHC<Character, Integer> dhc = new MealyDHC<>(alphabet, cache);
+		MealyDHC<Character, Integer> dhc = new MealyDHC<>(alphabet, simoracle);
 
 		dhc.startLearning();
 		MealyMachine<?, Character, ?, Integer> hypo = dhc.getHypothesisModel();
@@ -87,9 +83,8 @@ public class MealyDHCTest {
 		Alphabet<ExampleStack.Input> alphabet = ExampleStack.getInputAlphabet();
 
 		MealySimulatorOracle<ExampleStack.Input,ExampleStack.Output> simoracle = new MealySimulatorOracle<>(fm);
-		MealyMembershipOracle<ExampleStack.Input,ExampleStack.Output> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
 
-		MealyDHC<ExampleStack.Input, ExampleStack.Output> dhc = new MealyDHC<>(alphabet, cache);
+		MealyDHC<ExampleStack.Input, ExampleStack.Output> dhc = new MealyDHC<>(alphabet, simoracle);
 
 		dhc.startLearning();
 
@@ -131,8 +126,7 @@ public class MealyDHCTest {
 		SimulatorOracle<ExampleCoffeeMachine.Input, Word<String>> simoracle = new SimulatorOracle<>(fm);
 		SimulatorEQOracle<ExampleCoffeeMachine.Input, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
 
-		MembershipOracle<ExampleCoffeeMachine.Input,Word<String>> cache = new MealyCacheOracle<>(alphabet, null, simoracle);
-		MealyDHC<ExampleCoffeeMachine.Input, String> dhc = new MealyDHC<>(alphabet, cache);
+		MealyDHC<ExampleCoffeeMachine.Input, String> dhc = new MealyDHC<>(alphabet, simoracle);
 
 		int rounds = 0;
 		DefaultQuery<ExampleCoffeeMachine.Input, Word<String>> counterexample = null;
@@ -165,10 +159,9 @@ public class MealyDHCTest {
 		
 		
 		SimulatorOracle<Character, Word<String>> simoracle = new SimulatorOracle<>(fm);
-		MealyCacheOracle<Character,String> cache = new MealyCacheOracle<>(inputs, null, simoracle);
 		SimulatorEQOracle<Character, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
 
-		MealyDHC<Character, String> dhc = new MealyDHC<>(inputs, cache);
+		MealyDHC<Character, String> dhc = new MealyDHC<>(inputs, simoracle);
 
 		int rounds = 0;
 		DefaultQuery<Character, Word<String>> counterexample = null;
@@ -188,7 +181,6 @@ public class MealyDHCTest {
 		
 		Assert.assertEquals(dhc.getHypothesisModel().size(), fm.size(), "Mismatch in size of learned hypothesis and target model");
 		System.err.println("Hypothesis has " + dhc.getHypothesisModel().size() + " states");
-		System.err.println("Cache size is " + cache.getCacheSize());
 
 	}
 }
