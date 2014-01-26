@@ -50,4 +50,9 @@ public class CloseRandomStrategy implements ClosingStrategy<Object,Object> {
 		return result;
 	}
 	
+	@Override
+	public String toString() {
+		return "CloseRandom";
+	}
+	
 }

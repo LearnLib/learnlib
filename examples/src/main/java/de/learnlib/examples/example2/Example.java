@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.SUL;
-import de.learnlib.cache.Caches;
+import de.learnlib.cache.sul.SULCaches;
 import de.learnlib.drivers.reflect.AbstractMethodInput;
 import de.learnlib.drivers.reflect.AbstractMethodOutput;
 import de.learnlib.drivers.reflect.SimplePOJOTestDriver;
@@ -107,7 +107,7 @@ public class Example {
         
         SUL<AbstractMethodInput, AbstractMethodOutput> effectiveSul = statisticSul;
         // use caching in order to avoid duplicate queries
-        effectiveSul = Caches.createSULCache(driver.getInputs(), effectiveSul);
+        effectiveSul = SULCaches.createCache(driver.getInputs(), effectiveSul);
         
         SULOracle<AbstractMethodInput, AbstractMethodOutput> mqOracle = new SULOracle<>(effectiveSul);
 

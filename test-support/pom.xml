@@ -26,22 +26,14 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<relativePath>../pom.xml</relativePath>        
 	</parent>
 
-	<artifactId>learnlib-test-support</artifactId>
+	<groupId>de.learnlib.testsupport</groupId>
+	<artifactId>learnlib-test-support-parent</artifactId>
 	<name>LearnLib :: Test Support</name>
 	<description>Functionality to ease writing test cases for LearnLib</description>
+	<packaging>pom</packaging>
 
-	<dependencies>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-util</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-commons-dotutil</artifactId>
-		</dependency>
-	</dependencies>
+	<modules> 
+		<module>learning-examples</module>
+		<module>learner-it-support</module>
+	</modules>
 </project>
