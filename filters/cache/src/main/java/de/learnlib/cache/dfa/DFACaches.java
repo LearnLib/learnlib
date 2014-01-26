@@ -16,11 +16,14 @@
  */
 package de.learnlib.cache.dfa;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.words.Alphabet;
 import de.learnlib.api.MembershipOracle;
 
 
+@ParametersAreNonnullByDefault
 public abstract class DFACaches {
 	
 	/**
@@ -30,8 +33,14 @@ public abstract class DFACaches {
 	 * @param mqOracle the membership oracle
 	 * @return a Mealy learning cache with a default implementation
 	 */
-	public static <I> DFACacheOracle<I> createDAGCache(Alphabet<I> alphabet, MembershipOracle<I,Boolean> mqOracle) {
-		return new DFACacheOracle<I>(alphabet, mqOracle);
+	public static <I>
+	DFACacheOracle<I> createDAGCache(Alphabet<I> alphabet, MembershipOracle<I,Boolean> mqOracle) {
+		return DFACacheOracle.createDAGCacheOracle(alphabet, mqOracle);
+	}
+	
+	public static <I>
+	DFACacheOracle<I> createTreeCache(Alphabet<I> alphabet, MembershipOracle<I,Boolean> mqOracle) {
+		return DFACacheOracle.createTreeCacheOracle(alphabet, mqOracle);
 	}
 	
 	/**
@@ -44,8 +53,9 @@ public abstract class DFACaches {
 	 * @param mqOracle the membership oracle
 	 * @return a Mealy learning cache with a default implementation
 	 */
-	public static <I> DFACacheOracle<I> createCache(Alphabet<I> alphabet, MembershipOracle<I,Boolean> mqOracle) {
-		return new DFACacheOracle<I>(alphabet, mqOracle);
+	public static <I>
+	DFACacheOracle<I> createCache(Alphabet<I> alphabet, MembershipOracle<I,Boolean> mqOracle) {
+		return createDAGCache(alphabet, mqOracle);
 	}
 	
 	private DFACaches() {

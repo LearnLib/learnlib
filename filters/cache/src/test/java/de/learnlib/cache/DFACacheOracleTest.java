@@ -41,6 +41,7 @@ import de.learnlib.oracles.SimulatorOracle;
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
 // TODO CounterOracle needs a test,
+@SuppressWarnings("deprecation")
 public class DFACacheOracleTest {
 
 	private MembershipOracle<Integer, Boolean> oracle;

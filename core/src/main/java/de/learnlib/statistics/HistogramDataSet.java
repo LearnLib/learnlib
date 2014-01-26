@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -21,11 +21,15 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * A simple histogram data set.
  * 
  * @author falkhowar
  */
+@ParametersAreNonnullByDefault
 public class HistogramDataSet extends StatisticData {
 
     private SortedMap<Long,Integer> histogram = new TreeMap<>();
@@ -52,6 +56,7 @@ public class HistogramDataSet extends StatisticData {
     }
     
     
+    @Nonnull
     public SortedMap<Long, Integer> getHistogram() {
         return histogram;
     }
@@ -81,6 +86,7 @@ public class HistogramDataSet extends StatisticData {
     }
 
     @Override
+    @Nonnull
     public String getSummary() {
         return getName() + " [" + getUnit() + "]: " + 
                 size + " (count), " + 
@@ -90,6 +96,7 @@ public class HistogramDataSet extends StatisticData {
     }
 
     @Override
+    @Nonnull
     public String getDetails() {
         StringBuilder sb = new StringBuilder();
         sb.append(getSummary()).append(System.getProperty("line.separator"));

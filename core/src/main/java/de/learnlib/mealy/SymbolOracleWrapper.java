@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
@@ -36,8 +39,10 @@ import de.learnlib.api.Query;
  * @param <I> input symbol class
  * @param <O> output symbol class
  */
+@ParametersAreNonnullByDefault
 final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 	
+	@ParametersAreNonnullByDefault
 	private static final class LastSymbolQuery<I,O> extends Query<I,Word<O>> {
 		
 		private final Query<I,O> originalQuery;
@@ -47,17 +52,19 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 		}
 
 		@Override
+		@Nonnull
 		public Word<I> getPrefix() {
 			return originalQuery.getPrefix();
 		}
 
 		@Override
+		@Nonnull
 		public Word<I> getSuffix() {
 			return originalQuery.getSuffix();
 		}
 
 		@Override
-		public void answer(Word<O> output) {
+		public void answer(@Nonnull Word<O> output) {
 			originalQuery.answer(output.isEmpty() ? null : output.lastSymbol());
 		}
 		

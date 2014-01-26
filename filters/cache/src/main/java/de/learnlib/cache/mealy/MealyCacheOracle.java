@@ -129,7 +129,7 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 	}
 	
 	public int getCacheSize() {
-		return incMealy.size();
+		return incMealy.asGraph().size();
 	}
 	
 	/*

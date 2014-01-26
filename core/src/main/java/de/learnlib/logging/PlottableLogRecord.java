@@ -36,6 +36,7 @@ public class PlottableLogRecord extends LearnLogRecord {
     
     public PlottableLogRecord(Level lvl, Object data, Category category) {
         super(lvl, data.toString(), category);
+        this.data = data;
     }
  
     public Object getData() {

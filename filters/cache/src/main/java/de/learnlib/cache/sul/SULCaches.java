@@ -27,6 +27,11 @@ public abstract class SULCaches {
 	}
 	
 	public static <I,O>
+	SULCache<I,O> createDAGCache(Alphabet<I> alphabet, SUL<I,O> sul) {
+		return SULCache.createDAGCache(alphabet, sul);
+	}
+	
+	public static <I,O>
 	SULCache<I,O> createCache(Alphabet<I> alphabet, SUL<I,O> sul) {
 		return createDAGCache(alphabet, sul);
 	}

@@ -497,7 +497,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<version>${guava.version}</version>
 			</dependency>
 
-			<!-- FindBugs - JSR 305 Annotations -->
+			<!-- FindBugs - JSR 305 Annotations (@Nullable, @Nonnull, ...) -->
 			<dependency>
 				<groupId>com.google.code.findbugs</groupId>
 				<artifactId>jsr305</artifactId>
@@ -511,13 +511,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<version>${buildergen.version}</version>
 				<!-- Compile-time only -->
 				<scope>provided</scope>
-			</dependency>
-
-			<!-- JSR 305: @Nullable, @Nonnull-->
-			<dependency>
-				<groupId>com.google.code.findbugs</groupId>
-				<artifactId>jsr305</artifactId>
-				<version>2.0.2</version>
 			</dependency>
 
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -16,17 +16,23 @@
  */
 package de.learnlib.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.automatalib.words.Word;
 
 public abstract class Query<I, O> {
 	
 	private int hashCode = 0;
 	
+	@Nonnull
 	public abstract Word<I> getPrefix();
+	@Nonnull
 	public abstract Word<I> getSuffix();
 	
-	public abstract void answer(O output);
+	public abstract void answer(@Nullable O output);
 	
+	@Nonnull
 	public final Word<I> getInput() {
 		return getPrefix().concat(getSuffix());
 	}
@@ -38,10 +44,10 @@ public abstract class Query<I, O> {
 	 */
 	@Override
 	public final boolean equals(Object o) {
-		if(this == o)
-			return true;
 		if(o == null)
 			return false;
+		if(this == o)
+			return true;
 		if(!(o instanceof Query))
 			return false;
 		Query<?,?> other = (Query<?,?>)o;
@@ -52,9 +58,9 @@ public abstract class Query<I, O> {
 		Word<?> otherPref = other.getPrefix();
 		Word<?> otherSuff = other.getSuffix();
 		
-		if(thisPref != otherPref && (thisPref == null || !thisPref.equals(otherPref)))
+		if(thisPref != otherPref && !thisPref.equals(otherPref))
 			return false;
-		if(thisSuff != otherSuff && (thisSuff == null || !thisSuff.equals(otherSuff)))
+		if(thisSuff != otherSuff && !thisSuff.equals(otherSuff))
 			return false;
 		
 		return true;
@@ -71,8 +77,8 @@ public abstract class Query<I, O> {
 		
 		Word<I> prefix = getPrefix(), suffix = getSuffix();
 		hashCode = 5;
-        hashCode = 89 * hashCode + (prefix != null ? prefix.hashCode() : 0);
-        hashCode = 89 * hashCode + (suffix != null ? suffix.hashCode() : 0);
+        hashCode = 89 * hashCode + prefix.hashCode();
+        hashCode = 89 * hashCode + suffix.hashCode();
         return hashCode;
 	}
 	

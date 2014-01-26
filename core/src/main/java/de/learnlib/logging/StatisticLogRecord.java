@@ -17,9 +17,9 @@
 
 package de.learnlib.logging;
 
-import de.learnlib.statistics.StatisticData;
-
 import java.util.logging.Level;
+
+import de.learnlib.statistics.StatisticData;
 
 /**
  *
@@ -32,10 +32,11 @@ public class StatisticLogRecord extends LearnLogRecord {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private StatisticData data;
+	private final StatisticData data;
     
     public StatisticLogRecord(Level lvl, StatisticData data, Category category) {
         super(lvl, data.getSummary(), category);
+        this.data = data;
     }
  
     public StatisticData getData() {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -18,6 +18,10 @@ package de.learnlib.mealy;
 
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Word;
 import de.learnlib.api.LearningAlgorithm;
@@ -32,6 +36,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @author Malte Isberner <malte.isberner@gmail.com>
  *
  */
+@ParametersAreNonnullByDefault
 public abstract class MealyUtil {
 	
 	public static final int NO_MISMATCH = -1;
@@ -52,6 +57,7 @@ public abstract class MealyUtil {
 	}
 	
 	
+	@Nullable
 	public static <I,O> DefaultQuery<I,Word<O>> shortenCounterExample(
 			MealyMachine<?,I,?,O> hypothesis,
 			DefaultQuery<I,Word<O>> ceQuery) {
@@ -69,6 +75,7 @@ public abstract class MealyUtil {
 				ceOut.prefix(mismatchIdx + 1));
 	}
 	
+	@Nullable
 	public static <I,O> DefaultQuery<I,O> reduceCounterExample(
 			MealyMachine<?,I,?,O> hypothesis,
 			DefaultQuery<I,Word<O>> ceQuery) {
@@ -87,16 +94,20 @@ public abstract class MealyUtil {
 	}
 	
 	
+	@Nonnull
 	public static <M extends MealyMachine<?,I,?,O>,I,O>
 	LearningAlgorithm<M,I,Word<O>> wrapSymbolLearner(LearningAlgorithm<M,I,O> learner) {
 		return new MealyLearnerWrapper<>(learner);
 	}
 	
+	@Nonnull
 	public static <I,O> MembershipOracle<I, O> wrapWordOracle(MembershipOracle<I,Word<O>> oracle) {
 		return new SymbolOracleWrapper<>(oracle);
 	}
 	
 	// Prevent inheritance
-	private MealyUtil() {}
+	private MealyUtil() {
+		throw new IllegalStateException("Constructor should never be invoked");
+	}
 
 }

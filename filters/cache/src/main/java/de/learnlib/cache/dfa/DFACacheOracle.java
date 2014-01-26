@@ -20,8 +20,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
+import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;
+import net.automatalib.incremental.dfa.tree.IncrementalDFATreeBuilder;
 import net.automatalib.words.Alphabet;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
@@ -38,7 +42,19 @@ import de.learnlib.cache.LearningCacheOracle.DFALearningCacheOracle;
  *
  * @param <I> input symbol class
  */
+@ParametersAreNonnullByDefault
 public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
+	
+	
+	public static <I>
+	DFACacheOracle<I> createTreeCacheOracle(Alphabet<I> alphabet, MembershipOracle<I,Boolean> delegate) {
+		return new DFACacheOracle<>(new IncrementalDFADAGBuilder<>(alphabet), delegate);
+	}
+	
+	public static <I>
+	DFACacheOracle<I> createDAGCacheOracle(Alphabet<I> alphabet, MembershipOracle<I,Boolean> delegate) {
+		return new DFACacheOracle<>(new IncrementalDFATreeBuilder<>(alphabet), delegate);
+	}
 	
 	private final IncrementalDFABuilder<I> incDfa;
 	private final MembershipOracle<I,Boolean> delegate;
@@ -47,14 +63,16 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
 	 * Constructor.
 	 * @param alphabet the alphabet of the cache
 	 * @param delegate the delegate oracle
+	 * @deprecated since 2014-01-24. Use {@link DFACaches#createCache(Alphabet, MembershipOracle)}
 	 */
+	@Deprecated
 	public DFACacheOracle(Alphabet<I> alphabet, MembershipOracle<I,Boolean> delegate) {
-		this.incDfa = new IncrementalDFABuilder<>(alphabet);
-		this.delegate = delegate;
+		this(new IncrementalDFADAGBuilder<>(alphabet), delegate);
 	}
 	
-	public int getCacheSize() {
-		return incDfa.size();
+	private DFACacheOracle(IncrementalDFABuilder<I> incDfa, MembershipOracle<I,Boolean> delegate) {
+		this.incDfa = incDfa;
+		this.delegate = delegate;
 	}
 	
 	/**

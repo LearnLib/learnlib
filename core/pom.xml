@@ -45,6 +45,10 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<artifactId>automata-util</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 		</dependency>

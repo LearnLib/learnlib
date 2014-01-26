@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -17,6 +17,9 @@
 package de.learnlib.api;
 
 import java.util.Collection;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
@@ -45,6 +48,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <I> input symbol class
  * @param <O> output class
  */
+@ParametersAreNonnullByDefault
 public interface EquivalenceOracle<A, I, O> {
 	
 	/**
@@ -80,6 +84,7 @@ public interface EquivalenceOracle<A, I, O> {
 	 * could be found. In case a non-<tt>null</tt> value is returned, the output field
 	 * in the {@link DefaultQuery} contains the SUL output for the respective query.
 	 */
+	@Nullable
 	public DefaultQuery<I, O> findCounterExample(A hypothesis, Collection<? extends I> inputs);  
 	
 }

@@ -16,13 +16,17 @@
  */
 package de.learnlib.cache.sul;
 
-import net.automatalib.automata.transout.MealyMachine;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
+import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
+import net.automatalib.ts.transout.MealyTransitionSystem;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.SUL;
-import de.learnlib.cache.Caches;
 import de.learnlib.cache.LearningCache.MealyLearningCache;
 import de.learnlib.cache.mealy.MealyCacheConsistencyTest;
 
@@ -44,7 +48,18 @@ import de.learnlib.cache.mealy.MealyCacheConsistencyTest;
  * @param <I> input symbol type
  * @param <O> output symbol type
  */
+@ParametersAreNonnullByDefault
 public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
+	
+	public static <I,O>
+	SULCache<I,O> createTreeCache(Alphabet<I> alphabet, SUL<I,O> sul) {
+		return new SULCache<>(new IncrementalMealyTreeBuilder<I,O>(alphabet), sul);
+	}
+	
+	public static <I,O>
+	SULCache<I,O> createDAGCache(Alphabet<I> alphabet, SUL<I,O> sul) {
+		return new SULCache<>(new IncrementalMealyDAGBuilder<I,O>(alphabet), sul);
+	}
 	
 	/**
 	 * Implementation class; we need this to bind the {@code T} and {@code S}
@@ -58,16 +73,17 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 	 * @param <T> transition system transition type
 	 * @param <O> output symbol type
 	 */
+	@ParametersAreNonnullByDefault
 	private static final class SULCacheImpl<S,I,T,O> {
 		private final IncrementalMealyBuilder<I, O> incMealy;
-		private final MealyMachine<S,I,T,O> mealyTs;
+		private final MealyTransitionSystem<S,I,T,O> mealyTs;
 		private final SUL<I,O> delegate;
 		
 		private S current;
 		private final WordBuilder<I> inputWord = new WordBuilder<>();
 		private WordBuilder<O> outputWord;
 		
-		public SULCacheImpl(IncrementalMealyBuilder<I,O> incMealy, MealyMachine<S,I,T,O> mealyTs, SUL<I,O> sul) {
+		public SULCacheImpl(IncrementalMealyBuilder<I,O> incMealy, MealyTransitionSystem<S,I,T,O> mealyTs, SUL<I,O> sul) {
 			this.incMealy = incMealy;
 			this.mealyTs = mealyTs;
 			this.delegate = sul;
@@ -77,7 +93,8 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 			this.current = mealyTs.getInitialState();
 		}
 		
-		public O step(I in) {
+		@Nullable
+		public O step(@Nullable I in) {
 			O out = null;
 			
 			if(current != null) {
@@ -118,6 +135,7 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 			current = null;
 		}
 		
+		@Nonnull
 		public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
 			return new MealyCacheConsistencyTest<>(incMealy);
 		}
@@ -129,14 +147,14 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 	 * Constructor.
 	 * @param alphabet the input alphabet
 	 * @param sul the system under learning
-	 * @deprecated since 2014-01-24. Use {@link Caches#createSULCache(Alphabet, SUL)}
+	 * @deprecated since 2014-01-24. Use {@link de.learnlib.cache.Caches#createSULCache(Alphabet, SUL)}
 	 */
 	@Deprecated
 	public SULCache(Alphabet<I> alphabet, SUL<I,O> sul) {
 		this(new IncrementalMealyDAGBuilder<I,O>(alphabet), sul);
 	}
 	public SULCache(IncrementalMealyBuilder<I, O> incMealy, SUL<I,O> sul) {
-		this.impl = new SULCacheImpl<>(incMealy, incMealy.toAutomaton(), sul);
+		this.impl = new SULCacheImpl<>(incMealy, incMealy.asTransitionSystem(), sul);
 	}
 
 	/*

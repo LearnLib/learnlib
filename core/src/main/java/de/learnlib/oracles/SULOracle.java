@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * LearnLib is free software; you can redistribute it and/or
@@ -16,6 +16,9 @@
  */
 package de.learnlib.oracles;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
@@ -26,6 +29,7 @@ import de.learnlib.api.SUL;
  * 
  * @author falkhowar
  */
+@ParametersAreNonnullByDefault
 public class SULOracle<I, O> extends AbstractSingleQueryOracle<I, Word<O>> implements MealyMembershipOracle<I,O> {
 
 	private final SUL<I, O> sul;
@@ -35,6 +39,7 @@ public class SULOracle<I, O> extends AbstractSingleQueryOracle<I, Word<O>> imple
 	}
 
 	@Override
+	@Nonnull
 	public Word<O> answerQuery(Word<I> prefix, Word<I> suffix) {
 		sul.pre();
 		// Prefix: Execute symbols, don't record output
