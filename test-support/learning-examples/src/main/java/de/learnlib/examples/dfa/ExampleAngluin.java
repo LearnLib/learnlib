@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import de.learnlib.examples.LearningExample.DFALearningExample;
+import de.learnlib.examples.DefaultLearningExample.DefaultDFALearningExample;
 
 /**
  * This class provides the example used in the paper ''Learning Regular Sets
@@ -33,26 +33,13 @@ import de.learnlib.examples.LearningExample.DFALearningExample;
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
-public class ExampleAngluin implements DFALearningExample<Integer> {
-	
-	private static final class InstanceHolder {
-		public static final DFA<?,Integer> INSTANCE;
-		
-		static {
-			INSTANCE = constructMachine();
-		}
-	}
-	
-	private static final Alphabet<Integer> ALPHABET = Alphabets.integers(0, 1);
+public class ExampleAngluin extends DefaultDFALearningExample<Integer> {
 
-	
-	public static Alphabet<Integer> getInputAlphabet() {
-		return ALPHABET;
+
+	public static Alphabet<Integer> createInputAlphabet() {
+		return Alphabets.integers(0, 1);
 	}
 	
-	public static DFA<?,Integer> getInstance() {
-		return InstanceHolder.INSTANCE;
-	}
 	
 	
 	public static <A extends MutableDFA<S, ? super Integer>,S>
@@ -95,17 +82,19 @@ public class ExampleAngluin implements DFALearningExample<Integer> {
 	}
 	
 	public static CompactDFA<Integer> constructMachine() {
-		return constructMachine(new CompactDFA<>(ALPHABET));
+		return constructMachine(new CompactDFA<>(createInputAlphabet()));
 	}
 
-	@Override
-	public DFA<?, Integer> getReferenceAutomaton() {
-		return getInstance();
-	}
-
-	@Override
-	public Alphabet<Integer> getAlphabet() {
-		return getInputAlphabet();
-	}
 	
+	public static ExampleAngluin createExample() {
+		CompactDFA<Integer> dfa = constructMachine();
+		return new ExampleAngluin(dfa.getInputAlphabet(), dfa);
+	}
+
+	
+	
+	private ExampleAngluin(Alphabet<Integer> alphabet,
+			DFA<?, Integer> referenceAutomaton) {
+		super(alphabet, referenceAutomaton);
+	}
 }

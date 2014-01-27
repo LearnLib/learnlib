@@ -45,8 +45,9 @@ public class LStarDFATest extends LearningTest {
  
 	@Test
 	public void testLStar() {
-		DFA<?,Symbol> targetDFA = ExamplePaulAndMary.getInstance();
-		Alphabet<Symbol> alphabet = ExamplePaulAndMary.getInputAlphabet();
+		ExamplePaulAndMary pmExample = ExamplePaulAndMary.createExample();
+		DFA<?,Symbol> targetDFA = pmExample.getReferenceAutomaton();
+		Alphabet<Symbol> alphabet = pmExample.getAlphabet();
 		
 		DFAMembershipOracle<Symbol> dfaOracle = new DFASimulatorOracle<>(targetDFA);
 

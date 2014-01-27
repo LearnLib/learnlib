@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import de.learnlib.examples.LearningExample.MealyLearningExample;
+import de.learnlib.examples.DefaultLearningExample.DefaultMealyLearningExample;
 
 /**
  * This class generates a Mealy machine consisting of a two-dimensional grid of
@@ -29,12 +29,11 @@ import de.learnlib.examples.LearningExample.MealyLearningExample;
  *
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class ExampleGrid implements MealyLearningExample<Character,Integer> {
+public class ExampleGrid extends DefaultMealyLearningExample<Character,Integer> {
 
-    private final static Alphabet<Character> ALPHABET = Alphabets.characters('x', 'y');
-    
-    public static Alphabet<Character> getInputAlphabet() {
-    	return ALPHABET;
+
+	public static Alphabet<Character> createInputAlphabet() {
+    	return Alphabets.characters('x', 'y');
     }
     
 
@@ -77,27 +76,17 @@ public class ExampleGrid implements MealyLearningExample<Character,Integer> {
     }
     
     public static CompactMealy<Character, Integer> constructMachine(int xsize, int ysize) {
-    	return constructMachine(new CompactMealy<Character,Integer>(ALPHABET), xsize, ysize);
+    	return constructMachine(new CompactMealy<Character,Integer>(createInputAlphabet()), xsize, ysize);
     }
-   
     
-    private final int xsize;
-    private final int ysize;
-    
-    public ExampleGrid(int xsize, int ysize) {
-    	this.xsize = xsize;
-    	this.ysize = ysize;
+    public static ExampleGrid createExample(int xsize, int ysize) {
+    	CompactMealy<Character,Integer> mealy = constructMachine(xsize, ysize);
+    	return new ExampleGrid(mealy.getInputAlphabet(), mealy);
     }
 
-
-	@Override
-	public MealyMachine<?, Character, ?, Integer> getReferenceAutomaton() {
-		return constructMachine(xsize, ysize);
+    private ExampleGrid(Alphabet<Character> alphabet,
+			MealyMachine<?, Character, ?, Integer> referenceAutomaton) {
+		super(alphabet, referenceAutomaton);
 	}
 
-
-	@Override
-	public Alphabet<Character> getAlphabet() {
-		return getInputAlphabet();
-	}
 }

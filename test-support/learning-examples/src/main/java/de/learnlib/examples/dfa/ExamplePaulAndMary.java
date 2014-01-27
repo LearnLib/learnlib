@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -24,38 +24,26 @@ import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
-import de.learnlib.examples.LearningExample.DFALearningExample;
+import de.learnlib.examples.DefaultLearningExample.DefaultDFALearningExample;
 
 /**
  * This class implements a sad love story - DFA style.
  * 
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class ExamplePaulAndMary implements DFALearningExample<Symbol> {
+public class ExamplePaulAndMary extends DefaultDFALearningExample<Symbol> {
 	
-	private static final class InstanceHolder {
-		public static final DFA<?,Symbol> INSTANCE;
-		
-		static {
-			INSTANCE = constructMachine();
-		}
-	}
-    
-    public static final Symbol IN_PAUL = new Symbol("Paul");
+
+	public static final Symbol IN_PAUL = new Symbol("Paul");
     public static final Symbol IN_LOVES = new Symbol("loves");
     public static final Symbol IN_MARY = new Symbol("Mary");
     
-    private static final Alphabet<Symbol> ALPHABET = new FastAlphabet<>(IN_PAUL, IN_LOVES, IN_MARY);
+ 
     
+    public static Alphabet<Symbol> createInputAlphabet() {
+    	return new FastAlphabet<>(IN_PAUL, IN_LOVES, IN_MARY);
+    }
   
-    public static DFA<?,Symbol> getInstance() {
-    	return InstanceHolder.INSTANCE;
-    }
-    
-    public static Alphabet<Symbol> getInputAlphabet() {
-    	return ALPHABET;
-    }
-    
     
     /**
      * Construct and return a machine representation of this example
@@ -63,7 +51,7 @@ public class ExamplePaulAndMary implements DFALearningExample<Symbol> {
      * @return machine instance of the example
      */
     public static CompactDFA<Symbol> constructMachine() {
-    	return constructMachine(new CompactDFA<>(ALPHABET));
+    	return constructMachine(new CompactDFA<>(createInputAlphabet()));
     }
      
     public static <A extends MutableDFA<S,? super Symbol>,S>
@@ -115,14 +103,15 @@ public class ExamplePaulAndMary implements DFALearningExample<Symbol> {
     	
     	return dfa;
     }
-
-	@Override
-	public DFA<?, Symbol> getReferenceAutomaton() {
-		return getInstance();
+    
+    public static ExamplePaulAndMary createExample() {
+    	CompactDFA<Symbol> dfa = constructMachine();
+    	return new ExamplePaulAndMary(dfa.getInputAlphabet(), dfa);
+    }
+    
+    private ExamplePaulAndMary(Alphabet<Symbol> alphabet,
+			DFA<?, Symbol> referenceAutomaton) {
+		super(alphabet, referenceAutomaton);
 	}
 
-	@Override
-	public Alphabet<Symbol> getAlphabet() {
-		return getInputAlphabet();
-	}
 }

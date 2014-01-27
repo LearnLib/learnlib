@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import de.learnlib.examples.LearningExample.MealyLearningExample;
+import de.learnlib.examples.DefaultLearningExample.DefaultMealyLearningExample;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine.Input;
 
 /**
@@ -37,17 +37,10 @@ import de.learnlib.examples.mealy.ExampleCoffeeMachine.Input;
  * 
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class ExampleCoffeeMachine implements MealyLearningExample<Input,String> {
-	
-	private static final class InstanceHolder {
-		public static final MealyMachine<?,Input,?,String> INSTANCE;
-		
-		static {
-			INSTANCE = constructMachine();
-		}
-	}
-	
-	public enum Input {
+public class ExampleCoffeeMachine extends DefaultMealyLearningExample<Input,String> {
+
+
+	public static enum Input {
 		WATER,
 		POD,
 		BUTTON,
@@ -58,16 +51,11 @@ public class ExampleCoffeeMachine implements MealyLearningExample<Input,String> 
 	public final static String out_error = "error";
 	public final static String out_coffee = "coffee!";
 	
-	private final static Alphabet<Input> ALPHABET = Alphabets.fromEnum(Input.class);
 	
-	
-	public static Alphabet<Input> getInputAlphabet() {
-		return ALPHABET;
+	public static Alphabet<Input> createInputAlphabet() {
+		return Alphabets.fromEnum(Input.class);
 	}
 	
-	public static MealyMachine<?,Input,?,String> getInstance() {
-		return InstanceHolder.INSTANCE;
-	}
 	
 	
     /**
@@ -144,17 +132,18 @@ public class ExampleCoffeeMachine implements MealyLearningExample<Input,String> 
     }
     
     public static CompactMealy<Input,String> constructMachine() {
-    	return constructMachine(new CompactMealy<Input,String>(ALPHABET));
+    	return constructMachine(new CompactMealy<Input,String>(createInputAlphabet()));
     }
 
-	@Override
-	public MealyMachine<?, Input, ?, String> getReferenceAutomaton() {
-		return getInstance();
-	}
-
-	@Override
-	public Alphabet<Input> getAlphabet() {
-		return getInputAlphabet();
+    
+    public static ExampleCoffeeMachine createExample() {
+    	CompactMealy<Input,String> mealy = constructMachine();
+    	return new ExampleCoffeeMachine(mealy.getInputAlphabet(), mealy);
+    }
+    
+	private ExampleCoffeeMachine(Alphabet<Input> alphabet,
+			MealyMachine<?, Input, ?, String> referenceAutomaton) {
+		super(alphabet, referenceAutomaton);
 	}
 	
 }

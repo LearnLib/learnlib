@@ -45,8 +45,10 @@ public class LStarMealyTest extends LearningTest {
 
 	@Test
 	public void testClassicLStarMealy() {
-		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> mealy = ExampleStack.getInstance();
-		Alphabet<ExampleStack.Input> alphabet = ExampleStack.getInputAlphabet();
+		ExampleStack stackExample = ExampleStack.createExample();
+		
+		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> mealy = stackExample.getReferenceAutomaton();
+		Alphabet<ExampleStack.Input> alphabet = stackExample.getAlphabet();
 		
 		MealyMembershipOracle<ExampleStack.Input,ExampleStack.Output> oracle
 			= new MealySimulatorOracle<>(mealy);
@@ -73,8 +75,9 @@ public class LStarMealyTest extends LearningTest {
 	
 	@Test
 	public void testOptimizedLStarMealy() {
-		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> mealy = ExampleStack.getInstance();
-		Alphabet<ExampleStack.Input> alphabet = ExampleStack.getInputAlphabet();
+		ExampleStack stackExample = ExampleStack.createExample();
+		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> mealy = stackExample.getReferenceAutomaton();
+		Alphabet<ExampleStack.Input> alphabet = stackExample.getAlphabet();
 		
 		MembershipOracle<ExampleStack.Input,Word<ExampleStack.Output>> oracle
 			= new SimulatorOracle<>(mealy);

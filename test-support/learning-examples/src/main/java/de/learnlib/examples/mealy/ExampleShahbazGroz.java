@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import de.learnlib.examples.LearningExample.MealyLearningExample;
+import de.learnlib.examples.DefaultLearningExample.DefaultMealyLearningExample;
 
 /**
  * This class provides the example used in the paper ''Inferring Mealy Machines'' 
@@ -31,25 +31,11 @@ import de.learnlib.examples.LearningExample.MealyLearningExample;
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
-public class ExampleShahbazGroz implements MealyLearningExample<Character,String> {
+public class ExampleShahbazGroz extends DefaultMealyLearningExample<Character,String> {
 	
-	private static final class InstanceHolder {
-		public static final MealyMachine<?,Character,?,String> INSTANCE;
-		
-		static {
-			INSTANCE = constructMachine();
-		}
-	}
-	
-    private final static Alphabet<Character> ALPHABET = Alphabets.characters('a', 'b');
-  
-    
-    public static Alphabet<Character> getInputAlphabet() {
-    	return ALPHABET;
-    }
-    
-    public static MealyMachine<?,Character,?,String> getInstance() {
-    	return InstanceHolder.INSTANCE;
+
+	public static Alphabet<Character> createInputAlphabet() {
+    	return Alphabets.characters('a', 'b');
     }
     
     /**
@@ -101,16 +87,17 @@ public class ExampleShahbazGroz implements MealyLearningExample<Character,String
     }
     
     public static CompactMealy<Character, String> constructMachine() {
-    	return constructMachine(new CompactMealy<Character,String>(ALPHABET));
+    	return constructMachine(new CompactMealy<Character,String>(createInputAlphabet()));
     }
-
-	@Override
-	public MealyMachine<?, Character, ?, String> getReferenceAutomaton() {
-		return getInstance();
+    
+    public static ExampleShahbazGroz createExample() {
+    	CompactMealy<Character,String> mealy = constructMachine();
+    	return new ExampleShahbazGroz(mealy.getInputAlphabet(), mealy);
+    }
+    
+    private ExampleShahbazGroz(Alphabet<Character> alphabet,
+			MealyMachine<?, Character, ?, String> referenceAutomaton) {
+		super(alphabet, referenceAutomaton);
 	}
 
-	@Override
-	public Alphabet<Character> getAlphabet() {
-		return getInputAlphabet();
-	}
 }

@@ -46,8 +46,10 @@ public class MealyDHCTest {
 	
 	@Test(expectedExceptions = Exception.class)
 	public void testMealyDHCInternalSate() {
-		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> fm = ExampleStack.getInstance();
-		Alphabet<ExampleStack.Input> alphabet = ExampleStack.getInputAlphabet();
+		ExampleStack stackExample = ExampleStack.createExample();
+		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> fm = stackExample.getReferenceAutomaton();
+		Alphabet<ExampleStack.Input> alphabet = stackExample.getAlphabet();
+		
 		MealySimulatorOracle<ExampleStack.Input,ExampleStack.Output> simoracle = new MealySimulatorOracle<>(fm);
 		MealyDHC<ExampleStack.Input, ExampleStack.Output> dhc = new MealyDHC<>(alphabet, simoracle);
 		
@@ -62,8 +64,9 @@ public class MealyDHCTest {
 		final int xsize = 5;
 		final int ysize = 5;
 
-		MealyMachine<?,Character,?,Integer> fm = ExampleGrid.constructMachine(xsize, ysize);
-		Alphabet<Character> alphabet = ExampleGrid.getInputAlphabet();
+		ExampleGrid gridExample = ExampleGrid.createExample(xsize, ysize);
+		MealyMachine<?,Character,?,Integer> fm = gridExample.getReferenceAutomaton();
+		Alphabet<Character> alphabet = gridExample.getAlphabet();
 
 
 		MealySimulatorOracle<Character,Integer> simoracle = new MealySimulatorOracle<>(fm);
@@ -79,8 +82,9 @@ public class MealyDHCTest {
 
 	@Test
 	public void testMealyDHCStack() {
-		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> fm = ExampleStack.getInstance();
-		Alphabet<ExampleStack.Input> alphabet = ExampleStack.getInputAlphabet();
+		ExampleStack stackExample = ExampleStack.createExample();
+		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> fm = stackExample.getReferenceAutomaton();
+		Alphabet<ExampleStack.Input> alphabet = stackExample.getAlphabet();
 
 		MealySimulatorOracle<ExampleStack.Input,ExampleStack.Output> simoracle = new MealySimulatorOracle<>(fm);
 
@@ -120,8 +124,10 @@ public class MealyDHCTest {
 	@Test
 	public void testMealyDHCCoffee() {
 
-		MealyMachine<?,ExampleCoffeeMachine.Input,?,String> fm = ExampleCoffeeMachine.getInstance();
-		Alphabet<ExampleCoffeeMachine.Input> alphabet = ExampleCoffeeMachine.getInputAlphabet();
+		ExampleCoffeeMachine cmExample = ExampleCoffeeMachine.createExample();
+		
+		MealyMachine<?,ExampleCoffeeMachine.Input,?,String> fm = cmExample.getReferenceAutomaton();
+		Alphabet<ExampleCoffeeMachine.Input> alphabet = cmExample.getAlphabet();
 
 		SimulatorOracle<ExampleCoffeeMachine.Input, Word<String>> simoracle = new SimulatorOracle<>(fm);
 		SimulatorEQOracle<ExampleCoffeeMachine.Input, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
