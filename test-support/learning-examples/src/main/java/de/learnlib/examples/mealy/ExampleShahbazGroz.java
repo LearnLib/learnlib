@@ -20,6 +20,7 @@ package de.learnlib.examples.mealy;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
@@ -41,9 +42,7 @@ public class ExampleShahbazGroz implements MealyLearningExample<Character,String
 	}
 	
     private final static Alphabet<Character> ALPHABET = Alphabets.characters('a', 'b');
-    
-    private final static String out_x = "x";
-    private final static String out_y = "y";
+  
     
     public static Alphabet<Character> getInputAlphabet() {
     	return ALPHABET;
@@ -58,33 +57,47 @@ public class ExampleShahbazGroz implements MealyLearningExample<Character,String
      * 
      * @return machine instance of the example
      */
-    public static <S,A extends MutableMealyMachine<S,Character,?,String>>
+    public static <S,T,A extends MutableMealyMachine<S,? super Character,T,? super String>>
     A constructMachine(A fm) {
-        
-        S q0 = fm.addInitialState();
-        S q1 = fm.addState();
-        S q2 = fm.addState();
-        S q3 = fm.addState();
-        
-        fm.addTransition(q0, 'a', q1, out_x);
-        fm.addTransition(q0, 'b', q3, out_x);
-        
-        fm.addTransition(q1, 'a', q1, out_y);
-        fm.addTransition(q1, 'b', q2, out_x);
-        
-        fm.addTransition(q2, 'a', q3, out_x);
-        fm.addTransition(q2, 'b', q3, out_x);
-        
-        fm.addTransition(q3, 'a', q0, out_x);
-        fm.addTransition(q3, 'b', q0, out_x);
-        
+//
+//		S q0 = fm.addInitialState();
+//		S q1 = fm.addState();
+//		S q2 = fm.addState();
+//		S q3 = fm.addState();
+//
+//		fm.addTransition(q0, 'a', q1, out_x);
+//		fm.addTransition(q0, 'b', q3, out_x);
+//
+//		fm.addTransition(q1, 'a', q1, out_y);
+//		fm.addTransition(q1, 'b', q2, out_x);
+//
+//		fm.addTransition(q2, 'a', q3, out_x);
+//		fm.addTransition(q2, 'b', q3, out_x);
+//
+//		fm.addTransition(q3, 'a', q0, out_x);
+//		fm.addTransition(q3, 'b', q0, out_x);
+
+    	fm = AutomatonBuilders.forMealy(fm)
+    			.withInitial("q0")
+    			.from("q0")
+    				.on('a').withOutput("x").to("q1")
+    				.on('b').withOutput("x").to("q3")
+    			.from("q1")
+    				.on('a').withOutput("y").loop()
+    				.on('b').withOutput("x").to("q2")
+    			.from("q2")
+    				.on('a', 'b').withOutput("x").to("q3")
+    			.from("q3")
+    				.on('a', 'b').withOutput("x").to("q0")
+    		.create();
+    	
         /*
          * In the paper the authors use the following counterexample
          * to refine the first conjecture from an angluin for mealy machines:
          * a b a b b a a
          */
-        
-        return fm;
+    	
+    	return fm;
     }
     
     public static CompactMealy<Character, String> constructMachine() {

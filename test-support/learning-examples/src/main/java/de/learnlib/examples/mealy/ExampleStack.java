@@ -25,6 +25,7 @@ import static de.learnlib.examples.mealy.ExampleStack.Output.OK;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
@@ -75,8 +76,25 @@ public class ExampleStack implements MealyLearningExample<Input, Output> {
      * 
      * @return machine instance of the example
      */
-    public static <S,A extends MutableMealyMachine<S,Input,?,Output>> 
+    public static <S,T,A extends MutableMealyMachine<S,? super Input,T,? super Output>> 
     A constructMachine(A fm) {
+    	fm = AutomatonBuilders.forMealy(fm)
+    			.withInitial("s0")
+    			.from("s0")
+    				.on(PUSH).withOutput(OK).to("s1")
+    				.on(POP).withOutput(EMPTY).loop()
+    			.from("s1")
+    				.on(PUSH).withOutput(OK).to("s2")
+    				.on(POP).withOutput(OK).to("s0")
+    			.from("s2")
+    				.on(PUSH).withOutput(OK).to("s3")
+    				.on(POP).withOutput(OK).to("s1")
+    			.from("s3")
+    				.on(PUSH).withOutput(FULL).loop()
+    				.on(POP).withOutput(OK).to("s2")
+    		.create();
+    	
+    	/*
         S s0 = fm.addInitialState(),
                 s1 = fm.addState(),
                 s2 = fm.addState(),
@@ -93,6 +111,7 @@ public class ExampleStack implements MealyLearningExample<Input, Output> {
         
         fm.addTransition(s3, PUSH, s3, FULL);
         fm.addTransition(s3, POP, s2, OK);
+        */
         
         return fm;
     }

@@ -20,6 +20,7 @@ package de.learnlib.examples.dfa;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
@@ -67,33 +68,52 @@ public class ExamplePaulAndMary implements DFALearningExample<Symbol> {
      
     public static <A extends MutableDFA<S,? super Symbol>,S>
     A constructMachine(A dfa) {
-    	S s0 = dfa.addInitialState(false),
-          s1 = dfa.addState(false),
-          s2 = dfa.addState(false),
-          s3 = dfa.addState(true),
-          s4 = dfa.addState(false);
 
-        dfa.addTransition(s0, IN_PAUL, s1);
-        dfa.addTransition(s0, IN_LOVES, s4);
-        dfa.addTransition(s0, IN_MARY, s4);
-        
-        dfa.addTransition(s1, IN_PAUL, s4);
-        dfa.addTransition(s1, IN_LOVES, s2);
-        dfa.addTransition(s1, IN_MARY, s4);
-        
-        dfa.addTransition(s2, IN_PAUL, s4);
-        dfa.addTransition(s2, IN_LOVES, s4);
-        dfa.addTransition(s2, IN_MARY, s3);
-        
-        dfa.addTransition(s3, IN_PAUL, s4);
-        dfa.addTransition(s3, IN_LOVES, s4);
-        dfa.addTransition(s3, IN_MARY, s4);
-        
-        dfa.addTransition(s4, IN_PAUL, s4);
-        dfa.addTransition(s4, IN_LOVES, s4);
-        dfa.addTransition(s4, IN_MARY, s4);
+    	/*
+		S s0 = dfa.addInitialState(false), s1 = dfa.addState(false), s2 = dfa
+				.addState(false), s3 = dfa.addState(true), s4 = dfa
+				.addState(false);
 
-        return dfa;
+		dfa.addTransition(s0, IN_PAUL, s1);
+		dfa.addTransition(s0, IN_LOVES, s4);
+		dfa.addTransition(s0, IN_MARY, s4);
+
+		dfa.addTransition(s1, IN_PAUL, s4);
+		dfa.addTransition(s1, IN_LOVES, s2);
+		dfa.addTransition(s1, IN_MARY, s4);
+
+		dfa.addTransition(s2, IN_PAUL, s4);
+		dfa.addTransition(s2, IN_LOVES, s4);
+		dfa.addTransition(s2, IN_MARY, s3);
+
+		dfa.addTransition(s3, IN_PAUL, s4);
+		dfa.addTransition(s3, IN_LOVES, s4);
+		dfa.addTransition(s3, IN_MARY, s4);
+
+		dfa.addTransition(s4, IN_PAUL, s4);
+		dfa.addTransition(s4, IN_LOVES, s4);
+		dfa.addTransition(s4, IN_MARY, s4);
+		*/
+
+    	dfa = AutomatonBuilders.forDFA(dfa)
+    			.from("s0")
+    				.on(IN_PAUL).to("s1")
+    				.on(IN_LOVES, IN_MARY).to("s4")
+    			.from("s1")
+    				.on(IN_LOVES).to("s2")
+    				.on(IN_PAUL, IN_MARY).to("s4")
+    			.from("s2")
+    				.on(IN_MARY).to("s3")
+    				.on(IN_PAUL, IN_LOVES).to("s4")
+    			.from("s3")
+    				.on(IN_PAUL, IN_LOVES, IN_MARY).to("s4")
+    			.from("s4")
+    				.on(IN_PAUL, IN_LOVES, IN_MARY).loop()
+    			.withAccepting("s3")
+    			.withInitial("s0")
+    		.create();
+    	
+    	return dfa;
     }
 
 	@Override

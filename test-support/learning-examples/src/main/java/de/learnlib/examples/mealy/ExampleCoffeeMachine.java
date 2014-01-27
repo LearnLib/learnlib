@@ -24,6 +24,7 @@ import static de.learnlib.examples.mealy.ExampleCoffeeMachine.Input.WATER;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
@@ -74,48 +75,72 @@ public class ExampleCoffeeMachine implements MealyLearningExample<Input,String> 
      * 
      * @return a Mealy machine representing the coffee machine example
      */   
-    public static <S,A extends MutableMealyMachine<S,Input,?,String>>
+    public static <S,T,A extends MutableMealyMachine<S,? super Input,T,? super String>>
     A constructMachine(A machine) {
-		
-		S a = machine.addInitialState(),
-				b = machine.addState(),
-				c = machine.addState(),
-				d = machine.addState(),
-				e = machine.addState(),
-				f = machine.addState();
-		
-		machine.addTransition(a, WATER, c, out_ok);
-		machine.addTransition(a, POD, b, out_ok);
-		machine.addTransition(a, BUTTON, f, out_error);
-		machine.addTransition(a, CLEAN, a, out_ok);
+//		S a = machine.addInitialState(), b = machine.addState(), c = machine
+//				.addState(), d = machine.addState(), e = machine.addState(), f = machine
+//				.addState();
+//
+//		machine.addTransition(a, WATER, c, out_ok);
+//		machine.addTransition(a, POD, b, out_ok);
+//		machine.addTransition(a, BUTTON, f, out_error);
+//		machine.addTransition(a, CLEAN, a, out_ok);
+//
+//		machine.addTransition(b, WATER, d, out_ok);
+//		machine.addTransition(b, POD, b, out_ok);
+//		machine.addTransition(b, BUTTON, f, out_error);
+//		machine.addTransition(b, CLEAN, a, out_ok);
+//
+//		machine.addTransition(c, WATER, c, out_ok);
+//		machine.addTransition(c, POD, d, out_ok);
+//		machine.addTransition(c, BUTTON, f, out_error);
+//		machine.addTransition(c, CLEAN, a, out_ok);
+//
+//		machine.addTransition(d, WATER, d, out_ok);
+//		machine.addTransition(d, POD, d, out_ok);
+//		machine.addTransition(d, BUTTON, e, out_coffee);
+//		machine.addTransition(d, CLEAN, a, out_ok);
+//
+//		machine.addTransition(e, WATER, f, out_error);
+//		machine.addTransition(e, POD, f, out_error);
+//		machine.addTransition(e, BUTTON, f, out_error);
+//		machine.addTransition(e, CLEAN, a, out_ok);
+//
+//		machine.addTransition(f, WATER, f, out_error);
+//		machine.addTransition(f, POD, f, out_error);
+//		machine.addTransition(f, BUTTON, f, out_error);
+//		machine.addTransition(f, CLEAN, f, out_error);
 
-		machine.addTransition(b, WATER, d, out_ok);
-		machine.addTransition(b, POD, b, out_ok);
-		machine.addTransition(b, BUTTON, f, out_error);
-		machine.addTransition(b, CLEAN, a, out_ok);
-
-		machine.addTransition(c, WATER, c, out_ok);
-		machine.addTransition(c, POD, d, out_ok);
-		machine.addTransition(c, BUTTON, f, out_error);
-		machine.addTransition(c, CLEAN, a, out_ok);
-
-		machine.addTransition(d, WATER, d, out_ok);
-		machine.addTransition(d, POD, d, out_ok);
-		machine.addTransition(d, BUTTON, e, out_coffee);
-		machine.addTransition(d, CLEAN, a, out_ok);
-
-		machine.addTransition(e, WATER, f, out_error);
-		machine.addTransition(e, POD, f, out_error);
-		machine.addTransition(e, BUTTON, f, out_error);
-		machine.addTransition(e, CLEAN, a, out_ok);
-		
-		machine.addTransition(f, WATER, f, out_error);
-		machine.addTransition(f, POD, f, out_error);
-		machine.addTransition(f, BUTTON, f, out_error);
-		machine.addTransition(f, CLEAN, f, out_error);
-		
-
-        return machine;
+    	machine = AutomatonBuilders.forMealy(machine)
+    			.withInitial("a")
+    			.from("a")
+    				.on(WATER).withOutput(out_ok).to("c")
+    				.on(POD).withOutput(out_ok).to("b")
+    				.on(BUTTON).withOutput(out_error).to("f")
+    				.on(CLEAN).withOutput(out_ok).loop()
+    			.from("b")
+    				.on(WATER).withOutput(out_ok).to("d")
+    				.on(POD).withOutput(out_ok).loop()
+    				.on(BUTTON).withOutput(out_error).to("f")
+    				.on(CLEAN).withOutput(out_ok).to("a")
+    			.from("c")
+    				.on(WATER).withOutput(out_ok).loop()
+    				.on(POD).withOutput(out_ok).to("d")
+    				.on(BUTTON).withOutput(out_error).to("f")
+    				.on(CLEAN).withOutput(out_ok).to("a")
+    			.from("d")
+    				.on(WATER, POD).withOutput(out_ok).loop()
+    				.on(BUTTON).withOutput(out_coffee).to("e")
+    				.on(CLEAN).withOutput(out_ok).to("a")
+    			.from("e")
+    				.on(WATER, POD, BUTTON).withOutput(out_error).to("f")
+    				.on(CLEAN).withOutput(out_ok).to("a")
+    			.from("f")
+    				.on(WATER, POD, BUTTON, CLEAN).withOutput(out_error).loop()
+    		.create();
+    	
+    	
+    	return machine;
     }
     
     public static CompactMealy<Input,String> constructMachine() {

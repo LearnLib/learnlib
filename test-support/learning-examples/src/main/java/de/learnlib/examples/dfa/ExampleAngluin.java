@@ -20,6 +20,7 @@ package de.learnlib.examples.dfa;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import de.learnlib.examples.LearningExample.DFALearningExample;
@@ -56,20 +57,39 @@ public class ExampleAngluin implements DFALearningExample<Integer> {
 	
 	public static <A extends MutableDFA<S, ? super Integer>,S>
 	A constructMachine(A machine) {
-		S q0 = machine.addInitialState(true);
-		S q1 = machine.addState(false), q2 = machine.addState(false), q3 = machine.addState(false);
 		
-		machine.addTransition(q0, 0, q1);
-		machine.addTransition(q0, 1, q2);
-		
-		machine.addTransition(q1, 0, q0);
-		machine.addTransition(q1, 1, q3);
-		
-		machine.addTransition(q2, 0, q3);
-		machine.addTransition(q2, 1, q0);
-		
-		machine.addTransition(q3, 0, q2);
-		machine.addTransition(q3, 1, q1);
+//		S q0 = machine.addInitialState(true);
+//		S q1 = machine.addState(false), q2 = machine.addState(false), q3 = machine
+//				.addState(false);
+//
+//		machine.addTransition(q0, 0, q1);
+//		machine.addTransition(q0, 1, q2);
+//
+//		machine.addTransition(q1, 0, q0);
+//		machine.addTransition(q1, 1, q3);
+//
+//		machine.addTransition(q2, 0, q3);
+//		machine.addTransition(q2, 1, q0);
+//
+//		machine.addTransition(q3, 0, q2);
+//		machine.addTransition(q3, 1, q1);
+
+	machine = AutomatonBuilders.forDFA(machine)
+				.from("q0")
+					.on(0).to("q1")
+					.on(1).to("q2")
+				.from("q1")
+					.on(0).to("q0")
+					.on(1).to("q3")
+				.from("q2")
+					.on(0).to("q3")
+					.on(1).to("q0")
+				.from("q3")
+					.on(0).to("q2")
+					.on(1).to("q3")
+				.withAccepting("q0")
+				.withInitial("q0")
+			.create();
 		
 		return machine;
 	}
