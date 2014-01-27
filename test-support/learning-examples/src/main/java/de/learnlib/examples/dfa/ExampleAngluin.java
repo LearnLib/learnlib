@@ -22,6 +22,7 @@ import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import de.learnlib.examples.LearningExample.DFALearningExample;
 
 /**
  * This class provides the example used in the paper ''Learning Regular Sets
@@ -31,7 +32,7 @@ import net.automatalib.words.impl.Alphabets;
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
-public class ExampleAngluin {
+public class ExampleAngluin implements DFALearningExample<Integer> {
 	
 	private static final class InstanceHolder {
 		public static final DFA<?,Integer> INSTANCE;
@@ -76,9 +77,15 @@ public class ExampleAngluin {
 	public static CompactDFA<Integer> constructMachine() {
 		return constructMachine(new CompactDFA<>(ALPHABET));
 	}
-	
-	
-	
-	
+
+	@Override
+	public DFA<?, Integer> getReferenceAutomaton() {
+		return getInstance();
+	}
+
+	@Override
+	public Alphabet<Integer> getAlphabet() {
+		return getInputAlphabet();
+	}
 	
 }

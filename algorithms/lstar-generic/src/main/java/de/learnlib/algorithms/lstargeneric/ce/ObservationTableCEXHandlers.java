@@ -47,6 +47,10 @@ public class ObservationTableCEXHandlers {
 			public boolean needsConsistencyCheck() {
 				return true;
 			}
+			@Override
+			public String toString() {
+				return "ClassicLStar";
+			}
 		};
 		
 	public static ObservationTableCEXHandler<Object,Object> SUFFIX1BY1
@@ -63,6 +67,10 @@ public class ObservationTableCEXHandlers {
 			@Override
 			public boolean needsConsistencyCheck() {
 				return false;
+			}
+			@Override
+			public String toString() {
+				return "Suffix1by1";
 			}
 		};
 		
@@ -107,6 +115,10 @@ public class ObservationTableCEXHandlers {
 			public boolean needsConsistencyCheck() {
 				return false;
 			}
+			@Override
+			public String toString() {
+				return globalFinder.toString();
+			}
 		};
 	}
 	
@@ -124,6 +136,10 @@ public class ObservationTableCEXHandlers {
 			@Override
 			public boolean needsConsistencyCheck() {
 				return false;
+			}
+			@Override
+			public String toString() {
+				return localFinder.toString();
 			}
 		};
 	}
@@ -188,5 +204,21 @@ public class ObservationTableCEXHandlers {
 	List<List<Row<I>>> handleLocalSuffix(Query<I,O> ceQuery, ObservationTable<I,O> table,
 			int suffixIndex, MembershipOracle<I,O> oracle) {
 		return handleLocalSuffix(ceQuery, table, suffixIndex, false, oracle);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static ObservationTableCEXHandler<Object,Object>[] values() {
+		return new ObservationTableCEXHandler[]{
+				CLASSIC_LSTAR,
+				SUFFIX1BY1,
+				MAHLER_PNUELI,
+				SHAHBAZ,
+				FIND_LINEAR,
+				FIND_LINEAR_ALLSUFFIXES,
+				FIND_LINEAR_REVERSE,
+				FIND_LINEAR_REVERSE_ALLSUFFIXES,
+				RIVEST_SCHAPIRE,
+				RIVEST_SCHAPIRE_ALLSUFFIXES
+		};
 	}
 }

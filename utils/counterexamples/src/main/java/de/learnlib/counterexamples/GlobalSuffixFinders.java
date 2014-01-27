@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ import de.learnlib.api.Query;
  * 
  * @see GlobalSuffixFinder
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  */
 public abstract class GlobalSuffixFinders {
 	
@@ -49,6 +49,10 @@ public abstract class GlobalSuffixFinders {
 					MembershipOracle<RI, RO> oracle) {
 				return findMahlerPnueli(ceQuery);
 			}
+			@Override
+			public String toString() {
+				return "MahlerPnueli";
+			}
 	};
 	
 	/**
@@ -66,6 +70,10 @@ public abstract class GlobalSuffixFinders {
 					SuffixOutput<RI, RO> hypOutput,
 					MembershipOracle<RI, RO> oracle) {
 				return findShahbaz(ceQuery, asTransformer);
+			}
+			@Override
+			public String toString() {
+				return "Shahbaz";
 			}
 	};
 	
@@ -146,6 +154,10 @@ public abstract class GlobalSuffixFinders {
 					SuffixOutput<RI, RO> hypOutput, MembershipOracle<RI, RO> oracle) {
 				int idx = localFinder.findSuffixIndex(ceQuery, asTransformer, hypOutput, oracle);
 				return suffixesForLocalOutput(ceQuery, idx, allSuffixes);
+			}
+			@Override
+			public String toString() {
+				return localFinder.toString() + (allSuffixes ? "-AllSuffixes" : "");
 			}
 		};
 	}
@@ -295,6 +307,20 @@ public abstract class GlobalSuffixFinders {
 		return suffix.suffixes(false);
 	}
 	
+	
+	@SuppressWarnings("unchecked")
+	public static GlobalSuffixFinder<Object,Object>[] values() {
+		return new GlobalSuffixFinder[]{
+			MAHLER_PNUELI,
+			SHAHBAZ,
+			FIND_LINEAR,
+			FIND_LINEAR_ALLSUFFIXES,
+			FIND_LINEAR_REVERSE,
+			FIND_LINEAR_REVERSE_ALLSUFFIXES,
+			RIVEST_SCHAPIRE,
+			RIVEST_SCHAPIRE_ALLSUFFIXES
+		};
+	}
 
 	// Prevent inheritance
 	private GlobalSuffixFinders() {}

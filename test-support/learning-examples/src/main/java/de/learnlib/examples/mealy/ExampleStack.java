@@ -27,6 +27,9 @@ import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import de.learnlib.examples.LearningExample.MealyLearningExample;
+import de.learnlib.examples.mealy.ExampleStack.Input;
+import de.learnlib.examples.mealy.ExampleStack.Output;
 
 /**
  * This example encodes a small stack with a capacity of three elements
@@ -35,7 +38,7 @@ import net.automatalib.words.impl.Alphabets;
  * 
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class ExampleStack {
+public class ExampleStack implements MealyLearningExample<Input, Output> {
 	private static final class InstanceHolder {
 		public static final MealyMachine<?,Input,?,Output> INSTANCE;
 		
@@ -97,5 +100,15 @@ public class ExampleStack {
     public static CompactMealy<Input, Output> constructMachine() {
     	return constructMachine(new CompactMealy<Input,Output>(ALPHABET));
     }
+
+	@Override
+	public MealyMachine<?, Input, ?, Output> getReferenceAutomaton() {
+		return getInstance();
+	}
+
+	@Override
+	public Alphabet<Input> getAlphabet() {
+		return getInputAlphabet();
+	}
     
 }

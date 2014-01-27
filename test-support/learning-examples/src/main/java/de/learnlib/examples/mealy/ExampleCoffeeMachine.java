@@ -26,6 +26,8 @@ import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import de.learnlib.examples.LearningExample.MealyLearningExample;
+import de.learnlib.examples.mealy.ExampleCoffeeMachine.Input;
 
 /**
  * This example represents the Coffee Machine example from
@@ -34,7 +36,7 @@ import net.automatalib.words.impl.Alphabets;
  * 
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class ExampleCoffeeMachine {
+public class ExampleCoffeeMachine implements MealyLearningExample<Input,String> {
 	
 	private static final class InstanceHolder {
 		public static final MealyMachine<?,Input,?,String> INSTANCE;
@@ -119,5 +121,15 @@ public class ExampleCoffeeMachine {
     public static CompactMealy<Input,String> constructMachine() {
     	return constructMachine(new CompactMealy<Input,String>(ALPHABET));
     }
+
+	@Override
+	public MealyMachine<?, Input, ?, String> getReferenceAutomaton() {
+		return getInstance();
+	}
+
+	@Override
+	public Alphabet<Input> getAlphabet() {
+		return getInputAlphabet();
+	}
 	
 }

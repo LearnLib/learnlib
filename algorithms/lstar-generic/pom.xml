@@ -32,14 +32,21 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<description>A flexible, optimized version of Dana Angluin's L* algorithm</description>
 
 	<dependencies>
+		<!--
+		Compile-time dependencies
+		-->
+		
+		<!-- LearnLib dependencies -->
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-counterexamples</artifactId>
 		</dependency>
+		
+		<!-- AutomataLib dependencies -->
 		<dependency>
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-api</artifactId>
@@ -52,37 +59,48 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-util</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-test-support</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-basic-eqtests</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-cache</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-simulator</artifactId>
-			<scope>test</scope>
-		</dependency>
+		
+		<!-- GNU Trove -->
 		<dependency>
 			<groupId>net.sf.trove4j</groupId>
 			<artifactId>trove4j</artifactId>
 			<version>${trove4j.version}</version>
 		</dependency>
+		
+		<!-- BuilderGen -->
 		<dependency>
 			<groupId>com.github.misberner.buildergen</groupId>
 			<artifactId>buildergen</artifactId>
+		</dependency>
+		
+		<!--
+		Test dependencies
+		-->
+		
+		<!-- TestNG -->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+		</dependency>
+		
+		<!-- LearnLib dependencies -->
+		<dependency>
+			<groupId>de.learnlib.testsupport</groupId>
+			<artifactId>learnlib-learning-examples</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib.testsupport</groupId>
+			<artifactId>learnlib-learner-it-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-basic-eqtests</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-simulator</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

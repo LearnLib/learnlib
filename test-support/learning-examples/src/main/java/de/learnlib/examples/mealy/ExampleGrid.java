@@ -16,10 +16,12 @@
  */
 package de.learnlib.examples.mealy;
 
+import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import de.learnlib.examples.LearningExample.MealyLearningExample;
 
 /**
  * This class generates a Mealy machine consisting of a two-dimensional grid of
@@ -27,7 +29,7 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class ExampleGrid {
+public class ExampleGrid implements MealyLearningExample<Character,Integer> {
 
     private final static Alphabet<Character> ALPHABET = Alphabets.characters('x', 'y');
     
@@ -77,4 +79,25 @@ public class ExampleGrid {
     public static CompactMealy<Character, Integer> constructMachine(int xsize, int ysize) {
     	return constructMachine(new CompactMealy<Character,Integer>(ALPHABET), xsize, ysize);
     }
+   
+    
+    private final int xsize;
+    private final int ysize;
+    
+    public ExampleGrid(int xsize, int ysize) {
+    	this.xsize = xsize;
+    	this.ysize = ysize;
+    }
+
+
+	@Override
+	public MealyMachine<?, Character, ?, Integer> getReferenceAutomaton() {
+		return constructMachine(xsize, ysize);
+	}
+
+
+	@Override
+	public Alphabet<Character> getAlphabet() {
+		return getInputAlphabet();
+	}
 }

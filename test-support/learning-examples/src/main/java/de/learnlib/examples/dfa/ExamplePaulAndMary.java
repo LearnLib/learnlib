@@ -23,13 +23,14 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
+import de.learnlib.examples.LearningExample.DFALearningExample;
 
 /**
  * This class implements a sad love story - DFA style.
  * 
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class ExamplePaulAndMary {
+public class ExamplePaulAndMary implements DFALearningExample<Symbol> {
 	
 	private static final class InstanceHolder {
 		public static final DFA<?,Symbol> INSTANCE;
@@ -94,4 +95,14 @@ public class ExamplePaulAndMary {
 
         return dfa;
     }
+
+	@Override
+	public DFA<?, Symbol> getReferenceAutomaton() {
+		return getInstance();
+	}
+
+	@Override
+	public Alphabet<Symbol> getAlphabet() {
+		return getInputAlphabet();
+	}
 }

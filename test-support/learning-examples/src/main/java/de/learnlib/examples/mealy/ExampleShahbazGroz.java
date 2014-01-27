@@ -22,6 +22,7 @@ import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import de.learnlib.examples.LearningExample.MealyLearningExample;
 
 /**
  * This class provides the example used in the paper ''Inferring Mealy Machines'' 
@@ -29,7 +30,7 @@ import net.automatalib.words.impl.Alphabets;
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
-public class ExampleShahbazGroz {
+public class ExampleShahbazGroz implements MealyLearningExample<Character,String> {
 	
 	private static final class InstanceHolder {
 		public static final MealyMachine<?,Character,?,String> INSTANCE;
@@ -89,4 +90,14 @@ public class ExampleShahbazGroz {
     public static CompactMealy<Character, String> constructMachine() {
     	return constructMachine(new CompactMealy<Character,String>(ALPHABET));
     }
+
+	@Override
+	public MealyMachine<?, Character, ?, String> getReferenceAutomaton() {
+		return getInstance();
+	}
+
+	@Override
+	public Alphabet<Character> getAlphabet() {
+		return getInputAlphabet();
+	}
 }
