@@ -27,7 +27,7 @@ import java.util.Map;
  * 
  * @author falkhowar
  */
-final class ConcreteMethodInput implements ExecutableInput<Object> {
+public class ConcreteMethodInput implements ExecutableInput<Object> {
     
     /**
      * corresponding abstract input

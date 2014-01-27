@@ -29,16 +29,16 @@ import java.util.Map;
  * 
  * @author falkhowar
  */
-final class SimplePOJODataMapper implements DataMapper<AbstractMethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
+public class SimplePOJODataMapper implements DataMapper<AbstractMethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
 
     private final Constructor<?> initMethod;
     private final Object[] initParams;
     private final AbstractMethodInput doNothing;
                 
-    private Object _this;    
-    private boolean error;
+    protected Object _this;    
+    protected boolean error;
 
-    SimplePOJODataMapper(Constructor<?> initMethod, Object[] initParams) {
+    protected SimplePOJODataMapper(Constructor<?> initMethod, Object[] initParams) {
         this.initMethod = initMethod;
         this.initParams = initParams;
         try {
