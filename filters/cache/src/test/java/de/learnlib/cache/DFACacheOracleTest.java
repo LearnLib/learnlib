@@ -51,8 +51,9 @@ public class DFACacheOracleTest {
 	@BeforeClass
 	public void setup() {
 		// use angluin's example
-		DFA<?,Integer> fm = ExampleAngluin.getInstance();
-		Alphabet<Integer> alphabet = ExampleAngluin.getInputAlphabet();
+		ExampleAngluin exampleAngluin = ExampleAngluin.createExample();
+		DFA<?,Integer> fm = exampleAngluin.getReferenceAutomaton();
+		Alphabet<Integer> alphabet = exampleAngluin.getAlphabet();
 
 		// use simulated environment
 		SimulatorOracle<Integer, Boolean> simulatorOracle = new SimulatorOracle<>(

@@ -35,7 +35,7 @@ import de.learnlib.oracles.SimulatorOracle.DFASimulatorOracle;
  * If run, this integration test tests the functionality of all
  * {@link #addLearnerVariants(Alphabet, DFAMembershipOracle, DFALearnerVariantList) variants}
  * of a DFA learning algorithm against all the examples contained in
- * {@link LearningExamples#getDFAExamples()}.
+ * {@link LearningExamples#createDFAExamples()}.
  * 
  * @author Malte Isberner
  *
@@ -47,7 +47,7 @@ public abstract class AbstractDFALearnerIT extends AbstractLearnerIT {
 	// @Factory FIXME
 	@Override
 	public SingleExampleAllVariantsITSubCase<?,?,?>[] createExampleITCases() {
-		List<? extends DFALearningExample<?>> examples = LearningExamples.getDFAExamples();
+		List<? extends DFALearningExample<?>> examples = LearningExamples.createDFAExamples();
 		
 		SingleExampleAllVariantsITSubCase<?,?,?>[] result = new SingleExampleAllVariantsITSubCase[examples.size()];
 		int i = 0;

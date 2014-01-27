@@ -17,7 +17,6 @@
 package de.learnlib.examples;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -39,35 +38,32 @@ public abstract class LearningExamples {
 	private static final Alphabet<Character> RANDOM_ALPHABET = Alphabets.characters('a', 'c');
 	
 	private static final int RANDOM_SIZE = 100;
-	
-	private static final List<? extends DFALearningExample<?>> DFA_EXAMPLES
-			= Arrays.asList(
-					new ExampleAngluin(),
-					new ExamplePaulAndMary());
-	
+
 	private static final int GRID_XSIZE = 5;
 	private static final int GRID_YSIZE = 5;
 	
 	private static final String[] RANDOM_MEALY_OUTPUTS = { "o1", "o2", "o3" };
 	
-	private static final List<? extends MealyLearningExample<?,?>> MEALY_EXAMPLES
-			= Arrays.asList(
-					new ExampleCoffeeMachine(),
-					new ExampleGrid(GRID_XSIZE, GRID_YSIZE),
-					new ExampleShahbazGroz(),
-					new ExampleStack(),
-					new ExampleRandomMealy<>(new Random(RANDOM_SEED), RANDOM_ALPHABET, RANDOM_SIZE, RANDOM_MEALY_OUTPUTS));
 
 	private LearningExamples() {
 		throw new AssertionError("Constructor should not be invoked");
 	}
 	
-	public static List<? extends DFALearningExample<?>> getDFAExamples() {
-		return Collections.unmodifiableList(DFA_EXAMPLES);
+	public static List<? extends DFALearningExample<?>> createDFAExamples() {
+		return Arrays.asList(
+				ExampleAngluin.createExample(),
+				ExamplePaulAndMary.createExample()
+				);
 	}
 	
-	public static List<? extends MealyLearningExample<?,?>> getMealyExamples() {
-		return Collections.unmodifiableList(MEALY_EXAMPLES);
+	public static List<? extends MealyLearningExample<?,?>> createMealyExamples() {
+		return Arrays.asList(
+				ExampleCoffeeMachine.createExample(),
+				ExampleGrid.createExample(GRID_XSIZE, GRID_YSIZE),
+				ExampleShahbazGroz.createExample(),
+				ExampleStack.createExample(),
+				ExampleRandomMealy.createExample(new Random(RANDOM_SEED), RANDOM_ALPHABET, RANDOM_SIZE, RANDOM_MEALY_OUTPUTS)
+				);
 	}
 
 }

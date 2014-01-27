@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -20,9 +20,10 @@ package de.learnlib.examples.mealy;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import de.learnlib.examples.LearningExample.MealyLearningExample;
+import de.learnlib.examples.DefaultLearningExample.DefaultMealyLearningExample;
 
 /**
  * This class provides the example used in the paper ''Inferring Mealy Machines'' 
@@ -30,27 +31,11 @@ import de.learnlib.examples.LearningExample.MealyLearningExample;
  * 
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
-public class ExampleShahbazGroz implements MealyLearningExample<Character,String> {
+public class ExampleShahbazGroz extends DefaultMealyLearningExample<Character,String> {
 	
-	private static final class InstanceHolder {
-		public static final MealyMachine<?,Character,?,String> INSTANCE;
-		
-		static {
-			INSTANCE = constructMachine();
-		}
-	}
-	
-    private final static Alphabet<Character> ALPHABET = Alphabets.characters('a', 'b');
-    
-    private final static String out_x = "x";
-    private final static String out_y = "y";
-    
-    public static Alphabet<Character> getInputAlphabet() {
-    	return ALPHABET;
-    }
-    
-    public static MealyMachine<?,Character,?,String> getInstance() {
-    	return InstanceHolder.INSTANCE;
+
+	public static Alphabet<Character> createInputAlphabet() {
+    	return Alphabets.characters('a', 'b');
     }
     
     /**
@@ -58,46 +43,61 @@ public class ExampleShahbazGroz implements MealyLearningExample<Character,String
      * 
      * @return machine instance of the example
      */
-    public static <S,A extends MutableMealyMachine<S,Character,?,String>>
+    public static <S,T,A extends MutableMealyMachine<S,? super Character,T,? super String>>
     A constructMachine(A fm) {
-        
-        S q0 = fm.addInitialState();
-        S q1 = fm.addState();
-        S q2 = fm.addState();
-        S q3 = fm.addState();
-        
-        fm.addTransition(q0, 'a', q1, out_x);
-        fm.addTransition(q0, 'b', q3, out_x);
-        
-        fm.addTransition(q1, 'a', q1, out_y);
-        fm.addTransition(q1, 'b', q2, out_x);
-        
-        fm.addTransition(q2, 'a', q3, out_x);
-        fm.addTransition(q2, 'b', q3, out_x);
-        
-        fm.addTransition(q3, 'a', q0, out_x);
-        fm.addTransition(q3, 'b', q0, out_x);
-        
+//
+//		S q0 = fm.addInitialState();
+//		S q1 = fm.addState();
+//		S q2 = fm.addState();
+//		S q3 = fm.addState();
+//
+//		fm.addTransition(q0, 'a', q1, out_x);
+//		fm.addTransition(q0, 'b', q3, out_x);
+//
+//		fm.addTransition(q1, 'a', q1, out_y);
+//		fm.addTransition(q1, 'b', q2, out_x);
+//
+//		fm.addTransition(q2, 'a', q3, out_x);
+//		fm.addTransition(q2, 'b', q3, out_x);
+//
+//		fm.addTransition(q3, 'a', q0, out_x);
+//		fm.addTransition(q3, 'b', q0, out_x);
+
+    	fm = AutomatonBuilders.forMealy(fm)
+    			.withInitial("q0")
+    			.from("q0")
+    				.on('a').withOutput("x").to("q1")
+    				.on('b').withOutput("x").to("q3")
+    			.from("q1")
+    				.on('a').withOutput("y").loop()
+    				.on('b').withOutput("x").to("q2")
+    			.from("q2")
+    				.on('a', 'b').withOutput("x").to("q3")
+    			.from("q3")
+    				.on('a', 'b').withOutput("x").to("q0")
+    		.create();
+    	
         /*
          * In the paper the authors use the following counterexample
          * to refine the first conjecture from an angluin for mealy machines:
          * a b a b b a a
          */
-        
-        return fm;
+    	
+    	return fm;
     }
     
     public static CompactMealy<Character, String> constructMachine() {
-    	return constructMachine(new CompactMealy<Character,String>(ALPHABET));
+    	return constructMachine(new CompactMealy<Character,String>(createInputAlphabet()));
     }
-
-	@Override
-	public MealyMachine<?, Character, ?, String> getReferenceAutomaton() {
-		return getInstance();
+    
+    public static ExampleShahbazGroz createExample() {
+    	CompactMealy<Character,String> mealy = constructMachine();
+    	return new ExampleShahbazGroz(mealy.getInputAlphabet(), mealy);
+    }
+    
+    private ExampleShahbazGroz(Alphabet<Character> alphabet,
+			MealyMachine<?, Character, ?, String> referenceAutomaton) {
+		super(alphabet, referenceAutomaton);
 	}
 
-	@Override
-	public Alphabet<Character> getAlphabet() {
-		return getInputAlphabet();
-	}
 }

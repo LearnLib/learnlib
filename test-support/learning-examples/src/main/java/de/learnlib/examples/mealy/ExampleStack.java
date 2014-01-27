@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -25,9 +25,10 @@ import static de.learnlib.examples.mealy.ExampleStack.Output.OK;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import de.learnlib.examples.LearningExample.MealyLearningExample;
+import de.learnlib.examples.DefaultLearningExample.DefaultMealyLearningExample;
 import de.learnlib.examples.mealy.ExampleStack.Input;
 import de.learnlib.examples.mealy.ExampleStack.Output;
 
@@ -38,36 +39,22 @@ import de.learnlib.examples.mealy.ExampleStack.Output;
  * 
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class ExampleStack implements MealyLearningExample<Input, Output> {
-	private static final class InstanceHolder {
-		public static final MealyMachine<?,Input,?,Output> INSTANCE;
-		
-		static {
-			INSTANCE = constructMachine();
-		}
-	}
-	
-	public enum Input {
+public class ExampleStack extends DefaultMealyLearningExample<Input, Output> {
+
+	public static enum Input {
 		PUSH,
 		POP
 	}
 	
-	public enum Output {
+	public static enum Output {
 		OK,
 		EMPTY,
 		FULL
 	}
 
     
-    private final static Alphabet<Input> ALPHABET = Alphabets.fromEnum(Input.class); 
-    
-    
-    public static Alphabet<Input> getInputAlphabet() {
-    	return ALPHABET;
-    }
-    
-    public static MealyMachine<?,Input,?,Output> getInstance() {
-    	return InstanceHolder.INSTANCE;
+    public static Alphabet<Input> createInputAlphabet() {
+    	return Alphabets.fromEnum(Input.class);
     }
     
     /**
@@ -75,8 +62,25 @@ public class ExampleStack implements MealyLearningExample<Input, Output> {
      * 
      * @return machine instance of the example
      */
-    public static <S,A extends MutableMealyMachine<S,Input,?,Output>> 
+    public static <S,T,A extends MutableMealyMachine<S,? super Input,T,? super Output>> 
     A constructMachine(A fm) {
+    	fm = AutomatonBuilders.forMealy(fm)
+    			.withInitial("s0")
+    			.from("s0")
+    				.on(PUSH).withOutput(OK).to("s1")
+    				.on(POP).withOutput(EMPTY).loop()
+    			.from("s1")
+    				.on(PUSH).withOutput(OK).to("s2")
+    				.on(POP).withOutput(OK).to("s0")
+    			.from("s2")
+    				.on(PUSH).withOutput(OK).to("s3")
+    				.on(POP).withOutput(OK).to("s1")
+    			.from("s3")
+    				.on(PUSH).withOutput(FULL).loop()
+    				.on(POP).withOutput(OK).to("s2")
+    		.create();
+    	
+    	/*
         S s0 = fm.addInitialState(),
                 s1 = fm.addState(),
                 s2 = fm.addState(),
@@ -93,22 +97,24 @@ public class ExampleStack implements MealyLearningExample<Input, Output> {
         
         fm.addTransition(s3, PUSH, s3, FULL);
         fm.addTransition(s3, POP, s2, OK);
+        */
         
         return fm;
     }
     
     public static CompactMealy<Input, Output> constructMachine() {
-    	return constructMachine(new CompactMealy<Input,Output>(ALPHABET));
+    	return constructMachine(new CompactMealy<Input,Output>(createInputAlphabet()));
     }
-
-	@Override
-	public MealyMachine<?, Input, ?, Output> getReferenceAutomaton() {
-		return getInstance();
+    
+    public static ExampleStack createExample() {
+    	CompactMealy<Input,Output> mealy = constructMachine();
+    	return new ExampleStack(mealy.getInputAlphabet(), mealy);
+    }
+    
+	private ExampleStack(Alphabet<Input> alphabet,
+			MealyMachine<?, Input, ?, Output> referenceAutomaton) {
+		super(alphabet, referenceAutomaton);
 	}
 
-	@Override
-	public Alphabet<Input> getAlphabet() {
-		return getInputAlphabet();
-	}
     
 }

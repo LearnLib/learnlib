@@ -48,7 +48,7 @@ public abstract class AbstractMealySymLearnerIT extends AbstractLearnerIT {
 	// @Factory FIXME
 	@Override
 	public SingleExampleAllVariantsITSubCase<?,?,?>[] createExampleITCases() {
-		List<? extends MealyLearningExample<?,?>> examples = LearningExamples.getMealyExamples();
+		List<? extends MealyLearningExample<?,?>> examples = LearningExamples.createMealyExamples();
 		
 		SingleExampleAllVariantsITSubCase<?,?,?>[] result = new SingleExampleAllVariantsITSubCase[examples.size()];
 		int i = 0;
