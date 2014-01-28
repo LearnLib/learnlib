@@ -34,16 +34,14 @@ import java.util.List;
  *
  * @param <I>
  * 		input symbol class.
- * @param <O>
- * 		output symbol class.
  */
-public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
+public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
 
 	@Nonnull
-	private final List<ObservationTableRow<I, O>> shortPrefixRows; // S
+	private final List<ObservationTableRow<I>> shortPrefixRows; // S
 
 	@Nonnull
-	private final List<ObservationTableRow<I, O>> longPrefixRows;  // SA
+	private final List<ObservationTableRow<I>> longPrefixRows;  // SA
 
 	@Nonnull
 	private final List<Word<I>> suffixes;                          // E
@@ -56,7 +54,7 @@ public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 		suffixes.add(emptyWord);
 
 		Word<I> epsiplon = Word.epsilon();
-		ObservationTableRow<I, O> initialRow = new ObservationTableRow<>(epsiplon);
+		ObservationTableRow<I> initialRow = new ObservationTableRow<>(epsiplon);
 		initialRow.setShortPrefixRow();
 		shortPrefixRows = new LinkedList<>();
 		shortPrefixRows.add(initialRow);
@@ -79,28 +77,28 @@ public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 	}
 
 	@Override
-	public Collection<ObservationTableRow<I, O>> getShortPrefixRows() {
+	public Collection<ObservationTableRow<I>> getShortPrefixRows() {
 		return Collections.unmodifiableCollection(shortPrefixRows);
 	}
 
 	@Nonnull
 	public List<Word<I>> getShortPrefixLabels() {
 		List<Word<I>> labels = Lists.newArrayListWithExpectedSize(shortPrefixRows.size());
-		for (ObservationTableRow<I, O> row : shortPrefixRows) {
+		for (ObservationTableRow<I> row : shortPrefixRows) {
 			labels.add(row.getLabel());
 		}
 		return labels;
 	}
 
 	@Override
-	public Collection<ObservationTableRow<I, O>> getLongPrefixRows() {
+	public Collection<ObservationTableRow<I>> getLongPrefixRows() {
 		return Collections.unmodifiableCollection(longPrefixRows);
 	}
 
 	@Nonnull
 	public List<Word<I>> getLongPrefixLabels() {
 		List<Word<I>> labels = Lists.newArrayListWithExpectedSize(longPrefixRows.size());
-		for (ObservationTableRow<I, O> row : longPrefixRows) {
+		for (ObservationTableRow<I> row : longPrefixRows) {
 			labels.add(row.getLabel());
 		}
 		return labels;
@@ -108,7 +106,7 @@ public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 
 	@Override
 	@Nullable
-	public Row<I, O> getSuccessorRow(@Nonnull Row<I, O> spRow, I symbol) {
+	public Row<I, Boolean> getSuccessorRow(@Nonnull Row<I, Boolean> spRow, I symbol) {
 		//noinspection SuspiciousMethodCalls
 		if (!shortPrefixRows.contains(spRow)) {
 			throw new IllegalArgumentException("Row '" + spRow + "' is not part of short prefix rows!");
@@ -116,9 +114,9 @@ public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 
 		Word<I> successorLabel = spRow.getLabel().append(symbol);
 
-		Row<I, O> successor = null;
+		Row<I, Boolean> successor = null;
 
-		for (Row<I, O> row : getAllRows()) {
+		for (Row<I, Boolean> row : getAllRows()) {
 			if (row.getLabel().equals(successorLabel)) {
 				successor = row;
 				break;
@@ -129,13 +127,13 @@ public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 	}
 
 	void addShortPrefix(@Nonnull Word<I> shortPrefix) {
-		final ObservationTableRow<I, O> row = new ObservationTableRow<>(shortPrefix);
+		final ObservationTableRow<I> row = new ObservationTableRow<>(shortPrefix);
 		row.setShortPrefixRow();
 		shortPrefixRows.add(row);
 	}
 
 	void addLongPrefix(@Nonnull Word<I> longPrefix) {
-		final ObservationTableRow<I, O> row = new ObservationTableRow<>(longPrefix);
+		final ObservationTableRow<I> row = new ObservationTableRow<>(longPrefix);
 		row.setLongPrefixRow();
 		longPrefixRows.add(row);
 	}
@@ -144,9 +142,9 @@ public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 		List<Word<I>> longPrefixLabels = getLongPrefixLabels();
 		longPrefixLabels.retainAll(getShortPrefixLabels());
 
-		List<ObservationTableRow<I, O>> rowsToRemove = Lists.newArrayListWithCapacity(longPrefixLabels.size());
+		List<ObservationTableRow<I>> rowsToRemove = Lists.newArrayListWithCapacity(longPrefixLabels.size());
 
-		for (ObservationTableRow<I, O> row : longPrefixRows) {
+		for (ObservationTableRow<I> row : longPrefixRows) {
 			if (longPrefixLabels.contains(row.getLabel())) {
 				rowsToRemove.add(row);
 			}
@@ -165,19 +163,19 @@ public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 	 * @param result
 	 * 		The result of the query.
 	 */
-	void addResult(@Nonnull Word<I> prefix, @Nonnull Word<I> suffix, @Nonnull O result) {
+	void addResult(@Nonnull Word<I> prefix, @Nonnull Word<I> suffix, @Nonnull Boolean result) {
 		if (!suffixes.contains(suffix)) {
 			throw new IllegalArgumentException("Suffix '" + suffix + "' is not part of the suffixes set");
 		}
 
 		final int suffixPosition = suffixes.indexOf(suffix);
-		ObservationTableRow<I, O> row = getRowForPrefix(prefix);
+		ObservationTableRow<I> row = getRowForPrefix(prefix);
 
 		addResultToRow(result, suffixPosition, row);
 	}
 
-	private void addResultToRow(@Nonnull O result, int suffixPosition, @Nonnull ObservationTableRow<I, O> row) {
-		final List<O> values = row.getValues();
+	private void addResultToRow(@Nonnull Boolean result, int suffixPosition, @Nonnull ObservationTableRow<I> row) {
+		final List<Boolean> values = row.getValues();
 		if (values.size() > suffixPosition) {
 			if (!values.get(suffixPosition).equals(result)) {
 				throw new IllegalStateException(
@@ -197,10 +195,10 @@ public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 	 */
 	@Nullable
 	Word<I> findUnclosedState() {
-		for (ObservationTableRow<I, O> candidate : longPrefixRows) {
+		for (ObservationTableRow<I> candidate : longPrefixRows) {
 			boolean found = false;
 
-			for (ObservationTableRow<I, O> stateRow : shortPrefixRows) {
+			for (ObservationTableRow<I> stateRow : shortPrefixRows) {
 				if (candidate.getValues().equals(stateRow.getValues())) {
 					found = true;
 					break;
@@ -246,8 +244,8 @@ public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 
 	private boolean checkInconsistency(@Nonnull Word<I> firstState, @Nonnull Word<I> secondState,
 			@Nonnull I alphabetSymbol) {
-		ObservationTableRow<I, O> rowForFirstState = getRowForPrefix(firstState);
-		ObservationTableRow<I, O> rowForSecondState = getRowForPrefix(secondState);
+		ObservationTableRow<I> rowForFirstState = getRowForPrefix(firstState);
+		ObservationTableRow<I> rowForSecondState = getRowForPrefix(secondState);
 
 		if (!rowForFirstState.getValues().equals(rowForSecondState.getValues())) {
 			return false;
@@ -266,12 +264,12 @@ public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 		Word<I> firstState = dataHolder.getFirstState().append(dataHolder.getDifferingSymbol());
 		Word<I> secondState = dataHolder.getSecondState().append(dataHolder.getDifferingSymbol());
 
-		ObservationTableRow<I, O> firstRow = getRowForPrefix(firstState);
-		ObservationTableRow<I, O> secondRow = getRowForPrefix(secondState);
+		ObservationTableRow<I> firstRow = getRowForPrefix(firstState);
+		ObservationTableRow<I> secondRow = getRowForPrefix(secondState);
 
 		for (int i = 0; i < firstRow.getValues().size(); i++) {
-			O symbolFirstRow = firstRow.getValues().get(i);
-			O symbolSecondRow = secondRow.getValues().get(i);
+			Boolean symbolFirstRow = firstRow.getValues().get(i);
+			Boolean symbolSecondRow = secondRow.getValues().get(i);
 			if (!symbolFirstRow.equals(symbolSecondRow)) {
 				return suffixes.get(i);
 			}
@@ -281,14 +279,14 @@ public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 	}
 
 	@Nonnull
-	ObservationTableRow<I, O> getRowForPrefix(@Nonnull Word<I> state) {
-		for (ObservationTableRow<I, O> row : shortPrefixRows) {
+	ObservationTableRow<I> getRowForPrefix(@Nonnull Word<I> state) {
+		for (ObservationTableRow<I> row : shortPrefixRows) {
 			if (row.getLabel().equals(state)) {
 				return row;
 			}
 		}
 
-		for (ObservationTableRow<I, O> row : longPrefixRows) {
+		for (ObservationTableRow<I> row : longPrefixRows) {
 			if (row.getLabel().equals(state)) {
 				return row;
 			}
@@ -305,9 +303,9 @@ public class ObservationTable<I, O> extends AbstractObservationTable<I, O> {
 	 * 		should be moved to the short prefix rows.
 	 */
 	void moveLongPrefixToShortPrefixes(@Nonnull Word<I> longPrefix) {
-		ObservationTableRow<I, O> rowToMove = null;
+		ObservationTableRow<I> rowToMove = null;
 
-		for (ObservationTableRow<I, O> row : longPrefixRows) {
+		for (ObservationTableRow<I> row : longPrefixRows) {
 			if (row.getLabel().equals(longPrefix)) {
 				rowToMove = row;
 				break;

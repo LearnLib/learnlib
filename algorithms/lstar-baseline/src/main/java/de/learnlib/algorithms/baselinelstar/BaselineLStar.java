@@ -51,7 +51,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	private final MembershipOracle<I, Boolean> oracle;
 
 	@Nonnull
-	private final ObservationTable<I, Boolean> observationTable;
+	private final ObservationTable<I> observationTable;
 
 	private boolean startLearningAlreadyCalled;
 
@@ -178,7 +178,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 		Map<List<Boolean>, FastDFAState> dfaStates = Maps.newHashMapWithExpectedSize(
 				observationTable.getShortPrefixRows().size());
 
-		for (ObservationTableRow<I, Boolean> stateRow : observationTable.getShortPrefixRows()) {
+		for (ObservationTableRow<I> stateRow : observationTable.getShortPrefixRows()) {
 			if (dfaStates.containsKey(stateRow.getValues())) {
 				continue;
 			}
@@ -198,7 +198,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 			dfaStates.put(stateRow.getValues(), dfaState);
 		}
 
-		for (ObservationTableRow<I, Boolean> stateRow : observationTable.getShortPrefixRows()) {
+		for (ObservationTableRow<I> stateRow : observationTable.getShortPrefixRows()) {
 			FastDFAState dfaState = dfaStates.get(stateRow.getValues());
 			for (I alphabetSymbol : alphabet) {
 				Word<I> word = stateRow.getLabel().append(alphabetSymbol);

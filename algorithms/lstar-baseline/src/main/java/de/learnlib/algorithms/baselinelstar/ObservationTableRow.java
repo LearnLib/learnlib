@@ -28,13 +28,13 @@ import java.util.List;
  * A single row inside an {@link ObservationTable}, containing only the boolean values
  * if a combination of state/candidate and suffix is accepted by the current hypothesis.
  */
-class ObservationTableRow<I, O> extends AbstractObservationTable.AbstractRow<I, O> {
+class ObservationTableRow<I> extends AbstractObservationTable.AbstractRow<I, Boolean> {
 
 	@Nonnull
 	private final Word<I> label;
 
 	@Nonnull
-	private final List<O> rowData;
+	private final List<Boolean> rowData;
 
 	private boolean shortPrefixRow;
 
@@ -43,7 +43,7 @@ class ObservationTableRow<I, O> extends AbstractObservationTable.AbstractRow<I, 
 		rowData = new LinkedList<>();
 	}
 
-	void addValue(O value) {
+	void addValue(Boolean value) {
 		rowData.add(value);
 	}
 
@@ -72,7 +72,7 @@ class ObservationTableRow<I, O> extends AbstractObservationTable.AbstractRow<I, 
 
 	@Override
 	@Nonnull
-	public List<O> getValues() {
+	public List<Boolean> getValues() {
 		return Collections.unmodifiableList(rowData);
 	}
 

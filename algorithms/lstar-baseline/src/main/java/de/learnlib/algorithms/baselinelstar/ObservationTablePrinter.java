@@ -26,7 +26,7 @@ import java.util.Collection;
  */
 public class ObservationTablePrinter {
 
-	public static <I> String getPrintableStringRepresentation(ObservationTable<I, Boolean> observationTable) {
+	public static <I> String getPrintableStringRepresentation(ObservationTable<I> observationTable) {
 		StringBuilder sb = new StringBuilder();
 
 		int firstColumnWidth = getFirstColumnWidth(observationTable);
@@ -44,20 +44,20 @@ public class ObservationTablePrinter {
 		for (Word<I> state : observationTable.getShortPrefixLabels()) {
 			sb.append(paddedString(state.toString(), firstColumnWidth)).append(" | ");
 			sb.append(stringPresentationOfRow(observationTable.getRowForPrefix(state), maxSuffixLength));
-			sb.append("\n");
+			sb.append('\n');
 		}
-		sb.append("\n");
+		sb.append('\n');
 
 		for (Word<I> candidate : observationTable.getLongPrefixLabels()) {
 			sb.append(paddedString(candidate.toString(), firstColumnWidth)).append(" | ");
 			sb.append(stringPresentationOfRow(observationTable.getRowForPrefix(candidate), maxSuffixLength));
-			sb.append("\n");
+			sb.append('\n');
 		}
 
 		return sb.toString();
 	}
 
-	private static <I> int getFirstColumnWidth(ObservationTable<I, Boolean> observationTable) {
+	private static <I> int getFirstColumnWidth(ObservationTable<I> observationTable) {
 		int maxStateLength = getMaxWordLength(observationTable.getShortPrefixLabels());
 		int maxCandidateLength = getMaxWordLength(observationTable.getLongPrefixLabels());
 		return Math.max(maxStateLength, maxCandidateLength);
@@ -76,7 +76,7 @@ public class ObservationTablePrinter {
 		return length;
 	}
 
-	private static <I> String stringPresentationOfRow(ObservationTableRow<I, Boolean> row, int length) {
+	private static <I> String stringPresentationOfRow(ObservationTableRow<I> row, int length) {
 		StringBuilder sb = new StringBuilder();
 		for (Boolean value : row.getValues()) {
 			if (value) {
@@ -93,7 +93,7 @@ public class ObservationTablePrinter {
 		StringBuilder sb = new StringBuilder(length);
 		sb.append(string);
 		for (int i = string.length(); i < length; i++) {
-			sb.append(" ");
+			sb.append(' ');
 		}
 		return sb.toString();
 	}
