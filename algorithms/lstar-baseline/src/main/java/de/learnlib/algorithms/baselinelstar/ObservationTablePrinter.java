@@ -26,7 +26,7 @@ import java.util.Collection;
  */
 public class ObservationTablePrinter {
 
-	public static <I> String getPrintableStringRepresentation(ObservationTable<I, Boolean> observationTable) {
+	public static <I> String getPrintableStringRepresentation(ObservationTable<I> observationTable) {
 		StringBuilder sb = new StringBuilder();
 
 		int firstColumnWidth = getFirstColumnWidth(observationTable);
@@ -57,7 +57,7 @@ public class ObservationTablePrinter {
 		return sb.toString();
 	}
 
-	private static <I> int getFirstColumnWidth(ObservationTable<I, Boolean> observationTable) {
+	private static <I> int getFirstColumnWidth(ObservationTable<I> observationTable) {
 		int maxStateLength = getMaxWordLength(observationTable.getShortPrefixLabels());
 		int maxCandidateLength = getMaxWordLength(observationTable.getLongPrefixLabels());
 		return Math.max(maxStateLength, maxCandidateLength);
@@ -76,7 +76,7 @@ public class ObservationTablePrinter {
 		return length;
 	}
 
-	private static <I> String stringPresentationOfRow(ObservationTableRow<I, Boolean> row, int length) {
+	private static <I> String stringPresentationOfRow(ObservationTableRow<I> row, int length) {
 		StringBuilder sb = new StringBuilder();
 		for (Boolean value : row.getValues()) {
 			if (value) {

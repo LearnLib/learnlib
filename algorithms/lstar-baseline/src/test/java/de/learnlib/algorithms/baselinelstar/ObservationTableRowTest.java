@@ -24,12 +24,12 @@ public class ObservationTableRowTest {
 
 	@Test
 	public void testEquals() throws Exception {
-		ObservationTableRow<?, Boolean> first = new ObservationTableRow<>(Word.epsilon());
+		ObservationTableRow<?> first = new ObservationTableRow<>(Word.epsilon());
 
 		Assert.assertEquals(first, first);
 		Assert.assertNotEquals(first.getValues(), first);
 
-		ObservationTableRow<?, Boolean> second = new ObservationTableRow<>(Word.epsilon());
+		ObservationTableRow<?> second = new ObservationTableRow<>(Word.epsilon());
 
 		Assert.assertEquals(first, second);
 
