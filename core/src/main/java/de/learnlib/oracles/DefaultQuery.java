@@ -16,11 +16,11 @@
  */
 package de.learnlib.oracles;
 
+import de.learnlib.api.Query;
+import net.automatalib.words.Word;
+
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-
-import net.automatalib.words.Word;
-import de.learnlib.api.Query;
 
 /**
  * A query is a container for tests a learning algorithms performs, containing
@@ -71,4 +71,15 @@ public class DefaultQuery<I, O> extends AbstractQuery<I,O> {
     public void answer(@Nullable O output) {
         this.output = output;
     }
+
+	/**
+	 * Returns the string representation of this query, including a possible answer.
+	 *
+	 * @return A string of the form "Query[prefix=AB,suffix=CD,answer=true]". If the query
+	 * has not been answered yet, answer will be null.
+	 */
+	@Override
+	public String toString() {
+		return "Query[prefix=" + getPrefix() + ",suffix=" + getSuffix() + ",answer=" + output + ']';
+	}
 }

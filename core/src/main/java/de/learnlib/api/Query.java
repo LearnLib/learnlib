@@ -16,10 +16,10 @@
  */
 package de.learnlib.api;
 
+import net.automatalib.words.Word;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import net.automatalib.words.Word;
 
 public abstract class Query<I, O> {
 	
@@ -81,5 +81,15 @@ public abstract class Query<I, O> {
         hashCode = 89 * hashCode + suffix.hashCode();
         return hashCode;
 	}
-	
+
+	/**
+	 * Returns the string representation of this query.
+	 *
+	 * @return A string of the form "Query[prefix=AB,suffix=CD]"
+	 */
+	@Override
+	public String toString() {
+		return "Query[prefix=" + getPrefix() + ",suffix=" + getSuffix() + ']';
+	}
+
 }

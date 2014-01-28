@@ -16,13 +16,13 @@
  */
 package de.learnlib.cache.mealy;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.learnlib.api.Query;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import de.learnlib.api.Query;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -131,5 +131,15 @@ final class MasterQuery<I,O> extends Query<I,Word<O>> {
 		
 		return wb.toWord();
 	}
-	
+
+	/**
+	 * Returns the string representation of this query, including a possible answer.
+	 *
+	 * @return A string of the form "Query[prefix=AB,suffix=CD,answer=true]". If the query
+	 * has not been answered yet, answer will be null.
+	 */
+	@Override
+	public String toString() {
+		return "Query[prefix=" + getPrefix() + ",suffix=" + word + ",answer=" + answer + ']';
+	}
 }
