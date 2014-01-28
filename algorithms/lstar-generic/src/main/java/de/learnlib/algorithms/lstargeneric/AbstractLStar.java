@@ -17,16 +17,19 @@
 package de.learnlib.algorithms.lstargeneric;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner;
+import de.learnlib.algorithms.features.observationtable.OTLearner;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.table.Inconsistency;
 import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
-import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
@@ -43,7 +46,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <I> input symbol class.
  * @param <O> output class.
  */
-public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, O> {
+public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, GlobalSuffixLearner<A, I, O> {
 	
 	protected final Alphabet<? extends I> alphabet;
 	protected final MembershipOracle<I, O> oracle;
@@ -98,11 +101,13 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	 * observation table is both closed and consistent. 
 	 * @param unclosed the unclosed rows (equivalence classes) to start with.
 	 */
-	protected void completeConsistentTable(List<List<Row<I>>> unclosed, boolean checkConsistency) {
+	protected boolean completeConsistentTable(List<List<Row<I>>> unclosed, boolean checkConsistency) {
+		boolean refined = false;
 		do {
 			while(!unclosed.isEmpty()) {
 				List<Row<I>> closingRows = selectClosingRows(unclosed);
 				unclosed = table.toShortPrefixes(closingRows, oracle);
+				refined = true;
 			}
 			
 			
@@ -118,6 +123,8 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 				} while(unclosed.isEmpty() && (incons != null));
 			}
 		} while(!unclosed.isEmpty());
+		
+		return refined;
 	}
 	
 	
@@ -187,5 +194,35 @@ public abstract class AbstractLStar<A, I, O> implements LearningAlgorithm<A, I, 
 	 * @return the list of initial suffixes.
 	 */
 	protected abstract List<Word<I>> initialSuffixes();
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.algorithms.features.GlobalSuffixLearner#getGlobalSuffixes()
+	 */
+	@Override
+	public Collection<? extends Word<I>> getGlobalSuffixes() {
+		return Collections.unmodifiableCollection(table.getSuffixes());
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.algorithms.features.GlobalSuffixLearner#addGlobalSuffixes(java.util.Collection)
+	 */
+	@Override
+	public boolean addGlobalSuffixes(Collection<? extends Word<I>> newGlobalSuffixes) {
+		List<List<Row<I>>> unclosed = table.addSuffixes(newGlobalSuffixes, oracle);
+		if(unclosed.isEmpty()) {
+			return false;
+		}
+		return completeConsistentTable(unclosed, false);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.algorithms.features.observationtable.OTLearner#getObservationTable()
+	 */
+	@Override
+	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, O> getObservationTable() {
+		return table.asStandardTable();
+	}
 }

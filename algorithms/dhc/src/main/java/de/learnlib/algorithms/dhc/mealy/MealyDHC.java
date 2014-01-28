@@ -37,6 +37,7 @@ import net.automatalib.words.Word;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 
+import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle;
@@ -49,7 +50,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @author Maik Merten <maikmerten@googlemail.com>
  */
 public class MealyDHC<I, O> implements MealyLearner<I,O>,
-		AccessSequenceTransformer<I> {
+		AccessSequenceTransformer<I>, GlobalSuffixLearnerMealy<I, O> {
 	
 	
 	public static class BuilderDefaults {
@@ -230,18 +231,10 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 	public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
 		checkInternalState();
 
-		int oldsize = hypothesis.size();
+		Collection<? extends Word<I>> ceSuffixes
+				= suffixFinder.findSuffixes(ceQuery, this, hypothesis, oracle);
 		
-		for(Word<I> suf : suffixFinder.findSuffixes(ceQuery, this, hypothesis, oracle)) {
-			if(!splitters.contains(suf)) {
-				splitters.add(suf);
-				log.log(Level.FINE, "added suffix: {0}", suf);
-			}
-		}
-
-		startLearning();
-
-		return oldsize != hypothesis.size();
+		return addSuffixesUnchecked(ceSuffixes);
 	}
 
 	/*
@@ -274,6 +267,33 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		checkInternalState();
 		Word<I> canonical = transformAccessSequence(word);
 		return canonical.equals(word);
+	}
+
+	@Override
+	public Collection<? extends Word<I>> getGlobalSuffixes() {
+		return Collections.unmodifiableCollection(splitters);
+	}
+
+	@Override
+	public boolean addGlobalSuffixes(Collection<? extends Word<I>> newGlobalSuffixes) {
+		checkInternalState();
+		
+		return addSuffixesUnchecked(newGlobalSuffixes);
+	}
+	
+	protected boolean addSuffixesUnchecked(Collection<? extends Word<I>> newSuffixes) {
+		int oldSize = hypothesis.size();
+		
+		for(Word<I> suf : newSuffixes) {
+			if(!splitters.contains(suf)) {
+				splitters.add(suf);
+				log.log(Level.FINE, "added suffix: {0}", suf);
+			}
+		}
+		
+		startLearning();
+		
+		return (hypothesis.size() != oldSize);
 	}
 
 }

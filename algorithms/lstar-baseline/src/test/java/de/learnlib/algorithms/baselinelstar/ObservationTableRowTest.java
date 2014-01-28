@@ -16,21 +16,20 @@
  */
 package de.learnlib.algorithms.baselinelstar;
 
+import net.automatalib.words.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import de.learnlib.algorithms.baselinelstar.ObservationTableRow;
 
 public class ObservationTableRowTest {
 
 	@Test
 	public void testEquals() throws Exception {
-		ObservationTableRow first = new ObservationTableRow();
+		ObservationTableRow<?> first = new ObservationTableRow<>(Word.epsilon());
 
 		Assert.assertEquals(first, first);
-		Assert.assertNotEquals(first.getValues(), first);
+		Assert.assertNotEquals(first.getContents(), first);
 
-		ObservationTableRow second = new ObservationTableRow();
+		ObservationTableRow<?> second = new ObservationTableRow<>(Word.epsilon());
 
 		Assert.assertEquals(first, second);
 

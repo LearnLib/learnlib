@@ -20,6 +20,7 @@ import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,6 +29,12 @@ import java.util.Map;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+
+import de.learnlib.algorithms.features.observationtable.AbstractObservationTable;
+import de.learnlib.algorithms.features.observationtable.AbstractObservationTable.AbstractRow;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
@@ -185,9 +192,18 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	 * @param oracle the membership oracle
 	 * @return a list of equivalence classes of unclosed rows
 	 */
-	public List<List<Row<I>>> addSuffixes(List<? extends Word<I>> newSuffixes, MembershipOracle<I, O> oracle) {
+	public List<List<Row<I>>> addSuffixes(Collection<? extends Word<I>> newSuffixes, MembershipOracle<I, O> oracle) {
 		int oldSuffixCount = suffixes.size();
-		int numNewSuffixes = newSuffixes.size();
+		// we need a stable iteration order, and only List guarantees this
+		List<? extends Word<I>> newSuffixList;
+		if(newSuffixes instanceof List) {
+			newSuffixList = (List<? extends Word<I>>)newSuffixes;
+		}
+		else {
+			newSuffixList = new ArrayList<>(newSuffixes);
+		}
+		
+		int numNewSuffixes = newSuffixList.size();
 		
 		int numSpRows = shortPrefixRows.size();
 		int rowCount = numSpRows + longPrefixRows.size();
@@ -195,10 +211,10 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		List<DefaultQuery<I,O>> queries = new ArrayList<DefaultQuery<I,O>>(rowCount * numNewSuffixes);
 		
 		for(Row<I> row : shortPrefixRows)
-			buildQueries(queries, row.getPrefix(), newSuffixes);
+			buildQueries(queries, row.getPrefix(), newSuffixList);
 		
 		for(Row<I> row : longPrefixRows)
-			buildQueries(queries, row.getPrefix(), newSuffixes);
+			buildQueries(queries, row.getPrefix(), newSuffixList);
 		
 		oracle.processQueries(queries);
 		
@@ -242,7 +258,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 			}	
 		}
 		
-		this.suffixes.addAll(newSuffixes);
+		this.suffixes.addAll(newSuffixList);
 		
 		return unclosed;
 	}
@@ -343,14 +359,14 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	
 	@SuppressWarnings("unchecked")
 	public Inconsistency<I,O> findInconsistency() {
-		Row<I>[] canonicRows = (Row<I>[])new Row<?>[numDistinctRows()];
+		Row<I>[] canonicalRows = (Row<I>[])new Row<?>[numDistinctRows()];
 		
 		for(Row<I> spRow : shortPrefixRows) {
 			int contentId = spRow.getRowContentId();
 			
-			Row<I> canRow = canonicRows[contentId];
+			Row<I> canRow = canonicalRows[contentId];
 			if(canRow == null) {
-				canonicRows[contentId] = spRow;
+				canonicalRows[contentId] = spRow;
 				continue;
 			}
 			
@@ -467,7 +483,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	}
 	
 	protected static <I,O>
-	void buildQueries(List<DefaultQuery<I,O>> queryList, List<? extends Word<I>> prefixes, List<? extends Word<I>> suffixes) {
+	void buildQueries(List<DefaultQuery<I,O>> queryList, List<Word<I>> prefixes, List<? extends Word<I>> suffixes) {
 		for(Word<I> prefix : prefixes)
 			buildQueries(queryList, prefix, suffixes);
 	}
@@ -547,5 +563,83 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		}
 		
 		return true;
+	}
+	
+	private class StandardRowWrapper extends AbstractRow<I, O> {
+		private final Row<I> internalRow;
+		
+		public StandardRowWrapper(Row<I> internalRow) {
+			this.internalRow = internalRow;
+		}
+		@Override
+		public Word<I> getLabel() {
+			return internalRow.getPrefix();
+		}
+		@Override
+		public boolean isShortPrefixRow() {
+			return internalRow.isShortPrefix();
+		}
+		@Override
+		public List<O> getContents() {
+			return Collections.unmodifiableList(allRowContents.get(internalRow.getRowContentId()));
+		}
+	}
+	
+	private StandardRowWrapper wrapRow(Row<I> internalRow) {
+		if(internalRow != null) {
+			return new StandardRowWrapper(internalRow);
+		}
+		return null;
+	}
+	
+	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, O> asStandardTable() {
+		final Function<Row<I>,StandardRowWrapper> wrapRow = new Function<Row<I>,StandardRowWrapper>() {
+			@Override
+			public StandardRowWrapper apply(Row<I> internalRow) {
+				return wrapRow(internalRow);
+			}
+		};
+		
+		return new AbstractObservationTable<I, O>() {
+			@Override
+			public List<? extends Word<I>> getSuffixes() {
+				return Collections.unmodifiableList(suffixes);
+			}
+			@Override
+			public Collection<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getShortPrefixRows() {
+				return Collections.unmodifiableList(Lists.transform(shortPrefixRows, wrapRow));
+			}
+
+			@Override
+			public Collection<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getLongPrefixRows() {
+				return Collections.unmodifiableList(Lists.transform(longPrefixRows, wrapRow));
+			}
+
+			@Override
+			public de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O> getSuccessorRow(
+					de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O> spRow,
+					I symbol) {
+				if(!(spRow instanceof ObservationTable.StandardRowWrapper)) {
+					throw new IllegalArgumentException("Invalid observation table row");
+				}
+				StandardRowWrapper wrapped = (StandardRowWrapper)spRow;
+				return wrapRow(getRowSuccessor(wrapped.internalRow, symbol));
+			}
+			@Override
+			public List<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getAllRows() {
+				return Collections.unmodifiableList(Lists.transform(allRows, wrapRow));
+			}
+			@Override
+			public de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O> getRow(
+					Word<I> prefix) {
+				return wrapRow(rowMap.get(prefix));
+			}
+			@Override
+			public Collection<? extends Word<I>> getAllPrefixes() {
+				return Collections.unmodifiableSet(rowMap.keySet());
+			}
+			
+			
+		};
 	}
 }

@@ -41,6 +41,10 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-core</artifactId>
 		</dependency>
+		<dependency> 
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-algorithm-features</artifactId>
+		</dependency>
 		
 		<!-- AutomataLib dependencies -->
 		<dependency>
@@ -79,7 +83,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-simulator</artifactId>
 			<scope>test</scope>
-		</dependency>        
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>
