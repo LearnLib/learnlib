@@ -17,7 +17,6 @@
 
 package de.learnlib.examples.mealy;
 
-import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
@@ -91,13 +90,11 @@ public class ExampleShahbazGroz extends DefaultMealyLearningExample<Character,St
     }
     
     public static ExampleShahbazGroz createExample() {
-    	CompactMealy<Character,String> mealy = constructMachine();
-    	return new ExampleShahbazGroz(mealy.getInputAlphabet(), mealy);
+    	return new ExampleShahbazGroz();
     }
     
-    private ExampleShahbazGroz(Alphabet<Character> alphabet,
-			MealyMachine<?, Character, ?, String> referenceAutomaton) {
-		super(alphabet, referenceAutomaton);
+    public ExampleShahbazGroz() {
+		super(constructMachine());
 	}
 
 }

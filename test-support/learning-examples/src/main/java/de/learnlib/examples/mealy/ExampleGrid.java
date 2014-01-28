@@ -16,7 +16,6 @@
  */
 package de.learnlib.examples.mealy;
 
-import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
@@ -80,13 +79,12 @@ public class ExampleGrid extends DefaultMealyLearningExample<Character,Integer> 
     }
     
     public static ExampleGrid createExample(int xsize, int ysize) {
-    	CompactMealy<Character,Integer> mealy = constructMachine(xsize, ysize);
-    	return new ExampleGrid(mealy.getInputAlphabet(), mealy);
+    	return new ExampleGrid(xsize, ysize);
     }
 
-    private ExampleGrid(Alphabet<Character> alphabet,
-			MealyMachine<?, Character, ?, Integer> referenceAutomaton) {
-		super(alphabet, referenceAutomaton);
-	}
+    public ExampleGrid(int xsize, int ysize) {
+    	super(constructMachine(xsize, ysize));
+    }
+    
 
 }

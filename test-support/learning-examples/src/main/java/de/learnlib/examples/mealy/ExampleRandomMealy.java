@@ -19,7 +19,6 @@ package de.learnlib.examples.mealy;
 import java.util.Arrays;
 import java.util.Random;
 
-import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
@@ -31,16 +30,13 @@ public class ExampleRandomMealy<I,O> extends DefaultMealyLearningExample<I, O> {
 	@SafeVarargs
 	public static <I,O>
 	ExampleRandomMealy<I,O> createExample(Random random, Alphabet<I> alphabet, int size, O... outputs) {
-		CompactMealy<I,O> mealy = new CompactMealy<>(alphabet, size);
-		RandomAutomata.randomDeterministic(random, size, alphabet, null, Arrays.asList(outputs), mealy);
-		
-		return new ExampleRandomMealy<>(mealy.getInputAlphabet(), mealy);
+		return new ExampleRandomMealy<>(random, alphabet, size, outputs);
 	}
 
 
-	private ExampleRandomMealy(Alphabet<I> alphabet,
-			MealyMachine<?, I, ?, O> referenceAutomaton) {
-		super(alphabet, referenceAutomaton);
+	@SafeVarargs
+	public ExampleRandomMealy(Random random, Alphabet<I> alphabet, int size, O... outputs) {
+		super(RandomAutomata.randomDeterministic(random, size, alphabet, null, Arrays.asList(outputs), new CompactMealy<I,O>(alphabet)));
 	}
 
 }

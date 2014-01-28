@@ -21,7 +21,6 @@ import static de.learnlib.examples.mealy.ExampleCoffeeMachine.Input.BUTTON;
 import static de.learnlib.examples.mealy.ExampleCoffeeMachine.Input.CLEAN;
 import static de.learnlib.examples.mealy.ExampleCoffeeMachine.Input.POD;
 import static de.learnlib.examples.mealy.ExampleCoffeeMachine.Input.WATER;
-import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
@@ -137,13 +136,11 @@ public class ExampleCoffeeMachine extends DefaultMealyLearningExample<Input,Stri
 
     
     public static ExampleCoffeeMachine createExample() {
-    	CompactMealy<Input,String> mealy = constructMachine();
-    	return new ExampleCoffeeMachine(mealy.getInputAlphabet(), mealy);
+    	return new ExampleCoffeeMachine();
     }
-    
-	private ExampleCoffeeMachine(Alphabet<Input> alphabet,
-			MealyMachine<?, Input, ?, String> referenceAutomaton) {
-		super(alphabet, referenceAutomaton);
+	
+	public ExampleCoffeeMachine() {
+		super(constructMachine());
 	}
 	
 }

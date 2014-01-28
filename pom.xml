@@ -127,7 +127,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<assembly-plugin.version>2.4</assembly-plugin.version>
 		<resources-plugin.version>2.6</resources-plugin.version>
 		<trove4j.version>3.0.3</trove4j.version>
-		<guava.version>15.0</guava.version>
+		<guava.version>16.0</guava.version>
 		<findbugs.version>2.0.2</findbugs.version>
 		<!-- TODO: Change to 0.1 as soon as buildergen release is synced to Maven central -->
 		<buildergen.version>0.1.1-SNAPSHOT</buildergen.version>

@@ -22,7 +22,6 @@ import static de.learnlib.examples.mealy.ExampleStack.Input.PUSH;
 import static de.learnlib.examples.mealy.ExampleStack.Output.EMPTY;
 import static de.learnlib.examples.mealy.ExampleStack.Output.FULL;
 import static de.learnlib.examples.mealy.ExampleStack.Output.OK;
-import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
@@ -107,14 +106,10 @@ public class ExampleStack extends DefaultMealyLearningExample<Input, Output> {
     }
     
     public static ExampleStack createExample() {
-    	CompactMealy<Input,Output> mealy = constructMachine();
-    	return new ExampleStack(mealy.getInputAlphabet(), mealy);
+    	return new ExampleStack();
     }
     
-	private ExampleStack(Alphabet<Input> alphabet,
-			MealyMachine<?, Input, ?, Output> referenceAutomaton) {
-		super(alphabet, referenceAutomaton);
+	public ExampleStack() {
+		super(constructMachine());
 	}
-
-    
 }

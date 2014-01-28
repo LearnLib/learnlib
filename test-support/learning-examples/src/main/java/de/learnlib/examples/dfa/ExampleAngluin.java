@@ -17,7 +17,6 @@
 
 package de.learnlib.examples.dfa;
 
-import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
@@ -87,14 +86,12 @@ public class ExampleAngluin extends DefaultDFALearningExample<Integer> {
 
 	
 	public static ExampleAngluin createExample() {
-		CompactDFA<Integer> dfa = constructMachine();
-		return new ExampleAngluin(dfa.getInputAlphabet(), dfa);
+		return new ExampleAngluin();
 	}
 
 	
 	
-	private ExampleAngluin(Alphabet<Integer> alphabet,
-			DFA<?, Integer> referenceAutomaton) {
-		super(alphabet, referenceAutomaton);
+	public ExampleAngluin() {
+		super(constructMachine());
 	}
 }

@@ -16,6 +16,7 @@
  */
 package de.learnlib.examples;
 import net.automatalib.automata.UniversalAutomaton;
+import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
@@ -41,6 +42,10 @@ public class DefaultLearningExample<I, O, A extends UniversalAutomaton<?, I, ?, 
 				DFA<?, I> referenceAutomaton) {
 			super(alphabet, referenceAutomaton);
 		}
+		public <A extends DFA<?,I> & InputAlphabetHolder<I>>
+		DefaultDFALearningExample(A automaton) {
+			this(automaton.getInputAlphabet(), automaton);
+		}
 	}
 	
 	public static class DefaultMealyLearningExample<I,O> extends DefaultLearningExample<I,Word<O>,MealyMachine<?,I,?,O>>
@@ -48,6 +53,10 @@ public class DefaultLearningExample<I, O, A extends UniversalAutomaton<?, I, ?, 
 		public DefaultMealyLearningExample(Alphabet<I> alphabet,
 				MealyMachine<?, I, ?, O> referenceAutomaton) {
 			super(alphabet, referenceAutomaton);
+		}
+		public <A extends MealyMachine<?,I,?,O> & InputAlphabetHolder<I>>
+		DefaultMealyLearningExample(A automaton) {
+			this(automaton.getInputAlphabet(), automaton);
 		}
 	}
 	
@@ -58,6 +67,7 @@ public class DefaultLearningExample<I, O, A extends UniversalAutomaton<?, I, ?, 
 		this.alphabet = alphabet;
 		this.referenceAutomaton = referenceAutomaton;
 	}
+	
 
 	@Override
 	public A getReferenceAutomaton() {

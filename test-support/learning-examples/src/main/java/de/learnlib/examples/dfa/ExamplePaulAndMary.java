@@ -17,7 +17,6 @@
 
 package de.learnlib.examples.dfa;
 
-import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
@@ -84,6 +83,7 @@ public class ExamplePaulAndMary extends DefaultDFALearningExample<Symbol> {
 		*/
 
     	dfa = AutomatonBuilders.forDFA(dfa)
+    			.withInitial("s0")
     			.from("s0")
     				.on(IN_PAUL).to("s1")
     				.on(IN_LOVES, IN_MARY).to("s4")
@@ -98,20 +98,17 @@ public class ExamplePaulAndMary extends DefaultDFALearningExample<Symbol> {
     			.from("s4")
     				.on(IN_PAUL, IN_LOVES, IN_MARY).loop()
     			.withAccepting("s3")
-    			.withInitial("s0")
     		.create();
     	
     	return dfa;
     }
     
     public static ExamplePaulAndMary createExample() {
-    	CompactDFA<Symbol> dfa = constructMachine();
-    	return new ExamplePaulAndMary(dfa.getInputAlphabet(), dfa);
+    	return new ExamplePaulAndMary();
     }
     
-    private ExamplePaulAndMary(Alphabet<Symbol> alphabet,
-			DFA<?, Symbol> referenceAutomaton) {
-		super(alphabet, referenceAutomaton);
+    public ExamplePaulAndMary() {
+		super(constructMachine());
 	}
 
 }
