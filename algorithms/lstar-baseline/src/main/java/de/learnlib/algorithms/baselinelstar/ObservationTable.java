@@ -16,18 +16,21 @@
  */
 package de.learnlib.algorithms.baselinelstar;
 
-import com.google.common.collect.Lists;
-import de.learnlib.algorithms.features.observationtable.AbstractObservationTable;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.google.common.collect.Lists;
+
+import de.learnlib.algorithms.features.observationtable.AbstractObservationTable;
+
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 
 /**
  * The internal storage mechanism for {@link BaselineLStar}.
@@ -226,14 +229,14 @@ public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
 	InconsistencyDataHolder<I> findInconsistentSymbol(@Nonnull Alphabet<I> alphabet) {
 		for (I symbol : alphabet) {
 			for (int firstStateCounter = 0; firstStateCounter < shortPrefixRows.size(); firstStateCounter++) {
-				Word<I> firstState = shortPrefixRows.get(firstStateCounter).getLabel();
+				ObservationTableRow<I> firstRow = shortPrefixRows.get(firstStateCounter);
 
 				for (int secondStateCounter = firstStateCounter + 1; secondStateCounter < shortPrefixRows.size();
 				     secondStateCounter++) {
-					Word<I> secondState = shortPrefixRows.get(secondStateCounter).getLabel();
+					ObservationTableRow<I> secondRow = shortPrefixRows.get(secondStateCounter);
 
-					if (checkInconsistency(firstState, secondState, symbol)) {
-						return new InconsistencyDataHolder<>(firstState, secondState, symbol);
+					if (checkInconsistency(firstRow, secondRow, symbol)) {
+						return new InconsistencyDataHolder<>(firstRow, secondRow, symbol);
 					}
 				}
 			}
@@ -242,17 +245,17 @@ public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
 		return null;
 	}
 
-	private boolean checkInconsistency(@Nonnull Word<I> firstState, @Nonnull Word<I> secondState,
+	private boolean checkInconsistency(@Nonnull ObservationTableRow<I> firstRow, @Nonnull ObservationTableRow<I> secondRow,
 			@Nonnull I alphabetSymbol) {
-		ObservationTableRow<I> rowForFirstState = getRowForPrefix(firstState);
-		ObservationTableRow<I> rowForSecondState = getRowForPrefix(secondState);
+		ObservationTableRow<I> rowForFirstState = firstRow;
+		ObservationTableRow<I> rowForSecondState = secondRow;
 
 		if (!rowForFirstState.getContents().equals(rowForSecondState.getContents())) {
 			return false;
 		}
 
-		Word<I> extendedFirstState = firstState.append(alphabetSymbol);
-		Word<I> extendedSecondState = secondState.append(alphabetSymbol);
+		Word<I> extendedFirstState = firstRow.getLabel().append(alphabetSymbol);
+		Word<I> extendedSecondState = secondRow.getLabel().append(alphabetSymbol);
 		ObservationTableRow<I> rowForExtendedFirstState = getRowForPrefix(extendedFirstState);
 		ObservationTableRow<I> rowForExtendedSecondState = getRowForPrefix(extendedSecondState);
 

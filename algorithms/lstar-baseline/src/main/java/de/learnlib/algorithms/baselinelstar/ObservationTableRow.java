@@ -16,13 +16,15 @@
  */
 package de.learnlib.algorithms.baselinelstar;
 
-import de.learnlib.algorithms.features.observationtable.AbstractObservationTable;
-import net.automatalib.words.Word;
-
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.annotation.Nonnull;
+
+import de.learnlib.algorithms.features.observationtable.AbstractObservationTable;
+
+import net.automatalib.words.Word;
 
 /**
  * A single row inside an {@link ObservationTable}, containing only the boolean values
@@ -86,7 +88,7 @@ class ObservationTableRow<I> extends AbstractObservationTable.AbstractRow<I, Boo
 			return false;
 		}
 
-		ObservationTableRow that = (ObservationTableRow) o;
+		ObservationTableRow<?> that = (ObservationTableRow<?>) o;
 
 		return label.equals(that.label) && rowData.equals(that.rowData);
 	}
