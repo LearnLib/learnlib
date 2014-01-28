@@ -26,7 +26,7 @@ import java.util.Collection;
  */
 public class ObservationTablePrinter {
 
-	public static <I> String getPrintableStringRepresentation(ObservationTable<I> observationTable) {
+	public static <I> String getPrintableStringRepresentation(ObservationTable<I, Boolean> observationTable) {
 		StringBuilder sb = new StringBuilder();
 
 		int firstColumnWidth = getFirstColumnWidth(observationTable);
@@ -41,14 +41,14 @@ public class ObservationTablePrinter {
 
 		sb.append("\n\n");
 
-		for (Word<I> state : observationTable.getStates()) {
+		for (Word<I> state : observationTable.getShortPrefixLabels()) {
 			sb.append(paddedString(state.toString(), firstColumnWidth)).append(" | ");
 			sb.append(stringPresentationOfRow(observationTable.getRowForPrefix(state), maxSuffixLength));
 			sb.append("\n");
 		}
 		sb.append("\n");
 
-		for (Word<I> candidate : observationTable.getCandidates()) {
+		for (Word<I> candidate : observationTable.getLongPrefixLabels()) {
 			sb.append(paddedString(candidate.toString(), firstColumnWidth)).append(" | ");
 			sb.append(stringPresentationOfRow(observationTable.getRowForPrefix(candidate), maxSuffixLength));
 			sb.append("\n");
@@ -57,9 +57,9 @@ public class ObservationTablePrinter {
 		return sb.toString();
 	}
 
-	private static <S> int getFirstColumnWidth(ObservationTable<S> observationTable) {
-		int maxStateLength = getMaxWordLength(observationTable.getStates());
-		int maxCandidateLength = getMaxWordLength(observationTable.getCandidates());
+	private static <I> int getFirstColumnWidth(ObservationTable<I, Boolean> observationTable) {
+		int maxStateLength = getMaxWordLength(observationTable.getShortPrefixLabels());
+		int maxCandidateLength = getMaxWordLength(observationTable.getLongPrefixLabels());
 		return Math.max(maxStateLength, maxCandidateLength);
 	}
 
@@ -76,7 +76,7 @@ public class ObservationTablePrinter {
 		return length;
 	}
 
-	private static String stringPresentationOfRow(ObservationTableRow row, int length) {
+	private static <I> String stringPresentationOfRow(ObservationTableRow<I, Boolean> row, int length) {
 		StringBuilder sb = new StringBuilder();
 		for (Boolean value : row.getValues()) {
 			if (value) {

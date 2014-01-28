@@ -16,6 +16,10 @@
  */
 package de.learnlib.algorithms.baselinelstar;
 
+import de.learnlib.algorithms.features.observationtable.AbstractObservationTable;
+import net.automatalib.words.Word;
+
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,15 +28,22 @@ import java.util.List;
  * A single row inside an {@link ObservationTable}, containing only the boolean values
  * if a combination of state/candidate and suffix is accepted by the current hypothesis.
  */
-class ObservationTableRow {
+class ObservationTableRow<I, O> extends AbstractObservationTable.AbstractRow<I, O> {
 
-	private final List<Boolean> rowData;
+	@Nonnull
+	private final Word<I> label;
 
-	ObservationTableRow() {
+	@Nonnull
+	private final List<O> rowData;
+
+	private boolean shortPrefixRow;
+
+	ObservationTableRow(@Nonnull Word<I> label) {
+		this.label = label;
 		rowData = new LinkedList<>();
 	}
 
-	void addValue(boolean value) {
+	void addValue(O value) {
 		rowData.add(value);
 	}
 
@@ -40,7 +51,28 @@ class ObservationTableRow {
 		rowData.clear();
 	}
 
-	List<Boolean> getValues() {
+	void setShortPrefixRow() {
+		shortPrefixRow = true;
+	}
+
+	void setLongPrefixRow() {
+		shortPrefixRow = false;
+	}
+
+	@Override
+	@Nonnull
+	public Word<I> getLabel() {
+		return label;
+	}
+
+	@Override
+	public boolean isShortPrefixRow() {
+		return shortPrefixRow;
+	}
+
+	@Override
+	@Nonnull
+	public List<O> getValues() {
 		return Collections.unmodifiableList(rowData);
 	}
 
@@ -56,17 +88,17 @@ class ObservationTableRow {
 
 		ObservationTableRow that = (ObservationTableRow) o;
 
-		return rowData.equals(that.rowData);
+		return label.equals(that.label) && rowData.equals(that.rowData);
 	}
 
 	@Override
 	public int hashCode() {
-		return rowData.hashCode();
+		return 7 * rowData.hashCode() + 13 * label.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return rowData.toString();
+		return label.toString() + ": " + rowData.toString();
 	}
 
 }
