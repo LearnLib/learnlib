@@ -69,7 +69,7 @@ AbstractAutomatonLStar<A, I, O,S,T,SP,TP,AI> {
 	 * @see de.learnlib.algorithms.lstargeneric.AbstractLStar#doRefineHypothesis(de.learnlib.oracles.DefaultQuery)
 	 */
 	@Override
-	protected void doRefineHypothesis(DefaultQuery<I, O> ceQuery) {
+	protected void refineHypothesisInternal(DefaultQuery<I, O> ceQuery) {
 		List<List<Row<I>>> unclosed = cexHandler.handleCounterexample(ceQuery, table, hypothesisOutput(), oracle);
 		completeConsistentTable(unclosed, cexHandler.needsConsistencyCheck());
 	}

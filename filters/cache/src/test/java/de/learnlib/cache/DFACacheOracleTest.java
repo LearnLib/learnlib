@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ import de.learnlib.oracles.SimulatorOracle;
  *  
  * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
  */
-// TODO CounterOracle needs a test,
+@SuppressWarnings("deprecation")
 public class DFACacheOracleTest {
 
 	private MembershipOracle<Integer, Boolean> oracle;
@@ -51,8 +51,9 @@ public class DFACacheOracleTest {
 	@BeforeClass
 	public void setup() {
 		// use angluin's example
-		DFA<?,Integer> fm = ExampleAngluin.getInstance();
-		Alphabet<Integer> alphabet = ExampleAngluin.getInputAlphabet();
+		ExampleAngluin exampleAngluin = ExampleAngluin.createExample();
+		DFA<?,Integer> fm = exampleAngluin.getReferenceAutomaton();
+		Alphabet<Integer> alphabet = exampleAngluin.getAlphabet();
 
 		// use simulated environment
 		SimulatorOracle<Integer, Boolean> simulatorOracle = new SimulatorOracle<>(

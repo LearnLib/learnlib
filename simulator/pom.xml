@@ -32,17 +32,30 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<description>Membership and equivalence oracles using an automaton model as backend</description>
 
 	<dependencies>
+		<!--
+		Compile-time dependencies
+		-->
+		
+		<!-- LearnLib dependencies -->
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-core</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-test-support</artifactId>
-		</dependency>
+		
+		<!--
+		Test dependencies
+		-->
+		
+		<!-- TestNG -->
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
+		</dependency>
+		
+		<!-- LearnLib dependencies -->
+		<dependency>
+			<groupId>de.learnlib.testsupport</groupId>
+			<artifactId>learnlib-learning-examples</artifactId>
 		</dependency>
 	</dependencies>
 

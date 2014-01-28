@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -17,11 +17,15 @@
 
 package de.learnlib.statistics;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Common interface for statistical data. 
  * 
  * @author falkhowar
  */
+@ParametersAreNonnullByDefault
 public abstract class StatisticData {
     
     private final String name;
@@ -32,15 +36,19 @@ public abstract class StatisticData {
         this.unit = unit;
     }
         
+    @Nonnull
     public String getName() {
         return name;
     }
     
+    @Nonnull
     public String getUnit() {
         return unit;
     }
     
+    @Nonnull
     abstract public String getSummary();
     
+    @Nonnull
     abstract public String getDetails();    
 }

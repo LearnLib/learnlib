@@ -339,7 +339,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		return row.getSuccessor(alphabet.getSymbolIndex(sym));
 	}
 	
-	public List<List<Row<I>>> addShortPrefixes(List<Word<I>> shortPrefixes, MembershipOracle<I,O> oracle) {	
+	public List<List<Row<I>>> addShortPrefixes(List<? extends Word<I>> shortPrefixes, MembershipOracle<I,O> oracle) {	
 		List<Row<I>> toSpRows = new ArrayList<Row<I>>();
 		
 		for(Word<I> sp : shortPrefixes) {

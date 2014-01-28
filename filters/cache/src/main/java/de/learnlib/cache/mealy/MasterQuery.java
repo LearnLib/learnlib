@@ -31,8 +31,8 @@ import de.learnlib.api.Query;
  * Upon answering the master query, all slave queries are also answered 
  * @author Malte Isberner <malte.isberner@gmail.com>
  *
- * @param <I>
- * @param <O>
+ * @param <I> input symbol type
+ * @param <O> output symbol type
  */
 final class MasterQuery<I,O> extends Query<I,Word<O>> {
 	

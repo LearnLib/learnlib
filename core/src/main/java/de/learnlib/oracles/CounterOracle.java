@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -19,6 +19,9 @@ package de.learnlib.oracles;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
@@ -30,6 +33,7 @@ import de.learnlib.statistics.StatisticOracle;
  * 
  * @author falkhowar
  */
+@ParametersAreNonnullByDefault
 public class CounterOracle<I,O> implements StatisticOracle<I,O> {
 	
 	public static class DFACounterOracle<I> extends CounterOracle<I,Boolean>
@@ -64,10 +68,12 @@ public class CounterOracle<I,O> implements StatisticOracle<I,O> {
     }
 
     @Override
+    @Nonnull
     public Counter getStatisticalData() {
         return this.counter;
     }
     
+    @Nonnull
     public Counter getCounter() {
     	return this.counter;
     }

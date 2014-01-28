@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013 TU Dortmund
+Copyright (C) 2013-2014 TU Dortmund
 This file is part of LearnLib, http://www.learnlib.de/.
 
 LearnLib is free software; you can redistribute it and/or
@@ -32,6 +32,41 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<description>A collection of examples of how to use LearnLib</description>
 
 	<dependencies>
+		<!--
+		Compile-time dependencies
+		-->
+		
+		<!-- LearnLib dependencies -->
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-cache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-drivers-basic</artifactId>
+		</dependency>
+        <dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-lstar-generic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-basic-eqtests</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-simulator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-reuse</artifactId>
+		</dependency>  
+
+		<!-- AutomataLib dependencies -->
 		<dependency>
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-api</artifactId>
@@ -48,33 +83,5 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-commons-dotutil</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-cache</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-drivers-basic</artifactId>
-		</dependency>
-                <dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-lstar-generic</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-basic-eqtests</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-simulator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>learnlib-reuse</artifactId>
-		</dependency>  
     </dependencies>
 </project>

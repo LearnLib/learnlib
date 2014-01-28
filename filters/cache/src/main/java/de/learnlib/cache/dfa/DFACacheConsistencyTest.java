@@ -19,7 +19,6 @@ package de.learnlib.cache.dfa;
 import java.util.Collection;
 
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.words.Word;
@@ -38,13 +37,13 @@ import de.learnlib.oracles.DefaultQuery;
 public final class DFACacheConsistencyTest<I> implements
 		DFAEquivalenceOracle<I> {
 	
-	private final AbstractIncrementalDFABuilder<I> incDfa;
+	private final IncrementalDFABuilder<I> incDfa;
 	
 	/**
 	 * Constructor.
 	 * @param incDfa the {@link IncrementalDFABuilder} data structure of the cache
 	 */
-	public DFACacheConsistencyTest(AbstractIncrementalDFABuilder<I> incDfa) {
+	public DFACacheConsistencyTest(IncrementalDFABuilder<I> incDfa) {
 		this.incDfa = incDfa;
 	}
 

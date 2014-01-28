@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -17,14 +17,19 @@
 
 package de.learnlib.statistics;
 
-import de.learnlib.logging.LearnLogger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import de.learnlib.logging.LearnLogger;
+
 /**
  * Very rudimentary profiler. 
  */
+@ParametersAreNonnullByDefault
 public class SimpleProfiler {
 
   private static boolean PROFILE = true;
@@ -84,6 +89,7 @@ public class SimpleProfiler {
    * 
    * @return 
    */
+  @Nonnull
   public static String getResults() {
     StringBuilder sb = new StringBuilder();
     for (Entry<String, Counter> e : cumulated.entrySet()) {
