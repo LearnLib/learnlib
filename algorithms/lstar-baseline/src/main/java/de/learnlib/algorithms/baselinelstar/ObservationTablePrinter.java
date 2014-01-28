@@ -44,14 +44,14 @@ public class ObservationTablePrinter {
 		for (Word<I> state : observationTable.getShortPrefixLabels()) {
 			sb.append(paddedString(state.toString(), firstColumnWidth)).append(" | ");
 			sb.append(stringPresentationOfRow(observationTable.getRowForPrefix(state), maxSuffixLength));
-			sb.append("\n");
+			sb.append('\n');
 		}
-		sb.append("\n");
+		sb.append('\n');
 
 		for (Word<I> candidate : observationTable.getLongPrefixLabels()) {
 			sb.append(paddedString(candidate.toString(), firstColumnWidth)).append(" | ");
 			sb.append(stringPresentationOfRow(observationTable.getRowForPrefix(candidate), maxSuffixLength));
-			sb.append("\n");
+			sb.append('\n');
 		}
 
 		return sb.toString();
@@ -93,7 +93,7 @@ public class ObservationTablePrinter {
 		StringBuilder sb = new StringBuilder(length);
 		sb.append(string);
 		for (int i = string.length(); i < length; i++) {
-			sb.append(" ");
+			sb.append(' ');
 		}
 		return sb.toString();
 	}
