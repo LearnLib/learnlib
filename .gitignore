@@ -9,4 +9,5 @@ pom.xml.versionsBackup
 test-output/
 importers/
 /target/
+.factorypath
 

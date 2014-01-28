@@ -17,7 +17,8 @@
 package de.learnlib.algorithms.baselinelstar;
 
 import com.google.common.collect.Maps;
-import de.learnlib.algorithms.features.GlobalSuffixLearner.GlobalSuffixLearnerDFA;
+
+import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner.GlobalSuffixLearnerDFA;
 import de.learnlib.algorithms.features.observationtable.OTLearner;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
@@ -28,6 +29,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 import javax.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -179,7 +181,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 				observationTable.getShortPrefixRows().size());
 
 		for (ObservationTableRow<I> stateRow : observationTable.getShortPrefixRows()) {
-			if (dfaStates.containsKey(stateRow.getValues())) {
+			if (dfaStates.containsKey(stateRow.getContents())) {
 				continue;
 			}
 
@@ -194,17 +196,17 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 
 			Word<I> emptyWord = Word.epsilon();
 			int positionOfEmptyWord = observationTable.getSuffixes().indexOf(emptyWord);
-			dfaState.setAccepting(stateRow.getValues().get(positionOfEmptyWord));
-			dfaStates.put(stateRow.getValues(), dfaState);
+			dfaState.setAccepting(stateRow.getContents().get(positionOfEmptyWord));
+			dfaStates.put(stateRow.getContents(), dfaState);
 		}
 
 		for (ObservationTableRow<I> stateRow : observationTable.getShortPrefixRows()) {
-			FastDFAState dfaState = dfaStates.get(stateRow.getValues());
+			FastDFAState dfaState = dfaStates.get(stateRow.getContents());
 			for (I alphabetSymbol : alphabet) {
 				Word<I> word = stateRow.getLabel().append(alphabetSymbol);
 
 				final int index = alphabet.getSymbolIndex(alphabetSymbol);
-				dfaState.setTransition(index, dfaStates.get(observationTable.getRowForPrefix(word).getValues()));
+				dfaState.setTransition(index, dfaStates.get(observationTable.getRowForPrefix(word).getContents()));
 			}
 		}
 

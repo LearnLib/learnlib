@@ -175,7 +175,7 @@ public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
 	}
 
 	private void addResultToRow(@Nonnull Boolean result, int suffixPosition, @Nonnull ObservationTableRow<I> row) {
-		final List<Boolean> values = row.getValues();
+		final List<Boolean> values = row.getContents();
 		if (values.size() > suffixPosition) {
 			if (!values.get(suffixPosition).equals(result)) {
 				throw new IllegalStateException(
@@ -199,7 +199,7 @@ public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
 			boolean found = false;
 
 			for (ObservationTableRow<I> stateRow : shortPrefixRows) {
-				if (candidate.getValues().equals(stateRow.getValues())) {
+				if (candidate.getContents().equals(stateRow.getContents())) {
 					found = true;
 					break;
 				}
@@ -247,16 +247,16 @@ public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
 		ObservationTableRow<I> rowForFirstState = getRowForPrefix(firstState);
 		ObservationTableRow<I> rowForSecondState = getRowForPrefix(secondState);
 
-		if (!rowForFirstState.getValues().equals(rowForSecondState.getValues())) {
+		if (!rowForFirstState.getContents().equals(rowForSecondState.getContents())) {
 			return false;
 		}
 
 		Word<I> extendedFirstState = firstState.append(alphabetSymbol);
 		Word<I> extendedSecondState = secondState.append(alphabetSymbol);
-		ObservationTableRow rowForExtendedFirstState = getRowForPrefix(extendedFirstState);
-		ObservationTableRow rowForExtendedSecondState = getRowForPrefix(extendedSecondState);
+		ObservationTableRow<I> rowForExtendedFirstState = getRowForPrefix(extendedFirstState);
+		ObservationTableRow<I> rowForExtendedSecondState = getRowForPrefix(extendedSecondState);
 
-		return !rowForExtendedFirstState.getValues().equals(rowForExtendedSecondState.getValues());
+		return !rowForExtendedFirstState.getContents().equals(rowForExtendedSecondState.getContents());
 	}
 
 	@Nonnull
@@ -267,9 +267,9 @@ public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
 		ObservationTableRow<I> firstRow = getRowForPrefix(firstState);
 		ObservationTableRow<I> secondRow = getRowForPrefix(secondState);
 
-		for (int i = 0; i < firstRow.getValues().size(); i++) {
-			Boolean symbolFirstRow = firstRow.getValues().get(i);
-			Boolean symbolSecondRow = secondRow.getValues().get(i);
+		for (int i = 0; i < firstRow.getContents().size(); i++) {
+			Boolean symbolFirstRow = firstRow.getContents().get(i);
+			Boolean symbolSecondRow = secondRow.getContents().get(i);
 			if (!symbolFirstRow.equals(symbolSecondRow)) {
 				return suffixes.get(i);
 			}

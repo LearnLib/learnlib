@@ -44,7 +44,7 @@ public class ObservationTableHTMLWriter<I, O> extends AbstractObservationTableWr
 	}
 	
 	@Override
-	public void write(Appendable out, ObservationTable<? extends I,? extends O> table) throws IOException {
+	public void write(ObservationTable<? extends I,? extends O> table, Appendable out) throws IOException {
 		List<? extends Word<? extends I>> suffixes = table.getSuffixes();
 		
 		out.append("<table class=\"learnlib-observationtable\">\n");

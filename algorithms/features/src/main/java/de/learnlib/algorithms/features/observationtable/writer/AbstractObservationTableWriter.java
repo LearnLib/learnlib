@@ -1,9 +1,17 @@
 package de.learnlib.algorithms.features.observationtable.writer;
 
-import net.automatalib.words.Word;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
+
+import de.learnlib.algorithms.features.observationtable.ObservationTable;
+
+import net.automatalib.words.Word;
 
 public abstract class AbstractObservationTableWriter<I,O> implements ObservationTableWriter<I,O> {
 	
@@ -50,4 +58,36 @@ public abstract class AbstractObservationTableWriter<I,O> implements Observation
 		}
 		return Functions.toStringFunction();
 	}
+
+	@Override
+	public void write(ObservationTable<? extends I, ? extends O> table,
+			PrintStream out) {
+		try {
+			write(table, (Appendable)out);
+		}
+		catch(IOException ex) {
+			throw new AssertionError("Writing to PrintStream must not throw");
+		}
+	}
+
+	@Override
+	public void write(ObservationTable<? extends I, ? extends O> table,
+			StringBuilder out) {
+		try {
+			write(table, (Appendable)out);
+		}
+		catch(IOException ex) {
+			throw new AssertionError("Writing to StringBuilder must not throw");
+		}
+	}
+	
+	@Override
+	public void write(ObservationTable<? extends I, ? extends O> table,
+			File file) throws IOException {
+		try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+			write(table, bw);
+		}
+	}
+	
+	
 }

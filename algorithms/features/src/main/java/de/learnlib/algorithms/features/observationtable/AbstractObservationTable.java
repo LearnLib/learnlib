@@ -16,11 +16,6 @@
  */
 package de.learnlib.algorithms.features.observationtable;
 
-import com.google.common.base.Function;
-import com.google.common.base.Objects;
-import com.google.common.collect.Collections2;
-import net.automatalib.words.Word;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,25 +26,58 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.automatalib.words.Word;
+
+import com.google.common.base.Function;
+import com.google.common.base.Objects;
+import com.google.common.collect.Collections2;
+
 public abstract class AbstractObservationTable<I, O> implements ObservationTable<I, O> {
 
 	public static abstract class AbstractRow<I,O> implements Row<I,O> {
 
 		@Override
 		public Iterator<O> iterator() {
-			return Collections.unmodifiableCollection(getValues()).iterator();
+			return Collections.unmodifiableCollection(getContents()).iterator();
 		}
 
 		@Override
 		public int size() {
-			return getValues().size();
+			return getContents().size();
 		}
 		
 		@Override
-		public O getValue(int index) {
-			return getValues().get(index);
+		public O getCellContent(int index) {
+			return getContents().get(index);
 		}
 		
+	}
+	
+	public static class DefaultInconsistency<I,O> implements Inconsistency<I,O> {
+		private final Row<I,O> firstRow;
+		private final Row<I,O> secondRow;
+		private final I symbol;
+		
+		public DefaultInconsistency(Row<I,O> firstRow, Row<I,O> secondRow, I symbol) {
+			this.firstRow = firstRow;
+			this.secondRow = secondRow;
+			this.symbol = symbol;
+		}
+		
+		@Override
+		public Row<I,O> getFirstRow() {
+			return firstRow;
+		}
+		
+		@Override
+		public Row<I,O> getSecondRow() {
+			return secondRow;
+		}
+		
+		@Override
+		public I getSymbol() {
+			return symbol;
+		}
 	}
 	
 	private final Function<Row<I,O>,Word<I>> getLabel
@@ -116,11 +144,11 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 	public Row<I, O> findUnclosedRow() {
 		Set<List<? extends O>> spRowContents = new HashSet<>();
 		for(Row<I,O> spRow : getShortPrefixRows()) {
-			spRowContents.add(spRow.getValues());
+			spRowContents.add(spRow.getContents());
 		}
 		
 		for(Row<I,O> lpRow : getLongPrefixRows()) {
-			if(!spRowContents.contains(lpRow.getValues())) {
+			if(!spRowContents.contains(lpRow.getContents())) {
 				return lpRow;
 			}
 		}
@@ -133,15 +161,15 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 			Collection<? extends I> inputs) {
 		Map<List<? extends O>,Row<I,O>> spRowsByContent = new HashMap<>();
 		for(Row<I,O> spRow : getShortPrefixRows()) {
-			List<? extends O> content = spRow.getValues();
+			List<? extends O> content = spRow.getContents();
 			Row<I,O> canonicalRow = spRowsByContent.get(content);
 			if(canonicalRow != null) {
 				for(I inputSym : inputs) {
 					Row<I,O> spRowSucc = getSuccessorRow(spRow, inputSym);
 					Row<I,O> canRowSucc = getSuccessorRow(canonicalRow, inputSym);
 					if(spRowSucc != canRowSucc) {
-						if(!spRowSucc.getValues().equals(canRowSucc.getValues())) {
-							return new Inconsistency<>(spRow, canonicalRow, inputSym);
+						if(!spRowSucc.getContents().equals(canRowSucc.getContents())) {
+							return new DefaultInconsistency<>(spRow, canonicalRow, inputSym);
 						}
 					}
 				}
@@ -153,28 +181,68 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 		
 		return null;
 	}
+	
+	@Override
+	public Word<I> getSuffix(int index) {
+		return getSuffixes().get(index);
+	}
+	
+	@Override
+	public int findDistinguishingSuffixIndex(Inconsistency<I, O> inconsistency) {
+		Row<I,O> row1 = inconsistency.getFirstRow();
+		Row<I,O> row2 = inconsistency.getSecondRow();
+		I sym = inconsistency.getSymbol();
+		
+		Row<I,O> succRow1 = getSuccessorRow(row1, sym);
+		Row<I,O> succRow2 = getSuccessorRow(row2, sym);
+		
+		return findDistinguishingSuffixIndex(succRow1, succRow2);
+	}
+	
+	@Override
+	public Word<I> findDistinguishingSuffix(Inconsistency<I, O> inconsistency) {
+		int suffixIndex = findDistinguishingSuffixIndex(inconsistency);
+		if(suffixIndex != NO_DISTINGUISHING_SUFFIX) {
+			return null;
+		}
+		return getSuffix(suffixIndex);
+	}
 
 	@Override
-	public Word<I> getDistinguishingSuffix(Row<I, O> row1, Row<I, O> row2) {
-		Iterator<? extends O> values1It = row1.getValues().iterator();
-		Iterator<? extends O> values2It = row2.getValues().iterator();
+	public Word<I> findDistinguishingSuffix(Row<I, O> row1, Row<I, O> row2) {
+		int suffixIndex = findDistinguishingSuffixIndex(row1, row2);
+		if(suffixIndex != NO_DISTINGUISHING_SUFFIX) {
+			return null;
+		}
+		return getSuffix(suffixIndex);
+	}
+	
+	@Override
+	public int findDistinguishingSuffixIndex(Row<I,O> row1, Row<I,O> row2) {
+		Iterator<? extends O> values1It = row1.getContents().iterator();
+		Iterator<? extends O> values2It = row2.getContents().iterator();
 		
-		Iterator<? extends Word<I>> suffixIt = getSuffixes().iterator();
-		while(suffixIt.hasNext() && values1It.hasNext() && values2It.hasNext()) {
-			Word<I> suffix = suffixIt.next();
+		int i = 0;
+		while(values1It.hasNext() && values2It.hasNext()) {
 			O value1 = values1It.next();
 			O value2 = values2It.next();
 			
 			if(!Objects.equal(value1, value2)) {
-				return suffix;
+				return i;
 			}
+			i++;
 		}
 		
-		if(suffixIt.hasNext() || values1It.hasNext() || values2It.hasNext()) {
+		if(values1It.hasNext() || values2It.hasNext()) {
 			throw new IllegalStateException("Rows [" + row1.getLabel() + "] and/or [" + row2.getLabel() + "] have invalid length");
 		}
 		
-		return null;
+		return NO_DISTINGUISHING_SUFFIX;
+	}
+	
+	@Override
+	public boolean isConsistent(Collection<? extends I> inputs) {
+		return (findInconsistency(inputs) == null);
 	}
 
 }

@@ -27,7 +27,7 @@ public class ObservationTableRowTest {
 		ObservationTableRow<?> first = new ObservationTableRow<>(Word.epsilon());
 
 		Assert.assertEquals(first, first);
-		Assert.assertNotEquals(first.getValues(), first);
+		Assert.assertNotEquals(first.getContents(), first);
 
 		ObservationTableRow<?> second = new ObservationTableRow<>(Word.epsilon());
 

@@ -580,7 +580,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 			return internalRow.isShortPrefix();
 		}
 		@Override
-		public List<O> getValues() {
+		public List<O> getContents() {
 			return Collections.unmodifiableList(allRowContents.get(internalRow.getRowContentId()));
 		}
 	}

@@ -72,7 +72,7 @@ class ObservationTableRow<I> extends AbstractObservationTable.AbstractRow<I, Boo
 
 	@Override
 	@Nonnull
-	public List<Boolean> getValues() {
+	public List<Boolean> getContents() {
 		return Collections.unmodifiableList(rowData);
 	}
 

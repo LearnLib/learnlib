@@ -78,7 +78,7 @@ public class ObservationTablePrinter {
 
 	private static <I> String stringPresentationOfRow(ObservationTableRow<I> row, int length) {
 		StringBuilder sb = new StringBuilder();
-		for (Boolean value : row.getValues()) {
+		for (Boolean value : row.getContents()) {
 			if (value) {
 				sb.append(paddedString("1", length));
 			}

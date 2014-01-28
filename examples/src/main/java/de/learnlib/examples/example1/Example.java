@@ -19,13 +19,8 @@ package de.learnlib.examples.example1;
 import java.io.IOException;
 import java.io.Writer;
 
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.commons.dotutil.DOT;
-import net.automatalib.util.graphs.dot.GraphDOT;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
 import de.learnlib.algorithms.features.observationtable.OTUtils;
+import de.learnlib.algorithms.features.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFABuilder;
 import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
@@ -34,6 +29,13 @@ import de.learnlib.experiments.Experiment.DFAExperiment;
 import de.learnlib.oracles.CounterOracle.DFACounterOracle;
 import de.learnlib.oracles.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.statistics.SimpleProfiler;
+
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.dotutil.DOT;
+import net.automatalib.util.graphs.dot.GraphDOT;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * This example shows the usage of a learning algorithm and an equivalence test
@@ -146,7 +148,8 @@ public class Example {
         System.out.println("-------------------------------------------------------");
         
         System.out.println("Final observation table:");
-        OTUtils.writeASCIIToSysout(lstar.getObservationTable());
+        new ObservationTableASCIIWriter<>().write(lstar.getObservationTable(), System.out);
+        
         OTUtils.displayHTMLInBrowser(lstar.getObservationTable());
     }
 }

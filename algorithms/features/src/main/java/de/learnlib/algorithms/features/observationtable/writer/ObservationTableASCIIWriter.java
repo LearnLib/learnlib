@@ -52,7 +52,7 @@ public class ObservationTableASCIIWriter<I,O> extends AbstractObservationTableWr
 	
 	
 	@Override
-	public void write(Appendable out, ObservationTable<? extends I,? extends O> table) throws IOException {
+	public void write(ObservationTable<? extends I,? extends O> table, Appendable out) throws IOException {
 		List<? extends Word<? extends I>> suffixes = table.getSuffixes();
 		int numSuffixes = suffixes.size();
 		
@@ -120,7 +120,7 @@ public class ObservationTableASCIIWriter<I,O> extends AbstractObservationTableWr
 			}
 			content[0] = wordToString(lpRow.getLabel());
 			i = 1;
-			for(O value : lpRow.getValues()) {
+			for(O value : lpRow.getContents()) {
 				content[i++] = outputToString(value);
 			}
 			appendContentRow(out, content, colWidth);

@@ -24,15 +24,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.FutureTask;
 
-import net.automatalib.words.Word;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 
-import de.learnlib.algorithms.features.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.algorithms.features.observationtable.writer.ObservationTableHTMLWriter;
 import de.learnlib.algorithms.features.observationtable.writer.ObservationTableWriter;
 
+import net.automatalib.words.Word;
+
+@ParametersAreNonnullByDefault
 public abstract class OTUtils {
 	
 	private static final long BROWSER_STARTUP_DELAY = 5000; // milliseconds
@@ -50,39 +52,15 @@ public abstract class OTUtils {
 			+ "<body>\n";
 	private static final String HTML_FILE_FOOTER = "</body></html>\n";
 	
-	public static <I,O>
-	void writeToSysout(
-			ObservationTable<? extends I,? extends O> table,
-			ObservationTableWriter<I,O> writer) {
-		try {
-			writer.write(System.out, table);
-		}
-		catch(IOException ex) {
-			throw new IllegalStateException("Writing to System.out must not throw", ex);
-		}
-	}
 	
 	public static <I,O>
-	void writeToFile(
-			ObservationTable<? extends I,? extends O> table,
-			ObservationTableWriter<I,O> writer,
-			File file) throws IOException {
-		try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-			writer.write(bw, table);
-		}
-	}
-	
-	public static <I,O>
-	void toString(
+	String toString(
 			ObservationTable<? extends I,? extends O> table,
 			ObservationTableWriter<I,O> writer) {
-		try {
-			StringBuilder sb = new StringBuilder();
-			writer.write(sb, table);
-		}
-		catch(IOException ex) {
-			throw new IllegalStateException("Writing to StringBuilder must not throw", ex);
-		}
+		StringBuilder sb = new StringBuilder();
+		writer.write(table, sb);
+		
+		return sb.toString();
 	}
 	
 	
@@ -92,14 +70,14 @@ public abstract class OTUtils {
 	void writeHTMLToFile(
 			ObservationTable<I, O> table,
 			File file,
-			Function<? super Word<I>,? extends String> wordToString,
+			Function<? super Word<? extends I>,? extends String> wordToString,
 			Function<? super O,? extends String> outputToString) throws IOException {
 		
 		try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
 			bw.write(HTML_FILE_HEADER);
 			ObservationTableHTMLWriter<I, O> otWriter
-				= new ObservationTableHTMLWriter<>(bw, wordToString, outputToString);
-			otWriter.write(table);
+				= new ObservationTableHTMLWriter<>(wordToString, outputToString);
+			otWriter.write(table, bw);
 			bw.write(HTML_FILE_FOOTER);
 		}
 	}
@@ -134,7 +112,7 @@ public abstract class OTUtils {
 	public static <I,O>
 	void displayHTMLInBrowser(
 			ObservationTable<I,O> table,
-			Function<? super Word<I>,? extends String> wordToString,
+			Function<? super Word<? extends I>,? extends String> wordToString,
 			Function<? super O,? extends String> outputToString) throws IOException, HeadlessException, UnsupportedOperationException {
 		File tempFile = File.createTempFile("learnlib-ot" , ".html");
 		tempFile.deleteOnExit();
@@ -166,46 +144,8 @@ public abstract class OTUtils {
 	}
 	
 	
-	public static <I,O>
-	void writeASCIIToFile(
-			ObservationTable<I,O> table,
-			File file,
-			Function<? super Word<I>,? extends String> wordToString,
-			Function<? super O,? extends String> outputToString) throws IOException {
-		
-		try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-			ObservationTableASCIIWriter<I, O> otWriter
-				= new ObservationTableASCIIWriter<>(bw, true, wordToString, outputToString);
-			otWriter.write(table);
-		}
-	}
-	
-	public static <I,O>
-	void writeASCIIToFile(
-			ObservationTable<I,O> table,
-			File file) throws IOException {
-		writeASCIIToFile(table, file, Functions.toStringFunction(), Functions.toStringFunction());
-	}
-	
-	
-	
-	public static <I,O>
-	void writeASCIIToSysout(
-			ObservationTable<I, O> table,
-			Function<? super Word<? extends I>,? extends String> wordToString,
-			Function<? super O,? extends String> outputToString) {
-		
-		ObservationTableWriter<I, O> otWriter
-			= new ObservationTableASCIIWriter<>(wordToString, outputToString, true);
-		writeToSysout(table, otWriter);
-	}
-	
-	public static <I,O>
-	void writeASCIIToSysout(ObservationTable<I, O> table) {
-		writeASCIIToSysout(table, Functions.toStringFunction(), Functions.toStringFunction());
-	}
 	
 	private OTUtils() {
-		throw new IllegalStateException("Constructor should never be invoked");
+		throw new AssertionError("Constructor should never be invoked");
 	}
 }

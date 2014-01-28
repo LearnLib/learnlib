@@ -24,7 +24,7 @@ import java.util.Objects;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import de.learnlib.algorithms.features.GlobalSuffixLearner;
+import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner;
 import de.learnlib.algorithms.features.observationtable.OTLearner;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.table.Inconsistency;

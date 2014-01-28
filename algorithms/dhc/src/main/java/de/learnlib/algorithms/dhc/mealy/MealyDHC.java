@@ -37,7 +37,7 @@ import net.automatalib.words.Word;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 
-import de.learnlib.algorithms.features.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
+import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle;

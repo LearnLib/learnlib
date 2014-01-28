@@ -126,6 +126,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<failsafe-plugin.version>2.16</failsafe-plugin.version>
 		<assembly-plugin.version>2.4</assembly-plugin.version>
 		<resources-plugin.version>2.6</resources-plugin.version>
+
 		<trove4j.version>3.0.3</trove4j.version>
 		<guava.version>16.0</guava.version>
 		<findbugs.version>2.0.2</findbugs.version>
@@ -240,9 +241,33 @@ http://www.gnu.de/documents/lgpl.en.html.
 						<preparationGoals>clean install</preparationGoals>
 					</configuration>
 				</plugin>
+				<!-- This gets rid of the nasty "maven-enforcer-plugin will be ignored" warning by m2e -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
-		
 	</build>
 
 	<!--

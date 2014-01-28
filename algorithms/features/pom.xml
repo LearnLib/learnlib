@@ -32,22 +32,33 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<description>Common interfaces providing features supported by various learning algorithms</description>
 
 	<dependencies>
+		<!-- 
+		Compile-time dependencies
+		-->
+		
+		<!-- LearnLib dependencies -->
 		<dependency>
 			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-core</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-core</artifactId>
-		</dependency>
+		
+		<!-- AutomataLib dependencies -->
 		<dependency>
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-util</artifactId>
 		</dependency>
+		
+		<!-- JSR-305 -->
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+		</dependency>
+		
+		<!-- 
+		Test dependencies
+		-->
+		
+		<!-- TestNG -->
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
