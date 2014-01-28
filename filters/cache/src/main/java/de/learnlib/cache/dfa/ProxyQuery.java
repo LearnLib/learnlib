@@ -16,8 +16,8 @@
  */
 package de.learnlib.cache.dfa;
 
-import net.automatalib.words.Word;
 import de.learnlib.api.Query;
+import net.automatalib.words.Word;
 
 /**
  * Proxy query. Answers an underlying query, and also
@@ -64,7 +64,7 @@ final class ProxyQuery<I> extends Query<I,Boolean> {
 	@Override
 	public void answer(Boolean output) {
 		origQuery.answer(output);
-		this.answer = output.booleanValue();
+		this.answer = output;
 	}
 	
 	/**
