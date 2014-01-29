@@ -116,6 +116,7 @@ public class Example {
         // enable logging of models
         experiment.setLogModels(true);
 
+
         // run experiment
         experiment.run();
 
