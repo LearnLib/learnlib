@@ -17,6 +17,7 @@
 package de.learnlib.cache.mealy;
 
 import de.learnlib.api.Query;
+import de.learnlib.oracles.AbstractQuery;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -34,9 +35,8 @@ import java.util.List;
  * @param <I> input symbol type
  * @param <O> output symbol type
  */
-final class MasterQuery<I,O> extends Query<I,Word<O>> {
+final class MasterQuery<I,O> extends AbstractQuery<I,Word<O>> {
 	
-	private final Word<I> word;
 	private Word<O> answer;
 	private final Mapping<? super O,? extends O> errorSyms;
 	
@@ -47,36 +47,18 @@ final class MasterQuery<I,O> extends Query<I,Word<O>> {
 	}
 	
 	public MasterQuery(Word<I> word, Word<O> output) {
-		this.word = word;
+		super(word);
 		this.answer = output;
 		this.errorSyms = null;
 		this.slaves = null;
 	}
 	
 	public MasterQuery(Word<I> word, Mapping<? super O, ? extends O> errorSyms) {
-		this.word = word;
+		super(word);
 		this.errorSyms = errorSyms;
 		this.slaves = new ArrayList<>();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.api.Query#getPrefix()
-	 */
-	@Override
-	public Word<I> getPrefix() {
-		return Word.epsilon();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.api.Query#getSuffix()
-	 */
-	@Override
-	public Word<I> getSuffix() {
-		return word;
-	}
-	
 	public Word<O> getAnswer() {
 		return answer;
 	}
@@ -140,6 +122,6 @@ final class MasterQuery<I,O> extends Query<I,Word<O>> {
 	 */
 	@Override
 	public String toString() {
-		return "Query[prefix=" + getPrefix() + ",suffix=" + word + ",answer=" + answer + ']';
+		return "Query[prefix=" + getPrefix() + ",suffix=" + getSuffix() + ",answer=" + answer + ']';
 	}
 }
