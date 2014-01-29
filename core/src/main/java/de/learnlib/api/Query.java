@@ -16,10 +16,10 @@
  */
 package de.learnlib.api;
 
-import net.automatalib.words.Word;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import net.automatalib.words.Word;
 
 public abstract class Query<I, O> {
 	

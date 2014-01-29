@@ -16,14 +16,14 @@
  */
 package de.learnlib.cache.mealy;
 
-import de.learnlib.api.Query;
-import de.learnlib.oracles.AbstractQuery;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-
-import java.util.ArrayList;
-import java.util.List;
+import de.learnlib.api.Query;
+import de.learnlib.oracles.AbstractQuery;
 
 
 /**

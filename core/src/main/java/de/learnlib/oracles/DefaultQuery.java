@@ -16,11 +16,11 @@
  */
 package de.learnlib.oracles;
 
-import de.learnlib.api.Query;
-import net.automatalib.words.Word;
-
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.automatalib.words.Word;
+import de.learnlib.api.Query;
 
 /**
  * A query is a container for tests a learning algorithms performs, containing
