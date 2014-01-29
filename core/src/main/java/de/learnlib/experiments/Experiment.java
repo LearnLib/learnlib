@@ -35,12 +35,10 @@ import de.learnlib.statistics.SimpleProfiler;
  * 
  * @author falkhowar
  * @param <A>
- * @param <I>
- * @param <O> 
  */
 @ParametersAreNonnullByDefault
 public class Experiment<A> {
-	
+
 	public static class DFAExperiment<I> extends Experiment<DFA<?,I>> {
 		public DFAExperiment(
 				LearningAlgorithm<? extends DFA<?, I>, I, Boolean> learningAlgorithm,

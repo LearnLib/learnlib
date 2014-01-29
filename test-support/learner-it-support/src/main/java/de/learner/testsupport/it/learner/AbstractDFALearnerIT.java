@@ -43,8 +43,7 @@ import de.learnlib.oracles.SimulatorOracle.DFASimulatorOracle;
 public abstract class AbstractDFALearnerIT extends AbstractLearnerIT {
 
 	
-	
-	// @Factory FIXME
+
 	@Override
 	public SingleExampleAllVariantsITSubCase<?,?,?>[] createExampleITCases() {
 		List<? extends DFALearningExample<?>> examples = LearningExamples.createDFAExamples();

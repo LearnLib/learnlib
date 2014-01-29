@@ -18,7 +18,7 @@ package de.learnlib.filters.reuse.tree;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
@@ -76,8 +76,8 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 		public ReuseTreeBuilder(Alphabet<I> alphabet) {
 			this.alphabet = alphabet;
 			this.systemStateHandler = null;
-			this.invariantInputSymbols = new HashSet<>();
-			this.failureOutputSymbols = new HashSet<>();
+			this.invariantInputSymbols = Collections.emptySet();
+			this.failureOutputSymbols = Collections.emptySet();
 		}
 		
 		public ReuseTreeBuilder<S,I,O> withSystemStateHandler(SystemStateHandler<S> systemStateHandler) {
@@ -132,8 +132,10 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 			};
 		}
 		this.systemStateHandler = handler;
-		this.invariantInputSymbols = builder.invariantInputSymbols;
-		this.failureOutputSymbols = builder.failureOutputSymbols;
+		this.invariantInputSymbols = 
+				(builder.invariantInputSymbols != null) ? builder.invariantInputSymbols : Collections.<I>emptySet();
+		this.failureOutputSymbols =
+				(builder.failureOutputSymbols != null) ? builder.failureOutputSymbols : Collections.<O>emptySet();
 		
 		// local and not configurable
 		this.alphabetSize = alphabet.size();
@@ -359,9 +361,9 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 								", cached output '" + edge.getOutput() + "'");
 			}
 
-			if (failureOutputSymbols != null && failureOutputSymbols.contains(out)) {
+			if (failureOutputSymbols.contains(out)) {
 				rn = sink;
-			} else if (invariantInputSymbols != null && invariantInputSymbols.contains(in)) {
+			} else if (invariantInputSymbols.contains(in)) {
 				rn = sink;
 			} else {
 				rn = new ReuseNode<>(nodeCount++, alphabetSize);
