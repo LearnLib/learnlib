@@ -73,13 +73,11 @@ public class DefaultQuery<I, O> extends AbstractQuery<I,O> {
     }
 
 	/**
-	 * Returns the string representation of this query, including a possible answer.
-	 *
-	 * @return A string of the form "Query[prefix=AB,suffix=CD,answer=true]". If the query
-	 * has not been answered yet, answer will be null.
+	 * @see de.learnlib.oracles.AbstractQuery#toStringWithAnswer(Object)
 	 */
 	@Override
 	public String toString() {
-		return "Query[prefix=" + getPrefix() + ",suffix=" + getSuffix() + ",answer=" + output + ']';
+		return toStringWithAnswer(output);
 	}
+
 }

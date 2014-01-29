@@ -75,15 +75,10 @@ final class ProxyQuery<I> extends Query<I,Boolean> {
 		return answer;
 	}
 
-	/**
-	 * Returns the string representation of this query, including a possible answer.
-	 *
-	 * @return A string of the form "Query[prefix=AB,suffix=CD,answer=true]". If the query
-	 * has not been answered yet, answer will be null.
-	 */
 	@Override
 	public String toString() {
-		return "Query[prefix=" + getPrefix() + ",suffix=" + getSuffix() + ",answer=" + answer + ']';
+		return origQuery.toString();
 	}
+
 }
 
