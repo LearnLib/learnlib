@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="de">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/* Copyright (C) 2013 TU Dortmund<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * This file is part of LearnLib, http://www.learnlib.de/.<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * <a name="line.3"></a>
+<span class="sourceLineNo">004</span> * LearnLib is free software; you can redistribute it and/or<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * modify it under the terms of the GNU Lesser General Public<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * License version 3.0 as published by the Free Software Foundation.<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * <a name="line.7"></a>
+<span class="sourceLineNo">008</span> * LearnLib is distributed in the hope that it will be useful,<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Lesser General Public License for more details.<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * <a name="line.12"></a>
+<span class="sourceLineNo">013</span> * You should have received a copy of the GNU Lesser General Public<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * License along with LearnLib; if not, see<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * &lt;http://www.gnu.de/documents/lgpl.en.html&gt;.<a name="line.15"></a>
+<span class="sourceLineNo">016</span> */<a name="line.16"></a>
+<span class="sourceLineNo">017</span>package de.learnlib.cache.mealy;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import java.util.ArrayList;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.util.Collection;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import java.util.Collections;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import java.util.Comparator;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import java.util.Iterator;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>import java.util.List;<a name="line.24"></a>
+<span class="sourceLineNo">025</span><a name="line.25"></a>
+<span class="sourceLineNo">026</span>import net.automatalib.commons.util.comparison.CmpUtil;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>import net.automatalib.commons.util.mappings.Mapping;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>import net.automatalib.incremental.mealy.IncrementalMealyBuilder;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>import net.automatalib.words.Alphabet;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>import net.automatalib.words.Word;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>import net.automatalib.words.WordBuilder;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>import de.learnlib.api.MembershipOracle;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>import de.learnlib.api.Query;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>import de.learnlib.cache.LearningCacheOracle.MealyLearningCacheOracle;<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span>/**<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * Mealy cache. This cache is implemented as a membership oracle: upon construction, it is<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * provided with a delegate oracle. Queries that can be answered from the cache are answered<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * directly, others are forwarded to the delegate oracle. When the delegate oracle has finished<a name="line.41"></a>
+<span class="sourceLineNo">042</span> * processing these remaining queries, the results are incorporated into the cache.<a name="line.42"></a>
+<span class="sourceLineNo">043</span> * <a name="line.43"></a>
+<span class="sourceLineNo">044</span> * This oracle additionally enables the user to define a Mealy-style prefix-closure filter:<a name="line.44"></a>
+<span class="sourceLineNo">045</span> * a {@link Mapping} from output symbols to output symbols may be provided, with the following<a name="line.45"></a>
+<span class="sourceLineNo">046</span> * semantics: If in an output word a symbol for which the given mapping has a non-null value<a name="line.46"></a>
+<span class="sourceLineNo">047</span> * is encountered, all symbols &lt;i&gt;after&lt;/i&gt; this symbol are replaced by the respective value.<a name="line.47"></a>
+<span class="sourceLineNo">048</span> * The rationale behind this is that the concrete error message (key in the mapping) is still<a name="line.48"></a>
+<span class="sourceLineNo">049</span> * reflected in the learned model, it is forced to result in a sink state with only a single<a name="line.49"></a>
+<span class="sourceLineNo">050</span> * repeating output symbol (value in the mapping).<a name="line.50"></a>
+<span class="sourceLineNo">051</span> * <a name="line.51"></a>
+<span class="sourceLineNo">052</span> * @author Malte Isberner &lt;malte.isberner@gmail.com&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span> *<a name="line.53"></a>
+<span class="sourceLineNo">054</span> * @param &lt;I&gt; input symbol class<a name="line.54"></a>
+<span class="sourceLineNo">055</span> * @param &lt;O&gt; output symbol class<a name="line.55"></a>
+<span class="sourceLineNo">056</span> */<a name="line.56"></a>
+<span class="sourceLineNo">057</span>public class MealyCacheOracle&lt;I, O&gt; implements MealyLearningCacheOracle&lt;I,O&gt; {<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        <a name="line.58"></a>
+<span class="sourceLineNo">059</span>        private static final class ReverseLexCmp&lt;I&gt; implements Comparator&lt;Query&lt;I,?&gt;&gt; {<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                private final Alphabet&lt;I&gt; alphabet;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                <a name="line.61"></a>
+<span class="sourceLineNo">062</span>                public ReverseLexCmp(Alphabet&lt;I&gt; alphabet) {<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                        this.alphabet = alphabet;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                }<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                <a name="line.65"></a>
+<span class="sourceLineNo">066</span>                @Override<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                public int compare(Query&lt;I, ?&gt; o1, Query&lt;I, ?&gt; o2) {<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                        return -CmpUtil.lexCompare(o1.getInput(), o2.getInput(), alphabet);<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                }<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        }<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        <a name="line.71"></a>
+<span class="sourceLineNo">072</span>        public static &lt;I,O&gt;<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        MealyCacheOracle&lt;I,O&gt; createDAGCacheOracle(Alphabet&lt;I&gt; inputAlphabet, MembershipOracle&lt;I,Word&lt;O&gt;&gt; delegate) {<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                return createDAGCacheOracle(inputAlphabet, null, delegate);<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        }<a name="line.75"></a>
+<span class="sourceLineNo">076</span>        <a name="line.76"></a>
+<span class="sourceLineNo">077</span>        public static &lt;I,O&gt;<a name="line.77"></a>
+<span class="sourceLineNo">078</span>        MealyCacheOracle&lt;I,O&gt; createDAGCacheOracle(<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                        Alphabet&lt;I&gt; inputAlphabet, Mapping&lt;? super O,? extends O&gt; errorSyms, MembershipOracle&lt;I,Word&lt;O&gt;&gt; delegate) {<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                IncrementalMealyBuilder&lt;I,O&gt; incrementalBuilder = new IncrementalMealyDAGBuilder&lt;&gt;(inputAlphabet);<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                return new MealyCacheOracle&lt;&gt;(incrementalBuilder, errorSyms, delegate);<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        }<a name="line.82"></a>
+<span class="sourceLineNo">083</span>        <a name="line.83"></a>
+<span class="sourceLineNo">084</span>        public static &lt;I,O&gt;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        MealyCacheOracle&lt;I,O&gt; createTreeCacheOracle(Alphabet&lt;I&gt; inputAlphabet, MembershipOracle&lt;I,Word&lt;O&gt;&gt; delegate) {<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                return createTreeCacheOracle(inputAlphabet, null, delegate);<a name="line.86"></a>
+<span class="sourceLineNo">087</span>        }<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        <a name="line.88"></a>
+<span class="sourceLineNo">089</span>        public static &lt;I,O&gt;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>        MealyCacheOracle&lt;I,O&gt; createTreeCacheOracle(Alphabet&lt;I&gt; inputAlphabet, Mapping&lt;? super O,? extends O&gt; errorSyms, MembershipOracle&lt;I,Word&lt;O&gt;&gt; delegate) {<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                IncrementalMealyBuilder&lt;I,O&gt; incrementalBuilder = new IncrementalMealyTreeBuilder&lt;&gt;(inputAlphabet);<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                return new MealyCacheOracle&lt;&gt;(incrementalBuilder, errorSyms, delegate);<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        }<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        <a name="line.94"></a>
+<span class="sourceLineNo">095</span>        private final MembershipOracle&lt;I,Word&lt;O&gt;&gt; delegate;<a name="line.95"></a>
+<span class="sourceLineNo">096</span>        private final IncrementalMealyBuilder&lt;I, O&gt; incMealy;<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        private final Comparator&lt;? super Query&lt;I,?&gt;&gt; queryCmp;<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        private final Mapping&lt;? super O,? extends O&gt; errorSyms;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>        <a name="line.99"></a>
+<span class="sourceLineNo">100</span>        <a name="line.100"></a>
+<span class="sourceLineNo">101</span>        public MealyCacheOracle(IncrementalMealyBuilder&lt;I, O&gt; incrementalBuilder, Mapping&lt;? super O,? extends O&gt; errorSyms, MembershipOracle&lt;I,Word&lt;O&gt;&gt; delegate) {<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                this.incMealy = incrementalBuilder;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                this.queryCmp = new ReverseLexCmp&lt;&gt;(incrementalBuilder.getInputAlphabet());<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                this.errorSyms = errorSyms;<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                this.delegate = delegate;<a name="line.105"></a>
+<span class="sourceLineNo">106</span>        }<a name="line.106"></a>
+<span class="sourceLineNo">107</span>        /**<a name="line.107"></a>
+<span class="sourceLineNo">108</span>         * Constructor.<a name="line.108"></a>
+<span class="sourceLineNo">109</span>         * @param alphabet the input alphabet for the cache<a name="line.109"></a>
+<span class="sourceLineNo">110</span>         * @param delegate the delegate Mealy oracle<a name="line.110"></a>
+<span class="sourceLineNo">111</span>         * @deprecated since 2014-01-23. Use {@link #createDAGCacheOracle(Alphabet, MembershipOracle)} to reproduce old behavior.<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         */<a name="line.112"></a>
+<span class="sourceLineNo">113</span>        @Deprecated<a name="line.113"></a>
+<span class="sourceLineNo">114</span>        public MealyCacheOracle(Alphabet&lt;I&gt; alphabet, MembershipOracle&lt;I,Word&lt;O&gt;&gt; delegate) {<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                this(alphabet, null, delegate);<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        }<a name="line.116"></a>
+<span class="sourceLineNo">117</span>        <a name="line.117"></a>
+<span class="sourceLineNo">118</span>        /**<a name="line.118"></a>
+<span class="sourceLineNo">119</span>         * Constructor.<a name="line.119"></a>
+<span class="sourceLineNo">120</span>         * @param alphabet the input alphabet for the cache<a name="line.120"></a>
+<span class="sourceLineNo">121</span>         * @param errorSyms the error symbol mapping (see class description)<a name="line.121"></a>
+<span class="sourceLineNo">122</span>         * @param delegate the delegate Mealy oracle<a name="line.122"></a>
+<span class="sourceLineNo">123</span>         * @deprecated since 2014-01-23. Use {@link #createDAGCacheOracle(Alphabet, Mapping, MembershipOracle)} to reproduce old<a name="line.123"></a>
+<span class="sourceLineNo">124</span>         * behavior.<a name="line.124"></a>
+<span class="sourceLineNo">125</span>         */<a name="line.125"></a>
+<span class="sourceLineNo">126</span>        @Deprecated<a name="line.126"></a>
+<span class="sourceLineNo">127</span>        public MealyCacheOracle(Alphabet&lt;I&gt; alphabet, Mapping&lt;? super O, ? extends O&gt; errorSyms, MembershipOracle&lt;I,Word&lt;O&gt;&gt; delegate) {<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                this(new IncrementalMealyDAGBuilder&lt;I,O&gt;(alphabet), errorSyms, delegate);<a name="line.128"></a>
+<span class="sourceLineNo">129</span>        }<a name="line.129"></a>
+<span class="sourceLineNo">130</span>        <a name="line.130"></a>
+<span class="sourceLineNo">131</span>        public int getCacheSize() {<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                return incMealy.asGraph().size();<a name="line.132"></a>
+<span class="sourceLineNo">133</span>        }<a name="line.133"></a>
+<span class="sourceLineNo">134</span>        <a name="line.134"></a>
+<span class="sourceLineNo">135</span>        /*<a name="line.135"></a>
+<span class="sourceLineNo">136</span>         * (non-Javadoc)<a name="line.136"></a>
+<span class="sourceLineNo">137</span>         * @see de.learnlib.cache.LearningCache#createCacheConsistencyTest()<a name="line.137"></a>
+<span class="sourceLineNo">138</span>         */<a name="line.138"></a>
+<span class="sourceLineNo">139</span>        @Override<a name="line.139"></a>
+<span class="sourceLineNo">140</span>        public MealyCacheConsistencyTest&lt;I, O&gt; createCacheConsistencyTest() {<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                return new MealyCacheConsistencyTest&lt;&gt;(incMealy);<a name="line.141"></a>
+<span class="sourceLineNo">142</span>        }<a name="line.142"></a>
+<span class="sourceLineNo">143</span><a name="line.143"></a>
+<span class="sourceLineNo">144</span>        /*<a name="line.144"></a>
+<span class="sourceLineNo">145</span>         * (non-Javadoc)<a name="line.145"></a>
+<span class="sourceLineNo">146</span>         * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         */<a name="line.147"></a>
+<span class="sourceLineNo">148</span>        @Override<a name="line.148"></a>
+<span class="sourceLineNo">149</span>        public void processQueries(Collection&lt;? extends Query&lt;I, Word&lt;O&gt;&gt;&gt; queries) {<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                if(queries.isEmpty()) {<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                        return;<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                }<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                <a name="line.153"></a>
+<span class="sourceLineNo">154</span>                List&lt;Query&lt;I,Word&lt;O&gt;&gt;&gt; qrys = new ArrayList&lt;Query&lt;I,Word&lt;O&gt;&gt;&gt;(queries);<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                Collections.sort(qrys, queryCmp);<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                <a name="line.156"></a>
+<span class="sourceLineNo">157</span>                List&lt;MasterQuery&lt;I,O&gt;&gt; masterQueries = new ArrayList&lt;&gt;();<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                <a name="line.158"></a>
+<span class="sourceLineNo">159</span>                Iterator&lt;Query&lt;I,Word&lt;O&gt;&gt;&gt; it = qrys.iterator();<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                Query&lt;I,Word&lt;O&gt;&gt; q = it.next();<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                Word&lt;I&gt; ref = q.getInput();<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                MasterQuery&lt;I,O&gt; master = createMasterQuery(ref);<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                if(master.getAnswer() == null)<a name="line.163"></a>
+<span class="sourceLineNo">164</span>                        masterQueries.add(master);<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                master.addSlave(q);<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                <a name="line.166"></a>
+<span class="sourceLineNo">167</span>                while(it.hasNext()) {<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                        q = it.next();<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                        Word&lt;I&gt; curr = q.getInput();<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                        if(!curr.isPrefixOf(ref)) {<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                                master = createMasterQuery(curr);<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                                if(master.getAnswer() == null)<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                                        masterQueries.add(master);<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                        }<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                        <a name="line.175"></a>
+<span class="sourceLineNo">176</span>                        master.addSlave(q);<a name="line.176"></a>
+<span class="sourceLineNo">177</span>                        ref = curr;<a name="line.177"></a>
+<span class="sourceLineNo">178</span>                }<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                <a name="line.179"></a>
+<span class="sourceLineNo">180</span>                delegate.processQueries(masterQueries);<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                <a name="line.181"></a>
+<span class="sourceLineNo">182</span>                for(MasterQuery&lt;I,O&gt; m : masterQueries)<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                        postProcess(m);<a name="line.183"></a>
+<span class="sourceLineNo">184</span>        }<a name="line.184"></a>
+<span class="sourceLineNo">185</span>        <a name="line.185"></a>
+<span class="sourceLineNo">186</span>        private void postProcess(MasterQuery&lt;I,O&gt; master) {<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                Word&lt;I&gt; word = master.getSuffix();<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                Word&lt;O&gt; answer = master.getAnswer();<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                <a name="line.189"></a>
+<span class="sourceLineNo">190</span>                if(errorSyms == null) {<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                        incMealy.insert(word, answer);<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                        return;<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                }<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                <a name="line.194"></a>
+<span class="sourceLineNo">195</span>                int answLen = answer.length();<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                int i = 0;<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                while(i &lt; answLen) {<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                        O sym = answer.getSymbol(i++);<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                        if(errorSyms.get(sym) != null)<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                                break;<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                }<a name="line.201"></a>
+<span class="sourceLineNo">202</span>                <a name="line.202"></a>
+<span class="sourceLineNo">203</span>                if(i == answLen)<a name="line.203"></a>
+<span class="sourceLineNo">204</span>                        incMealy.insert(word, answer);<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                else<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                        incMealy.insert(word.prefix(i), answer.prefix(i));<a name="line.206"></a>
+<span class="sourceLineNo">207</span>        }<a name="line.207"></a>
+<span class="sourceLineNo">208</span>        <a name="line.208"></a>
+<span class="sourceLineNo">209</span>        private MasterQuery&lt;I,O&gt; createMasterQuery(Word&lt;I&gt; word) {<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                WordBuilder&lt;O&gt; wb = new WordBuilder&lt;O&gt;();<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                if(incMealy.lookup(word, wb)) {<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                        return new MasterQuery&lt;&gt;(word, wb.toWord());<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                }<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                <a name="line.214"></a>
+<span class="sourceLineNo">215</span>                if(errorSyms == null) {<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                        return new MasterQuery&lt;&gt;(word);<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                }<a name="line.217"></a>
+<span class="sourceLineNo">218</span>                int wbSize = wb.size();<a name="line.218"></a>
+<span class="sourceLineNo">219</span>                O repSym;<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                if(wbSize == 0 || (repSym = errorSyms.get(wb.getSymbol(wbSize - 1))) == null) {<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                        return new MasterQuery&lt;&gt;(word, errorSyms);<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                }<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                <a name="line.223"></a>
+<span class="sourceLineNo">224</span>                wb.repeatAppend(word.length() - wbSize, repSym);<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                return new MasterQuery&lt;&gt;(word, wb.toWord());<a name="line.225"></a>
+<span class="sourceLineNo">226</span>        }<a name="line.226"></a>
+<span class="sourceLineNo">227</span><a name="line.227"></a>
+<span class="sourceLineNo">228</span>}<a name="line.228"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
