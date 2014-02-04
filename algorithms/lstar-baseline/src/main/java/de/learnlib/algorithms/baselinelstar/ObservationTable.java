@@ -19,7 +19,6 @@ package de.learnlib.algorithms.baselinelstar;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -59,10 +58,10 @@ public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
 		Word<I> epsiplon = Word.epsilon();
 		ObservationTableRow<I> initialRow = new ObservationTableRow<>(epsiplon);
 		initialRow.setShortPrefixRow();
-		shortPrefixRows = new LinkedList<>();
+		shortPrefixRows = new ArrayList<>();
 		shortPrefixRows.add(initialRow);
 
-		longPrefixRows = new LinkedList<>();
+		longPrefixRows = new ArrayList<>();
 	}
 
 	/**
@@ -202,7 +201,7 @@ public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
 			boolean found = false;
 
 			for (ObservationTableRow<I> stateRow : shortPrefixRows) {
-				if (candidate.getContents().equals(stateRow.getContents())) {
+				if (candidate.isContentsEqual(stateRow)) {
 					found = true;
 					break;
 				}
@@ -247,10 +246,8 @@ public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
 
 	private boolean checkInconsistency(@Nonnull ObservationTableRow<I> firstRow, @Nonnull ObservationTableRow<I> secondRow,
 			@Nonnull I alphabetSymbol) {
-		ObservationTableRow<I> rowForFirstState = firstRow;
-		ObservationTableRow<I> rowForSecondState = secondRow;
 
-		if (!rowForFirstState.getContents().equals(rowForSecondState.getContents())) {
+		if (!firstRow.isContentsEqual(secondRow)) {
 			return false;
 		}
 
@@ -259,7 +256,7 @@ public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
 		ObservationTableRow<I> rowForExtendedFirstState = getRowForPrefix(extendedFirstState);
 		ObservationTableRow<I> rowForExtendedSecondState = getRowForPrefix(extendedSecondState);
 
-		return !rowForExtendedFirstState.getContents().equals(rowForExtendedSecondState.getContents());
+		return !rowForExtendedFirstState.isContentsEqual(rowForExtendedSecondState);
 	}
 
 	@Nonnull
@@ -270,9 +267,12 @@ public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
 		ObservationTableRow<I> firstRow = getRowForPrefix(firstState);
 		ObservationTableRow<I> secondRow = getRowForPrefix(secondState);
 
+		final List<Boolean> firstRowContents = firstRow.getContents();
+		final List<Boolean> secondRowContents = secondRow.getContents();
+
 		for (int i = 0; i < firstRow.getContents().size(); i++) {
-			Boolean symbolFirstRow = firstRow.getContents().get(i);
-			Boolean symbolSecondRow = secondRow.getContents().get(i);
+			Boolean symbolFirstRow = firstRowContents.get(i);
+			Boolean symbolSecondRow = secondRowContents.get(i);
 			if (!symbolFirstRow.equals(symbolSecondRow)) {
 				return suffixes.get(i);
 			}
