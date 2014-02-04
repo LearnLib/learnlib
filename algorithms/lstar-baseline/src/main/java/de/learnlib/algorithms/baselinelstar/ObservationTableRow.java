@@ -16,8 +16,8 @@
  */
 package de.learnlib.algorithms.baselinelstar;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -42,7 +42,7 @@ class ObservationTableRow<I> extends AbstractObservationTable.AbstractRow<I, Boo
 
 	ObservationTableRow(@Nonnull Word<I> label) {
 		this.label = label;
-		rowData = new LinkedList<>();
+		rowData = new ArrayList<>();
 	}
 
 	void addValue(Boolean value) {
@@ -101,6 +101,10 @@ class ObservationTableRow<I> extends AbstractObservationTable.AbstractRow<I, Boo
 	@Override
 	public String toString() {
 		return label.toString() + ": " + rowData.toString();
+	}
+
+	boolean isContentsEqual(ObservationTableRow<I> row) {
+		return rowData.equals(row.rowData);
 	}
 
 }
