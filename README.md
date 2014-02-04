@@ -22,7 +22,6 @@ Maintainers
 Resources
 ---------
 * **[LearnLib Web-page][3]**
-
 * **[Maven Project Site][5]**
 * **[API Documentation][6]**
 * [Q&A @ Google Groups][7] -- [learnlib-qa@googlegroups.com][8]
@@ -33,8 +32,8 @@ Resources
 [2]: http://www.cs.tu-dortmund.de
 [3]: http://www.learnlib.de
 [4]: https://github.com/misberner
-[5]: http://learnlib.github.io/learnlib/maven-site/
-[6]: http://learnlib.github.io/learnlib/maven-site/apidocs/
+[5]: http://learnlib.github.io/learnlib/maven-site/latest-snapshot/
+[6]: http://learnlib.github.io/learnlib/maven-site/latest-snapshot/apidocs/
 [7]: https://groups.google.com/forum/?fromgroups#!forum/learnlib-qa
 [8]: mailto:learnlib-qa@googlegroups.com
 [9]: https://groups.google.com/forum/?fromgroups#!forum/learnlib-discussion
