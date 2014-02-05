@@ -46,5 +46,4 @@ public interface SUL<I, O> {
      */
     @Nullable
     O step(@Nullable I in);
-
 }

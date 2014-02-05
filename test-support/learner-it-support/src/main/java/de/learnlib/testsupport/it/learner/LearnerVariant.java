@@ -14,11 +14,11 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learner.testsupport.it.learner.internal;
+package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.api.LearningAlgorithm;
 
-public class LearnerVariant<M,I,O> {
+class LearnerVariant<M,I,O> {
 	
 	private final String name;
 	private final LearningAlgorithm<? extends M, I, O> learner;

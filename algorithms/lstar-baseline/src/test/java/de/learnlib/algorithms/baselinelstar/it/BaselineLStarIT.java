@@ -17,10 +17,11 @@
 package de.learnlib.algorithms.baselinelstar.it;
 
 import net.automatalib.words.Alphabet;
-import de.learner.testsupport.it.learner.AbstractDFALearnerIT;
-import de.learner.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
+
 import de.learnlib.algorithms.baselinelstar.BaselineLStar;
 import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
+import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
 
 public class BaselineLStarIT extends AbstractDFALearnerIT {
 
