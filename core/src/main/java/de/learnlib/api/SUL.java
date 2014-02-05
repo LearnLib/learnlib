@@ -45,5 +45,5 @@ public interface SUL<I, O> {
      * @return output of SUL
      */
     @Nullable
-    O step(@Nullable I in);
+    O step(@Nullable I in) throws SULException;
 }

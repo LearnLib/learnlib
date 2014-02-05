@@ -16,13 +16,14 @@
  */
 package de.learnlib.drivers.reflect;
 
-import de.learnlib.drivers.api.DataMapper;
-import de.learnlib.drivers.api.SULException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import de.learnlib.api.SULException;
+import de.learnlib.drivers.api.DataMapper;
 
 /**
  * Basic stateless data mapper for objects.

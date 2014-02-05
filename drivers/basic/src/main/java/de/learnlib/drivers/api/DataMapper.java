@@ -16,6 +16,8 @@
  */
 package de.learnlib.drivers.api;
 
+import de.learnlib.api.SULException;
+
 /**
  * A data mapper transforms abstract inputs into concrete inputs and
  * concrete outputs into abstract outputs. A mapper can be stateful.

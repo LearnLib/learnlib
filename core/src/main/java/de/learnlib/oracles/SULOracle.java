@@ -19,10 +19,12 @@ package de.learnlib.oracles;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.SUL;
+import de.learnlib.api.SULException;
+
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 
 /**
  * A wrapper around a system under learning (SUL).
@@ -40,21 +42,25 @@ public class SULOracle<I, O> extends AbstractSingleQueryOracle<I, Word<O>> imple
 
 	@Override
 	@Nonnull
-	public Word<O> answerQuery(Word<I> prefix, Word<I> suffix) {
+	public Word<O> answerQuery(Word<I> prefix, Word<I> suffix) throws SULException {
 		sul.pre();
-		// Prefix: Execute symbols, don't record output
-		for(I sym : prefix) {
-			sul.step(sym);
+		try {
+			// Prefix: Execute symbols, don't record output
+			for(I sym : prefix) {
+				sul.step(sym);
+			}
+			
+			// Suffix: Execute symbols, outputs constitute output word
+			WordBuilder<O> wb = new WordBuilder<>(suffix.length());
+			for(I sym : suffix) {
+				wb.add(sul.step(sym));
+			}
+			
+			return wb.toWord();
 		}
-		
-		// Suffix: Execute symbols, outputs constitute output word
-		WordBuilder<O> wb = new WordBuilder<>(suffix.length());
-		for(I sym : suffix) {
-			wb.add(sul.step(sym));
+		finally {
+			sul.post();
 		}
-		
-        sul.post();
-		return wb.toWord();
 	}
 
 }

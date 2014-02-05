@@ -21,6 +21,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import de.learnlib.api.Query;
+import de.learnlib.mappers.reflect.NewSimplePOJOTestDriver;
+import de.learnlib.oracles.DefaultQuery;
+import de.learnlib.oracles.SULOracle;
+
 import net.automatalib.words.Word;
 
 import org.testng.annotations.AfterClass;
@@ -29,14 +34,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import de.learnlib.api.Query;
-import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.SULOracle;
-
 /**
  *
  * @author falk
  */
+@Test
 public class ObjectTest {
     
     public ObjectTest() {
@@ -48,6 +50,35 @@ public class ObjectTest {
          Constructor<?> c = Stack.class.getConstructor(int.class);
          SimplePOJOTestDriver driver = new SimplePOJOTestDriver(c, 2);
          SULOracle<AbstractMethodInput, AbstractMethodOutput> oracle = new SULOracle<>(driver);
+         
+         Method push = Stack.class.getMethod("push", new Class<?>[] {Object.class});
+         AbstractMethodInput push_1 = driver.addInput("push_1", push, 1);
+         AbstractMethodInput push_2 = driver.addInput("push_2", push, 2);
+         
+         Method _pop = Stack.class.getMethod("pop", new Class<?>[] {});
+         AbstractMethodInput pop = driver.addInput("pop", _pop, new Object[] {});
+                  
+         DefaultQuery<AbstractMethodInput, Word<AbstractMethodOutput>> query1 = new DefaultQuery<>(
+                Word.fromSymbols(push_1, push_2, pop, pop, pop, pop));
+         DefaultQuery<AbstractMethodInput, Word<AbstractMethodOutput>> query2 = new DefaultQuery<>(
+                Word.fromSymbols(push_1, push_2, push_1, pop));
+         
+         Collection<Query<AbstractMethodInput, Word<AbstractMethodOutput>>> queries = new ArrayList<>();
+         queries.add(query1);
+         queries.add(query2);
+         
+         oracle.processQueries(queries);
+
+         System.out.println(query1.getInput() + "  :  " + query1.getOutput());
+         System.out.println(query2.getInput() + "  :  " + query2.getOutput());
+     }
+     
+     @Test
+     public void testNewDriver() throws Exception {
+    	 System.out.println("Testing new driver");
+    	 Constructor<?> c = Stack.class.getConstructor(int.class);
+         NewSimplePOJOTestDriver driver = new NewSimplePOJOTestDriver(c, 2);
+         SULOracle<AbstractMethodInput, AbstractMethodOutput> oracle = new SULOracle<>(driver.getSUL());
          
          Method push = Stack.class.getMethod("push", new Class<?>[] {Object.class});
          AbstractMethodInput push_1 = driver.addInput("push_1", push, 1);

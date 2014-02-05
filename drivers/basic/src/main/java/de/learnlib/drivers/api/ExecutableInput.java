@@ -16,6 +16,9 @@
  */
 package de.learnlib.drivers.api;
 
+import de.learnlib.api.SULException;
+
+
 /**
  * An executable input is a concrete input produced by a data mapper
  * and can be executed directly. 
@@ -31,6 +34,6 @@ public interface ExecutableInput<CO> {
      * 
      * @return concrete output for this input 
      */
-    public CO execute() throws SULException;
+    public CO execute() throws SULException, Exception;
     
 }

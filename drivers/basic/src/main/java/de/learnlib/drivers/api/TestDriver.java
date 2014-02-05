@@ -17,6 +17,7 @@
 package de.learnlib.drivers.api;
 
 import de.learnlib.api.SUL;
+import de.learnlib.api.SULException;
 
 /**
  * A test driver executes
@@ -44,8 +45,11 @@ public class TestDriver<AI, AO, CI extends ExecutableInput<CO>, CO> implements S
             CO out = ci.execute();
             return this.mapper.output(out);
         } 
-        catch (SULException e) {
-            return this.mapper.exception(e);
+        catch(SULException ex) {
+        	return this.mapper.exception(ex);
+        }
+        catch (Exception e) {
+            return this.mapper.exception(new SULException(e));
         }        
     }
 
