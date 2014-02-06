@@ -1,8 +1,9 @@
 package de.learnlib.algorithms.features.observationtable.reader;
 
-import com.sun.istack.internal.NotNull;
 import de.learnlib.algorithms.features.observationtable.ObservationTable;
 import net.automatalib.words.Alphabet;
+
+import javax.annotation.Nonnull;
 
 /**
  * Reads an {@link ObservationTable} from a string source.
@@ -20,14 +21,14 @@ public interface ObservationTableReader<I,O> {
 	 * @param source
 	 *      The string representation to read, must not be {@code null}.
 	 * @param alphabet
-	 *      The learning alphabet containing the symbols used.
+	 *      The learning alphabet containing the symbols used, must not be {@code null}.
 	 *
 	 * @return
 	 *      an implementation of {@link ObservationTable} which allows at lease access to
 	 *      {@link ObservationTable#getSuffixes()}, {@link ObservationTable#getShortPrefixes()},
 	 *      and {@link ObservationTable#getLongPrefixes()}. Will never be {@code null}.
 	 */
-	@NotNull
-	public ObservationTable<I,O> read(@NotNull String source, Alphabet<I> alphabet);
+	@Nonnull
+	public ObservationTable<I,O> read(@Nonnull String source, @Nonnull Alphabet<I> alphabet);
 
 }
