@@ -3,6 +3,7 @@ package de.learnlib.algorithms.features.observationtable.reader;
 import de.learnlib.algorithms.features.observationtable.InvalidRowException;
 import de.learnlib.algorithms.features.observationtable.NoSuchRowException;
 import de.learnlib.algorithms.features.observationtable.ObservationTable;
+import de.learnlib.algorithms.features.observationtable.OTUtils;
 import net.automatalib.words.Word;
 
 import javax.annotation.Nonnegative;
@@ -12,6 +13,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class represents the data structure of an {@link ObservationTable} wihout providing
+ * any meaningful functionalily. It is used to store the result of reading string representations
+ * like with {@link OTUtils#fromString(String, net.automatalib.words.Alphabet, ObservationTableReader)}.
+ *
+ * @param <I>
+ *     The input type.
+ * @param <O>
+ *     The output type.
+ */
 public class SimpleObservationTable<I,O> implements ObservationTable<I,O> {
 
 	final List<? extends Word<I>> suffixes;
