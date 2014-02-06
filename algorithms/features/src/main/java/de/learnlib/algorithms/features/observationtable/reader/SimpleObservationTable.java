@@ -34,19 +34,19 @@ public class SimpleObservationTable<I,O> implements ObservationTable<I,O> {
 	@Nonnull
 	@Override
 	public Collection<? extends Word<I>> getShortPrefixes() {
-		throw new UnsupportedOperationException();
+		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
 	public Collection<? extends Word<I>> getLongPrefixes() {
-		throw new UnsupportedOperationException();
+		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
 	public Collection<? extends Word<I>> getAllPrefixes() {
-		throw new UnsupportedOperationException();
+		return Collections.emptyList();
 	}
 
 	@Nonnull
@@ -64,7 +64,7 @@ public class SimpleObservationTable<I,O> implements ObservationTable<I,O> {
 	@Nonnull
 	@Override
 	public Collection<? extends Row<I, O>> getShortPrefixRows() {
-		throw new UnsupportedOperationException();
+		return Collections.emptyList();
 	}
 
 	@Nonnull
@@ -76,24 +76,24 @@ public class SimpleObservationTable<I,O> implements ObservationTable<I,O> {
 	@Nonnull
 	@Override
 	public Collection<? extends Row<I, O>> getAllRows() {
-		throw new UnsupportedOperationException();
+		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
 	public Row<I, O> getRow(Word<I> prefix) throws NoSuchRowException {
-		throw new UnsupportedOperationException();
+		throw new NoSuchRowException();
 	}
 
 	@Nullable
 	@Override
 	public Row<I, O> getSuccessorRow(Row<I, O> spRow, @Nullable I symbol) throws InvalidRowException {
-		throw new UnsupportedOperationException();
+		throw new InvalidRowException();
 	}
 
 	@Override
 	public boolean isClosed() {
-		throw new UnsupportedOperationException();
+		return false;
 	}
 
 	@Nullable
@@ -104,7 +104,7 @@ public class SimpleObservationTable<I,O> implements ObservationTable<I,O> {
 
 	@Override
 	public boolean isConsistent(Collection<? extends I> inputs) {
-		throw new UnsupportedOperationException();
+		return false;
 	}
 
 	@Nullable
