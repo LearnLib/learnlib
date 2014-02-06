@@ -1,6 +1,7 @@
 package de.learnlib.algorithms.features.observationtable.writer.otsource;
 
 import de.learnlib.algorithms.features.observationtable.ObservationTable;
+import de.learnlib.algorithms.features.observationtable.reader.SimpleObservationTable;
 import net.automatalib.words.Word;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class ObservationTableSource {
 		suffixes.add(Word.fromLetter("A"));
 		suffixes.add(Word.fromLetter("B"));
 		suffixes.add(Word.fromLetter("A").concat(Word.fromLetter("B")));
-		return new SimpleObservationTable(suffixes);
+		return new SimpleObservationTable<>(suffixes);
 	}
 
 	public static ObservationTable<String,String> otWithFourSuffixesUsingDelimiterInNames() {
@@ -29,7 +30,7 @@ public class ObservationTableSource {
 		suffixes.add(Word.fromLetter("A,"));
 		suffixes.add(Word.fromLetter("B"));
 		suffixes.add(Word.fromLetter("A,").concat(Word.fromLetter("B")));
-		return new SimpleObservationTable(suffixes);
+		return new SimpleObservationTable<>(suffixes);
 	}
 
 
