@@ -140,11 +140,11 @@ public class ClassicLStarMealy<I, O> extends
 	protected SuffixOutput<I, O> hypothesisOutput() {
 		return new SuffixOutput<I,O>() {
 			@Override
-			public O computeOutput(Iterable<I> input) {
+			public O computeOutput(Iterable<? extends I> input) {
 				return computeSuffixOutput(Collections.<I>emptyList(), input);
 			}
 			@Override
-			public O computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+			public O computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 				Word<O> wordOut = internalHyp.computeSuffixOutput(prefix, suffix);
 				if(wordOut.isEmpty())
 					return null;
