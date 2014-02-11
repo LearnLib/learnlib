@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -16,219 +16,64 @@
  */
 package de.learnlib.parallelism;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
-
 
 /**
- * A membership oracle that distributes a set of queries among several threads.
+ * Basic interface for {@link MembershipOracle}s that can process queries
+ * in parallel.
+ * <p>
+ * Parallel oracles usually use one or more dedicated worker threads in which the
+ * processing of queries is performed. Since these do not have a defined life span,
+ * they must be terminated explicitly using {@link #shutdown()} or {@link #shutdownNow()}. 
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
- * @param <I> input symbol class
- * @param <O> output class
+ * @param <I> input symbol type
+ * @param <O> output type
  */
-public class ParallelOracle<I, O> implements MembershipOracle<I, O> {
-	
-	
-	
-	// TODO Does this number make sense?
-	public static int DEFAULT_MIN_BATCH_SIZE = 10;
-	
-	private final int minBatchSize;
-	private final OracleWorker<I, O>[] workers;
-	private final Thread[] workerThreads;
-	private final MembershipOracle<I,O> thisThreadOracle;
-
-	/**
-	 * Constructor for using (potentially) <i>separate</i> oracles for each worker thread,
-	 * with a default minimum batch size.
-	 * @param oracles the oracles to use for answering the queries. The cardinality of this
-	 * list coincides with the number of threads created.
-	 */
-	public ParallelOracle(List<? extends MembershipOracle<I,O>> oracles) {
-		this(oracles, DEFAULT_MIN_BATCH_SIZE);
-	}
+public interface ParallelOracle<I, O> extends MembershipOracle<I, O> {
 	
 	/**
-	 * Constructor for using (potentially) <i>separate</i> oracles for each worker thread.
-	 * @param oracles the oracles to use for answering the queries. The cardinality of this
-	 * list coincides with the number of threads created.
-	 * @param minBatchSize the minimum batch size
-	 */
-	@SuppressWarnings("unchecked")
-	public ParallelOracle(List<? extends MembershipOracle<I,O>> oracles, int minBatchSize) {
-		int numOracles = oracles.size();
-		if(numOracles <= 0)
-			throw new IllegalArgumentException("Must provide at least one oracle");
-		workers = new OracleWorker[numOracles - 1];
-		workerThreads = new Thread[numOracles - 1];
-		Iterator<? extends MembershipOracle<I,O>> it = oracles.iterator();
-		thisThreadOracle = it.next();
-		int i = 0;
-		while(it.hasNext()) {
-			MembershipOracle<I,O> oracle = it.next();
-			OracleWorker<I,O> worker = new OracleWorker<>(oracle);
-			workers[i++] = worker;
-		}
-		this.minBatchSize = minBatchSize;
-	}
-	
-	/**
-	 * Constructor for using one <i>shared</i> oracle for all worker threads,
-	 * with the default minimum batch size.
-	 * @param sharedOracle the shared oracle
-	 * @param numInstances the number of threads to create
-	 */
-	public ParallelOracle(MembershipOracle<I,O> sharedOracle, int numInstances) {
-		this(sharedOracle, numInstances, DEFAULT_MIN_BATCH_SIZE);
-	}
-	
-	/**
-	 * Constructor for using one <i>shared</i> oracle for all worker threads,
-	 * with a custom minimum batch size.
-	 * @param sharedOracle the shared oracle
-	 * @param numInstances the number of threads to create
-	 * @param minBatchSize the minimum batch size
-	 */
-	@SuppressWarnings("unchecked")
-	public ParallelOracle(MembershipOracle<I,O> sharedOracle, int numInstances, int minBatchSize) {
-		if(numInstances <= 0)
-			throw new IllegalArgumentException("Must have at least one oracle instance");
-		numInstances--;
-		workers = new OracleWorker[numInstances];
-		workerThreads = new Thread[numInstances];
-		thisThreadOracle = sharedOracle;
-		for(int i = 0; i < numInstances; i++) {
-			OracleWorker<I,O> worker = new OracleWorker<>(sharedOracle);
-			workers[i] = worker;
-		}
-		this.minBatchSize = minBatchSize;
-	}
-	
-	/**
-	 * Starts all worker threads.
-	 */
-	public synchronized void startWorkers() {
-		if(workerThreads.length > 0 && workerThreads[0] != null)
-			throw new IllegalStateException("ParallelOracle already started");
-		
-		for(int i = 0; i < workers.length; i++) {
-			Thread t = new Thread(workers[i]);
-			workerThreads[i] = t;
-			t.start();
-		}
-	}
-	
-	/**
-	 * Starts all worker threads.
-	 * @deprecated since 2014-01-13. Prefer {@link #startWorkers()} as it is more explicit.
-	 */
-	@Deprecated
-	public void start() {
-		startWorkers();
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public synchronized void processQueries(Collection<? extends Query<I, O>> queries) {
-		if(workerThreads.length > 0 && workerThreads[0] == null)
-			throw new IllegalStateException("ParallelOracle was not started");
-		
-		int num = queries.size();
-		if(num <= 0)
-			return;
-		
-		int numBatches = (num - minBatchSize)/minBatchSize + 1;
-		if(numBatches > workers.length + 1)
-			numBatches = workers.length + 1;
-		
-		// Calculate the number of full and non-full batches. The difference in size
-		// will never exceed one (cf. pidgeonhole principle)
-		int fullBatchSize = (num - 1)/numBatches + 1;
-		int nonFullBatches = fullBatchSize*numBatches - num;
-		
-		Iterator<? extends Query<I,O>> queryIt = queries.iterator();
-		
-		// One batch is always executed in the local thread. This saves the thread creation
-		// overhead for the common case where the batch size is quite small.
-		int externalBatches = numBatches - 1;
-		
-		// If we decide not to need any external threads, we can save initializing synchronization
-		// measures.
-		CountDownLatch finishSignal = (externalBatches > 0) ? new CountDownLatch(externalBatches) : null;
-		
-		// Start the threads for the external batches
-		for(int i = 0; i < externalBatches; i++) {
-			int bs = fullBatchSize;
-			if(i < nonFullBatches)
-				bs--;
-			Query<I,O>[] batch = new Query[bs];
-			for(int j = 0; j < bs; j++)
-				batch[j] = queryIt.next();
-			
-			workers[i].offerBatch(batch, finishSignal);
-		}
-		
-		// Finally, prepare and process the batch for the oracle executed in this thread.
-		Query<I,O>[] batch = new Query[fullBatchSize];
-		for(int j = 0; j < fullBatchSize; j++)
-			batch[j] = queryIt.next();
-		
-		thisThreadOracle.processQueries(Arrays.asList(batch));
-		
-		// FIXME: Needs deadlock prevention
-		if(finishSignal != null) {
-			try {
-				finishSignal.await();
-			} catch (InterruptedException e) {
-				throw new IllegalStateException(e);
-			}
-		}
-	}
-	
-	/**
-	 * Stop all worker threads. After this method has been called, invoking {@link #processQueries(Collection)}
-	 * will result in an {@link IllegalStateException} until the next call to {@link #startWorkers()}
-	 * is made. 
-	 */
-	public synchronized void stopWorkers() {
-		if(workerThreads.length > 0 && workerThreads[0] == null) {
-			throw new IllegalStateException("Parallel oracle was not started");
-		}
-		
-		for(int i = 0; i < workers.length; i++) {
-			workers[i].stop();
-		}
-		for(int i = 0; i < workerThreads.length; i++) {
-			try {
-				workerThreads[i].join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			workerThreads[i] = null;
-		}
-	}
-	
-	/**
-	 * Stop all worker threads; cf. {@link #stopWorkers()}.
+	 * The policy for dealing with thread pools.
 	 * 
-	 * @deprecated since 2014-01-13. Prefer {@link #stopWorkers()} as it is more explicit
+	 * @author Malte Isberner
+	 *
 	 */
-	@Deprecated
-	public void stop() {
-		stopWorkers();
+	public enum PoolPolicy {
+		/**
+		 * Maintain a fixed thread pool. The threads will be started immediately,
+		 * and will terminate only if {@link ParallelOracle#shutdown()} or
+		 * {@link ParallelOracle#shutdownNow()} are called.
+		 * @see Executors#newFixedThreadPool(int)
+		 */
+		FIXED,
+		/**
+		 * Maintain a "cached" thread pool. Threads will be created on-demand,
+		 * but will be kept alive for re-use when all jobs are processed. However,
+		 * they will be terminated when they have been idle for 100 seconds.
+		 * <p>
+		 * Note that as opposed to {@link Executors#newCachedThreadPool()}, the
+		 * specified pool size will never be exceeded.
+		 * 
+		 * @see Executors#newCachedThreadPool()
+		 */
+		CACHED
 	}
-
+	
+	/**
+	 * Shuts down all worker threads, but waits for any queued queries
+	 * to be processed.
+	 * @see ExecutorService#shutdown()
+	 */
+	public void shutdown();
+	
+	/**
+	 * Shuts down all worker threads, and attempts to abort any query
+	 * processing currently taking place.
+	 * @see ExecutorService#shutdownNow()
+	 */
+	public void shutdownNow();
 }
