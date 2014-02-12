@@ -16,17 +16,17 @@
  */
 package de.learnlib.mealy;
 
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
-
-import net.automatalib.words.Word;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.Query;
+
+import net.automatalib.words.Word;
 
 
 /**
@@ -71,7 +71,12 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 			}
 			originalQuery.answer(output.isEmpty() ? null : output.lastSymbol());
 		}
-		
+
+		@Override
+		public String toString() {
+			return originalQuery.toString();
+		}
+
 	}
 	
 	private final MembershipOracle<I,Word<O>> wordOracle;

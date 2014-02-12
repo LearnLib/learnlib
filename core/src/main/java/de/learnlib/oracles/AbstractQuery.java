@@ -53,4 +53,15 @@ public abstract class AbstractQuery<I, O> extends Query<I, O> {
 		return suffix;
 	}
 
+	/**
+	 * Returns the string representation of this query, including a possible answer.
+	 * This method should be used by classes extending {@link AbstractQuery} for their
+	 * toString method to ensure output consistency.
+	 *
+	 * @return A string of the form "Query[<prefix>|<suffix> / <answer>]". If the query
+	 * has not been answered yet, <answer> will be null.
+	 */
+	public String toStringWithAnswer(O answer) {
+		return "Query[" + prefix + '|' + suffix + " / " + answer + ']';
+	}
 }
