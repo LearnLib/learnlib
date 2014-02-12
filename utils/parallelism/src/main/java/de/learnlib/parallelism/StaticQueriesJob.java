@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2014 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -41,7 +41,6 @@ final class StaticQueriesJob<I, O> extends AbstractQueriesJob<I, O> {
 
 	@Override
 	protected MembershipOracle<I, O> getOracle() {
-		System.err.println("Processing queries using oracle " + oracle);
 		return oracle;
 	}
 

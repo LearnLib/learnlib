@@ -35,6 +35,27 @@ public class LearnLibSettings {
 
 
 	private final Properties properties = new Properties();
+	
+	private LearnLibSettings() {
+		try {
+			Enumeration<URL> resourceUrls = getClass().getClassLoader().getResources("learnlib.properties");
+			while(resourceUrls.hasMoreElements()) {
+				URL url = resourceUrls.nextElement();
+				try(BufferedInputStream is = new BufferedInputStream(url.openStream())) {
+					properties.load(is);
+				}
+				catch(IOException ex) {
+					LOG.severe("Could not read property file " + url + ": " + ex.getMessage());
+				}
+			}
+		}
+		catch(IOException ex) {
+			LOG.severe("Could not enumerate learnlib.properties files: " + ex.getMessage());
+		}
+
+		// System properties (specified via command line) override all other properties
+		properties.putAll(System.getProperties());
+	}
 
 
 	public String getProperty(String propName) {
@@ -100,29 +121,6 @@ public class LearnLibSettings {
 			}
 		}
 		return null;
-	}
-
-
-
-	private LearnLibSettings() {
-		try {
-			Enumeration<URL> resourceUrls = getClass().getClassLoader().getResources("learnlib.properties");
-			while(resourceUrls.hasMoreElements()) {
-				URL url = resourceUrls.nextElement();
-				try(BufferedInputStream is = new BufferedInputStream(url.openStream())) {
-					properties.load(is);
-				}
-				catch(IOException ex) {
-					LOG.severe("Could not read property file " + url + ": " + ex.getMessage());
-				}
-			}
-		}
-		catch(IOException ex) {
-			LOG.severe("Could not enumerate learnlib.properties files: " + ex.getMessage());
-		}
-
-		// System properties (specified via command line) override all other properties
-		properties.putAll(System.getProperties());
 	}
 
 }
