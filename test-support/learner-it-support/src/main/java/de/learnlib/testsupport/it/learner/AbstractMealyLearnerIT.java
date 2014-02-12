@@ -14,35 +14,33 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learner.testsupport.it.learner;
+package de.learnlib.testsupport.it.learner;
 
 import java.util.List;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import de.learner.testsupport.it.learner.LearnerVariantList.MealySymLearnerVariantList;
-import de.learner.testsupport.it.learner.internal.LearnerVariantListImpl.MealySymLearnerVariantListImpl;
-import de.learner.testsupport.it.learner.internal.SingleExampleAllVariantsITSubCase;
-import de.learnlib.api.MembershipOracle;
+
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
 import de.learnlib.examples.LearningExamples;
-import de.learnlib.mealy.MealyUtil;
 import de.learnlib.oracles.SimulatorOracle.MealySimulatorOracle;
+import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
+import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MealyLearnerVariantListImpl;
 
 /**
  * Abstract integration test for Mealy machine learning algorithms.
  * <p>
  * Mealy machine learning algorithms tested by this integration test are expected to
- * assume membership queries yield only the last symbol of the output word. If the
- * learning algorithm expects the full output word for the suffix part of the query,
- * use {@link AbstractMealySymLearnerIT}.
- * 
+ * assume membership queries yield the full output word corresponding to the suffix
+ * part of the query. If the learning algorithm only expects the last symbol as
+ * output, use {@link AbstractMealySymLearnerIT}.
+ *  
  * @author Malte Isberner
  *
  */
-public abstract class AbstractMealySymLearnerIT extends AbstractLearnerIT {
+public abstract class AbstractMealyLearnerIT extends AbstractLearnerIT {
 
 	
 	// @Factory FIXME
@@ -64,10 +62,10 @@ public abstract class AbstractMealySymLearnerIT extends AbstractLearnerIT {
 		Alphabet<I> alphabet = example.getAlphabet();
 		MealyMembershipOracle<I,O> mqOracle
 			= new MealySimulatorOracle<>(example.getReferenceAutomaton());
-		MealySymLearnerVariantListImpl<I,O> variants = new MealySymLearnerVariantListImpl<>();
-		addLearnerVariants(alphabet, MealyUtil.wrapWordOracle(mqOracle), variants);
+		MealyLearnerVariantListImpl<I,O> variants = new MealyLearnerVariantListImpl<>();
+		addLearnerVariants(alphabet, mqOracle, variants);
 		
-		return new SingleExampleAllVariantsITSubCase<>(example, variants.getMealyLearnerVariants());
+		return new SingleExampleAllVariantsITSubCase<>(example, variants);
 	}
 	
 	/**
@@ -80,6 +78,6 @@ public abstract class AbstractMealySymLearnerIT extends AbstractLearnerIT {
 	 */
 	protected abstract <I,O> void addLearnerVariants(
 			Alphabet<I> alphabet,
-			MembershipOracle<I,O> mqOracle,
-			MealySymLearnerVariantList<I,O> variants);
+			MealyMembershipOracle<I,O> mqOracle,
+			MealyLearnerVariantList<I,O> variants);
 }

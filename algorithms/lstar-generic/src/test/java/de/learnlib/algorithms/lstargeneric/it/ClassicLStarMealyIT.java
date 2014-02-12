@@ -17,14 +17,15 @@
 package de.learnlib.algorithms.lstargeneric.it;
 
 import net.automatalib.words.Alphabet;
-import de.learner.testsupport.it.learner.AbstractMealySymLearnerIT;
-import de.learner.testsupport.it.learner.LearnerVariantList.MealySymLearnerVariantList;
+
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.mealy.ClassicLStarMealyBuilder;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.testsupport.it.learner.AbstractMealySymLearnerIT;
+import de.learnlib.testsupport.it.learner.LearnerVariantList.MealySymLearnerVariantList;
 
 public class ClassicLStarMealyIT extends AbstractMealySymLearnerIT {
 

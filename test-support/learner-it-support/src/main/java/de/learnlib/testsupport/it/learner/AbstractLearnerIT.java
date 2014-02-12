@@ -14,12 +14,9 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learner.testsupport.it.learner;
+package de.learnlib.testsupport.it.learner;
 
 import org.testng.annotations.Test;
-
-import de.learner.testsupport.it.learner.internal.SingleExampleAllVariantsITSubCase;
-import de.learner.testsupport.it.learner.internal.SingleLearnerVariantITSubCase;
 
 /**
  * Abstract integration test for a learning algorithm (or "learner").
@@ -40,11 +37,14 @@ public abstract class AbstractLearnerIT {
 	 */
 	@Test
 	public void testAll() {
+		int testCounter = 0;
 		for(SingleExampleAllVariantsITSubCase<?, ?, ?> exampleSubCase : createExampleITCases()) {
 			for(SingleLearnerVariantITSubCase<?, ?, ?> variantSubCase : exampleSubCase.createSingleVariantITCases()) {
 				variantSubCase.testLearning();
+				testCounter++;
 			}
 		}
+		System.out.println("Ran " + testCounter + " tests");
 	}
 	
 	/**

@@ -14,34 +14,34 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learner.testsupport.it.learner.internal;
+package de.learnlib.parallelism;
 
-import de.learnlib.api.LearningAlgorithm;
+import java.util.Collection;
 
-public class LearnerVariant<M,I,O> {
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.Query;
+
+/**
+ * A queries job that maintains a fixed reference to a membership oracle,
+ * executes queries using this oracle regardless of the executing thread.
+ * 
+ * @author Malte Isberner
+ *
+ * @param <I> input symbol type
+ * @param <O> output type
+ */
+final class StaticQueriesJob<I, O> extends AbstractQueriesJob<I, O> {
+
+	private final MembershipOracle<I, O> oracle;
 	
-	private final String name;
-	private final LearningAlgorithm<? extends M, I, O> learner;
-	private final int maxRounds;
-
-	public LearnerVariant(String name, LearningAlgorithm<? extends M,I,O> learner, int maxRounds) {
-		this.name = name;
-		this.learner = learner;
-		this.maxRounds = maxRounds;
+	public StaticQueriesJob(Collection<? extends Query<I, O>> queries, MembershipOracle<I, O> oracle) {
+		super(queries);
+		this.oracle = oracle;
 	}
 
-	public String getName() {
-		return name;
+	@Override
+	protected MembershipOracle<I, O> getOracle() {
+		return oracle;
 	}
-
-	public LearningAlgorithm<? extends M, I, O> getLearner() {
-		return learner;
-	}
-
-	public int getMaxRounds() {
-		return maxRounds;
-	}
-	
-	
 
 }

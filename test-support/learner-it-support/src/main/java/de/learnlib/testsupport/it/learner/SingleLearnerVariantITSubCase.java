@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learner.testsupport.it.learner.internal;
+package de.learnlib.testsupport.it.learner;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.SuffixOutput;
@@ -31,7 +31,7 @@ import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.examples.LearningExample;
 import de.learnlib.oracles.DefaultQuery;
 
-public final class SingleLearnerVariantITSubCase<I,O,
+final class SingleLearnerVariantITSubCase<I,O,
 	M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I,O>> implements ITest {
 	
 	private final LearnerVariant<? extends M, I, O> variant;

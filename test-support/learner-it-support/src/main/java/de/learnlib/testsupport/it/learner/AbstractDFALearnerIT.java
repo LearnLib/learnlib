@@ -14,19 +14,19 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learner.testsupport.it.learner;
+package de.learnlib.testsupport.it.learner;
 
 import java.util.List;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
-import de.learner.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
-import de.learner.testsupport.it.learner.internal.LearnerVariantListImpl.DFALearnerVariantListImpl;
-import de.learner.testsupport.it.learner.internal.SingleExampleAllVariantsITSubCase;
+
 import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.examples.LearningExample.DFALearningExample;
 import de.learnlib.examples.LearningExamples;
 import de.learnlib.oracles.SimulatorOracle.DFASimulatorOracle;
+import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
+import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.DFALearnerVariantListImpl;
 
 
 /**

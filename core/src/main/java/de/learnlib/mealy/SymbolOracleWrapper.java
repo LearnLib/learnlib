@@ -18,10 +18,12 @@ package de.learnlib.mealy;
 
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
+
 import net.automatalib.words.Word;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -63,8 +65,10 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 		}
 
 		@Override
-		@SuppressWarnings("NullableProblems")
-		public void answer(@Nonnull Word<O> output) {
+		public void answer(Word<O> output) {
+			if(output == null) {
+				throw new IllegalArgumentException("Query answer words must not be null");
+			}
 			originalQuery.answer(output.isEmpty() ? null : output.lastSymbol());
 		}
 		

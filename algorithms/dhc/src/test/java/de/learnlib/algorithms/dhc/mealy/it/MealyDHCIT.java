@@ -17,10 +17,11 @@
 package de.learnlib.algorithms.dhc.mealy.it;
 
 import net.automatalib.words.Alphabet;
-import de.learner.testsupport.it.learner.AbstractMealyLearnerIT;
-import de.learner.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
+
 import de.learnlib.algorithms.dhc.mealy.factory.MealyDHCBuilder;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
+import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 
 public class MealyDHCIT extends AbstractMealyLearnerIT {
 	
