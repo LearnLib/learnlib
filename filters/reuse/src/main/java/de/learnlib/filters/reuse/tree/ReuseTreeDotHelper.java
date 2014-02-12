@@ -16,10 +16,10 @@
  */
 package de.learnlib.filters.reuse.tree;
 
+import java.util.Map;
+
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
-
-import java.util.Map;
 
 /**
  * {@link GraphDOTHelper} implementation for the {@link ReuseTree} that renders
@@ -35,6 +35,8 @@ import java.util.Map;
  */
 class ReuseTreeDotHelper<S, I, O> extends
 DefaultDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
+	
+
 	/*
 	 * (non-Javadoc)
 	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#getNodeProperties(java.lang.Object, java.util.Map)
@@ -45,7 +47,7 @@ DefaultDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
 		super.getNodeProperties(node, properties);
 		if (node.getSystemState() != null) {
 			properties.put(NodeAttrs.COLOR, "black");
-			properties.put("style", "filled");
+			properties.put(NodeAttrs.STYLE, "filled");
 			properties.put(NodeAttrs.SHAPE, "diamond");
 			properties.put("fontcolor", "white");
 		}

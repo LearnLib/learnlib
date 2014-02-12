@@ -17,14 +17,15 @@
 package de.learnlib.algorithms.lstargeneric.it;
 
 import net.automatalib.words.Alphabet;
-import de.learner.testsupport.it.learner.AbstractDFALearnerIT;
-import de.learner.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
+
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFABuilder;
 import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
+import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
 
 public class ExtensibleLStarDFAIT extends AbstractDFALearnerIT {
 

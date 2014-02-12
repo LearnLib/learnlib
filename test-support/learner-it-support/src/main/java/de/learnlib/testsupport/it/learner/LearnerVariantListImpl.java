@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learner.testsupport.it.learner.internal;
+package de.learnlib.testsupport.it.learner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +22,11 @@ import java.util.List;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Word;
-import de.learner.testsupport.it.learner.LearnerVariantList;
+
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.mealy.MealyUtil;
 
-public class LearnerVariantListImpl<M,I,O> implements LearnerVariantList<M, I, O> {
+class LearnerVariantListImpl<M,I,O> implements LearnerVariantList<M, I, O> {
 	
 	public static class DFALearnerVariantListImpl<I> extends LearnerVariantListImpl<DFA<?,I>,I,Boolean>
 			implements DFALearnerVariantList<I> {}

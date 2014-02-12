@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learner.testsupport.it.learner.internal;
+package de.learnlib.testsupport.it.learner;
 
 import java.util.List;
 
@@ -23,12 +23,12 @@ import net.automatalib.automata.concepts.SuffixOutput;
 
 import org.testng.annotations.Factory;
 
-import de.learner.testsupport.it.learner.internal.LearnerVariant;
-import de.learner.testsupport.it.learner.internal.LearnerVariantListImpl;
-import de.learner.testsupport.it.learner.internal.SingleLearnerVariantITSubCase;
 import de.learnlib.examples.LearningExample;
+import de.learnlib.testsupport.it.learner.LearnerVariant;
+import de.learnlib.testsupport.it.learner.LearnerVariantListImpl;
+import de.learnlib.testsupport.it.learner.SingleLearnerVariantITSubCase;
 
-public final class SingleExampleAllVariantsITSubCase<I,O,
+final class SingleExampleAllVariantsITSubCase<I,O,
 	A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, O>> {
 	
 	private final LearningExample<I, O, ? extends A> example;

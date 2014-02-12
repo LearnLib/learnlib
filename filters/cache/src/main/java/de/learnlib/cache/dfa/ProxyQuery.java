@@ -64,7 +64,7 @@ final class ProxyQuery<I> extends Query<I,Boolean> {
 	@Override
 	public void answer(Boolean output) {
 		origQuery.answer(output);
-		this.answer = output.booleanValue();
+		this.answer = output;
 	}
 	
 	/**

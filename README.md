@@ -22,9 +22,8 @@ Maintainers
 Resources
 ---------
 * **[LearnLib Web-page][3]**
-
-* **[Maven Project Site][5]**
-* **[API Documentation][6]**
+* **Maven Project Site (latest):** [snapshot](http://learnlib.github.io/learnlib/maven-site/latest-snapshot/) | [release](http://learnlib.github.io/learnlib/maven-site/latest-release/)
+* **API Documentation (latest):** [snapshot](http://learnlib.github.io/learnlib/maven-site/latest-snapshot/apidocs/) | [release](http://learnlib.github.io/learnlib/maven-site/latest-release/apidocs/)
 * [Q&A @ Google Groups][7] -- [learnlib-qa@googlegroups.com][8]
 * [Discussion @ Google Groups][9] -- [learnlib-discussion@googlegroups.com][10] 
 * [Developers @ Google Groups (closed group)][11] -- [learnlib-internal@googlegroups.com][12]
@@ -33,8 +32,8 @@ Resources
 [2]: http://www.cs.tu-dortmund.de
 [3]: http://www.learnlib.de
 [4]: https://github.com/misberner
-[5]: http://learnlib.github.io/learnlib/maven-site/
-[6]: http://learnlib.github.io/learnlib/maven-site/apidocs/
+[5]: http://learnlib.github.io/learnlib/maven-site/latest-snapshot/
+[6]: http://learnlib.github.io/learnlib/maven-site/latest-snapshot/apidocs/
 [7]: https://groups.google.com/forum/?fromgroups#!forum/learnlib-qa
 [8]: mailto:learnlib-qa@googlegroups.com
 [9]: https://groups.google.com/forum/?fromgroups#!forum/learnlib-discussion

@@ -43,6 +43,10 @@ http://www.gnu.de/documents/lgpl.en.html.
 		</dependency>
 		<dependency>
 			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-algorithm-features</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-counterexamples</artifactId>
 		</dependency>
 		

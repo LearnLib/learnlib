@@ -16,19 +16,27 @@
  */
 package de.learnlib.algorithms.baselinelstar;
 
+import com.google.common.collect.Maps;
+
+import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner.GlobalSuffixLearnerDFA;
+import de.learnlib.algorithms.features.observationtable.OTLearner;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.oracles.DefaultQuery;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.FastDFA;
+import net.automatalib.automata.fsa.impl.FastDFAState;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
+import javax.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import de.learnlib.api.LearningAlgorithm.DFALearner;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.DefaultQuery;
 
 /**
  * Implementation of the L* algorithm by Dana Angluin
@@ -36,13 +44,16 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <I>
  * 		input symbol class.
  */
-public class BaselineLStar<I> implements DFALearner<I> {
+public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, GlobalSuffixLearnerDFA<I> {
 
+	@Nonnull
 	private final Alphabet<I> alphabet;
 
+	@Nonnull
 	private final MembershipOracle<I, Boolean> oracle;
 
-	private ObservationTable<I> observationTable;
+	@Nonnull
+	private final ObservationTable<I> observationTable;
 
 	private boolean startLearningAlreadyCalled;
 
@@ -55,15 +66,13 @@ public class BaselineLStar<I> implements DFALearner<I> {
 	 * @param oracle
 	 * 		The {@link MembershipOracle} which is used for membership queries.
 	 */
-	public BaselineLStar(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
+	public BaselineLStar(@Nonnull Alphabet<I> alphabet, @Nonnull MembershipOracle<I, Boolean> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		this.observationTable = new ObservationTable<>();
 
-		LinkedHashSet<Word<I>> initialCandidates = observationTable.getCandidates();
-
 		for (I alphabetSymbol : alphabet) {
-			initialCandidates.add(Word.fromLetter(alphabetSymbol));
+			observationTable.addLongPrefix(Word.fromLetter(alphabetSymbol));
 		}
 	}
 
@@ -75,8 +84,8 @@ public class BaselineLStar<I> implements DFALearner<I> {
 
 		final List<Word<I>> allSuffixes = observationTable.getSuffixes();
 
-		processMembershipQueriesForStates(observationTable.getStates(), allSuffixes);
-		processMembershipQueriesForStates(observationTable.getCandidates(), allSuffixes);
+		processMembershipQueriesForStates(observationTable.getShortPrefixLabels(), allSuffixes);
+		processMembershipQueriesForStates(observationTable.getLongPrefixLabels(), allSuffixes);
 
 		makeTableClosedAndConsistent();
 
@@ -84,21 +93,24 @@ public class BaselineLStar<I> implements DFALearner<I> {
 	}
 
 	@Override
-	public boolean refineHypothesis(DefaultQuery<I, Boolean> ceQuery) {
+	public boolean refineHypothesis(@Nonnull DefaultQuery<I, Boolean> ceQuery) {
 		if (!startLearningAlreadyCalled) {
 			throw new IllegalStateException("Unable to refine hypothesis before first learn iteration!");
 		}
 
-		LinkedHashSet<Word<I>> states = observationTable.getStates();
-		LinkedHashSet<Word<I>> candidates = observationTable.getCandidates();
-
 		LinkedHashSet<Word<I>> prefixes = prefixesOfWordNotInStates(ceQuery.getInput());
 
-		states.addAll(prefixes);
-		removeStatesFromCandidates();
+		for (Word<I> prefix : prefixes) {
+			observationTable.addShortPrefix(prefix);
+		}
+
+		observationTable.removeShortPrefixesFromLongPrefixes();
 
 		LinkedHashSet<Word<I>> newCandidates = getNewCandidatesFromPrefixes(prefixes);
-		candidates.addAll(newCandidates);
+
+		for (Word<I> candidate : newCandidates) {
+			observationTable.addLongPrefix(candidate);
+		}
 
 		processMembershipQueriesForStates(prefixes, observationTable.getSuffixes());
 		processMembershipQueriesForStates(newCandidates, observationTable.getSuffixes());
@@ -108,11 +120,12 @@ public class BaselineLStar<I> implements DFALearner<I> {
 		return true;
 	}
 
-	private LinkedHashSet<Word<I>> prefixesOfWordNotInStates(Word<I> word) {
-		LinkedHashSet<Word<I>> states = observationTable.getStates();
+	@Nonnull
+	private LinkedHashSet<Word<I>> prefixesOfWordNotInStates(@Nonnull Word<I> word) {
+		List<Word<I>> states = observationTable.getShortPrefixLabels();
 
 		LinkedHashSet<Word<I>> prefixes = new LinkedHashSet<>();
-		for (Word<I> prefix : prefixesOfWord(word)) {
+		for (Word<I> prefix : word.prefixes(false)) {
 			if (!states.contains(prefix)) {
 				prefixes.add(prefix);
 			}
@@ -121,19 +134,14 @@ public class BaselineLStar<I> implements DFALearner<I> {
 		return prefixes;
 	}
 
-	private void removeStatesFromCandidates() {
-		LinkedHashSet<Word<I>> states = observationTable.getStates();
-		LinkedHashSet<Word<I>> candidates = observationTable.getCandidates();
-		candidates.removeAll(states);
-	}
-
-	private LinkedHashSet<Word<I>> getNewCandidatesFromPrefixes(LinkedHashSet<Word<I>> prefixes) {
+	@Nonnull
+	private LinkedHashSet<Word<I>> getNewCandidatesFromPrefixes(@Nonnull LinkedHashSet<Word<I>> prefixes) {
 		LinkedHashSet<Word<I>> newCandidates = new LinkedHashSet<>();
 
 		for (Word<I> prefix : prefixes) {
 			Set<Word<I>> possibleCandidates = appendAlphabetSymbolsToWord(prefix);
 			for (Word<I> possibleCandidate :possibleCandidates) {
-				if (!observationTable.getStates().contains(possibleCandidate)) {
+				if (!observationTable.getShortPrefixLabels().contains(possibleCandidate)) {
 					newCandidates.add(possibleCandidate);
 				}
 			}
@@ -152,7 +160,8 @@ public class BaselineLStar<I> implements DFALearner<I> {
 	 *      A set with the size of the alphabet, containing each time the word
 	 *      appended with an alphabet symbol.
 	 */
-	private LinkedHashSet<Word<I>> appendAlphabetSymbolsToWord(Word<I> word) {
+	@Nonnull
+	private LinkedHashSet<Word<I>> appendAlphabetSymbolsToWord(@Nonnull Word<I> word) {
 		LinkedHashSet<Word<I>> newCandidates = new LinkedHashSet<>(alphabet.size());
 		for (I alphabetSymbol : alphabet) {
 			Word<I> newCandidate = word.append(alphabetSymbol);
@@ -167,7 +176,41 @@ public class BaselineLStar<I> implements DFALearner<I> {
 			throw new IllegalStateException("Unable to get hypothesis model before first learn iteration!");
 		}
 
-		return observationTable.toAutomaton(alphabet);
+		FastDFA<I> automaton = new FastDFA<>(alphabet);
+		Map<List<Boolean>, FastDFAState> dfaStates = Maps.newHashMapWithExpectedSize(
+				observationTable.getShortPrefixRows().size());
+
+		for (ObservationTableRow<I> stateRow : observationTable.getShortPrefixRows()) {
+			if (dfaStates.containsKey(stateRow.getContents())) {
+				continue;
+			}
+
+			FastDFAState dfaState;
+
+			if (stateRow.getLabel().isEmpty()) {
+				dfaState = automaton.addInitialState();
+			}
+			else {
+				dfaState = automaton.addState();
+			}
+
+			Word<I> emptyWord = Word.epsilon();
+			int positionOfEmptyWord = observationTable.getSuffixes().indexOf(emptyWord);
+			dfaState.setAccepting(stateRow.getContents().get(positionOfEmptyWord));
+			dfaStates.put(stateRow.getContents(), dfaState);
+		}
+
+		for (ObservationTableRow<I> stateRow : observationTable.getShortPrefixRows()) {
+			FastDFAState dfaState = dfaStates.get(stateRow.getContents());
+			for (I alphabetSymbol : alphabet) {
+				Word<I> word = stateRow.getLabel().append(alphabetSymbol);
+
+				final int index = alphabet.getSymbolIndex(alphabetSymbol);
+				dfaState.setTransition(index, dfaStates.get(observationTable.getRowForPrefix(word).getContents()));
+			}
+		}
+
+		return automaton;
 	}
 
 	/**
@@ -198,12 +241,12 @@ public class BaselineLStar<I> implements DFALearner<I> {
 		Word<I> candidate = observationTable.findUnclosedState();
 
 		while (candidate != null) {
-			observationTable.getStates().add(candidate);
-			observationTable.getCandidates().remove(candidate);
+			observationTable.moveLongPrefixToShortPrefixes(candidate);
 
 			LinkedHashSet<Word<I>> newCandidates = appendAlphabetSymbolsToWord(candidate);
-
-			observationTable.getCandidates().addAll(newCandidates);
+			for (Word<I> newCandidate : newCandidates) {
+				observationTable.addLongPrefix(newCandidate);
+			}
 
 			processMembershipQueriesForStates(newCandidates, observationTable.getSuffixes());
 
@@ -217,14 +260,19 @@ public class BaselineLStar<I> implements DFALearner<I> {
 	private void ensureConsistency() {
 		InconsistencyDataHolder<I> dataHolder = observationTable.findInconsistentSymbol(alphabet);
 
+		if (dataHolder == null) {
+			// It seems like this method has been called without checking if table is inconsistent first
+			return;
+		}
+
 		Word<I> witness = observationTable.determineWitnessForInconsistency(dataHolder);
 		Word<I> newSuffix = Word.fromSymbols(dataHolder.getDifferingSymbol()).concat(witness);
-		observationTable.getSuffixes().add(newSuffix);
+		observationTable.addSuffix(newSuffix);
 
 		List<Word<I>> singleSuffixList = Collections.singletonList(newSuffix);
 
-		processMembershipQueriesForStates(observationTable.getStates(), singleSuffixList);
-		processMembershipQueriesForStates(observationTable.getCandidates(), singleSuffixList);
+		processMembershipQueriesForStates(observationTable.getShortPrefixLabels(), singleSuffixList);
+		processMembershipQueriesForStates(observationTable.getLongPrefixLabels(), singleSuffixList);
 	}
 
 	/**
@@ -237,11 +285,12 @@ public class BaselineLStar<I> implements DFALearner<I> {
 	 * @param suffixes
 	 * 		The suffixes which are appended to the states before sending the resulting word to the oracle.
 	 */
-	private void processMembershipQueriesForStates(LinkedHashSet<Word<I>> states, Collection<Word<I>> suffixes) {
+	private void processMembershipQueriesForStates(@Nonnull Collection<Word<I>> states,
+			@Nonnull Collection<? extends Word<I>> suffixes) {
 		List<DefaultQuery<I, Boolean>> queries = new ArrayList<>(states.size());
-		for (Word<I> state : states) {
+		for (Word<I> label : states) {
 			for (Word<I> suffix : suffixes) {
-				queries.add(new DefaultQuery<I, Boolean>(state, suffix));
+				queries.add(new DefaultQuery<I, Boolean>(label, suffix));
 			}
 		}
 
@@ -255,25 +304,34 @@ public class BaselineLStar<I> implements DFALearner<I> {
 		}
 	}
 
-	/**
-	 * A {@link Word} of the length n may have n prefixes of the length 1-n.
-	 * This method returns all of them.
-	 *
-	 * @param word
-	 * 		The word for which the prefixes should be returned.
-	 * @return A list of all prefixes for the given word.
-	 */
-	// FIXME: This is superseded by Word.suffixes(boolean). Please adapt -misberner
-	private static <I> List<Word<I>> prefixesOfWord(Word<I> word) {
-		List<Word<I>> prefixes = new ArrayList<>(word.size());
-		for (int i = 1; i <= word.size(); i++) {
-			prefixes.add(word.prefix(i));
-		}
-		return prefixes;
-	}
-
+	@Nonnull
 	public String getStringRepresentationOfObservationTable() {
 		return ObservationTablePrinter.getPrintableStringRepresentation(observationTable);
 	}
 
+	@Override
+	@Nonnull
+	public Collection<? extends Word<I>> getGlobalSuffixes() {
+		return Collections.unmodifiableCollection(observationTable.getSuffixes());
+	}
+
+	@Override
+	public boolean addGlobalSuffixes(@Nonnull Collection<? extends Word<I>> newGlobalSuffixes) {
+		observationTable.getSuffixes().addAll(newGlobalSuffixes);
+
+		int numStatesOld = observationTable.getShortPrefixRows().size();
+
+		processMembershipQueriesForStates(observationTable.getShortPrefixLabels(), newGlobalSuffixes);
+		processMembershipQueriesForStates(observationTable.getLongPrefixLabels(), newGlobalSuffixes);
+
+		closeTable();
+
+		return (observationTable.getShortPrefixRows().size() != numStatesOld);
+	}
+
+	@Override
+	@Nonnull
+	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, Boolean> getObservationTable() {
+		return observationTable;
+	}
 }

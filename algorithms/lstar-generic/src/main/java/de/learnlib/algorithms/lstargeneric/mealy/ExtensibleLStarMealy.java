@@ -29,17 +29,17 @@ import net.automatalib.words.Word;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
+import de.learnlib.algorithms.features.observationtable.OTLearner.OTLearnerMealy;
 import de.learnlib.algorithms.lstargeneric.ExtensibleAutomatonLStar;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.table.Row;
-import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
 public class ExtensibleLStarMealy<I, O> extends
 		ExtensibleAutomatonLStar<MealyMachine<?,I,?,O>, I, Word<O>, Integer, CompactMealyTransition<O>, Void, O, CompactMealy<I,O>>
-		implements MealyLearner<I,O> {
+		implements OTLearnerMealy<I,O> {
 	
 	private final List<O> outputTable
 		= new ArrayList<O>();

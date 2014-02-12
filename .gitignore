@@ -9,4 +9,7 @@ pom.xml.versionsBackup
 test-output/
 importers/
 /target/
+.factorypath
+"C:\\nppdf32Log\debuglog.txt"
+
 
