@@ -23,17 +23,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import net.automatalib.words.Word;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.oracles.DefaultQuery;
 
+import net.automatalib.words.Word;
+
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
 @Test
-public class ParallelOracleTest {
+public class StaticParallelOracleTest {
 	
 	public static final int NUM_ORACLES = 10;
 	public static final int MIN_BATCH_SIZE = 20;
@@ -91,49 +93,72 @@ public class ParallelOracleTest {
 		
 	}
 	
-	@Test
-	public void testParallelOracle() {
+	private StaticParallelOracle<Integer,TestOutput> parallelOracle;
+	
+	@BeforeClass
+	public void setUp() {
 		List<TestMembershipOracle> oracles = new ArrayList<TestMembershipOracle>(NUM_ORACLES);
 		for(int i = 0; i < NUM_ORACLES; i++) {
 			oracles.add(new TestMembershipOracle(i));
 		}
 		
-		ParallelOracle<Integer,TestOutput> po = new ParallelOracle<Integer,TestOutput>(oracles, MIN_BATCH_SIZE);
 		
-		po.startWorkers();
-		
+		parallelOracle = ParallelOracleBuilders.newStaticParallelOracle(oracles).withMinBatchSize(MIN_BATCH_SIZE).create();
+	}
+	
+	@AfterClass
+	public void tearDown() {
+		parallelOracle.shutdown();
+	}
+	
+	@Test
+	public void testLessThanMin() {
 		List<DefaultQuery<Integer,TestOutput>> queries = createQueries(MIN_BATCH_SIZE - 1);
-		po.processQueries(queries);
+		parallelOracle.processQueries(queries);
 		Analysis ana = analyze(queries);
 		sanityCheck(ana);
 		Assert.assertEquals(ana.involvedOracles.size(), 1);
-		
-		queries = createQueries(MIN_BATCH_SIZE);
-		po.processQueries(queries);
-		ana = analyze(queries);
+	}
+	
+	@Test
+	public void testMin() {
+		List<DefaultQuery<Integer,TestOutput>> queries = createQueries(MIN_BATCH_SIZE);
+		parallelOracle.processQueries(queries);
+		Analysis ana = analyze(queries);
 		sanityCheck(ana);
 		Assert.assertEquals(ana.involvedOracles.size(), 1);
-		
-		queries = createQueries(2*MIN_BATCH_SIZE - 1);
-		po.processQueries(queries);
-		ana = analyze(queries);
+	}
+	
+	@Test
+	public void testLessThanTwoBatches() {
+		List<DefaultQuery<Integer,TestOutput>> queries = createQueries(2*MIN_BATCH_SIZE - 1);
+		parallelOracle.processQueries(queries);
+		Analysis ana = analyze(queries);
 		sanityCheck(ana);
 		Assert.assertEquals(ana.involvedOracles.size(), 1);
-		
-		queries = createQueries(5*MIN_BATCH_SIZE + MIN_BATCH_SIZE/2);
-		po.processQueries(queries);
-		ana = analyze(queries);
+	}
+	
+	@Test
+	public void testLessThanSixBatches() {
+		List<DefaultQuery<Integer,TestOutput>> queries = createQueries(5*MIN_BATCH_SIZE + MIN_BATCH_SIZE/2);
+		parallelOracle.processQueries(queries);
+		Analysis ana = analyze(queries);
 		sanityCheck(ana);
 		Assert.assertEquals(ana.involvedOracles.size(), 5);
-		
-		queries = createQueries(2*NUM_ORACLES*MIN_BATCH_SIZE);
-		po.processQueries(queries);
-		ana = analyze(queries);
+	}
+	
+	@Test
+	public void testFullLoad() {
+		List<DefaultQuery<Integer,TestOutput>> queries = createQueries(2*NUM_ORACLES*MIN_BATCH_SIZE);
+		parallelOracle.processQueries(queries);
+		Analysis ana = analyze(queries);
 		sanityCheck(ana);
 		Assert.assertEquals(ana.involvedOracles.size(), NUM_ORACLES);
-		
-		po.stopWorkers();
 	}
+	
+	
+	
+	
 	
 	private static Analysis analyze(Collection<DefaultQuery<Integer,TestOutput>> queries) {
 		List<Integer> oracles = new ArrayList<>();
