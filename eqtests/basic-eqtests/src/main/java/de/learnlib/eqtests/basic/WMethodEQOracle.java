@@ -75,6 +75,10 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
 		this.maxDepth = maxDepth;
 		this.sulOracle = sulOracle;
 	}
+	
+	public void setMaxDepth(int maxDepth) {
+		this.maxDepth = maxDepth;
+	}
 
 	/*
 	 * (non-Javadoc)
