@@ -36,7 +36,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<modules>
 		<module>counterexamples</module>
 		<module>parallelism</module>
-		<module>evolving</module>
 	</modules>
 </project>
 
