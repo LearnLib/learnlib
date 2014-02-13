@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.google.common.base.Supplier;
 
 import de.learnlib.api.MembershipOracle;
@@ -33,13 +37,19 @@ import de.learnlib.parallelism.ParallelOracle.PoolPolicy;
  * @param <I> input symbol type
  * @param <O> output type
  */
+@ParametersAreNonnullByDefault
 public class StaticParallelOracleBuilder<I, O> {
 	
+	@Nonnegative
 	private int minBatchSize = StaticParallelOracle.DEFAULT_MIN_BATCH_SIZE;
+	@Nonnegative
 	private int numInstances = StaticParallelOracle.DEFAULT_NUM_INSTANCES;
+	@Nonnull
 	private PoolPolicy poolPolicy = StaticParallelOracle.DEFAULT_POOL_POLICY;
 	
+	@Nonnull
 	private final Collection<? extends MembershipOracle<I,O>> oracles;
+	@Nonnull
 	private final Supplier<? extends MembershipOracle<I,O>> oracleSupplier;
 	
 	
@@ -48,43 +58,49 @@ public class StaticParallelOracleBuilder<I, O> {
 		this.oracleSupplier = null;
 	}
 	
+	
 	public StaticParallelOracleBuilder(Supplier<? extends MembershipOracle<I,O>> oracleSupplier) {
 		this.oracles = null;
 		this.oracleSupplier = oracleSupplier;
 	}
 
-	
+	@Nonnull
 	public StaticParallelOracleBuilder<I,O> withDefaultMinBatchSize() {
 		this.minBatchSize = StaticParallelOracle.DEFAULT_MIN_BATCH_SIZE;
 		return this;
 	}
 	
-	
-	public StaticParallelOracleBuilder<I,O> withMinBatchSize(int minBatchSize) {
+	@Nonnull
+	public StaticParallelOracleBuilder<I,O> withMinBatchSize(@Nonnegative int minBatchSize) {
 		this.minBatchSize = minBatchSize;
 		return this;
 	}
 	
+	@Nonnull
 	public StaticParallelOracleBuilder<I,O> withDefaultPoolPolicy() {
 		this.poolPolicy = StaticParallelOracle.DEFAULT_POOL_POLICY;
 		return this;
 	}
 	
+	@Nonnull
 	public StaticParallelOracleBuilder<I,O> withPoolPolicy(PoolPolicy policy) {
 		this.poolPolicy = policy;
 		return this;
 	}
 	
+	@Nonnull
 	public StaticParallelOracleBuilder<I,O> withDefaultNumInstances() {
 		this.numInstances = StaticParallelOracle.DEFAULT_NUM_INSTANCES;
 		return this;
 	}
 	
-	public StaticParallelOracleBuilder<I,O> withNumInstances(int numInstances) {
+	@Nonnull
+	public StaticParallelOracleBuilder<I,O> withNumInstances(@Nonnegative int numInstances) {
 		this.numInstances = numInstances;
 		return this;
 	}
 	
+	@Nonnull
 	public StaticParallelOracle<I,O> create() {
 		Collection<? extends MembershipOracle<I, O>> oracleInstances;
 		if(oracles != null) {

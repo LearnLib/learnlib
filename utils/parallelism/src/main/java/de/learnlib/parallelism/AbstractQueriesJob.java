@@ -18,6 +18,9 @@ package de.learnlib.parallelism;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 
@@ -31,10 +34,12 @@ import de.learnlib.api.Query;
  * @param <I> input symbol type
  * @param <O> output type
  */
+@ParametersAreNonnullByDefault
 abstract class AbstractQueriesJob<I, O> implements Runnable {
 	
 	private final Collection<? extends Query<I,O>> queries;
 	
+	@Nonnull
 	protected abstract MembershipOracle<I,O> getOracle();
 	
 	public AbstractQueriesJob(Collection<? extends Query<I,O>> queries) {

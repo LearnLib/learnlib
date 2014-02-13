@@ -21,6 +21,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 
@@ -63,28 +66,34 @@ import de.learnlib.api.MembershipOracle;
  * @author Malte Isberner
  *
  */
+@ParametersAreNonnullByDefault
 public abstract class ParallelOracleBuilders {
 	
+	@Nonnull
 	public static <I,O>
 	DynamicParallelOracleBuilder<I, O> newDynamicParallelOracle(MembershipOracle<I,O> sharedOracle) {
 		return newDynamicParallelOracle(Suppliers.ofInstance(sharedOracle));
 	}
 	
+	@Nonnull
 	public static <I,O>
 	DynamicParallelOracleBuilder<I,O> newDynamicParallelOracle(Supplier<? extends MembershipOracle<I,O>> oracleSupplier) {
 		return new DynamicParallelOracleBuilder<>(oracleSupplier);
 	}
 	
+	@Nonnull
 	public static <I,O>
 	StaticParallelOracleBuilder<I, O> newStaticParallelOracle(MembershipOracle<I,O> sharedOracle) {
 		return newStaticParallelOracle(Suppliers.ofInstance(sharedOracle));
 	}
 	
+	@Nonnull
 	public static <I,O>
 	StaticParallelOracleBuilder<I,O> newStaticParallelOracle(Supplier<? extends MembershipOracle<I,O>> oracleSupplier) {
 		return new StaticParallelOracleBuilder<>(oracleSupplier);
 	}
 	
+	@Nonnull
 	@SafeVarargs
 	public static <I,O>
 	StaticParallelOracleBuilder<I,O> newStaticParallelOracle(
@@ -96,6 +105,7 @@ public abstract class ParallelOracleBuilders {
 		return newStaticParallelOracle(oracles);
 	}
 	
+	@Nonnull
 	public static <I,O>
 	StaticParallelOracleBuilder<I,O> newStaticParallelOracle(Collection<? extends MembershipOracle<I,O>> oracles) {
 		return new StaticParallelOracleBuilder<>(oracles);
