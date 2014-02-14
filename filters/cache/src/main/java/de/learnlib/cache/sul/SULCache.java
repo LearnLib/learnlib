@@ -16,9 +16,16 @@
  */
 package de.learnlib.cache.sul;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import de.learnlib.api.SUL;
+import de.learnlib.cache.LearningCache.MealyLearningCache;
+import de.learnlib.cache.mealy.MealyCacheConsistencyTest;
 
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
@@ -26,9 +33,6 @@ import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.ts.transout.MealyTransitionSystem;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.WordBuilder;
-import de.learnlib.api.SUL;
-import de.learnlib.cache.LearningCache.MealyLearningCache;
-import de.learnlib.cache.mealy.MealyCacheConsistencyTest;
 
 /**
  * A cache to be used with a {@link SUL}.
@@ -82,14 +86,17 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 		private S current;
 		private final WordBuilder<I> inputWord = new WordBuilder<>();
 		private WordBuilder<O> outputWord;
+		private final Lock incMealyLock;
 		
-		public SULCacheImpl(IncrementalMealyBuilder<I,O> incMealy, MealyTransitionSystem<S,I,T,O> mealyTs, SUL<I,O> sul) {
+		public SULCacheImpl(IncrementalMealyBuilder<I,O> incMealy, Lock lock, MealyTransitionSystem<S,I,T,O> mealyTs, SUL<I,O> sul) {
 			this.incMealy = incMealy;
 			this.mealyTs = mealyTs;
 			this.delegate = sul;
+			this.incMealyLock = lock;
 		}
 		
 		public void pre() {
+			incMealyLock.lock();
 			this.current = mealyTs.getInitialState();
 		}
 		
@@ -106,6 +113,8 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 					assert current != null;
 				}
 				else {
+					// whenever current is not null, we are holding the lock
+					incMealyLock.unlock();
 					current = null;
 					outputWord = new WordBuilder<>();
 					delegate.pre();
@@ -125,9 +134,21 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 			return out;
 		}
 		
+		// TODO: The SUL interface might need a cleanup() method which, by contract,
+		// is to be called regardless of whether preceding step()s threw unrecoverable
+		// errors!
 		public void post() {
-			if(outputWord != null) {
-				incMealy.insert(inputWord.toWord(), outputWord.toWord());
+			try {
+				if(outputWord != null) {
+					// If outputWord is not null we DO NOT hold the lock!
+					incMealyLock.lock();
+					incMealy.insert(inputWord.toWord(), outputWord.toWord());
+				}
+				// otherwise we do, so the following call to unlock() is legal
+				// in any case
+			}
+			finally {
+				incMealyLock.unlock();
 			}
 			
 			inputWord.clear();
@@ -137,7 +158,7 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 		
 		@Nonnull
 		public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
-			return new MealyCacheConsistencyTest<>(incMealy);
+			return new MealyCacheConsistencyTest<>(incMealy, incMealyLock);
 		}
 	}
 	
@@ -153,8 +174,13 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 	public SULCache(Alphabet<I> alphabet, SUL<I,O> sul) {
 		this(new IncrementalMealyDAGBuilder<I,O>(alphabet), sul);
 	}
-	public SULCache(IncrementalMealyBuilder<I, O> incMealy, SUL<I,O> sul) {
-		this.impl = new SULCacheImpl<>(incMealy, incMealy.asTransitionSystem(), sul);
+	
+	public SULCache(IncrementalMealyBuilder<I,O> incMealy, SUL<I,O> sul) {
+		this(incMealy, new ReentrantLock(), sul);
+	}
+	
+	public SULCache(IncrementalMealyBuilder<I, O> incMealy, Lock lock, SUL<I,O> sul) {
+		this.impl = new SULCacheImpl<>(incMealy, lock, incMealy.asTransitionSystem(), sul);
 	}
 
 	/*

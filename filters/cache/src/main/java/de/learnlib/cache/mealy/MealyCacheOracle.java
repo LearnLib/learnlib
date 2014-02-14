@@ -22,6 +22,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.Query;
+import de.learnlib.cache.LearningCacheOracle.MealyLearningCacheOracle;
 
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.commons.util.mappings.Mapping;
@@ -31,9 +37,6 @@ import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
-import de.learnlib.cache.LearningCacheOracle.MealyLearningCacheOracle;
 
 /**
  * Mealy cache. This cache is implemented as a membership oracle: upon construction, it is
@@ -94,12 +97,18 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 	
 	private final MembershipOracle<I,Word<O>> delegate;
 	private final IncrementalMealyBuilder<I, O> incMealy;
+	private final Lock incMealyLock;
 	private final Comparator<? super Query<I,?>> queryCmp;
 	private final Mapping<? super O,? extends O> errorSyms;
 	
 	
-	public MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder, Mapping<? super O,? extends O> errorSyms, MembershipOracle<I,Word<O>> delegate) {
+	public MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder, Mapping<? super O,? extends O> errorSyms, MembershipOracle<I, Word<O>> delegate) {
+		this(incrementalBuilder, new ReentrantLock(), errorSyms, delegate);
+	}
+	
+	public MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder, Lock lock, Mapping<? super O,? extends O> errorSyms, MembershipOracle<I,Word<O>> delegate) {
 		this.incMealy = incrementalBuilder;
+		this.incMealyLock = lock;
 		this.queryCmp = new ReverseLexCmp<>(incrementalBuilder.getInputAlphabet());
 		this.errorSyms = errorSyms;
 		this.delegate = delegate;
@@ -138,7 +147,7 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 	 */
 	@Override
 	public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
-		return new MealyCacheConsistencyTest<>(incMealy);
+		return new MealyCacheConsistencyTest<>(incMealy, incMealyLock);
 	}
 
 	/*
@@ -159,28 +168,42 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 		Iterator<Query<I,Word<O>>> it = qrys.iterator();
 		Query<I,Word<O>> q = it.next();
 		Word<I> ref = q.getInput();
-		MasterQuery<I,O> master = createMasterQuery(ref);
-		if(master.getAnswer() == null)
-			masterQueries.add(master);
-		master.addSlave(q);
 		
-		while(it.hasNext()) {
-			q = it.next();
-			Word<I> curr = q.getInput();
-			if(!curr.isPrefixOf(ref)) {
-				master = createMasterQuery(curr);
-				if(master.getAnswer() == null)
-					masterQueries.add(master);
-			}
-			
+		incMealyLock.lock();
+		try {
+			MasterQuery<I,O> master = createMasterQuery(ref);
+			if(master.getAnswer() == null)
+				masterQueries.add(master);
 			master.addSlave(q);
-			ref = curr;
+			
+			while(it.hasNext()) {
+				q = it.next();
+				Word<I> curr = q.getInput();
+				if(!curr.isPrefixOf(ref)) {
+					master = createMasterQuery(curr);
+					if(master.getAnswer() == null)
+						masterQueries.add(master);
+				}
+				
+				master.addSlave(q);
+				ref = curr;
+			}
 		}
+		finally {
+			incMealyLock.unlock();
+		}
+		
 		
 		delegate.processQueries(masterQueries);
 		
-		for(MasterQuery<I,O> m : masterQueries)
-			postProcess(m);
+		incMealyLock.lock();
+		try {
+			for(MasterQuery<I,O> m : masterQueries)
+				postProcess(m);
+		}
+		finally {
+			incMealyLock.unlock();
+		}
 	}
 	
 	private void postProcess(MasterQuery<I,O> master) {
