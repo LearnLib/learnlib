@@ -248,8 +248,8 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 
 	/**
 	 * Clears the whole tree which means the root will be reinitialized by a new
-	 * {@link ReuseNode} and all invariant input symbols as well as all failure
-	 * output symbols will be removed.
+	 * {@link ReuseNode} and all existing system states will be disposed.
+	 * All invariant input symbols as well as all failure output symbols will remain.
 	 * <p>
 	 * The {@link SystemStateHandler} (
 	 * {@link #setSystemStateHandler(SystemStateHandler)}) will <b>not</b> be
@@ -257,9 +257,8 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 */
 	public synchronized void clearTree() {
 		this.nodeCount = 0;
+		disposeSystemstates(root);
 		this.root = createNode();
-		this.invariantInputSymbols.clear();
-		this.failureOutputSymbols.clear();
 	}
 
 	/**
