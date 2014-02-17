@@ -26,6 +26,9 @@ import java.util.Iterator;
  * A generic deque-derived container which transparently acts <i>either</i> as a stack <i>or</i>
  * a queue, and optionally a capacity restriction with a configurable policy which element is
  * evicted (or reject) if the maximum capacity is reached.
+ * <p>
+ * <b>Note:</b> Like {@link ArrayDeque}, this deque implementation is not thread-safe. Concurrent
+ * access by multiple threads requires explicit synchronization.
  * 
  * @author Malte Isberner
  *
