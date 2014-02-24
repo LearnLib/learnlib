@@ -76,6 +76,7 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		this.incrementalWMethodIt = new IncrementalWMethodTestsIterator<>(alphabet);
+		this.incrementalWMethodIt.setMaxDepth(maxDepth);
 		
 		this.maxDepth = maxDepth;
 	}
