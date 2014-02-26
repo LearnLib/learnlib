@@ -24,8 +24,16 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.api.QueryAnswerer;
 
+import net.automatalib.words.Word;
+
 @ParametersAreNonnullByDefault
 public abstract class AbstractSingleQueryOracle<I, O> implements MembershipOracle<I, O>, QueryAnswerer<I, O> {
+	
+	public static abstract class AbstractSingleQueryOracleDFA<I> extends AbstractSingleQueryOracle<I,Boolean> implements DFAMembershipOracle<I> {
+	}
+	
+	public static abstract class AbstractSingleQueryOracleMealy<I,O> extends AbstractSingleQueryOracle<I,Word<O>> implements MealyMembershipOracle<I,O> {
+	}
 
 	public AbstractSingleQueryOracle() {
 	}
