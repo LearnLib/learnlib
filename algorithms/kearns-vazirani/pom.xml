@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>de.learnlib</groupId>
+    <artifactId>learnlib-algorithms</artifactId>
+    <version>0.10.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>learnlib-kearns-vazirani</artifactId>
+  <name>LearnLib :: Algorithms :: Kearns/Vazirani</name>
+  <description>The automata learning algorithm described by Kearns &amp; Vazirani</description>
+  <dependencies>
+  	<dependency>
+  		<groupId>de.learnlib</groupId>
+  		<artifactId>learnlib-core</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>net.automatalib</groupId>
+  		<artifactId>automata-core</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>net.sf.trove4j</groupId>
+  		<artifactId>trove4j</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.github.misberner.jdtree</groupId>
+  		<artifactId>jdtree</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>de.learnlib.testsupport</groupId>
+  		<artifactId>learnlib-learner-it-support</artifactId>
+  		<scope>test</scope>
+  	</dependency>
+  </dependencies>
+</project>

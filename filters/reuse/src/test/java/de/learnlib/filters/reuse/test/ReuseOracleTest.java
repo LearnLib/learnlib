@@ -16,14 +16,6 @@
  */
 package de.learnlib.filters.reuse.test;
 
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
-
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import com.google.common.base.Supplier;
 
 import de.learnlib.filters.reuse.ReuseCapableOracle;
@@ -32,6 +24,14 @@ import de.learnlib.filters.reuse.ReuseException;
 import de.learnlib.filters.reuse.ReuseOracle;
 import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
+
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.Alphabets;
+
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * Simple tests for the reuse oracle without domain knowledge.
@@ -161,8 +161,8 @@ public class ReuseOracleTest {
 		
 		// we have automatic invalidation, so the reuseNode already has system state set to null
 		// and although querying again reveals nothing reusable
-		Integer invSystemState = node.reuseNode.getSystemState();
-		Assert.assertNull(invSystemState);
+		boolean hasSystemState = node.reuseNode.hasSystemStates();
+		Assert.assertFalse(hasSystemState);
 		node = reuseOracle.getReuseTree().fetchSystemState(getInput(1,1,1));
 		Assert.assertNull(node);
 	}

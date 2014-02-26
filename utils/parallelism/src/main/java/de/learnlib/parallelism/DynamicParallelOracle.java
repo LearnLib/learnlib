@@ -23,6 +23,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
 
@@ -39,6 +43,7 @@ import de.learnlib.settings.LearnLibSettings;
  * @param <I> input symbol type
  * @param <O> output type
  */
+@ParametersAreNonnullByDefault
 public class DynamicParallelOracle<I,O> implements ParallelOracle<I, O>{
 	
 	public static final int DEFAULT_BATCH_SIZE;
@@ -58,13 +63,16 @@ public class DynamicParallelOracle<I,O> implements ParallelOracle<I, O>{
 	
 	
 	
+	@Nonnull
 	private final ThreadLocal<MembershipOracle<I,O>> threadLocalOracle;
+	@Nonnull
 	private final ExecutorService executor;
+	@Nonnegative
 	private final int batchSize;
 
 	
 	public DynamicParallelOracle(final Supplier<? extends MembershipOracle<I,O>> oracleSupplier,
-			int batchSize,
+			@Nonnegative int batchSize,
 			ExecutorService executor) {
 		this.threadLocalOracle = new ThreadLocal<MembershipOracle<I,O>>() {
 			@Override

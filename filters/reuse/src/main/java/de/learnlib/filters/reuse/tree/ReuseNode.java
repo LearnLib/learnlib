@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -18,6 +18,10 @@ package de.learnlib.filters.reuse.tree;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
+
+import de.learnlib.filters.reuse.tree.BoundedDeque.AccessPolicy;
+import de.learnlib.filters.reuse.tree.BoundedDeque.EvictPolicy;
 
 /**
  * A {@link ReuseNode} is a vertex in the {@link ReuseTree} that contains (a
@@ -50,13 +54,15 @@ public class ReuseNode<S, I, O> {
 	}
 	
 	private final ReuseEdge<S,I,O>[] edges;
-	private S systemstate;
+	private final BoundedDeque<S> systemStates;
+	// private S systemstate;
 	private final int id;
 
 	@SuppressWarnings("unchecked")
-	public ReuseNode(int id, int alphabetSize) {
+	public ReuseNode(int id, int alphabetSize, int maxSystemStates, AccessPolicy accessPolicy, EvictPolicy evictPolicy) {
 		this.edges = new ReuseEdge[alphabetSize];
 		this.id = id;
+		this.systemStates = new BoundedDeque<>(maxSystemStates, accessPolicy, evictPolicy);
 	}
 
 	/**
@@ -64,13 +70,29 @@ public class ReuseNode<S, I, O> {
 	 * 
 	 * @return
 	 */
-	public S getSystemState() {
-		return systemstate;
+	public S fetchSystemState(boolean remove) {
+		if(remove) {
+			return systemStates.retrieve();
+		}
+		return systemStates.peek();
 	}
 
-	public void setSystemState(S state) {
-		this.systemstate = state;
+	public S addSystemState(S state) {
+		return systemStates.insert(state);
 	}
+	
+	public Iterator<S> systemStatesIterator() {
+		return systemStates.iterator();
+	}
+	
+	public boolean hasSystemStates() {
+		return !systemStates.isEmpty();
+	}
+	
+	public void clearSystemStates() {
+		systemStates.clear();
+	}
+	
 	/**
 	 * Returns all outgoing {@link ReuseEdge}s from this {@link ReuseNode}. If
 	 * there are none the returned {@link java.util.Collection} will be empty
@@ -113,21 +135,28 @@ public class ReuseNode<S, I, O> {
 		return this.id;
 	}
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof ReuseNode) {
-			@SuppressWarnings("unchecked")
-			ReuseNode<S, I, O> other = ((ReuseNode<S,I,O>)obj);
-			return other.id == id;
-		}
-		return false;
-	}
+	
+	/*
+	 * Defining equals via the ID only leads to confusion if the
+	 * tree is cleared and somehow references to old nodes with the
+	 * same id as new ones exist. Identity semantics are just fine
+	 * here.
+	 */
+//	@Override
+//	public int hashCode() {
+//		final int prime = 31;
+//		int result = 1;
+//		result = prime * result + id;
+//		return result;
+//	}
+//
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (obj instanceof ReuseNode) {
+//			@SuppressWarnings("unchecked")
+//			ReuseNode<S, I, O> other = ((ReuseNode<S,I,O>)obj);
+//			return other.id == id;
+//		}
+//		return false;
+//	}
 }

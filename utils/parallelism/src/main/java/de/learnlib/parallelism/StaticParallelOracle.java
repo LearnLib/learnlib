@@ -25,6 +25,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.google.common.base.Throwables;
 
 import de.learnlib.api.MembershipOracle;
@@ -44,6 +48,7 @@ import de.learnlib.settings.LearnLibSettings;
  * @param <I> input symbol class
  * @param <O> output class
  */
+@ParametersAreNonnullByDefault
 public class StaticParallelOracle<I, O> implements ParallelOracle<I, O> {
 	
 	static {
@@ -61,13 +66,16 @@ public class StaticParallelOracle<I, O> implements ParallelOracle<I, O> {
 	public static final int DEFAULT_NUM_INSTANCES;
 	public static final PoolPolicy DEFAULT_POOL_POLICY;
 	
+	@Nonnegative
 	private final int minBatchSize;
+	@Nonnull
 	private final MembershipOracle<I, O>[] oracles;
+	@Nonnull
 	private final ExecutorService executor;
 
 	@SuppressWarnings("unchecked")
 	public StaticParallelOracle(Collection<? extends MembershipOracle<I,O>> oracles,
-			int minBatchSize,
+			@Nonnegative int minBatchSize,
 			PoolPolicy policy) {
 		
 		this.oracles = oracles.toArray(new MembershipOracle[oracles.size()]);

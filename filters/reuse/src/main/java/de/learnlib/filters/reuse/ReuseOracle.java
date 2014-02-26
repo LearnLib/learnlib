@@ -16,21 +16,25 @@
  */
 package de.learnlib.filters.reuse;
 
+import java.util.Collection;
+import java.util.Set;
+
 import com.google.common.base.Supplier;
+
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
+import de.learnlib.filters.reuse.tree.BoundedDeque.AccessPolicy;
+import de.learnlib.filters.reuse.tree.BoundedDeque.EvictPolicy;
 import de.learnlib.filters.reuse.tree.ReuseNode;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 import de.learnlib.filters.reuse.tree.ReuseTree;
 import de.learnlib.filters.reuse.tree.ReuseTree.ReuseTreeBuilder;
 import de.learnlib.filters.reuse.tree.SystemStateHandler;
+
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-
-import java.util.Collection;
-import java.util.Set;
 
 /**
  * The reuse oracle is a {@link MealyMembershipOracle} that is able to
@@ -83,7 +87,10 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 		private boolean invalidateSystemstates = true;
 		private SystemStateHandler<S> systemStateHandler;
 		private Set<I> invariantInputSymbols;
-		private Set<O> failureOutputSymbols;	
+		private Set<O> failureOutputSymbols;
+		private int maxSystemStates = -1;
+		private AccessPolicy accessPolicy = AccessPolicy.LIFO;
+		private EvictPolicy evictPolicy = EvictPolicy.EVICT_OLDEST;
 		
 		public ReuseOracleBuilder(
 				Alphabet<I> alphabet,
@@ -112,6 +119,21 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 			return this;
 		}
 		
+		public ReuseOracleBuilder<S,I,O> withMaxSystemStates(int maxSystemStates) {
+			this.maxSystemStates = maxSystemStates;
+			return this;
+		}
+		
+		public ReuseOracleBuilder<S,I,O> withAccessPolicy(AccessPolicy accessPolicy) {
+			this.accessPolicy = accessPolicy;
+			return this;
+		}
+		
+		public ReuseOracleBuilder<S,I,O> withEvictPolicy(EvictPolicy evictPolicy) {
+			this.evictPolicy = evictPolicy;
+			return this;
+		}
+		
 		public ReuseOracle<S, I, O> build() {
 			return new ReuseOracle<>(this);
 		}
@@ -127,6 +149,9 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 				.withFailureOutputs(builder.failureOutputSymbols)
 				.withInvariantInputs(builder.invariantInputSymbols)
 				.withEnabledSystemstateInvalidation(builder.invalidateSystemstates)
+				.withMaxSystemStates(builder.maxSystemStates)
+				.withAccessPolicy(builder.accessPolicy)
+				.withEvictPolicy(builder.evictPolicy)
 				.build();
 	}
 

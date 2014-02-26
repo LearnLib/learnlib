@@ -45,7 +45,7 @@ DefaultDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
 	public boolean getNodeProperties(ReuseNode<S, I, O> node,
 			Map<String, String> properties) {
 		super.getNodeProperties(node, properties);
-		if (node.getSystemState() != null) {
+		if (node.hasSystemStates()) {
 			properties.put(NodeAttrs.COLOR, "black");
 			properties.put(NodeAttrs.STYLE, "filled");
 			properties.put(NodeAttrs.SHAPE, "diamond");
