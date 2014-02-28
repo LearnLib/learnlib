@@ -207,6 +207,7 @@ public abstract class GlobalSuffixFinders {
 			i++;
 		}
 		
+		System.err.println("Returning suffixes of " + queryWord.subWord(i+1));
 		return queryWord.subWord(i).suffixes(false);
 	}
 	
