@@ -192,7 +192,6 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 			List<O> rowContents = new ArrayList<>(numSuffixes);
 			fetchResults(queryIt, rowContents, numSuffixes);
 			if(!processContents(spRow, rowContents, true)) {
-				System.err.println("Initial consistency check required!");
 				initialConsistencyCheckRequired = true;
 			}
 		}
