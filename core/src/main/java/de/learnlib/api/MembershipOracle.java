@@ -30,8 +30,8 @@ import de.learnlib.oracles.DefaultQuery;
  * and {@link DefaultQuery#getSuffix()}, in reaction to which the SUL produces a specific observable
  * behavior (outputting a word, acceptance/rejection etc.).
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
- * @author Maik Merten <maikmerten@googlemail.com>
+ * @author Malte Isberner
+ * @author Maik Merten
  * 
  * @see DefaultQuery
  */

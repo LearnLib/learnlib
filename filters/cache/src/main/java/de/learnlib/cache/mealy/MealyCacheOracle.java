@@ -52,7 +52,7 @@ import net.automatalib.words.WordBuilder;
  * reflected in the learned model, it is forced to result in a sink state with only a single
  * repeating output symbol (value in the mapping).
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <I> input symbol class
  * @param <O> output symbol class
@@ -172,8 +172,9 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 		incMealyLock.lock();
 		try {
 			MasterQuery<I,O> master = createMasterQuery(ref);
-			if(master.getAnswer() == null)
+			if(!master.isAnswered()) {
 				masterQueries.add(master);
+			}
 			master.addSlave(q);
 			
 			while(it.hasNext()) {
@@ -181,11 +182,14 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 				Word<I> curr = q.getInput();
 				if(!curr.isPrefixOf(ref)) {
 					master = createMasterQuery(curr);
-					if(master.getAnswer() == null)
+					if(!master.isAnswered()) {
 						masterQueries.add(master);
+					}
 				}
 				
 				master.addSlave(q);
+				// Update ref to increase the effectivity of the length check in
+				// isPrefixOf
 				ref = curr;
 			}
 		}
@@ -198,8 +202,9 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 		
 		incMealyLock.lock();
 		try {
-			for(MasterQuery<I,O> m : masterQueries)
+			for(MasterQuery<I,O> m : masterQueries) {
 				postProcess(m);
+			}
 		}
 		finally {
 			incMealyLock.unlock();
@@ -223,10 +228,12 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 				break;
 		}
 		
-		if(i == answLen)
+		if(i == answLen) {
 			incMealy.insert(word, answer);
-		else
+		}
+		else {
 			incMealy.insert(word.prefix(i), answer.prefix(i));
+		}
 	}
 	
 	private MasterQuery<I,O> createMasterQuery(Word<I> word) {

@@ -51,12 +51,12 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
 	
 	public static <I>
 	DFACacheOracle<I> createTreeCacheOracle(Alphabet<I> alphabet, MembershipOracle<I,Boolean> delegate) {
-		return new DFACacheOracle<>(new IncrementalDFADAGBuilder<>(alphabet), delegate);
+		return new DFACacheOracle<>(new IncrementalDFATreeBuilder<>(alphabet), delegate);
 	}
 	
 	public static <I>
 	DFACacheOracle<I> createDAGCacheOracle(Alphabet<I> alphabet, MembershipOracle<I,Boolean> delegate) {
-		return new DFACacheOracle<>(new IncrementalDFATreeBuilder<>(alphabet), delegate);
+		return new DFACacheOracle<>(new IncrementalDFADAGBuilder<>(alphabet), delegate);
 	}
 	
 	private final IncrementalDFABuilder<I> incDfa;
@@ -107,10 +107,12 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
 		try {
 			for(Query<I,Boolean> q : queries) {
 				Acceptance acc = incDfa.lookup(q.getInput());
-				if(acc != Acceptance.DONT_KNOW)
+				if(acc != Acceptance.DONT_KNOW) {
 					q.answer((acc == Acceptance.TRUE) ? true : false);
-				else
+				}
+				else {
 					unanswered.add(new ProxyQuery<>(q));
+				}
 			}
 		}
 		finally {
@@ -121,8 +123,9 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
 		
 		incDfaLock.lock();
 		try {
-			for(ProxyQuery<I> q : unanswered)
+			for(ProxyQuery<I> q : unanswered) {
 				incDfa.insert(q.getInput(), q.getAnswer());
+			}
 		}
 		finally {
 			incDfaLock.unlock();
