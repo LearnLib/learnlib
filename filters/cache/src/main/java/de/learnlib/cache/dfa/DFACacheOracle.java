@@ -108,7 +108,7 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
 			for(Query<I,Boolean> q : queries) {
 				Acceptance acc = incDfa.lookup(q.getInput());
 				if(acc != Acceptance.DONT_KNOW) {
-					q.answer((acc == Acceptance.TRUE) ? true : false);
+					q.answer(acc.toBoolean());
 				}
 				else {
 					unanswered.add(new ProxyQuery<>(q));

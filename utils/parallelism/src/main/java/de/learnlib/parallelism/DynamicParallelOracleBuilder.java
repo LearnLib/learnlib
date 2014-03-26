@@ -48,11 +48,11 @@ public class DynamicParallelOracleBuilder<I,O> {
 	@Nonnull
 	private ExecutorService customExecutor;
 	@Nonnegative
-	private int batchSize;
+	private int batchSize = DynamicParallelOracle.DEFAULT_BATCH_SIZE;
 	@Nonnegative
-	private int poolSize;
+	private int poolSize = DynamicParallelOracle.DEFAULT_POOL_SIZE;
 	@Nonnull
-	private PoolPolicy poolPolicy;
+	private PoolPolicy poolPolicy = DynamicParallelOracle.DEFAULT_POOL_POLICY;
 	
 	
 	public DynamicParallelOracleBuilder(Supplier<? extends MembershipOracle<I,O>> oracleSupplier) {

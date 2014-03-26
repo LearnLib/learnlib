@@ -140,6 +140,7 @@ public class StaticParallelOracle<I, O> implements ParallelOracle<I, O> {
 			futures.add(future);
 		}
 		
+		
 		// Finally, prepare and process the batch for the oracle executed in this thread.
 		List<Query<I,O>> localBatch = new ArrayList<>(fullBatchSize);
 		for(int j = 0; j < fullBatchSize; j++) {
