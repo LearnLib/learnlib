@@ -36,19 +36,19 @@ public abstract class ExtensibleAutomatonLStar<A,I,O,S,T,SP,TP,AI extends Mutabl
 AbstractAutomatonLStar<A, I, O,S,T,SP,TP,AI> {
 	
 	public static final class BuilderDefaults {
-		
 		public static final <I> List<Word<I>> initialPrefixes() {
 			return Collections.singletonList(Word.<I>epsilon());
 		}
 		public static final <I> List<Word<I>> initialSuffixes() {
+
 			return Collections.emptyList();
 		}
 		
-		public static final <I,O> ObservationTableCEXHandler<? super I, ? super O> cexHandler() {
+		public static <I,O> ObservationTableCEXHandler<? super I, ? super O> cexHandler() {
 			return ObservationTableCEXHandlers.CLASSIC_LSTAR;
 		}
 		
-		public static final <I,O> ClosingStrategy<? super I, ? super O> closingStrategy() {
+		public static <I,O> ClosingStrategy<? super I, ? super O> closingStrategy() {
 			return ClosingStrategies.CLOSE_FIRST;
 		}
 		

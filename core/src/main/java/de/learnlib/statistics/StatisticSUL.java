@@ -24,5 +24,6 @@ public interface StatisticSUL<I, O> extends SUL<I,O> {
 	
 	@Nonnull
 	public StatisticData getStatisticalData();
+
 	
 }

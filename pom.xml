@@ -129,8 +129,9 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<upload-plugin.version>1.1</upload-plugin.version>
 
 		<trove4j.version>3.0.3</trove4j.version>
+		
 		<guava.version>16.0.1</guava.version>
-		<findbugs.version>2.0.2</findbugs.version>
+		<findbugs.version>2.0.3</findbugs.version>
 		
 		<buildergen.version>0.1</buildergen.version>
 		
@@ -250,6 +251,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 						<!-- <tagNameFormat>learnlib-@{project.version}</tagNameFormat> -->
 						<!-- The default "clean verify" causes javadoc and archetype integration tests to fail -->
 						<preparationGoals>clean install</preparationGoals>
+						<arguments>-Pbinary-release,sonatype-oss-release</arguments>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -436,7 +438,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 								<goals>
 									<goal>aggregate-jar</goal>
 								</goals>
-								<phase>site</phase>
+								<phase>package</phase>
 							</execution>
 						</executions>
 					</plugin>

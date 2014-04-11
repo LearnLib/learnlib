@@ -44,7 +44,7 @@ public interface ClosingStrategy<I, O> {
 	 * @param oracle the membership oracle
 	 * @return a selection of representative rows to be closed.
 	 */
-	public <RI extends I,RO extends O>
+	<RI extends I,RO extends O>
 	List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses, ObservationTable<RI,RO> table,
 			MembershipOracle<RI,RO> oracle);
 }

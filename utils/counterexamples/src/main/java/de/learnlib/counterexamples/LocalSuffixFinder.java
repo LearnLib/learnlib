@@ -72,7 +72,7 @@ public interface LocalSuffixFinder<I, O> {
 	 * @param oracle interface to the System Under Learning (SUL).
 	 * @return an adequate split index, or <tt>-1</tt> if the counterexample could not be analyzed.
 	 */
-	public <RI extends I,RO extends O>
+	<RI extends I,RO extends O>
 	int findSuffixIndex(Query<RI,RO> ceQuery,
 			AccessSequenceTransformer<RI> asTransformer,
 			SuffixOutput<RI,RO> hypOutput,
