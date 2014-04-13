@@ -1,3 +1,19 @@
+/* Copyright (C) 2014 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ * 
+ * LearnLib is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 3.0 as published by the Free Software Foundation.
+ * 
+ * LearnLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with LearnLib; if not, see
+ * <http://www.gnu.de/documents/lgpl.en.html>.
+ */
 package de.learnlib.algorithms.discriminationtree;
 
 
@@ -6,10 +22,6 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import de.learnlib.algorithms.discriminationtree.DTNode.SplitResult;
 import de.learnlib.algorithms.discriminationtree.hypothesis.DTLearnerHypothesis;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HTransition;
@@ -18,12 +30,19 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.counterexamples.LocalSuffixFinders;
+import de.learnlib.discriminationtree.DTNode;
+import de.learnlib.discriminationtree.DTNode.SplitResult;
+import de.learnlib.discriminationtree.DiscriminationTree;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.MQUtil;
 
+import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
 public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, TP> implements LearningAlgorithm<M, I, O> {
 	
-	public static final class BuilderDefaults {
+	public static class BuilderDefaults {
 		public static <I,O> LocalSuffixFinder<? super I,? super O> suffixFinder() {
 			return LocalSuffixFinders.RIVEST_SCHAPIRE;
 		}
@@ -32,31 +51,63 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 	private final Alphabet<I> alphabet;
 	private final MembershipOracle<I, O> oracle;
 	private final LocalSuffixFinder<? super I, ? super O> suffixFinder;
-	private final DiscriminationTree<I, O, HState<I,O,SP,TP>> dtree;
+	protected final DiscriminationTree<I, O, HState<I,O,SP,TP>> dtree;
 	protected final DTLearnerHypothesis<I, O, SP, TP> hypothesis;
 	
 	private final List<HState<I,O,SP,TP>> newStates = new ArrayList<>();
 	private final List<HTransition<I,O,SP,TP>> newTransitions = new ArrayList<>();
 	private final Deque<HTransition<I,O,SP,TP>> openTransitions = new ArrayDeque<>();
 
-	public AbstractDTLearner(Alphabet<I> alphabet, MembershipOracle<I, O> oracle, LocalSuffixFinder<? super I, ? super O> suffixFinder) {
+	protected AbstractDTLearner(Alphabet<I> alphabet, MembershipOracle<I, O> oracle, LocalSuffixFinder<? super I, ? super O> suffixFinder,
+			DiscriminationTree<I, O, HState<I,O,SP,TP>> dtree) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		this.suffixFinder = suffixFinder;
 		this.hypothesis = new DTLearnerHypothesis<I,O,SP,TP>(alphabet);
-		HState<I,O,SP,TP> init = hypothesis.getInitialState();
-		this.dtree = new DiscriminationTree<>(init, oracle);
-		init.setDTLeaf(dtree.getRoot());
-		initializeState(init);
+		this.dtree = dtree;
 	}
 
 	@Override
-	public boolean refineHypothesis(DefaultQuery<I, O> ceQuery) {
+	public boolean refineHypothesis(DefaultQuery<I,O> ceQuery) {
+		boolean refined = false;
+		while(MQUtil.isCounterexample(ceQuery, getHypothesisModel())) {
+			refined = true;
+			refineHypothesisSingle(ceQuery);
+		}
+		
+		return refined;
+	}
+	
+	
+
+	@Override
+	public void startLearning() {
+		HState<I,O,SP,TP> init = hypothesis.getInitialState();
+		DTNode<I, O, HState<I,O,SP,TP>> initDt = dtree.sift(init.getAccessSequence());
+		if(initDt.getData() != null) {
+			throw new IllegalStateException("Decision tree already contains data");
+		}
+		initDt.setData(init);
+		init.setDTLeaf(initDt);
+		initializeState(init);
+		
+		updateHypothesis();
+	}
+	
+	public DiscriminationTree<I, O, HState<I,O,SP,TP>> getDiscriminationTree() {
+		return dtree;
+	}
+	
+	public DTLearnerHypothesis<I,O,SP,TP> getHypothesisDS() {
+		return hypothesis;
+	}
+	
+	protected void refineHypothesisSingle(DefaultQuery<I, O> ceQuery) {
 		int suffixIdx = suffixFinder.findSuffixIndex(ceQuery, hypothesis, getHypothesisModel(),
 				oracle);
 		
 		if(suffixIdx == -1) {
-			return false;
+			throw new AssertionError("Suffix finder does not work correctly, found no suffix for valid counterexample");
 		}
 		
 		Word<I> input = ceQuery.getInput();
@@ -85,21 +136,6 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 		newState.setDTLeaf(sr.nodeNew);
 		
 		updateHypothesis();
-		
-		return true;
-	}
-
-	@Override
-	public void startLearning() {
-		updateHypothesis();
-	}
-	
-	public DiscriminationTree<I, O, HState<I,O,SP,TP>> getDiscriminationTree() {
-		return dtree;
-	}
-	
-	public DTLearnerHypothesis<I,O,SP,TP> getHypothesisDS() {
-		return hypothesis;
 	}
 	
 	protected void initializeState(HState<I,O,SP,TP> newState) {
@@ -124,11 +160,14 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 	}
 	
 	protected void updateTransition(HTransition<I,O,SP,TP> trans) {
-		if(trans.isTree())
+		if(trans.isTree()) {
 			return;
+		}
+		
 		DTNode<I,O,HState<I,O,SP,TP>> currDt = trans.getDT();
 		currDt = dtree.sift(currDt, trans.getAccessSequence());
 		trans.setDT(currDt);
+		
 		HState<I,O,SP,TP> state = currDt.getData();
 		if(state == null) {
 			state = createState(trans);
@@ -153,12 +192,16 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 				queries.add(spQuery);
 			}
 		}
+		newStates.clear();
+		
 		for(HTransition<I,O,SP,TP> trans : newTransitions) {
 			Query<I,O> tpQuery = tpQuery(trans);
 			if(tpQuery != null) {
 				queries.add(tpQuery);
 			}
 		}
+		newTransitions.clear();
+		
 		oracle.processQueries(queries);
 	}
 

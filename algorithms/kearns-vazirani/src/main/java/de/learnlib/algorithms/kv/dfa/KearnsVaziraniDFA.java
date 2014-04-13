@@ -105,7 +105,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 	 * in the BinaryDTree will always match. Both classes provide guarantees wrt.
 	 * the IDs used for newly introduced states/leaves which allow for doing so.
 	 * 
-	 * Although this hard-wires the implementation to these classes, it actually safes
+	 * Although this hard-wires the implementation to these classes, it actually saves
 	 * a lot of work required for mapping states to discrimination tree leaves and
 	 * vice versa. 
 	 */

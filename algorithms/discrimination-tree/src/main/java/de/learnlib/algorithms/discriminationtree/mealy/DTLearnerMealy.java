@@ -1,8 +1,20 @@
+/* Copyright (C) 2014 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ * 
+ * LearnLib is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 3.0 as published by the Free Software Foundation.
+ * 
+ * LearnLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with LearnLib; if not, see
+ * <http://www.gnu.de/documents/lgpl.en.html>.
+ */
 package de.learnlib.algorithms.discriminationtree.mealy;
-
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
@@ -13,7 +25,12 @@ import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.counterexamples.LocalSuffixFinder;
+import de.learnlib.discriminationtree.MultiDTree;
 import de.learnlib.oracles.AbstractQuery;
+
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 
 /**
  * 
@@ -40,7 +57,7 @@ public class DTLearnerMealy<I, O>
 	public DTLearnerMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, Word<O>> oracle,
 			LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder) {
-		super(alphabet, oracle, suffixFinder);
+		super(alphabet, oracle, suffixFinder, new MultiDTree<I,Word<O>,HState<I,Word<O>,Void,O>>(oracle));
 		this.hypWrapper = new HypothesisWrapperMealy<>(hypothesis);
 	}
 

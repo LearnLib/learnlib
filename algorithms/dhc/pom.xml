@@ -101,6 +101,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<scope>test</scope>
 		</dependency>
 		
+		<!-- Buildergen -->
+		<dependency>
+			<groupId>com.github.misberner.buildergen</groupId>
+			<artifactId>buildergen</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>
