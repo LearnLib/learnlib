@@ -87,7 +87,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 			<groupId>org.sonatype.oss</groupId>
 			<artifactId>oss-parent</artifactId>
-			<version>7</version>
+			<version>9</version>
 	</parent>
 
 	<!--	
@@ -122,6 +122,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
 		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
+		<jdiff-plugin.version>1.0-beta-1</jdiff-plugin.version>
 		<site-plugin.version>3.3</site-plugin.version>
 		<reports-plugin.version>2.7</reports-plugin.version>
 		<surefire-plugin.version>2.14.1</surefire-plugin.version>
@@ -364,6 +365,14 @@ http://www.gnu.de/documents/lgpl.en.html.
 					</reportSet>
 				</reportSets>
 			</plugin>
+			<!-- jdiff-maven-plugin not in central! -->
+			<!--
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jdiff-maven-plugin</artifactId>
+				<version>${jdiff-plugin.version}</version>
+			</plugin>
+			-->
 		</plugins>
 	</reporting>
 
