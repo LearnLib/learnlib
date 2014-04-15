@@ -60,8 +60,9 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?,I>, I, Boolean, Boo
 	public DTLearnerDFA(Alphabet<I> alphabet,
 			MembershipOracle<I, Boolean> oracle,
 			LocalSuffixFinder<? super I, ? super Boolean> suffixFinder,
+			boolean repeatedCounterexampleEvaluation,
 			boolean epsilonRoot) {
-		super(alphabet, oracle, suffixFinder, new BinaryDTree<I,HState<I,Boolean,Boolean,Void>>(oracle));
+		super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new BinaryDTree<I,HState<I,Boolean,Boolean,Void>>(oracle));
 		this.hypWrapper = new HypothesisWrapperDFA<I>(hypothesis);
 		if(epsilonRoot) {
 			dtree.getRoot().split(Word.<I>epsilon(), false, true, null);

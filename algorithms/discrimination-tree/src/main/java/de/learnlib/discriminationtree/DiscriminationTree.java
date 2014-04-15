@@ -73,7 +73,7 @@ public class DiscriminationTree<I, O, D> {
 		int ddiff = d2 - d1;
 		
 		DTNode<I,O,D> curr1, curr2;
-		if(d1 < d2) {
+		if(ddiff >= 0) {
 			curr1 = node1;
 			curr2 = node2;
 		}
@@ -85,6 +85,7 @@ public class DiscriminationTree<I, O, D> {
 		
 		while(ddiff > 0) {
 			curr2 = curr2.parent;
+			ddiff--;
 		}
 		
 		if(curr1 == curr2) {
@@ -126,7 +127,7 @@ public class DiscriminationTree<I, O, D> {
 		boolean swap = false;
 		
 		DTNode<I,O,D> curr1, curr2;
-		if(d1 < d2) {
+		if(ddiff >= 0) {
 			curr1 = node1;
 			curr2 = node2;
 		}
@@ -141,6 +142,7 @@ public class DiscriminationTree<I, O, D> {
 		while(ddiff > 0) {
 			out2 = curr2.parentOutcome;
 			curr2 = curr2.parent;
+			ddiff--;
 		}
 		
 		if(curr1 == curr2) {

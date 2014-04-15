@@ -24,13 +24,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import com.github.misberner.jdtree.multi.MDTEvaluator;
-import com.github.misberner.jdtree.multi.MDTLCAInfo;
-import com.github.misberner.jdtree.multi.MDTNode;
-import com.github.misberner.jdtree.multi.MultiDTree;
+import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.discriminationtree.DTNode;
+import de.learnlib.discriminationtree.DTNode.SplitResult;
+import de.learnlib.discriminationtree.DiscriminationTree;
+import de.learnlib.discriminationtree.DiscriminationTree.LCAInfo;
+import de.learnlib.discriminationtree.MultiDTree;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.MQUtil;
 
@@ -53,12 +55,21 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 	
 	private static final TLongList EMPTY_LONG_LIST = new TLongArrayList(0);
 	
-	private static final class StateInfo<I> {
+	static final class BuilderDefaults {
+		public static boolean repeatedCounterexampleEvaluation() {
+			return true;
+		}
+	}
+	
+	private static final class StateInfo<I,O> {
+		public final int id;
 		public final Word<I> accessSequence;
+		public DTNode<I, Word<O>, StateInfo<I,O>> dtNode;
 		private TLongList incoming;
 		
-		public StateInfo(Word<I> accessSequence) {
+		public StateInfo(int id, Word<I> accessSequence) {
 			this.accessSequence = accessSequence.trimmed();
+			this.id = id;
 		}
 		
 		public void addIncoming(int sourceState, int transIdx) {
@@ -77,39 +88,26 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 			this.incoming = null;
 			return result;
 		}
-		
-	}
-	private static final class WordEval<I,O> implements MDTEvaluator<Word<I>, Word<I>,Word<O>> {
-		
-		private final MembershipOracle<I, Word<O>> oracle;
-		
-		public WordEval(MembershipOracle<I,Word<O>> oracle) {
-			this.oracle = oracle;
-		}
-		@Override
-		public Word<O> evaluate(Word<I> prefix, Word<I> discriminator) {
-			return MQUtil.output(oracle, prefix, discriminator);
-		}
 	}
 	
 	private final Alphabet<I> alphabet;
 	private final CompactMealy<I,O> hypothesis;
 	private final MembershipOracle<I,Word<O>> oracle;
+	private final boolean repeatedCounterexampleEvaluation;
 	
-	private final MultiDTree<Word<I>,Word<O>> discriminationTree
-		= new MultiDTree<>();
+	private final DiscriminationTree<I,Word<O>,StateInfo<I,O>> discriminationTree;
 		
-	private final List<StateInfo<I>> stateInfos
+	private final List<StateInfo<I,O>> stateInfos
 		= new ArrayList<>();
-		
-	private final MDTEvaluator<Word<I>, Word<I>, Word<O>> prefixEval;
 
-	
-	public KearnsVaziraniMealy(Alphabet<I> alphabet, MembershipOracle<I,Word<O>> oracle) {
+	@GenerateBuilder
+	public KearnsVaziraniMealy(Alphabet<I> alphabet, MembershipOracle<I,Word<O>> oracle,
+			boolean repeatedCounterexampleEvaluation) {
 		this.alphabet = alphabet;
 		this.hypothesis = new CompactMealy<>(alphabet);
 		this.oracle = oracle;
-		this.prefixEval = new WordEval<>(oracle);
+		this.repeatedCounterexampleEvaluation = repeatedCounterexampleEvaluation;
+		this.discriminationTree = new MultiDTree<>(oracle);
 	}
 	
 	@Override
@@ -122,14 +120,15 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 		if(hypothesis.size() == 0) {
 			throw new IllegalStateException("Not initialized");
 		}
-		boolean refined = false;
 		Word<I> input = ceQuery.getInput();
 		Word<O> output = ceQuery.getOutput();
-		while(!hypothesis.computeOutput(input).equals(output)) {
-			refined |= refineHypothesisSingle(input, output);
+		if(!refineHypothesisSingle(input, output)) {
+			return false;
 		}
-		
-		return refined;
+		if(repeatedCounterexampleEvaluation) {
+			while(refineHypothesisSingle(input, output)) {}
+		}
+		return true;
 	}
 	
 	
@@ -176,10 +175,10 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 			
 			int nextHypState = hypothesis.getIntSuccessor(trans);
 			
-			int siftState = sift(nextPrefix);
-			if(siftState != nextHypState) {
+			StateInfo<I,O> siftStateInfo = sift(nextPrefix);
+			if(siftStateInfo.id != nextHypState) {
 				// Successor differs
-				updateTree(hypState, sym, nextHypState, siftState, hypOutput, prefix);
+				updateTree(hypState, sym, nextHypState, siftStateInfo, hypOutput, prefix);
 				return true;
 			}
 			
@@ -195,33 +194,37 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 	
 	private void splitState(int hypState, Word<I> newAs, Word<I> newDiscriminator, Word<O> oldOutcome,
 			Word<O> newOutcome) {
-		MDTNode<Word<I>, Word<O>> hypStateLeaf = discriminationTree.getLeaf(hypState);
+		StateInfo<I,O> hypStateInfo = stateInfos.get(hypState);
 		
-		int newState = hypothesis.addIntState();
+		DTNode<I, Word<O>, StateInfo<I,O>> hypStateLeaf = hypStateInfo.dtNode; 
 		
-		StateInfo<I> hypStateInfo = stateInfos.get(hypState);
+		StateInfo<I,O> newStateInfo = createState(newAs);
+		
 		TLongList oldIncoming = hypStateInfo.fetchIncoming();
 		
-		discriminationTree.split(hypStateLeaf, newDiscriminator, oldOutcome, newOutcome);
+		SplitResult<I, Word<O>, StateInfo<I,O>> split = hypStateLeaf.split(newDiscriminator, oldOutcome, newOutcome, newStateInfo);
+		hypStateInfo.dtNode = split.nodeOld;
+		newStateInfo.dtNode = split.nodeNew;
 		
-		initState(newState, newAs);
+		initState(newStateInfo);
 		updateTransitions(oldIncoming, hypStateLeaf);
 	}
 	
-	private void updateTree(int hypState, I sym, int hypSucc, int siftSucc, O transOut, Word<I> prefix) {
-		MDTNode<Word<I>,Word<O>> hypSuccLeaf = discriminationTree.getLeaf(hypSucc);
-		MDTNode<Word<I>,Word<O>> siftSuccLeaf = discriminationTree.getLeaf(siftSucc);
+	
+	private void updateTree(int hypState, I sym, int hypSucc, StateInfo<I,O> siftSucc, O transOut, Word<I> prefix) {
+		DTNode<I,Word<O>,StateInfo<I,O>> hypSuccLeaf = dtNode(hypSucc);
+		DTNode<I,Word<O>,StateInfo<I,O>> siftSuccLeaf = siftSucc.dtNode;
 		
-		MDTLCAInfo<Word<I>, Word<O>> lcaInfo = discriminationTree.leastCommonAncestor(hypSuccLeaf, siftSuccLeaf);
+		LCAInfo<I,Word<O>,StateInfo<I,O>> lcaInfo = discriminationTree.lcaInfo(hypSuccLeaf, siftSuccLeaf);
 		
-		MDTNode<Word<I>,Word<O>> separator = lcaInfo.leastCommonAncestor;
+		DTNode<I,Word<O>,StateInfo<I,O>> separator = lcaInfo.leastCommonAncestor;
 		
 		Word<I> newDiscriminator = newDiscriminator(sym, separator.getDiscriminator());
 		
 		
 		// query-less composition of new outcomes
-		Word<O> oldStateOutcome = newOutcome(transOut, lcaInfo.firstOutcome);
-		Word<O> newStateOutcome = newOutcome(transOut, lcaInfo.secondOutcome);
+		Word<O> oldStateOutcome = newOutcome(transOut, lcaInfo.subtree1Label);
+		Word<O> newStateOutcome = newOutcome(transOut, lcaInfo.subtree2Label);
 		
 		splitState(hypState, prefix, newDiscriminator, oldStateOutcome, newStateOutcome);
 	}
@@ -231,7 +234,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 	}
 	
 	
-	private void updateTransitions(TLongList transList, MDTNode<Word<I>,Word<O>> oldDtTarget) {
+	private void updateTransitions(TLongList transList, DTNode<I,Word<O>,StateInfo<I,O>> oldDtTarget) {
 		int numTrans = transList.size();
 		for(int i = 0; i < numTrans; i++) {
 			long encodedTrans = transList.get(i);
@@ -239,13 +242,13 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 			int sourceState = (int)(encodedTrans >> 32L);
 			int transIdx = (int)(encodedTrans & 0xffffffff);
 			
-			StateInfo<I> sourceInfo = stateInfos.get(sourceState);
+			StateInfo<I,O> sourceInfo = stateInfos.get(sourceState);
 			I symbol = alphabet.getSymbol(transIdx);
 			
-			int succ = sift(oldDtTarget, sourceInfo.accessSequence.append(symbol));
+			StateInfo<I,O> succInfo = sift(oldDtTarget, sourceInfo.accessSequence.append(symbol));
 			
 			O output = hypothesis.getTransition(sourceState, transIdx).getOutput();
-			setTransition(sourceState, transIdx, succ, output);
+			setTransition(sourceState, transIdx, succInfo, output);
 		}
 	}
 	
@@ -263,18 +266,38 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 
 
 	
-	private void initialize() {
-		int init = hypothesis.addInitialState();
-		assert init == 0;
+	private StateInfo<I,O> createInitialState() {
+		int state = hypothesis.addIntInitialState();
+		assert state == stateInfos.size();
 		
-		initState(init, Word.<I>epsilon());
+		StateInfo<I,O> stateInfo = new StateInfo<>(state, Word.<I>epsilon());
+		stateInfos.add(stateInfo);
+		
+		return stateInfo;
 	}
 	
-	private void initState(int state, Word<I> accessSequence) {
+	private StateInfo<I,O> createState(Word<I> prefix) {
+		int state = hypothesis.addIntState();
 		assert state == stateInfos.size();
-		stateInfos.add(new StateInfo<>(accessSequence));
 		
+		StateInfo<I, O> stateInfo = new StateInfo<>(state, prefix);
+		stateInfos.add(stateInfo);
+		
+		return stateInfo;
+	}
+	
+	private void initialize() {
+		StateInfo<I, O> init = createInitialState();
+		discriminationTree.getRoot().setData(init);
+		init.dtNode = discriminationTree.getRoot();
+		initState(init);
+	}
+	
+	private void initState(StateInfo<I,O> stateInfo) {
 		int alphabetSize = alphabet.size();
+		
+		int state = stateInfo.id;
+		Word<I> accessSequence = stateInfo.accessSequence;
 		
 		for(int i = 0; i < alphabetSize; i++) {
 			I sym = alphabet.getSymbol(i);
@@ -283,36 +306,41 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 			
 			Word<I> transAs = accessSequence.append(sym);
 			
-			
-			int succ = sift(transAs);
-			setTransition(state, i, succ, output);
+			StateInfo<I,O> succInfo = sift(transAs);
+			setTransition(state, i, succInfo, output);
 		}
 	}
 	
-	private void setTransition(int state, int symIdx, int succ, O output) {
-		StateInfo<I> succInfo = stateInfos.get(succ);
-		assert succInfo != null;
+	private void setTransition(int state, int symIdx, StateInfo<I,O> succInfo, O output) {
 		succInfo.addIncoming(state, symIdx);
-		hypothesis.setTransition(state, symIdx, succ, output);
+		hypothesis.setTransition(state, symIdx, succInfo.id, output);
 	}
 	
-	private int sift(Word<I> prefix) {
+	
+	private DTNode<I, Word<O>, StateInfo<I,O>> dtNode(int state) {
+		return stateInfos.get(state).dtNode;
+	}
+	
+	private StateInfo<I,O> sift(Word<I> prefix) {
 		return sift(discriminationTree.getRoot(), prefix);
 	}
 	
-	private int sift(MDTNode<Word<I>,Word<O>> start, Word<I> prefix) {
-		MDTNode<Word<I>,Word<O>> leaf = discriminationTree.sift(start, prefix, prefixEval);
+	private StateInfo<I,O> sift(DTNode<I,Word<O>,StateInfo<I,O>> start, Word<I> prefix) {
+		DTNode<I,Word<O>,StateInfo<I,O>> leaf = discriminationTree.sift(start, prefix);
 		
-		int succState = leaf.getLeafId();
-		if(succState >= hypothesis.size()) {
+		StateInfo<I,O> succStateInfo = leaf.getData();
+		if(succStateInfo == null) {
 			// Special case: this is the *first* state with a different output
 			// for some discriminator
-			int newState = hypothesis.addIntState();
-			assert newState == succState;
-			initState(newState, prefix);
+			succStateInfo = createState(prefix);
+			
+			leaf.setData(succStateInfo);
+			succStateInfo.dtNode = leaf;
+
+			initState(succStateInfo);
 		}
 		
-		return succState;
+		return succStateInfo;
 	}
 
 }

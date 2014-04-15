@@ -23,16 +23,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import com.github.misberner.buildergen.annotations.GenerateBuilder;
+
 import de.learnlib.api.LearningAlgorithm.DFALearner;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.discriminationtree.BinaryDTree;
 import de.learnlib.discriminationtree.DTNode;
+import de.learnlib.discriminationtree.DTNode.SplitResult;
+import de.learnlib.discriminationtree.DiscriminationTree.LCAInfo;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.MQUtil;
+
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 
 
 /**
@@ -45,6 +50,12 @@ import de.learnlib.oracles.MQUtil;
  * @param <I> input symbol type
  */
 public class KearnsVaziraniDFA<I> implements DFALearner<I> {
+	
+	static final class BuilderDefaults {
+		public static boolean repeatedCounterexampleEvaluation() {
+			return true;
+		}
+	}
 	
 	private static final TLongList EMPTY_LONG_LIST = new TLongArrayList(0);
 	
@@ -59,6 +70,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 	private static final class StateInfo<I> {
 		public final int id;
 		public final Word<I> accessSequence;
+		private DTNode<I, Boolean, StateInfo<I>> dtNode;
 		private TLongList incoming;
 		
 		public StateInfo(int id, Word<I> accessSequence) {
@@ -85,22 +97,12 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		
 	}
 	
-	/*
-	 * Implementation note: We will ensure that, by construction, the integer
-	 * IDs used for (a) the hypothesis states of the CompactDFA and (b) the leaves
-	 * in the BinaryDTree will always match. Both classes provide guarantees wrt.
-	 * the IDs used for newly introduced states/leaves which allow for doing so.
-	 * 
-	 * Although this hard-wires the implementation to these classes, it actually saves
-	 * a lot of work required for mapping states to discrimination tree leaves and
-	 * vice versa. 
-	 */
-	
 	private final Alphabet<I> alphabet;
 	private final CompactDFA<I> hypothesis;
 	private final MembershipOracle<I,Boolean> oracle;
+	private final boolean repeatedCounterexampleEvaluation;
 	
-	private final BinaryDTree<I, Integer> discriminationTree;
+	private final BinaryDTree<I, StateInfo<I>> discriminationTree;
 		
 		
 	private final List<StateInfo<I>> stateInfos
@@ -112,11 +114,14 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 	 * @param alphabet the learning alphabet
 	 * @param oracle the membership oracle
 	 */
-	public KearnsVaziraniDFA(Alphabet<I> alphabet, MembershipOracle<I,Boolean> oracle) {
+	@GenerateBuilder
+	public KearnsVaziraniDFA(Alphabet<I> alphabet, MembershipOracle<I,Boolean> oracle,
+			boolean repeatedCounterexampleEvaluation) {
 		this.alphabet = alphabet;
 		this.hypothesis = new CompactDFA<>(alphabet);
 		this.discriminationTree = new BinaryDTree<>(oracle);
 		this.oracle = oracle;
+		this.repeatedCounterexampleEvaluation = repeatedCounterexampleEvaluation;
 	}
 	
 	@Override
@@ -129,24 +134,29 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		if(hypothesis.size() == 0) {
 			throw new IllegalStateException("Not initialized");
 		}
-		
-		boolean refined = false;
 		Word<I> input = ceQuery.getInput();
-		boolean output = ceQuery.getOutput().booleanValue();
-		while(hypothesis.accepts(input) != output) {
-			refined |= refineHypothesisSingle(input);
+		boolean output = ceQuery.getOutput();
+		if(!refineHypothesisSingle(input, output)) {
+			return false;
 		}
-		
-		return refined;
+		if(repeatedCounterexampleEvaluation) {
+			while(refineHypothesisSingle(input, output)) {}
+		}
+		return true;
 	}
 	
 	
-	private boolean refineHypothesisSingle(Word<I> input) {
+	private boolean refineHypothesisSingle(Word<I> input, boolean output) {
 		int inputLen = input.length();
 		
 		if(inputLen < 2) {
 			return false;
 		}
+		
+		if(hypothesis.accepts(input) == output) {
+			return false;
+		}
+		
 		
 		int hypState = hypothesis.getInitialState();
 		
@@ -167,8 +177,8 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 			
 			int nextHypState = hypothesis.getSuccessor(hypState, sym);
 			
-			int siftState = sift(nextPrefix);
-			if(siftState != nextHypState) {
+			StateInfo<I> siftState = sift(nextPrefix);
+			if(siftState.id != nextHypState) {
 				updateTree(hypState, sym, nextHypState, siftState, prefix);
 				return true;
 			}
@@ -182,31 +192,41 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		return false;
 	}
 	
-	private void updateTree(int hypState, I sym, int hypSucc, int siftSucc, Word<I> prefix) {
-		BDTNode<Word<I>> hypStateLeaf = discriminationTree.getLeaf(hypState);
+	
+	private DTNode<I,Boolean,StateInfo<I>> dtNode(int state) {
+		return stateInfos.get(state).dtNode;
+	}
+	
+	private void updateTree(int hypState, I sym, int hypSucc, StateInfo<I> siftSucc, Word<I> prefix) {
+		DTNode<I,Boolean,StateInfo<I>> hypStateLeaf = dtNode(hypState);
 		
-		BDTNode<Word<I>> hypSuccLeaf = discriminationTree.getLeaf(hypSucc);
-		BDTNode<Word<I>> siftSuccLeaf = discriminationTree.getLeaf(siftSucc);
+		DTNode<I,Boolean,StateInfo<I>> hypSuccLeaf = dtNode(hypSucc);
+		DTNode<I,Boolean,StateInfo<I>> siftSuccLeaf = siftSucc.dtNode;
 		
-		BDTNode<Word<I>> separator = discriminationTree.leastCommonAncestor(hypSuccLeaf, siftSuccLeaf);
+		LCAInfo<I, Boolean, StateInfo<I>> separatorInfo = discriminationTree.lcaInfo(hypSuccLeaf, siftSuccLeaf);
+		Word<I> succDiscriminator = separatorInfo.leastCommonAncestor.getDiscriminator();
 		
-		Word<I> newDiscriminator = newDiscriminator(sym, separator.getDiscriminator());
+		Word<I> newDiscriminator = newDiscriminator(sym, succDiscriminator);
 		
 		StateInfo<I> hypStateInfo = stateInfos.get(hypState);
 		
-		boolean oldAccepting = MQUtil.output(oracle, hypStateInfo.accessSequence, newDiscriminator);
-		
+		boolean oldAccepting = hypothesis.isAccepting(hypState);
 		TLongList oldIncoming = hypStateInfo.fetchIncoming();
 		
-		int newState = hypothesis.addIntState(hypothesis.isAccepting(hypState));
-		discriminationTree.split(hypStateLeaf, newDiscriminator, oldAccepting);
-		initState(newState, prefix);
+		StateInfo<I> newStateInfo = createState(prefix, oldAccepting);
+		
+		SplitResult<I, Boolean, StateInfo<I>> split = hypStateLeaf.split(newDiscriminator, separatorInfo.subtree1Label, separatorInfo.subtree2Label, newStateInfo);
+		
+		hypStateInfo.dtNode = split.nodeOld;
+		newStateInfo.dtNode = split.nodeNew;
+		
+		initState(newStateInfo);
 		
 		updateTransitions(oldIncoming, hypStateLeaf);
 	}
 	
 	
-	private void updateTransitions(TLongList transList, DTNode<I, Boolean, Integer> oldDtTarget) {
+	private void updateTransitions(TLongList transList, DTNode<I, Boolean, StateInfo<I>> oldDtTarget) {
 		int numTrans = transList.size();
 		for(int i = 0; i < numTrans; i++) {
 			long encodedTrans = transList.get(i);
@@ -217,7 +237,8 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 			StateInfo<I> sourceInfo = stateInfos.get(sourceState);
 			I symbol = alphabet.getSymbol(transIdx);
 			
-			int succ = sift(oldDtTarget, sourceInfo.accessSequence.append(symbol));
+			
+			StateInfo<I> succ = sift(oldDtTarget, sourceInfo.accessSequence.append(symbol));
 			setTransition(sourceState, transIdx, succ);
 		}
 	}
@@ -238,59 +259,75 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 	
 	private void initialize() {
 		boolean initAccepting = MQUtil.output(oracle, Word.<I>epsilon()).booleanValue();
-		int init = hypothesis.addInitialState(initAccepting);
-		assert init == 0;
+		StateInfo<I> initStateInfo = createInitialState(initAccepting);
 		
-		DTNode<I, Boolean, Integer> root = discriminationTree.getRoot();
-		root.setData(init);
-		root.split(Word.<I>epsilon(), initAccepting, !initAccepting, null);
+		DTNode<I, Boolean, StateInfo<I>> root = discriminationTree.getRoot();
+		root.setData(initStateInfo);
+		initStateInfo.dtNode = root.split(Word.<I>epsilon(), initAccepting, !initAccepting, null).nodeOld;
 		
 		
-		initState(init, Word.<I>epsilon());
+		initState(initStateInfo);
 	}
 	
-	private void initState(int state, Word<I> accessSequence) {
-		assert state == stateInfos.size();
-		stateInfos.add(new StateInfo<>(state, accessSequence));
+	private StateInfo<I> createInitialState(boolean accepting) {
+		int state = hypothesis.addIntInitialState(accepting);
+		StateInfo<I> si = new StateInfo<>(state, Word.<I>epsilon());
+		assert stateInfos.size() == state;
+		stateInfos.add(si);
 		
+		return si;
+	}
+	
+	private StateInfo<I> createState(Word<I> accessSequence, boolean accepting) {
+		int state = hypothesis.addIntState(accepting);
+		StateInfo<I> si = new StateInfo<>(state, accessSequence);
+		assert stateInfos.size() == state;
+		stateInfos.add(si);
+		
+		return si;
+	}
+	
+	private void initState(StateInfo<I> stateInfo) {
 		int alphabetSize = alphabet.size();
+		
+		int state = stateInfo.id;
+		Word<I> accessSequence = stateInfo.accessSequence;
 		
 		for(int i = 0; i < alphabetSize; i++) {
 			I sym = alphabet.getSymbol(i);
 			
 			Word<I> transAs = accessSequence.append(sym);
 			
-			int succ = sift(transAs);
+			StateInfo<I> succ = sift(transAs);
 			setTransition(state, i, succ);
 		}
 	}
 	
-	private void setTransition(int state, int symIdx, int succ) {
-		StateInfo<I> succInfo = stateInfos.get(succ);
-		assert succInfo != null;
+	private void setTransition(int state, int symIdx, StateInfo<I> succInfo) {
 		succInfo.addIncoming(state, symIdx);
-		hypothesis.setTransition(state, symIdx, succ);
+		hypothesis.setTransition(state, symIdx, succInfo.id);
 	}
 	
-	private int sift(Word<I> prefix) {
-		
+	private StateInfo<I> sift(Word<I> prefix) {
 		return sift(discriminationTree.getRoot(), prefix);
 	}
 	
-	private int sift(DTNode<I,Boolean,Integer> start, Word<I> prefix) {
-		DTNode<I,Boolean,Integer> leaf = discriminationTree.sift(start, prefix);
+	private StateInfo<I> sift(DTNode<I,Boolean,StateInfo<I>> start, Word<I> prefix) {
+		DTNode<I,Boolean,StateInfo<I>> leaf = discriminationTree.sift(start, prefix);
 		
-		Integer succState = leaf.getData();
-		if(succState == null) {
+		StateInfo<I> succStateInfo = leaf.getData();
+		if(succStateInfo == null) {
 			// Special case: this is the *first* state of a different
 			// acceptance than the initial state
-			int newState = hypothesis.addIntState(!hypothesis.isAccepting(0));
-			initState(newState, prefix);
-			succState = newState;
-			leaf.setData(succState);
+			boolean initAccepting = hypothesis.isAccepting(hypothesis.getIntInitialState());
+			succStateInfo = createState(prefix, !initAccepting);
+			leaf.setData(succStateInfo);
+			succStateInfo.dtNode = leaf;
+			
+			initState(succStateInfo);
 		}
 		
-		return succState;
+		return succStateInfo;
 	}
 
 }

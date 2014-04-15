@@ -46,11 +46,15 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 		public static <I,O> LocalSuffixFinder<? super I,? super O> suffixFinder() {
 			return LocalSuffixFinders.RIVEST_SCHAPIRE;
 		}
+		public static boolean repeatedCounterexampleEvaluation() {
+			return true;
+		}
 	}
 
 	private final Alphabet<I> alphabet;
 	private final MembershipOracle<I, O> oracle;
 	private final LocalSuffixFinder<? super I, ? super O> suffixFinder;
+	private final boolean repeatedCounterexampleEvaluation;
 	protected final DiscriminationTree<I, O, HState<I,O,SP,TP>> dtree;
 	protected final DTLearnerHypothesis<I, O, SP, TP> hypothesis;
 	
@@ -58,24 +62,27 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 	private final List<HTransition<I,O,SP,TP>> newTransitions = new ArrayList<>();
 	private final Deque<HTransition<I,O,SP,TP>> openTransitions = new ArrayDeque<>();
 
-	protected AbstractDTLearner(Alphabet<I> alphabet, MembershipOracle<I, O> oracle, LocalSuffixFinder<? super I, ? super O> suffixFinder,
+	protected AbstractDTLearner(Alphabet<I> alphabet, MembershipOracle<I, O> oracle,
+			LocalSuffixFinder<? super I, ? super O> suffixFinder,
+			boolean repeatedCounterexampleEvaluation,
 			DiscriminationTree<I, O, HState<I,O,SP,TP>> dtree) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		this.suffixFinder = suffixFinder;
 		this.hypothesis = new DTLearnerHypothesis<I,O,SP,TP>(alphabet);
 		this.dtree = dtree;
+		this.repeatedCounterexampleEvaluation = repeatedCounterexampleEvaluation;
 	}
 
 	@Override
 	public boolean refineHypothesis(DefaultQuery<I,O> ceQuery) {
-		boolean refined = false;
-		while(MQUtil.isCounterexample(ceQuery, getHypothesisModel())) {
-			refined = true;
-			refineHypothesisSingle(ceQuery);
+		if(!refineHypothesisSingle(ceQuery)) {
+			return false;
 		}
-		
-		return refined;
+		if(repeatedCounterexampleEvaluation) {
+			while(refineHypothesisSingle(ceQuery)) {}
+		}
+		return true;
 	}
 	
 	
@@ -102,7 +109,11 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 		return hypothesis;
 	}
 	
-	protected void refineHypothesisSingle(DefaultQuery<I, O> ceQuery) {
+	protected boolean refineHypothesisSingle(DefaultQuery<I, O> ceQuery) {
+		if(!MQUtil.isCounterexample(ceQuery, getHypothesisModel())) {
+			return false;
+		}
+		
 		int suffixIdx = suffixFinder.findSuffixIndex(ceQuery, hypothesis, getHypothesisModel(),
 				oracle);
 		
@@ -136,6 +147,8 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 		newState.setDTLeaf(sr.nodeNew);
 		
 		updateHypothesis();
+		
+		return true;
 	}
 	
 	protected void initializeState(HState<I,O,SP,TP> newState) {

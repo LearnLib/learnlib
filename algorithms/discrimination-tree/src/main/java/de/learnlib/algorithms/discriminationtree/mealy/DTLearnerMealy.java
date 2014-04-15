@@ -56,8 +56,9 @@ public class DTLearnerMealy<I, O>
 	@GenerateBuilder(defaults = AbstractDTLearner.BuilderDefaults.class)
 	public DTLearnerMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, Word<O>> oracle,
-			LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder) {
-		super(alphabet, oracle, suffixFinder, new MultiDTree<I,Word<O>,HState<I,Word<O>,Void,O>>(oracle));
+			LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
+			boolean repeatedCounterexampleEvaluation) {
+		super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new MultiDTree<I,Word<O>,HState<I,Word<O>,Void,O>>(oracle));
 		this.hypWrapper = new HypothesisWrapperMealy<>(hypothesis);
 	}
 
