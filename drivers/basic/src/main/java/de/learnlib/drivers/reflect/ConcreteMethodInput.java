@@ -28,7 +28,7 @@ import de.learnlib.drivers.api.ExecutableInput;
  * 
  * @author falkhowar
  */
-public final class ConcreteMethodInput implements ExecutableInput<Object> {
+public class ConcreteMethodInput implements ExecutableInput<Object> {
     
     /**
      * corresponding abstract input

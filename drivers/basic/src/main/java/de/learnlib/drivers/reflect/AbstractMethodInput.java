@@ -28,7 +28,7 @@ import java.util.Map.Entry;
  * 
  * @author falkhowar
  */
-public final class AbstractMethodInput {
+public class AbstractMethodInput {
     
     private final String name;
     
