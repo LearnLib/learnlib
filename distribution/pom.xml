@@ -209,6 +209,18 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<classifier>sources</classifier>
 				</dependency>
 
+				<dependency>
+					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-mapper</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-mapper</artifactId>
+					<version>${project.version}</version>
+					<classifier>sources</classifier>
+				</dependency>
+
 				<!-- AutomataLib dependencies - to ensure bundle completeness TODO: Having 
 					to keep this up-to-date manually is somewhat error-prone; should there exist 
 					something like meta-packages? -->

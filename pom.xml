@@ -541,6 +541,12 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>learnlib-kearns-vazirani</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-mapper</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<!-- LearnLib tests -->
 			<dependency>

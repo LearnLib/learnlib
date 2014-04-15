@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.api;
+package de.learnlib.mapper.api;
 
 import de.learnlib.api.SULException;
 

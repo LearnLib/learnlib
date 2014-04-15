@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import de.learnlib.api.SULException;
-import de.learnlib.drivers.api.ExecutableInput;
+import de.learnlib.mapper.api.ExecutableInput;
 
 /**
  * A concrete inputs contains the information for one specific method call.
