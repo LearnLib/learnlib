@@ -29,9 +29,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 
+import de.learnlib.algorithms.features.observationtable.reader.ObservationTableReader;
 import de.learnlib.algorithms.features.observationtable.writer.ObservationTableHTMLWriter;
 import de.learnlib.algorithms.features.observationtable.writer.ObservationTableWriter;
 
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 @ParametersAreNonnullByDefault
@@ -62,7 +64,11 @@ public abstract class OTUtils {
 		
 		return sb.toString();
 	}
-	
+
+	public static <I,O> ObservationTable<I,O> fromString(String source, Alphabet<I> alphabet,
+			ObservationTableReader<I,O> reader) {
+		return reader.read(source, alphabet);
+	}
 	
 	
 	
