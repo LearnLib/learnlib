@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.SUL;
+import de.learnlib.api.SULException;
 import de.learnlib.statistics.Counter;
 import de.learnlib.statistics.StatisticSUL;
 
@@ -48,7 +49,7 @@ public class ResetCounterSUL<I, O> implements StatisticSUL<I, O> {
         
 	@Override
 	@Nullable
-	public O step(@Nullable I in) {
+	public O step(@Nullable I in) throws SULException {
 		return sul.step(in);
 	}
 

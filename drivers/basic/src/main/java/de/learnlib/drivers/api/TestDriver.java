@@ -17,6 +17,10 @@
 package de.learnlib.drivers.api;
 
 import de.learnlib.api.SUL;
+import de.learnlib.mapper.ExecutableInputSUL;
+import de.learnlib.mapper.Mappers;
+import de.learnlib.mapper.api.ExecutableInput;
+import de.learnlib.mapper.api.Mapper;
 
 /**
  * A test driver executes
@@ -31,32 +35,25 @@ import de.learnlib.api.SUL;
  */
 public class TestDriver<AI, AO, CI extends ExecutableInput<CO>, CO> implements SUL<AI, AO> {
 
-    private final DataMapper<AI, AO, CI, CO> mapper;
+	private final SUL<AI, AO> sul;
 
-    public TestDriver(DataMapper<AI, AO, CI, CO> mapper) {
-        this.mapper = mapper;
+    public TestDriver(Mapper<AI, AO, CI, CO> mapper) {
+    	this.sul = Mappers.apply(mapper, new ExecutableInputSUL<CI,CO>());
     }    
     
     @Override
     public AO step(AI i) {
-        ExecutableInput<CO> ci = this.mapper.input(i);
-        try {
-            CO out = ci.execute();
-            return this.mapper.output(out);
-        } 
-        catch (SULException e) {
-            return this.mapper.exception(e);
-        }        
+        return sul.step(i);
     }
 
     @Override
     public void pre() {
-        mapper.pre();
+        sul.pre();
     }
 
     @Override
     public void post() {
-        mapper.post();
+        sul.post();
     }
 
 }

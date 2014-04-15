@@ -16,37 +16,29 @@
  */
 package de.learnlib.drivers.reflect;
 
-import de.learnlib.drivers.api.DataMapper;
-import de.learnlib.drivers.api.SULException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import de.learnlib.api.SULException;
+import de.learnlib.mapper.AbstractMapper;
 
 /**
  * Basic stateless data mapper for objects.
  * 
  * @author falkhowar
  */
-final class SimplePOJODataMapper implements DataMapper<AbstractMethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
+public class SimplePOJODataMapper extends AbstractMapper<AbstractMethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
 
     private final Constructor<?> initMethod;
     private final Object[] initParams;
-    private final AbstractMethodInput doNothing;
                 
-    private Object _this;    
-    private boolean error;
+    protected Object _this; 
 
-    SimplePOJODataMapper(Constructor<?> initMethod, Object[] initParams) {
+    protected SimplePOJODataMapper(Constructor<?> initMethod, Object... initParams) {
         this.initMethod = initMethod;
         this.initParams = initParams;
-        try {
-            Method dn = this.getClass().getMethod("doNothing", new Class<?>[] {});
-            this.doNothing = new AbstractMethodInput("dn", dn, new HashMap<String, Integer>(), new Object[] {});            
-        } catch (NoSuchMethodException | SecurityException ex) {
-            throw new IllegalStateException(ex);
-        }
     }
     
     @Override
@@ -57,46 +49,32 @@ final class SimplePOJODataMapper implements DataMapper<AbstractMethodInput, Abst
                 IllegalArgumentException | InvocationTargetException ex) {
             throw new RuntimeException(ex);
         }
-        this.error = false;
     }
 
     @Override
     public void post() {
         _this = null;
     }
-
-    @Override
-    public ConcreteMethodInput input(AbstractMethodInput i) {
-        Map<String, Object> params = new HashMap<>();
-        
-        if (this.error) {
-            return new ConcreteMethodInput(doNothing, params, null);
-        }
-        
-        return new ConcreteMethodInput(i, params, _this);
-    }
-
-    @Override
-    public AbstractMethodOutput output(Object o) {        
-        if (this.error) {
-            return Unobserved.INSTANCE;
-        }
-            
-        return new ReturnValue(o);
-    }
-
-    @Override
-    public AbstractMethodOutput exception(SULException e) {
-        if (this.error) {
-            return Unobserved.INSTANCE;
-        }
-
-        this.error = true;
-        return new Error(e.getCause());
-    }
     
-    
-    public static void doNothing() {
-    }
+
+	@Override
+	public ConcreteMethodInput mapInput(AbstractMethodInput abstractInput) {
+		Map<String, Object> params = new HashMap<>();
+        
+        return new ConcreteMethodInput(abstractInput, params, _this);
+	}
+
+	@Override
+	public AbstractMethodOutput mapOutput(Object concreteOutput) {
+        return new ReturnValue(concreteOutput);
+	}
+
+	@Override
+	public de.learnlib.mapper.api.Mapper.MappedException<? extends AbstractMethodOutput> mapUnwrappedException(
+			RuntimeException exception) throws SULException, RuntimeException {
+		return MappedException.repeatOutput(new Error(exception.getCause()), Unobserved.INSTANCE);
+	}
+	
+	
 
 }

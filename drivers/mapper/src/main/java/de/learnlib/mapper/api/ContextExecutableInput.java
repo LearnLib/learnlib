@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * LearnLib is free software; you can redistribute it and/or
@@ -14,20 +14,12 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.api;
+package de.learnlib.mapper.api;
+
+import de.learnlib.api.SULException;
 
 
-/**
- * Thrown by executable inputs on SUL errors.
- * 
- * @author falkhowar
- */
-public class SULException extends Exception {
-	
-	private static final long serialVersionUID = 1L;
-    
-    public SULException(Throwable cause) {
-        super(cause);
-    }
-    
+
+public interface ContextExecutableInput<O, C> {
+	public O execute(C context) throws SULException, Exception;
 }

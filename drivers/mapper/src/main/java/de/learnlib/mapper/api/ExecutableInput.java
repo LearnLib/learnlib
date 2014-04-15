@@ -14,7 +14,10 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.api;
+package de.learnlib.mapper.api;
+
+import de.learnlib.api.SULException;
+
 
 /**
  * An executable input is a concrete input produced by a data mapper
@@ -31,6 +34,6 @@ public interface ExecutableInput<CO> {
      * 
      * @return concrete output for this input 
      */
-    CO execute() throws SULException;
+    public CO execute() throws SULException, Exception;
     
 }

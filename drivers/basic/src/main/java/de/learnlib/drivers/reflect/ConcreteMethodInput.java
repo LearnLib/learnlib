@@ -16,18 +16,19 @@
  */
 package de.learnlib.drivers.reflect;
 
-import de.learnlib.drivers.api.ExecutableInput;
-import de.learnlib.drivers.api.SULException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Map;
+
+import de.learnlib.api.SULException;
+import de.learnlib.mapper.api.ExecutableInput;
 
 /**
  * A concrete inputs contains the information for one specific method call.
  * 
  * @author falkhowar
  */
-final class ConcreteMethodInput implements ExecutableInput<Object> {
+public class ConcreteMethodInput implements ExecutableInput<Object> {
     
     /**
      * corresponding abstract input
@@ -60,7 +61,7 @@ final class ConcreteMethodInput implements ExecutableInput<Object> {
     }
   
     @Override
-    public Object execute() throws SULException {
+    public Object execute() throws Exception {
         Object out = null;
         try {                        
             Object ret = this.input.getMethod().invoke(this.target, getParameterValues());
@@ -74,7 +75,7 @@ final class ConcreteMethodInput implements ExecutableInput<Object> {
             throw new RuntimeException(e);
         } 
         catch (InvocationTargetException e) {
-            throw new SULException(e.getCause());
+        	throw new SULException(e.getCause());
         }        
         return out;                
     }

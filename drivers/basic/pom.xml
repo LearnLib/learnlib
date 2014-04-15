@@ -63,6 +63,10 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<artifactId>learnlib-simulator</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-mapper</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>
