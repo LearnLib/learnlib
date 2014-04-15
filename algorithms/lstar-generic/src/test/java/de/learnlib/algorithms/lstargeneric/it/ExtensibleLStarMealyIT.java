@@ -16,8 +16,7 @@
  */
 package de.learnlib.algorithms.lstargeneric.it;
 
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import java.util.Arrays;
 
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
@@ -28,6 +27,9 @@ import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
 public class ExtensibleLStarMealyIT extends AbstractMealyLearnerIT {
 
 	@Override
@@ -37,6 +39,8 @@ public class ExtensibleLStarMealyIT extends AbstractMealyLearnerIT {
 		ExtensibleLStarMealyBuilder<I, O> builder = new ExtensibleLStarMealyBuilder<>();
 		builder.setAlphabet(alphabet);
 		builder.setOracle(mqOracle);
+		
+		builder.setInitialPrefixes(Arrays.asList(Word.<I>epsilon(), Word.fromLetter(alphabet.getSymbol(0))));
 		
 		for(ObservationTableCEXHandler<? super I, ? super Word<O>> handler : ObservationTableCEXHandlers.values()) {
 			builder.setCexHandler(handler);

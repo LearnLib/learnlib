@@ -16,12 +16,15 @@
  */
 package de.learnlib.algorithms.dhc.mealy.it;
 
-import net.automatalib.words.Alphabet;
-
-import de.learnlib.algorithms.dhc.mealy.factory.MealyDHCBuilder;
+import de.learnlib.algorithms.dhc.mealy.MealyDHCBuilder;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.counterexamples.GlobalSuffixFinder;
+import de.learnlib.counterexamples.GlobalSuffixFinders;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
+
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 
 public class MealyDHCIT extends AbstractMealyLearnerIT {
 	
@@ -34,10 +37,11 @@ public class MealyDHCIT extends AbstractMealyLearnerIT {
 		builder.setAlphabet(alphabet);
 		builder.setOracle(mqOracle);
 		
-		//for(GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder : GlobalSuffixFinders.values()) {
-		//	
-		//}
-		variants.addLearnerVariant("default", builder.create());
+		for(GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder : GlobalSuffixFinders.values()) {
+			builder.setSuffixFinder(suffixFinder);
+			String name = "suffixFinder=" + suffixFinder.toString();
+			variants.addLearnerVariant(name, builder.create());
+		}
 	}
 
 }

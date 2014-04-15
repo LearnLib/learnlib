@@ -18,9 +18,11 @@ package de.learnlib.cache.dfa;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.cache.LearningCacheOracle.DFALearningCacheOracle;
+
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.words.Alphabet;
-import de.learnlib.api.MembershipOracle;
 
 
 @ParametersAreNonnullByDefault
@@ -41,6 +43,11 @@ public abstract class DFACaches {
 	public static <I>
 	DFACacheOracle<I> createTreeCache(Alphabet<I> alphabet, MembershipOracle<I,Boolean> mqOracle) {
 		return DFACacheOracle.createTreeCacheOracle(alphabet, mqOracle);
+	}
+	
+	public static <I>
+	DFALearningCacheOracle<I> createHashCache(MembershipOracle<I, Boolean> mqOracle) {
+		return new DFAHashCacheOracle<>(mqOracle);
 	}
 	
 	/**

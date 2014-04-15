@@ -22,8 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner;
 import de.learnlib.algorithms.features.observationtable.OTLearner;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
@@ -32,6 +30,9 @@ import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
+
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 
 /**
  * An abstract base class for L*-style algorithms.
@@ -73,10 +74,11 @@ public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, Glob
 	 */
 	@Override
 	public void startLearning() {
+		List<Word<I>> prefixes = initialPrefixes();
 		List<Word<I>> suffixes = initialSuffixes();
-		List<List<Row<I>>> initialUnclosed = table.initialize(suffixes, oracle);
+		List<List<Row<I>>> initialUnclosed = table.initialize(prefixes, suffixes, oracle);
 		
-		completeConsistentTable(initialUnclosed, false);
+		completeConsistentTable(initialUnclosed, table.isInitialConsistencyCheckRequired());
 	}
 
 	/*
@@ -194,6 +196,10 @@ public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, Glob
 	 * @return the list of initial suffixes.
 	 */
 	protected abstract List<Word<I>> initialSuffixes();
+	
+	protected List<Word<I>> initialPrefixes() {
+		return Collections.singletonList(Word.<I>epsilon());
+	}
 	
 	/*
 	 * (non-Javadoc)

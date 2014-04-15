@@ -75,7 +75,7 @@ final class SingleLearnerVariantITSubCase<I,O,
 			}
 			
 			boolean refined = learner.refineHypothesis(ceQuery);
-			Assert.assertTrue(refined, "Real counterexample did not refine hypothesis");
+			Assert.assertTrue(refined, "Real counterexample " + ceQuery.getInput() + " did not refine hypothesis");
 		}
 		
 		Assert.assertNull(

@@ -19,17 +19,20 @@ package de.learnlib.cache.dfa;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.Query;
+import de.learnlib.cache.LearningCacheOracle.DFALearningCacheOracle;
 
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;
 import net.automatalib.incremental.dfa.tree.IncrementalDFATreeBuilder;
 import net.automatalib.words.Alphabet;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
-import de.learnlib.cache.LearningCacheOracle.DFALearningCacheOracle;
 
 
 /**
@@ -48,15 +51,16 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
 	
 	public static <I>
 	DFACacheOracle<I> createTreeCacheOracle(Alphabet<I> alphabet, MembershipOracle<I,Boolean> delegate) {
-		return new DFACacheOracle<>(new IncrementalDFADAGBuilder<>(alphabet), delegate);
+		return new DFACacheOracle<>(new IncrementalDFATreeBuilder<>(alphabet), delegate);
 	}
 	
 	public static <I>
 	DFACacheOracle<I> createDAGCacheOracle(Alphabet<I> alphabet, MembershipOracle<I,Boolean> delegate) {
-		return new DFACacheOracle<>(new IncrementalDFATreeBuilder<>(alphabet), delegate);
+		return new DFACacheOracle<>(new IncrementalDFADAGBuilder<>(alphabet), delegate);
 	}
 	
 	private final IncrementalDFABuilder<I> incDfa;
+	private final Lock incDfaLock;
 	private final MembershipOracle<I,Boolean> delegate;
 
 	/**
@@ -70,8 +74,13 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
 		this(new IncrementalDFADAGBuilder<>(alphabet), delegate);
 	}
 	
-	private DFACacheOracle(IncrementalDFABuilder<I> incDfa, MembershipOracle<I,Boolean> delegate) {
+	private DFACacheOracle(IncrementalDFABuilder<I> incDfa, MembershipOracle<I, Boolean> delegate) {
+		this(incDfa, new ReentrantLock(), delegate);
+	}
+	
+	private DFACacheOracle(IncrementalDFABuilder<I> incDfa, Lock lock, MembershipOracle<I,Boolean> delegate) {
 		this.incDfa = incDfa;
+		this.incDfaLock = lock;
 		this.delegate = delegate;
 	}
 	
@@ -83,7 +92,7 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
 	 */
 	@Override
 	public DFACacheConsistencyTest<I> createCacheConsistencyTest() {
-		return new DFACacheConsistencyTest<>(incDfa);
+		return new DFACacheConsistencyTest<>(incDfa, incDfaLock);
 	}
 	
 	/*
@@ -94,18 +103,33 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
 	public void processQueries(Collection<? extends Query<I, Boolean>> queries) {
 		List<ProxyQuery<I>> unanswered = new ArrayList<>();
 		
-		for(Query<I,Boolean> q : queries) {
-			Acceptance acc = incDfa.lookup(q.getInput());
-			if(acc != Acceptance.DONT_KNOW)
-				q.answer((acc == Acceptance.TRUE) ? true : false);
-			else
-				unanswered.add(new ProxyQuery<>(q));
+		incDfaLock.lock();
+		try {
+			for(Query<I,Boolean> q : queries) {
+				Acceptance acc = incDfa.lookup(q.getInput());
+				if(acc != Acceptance.DONT_KNOW) {
+					q.answer(acc.toBoolean());
+				}
+				else {
+					unanswered.add(new ProxyQuery<>(q));
+				}
+			}
+		}
+		finally {
+			incDfaLock.unlock();
 		}
 		
 		delegate.processQueries(unanswered);
 		
-		for(ProxyQuery<I> q : unanswered)
-			incDfa.insert(q.getInput(), q.getAnswer());
+		incDfaLock.lock();
+		try {
+			for(ProxyQuery<I> q : unanswered) {
+				incDfa.insert(q.getInput(), q.getAnswer());
+			}
+		}
+		finally {
+			incDfaLock.unlock();
+		}
 	}
 
 }

@@ -18,14 +18,8 @@ package de.learnlib.algorithms.lstargeneric.mealy;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
@@ -37,6 +31,13 @@ import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
+import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
 public class ExtensibleLStarMealy<I, O> extends
 		ExtensibleAutomatonLStar<MealyMachine<?,I,?,O>, I, Word<O>, Integer, CompactMealyTransition<O>, Void, O, CompactMealy<I,O>>
 		implements OTLearnerMealy<I,O> {
@@ -45,13 +46,23 @@ public class ExtensibleLStarMealy<I, O> extends
 		= new ArrayList<O>();
 	
 
-	@GenerateBuilder(defaults = ExtensibleAutomatonLStar.BuilderDefaults.class)
 	public ExtensibleLStarMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, Word<O>> oracle,
 			List<Word<I>> initialSuffixes,
 			ObservationTableCEXHandler<? super I, ? super Word<O>> cexHandler,
 			ClosingStrategy<? super I, ? super Word<O>> closingStrategy) {
+		this(alphabet, oracle, Collections.singletonList(Word.<I>epsilon()), initialSuffixes, cexHandler, closingStrategy);
+	}
+	
+	@GenerateBuilder(defaults = ExtensibleAutomatonLStar.BuilderDefaults.class)
+	public ExtensibleLStarMealy(Alphabet<I> alphabet,
+			MembershipOracle<I, Word<O>> oracle,
+			List<Word<I>> initialPrefixes,
+			List<Word<I>> initialSuffixes,
+			ObservationTableCEXHandler<? super I, ? super Word<O>> cexHandler,
+			ClosingStrategy<? super I, ? super Word<O>> closingStrategy) {
 		super(alphabet, oracle, new CompactMealy<I,O>(alphabet),
+				initialPrefixes,
 				LStarMealyUtil.ensureSuffixCompliancy(initialSuffixes, alphabet, cexHandler.needsConsistencyCheck()),
 				cexHandler,
 				closingStrategy);

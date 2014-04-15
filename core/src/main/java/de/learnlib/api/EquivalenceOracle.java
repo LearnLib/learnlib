@@ -69,6 +69,7 @@ public interface EquivalenceOracle<A, I, O> {
 	 * @param <O> output symbol class
 	 */
 	public static interface MealyEquivalenceOracle<I,O> extends EquivalenceOracle<MealyMachine<?,I,?,O>,I,Word<O>> {}
+
 	
 	
 	/**
@@ -86,5 +87,6 @@ public interface EquivalenceOracle<A, I, O> {
 	 */
 	@Nullable
 	public DefaultQuery<I, O> findCounterExample(A hypothesis, Collection<? extends I> inputs);  
+
 	
 }

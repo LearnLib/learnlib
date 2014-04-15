@@ -18,15 +18,18 @@ package de.learnlib.oracles;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.api.QueryAnswerer;
+
+import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.words.Word;
 
 @ParametersAreNonnullByDefault
 public abstract class MQUtil {
@@ -60,5 +63,11 @@ public abstract class MQUtil {
 			O answer = answerer.answerQuery(prefix, suffix);
 			query.answer(answer);
 		}
+	}
+	
+	public static <I,O> boolean isCounterexample(DefaultQuery<I, O> query, SuffixOutput<I, O> hyp) {
+		O qryOut = query.getOutput();
+		O hypOut = hyp.computeSuffixOutput(query.getPrefix(), query.getSuffix());
+		return !Objects.equals(qryOut, hypOut);
 	}
 }

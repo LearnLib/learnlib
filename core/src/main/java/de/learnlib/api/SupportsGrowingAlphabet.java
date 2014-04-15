@@ -22,6 +22,6 @@ package de.learnlib.api;
  */
 public interface SupportsGrowingAlphabet<I> {
 	
-	public void addAlphabetSymbol(I symbol);
+	void addAlphabetSymbol(I symbol);
 	
 }

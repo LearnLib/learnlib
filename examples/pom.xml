@@ -83,5 +83,9 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-commons-dotutil</artifactId>
 		</dependency>
-    </dependencies>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-parallelism</artifactId>
+		</dependency>
+	</dependencies>
 </project>

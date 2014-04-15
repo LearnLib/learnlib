@@ -16,17 +16,17 @@
  */
 package de.learnlib.mealy;
 
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
-
-import net.automatalib.words.Word;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.Query;
+
+import net.automatalib.words.Word;
 
 
 /**
@@ -71,7 +71,12 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 			}
 			originalQuery.answer(output.isEmpty() ? null : output.lastSymbol());
 		}
-		
+
+		@Override
+		public String toString() {
+			return originalQuery.toString();
+		}
+
 	}
 	
 	private final MembershipOracle<I,Word<O>> wordOracle;
@@ -91,8 +96,9 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 	@Override
 	public void processQueries(Collection<? extends Query<I, O>> queries) {
 		List<LastSymbolQuery<I,O>> lsQueries = new ArrayList<LastSymbolQuery<I,O>>(queries.size());
-		for(Query<I,O> qry : queries)
+		for(Query<I,O> qry : queries) {
 			lsQueries.add(new LastSymbolQuery<I,O>(qry));
+		}
 		
 		wordOracle.processQueries(lsQueries);
 	}

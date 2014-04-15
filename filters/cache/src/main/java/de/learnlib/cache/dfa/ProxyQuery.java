@@ -74,5 +74,11 @@ final class ProxyQuery<I> extends Query<I,Boolean> {
 	public Boolean getAnswer() {
 		return answer;
 	}
-	
+
+	@Override
+	public String toString() {
+		return origQuery.toString();
+	}
+
 }
+

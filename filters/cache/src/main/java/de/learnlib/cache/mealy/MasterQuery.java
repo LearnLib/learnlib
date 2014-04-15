@@ -23,6 +23,7 @@ import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import de.learnlib.api.Query;
+import de.learnlib.oracles.AbstractQuery;
 
 
 /**
@@ -34,9 +35,8 @@ import de.learnlib.api.Query;
  * @param <I> input symbol type
  * @param <O> output symbol type
  */
-final class MasterQuery<I,O> extends Query<I,Word<O>> {
+final class MasterQuery<I,O> extends AbstractQuery<I,Word<O>> {
 	
-	private final Word<I> word;
 	private Word<O> answer;
 	private final Mapping<? super O,? extends O> errorSyms;
 	
@@ -47,38 +47,24 @@ final class MasterQuery<I,O> extends Query<I,Word<O>> {
 	}
 	
 	public MasterQuery(Word<I> word, Word<O> output) {
-		this.word = word;
+		super(word);
 		this.answer = output;
 		this.errorSyms = null;
 		this.slaves = null;
 	}
 	
 	public MasterQuery(Word<I> word, Mapping<? super O, ? extends O> errorSyms) {
-		this.word = word;
+		super(word);
 		this.errorSyms = errorSyms;
 		this.slaves = new ArrayList<>();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.api.Query#getPrefix()
-	 */
-	@Override
-	public Word<I> getPrefix() {
-		return Word.epsilon();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.api.Query#getSuffix()
-	 */
-	@Override
-	public Word<I> getSuffix() {
-		return word;
-	}
-	
 	public Word<O> getAnswer() {
 		return answer;
+	}
+	
+	public boolean isAnswered() {
+		return (answer != null);
 	}
 
 	/*
@@ -89,16 +75,19 @@ final class MasterQuery<I,O> extends Query<I,Word<O>> {
 	public void answer(Word<O> output) {
 		output = truncateOutput(output);
 		this.answer = output;
-		for(Query<I,Word<O>> slave : slaves)
+		for(Query<I,Word<O>> slave : slaves) {
 			answerSlave(slave);
+		}
 	}
 	
 	
 	public void addSlave(Query<I,Word<O>> slave) {
-		if(slaves == null)
+		if(slaves == null) {
 			answerSlave(slave);
-		else
+		}
+		else {
 			slaves.add(slave);
+		}
 	}
 	
 	private void answerSlave(Query<I,Word<O>> slave) {
@@ -131,5 +120,13 @@ final class MasterQuery<I,O> extends Query<I,Word<O>> {
 		
 		return wb.toWord();
 	}
-	
+
+	/**
+	 * @see de.learnlib.oracles.AbstractQuery#toStringWithAnswer(Object)
+	 */
+	@Override
+	public String toString() {
+		return toStringWithAnswer(answer);
+	}
+
 }

@@ -30,15 +30,15 @@ import de.learnlib.oracles.DefaultQuery;
  * and {@link DefaultQuery#getSuffix()}, in reaction to which the SUL produces a specific observable
  * behavior (outputting a word, acceptance/rejection etc.).
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
- * @author Maik Merten <maikmerten@googlemail.com>
+ * @author Malte Isberner
+ * @author Maik Merten
  * 
  * @see DefaultQuery
  */
 public interface MembershipOracle<I, O> {
 	
-	public static interface DFAMembershipOracle<I> extends MembershipOracle<I,Boolean> {}
-	public static interface MealyMembershipOracle<I,O> extends MembershipOracle<I,Word<O>> {}
+	static interface DFAMembershipOracle<I> extends MembershipOracle<I,Boolean> {}
+	static interface MealyMembershipOracle<I,O> extends MembershipOracle<I,Word<O>> {}
 	
 	/**
 	 * Processes the specified collection of queries. When this method returns,

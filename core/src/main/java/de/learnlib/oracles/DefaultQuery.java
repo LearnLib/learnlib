@@ -71,4 +71,13 @@ public class DefaultQuery<I, O> extends AbstractQuery<I,O> {
     public void answer(@Nullable O output) {
         this.output = output;
     }
+
+	/**
+	 * @see de.learnlib.oracles.AbstractQuery#toStringWithAnswer(Object)
+	 */
+	@Override
+	public String toString() {
+		return toStringWithAnswer(output);
+	}
+
 }

@@ -38,4 +38,12 @@ public class NoopQuery<I, O> extends AbstractQuery<I, O> {
 	public void answer(O output) {
 	}
 
+	/**
+	 * @see de.learnlib.oracles.AbstractQuery#toStringWithAnswer(Object)
+	 */
+	@Override
+	public String toString() {
+		return toStringWithAnswer(null);
+	}
+
 }

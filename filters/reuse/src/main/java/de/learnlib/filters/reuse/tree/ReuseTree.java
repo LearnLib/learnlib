@@ -19,12 +19,15 @@ package de.learnlib.filters.reuse.tree;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.ReuseException;
 import de.learnlib.filters.reuse.ReuseOracle;
+import de.learnlib.filters.reuse.tree.BoundedDeque.AccessPolicy;
+import de.learnlib.filters.reuse.tree.BoundedDeque.EvictPolicy;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 
 import net.automatalib.graphs.abstractimpl.AbstractGraph;
@@ -71,7 +74,10 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 		private boolean invalidateSystemstates = true;
 		private SystemStateHandler<S> systemStateHandler;
 		private Set<I> invariantInputSymbols;
-		private Set<O> failureOutputSymbols;		
+		private Set<O> failureOutputSymbols;
+		private int maxSystemStates = -1;
+		private AccessPolicy accessPolicy = AccessPolicy.LIFO;
+		private EvictPolicy evictPolicy = EvictPolicy.EVICT_OLDEST;
 		
 		public ReuseTreeBuilder(Alphabet<I> alphabet) {
 			this.alphabet = alphabet;
@@ -100,6 +106,21 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 			return this;
 		}
 		
+		public ReuseTreeBuilder<S,I,O> withMaxSystemStates(int maxSystemStates) {
+			this.maxSystemStates = maxSystemStates;
+			return this;
+		}
+		
+		public ReuseTreeBuilder<S,I,O> withAccessPolicy(AccessPolicy accessPolicy) {
+			this.accessPolicy = accessPolicy;
+			return this;
+		}
+		
+		public ReuseTreeBuilder<S,I,O> withEvictPolicy(EvictPolicy evictPolicy) {
+			this.evictPolicy = evictPolicy;
+			return this;
+		}
+		
 		public ReuseTree<S, I, O> build() {
 			return new ReuseTree<>(this);
 		}
@@ -113,6 +134,10 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 
 	private final boolean invalidateSystemstates;
 	private final SystemStateHandler<S> systemStateHandler;
+	
+	private final int maxSystemStates;
+	private final AccessPolicy accessPolicy;
+	private final EvictPolicy evictPolicy;
 
 	/** Maybe reset to zero, see {@link ReuseTree#clearTree()} */
 	private int nodeCount = 0;
@@ -137,9 +162,13 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 		this.failureOutputSymbols =
 				(builder.failureOutputSymbols != null) ? builder.failureOutputSymbols : Collections.<O>emptySet();
 		
+		this.maxSystemStates = builder.maxSystemStates;
+		this.accessPolicy = builder.accessPolicy;
+		this.evictPolicy = builder.evictPolicy;
+		
 		// local and not configurable
 		this.alphabetSize = alphabet.size();
-		this.root = new ReuseNode<>(nodeCount++, alphabetSize);
+		this.root = createNode();
 	}
 
 	/**
@@ -200,10 +229,13 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	}
 
 	private void disposeSystemstates(ReuseNode<S, I, O> node) {
-		if (node.getSystemState() != null) {
-			systemStateHandler.dispose(node.getSystemState());
+		Iterator<S> stateIt = node.systemStatesIterator();
+		while(stateIt.hasNext()) {
+			S state = stateIt.next();
+			systemStateHandler.dispose(state);
 		}
-		node.setSystemState(null);
+		node.clearSystemStates();
+		
 		for (ReuseEdge<S, I, O> edge : node.getEdges()) {
 			if (edge != null) {
 				if (!edge.getTarget().equals(node)) {
@@ -216,8 +248,8 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 
 	/**
 	 * Clears the whole tree which means the root will be reinitialized by a new
-	 * {@link ReuseNode} and all invariant input symbols as well as all failure
-	 * output symbols will be removed.
+	 * {@link ReuseNode} and all existing system states will be disposed.
+	 * All invariant input symbols as well as all failure output symbols will remain.
 	 * <p>
 	 * The {@link SystemStateHandler} (
 	 * {@link #setSystemStateHandler(SystemStateHandler)}) will <b>not</b> be
@@ -225,9 +257,8 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 */
 	public synchronized void clearTree() {
 		this.nodeCount = 0;
-		this.root = new ReuseNode<>(nodeCount++, alphabetSize);
-		this.invariantInputSymbols.clear();
-		this.failureOutputSymbols.clear();
+		disposeSystemstates(root);
+		this.root = createNode();
 	}
 
 	/**
@@ -251,7 +282,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 
 		ReuseNode<S, I, O> sink = getRoot();
 		ReuseNode<S, I, O> lastState = null;
-		if (sink.getSystemState() != null) {
+		if (sink.hasSystemStates()) {
 			lastState = sink;
 		}
 
@@ -265,7 +296,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 			}
 
 			sink = node;
-			if (sink.getSystemState() != null) {
+			if (sink.hasSystemStates()) {
 				lastState = sink;
 				length = i + 1;
 			}
@@ -274,10 +305,9 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 		if (lastState == null) {
 			return null;
 		}
-		S systemState = lastState.getSystemState();
-		if (invalidateSystemstates) {
-			lastState.setSystemState(null);
-		}
+		
+		S systemState = lastState.fetchSystemState(invalidateSystemstates);
+		
 		return new NodeResult<>(lastState, systemState, length);
 	}
 
@@ -366,7 +396,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 			} else if (invariantInputSymbols.contains(in)) {
 				rn = sink;
 			} else {
-				rn = new ReuseNode<>(nodeCount++, alphabetSize);
+				rn = createNode();
 			}
 
 			int index = alphabet.getSymbolIndex(in);
@@ -374,13 +404,10 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 			sink = rn;
 		}
 		
-		// If there already is a state stored at this node, overwrite it (but dispose it beforehand)
-		// TODO: Allow storing multiple states at a node
-		S oldState = sink.getSystemState();
-		if(oldState != null) {
-			systemStateHandler.dispose(oldState);
+		S evictedState = sink.addSystemState(queryResult.newState);
+		if(evictedState != null) {
+			systemStateHandler.dispose(evictedState);
 		}
-		sink.setSystemState(queryResult.newState);
 	}
 	
 	/*
@@ -434,5 +461,10 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	@Override
 	public synchronized GraphDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> getGraphDOTHelper() {
 		return new ReuseTreeDotHelper<>();
+	}
+	
+	
+	private ReuseNode<S,I,O> createNode() {
+		return new ReuseNode<>(nodeCount++, alphabetSize, maxSystemStates, accessPolicy, evictPolicy);
 	}
 }
