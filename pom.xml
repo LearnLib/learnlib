@@ -167,24 +167,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>${javadoc-plugin.version}</version>
-					<configuration>
-						<maxmemory>512</maxmemory>
-						<quiet>false</quiet>
-						<source>1.7</source>
-						<verbose>true</verbose>
-						<linksource>false</linksource>
-						<links>
-							<link>${java7.apidocs}</link>
-							<link>${automatalib.apidocs}</link>
-							<link>${guava.apidocs}</link>
-							<link>${trove4j.apidocs}</link>
-						</links>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<version>${checkstyle-plugin.version}</version>
 					<configuration>
@@ -498,7 +480,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 								<goals>
 									<goal>aggregate-jar</goal>
 								</goals>
-								<phase>prepare-package</phase>
+								<phase>package</phase>
 							</execution>
 						</executions>
 					</plugin>
