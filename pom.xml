@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (C) 2013 TU Dortmund
+Copyright (C) 2014 TU Dortmund
 This file is part of LearnLib, http://www.learnlib.de/.
 
 LearnLib is free software; you can redistribute it and/or
@@ -25,10 +25,10 @@ http://www.gnu.de/documents/lgpl.en.html.
 	-->
 	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-parent</artifactId>
-	<version>0.9.1</version>
+	<version>0.10.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
-	<url>http://learnlib.github.io/learnlib/maven-site/</url>
+	<url>http://learnlib.github.io/learnlib/maven-site/${project.version}</url>
 	<description>A framework for active automata learning and experimentation</description>
 
 	<licenses>
@@ -87,7 +87,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 			<groupId>org.sonatype.oss</groupId>
 			<artifactId>oss-parent</artifactId>
-			<version>7</version>
+			<version>9</version>
 	</parent>
 
 	<!--	
@@ -102,8 +102,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<module>simulator</module>
 		<module>utils</module>
 		<module>filters</module>
+		<module>drivers</module>
 		<module>examples</module>
 		<module>archetypes</module>
+		
+		<module>distribution</module>
 	</modules>
 
 	<!--	
@@ -114,22 +117,35 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<!--
 			dependency versions
 		-->
-		<automatalib.version>0.3.1</automatalib.version>
-		<testng.version>6.8</testng.version>
+		<automatalib.version>0.4.0</automatalib.version>
+		<testng.version>6.8.8</testng.version>
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
 		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
+		<jdiff-plugin.version>1.0-beta-1</jdiff-plugin.version>
 		<site-plugin.version>3.3</site-plugin.version>
 		<reports-plugin.version>2.7</reports-plugin.version>
 		<surefire-plugin.version>2.14.1</surefire-plugin.version>
+		<failsafe-plugin.version>2.16</failsafe-plugin.version>
 		<assembly-plugin.version>2.4</assembly-plugin.version>
 		<resources-plugin.version>2.6</resources-plugin.version>
-		<release-plugin.version>2.2</release-plugin.version> <!-- overrides OSS parent! -->
+		<upload-plugin.version>1.1</upload-plugin.version>
+		<exec-plugin.version>1.2.1</exec-plugin.version>
+		<deploy-site-github.exec>deploy-site-github</deploy-site-github.exec>
+
 		<trove4j.version>3.0.3</trove4j.version>
+		
+		<guava.version>16.0.1</guava.version>
+		<findbugs.version>2.0.3</findbugs.version>
+		
+		<buildergen.version>0.1</buildergen.version>
 		
 		<!-- Javadoc links -->
 		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
-		<automatalib.apidocs>http://misberner.github.io/automatalib/maven-site/apidocs/</automatalib.apidocs>
+		<automatalib.apidocs>http://misberner.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
+		<guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/v${guava.version}/javadoc/</guava.apidocs>
+		<!-- Unfortunately, these are not version-sensitive -->
+		<trove4j.apidocs>http://trove4j.sourceforge.net/javadocs/</trove4j.apidocs>
 	</properties>
 
 
@@ -145,26 +161,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<version>${compiler-plugin.version}</version>
 					<configuration>
 						<fork>true</fork>
-						<meminitial>128m</meminitial>
-						<maxmem>512m</maxmem>
 						<source>1.7</source>
 						<target>1.7</target>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>${javadoc-plugin.version}</version>
-					<configuration>
-						<maxmemory>512</maxmemory>
-						<quiet>false</quiet>
-						<source>1.7</source>
-						<verbose>true</verbose>
-						<linksource>true</linksource>
-						<links>
-							<link>${java7.apidocs}</link>
-							<link>${automatalib.apidocs}</link>
-						</links>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -195,12 +193,41 @@ http://www.gnu.de/documents/lgpl.en.html.
 								<goal>attach-descriptor</goal>
 							</goals>
 						</execution>
+						<!-- Skip site creation; this will be done by deploy-site-github -->
+						<execution>
+							<id>default-site</id>
+							<phase>site</phase>
+							<configuration>
+								<skip>true</skip>
+							</configuration>
+						</execution>
 					</executions>
+					<configuration>
+						<skipDeploy>true</skipDeploy>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>${exec-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>${failsafe-plugin.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -212,17 +239,102 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<artifactId>maven-release-plugin</artifactId>
 					<!-- <version>${release-plugin.version}</version> -->
 					<configuration>
+						<!--
+						We use a property rather than a profile such that several different profiles
+						can be activated upon a release, without us having to add them here
+						-->
+						<arguments>-Psonatype-oss-release -Dlearnlib.release=true</arguments>
 						<!-- False to allow rebasing in case of errors -->
 						<pushChanges>false</pushChanges>
 						<!-- Automatically use the parent version for all submodules, do not prompt for each one -->
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<!-- Use prefix learnlib, not learnlib-parent -->
 						<!-- <tagNameFormat>learnlib-@{project.version}</tagNameFormat> -->
+						<!-- The default "clean verify" causes javadoc and archetype integration tests to fail -->
 						<preparationGoals>clean install</preparationGoals>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>com.atlassian.maven.plugins</groupId>
+					<artifactId>maven-upload-plugin</artifactId>
+					<version>${upload-plugin.version}</version>
+					<configuration>
+						<serverId>learnlib-de</serverId>
+						<url>sftp://www155.your-server.de/</url>
+					</configuration>
+				</plugin>
+				<!-- This gets rid of the nasty "maven-enforcer-plugin will be ignored" warning by m2e -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<executions>
+					<!-- Deploy site @ GitHub pages -->
+					<!--
+						Note: In order to be able to deploy the Maven site,
+						you need the script deploy-site-github to reside
+						in your PATH, or manually specify the path to the
+						executable script using the "deploy-site-github.exec"
+						property.
+						You can download the shell script from this URL:
+						https://raw.github.com/misberner/shell-scripts/master/maven/deploy-site-github.sh
+					-->
+					<execution>
+						<id>deploy-site-github</id>
+						<inherited>false</inherited>
+						<phase>site-deploy</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${deploy-site-github.exec}</executable>
+							<workingDirectory>${project.basedir}</workingDirectory>
+							<arguments>
+								<argument>-p</argument> <!-- Purge contents before copying -->
+								<argument>-P/maven-site</argument>
+								<argument>-V</argument>
+								<argument>-l</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>2.6</version>
+			</extension>
+		</extensions>
 	</build>
 
 	<!--
@@ -255,14 +367,20 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${javadoc-plugin.version}</version>
 				<configuration>
-					<maxmemory>512</maxmemory>
 					<quiet>false</quiet>
 					<source>1.7</source>
+					<detectLinks>true</detectLinks>
 					<verbose>true</verbose>
-					<linksource>true</linksource>
+					<!--
+						No need to include the source in Javadoc, as it is browseable
+						via GitHub
+					-->
+					<linksource>false</linksource>
 					<links>
 						<link>${java7.apidocs}</link>
 						<link>${automatalib.apidocs}</link>
+						<link>${guava.apidocs}</link>
+						<link>${trove4j.apidocs}</link>
 					</links>
 				</configuration>
 				<reportSets>
@@ -281,6 +399,14 @@ http://www.gnu.de/documents/lgpl.en.html.
 					</reportSet>
 				</reportSets>
 			</plugin>
+			<!-- jdiff-maven-plugin not in central! -->
+			<!--
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jdiff-maven-plugin</artifactId>
+				<version>${jdiff-plugin.version}</version>
+			</plugin>
+			-->
 		</plugins>
 	</reporting>
 
@@ -288,6 +414,23 @@ http://www.gnu.de/documents/lgpl.en.html.
 	===============================	PROFILES =======================	
 	-->
 	<profiles>
+		<profile>
+			<id>integration-tests</id>
+			<activation>
+				<property>
+					<name>learnlib.release</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>netbeans-private-testng</id>
 			<activation>
@@ -311,9 +454,21 @@ http://www.gnu.de/documents/lgpl.en.html.
 		</profile>
 		<profile>
 			<id>binary-release</id>
+			<activation>
+				<property>
+					<name>learnlib.release</name>
+					<value>true</value>
+				</property>
+			</activation>
 			<build>
 				<plugins>
-					<!--  aggregate javadoc of modules in one jar -->
+					<!-- aggregate javadoc of modules in one jar -->
+					<!--
+						Note: we don't use the assembly plugin here, since then
+						inter-module links wouldn't work correctly
+					-->
+					<!-- Moved to distribution -->
+					<!-- 
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
@@ -327,67 +482,29 @@ http://www.gnu.de/documents/lgpl.en.html.
 								<goals>
 									<goal>aggregate-jar</goal>
 								</goals>
-								<phase>site</phase>
+								<phase>package</phase>
 							</execution>
 						</executions>
 					</plugin>
-					<!-- 
-                        build assemblies
-                    -->
 					<plugin>
-						<artifactId>maven-assembly-plugin</artifactId>
+						<groupId>com.atlassian.maven.plugins</groupId>
+						<artifactId>maven-upload-plugin</artifactId>
 						<inherited>false</inherited>
-						<configuration>
-							<finalName>learnlib-${project.version}</finalName>
-							<appendAssemblyId>false</appendAssemblyId>
-						</configuration>
 						<executions>
-							<!--  sources jar -->
 							<execution>
-								<id>src</id>
-								<phase>package</phase>
+								<id>upload-javadoc-jar</id>
+								<phase>site-deploy</phase>
 								<goals>
-									<goal>single</goal>
+									<goal>upload</goal>
 								</goals>
 								<configuration>
-									<descriptors>
-										<descriptor>src/main/assembly/learnlib-srcjar.xml</descriptor>
-									</descriptors>
-									<finalName>learnlib-${project.version}-sources</finalName>
-								</configuration>
-							</execution>
-							<!-- 
-                                binary jar
-                            -->
-							<execution>
-								<id>jar</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-								<configuration>
-									<descriptors>
-										<descriptor>src/main/assembly/learnlib-jar.xml</descriptor>
-									</descriptors>
-								</configuration>
-							</execution>
-							<!-- 
-                                bin
-                            -->
-							<execution>
-								<id>bin</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-								<configuration>
-									<descriptors>
-										<descriptor>src/main/assembly/learnlib-bin.xml</descriptor>
-									</descriptors>
+									<resourceSrc>${project.build.directory}/learnlib-${project.version}-javadoc.jar</resourceSrc>
+									<resourceDest>/files/releases/${project.version}/</resourceDest>
 								</configuration>
 							</execution>
 						</executions>
 					</plugin>
+				-->
 				</plugins>
 			</build>
 		</profile>
@@ -400,13 +517,12 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<dependencies>
 			<dependency>
 				<groupId>de.learnlib</groupId>
-				<artifactId>learnlib-test-support</artifactId>
+				<artifactId>learnlib-core</artifactId>
 				<version>${project.version}</version>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>de.learnlib</groupId>
-				<artifactId>learnlib-core</artifactId>
+				<artifactId>learnlib-algorithm-features</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -446,8 +562,51 @@ http://www.gnu.de/documents/lgpl.en.html.
 			</dependency>
 			<dependency>
 				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-reuse</artifactId>
+				<version>${project.version}</version>
+			</dependency>			
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-drivers-basic</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-parallelism</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-discrimination-tree</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-kearns-vazirani</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-mapper</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- LearnLib tests -->
+			<dependency>
+				<groupId>de.learnlib.testsupport</groupId>
+				<artifactId>learnlib-learning-examples</artifactId>
+				<version>${project.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>de.learnlib.testsupport</groupId>
+				<artifactId>learnlib-learner-it-support</artifactId>
+				<version>${project.version}</version>
+				<scope>test</scope>
 			</dependency>
 
 			<!-- Import AutomataLib dependencies -->
@@ -474,8 +633,44 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>trove4j</artifactId>
 				<version>${trove4j.version}</version>
 			</dependency>
+
+			<!-- Guava -->
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+
+			<!-- FindBugs - JSR 305 Annotations (@Nullable, @Nonnull, ...) -->
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>${findbugs.version}</version>
+			</dependency>
+
+			<!-- BuilderGen -->
+			<dependency>
+				<groupId>com.github.misberner.buildergen</groupId>
+				<artifactId>buildergen</artifactId>
+				<version>${buildergen.version}</version>
+				<!-- Compile-time only -->
+				<scope>provided</scope>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
+	
+	<!-- For maven-upload-plugin -->
+	<pluginRepositories>
+		<pluginRepository>
+			<id>atlassian-public</id>
+			<url>https://maven.atlassian.com/repository/public</url>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<!--
 	================================= DISTRIBUTION ==============================	

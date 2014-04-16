@@ -37,8 +37,10 @@ public class BaselineLStarTest {
 
 	@BeforeClass
 	public void setup() {
-		DFA<?, Integer> dfa = ExampleAngluin.getInstance();
-		Alphabet<Integer> alphabet = ExampleAngluin.getInputAlphabet();
+		ExampleAngluin angluinExample = ExampleAngluin.createExample();
+		
+		DFA<?, Integer> dfa = angluinExample.getReferenceAutomaton();
+		Alphabet<Integer> alphabet = angluinExample.getAlphabet();
 
 		SimulatorOracle<Integer, Boolean> dso = new SimulatorOracle<>(dfa);
 		SafeOracle<Integer, Boolean> oracle = new SafeOracle<>(dso);

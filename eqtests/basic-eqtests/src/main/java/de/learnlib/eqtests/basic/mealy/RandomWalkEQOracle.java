@@ -19,14 +19,16 @@ package de.learnlib.eqtests.basic.mealy;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
+
+import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.api.SUL;
+import de.learnlib.oracles.DefaultQuery;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
-import de.learnlib.api.SUL;
-import de.learnlib.oracles.DefaultQuery;
 
 /**
  * Performs a random walk over the hypothesis. A random walk restarts with a
@@ -45,6 +47,8 @@ import de.learnlib.oracles.DefaultQuery;
  */
 public class RandomWalkEQOracle<I, O>
 		implements MealyEquivalenceOracle<I,O> {
+	
+	private static final Logger LOGGER = Logger.getLogger(RandomWalkEQOracle.class.getName());
 
 	/**
 	 * probability to restart before step.
@@ -117,41 +121,60 @@ public class RandomWalkEQOracle<I, O>
 			steps = 0;
 		}
 
+		if (inputs.isEmpty()) {
+			LOGGER.warning("Passed empty set of inputs to equivalence oracle; no counterexample can be found!");
+			return null;
+		}
+
 		List<? extends I> choices = CollectionsUtil.randomAccessList(inputs);
 		int bound = choices.size();
 		S cur = hypothesis.getInitialState();
 		WordBuilder<I> wbIn = new WordBuilder<>();
 		WordBuilder<O> wbOut = new WordBuilder<>();
 
-		while (steps < maxSteps) {
+		boolean first = true;
+		sul.pre();
+		try {
+			while (steps < maxSteps) {
 
-			// restart?
-			double restart = random.nextDouble();
-			if (restart < restartProbability) {
-				sul.reset();
-				cur = hypothesis.getInitialState();
-				wbIn.clear();
-				wbOut.clear();
+				// restart?
+				double restart = random.nextDouble();
+				if (restart < restartProbability) {
+					if (first) {
+						first = false;
+					} else {
+						sul.post();
+					}
+					sul.pre();
+					cur = hypothesis.getInitialState();
+					wbIn.clear();
+					wbOut.clear();
+				}
+
+				// step
+				steps++;
+				I in = choices.get(random.nextInt(bound));
+				O outSul;
+
+				outSul = sul.step(in);
+
+				T hypTrans = hypothesis.getTransition(cur, in);
+				O outHyp = hypothesis.getTransitionOutput(hypTrans);
+				wbIn.add(in);
+				wbOut.add(outSul);
+
+				// ce?
+				if (!outSul.equals(outHyp)) {
+					DefaultQuery<I, Word<O>> ce = new DefaultQuery<>(
+							wbIn.toWord());
+					ce.answer(wbOut.toWord());
+					return ce;
+				}
+				cur = hypothesis.getSuccessor(cur, in);
 			}
-
-			// step
-			steps++;
-			I in = choices.get(random.nextInt(bound));
-			O outSul = sul.step(in);
-			T hypTrans = hypothesis.getTransition(cur, in);
-			O outHyp = hypothesis.getTransitionOutput(hypTrans);
-			wbIn.add(in);
-			wbOut.add(outSul);
-
-			// ce?
-			if (!outSul.equals(outHyp)) {
-				DefaultQuery<I, Word<O>> ce = new DefaultQuery<>(wbIn.toWord());
-				ce.answer(wbOut.toWord());
-				return ce;
-			}
-			cur = hypothesis.getSuccessor(cur, in);
+			return null;
+		} finally {
+			sul.post();
 		}
-
-		return null;
 	}
 }

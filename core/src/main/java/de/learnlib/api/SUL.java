@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * LearnLib is free software; you can redistribute it and/or
@@ -16,6 +16,8 @@
  */
 package de.learnlib.api;
 
+import javax.annotation.Nullable;
+
 /**
  * Interface for a system under learning (SUL) that can make single steps.
  *
@@ -27,16 +29,21 @@ package de.learnlib.api;
 public interface SUL<I, O> {
 
     /**
-     * perform reset to initial state.
+     * setup SUL.
      */
-    void reset();
+    void pre();
 
+    /**
+     * shut down SUL.
+     */
+    void post();
+    
     /**
      * make one step on the SUL.
      *
      * @param in input to the SUL
      * @return output of SUL
      */
-    O step(I in);
-
+    @Nullable
+    O step(@Nullable I in) throws SULException;
 }

@@ -35,7 +35,7 @@ import de.learnlib.oracles.DefaultQuery;
 
 /**
  * Implements an equivalence test by applying the W-method test on the given
- * hypothesis automaton, as described in "Testing software design modelled by finite state machines"
+ * hypothesis automaton, as described in "Testing software design modeled by finite state machines"
  * by T.S. Chow.
  * 
  * @author Malte Isberner <malte.isberner@gmail.com>
@@ -74,6 +74,10 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
 	public WMethodEQOracle(int maxDepth, MembershipOracle<I,O> sulOracle) {
 		this.maxDepth = maxDepth;
 		this.sulOracle = sulOracle;
+	}
+	
+	public void setMaxDepth(int maxDepth) {
+		this.maxDepth = maxDepth;
 	}
 
 	/*

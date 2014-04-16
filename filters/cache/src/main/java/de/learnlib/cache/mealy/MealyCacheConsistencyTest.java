@@ -17,14 +17,16 @@
 package de.learnlib.cache.mealy;
 
 import java.util.Collection;
+import java.util.concurrent.locks.Lock;
+
+import de.learnlib.api.EquivalenceOracle;
+import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.oracles.DefaultQuery;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import de.learnlib.api.EquivalenceOracle;
-import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
-import de.learnlib.oracles.DefaultQuery;
 
 /**
  * An {@link EquivalenceOracle} that tests an hypothesis for consistency with the
@@ -39,14 +41,16 @@ public class MealyCacheConsistencyTest<I, O> implements
 		MealyEquivalenceOracle<I,O> {
 	
 	private final IncrementalMealyBuilder<I, O> incMealy;
+	private final Lock incMealyLock;
 	
 	/**
 	 * Constructor.
 	 * @param incMealy the {@link IncrementalMealyBuilder} data structure underlying the
 	 * cache.
 	 */
-	public MealyCacheConsistencyTest(IncrementalMealyBuilder<I, O> incMealy) {
+	public MealyCacheConsistencyTest(IncrementalMealyBuilder<I, O> incMealy, Lock lock) {
 		this.incMealy = incMealy;
+		this.incMealyLock = lock;
 	}
 
 	/*
@@ -56,11 +60,21 @@ public class MealyCacheConsistencyTest<I, O> implements
 	@Override
 	public DefaultQuery<I, Word<O>> findCounterExample(
 			MealyMachine<?, I, ?, O> hypothesis, Collection<? extends I> inputs) {
-		Word<I> w = incMealy.findSeparatingWord(hypothesis, inputs, false);
-		if(w == null)
-			return null;
-		WordBuilder<O> wb = new WordBuilder<O>(w.length());
-		incMealy.lookup(w, wb);
+		WordBuilder<O> wb;
+		Word<I> w;
+		
+		incMealyLock.lock();
+		try {
+			w = incMealy.findSeparatingWord(hypothesis, inputs, false);
+			if(w == null)
+				return null;
+			wb = new WordBuilder<O>(w.length());
+			incMealy.lookup(w, wb);
+		}
+		finally {
+			incMealyLock.unlock();
+		}
+		
 		DefaultQuery<I,Word<O>> result = new DefaultQuery<>(w);
 		result.answer(wb.toWord());
 		return result;

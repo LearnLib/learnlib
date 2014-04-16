@@ -63,7 +63,7 @@ public interface GlobalSuffixFinder<I,O> {
 	 * could not be analyzed.
 	 */
 	public <RI extends I,RO extends O>
-	List<Word<RI>> findSuffixes(Query<RI,RO> ceQuery,
+	List<? extends Word<RI>> findSuffixes(Query<RI,RO> ceQuery,
 			AccessSequenceTransformer<RI> asTransformer,
 			SuffixOutput<RI,RO> hypOutput,
 			MembershipOracle<RI,RO> oracle);

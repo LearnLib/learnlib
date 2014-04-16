@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -18,11 +18,22 @@ package de.learnlib.oracles;
 
 import java.util.Collection;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.api.QueryAnswerer;
 
+import net.automatalib.words.Word;
+
+@ParametersAreNonnullByDefault
 public abstract class AbstractSingleQueryOracle<I, O> implements MembershipOracle<I, O>, QueryAnswerer<I, O> {
+	
+	public static abstract class AbstractSingleQueryOracleDFA<I> extends AbstractSingleQueryOracle<I,Boolean> implements DFAMembershipOracle<I> {
+	}
+	
+	public static abstract class AbstractSingleQueryOracleMealy<I,O> extends AbstractSingleQueryOracle<I,Word<O>> implements MealyMembershipOracle<I,O> {
+	}
 
 	public AbstractSingleQueryOracle() {
 	}

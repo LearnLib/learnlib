@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -17,10 +17,10 @@
 
 package de.learnlib.oracles;
 
-import static de.learnlib.examples.dfa.ExamplePaulAndMary.constructMachine;
 import static de.learnlib.examples.dfa.ExamplePaulAndMary.IN_LOVES;
 import static de.learnlib.examples.dfa.ExamplePaulAndMary.IN_MARY;
 import static de.learnlib.examples.dfa.ExamplePaulAndMary.IN_PAUL;
+import static de.learnlib.examples.dfa.ExamplePaulAndMary.constructMachine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,10 +62,10 @@ public class OracleTest {
         
         
         // Paul loves Mary...
-        Assert.assertEquals(queries.get(0).getOutput(), (Object)true);
+        Assert.assertEquals(queries.get(0).getOutput(), Boolean.TRUE);
         
         // ... but Mary does not love Paul :-(
-        Assert.assertEquals(queries.get(1).getOutput(), (Object)false);
+        Assert.assertEquals(queries.get(1).getOutput(), Boolean.FALSE);
         
     }
     

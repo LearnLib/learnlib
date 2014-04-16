@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -16,6 +16,9 @@
  */
 package de.learnlib.experiments;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Alphabet;
@@ -32,11 +35,10 @@ import de.learnlib.statistics.SimpleProfiler;
  * 
  * @author falkhowar
  * @param <A>
- * @param <I>
- * @param <O> 
  */
+@ParametersAreNonnullByDefault
 public class Experiment<A> {
-	
+
 	public static class DFAExperiment<I> extends Experiment<DFA<?,I>> {
 		public DFAExperiment(
 				LearningAlgorithm<? extends DFA<?, I>, I, Boolean> learningAlgorithm,
@@ -124,12 +126,17 @@ public class Experiment<A> {
     /**
      * 
      */
+    @Nonnull
     public A run() {
     	finalHypothesis = impl.run();
     	return finalHypothesis;
     }
     
+    @Nonnull
     public A getFinalHypothesis() {
+    	if(finalHypothesis == null) {
+    		throw new IllegalStateException("Experiment has not yet been run");
+    	}
     	return finalHypothesis;
     }
 
@@ -164,6 +171,7 @@ public class Experiment<A> {
     /**
      * @return the rounds
      */
+    @Nonnull
     public Counter getRounds() {
         return rounds;
     }

@@ -40,7 +40,7 @@ public class CategoryFilter implements Filter {
         
     @Override
     public boolean isLoggable(LogRecord record) {
-        if (!record.getClass().getName().equals(LearnLogRecord.class.getName())) {
+        if (record.getClass() != LearnLogRecord.class) {
             return categories.contains(Category.SYSTEM);
         }
         LearnLogRecord lrec = (LearnLogRecord)record;        

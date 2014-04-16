@@ -23,6 +23,7 @@ import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.oracles.DefaultQuery;
 
 
 /**
@@ -89,9 +90,10 @@ public abstract class AbstractAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableD
 	
 	/**
 	 * Derives a transition property from the corresponding transition.
+	 * <p>
 	 * N.B.: Not the transition row is passed to this method, but the
 	 * row for the outgoing state. The transition row can be retrieved
-	 * by <code>stateRow.getSuccessor(inputIdx)</code>.
+	 * using {@link Row#getSuccessor(int)}.
 	 * @param stateRow the row for the source state
 	 * @param inputIdx the index of the input symbol to consider
 	 * @return the transition property of the corresponding transition
@@ -177,8 +179,23 @@ public abstract class AbstractAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableD
 	
 	@Override
 	public A getHypothesisModel() {
-		updateInternalHypothesis();
 		return exposeInternalHypothesis();
 	}
-
+	
+	@Override
+	public final void startLearning() {
+		super.startLearning();
+		updateInternalHypothesis();
+	}
+	
+	@Override
+	protected final void doRefineHypothesis(DefaultQuery<I,O> ceQuery) {
+		refineHypothesisInternal(ceQuery);
+		updateInternalHypothesis();
+	}
+	
+	protected void refineHypothesisInternal(DefaultQuery<I,O> ceQuery) {
+		super.doRefineHypothesis(ceQuery);
+	}
+	
 }

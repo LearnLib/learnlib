@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -16,6 +16,8 @@
  */
 package de.learnlib.api;
 
+import javax.annotation.Nonnull;
+
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Word;
@@ -25,7 +27,7 @@ import de.learnlib.oracles.DefaultQuery;
 
 /**
  * Basic interface for a model inference algorithm.
- * 
+ * <p>
  * Actively inferring models (such as DFAs or Mealy machines) consists of the construction
  * of an initial hypothesis, which is subsequently refined using counterexamples
  * (see {@link EquivalenceOracle}). 
@@ -39,14 +41,14 @@ import de.learnlib.oracles.DefaultQuery;
  */
 public interface LearningAlgorithm<M, I, O> {
 	
-	public static interface DFALearner<I> extends LearningAlgorithm<DFA<?,I>,I,Boolean> {}
-	public static interface MealyLearner<I,O> extends LearningAlgorithm<MealyMachine<?,I,?,O>,I,Word<O>> {}
+	static interface DFALearner<I> extends LearningAlgorithm<DFA<?,I>,I,Boolean> {}
+	static interface MealyLearner<I,O> extends LearningAlgorithm<MealyMachine<?,I,?,O>,I,Word<O>> {}
 	
 	/**
 	 * Starts the model inference process, creating an initial hypothesis in the provided
 	 * model object. Please note that it should be illegal to invoke this method twice.
 	 */
-	public void startLearning();
+	void startLearning();
 	
 	/**
 	 * Triggers a refinement of the model by providing a counterexample.
@@ -59,7 +61,8 @@ public interface LearningAlgorithm<M, I, O> {
 	 * @return <tt>true</tt> if the counterexample triggered a refinement of the hypothesis,
 	 * <tt>false</tt> otherwise (i.e., it was no counterexample).
 	 */
-	public boolean refineHypothesis(DefaultQuery<I, O> ceQuery);
+	public boolean refineHypothesis(@Nonnull DefaultQuery<I, O> ceQuery);
+
 	
 	/**
 	 * Returns the current hypothesis model.
@@ -67,10 +70,12 @@ public interface LearningAlgorithm<M, I, O> {
 	 * N.B.: By the contract of this interface, the model returned by this method may not be
 	 * modified (i.e., M generally should refer to an immutable interface), and its validity
 	 * is retained only until the next invocation of {@link #refineHypothesis(DefaultQuery)}. If
-	 * older hypotheses have to be maintained, a copy of the returned model must be made
+	 * older hypotheses have to be maintained, a copy of the returned model must be made.
+	 * <p>
 	 * Please note that it should be illegal to invoke this method before an initial invocation
 	 * of {@link #startLearning()}.
 	 * @return the current hypothesis model.
 	 */
+	@Nonnull
 	public M getHypothesisModel();
 }

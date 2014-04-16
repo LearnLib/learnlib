@@ -34,7 +34,7 @@ public class LLConsoleFormatter extends SimpleFormatter {
     public String format(LogRecord record) {
         String formatted = super.format(record);
         String category = "SYSTEM";
-        if (record.getClass().getName().equals(LearnLogRecord.class.getName())) {
+        if (record.getClass() == LearnLogRecord.class) {
             LearnLogRecord lrec = (LearnLogRecord)record;
             category = lrec.getCategory().toString();
         }

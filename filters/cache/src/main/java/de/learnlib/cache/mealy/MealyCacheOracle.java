@@ -22,16 +22,21 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.Query;
+import de.learnlib.cache.LearningCacheOracle.MealyLearningCacheOracle;
 
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
+import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
+import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.api.Query;
 
 /**
  * Mealy cache. This cache is implemented as a membership oracle: upon construction, it is
@@ -47,12 +52,12 @@ import de.learnlib.api.Query;
  * reflected in the learned model, it is forced to result in a sink state with only a single
  * repeating output symbol (value in the mapping).
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <I> input symbol class
  * @param <O> output symbol class
  */
-public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
+public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 	
 	private static final class ReverseLexCmp<I> implements Comparator<Query<I,?>> {
 		private final Alphabet<I> alphabet;
@@ -67,16 +72,54 @@ public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
 		}
 	}
 	
+	public static <I,O>
+	MealyCacheOracle<I,O> createDAGCacheOracle(Alphabet<I> inputAlphabet, MembershipOracle<I,Word<O>> delegate) {
+		return createDAGCacheOracle(inputAlphabet, null, delegate);
+	}
+	
+	public static <I,O>
+	MealyCacheOracle<I,O> createDAGCacheOracle(
+			Alphabet<I> inputAlphabet, Mapping<? super O,? extends O> errorSyms, MembershipOracle<I,Word<O>> delegate) {
+		IncrementalMealyBuilder<I,O> incrementalBuilder = new IncrementalMealyDAGBuilder<>(inputAlphabet);
+		return new MealyCacheOracle<>(incrementalBuilder, errorSyms, delegate);
+	}
+	
+	public static <I,O>
+	MealyCacheOracle<I,O> createTreeCacheOracle(Alphabet<I> inputAlphabet, MembershipOracle<I,Word<O>> delegate) {
+		return createTreeCacheOracle(inputAlphabet, null, delegate);
+	}
+	
+	public static <I,O>
+	MealyCacheOracle<I,O> createTreeCacheOracle(Alphabet<I> inputAlphabet, Mapping<? super O,? extends O> errorSyms, MembershipOracle<I,Word<O>> delegate) {
+		IncrementalMealyBuilder<I,O> incrementalBuilder = new IncrementalMealyTreeBuilder<>(inputAlphabet);
+		return new MealyCacheOracle<>(incrementalBuilder, errorSyms, delegate);
+	}
+	
 	private final MembershipOracle<I,Word<O>> delegate;
 	private final IncrementalMealyBuilder<I, O> incMealy;
+	private final Lock incMealyLock;
 	private final Comparator<? super Query<I,?>> queryCmp;
 	private final Mapping<? super O,? extends O> errorSyms;
 	
+	
+	public MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder, Mapping<? super O,? extends O> errorSyms, MembershipOracle<I, Word<O>> delegate) {
+		this(incrementalBuilder, new ReentrantLock(), errorSyms, delegate);
+	}
+	
+	public MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder, Lock lock, Mapping<? super O,? extends O> errorSyms, MembershipOracle<I,Word<O>> delegate) {
+		this.incMealy = incrementalBuilder;
+		this.incMealyLock = lock;
+		this.queryCmp = new ReverseLexCmp<>(incrementalBuilder.getInputAlphabet());
+		this.errorSyms = errorSyms;
+		this.delegate = delegate;
+	}
 	/**
 	 * Constructor.
 	 * @param alphabet the input alphabet for the cache
 	 * @param delegate the delegate Mealy oracle
+	 * @deprecated since 2014-01-23. Use {@link #createDAGCacheOracle(Alphabet, MembershipOracle)} to reproduce old behavior.
 	 */
+	@Deprecated
 	public MealyCacheOracle(Alphabet<I> alphabet, MembershipOracle<I,Word<O>> delegate) {
 		this(alphabet, null, delegate);
 	}
@@ -86,26 +129,25 @@ public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
 	 * @param alphabet the input alphabet for the cache
 	 * @param errorSyms the error symbol mapping (see class description)
 	 * @param delegate the delegate Mealy oracle
+	 * @deprecated since 2014-01-23. Use {@link #createDAGCacheOracle(Alphabet, Mapping, MembershipOracle)} to reproduce old
+	 * behavior.
 	 */
+	@Deprecated
 	public MealyCacheOracle(Alphabet<I> alphabet, Mapping<? super O, ? extends O> errorSyms, MembershipOracle<I,Word<O>> delegate) {
-		this.delegate = delegate;
-		this.incMealy = new IncrementalMealyBuilder<>(alphabet);
-		this.queryCmp = new ReverseLexCmp<>(alphabet);
-		this.errorSyms = errorSyms;
+		this(new IncrementalMealyDAGBuilder<I,O>(alphabet), errorSyms, delegate);
 	}
 	
 	public int getCacheSize() {
-		return incMealy.size();
+		return incMealy.asGraph().size();
 	}
 	
-	/**
-	 * Creates an equivalence oracle that checks an hypothesis for consistency with the
-	 * contents of this cache. Note that the returned oracle is backed by the cache data structure,
-	 * i.e., it is sufficient to call this method once after creation of the cache.
-	 * @return the cache consistency test backed by the contents of this cache.
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.cache.LearningCache#createCacheConsistencyTest()
 	 */
+	@Override
 	public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
-		return new MealyCacheConsistencyTest<>(incMealy);
+		return new MealyCacheConsistencyTest<>(incMealy, incMealyLock);
 	}
 
 	/*
@@ -114,8 +156,9 @@ public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
 	 */
 	@Override
 	public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-		if(queries.isEmpty())
+		if(queries.isEmpty()) {
 			return;
+		}
 		
 		List<Query<I,Word<O>>> qrys = new ArrayList<Query<I,Word<O>>>(queries);
 		Collections.sort(qrys, queryCmp);
@@ -125,28 +168,47 @@ public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
 		Iterator<Query<I,Word<O>>> it = qrys.iterator();
 		Query<I,Word<O>> q = it.next();
 		Word<I> ref = q.getInput();
-		MasterQuery<I,O> master = createMasterQuery(ref);
-		if(master.getAnswer() == null)
-			masterQueries.add(master);
-		master.addSlave(q);
 		
-		while(it.hasNext()) {
-			q = it.next();
-			Word<I> curr = q.getInput();
-			if(!curr.isPrefixOf(ref)) {
-				master = createMasterQuery(curr);
-				if(master.getAnswer() == null)
-					masterQueries.add(master);
+		incMealyLock.lock();
+		try {
+			MasterQuery<I,O> master = createMasterQuery(ref);
+			if(!master.isAnswered()) {
+				masterQueries.add(master);
 			}
-			
 			master.addSlave(q);
-			ref = curr;
+			
+			while(it.hasNext()) {
+				q = it.next();
+				Word<I> curr = q.getInput();
+				if(!curr.isPrefixOf(ref)) {
+					master = createMasterQuery(curr);
+					if(!master.isAnswered()) {
+						masterQueries.add(master);
+					}
+				}
+				
+				master.addSlave(q);
+				// Update ref to increase the effectivity of the length check in
+				// isPrefixOf
+				ref = curr;
+			}
 		}
+		finally {
+			incMealyLock.unlock();
+		}
+		
 		
 		delegate.processQueries(masterQueries);
 		
-		for(MasterQuery<I,O> m : masterQueries)
-			postProcess(m);
+		incMealyLock.lock();
+		try {
+			for(MasterQuery<I,O> m : masterQueries) {
+				postProcess(m);
+			}
+		}
+		finally {
+			incMealyLock.unlock();
+		}
 	}
 	
 	private void postProcess(MasterQuery<I,O> master) {
@@ -166,23 +228,28 @@ public class MealyCacheOracle<I, O> implements MealyMembershipOracle<I,O> {
 				break;
 		}
 		
-		if(i == answLen)
+		if(i == answLen) {
 			incMealy.insert(word, answer);
-		else
+		}
+		else {
 			incMealy.insert(word.prefix(i), answer.prefix(i));
+		}
 	}
 	
 	private MasterQuery<I,O> createMasterQuery(Word<I> word) {
 		WordBuilder<O> wb = new WordBuilder<O>();
-		if(incMealy.lookup(word, wb))
+		if(incMealy.lookup(word, wb)) {
 			return new MasterQuery<>(word, wb.toWord());
+		}
 		
-		if(errorSyms == null)
+		if(errorSyms == null) {
 			return new MasterQuery<>(word);
+		}
 		int wbSize = wb.size();
 		O repSym;
-		if(wbSize == 0 || (repSym = errorSyms.get(wb.getSymbol(wbSize - 1))) == null)
+		if(wbSize == 0 || (repSym = errorSyms.get(wb.getSymbol(wbSize - 1))) == null) {
 			return new MasterQuery<>(word, errorSyms);
+		}
 		
 		wb.repeatAppend(word.length() - wbSize, repSym);
 		return new MasterQuery<>(word, wb.toWord());

@@ -39,6 +39,7 @@ http://www.gnu.de/documents/lgpl.en.html.
         
     <moduleSets>
         <moduleSet>
+            <useAllReactorProjects>true</useAllReactorProjects>
             <includes>
                 <include>*:jar:*</include>
             </includes>

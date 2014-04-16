@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -16,11 +16,15 @@
  */
 package de.learnlib.mealy;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Word;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.oracles.DefaultQuery;
 
+@ParametersAreNonnullByDefault
 final class MealyLearnerWrapper<M extends MealyMachine<?, I, ?, O>, I, O> implements LearningAlgorithm<M, I, Word<O>> {
 	
 	private final LearningAlgorithm<M, I, O> learner;
@@ -51,6 +55,7 @@ final class MealyLearnerWrapper<M extends MealyMachine<?, I, ?, O>, I, O> implem
 	}
 
 	@Override
+	@Nonnull
 	public M getHypothesisModel() {
 		hypothesis = learner.getHypothesisModel();
 		return hypothesis;

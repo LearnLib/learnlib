@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * LearnLib is free software; you can redistribute it and/or
@@ -16,16 +16,22 @@
  */
 package de.learnlib.oracles;
 
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.SUL;
+import de.learnlib.api.SULException;
+
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 
 /**
  * A wrapper around a system under learning (SUL).
  * 
  * @author falkhowar
  */
+@ParametersAreNonnullByDefault
 public class SULOracle<I, O> extends AbstractSingleQueryOracle<I, Word<O>> implements MealyMembershipOracle<I,O> {
 
 	private final SUL<I, O> sul;
@@ -35,18 +41,26 @@ public class SULOracle<I, O> extends AbstractSingleQueryOracle<I, Word<O>> imple
 	}
 
 	@Override
-	public Word<O> answerQuery(Word<I> prefix, Word<I> suffix) {
-		sul.reset();
-		// Prefix: Execute symbols, don't record output
-		for(I sym : prefix)
-			sul.step(sym);
-		
-		// Suffix: Execute symbols, outputs constitute output word
-		WordBuilder<O> wb = new WordBuilder<>(suffix.length());
-		for(I sym : suffix)
-			wb.add(sul.step(sym));
-		
-		return wb.toWord();
+	@Nonnull
+	public Word<O> answerQuery(Word<I> prefix, Word<I> suffix) throws SULException {
+		sul.pre();
+		try {
+			// Prefix: Execute symbols, don't record output
+			for(I sym : prefix) {
+				sul.step(sym);
+			}
+			
+			// Suffix: Execute symbols, outputs constitute output word
+			WordBuilder<O> wb = new WordBuilder<>(suffix.length());
+			for(I sym : suffix) {
+				wb.add(sul.step(sym));
+			}
+			
+			return wb.toWord();
+		}
+		finally {
+			sul.post();
+		}
 	}
 
 }

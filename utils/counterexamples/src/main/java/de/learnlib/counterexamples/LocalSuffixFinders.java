@@ -49,6 +49,10 @@ public abstract class LocalSuffixFinders {
 					MembershipOracle<RI, RO> oracle) {
 				return findLinear(ceQuery, asTransformer, hypOutput, oracle);
 			}
+			@Override
+			public String toString() {
+				return "FindLinear";
+			}
 	};
 	
 	/**
@@ -66,6 +70,10 @@ public abstract class LocalSuffixFinders {
 					MembershipOracle<RI, RO> oracle) {
 				return findLinearReverse(ceQuery, asTransformer, hypOutput, oracle);
 			}
+			@Override
+			public String toString() {
+				return "FindLinear-Reverse";
+			}
 	};
 	
 	/**
@@ -82,6 +90,10 @@ public abstract class LocalSuffixFinders {
 					SuffixOutput<RI,RO> hypOutput,
 					MembershipOracle<RI, RO> oracle) {
 				return findRivestSchapire(ceQuery, asTransformer, hypOutput, oracle);
+			}
+			@Override
+			public String toString() {
+				return "RivestSchapire";
 			}
 	};
 
@@ -227,6 +239,14 @@ public abstract class LocalSuffixFinders {
 		return low+1;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static LocalSuffixFinder<Object, Object>[] values() {
+		return new LocalSuffixFinder[]{
+				FIND_LINEAR,
+				FIND_LINEAR_REVERSE,
+				RIVEST_SCHAPIRE
+		};
+	}
 	
 	// Prevent inheritance
 	private LocalSuffixFinders() {}

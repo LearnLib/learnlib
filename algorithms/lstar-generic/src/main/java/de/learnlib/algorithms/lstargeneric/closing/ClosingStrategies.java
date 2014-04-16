@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -21,10 +21,10 @@ import java.util.List;
 
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.words.Alphabet;
-
 import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
+
 
 /**
  * Collection of predefined observation table closing strategies.
@@ -58,6 +58,10 @@ public class ClosingStrategies {
 					result.add(clazz.get(0));
 				return result;
 			}
+			@Override
+			public String toString() {
+				return "CloseFirst";
+			}
 	};
 	
 	/**
@@ -87,6 +91,10 @@ public class ClosingStrategies {
 				}
 				return result;
 			}
+			@Override
+			public String toString() {
+				return "CloseShortest";
+			}
 	};
 	
 	/**
@@ -114,6 +122,20 @@ public class ClosingStrategies {
 				}
 				return result;
 			}
+			@Override
+			public String toString() {
+				return "CloseLexMin";
+			}
 	};
+
+	@SuppressWarnings("unchecked")
+	public static ClosingStrategy<Object,Object>[] values() {
+		return new ClosingStrategy[]{
+				CLOSE_RANDOM,
+				CLOSE_FIRST,
+				CLOSE_SHORTEST,
+				CLOSE_LEX_MIN
+			};
+	}
 
 }

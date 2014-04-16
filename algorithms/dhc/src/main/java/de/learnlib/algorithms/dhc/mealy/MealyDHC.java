@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@ package de.learnlib.algorithms.dhc.mealy;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -27,12 +28,11 @@ import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import de.learnlib.algorithms.dhc.Deduplicator;
+import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import com.google.common.collect.Interner;
+import com.google.common.collect.Interners;
+
+import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle;
@@ -40,12 +40,30 @@ import de.learnlib.counterexamples.GlobalSuffixFinder;
 import de.learnlib.counterexamples.GlobalSuffixFinders;
 import de.learnlib.oracles.DefaultQuery;
 
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.commons.util.mappings.MutableMapping;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
 /**
  *
  * @author Maik Merten <maikmerten@googlemail.com>
  */
 public class MealyDHC<I, O> implements MealyLearner<I,O>,
-		AccessSequenceTransformer<I> {
+		AccessSequenceTransformer<I>, GlobalSuffixLearnerMealy<I, O> {
+	
+	
+	public static class BuilderDefaults {
+		public static <I,O>
+		GlobalSuffixFinder<? super I,? super Word<O>> suffixFinder() {
+			return GlobalSuffixFinders.RIVEST_SCHAPIRE; 
+		}
+		public static <I,O>
+		Collection<? extends Word<I>> initialSplitters() {
+			return null;
+		}
+	}
 
 	private static final Logger log = Logger.getLogger( MealyDHC.class.getName() );
 	
@@ -72,16 +90,47 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 			this.depth = (parentElement != null) ? parentElement.depth+1 : 0;
 		}
 	}
+	
+	/**
+	 * Constructor, provided for backwards compatibility reasons.
+	 *  
+	 * @param alphabet the learning alphabet
+	 * @param oracle the learning membership oracle
+	 */
+	public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I,Word<O>> oracle) {
+		this(alphabet, oracle, GlobalSuffixFinders.RIVEST_SCHAPIRE, null);
+	}
 
-	public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
+	/**
+	 * Constructor.
+	 * @param alphabet the learning alphabet
+	 * @param oracle the learning membership oracle
+	 * @param suffixFinder the {@link GlobalSuffixFinder suffix finder} to use for analyzing counterexamples
+	 * @param initialSplitters the initial set of splitters, {@code null} or an empty collection will result
+	 * in the set of splitters being initialized as the set of alphabet symbols (interpreted as {@link Word}s) 
+	 */
+	@GenerateBuilder(defaults = BuilderDefaults.class)
+	public MealyDHC(Alphabet<I> alphabet,
+			MembershipOracle<I, Word<O>> oracle,
+			GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
+			Collection<? extends Word<I>> initialSplitters) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
-		this.suffixFinder = GlobalSuffixFinders.RIVEST_SCHAPIRE;
-		for(I symbol : alphabet) {
-			splitters.add(Word.fromLetter(symbol));
+		this.suffixFinder = suffixFinder;
+		if(initialSplitters == null || initialSplitters.isEmpty()) {
+			for(I symbol : alphabet) {
+				splitters.add(Word.fromLetter(symbol));
+			}
+		}
+		else {
+			splitters.addAll(initialSplitters);
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.LearningAlgorithm#startLearning()
+	 */
 	@Override
 	public void startLearning() {
 		// initialize structure to store state output signatures
@@ -99,7 +148,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		// first element to be explored represents the initial state with no predecessor
 		queue.add(new QueueElement<I,O>(null, null, null, null));
 
-		Deduplicator<Word<O>> deduplicator = new Deduplicator<>();
+		Interner<Word<O>> deduplicator = Interners.newStrongInterner();
 		
 		while (!queue.isEmpty()) {
 			// get element to be explored from queue
@@ -120,7 +169,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 			// assemble output signature
 			List<Word<O>> sig = new ArrayList<>(splitters.size());
 			for (DefaultQuery<I, Word<O>> query : queries) {
-				sig.add(deduplicator.deduplicate(query.getOutput()));
+				sig.add(deduplicator.intern(query.getOutput()));
 			}
 
 			Integer sibling = signatures.get(sig);
@@ -176,30 +225,34 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.LearningAlgorithm#refineHypothesis(de.learnlib.oracles.DefaultQuery)
+	 */
 	@Override
 	public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
 		checkInternalState();
 
-		int oldsize = hypothesis.size();
+		Collection<? extends Word<I>> ceSuffixes
+				= suffixFinder.findSuffixes(ceQuery, this, hypothesis, oracle);
 		
-		for(Word<I> suf : suffixFinder.findSuffixes(ceQuery, this, hypothesis, oracle)) {
-			if(!splitters.contains(suf)) {
-				splitters.add(suf);
-				log.log(Level.FINE, "added suffix: {0}", suf);
-			}
-		}
-
-		startLearning();
-
-		return oldsize != hypothesis.size();
+		return addSuffixesUnchecked(ceSuffixes);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.LearningAlgorithm#getHypothesisModel()
+	 */
 	@Override
 	public MealyMachine<?, I, ?, O> getHypothesisModel() {
 		checkInternalState();
 		return hypothesis;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.AccessSequenceTransformer#transformAccessSequence(net.automatalib.words.Word)
+	 */
 	@Override
 	public Word<I> transformAccessSequence(Word<I> word) {
 		checkInternalState();
@@ -207,11 +260,42 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		return assembleAccessSequence(accessSequences.get(state));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.learnlib.api.AccessSequenceTransformer#isAccessSequence(net.automatalib.words.Word)
+	 */
 	@Override
 	public boolean isAccessSequence(Word<I> word) {
 		checkInternalState();
 		Word<I> canonical = transformAccessSequence(word);
 		return canonical.equals(word);
+	}
+
+	@Override
+	public Collection<? extends Word<I>> getGlobalSuffixes() {
+		return Collections.unmodifiableCollection(splitters);
+	}
+
+	@Override
+	public boolean addGlobalSuffixes(Collection<? extends Word<I>> newGlobalSuffixes) {
+		checkInternalState();
+		
+		return addSuffixesUnchecked(newGlobalSuffixes);
+	}
+	
+	protected boolean addSuffixesUnchecked(Collection<? extends Word<I>> newSuffixes) {
+		int oldSize = hypothesis.size();
+		
+		for(Word<I> suf : newSuffixes) {
+			if(!splitters.contains(suf)) {
+				splitters.add(suf);
+				log.log(Level.FINE, "added suffix: {0}", suf);
+			}
+		}
+		
+		startLearning();
+		
+		return (hypothesis.size() != oldSize);
 	}
 
 }

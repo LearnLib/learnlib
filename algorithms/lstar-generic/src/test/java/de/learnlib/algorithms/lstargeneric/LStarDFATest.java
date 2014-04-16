@@ -33,7 +33,6 @@ import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.cache.dfa.DFACacheOracle;
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.eqtests.basic.WMethodEQOracle;
 import de.learnlib.eqtests.basic.WpMethodEQOracle;
@@ -46,8 +45,9 @@ public class LStarDFATest extends LearningTest {
  
 	@Test
 	public void testLStar() {
-		DFA<?,Symbol> targetDFA = ExamplePaulAndMary.getInstance();
-		Alphabet<Symbol> alphabet = ExamplePaulAndMary.getInputAlphabet();
+		ExamplePaulAndMary pmExample = ExamplePaulAndMary.createExample();
+		DFA<?,Symbol> targetDFA = pmExample.getReferenceAutomaton();
+		Alphabet<Symbol> alphabet = pmExample.getAlphabet();
 		
 		DFAMembershipOracle<Symbol> dfaOracle = new DFASimulatorOracle<>(targetDFA);
 
@@ -66,9 +66,8 @@ public class LStarDFATest extends LearningTest {
 			for(ClosingStrategy<? super Symbol,? super Boolean> strategy : LearningTest.CLOSING_STRATEGIES) {
 					
 				for(EquivalenceOracle<? super DFA<?,Symbol>, Symbol, Boolean> eqOracle : eqOracles) {
-					DFACacheOracle<Symbol> cache = new DFACacheOracle<>(alphabet, dfaOracle);
 					LearningAlgorithm<? extends DFA<?,Symbol>,Symbol,Boolean> learner 
-					= new ExtensibleLStarDFA<>(alphabet, cache, suffixes,
+					= new ExtensibleLStarDFA<>(alphabet, dfaOracle, suffixes,
 							handler, strategy);
 					
 					testLearnModel(targetDFA, alphabet, learner, dfaOracle, eqOracle);

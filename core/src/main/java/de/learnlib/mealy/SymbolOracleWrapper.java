@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -20,9 +20,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.automatalib.words.Word;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
+
+import net.automatalib.words.Word;
 
 
 /**
@@ -36,8 +40,10 @@ import de.learnlib.api.Query;
  * @param <I> input symbol class
  * @param <O> output symbol class
  */
+@ParametersAreNonnullByDefault
 final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 	
+	@ParametersAreNonnullByDefault
 	private static final class LastSymbolQuery<I,O> extends Query<I,Word<O>> {
 		
 		private final Query<I,O> originalQuery;
@@ -47,20 +53,30 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 		}
 
 		@Override
+		@Nonnull
 		public Word<I> getPrefix() {
 			return originalQuery.getPrefix();
 		}
 
 		@Override
+		@Nonnull
 		public Word<I> getSuffix() {
 			return originalQuery.getSuffix();
 		}
 
 		@Override
 		public void answer(Word<O> output) {
+			if(output == null) {
+				throw new IllegalArgumentException("Query answer words must not be null");
+			}
 			originalQuery.answer(output.isEmpty() ? null : output.lastSymbol());
 		}
-		
+
+		@Override
+		public String toString() {
+			return originalQuery.toString();
+		}
+
 	}
 	
 	private final MembershipOracle<I,Word<O>> wordOracle;
@@ -80,8 +96,9 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 	@Override
 	public void processQueries(Collection<? extends Query<I, O>> queries) {
 		List<LastSymbolQuery<I,O>> lsQueries = new ArrayList<LastSymbolQuery<I,O>>(queries.size());
-		for(Query<I,O> qry : queries)
+		for(Query<I,O> qry : queries) {
 			lsQueries.add(new LastSymbolQuery<I,O>(qry));
+		}
 		
 		wordOracle.processQueries(lsQueries);
 	}

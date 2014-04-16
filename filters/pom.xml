@@ -23,7 +23,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<artifactId>learnlib-parent</artifactId>
 		<groupId>de.learnlib</groupId>
-		<version>0.9.1</version>
+		<version>0.10.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>        
 	</parent>
 
@@ -35,6 +35,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 	<modules>
 		<module>cache</module>
+		<module>reuse</module>
 	</modules>
 </project>
 
