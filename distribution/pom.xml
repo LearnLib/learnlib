@@ -408,7 +408,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 								</goals>
 								<configuration>
 									<resourceSrc>${project.build.directory}/bundles/*</resourceSrc>
-									<resourceDest>/files/releases/</resourceDest>
+									<resourceDest>/files/releases/${project.version}</resourceDest>
 								</configuration>
 							</execution>
 						</executions>

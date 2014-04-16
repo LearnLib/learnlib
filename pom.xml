@@ -28,7 +28,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<version>0.10.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
-	<url>http://learnlib.github.io/learnlib/${project.version}/maven-site/</url>
+	<url>http://learnlib.github.io/learnlib/maven-site/${project.version}</url>
 	<description>A framework for active automata learning and experimentation</description>
 
 	<licenses>
@@ -130,6 +130,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<assembly-plugin.version>2.4</assembly-plugin.version>
 		<resources-plugin.version>2.6</resources-plugin.version>
 		<upload-plugin.version>1.1</upload-plugin.version>
+		<exec-plugin.version>1.2.1</exec-plugin.version>
+		<deploy-site-github.exec>deploy-site-github</deploy-site-github.exec>
 
 		<trove4j.version>3.0.3</trove4j.version>
 		
@@ -140,7 +142,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		
 		<!-- Javadoc links -->
 		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
-		<automatalib.apidocs>http://misberner.github.io/automatalib/maven-site/apidocs/</automatalib.apidocs>
+		<automatalib.apidocs>http://misberner.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
 		<guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/v${guava.version}/javadoc/</guava.apidocs>
 		<!-- Unfortunately, these are not version-sensitive -->
 		<trove4j.apidocs>http://trove4j.sourceforge.net/javadocs/</trove4j.apidocs>
@@ -159,8 +161,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<version>${compiler-plugin.version}</version>
 					<configuration>
 						<fork>true</fork>
-						<meminitial>128m</meminitial>
-						<maxmem>512m</maxmem>
 						<source>1.7</source>
 						<target>1.7</target>
 					</configuration>
@@ -211,7 +211,23 @@ http://www.gnu.de/documents/lgpl.en.html.
 								<goal>attach-descriptor</goal>
 							</goals>
 						</execution>
+						<!-- Skip site creation; this will be done by deploy-site-github -->
+						<execution>
+							<id>default-site</id>
+							<phase>site</phase>
+							<configuration>
+								<skip>true</skip>
+							</configuration>
+						</execution>
 					</executions>
+					<configuration>
+						<skipDeploy>true</skipDeploy>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>${exec-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -254,7 +270,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 						<!-- <tagNameFormat>learnlib-@{project.version}</tagNameFormat> -->
 						<!-- The default "clean verify" causes javadoc and archetype integration tests to fail -->
 						<preparationGoals>clean install</preparationGoals>
-						<arguments>-Pbinary-release,sonatype-oss-release</arguments>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -293,6 +308,43 @@ http://www.gnu.de/documents/lgpl.en.html.
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<executions>
+					<!-- Deploy site @ GitHub pages -->
+					<!--
+						Note: In order to be able to deploy the Maven site,
+						you need the script deploy-site-github to reside
+						in your PATH, or manually specify the path to the
+						executable script using the "deploy-site-github.exec"
+						property.
+						You can download the shell script from this URL:
+						https://raw.github.com/misberner/shell-scripts/master/maven/deploy-site-github.sh
+					-->
+					<execution>
+						<id>deploy-site-github</id>
+						<inherited>false</inherited>
+						<phase>site-deploy</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${deploy-site-github.exec}</executable>
+							<workingDirectory>${project.basedir}</workingDirectory>
+							<arguments>
+								<argument>-p</argument> <!-- Purge contents before copying -->
+								<argument>-P/maven-site</argument>
+								<argument>-V</argument>
+								<argument>-l</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 		
 		<extensions>
 			<extension>
@@ -446,7 +498,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 								<goals>
 									<goal>aggregate-jar</goal>
 								</goals>
-								<phase>package</phase>
+								<phase>prepare-package</phase>
 							</execution>
 						</executions>
 					</plugin>
@@ -463,7 +515,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 								</goals>
 								<configuration>
 									<resourceSrc>${project.build.directory}/learnlib-${project.version}-javadoc.jar</resourceSrc>
-									<resourceDest>/files/</resourceDest>
+									<resourceDest>/files/releases/${project.version}/</resourceDest>
 								</configuration>
 							</execution>
 						</executions>
