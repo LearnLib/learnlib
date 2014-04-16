@@ -88,6 +88,10 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.github.misberner.buildergen</groupId>
+			<artifactId>buildergen</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>
