@@ -16,20 +16,6 @@
  */
 package de.learnlib.algorithms.baselinelstar;
 
-import com.google.common.collect.Maps;
-
-import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner.GlobalSuffixLearnerDFA;
-import de.learnlib.algorithms.features.observationtable.OTLearner;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.DefaultQuery;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.FastDFA;
-import net.automatalib.automata.fsa.impl.FastDFAState;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-
-import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,6 +23,22 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
+
+import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import com.google.common.collect.Maps;
+
+import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner.GlobalSuffixLearnerDFA;
+import de.learnlib.algorithms.features.observationtable.OTLearner;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.oracles.DefaultQuery;
+
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.FastDFA;
+import net.automatalib.automata.fsa.impl.FastDFAState;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 
 /**
  * Implementation of the L* algorithm by Dana Angluin
@@ -66,6 +68,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	 * @param oracle
 	 * 		The {@link MembershipOracle} which is used for membership queries.
 	 */
+	@GenerateBuilder
 	public BaselineLStar(@Nonnull Alphabet<I> alphabet, @Nonnull MembershipOracle<I, Boolean> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;

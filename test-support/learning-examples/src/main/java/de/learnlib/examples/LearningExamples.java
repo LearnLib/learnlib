@@ -22,9 +22,11 @@ import java.util.Random;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+
 import de.learnlib.examples.LearningExample.DFALearningExample;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
 import de.learnlib.examples.dfa.ExampleAngluin;
+import de.learnlib.examples.dfa.ExampleKeylock;
 import de.learnlib.examples.dfa.ExamplePaulAndMary;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine;
 import de.learnlib.examples.mealy.ExampleGrid;
@@ -44,6 +46,8 @@ public abstract class LearningExamples {
 	
 	private static final String[] RANDOM_MEALY_OUTPUTS = { "o1", "o2", "o3" };
 	
+	
+	private static final int KEYLOCK_SIZE = 100;
 
 	private LearningExamples() {
 		throw new AssertionError("Constructor should not be invoked");
@@ -52,7 +56,9 @@ public abstract class LearningExamples {
 	public static List<? extends DFALearningExample<?>> createDFAExamples() {
 		return Arrays.asList(
 				ExampleAngluin.createExample(),
-				ExamplePaulAndMary.createExample()
+				ExamplePaulAndMary.createExample(),
+				ExampleKeylock.createExample(KEYLOCK_SIZE, false),
+				ExampleKeylock.createExample(KEYLOCK_SIZE, true)
 				);
 	}
 	
