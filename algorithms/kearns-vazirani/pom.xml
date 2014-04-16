@@ -21,15 +21,20 @@
   		<groupId>net.sf.trove4j</groupId>
   		<artifactId>trove4j</artifactId>
   	</dependency>
+  	
   	<dependency>
-  		<groupId>com.github.misberner.jdtree</groupId>
-  		<artifactId>jdtree</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
+  		<groupId>de.learnlib</groupId>
+  		<artifactId>learnlib-discrimination-tree</artifactId>
   	</dependency>
+  	
   	<dependency>
   		<groupId>de.learnlib.testsupport</groupId>
   		<artifactId>learnlib-learner-it-support</artifactId>
   		<scope>test</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.github.misberner.buildergen</groupId>
+  		<artifactId>buildergen</artifactId>
   	</dependency>
   </dependencies>
 </project>

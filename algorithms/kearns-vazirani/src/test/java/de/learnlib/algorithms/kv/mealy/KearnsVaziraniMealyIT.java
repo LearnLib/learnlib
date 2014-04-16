@@ -33,11 +33,21 @@ import org.testng.annotations.Test;
 @Test
 public class KearnsVaziraniMealyIT extends AbstractMealyLearnerIT {
 
+	private static boolean[] BOOLEAN_VALUES = { false, true };
+	
 	@Override
 	protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,
 			MealyMembershipOracle<I, O> mqOracle,
 			MealyLearnerVariantList<I, O> variants) {
-		variants.addLearnerVariant("KearnsVaziraniMealy", new KearnsVaziraniMealy<>(alphabet, mqOracle));		
+		KearnsVaziraniMealyBuilder<I, O> builder = new KearnsVaziraniMealyBuilder<>();
+		builder.setAlphabet(alphabet);
+		builder.setOracle(mqOracle);
+		
+		for(boolean repeatedEval : BOOLEAN_VALUES) {
+			builder.setRepeatedCounterexampleEvaluation(repeatedEval);
+			String name = "repeatedEval=" + repeatedEval;
+			variants.addLearnerVariant(name, builder.create());
+		}		
 	}
 
 

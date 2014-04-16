@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * LearnLib is free software; you can redistribute it and/or
@@ -14,20 +14,19 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.drivers.api;
+package de.learnlib.discriminationtree;
 
+import de.learnlib.api.MembershipOracle;
 
-/**
- * Thrown by executable inputs on SUL errors.
- * 
- * @author falkhowar
- */
-public class SULException extends Exception {
+public class BinaryDTree<I, D> extends DiscriminationTree<I, Boolean, D> {
+
+	public BinaryDTree(D rootData,
+			MembershipOracle<I, Boolean> oracle) {
+		super(new BinaryDTNode<I,D>(rootData), oracle);
+	}
 	
-	private static final long serialVersionUID = 1L;
-    
-    public SULException(Throwable cause) {
-        super(cause);
-    }
-    
+	public BinaryDTree(MembershipOracle<I, Boolean> oracle) {
+		this(null, oracle);
+	}
+
 }

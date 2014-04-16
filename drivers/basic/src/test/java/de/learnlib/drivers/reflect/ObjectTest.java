@@ -21,6 +21,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import de.learnlib.api.Query;
+import de.learnlib.oracles.DefaultQuery;
+import de.learnlib.oracles.SULOracle;
+
 import net.automatalib.words.Word;
 
 import org.testng.annotations.AfterClass;
@@ -29,14 +33,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import de.learnlib.api.Query;
-import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.SULOracle;
-
 /**
  *
  * @author falk
  */
+@Test
 public class ObjectTest {
     
     public ObjectTest() {
@@ -70,7 +71,7 @@ public class ObjectTest {
          System.out.println(query1.getInput() + "  :  " + query1.getOutput());
          System.out.println(query2.getInput() + "  :  " + query2.getOutput());
      }
-
+     
     @BeforeClass
     public static void setUpClass() throws Exception {
     }

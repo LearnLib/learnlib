@@ -16,12 +16,14 @@
  */
 package de.learnlib.drivers.reflect;
 
-import de.learnlib.drivers.api.TestDriver;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+
+import de.learnlib.drivers.api.TestDriver;
+
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.FastAlphabet;
 
 /**
  * Simple test driver for plain java objects. Uses a very simple data mapper
@@ -32,7 +34,7 @@ import net.automatalib.words.impl.SimpleAlphabet;
 public final class SimplePOJOTestDriver extends 
         TestDriver<AbstractMethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
  
-    private final SimpleAlphabet<AbstractMethodInput> inputs = new SimpleAlphabet<>();
+    private final FastAlphabet<AbstractMethodInput> inputs = new FastAlphabet<>();
     
     public SimplePOJOTestDriver(Constructor<?> c, Object ... cParams) {
         super(new SimplePOJODataMapper(c, cParams));
