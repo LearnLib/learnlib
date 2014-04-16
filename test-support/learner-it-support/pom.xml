@@ -22,7 +22,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<artifactId>learnlib-test-support-parent</artifactId>
 		<groupId>de.learnlib.testsupport</groupId>
-		<version>0.10.0-SNAPSHOT</version>
+		<version>0.10.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>        
 	</parent>
 
