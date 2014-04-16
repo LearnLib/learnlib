@@ -396,6 +396,29 @@ http://www.gnu.de/documents/lgpl.en.html.
 					</plugin>
 
 					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<inherited>false</inherited>
+						<configuration>
+							<finalName>learnlib-${project.version}</finalName>
+							<jarOutputDirectory>${project.build.directory}/bundles</jarOutputDirectory>
+							<includeDependencySources>true</includeDependencySources>
+							<dependencySourceIncludes>
+								<dependencySourceInclude>de.learnlib:*</dependencySourceInclude>
+							</dependencySourceIncludes>
+						</configuration>
+						<executions>
+							<execution>
+								<id>aggregate</id>
+								<goals>
+									<goal>aggregate-jar</goal>
+								</goals>
+								<phase>package</phase>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
 						<groupId>com.atlassian.maven.plugins</groupId>
 						<artifactId>maven-upload-plugin</artifactId>
 						<inherited>false</inherited>

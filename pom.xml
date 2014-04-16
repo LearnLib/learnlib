@@ -467,6 +467,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 						Note: we don't use the assembly plugin here, since then
 						inter-module links wouldn't work correctly
 					-->
+					<!-- Moved to distribution -->
+					<!-- 
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
@@ -502,6 +504,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 							</execution>
 						</executions>
 					</plugin>
+				-->
 				</plugins>
 			</build>
 		</profile>
