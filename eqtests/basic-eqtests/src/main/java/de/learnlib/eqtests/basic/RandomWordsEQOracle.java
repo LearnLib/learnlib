@@ -133,6 +133,7 @@ public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> im
 					}
 				}
 
+				queryBatch.clear();
 			}
 		}
 
