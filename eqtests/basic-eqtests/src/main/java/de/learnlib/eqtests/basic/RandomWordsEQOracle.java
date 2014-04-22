@@ -113,7 +113,10 @@ public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> im
 
 			final DefaultQuery<I, O> query = new DefaultQuery<>(testtrace.toWord());
 
-			if (queryBatch.size() < batchSize - 1) {
+			final boolean batchNotFilled = queryBatch.size() < batchSize - 1;
+			final boolean maxTestsNotReached = i < maxTests - 1;
+
+			if (batchNotFilled && maxTestsNotReached) {
 				queryBatch.add(query);
 			}
 			else {
