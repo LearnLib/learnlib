@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -131,7 +132,7 @@ public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> im
 					O hypOutput = hypothesis.computeOutput(testtrace.toWord());
 
 					// compare output of hypothesis and oracle
-					if (oracleoutput != null && !oracleoutput.equals(hypOutput)) {
+					if (!Objects.equals(oracleoutput, hypOutput)) {
 						return ioQuery;
 					}
 				}
