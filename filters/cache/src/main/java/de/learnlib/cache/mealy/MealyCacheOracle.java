@@ -160,7 +160,7 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 			return;
 		}
 		
-		List<Query<I,Word<O>>> qrys = new ArrayList<Query<I,Word<O>>>(queries);
+		List<Query<I,Word<O>>> qrys = new ArrayList<>(queries);
 		Collections.sort(qrys, queryCmp);
 		
 		List<MasterQuery<I,O>> masterQueries = new ArrayList<>();
@@ -237,7 +237,7 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 	}
 	
 	private MasterQuery<I,O> createMasterQuery(Word<I> word) {
-		WordBuilder<O> wb = new WordBuilder<O>();
+		WordBuilder<O> wb = new WordBuilder<>();
 		if(incMealy.lookup(word, wb)) {
 			return new MasterQuery<>(word, wb.toWord());
 		}
