@@ -18,7 +18,6 @@ package de.learnlib.eqtests.basic;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -100,7 +99,7 @@ public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> im
 		
 		int numSyms = symbolList.size();
 
-		final Collection<DefaultQuery<I,O>> queryBatch = new LinkedList<>();
+		final Collection<DefaultQuery<I,O>> queryBatch = new ArrayList<>(batchSize);
 
 		for (int i = 0; i < maxTests; ++i) {
 			int length = minLength + random.nextInt((maxLength - minLength) + 1);
