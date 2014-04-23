@@ -113,22 +113,19 @@ public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> im
 
 			final DefaultQuery<I, O> query = new DefaultQuery<>(testtrace.toWord());
 
-			final boolean batchNotFilled = queryBatch.size() < batchSize - 1;
-			final boolean maxTestsNotReached = i < maxTests - 1;
+			final boolean batchFilled = queryBatch.size() >= batchSize - 1;
+			final boolean maxTestsReached = i >= maxTests - 1;
 
-			if (batchNotFilled && maxTestsNotReached) {
-				queryBatch.add(query);
-			}
-			else {
+			queryBatch.add(query);
+			if(batchFilled || maxTestsReached) {
 				// query oracle
-				queryBatch.add(query);
 				oracle.processQueries(queryBatch);
 
 				for (final DefaultQuery<I, O> ioQuery : queryBatch) {
 					O oracleoutput = ioQuery.getOutput();
 
 					// trace hypothesis
-					O hypOutput = hypothesis.computeOutput(testtrace.toWord());
+					O hypOutput = hypothesis.computeOutput(ioQuery.getInput());
 
 					// compare output of hypothesis and oracle
 					if (!Objects.equals(oracleoutput, hypOutput)) {
