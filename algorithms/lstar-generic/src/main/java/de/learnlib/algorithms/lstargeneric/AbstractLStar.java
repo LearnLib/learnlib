@@ -22,6 +22,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner;
 import de.learnlib.algorithms.features.observationtable.OTLearner;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
@@ -30,9 +33,7 @@ import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
-
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import de.learnlib.oracles.MQUtil;
 
 /**
  * An abstract base class for L*-style algorithms.
@@ -87,9 +88,13 @@ public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, Glob
 	 */
 	@Override
 	public final boolean refineHypothesis(DefaultQuery<I, O> ceQuery) {
+		if(!MQUtil.isCounterexample(ceQuery, hypothesisOutput())) {
+			return false;
+		}
 		int oldDistinctRows = table.numDistinctRows();
 		doRefineHypothesis(ceQuery);
-		return (table.numDistinctRows() > oldDistinctRows);
+		assert (table.numDistinctRows() > oldDistinctRows);
+		return true;
 	}
 	
 	protected void doRefineHypothesis(DefaultQuery<I,O> ceQuery) {
@@ -231,4 +236,6 @@ public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, Glob
 	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, O> getObservationTable() {
 		return table.asStandardTable();
 	}
+	
+	protected abstract SuffixOutput<I, O> hypothesisOutput();
 }
