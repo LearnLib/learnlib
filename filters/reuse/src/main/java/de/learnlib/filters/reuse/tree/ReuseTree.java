@@ -64,8 +64,12 @@ import net.automatalib.words.WordBuilder;
  */
 public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseEdge<S, I, O>>
 	implements DOTPlottableGraph<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
-	
-	
+
+
+	public Word<O> computePartialOutput(Word<I> query) {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
 	public static class ReuseTreeBuilder<S,I,O> {
 		// mandatory
 		private final Alphabet<I> alphabet;
@@ -307,7 +311,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 		}
 		
 		S systemState = lastState.fetchSystemState(invalidateSystemstates);
-		
+
 		return new NodeResult<>(lastState, systemState, length);
 	}
 

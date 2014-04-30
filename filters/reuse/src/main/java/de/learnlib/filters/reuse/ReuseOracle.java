@@ -17,6 +17,8 @@
 package de.learnlib.filters.reuse;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 
 import com.google.common.base.Supplier;
@@ -32,6 +34,7 @@ import de.learnlib.filters.reuse.tree.ReuseTree;
 import de.learnlib.filters.reuse.tree.ReuseTree.ReuseTreeBuilder;
 import de.learnlib.filters.reuse.tree.SystemStateHandler;
 
+import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -193,10 +196,40 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 		ReuseCapableOracle<S, I, O> oracle = getReuseCapableOracle();
 
 		if (nodeResult == null) {
-			QueryResult<S, O> res = oracle.processQuery(query);
-			tree.insert(query, res);
+			Word<O> partialOutput = tree.computePartialOutput(query);
 
-			return res.output;
+			final LinkedList<I> filteredQueryList = new LinkedList<>(query.asList());
+			Iterator<I> queryIterator = filteredQueryList.iterator();
+			Iterator<O> partialOutputIterator = partialOutput.iterator();
+
+			while (queryIterator.hasNext()) {
+				queryIterator.next();
+				O outputSymbol = partialOutputIterator.next();
+				if (outputSymbol != null) {
+					queryIterator.remove();
+				}
+			}
+
+			QueryResult<S, O> res = oracle.processQuery(Word.fromList(filteredQueryList));
+
+			WordBuilder<O> wordBuilder = new WordBuilder<>();
+
+			Iterator<O> resultIterator = res.output.iterator();
+
+			for (O output : partialOutput) {
+				if (output == null) {
+					wordBuilder.add(resultIterator.next());
+				}
+				else {
+					wordBuilder.add(output);
+				}
+			}
+
+			QueryResult<S, O> newResult = new QueryResult<>(wordBuilder.toWord(), res.newState);
+
+			tree.insert(query, newResult);
+
+			return newResult.output;
 		}
 		
 		Word<I> suffix = query.suffix(query.size() - nodeResult.prefixLength);
