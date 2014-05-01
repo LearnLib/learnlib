@@ -16,13 +16,8 @@
  */
 package de.learnlib.filters.reuse;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
-
+import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
@@ -33,11 +28,14 @@ import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 import de.learnlib.filters.reuse.tree.ReuseTree;
 import de.learnlib.filters.reuse.tree.ReuseTree.ReuseTreeBuilder;
 import de.learnlib.filters.reuse.tree.SystemStateHandler;
-
-import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * The reuse oracle is a {@link MealyMembershipOracle} that is able to
@@ -191,63 +189,101 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 			return knownOutput;
 		}
 
-		NodeResult<S,I,O> nodeResult = tree.fetchSystemState(query);
+        // Search for system state
+		final NodeResult<S,I,O> nodeResult = tree.fetchSystemState(query);
+		final ReuseCapableOracle<S, I, O> oracle = getReuseCapableOracle();
+        final Word<O> output;
 
-		ReuseCapableOracle<S, I, O> oracle = getReuseCapableOracle();
-
+        // No system state available
 		if (nodeResult == null) {
-			Word<O> partialOutput = tree.computePartialOutput(query);
-
-			final LinkedList<I> filteredQueryList = new LinkedList<>(query.asList());
-			Iterator<I> queryIterator = filteredQueryList.iterator();
-			Iterator<O> partialOutputIterator = partialOutput.iterator();
-
-			while (queryIterator.hasNext()) {
-				queryIterator.next();
-				O outputSymbol = partialOutputIterator.next();
-				if (outputSymbol != null) {
-					queryIterator.remove();
-				}
-			}
-
-			QueryResult<S, O> res = oracle.processQuery(Word.fromList(filteredQueryList));
-
-			WordBuilder<O> wordBuilder = new WordBuilder<>();
-
-			Iterator<O> resultIterator = res.output.iterator();
-
-			for (O output : partialOutput) {
-				if (output == null) {
-					wordBuilder.add(resultIterator.next());
-				}
-				else {
-					wordBuilder.add(output);
-				}
-			}
-
-			QueryResult<S, O> newResult = new QueryResult<>(wordBuilder.toWord(), res.newState);
+            final QueryResult<S, O> newResult = filterAndProcessQuery(query, tree.getPartialOutput(query),
+                    new Function<Word<I>, QueryResult<S,O>>() {
+                        @Override
+                        public QueryResult<S, O> apply(Word<I> filteredInput) {
+                            return oracle.processQuery(filteredInput);
+                        }
+                    });
 
 			tree.insert(query, newResult);
 
-			return newResult.output;
+			output = newResult.output;
 		}
-		
-		Word<I> suffix = query.suffix(query.size() - nodeResult.prefixLength);
-		Word<I> prefix = query.prefix(nodeResult.prefixLength);
-		
-		ReuseNode<S, I, O> reuseNode = nodeResult.reuseNode;
-		S systemState = nodeResult.systemState;
-		
-		QueryResult<S, O> queryResult;
-		queryResult = oracle.continueQuery(suffix, systemState);
-		this.tree.insert(suffix, reuseNode, queryResult);
-		
-		Word<O> prefixOutput = tree.getOutput(prefix); // TODO don't compute twice
-		Word<O> suffixOutput = queryResult.output;
-		return new WordBuilder<>(prefixOutput).append(suffixOutput).toWord();
+        // System state available -> reuse
+        else {
+            final int suffixLen = query.size() - nodeResult.prefixLength;
+            final Word<I> suffix = query.suffix(suffixLen);
+
+            final Word<O> partialOutput = tree.getPartialOutput(query);
+            final Word<O> partialSuffixOutput = partialOutput.suffix(suffixLen);
+
+            final ReuseNode<S, I, O> reuseNode = nodeResult.reuseNode;
+            final S systemState = nodeResult.systemState;
+
+            final QueryResult<S, O> suffixQueryResult = filterAndProcessQuery(suffix, partialSuffixOutput,
+                    new Function<Word<I>, QueryResult<S, O>>() {
+                        @Override
+                        public QueryResult<S, O> apply(Word<I> filteredInput) {
+                            return oracle.continueQuery(filteredInput, systemState);
+                        }
+                    }
+            );
+
+            this.tree.insert(suffix, reuseNode, suffixQueryResult);
+
+            final Word<O> prefixOutput = tree.getOutput(query.prefix(nodeResult.prefixLength));
+            output = new WordBuilder<>(prefixOutput).append(suffixQueryResult.output).toWord();
+        }
+        return output;
 	}
 
-	/**
+    /**
+     * Filters all the query elements corresponding to "reflexive" edges in the reuse tree,
+     * executes the shorter query, and fills the filtered outputs into the resulting output
+     * word.
+     *
+     * @param query
+     *      the input query with "reflexive" symbols (may be a suffix of the original query, if a system state is
+     *      reused).
+     * @param partialOutput
+     *      the output information from the tree with {@code null} entries for all "non-reflexive" edges.
+     * @param processQuery
+     *      a function that actually processes the (shortened) query.
+     * @return
+     *      the query result including the outputs of the "reflexive" symbol executions.
+     */
+    private QueryResult<S, O> filterAndProcessQuery(Word<I> query, Word<O> partialOutput,
+                                                    Function<Word<I>, QueryResult<S, O>> processQuery) {
+        final LinkedList<I> filteredQueryList = new LinkedList<>(query.asList());
+        final Iterator<I> queryIterator = filteredQueryList.iterator();
+
+        // filter "reflexive" edges
+        for (final O outputSymbol : partialOutput) {
+            queryIterator.next();
+            if (outputSymbol != null) {
+                queryIterator.remove();
+            }
+        }
+
+        // process the query
+        final QueryResult<S, O> res = processQuery.apply(Word.fromList(filteredQueryList));
+
+        final WordBuilder<O> wordBuilder = new WordBuilder<>();
+        final Iterator<O> resultIterator = res.output.iterator();
+
+        // insert back the a priori available outputs of "reflexive" edges
+        for (final O output : partialOutput) {
+            if (output == null) {
+                wordBuilder.add(resultIterator.next());
+            }
+            else {
+                wordBuilder.add(output);
+            }
+        }
+
+        return new QueryResult<>(wordBuilder.toWord(), res.newState);
+    }
+
+    /**
 	 * Returns the {@link ReuseTree} used by this instance.
 	 *
 	 * @return
