@@ -246,7 +246,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
             sink = edge.getTarget();
         }
         // fill the output with null-pointers to the size of the query.
-        output.repeatAppend(query.size() - output.size(), null);
+        output.repeatAppend(query.size() - output.size(), (O)null);
         return output.toWord();
     }
 
