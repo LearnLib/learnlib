@@ -26,13 +26,13 @@ import com.google.common.base.Function;
 import de.learnlib.algorithms.features.observationtable.ObservationTable;
 import de.learnlib.algorithms.features.observationtable.ObservationTable.Row;
 
-public class ObservationTableASCIIWriter<I,O> extends AbstractObservationTableWriter<I,O> {
+public class ObservationTableASCIIWriter<I,D> extends AbstractObservationTableWriter<I,D> {
 	
 	private boolean rowSeparators;
 	
 	public ObservationTableASCIIWriter(
 			Function<? super Word<? extends I>,? extends String> wordToString,
-			Function<? super O,? extends String> outputToString,
+			Function<? super D,? extends String> outputToString,
 			boolean rowSeparators) {
 		super(wordToString, outputToString);
 		this.rowSeparators = rowSeparators;
@@ -52,7 +52,7 @@ public class ObservationTableASCIIWriter<I,O> extends AbstractObservationTableWr
 	
 	
 	@Override
-	public void write(ObservationTable<? extends I,? extends O> table, Appendable out) throws IOException {
+	public void write(ObservationTable<? extends I,? extends D> table, Appendable out) throws IOException {
 		List<? extends Word<? extends I>> suffixes = table.getSuffixes();
 		int numSuffixes = suffixes.size();
 		
@@ -63,14 +63,14 @@ public class ObservationTableASCIIWriter<I,O> extends AbstractObservationTableWr
 			colWidth[i++] = wordToString(suffix).length();
 		}
 		
-		for(Row<? extends I,? extends O> row : table.getAllRows()) {
+		for(Row<? extends I,? extends D> row : table.getAllRows()) {
 			int thisWidth = wordToString(row.getLabel()).length();
 			if(thisWidth > colWidth[0]) {
 				colWidth[0] = thisWidth;
 			}
 			
 			i = 1;
-			for(O value : row) {
+			for(D value : row) {
 				thisWidth = outputToString(value).length();
 				if(thisWidth > colWidth[i]) {
 					colWidth[i] = thisWidth;
@@ -93,7 +93,7 @@ public class ObservationTableASCIIWriter<I,O> extends AbstractObservationTableWr
 		appendSeparatorRow(out, '=', colWidth);
 		
 		boolean first = true;
-		for(Row<? extends I,? extends O> spRow : table.getShortPrefixRows()) {
+		for(Row<? extends I,? extends D> spRow : table.getShortPrefixRows()) {
 			if(first) {
 				first = false;
 			}
@@ -102,7 +102,7 @@ public class ObservationTableASCIIWriter<I,O> extends AbstractObservationTableWr
 			}
 			content[0] = wordToString(spRow.getLabel());
 			i = 1;
-			for(O value : spRow) {
+			for(D value : spRow) {
 				content[i++] = outputToString(value);
 			}
 			appendContentRow(out, content, colWidth);
@@ -111,7 +111,7 @@ public class ObservationTableASCIIWriter<I,O> extends AbstractObservationTableWr
 		appendSeparatorRow(out, '=', colWidth);
 		
 		first = true;
-		for(Row<? extends I,? extends O> lpRow : table.getLongPrefixRows()) {
+		for(Row<? extends I,? extends D> lpRow : table.getLongPrefixRows()) {
 			if(first) {
 				first = false;
 			}
@@ -120,7 +120,7 @@ public class ObservationTableASCIIWriter<I,O> extends AbstractObservationTableWr
 			}
 			content[0] = wordToString(lpRow.getLabel());
 			i = 1;
-			for(O value : lpRow.getContents()) {
+			for(D value : lpRow.getContents()) {
 				content[i++] = outputToString(value);
 			}
 			appendContentRow(out, content, colWidth);

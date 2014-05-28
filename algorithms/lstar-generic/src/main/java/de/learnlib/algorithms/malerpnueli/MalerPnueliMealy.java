@@ -14,7 +14,7 @@
  * License along with LearnLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.mahlerpnueli;
+package de.learnlib.algorithms.malerpnueli;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,18 +31,18 @@ import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategy;
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealy;
 import de.learnlib.api.MembershipOracle;
 
-public class MahlerPnueliMealy<I,O> extends ExtensibleLStarMealy<I, O> {
+public class MalerPnueliMealy<I,O> extends ExtensibleLStarMealy<I, O> {
 
-	public MahlerPnueliMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
+	public MalerPnueliMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
 		this(alphabet, oracle, Collections.<Word<I>>emptyList(), ClosingStrategies.CLOSE_FIRST);
 	}
 	
 	@GenerateBuilder(defaults = ExtensibleAutomatonLStar.BuilderDefaults.class)
-	public MahlerPnueliMealy(Alphabet<I> alphabet,
+	public MalerPnueliMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, Word<O>> oracle,
 			List<Word<I>> initialSuffixes,
 			ClosingStrategy<? super I, ? super Word<O>> closingStrategy) {
-		super(alphabet, oracle, initialSuffixes, ObservationTableCEXHandlers.MAHLER_PNUELI, closingStrategy);
+		super(alphabet, oracle, initialSuffixes, ObservationTableCEXHandlers.MALER_PNUELI, closingStrategy);
 	}
 
 }

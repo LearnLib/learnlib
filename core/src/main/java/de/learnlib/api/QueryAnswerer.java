@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import net.automatalib.words.Word;
 
 @ParametersAreNonnullByDefault
-public interface QueryAnswerer<I, O> {
+public interface QueryAnswerer<I, D> {
 	@Nullable
-	public O answerQuery(Word<I> prefix, Word<I> suffix);
+	public D answerQuery(Word<I> prefix, Word<I> suffix);
 }

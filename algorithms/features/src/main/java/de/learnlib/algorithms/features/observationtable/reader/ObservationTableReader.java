@@ -25,9 +25,9 @@ import javax.annotation.Nonnull;
  * Reads an {@link ObservationTable} from a string source.
  *
  * @param <I>
- * @param <O>
+ * @param <D>
  */
-public interface ObservationTableReader<I,O> {
+public interface ObservationTableReader<I,D> {
 
 	/**
 	 * Reads the string representation of an observation table and returns an implementation
@@ -45,6 +45,6 @@ public interface ObservationTableReader<I,O> {
 	 *      and {@link ObservationTable#getLongPrefixes()}. Will never be {@code null}.
 	 */
 	@Nonnull
-	public ObservationTable<I,O> read(@Nonnull String source, @Nonnull Alphabet<I> alphabet);
+	public ObservationTable<I,D> read(@Nonnull String source, @Nonnull Alphabet<I> alphabet);
 
 }

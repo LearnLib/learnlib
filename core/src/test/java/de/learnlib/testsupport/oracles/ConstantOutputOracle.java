@@ -21,17 +21,17 @@ import java.util.Collection;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 
-public class ConstantOutputOracle<I, O> implements MembershipOracle<I, O> {
+public class ConstantOutputOracle<I, D> implements MembershipOracle<I, D> {
 	
-	private final O output;
+	private final D output;
 
-	public ConstantOutputOracle(O answer) {
+	public ConstantOutputOracle(D answer) {
 		this.output = answer;
 	}
 
 	@Override
-	public void processQueries(Collection<? extends Query<I, O>> queries) {
-		for(Query<I, O> qry : queries) {
+	public void processQueries(Collection<? extends Query<I, D>> queries) {
+		for(Query<I, D> qry : queries) {
 			qry.answer(output);
 		}
 	}

@@ -23,7 +23,7 @@ import org.testng.Assert;
 import de.learnlib.api.Query;
 import de.learnlib.oracles.AbstractQuery;
 
-public class UnanswerableQuery<I, O> extends AbstractQuery<I, O> {
+public class UnanswerableQuery<I, D> extends AbstractQuery<I, D> {
 
 
 	public UnanswerableQuery(Query<I, ?> query) {
@@ -39,7 +39,7 @@ public class UnanswerableQuery<I, O> extends AbstractQuery<I, O> {
 	}
 
 	@Override
-	public void answer(O output) {
+	public void answer(D output) {
 		Assert.fail("Query should not be answered");
 	}
 

@@ -60,10 +60,10 @@ import net.automatalib.words.Word;
  * @author Malte Isberner
  *
  * @param <I> input symbol type
- * @param <O> observation (output) type
+ * @param <D> observation (output) domain type
  */
 @ParametersAreNonnullByDefault
-public interface ObservationTable<I, O> {
+public interface ObservationTable<I, D> {
 	
 	/**
 	 * Used to indicate that no distinguishing suffix exists in
@@ -78,9 +78,9 @@ public interface ObservationTable<I, O> {
 	 * @author Malte Isberner
 	 *
 	 * @param <I> input symbol type 
-	 * @param <O> observation type
+	 * @param <D> output domain type
 	 */
-	public static interface Row<I,O> extends Iterable<O> {
+	public static interface Row<I,D> extends Iterable<D> {
 		/**
 		 * Retrieves the label of this row.
 		 * @return the label of this row
@@ -100,7 +100,7 @@ public interface ObservationTable<I, O> {
 		 * @return the cell contents in this row
 		 */
 		@Nonnull
-		public List<? extends O> getContents();
+		public List<? extends D> getContents();
 		
 		/**
 		 * Retrieves the size (length) of this row.
@@ -116,7 +116,7 @@ public interface ObservationTable<I, O> {
 		 * {@code 0} or greater than or equal to {@code size()}
 		 */
 		@Nullable
-		public O getCellContent(@Nonnegative int index) throws IndexOutOfBoundsException;
+		public D getCellContent(@Nonnegative int index) throws IndexOutOfBoundsException;
 	}
 	
 	
@@ -130,22 +130,22 @@ public interface ObservationTable<I, O> {
 	 * @author Malte Isberner
 	 *
 	 * @param <I> input symbol type
-	 * @param <O> observation type
+	 * @param <D> observation type
 	 */
-	public static interface Inconsistency<I,O> {
+	public static interface Inconsistency<I,D> {
 		/**
 		 * Retrieves the first (short prefix) row constituting the inconsistency.
 		 * @return the first row
 		 */
 		@Nonnull
-		public Row<I,O> getFirstRow();
+		public Row<I,D> getFirstRow();
 		
 		/**
 		 * Retrieves the second (short prefix) row constituting the inconsistency
 		 * @return the second row
 		 */
 		@Nonnull
-		public Row<I,O> getSecondRow();
+		public Row<I,D> getSecondRow();
 		
 		/**
 		 * Retrieves the symbol for which's one-letter extensions the corresponding
@@ -198,26 +198,26 @@ public interface ObservationTable<I, O> {
 	public Word<I> getSuffix(@Nonnegative int index) throws IndexOutOfBoundsException;
 	
 	@Nonnull
-	public Collection<? extends Row<I,O>> getShortPrefixRows();
+	public Collection<? extends Row<I,D>> getShortPrefixRows();
 	@Nonnull
-	public Collection<? extends Row<I,O>> getLongPrefixRows();
+	public Collection<? extends Row<I,D>> getLongPrefixRows();
 	@Nonnull
-	public Collection<? extends Row<I,O>> getAllRows();
+	public Collection<? extends Row<I,D>> getAllRows();
 	
 	@Nonnull
-	public Row<I,O> getRow(Word<I> prefix) throws NoSuchRowException;				
+	public Row<I,D> getRow(Word<I> prefix) throws NoSuchRowException;				
 	
 	@Nullable
-	public Row<I,O> getSuccessorRow(Row<I,O> spRow, @Nullable I symbol) throws InvalidRowException;
+	public Row<I,D> getSuccessorRow(Row<I,D> spRow, @Nullable I symbol) throws InvalidRowException;
 	
 	
 	public boolean isClosed();
 	@Nullable
-	public Row<I,O> findUnclosedRow();
+	public Row<I,D> findUnclosedRow();
 	
 	public boolean isConsistent(Collection<? extends I> inputs);
 	@Nullable
-	public Inconsistency<I,O> findInconsistency(Collection<? extends I> inputs);
+	public Inconsistency<I,D> findInconsistency(Collection<? extends I> inputs);
 	
 	/**
 	 * 
@@ -227,7 +227,7 @@ public interface ObservationTable<I, O> {
 	 * @throws NoSuchRowException if the 
 	 */
 	@Signed
-	public int findDistinguishingSuffixIndex(Inconsistency<I,O> inconsistency) throws NoSuchRowException, InvalidRowException;
+	public int findDistinguishingSuffixIndex(Inconsistency<I,D> inconsistency) throws NoSuchRowException, InvalidRowException;
 	
 	/**
 	 * 
@@ -236,7 +236,7 @@ public interface ObservationTable<I, O> {
 	 * @throws NoSuchRowException
 	 */
 	@Nullable
-	public Word<I> findDistinguishingSuffix(Inconsistency<I,O> inconsistency) throws NoSuchRowException, InvalidRowException;
+	public Word<I> findDistinguishingSuffix(Inconsistency<I,D> inconsistency) throws NoSuchRowException, InvalidRowException;
 	
 	/**
 	 * 
@@ -247,7 +247,7 @@ public interface ObservationTable<I, O> {
 	 * @throws InvalidRowException if the rows do not belong to this observation table
 	 */
 	@Signed
-	public int findDistinguishingSuffixIndex(Row<I,O> firstRow, Row<I,O> secondRow) throws InvalidRowException;
+	public int findDistinguishingSuffixIndex(Row<I,D> firstRow, Row<I,D> secondRow) throws InvalidRowException;
 	
 	/**
 	 * 
@@ -257,5 +257,5 @@ public interface ObservationTable<I, O> {
 	 * @throws InvalidRowException if the rows do not belong to this observation table
 	 */
 	@Nullable
-	public Word<I> findDistinguishingSuffix(Row<I,O> firstRow, Row<I,O> secondRow) throws InvalidRowException;	
+	public Word<I> findDistinguishingSuffix(Row<I,D> firstRow, Row<I,D> secondRow) throws InvalidRowException;	
 }

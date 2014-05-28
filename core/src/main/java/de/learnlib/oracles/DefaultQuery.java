@@ -26,21 +26,21 @@ import de.learnlib.api.Query;
  * A query is a container for tests a learning algorithms performs, containing
  * the actual test and the corresponding result.
  *
- * @param <I> input symbol class.
- * @param <O> output class. 
+ * @param <I> input symbol type
+ * @param <D> output domain type 
  * 
- * @author Maik Merten <maikmerten@googlemail.com>
+ * @author Maik Merten
  */
 @ParametersAreNonnullByDefault
-public class DefaultQuery<I, O> extends AbstractQuery<I,O> {
+public class DefaultQuery<I, D> extends AbstractQuery<I,D> {
     
-    private O output;
+    private D output;
     
     public DefaultQuery(Word<I> prefix, Word<I> suffix) {
         super(prefix, suffix);
     }
     
-    public DefaultQuery(Word<I> prefix, Word<I> suffix, @Nullable O output) {
+    public DefaultQuery(Word<I> prefix, Word<I> suffix, @Nullable D output) {
     	this(prefix, suffix);
     	this.output = output;
     }
@@ -49,7 +49,7 @@ public class DefaultQuery<I, O> extends AbstractQuery<I,O> {
     	super(input);
     }
     
-    public DefaultQuery(Word<I> input, @Nullable O output) {
+    public DefaultQuery(Word<I> input, @Nullable D output) {
     	super(input);
     	this.output = output;
     }
@@ -59,7 +59,7 @@ public class DefaultQuery<I, O> extends AbstractQuery<I,O> {
     }
 
     @Nullable
-    public O getOutput() {
+    public D getOutput() {
         return output;
     }
 
@@ -68,7 +68,7 @@ public class DefaultQuery<I, O> extends AbstractQuery<I,O> {
      * @see de.learnlib.api.Query#setOutput(java.lang.Object)
      */
     @Override
-    public void answer(@Nullable O output) {
+    public void answer(@Nullable D output) {
         this.output = output;
     }
 

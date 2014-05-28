@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 
 import net.automatalib.words.Word;
 
-public abstract class Query<I, O> {
+public abstract class Query<I, D> {
 	
 	private int hashCode = 0;
 	
@@ -30,7 +30,7 @@ public abstract class Query<I, O> {
 	@Nonnull
 	public abstract Word<I> getSuffix();
 	
-	public abstract void answer(@Nullable O output);
+	public abstract void answer(@Nullable D output);
 	
 	@Nonnull
 	public final Word<I> getInput() {

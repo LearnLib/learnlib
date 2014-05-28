@@ -29,8 +29,9 @@ import de.learnlib.oracles.AbstractQuery;
 /**
  * A "master" query. This query corresponds to a maximal input word in the batch,
  * and all queries that constitute prefixes of this input word are slaves of this query.
- * Upon answering the master query, all slave queries are also answered 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * Upon answering the master query, all slave queries are also answered.
+ *  
+ * @author Malte Isberner
  *
  * @param <I> input symbol type
  * @param <O> output symbol type

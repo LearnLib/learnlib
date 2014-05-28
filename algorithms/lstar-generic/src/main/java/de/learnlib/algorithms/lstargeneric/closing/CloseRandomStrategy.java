@@ -37,9 +37,9 @@ public class CloseRandomStrategy implements ClosingStrategy<Object,Object> {
 	}
 
 	@Override
-	public <RI,RO>
+	public <RI,RD>
 	List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses,
-			ObservationTable<RI,RO> table, MembershipOracle<RI,RO> oracle) {
+			ObservationTable<RI,RD> table, MembershipOracle<RI,RD> oracle) {
 		List<Row<RI>> result = new ArrayList<>(unclosedClasses.size());
 		
 		for(List<Row<RI>> clazz : unclosedClasses) {

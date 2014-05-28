@@ -36,11 +36,11 @@ public class ObservationTableCEXHandlers {
 	public static ObservationTableCEXHandler<Object,Object> CLASSIC_LSTAR
 		= new ObservationTableCEXHandler<Object, Object>() {
 			@Override
-			public <RI,RO> List<List<Row<RI>>> handleCounterexample(
-					DefaultQuery<RI, RO> ceQuery,
-					ObservationTable<RI, RO> table,
-					SuffixOutput<RI, RO> hypOutput,
-					MembershipOracle<RI, RO> oracle) {
+			public <RI,RD> List<List<Row<RI>>> handleCounterexample(
+					DefaultQuery<RI, RD> ceQuery,
+					ObservationTable<RI, RD> table,
+					SuffixOutput<RI, RD> hypOutput,
+					MembershipOracle<RI, RD> oracle) {
 				return handleClassicLStar(ceQuery, table, oracle);
 			}
 			@Override
@@ -56,12 +56,12 @@ public class ObservationTableCEXHandlers {
 	public static ObservationTableCEXHandler<Object,Object> SUFFIX1BY1
 		= new ObservationTableCEXHandler<Object,Object>() {
 			@Override
-			public <RI,RO>
+			public <RI,RD>
 			List<List<Row<RI>>> handleCounterexample(
-					DefaultQuery<RI, RO> ceQuery,
-					ObservationTable<RI, RO> table,
-					SuffixOutput<RI, RO> hypOutput,
-					MembershipOracle<RI, RO> oracle) {
+					DefaultQuery<RI, RD> ceQuery,
+					ObservationTable<RI, RD> table,
+					SuffixOutput<RI, RD> hypOutput,
+					MembershipOracle<RI, RD> oracle) {
 				return handleSuffix1by1(ceQuery, table, oracle);
 			}
 			@Override
@@ -74,8 +74,8 @@ public class ObservationTableCEXHandlers {
 			}
 		};
 		
-	public static ObservationTableCEXHandler<Object,Object> MAHLER_PNUELI
-		= fromGlobalSuffixFinder(GlobalSuffixFinders.MAHLER_PNUELI);
+	public static ObservationTableCEXHandler<Object,Object> MALER_PNUELI
+		= fromGlobalSuffixFinder(GlobalSuffixFinders.MALER_PNUELI);
 	
 	public static ObservationTableCEXHandler<Object,Object> SHAHBAZ
 		= fromGlobalSuffixFinder(GlobalSuffixFinders.SHAHBAZ);
@@ -100,14 +100,14 @@ public class ObservationTableCEXHandlers {
 		
 	
 	
-	public static <I,O> 
-	ObservationTableCEXHandler<I, O> fromGlobalSuffixFinder(final GlobalSuffixFinder<I,O> globalFinder) {
-		return new ObservationTableCEXHandler<I, O>() {
+	public static <I,D> 
+	ObservationTableCEXHandler<I, D> fromGlobalSuffixFinder(final GlobalSuffixFinder<I,D> globalFinder) {
+		return new ObservationTableCEXHandler<I, D>() {
 			@Override
-			public <RI extends I,RO extends O>
+			public <RI extends I,RD extends D>
 			List<List<Row<RI>>> handleCounterexample(
-					DefaultQuery<RI,RO> ceQuery, ObservationTable<RI,RO> table,
-					SuffixOutput<RI,RO> hypOutput, MembershipOracle<RI,RO> oracle) {
+					DefaultQuery<RI,RD> ceQuery, ObservationTable<RI,RD> table,
+					SuffixOutput<RI,RD> hypOutput, MembershipOracle<RI,RD> oracle) {
 				List<? extends Word<RI>> suffixes = globalFinder.findSuffixes(ceQuery, table, hypOutput, oracle);
 				return handleGlobalSuffixes(table, suffixes, oracle);
 			}
@@ -122,14 +122,14 @@ public class ObservationTableCEXHandlers {
 		};
 	}
 	
-	public static <I,O>
-	ObservationTableCEXHandler<I, O> fromLocalSuffixFinder(final LocalSuffixFinder<I,O> localFinder, final boolean allSuffixes) {
-		return new ObservationTableCEXHandler<I, O>() {
+	public static <I,D>
+	ObservationTableCEXHandler<I, D> fromLocalSuffixFinder(final LocalSuffixFinder<I,D> localFinder, final boolean allSuffixes) {
+		return new ObservationTableCEXHandler<I, D>() {
 			@Override
-			public <RI extends I,RO extends O>
+			public <RI extends I,RD extends D>
 			List<List<Row<RI>>> handleCounterexample(
-					DefaultQuery<RI,RO> ceQuery, ObservationTable<RI,RO> table,
-					SuffixOutput<RI,RO> hypOutput, MembershipOracle<RI,RO> oracle) {
+					DefaultQuery<RI,RD> ceQuery, ObservationTable<RI,RD> table,
+					SuffixOutput<RI,RD> hypOutput, MembershipOracle<RI,RD> oracle) {
 				int suffixIdx = localFinder.findSuffixIndex(ceQuery, table, hypOutput, oracle);
 				return handleLocalSuffix(ceQuery, table, suffixIdx, allSuffixes, oracle);
 			}
@@ -146,23 +146,23 @@ public class ObservationTableCEXHandlers {
 	
 	
 	
-	public static <I,O>
-	ObservationTableCEXHandler<I, O> fromLocalSuffixFinder(final LocalSuffixFinder<I,O> localFinder) {
+	public static <I,D>
+	ObservationTableCEXHandler<I, D> fromLocalSuffixFinder(final LocalSuffixFinder<I,D> localFinder) {
 		return fromLocalSuffixFinder(localFinder, false);
 	}
 	
-	public static <I,O>
-	List<List<Row<I>>> handleClassicLStar(DefaultQuery<I, O> ceQuery,
-			ObservationTable<I, O> table, MembershipOracle<I, O> oracle) {
+	public static <I,D>
+	List<List<Row<I>>> handleClassicLStar(DefaultQuery<I, D> ceQuery,
+			ObservationTable<I, D> table, MembershipOracle<I, D> oracle) {
 		
 		List<? extends Word<I>> prefixes = ceQuery.getInput().prefixes(false);
 		
 		return table.addShortPrefixes(prefixes, oracle);
 	}
 	
-	public static <I,O>
-	List<List<Row<I>>> handleSuffix1by1(DefaultQuery<I, O> ceQuery,
-			ObservationTable<I, O> table, MembershipOracle<I, O> oracle) {
+	public static <I,D>
+	List<List<Row<I>>> handleSuffix1by1(DefaultQuery<I, D> ceQuery,
+			ObservationTable<I, D> table, MembershipOracle<I, D> oracle) {
 		List<List<Row<I>>> unclosed = Collections.emptyList();
 		
 		List<Word<I>> suffixes = table.getSuffixes();
@@ -186,23 +186,23 @@ public class ObservationTableCEXHandlers {
 		return unclosed;
 	}
 	
-	public static <I,O>
-	List<List<Row<I>>> handleGlobalSuffixes(ObservationTable<I,O> table, List<? extends Word<I>> suffixes,
-			MembershipOracle<I,O> oracle) {
+	public static <I,D>
+	List<List<Row<I>>> handleGlobalSuffixes(ObservationTable<I,D> table, List<? extends Word<I>> suffixes,
+			MembershipOracle<I,D> oracle) {
 		return table.addSuffixes(suffixes, oracle);
 	}
 	
-	public static <I,O>
-	List<List<Row<I>>> handleLocalSuffix(Query<I,O> ceQuery, ObservationTable<I,O> table,
-			int suffixIndex, boolean allSuffixes, MembershipOracle<I,O> oracle) {
+	public static <I,D>
+	List<List<Row<I>>> handleLocalSuffix(Query<I,D> ceQuery, ObservationTable<I,D> table,
+			int suffixIndex, boolean allSuffixes, MembershipOracle<I,D> oracle) {
 		List<? extends Word<I>> suffixes
 			= GlobalSuffixFinders.suffixesForLocalOutput(ceQuery, suffixIndex, allSuffixes);
 		return handleGlobalSuffixes(table, suffixes, oracle);
 	}
 	
-	public static <I,O>
-	List<List<Row<I>>> handleLocalSuffix(Query<I,O> ceQuery, ObservationTable<I,O> table,
-			int suffixIndex, MembershipOracle<I,O> oracle) {
+	public static <I,D>
+	List<List<Row<I>>> handleLocalSuffix(Query<I,D> ceQuery, ObservationTable<I,D> table,
+			int suffixIndex, MembershipOracle<I,D> oracle) {
 		return handleLocalSuffix(ceQuery, table, suffixIndex, false, oracle);
 	}
 
@@ -211,7 +211,7 @@ public class ObservationTableCEXHandlers {
 		return new ObservationTableCEXHandler[]{
 				CLASSIC_LSTAR,
 				SUFFIX1BY1,
-				MAHLER_PNUELI,
+				MALER_PNUELI,
 				SHAHBAZ,
 				FIND_LINEAR,
 				FIND_LINEAR_ALLSUFFIXES,

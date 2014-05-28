@@ -25,16 +25,16 @@ import de.learnlib.api.Query;
 import de.learnlib.api.QueryAnswerer;
 
 @ParametersAreNonnullByDefault
-public class QueryAnswererOracle<I, O> implements MembershipOracle<I,O> {
+public class QueryAnswererOracle<I, D> implements MembershipOracle<I,D> {
 	
-	private final QueryAnswerer<I,O> answerer;
+	private final QueryAnswerer<I,D> answerer;
 
-	public QueryAnswererOracle(QueryAnswerer<I,O> answerer) {
+	public QueryAnswererOracle(QueryAnswerer<I,D> answerer) {
 		this.answerer = answerer;
 	}
 
 	@Override
-	public void processQueries(Collection<? extends Query<I, O>> queries) {
+	public void processQueries(Collection<? extends Query<I, D>> queries) {
 		MQUtil.answerQueries(answerer, queries);
 	}
 	

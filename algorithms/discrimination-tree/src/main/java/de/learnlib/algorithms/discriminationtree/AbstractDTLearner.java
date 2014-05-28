@@ -40,7 +40,7 @@ import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, TP> implements LearningAlgorithm<M, I, O> {
+public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, TP> implements LearningAlgorithm<M, I, D> {
 	
 	public static class BuilderDefaults {
 		public static <I,O> LocalSuffixFinder<? super I,? super O> suffixFinder() {
@@ -52,30 +52,30 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 	}
 
 	private final Alphabet<I> alphabet;
-	private final MembershipOracle<I, O> oracle;
-	private final LocalSuffixFinder<? super I, ? super O> suffixFinder;
+	private final MembershipOracle<I, D> oracle;
+	private final LocalSuffixFinder<? super I, ? super D> suffixFinder;
 	private final boolean repeatedCounterexampleEvaluation;
-	protected final DiscriminationTree<I, O, HState<I,O,SP,TP>> dtree;
-	protected final DTLearnerHypothesis<I, O, SP, TP> hypothesis;
+	protected final DiscriminationTree<I, D, HState<I,D,SP,TP>> dtree;
+	protected final DTLearnerHypothesis<I, D, SP, TP> hypothesis;
 	
-	private final List<HState<I,O,SP,TP>> newStates = new ArrayList<>();
-	private final List<HTransition<I,O,SP,TP>> newTransitions = new ArrayList<>();
-	private final Deque<HTransition<I,O,SP,TP>> openTransitions = new ArrayDeque<>();
+	private final List<HState<I,D,SP,TP>> newStates = new ArrayList<>();
+	private final List<HTransition<I,D,SP,TP>> newTransitions = new ArrayList<>();
+	private final Deque<HTransition<I,D,SP,TP>> openTransitions = new ArrayDeque<>();
 
-	protected AbstractDTLearner(Alphabet<I> alphabet, MembershipOracle<I, O> oracle,
-			LocalSuffixFinder<? super I, ? super O> suffixFinder,
+	protected AbstractDTLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle,
+			LocalSuffixFinder<? super I, ? super D> suffixFinder,
 			boolean repeatedCounterexampleEvaluation,
-			DiscriminationTree<I, O, HState<I,O,SP,TP>> dtree) {
+			DiscriminationTree<I, D, HState<I,D,SP,TP>> dtree) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		this.suffixFinder = suffixFinder;
-		this.hypothesis = new DTLearnerHypothesis<I,O,SP,TP>(alphabet);
+		this.hypothesis = new DTLearnerHypothesis<I,D,SP,TP>(alphabet);
 		this.dtree = dtree;
 		this.repeatedCounterexampleEvaluation = repeatedCounterexampleEvaluation;
 	}
 
 	@Override
-	public boolean refineHypothesis(DefaultQuery<I,O> ceQuery) {
+	public boolean refineHypothesis(DefaultQuery<I,D> ceQuery) {
 		if(!refineHypothesisSingle(ceQuery)) {
 			return false;
 		}
@@ -89,8 +89,8 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 
 	@Override
 	public void startLearning() {
-		HState<I,O,SP,TP> init = hypothesis.getInitialState();
-		DTNode<I, O, HState<I,O,SP,TP>> initDt = dtree.sift(init.getAccessSequence());
+		HState<I,D,SP,TP> init = hypothesis.getInitialState();
+		DTNode<I, D, HState<I,D,SP,TP>> initDt = dtree.sift(init.getAccessSequence());
 		if(initDt.getData() != null) {
 			throw new IllegalStateException("Decision tree already contains data");
 		}
@@ -101,15 +101,15 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 		updateHypothesis();
 	}
 	
-	public DiscriminationTree<I, O, HState<I,O,SP,TP>> getDiscriminationTree() {
+	public DiscriminationTree<I, D, HState<I,D,SP,TP>> getDiscriminationTree() {
 		return dtree;
 	}
 	
-	public DTLearnerHypothesis<I,O,SP,TP> getHypothesisDS() {
+	public DTLearnerHypothesis<I,D,SP,TP> getHypothesisDS() {
 		return hypothesis;
 	}
 	
-	protected boolean refineHypothesisSingle(DefaultQuery<I, O> ceQuery) {
+	protected boolean refineHypothesisSingle(DefaultQuery<I, D> ceQuery) {
 		if(!MQUtil.isCounterexample(ceQuery, getHypothesisModel())) {
 			return false;
 		}
@@ -123,23 +123,23 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 		
 		Word<I> input = ceQuery.getInput();
 		Word<I> oldStateAs = input.prefix(suffixIdx);
-		HState<I,O,SP,TP> oldState = hypothesis.getState(oldStateAs);
-		DTNode<I, O, HState<I,O,SP,TP>> oldDt = oldState.getDTLeaf();
+		HState<I,D,SP,TP> oldState = hypothesis.getState(oldStateAs);
+		DTNode<I, D, HState<I,D,SP,TP>> oldDt = oldState.getDTLeaf();
 		
 		Word<I> newPredAs = input.prefix(suffixIdx - 1);
-		HState<I,O,SP,TP> newPred = hypothesis.getState(newPredAs);
+		HState<I,D,SP,TP> newPred = hypothesis.getState(newPredAs);
 		I transSym = input.getSymbol(suffixIdx - 1);
 		int transIdx = alphabet.getSymbolIndex(transSym);
-		HTransition<I,O,SP,TP> trans = newPred.getTransition(transIdx);
+		HTransition<I,D,SP,TP> trans = newPred.getTransition(transIdx);
 		
-		HState<I,O,SP,TP> newState = createState(trans);
+		HState<I,D,SP,TP> newState = createState(trans);
 		
 		Word<I> suffix = input.subWord(suffixIdx);
 		
-		O oldOut = MQUtil.output(oracle, oldState.getAccessSequence(), suffix);
-		O newOut = MQUtil.output(oracle, newState.getAccessSequence(), suffix);
+		D oldOut = MQUtil.output(oracle, oldState.getAccessSequence(), suffix);
+		D newOut = MQUtil.output(oracle, newState.getAccessSequence(), suffix);
 		
-		SplitResult<I,O,HState<I,O,SP,TP>> sr = oldDt.split(suffix, oldOut, newOut, newState);
+		SplitResult<I,D,HState<I,D,SP,TP>> sr = oldDt.split(suffix, oldOut, newOut, newState);
 		
 		oldState.fetchNonTreeIncoming(openTransitions);
 		
@@ -151,37 +151,37 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 		return true;
 	}
 	
-	protected void initializeState(HState<I,O,SP,TP> newState) {
+	protected void initializeState(HState<I,D,SP,TP> newState) {
 		newStates.add(newState);
 		
 		int size = alphabet.size();
 		for(int i = 0; i < size; i++) {
 			I sym = alphabet.getSymbol(i);
-			HTransition<I,O,SP,TP> newTrans = new HTransition<I,O,SP,TP>(newState, sym, dtree.getRoot());
+			HTransition<I,D,SP,TP> newTrans = new HTransition<I,D,SP,TP>(newState, sym, dtree.getRoot());
 			newState.setTransition(i, newTrans);
 			newTransitions.add(newTrans);
 			openTransitions.offer(newTrans);
 		}
 	}
 	
-	protected HState<I,O,SP,TP> createState(HTransition<I,O,SP,TP> trans) {
-		HState<I,O,SP,TP> newState = hypothesis.createState(trans);
+	protected HState<I,D,SP,TP> createState(HTransition<I,D,SP,TP> trans) {
+		HState<I,D,SP,TP> newState = hypothesis.createState(trans);
 		
 		initializeState(newState);
 		
 		return newState;
 	}
 	
-	protected void updateTransition(HTransition<I,O,SP,TP> trans) {
+	protected void updateTransition(HTransition<I,D,SP,TP> trans) {
 		if(trans.isTree()) {
 			return;
 		}
 		
-		DTNode<I,O,HState<I,O,SP,TP>> currDt = trans.getDT();
+		DTNode<I,D,HState<I,D,SP,TP>> currDt = trans.getDT();
 		currDt = dtree.sift(currDt, trans.getAccessSequence());
 		trans.setDT(currDt);
 		
-		HState<I,O,SP,TP> state = currDt.getData();
+		HState<I,D,SP,TP> state = currDt.getData();
 		if(state == null) {
 			state = createState(trans);
 			currDt.setData(state);
@@ -193,22 +193,22 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 	}
 	
 	protected void updateHypothesis() {
-		HTransition<I,O,SP,TP> current;
+		HTransition<I,D,SP,TP> current;
 		while((current = openTransitions.poll()) != null) {
 			updateTransition(current);
 		}
 		
-		List<Query<I,O>> queries = new ArrayList<>();
-		for(HState<I,O,SP,TP> state : newStates) {
-			Query<I,O> spQuery = spQuery(state);
+		List<Query<I,D>> queries = new ArrayList<>();
+		for(HState<I,D,SP,TP> state : newStates) {
+			Query<I,D> spQuery = spQuery(state);
 			if(spQuery != null) {
 				queries.add(spQuery);
 			}
 		}
 		newStates.clear();
 		
-		for(HTransition<I,O,SP,TP> trans : newTransitions) {
-			Query<I,O> tpQuery = tpQuery(trans);
+		for(HTransition<I,D,SP,TP> trans : newTransitions) {
+			Query<I,D> tpQuery = tpQuery(trans);
 			if(tpQuery != null) {
 				queries.add(tpQuery);
 			}
@@ -219,7 +219,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,O>, I, O, SP, T
 	}
 
 	
-	protected abstract Query<I,O> spQuery(HState<I,O,SP,TP> state);
+	protected abstract Query<I,D> spQuery(HState<I,D,SP,TP> state);
 	
-	protected abstract Query<I,O> tpQuery(HTransition<I, O, SP, TP> transition);
+	protected abstract Query<I,D> tpQuery(HTransition<I, D, SP, TP> transition);
 }

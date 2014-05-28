@@ -29,12 +29,12 @@ import de.learnlib.statistics.StatisticOracle;
  * Collects a histogram of passed query lengths.
  *
  * @param <I> input symbol class
- * @param <O> output symbol class
+ * @param <D> output symbol class
  *
  * @author falkhowar
  */
 @ParametersAreNonnullByDefault
-public class HistogramOracle<I, O> implements StatisticOracle<I, O> {
+public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
 
     /**
      * dataset to be collected.
@@ -44,21 +44,21 @@ public class HistogramOracle<I, O> implements StatisticOracle<I, O> {
     /**
      * oracle used to answer queries.
      */
-    private MembershipOracle<I, O> nextOracle;
+    private MembershipOracle<I, D> nextOracle;
 
     /**
      *
      * @param next real oracle
      * @param name name of the collected data set
      */
-    public HistogramOracle(MembershipOracle<I, O> next, String name) {
+    public HistogramOracle(MembershipOracle<I, D> next, String name) {
 	this.nextOracle = next;
 	this.dataSet = new HistogramDataSet(name, "query length");
     }
 
     @Override
-    public final void processQueries(Collection<? extends Query<I, O>> queries) {
-	for (Query<I, O> q : queries) {
+    public final void processQueries(Collection<? extends Query<I, D>> queries) {
+	for (Query<I, D> q : queries) {
 	    this.dataSet.addDataPoint((long) q.getInput().size());
 	}
 	nextOracle.processQueries(queries);
@@ -79,7 +79,7 @@ public class HistogramOracle<I, O> implements StatisticOracle<I, O> {
      * @param next oracle to be used
      */
     @Override
-    public final void setNext(final MembershipOracle<I, O> next) {
+    public final void setNext(final MembershipOracle<I, D> next) {
 	this.nextOracle = next;
     }
 }

@@ -49,10 +49,10 @@ public class ClosingStrategies {
 	public static final ClosingStrategy<Object,Object> CLOSE_FIRST
 		= new ClosingStrategy<Object,Object>() {
 			@Override
-			public <RI, RO> List<Row<RI>> selectClosingRows(
+			public <RI, RD> List<Row<RI>> selectClosingRows(
 					List<List<Row<RI>>> unclosedClasses,
-					ObservationTable<RI, RO> table,
-					MembershipOracle<RI, RO> oracle) {
+					ObservationTable<RI, RD> table,
+					MembershipOracle<RI, RD> oracle) {
 				List<Row<RI>> result = new ArrayList<Row<RI>>(unclosedClasses.size());
 				for(List<Row<RI>> clazz : unclosedClasses)
 					result.add(clazz.get(0));
@@ -71,10 +71,10 @@ public class ClosingStrategies {
 	public static final ClosingStrategy<Object,Object> CLOSE_SHORTEST
 		= new ClosingStrategy<Object,Object>() {
 			@Override
-			public <RI, RO> List<Row<RI>> selectClosingRows(
+			public <RI, RD> List<Row<RI>> selectClosingRows(
 					List<List<Row<RI>>> unclosedClasses,
-					ObservationTable<RI, RO> table,
-					MembershipOracle<RI, RO> oracle) {
+					ObservationTable<RI, RD> table,
+					MembershipOracle<RI, RD> oracle) {
 				
 				List<Row<RI>> result = new ArrayList<Row<RI>>();
 				for(List<Row<RI>> clazz : unclosedClasses) {
@@ -104,10 +104,10 @@ public class ClosingStrategies {
 	public static final ClosingStrategy<Object,Object> CLOSE_LEX_MIN
 		= new ClosingStrategy<Object,Object>() {
 			@Override
-			public <RI, RO> List<Row<RI>> selectClosingRows(
+			public <RI, RD> List<Row<RI>> selectClosingRows(
 					List<List<Row<RI>>> unclosedClasses,
-					ObservationTable<RI, RO> table,
-					MembershipOracle<RI, RO> oracle) {
+					ObservationTable<RI, RD> table,
+					MembershipOracle<RI, RD> oracle) {
 				List<Row<RI>> result = new ArrayList<Row<RI>>(unclosedClasses.size());
 				Alphabet<RI> alphabet = table.getInputAlphabet();
 				for(List<Row<RI>> clazz : unclosedClasses) {

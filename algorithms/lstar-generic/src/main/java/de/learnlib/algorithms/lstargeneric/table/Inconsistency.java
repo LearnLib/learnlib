@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -23,12 +23,12 @@ package de.learnlib.algorithms.lstargeneric.table;
  * and an input symbol <code>a</code>, such that the rows for <code>ua</code> and <code>u'a</code>
  * have different contents.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <I> input symbol class
- * @param <O> output class
+ * @param <D> output class
  */
-public final class Inconsistency<I, O> {
+public final class Inconsistency<I, D> {
 	private final Row<I> firstRow;
 	private final Row<I> secondRow;
 	private final int inputIndex;

@@ -32,9 +32,9 @@ import de.learnlib.api.MembershipOracle;
  * @author Malte Isberner
  *
  * @param <I> input symbol type
- * @param <O> output type
+ * @param <D> output domain type
  */
-public interface ParallelOracle<I, O> extends MembershipOracle<I, O> {
+public interface ParallelOracle<I, D> extends MembershipOracle<I, D> {
 	
 	/**
 	 * The policy for dealing with thread pools.
