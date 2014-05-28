@@ -26,26 +26,26 @@ import de.learnlib.api.Query;
  *
  * @author Maik Merten <maikmerten@googlemail.com>
  */
-public class SafeOracle<I,O> implements MembershipOracle<I,O> {
+public class SafeOracle<I,D> implements MembershipOracle<I,D> {
     
-    private MembershipOracle<I,O> nextOracle;
+    private MembershipOracle<I,D> nextOracle;
     
-    public SafeOracle(MembershipOracle<I,O> nextOracle) {
+    public SafeOracle(MembershipOracle<I,D> nextOracle) {
         this.nextOracle = nextOracle;
     }
     
 
     @Override
-    public void processQueries(Collection<? extends Query<I, O>> queries) {
+    public void processQueries(Collection<? extends Query<I, D>> queries) {
         // let the next oracle in chain process the queries
         nextOracle.processQueries(queries);
         
         // now, let's see if everything is okay
-        for(Query<I,O> query : queries)
+        for(Query<I,D> query : queries)
             checkQuery(query);
     }
     
-    protected void checkQuery(Query<I,O> query) {
+    protected void checkQuery(Query<I,D> query) {
     	
     	// somebody punched holes into our query batch
         if(query == null)

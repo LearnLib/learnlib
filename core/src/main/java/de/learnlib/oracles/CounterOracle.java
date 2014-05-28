@@ -34,7 +34,7 @@ import de.learnlib.statistics.StatisticOracle;
  * @author falkhowar
  */
 @ParametersAreNonnullByDefault
-public class CounterOracle<I,O> implements StatisticOracle<I,O> {
+public class CounterOracle<I,D> implements StatisticOracle<I,D> {
 	
 	public static class DFACounterOracle<I> extends CounterOracle<I,Boolean>
 			implements DFAMembershipOracle<I> {
@@ -54,15 +54,15 @@ public class CounterOracle<I,O> implements StatisticOracle<I,O> {
     
     private final Counter counter;
     
-    private MembershipOracle<I,O> nextOracle;
+    private MembershipOracle<I,D> nextOracle;
     
-    public CounterOracle(MembershipOracle<I,O> nextOracle, String name) {        
+    public CounterOracle(MembershipOracle<I,D> nextOracle, String name) {        
         this.nextOracle = nextOracle;
         this.counter = new Counter(name, "queries");
     }
 
     @Override
-    public void processQueries(Collection<? extends Query<I, O>> queries) {
+    public void processQueries(Collection<? extends Query<I, D>> queries) {
         this.counter.increment(queries.size());
         nextOracle.processQueries(queries);
     }
@@ -83,7 +83,7 @@ public class CounterOracle<I,O> implements StatisticOracle<I,O> {
     }
 
     @Override
-    public void setNext(MembershipOracle<I, O> next) {
+    public void setNext(MembershipOracle<I, D> next) {
         this.nextOracle = next;
     }
 }

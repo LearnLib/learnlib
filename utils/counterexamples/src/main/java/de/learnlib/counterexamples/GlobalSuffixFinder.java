@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -39,18 +39,18 @@ import de.learnlib.api.Query;
  * {@link #findSuffixIndex(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)}
  * method.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
- * @param <I> input symbol class upper bound
- * @param <O> output class upper bound
+ * @param <I> input symbol type upper bound
+ * @param <D> output domain type upper bound
  */
-public interface GlobalSuffixFinder<I,O> {
+public interface GlobalSuffixFinder<I,D> {
 	
 	/**
 	 * Finds a set of distinguishing suffixes which will allow to expose at least one additional
 	 * state in the hypothesis.
-	 * @param <RI> real input symbol class used for *this* counterexample analysis
-	 * @param <RO> real output class used for *this* counterexample analysis
+	 * @param <RI> real input symbol type used for *this* counterexample analysis
+	 * @param <RD> real output domain type used for *this* counterexample analysis
 	 * @param ceQuery the counterexample query that triggered the refinement. Note that the same
 	 * restrictions as in {@link LearningAlgorithm#refineHypothesis(de.learnlib.oracles.DefaultQuery)}
 	 * apply.
@@ -62,10 +62,10 @@ public interface GlobalSuffixFinder<I,O> {
 	 * @return a set of distinguishing suffixes, or the empty set if the counterexample
 	 * could not be analyzed.
 	 */
-	public <RI extends I,RO extends O>
-	List<? extends Word<RI>> findSuffixes(Query<RI,RO> ceQuery,
+	public <RI extends I,RD extends D>
+	List<? extends Word<RI>> findSuffixes(Query<RI,RD> ceQuery,
 			AccessSequenceTransformer<RI> asTransformer,
-			SuffixOutput<RI,RO> hypOutput,
-			MembershipOracle<RI,RO> oracle);
+			SuffixOutput<RI,RD> hypOutput,
+			MembershipOracle<RI,RD> oracle);
 	
 }

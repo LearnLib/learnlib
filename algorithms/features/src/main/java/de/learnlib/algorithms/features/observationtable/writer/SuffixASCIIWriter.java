@@ -32,10 +32,10 @@ import java.util.List;
  *
  * @param <I>
  *     The input type.
- * @param <O>
- *     The output type
+ * @param <D>
+ *     The output domain type
  */
-public class SuffixASCIIWriter<I,O> extends AbstractObservationTableWriter<I,O> {
+public class SuffixASCIIWriter<I,D> extends AbstractObservationTableWriter<I,D> {
 
 	private static final String WORD_DELIMITER = ";";
 	private static final String SYMBOL_DELIMITER = ",";
@@ -82,7 +82,7 @@ public class SuffixASCIIWriter<I,O> extends AbstractObservationTableWriter<I,O> 
 	}
 
 	@Override
-	public void write(ObservationTable<? extends I, ? extends O> table, @WillNotClose Appendable out)
+	public void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose Appendable out)
 			throws IOException {
 		List<? extends Word<? extends I>> suffixes = table.getSuffixes();
 

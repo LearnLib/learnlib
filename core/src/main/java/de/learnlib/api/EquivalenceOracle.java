@@ -41,15 +41,15 @@ import de.learnlib.oracles.DefaultQuery;
  * counterexamples, <b>BUT</b> a <tt>null</tt> result signalling no counterexample was found
  * does <b>not</b> mean that there can be none.
  * 
- * @author Maik Merten <maikmerten@googlemail.com>
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Maik Merten
+ * @author Malte Isberner
  * 
- * @param <A> automaton class this equivalence oracle works on
- * @param <I> input symbol class
- * @param <O> output class
+ * @param <A> automaton type this equivalence oracle works on
+ * @param <I> input symbol type
+ * @param <D> output domain type
  */
 @ParametersAreNonnullByDefault
-public interface EquivalenceOracle<A, I, O> {
+public interface EquivalenceOracle<A, I, D> {
 	
 	/**
 	 * A specialization of the {@link EquivalenceOracle} interface for a DFA learning scenario.
@@ -86,7 +86,7 @@ public interface EquivalenceOracle<A, I, O> {
 	 * in the {@link DefaultQuery} contains the SUL output for the respective query.
 	 */
 	@Nullable
-	public DefaultQuery<I, O> findCounterExample(A hypothesis, Collection<? extends I> inputs);  
+	public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs);  
 
 	
 }

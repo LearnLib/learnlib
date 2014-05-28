@@ -22,8 +22,8 @@ import net.automatalib.words.Word;
 import de.learnlib.api.LearningAlgorithm;
 
 
-public interface OTLearner<M, I, O> extends
-		LearningAlgorithm<M, I, O>, ObservationTableFeature<I,O> {
+public interface OTLearner<M, I, D> extends
+		LearningAlgorithm<M, I, D>, ObservationTableFeature<I,D> {
 	
 	public static interface OTLearnerDFA<I> extends DFALearner<I>, OTLearner<DFA<?,I>,I,Boolean> {
 	}

@@ -26,18 +26,18 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.QueryAnswerer;
 
 @ParametersAreNonnullByDefault
-public final class OracleQueryAnswerer<I, O> implements QueryAnswerer<I,O> {
+public final class OracleQueryAnswerer<I, D> implements QueryAnswerer<I,D> {
 	
-	private final MembershipOracle<I,O> oracle;
+	private final MembershipOracle<I,D> oracle;
 	
-	public OracleQueryAnswerer(MembershipOracle<I,O> oracle) {
+	public OracleQueryAnswerer(MembershipOracle<I,D> oracle) {
 		this.oracle = oracle;
 	}
 
 	@Override
 	@Nullable
-	public O answerQuery(Word<I> prefix, Word<I> suffix) {
-		DefaultQuery<I,O> query = new DefaultQuery<>(prefix, suffix);
+	public D answerQuery(Word<I> prefix, Word<I> suffix) {
+		DefaultQuery<I,D> query = new DefaultQuery<>(prefix, suffix);
 		oracle.processQueries(Collections.singleton(query));
 		return query.getOutput();
 	}

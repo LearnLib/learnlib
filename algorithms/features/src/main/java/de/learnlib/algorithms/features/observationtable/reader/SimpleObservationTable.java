@@ -36,10 +36,10 @@ import java.util.List;
  *
  * @param <I>
  *     The input type.
- * @param <O>
- *     The output type.
+ * @param <D>
+ *     The output domain type.
  */
-public class SimpleObservationTable<I,O> implements ObservationTable<I,O> {
+public class SimpleObservationTable<I,D> implements ObservationTable<I,D> {
 
 	final List<? extends Word<I>> suffixes;
 
@@ -79,31 +79,31 @@ public class SimpleObservationTable<I,O> implements ObservationTable<I,O> {
 
 	@Nonnull
 	@Override
-	public Collection<? extends Row<I, O>> getShortPrefixRows() {
+	public Collection<? extends Row<I, D>> getShortPrefixRows() {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public Collection<? extends Row<I, O>> getLongPrefixRows() {
+	public Collection<? extends Row<I, D>> getLongPrefixRows() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Nonnull
 	@Override
-	public Collection<? extends Row<I, O>> getAllRows() {
+	public Collection<? extends Row<I, D>> getAllRows() {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public Row<I, O> getRow(Word<I> prefix) throws NoSuchRowException {
+	public Row<I, D> getRow(Word<I> prefix) throws NoSuchRowException {
 		throw new NoSuchRowException();
 	}
 
 	@Nullable
 	@Override
-	public Row<I, O> getSuccessorRow(Row<I, O> spRow, @Nullable I symbol) throws InvalidRowException {
+	public Row<I, D> getSuccessorRow(Row<I, D> spRow, @Nullable I symbol) throws InvalidRowException {
 		throw new InvalidRowException();
 	}
 
@@ -114,7 +114,7 @@ public class SimpleObservationTable<I,O> implements ObservationTable<I,O> {
 
 	@Nullable
 	@Override
-	public Row<I, O> findUnclosedRow() {
+	public Row<I, D> findUnclosedRow() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -125,29 +125,29 @@ public class SimpleObservationTable<I,O> implements ObservationTable<I,O> {
 
 	@Nullable
 	@Override
-	public Inconsistency<I, O> findInconsistency(Collection<? extends I> inputs) {
+	public Inconsistency<I, D> findInconsistency(Collection<? extends I> inputs) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public int findDistinguishingSuffixIndex(Inconsistency<I, O> inconsistency) throws NoSuchRowException, InvalidRowException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Nullable
-	@Override
-	public Word<I> findDistinguishingSuffix(Inconsistency<I, O> inconsistency) throws NoSuchRowException, InvalidRowException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public int findDistinguishingSuffixIndex(Row<I, O> firstRow, Row<I, O> secondRow) throws InvalidRowException {
+	public int findDistinguishingSuffixIndex(Inconsistency<I, D> inconsistency) throws NoSuchRowException, InvalidRowException {
 		throw new UnsupportedOperationException();
 	}
 
 	@Nullable
 	@Override
-	public Word<I> findDistinguishingSuffix(Row<I, O> firstRow, Row<I, O> secondRow) throws InvalidRowException {
+	public Word<I> findDistinguishingSuffix(Inconsistency<I, D> inconsistency) throws NoSuchRowException, InvalidRowException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public int findDistinguishingSuffixIndex(Row<I, D> firstRow, Row<I, D> secondRow) throws InvalidRowException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Nullable
+	@Override
+	public Word<I> findDistinguishingSuffix(Row<I, D> firstRow, Row<I, D> secondRow) throws InvalidRowException {
 		throw new UnsupportedOperationException();
 	}
 }

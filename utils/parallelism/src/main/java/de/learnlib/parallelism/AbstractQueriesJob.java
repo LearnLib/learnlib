@@ -32,23 +32,23 @@ import de.learnlib.api.Query;
  * @author Malte Isberner
  *
  * @param <I> input symbol type
- * @param <O> output type
+ * @param <D> output domain type
  */
 @ParametersAreNonnullByDefault
-abstract class AbstractQueriesJob<I, O> implements Runnable {
+abstract class AbstractQueriesJob<I, D> implements Runnable {
 	
-	private final Collection<? extends Query<I,O>> queries;
+	private final Collection<? extends Query<I,D>> queries;
 	
 	@Nonnull
-	protected abstract MembershipOracle<I,O> getOracle();
+	protected abstract MembershipOracle<I,D> getOracle();
 	
-	public AbstractQueriesJob(Collection<? extends Query<I,O>> queries) {
+	public AbstractQueriesJob(Collection<? extends Query<I,D>> queries) {
 		this.queries = queries;
 	}
 	
 	@Override
 	public void run() {
-		MembershipOracle<I, O> oracle = getOracle();
+		MembershipOracle<I, D> oracle = getOracle();
 		
 		oracle.processQueries(queries);
 	}

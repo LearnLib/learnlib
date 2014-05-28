@@ -30,9 +30,9 @@ import de.learnlib.api.LearningAlgorithm;
  *
  * @param <M> hypothesis model type
  * @param <I> input symbol type
- * @param <O> output type
+ * @param <D> output domain type
  */
-public interface GlobalSuffixLearner<M, I, O> extends LearningAlgorithm<M, I, O>, GlobalSuffixFeature<I> {
+public interface GlobalSuffixLearner<M, I, D> extends LearningAlgorithm<M, I, D>, GlobalSuffixFeature<I> {
 	
 	public static interface GlobalSuffixLearnerDFA<I> extends GlobalSuffixLearner<DFA<?,I>,I,Boolean> {
 	}

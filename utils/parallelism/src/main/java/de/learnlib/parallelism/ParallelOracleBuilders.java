@@ -70,44 +70,44 @@ import de.learnlib.api.MembershipOracle;
 public abstract class ParallelOracleBuilders {
 	
 	@Nonnull
-	public static <I,O>
-	DynamicParallelOracleBuilder<I, O> newDynamicParallelOracle(MembershipOracle<I,O> sharedOracle) {
+	public static <I,D>
+	DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(MembershipOracle<I,D> sharedOracle) {
 		return newDynamicParallelOracle(Suppliers.ofInstance(sharedOracle));
 	}
 	
 	@Nonnull
-	public static <I,O>
-	DynamicParallelOracleBuilder<I,O> newDynamicParallelOracle(Supplier<? extends MembershipOracle<I,O>> oracleSupplier) {
+	public static <I,D>
+	DynamicParallelOracleBuilder<I,D> newDynamicParallelOracle(Supplier<? extends MembershipOracle<I,D>> oracleSupplier) {
 		return new DynamicParallelOracleBuilder<>(oracleSupplier);
 	}
 	
 	@Nonnull
-	public static <I,O>
-	StaticParallelOracleBuilder<I, O> newStaticParallelOracle(MembershipOracle<I,O> sharedOracle) {
+	public static <I,D>
+	StaticParallelOracleBuilder<I, D> newStaticParallelOracle(MembershipOracle<I,D> sharedOracle) {
 		return newStaticParallelOracle(Suppliers.ofInstance(sharedOracle));
 	}
 	
 	@Nonnull
-	public static <I,O>
-	StaticParallelOracleBuilder<I,O> newStaticParallelOracle(Supplier<? extends MembershipOracle<I,O>> oracleSupplier) {
+	public static <I,D>
+	StaticParallelOracleBuilder<I,D> newStaticParallelOracle(Supplier<? extends MembershipOracle<I,D>> oracleSupplier) {
 		return new StaticParallelOracleBuilder<>(oracleSupplier);
 	}
 	
 	@Nonnull
 	@SafeVarargs
-	public static <I,O>
-	StaticParallelOracleBuilder<I,O> newStaticParallelOracle(
-			MembershipOracle<I,O> firstOracle,
-			MembershipOracle<I,O>... otherOracles) {
-		List<MembershipOracle<I,O>> oracles = new ArrayList<>(otherOracles.length + 1);
+	public static <I,D>
+	StaticParallelOracleBuilder<I,D> newStaticParallelOracle(
+			MembershipOracle<I,D> firstOracle,
+			MembershipOracle<I,D>... otherOracles) {
+		List<MembershipOracle<I,D>> oracles = new ArrayList<>(otherOracles.length + 1);
 		oracles.add(firstOracle);
 		Collections.addAll(oracles, otherOracles);
 		return newStaticParallelOracle(oracles);
 	}
 	
 	@Nonnull
-	public static <I,O>
-	StaticParallelOracleBuilder<I,O> newStaticParallelOracle(Collection<? extends MembershipOracle<I,O>> oracles) {
+	public static <I,D>
+	StaticParallelOracleBuilder<I,D> newStaticParallelOracle(Collection<? extends MembershipOracle<I,D>> oracles) {
 		return new StaticParallelOracleBuilder<>(oracles);
 	}
 	

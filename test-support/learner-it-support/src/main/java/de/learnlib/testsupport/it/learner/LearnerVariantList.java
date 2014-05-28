@@ -35,9 +35,9 @@ import de.learnlib.api.LearningAlgorithm;
  *
  * @param <M> hypothesis model type (upper bound)
  * @param <I> input symbol type
- * @param <O> output type
+ * @param <D> output type
  */
-public interface LearnerVariantList<M, I, O> {
+public interface LearnerVariantList<M, I, D> {
 	
 	public static interface DFALearnerVariantList<I> extends LearnerVariantList<DFA<?,I>,I,Boolean> {}
 	public static interface MealyLearnerVariantList<I,O> extends LearnerVariantList<MealyMachine<?,I,?,O>,I,Word<O>> {}
@@ -52,7 +52,7 @@ public interface LearnerVariantList<M, I, O> {
 	 * @param name the name of the variant
 	 * @param learner the algorithm instance for this variant
 	 */
-	public void addLearnerVariant(String name, LearningAlgorithm<? extends M,I,O> learner);
+	public void addLearnerVariant(String name, LearningAlgorithm<? extends M,I,D> learner);
 	
 	/**
 	 * Adds a learner variant with a given maximum number of rounds to the list.
@@ -63,7 +63,7 @@ public interface LearnerVariantList<M, I, O> {
 	 * less than or equal to zero is specified, the default maximum number of rounds (the size of the
 	 * target automaton) is assumed.
 	 */
-	public void addLearnerVariant(String name, LearningAlgorithm<? extends M,I,O> learner, int maxRounds);
+	public void addLearnerVariant(String name, LearningAlgorithm<? extends M,I,D> learner, int maxRounds);
 
 	
 }

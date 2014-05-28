@@ -26,12 +26,12 @@ import java.util.Collection;
  * 
  * @author falkhowar
  */
-public class FilterChain<I,O> implements MembershipOracle<I, O> {
+public class FilterChain<I,D> implements MembershipOracle<I, D> {
         
-    private final MembershipOracle<I,O> oracle;
+    private final MembershipOracle<I,D> oracle;
 
     @SafeVarargs
-    public FilterChain(MembershipOracle<I,O> endpoint, Filter<I,O> ... chain) {
+    public FilterChain(MembershipOracle<I,D> endpoint, Filter<I,D> ... chain) {
         if (chain.length < 1) {
             this.oracle = endpoint;
             return;
@@ -45,7 +45,7 @@ public class FilterChain<I,O> implements MembershipOracle<I, O> {
     }
     
     @Override
-    public void processQueries(Collection<? extends Query<I, O>> queries) {
+    public void processQueries(Collection<? extends Query<I, D>> queries) {
         this.oracle.processQueries(queries);
     }
     

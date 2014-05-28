@@ -30,8 +30,8 @@ import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
-public abstract class ExtensibleAutomatonLStar<A,I,O,S,T,SP,TP,AI extends MutableDeterministic<S,I,T,SP,TP>> extends
-AbstractAutomatonLStar<A, I, O,S,T,SP,TP,AI> {
+public abstract class ExtensibleAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableDeterministic<S,I,T,SP,TP>> extends
+AbstractAutomatonLStar<A, I, D,S,T,SP,TP,AI> {
 	
 	public static final class BuilderDefaults {
 		public static final <I> List<Word<I>> initialPrefixes() {
@@ -42,27 +42,27 @@ AbstractAutomatonLStar<A, I, O,S,T,SP,TP,AI> {
 			return Collections.emptyList();
 		}
 		
-		public static <I,O> ObservationTableCEXHandler<? super I, ? super O> cexHandler() {
+		public static <I,D> ObservationTableCEXHandler<? super I, ? super D> cexHandler() {
 			return ObservationTableCEXHandlers.CLASSIC_LSTAR;
 		}
 		
-		public static <I,O> ClosingStrategy<? super I, ? super O> closingStrategy() {
+		public static <I,D> ClosingStrategy<? super I, ? super D> closingStrategy() {
 			return ClosingStrategies.CLOSE_FIRST;
 		}
 		
 	}
 	
-	protected final ObservationTableCEXHandler<? super I, ? super O> cexHandler;
-	protected final ClosingStrategy<? super I, ? super O> closingStrategy;
+	protected final ObservationTableCEXHandler<? super I, ? super D> cexHandler;
+	protected final ClosingStrategy<? super I, ? super D> closingStrategy;
 	protected final List<Word<I>> initialPrefixes;
 	protected final List<Word<I>> initialSuffixes;
 	
 	public ExtensibleAutomatonLStar(Alphabet<I> alphabet,
-			MembershipOracle<I,O> oracle, AI internalHyp,
+			MembershipOracle<I,D> oracle, AI internalHyp,
 			List<Word<I>> initialPrefixes,
 			List<Word<I>> initialSuffixes,
-			ObservationTableCEXHandler<? super I,? super O> cexHandler,
-			ClosingStrategy<? super I,? super O> closingStrategy) {
+			ObservationTableCEXHandler<? super I,? super D> cexHandler,
+			ClosingStrategy<? super I,? super D> closingStrategy) {
 		super(alphabet, oracle, internalHyp);
 		this.initialPrefixes = initialPrefixes;
 		this.initialSuffixes = initialSuffixes;
@@ -75,7 +75,7 @@ AbstractAutomatonLStar<A, I, O,S,T,SP,TP,AI> {
 	 * @see de.learnlib.algorithms.lstargeneric.AbstractLStar#doRefineHypothesis(de.learnlib.oracles.DefaultQuery)
 	 */
 	@Override
-	protected void refineHypothesisInternal(DefaultQuery<I, O> ceQuery) {
+	protected void refineHypothesisInternal(DefaultQuery<I, D> ceQuery) {
 		List<List<Row<I>>> unclosed = cexHandler.handleCounterexample(ceQuery, table, hypothesisOutput(), oracle);
 		completeConsistentTable(unclosed, cexHandler.needsConsistencyCheck());
 	}

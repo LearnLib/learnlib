@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -26,12 +26,12 @@ import net.automatalib.words.Word;
  * the {@link SuffixOutput} concept, allowing to identify a suffix part in the output
  * (relative to a prefix/suffix subdivision in the input).
  *   
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
- * @param <I> input symbol class
- * @param <O> (suffix) output class
+ * @param <I> input symbol type
+ * @param <D> (suffix) output domain type
  */
-public class SimulatorOracle<I, O> extends AbstractSingleQueryOracle<I, O> {
+public class SimulatorOracle<I, D> extends AbstractSingleQueryOracle<I, D> {
 	
 	
 	public static class DFASimulatorOracle<I> extends SimulatorOracle<I,Boolean>
@@ -49,13 +49,13 @@ public class SimulatorOracle<I, O> extends AbstractSingleQueryOracle<I, O> {
 	}
 	
 	
-	private final SuffixOutput<I, O> automaton;
+	private final SuffixOutput<I, D> automaton;
 	
 	/**
 	 * Constructor.
 	 * @param automaton the suffix-observable automaton
 	 */
-	public SimulatorOracle(SuffixOutput<I,O> automaton) {
+	public SimulatorOracle(SuffixOutput<I,D> automaton) {
 		this.automaton = automaton;
 	}
 	
@@ -64,7 +64,7 @@ public class SimulatorOracle<I, O> extends AbstractSingleQueryOracle<I, O> {
 	 * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
 	 */
 	@Override
-	public O answerQuery(Word<I> prefix, Word<I> suffix) {
+	public D answerQuery(Word<I> prefix, Word<I> suffix) {
 		return automaton.computeSuffixOutput(prefix, suffix);
 	}
 	

@@ -22,9 +22,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.FutureTask;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
@@ -33,13 +35,8 @@ import de.learnlib.algorithms.features.observationtable.reader.ObservationTableR
 import de.learnlib.algorithms.features.observationtable.writer.ObservationTableHTMLWriter;
 import de.learnlib.algorithms.features.observationtable.writer.ObservationTableWriter;
 
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-
 @ParametersAreNonnullByDefault
 public abstract class OTUtils {
-	
-	private static final long BROWSER_STARTUP_DELAY = 5000; // milliseconds
 
 	private static final String HTML_FILE_HEADER = "<html><head>\n"
 			+ "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n"
@@ -55,42 +52,42 @@ public abstract class OTUtils {
 	private static final String HTML_FILE_FOOTER = "</body></html>\n";
 	
 	
-	public static <I,O>
+	public static <I,D>
 	String toString(
-			ObservationTable<? extends I,? extends O> table,
-			ObservationTableWriter<I,O> writer) {
+			ObservationTable<? extends I,? extends D> table,
+			ObservationTableWriter<I,D> writer) {
 		StringBuilder sb = new StringBuilder();
 		writer.write(table, sb);
 		
 		return sb.toString();
 	}
 
-	public static <I,O> ObservationTable<I,O> fromString(String source, Alphabet<I> alphabet,
-			ObservationTableReader<I,O> reader) {
+	public static <I,D> ObservationTable<I,D> fromString(String source, Alphabet<I> alphabet,
+			ObservationTableReader<I,D> reader) {
 		return reader.read(source, alphabet);
 	}
 	
 	
 	
-	public static <I,O>
+	public static <I,D>
 	void writeHTMLToFile(
-			ObservationTable<I, O> table,
+			ObservationTable<I, D> table,
 			File file,
 			Function<? super Word<? extends I>,? extends String> wordToString,
-			Function<? super O,? extends String> outputToString) throws IOException {
+			Function<? super D,? extends String> outputToString) throws IOException {
 		
 		try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
 			bw.write(HTML_FILE_HEADER);
-			ObservationTableHTMLWriter<I, O> otWriter
+			ObservationTableHTMLWriter<I, D> otWriter
 				= new ObservationTableHTMLWriter<>(wordToString, outputToString);
 			otWriter.write(table, bw);
 			bw.write(HTML_FILE_FOOTER);
 		}
 	}
 	
-	public static <I,O>
+	public static <I,D>
 	void writeHTMLToFile(
-			ObservationTable<I, O> table,
+			ObservationTable<I, D> table,
 			File file) throws IOException {
 		writeHTMLToFile(table, file, Functions.toStringFunction(), Functions.toStringFunction());
 	}
@@ -115,37 +112,27 @@ public abstract class OTUtils {
 	 * @throws HeadlessException if the JVM is running in headless mode
 	 * @throws UnsupportedOperationException if {@link Desktop#getDesktop()} is not supported by the system
 	 */
-	public static <I,O>
+	public static <I,D>
 	void displayHTMLInBrowser(
-			ObservationTable<I,O> table,
+			ObservationTable<I,D> table,
 			Function<? super Word<? extends I>,? extends String> wordToString,
-			Function<? super O,? extends String> outputToString) throws IOException, HeadlessException, UnsupportedOperationException {
+			Function<? super D,? extends String> outputToString) throws IOException, HeadlessException, UnsupportedOperationException {
 		File tempFile = File.createTempFile("learnlib-ot" , ".html");
-		tempFile.deleteOnExit();
+		
+		// Doing this might cause problems if the startup delay of the browser
+		// causes it to start only after the JVM has exited.
+		// Temp directory should be wiped regularly anyway.
+		// tempFile.deleteOnExit();
 		writeHTMLToFile(table, tempFile, wordToString, outputToString);
 		
 		Desktop desktop = Desktop.getDesktop();
 		// We use browse() instead of open() because, e.g., web developers may have
 		// an HTML editor set up as their default application to open HTML files
 		desktop.browse(tempFile.toURI());
-		
-		// Enforce a delayed shutdown of the JVM, in order to make sure
-		// tempFile doesn't get deleted prematurely
-		new FutureTask<>(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(BROWSER_STARTUP_DELAY);
-				}
-				catch(InterruptedException ex) {
-					ex.printStackTrace(); // not much we can do here
-				}
-			}
-		}, null).run();
 	}
 	
-	public static <I,O>
-	void displayHTMLInBrowser(ObservationTable<I,O> table) throws IOException, HeadlessException, UnsupportedOperationException {
+	public static <I,D>
+	void displayHTMLInBrowser(ObservationTable<I,D> table) throws IOException, HeadlessException, UnsupportedOperationException {
 		displayHTMLInBrowser(table, Functions.toStringFunction(), Functions.toStringFunction());
 	}
 	

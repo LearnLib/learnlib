@@ -23,7 +23,7 @@ import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-public interface LearningExample<I,O,A extends UniversalAutomaton<?, I, ?, ?, ?> & SuffixOutput<I,O>> {
+public interface LearningExample<I,D,A extends UniversalAutomaton<?, I, ?, ?, ?> & SuffixOutput<I,D>> {
 	
 	public static interface DFALearningExample<I> extends LearningExample<I,Boolean,DFA<?,I>> {
 	}

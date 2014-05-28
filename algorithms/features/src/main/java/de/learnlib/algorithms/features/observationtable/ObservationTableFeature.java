@@ -16,6 +16,6 @@
  */
 package de.learnlib.algorithms.features.observationtable;
 
-public interface ObservationTableFeature<I, O> {
-	public ObservationTable<I, O> getObservationTable();
+public interface ObservationTableFeature<I, D> {
+	public ObservationTable<I, D> getObservationTable();
 }

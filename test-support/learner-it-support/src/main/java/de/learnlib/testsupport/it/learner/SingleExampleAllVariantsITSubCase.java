@@ -28,14 +28,14 @@ import de.learnlib.testsupport.it.learner.LearnerVariant;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl;
 import de.learnlib.testsupport.it.learner.SingleLearnerVariantITSubCase;
 
-final class SingleExampleAllVariantsITSubCase<I,O,
-	A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, O>> {
+final class SingleExampleAllVariantsITSubCase<I,D,
+	A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>> {
 	
-	private final LearningExample<I, O, ? extends A> example;
-	private final LearnerVariantListImpl<? extends A, I, O> variants;
+	private final LearningExample<I, D, ? extends A> example;
+	private final LearnerVariantListImpl<? extends A, I, D> variants;
 
-	public SingleExampleAllVariantsITSubCase(LearningExample<I,O,? extends A> example,
-			LearnerVariantListImpl<? extends A,I,O> variants) {
+	public SingleExampleAllVariantsITSubCase(LearningExample<I,D,? extends A> example,
+			LearnerVariantListImpl<? extends A,I,D> variants) {
 		this.example = example;
 		this.variants = variants;
 	}
@@ -43,10 +43,10 @@ final class SingleExampleAllVariantsITSubCase<I,O,
 	
 	@Factory
 	public SingleLearnerVariantITSubCase<?, ?, ?>[] createSingleVariantITCases() {
-		List<? extends LearnerVariant<? extends A, I, O>> variantList = variants.getLearnerVariants();
+		List<? extends LearnerVariant<? extends A, I, D>> variantList = variants.getLearnerVariants();
 		SingleLearnerVariantITSubCase<?, ?, ?>[] result = new SingleLearnerVariantITSubCase[variantList.size()];
 		int i = 0;
-		for(LearnerVariant<? extends A,I,O> variant : variantList) {
+		for(LearnerVariant<? extends A,I,D> variant : variantList) {
 			result[i++] = new SingleLearnerVariantITSubCase<>(variant, example);
 		}
 		return result;

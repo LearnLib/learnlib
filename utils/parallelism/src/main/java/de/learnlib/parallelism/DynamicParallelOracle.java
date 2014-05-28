@@ -41,10 +41,10 @@ import de.learnlib.settings.LearnLibSettings;
  * @author Malte Isberner
  *
  * @param <I> input symbol type
- * @param <O> output type
+ * @param <D> output domain type
  */
 @ParametersAreNonnullByDefault
-public class DynamicParallelOracle<I,O> implements ParallelOracle<I, O>{
+public class DynamicParallelOracle<I,D> implements ParallelOracle<I, D>{
 	
 	public static final int DEFAULT_BATCH_SIZE;
 	public static final int DEFAULT_POOL_SIZE;
@@ -64,19 +64,19 @@ public class DynamicParallelOracle<I,O> implements ParallelOracle<I, O>{
 	
 	
 	@Nonnull
-	private final ThreadLocal<MembershipOracle<I,O>> threadLocalOracle;
+	private final ThreadLocal<MembershipOracle<I,D>> threadLocalOracle;
 	@Nonnull
 	private final ExecutorService executor;
 	@Nonnegative
 	private final int batchSize;
 
 	
-	public DynamicParallelOracle(final Supplier<? extends MembershipOracle<I,O>> oracleSupplier,
+	public DynamicParallelOracle(final Supplier<? extends MembershipOracle<I,D>> oracleSupplier,
 			@Nonnegative int batchSize,
 			ExecutorService executor) {
-		this.threadLocalOracle = new ThreadLocal<MembershipOracle<I,O>>() {
+		this.threadLocalOracle = new ThreadLocal<MembershipOracle<I,D>>() {
 			@Override
-			protected MembershipOracle<I, O> initialValue() {
+			protected MembershipOracle<I, D> initialValue() {
 				return oracleSupplier.get();
 			}
 		};
@@ -95,7 +95,7 @@ public class DynamicParallelOracle<I,O> implements ParallelOracle<I, O>{
 	}
 
 	@Override
-	public void processQueries(Collection<? extends Query<I, O>> queries) {
+	public void processQueries(Collection<? extends Query<I, D>> queries) {
 		if(queries.isEmpty()) {
 			return;
 		}
@@ -103,11 +103,11 @@ public class DynamicParallelOracle<I,O> implements ParallelOracle<I, O>{
 		
 		int numQueries = queries.size();
 		int numJobs = (numQueries - 1) / batchSize + 1;
-		List<Query<I,O>> currentBatch = null;
+		List<Query<I,D>> currentBatch = null;
 		
 		List<Future<?>> futures = new ArrayList<>(numJobs);
 		
-		for(Query<I,O> query : queries) {
+		for(Query<I,D> query : queries) {
 			
 			if(currentBatch == null) {
 				currentBatch = new ArrayList<>(batchSize);

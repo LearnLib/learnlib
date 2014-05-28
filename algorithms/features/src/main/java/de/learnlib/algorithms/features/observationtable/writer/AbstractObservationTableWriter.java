@@ -29,10 +29,10 @@ import de.learnlib.algorithms.features.observationtable.ObservationTable;
 
 import net.automatalib.words.Word;
 
-public abstract class AbstractObservationTableWriter<I,O> implements ObservationTableWriter<I,O> {
+public abstract class AbstractObservationTableWriter<I,D> implements ObservationTableWriter<I,D> {
 	
 	private Function<? super Word<? extends I>,? extends String> wordToString;
-	private Function<? super O,? extends String> outputToString;
+	private Function<? super D,? extends String> outputToString;
 	
 	
 	
@@ -42,7 +42,7 @@ public abstract class AbstractObservationTableWriter<I,O> implements Observation
 	
 	public AbstractObservationTableWriter(
 			Function<? super Word<? extends I>,? extends String> wordToString,
-			Function<? super O,? extends String> outputToString) {
+			Function<? super D,? extends String> outputToString) {
 		this.wordToString = safeToStringFunction(wordToString);
 		this.outputToString = safeToStringFunction(outputToString);
 	}
@@ -53,7 +53,7 @@ public abstract class AbstractObservationTableWriter<I,O> implements Observation
 		this.wordToString = safeToStringFunction(wordToString);
 	}
 	
-	public void setOutputToString(Function<? super O,? extends String> outputToString) {
+	public void setOutputToString(Function<? super D,? extends String> outputToString) {
 		this.outputToString = safeToStringFunction(outputToString);
 	}
 	
@@ -62,7 +62,7 @@ public abstract class AbstractObservationTableWriter<I,O> implements Observation
 		return wordToString.apply(word);
 	}
 	
-	protected String outputToString(O output) {
+	protected String outputToString(D output) {
 		return outputToString.apply(output);
 	}
 	
@@ -76,7 +76,7 @@ public abstract class AbstractObservationTableWriter<I,O> implements Observation
 	}
 
 	@Override
-	public void write(ObservationTable<? extends I, ? extends O> table,
+	public void write(ObservationTable<? extends I, ? extends D> table,
 			PrintStream out) {
 		try {
 			write(table, (Appendable)out);
@@ -87,7 +87,7 @@ public abstract class AbstractObservationTableWriter<I,O> implements Observation
 	}
 
 	@Override
-	public void write(ObservationTable<? extends I, ? extends O> table,
+	public void write(ObservationTable<? extends I, ? extends D> table,
 			StringBuilder out) {
 		try {
 			write(table, (Appendable)out);
@@ -98,7 +98,7 @@ public abstract class AbstractObservationTableWriter<I,O> implements Observation
 	}
 	
 	@Override
-	public void write(ObservationTable<? extends I, ? extends O> table,
+	public void write(ObservationTable<? extends I, ? extends D> table,
 			File file) throws IOException {
 		try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
 			write(table, bw);

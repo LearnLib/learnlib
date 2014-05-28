@@ -37,14 +37,14 @@ import de.learnlib.parallelism.ParallelOracle.PoolPolicy;
  * @author Malte Isberner
  *
  * @param <I> input symbol type
- * @param <O> output type
+ * @param <D> output type
  */
 @ParametersAreNonnullByDefault
-public class DynamicParallelOracleBuilder<I,O> {
+public class DynamicParallelOracleBuilder<I,D> {
 	
 	
 	@Nonnull
-	private final Supplier<? extends MembershipOracle<I,O>> oracleSupplier;
+	private final Supplier<? extends MembershipOracle<I,D>> oracleSupplier;
 	@Nonnull
 	private ExecutorService customExecutor;
 	@Nonnegative
@@ -55,61 +55,61 @@ public class DynamicParallelOracleBuilder<I,O> {
 	private PoolPolicy poolPolicy = DynamicParallelOracle.DEFAULT_POOL_POLICY;
 	
 	
-	public DynamicParallelOracleBuilder(Supplier<? extends MembershipOracle<I,O>> oracleSupplier) {
+	public DynamicParallelOracleBuilder(Supplier<? extends MembershipOracle<I,D>> oracleSupplier) {
 		this.oracleSupplier = oracleSupplier;
 	}
 	
 	
 	@Nonnull
-	public DynamicParallelOracleBuilder<I,O> withCustomExecutor(ExecutorService executor) {
+	public DynamicParallelOracleBuilder<I,D> withCustomExecutor(ExecutorService executor) {
 		this.customExecutor = executor;
 		return this;
 	}
 	
 	@Nonnull
-	public DynamicParallelOracleBuilder<I,O> withDefaultExecutor() {
+	public DynamicParallelOracleBuilder<I,D> withDefaultExecutor() {
 		this.customExecutor = null;
 		return this;
 	}
 	
 	@Nonnull
-	public DynamicParallelOracleBuilder<I,O> withBatchSize(int batchSize) {
+	public DynamicParallelOracleBuilder<I,D> withBatchSize(int batchSize) {
 		this.batchSize = batchSize;
 		return this;
 	}
 	
 	@Nonnull
-	public DynamicParallelOracleBuilder<I,O> withDefaultBatchSize() {
+	public DynamicParallelOracleBuilder<I,D> withDefaultBatchSize() {
 		this.batchSize = DynamicParallelOracle.DEFAULT_BATCH_SIZE;
 		return this;
 	}
 	
 	@Nonnull
-	public DynamicParallelOracleBuilder<I,O> withPoolSize(@Nonnegative int poolSize) {
+	public DynamicParallelOracleBuilder<I,D> withPoolSize(@Nonnegative int poolSize) {
 		this.poolSize = poolSize;
 		return this;
 	}
 	
 	@Nonnull
-	public DynamicParallelOracleBuilder<I,O> withDefaultPoolSize() {
+	public DynamicParallelOracleBuilder<I,D> withDefaultPoolSize() {
 		this.poolSize = DynamicParallelOracle.DEFAULT_POOL_SIZE;
 		return this;
 	}
 	
 	@Nonnull
-	public DynamicParallelOracleBuilder<I,O> withDefaultPoolPolicy() {
+	public DynamicParallelOracleBuilder<I,D> withDefaultPoolPolicy() {
 		this.poolPolicy = DynamicParallelOracle.DEFAULT_POOL_POLICY;
 		return this;
 	}
 	
 	@Nonnull
-	public DynamicParallelOracleBuilder<I,O> withPoolPolicy(PoolPolicy policy) {
+	public DynamicParallelOracleBuilder<I,D> withPoolPolicy(PoolPolicy policy) {
 		this.poolPolicy = policy;
 		return this;
 	}
 	
 	@Nonnull
-	public DynamicParallelOracle<I,O> create() {
+	public DynamicParallelOracle<I,D> create() {
 		ExecutorService executor = customExecutor;
 		if(executor == null) {
 			switch(poolPolicy) {

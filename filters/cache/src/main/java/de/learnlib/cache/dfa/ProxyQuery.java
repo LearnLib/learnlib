@@ -23,7 +23,7 @@ import net.automatalib.words.Word;
  * Proxy query. Answers an underlying query, and also
  * stores the result.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <I> input symbol class
  */

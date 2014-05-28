@@ -30,11 +30,11 @@ import net.automatalib.words.Word;
  * @author Malte Isberner
  *
  * @param <I> input symbol type
- * @param <O> output type
+ * @param <D> output type
  * @param <A> automaton type
  */
-public class DefaultLearningExample<I, O, A extends UniversalAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, O>>
-		implements LearningExample<I, O, A> {
+public class DefaultLearningExample<I, D, A extends UniversalAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>>
+		implements LearningExample<I, D, A> {
 	
 	public static class DefaultDFALearningExample<I> extends DefaultLearningExample<I,Boolean,DFA<?,I>>
 		implements DFALearningExample<I> {
@@ -48,13 +48,13 @@ public class DefaultLearningExample<I, O, A extends UniversalAutomaton<?, I, ?, 
 		}
 	}
 	
-	public static class DefaultMealyLearningExample<I,O> extends DefaultLearningExample<I,Word<O>,MealyMachine<?,I,?,O>>
-		implements MealyLearningExample<I,O> {
+	public static class DefaultMealyLearningExample<I,D> extends DefaultLearningExample<I,Word<D>,MealyMachine<?,I,?,D>>
+		implements MealyLearningExample<I,D> {
 		public DefaultMealyLearningExample(Alphabet<I> alphabet,
-				MealyMachine<?, I, ?, O> referenceAutomaton) {
+				MealyMachine<?, I, ?, D> referenceAutomaton) {
 			super(alphabet, referenceAutomaton);
 		}
-		public <A extends MealyMachine<?,I,?,O> & InputAlphabetHolder<I>>
+		public <A extends MealyMachine<?,I,?,D> & InputAlphabetHolder<I>>
 		DefaultMealyLearningExample(A automaton) {
 			this(automaton.getInputAlphabet(), automaton);
 		}

@@ -35,39 +35,39 @@ import net.automatalib.words.Word;
 public abstract class MQUtil {
 	
 	@Nullable
-	public static <I,O> O output(MembershipOracle<I,O> oracle, Word<I> queryWord) {
+	public static <I,D> D output(MembershipOracle<I,D> oracle, Word<I> queryWord) {
 		return query(oracle, queryWord).getOutput();
 	}
 	
 	@Nullable
-	public static <I,O> O output(MembershipOracle<I,O> oracle, Word<I> prefix, Word<I> suffix) {
+	public static <I,D> D output(MembershipOracle<I,D> oracle, Word<I> prefix, Word<I> suffix) {
 		return query(oracle, prefix, suffix).getOutput();
 	}
 	
 	@Nonnull
-	public static <I,O> DefaultQuery<I,O> query(MembershipOracle<I,O> oracle, Word<I> prefix, Word<I> suffix) {
-		DefaultQuery<I,O> qry = new DefaultQuery<>(prefix, suffix);
+	public static <I,D> DefaultQuery<I,D> query(MembershipOracle<I,D> oracle, Word<I> prefix, Word<I> suffix) {
+		DefaultQuery<I,D> qry = new DefaultQuery<>(prefix, suffix);
 		oracle.processQueries(Collections.singleton(qry));
 		return qry;
 	}
 	
 	@Nonnull
-	public static <I,O> DefaultQuery<I,O> query(MembershipOracle<I,O> oracle, Word<I> queryWord) {
+	public static <I,D> DefaultQuery<I,D> query(MembershipOracle<I,D> oracle, Word<I> queryWord) {
 		return query(oracle, Word.<I>epsilon(), queryWord);
 	}
 	
-	public static <I,O> void answerQueries(QueryAnswerer<I,O> answerer, Collection<? extends Query<I,O>> queries) {
-		for(Query<I,O> query : queries) {
+	public static <I,D> void answerQueries(QueryAnswerer<I,D> answerer, Collection<? extends Query<I,D>> queries) {
+		for(Query<I,D> query : queries) {
 			Word<I> prefix = query.getPrefix();
 			Word<I> suffix = query.getSuffix();
-			O answer = answerer.answerQuery(prefix, suffix);
+			D answer = answerer.answerQuery(prefix, suffix);
 			query.answer(answer);
 		}
 	}
 	
-	public static <I,O> boolean isCounterexample(DefaultQuery<I, O> query, SuffixOutput<I, O> hyp) {
-		O qryOut = query.getOutput();
-		O hypOut = hyp.computeSuffixOutput(query.getPrefix(), query.getSuffix());
+	public static <I,D> boolean isCounterexample(DefaultQuery<I, D> query, SuffixOutput<I, D> hyp) {
+		D qryOut = query.getOutput();
+		D hypOut = hyp.computeSuffixOutput(query.getPrefix(), query.getSuffix());
 		return !Objects.equals(qryOut, hypOut);
 	}
 }

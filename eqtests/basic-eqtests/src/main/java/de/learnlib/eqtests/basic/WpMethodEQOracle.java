@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -39,14 +39,14 @@ import de.learnlib.oracles.DefaultQuery;
  * Implements an equivalence test by applying the Wp-method test on the given hypothesis automaton,
  * as described in "Test Selection Based on Finite State Models" by S. Fujiwara et al.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
- * @param <A> automaton class
- * @param <I> input symbol class
- * @param <O> output class
+ * @param <A> automaton type
+ * @param <I> input symbol type
+ * @param <D> output domain type
  */
-public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I,O>,I,O>
-		implements EquivalenceOracle<A, I, O> {
+public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I,D>,I,D>
+		implements EquivalenceOracle<A, I, D> {
 	
 	public static class DFAWpMethodEQOracle<I> extends WpMethodEQOracle<DFA<?,I>,I,Boolean>
 			implements DFAEquivalenceOracle<I> {
@@ -64,14 +64,14 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 	}
 	
 	private final int maxDepth;
-	private final MembershipOracle<I, O> sulOracle;
+	private final MembershipOracle<I, D> sulOracle;
 	
 	/**
 	 * Constructor.
 	 * @param maxDepth the maximum length of the "middle" part of the test cases
 	 * @param sulOracle interface to the system under learning
 	 */
-	public WpMethodEQOracle(int maxDepth, MembershipOracle<I,O> sulOracle) {
+	public WpMethodEQOracle(int maxDepth, MembershipOracle<I,D> sulOracle) {
 		this.maxDepth = maxDepth;
 		this.sulOracle = sulOracle;
 	}
@@ -81,10 +81,10 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 	 * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
 	 */
 	@Override
-	public DefaultQuery<I, O> findCounterExample(A hypothesis,
+	public DefaultQuery<I, D> findCounterExample(A hypothesis,
 			Collection<? extends I> inputs) {
 		UniversalDeterministicAutomaton<?, I, ?, ?, ?> aut = hypothesis;
-		Output<I,O> out = hypothesis;
+		Output<I,D> out = hypothesis;
 		return doFindCounterExample(aut, out, inputs);
 	}
 	
@@ -92,8 +92,8 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 	/*
 	 * Delegate target, used to bind the state-parameter of the automaton
 	 */
-	private <S> DefaultQuery<I,O> doFindCounterExample(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
-			Output<I,O> output, Collection<? extends I> inputs) {
+	private <S> DefaultQuery<I,D> doFindCounterExample(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
+			Output<I,D> output, Collection<? extends I> inputs) {
 		
 		List<Word<I>> stateCover = new ArrayList<Word<I>>(hypothesis.size());
 		List<Word<I>> transitions = new ArrayList<Word<I>>(hypothesis.size() * (inputs.size() - 1));
@@ -114,8 +114,8 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 					wb.append(as).append(middle).append(suffix);
 					Word<I> queryWord = wb.toWord();
 					wb.clear();
-					DefaultQuery<I,O> query = new DefaultQuery<>(queryWord);
-					O hypOutput = output.computeOutput(queryWord);
+					DefaultQuery<I,D> query = new DefaultQuery<>(queryWord);
+					D hypOutput = output.computeOutput(queryWord);
 					sulOracle.processQueries(Collections.singleton(query));
 					if(!Objects.equals(hypOutput, query.getOutput()))
 						return query;
@@ -142,8 +142,8 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 					wb.append(trans).append(middle).append(suffix);
 					Word<I> queryWord = wb.toWord();
 					wb.clear();
-					DefaultQuery<I,O> query = new DefaultQuery<>(queryWord);
-					O hypOutput = output.computeOutput(queryWord);
+					DefaultQuery<I,D> query = new DefaultQuery<>(queryWord);
+					D hypOutput = output.computeOutput(queryWord);
 					sulOracle.processQueries(Collections.singleton(query));
 					if(!Objects.equals(hypOutput, query.getOutput()))
 						return query;

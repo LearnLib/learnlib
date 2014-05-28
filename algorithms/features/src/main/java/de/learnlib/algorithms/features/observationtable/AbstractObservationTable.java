@@ -32,12 +32,12 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.collect.Collections2;
 
-public abstract class AbstractObservationTable<I, O> implements ObservationTable<I, O> {
+public abstract class AbstractObservationTable<I, D> implements ObservationTable<I, D> {
 
-	public static abstract class AbstractRow<I,O> implements Row<I,O> {
+	public static abstract class AbstractRow<I,D> implements Row<I,D> {
 
 		@Override
-		public Iterator<O> iterator() {
+		public Iterator<D> iterator() {
 			return Collections.unmodifiableCollection(getContents()).iterator();
 		}
 
@@ -47,30 +47,30 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 		}
 		
 		@Override
-		public O getCellContent(int index) {
+		public D getCellContent(int index) {
 			return getContents().get(index);
 		}
 		
 	}
 	
-	public static class DefaultInconsistency<I,O> implements Inconsistency<I,O> {
-		private final Row<I,O> firstRow;
-		private final Row<I,O> secondRow;
+	public static class DefaultInconsistency<I,D> implements Inconsistency<I,D> {
+		private final Row<I,D> firstRow;
+		private final Row<I,D> secondRow;
 		private final I symbol;
 		
-		public DefaultInconsistency(Row<I,O> firstRow, Row<I,O> secondRow, I symbol) {
+		public DefaultInconsistency(Row<I,D> firstRow, Row<I,D> secondRow, I symbol) {
 			this.firstRow = firstRow;
 			this.secondRow = secondRow;
 			this.symbol = symbol;
 		}
 		
 		@Override
-		public Row<I,O> getFirstRow() {
+		public Row<I,D> getFirstRow() {
 			return firstRow;
 		}
 		
 		@Override
-		public Row<I,O> getSecondRow() {
+		public Row<I,D> getSecondRow() {
 			return secondRow;
 		}
 		
@@ -80,23 +80,23 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 		}
 	}
 	
-	private final Function<Row<I,O>,Word<I>> getLabel
-		= new Function<Row<I,O>,Word<I>>() {
+	private final Function<Row<I,D>,Word<I>> getLabel
+		= new Function<Row<I,D>,Word<I>>() {
 		@Override
-		public Word<I> apply(Row<I,O> row) {
+		public Word<I> apply(Row<I,D> row) {
 			return row.getLabel();
 		}
 	};
 
 	@Override
 	public Collection<? extends Word<I>> getShortPrefixes() {
-		Collection<? extends Row<I,O>> spRows = getShortPrefixRows();
+		Collection<? extends Row<I,D>> spRows = getShortPrefixRows();
 		return Collections2.transform(spRows, getLabel);
 	}
 	
 	@Override
 	public Collection<? extends Word<I>> getLongPrefixes() {
-		Collection<? extends Row<I,O>> lpRows = getLongPrefixRows();
+		Collection<? extends Row<I,D>> lpRows = getLongPrefixRows();
 		return Collections2.transform(lpRows, getLabel);
 	}
 	
@@ -113,11 +113,11 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 	}
 
 	@Override
-	public List<? extends Row<I, O>> getAllRows() {
-		Collection<? extends Row<I,O>> spRows = getShortPrefixRows();
-		Collection<? extends Row<I,O>> lpRows = getLongPrefixRows();
+	public List<? extends Row<I, D>> getAllRows() {
+		Collection<? extends Row<I,D>> spRows = getShortPrefixRows();
+		Collection<? extends Row<I,D>> lpRows = getLongPrefixRows();
 		
-		List<Row<I,O>> result = new ArrayList<>(spRows.size() + lpRows.size());
+		List<Row<I,D>> result = new ArrayList<>(spRows.size() + lpRows.size());
 		result.addAll(spRows);
 		result.addAll(lpRows);
 		
@@ -125,8 +125,8 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 	}
 
 	@Override
-	public Row<I, O> getRow(Word<I> prefix) {
-		for(Row<I,O> row : getAllRows()) {
+	public Row<I, D> getRow(Word<I> prefix) {
+		for(Row<I,D> row : getAllRows()) {
 			if(prefix.equals(row.getLabel())) {
 				return row;
 			}
@@ -141,13 +141,13 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 	}
 
 	@Override
-	public Row<I, O> findUnclosedRow() {
-		Set<List<? extends O>> spRowContents = new HashSet<>();
-		for(Row<I,O> spRow : getShortPrefixRows()) {
+	public Row<I, D> findUnclosedRow() {
+		Set<List<? extends D>> spRowContents = new HashSet<>();
+		for(Row<I,D> spRow : getShortPrefixRows()) {
 			spRowContents.add(spRow.getContents());
 		}
 		
-		for(Row<I,O> lpRow : getLongPrefixRows()) {
+		for(Row<I,D> lpRow : getLongPrefixRows()) {
 			if(!spRowContents.contains(lpRow.getContents())) {
 				return lpRow;
 			}
@@ -157,16 +157,16 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 	}
 
 	@Override
-	public Inconsistency<I, O> findInconsistency(
+	public Inconsistency<I, D> findInconsistency(
 			Collection<? extends I> inputs) {
-		Map<List<? extends O>,Row<I,O>> spRowsByContent = new HashMap<>();
-		for(Row<I,O> spRow : getShortPrefixRows()) {
-			List<? extends O> content = spRow.getContents();
-			Row<I,O> canonicalRow = spRowsByContent.get(content);
+		Map<List<? extends D>,Row<I,D>> spRowsByContent = new HashMap<>();
+		for(Row<I,D> spRow : getShortPrefixRows()) {
+			List<? extends D> content = spRow.getContents();
+			Row<I,D> canonicalRow = spRowsByContent.get(content);
 			if(canonicalRow != null) {
 				for(I inputSym : inputs) {
-					Row<I,O> spRowSucc = getSuccessorRow(spRow, inputSym);
-					Row<I,O> canRowSucc = getSuccessorRow(canonicalRow, inputSym);
+					Row<I,D> spRowSucc = getSuccessorRow(spRow, inputSym);
+					Row<I,D> canRowSucc = getSuccessorRow(canonicalRow, inputSym);
 					if(spRowSucc != canRowSucc) {
 						if(!spRowSucc.getContents().equals(canRowSucc.getContents())) {
 							return new DefaultInconsistency<>(spRow, canonicalRow, inputSym);
@@ -188,19 +188,19 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 	}
 	
 	@Override
-	public int findDistinguishingSuffixIndex(Inconsistency<I, O> inconsistency) {
-		Row<I,O> row1 = inconsistency.getFirstRow();
-		Row<I,O> row2 = inconsistency.getSecondRow();
+	public int findDistinguishingSuffixIndex(Inconsistency<I, D> inconsistency) {
+		Row<I,D> row1 = inconsistency.getFirstRow();
+		Row<I,D> row2 = inconsistency.getSecondRow();
 		I sym = inconsistency.getSymbol();
 		
-		Row<I,O> succRow1 = getSuccessorRow(row1, sym);
-		Row<I,O> succRow2 = getSuccessorRow(row2, sym);
+		Row<I,D> succRow1 = getSuccessorRow(row1, sym);
+		Row<I,D> succRow2 = getSuccessorRow(row2, sym);
 		
 		return findDistinguishingSuffixIndex(succRow1, succRow2);
 	}
 	
 	@Override
-	public Word<I> findDistinguishingSuffix(Inconsistency<I, O> inconsistency) {
+	public Word<I> findDistinguishingSuffix(Inconsistency<I, D> inconsistency) {
 		int suffixIndex = findDistinguishingSuffixIndex(inconsistency);
 		if(suffixIndex != NO_DISTINGUISHING_SUFFIX) {
 			return null;
@@ -209,7 +209,7 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 	}
 
 	@Override
-	public Word<I> findDistinguishingSuffix(Row<I, O> row1, Row<I, O> row2) {
+	public Word<I> findDistinguishingSuffix(Row<I, D> row1, Row<I, D> row2) {
 		int suffixIndex = findDistinguishingSuffixIndex(row1, row2);
 		if(suffixIndex != NO_DISTINGUISHING_SUFFIX) {
 			return null;
@@ -218,14 +218,14 @@ public abstract class AbstractObservationTable<I, O> implements ObservationTable
 	}
 	
 	@Override
-	public int findDistinguishingSuffixIndex(Row<I,O> row1, Row<I,O> row2) {
-		Iterator<? extends O> values1It = row1.getContents().iterator();
-		Iterator<? extends O> values2It = row2.getContents().iterator();
+	public int findDistinguishingSuffixIndex(Row<I,D> row1, Row<I,D> row2) {
+		Iterator<? extends D> values1It = row1.getContents().iterator();
+		Iterator<? extends D> values2It = row2.getContents().iterator();
 		
 		int i = 0;
 		while(values1It.hasNext() && values2It.hasNext()) {
-			O value1 = values1It.next();
-			O value2 = values2It.next();
+			D value1 = values1It.next();
+			D value2 = values2It.next();
 			
 			if(!Objects.equal(value1, value2)) {
 				return i;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -67,12 +67,12 @@ import net.automatalib.words.Word;
  * the rows indexed by <code>ua</code> and <code>u'a</code> also have identical contents.  
  * </ul>
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
- * @param <I> input symbol class
- * @param <O> output class
+ * @param <I> input symbol type
+ * @param <D> output domain type
  */
-public final class ObservationTable<I,O> implements AccessSequenceTransformer<I> {
+public final class ObservationTable<I,D> implements AccessSequenceTransformer<I> {
 	
 	private static final <I> boolean checkPrefixClosed(Collection<? extends Word<I>> initialShortPrefixes) {
 		Set<Word<I>> prefixes = new HashSet<>(initialShortPrefixes);
@@ -102,18 +102,14 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	private final List<Row<I>> allRows
 		= new ArrayList<Row<I>>();
 	
-	private final List<List<O>> allRowContents
-		= new ArrayList<List<O>>();
+	private final List<List<D>> allRowContents
+		= new ArrayList<List<D>>();
 	
 	private final List<Row<I>> canonicalRows
 		= new ArrayList<Row<I>>();
 	
-	/*
-	private final Map<List<O>,Integer> rowContentIds
-		= new HashMap<List<O>,Integer>();
-	*/
 	
-	private final TObjectIntMap<List<O>> rowContentIds
+	private final TObjectIntMap<List<D>> rowContentIds
 		= new TObjectIntHashMap<>(10, 0.75f, NO_ENTRY);
 	
 	private final Map<Word<I>,Row<I>> rowMap
@@ -141,7 +137,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	 * @param oracle the {@link MembershipOracle} to use for performing queries
 	 * @return a list of equivalence classes of unclosed rows
 	 */
-	public List<List<Row<I>>> initialize(List<Word<I>> initialShortPrefixes, List<Word<I>> initialSuffixes, MembershipOracle<I,O> oracle) {
+	public List<List<Row<I>>> initialize(List<Word<I>> initialShortPrefixes, List<Word<I>> initialSuffixes, MembershipOracle<I,D> oracle) {
 		if(allRows.size() > 0) {
 			throw new IllegalStateException("Called initialize, but there are already rows present");
 		}
@@ -159,7 +155,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		
 		int numPrefixes = alphabet.size() * initialShortPrefixes.size() + 1;
 		
-		List<DefaultQuery<I,O>> queries = new ArrayList<DefaultQuery<I,O>>(numPrefixes * numSuffixes);
+		List<DefaultQuery<I,D>> queries = new ArrayList<DefaultQuery<I,D>>(numPrefixes * numSuffixes);
 		
 		// PASS 1: Add short prefix rows
 		for(Word<I> sp : initialShortPrefixes) {
@@ -184,12 +180,12 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		
 		oracle.processQueries(queries);
 		
-		Iterator<DefaultQuery<I,O>> queryIt = queries.iterator();
+		Iterator<DefaultQuery<I,D>> queryIt = queries.iterator();
 		
 		
 		
 		for(Row<I> spRow : shortPrefixRows) {
-			List<O> rowContents = new ArrayList<>(numSuffixes);
+			List<D> rowContents = new ArrayList<>(numSuffixes);
 			fetchResults(queryIt, rowContents, numSuffixes);
 			if(!processContents(spRow, rowContents, true)) {
 				initialConsistencyCheckRequired = true;
@@ -206,7 +202,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 				if(succRow.isShortPrefix()) {
 					continue;
 				}
-				List<O> rowContents = new ArrayList<>(numSuffixes);
+				List<D> rowContents = new ArrayList<>(numSuffixes);
 				fetchResults(queryIt, rowContents, numSuffixes);
 				if(processContents(succRow, rowContents, false)) {
 					unclosed.add(new ArrayList<Row<I>>());
@@ -231,7 +227,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	 * @param oracle the membership oracle
 	 * @return a list of equivalence classes of unclosed rows
 	 */
-	public List<List<Row<I>>> addSuffix(Word<I> suffix, MembershipOracle<I,O> oracle) {
+	public List<List<Row<I>>> addSuffix(Word<I> suffix, MembershipOracle<I,D> oracle) {
 		return addSuffixes(Collections.singletonList(suffix), oracle);
 	}
 	
@@ -241,7 +237,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	 * @param oracle the membership oracle
 	 * @return a list of equivalence classes of unclosed rows
 	 */
-	public List<List<Row<I>>> addSuffixes(Collection<? extends Word<I>> newSuffixes, MembershipOracle<I, O> oracle) {
+	public List<List<Row<I>>> addSuffixes(Collection<? extends Word<I>> newSuffixes, MembershipOracle<I, D> oracle) {
 		int oldSuffixCount = suffixes.size();
 		// we need a stable iteration order, and only List guarantees this
 		List<? extends Word<I>> newSuffixList;
@@ -257,7 +253,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		int numSpRows = shortPrefixRows.size();
 		int rowCount = numSpRows + longPrefixRows.size();
 		
-		List<DefaultQuery<I,O>> queries = new ArrayList<DefaultQuery<I,O>>(rowCount * numNewSuffixes);
+		List<DefaultQuery<I,D>> queries = new ArrayList<DefaultQuery<I,D>>(rowCount * numNewSuffixes);
 		
 		for(Row<I> row : shortPrefixRows)
 			buildQueries(queries, row.getPrefix(), newSuffixList);
@@ -267,17 +263,17 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		
 		oracle.processQueries(queries);
 		
-		Iterator<DefaultQuery<I,O>> queryIt = queries.iterator();
+		Iterator<DefaultQuery<I,D>> queryIt = queries.iterator();
 		
 		for(Row<I> row : shortPrefixRows) {
-			List<O> rowContents = allRowContents.get(row.getRowContentId());
+			List<D> rowContents = allRowContents.get(row.getRowContentId());
 			if(rowContents.size() == oldSuffixCount) {
 				rowContentIds.remove(rowContents);
 				fetchResults(queryIt, rowContents, numNewSuffixes);
 				rowContentIds.put(rowContents, row.getRowContentId());
 			}
 			else {
-				List<O> newContents = new ArrayList<O>(oldSuffixCount + numNewSuffixes);
+				List<D> newContents = new ArrayList<D>(oldSuffixCount + numNewSuffixes);
 				newContents.addAll(rowContents.subList(0, oldSuffixCount));
 				fetchResults(queryIt, newContents, numNewSuffixes);
 				processContents(row, newContents, true);
@@ -288,14 +284,14 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		numSpRows = numDistinctRows();
 		
 		for(Row<I> row : longPrefixRows) {
-			List<O> rowContents = allRowContents.get(row.getRowContentId());
+			List<D> rowContents = allRowContents.get(row.getRowContentId());
 			if(rowContents.size() == oldSuffixCount) {
 				rowContentIds.remove(rowContents);
 				fetchResults(queryIt, rowContents, numNewSuffixes);
 				rowContentIds.put(rowContents, row.getRowContentId());
 			}
 			else {
-				List<O> newContents = new ArrayList<O>(oldSuffixCount + numNewSuffixes);
+				List<D> newContents = new ArrayList<D>(oldSuffixCount + numNewSuffixes);
 				newContents.addAll(rowContents.subList(0, oldSuffixCount));
 				fetchResults(queryIt, newContents, numNewSuffixes);
 				if(processContents(row, newContents, false))
@@ -325,7 +321,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	 * @param oracle the membership oracle
 	 * @return a list of equivalence classes of unclosed rows
 	 */
-	public List<List<Row<I>>> toShortPrefixes(List<Row<I>> lpRows, MembershipOracle<I,O> oracle) {
+	public List<List<Row<I>>> toShortPrefixes(List<Row<I>> lpRows, MembershipOracle<I,D> oracle) {
 		List<Row<I>> freshSpRows = new ArrayList<Row<I>>();
 		List<Row<I>> freshLpRows = new ArrayList<Row<I>>();
 		
@@ -358,15 +354,15 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		int numSuffixes = suffixes.size();
 		
 		int numFreshRows = freshSpRows.size() + freshLpRows.size();
-		List<DefaultQuery<I,O>> queries = new ArrayList<DefaultQuery<I,O>>(numFreshRows * numSuffixes);
+		List<DefaultQuery<I,D>> queries = new ArrayList<DefaultQuery<I,D>>(numFreshRows * numSuffixes);
 		buildRowQueries(queries, freshSpRows, suffixes);
 		buildRowQueries(queries, freshLpRows, suffixes);
 		
 		oracle.processQueries(queries);
-		Iterator<DefaultQuery<I,O>> queryIt = queries.iterator();
+		Iterator<DefaultQuery<I,D>> queryIt = queries.iterator();
 		
 		for(Row<I> row : freshSpRows) {
-			List<O> contents = new ArrayList<O>(numSuffixes);
+			List<D> contents = new ArrayList<D>(numSuffixes);
 			fetchResults(queryIt, contents, numSuffixes);
 			processContents(row, contents, true);
 		}
@@ -375,7 +371,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		List<List<Row<I>>> unclosed = new ArrayList<List<Row<I>>>();
 		
 		for(Row<I> row : freshLpRows) {
-			List<O> contents = new ArrayList<O>(numSuffixes);
+			List<D> contents = new ArrayList<D>(numSuffixes);
 			fetchResults(queryIt, contents, numSuffixes);
 			if(processContents(row, contents, false))
 				unclosed.add(new ArrayList<Row<I>>());
@@ -392,7 +388,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		return row.getSuccessor(alphabet.getSymbolIndex(sym));
 	}
 	
-	public List<List<Row<I>>> addShortPrefixes(List<? extends Word<I>> shortPrefixes, MembershipOracle<I,O> oracle) {	
+	public List<List<Row<I>>> addShortPrefixes(List<? extends Word<I>> shortPrefixes, MembershipOracle<I,D> oracle) {	
 		List<Row<I>> toSpRows = new ArrayList<Row<I>>();
 		
 		for(Word<I> sp : shortPrefixes) {
@@ -411,7 +407,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	
 	
 	@SuppressWarnings("unchecked")
-	public Inconsistency<I,O> findInconsistency() {
+	public Inconsistency<I,D> findInconsistency() {
 		Row<I>[] canonicalRows = (Row<I>[])new Row<?>[numDistinctRows()];
 		
 		for(Row<I> spRow : shortPrefixRows) {
@@ -427,7 +423,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 				int spSuccContent = spRow.getSuccessor(i).getRowContentId();
 				int canSuccContent = canRow.getSuccessor(i).getRowContentId();
 				if(spSuccContent != canSuccContent)
-					return new Inconsistency<I,O>(canRow, spRow, i);
+					return new Inconsistency<I,D>(canRow, spRow, i);
 			}
 		}
 		
@@ -477,12 +473,12 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		return newRow;
 	}
 	
-	public List<O> rowContents(Row<I> row) {
+	public List<D> rowContents(Row<I> row) {
 		return allRowContents.get(row.getRowContentId());
 	}
 	
-	public O cellContents(Row<I> row, int columnId) {
-		List<O> contents = rowContents(row);
+	public D cellContents(Row<I> row, int columnId) {
+		List<D> contents = rowContents(row);
 		return contents.get(columnId);
 	}
 	
@@ -518,7 +514,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		return suffixes;
 	}
 	
-	protected boolean processContents(Row<I> row, List<O> rowContents, boolean makeCanonical) {
+	protected boolean processContents(Row<I> row, List<D> rowContents, boolean makeCanonical) {
 		// Integer contentId;
 		int contentId;
 		boolean added = false;
@@ -535,22 +531,22 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		return added;
 	}
 	
-	protected static <I,O>
-	void buildQueries(List<DefaultQuery<I,O>> queryList, List<Word<I>> prefixes, List<? extends Word<I>> suffixes) {
+	protected static <I,D>
+	void buildQueries(List<DefaultQuery<I,D>> queryList, List<Word<I>> prefixes, List<? extends Word<I>> suffixes) {
 		for(Word<I> prefix : prefixes)
 			buildQueries(queryList, prefix, suffixes);
 	}
 	
-	protected static <I,O>
-	void buildRowQueries(List<DefaultQuery<I,O>> queryList, List<Row<I>> rows, List<? extends Word<I>> suffixes) {
+	protected static <I,D>
+	void buildRowQueries(List<DefaultQuery<I,D>> queryList, List<Row<I>> rows, List<? extends Word<I>> suffixes) {
 		for(Row<I> row : rows)
 			buildQueries(queryList, row.getPrefix(), suffixes);
 	}
 	
-	protected static <I,O>
-	void buildQueries(List<DefaultQuery<I,O>> queryList, Word<I> prefix, List<? extends Word<I>> suffixes) {
+	protected static <I,D>
+	void buildQueries(List<DefaultQuery<I,D>> queryList, Word<I> prefix, List<? extends Word<I>> suffixes) {
 		for(Word<I> suffix : suffixes)
-			queryList.add(new DefaultQuery<I,O>(prefix, suffix));
+			queryList.add(new DefaultQuery<I,D>(prefix, suffix));
 	}
 	
 	/**
@@ -560,10 +556,10 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 	 * @param output the output list to write to
 	 * @param numSuffixes the number of suffixes (queries)
 	 */
-	protected static <I,O>
-	void fetchResults(Iterator<DefaultQuery<I,O>> queryIt, List<O> output, int numSuffixes) {
+	protected static <I,D>
+	void fetchResults(Iterator<DefaultQuery<I,D>> queryIt, List<D> output, int numSuffixes) {
 		for(int j = 0; j < numSuffixes; j++) {
-			DefaultQuery<I,O> qry = queryIt.next();
+			DefaultQuery<I,D> qry = queryIt.next();
 			output.add(qry.getOutput());
 		}
 	}
@@ -625,7 +621,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		return (canonicalRows.get(contentId) == row);
 	}
 	
-	private class StandardRowWrapper extends AbstractRow<I, O> {
+	private class StandardRowWrapper extends AbstractRow<I, D> {
 		private final Row<I> internalRow;
 		
 		public StandardRowWrapper(Row<I> internalRow) {
@@ -640,7 +636,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 			return internalRow.isShortPrefix();
 		}
 		@Override
-		public List<O> getContents() {
+		public List<D> getContents() {
 			return Collections.unmodifiableList(allRowContents.get(internalRow.getRowContentId()));
 		}
 	}
@@ -652,7 +648,7 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 		return null;
 	}
 	
-	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, O> asStandardTable() {
+	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, D> asStandardTable() {
 		final Function<Row<I>,StandardRowWrapper> wrapRow = new Function<Row<I>,StandardRowWrapper>() {
 			@Override
 			public StandardRowWrapper apply(Row<I> internalRow) {
@@ -660,24 +656,24 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 			}
 		};
 		
-		return new AbstractObservationTable<I, O>() {
+		return new AbstractObservationTable<I, D>() {
 			@Override
 			public List<? extends Word<I>> getSuffixes() {
 				return Collections.unmodifiableList(suffixes);
 			}
 			@Override
-			public Collection<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getShortPrefixRows() {
+			public Collection<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, D>> getShortPrefixRows() {
 				return Collections.unmodifiableList(Lists.transform(shortPrefixRows, wrapRow));
 			}
 
 			@Override
-			public Collection<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getLongPrefixRows() {
+			public Collection<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, D>> getLongPrefixRows() {
 				return Collections.unmodifiableList(Lists.transform(longPrefixRows, wrapRow));
 			}
 
 			@Override
-			public de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O> getSuccessorRow(
-					de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O> spRow,
+			public de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, D> getSuccessorRow(
+					de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, D> spRow,
 					I symbol) {
 				if(!(spRow instanceof ObservationTable.StandardRowWrapper)) {
 					throw new IllegalArgumentException("Invalid observation table row");
@@ -686,11 +682,11 @@ public final class ObservationTable<I,O> implements AccessSequenceTransformer<I>
 				return wrapRow(getRowSuccessor(wrapped.internalRow, symbol));
 			}
 			@Override
-			public List<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O>> getAllRows() {
+			public List<? extends de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, D>> getAllRows() {
 				return Collections.unmodifiableList(Lists.transform(allRows, wrapRow));
 			}
 			@Override
-			public de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, O> getRow(
+			public de.learnlib.algorithms.features.observationtable.ObservationTable.Row<I, D> getRow(
 					Word<I> prefix) {
 				return wrapRow(rowMap.get(prefix));
 			}
