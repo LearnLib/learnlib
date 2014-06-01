@@ -14,23 +14,40 @@
  * License along with AutomataLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.baselinelstar.it;
+package de.learnlib.algorithms.nlstar;
 
-import net.automatalib.words.Alphabet;
-
-import de.learnlib.algorithms.baselinelstar.BaselineLStar;
-import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
-
-public class BaselineLStarIT extends AbstractDFALearnerIT {
-
-	@Override
-	protected <I> void addLearnerVariants(Alphabet<I> alphabet,
-			int targetSize,
-			DFAMembershipOracle<I> mqOracle, DFALearnerVariantList<I> variants) {
-		variants.addLearnerVariant("default", new BaselineLStar<>(alphabet, mqOracle));
+public class Inconsistency<I> {
+	
+	private final Row<I> row1;
+	private final Row<I> row2;
+	
+	private final int symbolIdx;
+	
+	private final int suffixIdx;
+	
+	public Inconsistency(Row<I> row1, Row<I> row2, int symbolIdx, int suffixIdx) {
+		this.row1 = row1;
+		this.row2 = row2;
+		this.symbolIdx = symbolIdx;
+		this.suffixIdx = suffixIdx;
 	}
 
+	public Row<I> getRow1() {
+		return row1;
+	}
+
+	public Row<I> getRow2() {
+		return row2;
+	}
+
+	public int getSymbolIdx() {
+		return symbolIdx;
+	}
+
+	public int getSuffixIdx() {
+		return suffixIdx;
+	}
+
+	
 	
 }

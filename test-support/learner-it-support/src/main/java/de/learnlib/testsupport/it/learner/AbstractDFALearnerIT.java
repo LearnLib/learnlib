@@ -63,7 +63,7 @@ public abstract class AbstractDFALearnerIT extends AbstractLearnerIT {
 		DFAMembershipOracle<I> mqOracle
 			= new DFASimulatorOracle<>(example.getReferenceAutomaton());
 		DFALearnerVariantListImpl<I> variants = new DFALearnerVariantListImpl<>();
-		addLearnerVariants(alphabet, mqOracle, variants);
+		addLearnerVariants(alphabet, example.getReferenceAutomaton().size(), mqOracle, variants);
 		
 		return new SingleExampleAllVariantsITSubCase<>(example, variants);
 	}
@@ -78,6 +78,7 @@ public abstract class AbstractDFALearnerIT extends AbstractLearnerIT {
 	 */
 	protected abstract <I> void addLearnerVariants(
 			Alphabet<I> alphabet,
+			int targetSize,
 			DFAMembershipOracle<I> mqOracle,
 			DFALearnerVariantList<I> variants);
 }

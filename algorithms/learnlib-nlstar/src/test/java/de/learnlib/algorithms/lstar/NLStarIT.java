@@ -14,23 +14,25 @@
  * License along with AutomataLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package de.learnlib.algorithms.baselinelstar.it;
+package de.learnlib.algorithms.lstar;
 
 import net.automatalib.words.Alphabet;
 
-import de.learnlib.algorithms.baselinelstar.BaselineLStar;
+import org.testng.annotations.Test;
+
+import de.learnlib.algorithms.nlstar.NLStarLearner;
 import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
 
-public class BaselineLStarIT extends AbstractDFALearnerIT {
+@Test
+public class NLStarIT extends AbstractDFALearnerIT {
 
 	@Override
 	protected <I> void addLearnerVariants(Alphabet<I> alphabet,
 			int targetSize,
 			DFAMembershipOracle<I> mqOracle, DFALearnerVariantList<I> variants) {
-		variants.addLearnerVariant("default", new BaselineLStar<>(alphabet, mqOracle));
+		variants.addLearnerVariant("vanilla", new NLStarLearner<>(alphabet, mqOracle).asDFALearner(), targetSize*targetSize);
 	}
 
-	
 }
