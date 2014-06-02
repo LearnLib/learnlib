@@ -43,4 +43,5 @@
   		<artifactId>learnlib-lstar-generic</artifactId>
   	</dependency>
   </dependencies>
+  <name>LearnLib :: Algorithms :: NL*</name>
 </project>
