@@ -18,11 +18,13 @@ package de.learnlib.algorithms.features.globalsuffixes;
 
 import java.util.Collection;
 
+import de.learnlib.api.LearningAlgorithm;
 import net.automatalib.words.Word;
 
 public interface GlobalSuffixFeature<I> {
 	/**
-	 * Retrieves the global suffixes of this learner. Calling this method before {@link #startLearning()}
+	 * Retrieves the global suffixes of this learner.
+	 * Calling this method before {@link LearningAlgorithm#startLearning()}
 	 * should return an empty collection.
 	 * <p>
 	 * The return value should not be modified; attempting to do so may result in an
@@ -36,7 +38,7 @@ public interface GlobalSuffixFeature<I> {
 	/**
 	 * Add the provided suffixes to the collection of global suffixes. As this method 
 	 * is designed to possibly trigger a <em>refinement</em>, it is illegal to invoke
-	 * it before {@link #startLearning()} has been called.
+	 * it before {@link LearningAlgorithm#startLearning()} has been called.
 	 * <p>
 	 * The implementation may choose to (but is not required to) omit suffixes which are
 	 * already present (that is, manage the global suffixes as a proper set).
