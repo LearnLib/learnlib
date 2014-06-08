@@ -26,7 +26,7 @@ import de.learnlib.api.LearningAlgorithm;
  * algorithms using an <em>observation table</em>, such as Dana Angluin's L* and its
  * derivatives.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <M> hypothesis model type
  * @param <I> input symbol type

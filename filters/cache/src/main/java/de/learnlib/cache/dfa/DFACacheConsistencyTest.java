@@ -32,7 +32,7 @@ import net.automatalib.words.Word;
  * An {@link EquivalenceOracle} that tests an hypothesis for consistency with the
  * contents of a {@link DFACacheOracle}.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol class
  */

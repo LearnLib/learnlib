@@ -39,7 +39,7 @@ import net.automatalib.words.Word;
  * An implementation of Angluin's L* algorithm for learning DFAs, as described in the paper
  * "Learning Regular Sets from Queries and Counterexamples".
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol class.
  */

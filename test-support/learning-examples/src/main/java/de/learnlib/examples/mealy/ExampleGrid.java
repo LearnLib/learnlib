@@ -26,7 +26,7 @@ import de.learnlib.examples.DefaultLearningExample.DefaultMealyLearningExample;
  * This class generates a Mealy machine consisting of a two-dimensional grid of
  * states. Each transition has unique output.
  *
- * @author Maik Merten <maikmerten@googlemail.com>
+ * @author Maik Merten 
  */
 public class ExampleGrid extends DefaultMealyLearningExample<Character,Integer> {
 

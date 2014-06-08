@@ -34,7 +34,7 @@ import de.learnlib.examples.mealy.ExampleCoffeeMachine.Input;
  * Steffen et al. "Introduction to Active Automata Learning from
  * a Practical Perspective" (Figure 3)
  * 
- * @author Maik Merten <maikmerten@googlemail.com>
+ * @author Maik Merten 
  */
 public class ExampleCoffeeMachine extends DefaultMealyLearningExample<Input,String> {
 

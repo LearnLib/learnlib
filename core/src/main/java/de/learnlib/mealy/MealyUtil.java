@@ -33,7 +33,7 @@ import de.learnlib.oracles.DefaultQuery;
  * Utility class helping to unify various approaches to actively learning
  * Mealy machines.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  */
 @ParametersAreNonnullByDefault

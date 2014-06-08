@@ -47,7 +47,7 @@ import net.automatalib.words.WordBuilder;
  * is definitely insufficient; if such a point is not reached before a call to {@link #post()}
  * is made, the underlying SUL is not queried.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol type
  * @param <O> output symbol type
@@ -70,7 +70,7 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 	 * type parameters of the transition system returned by
 	 * {@link IncrementalMealyBuilder#asTransitionSystem()}.
 	 * 
-	 * @author Malte Isberner <malte.isberner@gmail.com>
+	 * @author Malte Isberner 
 	 *
 	 * @param <S> transition system state type
 	 * @param <I> input symbol type

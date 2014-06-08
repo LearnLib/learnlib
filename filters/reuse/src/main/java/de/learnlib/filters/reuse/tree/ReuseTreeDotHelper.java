@@ -27,7 +27,7 @@ import net.automatalib.graphs.dot.GraphDOTHelper;
  * diamonds (otherwise). 
  * Edges are labeled with input / output behavior.
  * 
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  *
  * @param <S> system state class
  * @param <I> input symbol class

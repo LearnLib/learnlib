@@ -30,7 +30,7 @@ import de.learnlib.examples.DefaultLearningExample.DefaultDFALearningExample;
  * automaton that accepts ''all strings over {0,1} with an even number of 0's
  * and an even number of 1's.''
  * 
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  */
 public class ExampleAngluin extends DefaultDFALearningExample<Integer> {
 

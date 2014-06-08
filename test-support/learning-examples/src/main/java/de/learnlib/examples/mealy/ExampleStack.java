@@ -36,7 +36,7 @@ import de.learnlib.examples.mealy.ExampleStack.Output;
  * and "push" and "pop" operations as Mealy machine. Outputs are
  * "ok", "empty" and "full".
  * 
- * @author Maik Merten <maikmerten@googlemail.com>
+ * @author Maik Merten 
  */
 public class ExampleStack extends DefaultMealyLearningExample<Input, Output> {
 

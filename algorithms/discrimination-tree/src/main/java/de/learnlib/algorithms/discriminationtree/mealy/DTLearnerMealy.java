@@ -34,7 +34,7 @@ import net.automatalib.words.Word;
 
 /**
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol type
  * @param <O> output symbol type

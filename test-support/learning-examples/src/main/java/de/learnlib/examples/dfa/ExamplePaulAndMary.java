@@ -28,7 +28,7 @@ import de.learnlib.examples.DefaultLearningExample.DefaultDFALearningExample;
 /**
  * This class implements a sad love story - DFA style.
  * 
- * @author Maik Merten <maikmerten@googlemail.com>
+ * @author Maik Merten 
  */
 public class ExamplePaulAndMary extends DefaultDFALearningExample<Symbol> {
 	

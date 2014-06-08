@@ -38,7 +38,7 @@ import net.automatalib.words.Word;
 /**
  * Basic hypothesis data structure for Discrimination Tree learning algorithms.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol type
  * @param <O> SUL output type
