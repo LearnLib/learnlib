@@ -58,8 +58,8 @@ public abstract class AbstractQuery<I, D> extends Query<I, D> {
 	 * This method should be used by classes extending {@link AbstractQuery} for their
 	 * toString method to ensure output consistency.
 	 *
-	 * @return A string of the form "Query[<prefix>|<suffix> / <answer>]". If the query
-	 * has not been answered yet, <answer> will be null.
+	 * @return A string of the form {@code "Query[<prefix>|<suffix> / <answer>]"}. If the query
+	 * has not been answered yet, {@code <answer>} will be null.
 	 */
 	public String toStringWithAnswer(D answer) {
 		return "Query[" + prefix + '|' + suffix + " / " + answer + ']';

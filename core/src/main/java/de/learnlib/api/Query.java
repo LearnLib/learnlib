@@ -85,8 +85,8 @@ public abstract class Query<I, D> {
 	/**
 	 * Returns the string representation of this query.
 	 *
-	 * @return A string of the form "Query[<prefix>|<suffix>]" for queries not containing
-	 * an answer or "Query[<prefix>|<suffix> / <answer>]" if an answer may be specified.
+	 * @return A string of the form {@code "Query[<prefix>|<suffix>]"} for queries not containing
+	 * an answer or {@code "Query[<prefix>|<suffix> / <answer>]"} if an answer may be specified.
 	 */
 	@Override
 	public String toString() {
