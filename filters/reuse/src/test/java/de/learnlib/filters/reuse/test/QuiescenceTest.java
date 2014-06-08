@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
  * The purpose of this test is just to check that the reuse filter is able to work with
  * {@code null} outputs.
  * 
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  */
 public class QuiescenceTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;

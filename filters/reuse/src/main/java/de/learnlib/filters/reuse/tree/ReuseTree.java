@@ -56,7 +56,7 @@ import net.automatalib.words.WordBuilder;
  * nodes (only possible if {@link ReuseTreeBuilder#withFailureOutputs(Set)} or
  * {@link ReuseTreeBuilder#withInvariantInputs(Set)} is set).
  * 
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  * 
  * @param <S> system state class
  * @param <I> input symbol class

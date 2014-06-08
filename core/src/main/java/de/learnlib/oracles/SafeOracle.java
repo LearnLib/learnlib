@@ -24,7 +24,7 @@ import de.learnlib.api.Query;
 
 /**
  *
- * @author Maik Merten <maikmerten@googlemail.com>
+ * @author Maik Merten 
  */
 public class SafeOracle<I,D> implements MembershipOracle<I,D> {
     

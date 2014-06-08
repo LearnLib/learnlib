@@ -32,7 +32,7 @@ import de.learnlib.filters.reuse.ReuseOracle.ReuseOracleBuilder;
  * the reuse tree by executing only suffixes of a query) is not be seen as a
  * disposing.
  * 
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  * 
  * @param <S> system state class
  */

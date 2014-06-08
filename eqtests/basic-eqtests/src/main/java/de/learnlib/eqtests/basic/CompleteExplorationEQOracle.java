@@ -32,7 +32,7 @@ import de.learnlib.oracles.DefaultQuery;
  * Implements an equivalence check by complete exploration up to a given depth, i.e.,
  * by testing all possible sequences of a certain length within a specified range.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol type
  * @param <D> output domain type

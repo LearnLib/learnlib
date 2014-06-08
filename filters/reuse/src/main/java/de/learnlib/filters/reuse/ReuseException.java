@@ -20,7 +20,7 @@ package de.learnlib.filters.reuse;
  * This exception will be thrown whenever some nondeterministic behavior
  * in the reuse tree is detected when inserting new queries.
  * 
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  */
 public class ReuseException extends IllegalArgumentException {
 	private static final long serialVersionUID = 3661716306694750282L;

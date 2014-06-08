@@ -42,7 +42,7 @@ import net.automatalib.words.Word;
  * An implementation of the L*Mealy algorithm for inferring Mealy machines, as described
  * by Oliver Niese in his Ph.D. thesis.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol class
  * @param <O> output symbol class

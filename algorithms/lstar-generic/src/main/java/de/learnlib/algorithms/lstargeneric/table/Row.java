@@ -28,7 +28,7 @@ import net.automatalib.words.Word;
  * may be either a short or long prefix. In the former case, the row will also have successor rows
  * (one-step futures) associated with it.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol class
  */

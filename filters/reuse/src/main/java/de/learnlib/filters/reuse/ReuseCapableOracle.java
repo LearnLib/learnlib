@@ -29,7 +29,7 @@ import net.automatalib.words.Word;
  * there is a system state available that is able to save the reset with
  * some prefix (via {@link #continueQuery(Word, Object)}).
  *  
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  *
  * @param <S> system state class
  * @param <I> input symbol class

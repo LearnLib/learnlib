@@ -62,7 +62,7 @@ import java.util.Set;
  * disabled by default and can be enabled upon construction (see {@link ReuseOracleBuilder#withFailureOutputs(Set)} and
  * {@link ReuseOracleBuilder#withInvariantInputs(Set)}).
  * 
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  * 
  * @param <S> system state class
  * @param <I> input symbol class

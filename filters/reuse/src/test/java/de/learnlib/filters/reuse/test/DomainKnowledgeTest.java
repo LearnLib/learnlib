@@ -36,7 +36,7 @@ import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 /**
  * Reuse oracle test that uses invariant input symbols.
  *  
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  */
 public class DomainKnowledgeTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;

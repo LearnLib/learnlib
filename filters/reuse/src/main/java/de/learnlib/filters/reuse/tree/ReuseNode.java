@@ -30,7 +30,7 @@ import de.learnlib.filters.reuse.tree.BoundedDeque.EvictPolicy;
  * database identifiers or an object) that belongs to the system state that 
  * 'represents' the system state after executing a membership query.
  * 
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  * 
  * @param <S> system state class
  * @param <I> input symbol class

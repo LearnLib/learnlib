@@ -44,7 +44,7 @@ import java.util.List;
  * Please note that there is no equivalence oracle used in this example so the
  * resulting mealy machines are only first "guesses".
  * 
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  */
 public class Example {
 	public static void main(String[] args) throws Exception {

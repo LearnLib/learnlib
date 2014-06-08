@@ -36,7 +36,7 @@ import org.testng.annotations.Test;
 /**
  * Simple tests for the reuse oracle without domain knowledge.
  *  
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  */
 public class ReuseOracleTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;

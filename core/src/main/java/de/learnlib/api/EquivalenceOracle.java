@@ -54,7 +54,7 @@ public interface EquivalenceOracle<A, I, D> {
 	/**
 	 * A specialization of the {@link EquivalenceOracle} interface for a DFA learning scenario.
 	 * 
-	 * @author Malte Isberner <malte.isberner@gmail.com>
+	 * @author Malte Isberner 
 	 *
 	 * @param <I> input symbol class
 	 */
@@ -63,7 +63,7 @@ public interface EquivalenceOracle<A, I, D> {
 	/**
 	 * A specialization of the {@link EquivalenceOracle} interface for a Mealy learning scenario.
 	 * 
-	 * @author Malte Isberner <malte.isberner@gmail.com>
+	 * @author Malte Isberner 
 	 *
 	 * @param <I> input symbol class
 	 * @param <O> output symbol class

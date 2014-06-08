@@ -41,7 +41,7 @@ import de.learnlib.filters.reuse.tree.ReuseTree;
 /**
  * Simple learning test that shows who to use the reuse oracle.
  *  
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  */
 public class LearningTest {
 	private ReuseOracle<Integer, Integer, String> reuseOracle;

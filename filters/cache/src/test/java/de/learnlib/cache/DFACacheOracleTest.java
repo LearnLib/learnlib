@@ -38,7 +38,7 @@ import de.learnlib.oracles.SimulatorOracle;
 /**
  * A simple test against the {@link DFACacheOracle}.
  *  
- * @author Oliver Bauer <oliver.bauer@tu-dortmund.de>
+ * @author Oliver Bauer 
  */
 @SuppressWarnings("deprecation")
 public class DFACacheOracleTest {

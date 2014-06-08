@@ -48,7 +48,7 @@ import de.learnlib.oracles.DefaultQuery;
 
 /**
  *
- * @author Maik Merten <maikmerten@googlemail.com>
+ * @author Maik Merten 
  */
 public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		AccessSequenceTransformer<I>, GlobalSuffixLearnerMealy<I, O> {
