@@ -36,7 +36,7 @@ import de.learnlib.api.Query;
  * exploit any properties of the used classes will implement this interface with
  * <tt>&lt;Object,Object&gt;</tt> generic arguments only. The genericity is still maintained
  * due to the <tt>RI</tt> and <tt>RO</tt> generic parameters in the
- * {@link #findSuffixIndex(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)}
+ * {@link #findSuffixes(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)}
  * method.
  * 
  * @author Malte Isberner

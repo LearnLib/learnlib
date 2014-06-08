@@ -36,12 +36,10 @@ import net.automatalib.words.WordBuilder;
  * steps or with a counterexample. The number of steps to termination may be
  * reset for every new search.
  * 
- * @param <A>
- *            hypothesis format
  * @param <I>
- *            input symbols class
+ *            input symbol type
  * @param <O>
- *            output symbol class
+ *            output symbol type
  * 
  * @author falkhowar
  */

@@ -35,7 +35,7 @@ import de.learnlib.api.EquivalenceOracle;
  *
  * @param <A>
  * 		the (maximally generic) automaton model for which the caches stores information. For example,
- * 		for a {@link MealyMachine Mealy} cache this would be {@code MealyMachine<?,I,?,O>. This type
+ * 		for a {@link MealyMachine Mealy} cache this would be {@code MealyMachine<?,I,?,O>}. This type
  * 		determines what the cache contents can be checked against by
  * 		a {@link #createCacheConsistencyTest() cache consistency test} 
  * @param <I>

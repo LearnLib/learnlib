@@ -78,19 +78,19 @@ public class NLStarLearner<I> implements NFALearner<I> {
 		return new DFALearner<I>() {
 			@Override
 			public void startLearning() {
-				startLearning();
+				NLStarLearner.this.startLearning();
 			}
 			@Override
 			public boolean refineHypothesis(DefaultQuery<I, Boolean> ceQuery) {
-				return refineHypothesis(ceQuery);
+				return NLStarLearner.this.refineHypothesis(ceQuery);
 			}
 			@Override
 			public CompactDFA<I> getHypothesisModel() {
-				return getDeterminizedHypothesis();
+				return NLStarLearner.this.getDeterminizedHypothesis();
 			}
 			@Override
 			public String toString() {
-				return toString();
+				return NLStarLearner.this.toString();
 			}
 		};
 	}

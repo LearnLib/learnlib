@@ -44,7 +44,6 @@ import net.automatalib.words.Word;
  * @param <O> SUL output type
  * @param <SP> state property type
  * @param <TP> transition property type
- * @param <T> exposed transition 
  */
 public class DTLearnerHypothesis<I, O, SP, TP> extends
 		AbstractDeterministicAutomaton<HState<I, O, SP, TP>, I, HTransition<I, O, SP, TP>>
