@@ -33,8 +33,9 @@ import de.learnlib.api.MembershipOracle;
  * Builders for (static and dynamic) parallel oracles.
  * <p>
  * Using the methods defined in this class is the preferred way of instantiating parallel oracles.
- * 
- * <h4>Usage examples</h4>
+ * <p>
+ * <b>Usage examples</b>
+ * <p>
  * Creating a static parallel oracle with a minimum batch size of 20 and a fixed thread pool, using
  * a membership oracle shared by 4 threads:
  * <pre>
