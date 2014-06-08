@@ -27,11 +27,11 @@ public abstract class TestQueries {
 
 	
 	
-	public static <I, O>
-	Collection<? extends Query<I,O>> createNoopQueries(int numQueries) {
-		List<Query<I,O>> result = new ArrayList<>(numQueries);
+	public static <I, D>
+	Collection<? extends Query<I,D>> createNoopQueries(int numQueries) {
+		List<Query<I,D>> result = new ArrayList<>(numQueries);
 		for(int i = 0; i < numQueries; i++) {
-			result.add(new NoopQuery<I,O>(Word.<I>epsilon()));
+			result.add(new NoopQuery<I,D>(Word.<I>epsilon()));
 		}
 		return result;
 	}

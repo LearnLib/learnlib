@@ -31,13 +31,13 @@ import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.examples.LearningExample;
 import de.learnlib.oracles.DefaultQuery;
 
-final class SingleLearnerVariantITSubCase<I,O,
-	M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I,O>> implements ITest {
+final class SingleLearnerVariantITSubCase<I,D,
+	M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I,D>> implements ITest {
 	
-	private final LearnerVariant<? extends M, I, O> variant;
-	private final LearningExample<I, O, ? extends M> example;
+	private final LearnerVariant<? extends M, I, D> variant;
+	private final LearningExample<I, D, ? extends M> example;
 	
-	public SingleLearnerVariantITSubCase(LearnerVariant<? extends M,I,O> variant, LearningExample<I,O,? extends M> example) {
+	public SingleLearnerVariantITSubCase(LearnerVariant<? extends M,I,D> variant, LearningExample<I,D,? extends M> example) {
 		this.variant = variant;
 		this.example = example;
 	}
@@ -50,7 +50,7 @@ final class SingleLearnerVariantITSubCase<I,O,
 	@Test
 	public void testLearning() {
 		System.out.println("Running learner integration test " + getTestName());
-		LearningAlgorithm<? extends M,I,O> learner
+		LearningAlgorithm<? extends M,I,D> learner
 			= variant.getLearner();
 		
 		Alphabet<I> alphabet = example.getAlphabet();
@@ -60,13 +60,13 @@ final class SingleLearnerVariantITSubCase<I,O,
 			maxRounds = example.getReferenceAutomaton().size();
 		}
 
-		EquivalenceOracle<? super M, I, O> eqOracle
-			= new SimulatorEQOracle<I,O>(example.getReferenceAutomaton());
+		EquivalenceOracle<? super M, I, D> eqOracle
+			= new SimulatorEQOracle<I,D>(example.getReferenceAutomaton());
 		
 		learner.startLearning();
 		
 		int roundCounter = 0;
-		DefaultQuery<I, O> ceQuery;
+		DefaultQuery<I, D> ceQuery;
 		
 		while((ceQuery = eqOracle.findCounterExample(learner.getHypothesisModel(), alphabet)) != null) {
 			roundCounter++;

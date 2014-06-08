@@ -17,6 +17,8 @@
 
 package de.learnlib.statistics;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -28,22 +30,22 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class Counter extends StatisticData {
 
-    private long count = 0;
+    private final AtomicLong count = new AtomicLong(0L);
     
     public Counter(String name, String unit) {
         super(name, unit);
     }
     
     public void increment(long inc) {
-        count += inc;
+        count.addAndGet(inc);
     }
     
     public void increment() {
-        count++;
+        count.incrementAndGet();
     }
 
     public long getCount() {
-        return count;
+        return count.get();
     }
 
     @Override

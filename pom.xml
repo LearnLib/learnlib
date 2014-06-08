@@ -25,7 +25,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	-->
 	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-parent</artifactId>
-	<version>0.10.0</version>
+	<version>0.10.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
 	<url>http://learnlib.github.io/learnlib/maven-site/${project.version}</url>
@@ -117,7 +117,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<!--
 			dependency versions
 		-->
-		<automatalib.version>0.4.0</automatalib.version>
+		<automatalib.version>0.4.1</automatalib.version>
 		<testng.version>6.8.8</testng.version>
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
@@ -135,7 +135,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 		<trove4j.version>3.0.3</trove4j.version>
 		
-		<guava.version>16.0.1</guava.version>
+		<guava.version>17.0</guava.version>
 		<findbugs.version>2.0.3</findbugs.version>
 		
 		<buildergen.version>0.1</buildergen.version>
@@ -660,8 +660,20 @@ http://www.gnu.de/documents/lgpl.en.html.
 		</dependencies>
 	</dependencyManagement>
 	
-	<!-- For maven-upload-plugin -->
 	<pluginRepositories>
+		<!-- Ensure preference over the atlassian plugin repository -->
+		<pluginRepository>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<url>http://repo1.maven.org/maven2</url>
+		</pluginRepository>
+		
+		<!-- For maven-upload-plugin -->
 		<pluginRepository>
 			<id>atlassian-public</id>
 			<url>https://maven.atlassian.com/repository/public</url>

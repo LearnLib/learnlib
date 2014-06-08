@@ -46,7 +46,7 @@ public class LearningTest {
 		= new ObservationTableCEXHandler[]{
 		ObservationTableCEXHandlers.CLASSIC_LSTAR,
 		ObservationTableCEXHandlers.SUFFIX1BY1,
-		ObservationTableCEXHandlers.MAHLER_PNUELI,
+		ObservationTableCEXHandlers.MALER_PNUELI,
 		ObservationTableCEXHandlers.SHAHBAZ,
 		ObservationTableCEXHandlers.FIND_LINEAR,
 		ObservationTableCEXHandlers.FIND_LINEAR_ALLSUFFIXES,
@@ -56,11 +56,11 @@ public class LearningTest {
 		ObservationTableCEXHandlers.RIVEST_SCHAPIRE_ALLSUFFIXES
 	};
 	
-	public static <I,O,M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> void testLearnModel(UniversalDeterministicAutomaton<?, I, ?, ?, ?> target,
+	public static <I,D,M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> void testLearnModel(UniversalDeterministicAutomaton<?, I, ?, ?, ?> target,
 			Alphabet<I> alphabet,
-			LearningAlgorithm<M, I, O> learner,
-			MembershipOracle<I, O> oracle,
-			EquivalenceOracle<? super M, I, O> eqOracle) {
+			LearningAlgorithm<M, I, D> learner,
+			MembershipOracle<I, D> oracle,
+			EquivalenceOracle<? super M, I, D> eqOracle) {
 		int maxRounds = target.size();
 		
 		learner.startLearning();
@@ -68,7 +68,7 @@ public class LearningTest {
 		while(maxRounds-- > 0) {
 			M hyp = learner.getHypothesisModel();
 			
-			DefaultQuery<I, O> ce = eqOracle.findCounterExample(hyp, alphabet);
+			DefaultQuery<I, D> ce = eqOracle.findCounterExample(hyp, alphabet);
 			
 			if(ce == null)
 				break;

@@ -34,22 +34,22 @@ import de.learnlib.api.Query;
  * @author Malte Isberner
  *
  * @param <I> input symbol type
- * @param <O> output type
+ * @param <D> output domain type
  */
 @ParametersAreNonnullByDefault
-final class DynamicQueriesJob<I, O> extends AbstractQueriesJob<I, O> {
+final class DynamicQueriesJob<I, D> extends AbstractQueriesJob<I, D> {
 	
 	@Nonnull
-	private final ThreadLocal<? extends MembershipOracle<I,O>> threadLocalOracle;
+	private final ThreadLocal<? extends MembershipOracle<I,D>> threadLocalOracle;
 
-	public DynamicQueriesJob(Collection<? extends Query<I, O>> queries,
-			ThreadLocal<? extends MembershipOracle<I,O>> threadLocalOracle) {
+	public DynamicQueriesJob(Collection<? extends Query<I, D>> queries,
+			ThreadLocal<? extends MembershipOracle<I,D>> threadLocalOracle) {
 		super(queries);
 		this.threadLocalOracle = threadLocalOracle;
 	}
 
 	@Override
-	protected MembershipOracle<I, O> getOracle() {
+	protected MembershipOracle<I, D> getOracle() {
 		return threadLocalOracle.get();
 	}
 

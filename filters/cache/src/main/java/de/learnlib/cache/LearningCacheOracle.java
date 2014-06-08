@@ -30,10 +30,10 @@ import de.learnlib.api.MembershipOracle;
  * 		the (maximally generic) automaton model for which the cache stores information. See {@link LearningCache}
  * @param <I>
  * 		input symbol type
- * @param <O>
- * 		output type
+ * @param <D>
+ * 		output domain type
  */
-public interface LearningCacheOracle<A, I, O> extends LearningCache<A,I,O>, MembershipOracle<I, O> {
+public interface LearningCacheOracle<A, I, D> extends LearningCache<A,I,D>, MembershipOracle<I, D> {
 	
 	/**
 	 * Specialization of the {@link LearningCacheOracle} interface for DFA learning.

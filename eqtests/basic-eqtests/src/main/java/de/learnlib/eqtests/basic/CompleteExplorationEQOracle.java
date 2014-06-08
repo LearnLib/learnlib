@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -34,22 +34,22 @@ import de.learnlib.oracles.DefaultQuery;
  * 
  * @author Malte Isberner <malte.isberner@gmail.com>
  *
- * @param <I> input symbol class
- * @param <O> output class
+ * @param <I> input symbol type
+ * @param <D> output domain type
  */
-public class CompleteExplorationEQOracle<I, O> implements
-		EquivalenceOracle<DetOutputAutomaton<?, I, ?, O>, I, O> {
+public class CompleteExplorationEQOracle<I, D> implements
+		EquivalenceOracle<DetOutputAutomaton<?, I, ?, D>, I, D> {
 	
 	private int minDepth;
 	private int maxDepth;
-	private final MembershipOracle<I, O> sulOracle;
+	private final MembershipOracle<I, D> sulOracle;
 	
 	/**
 	 * Constructor.
 	 * @param sulOracle interface to the system under learning
 	 * @param maxDepth maximum exploration depth
 	 */
-	public CompleteExplorationEQOracle(MembershipOracle<I, O> sulOracle, int maxDepth) {
+	public CompleteExplorationEQOracle(MembershipOracle<I, D> sulOracle, int maxDepth) {
 		this(sulOracle, 1, maxDepth);
 	}
 	
@@ -59,7 +59,7 @@ public class CompleteExplorationEQOracle<I, O> implements
 	 * @param minDepth minimum exploration depth
 	 * @param maxDepth maximum exploration depth
 	 */
-	public CompleteExplorationEQOracle(MembershipOracle<I, O> sulOracle, int minDepth, int maxDepth) {
+	public CompleteExplorationEQOracle(MembershipOracle<I, D> sulOracle, int minDepth, int maxDepth) {
 		if(maxDepth < minDepth)
 			maxDepth = minDepth;
 		
@@ -74,13 +74,13 @@ public class CompleteExplorationEQOracle<I, O> implements
 	 * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
 	 */
 	@Override
-	public DefaultQuery<I, O> findCounterExample(DetOutputAutomaton<?,I,?,O> hypothesis,
+	public DefaultQuery<I, D> findCounterExample(DetOutputAutomaton<?,I,?,D> hypothesis,
 			Collection<? extends I> alphabet) {
 		for(List<? extends I> symList : CollectionsUtil.allTuples(alphabet, minDepth, maxDepth)) {
 			Word<I> queryWord = Word.fromList(symList);
 			
-			DefaultQuery<I,O> query = new DefaultQuery<>(queryWord);
-			O hypOutput = hypothesis.computeOutput(queryWord);
+			DefaultQuery<I,D> query = new DefaultQuery<>(queryWord);
+			D hypOutput = hypothesis.computeOutput(queryWord);
 			sulOracle.processQueries(Collections.singleton(query));
 			
 			if(!Objects.equals(hypOutput, query.getOutput()))

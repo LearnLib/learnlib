@@ -27,6 +27,7 @@ public class BaselineLStarIT extends AbstractDFALearnerIT {
 
 	@Override
 	protected <I> void addLearnerVariants(Alphabet<I> alphabet,
+			int targetSize,
 			DFAMembershipOracle<I> mqOracle, DFALearnerVariantList<I> variants) {
 		variants.addLearnerVariant("default", new BaselineLStar<>(alphabet, mqOracle));
 	}

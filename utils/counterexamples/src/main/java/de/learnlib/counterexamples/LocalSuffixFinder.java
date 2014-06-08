@@ -47,12 +47,12 @@ import de.learnlib.api.Query;
  * {@link #findSuffixIndex(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)}
  * method.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
- * @param <I> input symbol class upper bound
- * @param <O> output class upper bound
+ * @param <I> input symbol type upper bound
+ * @param <D> output domain type upper bound
  */
-public interface LocalSuffixFinder<I, O> {
+public interface LocalSuffixFinder<I, D> {
 	
 	/** 
 	 * Finds, for a given counterexample, a "split index", such that:
@@ -61,7 +61,7 @@ public interface LocalSuffixFinder<I, O> {
 	 * this state.
 	 * 
 	 * @param <RI> real input symbol class used for *this* counterexample analysis
-	 * @param <RO> real output class used for *this* counterexample analysis
+	 * @param <RD> real output class used for *this* counterexample analysis
 	 * @param ceQuery the counterexample query that triggered the refinement. Note that the same
 	 * restrictions as in {@link LearningAlgorithm#refineHypothesis(de.learnlib.oracles.DefaultQuery)}
 	 * apply.
@@ -72,10 +72,10 @@ public interface LocalSuffixFinder<I, O> {
 	 * @param oracle interface to the System Under Learning (SUL).
 	 * @return an adequate split index, or <tt>-1</tt> if the counterexample could not be analyzed.
 	 */
-	<RI extends I,RO extends O>
-	int findSuffixIndex(Query<RI,RO> ceQuery,
+	<RI extends I,RD extends D>
+	int findSuffixIndex(Query<RI,RD> ceQuery,
 			AccessSequenceTransformer<RI> asTransformer,
-			SuffixOutput<RI,RO> hypOutput,
-			MembershipOracle<RI,RO> oracle);
+			SuffixOutput<RI,RD> hypOutput,
+			MembershipOracle<RI,RD> oracle);
 	
 }

@@ -42,11 +42,11 @@ public abstract class LocalSuffixFinders {
 	public static final LocalSuffixFinder<Object,Object> FIND_LINEAR
 		= new LocalSuffixFinder<Object,Object>() {
 			@Override
-			public <RI,RO>
-			int findSuffixIndex(Query<RI, RO> ceQuery,
+			public <RI,RD>
+			int findSuffixIndex(Query<RI, RD> ceQuery,
 					AccessSequenceTransformer<RI> asTransformer,
-					SuffixOutput<RI,RO> hypOutput,
-					MembershipOracle<RI, RO> oracle) {
+					SuffixOutput<RI,RD> hypOutput,
+					MembershipOracle<RI, RD> oracle) {
 				return findLinear(ceQuery, asTransformer, hypOutput, oracle);
 			}
 			@Override
@@ -63,11 +63,11 @@ public abstract class LocalSuffixFinders {
 	public static final LocalSuffixFinder<Object,Object> FIND_LINEAR_REVERSE
 		= new LocalSuffixFinder<Object,Object>() {
 			@Override
-			public <RI,RO>
-			int findSuffixIndex(Query<RI, RO> ceQuery,
+			public <RI,RD>
+			int findSuffixIndex(Query<RI, RD> ceQuery,
 					AccessSequenceTransformer<RI> asTransformer,
-					SuffixOutput<RI,RO> hypOutput,
-					MembershipOracle<RI, RO> oracle) {
+					SuffixOutput<RI,RD> hypOutput,
+					MembershipOracle<RI, RD> oracle) {
 				return findLinearReverse(ceQuery, asTransformer, hypOutput, oracle);
 			}
 			@Override
@@ -84,11 +84,11 @@ public abstract class LocalSuffixFinders {
 	public static final LocalSuffixFinder<Object,Object> RIVEST_SCHAPIRE
 		= new LocalSuffixFinder<Object,Object>() {
 			@Override
-			public <RI,RO>
-			int findSuffixIndex(Query<RI, RO> ceQuery,
+			public <RI,RD>
+			int findSuffixIndex(Query<RI, RD> ceQuery,
 					AccessSequenceTransformer<RI> asTransformer,
-					SuffixOutput<RI,RO> hypOutput,
-					MembershipOracle<RI, RO> oracle) {
+					SuffixOutput<RI,RD> hypOutput,
+					MembershipOracle<RI, RD> oracle) {
 				return findRivestSchapire(ceQuery, asTransformer, hypOutput, oracle);
 			}
 			@Override
@@ -112,10 +112,10 @@ public abstract class LocalSuffixFinders {
 	 * counterexample could be found
 	 * @see LocalSuffixFinder
 	 */
-	public static <S,I,O> int findLinear(Query<I,O> ceQuery,
+	public static <S,I,D> int findLinear(Query<I,D> ceQuery,
 			AccessSequenceTransformer<I> asTransformer,
-			SuffixOutput<I,O> hypOutput,
-			MembershipOracle<I, O> oracle) {
+			SuffixOutput<I,D> hypOutput,
+			MembershipOracle<I, D> oracle) {
 		
 		Word<I> queryWord = ceQuery.getInput();
 		int queryLen = queryWord.length();
@@ -133,8 +133,8 @@ public abstract class LocalSuffixFinders {
 			
 			Word<I> nextSuffix = queryWord.subWord(i);
 			
-			O hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
-			O mqOut = MQUtil.output(oracle, as, nextSuffix);
+			D hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
+			D mqOut = MQUtil.output(oracle, as, nextSuffix);
 			
 			if(Objects.equals(hypOut, mqOut))
 				return i;
@@ -156,10 +156,10 @@ public abstract class LocalSuffixFinders {
 	 * counterexample could be found
 	 * @see LocalSuffixFinder
 	 */
-	public static <I,O> int findLinearReverse(Query<I,O> ceQuery,
+	public static <I,D> int findLinearReverse(Query<I,D> ceQuery,
 			AccessSequenceTransformer<I> asTransformer,
-			SuffixOutput<I,O> hypOutput,
-			MembershipOracle<I, O> oracle) {
+			SuffixOutput<I,D> hypOutput,
+			MembershipOracle<I, D> oracle) {
 		
 		Word<I> queryWord = ceQuery.getInput();
 		int queryLen = queryWord.length();
@@ -177,8 +177,8 @@ public abstract class LocalSuffixFinders {
 			Word<I> as = asTransformer.transformAccessSequence(nextPrefix);
 			Word<I> nextSuffix = queryWord.subWord(i);
 			
-			O hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
-			O mqOut = MQUtil.output(oracle, as, nextSuffix);
+			D hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
+			D mqOut = MQUtil.output(oracle, as, nextSuffix);
 			
 			if(!Objects.equals(hypOut, mqOut))
 				return i+1;
@@ -201,10 +201,10 @@ public abstract class LocalSuffixFinders {
 	 * counterexample could be found
 	 * @see LocalSuffixFinder
 	 */
-	public static <I,O> int findRivestSchapire(Query<I,O> ceQuery,
+	public static <I,D> int findRivestSchapire(Query<I,D> ceQuery,
 			AccessSequenceTransformer<I> asTransformer,
-			SuffixOutput<I,O> hypOutput,
-			MembershipOracle<I, O> oracle) {
+			SuffixOutput<I,D> hypOutput,
+			MembershipOracle<I, D> oracle) {
 
 		Word<I> queryWord = ceQuery.getInput();
 		int queryLen = queryWord.length();
@@ -226,8 +226,8 @@ public abstract class LocalSuffixFinders {
 			
 			Word<I> nextSuffix = queryWord.subWord(mid);
 			
-			O hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
-			O ceOut = MQUtil.output(oracle, as, nextSuffix);
+			D hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
+			D ceOut = MQUtil.output(oracle, as, nextSuffix);
 			
 			if(!Objects.equals(hypOut, ceOut))
 				low = mid;

@@ -26,9 +26,9 @@ import javax.annotation.WillNotClose;
 import de.learnlib.algorithms.features.observationtable.ObservationTable;
 
 @ParametersAreNonnullByDefault
-public interface ObservationTableWriter<I, O> {
-	public void write(ObservationTable<? extends I,? extends O> table, @WillNotClose Appendable out) throws IOException;
-	public void write(ObservationTable<? extends I,? extends O> table, @WillNotClose PrintStream out);
-	public void write(ObservationTable<? extends I,? extends O> table, @WillNotClose StringBuilder out);
-	public void write(ObservationTable<? extends I,? extends O> table, File file) throws IOException;
+public interface ObservationTableWriter<I, D> {
+	public void write(ObservationTable<? extends I,? extends D> table, @WillNotClose Appendable out) throws IOException;
+	public void write(ObservationTable<? extends I,? extends D> table, @WillNotClose PrintStream out);
+	public void write(ObservationTable<? extends I,? extends D> table, @WillNotClose StringBuilder out);
+	public void write(ObservationTable<? extends I,? extends D> table, File file) throws IOException;
 }

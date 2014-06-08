@@ -30,8 +30,8 @@ import net.automatalib.words.Word;
 
 
 
-public class SimulatorEQOracle<I,O>
-	implements EquivalenceOracle<UniversalDeterministicAutomaton<?, I, ?, ?, ?>, I, O> {
+public class SimulatorEQOracle<I,D>
+	implements EquivalenceOracle<UniversalDeterministicAutomaton<?, I, ?, ?, ?>, I, D> {
 	
 	public static class DFASimulatorEQOracle<I> implements DFAEquivalenceOracle<I> {
 		private final SimulatorEQOracle<I, Boolean> delegate;
@@ -60,22 +60,22 @@ public class SimulatorEQOracle<I,O>
 	}
 	
 	private final UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference;
-	private final Output<I, O> output;
+	private final Output<I, D> output;
 	
-	public <S,T,R extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, O>>
+	public <S,T,R extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>>
 			SimulatorEQOracle(R reference) {
 		this.reference = reference;
 		this.output = reference;
 	}
 
 	@Override
-	public DefaultQuery<I, O> findCounterExample(UniversalDeterministicAutomaton<?, I, ?, ?, ?> hypothesis, Collection<? extends I> inputs) {
+	public DefaultQuery<I, D> findCounterExample(UniversalDeterministicAutomaton<?, I, ?, ?, ?> hypothesis, Collection<? extends I> inputs) {
 		Word<I> sep = Automata.findSeparatingWord(reference, hypothesis, inputs);
 		if(sep == null) {
 			return null;
 		}
-		O out = output.computeOutput(sep);
-		DefaultQuery<I,O> qry = new DefaultQuery<>(sep);
+		D out = output.computeOutput(sep);
+		DefaultQuery<I,D> qry = new DefaultQuery<>(sep);
 		qry.answer(out);
 		return qry;
 	}

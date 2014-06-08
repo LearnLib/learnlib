@@ -25,13 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SuffixASCIIReader<I,O> implements ObservationTableReader<I,O> {
+public class SuffixASCIIReader<I,D> implements ObservationTableReader<I,D> {
 
 	private static final String WORD_DELIMITER = ";";
 	private static final String SYMBOL_DELIMITER = ",";
 
 	@Override
-	public ObservationTable<I, O> read(String source, Alphabet<I> alphabet) {
+	public ObservationTable<I, D> read(String source, Alphabet<I> alphabet) {
 		Map<String, I> nameToSymbol = generateNameToSymbolMap(alphabet);
 		String[] suffixWords = source.split(WORD_DELIMITER);
 

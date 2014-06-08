@@ -26,7 +26,7 @@ import net.automatalib.words.Word;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.mealy.MealyUtil;
 
-class LearnerVariantListImpl<M,I,O> implements LearnerVariantList<M, I, O> {
+class LearnerVariantListImpl<M,I,D> implements LearnerVariantList<M, I, D> {
 	
 	public static class DFALearnerVariantListImpl<I> extends LearnerVariantListImpl<DFA<?,I>,I,Boolean>
 			implements DFALearnerVariantList<I> {}
@@ -61,25 +61,25 @@ class LearnerVariantListImpl<M,I,O> implements LearnerVariantList<M, I, O> {
 		
 	}
 	
-	private final List<LearnerVariant<M, I, O>> learnerVariants
+	private final List<LearnerVariant<M, I, D>> learnerVariants
 		= new ArrayList<>();
 
 	@Override
 	public void addLearnerVariant(String name,
-			LearningAlgorithm<? extends M, I, O> learner) {
+			LearningAlgorithm<? extends M, I, D> learner) {
 		addLearnerVariant(name, learner, -1);
 	}
 
 	@Override
 	public void addLearnerVariant(String name,
-			LearningAlgorithm<? extends M, I, O> learner, int maxRounds) {
-		LearnerVariant<M, I, O> variant
+			LearningAlgorithm<? extends M, I, D> learner, int maxRounds) {
+		LearnerVariant<M, I, D> variant
 			= new LearnerVariant<>(name, learner, maxRounds);
 		learnerVariants.add(variant);
 	}
 		
 	
-	public List<? extends LearnerVariant<M,I,O>> getLearnerVariants() {
+	public List<? extends LearnerVariant<M,I,D>> getLearnerVariants() {
 		return learnerVariants;
 	}
 	

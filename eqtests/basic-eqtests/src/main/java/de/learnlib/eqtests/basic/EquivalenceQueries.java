@@ -25,20 +25,20 @@ public abstract class EquivalenceQueries {
 	private EquivalenceQueries() {
 	}
 
-	public static <A extends UniversalDeterministicAutomaton<?,I,?,?,?> & Output<I,O>,I,O>
-	WMethodEQOracle<A, I, O> wMethod(int maxDepth, MembershipOracle<I, O> sulOracle) {
+	public static <A extends UniversalDeterministicAutomaton<?,I,?,?,?> & Output<I,D>,I,D>
+	WMethodEQOracle<A, I, D> wMethod(int maxDepth, MembershipOracle<I, D> sulOracle) {
 		return new WMethodEQOracle<>(maxDepth, sulOracle);
 	}
 	
-	public static <A extends UniversalDeterministicAutomaton<?,I,?,?,?> & Output<I,O>,I,O>
-	WpMethodEQOracle<A, I, O> wpMethod(int maxDepth, MembershipOracle<I,O> sulOracle) {
+	public static <A extends UniversalDeterministicAutomaton<?,I,?,?,?> & Output<I,D>,I,D>
+	WpMethodEQOracle<A, I, D> wpMethod(int maxDepth, MembershipOracle<I,D> sulOracle) {
 		return new WpMethodEQOracle<>(maxDepth, sulOracle);
 	}
 	
-	public static <A extends UniversalDeterministicAutomaton<?,I,?,?,?> & Output<I,O>,I,O>
-	SimulatorEQOracle<I, O> simulator(A target) {
+	public static <A extends UniversalDeterministicAutomaton<?,I,?,?,?> & Output<I,D>,I,D>
+	SimulatorEQOracle<I, D> simulator(A target) {
 		A automaton = target;
-		return new SimulatorEQOracle<I,O>(automaton);
+		return new SimulatorEQOracle<I,D>(automaton);
 	}
 
 }

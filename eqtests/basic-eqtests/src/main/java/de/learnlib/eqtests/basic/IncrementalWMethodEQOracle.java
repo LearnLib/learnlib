@@ -32,8 +32,8 @@ import net.automatalib.util.automata.conformance.IncrementalWMethodTestsIterator
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?,?> & Output<I,O>, I, O>
-		implements EquivalenceOracle<A, I, O> {
+public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?,?> & Output<I,D>, I, D>
+		implements EquivalenceOracle<A, I, D> {
 	
 	public static class DFAIncrementalWMethodEQOracle<I>
 			extends IncrementalWMethodEQOracle<DFA<?,I>, I, Boolean>
@@ -63,16 +63,16 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
 	
 	@SuppressWarnings("unused")
 	private final Alphabet<I> alphabet;
-	private final MembershipOracle<I, O> oracle;
+	private final MembershipOracle<I, D> oracle;
 	private final IncrementalWMethodTestsIterator<I> incrementalWMethodIt;
 	
 	private int maxDepth;
 	
-	public IncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, O> oracle) {
+	public IncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, D> oracle) {
 		this(alphabet, oracle, 1);
 	}
 	
-	public IncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, O> oracle, int maxDepth) {
+	public IncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, D> oracle, int maxDepth) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		this.incrementalWMethodIt = new IncrementalWMethodTestsIterator<>(alphabet);
@@ -90,7 +90,7 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
 	}
 	
 	@Override
-	public DefaultQuery<I, O> findCounterExample(A hypothesis,
+	public DefaultQuery<I, D> findCounterExample(A hypothesis,
 			Collection<? extends I> inputs) {
 		// FIXME: warn about inputs being ignored?
 		incrementalWMethodIt.update(hypothesis);
@@ -98,9 +98,9 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
 		while(incrementalWMethodIt.hasNext()) {
 			Word<I> testCase = incrementalWMethodIt.next();
 			
-			DefaultQuery<I, O> query = new DefaultQuery<>(testCase);
+			DefaultQuery<I, D> query = new DefaultQuery<>(testCase);
 			oracle.processQueries(Collections.singleton(query));
-			O hypOut = hypothesis.computeOutput(testCase);
+			D hypOut = hypothesis.computeOutput(testCase);
 			if(!Objects.equals(query.getOutput(), hypOut)) {
 				// found counterexample
 				return query;

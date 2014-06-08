@@ -34,6 +34,7 @@ public class DTLearnerDFAIT extends AbstractDFALearnerIT {
 
 	@Override
 	protected <I> void addLearnerVariants(Alphabet<I> alphabet,
+			int targetSize,
 			DFAMembershipOracle<I> mqOracle, DFALearnerVariantList<I> variants) {
 		DTLearnerDFABuilder<I> builder = new DTLearnerDFABuilder<>();
 		builder.setAlphabet(alphabet);

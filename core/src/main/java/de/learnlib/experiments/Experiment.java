@@ -58,12 +58,12 @@ public class Experiment<A> {
 		
 	}
 	
-	private final class ExperimentImpl<I,O> {
-		private final LearningAlgorithm<? extends A, I, O> learningAlgorithm;
-	    private final EquivalenceOracle<? super A, I, O> equivalenceAlgorithm;
+	private final class ExperimentImpl<I,D> {
+		private final LearningAlgorithm<? extends A, I, D> learningAlgorithm;
+	    private final EquivalenceOracle<? super A, I, D> equivalenceAlgorithm;
 	    private final Alphabet<I> inputs;
 	    
-	    public ExperimentImpl(LearningAlgorithm<? extends A, I, O> learningAlgorithm, EquivalenceOracle<? super A, I, O> equivalenceAlgorithm, Alphabet<I> inputs) {
+	    public ExperimentImpl(LearningAlgorithm<? extends A, I, D> learningAlgorithm, EquivalenceOracle<? super A, I, D> equivalenceAlgorithm, Alphabet<I> inputs) {
 	        this.learningAlgorithm = learningAlgorithm;
 	        this.equivalenceAlgorithm = equivalenceAlgorithm;
 	        this.inputs = inputs;
@@ -87,7 +87,7 @@ public class Experiment<A> {
 
 	            logger.logPhase("Searching for counterexample");
 	            profileStart("Searching for counterexample");
-	            DefaultQuery<I, O> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
+	            DefaultQuery<I, D> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
 	            if (ce == null) {
 	                done = true;
 	                continue;
@@ -117,7 +117,7 @@ public class Experiment<A> {
     private A finalHypothesis = null;
     private final ExperimentImpl<?,?> impl;
 
-    public <I,O> Experiment(LearningAlgorithm<? extends A, I, O> learningAlgorithm, EquivalenceOracle<? super A, I, O> equivalenceAlgorithm, Alphabet<I> inputs) {
+    public <I,D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm, EquivalenceOracle<? super A, I, D> equivalenceAlgorithm, Alphabet<I> inputs) {
         this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs);
     }
     

@@ -16,6 +16,7 @@
  */
 package de.learnlib.cache.mealy;
 
+import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -33,7 +34,20 @@ public abstract class MealyCaches {
 	public static <I,O> MealyCacheOracle<I,O> createDAGCache(Alphabet<I> alphabet, MembershipOracle<I,Word<O>> mqOracle) {
 		return MealyCacheOracle.createDAGCacheOracle(alphabet, mqOracle);
 	}
-	
+
+	/**
+	 * Creates a cache oracle for a Mealy machine learning setup, using a DAG for internal cache organization.
+	 *
+	 * @param alphabet the input alphabet
+	 * @param errorSyms a mapping for the prefix-closure filter
+	 * @param mqOracle the membership oracle
+	 * @return a Mealy learning cache with a DAG-based implementation
+	 */
+	public static <I,O> MealyCacheOracle<I,O> createDAGCache(Alphabet<I> alphabet,
+			Mapping<? super O,? extends O> errorSyms, MembershipOracle<I,Word<O>> mqOracle) {
+		return MealyCacheOracle.createDAGCacheOracle(alphabet, errorSyms, mqOracle);
+	}
+
 	/**
 	 * Creates a cache oracle for a Mealy machine learning setup, using a tree for internal cache organization.
 	 * 
@@ -44,7 +58,20 @@ public abstract class MealyCaches {
 	public static <I,O> MealyCacheOracle<I,O> createTreeCache(Alphabet<I> alphabet, MembershipOracle<I,Word<O>> mqOracle) {
 		return MealyCacheOracle.createTreeCacheOracle(alphabet, mqOracle);
 	}
-	
+
+	/**
+	 * Creates a cache oracle for a Mealy machine learning setup, using a tree for internal cache organization.
+	 *
+	 * @param alphabet the input alphabet
+	 * @param errorSyms a mapping for the prefix-closure filter
+	 * @param mqOracle the membership oracle
+	 * @return a Mealy learning cache with a tree-based implementation
+	 */
+	public static <I,O> MealyCacheOracle<I,O> createTreeCache(Alphabet<I> alphabet,
+			Mapping<? super O,? extends O> errorSyms, MembershipOracle<I,Word<O>> mqOracle) {
+		return MealyCacheOracle.createTreeCacheOracle(alphabet, errorSyms, mqOracle);
+	}
+
 	/**
 	 * Creates a cache oracle for a Mealy machine learning setup.
 	 * <p>

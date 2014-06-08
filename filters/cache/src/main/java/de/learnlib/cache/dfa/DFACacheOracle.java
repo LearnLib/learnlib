@@ -74,7 +74,7 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
 		this(new IncrementalDFADAGBuilder<>(alphabet), delegate);
 	}
 	
-	private DFACacheOracle(IncrementalDFABuilder<I> incDfa, MembershipOracle<I, Boolean> delegate) {
+	public DFACacheOracle(IncrementalDFABuilder<I> incDfa, MembershipOracle<I, Boolean> delegate) {
 		this(incDfa, new ReentrantLock(), delegate);
 	}
 	

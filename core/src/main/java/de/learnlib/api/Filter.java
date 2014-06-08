@@ -21,17 +21,17 @@ package de.learnlib.api;
  * element in a chain of oracles.
  * 
  * @param <I> input symbol class
- * @param <O> output symbol class
+ * @param <D> output domain type
  * 
  * @author falkhowar
  */
-public interface Filter<I, O> extends MembershipOracle<I, O> {
+public interface Filter<I, D> extends MembershipOracle<I, D> {
 
     /**
      * sets oracle for processing membership queries.
      * 
      * @param next 
      */
-    void setNext(MembershipOracle<I, O> next);
+    void setNext(MembershipOracle<I, D> next);
 
 }

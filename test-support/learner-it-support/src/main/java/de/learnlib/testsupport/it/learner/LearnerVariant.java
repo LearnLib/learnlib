@@ -18,13 +18,13 @@ package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.api.LearningAlgorithm;
 
-class LearnerVariant<M,I,O> {
+class LearnerVariant<M,I,D> {
 	
 	private final String name;
-	private final LearningAlgorithm<? extends M, I, O> learner;
+	private final LearningAlgorithm<? extends M, I, D> learner;
 	private final int maxRounds;
 
-	public LearnerVariant(String name, LearningAlgorithm<? extends M,I,O> learner, int maxRounds) {
+	public LearnerVariant(String name, LearningAlgorithm<? extends M,I,D> learner, int maxRounds) {
 		this.name = name;
 		this.learner = learner;
 		this.maxRounds = maxRounds;
@@ -34,7 +34,7 @@ class LearnerVariant<M,I,O> {
 		return name;
 	}
 
-	public LearningAlgorithm<? extends M, I, O> getLearner() {
+	public LearningAlgorithm<? extends M, I, D> getLearner() {
 		return learner;
 	}
 

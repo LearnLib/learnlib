@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -18,8 +18,8 @@ package de.learnlib.eqtests.basic;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -34,15 +34,19 @@ import de.learnlib.oracles.DefaultQuery;
 
 /**
  *
- * @author Maik Merten <maikmerten@googlemail.com>
+ * @author Maik Merten
  */
-public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> implements EquivalenceOracle<A, I, O> {
-	
+public class RandomWordsEQOracle<I, D, A extends OutputAutomaton<?, I, ?, D>> implements EquivalenceOracle<A, I, D> {
+
 	public static class DFARandomWordsEQOracle<I> extends RandomWordsEQOracle<I,Boolean,DFA<?,I>>
 			implements DFAEquivalenceOracle<I> {
 		public DFARandomWordsEQOracle(MembershipOracle<I, Boolean> mqOracle,
 				int minLength, int maxLength, int maxTests, Random random) {
 			super(mqOracle, minLength, maxLength, maxTests, random);
+		}
+		public DFARandomWordsEQOracle(MembershipOracle<I, Boolean> mqOracle,
+				int minLength, int maxLength, int maxTests, Random random, int batchSize) {
+			super(mqOracle, minLength, maxLength, maxTests, random, batchSize);
 		}
 	}
 	
@@ -52,24 +56,34 @@ public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> im
 				int minLength, int maxLength, int maxTests, Random random) {
 			super(mqOracle, minLength, maxLength, maxTests, random);
 		}
+		public MealyRandomWordsEQOracle(MembershipOracle<I, Word<O>> mqOracle,
+				int minLength, int maxLength, int maxTests, Random random, int batchSize) {
+			super(mqOracle, minLength, maxLength, maxTests, random, batchSize);
+		}
 	}
-	
+
 	private static final Logger LOGGER = Logger.getLogger(RandomWordsEQOracle.class.getName());
 
-	private MembershipOracle<I, O> oracle;
+	private MembershipOracle<I, D> oracle;
 	private int maxTests, minLength, maxLength;
 	private final Random random;
+	private final int batchSize;
 
-	public RandomWordsEQOracle(MembershipOracle<I, O> mqOracle, int minLength, int maxLength, int maxTests, Random random) {
+	public RandomWordsEQOracle(MembershipOracle<I, D> mqOracle, int minLength, int maxLength, int maxTests, Random random, int batchSize) {
 		this.oracle = mqOracle;
 		this.maxTests = maxTests;
 		this.minLength = minLength;
 		this.maxLength = maxLength;
 		this.random = random;
+		this.batchSize = batchSize;
+	}
+
+	public RandomWordsEQOracle(MembershipOracle<I, D> mqOracle, int minLength, int maxLength, int maxTests, Random random) {
+		this(mqOracle, minLength, maxLength, maxTests, random, 1);
 	}
 
 	@Override
-	public DefaultQuery<I, O> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+	public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
 		// Fail fast on empty inputs
 		if(inputs.isEmpty()) {
 			LOGGER.warning("Passed empty set of inputs to equivalence oracle; no counterexample can be found!");
@@ -85,6 +99,8 @@ public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> im
 		
 		int numSyms = symbolList.size();
 
+		final Collection<DefaultQuery<I,D>> queryBatch = new ArrayList<>(batchSize);
+
 		for (int i = 0; i < maxTests; ++i) {
 			int length = minLength + random.nextInt((maxLength - minLength) + 1);
 
@@ -95,18 +111,29 @@ public class RandomWordsEQOracle<I, O, A extends OutputAutomaton<?, I, ?, O>> im
 				testtrace.append(sym);
 			}
 
-			DefaultQuery<I, O> query = new DefaultQuery<>(testtrace.toWord());
+			final DefaultQuery<I, D> query = new DefaultQuery<>(testtrace.toWord());
+			queryBatch.add(query);
+			
+			final boolean batchFilled = queryBatch.size() >= batchSize;
+			final boolean maxTestsReached = i >= maxTests - 1;
 
-			// query oracle
-			oracle.processQueries(Collections.singletonList(query));
-			O oracleoutput = query.getOutput();
+			if(batchFilled || maxTestsReached) {
+				// query oracle
+				oracle.processQueries(queryBatch);
 
-			// trace hypothesis
-			O hypOutput = hypothesis.computeOutput(testtrace.toWord());
+				for (final DefaultQuery<I, D> ioQuery : queryBatch) {
+					D oracleoutput = ioQuery.getOutput();
 
-			// compare output of hypothesis and oracle
-			if (!oracleoutput.equals(hypOutput)) {
-				return query;
+					// trace hypothesis
+					D hypOutput = hypothesis.computeOutput(ioQuery.getInput());
+
+					// compare output of hypothesis and oracle
+					if (!Objects.equals(oracleoutput, hypOutput)) {
+						return ioQuery;
+					}
+				}
+
+				queryBatch.clear();
 			}
 		}
 

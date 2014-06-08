@@ -18,7 +18,7 @@ package de.learnlib.api;
 
 /**
  *
- * @author Maik Merten <maikmerten@googlemail.com>
+ * @author Maik Merten
  */
 public interface SupportsGrowingAlphabet<I> {
 	

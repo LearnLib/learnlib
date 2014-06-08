@@ -117,7 +117,7 @@ public class DTLearnerHypothesis<I, O, SP, TP> extends
 		for (I sym : word) {
 			int symIdx = alphabet.getSymbolIndex(sym);
 			HTransition<I, O, SP, TP> trans = curr.getTransition(symIdx);
-			if (trans.isTree())
+			if (!trans.isTree())
 				return false;
 			curr = trans.getTreeTarget();
 		}

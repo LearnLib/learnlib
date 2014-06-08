@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -24,11 +24,11 @@ import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
-public interface ObservationTableCEXHandler<I, O> {
-	<RI extends I,RO extends O>
-	List<List<Row<RI>>> handleCounterexample(DefaultQuery<RI,RO> ceQuery,
-			ObservationTable<RI,RO> table,
-			SuffixOutput<RI,RO> hypOutput, MembershipOracle<RI, RO> oracle);
+public interface ObservationTableCEXHandler<I, D> {
+	<RI extends I,RD extends D>
+	List<List<Row<RI>>> handleCounterexample(DefaultQuery<RI,RD> ceQuery,
+			ObservationTable<RI,RD> table,
+			SuffixOutput<RI,RD> hypOutput, MembershipOracle<RI, RD> oracle);
 	
 	boolean needsConsistencyCheck();
 }

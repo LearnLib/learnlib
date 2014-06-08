@@ -31,6 +31,7 @@ public class ExtensibleLStarDFAIT extends AbstractDFALearnerIT {
 
 	@Override
 	protected <I> void addLearnerVariants(Alphabet<I> alphabet,
+			int targetSize,
 			DFAMembershipOracle<I> mqOracle,
 			DFALearnerVariantList<I> variants) {
 		ExtensibleLStarDFABuilder<I> builder = new ExtensibleLStarDFABuilder<>();

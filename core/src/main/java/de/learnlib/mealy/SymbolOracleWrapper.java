@@ -35,10 +35,10 @@ import net.automatalib.words.Word;
  * Wraps an oracle which uses {@link Word}s as its output to an oracle which only
  * yields the last symbol of each output.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
- * @param <I> input symbol class
- * @param <O> output symbol class
+ * @param <I> input symbol type
+ * @param <O> output symbol type
  */
 @ParametersAreNonnullByDefault
 final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {

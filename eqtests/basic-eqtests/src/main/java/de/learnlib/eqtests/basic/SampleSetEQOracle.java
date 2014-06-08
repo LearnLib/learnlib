@@ -45,15 +45,15 @@ import de.learnlib.oracles.DefaultQuery;
  * to be counterexamples. However, the oracle can be configured to remove queries from the
  * sample set if they did not serve as counterexamples.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <I> input symbol type
- * @param <O> output type
+ * @param <D> output domain type
  */
-public class SampleSetEQOracle<I, O> implements EquivalenceOracle<SuffixOutput<I, O>, I, O>{
+public class SampleSetEQOracle<I, D> implements EquivalenceOracle<SuffixOutput<I, D>, I, D>{
 	
 	private final boolean removeUnsuccessful;
-	private final List<DefaultQuery<I,O>> testQueries;
+	private final List<DefaultQuery<I,D>> testQueries;
 	
 	/**
 	 * Constructor. Initializes the oracle with an empty sample set.
@@ -80,7 +80,7 @@ public class SampleSetEQOracle<I, O> implements EquivalenceOracle<SuffixOutput<I
 	 * @param expectedOutput the expected output for this word
 	 * @return {@code this}, to enable chained {@code add} or {@code addAll} calls
 	 */
-	public SampleSetEQOracle<I, O> add(Word<I> input, O expectedOutput) {
+	public SampleSetEQOracle<I, D> add(Word<I> input, D expectedOutput) {
 		testQueries.add(new DefaultQuery<>(input, expectedOutput));
 		return this;
 	}
@@ -94,7 +94,7 @@ public class SampleSetEQOracle<I, O> implements EquivalenceOracle<SuffixOutput<I
 	 * @return {@code this}, to enable chained {@code add} or {@code addAll} calls
 	 */
 	@SafeVarargs
-	public final SampleSetEQOracle<I, O> addAll(MembershipOracle<I,O> oracle, Word<I> ...words) {
+	public final SampleSetEQOracle<I, D> addAll(MembershipOracle<I,D> oracle, Word<I> ...words) {
 		return addAll(oracle, Arrays.asList(words));
 	}
 	
@@ -106,7 +106,7 @@ public class SampleSetEQOracle<I, O> implements EquivalenceOracle<SuffixOutput<I
 	 * @return {@code this}, to enable chained {@code add} or {@code addAll} calls
 	 */
 	@SafeVarargs
-	public final SampleSetEQOracle<I,O> addAll(DefaultQuery<I,O>... newTestQueries) {
+	public final SampleSetEQOracle<I,D> addAll(DefaultQuery<I,D>... newTestQueries) {
 		return addAll(Arrays.asList(newTestQueries));
 	}
 	
@@ -117,7 +117,7 @@ public class SampleSetEQOracle<I, O> implements EquivalenceOracle<SuffixOutput<I
 	 * @param newTestQueries the queries to add to the sample set
 	 * @return {@code this}, to enable chained {@code add} or {@code addAll} calls
 	 */
-	public SampleSetEQOracle<I,O> addAll(Collection<? extends DefaultQuery<I,O>> newTestQueries) {
+	public SampleSetEQOracle<I,D> addAll(Collection<? extends DefaultQuery<I,D>> newTestQueries) {
 		testQueries.addAll(newTestQueries);
 		return this;
 	}
@@ -130,13 +130,13 @@ public class SampleSetEQOracle<I, O> implements EquivalenceOracle<SuffixOutput<I
 	 * @param words the words to add
 	 * @return {@code this}, to enable chained {@code add} or {@code addAll} calls
 	 */
-	public SampleSetEQOracle<I, O> addAll(MembershipOracle<I,O> oracle, Collection<? extends Word<I>> words) {
+	public SampleSetEQOracle<I, D> addAll(MembershipOracle<I,D> oracle, Collection<? extends Word<I>> words) {
 		if(words.isEmpty()) {
 			return this;
 		}
-		List<DefaultQuery<I,O>> newQueries = new ArrayList<>(words.size());
+		List<DefaultQuery<I,D>> newQueries = new ArrayList<>(words.size());
 		for(Word<I> w : words) {
-			newQueries.add(new DefaultQuery<I,O>(w));
+			newQueries.add(new DefaultQuery<I,D>(w));
 		}
 		oracle.processQueries(newQueries);
 		
@@ -149,12 +149,12 @@ public class SampleSetEQOracle<I, O> implements EquivalenceOracle<SuffixOutput<I
 	 * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
 	 */
 	@Override
-	public DefaultQuery<I, O> findCounterExample(SuffixOutput<I, O> hypothesis,
+	public DefaultQuery<I, D> findCounterExample(SuffixOutput<I, D> hypothesis,
 			Collection<? extends I> inputs) {
-		Iterator<DefaultQuery<I,O>> queryIt = testQueries.iterator();
+		Iterator<DefaultQuery<I,D>> queryIt = testQueries.iterator();
 		
 		while(queryIt.hasNext()) {
-			DefaultQuery<I,O> query = queryIt.next();
+			DefaultQuery<I,D> query = queryIt.next();
 			
 			if(checkInputs(query, inputs)) {
 				if(!test(query, hypothesis)) {
@@ -177,8 +177,8 @@ public class SampleSetEQOracle<I, O> implements EquivalenceOracle<SuffixOutput<I
 	 * @return {@code true} if the suffix output by {@code hypOutput} matches the expected
 	 * output stored in {@code query}, {@code false} otherwise. 
 	 */
-	private static <I,O> boolean test(DefaultQuery<I, O> query, SuffixOutput<I,O> hypOutput) {
-		O hypOut = hypOutput.computeSuffixOutput(query.getPrefix(), query.getSuffix());
+	private static <I,D> boolean test(DefaultQuery<I, D> query, SuffixOutput<I,D> hypOutput) {
+		D hypOut = hypOutput.computeSuffixOutput(query.getPrefix(), query.getSuffix());
 		
 		return Objects.equals(hypOut, query.getOutput());
 	}

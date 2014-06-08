@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -38,14 +38,14 @@ import de.learnlib.oracles.DefaultQuery;
  * hypothesis automaton, as described in "Testing software design modeled by finite state machines"
  * by T.S. Chow.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
- * @param <A> automaton class
- * @param <I> input symbol class
- * @param <O> output class
+ * @param <A> automaton type
+ * @param <I> input symbol type
+ * @param <D> output domain type
  */
-public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?,?> & Output<I,O>, I, O>
-	implements EquivalenceOracle<A, I, O> {
+public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?,?> & Output<I,D>, I, D>
+	implements EquivalenceOracle<A, I, D> {
 	
 	public static class DFAWMethodEQOracle<I> extends WMethodEQOracle<DFA<?,I>,I,Boolean>
 			implements DFAEquivalenceOracle<I> {
@@ -64,14 +64,14 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
 	}
 	
 	private int maxDepth;
-	private final MembershipOracle<I,O> sulOracle;
+	private final MembershipOracle<I,D> sulOracle;
 	
 	/**
 	 * Constructor.
 	 * @param maxDepth the maximum length of the "middle" part of the test cases
 	 * @param sulOracle interface to the system under learning
 	 */
-	public WMethodEQOracle(int maxDepth, MembershipOracle<I,O> sulOracle) {
+	public WMethodEQOracle(int maxDepth, MembershipOracle<I,D> sulOracle) {
 		this.maxDepth = maxDepth;
 		this.sulOracle = sulOracle;
 	}
@@ -85,7 +85,7 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
 	 * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
 	 */
 	@Override
-	public DefaultQuery<I, O> findCounterExample(A hypothesis,
+	public DefaultQuery<I, D> findCounterExample(A hypothesis,
 			Collection<? extends I> inputs) {
 		
 		List<Word<I>> transCover = Automata.transitionCover(hypothesis, inputs);
@@ -105,8 +105,8 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
 					wb.append(trans).append(middle).append(suffix);
 					Word<I> queryWord = wb.toWord();
 					wb.clear();
-					DefaultQuery<I,O> query = new DefaultQuery<>(queryWord);
-					O hypOutput = hypothesis.computeOutput(queryWord);
+					DefaultQuery<I,D> query = new DefaultQuery<>(queryWord);
+					D hypOutput = hypothesis.computeOutput(queryWord);
 					sulOracle.processQueries(Collections.singleton(query));
 					if(!Objects.equals(hypOutput, query.getOutput()))
 						return query;

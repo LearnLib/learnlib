@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  * 
  * LearnLib is free software; you can redistribute it and/or
@@ -22,6 +22,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner;
 import de.learnlib.algorithms.features.observationtable.OTLearner;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
@@ -30,9 +33,7 @@ import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
-
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import de.learnlib.oracles.MQUtil;
 
 /**
  * An abstract base class for L*-style algorithms.
@@ -41,17 +42,17 @@ import net.automatalib.words.Word;
  * the main loop of alternating completeness and consistency checks. It does not take
  * care of choosing how to initialize the table and hypothesis construction.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
- * @param <A> automaton class.
- * @param <I> input symbol class.
- * @param <O> output class.
+ * @param <A> automaton type
+ * @param <I> input symbol type
+ * @param <D> output domain type
  */
-public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, GlobalSuffixLearner<A, I, O> {
+public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, GlobalSuffixLearner<A, I, D> {
 	
 	protected final Alphabet<? extends I> alphabet;
-	protected final MembershipOracle<I, O> oracle;
-	protected final ObservationTable<I, O> table;
+	protected final MembershipOracle<I, D> oracle;
+	protected final ObservationTable<I, D> table;
 
 	/**
 	 * Constructor.
@@ -60,7 +61,7 @@ public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, Glob
 	 * @param outputMapping a mapping that translates between oracle outputs and data entries stored
 	 * in the observation table.
 	 */
-	public AbstractLStar(Alphabet<I> alphabet, MembershipOracle<I,O> oracle) {
+	public AbstractLStar(Alphabet<I> alphabet, MembershipOracle<I,D> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		
@@ -86,13 +87,17 @@ public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, Glob
 	 * @see de.learnlib.api.LearningAlgorithm#refineHypothesis(de.learnlib.api.Query)
 	 */
 	@Override
-	public final boolean refineHypothesis(DefaultQuery<I, O> ceQuery) {
+	public final boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
+		if(!MQUtil.isCounterexample(ceQuery, hypothesisOutput())) {
+			return false;
+		}
 		int oldDistinctRows = table.numDistinctRows();
 		doRefineHypothesis(ceQuery);
-		return (table.numDistinctRows() > oldDistinctRows);
+		assert (table.numDistinctRows() > oldDistinctRows);
+		return true;
 	}
 	
-	protected void doRefineHypothesis(DefaultQuery<I,O> ceQuery) {
+	protected void doRefineHypothesis(DefaultQuery<I,D> ceQuery) {
 		List<List<Row<I>>> unclosed = incorporateCounterExample(ceQuery);
 		completeConsistentTable(unclosed, true);
 	}
@@ -114,7 +119,7 @@ public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, Glob
 			
 			
 			if(checkConsistency) {
-				Inconsistency<I,O> incons = null;
+				Inconsistency<I,D> incons = null;
 				
 				do {
 					incons = table.findInconsistency();
@@ -136,7 +141,7 @@ public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, Glob
 	 * @param incons the inconsistency description
 	 * @return the suffix to add in order to fix the inconsistency
 	 */
-	protected Word<I> analyzeInconsistency(Inconsistency<I,O> incons) {
+	protected Word<I> analyzeInconsistency(Inconsistency<I,D> incons) {
 		int inputIdx = incons.getInputIndex();
 		
 		Row<I> succRow1 = incons.getFirstRow().getSuccessor(inputIdx);
@@ -144,11 +149,11 @@ public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, Glob
 		
 		int numSuffixes = table.numSuffixes();
 		
-		List<O> contents1 = table.rowContents(succRow1);
-		List<O> contents2 = table.rowContents(succRow2);
+		List<D> contents1 = table.rowContents(succRow1);
+		List<D> contents2 = table.rowContents(succRow2);
 		
 		for(int i = 0; i < numSuffixes; i++) {
-			O val1 = contents1.get(i), val2 = contents2.get(i);
+			D val1 = contents1.get(i), val2 = contents2.get(i);
 			if(!Objects.equals(val1, val2)) {
 				I sym = alphabet.getSymbol(inputIdx);
 				Word<I> suffix = table.getSuffixes().get(i);
@@ -167,7 +172,7 @@ public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, Glob
 	 * @return the rows (equivalence classes) which became unclosed by
 	 * adding the information. 
 	 */
-	protected List<List<Row<I>>> incorporateCounterExample(DefaultQuery<I,O> ce) {
+	protected List<List<Row<I>>> incorporateCounterExample(DefaultQuery<I,D> ce) {
 		return ObservationTableCEXHandlers.handleClassicLStar(ce, table, oracle);
 	}
 	
@@ -228,7 +233,9 @@ public abstract class AbstractLStar<A, I, O> implements OTLearner<A, I, O>, Glob
 	 * @see de.learnlib.algorithms.features.observationtable.OTLearner#getObservationTable()
 	 */
 	@Override
-	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, O> getObservationTable() {
+	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, D> getObservationTable() {
 		return table.asStandardTable();
 	}
+	
+	protected abstract SuffixOutput<I, D> hypothesisOutput();
 }

@@ -45,11 +45,11 @@ import de.learnlib.settings.LearnLibSettings;
  * 
  * @author Malte Isberner
  *
- * @param <I> input symbol class
- * @param <O> output class
+ * @param <I> input symbol type
+ * @param <D> output domain type
  */
 @ParametersAreNonnullByDefault
-public class StaticParallelOracle<I, O> implements ParallelOracle<I, O> {
+public class StaticParallelOracle<I, D> implements ParallelOracle<I, D> {
 	
 	static {
 		LearnLibSettings settings = LearnLibSettings.getInstance();
@@ -69,12 +69,12 @@ public class StaticParallelOracle<I, O> implements ParallelOracle<I, O> {
 	@Nonnegative
 	private final int minBatchSize;
 	@Nonnull
-	private final MembershipOracle<I, O>[] oracles;
+	private final MembershipOracle<I, D>[] oracles;
 	@Nonnull
 	private final ExecutorService executor;
 
 	@SuppressWarnings("unchecked")
-	public StaticParallelOracle(Collection<? extends MembershipOracle<I,O>> oracles,
+	public StaticParallelOracle(Collection<? extends MembershipOracle<I,D>> oracles,
 			@Nonnegative int minBatchSize,
 			PoolPolicy policy) {
 		
@@ -98,7 +98,7 @@ public class StaticParallelOracle<I, O> implements ParallelOracle<I, O> {
 	 * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
 	 */
 	@Override
-	public void processQueries(Collection<? extends Query<I, O>> queries) {
+	public void processQueries(Collection<? extends Query<I, D>> queries) {
 		int num = queries.size();
 		if(num <= 0)
 			return;
@@ -123,14 +123,14 @@ public class StaticParallelOracle<I, O> implements ParallelOracle<I, O> {
 		
 		List<Future<?>> futures = new ArrayList<>(externalBatches);
 		
-		Iterator<? extends Query<I,O>> queryIt = queries.iterator();
+		Iterator<? extends Query<I,D>> queryIt = queries.iterator();
 		
 		// Start the threads for the external batches
 		for(int i = 0; i < externalBatches; i++) {
 			int bs = fullBatchSize;
 			if(i < nonFullBatches)
 				bs--;
-			List<Query<I,O>> batch = new ArrayList<>(bs);
+			List<Query<I,D>> batch = new ArrayList<>(bs);
 			for(int j = 0; j < bs; j++) {
 				batch.add(queryIt.next());
 			}
@@ -142,7 +142,7 @@ public class StaticParallelOracle<I, O> implements ParallelOracle<I, O> {
 		
 		
 		// Finally, prepare and process the batch for the oracle executed in this thread.
-		List<Query<I,O>> localBatch = new ArrayList<>(fullBatchSize);
+		List<Query<I,D>> localBatch = new ArrayList<>(fullBatchSize);
 		for(int j = 0; j < fullBatchSize; j++) {
 			localBatch.add(queryIt.next());
 		}
@@ -164,7 +164,7 @@ public class StaticParallelOracle<I, O> implements ParallelOracle<I, O> {
 		}
 	}
 	
-	private void processQueriesLocally(Collection<? extends Query<I,O>> localBatch) {
+	private void processQueriesLocally(Collection<? extends Query<I,D>> localBatch) {
 		oracles[0].processQueries(localBatch);
 	}
 	

@@ -27,7 +27,7 @@ import de.learnlib.api.QueryAnswerer;
 import net.automatalib.words.Word;
 
 @ParametersAreNonnullByDefault
-public abstract class AbstractSingleQueryOracle<I, O> implements MembershipOracle<I, O>, QueryAnswerer<I, O> {
+public abstract class AbstractSingleQueryOracle<I, D> implements MembershipOracle<I, D>, QueryAnswerer<I, D> {
 	
 	public static abstract class AbstractSingleQueryOracleDFA<I> extends AbstractSingleQueryOracle<I,Boolean> implements DFAMembershipOracle<I> {
 	}
@@ -42,7 +42,7 @@ public abstract class AbstractSingleQueryOracle<I, O> implements MembershipOracl
 	 * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
 	 */
 	@Override
-	public void processQueries(Collection<? extends Query<I, O>> queries) {
+	public void processQueries(Collection<? extends Query<I, D>> queries) {
 		MQUtil.answerQueries(this, queries);
 	}
 	

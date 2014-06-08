@@ -31,21 +31,21 @@ import de.learnlib.api.Query;
  * @author Malte Isberner
  *
  * @param <I> input symbol type
- * @param <O> output type
+ * @param <D> output type
  */
 @ParametersAreNonnullByDefault
-final class StaticQueriesJob<I, O> extends AbstractQueriesJob<I, O> {
+final class StaticQueriesJob<I, D> extends AbstractQueriesJob<I, D> {
 
 	@Nonnull
-	private final MembershipOracle<I, O> oracle;
+	private final MembershipOracle<I, D> oracle;
 	
-	public StaticQueriesJob(Collection<? extends Query<I, O>> queries, MembershipOracle<I, O> oracle) {
+	public StaticQueriesJob(Collection<? extends Query<I, D>> queries, MembershipOracle<I, D> oracle) {
 		super(queries);
 		this.oracle = oracle;
 	}
 
 	@Override
-	protected MembershipOracle<I, O> getOracle() {
+	protected MembershipOracle<I, D> getOracle() {
 		return oracle;
 	}
 

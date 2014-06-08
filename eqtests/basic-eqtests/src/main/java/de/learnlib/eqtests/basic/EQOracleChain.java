@@ -27,7 +27,7 @@ import net.automatalib.words.Word;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.oracles.DefaultQuery;
 
-public class EQOracleChain<A, I, O> implements EquivalenceOracle<A, I, O> {
+public class EQOracleChain<A, I, D> implements EquivalenceOracle<A, I, D> {
 	
 	public static class DFAEQOracleChain<I> extends EQOracleChain<DFA<?,I>,I,Boolean>
 			implements DFAEquivalenceOracle<I> {
@@ -54,14 +54,14 @@ public class EQOracleChain<A, I, O> implements EquivalenceOracle<A, I, O> {
 		}
 	}
 	
-	private final List<EquivalenceOracle<? super A, I, O>> oracles;
+	private final List<EquivalenceOracle<? super A, I, D>> oracles;
 
-	public EQOracleChain(List<? extends EquivalenceOracle<? super A,I,O>> oracles) {
+	public EQOracleChain(List<? extends EquivalenceOracle<? super A,I,D>> oracles) {
 		this.oracles = new ArrayList<>(oracles);
 	}
 	
 	@SafeVarargs
-	public EQOracleChain(EquivalenceOracle<? super A,I,O> ...oracles) {
+	public EQOracleChain(EquivalenceOracle<? super A,I,D> ...oracles) {
 		this(Arrays.asList(oracles));
 	}
 
@@ -70,10 +70,10 @@ public class EQOracleChain<A, I, O> implements EquivalenceOracle<A, I, O> {
 	 * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
 	 */
 	@Override
-	public DefaultQuery<I, O> findCounterExample(A hypothesis,
+	public DefaultQuery<I, D> findCounterExample(A hypothesis,
 			Collection<? extends I> inputs) {
-		for(EquivalenceOracle<? super A,I,O> eqOracle : oracles) {
-			DefaultQuery<I,O> ceQry = eqOracle.findCounterExample(hypothesis, inputs);
+		for(EquivalenceOracle<? super A,I,D> eqOracle : oracles) {
+			DefaultQuery<I,D> ceQry = eqOracle.findCounterExample(hypothesis, inputs);
 			if(ceQry != null)
 				return ceQry;
 		}

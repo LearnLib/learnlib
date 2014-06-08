@@ -21,10 +21,10 @@ import java.util.Collection;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 
-public class NoopOracle<I, O> implements MembershipOracle<I, O> {
+public class NoopOracle<I, D> implements MembershipOracle<I, D> {
 
 	@Override
-	public void processQueries(Collection<? extends Query<I, O>> queries) {
+	public void processQueries(Collection<? extends Query<I, D>> queries) {
 	}
 
 }
