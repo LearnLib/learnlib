@@ -40,6 +40,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<module>lstar-baseline</module>
 		<module>kearns-vazirani</module>
 		<module>discrimination-tree</module>
+		<module>nlstar</module>
 	</modules>  
 
 </project>
