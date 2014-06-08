@@ -27,7 +27,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.nfa.NFALearner;
-import de.learnlib.nfa.NFALearnerWrapper;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.MQUtil;
 
@@ -47,6 +46,11 @@ public class NLStarLearner<I> implements NFALearner<I> {
 	
 	private CompactNFA<I> hypothesis;
 
+	/**
+	 * Constructor.
+	 * @param alphabet the input alphabet
+	 * @param oracle the membership oracle
+	 */
 	public NLStarLearner(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
 		this.alphabet = alphabet;
 		this.table = new ObservationTable<>(alphabet, oracle);
@@ -64,8 +68,31 @@ public class NLStarLearner<I> implements NFALearner<I> {
 		constructHypothesis();
 	}
 	
+	/**
+	 * Retrieves a view of this learner as a DFA learner. The DFA is obtained
+	 * by determinizing and minimizing the NFA hypothesis.
+	 * @return a DFA learner view of this learner
+	 * @see #getDeterminizedHypothesis()
+	 */
 	public DFALearner<I> asDFALearner() {
-		return new NFALearnerWrapper<>(alphabet, this);
+		return new DFALearner<I>() {
+			@Override
+			public void startLearning() {
+				startLearning();
+			}
+			@Override
+			public boolean refineHypothesis(DefaultQuery<I, Boolean> ceQuery) {
+				return refineHypothesis(ceQuery);
+			}
+			@Override
+			public CompactDFA<I> getHypothesisModel() {
+				return getDeterminizedHypothesis();
+			}
+			@Override
+			public String toString() {
+				return toString();
+			}
+		};
 	}
 	
 	@Override
@@ -95,6 +122,11 @@ public class NLStarLearner<I> implements NFALearner<I> {
 		return hypothesis;
 	}
 	
+	/**
+	 * Retrieves a deterministic version of the hypothesis. The DFA is obtained
+	 * through {@link NFAs#determinize(net.automatalib.automata.fsa.NFA)}.
+	 * @return a deterministic version of the hypothesis
+	 */
 	public CompactDFA<I> getDeterminizedHypothesis() {
 		if(hypothesis == null) {
 			throw new IllegalStateException();

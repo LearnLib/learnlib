@@ -24,6 +24,13 @@ import java.util.List;
 import net.automatalib.words.Word;
 import de.learnlib.oracles.DefaultQuery;
 
+/**
+ * A single row in the {@link ObservationTable} for {@link NLStarLearner NL*}.
+ * 
+ * @author Malte Isberner
+ *
+ * @param <I> input symbol type
+ */
 public class Row<I> {
 	
 	private final Word<I> prefix;

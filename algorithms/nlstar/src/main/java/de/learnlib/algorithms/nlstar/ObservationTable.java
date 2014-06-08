@@ -31,6 +31,13 @@ import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
+/**
+ * The observation table implementation for the {@link NLStarLearner NL* algorithm}.
+ * 
+ * @author Malte Isberner
+ *
+ * @param <I> input symbol type
+ */
 public class ObservationTable<I> {
 	
 	private final Alphabet<I> alphabet;
