@@ -58,8 +58,6 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 	 * Constructor.
 	 * @param alphabet the learning alphabet.
 	 * @param oracle the membership oracle.
-	 * @param outputMapping a mapping that translates between oracle outputs and data entries stored
-	 * in the observation table.
 	 */
 	public AbstractLStar(Alphabet<I> alphabet, MembershipOracle<I,D> oracle) {
 		this.alphabet = alphabet;

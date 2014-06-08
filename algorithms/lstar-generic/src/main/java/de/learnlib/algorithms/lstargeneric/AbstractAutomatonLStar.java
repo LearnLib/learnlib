@@ -108,7 +108,6 @@ public abstract class AbstractAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableD
 	 * For creating states and transitions, the {@link #stateProperty(Row)} and
 	 * {@link #transitionProperty(Row, int)} methods are used to derive the
 	 * respective properties.
-	 * @param model the model to output
 	 */
 	protected void updateInternalHypothesis() {
 		if(!table.isInitialized())
