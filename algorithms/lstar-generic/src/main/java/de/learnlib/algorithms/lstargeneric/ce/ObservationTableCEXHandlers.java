@@ -165,19 +165,11 @@ public class ObservationTableCEXHandlers {
 			ObservationTable<I, D> table, MembershipOracle<I, D> oracle) {
 		List<List<Row<I>>> unclosed = Collections.emptyList();
 		
-		List<Word<I>> suffixes = table.getSuffixes();
-		
 		Word<I> ceWord = ceQuery.getInput();
 		int ceLen = ceWord.length();
 		
 		for(int i = 1; i <= ceLen; i++) {
 			Word<I> suffix = ceWord.suffix(i);
-			if(suffixes != null) {
-				if(suffixes.contains(suffix))
-					continue;
-				suffixes = null;
-			}
-			
 			unclosed = table.addSuffix(suffix, oracle);
 			if(!unclosed.isEmpty())
 				break;

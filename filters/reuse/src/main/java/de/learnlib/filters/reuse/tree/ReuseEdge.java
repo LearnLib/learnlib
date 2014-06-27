@@ -80,7 +80,7 @@ public class ReuseEdge<S, I, O> {
 	/**
 	 * The respective input on this edge, never {@code null}.
 	 * 
-	 * @return input, not <code>null</node>
+	 * @return input, not {@code null}
 	 */
 	public final I getInput() {
 		return input;

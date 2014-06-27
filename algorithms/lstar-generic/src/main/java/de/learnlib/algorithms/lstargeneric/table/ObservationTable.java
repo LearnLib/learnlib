@@ -120,6 +120,9 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 	private final List<Word<I>> suffixes
 		= new ArrayList<Word<I>>();
 	
+	private final Set<Word<I>> suffixSet
+		= new HashSet<>();
+	
 	private boolean initialConsistencyCheckRequired = false;
 	
 	/**
@@ -151,7 +154,11 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 		}
 		
 		int numSuffixes = initialSuffixes.size();
-		suffixes.addAll(initialSuffixes);
+		for(Word<I> suffix : initialSuffixes) {
+			if(suffixSet.add(suffix)) {
+				suffixes.add(suffix);
+			}
+		}
 		
 		int numPrefixes = alphabet.size() * initialShortPrefixes.size() + 1;
 		
@@ -240,12 +247,15 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 	public List<List<Row<I>>> addSuffixes(Collection<? extends Word<I>> newSuffixes, MembershipOracle<I, D> oracle) {
 		int oldSuffixCount = suffixes.size();
 		// we need a stable iteration order, and only List guarantees this
-		List<? extends Word<I>> newSuffixList;
-		if(newSuffixes instanceof List) {
-			newSuffixList = (List<? extends Word<I>>)newSuffixes;
+		List<Word<I>> newSuffixList = new ArrayList<>();
+		for(Word<I> suffix : newSuffixes) {
+			if(suffixSet.add(suffix)) {
+				newSuffixList.add(suffix);
+			}
 		}
-		else {
-			newSuffixList = new ArrayList<>(newSuffixes);
+		
+		if(newSuffixList.isEmpty()) {
+			return Collections.emptyList();
 		}
 		
 		int numNewSuffixes = newSuffixList.size();

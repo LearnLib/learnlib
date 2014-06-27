@@ -78,7 +78,7 @@ public abstract class LocalSuffixFinders {
 	
 	/**
 	 * Searches for a distinguishing suffixes by checking for counterexample yielding
-	 * access sequence transformations using a binary search, as proposed by Rivest & Schapire.
+	 * access sequence transformations using a binary search, as proposed by Rivest &amp; Schapire.
 	 * @see #findRivestSchapire(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)
 	 */
 	public static final LocalSuffixFinder<Object,Object> RIVEST_SCHAPIRE
@@ -190,7 +190,7 @@ public abstract class LocalSuffixFinders {
 	
 	/**
 	 * Searches for a distinguishing suffixes by checking for counterexample yielding
-	 * access sequence transformations using a binary search, as proposed by Rivest & Schapire.
+	 * access sequence transformations using a binary search, as proposed by Rivest &amp; Schapire.
 	 * 
 	 * @param ceQuery the initial counterexample query
 	 * @param asTransformer the access sequence transformer

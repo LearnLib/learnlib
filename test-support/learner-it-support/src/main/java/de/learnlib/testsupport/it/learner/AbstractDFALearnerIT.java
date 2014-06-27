@@ -33,7 +33,7 @@ import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.DFALearnerVaria
  * Abstract integration test for DFA learning algorithms.
  * <p>
  * If run, this integration test tests the functionality of all
- * {@link #addLearnerVariants(Alphabet, DFAMembershipOracle, DFALearnerVariantList) variants}
+ * {@link #addLearnerVariants(Alphabet, int, DFAMembershipOracle, DFALearnerVariantList) variants}
  * of a DFA learning algorithm against all the examples contained in
  * {@link LearningExamples#createDFAExamples()}.
  * 

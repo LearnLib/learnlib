@@ -44,7 +44,7 @@ import net.automatalib.words.WordBuilder;
  * {@link ReuseNode}) and edges (see {@link ReuseEdge}) that is used by the
  * {@link ReuseOracle}:
  * <ul>
- * <li>Nodes may contain a system state (see {@link ReuseNode#getSystemState()})
+ * <li>Nodes may contain a system state (see {@link ReuseNode#fetchSystemState(boolean)})
  * that could be used for executing suffixes of membership queries. Each node
  * consists of a (possible empty) set of outgoing edges.
  * <li>Edges consists beside source and target node of input and output
@@ -254,8 +254,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * This method removes all system states from the tree. The tree structure
 	 * remains, but there will be nothing for reusage.
 	 * <p>
-	 * The {@link SystemStateHandler} (
-	 * {@link #setSystemStateHandler(SystemStateHandler)}) will be informed
+	 * The {@link SystemStateHandler} will be informed
 	 * about all disposings.
 	 */
 	public final synchronized void disposeSystemstates() {
@@ -285,8 +284,7 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
 	 * {@link ReuseNode} and all existing system states will be disposed.
 	 * All invariant input symbols as well as all failure output symbols will remain.
 	 * <p>
-	 * The {@link SystemStateHandler} (
-	 * {@link #setSystemStateHandler(SystemStateHandler)}) will <b>not</b> be
+	 * The {@link SystemStateHandler} will <b>not</b> be
 	 * informed about any disposings.
 	 */
 	public synchronized void clearTree() {

@@ -35,7 +35,7 @@ import de.learnlib.api.Query;
 public abstract class GlobalSuffixFinders {
 	
 	/**
-	 * Adds all suffixes of the input word, as suggested by Mahler & Pnueli.
+	 * Adds all suffixes of the input word, as suggested by Maler &amp; Pnueli.
 	 * @see #findMalerPnueli(Query)
 	 */
 	public static final GlobalSuffixFinder<Object,Object> MALER_PNUELI
@@ -174,7 +174,7 @@ public abstract class GlobalSuffixFinders {
 	
 	/**
 	 * Returns all suffixes of the counterexample word as distinguishing suffixes, as suggested
-	 * by Maler & Pnueli.
+	 * by Maler &amp; Pnueli.
 	 * @param ceQuery the counterexample query
 	 * @return all suffixes of the counterexample input
 	 */

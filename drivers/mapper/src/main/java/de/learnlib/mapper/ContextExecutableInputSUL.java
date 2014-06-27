@@ -16,6 +16,7 @@
  */
 package de.learnlib.mapper;
 
+import de.learnlib.api.SUL;
 import de.learnlib.mapper.api.ContextExecutableInput;
 
 /**
