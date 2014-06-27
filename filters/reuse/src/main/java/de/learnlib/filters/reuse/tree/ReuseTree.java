@@ -235,11 +235,11 @@ public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseE
             if (edge == null) {
                 break;
             }
-            // add output for "non-reflexive" edges
-            if(!sink.equals(edge.getTarget())) {
+            // add output for "reflexive" edges
+            if(sink.equals(edge.getTarget())) {
                 output.add(edge.getOutput());
             }
-            // for "reflexive" edges add a null-pointer.
+            // for "non-reflexive" edges add a null-pointer.
             else {
                 output.add(null);
             }
