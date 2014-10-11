@@ -105,6 +105,10 @@ public class DiscriminationTree<I, O, D> {
 		public final O subtree1Label;
 		public final O subtree2Label;
 		
+		public LCAInfo(DTNode<I,O,D> leastCommonAncestor, O subtree1Label, O subtree2Label) {
+			this(leastCommonAncestor, subtree1Label, subtree2Label, false);
+		}
+		
 		private LCAInfo(DTNode<I,O,D> leastCommonAncestor, O subtree1Label, O subtree2Label, boolean swap) {
 			this.leastCommonAncestor = leastCommonAncestor;
 			if(swap) {
@@ -200,11 +204,12 @@ public class DiscriminationTree<I, O, D> {
 					if(!super.getNodeProperties(node, properties))
 						return false;
 					if(node.isLeaf()) {
-						properties.put(NodeAttrs.SHAPE, "box");
+						properties.put(NodeAttrs.SHAPE, NodeShapes.BOX);
 						properties.put(NodeAttrs.LABEL, String.valueOf(node.getData()));
 					}
 					else {
 						Word<I> d = node.getDiscriminator();
+						properties.put(NodeAttrs.SHAPE, NodeShapes.OVAL);
 						properties.put(NodeAttrs.LABEL, d.toString());
 					}
 					return true;

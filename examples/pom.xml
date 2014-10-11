@@ -87,5 +87,9 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-parallelism</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-discrimination-tree</artifactId>
+		</dependency>
 	</dependencies>
 </project>

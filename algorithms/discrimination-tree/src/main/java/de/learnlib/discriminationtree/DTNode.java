@@ -53,6 +53,14 @@ public abstract class DTNode<I, O, D> {
 	}
 	
 	
+	public DTNode<I,O,D> getParent() {
+		return parent;
+	}
+	
+	public O getParentOutcome() {
+		return parentOutcome;
+	}
+	
 	public Word<I> getDiscriminator() {
 		return discriminator;
 	}
