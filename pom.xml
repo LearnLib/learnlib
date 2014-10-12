@@ -25,7 +25,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	-->
 	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-parent</artifactId>
-	<version>0.10.2-SNAPSHOT</version>
+	<version>0.11.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
 	<url>http://learnlib.github.io/learnlib/maven-site/${project.version}</url>
@@ -117,7 +117,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<!--
 			dependency versions
 		-->
-		<automatalib.version>0.4.2-SNAPSHOT</automatalib.version>
+		<automatalib.version>0.5.0-SNAPSHOT</automatalib.version>
 		<testng.version>6.8.8</testng.version>
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
@@ -161,8 +161,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<version>${compiler-plugin.version}</version>
 					<configuration>
 						<fork>true</fork>
-						<source>1.7</source>
-						<target>1.7</target>
+						<source>1.8</source>
+						<target>1.8</target>
 					</configuration>
 				</plugin>
 				<plugin>

@@ -11,5 +11,7 @@ importers/
 /target/
 .factorypath
 C:\\nppdf32Log\\debuglog.txt
+/release.properties
+pom.xml.releaseBackup
 
 

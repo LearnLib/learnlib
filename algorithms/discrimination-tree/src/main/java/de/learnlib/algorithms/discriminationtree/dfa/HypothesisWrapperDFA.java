@@ -18,12 +18,11 @@ package de.learnlib.algorithms.discriminationtree.dfa;
 
 import java.util.Collection;
 
-import net.automatalib.automata.fsa.abstractimpl.AbstractDFA;
+import net.automatalib.automata.fsa.DFA;
 import de.learnlib.algorithms.discriminationtree.hypothesis.DTLearnerHypothesis;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 
-final class HypothesisWrapperDFA<I> extends
-		AbstractDFA<HState<I, Boolean, Boolean, Void>, I> {
+final class HypothesisWrapperDFA<I> implements DFA<HState<I, Boolean, Boolean, Void>, I> {
 	
 	private final DTLearnerHypothesis<I, Boolean, Boolean, Void> dtHypothesis;
 	

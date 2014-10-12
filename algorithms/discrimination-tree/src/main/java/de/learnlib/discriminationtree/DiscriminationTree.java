@@ -23,17 +23,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Iterables;
-
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.MQUtil;
-
-import net.automatalib.graphs.abstractimpl.AbstractGraph;
-import net.automatalib.graphs.dot.DOTPlottableGraph;
+import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 import net.automatalib.words.Word;
+
+import com.google.common.collect.Iterables;
+
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.oracles.MQUtil;
 
 public class DiscriminationTree<I, O, D> {
 	
@@ -167,8 +166,7 @@ public class DiscriminationTree<I, O, D> {
 	 * AutomataLib Graph API
 	 */
 	
-	public class GraphView extends AbstractGraph<DTNode<I,O,D>,Map.Entry<O,DTNode<I,O,D>>>
-		implements DOTPlottableGraph<DTNode<I,O,D>, Map.Entry<O,DTNode<I,O,D>>> {
+	public class GraphView implements Graph<DTNode<I,O,D>,Map.Entry<O,DTNode<I,O,D>>> {
 		
 		@Override
 		public Collection<DTNode<I, O, D>> getNodes() {

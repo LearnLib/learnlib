@@ -16,8 +16,16 @@
  */
 package de.learnlib.algorithms.features.observationtable;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -26,6 +34,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.Signed;
 
 import net.automatalib.words.Word;
+
+import com.google.common.base.Objects;
 
 /**
  * An observation table is a common method for learning algorithms to store organize
@@ -156,13 +166,64 @@ public interface ObservationTable<I, D> {
 		public I getSymbol();
 	}
 	
+	public static abstract class AbstractRow<I,D> implements Row<I,D> {
+
+		@Override
+		@SuppressWarnings("unchecked")
+		public Iterator<D> iterator() {
+			return (Iterator<D>)Collections.unmodifiableCollection(getContents()).iterator();
+		}
+
+		@Override
+		public int size() {
+			return getContents().size();
+		}
+		
+		@Override
+		public D getCellContent(int index) {
+			return getContents().get(index);
+		}
+		
+	}
+	
+	public static class DefaultInconsistency<I,D> implements Inconsistency<I,D> {
+		private final Row<I,D> firstRow;
+		private final Row<I,D> secondRow;
+		private final I symbol;
+		
+		public DefaultInconsistency(Row<I,D> firstRow, Row<I,D> secondRow, I symbol) {
+			this.firstRow = firstRow;
+			this.secondRow = secondRow;
+			this.symbol = symbol;
+		}
+		
+		@Override
+		public Row<I,D> getFirstRow() {
+			return firstRow;
+		}
+		
+		@Override
+		public Row<I,D> getSecondRow() {
+			return secondRow;
+		}
+		
+		@Override
+		public I getSymbol() {
+			return symbol;
+		}
+	}
+	
 	/**
 	 * Retrieves the short prefixes in the table. The prefixes are returned
 	 * in no specified order.
 	 * @return the short prefixes in the table
 	 */
 	@Nonnull
-	public Collection<? extends Word<I>> getShortPrefixes();
+	default public Collection<? extends Word<I>> getShortPrefixes() {
+		Collection<? extends Row<I,D>> spRows = getShortPrefixRows();
+		return spRows.stream().map(Row::getLabel).collect(Collectors.toList());
+		
+	}
 	
 	/**
 	 * Retrieves the long prefixes in the table. The prefixes are returned
@@ -170,7 +231,10 @@ public interface ObservationTable<I, D> {
 	 * @return the long prefixes in the table
 	 */
 	@Nonnull
-	public Collection<? extends Word<I>> getLongPrefixes();
+	default public Collection<? extends Word<I>> getLongPrefixes() {
+		Collection<? extends Row<I,D>> lpRows = getLongPrefixRows();
+		return lpRows.stream().map(Row::getLabel).collect(Collectors.toList());
+	}
 	
 	/**
 	 * Retrieves all prefixes (short and long) in the table. The prefixes are
@@ -178,14 +242,85 @@ public interface ObservationTable<I, D> {
 	 * @return all prefixes in the table
 	 */
 	@Nonnull
-	public Collection<? extends Word<I>> getAllPrefixes();
-	
-	/**
-	 * Retrieves all suffixes in the table.
-	 * @return all suffixes in the table
-	 */
+	default public Collection<? extends Word<I>> getAllPrefixes() {
+		Collection<? extends Word<I>> shortPrefixes = getShortPrefixes();
+		Collection<? extends Word<I>> longPrefixes = getLongPrefixes();
+		List<Word<I>> result = new ArrayList<>(shortPrefixes.size() + longPrefixes.size());
+		
+		result.addAll(shortPrefixes);
+		result.addAll(longPrefixes);
+		
+		return result;
+	}
+
 	@Nonnull
-	public List<? extends Word<I>> getSuffixes();
+	default public Collection<? extends Row<I, D>> getAllRows() {
+		Collection<? extends Row<I,D>> spRows = getShortPrefixRows();
+		Collection<? extends Row<I,D>> lpRows = getLongPrefixRows();
+		
+		List<Row<I,D>> result = new ArrayList<>(spRows.size() + lpRows.size());
+		result.addAll(spRows);
+		result.addAll(lpRows);
+		
+		return result;
+	}
+
+	@Nullable
+	default public Row<I, D> getRow(Word<I> prefix) {
+		for(Row<I,D> row : getAllRows()) {
+			if(prefix.equals(row.getLabel())) {
+				return row;
+			}
+		}
+		
+		return null;
+	}
+
+	default public boolean isClosed() {
+		return (findUnclosedRow() == null);
+	}
+
+	@Nullable
+	default public Row<I, D> findUnclosedRow() {
+		Set<List<? extends D>> spRowContents = new HashSet<>();
+		for(Row<I,D> spRow : getShortPrefixRows()) {
+			spRowContents.add(spRow.getContents());
+		}
+		
+		for(Row<I,D> lpRow : getLongPrefixRows()) {
+			if(!spRowContents.contains(lpRow.getContents())) {
+				return lpRow;
+			}
+		}
+		
+		return null;
+	}
+
+	@Nullable
+	default public Inconsistency<I, D> findInconsistency(
+			Collection<? extends I> inputs) {
+		Map<List<? extends D>,Row<I,D>> spRowsByContent = new HashMap<>();
+		for(Row<I,D> spRow : getShortPrefixRows()) {
+			List<? extends D> content = spRow.getContents();
+			Row<I,D> canonicalRow = spRowsByContent.get(content);
+			if(canonicalRow != null) {
+				for(I inputSym : inputs) {
+					Row<I,D> spRowSucc = getSuccessorRow(spRow, inputSym);
+					Row<I,D> canRowSucc = getSuccessorRow(canonicalRow, inputSym);
+					if(spRowSucc != canRowSucc) {
+						if(!spRowSucc.getContents().equals(canRowSucc.getContents())) {
+							return new DefaultInconsistency<>(spRow, canonicalRow, inputSym);
+						}
+					}
+				}
+			}
+			else {
+				spRowsByContent.put(content, spRow);
+			}
+		}
+		
+		return null;
+	}
 	
 	/**
 	 * Retrieves a suffix by its (column) index.
@@ -195,29 +330,9 @@ public interface ObservationTable<I, D> {
 	 * @throws IndexOutOfBoundsException
 	 */
 	@Nonnull
-	public Word<I> getSuffix(@Nonnegative int index) throws IndexOutOfBoundsException;
-	
-	@Nonnull
-	public Collection<? extends Row<I,D>> getShortPrefixRows();
-	@Nonnull
-	public Collection<? extends Row<I,D>> getLongPrefixRows();
-	@Nonnull
-	public Collection<? extends Row<I,D>> getAllRows();
-	
-	@Nonnull
-	public Row<I,D> getRow(Word<I> prefix) throws NoSuchRowException;				
-	
-	@Nullable
-	public Row<I,D> getSuccessorRow(Row<I,D> spRow, @Nullable I symbol) throws InvalidRowException;
-	
-	
-	public boolean isClosed();
-	@Nullable
-	public Row<I,D> findUnclosedRow();
-	
-	public boolean isConsistent(Collection<? extends I> inputs);
-	@Nullable
-	public Inconsistency<I,D> findInconsistency(Collection<? extends I> inputs);
+	default public Word<I> getSuffix(int index) {
+		return getSuffixes().get(index);
+	}
 	
 	/**
 	 * 
@@ -227,16 +342,41 @@ public interface ObservationTable<I, D> {
 	 * @throws NoSuchRowException if the 
 	 */
 	@Signed
-	public int findDistinguishingSuffixIndex(Inconsistency<I,D> inconsistency) throws NoSuchRowException, InvalidRowException;
+	default public int findDistinguishingSuffixIndex(Inconsistency<I, D> inconsistency) {
+		Row<I,D> row1 = inconsistency.getFirstRow();
+		Row<I,D> row2 = inconsistency.getSecondRow();
+		I sym = inconsistency.getSymbol();
+		
+		Row<I,D> succRow1 = getSuccessorRow(row1, sym);
+		Row<I,D> succRow2 = getSuccessorRow(row2, sym);
+		
+		return findDistinguishingSuffixIndex(succRow1, succRow2);
+	}
 	
+	@Nullable
+	default public Word<I> findDistinguishingSuffix(Inconsistency<I, D> inconsistency) {
+		int suffixIndex = findDistinguishingSuffixIndex(inconsistency);
+		if(suffixIndex != NO_DISTINGUISHING_SUFFIX) {
+			return null;
+		}
+		return getSuffix(suffixIndex);
+	}
+
 	/**
 	 * 
-	 * @param inconsistency
-	 * @return
-	 * @throws NoSuchRowException
+	 * @param firstRow the first row
+	 * @param secondRow the second row
+	 * @return the suffix distinguishing the contents of the two rows
+	 * @throws InvalidRowException if the rows do not belong to this observation table
 	 */
 	@Nullable
-	public Word<I> findDistinguishingSuffix(Inconsistency<I,D> inconsistency) throws NoSuchRowException, InvalidRowException;
+	default public Word<I> findDistinguishingSuffix(Row<I, D> row1, Row<I, D> row2) {
+		int suffixIndex = findDistinguishingSuffixIndex(row1, row2);
+		if(suffixIndex != NO_DISTINGUISHING_SUFFIX) {
+			return null;
+		}
+		return getSuffix(suffixIndex);
+	}
 	
 	/**
 	 * 
@@ -247,15 +387,45 @@ public interface ObservationTable<I, D> {
 	 * @throws InvalidRowException if the rows do not belong to this observation table
 	 */
 	@Signed
-	public int findDistinguishingSuffixIndex(Row<I,D> firstRow, Row<I,D> secondRow) throws InvalidRowException;
+	default public int findDistinguishingSuffixIndex(Row<I,D> row1, Row<I,D> row2) {
+		Iterator<? extends D> values1It = row1.getContents().iterator();
+		Iterator<? extends D> values2It = row2.getContents().iterator();
+		
+		int i = 0;
+		while(values1It.hasNext() && values2It.hasNext()) {
+			D value1 = values1It.next();
+			D value2 = values2It.next();
+			
+			if(!Objects.equal(value1, value2)) {
+				return i;
+			}
+			i++;
+		}
+		
+		if(values1It.hasNext() || values2It.hasNext()) {
+			throw new IllegalStateException("Rows [" + row1.getLabel() + "] and/or [" + row2.getLabel() + "] have invalid length");
+		}
+		
+		return NO_DISTINGUISHING_SUFFIX;
+	}
 	
+	default public boolean isConsistent(Collection<? extends I> inputs) {
+		return (findInconsistency(inputs) == null);
+	}
+
 	/**
-	 * 
-	 * @param firstRow the first row
-	 * @param secondRow the second row
-	 * @return the suffix distinguishing the contents of the two rows
-	 * @throws InvalidRowException if the rows do not belong to this observation table
+	 * Retrieves all suffixes in the table.
+	 * @return all suffixes in the table
 	 */
+	@Nonnull
+	public List<? extends Word<I>> getSuffixes();
+	
+	@Nonnull
+	public Collection<? extends Row<I,D>> getShortPrefixRows();
+	@Nonnull
+	public Collection<? extends Row<I,D>> getLongPrefixRows();
+	
 	@Nullable
-	public Word<I> findDistinguishingSuffix(Row<I,D> firstRow, Row<I,D> secondRow) throws InvalidRowException;	
+	public Row<I,D> getSuccessorRow(Row<I,D> spRow, @Nullable I symbol) throws InvalidRowException;
+		
 }

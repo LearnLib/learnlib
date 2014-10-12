@@ -29,17 +29,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
-import de.learnlib.algorithms.features.observationtable.AbstractObservationTable;
-import de.learnlib.algorithms.features.observationtable.AbstractObservationTable.AbstractRow;
+import de.learnlib.algorithms.features.observationtable.ObservationTable.AbstractRow;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
-
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 
 
 /**
@@ -666,7 +665,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 			}
 		};
 		
-		return new AbstractObservationTable<I, D>() {
+		return new de.learnlib.algorithms.features.observationtable.ObservationTable<I, D>() {
 			@Override
 			public List<? extends Word<I>> getSuffixes() {
 				return Collections.unmodifiableList(suffixes);
