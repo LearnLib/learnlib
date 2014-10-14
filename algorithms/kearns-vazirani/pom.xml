@@ -27,6 +27,10 @@
   		<groupId>de.learnlib</groupId>
   		<artifactId>learnlib-discrimination-tree</artifactId>
   	</dependency>
+  	<dependency>
+  		<groupId>de.learnlib</groupId>
+  		<artifactId>learnlib-acex</artifactId>
+  	</dependency>
   	
   	<dependency>
   		<groupId>de.learnlib.testsupport</groupId>

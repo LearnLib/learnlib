@@ -16,10 +16,11 @@
  */
 package de.learnlib.algorithms.kv.dfa;
 
+import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzers.NamedAcexAnalyzer;
 import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
-
 import net.automatalib.words.Alphabet;
 
 import org.testng.annotations.Test;
@@ -45,8 +46,12 @@ public class KearnsVaziraniDFAIT extends AbstractDFALearnerIT {
 		
 		for(boolean repeatedEval : BOOLEAN_VALUES) {
 			builder.setRepeatedCounterexampleEvaluation(repeatedEval);
-			String name = "repeatedEval=" + repeatedEval;
-			variants.addLearnerVariant(name, builder.create());
+			
+			for (NamedAcexAnalyzer acexAnalyzer : AcexAnalyzers.getAllAnalyzers()) {
+				builder.setCounterexampleAnalyzer(acexAnalyzer);
+				String name = String.format("repeatedEval=%s,ceAnalyzer=%s", repeatedEval, acexAnalyzer.getName());
+				variants.addLearnerVariant(name, builder.create());
+			}
 		}
 	}
 

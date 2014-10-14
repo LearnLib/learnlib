@@ -927,6 +927,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 			if(!trans.isTree()) {
 				return false;
 			}
+			curr = trans.getTarget();
 		}
 		
 		return true;

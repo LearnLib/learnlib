@@ -21,22 +21,25 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>learnlib-parent</artifactId>
+		<artifactId>learnlib-utils</artifactId>
 		<groupId>de.learnlib</groupId>
 		<version>0.11.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>        
 	</parent>
 
-	<artifactId>learnlib-utils</artifactId>
-	<name>LearnLib :: Utilities</name>
-	<description>Parent module for LearnLib utilities</description>
+	<artifactId>learnlib-acex</artifactId>
+	<name>LearnLib :: Utilities :: Abstract Counterexamples</name>
+	<description>An abstract counterexample analysis framework</description>
 
-	<packaging>pom</packaging>
-
-	<modules>
-		<module>acex</module>
-		<module>counterexamples</module>
-		<module>parallelism</module>
-	</modules>
+	<dependencies>
+		<!--
+		Test dependencies
+		-->
+		
+		<!-- TestNG -->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+		</dependency>
+	</dependencies>
 </project>
-

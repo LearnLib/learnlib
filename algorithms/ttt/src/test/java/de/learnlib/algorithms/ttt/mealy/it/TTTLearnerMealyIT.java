@@ -17,14 +17,14 @@
 package de.learnlib.algorithms.ttt.mealy.it;
 
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 
 import org.testng.annotations.Test;
 
+import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzers.NamedAcexAnalyzer;
 import de.learnlib.algorithms.ttt.mealy.TTTLearnerMealyBuilder;
 import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.counterexamples.LocalSuffixFinder;
-import de.learnlib.counterexamples.LocalSuffixFinders;
+import de.learnlib.counterexamples.AcexLocalSuffixFinder;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 
@@ -40,9 +40,9 @@ public class TTTLearnerMealyIT extends AbstractMealyLearnerIT {
 		builder.setAlphabet(alphabet);
 		builder.setOracle(mqOracle);
 		
-		for (LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder : LocalSuffixFinders.values()) {
-			builder.setSuffixFinder(suffixFinder);
-			variants.addLearnerVariant("suffixFinder=" + suffixFinder, builder.create());
+		for (NamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
+			builder.setSuffixFinder(new AcexLocalSuffixFinder(analyzer, true, analyzer.getName()));
+			variants.addLearnerVariant("suffixFinder=" + analyzer, builder.create());
 		}
 	}
 	

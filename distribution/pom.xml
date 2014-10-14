@@ -220,6 +220,30 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<version>${project.version}</version>
 					<classifier>sources</classifier>
 				</dependency>
+				
+				<dependency>
+					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-ttt</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-ttt</artifactId>
+					<version>${project.version}</version>
+					<classifier>sources</classifier>
+				</dependency>
+				
+				<dependency>
+					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-acex</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-acex</artifactId>
+					<version>${project.version}</version>
+					<classifier>sources</classifier>
+				</dependency>
 
 				<!-- AutomataLib dependencies - to ensure bundle completeness TODO: Having 
 					to keep this up-to-date manually is somewhat error-prone; should there exist 

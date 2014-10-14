@@ -52,6 +52,9 @@ public abstract class DTNode<I, O, D> {
 		this.data = data;
 	}
 	
+	public boolean isRoot() {
+		return parent == null;
+	}
 	
 	public DTNode<I,O,D> getParent() {
 		return parent;

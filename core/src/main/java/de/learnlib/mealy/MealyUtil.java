@@ -16,6 +16,7 @@
  */
 package de.learnlib.mealy;
 
+import java.util.Iterator;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
@@ -41,6 +42,30 @@ public abstract class MealyUtil {
 	
 	public static final int NO_MISMATCH = -1;
 	
+	public static <I,O> int findMismatch(MealyMachine<?, I, ?, O> hypothesis, Word<I> input, Word<O> output) {
+		return doFindMismatch(hypothesis, input, output);
+	}
+	
+	private static <S,I,T,O> int doFindMismatch(MealyMachine<S, I, T, O> hypothesis, Word<I> input, Word<O> output) {
+		int i = 0;
+		S state = hypothesis.getInitialState();
+		
+		Iterator<I> inIt = input.iterator();
+		Iterator<O> outIt = output.iterator();
+		
+		while (inIt.hasNext() && outIt.hasNext()) {
+			T trans = hypothesis.getTransition(state, inIt.next());
+			O ceOut = outIt.next();
+			O transOut = hypothesis.getTransitionOutput(trans);
+			if (!Objects.equals(transOut, ceOut)) {
+				return i;
+			}
+			state = hypothesis.getSuccessor(trans);
+			i++;
+		}
+		
+		return NO_MISMATCH;
+	}
 	public static <O> int findMismatch(Word<O> out1, Word<O> out2) {
 		int len = out1.length();
 		assert len == out2.length();
@@ -55,7 +80,6 @@ public abstract class MealyUtil {
 		
 		return NO_MISMATCH;
 	}
-	
 	
 	@Nullable
 	public static <I,O> DefaultQuery<I,Word<O>> shortenCounterExample(
