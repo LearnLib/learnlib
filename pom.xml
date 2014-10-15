@@ -135,7 +135,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 		<trove4j.version>3.0.3</trove4j.version>
 		
-		<guava.version>17.0</guava.version>
+		<guava.version>18.0</guava.version>
 		<findbugs.version>2.0.3</findbugs.version>
 		
 		<buildergen.version>0.1</buildergen.version>
