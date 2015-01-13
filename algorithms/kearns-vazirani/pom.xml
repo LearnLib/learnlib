@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.learnlib</groupId>
     <artifactId>learnlib-algorithms</artifactId>
-    <version>0.11.0-SNAPSHOT</version>
+    <version>0.11.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>learnlib-kearns-vazirani</artifactId>

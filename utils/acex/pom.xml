@@ -23,7 +23,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<artifactId>learnlib-utils</artifactId>
 		<groupId>de.learnlib</groupId>
-		<version>0.11.0-SNAPSHOT</version>
+		<version>0.11.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>        
 	</parent>
 
