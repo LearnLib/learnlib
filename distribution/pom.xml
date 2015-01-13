@@ -21,7 +21,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<groupId>de.learnlib</groupId>
 		<artifactId>learnlib-parent</artifactId>
-		<version>0.11.0</version>
+		<version>0.11.1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -235,6 +235,18 @@ http://www.gnu.de/documents/lgpl.en.html.
 				
 				<dependency>
 					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-nlstar</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-nlstar</artifactId>
+					<version>${project.version}</version>
+					<classifier>sources</classifier>
+				</dependency>
+				
+				<dependency>
+					<groupId>de.learnlib</groupId>
 					<artifactId>learnlib-acex</artifactId>
 					<version>${project.version}</version>
 				</dependency>
@@ -357,12 +369,12 @@ http://www.gnu.de/documents/lgpl.en.html.
 				</dependency>
 				
 				<dependency>
-		          <groupId>net.automatalib.visualization</groupId>
+		          <groupId>net.automatalib</groupId>
 		          <artifactId>automata-jung-visualizer</artifactId>
 		          <version>${automatalib.version}</version>
 		        </dependency>
 		        <dependency>
-		          <groupId>net.automatalib.visualization</groupId>
+		          <groupId>net.automatalib</groupId>
 		          <artifactId>automata-jung-visualizer</artifactId>
 		          <version>${automatalib.version}</version>
 		          <classifier>sources</classifier>
