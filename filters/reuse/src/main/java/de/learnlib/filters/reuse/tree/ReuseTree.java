@@ -23,19 +23,17 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
+import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.ReuseException;
 import de.learnlib.filters.reuse.ReuseOracle;
 import de.learnlib.filters.reuse.tree.BoundedDeque.AccessPolicy;
 import de.learnlib.filters.reuse.tree.BoundedDeque.EvictPolicy;
 import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
-
-import net.automatalib.graphs.abstractimpl.AbstractGraph;
-import net.automatalib.graphs.dot.DOTPlottableGraph;
-import net.automatalib.graphs.dot.GraphDOTHelper;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
 
 
 
@@ -62,8 +60,7 @@ import net.automatalib.words.WordBuilder;
  * @param <I> input symbol class
  * @param <O> output symbol class
  */
-public class ReuseTree<S, I, O> extends AbstractGraph<ReuseNode<S, I, O>, ReuseEdge<S, I, O>>
-	implements DOTPlottableGraph<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
+public class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
 
 	public static class ReuseTreeBuilder<S,I,O> {
 		// mandatory

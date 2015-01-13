@@ -16,13 +16,15 @@
  */
 package de.learnlib.algorithms.kv.mealy;
 
-import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
-
 import net.automatalib.words.Alphabet;
 
 import org.testng.annotations.Test;
+
+import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzers.NamedAcexAnalyzer;
+import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
+import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 
 /**
  * Function test for the Kearns/Vazirani algorithm for Mealy machine learning.
@@ -45,8 +47,11 @@ public class KearnsVaziraniMealyIT extends AbstractMealyLearnerIT {
 		
 		for(boolean repeatedEval : BOOLEAN_VALUES) {
 			builder.setRepeatedCounterexampleEvaluation(repeatedEval);
-			String name = "repeatedEval=" + repeatedEval;
-			variants.addLearnerVariant(name, builder.create());
+			for (NamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
+				builder.setCounterexampleAnalyzer(analyzer);
+				String name = String.format("repeatedEval=%s,ceAnalyzer=%s", repeatedEval, analyzer.getName());
+				variants.addLearnerVariant(name, builder.create());
+			}
 		}		
 	}
 

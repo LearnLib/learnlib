@@ -28,7 +28,6 @@ import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
@@ -244,7 +243,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 	 * @see de.learnlib.api.LearningAlgorithm#getHypothesisModel()
 	 */
 	@Override
-	public MealyMachine<?, I, ?, O> getHypothesisModel() {
+	public CompactMealy<I, O> getHypothesisModel() {
 		checkInternalState();
 		return hypothesis;
 	}

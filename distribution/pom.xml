@@ -21,7 +21,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<groupId>de.learnlib</groupId>
 		<artifactId>learnlib-parent</artifactId>
-		<version>0.10.2-SNAPSHOT</version>
+		<version>0.11.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -220,6 +220,30 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<version>${project.version}</version>
 					<classifier>sources</classifier>
 				</dependency>
+				
+				<dependency>
+					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-ttt</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-ttt</artifactId>
+					<version>${project.version}</version>
+					<classifier>sources</classifier>
+				</dependency>
+				
+				<dependency>
+					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-acex</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-acex</artifactId>
+					<version>${project.version}</version>
+					<classifier>sources</classifier>
+				</dependency>
 
 				<!-- AutomataLib dependencies - to ensure bundle completeness TODO: Having 
 					to keep this up-to-date manually is somewhat error-prone; should there exist 
@@ -331,6 +355,18 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<version>${automatalib.version}</version>
 					<classifier>sources</classifier>
 				</dependency>
+				
+				<dependency>
+		          <groupId>net.automatalib.visualization</groupId>
+		          <artifactId>automata-jung-visualizer</artifactId>
+		          <version>${project.version}</version>
+		        </dependency>
+		        <dependency>
+		          <groupId>net.automatalib.visualization</groupId>
+		          <artifactId>automata-jung-visualizer</artifactId>
+		          <version>${project.version}</version>
+		          <classifier>sources</classifier>
+		        </dependency>
 			</dependencies>
 
 			<build>

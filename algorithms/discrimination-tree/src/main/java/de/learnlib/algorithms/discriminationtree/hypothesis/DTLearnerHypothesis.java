@@ -22,18 +22,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import de.learnlib.api.AccessSequenceTransformer;
-
 import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.abstractimpl.AbstractDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.graphs.abstractimpl.AbstractGraph;
+import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.NodeIDs;
-import net.automatalib.graphs.dot.DOTPlottableGraph;
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import de.learnlib.api.AccessSequenceTransformer;
 
 /**
  * Basic hypothesis data structure for Discrimination Tree learning algorithms.
@@ -45,9 +42,7 @@ import net.automatalib.words.Word;
  * @param <SP> state property type
  * @param <TP> transition property type
  */
-public class DTLearnerHypothesis<I, O, SP, TP> extends
-		AbstractDeterministicAutomaton<HState<I, O, SP, TP>, I, HTransition<I, O, SP, TP>>
-		implements 
+public class DTLearnerHypothesis<I, O, SP, TP> implements
 		UniversalDeterministicAutomaton<HState<I,O,SP,TP>, I, HTransition<I,O,SP,TP>, SP, TP>,
 		AccessSequenceTransformer<I>,
 		StateIDs<HState<I,O,SP,TP>> {
@@ -139,10 +134,8 @@ public class DTLearnerHypothesis<I, O, SP, TP> extends
 		return trans.getProperty();
 	}
 	
-	public class GraphView extends AbstractGraph<HState<I,O,SP,TP>, HTransition<I, O, SP, TP>> 
-		implements
-		NodeIDs<HState<I,O,SP,TP>>,
-		DOTPlottableGraph<HState<I,O,SP,TP>, HTransition<I,O,SP,TP>> {
+	public class GraphView implements Graph<HState<I,O,SP,TP>, HTransition<I, O, SP, TP>>,
+		NodeIDs<HState<I,O,SP,TP>> {
 		
 		@Override
 		public Collection<HState<I, O, SP, TP>> getNodes() {

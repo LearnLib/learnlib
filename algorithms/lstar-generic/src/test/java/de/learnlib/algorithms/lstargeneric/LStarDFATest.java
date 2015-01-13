@@ -59,8 +59,8 @@ public class LStarDFATest extends LearningTest {
 				= new ArrayList<>();
 		
 		eqOracles.add(new SimulatorEQOracle<>(targetDFA));
-		eqOracles.add(new WMethodEQOracle<>(3, dfaOracle));
-		eqOracles.add(new WpMethodEQOracle<>(3, dfaOracle));
+		eqOracles.add(new WMethodEQOracle<DFA<?,Symbol>,Symbol,Boolean>(3, dfaOracle));
+		eqOracles.add(new WpMethodEQOracle<DFA<?,Symbol>,Symbol,Boolean>(3, dfaOracle));
 		
 		for(ObservationTableCEXHandler<? super Symbol,? super Boolean> handler : LearningTest.CEX_HANDLERS) {
 			for(ClosingStrategy<? super Symbol,? super Boolean> strategy : LearningTest.CLOSING_STRATEGIES) {

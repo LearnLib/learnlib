@@ -22,6 +22,11 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.graphs.dot.EmptyDOTHelper;
+import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import de.learnlib.algorithms.discriminationtree.hypothesis.DTLearnerHypothesis;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HTransition;
@@ -35,10 +40,6 @@ import de.learnlib.discriminationtree.DTNode.SplitResult;
 import de.learnlib.discriminationtree.DiscriminationTree;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.MQUtil;
-
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 
 public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, TP> implements LearningAlgorithm<M, I, D> {
 	
@@ -107,6 +108,10 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 	
 	public DTLearnerHypothesis<I,D,SP,TP> getHypothesisDS() {
 		return hypothesis;
+	}
+	
+	public GraphDOTHelper<HState<I, D, SP, TP>, HTransition<I, D, SP, TP>> getHypothesisDOTHelper() {
+		return new EmptyDOTHelper<>();
 	}
 	
 	protected boolean refineHypothesisSingle(DefaultQuery<I, D> ceQuery) {
@@ -222,4 +227,8 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 	protected abstract Query<I,D> spQuery(HState<I,D,SP,TP> state);
 	
 	protected abstract Query<I,D> tpQuery(HTransition<I, D, SP, TP> transition);
+	
+	public DiscriminationTree<I, D, HState<I,D,SP,TP>>.GraphView dtGraphView() {
+		return dtree.graphView();
+	}
 }

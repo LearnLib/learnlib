@@ -62,10 +62,31 @@
 			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-parallelism</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-mapper</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-drivers-basic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-discrimination-tree</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-ttt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib.testsupport</groupId>
+			<artifactId>learnlib-learning-examples</artifactId>
+			<scope>compile</scope>
+		</dependency>
 
 		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-commons-dotutil</artifactId>
+			<groupId>net.automatalib.visualization</groupId>
+			<artifactId>automata-jung-visualizer</artifactId>
 		</dependency>
 	</dependencies>
 

@@ -22,15 +22,13 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import de.learnlib.algorithms.features.observationtable.AbstractObservationTable;
-
 import net.automatalib.words.Word;
 
 /**
  * A single row inside an {@link ObservationTable}, containing only the boolean values
  * if a combination of state/candidate and suffix is accepted by the current hypothesis.
  */
-class ObservationTableRow<I> extends AbstractObservationTable.AbstractRow<I, Boolean> {
+class ObservationTableRow<I> extends ObservationTable.AbstractRow<I, Boolean> {
 
 	@Nonnull
 	private final Word<I> label;

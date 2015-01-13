@@ -71,7 +71,7 @@ public class LearningTest {
 		ReuseTree<Integer, Integer, String> reuseTree = reuseOracle.getReuseTree();
 		
 		Appendable sb = new StringBuffer();
-		GraphDOT.write(reuseTree, reuseTree.getGraphDOTHelper(), sb);
+		GraphDOT.write(reuseTree, sb);
 		Assert.assertTrue(sb.toString().startsWith("digraph g"));
 	}
 

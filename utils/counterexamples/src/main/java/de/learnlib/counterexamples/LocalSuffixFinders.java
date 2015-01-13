@@ -16,14 +16,11 @@
  */
 package de.learnlib.counterexamples;
 
-import java.util.Objects;
-
 import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.words.Word;
+import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import de.learnlib.oracles.MQUtil;
 
 /**
  * A collection of suffix-based local counterexample analyzers.
@@ -40,20 +37,7 @@ public abstract class LocalSuffixFinders {
 	 * @see #findLinear(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)
 	 */
 	public static final LocalSuffixFinder<Object,Object> FIND_LINEAR
-		= new LocalSuffixFinder<Object,Object>() {
-			@Override
-			public <RI,RD>
-			int findSuffixIndex(Query<RI, RD> ceQuery,
-					AccessSequenceTransformer<RI> asTransformer,
-					SuffixOutput<RI,RD> hypOutput,
-					MembershipOracle<RI, RD> oracle) {
-				return findLinear(ceQuery, asTransformer, hypOutput, oracle);
-			}
-			@Override
-			public String toString() {
-				return "FindLinear";
-			}
-	};
+		= new AcexLocalSuffixFinder(AcexAnalyzers.LINEAR_FWD, true, "FindLinear");
 	
 	/**
 	 * Searches for a distinguishing suffixes by checking for counterexample yielding
@@ -61,20 +45,7 @@ public abstract class LocalSuffixFinders {
 	 * @see #findLinearReverse(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)
 	 */
 	public static final LocalSuffixFinder<Object,Object> FIND_LINEAR_REVERSE
-		= new LocalSuffixFinder<Object,Object>() {
-			@Override
-			public <RI,RD>
-			int findSuffixIndex(Query<RI, RD> ceQuery,
-					AccessSequenceTransformer<RI> asTransformer,
-					SuffixOutput<RI,RD> hypOutput,
-					MembershipOracle<RI, RD> oracle) {
-				return findLinearReverse(ceQuery, asTransformer, hypOutput, oracle);
-			}
-			@Override
-			public String toString() {
-				return "FindLinear-Reverse";
-			}
-	};
+		= new AcexLocalSuffixFinder(AcexAnalyzers.LINEAR_BWD, true, "FindLinear-Reverse");
 	
 	/**
 	 * Searches for a distinguishing suffixes by checking for counterexample yielding
@@ -82,22 +53,8 @@ public abstract class LocalSuffixFinders {
 	 * @see #findRivestSchapire(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)
 	 */
 	public static final LocalSuffixFinder<Object,Object> RIVEST_SCHAPIRE
-		= new LocalSuffixFinder<Object,Object>() {
-			@Override
-			public <RI,RD>
-			int findSuffixIndex(Query<RI, RD> ceQuery,
-					AccessSequenceTransformer<RI> asTransformer,
-					SuffixOutput<RI,RD> hypOutput,
-					MembershipOracle<RI, RD> oracle) {
-				return findRivestSchapire(ceQuery, asTransformer, hypOutput, oracle);
-			}
-			@Override
-			public String toString() {
-				return "RivestSchapire";
-			}
-	};
+		= new AcexLocalSuffixFinder(AcexAnalyzers.BINARY_SEARCH, true, "RivestSchapire");
 
-	
 	
 	/**
 	 * Searches for a distinguishing suffixes by checking for counterexample yielding
@@ -117,30 +74,7 @@ public abstract class LocalSuffixFinders {
 			SuffixOutput<I,D> hypOutput,
 			MembershipOracle<I, D> oracle) {
 		
-		Word<I> queryWord = ceQuery.getInput();
-		int queryLen = queryWord.length();
-		
-		Word<I> prefix = ceQuery.getPrefix();
-		int prefixLen = prefix.length();
-		
-		// If the prefix is an access sequence (i.e., a short prefix),
-		// then we can omit the first step, as transforming won't change
-		int min = asTransformer.isAccessSequence(prefix) ? prefixLen+1 : prefixLen;
-		
-		for(int i = min; i <= queryLen; i++) {
-			Word<I> nextPrefix = queryWord.prefix(i);
-			Word<I> as = asTransformer.transformAccessSequence(nextPrefix);
-			
-			Word<I> nextSuffix = queryWord.subWord(i);
-			
-			D hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
-			D mqOut = MQUtil.output(oracle, as, nextSuffix);
-			
-			if(Objects.equals(hypOut, mqOut))
-				return i;
-		}
-		
-		return -1;
+		return AcexLocalSuffixFinder.findSuffixIndex(AcexAnalyzers.LINEAR_FWD, true, ceQuery, asTransformer, hypOutput, oracle);
 	}
 	
 	/**
@@ -161,30 +95,7 @@ public abstract class LocalSuffixFinders {
 			SuffixOutput<I,D> hypOutput,
 			MembershipOracle<I, D> oracle) {
 		
-		Word<I> queryWord = ceQuery.getInput();
-		int queryLen = queryWord.length();
-		
-		Word<I> prefix = ceQuery.getPrefix();
-		int prefixLen = prefix.length();
-		
-		// If the prefix is no access sequence (i.e., a long prefix),
-		// then we also need to consider that breakage only occurs
-		// by transforming this long prefix into a short one
-		int min = asTransformer.isAccessSequence(prefix) ? prefixLen : prefixLen-1;
-		
-		for(int i = queryLen - 1; i >= min; i--) {
-			Word<I> nextPrefix = queryWord.prefix(i);
-			Word<I> as = asTransformer.transformAccessSequence(nextPrefix);
-			Word<I> nextSuffix = queryWord.subWord(i);
-			
-			D hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
-			D mqOut = MQUtil.output(oracle, as, nextSuffix);
-			
-			if(!Objects.equals(hypOut, mqOut))
-				return i+1;
-		}
-		
-		return -1;
+		return AcexLocalSuffixFinder.findSuffixIndex(AcexAnalyzers.LINEAR_BWD, true, ceQuery, asTransformer, hypOutput, oracle);
 	}
 	
 	
@@ -206,37 +117,7 @@ public abstract class LocalSuffixFinders {
 			SuffixOutput<I,D> hypOutput,
 			MembershipOracle<I, D> oracle) {
 
-		Word<I> queryWord = ceQuery.getInput();
-		int queryLen = queryWord.length();
-		
-		Word<I> prefix = ceQuery.getPrefix();
-		int prefixLen = prefix.length();
-		
-		
-		int low = asTransformer.isAccessSequence(prefix) ? prefixLen : prefixLen-1;
-		
-		int high = queryLen;
-		
-		while((high - low) > 1) {
-			int mid = low + (high - low + 1)/2;
-			
-			
-			Word<I> nextPrefix = queryWord.prefix(mid);
-			Word<I> as = asTransformer.transformAccessSequence(nextPrefix);
-			
-			Word<I> nextSuffix = queryWord.subWord(mid);
-			
-			D hypOut = hypOutput.computeSuffixOutput(as, nextSuffix);
-			D ceOut = MQUtil.output(oracle, as, nextSuffix);
-			
-			if(!Objects.equals(hypOut, ceOut))
-				low = mid;
-			else
-				high = mid;
-		}
-		
-		// FIXME: No check if actually found CE
-		return low+1;
+		return AcexLocalSuffixFinder.findSuffixIndex(AcexAnalyzers.BINARY_SEARCH, true, ceQuery, asTransformer, hypOutput, oracle);
 	}
 	
 	@SuppressWarnings("unchecked")
