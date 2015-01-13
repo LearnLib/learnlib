@@ -355,6 +355,18 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<version>${automatalib.version}</version>
 					<classifier>sources</classifier>
 				</dependency>
+				
+				<dependency>
+		          <groupId>net.automatalib.visualization</groupId>
+		          <artifactId>automata-jung-visualizer</artifactId>
+		          <version>${project.version}</version>
+		        </dependency>
+		        <dependency>
+		          <groupId>net.automatalib.visualization</groupId>
+		          <artifactId>automata-jung-visualizer</artifactId>
+		          <version>${project.version}</version>
+		          <classifier>sources</classifier>
+		        </dependency>
 			</dependencies>
 
 			<build>
