@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import de.learnlib.drivers.api.TestDriver;
-
+import net.automatalib.commons.util.ReflectUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.FastAlphabet;
 
@@ -36,8 +36,19 @@ public final class SimplePOJOTestDriver extends
  
     private final FastAlphabet<AbstractMethodInput> inputs = new FastAlphabet<>();
     
+    private final Class<?> instanceClass;
+    
     public SimplePOJOTestDriver(Constructor<?> c, Object ... cParams) {
         super(new SimplePOJODataMapper(c, cParams));
+        this.instanceClass = c.getDeclaringClass();
+    }
+    
+    public AbstractMethodInput addInput(String name, String methodName, Object... params) {
+    	Method m = ReflectUtil.findMatchingMethod(instanceClass, methodName, params);
+    	if (m == null) {
+    		throw new IllegalArgumentException();
+    	}
+    	return addInput(name, m, params);
     }
     
     public AbstractMethodInput addInput(String name, Method m, Object ... params) {

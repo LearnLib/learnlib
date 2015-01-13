@@ -86,4 +86,5 @@ public class CounterOracle<I,D> implements StatisticOracle<I,D> {
     public void setNext(MembershipOracle<I, D> next) {
         this.nextOracle = next;
     }
+    
 }

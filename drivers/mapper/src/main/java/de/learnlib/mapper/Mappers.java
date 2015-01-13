@@ -38,7 +38,6 @@ public abstract class Mappers {
 		return new MappedSUL<>(mapper, sul);
 	}
 	
-	
 	private Mappers() {
 		throw new AssertionError("Constructor should not be invoked");
 	}

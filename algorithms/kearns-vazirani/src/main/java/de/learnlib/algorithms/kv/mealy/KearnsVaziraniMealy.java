@@ -19,13 +19,22 @@ package de.learnlib.algorithms.kv.mealy;
 import gnu.trove.list.TLongList;
 import gnu.trove.list.array.TLongArrayList;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
+import de.learnlib.acex.AcexAnalyzer;
+import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.impl.BaseAbstractCounterexample;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.discriminationtree.DTNode;
@@ -33,14 +42,9 @@ import de.learnlib.discriminationtree.DTNode.SplitResult;
 import de.learnlib.discriminationtree.DiscriminationTree;
 import de.learnlib.discriminationtree.DiscriminationTree.LCAInfo;
 import de.learnlib.discriminationtree.MultiDTree;
+import de.learnlib.mealy.MealyUtil;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.MQUtil;
-
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 
 
 /**
@@ -58,6 +62,9 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 	static final class BuilderDefaults {
 		public static boolean repeatedCounterexampleEvaluation() {
 			return true;
+		}
+		public static AcexAnalyzer counterexampleAnalyzer() {
+			return AcexAnalyzers.LINEAR_FWD;
 		}
 	}
 	
@@ -90,6 +97,77 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 		}
 	}
 	
+	private class KVAbstractCounterexample extends BaseAbstractCounterexample {
+		
+		private final Word<I> ceWord;
+		private final MembershipOracle<I, Word<O>> oracle;
+		private final StateInfo<I,O>[] states;
+		private final LCAInfo<I,Word<O>,StateInfo<I,O>>[] lcas;
+
+		@SuppressWarnings("unchecked")
+		public KVAbstractCounterexample(Word<I> ceWord, Word<O> output, MembershipOracle<I, Word<O>> oracle) {
+			super(ceWord.length());
+			this.ceWord = ceWord;
+			this.oracle = oracle;
+			
+			int m = ceWord.length();
+			this.states = new StateInfo[m+1];
+			this.lcas = new LCAInfo[m+1];
+			
+			int currState = hypothesis.getIntInitialState();
+			int i = 0;
+			states[i++] = stateInfos.get(currState);
+			for (I sym : ceWord) {
+				currState = hypothesis.getSuccessor(currState, sym);
+				states[i++] = stateInfos.get(currState);
+			}
+			
+			// Output of last transition separates hypothesis from target
+			O lastHypOut = hypothesis.getOutput(states[m-1].id, ceWord.lastSymbol());
+			lcas[m] = new LCAInfo<I,Word<O>,StateInfo<I,O>>(null,
+					Word.fromLetter(lastHypOut), Word.fromLetter(output.lastSymbol()));
+		}
+		
+		public StateInfo<I,O> getStateInfo(int idx) {
+			return states[idx];
+		}
+		
+		public LCAInfo<I,Word<O>,StateInfo<I,O>> getLCA(int idx) {
+			return lcas[idx];
+		}
+
+		@Override
+		protected int computeEffect(int index) {
+			Word<I> prefix = ceWord.prefix(index);
+			StateInfo<I,O> info = states[index];
+			
+			// Save the expected outcomes on the path from the leaf representing the state
+			// to the root on a stack
+			DTNode<I, Word<O>, StateInfo<I,O>> node = info.dtNode;
+			Deque<Word<O>> expect = new ArrayDeque<>();
+			while(!node.isRoot()) {
+				expect.push(node.getParentOutcome());
+				node = node.getParent();
+			}
+			
+			DTNode<I,Word<O>,StateInfo<I,O>> currNode = discriminationTree.getRoot();
+			
+			while(!expect.isEmpty()) {
+				Word<I> suffix = currNode.getDiscriminator();
+				Word<O> out = MQUtil.output(oracle, prefix, suffix);
+				Word<O> e = expect.pop();
+				if(!Objects.equals(out, e)) {
+					lcas[index] = new LCAInfo<>(currNode, e, out);
+					return 1;
+				}
+				currNode = currNode.child(out);
+			}
+			
+			assert currNode.isLeaf() && expect.isEmpty();
+			return 0;
+		}
+	}
+	
 	private final Alphabet<I> alphabet;
 	private final CompactMealy<I,O> hypothesis;
 	private final MembershipOracle<I,Word<O>> oracle;
@@ -99,15 +177,19 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 		
 	private final List<StateInfo<I,O>> stateInfos
 		= new ArrayList<>();
+	
+	private final AcexAnalyzer ceAnalyzer;
 
 	@GenerateBuilder
 	public KearnsVaziraniMealy(Alphabet<I> alphabet, MembershipOracle<I,Word<O>> oracle,
-			boolean repeatedCounterexampleEvaluation) {
+			boolean repeatedCounterexampleEvaluation,
+			AcexAnalyzer counterexampleAnalyzer) {
 		this.alphabet = alphabet;
 		this.hypothesis = new CompactMealy<>(alphabet);
 		this.oracle = oracle;
 		this.repeatedCounterexampleEvaluation = repeatedCounterexampleEvaluation;
 		this.discriminationTree = new MultiDTree<>(oracle);
+		this.ceAnalyzer = counterexampleAnalyzer;
 	}
 	
 	@Override
@@ -139,94 +221,62 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 			return false;
 		}
 		
-		int hypState = hypothesis.getInitialState();
+		int mismatchIdx = MealyUtil.findMismatch(hypothesis, input, output);
 		
-		Iterator<I> symIt = input.iterator();
-		
-		I firstSym = symIt.next();
-		hypState = hypothesis.getSuccessor(hypState, firstSym);
-		
-		Word<I> prefix = Word.fromLetter(firstSym);
-		
-		Iterator<O> outputIt = output.iterator();
-		outputIt.next();
-		
-		int i = 2;
-		
-		// Note that the empty word and all words of length 1
-		// have *always* been sifted into the tree already
-		while(symIt.hasNext()) {
-			Word<I> nextPrefix = input.prefix(i);
-			I sym = symIt.next();
-			
-			CompactMealyTransition<O> trans = hypothesis.getTransition(hypState, sym);
-			
-			
-			O hypOutput = hypothesis.getTransitionOutput(trans);
-			O ceOutput = outputIt.next();
-			
-			
-			if(!Objects.equals(hypOutput, ceOutput)) {
-				// Output differs
-				splitState(hypState, prefix, Word.fromLetter(sym), Word.fromLetter(hypOutput),
-						Word.fromLetter(ceOutput));
-				return true;
-			}
-			
-			int nextHypState = hypothesis.getIntSuccessor(trans);
-			
-			StateInfo<I,O> siftStateInfo = sift(nextPrefix);
-			if(siftStateInfo.id != nextHypState) {
-				// Successor differs
-				updateTree(hypState, sym, nextHypState, siftStateInfo, hypOutput, prefix);
-				return true;
-			}
-			
-			hypState = nextHypState;
-			prefix = nextPrefix;
-			i++;
+		if (mismatchIdx == MealyUtil.NO_MISMATCH) {
+			return false;
 		}
-
 		
-		return false;
+		Word<I> effInput = input.prefix(mismatchIdx+1);
+		Word<O> effOutput = output.prefix(mismatchIdx+1);
+		
+		KVAbstractCounterexample acex = new KVAbstractCounterexample(effInput, effOutput, oracle);
+		int idx = ceAnalyzer.analyzeAbstractCounterexample(acex, 0);
+		
+		Word<I> prefix = effInput.prefix(idx);
+		StateInfo<I,O> srcStateInfo = acex.getStateInfo(idx);
+		I sym = effInput.getSymbol(idx);
+		LCAInfo<I,Word<O>,StateInfo<I,O>> lca = acex.getLCA(idx+1);
+		assert lca != null;
+		
+		splitState(srcStateInfo, prefix, sym, lca);
+		
+		return true;
 	}
 	
 	
-	private void splitState(int hypState, Word<I> newAs, Word<I> newDiscriminator, Word<O> oldOutcome,
-			Word<O> newOutcome) {
-		StateInfo<I,O> hypStateInfo = stateInfos.get(hypState);
+	private void splitState(StateInfo<I,O> stateInfo, Word<I> newPrefix, I sym, LCAInfo<I,Word<O>,StateInfo<I,O>> separatorInfo) {
+		int state = stateInfo.id;
 		
-		DTNode<I, Word<O>, StateInfo<I,O>> hypStateLeaf = hypStateInfo.dtNode; 
+		TLongList oldIncoming = stateInfo.fetchIncoming();
 		
-		StateInfo<I,O> newStateInfo = createState(newAs);
+		StateInfo<I,O> newStateInfo = createState(newPrefix);
 		
-		TLongList oldIncoming = hypStateInfo.fetchIncoming();
+		DTNode<I, Word<O>, StateInfo<I,O>> stateLeaf = stateInfo.dtNode;
 		
-		SplitResult<I, Word<O>, StateInfo<I,O>> split = hypStateLeaf.split(newDiscriminator, oldOutcome, newOutcome, newStateInfo);
-		hypStateInfo.dtNode = split.nodeOld;
+		DTNode<I, Word<O>, StateInfo<I,O>> separator = separatorInfo.leastCommonAncestor;
+		Word<I> newDiscriminator;
+		Word<O> oldOut, newOut;
+		if (separator == null) {
+			newDiscriminator = Word.fromLetter(sym);
+			oldOut = separatorInfo.subtree1Label;
+			newOut = separatorInfo.subtree2Label;
+		}
+		else {
+			newDiscriminator = newDiscriminator(sym, separator.getDiscriminator());
+			O transOut = hypothesis.getOutput(state, sym);
+			oldOut = newOutcome(transOut, separatorInfo.subtree1Label);
+			newOut = newOutcome(transOut, separatorInfo.subtree2Label);
+		}
+		
+		SplitResult<I, Word<O>, StateInfo<I,O>> split = stateLeaf.split(newDiscriminator, oldOut, newOut, newStateInfo);
+		
+		stateInfo.dtNode = split.nodeOld;
 		newStateInfo.dtNode = split.nodeNew;
 		
 		initState(newStateInfo);
-		updateTransitions(oldIncoming, hypStateLeaf);
-	}
-	
-	
-	private void updateTree(int hypState, I sym, int hypSucc, StateInfo<I,O> siftSucc, O transOut, Word<I> prefix) {
-		DTNode<I,Word<O>,StateInfo<I,O>> hypSuccLeaf = dtNode(hypSucc);
-		DTNode<I,Word<O>,StateInfo<I,O>> siftSuccLeaf = siftSucc.dtNode;
 		
-		LCAInfo<I,Word<O>,StateInfo<I,O>> lcaInfo = discriminationTree.lcaInfo(hypSuccLeaf, siftSuccLeaf);
-		
-		DTNode<I,Word<O>,StateInfo<I,O>> separator = lcaInfo.leastCommonAncestor;
-		
-		Word<I> newDiscriminator = newDiscriminator(sym, separator.getDiscriminator());
-		
-		
-		// query-less composition of new outcomes
-		Word<O> oldStateOutcome = newOutcome(transOut, lcaInfo.subtree1Label);
-		Word<O> newStateOutcome = newOutcome(transOut, lcaInfo.subtree2Label);
-		
-		splitState(hypState, prefix, newDiscriminator, oldStateOutcome, newStateOutcome);
+		updateTransitions(oldIncoming, stateLeaf);
 	}
 	
 	private Word<O> newOutcome(O transOutput, Word<O> succOutcome) {
@@ -314,11 +364,6 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 	private void setTransition(int state, int symIdx, StateInfo<I,O> succInfo, O output) {
 		succInfo.addIncoming(state, symIdx);
 		hypothesis.setTransition(state, symIdx, succInfo.id, output);
-	}
-	
-	
-	private DTNode<I, Word<O>, StateInfo<I,O>> dtNode(int state) {
-		return stateInfos.get(state).dtNode;
 	}
 	
 	private StateInfo<I,O> sift(Word<I> prefix) {

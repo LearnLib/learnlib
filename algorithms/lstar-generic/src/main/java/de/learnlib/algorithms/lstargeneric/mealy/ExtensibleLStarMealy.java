@@ -124,6 +124,11 @@ public class ExtensibleLStarMealy<I, O> extends
 	}
 	
 	@Override
+	public CompactMealy<I,O> getHypothesisModel() {
+		return internalHyp;
+	}
+	
+	@Override
 	protected SuffixOutput<I,Word<O>> hypothesisOutput() {
 		return internalHyp;
 	}

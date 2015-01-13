@@ -17,6 +17,14 @@
 package de.learnlib.algorithms.discriminationtree.dfa;
 
 
+import java.util.Map;
+
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.graphs.dot.EmptyDOTHelper;
+import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
 import de.learnlib.algorithms.discriminationtree.AbstractDTLearner;
@@ -28,10 +36,6 @@ import de.learnlib.api.Query;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.discriminationtree.BinaryDTree;
 import de.learnlib.oracles.AbstractQuery;
-
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 
 /**
  * Algorithm for learning DFA using the Discrimination Tree algorithm.
@@ -76,6 +80,23 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?,I>, I, Boolean, Boo
 	@Override
 	public DFA<?, I> getHypothesisModel() {
 		return hypWrapper;
+	}
+	
+	
+
+	@Override
+	public GraphDOTHelper<HState<I, Boolean, Boolean, Void>, HTransition<I, Boolean, Boolean, Void>> getHypothesisDOTHelper() {
+		return new EmptyDOTHelper<HState<I,Boolean,Boolean,Void>,HTransition<I,Boolean,Boolean,Void>>() {
+			@Override
+			public boolean getNodeProperties(
+					HState<I, Boolean, Boolean, Void> node,
+					Map<String, String> properties) {
+				if (node.getProperty()) {
+					properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);
+				}
+				return true;
+			}			
+		};
 	}
 
 	/*

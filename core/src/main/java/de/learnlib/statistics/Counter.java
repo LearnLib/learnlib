@@ -60,5 +60,11 @@ public class Counter extends StatisticData {
         return getSummary();
     }
     
+    @Override
+    @Nonnull
+    public String toString() {
+    	return getDetails();
+    }
+    
     
 }

@@ -18,14 +18,13 @@ package de.learnlib.algorithms.discriminationtree.mealy;
 
 import java.util.Collection;
 
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.words.Word;
 import de.learnlib.algorithms.discriminationtree.hypothesis.DTLearnerHypothesis;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HTransition;
 
-import net.automatalib.automata.transout.abstractimpl.AbstractMealyMachine;
-import net.automatalib.words.Word;
-
-final class HypothesisWrapperMealy<I, O> extends AbstractMealyMachine<HState<I,Word<O>,Void,O>, I, HTransition<I,Word<O>,Void,O>, O> {
+final class HypothesisWrapperMealy<I, O> implements MealyMachine<HState<I,Word<O>,Void,O>, I, HTransition<I,Word<O>,Void,O>, O> {
 
 	private final DTLearnerHypothesis<I, Word<O>, Void, O> dtHypothesis;
 	

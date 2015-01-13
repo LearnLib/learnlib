@@ -25,7 +25,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	-->
 	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-parent</artifactId>
-	<version>0.10.1</version>
+	<version>0.11.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
 	<url>http://learnlib.github.io/learnlib/maven-site/${project.version}</url>
@@ -117,9 +117,9 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<!--
 			dependency versions
 		-->
-		<automatalib.version>0.4.1</automatalib.version>
+		<automatalib.version>0.5.0</automatalib.version>
 		<testng.version>6.8.8</testng.version>
-		<javadoc-plugin.version>2.9</javadoc-plugin.version>
+		<javadoc-plugin.version>2.10.1</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
 		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
 		<jdiff-plugin.version>1.0-beta-1</jdiff-plugin.version>
@@ -135,7 +135,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 		<trove4j.version>3.0.3</trove4j.version>
 		
-		<guava.version>17.0</guava.version>
+		<guava.version>18.0</guava.version>
 		<findbugs.version>2.0.3</findbugs.version>
 		
 		<buildergen.version>0.1</buildergen.version>
@@ -161,8 +161,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<version>${compiler-plugin.version}</version>
 					<configuration>
 						<fork>true</fork>
-						<source>1.7</source>
-						<target>1.7</target>
+						<source>1.8</source>
+						<target>1.8</target>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -261,6 +261,14 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<configuration>
 						<serverId>learnlib-de</serverId>
 						<url>sftp://www155.your-server.de/</url>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${javadoc-plugin.version}</version>
+					<configuration>
+						<failOnError>false</failOnError>
 					</configuration>
 				</plugin>
 				<!-- This gets rid of the nasty "maven-enforcer-plugin will be ignored" warning by m2e -->
@@ -368,7 +376,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<version>${javadoc-plugin.version}</version>
 				<configuration>
 					<quiet>false</quiet>
-					<source>1.7</source>
+					<failOnError>false</failOnError>
+					<source>1.8</source>
 					<detectLinks>true</detectLinks>
 					<verbose>true</verbose>
 					<!--
@@ -542,6 +551,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 			</dependency>
 			<dependency>
 				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-ttt</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-basic-eqtests</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -591,6 +605,12 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<dependency>
 				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-mapper</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-acex</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 

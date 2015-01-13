@@ -135,18 +135,20 @@ public class RandomWalkEQOracle<I, O>
 		try {
 			while (steps < maxSteps) {
 
-				// restart?
-				double restart = random.nextDouble();
-				if (restart < restartProbability) {
-					if (first) {
-						first = false;
-					} else {
+				if (first) {
+					first = false;
+				}
+				else {
+					// restart?
+					double restart = random.nextDouble();
+					if (restart < restartProbability) {
 						sul.post();
+						sul.pre();
+						cur = hypothesis.getInitialState();
+						wbIn.clear();
+						wbOut.clear();
+						first = true;
 					}
-					sul.pre();
-					cur = hypothesis.getInitialState();
-					wbIn.clear();
-					wbOut.clear();
 				}
 
 				// step

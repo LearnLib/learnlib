@@ -24,12 +24,10 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Lists;
-
-import de.learnlib.algorithms.features.observationtable.AbstractObservationTable;
-
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+
+import com.google.common.collect.Lists;
 
 /**
  * The internal storage mechanism for {@link BaselineLStar}.
@@ -37,7 +35,7 @@ import net.automatalib.words.Word;
  * @param <I>
  * 		input symbol class.
  */
-public class ObservationTable<I> extends AbstractObservationTable<I, Boolean> {
+public class ObservationTable<I> implements de.learnlib.algorithms.features.observationtable.ObservationTable<I, Boolean> {
 
 	@Nonnull
 	private final List<ObservationTableRow<I>> shortPrefixRows; // S

@@ -27,12 +27,12 @@ public abstract class EquivalenceQueries {
 
 	public static <A extends UniversalDeterministicAutomaton<?,I,?,?,?> & Output<I,D>,I,D>
 	WMethodEQOracle<A, I, D> wMethod(int maxDepth, MembershipOracle<I, D> sulOracle) {
-		return new WMethodEQOracle<>(maxDepth, sulOracle);
+		return new WMethodEQOracle<A,I,D>(maxDepth, sulOracle);
 	}
 	
 	public static <A extends UniversalDeterministicAutomaton<?,I,?,?,?> & Output<I,D>,I,D>
 	WpMethodEQOracle<A, I, D> wpMethod(int maxDepth, MembershipOracle<I,D> sulOracle) {
-		return new WpMethodEQOracle<>(maxDepth, sulOracle);
+		return new WpMethodEQOracle<A,I,D>(maxDepth, sulOracle);
 	}
 	
 	public static <A extends UniversalDeterministicAutomaton<?,I,?,?,?> & Output<I,D>,I,D>
