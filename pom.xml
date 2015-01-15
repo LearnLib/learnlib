@@ -25,7 +25,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	-->
 	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-parent</artifactId>
-	<version>0.11.1-SNAPSHOT</version>
+	<version>0.11.1</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
 	<url>http://learnlib.github.io/learnlib/maven-site/${project.version}</url>
@@ -78,7 +78,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<connection>scm:git:git@github.com:LearnLib/learnlib.git</connection>
 		<developerConnection>scm:git:git@github.com:LearnLib/learnlib.git</developerConnection>
 		<url>https://github.com/LearnLib/learnlib/tree/develop</url>
-	</scm>
+	  <tag>learnlib-0.11.1</tag>
+  </scm>
 
 
 	<!--	
