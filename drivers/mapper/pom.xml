@@ -21,7 +21,7 @@ http://www.gnu.de/documents/lgpl.en.html.
   <parent>
     <groupId>de.learnlib</groupId>
     <artifactId>learnlib-drivers</artifactId>
-    <version>0.11.0</version>
+    <version>0.11.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
