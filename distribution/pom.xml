@@ -235,6 +235,18 @@ http://www.gnu.de/documents/lgpl.en.html.
 				
 				<dependency>
 					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-nlstar</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>de.learnlib</groupId>
+					<artifactId>learnlib-nlstar</artifactId>
+					<version>${project.version}</version>
+					<classifier>sources</classifier>
+				</dependency>
+				
+				<dependency>
+					<groupId>de.learnlib</groupId>
 					<artifactId>learnlib-acex</artifactId>
 					<version>${project.version}</version>
 				</dependency>
