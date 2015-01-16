@@ -25,7 +25,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	-->
 	<groupId>de.learnlib</groupId>
 	<artifactId>learnlib-parent</artifactId>
-	<version>0.11.1</version>
+	<version>0.11.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LearnLib</name>
 	<url>http://learnlib.github.io/learnlib/maven-site/${project.version}</url>
@@ -78,7 +78,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<connection>scm:git:git@github.com:LearnLib/learnlib.git</connection>
 		<developerConnection>scm:git:git@github.com:LearnLib/learnlib.git</developerConnection>
 		<url>https://github.com/LearnLib/learnlib/tree/develop</url>
-	  <tag>learnlib-0.11.1</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 
@@ -121,7 +121,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<automatalib.version>0.5.1</automatalib.version>
 		<testng.version>6.8.8</testng.version>
 		<javadoc-plugin.version>2.10.1</javadoc-plugin.version>
-		<compiler-plugin.version>3.2</compiler-plugin.version>
+		<compiler-plugin.version>3.1</compiler-plugin.version>
 		<release-plugin.version>2.5.1</release-plugin.version>
 		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
 		<jdiff-plugin.version>1.0-beta-1</jdiff-plugin.version>
