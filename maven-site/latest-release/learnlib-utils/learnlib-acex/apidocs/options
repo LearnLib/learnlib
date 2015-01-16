@@ -1,0 +1,33 @@
+-encoding
+'UTF-8'
+-protected
+-source
+'1.8'
+-sourcepath
+'/Users/malte/Workspaces/learnlib/learnlib/target/checkout/utils/acex/src/main/java'
+-verbose
+-author
+-bottom
+'Copyright &#169; 2015. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/malte/Workspaces/learnlib/learnlib/target/checkout/utils/acex/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'LearnLib :: Utilities :: Abstract Counterexamples 0.11.1 API'
+-link
+'http://docs.oracle.com/javase/8/docs/api'
+-link
+'http://trove4j.sourceforge.net/javadocs'
+-link
+'http://docs.guava-libraries.googlecode.com/git-history/v18.0/javadoc'
+-link
+'http://misberner.github.io/automatalib/maven-site/0.5.1/apidocs'
+-linkoffline
+'http://docs.oracle.com/javase/8/docs/api' '/Users/malte/Workspaces/learnlib/learnlib/target/checkout/utils/acex/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'LearnLib :: Utilities :: Abstract Counterexamples 0.11.1 API'
