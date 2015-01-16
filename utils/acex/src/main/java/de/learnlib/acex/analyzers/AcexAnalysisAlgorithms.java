@@ -30,7 +30,7 @@ import de.learnlib.acex.impl.BaseAbstractCounterexample;
  * </ul>
  * For a valid input, all of the methods in this class will return an
  * index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>.
- * The input is valid iff <code>high > low</code>, <code>acex.testEffect(low) == 0</code>,
+ * The input is valid iff <code>high &gt; low</code>, <code>acex.testEffect(low) == 0</code>,
  * and <code>acex.testEffect(high) == 1</code>.
  * 
  * @author Malte Isberner

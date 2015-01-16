@@ -83,7 +83,7 @@ public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTT
 	
 	/**
 	 * Checks whether this automaton was initialized (i.e.,
-	 * {@link #initialize(boolean)} has been called).
+	 * {@link #initialize()} has been called).
 	 * 
 	 * @return {@code true} if this automaton was initialized, {@code false}
 	 * otherwise.
@@ -96,7 +96,6 @@ public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTT
 	 * Initializes the automaton, adding an initial state. Whether or not the
 	 * initial state is accepting needs to be known at this point.
 	 * 
-	 * @param initialAccepting whether or not the initial state is accepting
 	 * @return the initial state of this newly initialized automaton
 	 */
 	public TTTState<I,D> initialize() {
