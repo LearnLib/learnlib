@@ -28,11 +28,17 @@
 -link
 'http://misberner.github.io/automatalib/maven-site/0.5.1/apidocs'
 -link
+'http://learnlib.github.io/learnlib/maven-site/0.11.1/learnlib-core/apidocs'
+-link
+'http://learnlib.github.io/learnlib/maven-site/0.11.1/learnlib-utils/learnlib-counterexamples/apidocs'
+-link
 'http://misberner.github.io/automatalib/maven-site/0.5.1/automata-api/apidocs'
 -link
 'http://misberner.github.io/automatalib/maven-site/0.5.1/automata-core/apidocs'
 -link
 'http://misberner.github.io/automatalib/maven-site/0.5.1/automata-util/apidocs'
+-link
+'http://learnlib.github.io/learnlib/maven-site/0.11.1/learnlib-test-support-parent/learnlib-learner-it-support/apidocs'
 -linkoffline
 'http://docs.oracle.com/javase/8/docs/api' '/Users/malte/Workspaces/learnlib/learnlib/target/checkout/algorithms/ttt/target/javadoc-bundle-options'
 -linkoffline
