@@ -115,6 +115,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	-->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!--
 			dependency versions
 		-->
@@ -619,12 +620,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<dependency>
 				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-mapper</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			
-			<dependency>
-				<groupId>de.learnlib</groupId>
-				<artifactId>learnlib-ttt</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			
