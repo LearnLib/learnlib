@@ -29,7 +29,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<groupId>de.learnlib.archetypes</groupId>
 		<artifactId>learnlib-archetypes-parent</artifactId>
-		<version>0.11.2</version>
+		<version>0.11.3-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
