@@ -364,8 +364,8 @@ public interface ObservationTable<I, D> {
 
 	/**
 	 * 
-	 * @param firstRow the first row
-	 * @param secondRow the second row
+	 * @param row1 the first row
+	 * @param row2 the second row
 	 * @return the suffix distinguishing the contents of the two rows
 	 * @throws InvalidRowException if the rows do not belong to this observation table
 	 */
@@ -380,8 +380,8 @@ public interface ObservationTable<I, D> {
 	
 	/**
 	 * 
-	 * @param firstRow the first row
-	 * @param secondRow the second row
+	 * @param row1 the first row
+	 * @param row2 the second row
 	 * @return the suffix (column) index where the contents of the rows differ, or
 	 * {@code #NO_DISTINGUISHING_SUFFIX} if the contents of the rows are equal.  
 	 * @throws InvalidRowException if the rows do not belong to this observation table
