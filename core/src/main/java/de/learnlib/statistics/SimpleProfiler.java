@@ -17,9 +17,9 @@
 
 package de.learnlib.statistics;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,8 +34,8 @@ public class SimpleProfiler {
 
   private static boolean PROFILE = true;
   
-  private static final Map<String,Counter> cumulated = new HashMap<>();
-  private static final Map<String,Long> pending = new HashMap<>();
+  private static final Map<String,Counter> cumulated = new ConcurrentHashMap<>();
+  private static final Map<String,Long> pending = new ConcurrentHashMap<>();
    
   private static LearnLogger logger = LearnLogger.getLogger(SimpleProfiler.class.getName());
   

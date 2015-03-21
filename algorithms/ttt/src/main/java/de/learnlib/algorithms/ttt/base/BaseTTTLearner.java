@@ -528,6 +528,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @return a counterexample uncovering an inconsistency, or {@code null}
 	 * if the hypothesis is consistent with the discrimination tree
 	 */
+	// TODO can be removed
 	private DefaultQuery<I, D> checkHypothesisConsistency() {
 		for(DTNode<I,D> leaf : dtree.getRoot().subtreeLeaves()) {
 			TTTState<I,D> state = leaf.state;

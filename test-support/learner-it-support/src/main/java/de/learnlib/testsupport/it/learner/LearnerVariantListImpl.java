@@ -22,7 +22,6 @@ import java.util.List;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Word;
-
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.mealy.MealyUtil;
 
