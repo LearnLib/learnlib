@@ -25,7 +25,7 @@ import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.oracles.DefaultQuery;
 
 @ParametersAreNonnullByDefault
-final class MealyLearnerWrapper<M extends MealyMachine<?, I, ?, O>, I, O> implements LearningAlgorithm<M, I, Word<O>> {
+final class MealyLearnerWrapper<M extends MealyMachine<?, I, ?, O>, I, O> implements LearningAlgorithm.MealyLearner<I, O> {
 	
 	private final LearningAlgorithm<M, I, O> learner;
 	
