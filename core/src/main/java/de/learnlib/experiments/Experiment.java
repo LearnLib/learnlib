@@ -88,11 +88,11 @@ public class Experiment<A> {
 	            logger.logPhase("Searching for counterexample");
 	            profileStart("Searching for counterexample");
 	            DefaultQuery<I, D> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
+	            profileStop("Searching for counterexample");
 	            if (ce == null) {
 	                done = true;
 	                continue;
 	            }
-	            profileStop("Searching for counterexample");
 	            
 	            logger.logCounterexample(ce.getInput().toString());
 
