@@ -1,5 +1,7 @@
 LearnLib
 ===========
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.learnlib/learnlib-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.learnlib/learnlib-parent)
+
 LearnLib is a free, open source ([LGPLv3][1]) Java library for automata learning algorithms.
 
 About
