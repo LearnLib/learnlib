@@ -18,17 +18,13 @@ package de.learnlib.cache.mealy;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
-import de.learnlib.cache.LearningCacheOracle.MealyLearningCacheOracle;
-
+import net.automatalib.commons.util.array.RichArray;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
@@ -37,6 +33,9 @@ import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.Query;
+import de.learnlib.cache.LearningCacheOracle.MealyLearningCacheOracle;
 
 /**
  * Mealy cache. This cache is implemented as a membership oracle: upon construction, it is
@@ -160,8 +159,8 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 			return;
 		}
 		
-		List<Query<I,Word<O>>> qrys = new ArrayList<>(queries);
-		Collections.sort(qrys, queryCmp);
+		RichArray<Query<I,Word<O>>> qrys = new RichArray<>(queries);
+		qrys.parallelSort(queryCmp);
 		
 		List<MasterQuery<I,O>> masterQueries = new ArrayList<>();
 		
@@ -188,7 +187,7 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 				}
 				
 				master.addSlave(q);
-				// Update ref to increase the effectivity of the length check in
+				// Update ref to increase the effectiveness of the length check in
 				// isPrefixOf
 				ref = curr;
 			}
