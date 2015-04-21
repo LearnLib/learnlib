@@ -27,11 +27,12 @@ import de.learnlib.algorithms.ttt.base.BaseTTTLearner;
 import de.learnlib.algorithms.ttt.base.DTNode;
 import de.learnlib.algorithms.ttt.base.TTTState;
 import de.learnlib.algorithms.ttt.base.TTTTransition;
+import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 
 public class TTTLearnerMealy<I, O> extends
-		BaseTTTLearner<MealyMachine<?, I, ?, O>, I, Word<O>> {
+		BaseTTTLearner<MealyMachine<?, I, ?, O>, I, Word<O>> implements LearningAlgorithm.MealyLearner<I, O> {
 
 	@GenerateBuilder(defaults = BaseTTTLearner.BuilderDefaults.class)
 	public TTTLearnerMealy(Alphabet<I> alphabet,
