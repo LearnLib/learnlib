@@ -16,7 +16,11 @@
  */
 package de.learnlib.algorithms.ttt.mealy;
 
+import java.util.Map;
+
 import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.graphs.dot.EmptyDOTHelper;
+import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -25,6 +29,7 @@ import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
 import de.learnlib.algorithms.ttt.base.BaseTTTLearner;
 import de.learnlib.algorithms.ttt.base.DTNode;
+import de.learnlib.algorithms.ttt.base.TTTHypothesis.TTTEdge;
 import de.learnlib.algorithms.ttt.base.TTTState;
 import de.learnlib.algorithms.ttt.base.TTTTransition;
 import de.learnlib.api.LearningAlgorithm;
@@ -80,4 +85,25 @@ public class TTTLearnerMealy<I, O> extends
 		return wb.toWord();
 	}
 
+	@Override
+	public GraphDOTHelper<TTTState<I,Word<O>>, TTTEdge<I, Word<O>>> getHypothesisDOTHelper() {
+		return new EmptyDOTHelper<TTTState<I,Word<O>>,TTTEdge<I,Word<O>>>() {
+			@Override
+			public boolean getEdgeProperties(TTTState<I, Word<O>> src,
+					TTTEdge<I, Word<O>> edge, TTTState<I, Word<O>> tgt,
+					Map<String, String> properties) {
+				if (!super.getEdgeProperties(src, edge, tgt, properties)) {
+					return false;
+				}
+				String label = String.valueOf(edge.transition.getInput());
+				label += " / ";
+				TTTTransitionMealy<I, O> trans = (TTTTransitionMealy<I,O>) edge.transition;
+				if (trans.output != null) {
+					label += trans.output;
+				}
+				properties.put(EdgeAttrs.LABEL, label);
+				return true;
+			}
+		};
+	}
 }
