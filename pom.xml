@@ -119,7 +119,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<!--
 			dependency versions
 		-->
-		<automatalib.version>0.5.2-SNAPSHOT</automatalib.version>
+		<automatalib.version>0.5.2</automatalib.version>
 		<testng.version>6.8.8</testng.version>
 		<javadoc-plugin.version>2.10.1</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
@@ -246,7 +246,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 						We use a property rather than a profile such that several different profiles
 						can be activated upon a release, without us having to add them here
 						-->
-						<arguments>-Psonatype-oss-release -Dlearnlib.release=true</arguments>
+						<arguments>-Psonatype-oss-release -Dlearnlib.release=true -Dmaven.javadoc.failOnError=false</arguments>
 						<!-- False to allow rebasing in case of errors -->
 						<pushChanges>false</pushChanges>
 						<!-- Automatically use the parent version for all submodules, do not prompt for each one -->
