@@ -129,7 +129,6 @@ public interface ObservationTable<I, D> {
 		public D getCellContent(@Nonnegative int index) throws IndexOutOfBoundsException;
 	}
 	
-	
 	/**
 	 * Representation of an inconsistency in the observation table.
 	 * <p>

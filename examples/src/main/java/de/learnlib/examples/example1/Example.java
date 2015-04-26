@@ -17,8 +17,14 @@
 package de.learnlib.examples.example1;
 
 import java.io.IOException;
-import java.io.Writer;
 
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.util.graphs.dot.GraphDOT;
+import net.automatalib.visualization.Visualization;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.impl.Alphabets;
 import de.learnlib.algorithms.features.observationtable.OTUtils;
 import de.learnlib.algorithms.features.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
@@ -29,13 +35,6 @@ import de.learnlib.experiments.Experiment.DFAExperiment;
 import de.learnlib.oracles.CounterOracle.DFACounterOracle;
 import de.learnlib.oracles.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.statistics.SimpleProfiler;
-
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.commons.dotutil.DOT;
-import net.automatalib.util.graphs.dot.GraphDOT;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
 
 /**
  * This example shows the usage of a learning algorithm and an equivalence test
@@ -55,22 +54,23 @@ public class Example {
         // input alphabet contains characters 'a'..'b'
     	Alphabet<Character> sigma = Alphabets.characters('a', 'b');
 
-        // create states
-        CompactDFA<Character> dfa = new CompactDFA<>(sigma);
-        int q0 = dfa.addInitialState(true);
-        int q1 = dfa.addState(false);
-        int q2 = dfa.addState(false);
-        int q3 = dfa.addState(false);
-
-        // create transitions
-        dfa.addTransition(q0, 'a', q1);
-        dfa.addTransition(q0, 'b', q2);
-        dfa.addTransition(q1, 'a', q0);
-        dfa.addTransition(q1, 'b', q3);
-        dfa.addTransition(q2, 'a', q3);
-        dfa.addTransition(q2, 'b', q0);
-        dfa.addTransition(q3, 'a', q2);
-        dfa.addTransition(q3, 'b', q1);
+    	// create automaton
+    	CompactDFA<Character> dfa = AutomatonBuilders.newDFA(sigma)
+    			.from("q0")
+    				.on('a').to("q1")
+    				.on('b').to("q2")
+    			.from("q1")
+    				.on('a').to("q0")
+    				.on('b').to("q3")
+    			.from("q2")
+    				.on('a').to("q3")
+    				.on('b').to("q0")
+    			.from("q3")
+    				.on('a').to("q2")
+    				.on('b').to("q1")
+    			.withInitial("q0")
+    			.withAccepting("q0")
+    			.create();
 
         return dfa;
     }
@@ -142,9 +142,7 @@ public class Example {
         System.out.println("Model: ");
         GraphDOT.write(result, inputs, System.out); // may throw IOException!
 
-        Writer w = DOT.createDotWriter(true);
-        GraphDOT.write(result, inputs, w);
-        w.close();
+        Visualization.visualizeAutomaton(result, inputs, true);
 
         System.out.println("-------------------------------------------------------");
         

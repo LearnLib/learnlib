@@ -31,7 +31,7 @@ import net.automatalib.words.Word;
  * @param <I> input symbol type
  * @param <D> (suffix) output domain type
  */
-public class SimulatorOracle<I, D> extends AbstractSingleQueryOracle<I, D> {
+public class SimulatorOracle<I, D> implements ParallelSingleQueryOracle<I, D> {
 	
 	
 	public static class DFASimulatorOracle<I> extends SimulatorOracle<I,Boolean>

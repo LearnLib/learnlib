@@ -65,6 +65,15 @@ public abstract class MQUtil {
 		}
 	}
 	
+	public static <I,D> void answerQueriesParallel(QueryAnswerer<I,D> answerer, Collection<? extends Query<I,D>> queries) {
+		queries.parallelStream().forEach(q -> {
+			Word<I> prefix = q.getPrefix();
+			Word<I> suffix = q.getSuffix();
+			D answer = answerer.answerQuery(prefix, suffix);
+			q.answer(answer);
+		});
+	}
+	
 	public static <I,D> boolean isCounterexample(DefaultQuery<I, D> query, SuffixOutput<I, D> hyp) {
 		D qryOut = query.getOutput();
 		D hypOut = hyp.computeSuffixOutput(query.getPrefix(), query.getSuffix());

@@ -120,7 +120,7 @@ public abstract class MealyUtil {
 	
 	@Nonnull
 	public static <M extends MealyMachine<?,I,?,O>,I,O>
-	LearningAlgorithm<M,I,Word<O>> wrapSymbolLearner(LearningAlgorithm<M,I,O> learner) {
+	LearningAlgorithm.MealyLearner<I,O> wrapSymbolLearner(LearningAlgorithm<M,I,O> learner) {
 		return new MealyLearnerWrapper<>(learner);
 	}
 	

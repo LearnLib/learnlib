@@ -29,6 +29,17 @@ class LearnerVariant<M,I,D> {
 		this.learner = learner;
 		this.maxRounds = maxRounds;
 	}
+	
+	public String getLearnerName() {
+		String learnerName = learner.toString();
+		int atPos = learnerName.lastIndexOf('@');
+		if (atPos != -1) {
+			int simpleNameStart = learnerName.lastIndexOf('.', atPos - 1) + 1;
+			learnerName = learnerName.substring(simpleNameStart, atPos);
+		}
+		
+		return learnerName;
+	}
 
 	public String getName() {
 		return name;

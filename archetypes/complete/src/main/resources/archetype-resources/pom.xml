@@ -85,9 +85,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>net.automatalib.visualization</groupId>
+			<groupId>net.automatalib</groupId>
 			<artifactId>automata-jung-visualizer</artifactId>
-			<version>0.5.0</version>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 

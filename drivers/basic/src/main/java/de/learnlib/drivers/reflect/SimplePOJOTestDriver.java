@@ -43,6 +43,10 @@ public final class SimplePOJOTestDriver extends
         this.instanceClass = c.getDeclaringClass();
     }
     
+    public SimplePOJOTestDriver(Class<?> c) throws NoSuchMethodException {
+    	this(c.getConstructor());
+    }
+    
     public AbstractMethodInput addInput(String name, String methodName, Object... params) {
     	Method m = ReflectUtil.findMatchingMethod(instanceClass, methodName, params);
     	if (m == null) {

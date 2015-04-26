@@ -16,7 +16,6 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,9 +36,6 @@ import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-
-import com.google.common.collect.AbstractIterator;
-
 import de.learnlib.algorithms.ttt.base.TTTHypothesis.TTTEdge;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.LearningAlgorithm;
@@ -71,7 +67,9 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	protected final DiscriminationTree<I,D> dtree;
 	// private final SuffixTrie<I> suffixTrie = new SuffixTrie<>();
 	
-	private final Collection<WeakReference<TTTEventListener<I, D>>> eventListeners = new UnorderedCollection<>();
+	//private final Set<Word<I>> finalDiscriminators = Sets.newHashSet(Word.epsilon());
+	
+	private final Collection<TTTEventListener<I, D>> eventListeners = new UnorderedCollection<>();
 	
 	/**
 	 * Open transitions, i.e., transitions that possibly point to a non-leaf
@@ -145,10 +143,10 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		
 		DefaultQuery<I, D> currCe = ceQuery;
 		
-		while(currCe != null) {
+		//while(currCe != null) {
 			while(refineHypothesisSingle(currCe));
-			currCe = checkHypothesisConsistency();
-		}
+//			currCe = checkHypothesisConsistency();
+//		}
 		
 		return true;
 	}
@@ -425,6 +423,10 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		Iterator<DTNode<I,D>> blocksIt = blockList.iterator();
 		while(blocksIt.hasNext()) {
 			DTNode<I,D> blockRoot = blocksIt.next();
+//			if (finalDiscriminators.contains(blockRoot.getDiscriminator().subWord(1))) {
+//				declareFinal(blockRoot);
+//				continue;
+//			}
 			Splitter<I,D> splitter = findSplitter(blockRoot);
 			if(splitter != null) {
 				if(bestSplitter == null || splitter.discriminator.length()
@@ -521,37 +523,38 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		return new Splitter<>(state1, state2, bestI, bestLCA);
 	}
 	
-	/**
-	 * Checks whether the hypothesis is consistent with the discrimination tree.
-	 * If an inconsistency is discovered, it is returned in the form of a counterexample.
-	 * 
-	 * @return a counterexample uncovering an inconsistency, or {@code null}
-	 * if the hypothesis is consistent with the discrimination tree
-	 */
-	private DefaultQuery<I, D> checkHypothesisConsistency() {
-		for(DTNode<I,D> leaf : dtree.getRoot().subtreeLeaves()) {
-			TTTState<I,D> state = leaf.state;
-			if(state == null) {
-				continue;
-			}
-			
-			DTNode<I,D> curr = state.dtLeaf;
-			DTNode<I,D> next = curr.getParent();
-			
-			while(next != null) {
-				Word<I> discr = next.getDiscriminator();
-				D expected = curr.getParentEdgeLabel();
-				
-				if(!Objects.equals(computeHypothesisOutput(state, discr), expected)) {
-					return new DefaultQuery<>(state.getAccessSequence(), discr, expected);
-				}
-				curr = next;
-				next = curr.getParent();
-			}
-		}
-		
-		return null;
-	}
+//	/**
+//	 * Checks whether the hypothesis is consistent with the discrimination tree.
+//	 * If an inconsistency is discovered, it is returned in the form of a counterexample.
+//	 * 
+//	 * @return a counterexample uncovering an inconsistency, or {@code null}
+//	 * if the hypothesis is consistent with the discrimination tree
+//	 */
+//	// TODO can be removed
+//	private DefaultQuery<I, D> checkHypothesisConsistency() {
+//		for(DTNode<I,D> leaf : dtree.getRoot().subtreeLeaves()) {
+//			TTTState<I,D> state = leaf.state;
+//			if(state == null) {
+//				continue;
+//			}
+//			
+//			DTNode<I,D> curr = state.dtLeaf;
+//			DTNode<I,D> next = curr.getParent();
+//			
+//			while(next != null) {
+//				Word<I> discr = next.getDiscriminator();
+//				D expected = curr.getParentEdgeLabel();
+//				
+//				if(!Objects.equals(computeHypothesisOutput(state, discr), expected)) {
+//					return new DefaultQuery<>(state.getAccessSequence(), discr, expected);
+//				}
+//				curr = next;
+//				next = curr.getParent();
+//			}
+//		}
+//		
+//		return null;
+//	}
 	
 	/**
 	 * Creates a state in the hypothesis. This method cannot be used for the initial
@@ -580,8 +583,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		if(trans.isTree()) {
 			return trans.getTreeTarget();
 		}
-		DTNode<I,D> dtTarget = updateDTTarget(trans);
-		return dtTarget.state;
+		return updateTarget(trans);
 	}
 	
 	/**
@@ -627,15 +629,15 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		notifyPreFinalizeDiscriminator(blockRoot, splitter);
 		
 		Word<I> finalDiscriminator = prepareSplit(blockRoot, splitter);
-		
 		Map<D,DTNode<I,D>> repChildren = createMap();
-		
+			
 		for (D label : blockRoot.splitData.getLabels()) {
 			repChildren.put(label, extractSubtree(blockRoot, label));
 		}
 		blockRoot.replaceChildren(repChildren);
-
+	
 		blockRoot.setDiscriminator(finalDiscriminator);
+
 		declareFinal(blockRoot);
 		
 		notifyPostFinalizeDiscriminator(blockRoot, splitter);
@@ -646,6 +648,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		blockRoot.splitData = null;
 		
 		blockRoot.removeFromBlockList();
+//		finalDiscriminators.add(blockRoot.getDiscriminator());
 		
 		for (DTNode<I,D> subtree : blockRoot.getChildren()) {
 			assert subtree.splitData == null;
@@ -667,13 +670,14 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @return the discriminator to use for splitting
 	 */
 	private Word<I> prepareSplit(DTNode<I,D> node, Splitter<I,D> splitter) {
+		int symbolIdx = splitter.symbolIdx;
+		I symbol = alphabet.getSymbol(symbolIdx);
+		Word<I> discriminator = splitter.discriminator.prepend(symbol);
+		
 		Deque<DTNode<I,D>> dfsStack = new ArrayDeque<>();
 		
 		DTNode<I,D> succSeparator = splitter.succSeparator;
-		int symbolIdx = splitter.symbolIdx;
-		I symbol = alphabet.getSymbol(symbolIdx);
 		
-		Word<I> discriminator = splitter.discriminator.prepend(symbol);
 		
 		dfsStack.push(node);
 		assert node.splitData == null;
@@ -1026,13 +1030,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 			return;
 		}
 		
-		DTNode<I,D> dtTarget = updateDTTarget(trans);
-
-		if(dtTarget.state == null) {
-			TTTState<I,D> state = createState(trans);
-			link(dtTarget, state);
-			initializeState(state);
-		}
+		updateTarget(trans);
 	}
 	
 	/**
@@ -1044,6 +1042,19 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 */
 	private DTNode<I,D> updateDTTarget(TTTTransition<I,D> transition) {
 		return updateDTTarget(transition, true);
+	}
+	
+	private TTTState<I, D> updateTarget(TTTTransition<I, D> trans) {
+		DTNode<I,D> node = updateDTTarget(trans);
+		
+		TTTState<I,D> state = node.state;
+		if (state == null) {
+			state = createState(trans);
+			link(node, state);
+			initializeState(state);
+		}
+		
+		return state;
 	}
 	
 	/**
@@ -1135,31 +1146,11 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	}
 	
 	private Iterable<TTTEventListener<I, D>> eventListeners() {
-		return new Iterable<TTTEventListener<I,D>>() {
-			@Override
-			public Iterator<TTTEventListener<I, D>> iterator() {
-				final Iterator<WeakReference<TTTEventListener<I, D>>> iterator = eventListeners.iterator();
-				return new AbstractIterator<TTTEventListener<I,D>>() {
-					@Override
-					protected TTTEventListener<I, D> computeNext() {
-						while (iterator.hasNext()) {
-							WeakReference<TTTEventListener<I, D>> ref = iterator.next();
-							TTTEventListener<I, D> listener = ref.get();
-							if (listener != null) {
-								return listener;
-							}
-							iterator.remove();
-						}
-						return endOfData();
-					}
-					
-				};
-			}
-		};
+		return eventListeners;
 	}
 	
 	public void addEventListener(TTTEventListener<I, D> listener) {
-		eventListeners.add(new WeakReference<TTTEventListener<I,D>>(listener));
+		eventListeners.add(listener);
 	}
 	
 	public void removeEventListener(TTTEventListener<I, D> listener) {

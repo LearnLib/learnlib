@@ -44,12 +44,14 @@ final class SingleLearnerVariantITSubCase<I,D,
 
 	@Override
 	public String getTestName() {
-		return variant.getLearner().getClass().getSimpleName() + "[" + variant.getName() + "]/" + example.getClass().getSimpleName();
+		return variant.getLearnerName() + "[" + variant.getName() + "]/" + example.getClass().getSimpleName();
 	}
 	
 	@Test
 	public void testLearning() {
-		System.out.println("Running learner integration test " + getTestName());
+		System.out.print("Running learner integration test " + getTestName() + " ... ");
+		System.out.flush();
+		
 		LearningAlgorithm<? extends M,I,D> learner
 			= variant.getLearner();
 		
@@ -62,6 +64,8 @@ final class SingleLearnerVariantITSubCase<I,D,
 
 		EquivalenceOracle<? super M, I, D> eqOracle
 			= new SimulatorEQOracle<I,D>(example.getReferenceAutomaton());
+		
+		long start = System.nanoTime();
 		
 		learner.startLearning();
 		
@@ -81,6 +85,10 @@ final class SingleLearnerVariantITSubCase<I,D,
 		Assert.assertNull(
 				Automata.findSeparatingWord(example.getReferenceAutomaton(), learner.getHypothesisModel(), alphabet),
 				"Final hypothesis does not match reference automaton");
+		
+		long duration = (System.nanoTime() - start)/1000000L;
+		System.out.printf("ok [%d.%03ds]", duration/1000L, duration%1000L);
+		System.out.println();
 	}
 
 
