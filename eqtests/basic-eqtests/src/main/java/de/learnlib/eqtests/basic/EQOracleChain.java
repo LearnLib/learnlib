@@ -42,7 +42,8 @@ public class EQOracleChain<A, I, D> implements EquivalenceOracle<A, I, D> {
 		}
 	}
 	
-	public static class MealyEQOracleChain<I,O> extends EQOracleChain<MealyMachine<?,I,?,O>,I,Word<O>> {
+	public static class MealyEQOracleChain<I,O> extends EQOracleChain<MealyMachine<?,I,?,O>,I,Word<O>>
+			implements MealyEquivalenceOracle<I, O> {
 		@SafeVarargs
 		public MealyEQOracleChain(
 				EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>>... oracles) {
