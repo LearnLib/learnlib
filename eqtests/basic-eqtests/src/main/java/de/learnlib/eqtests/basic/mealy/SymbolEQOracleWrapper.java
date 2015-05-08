@@ -19,12 +19,12 @@ package de.learnlib.eqtests.basic.mealy;
 import java.util.Collection;
 import java.util.Objects;
 
-import net.automatalib.automata.concepts.SODetOutputAutomaton;
+import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
 import net.automatalib.words.Word;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.oracles.DefaultQuery;
 
-public class SymbolEQOracleWrapper<A extends SODetOutputAutomaton<?,I,?,Word<O>>, I, O> implements
+public class SymbolEQOracleWrapper<A extends DetSuffixOutputAutomaton<?,I,?,Word<O>>, I, O> implements
 		EquivalenceOracle<A, I, O> {
 	
 	private final EquivalenceOracle<? super A, I, Word<O>> wordEqOracle;
