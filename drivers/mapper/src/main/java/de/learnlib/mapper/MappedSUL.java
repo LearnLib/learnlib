@@ -78,5 +78,15 @@ public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
 
 		return mappedEx.getThisStepOutput();
 	}
+	
+	@Override
+	public boolean canFork() {
+		return mapper.canFork() && sul.canFork();
+	}
+	
+	@Override
+	public MappedSUL<AI,AO,CI,CO> fork() {
+		return new MappedSUL<>(mapper.fork(), sul.fork());
+	}
 
 }

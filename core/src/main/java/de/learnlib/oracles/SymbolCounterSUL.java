@@ -35,6 +35,11 @@ public class SymbolCounterSUL<I, O> implements StatisticSUL<I,O> {
 		this.sul = sul;
 		this.counter = new Counter(name, "symbols");
 	}
+	
+	private SymbolCounterSUL(Counter counter, SUL<I, O> sul) {
+		this.sul = sul;
+		this.counter = counter;
+	}
 
 	/* (non-Javadoc)
 	 * @see de.learnlib.api.SUL#pre()
@@ -72,6 +77,13 @@ public class SymbolCounterSUL<I, O> implements StatisticSUL<I,O> {
 		return counter;
 	}
 	
-	
+	@Override
+	public boolean canFork() {
+		return sul.canFork();
+	}
 
+	@Override
+	public SUL<I,O> fork() {
+		return new SymbolCounterSUL<>(counter, sul.fork());
+	}
 }

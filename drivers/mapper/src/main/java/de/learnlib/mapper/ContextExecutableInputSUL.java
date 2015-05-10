@@ -33,6 +33,18 @@ import de.learnlib.mapper.api.ContextExecutableInput;
 public class ContextExecutableInputSUL<I extends ContextExecutableInput<? extends O, ? super C>, O, C>
 		extends AbstractContextExecutableInputSUL<I, O, C> {
 	
+	/**
+	 * Facility for creating and disposing of contexts on which {@link ContextExecutableInput}s
+	 * operate.
+	 * <p>
+	 * An implementation of this interface must be thread-safe, i.e., both the {@link #createContext()}
+	 * and {@link #disposeContext(Object)} methods must be reentrant. Furthermore, it must not make
+	 * any assumptions as to the particular sequence in which these methods are called.
+	 * 
+	 * @author Malte Isberner
+	 *
+	 * @param <C> context type
+	 */
 	public static interface ContextHandler<C> {
 		public C createContext();
 		public void disposeContext(C context);
@@ -54,4 +66,13 @@ public class ContextExecutableInputSUL<I extends ContextExecutableInput<? extend
 		contextHandler.disposeContext(context);
 	}
 	
+	@Override
+	public boolean canFork() {
+		return true;
+	}
+	
+	@Override
+	public SUL<I,O> fork() {
+		return new ContextExecutableInputSUL<>(contextHandler);
+	}
 }

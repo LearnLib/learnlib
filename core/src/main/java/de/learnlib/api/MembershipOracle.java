@@ -39,7 +39,7 @@ public interface MembershipOracle<I, D> {
 	
 	static interface DFAMembershipOracle<I> extends MembershipOracle<I,Boolean> {}
 	static interface MealyMembershipOracle<I,O> extends MembershipOracle<I,Word<O>> {}
-	
+
 	/**
 	 * Processes the specified collection of queries. When this method returns,
 	 * the output field of each of the contained queries should reflect the SUL

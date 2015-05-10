@@ -50,4 +50,14 @@ public class ExecutableInputSUL<I extends ExecutableInput<? extends O>, O> imple
 			throw new SULException(ex);
 		}
 	}
+	
+	@Override
+	public boolean canFork() {
+		return true;
+	}
+	
+	@Override
+	public SUL<I,O> fork() {
+		return this;
+	}
 }
