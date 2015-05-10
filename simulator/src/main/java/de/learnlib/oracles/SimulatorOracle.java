@@ -20,6 +20,7 @@ import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Word;
+import de.learnlib.api.SingleQueryOracle;
 
 /**
  * A membership oracle backed by an automaton. The automaton must implement
@@ -31,18 +32,17 @@ import net.automatalib.words.Word;
  * @param <I> input symbol type
  * @param <D> (suffix) output domain type
  */
-public class SimulatorOracle<I, D> implements ParallelSingleQueryOracle<I, D> {
-	
-	
+public class SimulatorOracle<I, D> implements SingleQueryOracle<I, D> {
+
 	public static class DFASimulatorOracle<I> extends SimulatorOracle<I,Boolean>
-			implements DFAMembershipOracle<I> {
+			implements SingleQueryOracleDFA<I> {
 		public DFASimulatorOracle(DFA<?,I> dfa) {
 			super(dfa);
 		}
 	}
 	
 	public static class MealySimulatorOracle<I,O> extends SimulatorOracle<I,Word<O>>
-			implements MealyMembershipOracle<I,O> {
+			implements SingleQueryOracleMealy<I,O> {
 		public MealySimulatorOracle(MealyMachine<?,I,?,O> mealy) {
 			super(mealy);
 		}

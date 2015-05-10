@@ -43,7 +43,6 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.counterexamples.LocalSuffixFinders;
 import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.MQUtil;
 
 /**
  * The TTT learning algorithm for {@link DFA}.
@@ -1087,7 +1086,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @return the output
 	 */
 	protected D query(Word<I> prefix, Word<I> suffix) {
-		return MQUtil.output(oracle, prefix, suffix);
+		return oracle.answerQuery(prefix, suffix);
 	}
 	
 	/**

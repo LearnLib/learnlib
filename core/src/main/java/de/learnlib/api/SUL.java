@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2014 TU Dortmund
+/* Copyright (C) 2013-2015 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * LearnLib is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
  * @param <O> output symbols
  *
  * @author falkhowar
+ * @author Malte Isberner
  */
 public interface SUL<I, O> {
 

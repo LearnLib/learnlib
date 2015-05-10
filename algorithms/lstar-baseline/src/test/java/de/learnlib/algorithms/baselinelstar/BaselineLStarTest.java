@@ -28,7 +28,6 @@ import org.testng.annotations.Test;
 
 import de.learnlib.examples.dfa.ExampleAngluin;
 import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.SafeOracle;
 import de.learnlib.oracles.SimulatorOracle;
 
 public class BaselineLStarTest {
@@ -42,8 +41,7 @@ public class BaselineLStarTest {
 		DFA<?, Integer> dfa = angluinExample.getReferenceAutomaton();
 		Alphabet<Integer> alphabet = angluinExample.getAlphabet();
 
-		SimulatorOracle<Integer, Boolean> dso = new SimulatorOracle<>(dfa);
-		SafeOracle<Integer, Boolean> oracle = new SafeOracle<>(dso);
+		SimulatorOracle<Integer, Boolean> oracle = new SimulatorOracle<>(dfa);
 
 		angluin = new BaselineLStar<>(alphabet, oracle);
 	}

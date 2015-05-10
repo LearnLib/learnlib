@@ -32,7 +32,6 @@ import net.automatalib.words.Word;
 import com.google.common.collect.Iterables;
 
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.MQUtil;
 
 public class DiscriminationTree<I, O, D> {
 	
@@ -53,7 +52,7 @@ public class DiscriminationTree<I, O, D> {
 		DTNode<I,O,D> curr = start;
 		
 		while(!curr.isLeaf()) {
-			O out = MQUtil.output(oracle, prefix, curr.getDiscriminator());
+			O out = oracle.answerQuery(prefix, curr.getDiscriminator());
 			curr = curr.child(out);
 		}
 		

@@ -41,7 +41,6 @@ import de.learnlib.discriminationtree.DTNode;
 import de.learnlib.discriminationtree.DTNode.SplitResult;
 import de.learnlib.discriminationtree.DiscriminationTree.LCAInfo;
 import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.MQUtil;
 
 
 /**
@@ -159,7 +158,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 			
 			while(!expect.isEmpty()) {
 				Word<I> suffix = currNode.getDiscriminator();
-				boolean out = MQUtil.output(oracle, prefix, suffix);
+				boolean out = oracle.answerQuery(prefix, suffix);
 				if(out != expect.pop()) {
 					lcas[index] = new LCAInfo<>(currNode, !out, out);
 					return 1;
@@ -305,7 +304,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 
 	
 	private void initialize() {
-		boolean initAccepting = MQUtil.output(oracle, Word.<I>epsilon()).booleanValue();
+		boolean initAccepting = oracle.answerQuery(Word.<I>epsilon()).booleanValue();
 		StateInfo<I> initStateInfo = createInitialState(initAccepting);
 		
 		DTNode<I, Boolean, StateInfo<I>> root = discriminationTree.getRoot();

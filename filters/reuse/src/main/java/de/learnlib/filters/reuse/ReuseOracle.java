@@ -16,10 +16,18 @@
  */
 package de.learnlib.filters.reuse;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
+
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
+
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import de.learnlib.api.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.api.Query;
+
+import de.learnlib.api.SingleQueryOracle.SingleQueryOracleMealy;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.tree.BoundedDeque.AccessPolicy;
 import de.learnlib.filters.reuse.tree.BoundedDeque.EvictPolicy;
@@ -28,14 +36,6 @@ import de.learnlib.filters.reuse.tree.ReuseNode.NodeResult;
 import de.learnlib.filters.reuse.tree.ReuseTree;
 import de.learnlib.filters.reuse.tree.ReuseTree.ReuseTreeBuilder;
 import de.learnlib.filters.reuse.tree.SystemStateHandler;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
 
 /**
  * The reuse oracle is a {@link MealyMembershipOracle} that is able to
@@ -68,7 +68,7 @@ import java.util.Set;
  * @param <I> input symbol class
  * @param <O> output symbol class
  */
-public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
+public class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> {
 	private final Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier;
 
 	private final ThreadLocal<ReuseCapableOracle<S, I, O>> executableOracles =
@@ -155,16 +155,15 @@ public class ReuseOracle<S, I, O> implements MealyMembershipOracle<I, O> {
 				.withEvictPolicy(builder.evictPolicy)
 				.build();
 	}
-
-	/**
-	 * {@inheritDoc}.
-	 */
+	
 	@Override
-	public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-		for (Query<I, Word<O>> query : queries) {
-			Word<O> output = processQuery(query.getInput());
-			query.answer(output.suffix(query.getSuffix().size()));
-		}
+	public Word<O> answerQuery(Word<I> input) {
+		return processQuery(input);
+	}
+	
+	@Override
+	public Word<O> answerQuery(Word<I> prefix, Word<I> suffix) {
+		return processQuery(prefix.concat(suffix)).suffix(suffix.length());
 	}
 
 	/**
