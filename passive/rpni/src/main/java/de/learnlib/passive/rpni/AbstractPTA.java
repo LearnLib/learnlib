@@ -15,6 +15,16 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import net.automatalib.automata.MutableDeterministic;
+import net.automatalib.commons.util.Pair;
+import net.automatalib.commons.util.functions.FunctionsUtil;
+import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.dot.EmptyDOTHelper;
+import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.words.Alphabet;
+
+import com.google.common.collect.AbstractIterator;
+
 public class AbstractPTA<SP,TP,S extends AbstractPTAState<SP,TP,S>> {
 
 	protected final int alphabetSize;
@@ -102,63 +112,15 @@ public class AbstractPTA<SP,TP,S extends AbstractPTAState<SP,TP,S>> {
 		}
 	}
 	
-	public void addSampleOutput(int[] sample, D output) {
-		PTAState<D> target = getState(sample);
-		if (target != null) {
-			if (!target.setOutput(output)) {
-				throw new IllegalStateException();
-			}
-		}
-	}
 	
-	public boolean testSample(int[] sample, D expectedOutput) {
-		PTAState<D> target = getState(sample);
-		return target.isOutputCompatible(expectedOutput);
-	}
-	
-	public boolean testSampleStrict(int[] sample, D expectedOutput) {
-		PTAState<D> target = getState(sample);
-		return target != null && target.isOutputCompatible(expectedOutput);
-	}
-	
-	public int[] testSamples(Collection<int[]> samples, D expectedOutput) {
-		return samples.stream()
-				.filter(s -> !testSample(s, expectedOutput))
-				.findAny()
-				.orElse(null);
-	}
-	
-	public int[] testSamplesStrict(Collection<int[]> samples, D expectedOutput) {
-		return samples.stream()
-				.filter(s -> !testSampleStrict(s, expectedOutput))
-				.findAny()
-				.orElse(null);
-	}
-	
-	public void addSamplesOutput(Collection<int[]> samples, D output) {
-		samples.stream().forEach(s -> addSampleOutput(s, output));
-	}
-	
-	public void addSamples(Collection<int[]> samples, D output) {
-		samples.stream().forEach(s -> addSample(s, output));
-	}
-
-		
-	static final class FoldRecord<D> {
-		public PTAState<D> q;
-		public final PTAState<D> r;
-		public int i = -1;
-		
-		public FoldRecord(PTAState<D> q, PTAState<D> r) {
-			this.q = q;
-			this.r = r;
-		}
-	}
 	
 	public <S2,I,SP2,TP2> void toAutomaton(MutableDeterministic<S2, I, ?, ? super SP2, ? super TP2> automaton,
 			Alphabet<I> alphabet,
 			Function<? super SP,? extends SP2> spExtractor,
 			Function<? super TP,? extends TP2> tpExtractor) {
+		
+		spExtractor = FunctionsUtil.safeDefault(spExtractor);
+		tpExtractor = FunctionsUtil.safeDefault(tpExtractor);
 		
 		Map<S,S2> resultStates = new HashMap<>();
 		
@@ -191,15 +153,6 @@ public class AbstractPTA<SP,TP,S extends AbstractPTAState<SP,TP,S>> {
 		}
 	}
 	
-	
-	public RedBlueMerge<D> tryMerge(PTAState<D> red, PTAState<D> blue) {
-		RedBlueMerge<D> mod = new RedBlueMerge<>(this, red, blue);
-		if (!mod.merge()) {
-			return null;
-		}
-		
-		return mod;
-	}
 	
 	public static final class Edge<S> {
 		public final S state;

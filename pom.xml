@@ -105,6 +105,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<module>filters</module>
 		<module>drivers</module>
 		<module>examples</module>
+		<module>passive</module>
 		<module>archetypes</module>
 		
 		<module>distribution</module>

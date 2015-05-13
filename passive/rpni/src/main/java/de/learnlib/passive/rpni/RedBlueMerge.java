@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import net.automatalib.commons.util.array.RichArray;
+
 class RedBlueMerge<SP,TP,S extends AbstractBlueFringePTAState<SP, TP, S>> {
 	
 	static final class FoldRecord<S extends AbstractBlueFringePTAState<?,?,S>> {

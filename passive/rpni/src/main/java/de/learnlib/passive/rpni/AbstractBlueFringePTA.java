@@ -1,8 +1,13 @@
 package de.learnlib.passive.rpni;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class AbstractBlueFringePTA<SP,TP,S extends AbstractBlueFringePTAState<SP,TP,S>>
@@ -25,6 +30,7 @@ public class AbstractBlueFringePTA<SP,TP,S extends AbstractBlueFringePTAState<SP
 	}
 	
 	public void init(Consumer<? super BlueStateRef<S>> newBlue) {
+		root.color = Color.BLUE;
 		promote(root, newBlue);
 	}
 	

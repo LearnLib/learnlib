@@ -4,6 +4,8 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import net.automatalib.commons.util.array.RichArray;
+
 public abstract class AbstractPTAState<SP,TP,S extends AbstractPTAState<SP,TP,S>> implements Cloneable {
 
 	protected SP property;
@@ -61,7 +63,7 @@ public abstract class AbstractPTAState<SP,TP,S extends AbstractPTAState<SP,TP,S>
 		}
 		S succ = successors.get(index);
 		if (succ == null) {
-			succ = createState(index);
+			succ = createSuccessor(index);
 			successors.update(index, succ);
 		}
 		return succ;

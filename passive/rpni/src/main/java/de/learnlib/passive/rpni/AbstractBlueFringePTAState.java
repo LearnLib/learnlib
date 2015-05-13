@@ -2,6 +2,12 @@ package de.learnlib.passive.rpni;
 
 import java.awt.Color;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.automatalib.commons.util.comparison.CmpUtil;
+
 @ParametersAreNonnullByDefault
 public abstract class AbstractBlueFringePTAState<SP,TP,S extends AbstractBlueFringePTAState<SP,TP,S>>
 		extends AbstractPTAState<SP,TP,S>

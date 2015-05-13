@@ -1,18 +1,17 @@
 package de.learnlib.passive.rpni;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.stream.Stream;
 
+import net.automatalib.words.Alphabet;
+import de.learnlib.passive.api.PassiveLearningAlgorithm;
+
 public abstract class AbstractBlueFringeRPNI<I,D,SP,TP,M> implements PassiveLearningAlgorithm<M, I, D> {
 	
 	protected final Alphabet<I> alphabet;
 	protected final int alphabetSize;
-	private final List<int[]> positive = new ArrayList<>();
-	private final List<int[]> negative = new ArrayList<>();
 	
 	private boolean parallel = true;
 	private boolean deterministic = false;
@@ -20,6 +19,14 @@ public abstract class AbstractBlueFringeRPNI<I,D,SP,TP,M> implements PassiveLear
 	public AbstractBlueFringeRPNI(Alphabet<I> alphabet) {
 		this.alphabet = alphabet;
 		this.alphabetSize = alphabet.size();
+	}
+	
+	public void setParallel(boolean parallel) {
+		this.parallel = parallel;
+	}
+	
+	public void setDeterministic(boolean deterministic) {
+		this.deterministic = deterministic;
 	}
 
 	@Override
