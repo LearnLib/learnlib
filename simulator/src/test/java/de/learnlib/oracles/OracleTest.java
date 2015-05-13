@@ -45,8 +45,7 @@ public class OracleTest {
         
         DFA<?, Symbol> dfa = constructMachine();
         
-        SimulatorOracle<Symbol,Boolean> dso = new SimulatorOracle<>(dfa);
-        SafeOracle<Symbol,Boolean> oracle = new SafeOracle<>(dso);
+        SimulatorOracle<Symbol,Boolean> oracle = new SimulatorOracle<>(dfa);
         
         List<DefaultQuery<Symbol, Boolean>> queries = new ArrayList<>();
         

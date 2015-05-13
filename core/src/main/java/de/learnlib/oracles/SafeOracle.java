@@ -18,6 +18,7 @@
 package de.learnlib.oracles;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
@@ -25,7 +26,14 @@ import de.learnlib.api.Query;
 /**
  *
  * @author Maik Merten 
+ * 
+ * @deprecated since 2015-05-10. This class has no real (and reasonable) use case.
+ * All it does is to check whether the collection of queries passed to
+ * {@link #processQueries(Collection)} is being modified. However, this is highly unlikely,
+ * and wrapping the passed queries using {@link Collections#unmodifiableCollection(Collection)}
+ * is a way better approach for intercepting these cases than wrapping the oracle.
  */
+@Deprecated
 public class SafeOracle<I,D> implements MembershipOracle<I,D> {
     
     private MembershipOracle<I,D> nextOracle;

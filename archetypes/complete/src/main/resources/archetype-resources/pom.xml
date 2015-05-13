@@ -9,6 +9,10 @@
 	<packaging>jar</packaging>
 
 	<properties>
+		<!-- AutomataLib requires Java 8 -->
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		
 		<!-- Version of LearnLib to use -->
 		<learnlib.version>${learnlibVersion}</learnlib.version>
 	</properties>
@@ -85,9 +89,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>net.automatalib.visualization</groupId>
+			<groupId>net.automatalib</groupId>
 			<artifactId>automata-jung-visualizer</artifactId>
-			<version>0.5.0</version>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 

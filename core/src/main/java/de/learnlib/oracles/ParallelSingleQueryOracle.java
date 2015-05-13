@@ -18,11 +18,24 @@ package de.learnlib.oracles;
 
 import java.util.Collection;
 
-import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import de.learnlib.api.QueryAnswerer;
+import de.learnlib.api.SingleQueryOracle;
 
-public interface ParallelSingleQueryOracle<I, D> extends MembershipOracle<I, D>, QueryAnswerer<I, D> {
+/**
+ * Base interface for oracle that answer queries independently and in parallel.
+ * 
+ * @deprecated since 2015-05-10. Parallelization of query processing should not be determined
+ * by an oracle implementation and always be configurable. Instead, implement
+ * {@link SingleQueryOracle} (or the respective specialization) and use the
+ * {@link MQUtil#PARALLEL_THRESHOLD} variable (or setting) to configure parallelization.
+ * 
+ * @author Malte Isberner
+ *
+ * @param <I> input symbol type
+ * @param <D> output domain type
+ */
+@Deprecated
+public interface ParallelSingleQueryOracle<I, D> extends SingleQueryOracle<I,D> {
 	@Override
 	default public void processQueries(Collection<? extends Query<I,D>> queries) {
 		MQUtil.answerQueriesParallel(this, queries);

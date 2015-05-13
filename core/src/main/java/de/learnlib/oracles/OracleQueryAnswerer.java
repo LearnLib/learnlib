@@ -16,8 +16,6 @@
  */
 package de.learnlib.oracles;
 
-import java.util.Collections;
-
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -25,6 +23,21 @@ import net.automatalib.words.Word;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.QueryAnswerer;
 
+
+/**
+ * A {@link QueryAnswerer} that queries a {@link MembershipOracle} for implementing
+ * the {@link #answerQuery(Word,Word)} method.
+ * 
+ * 
+ * @author Malte Isberner
+ *
+ * @param <I> input symbol type
+ * @param <D> output domain type
+ * 
+ * @deprecated since 2015-05-10. {@link MembershipOracle} now extends {@link QueryAnswerer},
+ * rendering this class obsolete.
+ */
+@Deprecated
 @ParametersAreNonnullByDefault
 public final class OracleQueryAnswerer<I, D> implements QueryAnswerer<I,D> {
 	
@@ -37,9 +50,7 @@ public final class OracleQueryAnswerer<I, D> implements QueryAnswerer<I,D> {
 	@Override
 	@Nullable
 	public D answerQuery(Word<I> prefix, Word<I> suffix) {
-		DefaultQuery<I,D> query = new DefaultQuery<>(prefix, suffix);
-		oracle.processQueries(Collections.singleton(query));
-		return query.getOutput();
+		return oracle.answerQuery(prefix, suffix);
 	}
 
 }

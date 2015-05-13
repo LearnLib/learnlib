@@ -38,6 +38,8 @@ public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
 
 	@Override
 	public void pre() {
+		this.inError = false;
+		this.repeatedErrorOutput = null;
 		mapper.pre();
 		sul.pre();
 	}
@@ -46,8 +48,6 @@ public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
 	public void post() {
 		sul.post();
 		mapper.post();
-		this.inError = false;
-		this.repeatedErrorOutput = null;
 	}
 
 	@Override
@@ -77,6 +77,16 @@ public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
 		}
 
 		return mappedEx.getThisStepOutput();
+	}
+	
+	@Override
+	public boolean canFork() {
+		return mapper.canFork() && sul.canFork();
+	}
+	
+	@Override
+	public MappedSUL<AI,AO,CI,CO> fork() {
+		return new MappedSUL<>(mapper.fork(), sul.fork());
 	}
 
 }

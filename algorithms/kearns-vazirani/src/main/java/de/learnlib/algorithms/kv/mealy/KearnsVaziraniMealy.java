@@ -44,7 +44,6 @@ import de.learnlib.discriminationtree.DiscriminationTree.LCAInfo;
 import de.learnlib.discriminationtree.MultiDTree;
 import de.learnlib.mealy.MealyUtil;
 import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.MQUtil;
 
 
 /**
@@ -154,7 +153,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 			
 			while(!expect.isEmpty()) {
 				Word<I> suffix = currNode.getDiscriminator();
-				Word<O> out = MQUtil.output(oracle, prefix, suffix);
+				Word<O> out = oracle.answerQuery(prefix, suffix);
 				Word<O> e = expect.pop();
 				if(!Objects.equals(out, e)) {
 					lcas[index] = new LCAInfo<>(currNode, e, out);
@@ -352,7 +351,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 		for(int i = 0; i < alphabetSize; i++) {
 			I sym = alphabet.getSymbol(i);
 			
-			O output = MQUtil.output(oracle, accessSequence, Word.fromLetter(sym)).firstSymbol();
+			O output = oracle.answerQuery(accessSequence, Word.fromLetter(sym)).firstSymbol();
 			
 			Word<I> transAs = accessSequence.append(sym);
 			

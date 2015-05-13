@@ -16,7 +16,6 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -38,10 +36,6 @@ import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Sets;
-
 import de.learnlib.algorithms.ttt.base.TTTHypothesis.TTTEdge;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.LearningAlgorithm;
@@ -49,7 +43,6 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.counterexamples.LocalSuffixFinders;
 import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.MQUtil;
 
 /**
  * The TTT learning algorithm for {@link DFA}.
@@ -73,9 +66,9 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	protected final DiscriminationTree<I,D> dtree;
 	// private final SuffixTrie<I> suffixTrie = new SuffixTrie<>();
 	
-	private final Set<Word<I>> finalDiscriminators = Sets.newHashSet(Word.epsilon());
+	//private final Set<Word<I>> finalDiscriminators = Sets.newHashSet(Word.epsilon());
 	
-	private final Collection<WeakReference<TTTEventListener<I, D>>> eventListeners = new UnorderedCollection<>();
+	private final Collection<TTTEventListener<I, D>> eventListeners = new UnorderedCollection<>();
 	
 	/**
 	 * Open transitions, i.e., transitions that possibly point to a non-leaf
@@ -429,10 +422,10 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		Iterator<DTNode<I,D>> blocksIt = blockList.iterator();
 		while(blocksIt.hasNext()) {
 			DTNode<I,D> blockRoot = blocksIt.next();
-			if (finalDiscriminators.contains(blockRoot.getDiscriminator().subWord(1))) {
-				declareFinal(blockRoot);
-				continue;
-			}
+//			if (finalDiscriminators.contains(blockRoot.getDiscriminator().subWord(1))) {
+//				declareFinal(blockRoot);
+//				continue;
+//			}
 			Splitter<I,D> splitter = findSplitter(blockRoot);
 			if(splitter != null) {
 				if(bestSplitter == null || splitter.discriminator.length()
@@ -654,7 +647,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		blockRoot.splitData = null;
 		
 		blockRoot.removeFromBlockList();
-		finalDiscriminators.add(blockRoot.getDiscriminator());
+//		finalDiscriminators.add(blockRoot.getDiscriminator());
 		
 		for (DTNode<I,D> subtree : blockRoot.getChildren()) {
 			assert subtree.splitData == null;
@@ -1093,7 +1086,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @return the output
 	 */
 	protected D query(Word<I> prefix, Word<I> suffix) {
-		return MQUtil.output(oracle, prefix, suffix);
+		return oracle.answerQuery(prefix, suffix);
 	}
 	
 	/**
@@ -1152,31 +1145,11 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	}
 	
 	private Iterable<TTTEventListener<I, D>> eventListeners() {
-		return new Iterable<TTTEventListener<I,D>>() {
-			@Override
-			public Iterator<TTTEventListener<I, D>> iterator() {
-				final Iterator<WeakReference<TTTEventListener<I, D>>> iterator = eventListeners.iterator();
-				return new AbstractIterator<TTTEventListener<I,D>>() {
-					@Override
-					protected TTTEventListener<I, D> computeNext() {
-						while (iterator.hasNext()) {
-							WeakReference<TTTEventListener<I, D>> ref = iterator.next();
-							TTTEventListener<I, D> listener = ref.get();
-							if (listener != null) {
-								return listener;
-							}
-							iterator.remove();
-						}
-						return endOfData();
-					}
-					
-				};
-			}
-		};
+		return eventListeners;
 	}
 	
 	public void addEventListener(TTTEventListener<I, D> listener) {
-		eventListeners.add(new WeakReference<TTTEventListener<I,D>>(listener));
+		eventListeners.add(listener);
 	}
 	
 	public void removeEventListener(TTTEventListener<I, D> listener) {

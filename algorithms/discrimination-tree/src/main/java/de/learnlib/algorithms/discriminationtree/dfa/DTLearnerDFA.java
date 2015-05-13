@@ -34,6 +34,7 @@ import de.learnlib.api.LearningAlgorithm.DFALearner;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.counterexamples.LocalSuffixFinder;
+import de.learnlib.counterexamples.LocalSuffixFinders;
 import de.learnlib.discriminationtree.BinaryDTree;
 import de.learnlib.oracles.AbstractQuery;
 
@@ -46,8 +47,14 @@ import de.learnlib.oracles.AbstractQuery;
  */
 public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?,I>, I, Boolean, Boolean, Void> implements DFALearner<I> {
 	
-	public static class BuilderDefaults extends AbstractDTLearner.BuilderDefaults {
+	public static class BuilderDefaults {
 		public static boolean epsilonRoot() { return true; }
+		public static <I,O> LocalSuffixFinder<? super I,? super O> suffixFinder() {
+			return LocalSuffixFinders.RIVEST_SCHAPIRE;
+		}
+		public static boolean repeatedCounterexampleEvaluation() {
+			return true;
+		}
 	}
 	
 	private final HypothesisWrapperDFA<I> hypWrapper;

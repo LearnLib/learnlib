@@ -16,6 +16,14 @@
  */
 package de.learnlib.algorithms.discriminationtree.mealy;
 
+import java.util.Map;
+
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.graphs.dot.EmptyDOTHelper;
+import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
 import de.learnlib.algorithms.discriminationtree.AbstractDTLearner;
@@ -27,10 +35,6 @@ import de.learnlib.api.Query;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.discriminationtree.MultiDTree;
 import de.learnlib.oracles.AbstractQuery;
-
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 
 /**
  * 
@@ -80,6 +84,30 @@ public class DTLearnerMealy<I, O>
 			public void answer(Word<O> output) {
 				transition.setProperty(output.firstSymbol());
 			}
+		};
+	}
+	
+	@Override
+	public GraphDOTHelper<HState<I, Word<O>, Void, O>, HTransition<I, Word<O>, Void, O>> getHypothesisDOTHelper() {
+		return new EmptyDOTHelper<HState<I,Word<O>,Void,O>,HTransition<I,Word<O>,Void,O>>() {
+			@Override
+			public boolean getEdgeProperties(HState<I, Word<O>, Void, O> src,
+					HTransition<I, Word<O>, Void, O> edge,
+					HState<I, Word<O>, Void, O> tgt,
+					Map<String, String> properties) {
+				if (!super.getEdgeProperties(src, edge, tgt, properties)) {
+					return false;
+				}
+				String label = String.valueOf(edge.getSymbol());
+				label += " / ";
+				if (edge.getProperty() != null) {
+					label += edge.getProperty();
+				}
+				properties.put(EdgeAttrs.LABEL, label);
+				
+				return true;
+			}
+
 		};
 	}
 }

@@ -82,6 +82,7 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 		private final IncrementalMealyBuilder<I, O> incMealy;
 		private final MealyTransitionSystem<S,I,T,O> mealyTs;
 		private final SUL<I,O> delegate;
+		private boolean delegatePreCalled = false;
 		
 		private S current;
 		private final WordBuilder<I> inputWord = new WordBuilder<>();
@@ -118,6 +119,7 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 					current = null;
 					outputWord = new WordBuilder<>();
 					delegate.pre();
+					delegatePreCalled = true;
 					for(I prevSym : inputWord) {
 						outputWord.append(delegate.step(prevSym));
 					}
@@ -151,6 +153,10 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 				incMealyLock.unlock();
 			}
 			
+			if (delegatePreCalled) {
+				delegate.post();
+				delegatePreCalled = false;
+			}
 			inputWord.clear();
 			outputWord = null;
 			current = null;

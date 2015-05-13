@@ -62,6 +62,16 @@ public class DefaultQuery<I, D> extends AbstractQuery<I,D> {
     public D getOutput() {
         return output;
     }
+    
+    /**
+     * Checks if the query is normalized, i.e., if all the information is stored
+     * in the {@link #getSuffix() suffix} part of the counterexample.
+     * @return {@code true} if the counterexample is normalized, {@code false}
+     * otherwise.
+     */
+    public boolean isNormalized() {
+    	return prefix.isEmpty();
+    }
 
     /*
      * (non-Javadoc)

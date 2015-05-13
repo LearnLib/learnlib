@@ -30,7 +30,6 @@ import net.automatalib.words.Word;
 import com.google.common.collect.Iterators;
 
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.MQUtil;
 
 /**
  * The discrimination tree data structure.
@@ -136,7 +135,7 @@ public class DiscriminationTree<I,D> {
 	
 	
 	private D mqOut(Word<I> prefix, Word<I> suffix) {
-		return MQUtil.output(oracle, prefix, suffix);
+		return oracle.answerQuery(prefix, suffix);
 	}
 	
 	

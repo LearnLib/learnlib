@@ -35,6 +35,11 @@ public class ResetCounterSUL<I, O> implements StatisticSUL<I, O> {
 		this.sul = sul;
 		this.counter = new Counter(name, "resets");
 	}
+	
+	private ResetCounterSUL(Counter counter, SUL<I, O> sul) {
+		this.sul = sul;
+		this.counter = counter;
+	}
 
             @Override
             public void pre() {
@@ -59,4 +64,13 @@ public class ResetCounterSUL<I, O> implements StatisticSUL<I, O> {
 		return counter;
 	}
 
+	@Override
+	public boolean canFork() {
+		return sul.canFork();
+	}
+	
+	@Override
+	public SUL<I, O> fork() {
+		return new ResetCounterSUL<>(counter, sul.fork());
+	}
 }

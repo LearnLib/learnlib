@@ -91,6 +91,15 @@ final class MapperComposition<AI, AO, ACI, CAO, CI, CO> implements Mapper<AI,AO,
 		return mapMappedException(mappedEx);
 	}
 
+	@Override
+	public boolean canFork() {
+		return mapper1.canFork() && mapper2.canFork();
+	}
+	
+	@Override
+	public Mapper<AI,AO,CI,CO> fork() {
+		return new MapperComposition<>(mapper1.fork(), mapper2.fork());
+	}
 	
 	private MappedException<? extends AO> mapMappedException(MappedException<? extends CAO> mappedEx) {
 		AO thisStepOutput = mapper1.mapOutput(mappedEx.getThisStepOutput());

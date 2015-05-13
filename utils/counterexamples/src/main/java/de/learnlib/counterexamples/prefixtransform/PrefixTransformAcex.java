@@ -24,7 +24,6 @@ import com.google.common.base.Objects;
 import de.learnlib.acex.impl.BaseAbstractCounterexample;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.MQUtil;
 
 
 /**
@@ -69,7 +68,7 @@ public class PrefixTransformAcex<I, O> extends BaseAbstractCounterexample {
 		Word<I> transformedPrefix = asTransformer.transformAccessSequence(prefix);
 		
 		O hypOut = hypothesis.computeSuffixOutput(transformedPrefix, suffix);
-		O oracleOut = MQUtil.output(oracle, transformedPrefix, suffix);
+		O oracleOut = oracle.answerQuery(transformedPrefix, suffix);
 		
 		return Objects.equal(hypOut, oracleOut) ? 1 : 0;
 	}

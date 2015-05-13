@@ -38,8 +38,12 @@ public class TestDriver<AI, AO, CI extends ExecutableInput<CO>, CO> implements S
 	private final SUL<AI, AO> sul;
 
     public TestDriver(Mapper<AI, AO, CI, CO> mapper) {
-    	this.sul = Mappers.apply(mapper, new ExecutableInputSUL<CI,CO>());
-    }    
+    	this(Mappers.apply(mapper, new ExecutableInputSUL<CI,CO>()));
+    }   
+    
+    private TestDriver(SUL<AI,AO> sul) {
+    	this.sul = sul;
+    }
     
     @Override
     public AO step(AI i) {
@@ -54,6 +58,16 @@ public class TestDriver<AI, AO, CI extends ExecutableInput<CO>, CO> implements S
     @Override
     public void post() {
         sul.post();
+    }
+    
+    @Override
+    public boolean canFork() {
+    	return sul.canFork();
+    }
+    
+    @Override
+    public SUL<AI,AO> fork() {
+    	return new TestDriver<>(sul.fork());
     }
 
 }

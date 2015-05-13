@@ -46,6 +46,5 @@ public class TTTHypothesisMealy<I, O> extends
 	public O getTransitionOutput(TTTTransitionMealy<I, O> transition) {
 		return transition.getOutput();
 	}
-
-
+	
 }

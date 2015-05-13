@@ -141,8 +141,8 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		
 		Word<I> suffix = input.subWord(suffixIdx);
 		
-		D oldOut = MQUtil.output(oracle, oldState.getAccessSequence(), suffix);
-		D newOut = MQUtil.output(oracle, newState.getAccessSequence(), suffix);
+		D oldOut = oracle.answerQuery(oldState.getAccessSequence(), suffix);
+		D newOut = oracle.answerQuery(newState.getAccessSequence(), suffix);
 		
 		SplitResult<I,D,HState<I,D,SP,TP>> sr = oldDt.split(suffix, oldOut, newOut, newState);
 		
