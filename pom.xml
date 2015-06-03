@@ -135,8 +135,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<upload-plugin.version>1.1</upload-plugin.version>
 		<exec-plugin.version>1.3.2</exec-plugin.version>
 		<deploy-site-github.exec>deploy-site-github</deploy-site-github.exec>
-
-		<trove4j.version>3.0.3</trove4j.version>
 		
 		<guava.version>18.0</guava.version>
 		<findbugs.version>2.0.3</findbugs.version>
@@ -147,8 +145,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<java.apidocs>http://docs.oracle.com/javase/8/docs/api/</java.apidocs>
 		<automatalib.apidocs>http://misberner.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
 		<guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/v${guava.version}/javadoc/</guava.apidocs>
-		<!-- Unfortunately, these are not version-sensitive -->
-		<trove4j.apidocs>http://trove4j.sourceforge.net/javadocs/</trove4j.apidocs>
 	</properties>
 
 
@@ -279,7 +275,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 						<failOnError>false</failOnError>
 						<links>
 							<link>${java.apidocs}</link>
-							<link>${trove4j.apidocs}</link>
 							<link>${guava.apidocs}</link>
 							<link>${automatalib.apidocs}</link>
 						</links>
@@ -397,7 +392,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<failOnError>false</failOnError>
 					<links>
 						<link>${java.apidocs}</link>
-						<link>${trove4j.apidocs}</link>
 						<link>${guava.apidocs}</link>
 						<link>${automatalib.apidocs}</link>
 					</links>
@@ -661,13 +655,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<scope>test</scope>
 			</dependency>
 
-
-			<!-- GNU Trove -->
-			<dependency>
-				<groupId>net.sf.trove4j</groupId>
-				<artifactId>trove4j</artifactId>
-				<version>${trove4j.version}</version>
-			</dependency>
 
 			<!-- Guava -->
 			<dependency>

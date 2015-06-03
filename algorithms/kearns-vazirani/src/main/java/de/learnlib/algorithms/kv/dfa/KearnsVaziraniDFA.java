@@ -16,11 +16,9 @@
  */
 package de.learnlib.algorithms.kv.dfa;
 
-import gnu.trove.list.TLongList;
-import gnu.trove.list.array.TLongArrayList;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
@@ -63,8 +61,6 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		}
 	}
 	
-	private static final TLongList EMPTY_LONG_LIST = new TLongArrayList(0);
-	
 	/**
 	 * The information associated with a state: it's access sequence (or access string),
 	 * and the list of incoming transitions.
@@ -77,7 +73,8 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		public final int id;
 		public final Word<I> accessSequence;
 		private DTNode<I, Boolean, StateInfo<I>> dtNode;
-		private TLongList incoming;
+//		private TLongList incoming;
+		private List<Long> incoming; // TODO: replace with primitive specialization
 		
 		public StateInfo(int id, Word<I> accessSequence) {
 			this.id = id;
@@ -87,16 +84,20 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		public void addIncoming(int sourceState, int transIdx) {
 			long encodedTrans = ((long)sourceState << 32L) | transIdx;
 			if(incoming == null) {
-				incoming = new TLongArrayList();
+//				incoming = new TLongArrayList();
+				incoming = new ArrayList<>(); // TODO: replace with primitive specialization
 			}
 			incoming.add(encodedTrans);
 		}
 		
-		public TLongList fetchIncoming() {
+//		public TLongList fetchIncoming() {
+		public List<Long> fetchIncoming() { // TODO: replace with primitive specialization
 			if(incoming == null || incoming.isEmpty()) {
-				return EMPTY_LONG_LIST;
+//				return EMPTY_LONG_LIST;
+				return Collections.emptyList(); // TODO: replace with primitive specialization
 			}
-			TLongList result = incoming;
+//			TLongList result = incoming;
+			List<Long> result = incoming; // TODO: replace with primitive specialization
 			this.incoming = null;
 			return result;
 		}
@@ -252,7 +253,8 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 	private void splitState(StateInfo<I> stateInfo, Word<I> newPrefix, I sym, LCAInfo<I,Boolean,StateInfo<I>> separatorInfo) {
 		int state = stateInfo.id;
 		boolean oldAccepting = hypothesis.isAccepting(state);
-		TLongList oldIncoming = stateInfo.fetchIncoming();
+//		TLongList oldIncoming = stateInfo.fetchIncoming();
+		List<Long> oldIncoming = stateInfo.fetchIncoming(); // TODO: replace with primitive specialization
 		
 		StateInfo<I> newStateInfo = createState(newPrefix, oldAccepting);
 		
@@ -272,7 +274,8 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 	}
 	
 	
-	private void updateTransitions(TLongList transList, DTNode<I, Boolean, StateInfo<I>> oldDtTarget) {
+//	private void updateTransitions(TLongList transList, DTNode<I, Boolean, StateInfo<I>> oldDtTarget) {
+	private void updateTransitions(List<Long> transList, DTNode<I, Boolean, StateInfo<I>> oldDtTarget) { // TODO: replace with primitive specialization
 		int numTrans = transList.size();
 		for(int i = 0; i < numTrans; i++) {
 			long encodedTrans = transList.get(i);

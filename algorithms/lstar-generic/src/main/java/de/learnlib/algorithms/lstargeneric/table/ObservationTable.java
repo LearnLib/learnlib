@@ -16,9 +16,6 @@
  */
 package de.learnlib.algorithms.lstargeneric.table;
 
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -87,8 +84,8 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 		return true;
 	}
 	
-	// private static final Integer NO_ENTRY = null;
-	private static final int NO_ENTRY = -1;
+	private static final Integer NO_ENTRY = null; // TODO: replace with primitive specialization
+//	private static final int NO_ENTRY = -1;
 	
 	
 	private final Alphabet<I> alphabet;
@@ -108,8 +105,10 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 		= new ArrayList<Row<I>>();
 	
 	
-	private final TObjectIntMap<List<D>> rowContentIds
-		= new TObjectIntHashMap<>(10, 0.75f, NO_ENTRY);
+//	private final TObjectIntMap<List<D>> rowContentIds
+//		= new TObjectIntHashMap<>(10, 0.75f, NO_ENTRY);
+	private final Map<List<D>,Integer> rowContentIds
+		= new HashMap<>();  // TODO: replace with primitive specialization
 	
 	private final Map<Word<I>,Row<I>> rowMap
 		= new HashMap<Word<I>,Row<I>>();
@@ -524,8 +523,8 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 	}
 	
 	protected boolean processContents(Row<I> row, List<D> rowContents, boolean makeCanonical) {
-		// Integer contentId;
-		int contentId;
+		Integer contentId; // TODO: replace with primitive specialization
+//		int contentId;
 		boolean added = false;
 		if((contentId = rowContentIds.get(rowContents)) == NO_ENTRY) {
 			rowContentIds.put(rowContents, contentId = numDistinctRows());

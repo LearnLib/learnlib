@@ -16,11 +16,9 @@
  */
 package de.learnlib.algorithms.kv.mealy;
 
-import gnu.trove.list.TLongList;
-import gnu.trove.list.array.TLongArrayList;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
@@ -56,8 +54,6 @@ import de.learnlib.oracles.DefaultQuery;
  */
 public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 	
-	private static final TLongList EMPTY_LONG_LIST = new TLongArrayList(0);
-	
 	static final class BuilderDefaults {
 		public static boolean repeatedCounterexampleEvaluation() {
 			return true;
@@ -71,7 +67,8 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 		public final int id;
 		public final Word<I> accessSequence;
 		public DTNode<I, Word<O>, StateInfo<I,O>> dtNode;
-		private TLongList incoming;
+//		private TLongList incoming;
+		private List<Long> incoming; // TODO: replace with primitive specialization
 		
 		public StateInfo(int id, Word<I> accessSequence) {
 			this.accessSequence = accessSequence.trimmed();
@@ -81,16 +78,20 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 		public void addIncoming(int sourceState, int transIdx) {
 			long encodedTrans = ((long)sourceState << 32L) | transIdx;
 			if(incoming == null) {
-				incoming = new TLongArrayList();
+//				incoming = new TLongArrayList();
+				incoming = new ArrayList<>(); // TODO: replace with primitive specialization
 			}
 			incoming.add(encodedTrans);
 		}
 		
-		public TLongList fetchIncoming() {
+//		public TLongList fetchIncoming() {
+		public List<Long> fetchIncoming() { // TODO: replace with primitive specialization
 			if(incoming == null || incoming.isEmpty()) {
-				return EMPTY_LONG_LIST;
+//				return EMPTY_LONG_LIST;
+				return Collections.emptyList(); // TODO: replace with primitive specialization
 			}
-			TLongList result = incoming;
+//			TLongList result = incoming;
+			List<Long> result = incoming;
 			this.incoming = null;
 			return result;
 		}
@@ -247,7 +248,8 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 	private void splitState(StateInfo<I,O> stateInfo, Word<I> newPrefix, I sym, LCAInfo<I,Word<O>,StateInfo<I,O>> separatorInfo) {
 		int state = stateInfo.id;
 		
-		TLongList oldIncoming = stateInfo.fetchIncoming();
+//		TLongList oldIncoming = stateInfo.fetchIncoming();
+		List<Long> oldIncoming = stateInfo.fetchIncoming(); // TODO: replace with primitive specialization
 		
 		StateInfo<I,O> newStateInfo = createState(newPrefix);
 		
@@ -283,7 +285,8 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 	}
 	
 	
-	private void updateTransitions(TLongList transList, DTNode<I,Word<O>,StateInfo<I,O>> oldDtTarget) {
+//	private void updateTransitions(TLongList transList, DTNode<I,Word<O>,StateInfo<I,O>> oldDtTarget) {
+	private void updateTransitions(List<Long> transList, DTNode<I,Word<O>,StateInfo<I,O>> oldDtTarget) { // TODO: replace with primitive specialization
 		int numTrans = transList.size();
 		for(int i = 0; i < numTrans; i++) {
 			long encodedTrans = transList.get(i);
