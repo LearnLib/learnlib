@@ -629,6 +629,24 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>learnlib-acex</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-passive-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-passive-commons</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-rpni</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<!-- LearnLib tests -->
 			<dependency>

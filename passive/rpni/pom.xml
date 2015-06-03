@@ -39,7 +39,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<!-- LearnLib dependencies -->
 		<dependency>
 			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-core</artifactId>
+			<artifactId>learnlib-passive-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-passive-commons</artifactId>
 		</dependency>
 		
 		<!-- AutomataLib dependencies -->

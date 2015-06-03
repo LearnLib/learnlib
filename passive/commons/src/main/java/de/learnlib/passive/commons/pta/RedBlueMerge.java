@@ -1,4 +1,4 @@
-package de.learnlib.passive.rpni;
+package de.learnlib.passive.commons.pta;
 
 import java.awt.Color;
 import java.util.ArrayDeque;
@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 import net.automatalib.commons.util.array.RichArray;
 
-class RedBlueMerge<SP,TP,S extends AbstractBlueFringePTAState<SP, TP, S>> {
+public class RedBlueMerge<SP,TP,S extends AbstractBlueFringePTAState<SP, TP, S>> {
 	
 	static final class FoldRecord<S extends AbstractBlueFringePTAState<?,?,S>> {
 		public S q;
@@ -361,7 +361,7 @@ class RedBlueMerge<SP,TP,S extends AbstractBlueFringePTAState<SP, TP, S>> {
 		return tps1;
 	}
 	
-	public void apply(AbstractBlueFringePTA<SP,TP,S> pta, Consumer<? super BlueStateRef<S>> newFrontierConsumer) {
+	public void apply(AbstractBlueFringePTA<SP,TP,S> pta, Consumer<? super PTATransition<S>> newFrontierConsumer) {
 		int alphabetSize = pta.alphabetSize;
 		
 		for (int i = 0; i < succMod.length; i++) {
@@ -390,6 +390,10 @@ class RedBlueMerge<SP,TP,S extends AbstractBlueFringePTAState<SP, TP, S>> {
 			SP newProp = propMod.get(i);
 			if (newProp != null) {
 				redState.property = newProp;
+			}
+			RichArray<TP> newTransProps = transPropMod[i];
+			if (newTransProps != null) {
+				redState.transProperties = newTransProps;
 			}
 		}
 	}

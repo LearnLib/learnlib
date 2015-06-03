@@ -16,8 +16,16 @@
  */
 package de.learnlib.passive.api;
 
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.words.Word;
 
-public interface PassiveDFALearner<I> extends PassiveAcceptorLearner<DFA<?,I>,I> {
-	
+/**
+ * Basic interface for passive learning algorithms that infer {@link MealyMachine Mealy machines}.
+ * 
+ * @author Malte Isberner
+ *
+ * @param <I> input symbol type
+ * @param <O> output symbol type
+ */
+public interface PassiveMealyLearner<I,O> extends PassiveLearningAlgorithm<MealyMachine<?,I,?,O>, I, Word<O>> {
 }

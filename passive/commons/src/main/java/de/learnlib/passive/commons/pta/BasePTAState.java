@@ -1,4 +1,4 @@
-package de.learnlib.passive.rpni;
+package de.learnlib.passive.commons.pta;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import net.automatalib.commons.util.array.RichArray;
 
-public abstract class AbstractPTAState<SP,TP,S extends AbstractPTAState<SP,TP,S>> implements Cloneable {
+public abstract class BasePTAState<SP,TP,S extends BasePTAState<SP,TP,S>> implements Cloneable {
 
 	protected SP property;
 	protected RichArray<TP> transProperties;
@@ -80,13 +80,30 @@ public abstract class AbstractPTAState<SP,TP,S extends AbstractPTAState<SP,TP,S>
 		}
 	}
 
+	public boolean tryMergeTransitionProperty(int index, int alphabetSize, TP newTP) {
+		if (transProperties != null) {
+			TP oldTp = transProperties.get(index);
+			if (oldTp != null) {
+				return Objects.equals(oldTp, newTP);
+			}
+		}
+		else {
+			transProperties = new RichArray<>(alphabetSize);
+		}
+		
+		transProperties.update(index, newTP);
+		return true;
+	}
+	
+	public void mergeTransitionProperty(int index, int alphabetSize, TP newTP) {
+		if (!tryMergeTransitionProperty(index, alphabetSize, newTP)) {
+			throw new IllegalArgumentException();
+		}
+	}
 	
 	public boolean tryMergeStateProperty(SP newSP) {
 		if (property != null) {
-			if (!Objects.equals(property, newSP)) {
-				return false;
-			}
-			return true;
+			return Objects.equals(property, newSP);
 		}
 		this.property = newSP;
 		return true;

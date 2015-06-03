@@ -18,9 +18,20 @@ package de.learnlib.passive.api;
 
 import java.util.Collection;
 
+import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.FiniteStateAcceptor;
+import net.automatalib.automata.fsa.NFA;
 import net.automatalib.words.Word;
 
+/**
+ * Basic interface for passive learning algorithms that infer finite-state
+ * acceptors ({@link DFA}s or {@link NFA}s).
+ * 
+ * @author Malte Isberner
+ *
+ * @param <M> model type
+ * @param <I> input symbol type
+ */
 public interface PassiveAcceptorLearner<M extends FiniteStateAcceptor<?, I>,I> extends PassiveLearningAlgorithm<M, I, Boolean> {
 	
 	default public void addPositiveSample(Word<I> word) {

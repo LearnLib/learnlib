@@ -1,4 +1,4 @@
-package de.learnlib.passive.rpni;
+package de.learnlib.passive.commons.pta;
 
 public class BlueFringePTAState<SP,TP> extends AbstractBlueFringePTAState<SP, TP, BlueFringePTAState<SP,TP>> {
 	@Override

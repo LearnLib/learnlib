@@ -1,4 +1,4 @@
-package de.learnlib.passive.rpni;
+package de.learnlib.passive.commons.pta;
 
 import java.awt.Color;
 
@@ -10,7 +10,7 @@ import net.automatalib.commons.util.comparison.CmpUtil;
 
 @ParametersAreNonnullByDefault
 public abstract class AbstractBlueFringePTAState<SP,TP,S extends AbstractBlueFringePTAState<SP,TP,S>>
-		extends AbstractPTAState<SP,TP,S>
+		extends BasePTAState<SP,TP,S>
 		implements Comparable<S> {
 	
 	protected boolean isCopy = false;
@@ -35,7 +35,7 @@ public abstract class AbstractBlueFringePTAState<SP,TP,S extends AbstractBlueFri
 	}
 	
 	@Nonnull
-	public BlueStateRef<S> makeBlue() {
+	public PTATransition<S> makeBlue() {
 		if (!isWhite()) {
 			throw new IllegalStateException();
 		}
@@ -46,7 +46,7 @@ public abstract class AbstractBlueFringePTAState<SP,TP,S extends AbstractBlueFri
 		
 		this.color = Color.BLUE;
 		
-		return new BlueStateRef<>(parent, parentInput);
+		return new PTATransition<>(parent, parentInput);
 	}
 	
 	public void makeRed(int id) {
@@ -101,6 +101,23 @@ public abstract class AbstractBlueFringePTAState<SP,TP,S extends AbstractBlueFri
 		}
 		
 		return CmpUtil.canonicalCompare(access, other.access);
+	}
+	
+	public int lexCompareTo(S other) {
+		if (this == other) {
+			return 0;
+		}
+		if (access == null) {
+			if (other.access == null) {
+				return 0;
+			}
+			return 1;
+		}
+		if (other.access == null) {
+			return -1;
+		}
+		
+		return CmpUtil.lexCompare(access, other.access);
 	}
 	
 	@Override

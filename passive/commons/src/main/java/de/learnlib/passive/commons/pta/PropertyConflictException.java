@@ -14,10 +14,24 @@
  * License along with LearnLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package de.learnlib.passive.api;
+package de.learnlib.passive.commons.pta;
 
-import net.automatalib.automata.fsa.NFA;
+import java.text.MessageFormat;
 
-public interface PassiveNFALearner<I> extends PassiveAcceptorLearner<NFA<?,I>,I> {
+/**
+ * Exception to signal that two (state or transition) properties in a {@link BasePTA PTA} cannot
+ * be merged since they are incompatible.
+ * <p>
+ * 
+ * @author Malte Isberner
+ *
+ */
+public class PropertyConflictException extends IllegalArgumentException {
+	private static final long serialVersionUID = 1L;
+
+	public PropertyConflictException(Object oldProperty, Object newProperty) {
+		super(MessageFormat.format("Cannot merge incompatible properties {0} and {1}",
+				oldProperty, newProperty));
+	}
 
 }
