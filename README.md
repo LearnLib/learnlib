@@ -2,7 +2,7 @@ LearnLib
 ===========
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.learnlib/learnlib-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.learnlib/learnlib-parent)
 
-LearnLib is a free, open source ([LGPLv3][1]) Java library for automata learning algorithms.
+LearnLib is a free, open source ([Apache License, v2.0][1]) Java library for automata learning algorithms.
 
 About
 -----
@@ -30,7 +30,7 @@ Resources
 * [Discussion @ Google Groups][9] -- [learnlib-discussion@googlegroups.com][10] 
 * [Developers @ Google Groups (closed group)][11] -- [learnlib-internal@googlegroups.com][12]
 
-[1]: http://www.gnu.de/documents/lgpl.en.html
+[1]: http://www.apache.org/licenses/LICENSE-2.0
 [2]: http://www.cs.tu-dortmund.de
 [3]: http://www.learnlib.de
 [4]: https://github.com/misberner
