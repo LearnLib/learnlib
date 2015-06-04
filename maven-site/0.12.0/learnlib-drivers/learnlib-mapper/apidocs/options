@@ -1,0 +1,35 @@
+-classpath
+'/Users/malte/.m2/repository/net/automatalib/automata-api/0.6.0/automata-api-0.6.0.jar:/Users/malte/.m2/repository/net/automatalib/automata-util/0.6.0/automata-util-0.6.0.jar:/Users/malte/.m2/repository/de/learnlib/learnlib-core/0.12.0/learnlib-core-0.12.0.jar:/Users/malte/.m2/repository/net/automatalib/automata-core/0.6.0/automata-core-0.6.0.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-util/0.6.0/automata-commons-util-0.6.0.jar:/Users/malte/.m2/repository/com/google/code/findbugs/jsr305/2.0.3/jsr305-2.0.3.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-smartcollections/0.6.0/automata-commons-smartcollections-0.6.0.jar:/Users/malte/.m2/repository/com/google/guava/guava/18.0/guava-18.0.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-dotutil/0.6.0/automata-commons-dotutil-0.6.0.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'1.8'
+-sourcepath
+'/Users/malte/Workspaces/learnlib/learnlib/target/checkout/drivers/mapper/src/main/java'
+-verbose
+-author
+-bottom
+'Copyright &#169; 2015. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/malte/Workspaces/learnlib/learnlib/target/checkout/drivers/mapper/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'LearnLib :: Drivers :: Mapper 0.12.0 API'
+-link
+'http://docs.oracle.com/javase/8/docs/api'
+-link
+'http://docs.guava-libraries.googlecode.com/git-history/v18.0/javadoc'
+-link
+'http://misberner.github.io/automatalib/maven-site/0.6.0/apidocs'
+-linkoffline
+'http://docs.oracle.com/javase/8/docs/api' '/Users/malte/Workspaces/learnlib/learnlib/target/checkout/drivers/mapper/target/javadoc-bundle-options'
+-linkoffline
+'http://learnlib.github.io/learnlib/maven-site/0.12.0/learnlib-core/apidocs' '/Users/malte/Workspaces/learnlib/learnlib/target/checkout/core/target/site/apidocs'
+-use
+-version
+-windowtitle
+'LearnLib :: Drivers :: Mapper 0.12.0 API'

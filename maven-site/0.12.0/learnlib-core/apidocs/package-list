@@ -1,0 +1,11 @@
+de.learnlib.api
+de.learnlib.experiments
+de.learnlib.logging
+de.learnlib.logging.filter
+de.learnlib.mealy
+de.learnlib.nfa
+de.learnlib.oracles
+de.learnlib.passive.api
+de.learnlib.settings
+de.learnlib.settings.sources
+de.learnlib.statistics
