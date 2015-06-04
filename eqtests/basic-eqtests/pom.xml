@@ -22,7 +22,7 @@ limitations under the License.
 	<parent>
 		<artifactId>learnlib-eqtests</artifactId>
 		<groupId>de.learnlib</groupId>
-		<version>0.12.0-SNAPSHOT</version>
+		<version>0.12.0</version>
 		<relativePath>../pom.xml</relativePath>        
 	</parent>
 
