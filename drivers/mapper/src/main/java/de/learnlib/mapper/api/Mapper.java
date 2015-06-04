@@ -38,8 +38,8 @@ import de.learnlib.mapper.Mappers;
  * mappers (e.g., with empty {@link #pre()} and {@link #post()} implementations), should always
  * be forkable, and {@link #fork()} may just return {@code this}. Stateful mappers may require
  * more sophisticated fork logic, but in general it should be possible to fork them as well.
- * 
- * @implNote Despite the above recommendation that mappers should almost always be forkable,
+ * <p>
+ * Note: despite the above recommendation that mappers should almost always be forkable,
  * the default implementations of {@link #canFork()} and {@link #fork()} indicate
  * non-forkability for backwards compatibility reasons.
  * 
