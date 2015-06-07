@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import com.google.common.collect.Iterables;
+
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
@@ -33,6 +35,7 @@ import net.automatalib.words.WordBuilder;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
+import de.learnlib.oracles.MQUtil;
 
 /**
  * Implements an equivalence test by applying the Wp-method test on the given hypothesis automaton,
@@ -128,12 +131,13 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 		
 		for(List<? extends I> middle : CollectionsUtil.allTuples(inputs, 1, maxDepth)) {
 			for(Word<I> trans : transitions) {
-				S state = hypothesis.getState(trans);
+				S state = hypothesis.getState(Iterables.concat(trans, middle));
 				List<Word<I>> localSuffixes = localSuffixSets.get(state);
 				if(localSuffixes == null) {
 					localSuffixes = Automata.stateCharacterizingSet(hypothesis, inputs, state);
-					if(localSuffixes.isEmpty())
+					if(localSuffixes.isEmpty()) {
 						localSuffixes = Collections.singletonList(Word.<I>epsilon());
+					}
 					localSuffixSets.put(state, localSuffixes);
 				}
 				
@@ -141,11 +145,11 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 					wb.append(trans).append(middle).append(suffix);
 					Word<I> queryWord = wb.toWord();
 					wb.clear();
-					DefaultQuery<I,D> query = new DefaultQuery<>(queryWord);
+					DefaultQuery<I,D> query = MQUtil.query(sulOracle, queryWord);
 					D hypOutput = output.computeOutput(queryWord);
-					sulOracle.processQueries(Collections.singleton(query));
-					if(!Objects.equals(hypOutput, query.getOutput()))
+					if(!Objects.equals(hypOutput, query.getOutput())) {
 						return query;
+					}
 				}
 			}
 		}
