@@ -115,12 +115,12 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		this.alphabet = alphabet;
 		this.oracle = oracle;
 		this.suffixFinder = suffixFinder;
-		if(initialSplitters == null || initialSplitters.isEmpty()) {
-			for(I symbol : alphabet) {
-				splitters.add(Word.fromLetter(symbol));
-			}
+		// ensure that the first k splitters are the k alphabet symbols,
+		// in correct order (this is required by scheduleSuccessors)
+		for(I symbol : alphabet) {
+			splitters.add(Word.fromLetter(symbol));
 		}
-		else {
+		if(initialSplitters != null) {
 			splitters.addAll(initialSplitters);
 		}
 	}

@@ -132,7 +132,8 @@ public class AcexAnalysisAlgorithms {
 	 * <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
 	 */
 	public static int binarySearch(AbstractCounterexample acex, int low, int high) {
-		assert acex.test(low) == 0 && acex.test(high) == 1;
+		assert acex.test(low) == 0 : low;
+		assert acex.test(high) == 1 : high;
 		
 		while(high - low > 1) {
 			int mid = low + (high - low)/2;
