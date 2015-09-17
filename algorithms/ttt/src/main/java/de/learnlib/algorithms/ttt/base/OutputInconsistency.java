@@ -13,16 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.acex;
+package de.learnlib.algorithms.ttt.base;
 
-public interface AbstractCounterexample<E> {
+import net.automatalib.words.Word;
+
+/**
+ * Class for representing output inconsistencies within the TTT algorithm.
+ * 
+ * @author Malte Isberner
+ *
+ * @param <I> input symbol type
+ * @param <D> output domain type
+ */
+public class OutputInconsistency<I,D> {
 	
-	public int getLength();
-	public E effect(int index);
-	
-	public boolean checkEffects(E eff1, E eff2);
-	
-	default public boolean testEffects(int i, int j) {
-		return checkEffects(effect(i), effect(j));
+	public final TTTState<I,D> srcState;
+	public final Word<I> suffix;
+	public final D targetOut;
+
+	public OutputInconsistency(TTTState<I,D> srcState, Word<I> suffix, D targetOut) {
+		this.srcState = srcState;
+		this.suffix = suffix;
+		this.targetOut = targetOut;
 	}
+
 }

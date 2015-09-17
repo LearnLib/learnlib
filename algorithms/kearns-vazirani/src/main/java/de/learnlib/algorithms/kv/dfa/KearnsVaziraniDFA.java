@@ -103,7 +103,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		
 	}
 	
-	private class KVAbstractCounterexample extends BaseAbstractCounterexample {
+	private class KVAbstractCounterexample extends BaseAbstractCounterexample<Boolean> {
 		
 		private final Word<I> ceWord;
 		private final MembershipOracle<I, Boolean> oracle;
@@ -112,7 +112,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 
 		@SuppressWarnings("unchecked")
 		public KVAbstractCounterexample(Word<I> ceWord, boolean output, MembershipOracle<I, Boolean> oracle) {
-			super(ceWord.length());
+			super(ceWord.length() + 1);
 			this.ceWord = ceWord;
 			this.oracle = oracle;
 			
@@ -141,7 +141,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		}
 
 		@Override
-		protected int computeEffect(int index) {
+		protected Boolean computeEffect(int index) {
 			Word<I> prefix = ceWord.prefix(index);
 			StateInfo<I> info = states[index];
 			
@@ -161,13 +161,18 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 				boolean out = oracle.answerQuery(prefix, suffix);
 				if(out != expect.pop()) {
 					lcas[index] = new LCAInfo<>(currNode, !out, out);
-					return 1;
+					return false;
 				}
 				currNode = currNode.child(out);
 			}
 			
 			assert currNode.isLeaf() && expect.isEmpty();
-			return 0;
+			return true;
+		}
+
+		@Override
+		public boolean checkEffects(Boolean eff1, Boolean eff2) {
+			return !eff1 || eff2;
 		}
 	}
 	

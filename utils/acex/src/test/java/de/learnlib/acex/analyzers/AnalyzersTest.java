@@ -34,21 +34,21 @@ public class AnalyzersTest {
 	
 	private static final int NUM_RANDOM = 10;
 	
-	private static AbstractCounterexample createOne0(int length) {
+	private static AbstractCounterexample<Integer> createOne0(int length) {
 		int[] values = new int[length + 1];
 		values[0] = 0;
 		Arrays.fill(values, 1, values.length, 1);
 		return new DummyAcex(values);
 	}
 	
-	private static AbstractCounterexample createOne1(int length) {
+	private static AbstractCounterexample<Integer> createOne1(int length) {
 		int[] values = new int[length + 1];
 		values[length] = 1;
 		Arrays.fill(values, 0, length, 0);
 		return new DummyAcex(values);
 	}
 	
-	private static AbstractCounterexample createRandom(int length, Random random) {
+	private static AbstractCounterexample<Integer> createRandom(int length, Random random) {
 		int[] values = new int[length + 1];
 		values[0] = 0;
 		values[length] = 1;
@@ -71,7 +71,7 @@ public class AnalyzersTest {
 	
 	@Test(dataProvider = "analyzers")
 	public void testOne0(NamedAcexAnalyzer analyzer) {
-		AbstractCounterexample acex = createOne0(LENGTH);
+		AbstractCounterexample<?> acex = createOne0(LENGTH);
 		
 		int idx = analyzer.analyzeAbstractCounterexample(acex);
 		checkResult(acex, idx);
@@ -79,7 +79,7 @@ public class AnalyzersTest {
 	
 	@Test(dataProvider = "analyzers")
 	public void testOne1(NamedAcexAnalyzer analyzer) {
-		AbstractCounterexample acex = createOne1(LENGTH);
+		AbstractCounterexample<?> acex = createOne1(LENGTH);
 		
 		int idx = analyzer.analyzeAbstractCounterexample(acex);
 		checkResult(acex, idx);
@@ -90,15 +90,14 @@ public class AnalyzersTest {
 		Random r = new Random(SEED);
 		
 		for (int i = 0; i < NUM_RANDOM; i++) {
-			AbstractCounterexample acex = createRandom(LENGTH, r);
+			AbstractCounterexample<?> acex = createRandom(LENGTH, r);
 		
 			int idx = analyzer.analyzeAbstractCounterexample(acex);
 			checkResult(acex, idx);
 		}
 	}
 	
-	private static void checkResult(AbstractCounterexample acex, int idx) {
-		Assert.assertEquals(acex.test(idx), 0);
-		Assert.assertEquals(acex.test(idx+1), 1);
+	private static void checkResult(AbstractCounterexample<?> acex, int idx) {
+		Assert.assertFalse(acex.testEffects(idx, idx + 1));
 	}
 }

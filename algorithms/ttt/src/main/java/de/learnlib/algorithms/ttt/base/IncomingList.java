@@ -53,6 +53,9 @@ public class IncomingList<I,D> extends IncomingListElem<I,D> implements Iterable
 		
 	}
 
+	public boolean isEmpty() {
+		return nextIncoming == null;
+	}
 	public void insertIncoming(TTTTransition<I,D> transition) {
 		transition.removeFromList();
 		
@@ -66,12 +69,14 @@ public class IncomingList<I,D> extends IncomingListElem<I,D> implements Iterable
 	
 	public void insertAllIncoming(IncomingList<I,D> list) {
 		insertAllIncoming(list.nextIncoming);
+		list.nextIncoming = null;
 	}
 	
 	public void insertAllIncoming(TTTTransition<I,D> firstTransition) {
 		if(firstTransition == null) {
 			return;
 		}
+		firstTransition.prevIncoming.nextIncoming = null;
 		
 		if(nextIncoming == null) {
 			nextIncoming = firstTransition;
@@ -94,6 +99,18 @@ public class IncomingList<I,D> extends IncomingListElem<I,D> implements Iterable
 	
 	public TTTTransition<I,D> choose() {
 		return nextIncoming;
+	}
+	
+	public TTTTransition<I,D> poll() {
+		TTTTransition<I,D> result = nextIncoming;
+		if (result != null) {
+			this.nextIncoming = result.nextIncoming;
+			if (this.nextIncoming != null) {
+				this.nextIncoming.prevIncoming = this;
+			}
+			result.prevIncoming = result.nextIncoming = null;
+		}
+		return result;
 	}
 
 	@Override

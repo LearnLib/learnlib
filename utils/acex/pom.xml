@@ -31,6 +31,10 @@ limitations under the License.
 	<description>An abstract counterexample analysis framework</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-commons-util</artifactId>
+		</dependency>
 		<!--
 		Test dependencies
 		-->

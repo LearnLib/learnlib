@@ -25,14 +25,16 @@ import net.automatalib.words.Word;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
+import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithms.ttt.base.BaseTTTLearner;
 import de.learnlib.algorithms.ttt.base.DTNode;
+import de.learnlib.algorithms.ttt.base.OutputInconsistency;
 import de.learnlib.algorithms.ttt.base.TTTHypothesis.TTTEdge;
 import de.learnlib.algorithms.ttt.base.TTTState;
 import de.learnlib.algorithms.ttt.base.TTTTransition;
 import de.learnlib.api.LearningAlgorithm.DFALearner;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.counterexamples.LocalSuffixFinder;
+import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
 
 
 public class TTTLearnerDFA<I> extends BaseTTTLearner<DFA<?,I>,I,Boolean> implements DFALearner<I> {
@@ -40,8 +42,17 @@ public class TTTLearnerDFA<I> extends BaseTTTLearner<DFA<?,I>,I,Boolean> impleme
 	@GenerateBuilder(defaults = BaseTTTLearner.BuilderDefaults.class)
 	public TTTLearnerDFA(Alphabet<I> alphabet,
 			MembershipOracle<I, Boolean> oracle,
-			LocalSuffixFinder<? super I, ? super Boolean> suffixFinder) {
-		super(alphabet, oracle, new TTTHypothesisDFA<>(alphabet), suffixFinder);
+			AcexAnalyzer analyzer) {
+		super(alphabet, oracle, new TTTHypothesisDFA<>(alphabet), analyzer);
+		
+		split(dtree.getRoot(), Word.<I>epsilon(), false, true);
+	}
+	
+	protected TTTLearnerDFA(Alphabet<I> alphabet,
+			MembershipOracle<I,Boolean> oracle,
+			AcexAnalyzer analyzer,
+			DTNode<I,Boolean> root) {
+		super(alphabet, oracle, new TTTHypothesisDFA<>(alphabet), analyzer, root);
 		
 		split(dtree.getRoot(), Word.<I>epsilon(), false, true);
 	}
@@ -76,8 +87,8 @@ public class TTTLearnerDFA<I> extends BaseTTTLearner<DFA<?,I>,I,Boolean> impleme
 	@Override
 	protected Boolean computeHypothesisOutput(TTTState<I, Boolean> state,
 			Iterable<? extends I> suffix) {
-		TTTStateDFA<I> endState = (TTTStateDFA<I>) getState(state, suffix);
-		return endState.accepting;
+		TTTState<I,Boolean> endState = getAnySuccessor(state, suffix);
+		return ((TTTStateDFA<I>) endState).accepting;
 	}
 
 
@@ -94,5 +105,18 @@ public class TTTLearnerDFA<I> extends BaseTTTLearner<DFA<?,I>,I,Boolean> impleme
 				return true;
 			}
 		};
+	}
+
+	@Override
+	protected OutInconsPrefixTransformAcex<I, Boolean> deriveAcex(
+			OutputInconsistency<I, Boolean> outIncons) {
+		OutInconsPrefixTransformAcex<I, Boolean> acex = super.deriveAcex(outIncons);
+		acex.setEffect(acex.getLength() - 1, !outIncons.targetOut);
+		return acex;
+	}
+
+	@Override
+	protected Boolean succEffect(Boolean effect) {
+		return effect;
 	}
 }

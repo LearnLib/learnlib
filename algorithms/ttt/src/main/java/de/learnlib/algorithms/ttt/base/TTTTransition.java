@@ -74,6 +74,8 @@ public class TTTTransition<I,D> extends IncomingListElem<I,D> implements AccessS
 			return treeTarget;
 		}
 		
+		assert nonTreeTarget.isLeaf() : "transition target is not a leaf, but is a " + (nonTreeTarget.isTemp() ? "temp" : "non-temp") + " node with discr" + nonTreeTarget.getDiscriminator();
+		assert nonTreeTarget.state != null;
 		return nonTreeTarget.state;
 	}
 	

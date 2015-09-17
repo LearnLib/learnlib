@@ -28,9 +28,9 @@ import com.google.common.collect.AbstractIterator;
 
 public class DTNode<I,D> extends BlockListElem<I,D> {
 	
-	
 	private static final class StatesIterator<I,D> extends AbstractIterator<TTTState<I,D>> {
 		private final Deque<DTNode<I,D>> stack = new ArrayDeque<>();
+		
 		public StatesIterator(DTNode<I,D> root) {
 			stack.push(root);
 		}
@@ -57,9 +57,11 @@ public class DTNode<I,D> extends BlockListElem<I,D> {
 	
 	private static final class LeavesIterator<I,D> extends AbstractIterator<DTNode<I,D>> {
 		private final Deque<DTNode<I,D>> stack = new ArrayDeque<>();
+		
 		public LeavesIterator(DTNode<I,D> root) {
 			stack.push(root);
 		}
+		
 		@Override
 		protected DTNode<I,D> computeNext() {
 			while(!stack.isEmpty()) {
@@ -162,6 +164,10 @@ public class DTNode<I,D> extends BlockListElem<I,D> {
 	public TTTState<I,D> getState() {
 		assert isLeaf();
 		return state;
+	}
+	
+	public boolean isRoot() {
+		return parent == null;
 	}
 	
 	public boolean isInner() {
@@ -267,12 +273,16 @@ public class DTNode<I,D> extends BlockListElem<I,D> {
 		
 		for (int i = 0; i < numOutputs; i++) {
 			D output = outputs[i];
-			DTNode<I,D> child = new DTNode<I,D>(this, output);
+			DTNode<I,D> child = createChild(this, output);
 			this.children.put(output, child);
 			children[i] = child;
 		}
 		
 		return children;
+	}
+	
+	protected DTNode<I, D> createChild(DTNode<I,D> parent, D parentOut) {
+		return new DTNode<>(parent, parentOut);
 	}
 
 	public IncomingList<I,D> getIncoming() {

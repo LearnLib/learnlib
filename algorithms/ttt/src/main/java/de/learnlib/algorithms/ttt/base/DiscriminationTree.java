@@ -44,7 +44,11 @@ public class DiscriminationTree<I,D> {
 	private final MembershipOracle<I, D> oracle;
 	
 	public DiscriminationTree(MembershipOracle<I, D> oracle) {
-		this.root = new DTNode<>();
+		this(oracle, new DTNode<>());
+	}
+	
+	public DiscriminationTree(MembershipOracle<I, D> oracle, DTNode<I,D> root) {
+		this.root = root;
 		this.oracle = oracle;
 	}
 	

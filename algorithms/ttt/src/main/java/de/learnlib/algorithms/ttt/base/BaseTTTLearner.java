@@ -18,29 +18,34 @@ package de.learnlib.algorithms.ttt.base;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Queue;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.commons.smartcollections.ElementReference;
 import net.automatalib.commons.smartcollections.UnorderedCollection;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+
+import com.google.common.collect.Iterators;
+
+import de.learnlib.acex.AcexAnalyzer;
+import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.ttt.base.TTTHypothesis.TTTEdge;
-import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.counterexamples.LocalSuffixFinder;
-import de.learnlib.counterexamples.LocalSuffixFinders;
+import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
 import de.learnlib.oracles.DefaultQuery;
 
 /**
@@ -50,22 +55,21 @@ import de.learnlib.oracles.DefaultQuery;
  *
  * @param <I> input symbol type
  */
-public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>, AccessSequenceTransformer<I>, SuffixOutput<I, D> {
+public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> {
 	
 	public static class BuilderDefaults {
-		public static <I,D> LocalSuffixFinder<? super I, ? super D> suffixFinder() {
-			return LocalSuffixFinders.RIVEST_SCHAPIRE;
+		public static AcexAnalyzer analyzer() {
+			return AcexAnalyzers.BINARY_SEARCH_BWD;
 		}
 	}
 	
 	protected final Alphabet<I> alphabet;
 	protected final TTTHypothesis<I,D,?> hypothesis;
-	private final MembershipOracle<I, D> oracle;
+	protected final MembershipOracle<I, D> oracle;
 	
 	protected final DiscriminationTree<I,D> dtree;
-	// private final SuffixTrie<I> suffixTrie = new SuffixTrie<>();
 	
-	//private final Set<Word<I>> finalDiscriminators = Sets.newHashSet(Word.epsilon());
+	protected final AcexAnalyzer analyzer;
 	
 	private final Collection<TTTEventListener<I, D>> eventListeners = new UnorderedCollection<>();
 	
@@ -73,20 +77,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * Open transitions, i.e., transitions that possibly point to a non-leaf
 	 * node in the discrimination tree.
 	 */
-	private final Queue<TTTTransition<I,D>> openTransitions = new ArrayDeque<>();
-	
-	/**
-	 * Suffix finder to be used for counterexample analysis.
-	 */
-	private final LocalSuffixFinder<? super I, ? super D> suffixFinder;
-	
-	/**
-	 * The size of the hypothesis after the last call to {@link #closeTransitions()}.
-	 * This allows classifying states as "old" by means of their ID, which is necessary
-	 * to determine whether its transitions need to be added to the list
-	 * of "open" transitions.
-	 */
-	private int lastGeneration;
+	protected final IncomingList<I, D> openTransitions = new IncomingList<>();
 	
 	/**
 	 * The blocks during a split operation. A block is a maximal subtree of the
@@ -96,13 +87,25 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	
 	protected BaseTTTLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle,
 			TTTHypothesis<I, D, ?> hypothesis,
-			LocalSuffixFinder<? super I, ? super D> suffixFinder) {
+			AcexAnalyzer analyzer) {
 		this.alphabet = alphabet;
 		this.hypothesis = hypothesis;
 		this.oracle = oracle;
 		this.dtree = new DiscriminationTree<>(oracle);
-		this.suffixFinder = suffixFinder;
+		this.analyzer = analyzer;
 	}
+	
+	protected BaseTTTLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle,
+			TTTHypothesis<I, D, ?> hypothesis,
+			AcexAnalyzer analyzer,
+			DTNode<I,D> root) {
+		this.alphabet = alphabet;
+		this.hypothesis = hypothesis;
+		this.oracle = oracle;
+		this.dtree = new DiscriminationTree<>(oracle, root);
+		this.analyzer = analyzer;
+	}
+	
 	
 	/*
 	 * LearningAlgorithm interface methods
@@ -119,11 +122,8 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		}
 		
 		TTTState<I, D> init = hypothesis.initialize();
-		
-		DTNode<I, D> initNode = dtree.sift(init);
-		
+		DTNode<I, D> initNode = dtree.sift(init, false);
 		link(initNode, init);
-		
 		initializeState(init);
 		
 		closeTransitions();
@@ -140,14 +140,12 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		}
 		
 		DefaultQuery<I, D> currCe = ceQuery;
-		
-		//while(currCe != null) {
-			while(refineHypothesisSingle(currCe));
-//			currCe = checkHypothesisConsistency();
-//		}
+		while(refineHypothesisSingle(currCe));
 		
 		return true;
 	}
+	
+	
 	
 	
 	/*
@@ -166,7 +164,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 			TTTTransition<I,D> trans = createTransition(state, sym);
 			trans.setNonTreeTarget(dtree.getRoot());
 			state.transitions[i] = trans;
-			openTransitions.offer(trans);
+			openTransitions.insertIncoming(trans);
 		}
 	}
 	
@@ -183,40 +181,66 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param ceQuery the counterexample (query) to be used for refinement
 	 * @return {@code true} if the hypothesis was refined, {@code false} otherwise
 	 */
-	private boolean refineHypothesisSingle(DefaultQuery<I, D> ceQuery) {
-		TTTState<I,D> state = getState(ceQuery.getPrefix());
+	protected boolean refineHypothesisSingle(DefaultQuery<I, D> ceQuery) {
+		TTTState<I,D> state = getAnyState(ceQuery.getPrefix());
 		D out = computeHypothesisOutput(state, ceQuery.getSuffix());
 		
 		if(Objects.equals(out, ceQuery.getOutput())) {
 			return false;
 		}
 		
-		// Determine a counterexample decomposition (u, a, v)
-		int suffixIdx = suffixFinder.findSuffixIndex(ceQuery, this, this, oracle);
-		assert suffixIdx != -1;
+		OutputInconsistency<I,D> outIncons = new OutputInconsistency<I,D>(
+				state,
+				ceQuery.getSuffix(),
+				ceQuery.getOutput());
 		
-		Word<I> ceInput = ceQuery.getInput();
-		
-		Word<I> u = ceInput.prefix(suffixIdx - 1);
-		I a = ceInput.getSymbol(suffixIdx - 1);
-		int aIdx = alphabet.getSymbolIndex(a);
-		Word<I> v = ceInput.subWord(suffixIdx);
-		
-		
-		TTTState<I,D> pred = getState(u);
-		TTTTransition<I,D> trans = pred.transitions[aIdx];
-		
-		// Split the state reached by ua
-		splitState(trans, v);
-		
-		// "Repair" the hypothesis
-		while(!repair()) {}
-		
-		// Close all open transitions
-		closeTransitions();
+		do {
+			splitState(outIncons);
+			closeTransitions();
+			while (finalizeAny()) {
+				closeTransitions();
+			}
+			
+			outIncons = findOutputInconsistency();
+		} while(outIncons != null);
+		assert allNodesFinal();
 		
 		return true;
 	}
+	
+	private void splitState(OutputInconsistency<I, D> outIncons) {
+		OutInconsPrefixTransformAcex<I, D> acex = deriveAcex(outIncons);
+		int breakpoint = analyzer.analyzeAbstractCounterexample(acex);
+		assert !acex.testEffects(breakpoint, breakpoint+1);
+		
+		Word<I> suffix = outIncons.suffix;
+		
+		TTTState<I,D> predState = getDeterministicState(outIncons.srcState, suffix.prefix(breakpoint));
+		TTTState<I,D> succState = getDeterministicState(outIncons.srcState, suffix.prefix(breakpoint + 1));
+		assert getDeterministicState(predState, Word.fromLetter(suffix.getSymbol(breakpoint))) == succState;
+		
+		I sym = suffix.getSymbol(breakpoint);
+		Word<I> splitSuffix = suffix.subWord(breakpoint + 1);
+		TTTTransition<I, D> trans = predState.transitions[alphabet.getSymbolIndex(sym)];
+		D oldOut = acex.effect(breakpoint + 1);
+		D newOut = succEffect(acex.effect(breakpoint));
+		
+		splitState(trans, splitSuffix, oldOut, newOut);
+	}
+	
+	protected OutInconsPrefixTransformAcex<I, D> deriveAcex(OutputInconsistency<I, D> outIncons) {
+		TTTState<I, D> source = outIncons.srcState;
+		Word<I> suffix = outIncons.suffix;
+		
+		OutInconsPrefixTransformAcex<I,D> acex = new OutInconsPrefixTransformAcex<>(suffix, oracle,
+				w -> getDeterministicState(source, w).getAccessSequence());
+		
+		acex.setEffect(0, outIncons.targetOut);
+		return acex;
+	}
+	
+	protected abstract D succEffect(D effect);
+	
 	
 	/**
 	 * Chooses a block root, and finalizes the corresponding discriminator.
@@ -232,114 +256,95 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		return false;
 	}
 	
-	/**
-	 * "Repairs" the data structures of the algorithm by subsequently
-	 * finalizing discriminators of block roots. If this alone is insufficient (i.e.,
-	 * there are blocks with discriminators that cannot be finalized),
-	 * consistency between the discrimination tree and the hypothesis is restored
-	 * by calling {@link #makeConsistent(DTNode)}.
-	 * <p>
-	 * <b>Note:</b> In the latter case, this method has to be called again. Whether
-	 * or not this is necessary can be determined by examining the return value.
-	 * 
-	 * @return {@code true} if the hypothesis was successfully repaired, {@code false}
-	 * otherwise (i.e., if a subsequent call to this method is required)
-	 */
-	private boolean repair() {
-		while(finalizeAny()) {}
-		if(blockList.isEmpty()) {
-			return true;
+	protected TTTState<I,D> getDeterministicState(TTTState<I,D> start, Word<I> word) {
+		TTTState<I,D> lastSingleton = start;
+		int lastSingletonIndex = 0;
+		
+		Set<TTTState<I,D>> states = Collections.singleton(start);
+		int i = 1;
+		for (I sym : word) {
+			Set<TTTState<I,D>> nextStates = getNondetSuccessors(states, sym);
+			if (nextStates.size() == 1) {
+				lastSingleton = nextStates.iterator().next();
+				lastSingletonIndex = i;
+			}
+			states = nextStates;
+			
+			i++;
 		}
-		DTNode<I,D> blockRoot = blockList.chooseBlock();
-		makeConsistent(blockRoot);
-		return false;
+		if (lastSingletonIndex == word.length()) {
+			return lastSingleton;
+		}
+		
+		TTTState<I,D> curr = lastSingleton;
+		for (I sym : word.subWord(lastSingletonIndex)) {
+			TTTTransition<I, D> trans = curr.transitions[alphabet.getSymbolIndex(sym)];
+			TTTState<I,D> next = requireSuccessor(trans);
+			curr = next;
+		}
+		
+		return curr;
 	}
 	
-	/**
-	 * Restores consistency between the discriminator info contained in the subtree
-	 * of the given block, and the hypothesis. As counterexample reevaluation might result
-	 * in queries of relatively high length, only a single discriminator and
-	 * two states it separated are considered. Hence, this method may have to be invoked
-	 * repeatedly in order to allow further discriminator finalization.
-	 *  
-	 * @param blockRoot the root of the block in which to restore consistency
-	 */
-	private void makeConsistent(DTNode<I,D> blockRoot) {
-		// TODO currently, we have a very simplistic approach: we take the
-		// leftmost inner node, its left child, and the leftmost child of its
-		// new subtree. While this does not impair correctness, a heuristic
-		// trying to minimize the length of discriminators and state access sequences might be worth
-		// exploring.
-		DTNode<I,D> separator = chooseInnerNode(blockRoot);
-		
-		for (DTNode<I,D> subtreeRoot : separator.getChildren()) {
-			DTNode<I,D> leaf = chooseLeaf(subtreeRoot);
-			if (ensureConsistency(leaf.state, separator, subtreeRoot.getParentEdgeLabel())) {
-				return;
+	protected Set<TTTState<I,D>> getNondetSuccessors(Collection<? extends TTTState<I,D>> states, I sym) {
+		Set<TTTState<I,D>> result = new HashSet<>();
+		int symIdx = alphabet.getSymbolIndex(sym);
+		for (TTTState<I,D> state : states) {
+			TTTTransition<I, D> trans = state.transitions[symIdx];
+			if (trans.isTree()) {
+				result.add(trans.getTreeTarget());
+			}
+			else {
+				DTNode<I,D> tgtNode = trans.getNonTreeTarget();
+				Iterators.addAll(result, tgtNode.subtreeStatesIterator());
 			}
 		}
-		
-		assert false;
+		return result;
 	}
 	
-	protected DTNode<I,D> chooseInnerNode(DTNode<I,D> root) {
-		DTNode<I,D> shortestDiscriminator = null;
-		int shortestLen = 0;
-		
-		for(DTNode<I,D> node : root.innerNodes()) {
-			int discrLen = node.getDiscriminator().length();
-			if(shortestDiscriminator == null || discrLen < shortestLen) {
-				shortestDiscriminator = node;
-				shortestLen = discrLen;
-			}
+	protected Collection<? extends TTTState<I,D>> getNondetSuccessors(Collection<? extends TTTState<I,D>> states,
+			Iterable<? extends I> suffix) {
+		Collection<? extends TTTState<I,D>> curr = states;
+		for (I sym : suffix) {
+			curr = getNondetSuccessors(curr, sym);
 		}
-		
-		return shortestDiscriminator;
+		return curr;
 	}
 	
-	protected DTNode<I,D> chooseLeaf(DTNode<I,D> root) {
-		DTNode<I,D> shortestPrefix = null;
-		int shortestLen = 0;
-		
-		for(DTNode<I,D> leaf : root.subtreeLeaves()) {
-			int asLen = leaf.state.getAccessSequence().length();
-			if(shortestPrefix == null || asLen < shortestLen) {
-				shortestPrefix = leaf;
-				shortestLen = asLen;
-			}
+	protected TTTState<I,D> getAnySuccessor(TTTState<I,D> state, I sym) {
+		int symIdx = alphabet.getSymbolIndex(sym);
+		TTTTransition<I, D> trans = state.transitions[symIdx];
+		if (trans.isTree()) {
+			return trans.getTreeTarget();
 		}
-		
-		return shortestPrefix;
+		return trans.getNonTreeTarget().subtreeStatesIterator().next();
 	}
 	
-	/**
-	 * Ensures that the given state's output for the specified suffix in the hypothesis
-	 * matches the provided real outcome, as determined by means of a membership query.
-	 * This is achieved by analyzing the derived counterexample, if the hypothesis
-	 * in fact differs from the provided real outcome.
-	 * 
-	 * @param state the state
-	 * @param suffix the suffix
-	 * @param realOutcome the real outcome, previously determined through a membership query
-	 * @return {@code true} if the hypothesis was refined (i.e., was inconsistent when
-	 * this method was called), {@code false} otherwise
-	 */
-	private boolean ensureConsistency(TTTState<I,D> state, DTNode<I,D> dtNode, D realOutcome) {
-		Word<I> suffix = dtNode.getDiscriminator();
-		D hypOutcome = computeHypothesisOutput(state, suffix);
-		if(Objects.equals(hypOutcome, realOutcome)) {
-			return false;
+	protected TTTState<I,D> getAnySuccessor(TTTState<I,D> state, Iterable<? extends I> suffix) {
+		TTTState<I,D> curr = state;
+		for (I sym : suffix) {
+			curr = getAnySuccessor(curr, sym);
 		}
-		
-		notifyEnsureConsistency(state, dtNode, realOutcome);
-		
-		
-		DefaultQuery<I, D> query = new DefaultQuery<>(state.getAccessSequence(), suffix, realOutcome);
-		
-		while(refineHypothesisSingle(query)) {}
-		
-		return true;
+		return curr;
 	}
+	
+	protected TTTTransition<I,D> getStateTransition(TTTState<I,D> state, I sym) {
+		int idx = alphabet.getSymbolIndex(sym);
+		return state.transitions[idx];
+	}
+	
+	private TTTState<I,D> requireSuccessor(TTTTransition<I, D> trans) {
+		if (trans.isTree()) {
+			return trans.getTreeTarget();
+		}
+		DTNode<I, D> newTgtNode = updateDTTarget(trans, true);
+		if (newTgtNode.state == null) {
+			makeTree(trans);
+			closeTransitions();
+		}
+		return newTgtNode.state;
+	}
+	
 	
 	
 	/**
@@ -359,28 +364,27 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param <I> input symbol type
 	 */
 	public static final class Splitter<I,D> {
-		public final TTTState<I,D> state1, state2;
 		public final int symbolIdx;
 		public final DTNode<I,D> succSeparator;
-		public final Word<I> discriminator;
 		
-		public Splitter(TTTState<I,D> state1, TTTState<I,D> state2, int symbolIdx) {
-			this.state1 = state1;
-			this.state2 = state2;
-			
+		public Splitter(int symbolIdx) {
 			this.symbolIdx = symbolIdx;
 			this.succSeparator = null;
-			this.discriminator = Word.epsilon();
 		}
 		
-		public Splitter(TTTState<I,D> state1, TTTState<I,D> state2, int symbolIdx, DTNode<I,D> succSeparator) {
+		public Splitter(int symbolIdx, DTNode<I,D> succSeparator) {
 			assert !succSeparator.isTemp() && succSeparator.isInner();
 			
-			this.state1 = state1;
-			this.state2 = state2;
 			this.symbolIdx = symbolIdx;
 			this.succSeparator = succSeparator;
-			this.discriminator = succSeparator.getDiscriminator();
+		}
+		
+		public Word<I> getDiscriminator() {
+			return (succSeparator != null) ? succSeparator.getDiscriminator() : Word.epsilon();
+		}
+		
+		public int getDiscriminatorLength() {
+			return (succSeparator != null) ? succSeparator.getDiscriminator().length() : 0;
 		}
 	}
 	
@@ -418,17 +422,16 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		
 		Splitter<I,D> bestSplitter = null;
 		
-		Iterator<DTNode<I,D>> blocksIt = blockList.iterator();
-		while(blocksIt.hasNext()) {
-			DTNode<I,D> blockRoot = blocksIt.next();
+		for (DTNode<I,D> blockRoot : blockList) {
 //			if (finalDiscriminators.contains(blockRoot.getDiscriminator().subWord(1))) {
 //				declareFinal(blockRoot);
 //				continue;
 //			}
 			Splitter<I,D> splitter = findSplitter(blockRoot);
+			
 			if(splitter != null) {
-				if(bestSplitter == null || splitter.discriminator.length()
-						< bestSplitter.discriminator.length()) {
+				if(bestSplitter == null || splitter.getDiscriminatorLength()
+						< bestSplitter.getDiscriminatorLength()) {
 					bestSplitter = splitter;
 					bestBlockRoot = blockRoot;
 				}
@@ -457,102 +460,50 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 */
 	@SuppressWarnings("unchecked")
 	private Splitter<I,D> findSplitter(DTNode<I,D> blockRoot) {
-		// TODO: Make global option
-		boolean optimizeLocal = true;
+		int alphabetSize = alphabet.size();
 		
-		Iterator<TTTState<I,D>> statesIt = blockRoot.subtreeStatesIterator();
+		Object[] properties = new Object[alphabetSize];
+		DTNode<I,D>[] lcas = new DTNode[alphabetSize];
+		boolean first = true;
 		
-		assert statesIt.hasNext();
-		
-		Object[] properties = new Object[alphabet.size()];
-		DTNode<I,D>[] dtTargets = new DTNode[alphabet.size()];
-		
-		TTTState<I,D> state = statesIt.next();
-		
-		for(int i = 0; i < dtTargets.length; i++) {
-			TTTTransition<I,D> trans = state.transitions[i];
-			dtTargets[i] = updateDTTarget(trans, false);
-			properties[i] = trans.getProperty();
-		}
-		
-		TTTState<I,D> state1 = state;
-		
-		assert statesIt.hasNext();
-		
-		int bestI = -1;
-		DTNode<I,D> bestLCA = null;
-		
-		TTTState<I,D> state2 = null;
-		
-		while(statesIt.hasNext()) {
-			state = statesIt.next();
-			
-			for(int i = 0; i < dtTargets.length; i++) {
-				TTTTransition<I,D> trans = state.transitions[i];
-				if (!Objects.equals(properties[i], trans.getProperty())) {
-					return new Splitter<I,D>(state1, state, i);
-				}
-				
-				DTNode<I,D> tgt1 = dtTargets[i];
-				DTNode<I,D> tgt2 = updateDTTarget(trans, false);
-				
-				
-				DTNode<I,D> lca = dtree.leastCommonAncestor(tgt1, tgt2);
-				if(!lca.isTemp() && lca.isInner()) {
-					if(!optimizeLocal) {
-						return new Splitter<>(state1, state, i, lca);
-					}
-					if(bestLCA == null || bestLCA.getDiscriminator().length() > lca.getDiscriminator().length()) {
-						bestI = i;
-						bestLCA = lca;
-						state2 = state;
-					}
-					dtTargets[i] = lca;
+		for (TTTState<I,D> state : blockRoot.subtreeStates()) {
+			for (int i = 0; i < alphabetSize; i++) {
+				TTTTransition<I, D> trans = state.transitions[i];
+				if (first) {
+					properties[i] = trans.getProperty();
+					lcas[i] = trans.getDTTarget();
 				}
 				else {
-					dtTargets[i] = lca;
+					if (!Objects.equals(properties[i], trans.getProperty())) {
+						return new Splitter<>(i);
+					}
+					lcas[i] = dtree.leastCommonAncestor(lcas[i], trans.getDTTarget());
+				}
+			}
+			first = false;
+		}
+		
+		int shortestLen = Integer.MAX_VALUE;
+		DTNode<I, D> shortestLca = null;
+		int shortestLcaSym = -1;
+		
+		for (int i = 0; i < alphabetSize; i++) {
+			DTNode<I,D> lca = lcas[i];
+			if (!lca.isTemp() && !lca.isLeaf()) {
+				int lcaLen = lca.getDiscriminator().length();
+				if (shortestLca == null || lcaLen < shortestLen) {
+					shortestLca = lca;
+					shortestLen = lcaLen;
+					shortestLcaSym = i;
 				}
 			}
 		}
 		
-		if(bestLCA == null) {
-			return null;
+		if (shortestLca != null) {
+			return new Splitter<>(shortestLcaSym, shortestLca);
 		}
-		return new Splitter<>(state1, state2, bestI, bestLCA);
+		return null;
 	}
-	
-//	/**
-//	 * Checks whether the hypothesis is consistent with the discrimination tree.
-//	 * If an inconsistency is discovered, it is returned in the form of a counterexample.
-//	 * 
-//	 * @return a counterexample uncovering an inconsistency, or {@code null}
-//	 * if the hypothesis is consistent with the discrimination tree
-//	 */
-//	// TODO can be removed
-//	private DefaultQuery<I, D> checkHypothesisConsistency() {
-//		for(DTNode<I,D> leaf : dtree.getRoot().subtreeLeaves()) {
-//			TTTState<I,D> state = leaf.state;
-//			if(state == null) {
-//				continue;
-//			}
-//			
-//			DTNode<I,D> curr = state.dtLeaf;
-//			DTNode<I,D> next = curr.getParent();
-//			
-//			while(next != null) {
-//				Word<I> discr = next.getDiscriminator();
-//				D expected = curr.getParentEdgeLabel();
-//				
-//				if(!Objects.equals(computeHypothesisOutput(state, discr), expected)) {
-//					return new DefaultQuery<>(state.getAccessSequence(), discr, expected);
-//				}
-//				curr = next;
-//				next = curr.getParent();
-//			}
-//		}
-//		
-//		return null;
-//	}
 	
 	/**
 	 * Creates a state in the hypothesis. This method cannot be used for the initial
@@ -577,31 +528,13 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param trans the transition
 	 * @return the target state of this transition (possibly after it having been updated)
 	 */
-	protected TTTState<I,D> getTarget(TTTTransition<I,D> trans) {
+	protected TTTState<I,D> getAnyTarget(TTTTransition<I,D> trans) {
 		if(trans.isTree()) {
 			return trans.getTreeTarget();
 		}
-		return updateTarget(trans);
+		return trans.getNonTreeTarget().subtreeStates().iterator().next();
 	}
 	
-	/**
-	 * Retrieves the successor for a given state and a suffix sequence.
-	 * 
-	 * @param start the originating state
-	 * @param suffix the sequence of input symbols to process
-	 * @return the state reached after processing {@code suffix}, starting from
-	 * {@code start}
-	 */
-	protected TTTState<I,D> getState(TTTState<I,D> start, Iterable<? extends I> suffix) {
-		TTTState<I,D> curr = start;
-		
-		for(I sym : suffix) {
-			TTTTransition<I,D> trans = hypothesis.getInternalTransition(curr, sym);
-			curr = getTarget(trans);
-		}
-		
-		return curr;
-	}
 	
 	/**
 	 * Retrieves the state reached by the given sequence of symbols, starting
@@ -609,8 +542,28 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param suffix the sequence of symbols to process
 	 * @return the state reached after processing the specified symbols
 	 */
-	private TTTState<I,D> getState(Iterable<? extends I> suffix) {
-		return getState(hypothesis.getInitialState(), suffix);
+	private TTTState<I,D> getAnyState(Iterable<? extends I> suffix) {
+		return getAnySuccessor(hypothesis.getInitialState(), suffix);
+	}
+	
+	private OutputInconsistency<I, D> findOutputInconsistency() {
+		OutputInconsistency<I, D> best = null;
+		
+		for (TTTState<I, D> state : hypothesis.getStates()) {
+			DTNode<I, D> node = state.getDTLeaf();
+			while (!node.isRoot()) {
+				D expectedOut = node.getParentEdgeLabel();
+				node = node.getParent();
+				Word<I> suffix = node.getDiscriminator();
+				if (best == null || suffix.length() < best.suffix.length()) {
+					D hypOut = computeHypothesisOutput(state, suffix);
+					if (!Objects.equals(hypOut, expectedOut)) {
+						best = new OutputInconsistency<>(state, suffix, expectedOut);
+					}
+				}
+			}
+		}
+		return best;
 	}
 	
 	/**
@@ -626,21 +579,32 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		
 		notifyPreFinalizeDiscriminator(blockRoot, splitter);
 		
-		Word<I> finalDiscriminator = prepareSplit(blockRoot, splitter);
-		Map<D,DTNode<I,D>> repChildren = createMap();
-			
-		for (D label : blockRoot.splitData.getLabels()) {
-			repChildren.put(label, extractSubtree(blockRoot, label));
+		Word<I> succDiscr = splitter.getDiscriminator().prepend(alphabet.getSymbol(splitter.symbolIdx));
+		
+		if (!blockRoot.getDiscriminator().equals(succDiscr)) {
+			Word<I> finalDiscriminator = prepareSplit(blockRoot, splitter);
+			Map<D,DTNode<I,D>> repChildren = createMap();
+			for (D label : blockRoot.splitData.getLabels()) {
+				repChildren.put(label, extractSubtree(blockRoot, label));
+			}
+			blockRoot.replaceChildren(repChildren);
+
+			blockRoot.setDiscriminator(finalDiscriminator);
 		}
-		blockRoot.replaceChildren(repChildren);
-	
-		blockRoot.setDiscriminator(finalDiscriminator);
 
 		declareFinal(blockRoot);
 		
 		notifyPostFinalizeDiscriminator(blockRoot, splitter);
 	}
 	
+	protected boolean allNodesFinal() {
+		Iterator<? extends DTNode<I,D>> it = dtree.getRoot().subtreeNodesIterator();
+		while (it.hasNext()) {
+			DTNode<I,D> node = it.next();
+			assert !node.isTemp() : "Final node with discriminator " + node.getDiscriminator();
+		}
+		return true;
+	}
 	protected void declareFinal(DTNode<I,D> blockRoot) {
 		blockRoot.temp = false;
 		blockRoot.splitData = null;
@@ -656,6 +620,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 				blockList.insertBlock(subtree);
 			}
 		}
+		openTransitions.insertAllIncoming(blockRoot.getIncoming());
 	}
 	
 	/**
@@ -670,7 +635,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	private Word<I> prepareSplit(DTNode<I,D> node, Splitter<I,D> splitter) {
 		int symbolIdx = splitter.symbolIdx;
 		I symbol = alphabet.getSymbol(symbolIdx);
-		Word<I> discriminator = splitter.discriminator.prepend(symbol);
+		Word<I> discriminator = splitter.getDiscriminator().prepend(symbol);
 		
 		Deque<DTNode<I,D>> dfsStack = new ArrayDeque<>();
 		
@@ -702,16 +667,9 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 				TTTState<I,D> state = curr.state;
 				assert state != null;
 				
-				// Try to deduct the outcome from the DT target of
-				// the respective transition
 				TTTTransition<I,D> trans = state.transitions[symbolIdx];
-				// This used to be updateDTTarget(), but this would make 
-				// the "incoming" information inconsistent!
 				D outcome = predictSuccOutcome(trans, succSeparator);
-				if (outcome == null) {
-					// OK, we need to do a membership query here
-					outcome = query(state, discriminator);
-				}
+				assert outcome != null;
 				curr.splitData.setStateLabel(outcome);
 				markAndPropagate(curr, outcome);
 			}
@@ -721,9 +679,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		return discriminator;
 	}
 	
-	protected D predictSuccOutcome(TTTTransition<I, D> trans, DTNode<I, D> succSeparator) {
-		return null;
-	}
+	protected abstract D predictSuccOutcome(TTTTransition<I, D> trans, DTNode<I, D> succSeparator);
 	
 	/**
 	 * Marks a node, and propagates the label up to all nodes on the path from the block
@@ -877,62 +833,11 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param dtNode the node in the discrimination tree
 	 * @param state the state in the hypothesis
 	 */
-	private static <I,D> void link(DTNode<I,D> dtNode, TTTState<I,D> state) {
+	protected static <I,D> void link(DTNode<I,D> dtNode, TTTState<I,D> state) {
 		assert dtNode.isLeaf();
 		
 		dtNode.state = state;
 		state.dtLeaf = dtNode;
-	}
-
-	/*
-	 * Access Sequence Transformer API
-	 */
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.automata.concepts.Output#computeOutput(java.lang.Iterable)
-	 */
-	@Override
-	public D computeOutput(Iterable<? extends I> input) {
-		return computeHypothesisOutput(hypothesis.getInitialState(), input);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.automata.concepts.SuffixOutput#computeSuffixOutput(java.lang.Iterable, java.lang.Iterable)
-	 */
-	@Override
-	public D computeSuffixOutput(Iterable<? extends I> prefix,
-			Iterable<? extends I> suffix) {
-		TTTState<I,D> prefixState = getState(prefix);
-		return computeHypothesisOutput(prefixState, suffix);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.api.AccessSequenceTransformer#transformAccessSequence(net.automatalib.words.Word)
-	 */
-	@Override
-	public Word<I> transformAccessSequence(Word<I> word) {
-		return getState(word).getAccessSequence();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.api.AccessSequenceTransformer#isAccessSequence(net.automatalib.words.Word)
-	 */
-	@Override
-	public boolean isAccessSequence(Word<I> word) {
-		TTTState<I,D> curr = hypothesis.getInitialState();
-		for(I sym : word) {
-			TTTTransition<I,D> trans = hypothesis.getInternalTransition(curr, sym);
-			if(!trans.isTree()) {
-				return false;
-			}
-			curr = trans.getTarget();
-		}
-		
-		return true;
 	}
 	
 	public TTTHypothesis<I, D, ?> getHypothesisDS() {
@@ -957,34 +862,24 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @return the discrimination tree node separating the old and the new node, labeled
 	 * by the specified temporary discriminator
 	 */
-	private DTNode<I,D> splitState(TTTTransition<I,D> transition, Word<I> tempDiscriminator) {
+	private DTNode<I,D> splitState(TTTTransition<I,D> transition, Word<I> tempDiscriminator,
+			D oldOut, D newOut) {
 		assert !transition.isTree();
 		
 		notifyPreSplit(transition, tempDiscriminator);
 		
 		DTNode<I,D> dtNode = transition.getNonTreeTarget();
+		assert dtNode.isLeaf();
 		TTTState<I,D> oldState = dtNode.state;
 		assert oldState != null;
 		
-		TTTState<I,D> newState = createState(transition);
-		
-		D oldOut = query(oldState, tempDiscriminator);
-		D newOut = query(newState, tempDiscriminator);
+		TTTState<I,D> newState = makeTree(transition);
 		
 		DTNode<I,D>[] children = split(dtNode, tempDiscriminator, oldOut, newOut);
+		dtNode.temp = true;
 		
 		link(children[0], oldState);
 		link(children[1], newState);
-		
-		initializeState(newState);
-		
-		if(isOld(oldState)) {
-			for(TTTTransition<I,D> incoming : dtNode.getIncoming()) {
-				openTransitions.offer(incoming);
-			}
-		}
-		
-		dtNode.temp = true;
 		
 		if(dtNode.getParent() == null || !dtNode.getParent().isTemp()) {
 			blockList.insertBlock(dtNode);
@@ -995,26 +890,60 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		return dtNode;
 	}
 	
-	/**
-	 * Checks whether the given state is old, i.e., was added to the hypothesis before the
-	 * most recent call to {@link #closeTransitions()}.
-	 * 
-	 * @param state the state to check
-	 * @return {@code true} if this state is old, {@code false} otherwise
-	 */
-	private boolean isOld(@Nonnull TTTState<I,D> state) {
-		return state.id < lastGeneration;
-	}
 
-	/**
-	 * Ensures that all non-tree transitions in the hypothesis point to leaf nodes.
-	 */
-	private void closeTransitions() {
-		while(!openTransitions.isEmpty()) {
-			TTTTransition<I,D> trans = openTransitions.poll();
-			closeTransition(trans);
+	
+	protected void closeTransitions() {
+		TTTTransition<I, D> next;
+		UnorderedCollection<DTNode<I, D>> newStateNodes = new UnorderedCollection<>();
+		
+		do {
+			while ((next = openTransitions.poll()) != null) {
+				DTNode<I,D> newStateNode = closeTransition(next, false);
+				if (newStateNode != null) {
+					newStateNodes.add(newStateNode);
+				}
+			}
+			if (!newStateNodes.isEmpty()) {
+				addNewStates(newStateNodes);
+			}
+		} while(!openTransitions.isEmpty());
+	}
+	
+	private void addNewStates(UnorderedCollection<DTNode<I,D>> newStateNodes) {
+		DTNode<I,D> minTransNode = null;
+		TTTTransition<I, D> minTrans = null;
+		int minAsLen = Integer.MAX_VALUE;
+		ElementReference minTransNodeRef = null;
+		for (ElementReference ref : newStateNodes.references()) {
+			DTNode<I, D> newStateNode = newStateNodes.get(ref);
+			for (TTTTransition<I, D> trans : newStateNode.getIncoming()) {
+				Word<I> as = trans.getAccessSequence();
+				int asLen = as.length();
+				if (asLen < minAsLen) {
+					minTransNode = newStateNode;
+					minTrans = trans;
+					minAsLen = asLen;
+					minTransNodeRef = ref;
+				}
+			}
 		}
-		this.lastGeneration = hypothesis.size();
+		
+		assert minTransNode != null;
+		newStateNodes.remove(minTransNodeRef);
+		TTTState<I,D> state = makeTree(minTrans);
+		link(minTransNode, state);
+		initializeState(state);
+	}
+	
+	protected TTTState<I,D> makeTree(TTTTransition<I, D> trans) {
+		assert !trans.isTree();
+		DTNode<I,D> node = trans.nonTreeTarget;
+		assert node.isLeaf();
+		TTTState<I,D> state = createState(trans);
+		trans.removeFromList();
+		link(node, state);
+		initializeState(state);
+		return state;
 	}
 	
 	/**
@@ -1023,36 +952,16 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * 
 	 * @param trans the transition
 	 */
-	private void closeTransition(TTTTransition<I,D> trans) {
+	private DTNode<I,D> closeTransition(TTTTransition<I,D> trans, boolean hard) {
 		if(trans.isTree()) {
-			return;
+			return null;
 		}
 		
-		updateTarget(trans);
-	}
-	
-	/**
-	 * Updates the transition to point to a leaf in the discrimination tree, and
-	 * returns this leaf.
-	 * 
-	 * @param transition the transition
-	 * @return the DT leaf corresponding to the transition's target state
-	 */
-	private DTNode<I,D> updateDTTarget(TTTTransition<I,D> transition) {
-		return updateDTTarget(transition, true);
-	}
-	
-	private TTTState<I, D> updateTarget(TTTTransition<I, D> trans) {
-		DTNode<I,D> node = updateDTTarget(trans);
-		
-		TTTState<I,D> state = node.state;
-		if (state == null) {
-			state = createState(trans);
-			link(node, state);
-			initializeState(state);
+		DTNode<I,D> node = updateDTTarget(trans, hard);
+		if (node.isLeaf() && node.state == null && trans.nextIncoming == null) {
+			return node;
 		}
-		
-		return state;
+		return null;
 	}
 	
 	/**
@@ -1122,12 +1031,6 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	private void notifyPostFinalizeDiscriminator(DTNode<I, D> blockRoot, Splitter<I,D> splitter) {
 		for (TTTEventListener<I, D> listener : eventListeners()) {
 			listener.postFinalizeDiscriminator(blockRoot, splitter);
-		}
-	}
-	
-	private void notifyEnsureConsistency(TTTState<I,D> state, DTNode<I,D> discriminator, D realOutcome) {
-		for (TTTEventListener<I, D> listener : eventListeners()) {
-			listener.ensureConsistency(state, discriminator, realOutcome);
 		}
 	}
 	

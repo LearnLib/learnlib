@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2014-2015 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@ import de.learnlib.acex.analyzers.NamedAcexAnalyzer;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
-import de.learnlib.counterexamples.prefixtransform.PrefixTransformAcex;
+import de.learnlib.counterexamples.acex.ClassicPrefixTransformAcex;
 
 /**
  * Wraps a {@link NamedAcexAnalyzer}. This class is both responsible for adapting
@@ -45,13 +45,14 @@ public class AcexLocalSuffixFinder implements LocalSuffixFinder<Object, Object> 
 		Word<RI> counterexample = ceQuery.getInput();
 		
 		// Create the view of an abstract counterexample
-		PrefixTransformAcex<RI, RO> acex
-			= new PrefixTransformAcex<>(counterexample, oracle, asTransformer, hypOutput);
+		ClassicPrefixTransformAcex<RI, RO> acex
+			= new ClassicPrefixTransformAcex<>(counterexample, oracle, hypOutput,
+					asTransformer::transformAccessSequence);
 		
 		int start = 0;
 		
 		if (reduce) {
-			start = acex.getReductionPotential();
+			start = asTransformer.longestASPrefix(counterexample).length();
 		}
 		
 		int idx = analyzer.analyzeAbstractCounterexample(acex, start);

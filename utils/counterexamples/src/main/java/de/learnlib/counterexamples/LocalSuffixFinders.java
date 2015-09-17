@@ -52,7 +52,7 @@ public abstract class LocalSuffixFinders {
 	 * @see #findRivestSchapire(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)
 	 */
 	public static final LocalSuffixFinder<Object,Object> RIVEST_SCHAPIRE
-		= new AcexLocalSuffixFinder(AcexAnalyzers.BINARY_SEARCH, true, "RivestSchapire");
+		= new AcexLocalSuffixFinder(AcexAnalyzers.BINARY_SEARCH_BWD, true, "RivestSchapire");
 
 	
 	/**
@@ -116,7 +116,7 @@ public abstract class LocalSuffixFinders {
 			SuffixOutput<I,D> hypOutput,
 			MembershipOracle<I, D> oracle) {
 
-		return AcexLocalSuffixFinder.findSuffixIndex(AcexAnalyzers.BINARY_SEARCH, true, ceQuery, asTransformer, hypOutput, oracle);
+		return AcexLocalSuffixFinder.findSuffixIndex(AcexAnalyzers.BINARY_SEARCH_BWD, true, ceQuery, asTransformer, hypOutput, oracle);
 	}
 	
 	@SuppressWarnings("unchecked")

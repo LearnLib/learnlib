@@ -26,14 +26,17 @@ import net.automatalib.words.WordBuilder;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
+import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithms.ttt.base.BaseTTTLearner;
 import de.learnlib.algorithms.ttt.base.DTNode;
+import de.learnlib.algorithms.ttt.base.OutputInconsistency;
 import de.learnlib.algorithms.ttt.base.TTTHypothesis.TTTEdge;
 import de.learnlib.algorithms.ttt.base.TTTState;
 import de.learnlib.algorithms.ttt.base.TTTTransition;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.counterexamples.LocalSuffixFinder;
+import de.learnlib.counterexamples.acex.MealyOutInconsPrefixTransformAcex;
+import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
 
 public class TTTLearnerMealy<I, O> extends
 		BaseTTTLearner<MealyMachine<?, I, ?, O>, I, Word<O>> implements LearningAlgorithm.MealyLearner<I, O> {
@@ -41,8 +44,8 @@ public class TTTLearnerMealy<I, O> extends
 	@GenerateBuilder(defaults = BaseTTTLearner.BuilderDefaults.class)
 	public TTTLearnerMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, Word<O>> oracle,
-			LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder) {
-		super(alphabet, oracle, new TTTHypothesisMealy<I,O>(alphabet), suffixFinder);
+			AcexAnalyzer analyzer) {
+		super(alphabet, oracle, new TTTHypothesisMealy<I,O>(alphabet), analyzer);
 	}
 
 	@Override
@@ -78,7 +81,7 @@ public class TTTLearnerMealy<I, O> extends
 		for (I sym : suffix) {
 			TTTTransitionMealy<I, O> trans = (TTTTransitionMealy<I,O>) hypothesis.getInternalTransition(curr, sym);
 			wb.append(trans.output);
-			curr = getTarget(trans);
+			curr = getAnyTarget(trans);
 		}
 		
 		return wb.toWord();
@@ -104,5 +107,24 @@ public class TTTLearnerMealy<I, O> extends
 				return true;
 			}
 		};
+	}
+
+	@Override
+	protected Word<O> succEffect(Word<O> effect) {
+		return effect.subWord(1);
+	}
+	
+	@Override
+	protected OutInconsPrefixTransformAcex<I, Word<O>> deriveAcex(OutputInconsistency<I, Word<O>> outIncons) {
+		TTTState<I, Word<O>> source = outIncons.srcState;
+		Word<I> suffix = outIncons.suffix;
+		
+		OutInconsPrefixTransformAcex<I,Word<O>> acex = new MealyOutInconsPrefixTransformAcex<>(suffix, oracle,
+				w -> getDeterministicState(source, w).getAccessSequence());
+		
+		acex.setEffect(0, outIncons.targetOut);
+		Word<O> lastHypOut = computeHypothesisOutput(getAnySuccessor(source, suffix.prefix(-1)), suffix.suffix(1));
+		acex.setEffect(suffix.length() - 1, lastHypOut);
+		return acex;
 	}
 }

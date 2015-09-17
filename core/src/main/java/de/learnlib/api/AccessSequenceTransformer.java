@@ -24,4 +24,17 @@ public interface AccessSequenceTransformer<I> {
 	Word<I> transformAccessSequence(Word<I> word);
 	
 	boolean isAccessSequence(Word<I> word);
+	
+	default public Word<I> longestASPrefix(Word<I> word) {
+		int len = word.length();
+		Word<I> lastPrefix = Word.epsilon();
+		for (int i = 1; i <= len; i++) {
+			Word<I> prefix = word.prefix(i);
+			if (!isAccessSequence(prefix)) {
+				return lastPrefix;
+			}
+			lastPrefix = prefix;
+		}
+		return word;
+	}
 }

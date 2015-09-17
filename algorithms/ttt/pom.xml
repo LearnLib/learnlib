@@ -87,6 +87,10 @@ limitations under the License.
 			<groupId>com.github.misberner.buildergen</groupId>
 			<artifactId>buildergen</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-serialization-taf</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

@@ -1,6 +1,6 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2015 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,27 +16,9 @@
 package de.learnlib.acex.analyzers;
 
 import de.learnlib.acex.AbstractCounterexample;
-import de.learnlib.acex.impl.BaseAbstractCounterexample;
 
-/**
- * Abstract counterexample analysis algorithms.
- * <p>
- * All of the algorithms contained in this class takes as arguments:
- * <ul>
- * <li>an {@link BaseAbstractCounterexample} <code>acex</code>,</li>
- * <li>the lower bound of the search range <code>low</code>, and</li>
- * <li>the upper bound of the search range <code>high</code>.
- * </ul>
- * For a valid input, all of the methods in this class will return an
- * index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>.
- * The input is valid iff <code>high &gt; low</code>, <code>acex.testEffect(low) == 0</code>,
- * and <code>acex.testEffect(high) == 1</code>.
- * 
- * @author Malte Isberner
- *
- */
 public class AcexAnalysisAlgorithms {
-	
+
 	/**
 	 * Scan linearly through the counterexample in ascending order.
 	 * 
@@ -46,16 +28,18 @@ public class AcexAnalysisAlgorithms {
 	 * @return an index <code>i</code> such that
 	 * <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
 	 */
-	public static int linearSearchFwd(AbstractCounterexample acex, int low, int high) {
-		assert acex.test(low) == 0 && acex.test(high) == 1;
+	public static <E> int linearSearchFwd(AbstractCounterexample<E> acex, int low, int high) {
+		assert !acex.testEffects(low, high);
 		
-		int cur;
-		for(cur = low + 1; cur < high; cur++) {
-			if(acex.test(cur) == 1) {
-				break;
+		E effPrev = acex.effect(low);
+		for (int i = low + 1; i <= high; i++) {
+			E eff = acex.effect(i);
+			if (!acex.checkEffects(effPrev, eff)) {
+				return i - 1;
 			}
+			effPrev = eff;
 		}
-		return (cur-1);
+		throw new IllegalArgumentException();
 	}
 	
 	/**
@@ -67,16 +51,18 @@ public class AcexAnalysisAlgorithms {
 	 * @return an index <code>i</code> such that
 	 * <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
 	 */
-	public static int linearSearchBwd(AbstractCounterexample acex, int low, int high) {
-		assert acex.test(low) == 0 && acex.test(high) == 1;
+	public static <E> int linearSearchBwd(AbstractCounterexample<E> acex, int low, int high) {
+		assert !acex.testEffects(low, high);
 		
-		int cur;
-		for(cur = high-1; cur > low; cur--) {
-			if(acex.test(cur) == 0) {
-				break;
+		E effPrev = acex.effect(high);
+		for (int i = high - 1; i >= low; i--) {
+			E eff = acex.effect(i);
+			if (!acex.checkEffects(eff, effPrev)) {
+				return i;
 			}
+			effPrev = eff;
 		}
-		return cur;
+		throw new IllegalArgumentException();
 	}
 	
 	/**
@@ -88,38 +74,43 @@ public class AcexAnalysisAlgorithms {
 	 * @return an index <code>i</code> such that
 	 * <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
 	 */
-	public static int exponentialSearchBwd(AbstractCounterexample acex, int low, int high) {
-		assert acex.test(low) == 0 && acex.test(high) == 1;
+	public static <E> int exponentialSearchBwd(AbstractCounterexample<E> acex, int low, int high) {
+		assert !acex.testEffects(low, high);
 		
 		int ofs = 1;
+		E effHigh = acex.effect(high);
 		
 		while(high - ofs > low) {
-			if(acex.test(high - ofs) == 0) {
-				low = high - ofs;
+			int next = high - ofs;
+			E eff = acex.effect(next);
+			if(!acex.checkEffects(eff, effHigh)) {
+				low = next;
 				break;
 			}
-			high -= ofs;
+			high = next;
 			ofs *= 2;
 		}
 		
-		return binarySearch(acex, low, high);
+		return binarySearchRight(acex, low, high);
 	}
 	
-	public static int exponentialSearchFwd(AbstractCounterexample acex, int low, int high) {
-		assert acex.test(low) == 0 && acex.test(high) == 1;
+	public static <E> int exponentialSearchFwd(AbstractCounterexample<E> acex, int low, int high) {
+		assert !acex.testEffects(low, high);
 		
 		int ofs = 1;
-		
+		E effLow = acex.effect(low);
 		while(low + ofs < high) {
-			if(acex.test(low + ofs) == 1) {
-				high = low + ofs;
+			int next = low + ofs;
+			E eff = acex.effect(next);
+			if(!acex.checkEffects(effLow, eff)) {
+				high = next;
 				break;
 			}
-			low += ofs;
+			low = next;
 			ofs *= 2;
 		}
 		
-		return binarySearch(acex, low, high);
+		return binarySearchLeft(acex, low, high);
 	}
 	
 	/**
@@ -131,67 +122,94 @@ public class AcexAnalysisAlgorithms {
 	 * @return an index <code>i</code> such that
 	 * <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
 	 */
-	public static int binarySearch(AbstractCounterexample acex, int low, int high) {
-		assert acex.test(low) == 0 : low;
-		assert acex.test(high) == 1 : high;
+	public static <E> int binarySearchRight(AbstractCounterexample<E> acex, int low, int high) {
+		E effLow = acex.effect(low);
+		E effHigh = acex.effect(high);
+		
+		assert !acex.checkEffects(effLow, effHigh);
 		
 		while(high - low > 1) {
 			int mid = low + (high - low)/2;
-			if(acex.test(mid) == 0) {
+			E effMid = acex.effect(mid);
+			if(!acex.checkEffects(effMid, effHigh)) {
 				low = mid;
+				effLow = effMid;
 			}
 			else {
 				high = mid;
+				effHigh = effMid;
 			}
 		}
 		
 		return low;
 	}
 	
-	/**
-	 *  Search for a suffix index using a partition search
-	 * 
-	 * @param acex the abstract counterexample
-	 * @param low the lower bound of the search range
-	 * @param high the upper bound of the search range
-	 * @return an index <code>i</code> such that
-	 * <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
-	 */
-	public static int partitionSearchBwd(AbstractCounterexample acex, int low, int high) {
-		assert acex.test(low) == 0 && acex.test(high) == 1;
+	public static <E> int binarySearchLeft(AbstractCounterexample<E> acex, int low, int high) {
+		E effLow = acex.effect(low);
+		E effHigh = acex.effect(high);
 		
-		int span = high - low + 1;
-		double logSpan = Math.log(span)/Math.log(2);
+		assert !acex.checkEffects(effLow, effHigh) : "compatible effects at " + low + ", " + high + ": " + effLow + ", " + effHigh;
 		
-		int step = (int)(span/logSpan);
-		
-		while(high - step > low) {
-			if(acex.test(high - step) == 0) {
-				low = high - step;
-				break;
+		while(high - low > 1) {
+			int mid = low + (high - low)/2;
+			E effMid = acex.effect(mid);
+			if(!acex.checkEffects(effLow, effMid)) {
+				high = mid;
+				effHigh = effMid;
 			}
-			high -= step;
+			else {
+				low = mid;
+				effLow = effMid;
+			}
 		}
 		
-		return binarySearch(acex, low, high);
+		return low;
 	}
-	
-	public static int partitionSearchFwd(AbstractCounterexample acex, int low, int high) {
-		assert acex.test(low) == 0 && acex.test(high) == 1;
-		
-		int span = high - low + 1;
-		double logSpan = Math.log(span)/Math.log(2);
-		
-		int step = (int)(span/logSpan);
-		
-		while(low + step < high) {
-			if(acex.test(low + step) == 1) {
-				high = low + step;
-				break;
-			}
-			low += step;
-		}
-		
-		return binarySearch(acex, low, high);
-	}
+//	
+//	/**
+//	 *  Search for a suffix index using a partition search
+//	 * 
+//	 * @param acex the abstract counterexample
+//	 * @param low the lower bound of the search range
+//	 * @param high the upper bound of the search range
+//	 * @return an index <code>i</code> such that
+//	 * <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
+//	 */
+//	public static int partitionSearchBwd(AbstractCounterexample acex, int low, int high) {
+//		assert acex.test(low) == 0 && acex.test(high) == 1;
+//		
+//		int span = high - low + 1;
+//		double logSpan = Math.log(span)/Math.log(2);
+//		
+//		int step = (int)(span/logSpan);
+//		
+//		while(high - step > low) {
+//			if(acex.test(high - step) == 0) {
+//				low = high - step;
+//				break;
+//			}
+//			high -= step;
+//		}
+//		
+//		return binarySearch(acex, low, high);
+//	}
+//	
+//	public static int partitionSearchFwd(AbstractCounterexample acex, int low, int high) {
+//		assert acex.test(low) == 0 && acex.test(high) == 1;
+//		
+//		int span = high - low + 1;
+//		double logSpan = Math.log(span)/Math.log(2);
+//		
+//		int step = (int)(span/logSpan);
+//		
+//		while(low + step < high) {
+//			if(acex.test(low + step) == 1) {
+//				high = low + step;
+//				break;
+//			}
+//			low += step;
+//		}
+//		
+//		return binarySearch(acex, low, high);
+//	}
 }

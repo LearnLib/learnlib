@@ -23,15 +23,16 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.Query;
-import de.learnlib.cache.LearningCacheOracle.DFALearningCacheOracle;
-
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;
+import net.automatalib.incremental.dfa.dag.IncrementalPCDFADAGBuilder;
 import net.automatalib.incremental.dfa.tree.IncrementalDFATreeBuilder;
+import net.automatalib.incremental.dfa.tree.IncrementalPCDFATreeBuilder;
 import net.automatalib.words.Alphabet;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.Query;
+import de.learnlib.cache.LearningCacheOracle.DFALearningCacheOracle;
 
 
 /**
@@ -54,8 +55,18 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
 	}
 	
 	public static <I>
+	DFACacheOracle<I> createTreePCCacheOracle(Alphabet<I> alphabet, MembershipOracle<I,Boolean> delegate) {
+		return new DFACacheOracle<>(new IncrementalPCDFATreeBuilder<>(alphabet), delegate);
+	}
+	
+	public static <I>
 	DFACacheOracle<I> createDAGCacheOracle(Alphabet<I> alphabet, MembershipOracle<I,Boolean> delegate) {
 		return new DFACacheOracle<>(new IncrementalDFADAGBuilder<>(alphabet), delegate);
+	}
+	
+	public static <I>
+	DFACacheOracle<I> createDAGPCCacheOracle(Alphabet<I> alphabet, MembershipOracle<I,Boolean> delegate) {
+		return new DFACacheOracle<>(new IncrementalPCDFADAGBuilder<>(alphabet), delegate);
 	}
 	
 	private final IncrementalDFABuilder<I> incDfa;

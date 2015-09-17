@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2015 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,6 @@
  */
 package de.learnlib.acex;
 
-/**
- * Interface for an analyzer of {@link AbstractCounterexample}s.
- * 
- * @author Malte Isberner
- *
- */
 public interface AcexAnalyzer {
 	
 	/**
@@ -30,14 +24,14 @@ public interface AcexAnalyzer {
 	 * @param acex the abstract counterexample
 	 * @return the suffix index
 	 */
-	default public int analyzeAbstractCounterexample(AbstractCounterexample acex) {
-		return analyzeAbstractCounterexample(acex, 0, acex.getLength());
+	default public int analyzeAbstractCounterexample(AbstractCounterexample<?> acex) {
+		return analyzeAbstractCounterexample(acex, 0, acex.getLength() - 1);
 	}
 	
-	default public int analyzeAbstractCounterexample(AbstractCounterexample acex, int low) {
-		return analyzeAbstractCounterexample(acex, low, acex.getLength());
+	default public int analyzeAbstractCounterexample(AbstractCounterexample<?> acex, int low) {
+		return analyzeAbstractCounterexample(acex, low, acex.getLength() - 1);
 	}
 	
-	public int analyzeAbstractCounterexample(AbstractCounterexample acex, int low, int high);
+	public int analyzeAbstractCounterexample(AbstractCounterexample<?> acex, int low, int high);
 	
 }

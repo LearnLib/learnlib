@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.acex;
+package de.learnlib.counterexamples.acex;
 
-public interface AbstractCounterexample<E> {
-	
-	public int getLength();
-	public E effect(int index);
-	
-	public boolean checkEffects(E eff1, E eff2);
-	
-	default public boolean testEffects(int i, int j) {
-		return checkEffects(effect(i), effect(j));
+import java.util.function.Function;
+
+import de.learnlib.api.MembershipOracle;
+import net.automatalib.words.Word;
+
+public class MealyOutInconsPrefixTransformAcex<I,O> extends OutInconsPrefixTransformAcex<I, Word<O>> {
+
+	public MealyOutInconsPrefixTransformAcex(Word<I> suffix,
+			MembershipOracle<I,Word<O>> oracle,
+			Function<Word<I>, Word<I>> asTransform) {
+		super(suffix, suffix.length(), oracle, asTransform);
 	}
+	
+	@Override
+	public boolean checkEffects(Word<O> eff1, Word<O> eff2) {
+		return eff2.isSuffixOf(eff1);
+	}
+
 }

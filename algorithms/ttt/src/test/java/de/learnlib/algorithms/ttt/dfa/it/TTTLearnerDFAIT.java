@@ -16,14 +16,17 @@
 package de.learnlib.algorithms.ttt.dfa.it;
 
 import net.automatalib.words.Alphabet;
+
+import org.testng.annotations.Test;
+
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.acex.analyzers.NamedAcexAnalyzer;
 import de.learnlib.algorithms.ttt.dfa.TTTLearnerDFABuilder;
 import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.counterexamples.AcexLocalSuffixFinder;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
 
+@Test
 public class TTTLearnerDFAIT extends AbstractDFALearnerIT {
 
 	@Override
@@ -34,8 +37,8 @@ public class TTTLearnerDFAIT extends AbstractDFALearnerIT {
 		builder.setOracle(mqOracle);
 		
 		for (NamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
-			builder.setSuffixFinder(new AcexLocalSuffixFinder(analyzer, true, analyzer.getName()));
-			variants.addLearnerVariant("suffixFinder=" + analyzer, builder.create());
+			builder.setAnalyzer(analyzer);
+			variants.addLearnerVariant("analyzer=" + analyzer, builder.create());
 		}
 	}
 

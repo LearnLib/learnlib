@@ -1,6 +1,6 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2015 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,29 +15,19 @@
  */
 package de.learnlib.acex.impl;
 
-import java.util.Arrays;
-
+import net.automatalib.commons.util.array.RichArray;
 import de.learnlib.acex.AbstractCounterexample;
 
-/**
- * Base class for abstract counterexamples.
- * 
- * @author Malte Isberner
- *
- */
-public abstract class BaseAbstractCounterexample implements AbstractCounterexample {
-	
-	private final int[] values;
+public abstract class BaseAbstractCounterexample<E> implements AbstractCounterexample<E> {
+
+	private final RichArray<E> values;
 	
 	/**
 	 * Constructor.
 	 * @param m length of the counterexample
 	 */
 	public BaseAbstractCounterexample(int m) {
-		this.values = new int[m + 1];
-		Arrays.fill(values, -1);
-		values[0] = 0;
-		values[m] = 1;
+		this.values = new RichArray<>(m);
 	}
 	
 	/**
@@ -46,53 +36,46 @@ public abstract class BaseAbstractCounterexample implements AbstractCounterexamp
 	 */
 	@Override
 	public int getLength() {
-		return values.length - 1;
+		return values.length;
 	}
 	
-	/**
-	 * Tests the effect of performing a prefix transformation for
-	 * the given index. If the prefix transformation causes hypothesis
-	 * and target system to agree, 1 is returned, and 0 otherwise.
-	 * <p>
-	 * This method corresponds to the &alpha; mapping from the paper.
-	 * 
-	 * @param index the index for the prefix transformation
-	 * @return 1 if prefix transformation causes target and hypothesis
-	 * to agree, 0 otherwise.
-	 */
-	public int test(int index) {
-		if(index < 0 || index >= values.length) {
-			throw new IndexOutOfBoundsException("" + index);
+	public E effect(int index) {
+		E eff = values.get(index);
+		if (eff == null) {
+			eff = computeEffect(index);
+			values.set(index, eff);
 		}
-		
-		if(values[index] == -1) {
-			values[index] = computeEffect(index);
-		}
-		return values[index];
+		return eff;
 	}
 	
-	/**
-	 * Computes the effect of a prefix transformation.
-	 */
-	protected abstract int computeEffect(int index);
+	public void setEffect(int index, E effect) {
+		values.set(index, effect);
+	}
+	
+	protected abstract E computeEffect(int index);
 	
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(values.length);
 		
-		for (int v : values) {
-			if (v == 0) {
-				sb.append('0');
+		boolean first = true;
+		for (E v : values) {
+			if (first) {
+				first = false;
 			}
-			else if (v == 1) {
-				sb.append('1');
+			else {
+				sb.append(',');
 			}
-			else { // v == -1
+			if (v == null) {
 				sb.append('?');
+			}
+			else {
+				sb.append(v);
 			}
 		}
 		
 		return sb.toString();
 	}
+
 }

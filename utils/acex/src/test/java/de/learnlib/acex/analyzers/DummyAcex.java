@@ -17,7 +17,7 @@ package de.learnlib.acex.analyzers;
 
 import de.learnlib.acex.AbstractCounterexample;
 
-public class DummyAcex implements AbstractCounterexample {
+public class DummyAcex implements AbstractCounterexample<Integer> {
 
 	private final int[] values;
 	
@@ -27,12 +27,17 @@ public class DummyAcex implements AbstractCounterexample {
 	
 	@Override
 	public int getLength() {
-		return values.length - 1;
+		return values.length;
 	}
 
 	@Override
-	public int test(int index) {
+	public Integer effect(int index) {
 		return values[index];
+	}
+
+	@Override
+	public boolean checkEffects(Integer eff1, Integer eff2) {
+		return eff1.equals(eff2);
 	}
 
 }

@@ -96,7 +96,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 		}
 	}
 	
-	private class KVAbstractCounterexample extends BaseAbstractCounterexample {
+	private class KVAbstractCounterexample extends BaseAbstractCounterexample<Boolean> {
 		
 		private final Word<I> ceWord;
 		private final MembershipOracle<I, Word<O>> oracle;
@@ -105,26 +105,27 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 
 		@SuppressWarnings("unchecked")
 		public KVAbstractCounterexample(Word<I> ceWord, Word<O> output, MembershipOracle<I, Word<O>> oracle) {
-			super(ceWord.length());
+			super(ceWord.length() + 1);
 			this.ceWord = ceWord;
 			this.oracle = oracle;
 			
 			int m = ceWord.length();
-			this.states = new StateInfo[m+1];
-			this.lcas = new LCAInfo[m+1];
+			this.states = new StateInfo[m + 1];
+			this.lcas = new LCAInfo[m + 1];
 			
 			int currState = hypothesis.getIntInitialState();
 			int i = 0;
 			states[i++] = stateInfos.get(currState);
 			for (I sym : ceWord) {
-				currState = hypothesis.getSuccessor(currState, sym);
-				states[i++] = stateInfos.get(currState);
+					currState = hypothesis.getSuccessor(currState, sym);
+					states[i++] = stateInfos.get(currState);
 			}
 			
 			// Output of last transition separates hypothesis from target
 			O lastHypOut = hypothesis.getOutput(states[m-1].id, ceWord.lastSymbol());
 			lcas[m] = new LCAInfo<I,Word<O>,StateInfo<I,O>>(null,
 					Word.fromLetter(lastHypOut), Word.fromLetter(output.lastSymbol()));
+			super.setEffect(m, false);
 		}
 		
 		public StateInfo<I,O> getStateInfo(int idx) {
@@ -136,7 +137,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 		}
 
 		@Override
-		protected int computeEffect(int index) {
+		protected Boolean computeEffect(int index) {
 			Word<I> prefix = ceWord.prefix(index);
 			StateInfo<I,O> info = states[index];
 			
@@ -157,13 +158,18 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 				Word<O> e = expect.pop();
 				if(!Objects.equals(out, e)) {
 					lcas[index] = new LCAInfo<>(currNode, e, out);
-					return 1;
+					return false;
 				}
 				currNode = currNode.child(out);
 			}
 			
 			assert currNode.isLeaf() && expect.isEmpty();
-			return 0;
+			return true;
+		}
+
+		@Override
+		public boolean checkEffects(Boolean eff1, Boolean eff2) {
+			return !eff1 || eff2;
 		}
 	}
 	

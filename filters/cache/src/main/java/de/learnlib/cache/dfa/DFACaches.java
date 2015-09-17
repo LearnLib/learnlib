@@ -40,8 +40,18 @@ public abstract class DFACaches {
 	}
 	
 	public static <I>
+	DFACacheOracle<I> createDAGPCCache(Alphabet<I> alphabet, MembershipOracle<I,Boolean> mqOracle) {
+		return DFACacheOracle.createDAGPCCacheOracle(alphabet, mqOracle);
+	}
+	
+	public static <I>
 	DFACacheOracle<I> createTreeCache(Alphabet<I> alphabet, MembershipOracle<I,Boolean> mqOracle) {
 		return DFACacheOracle.createTreeCacheOracle(alphabet, mqOracle);
+	}
+	
+	public static <I>
+	DFACacheOracle<I> createTreePCCache(Alphabet<I> alphabet, MembershipOracle<I,Boolean> mqOracle) {
+		return DFACacheOracle.createTreePCCacheOracle(alphabet, mqOracle);
 	}
 	
 	public static <I>
