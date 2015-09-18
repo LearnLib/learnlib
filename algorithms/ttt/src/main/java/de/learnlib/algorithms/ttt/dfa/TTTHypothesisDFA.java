@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.ttt.dfa;
 
+import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import de.learnlib.algorithms.ttt.base.TTTHypothesis;
@@ -22,7 +23,8 @@ import de.learnlib.algorithms.ttt.base.TTTState;
 import de.learnlib.algorithms.ttt.base.TTTTransition;
 
 public class TTTHypothesisDFA<I> extends TTTHypothesis<I, Boolean, TTTState<I,Boolean>> 
-		implements DFA<TTTState<I,Boolean>,I> {
+		implements DFA<TTTState<I,Boolean>,I>,
+		UniversalDeterministicAutomaton.FullIntAbstraction<TTTState<I,Boolean>, Boolean, Void> {
 
 	public TTTHypothesisDFA(Alphabet<I> alphabet) {
 		super(alphabet);
@@ -48,5 +50,25 @@ public class TTTHypothesisDFA<I> extends TTTHypothesis<I, Boolean, TTTState<I,Bo
 	@Override
 	public boolean isAccepting(TTTState<I, Boolean> state) {
 		return ((TTTStateDFA<I>) state).accepting;
+	}
+	
+	
+	@Override
+	public Boolean getStateProperty(int state) {
+		return isAccepting(states.get(state));
+	}
+
+	@Override
+	public Void getTransitionProperty(TTTState<I,Boolean> transition) {
+		return null;
+	}
+
+
+	@Override
+	public UniversalDeterministicAutomaton.FullIntAbstraction<TTTState<I,Boolean>, Boolean, Void> fullIntAbstraction(Alphabet<I> alphabet) {
+		if (alphabet == this.alphabet) {
+			return this;
+		}
+		return DFA.super.fullIntAbstraction(alphabet);
 	}
 }

@@ -209,23 +209,30 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 	}
 	
 	private void splitState(OutputInconsistency<I, D> outIncons) {
+		
 		OutInconsPrefixTransformAcex<I, D> acex = deriveAcex(outIncons);
-		int breakpoint = analyzer.analyzeAbstractCounterexample(acex);
-		assert !acex.testEffects(breakpoint, breakpoint+1);
-		
-		Word<I> suffix = outIncons.suffix;
-		
-		TTTState<I,D> predState = getDeterministicState(outIncons.srcState, suffix.prefix(breakpoint));
-		TTTState<I,D> succState = getDeterministicState(outIncons.srcState, suffix.prefix(breakpoint + 1));
-		assert getDeterministicState(predState, Word.fromLetter(suffix.getSymbol(breakpoint))) == succState;
-		
-		I sym = suffix.getSymbol(breakpoint);
-		Word<I> splitSuffix = suffix.subWord(breakpoint + 1);
-		TTTTransition<I, D> trans = predState.transitions[alphabet.getSymbolIndex(sym)];
-		D oldOut = acex.effect(breakpoint + 1);
-		D newOut = succEffect(acex.effect(breakpoint));
-		
-		splitState(trans, splitSuffix, oldOut, newOut);
+		try {
+			int breakpoint = analyzer.analyzeAbstractCounterexample(acex);
+			assert !acex.testEffects(breakpoint, breakpoint+1);
+			
+			Word<I> suffix = outIncons.suffix;
+			
+			TTTState<I,D> predState = getDeterministicState(outIncons.srcState, suffix.prefix(breakpoint));
+			TTTState<I,D> succState = getDeterministicState(outIncons.srcState, suffix.prefix(breakpoint + 1));
+			assert getDeterministicState(predState, Word.fromLetter(suffix.getSymbol(breakpoint))) == succState;
+			
+			I sym = suffix.getSymbol(breakpoint);
+			Word<I> splitSuffix = suffix.subWord(breakpoint + 1);
+			TTTTransition<I, D> trans = predState.transitions[alphabet.getSymbolIndex(sym)];
+			assert !trans.isTree();
+			D oldOut = acex.effect(breakpoint + 1);
+			D newOut = succEffect(acex.effect(breakpoint));
+			
+			splitState(trans, splitSuffix, oldOut, newOut);
+		}
+		catch (HypothesisChangedException ex) {
+			return;
+		}
 	}
 	
 	protected OutInconsPrefixTransformAcex<I, D> deriveAcex(OutputInconsistency<I, D> outIncons) {
@@ -341,6 +348,9 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 		if (newTgtNode.state == null) {
 			makeTree(trans);
 			closeTransitions();
+			// FIXME: using exception handling for this is not very nice, but it appears there
+			// is no quicker way to abort counterexample analysis
+			throw new HypothesisChangedException();
 		}
 		return newTgtNode.state;
 	}
@@ -532,7 +542,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 		if(trans.isTree()) {
 			return trans.getTreeTarget();
 		}
-		return trans.getNonTreeTarget().subtreeStates().iterator().next();
+		return trans.getNonTreeTarget().anySubtreeState();
 	}
 	
 	
@@ -546,7 +556,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 		return getAnySuccessor(hypothesis.getInitialState(), suffix);
 	}
 	
-	private OutputInconsistency<I, D> findOutputInconsistency() {
+	protected OutputInconsistency<I, D> findOutputInconsistency() {
 		OutputInconsistency<I, D> best = null;
 		
 		for (TTTState<I, D> state : hypothesis.getStates()) {
@@ -824,7 +834,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 		initializeState(newState);
 	}
 	
-	protected abstract D computeHypothesisOutput(TTTState<I,D> state, Iterable<? extends I> suffix);
+	protected abstract D computeHypothesisOutput(TTTState<I,D> state, Word<I> suffix);
 	
 	/**
 	 * Establish the connection between a node in the discrimination tree

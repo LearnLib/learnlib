@@ -38,9 +38,10 @@ import net.automatalib.words.Alphabet;
  * @param <I> input symbol type
  */
 public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTTState<I,D>,I,T>,
-		FiniteAlphabetAutomaton<TTTState<I,D>, I, T> {
+		FiniteAlphabetAutomaton<TTTState<I,D>, I, T>,
+		DeterministicAutomaton.FullIntAbstraction<T> {
 
-	private final List<TTTState<I,D>> states = new ArrayList<>();
+	protected final List<TTTState<I,D>> states = new ArrayList<>();
 	
 	protected final Alphabet<I> alphabet;
 	private TTTState<I,D> initialState;
@@ -52,6 +53,11 @@ public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTT
 	 */
 	public TTTHypothesis(Alphabet<I> alphabet) {
 		this.alphabet = alphabet;
+	}
+	
+	@Override
+	public int size() {
+		return states.size();
 	}
 
 	/*
@@ -116,7 +122,11 @@ public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTT
 	 */
 	public TTTTransition<I,D> getInternalTransition(TTTState<I,D> state, I input) {
 		int inputIdx = alphabet.getSymbolIndex(input);
-		TTTTransition<I,D> trans = state.transitions[inputIdx];
+		return getInternalTransition(state, inputIdx);
+	}
+	
+	public TTTTransition<I,D> getInternalTransition(TTTState<I,D> state, int input) {
+		TTTTransition<I,D> trans = state.transitions[input];
 		return trans;
 	}
 	
@@ -196,8 +206,50 @@ public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTT
 		
 	}
 	
+	@Override
 	public GraphView graphView() {
 		return new GraphView();
 	}
 	
+	@Override
+	public T getTransition(int stateId, int symIdx) {
+		TTTState<I,D> state = states.get(stateId);
+		TTTTransition<I,D> trans = getInternalTransition(state, symIdx);
+		return mapTransition(trans);
+	}
+	
+	@Override
+	public int getIntInitialState() {
+		return 0;
+	}
+	
+	@Override
+	public int numInputs() {
+		return alphabet.size();
+	}
+	
+	@Override
+	public int getIntSuccessor(T trans) {
+		return getSuccessor(trans).id;
+	}
+	
+	
+	@Override
+	public DeterministicAutomaton.FullIntAbstraction<T> fullIntAbstraction(Alphabet<I> alphabet) {
+		if (alphabet == this.alphabet) {
+			return this;
+		}
+		return DeterministicAutomaton.super.fullIntAbstraction(alphabet);
+	}
+	
+//	
+//	
+//	- The type TTTHypothesisMealy<I,O> must implement the inherited abstract method 
+//	 DeterministicAutomaton.FullIntAbstraction<TTTTransitionMealy<I,O>>.getTransition(int, int)
+//	- The type TTTHypothesisMealy<I,O> must implement the inherited abstract method 
+//	 SimpleDeterministicAutomaton.IntAbstraction.getIntInitialState()
+//	- The type TTTHypothesisMealy<I,O> must implement the inherited abstract method 
+//	 SimpleDeterministicAutomaton.FullIntAbstraction.numInputs()
+//	- The type TTTHypothesisMealy<I,O> must implement the inherited abstract method 
+//	 DeterministicAutomaton.IntAbstraction<TTTTransitionMealy<I,O>>.getIntSuccessor(TTTTransitionMealy<I,O
 }

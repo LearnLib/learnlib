@@ -86,7 +86,7 @@ public class TTTLearnerDFA<I> extends BaseTTTLearner<DFA<?,I>,I,Boolean> impleme
 
 	@Override
 	protected Boolean computeHypothesisOutput(TTTState<I, Boolean> state,
-			Iterable<? extends I> suffix) {
+			Word<I> suffix) {
 		TTTState<I,Boolean> endState = getAnySuccessor(state, suffix);
 		return ((TTTStateDFA<I>) endState).accepting;
 	}

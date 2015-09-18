@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.ttt.mealy;
 
+import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -24,7 +25,8 @@ import de.learnlib.algorithms.ttt.base.TTTTransition;
 
 public class TTTHypothesisMealy<I, O> extends
 		TTTHypothesis<I, Word<O>, TTTTransitionMealy<I, O>>
-		implements MealyMachine<TTTState<I,Word<O>>, I, TTTTransitionMealy<I,O>, O> {
+		implements MealyMachine<TTTState<I,Word<O>>, I, TTTTransitionMealy<I,O>, O>,
+		UniversalDeterministicAutomaton.FullIntAbstraction<TTTTransitionMealy<I,O>, Void, O> {
 
 	public TTTHypothesisMealy(Alphabet<I> alphabet) {
 		super(alphabet);
@@ -45,5 +47,23 @@ public class TTTHypothesisMealy<I, O> extends
 	public O getTransitionOutput(TTTTransitionMealy<I, O> transition) {
 		return transition.getOutput();
 	}
-	
+
+	@Override
+	public Void getStateProperty(int state) {
+		return null;
+	}
+
+	@Override
+	public O getTransitionProperty(TTTTransitionMealy<I, O> transition) {
+		return transition.getOutput();
+	}
+
+
+	@Override
+	public UniversalDeterministicAutomaton.FullIntAbstraction<TTTTransitionMealy<I,O>, Void, O> fullIntAbstraction(Alphabet<I> alphabet) {
+		if (alphabet == this.alphabet) {
+			return this;
+		}
+		return MealyMachine.super.fullIntAbstraction(alphabet);
+	}
 }

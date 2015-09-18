@@ -238,6 +238,19 @@ public class DTNode<I,D> extends BlockListElem<I,D> {
 		return temp;
 	}
 	
+	public TTTState<I,D> anySubtreeState() {
+		DTNode<I,D> curr = this;
+		while (!curr.isLeaf()) {
+			curr = curr.anyChild();
+		}
+		return curr.state;
+	}
+	
+	public DTNode<I,D> anyChild() {
+		assert isInner();
+		return children.values().iterator().next();
+	}
+	
 	public Iterable<TTTState<I,D>> subtreeStates() {
 		return new Iterable<TTTState<I,D>>() {
 			@Override
