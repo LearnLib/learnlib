@@ -146,9 +146,6 @@ public class Example {
         // turn on time profiling
         experiment.setProfile(true);
 
-        // enable logging of models
-        experiment.setLogModels(true);
-
         // run experiment
         experiment.run();
 
