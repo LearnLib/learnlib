@@ -139,7 +139,9 @@ limitations under the License.
 		<findbugs.version>2.0.3</findbugs.version>
 		
 		<buildergen.version>0.1</buildergen.version>
-		
+
+		<slf4j.version>1.7.21</slf4j.version>
+
 		<!-- Javadoc links -->
 		<java.apidocs>http://docs.oracle.com/javase/8/docs/api/</java.apidocs>
 		<automatalib.apidocs>http://misberner.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
@@ -147,8 +149,8 @@ limitations under the License.
 	</properties>
 
 
-	<!--	
-	================================= BUILD PLUGINS =============================	
+	<!--
+	================================= BUILD PLUGINS =============================
 	-->
 	<build>
 		<pluginManagement>
@@ -306,7 +308,7 @@ limitations under the License.
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		
+
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -343,7 +345,7 @@ limitations under the License.
 				</executions>
 			</plugin>
 		</plugins>
-		
+
 		<extensions>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
@@ -354,7 +356,7 @@ limitations under the License.
 	</build>
 
 	<!--
-	================================= REPORTING PLUGINS ==============================	
+	================================= REPORTING PLUGINS ==============================
 	-->
 	<reporting>
 		<plugins>
@@ -422,8 +424,8 @@ limitations under the License.
 		</plugins>
 	</reporting>
 
-	<!--	
-	===============================	PROFILES =======================	
+	<!--
+	===============================	PROFILES =======================
 	-->
 	<profiles>
 		<profile>
@@ -480,7 +482,7 @@ limitations under the License.
 						inter-module links wouldn't work correctly
 					-->
 					<!-- Moved to distribution -->
-					<!-- 
+					<!--
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
@@ -522,8 +524,8 @@ limitations under the License.
 		</profile>
 	</profiles>
 
-	<!--	
-	===============================	DEFAULT DEP. VERSIONS =======================	
+	<!--
+	===============================	DEFAULT DEP. VERSIONS =======================
 	-->
 	<dependencyManagement>
 		<dependencies>
@@ -581,7 +583,7 @@ limitations under the License.
 				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-reuse</artifactId>
 				<version>${project.version}</version>
-			</dependency>			
+			</dependency>
 			<dependency>
 				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-drivers-basic</artifactId>
@@ -597,25 +599,25 @@ limitations under the License.
 				<artifactId>learnlib-nlstar</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-discrimination-tree</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-kearns-vazirani</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-mapper</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-acex</artifactId>
@@ -676,6 +678,13 @@ limitations under the License.
 				<version>${buildergen.version}</version>
 				<!-- Compile-time only -->
 				<scope>provided</scope>
+			</dependency>
+
+			<!-- SLF4J -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
 			</dependency>
 
 		</dependencies>
