@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import net.automatalib.automata.concepts.OutputAutomaton;
 import net.automatalib.automata.fsa.DFA;
@@ -30,6 +29,8 @@ import net.automatalib.words.WordBuilder;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -61,7 +62,7 @@ public class RandomWordsEQOracle<I, D, A extends OutputAutomaton<?, I, ?, D>> im
 		}
 	}
 
-	private static final Logger LOGGER = Logger.getLogger(RandomWordsEQOracle.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(RandomWordsEQOracle.class);
 
 	private MembershipOracle<I, D> oracle;
 	private int maxTests, minLength, maxLength;
@@ -85,7 +86,7 @@ public class RandomWordsEQOracle<I, D, A extends OutputAutomaton<?, I, ?, D>> im
 	public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
 		// Fail fast on empty inputs
 		if(inputs.isEmpty()) {
-			LOGGER.warning("Passed empty set of inputs to equivalence oracle; no counterexample can be found!");
+			logger.warn("Passed empty set of inputs to equivalence oracle; no counterexample can be found!");
 			return null;
 		}
 		

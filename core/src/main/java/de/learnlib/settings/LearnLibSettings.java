@@ -16,13 +16,14 @@
 package de.learnlib.settings;
 
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import net.automatalib.commons.util.settings.SettingsSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LearnLibSettings {
 
-	private static final Logger LOG = Logger.getLogger(LearnLibSettings.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(LearnLibSettings.class);
 	
 	private static final LearnLibSettings INSTANCE = new LearnLibSettings();
 
@@ -97,7 +98,7 @@ public class LearnLibSettings {
 				return val;
 			}
 			catch(NumberFormatException ex) {
-				LOG.warning("Could not parse LearnLib integer property '" + propName + "': " + ex.getMessage());
+				logger.warn("Could not parse LearnLib integer property '" + propName + "': " + ex.getMessage());
 			}
 		}
 		return null;

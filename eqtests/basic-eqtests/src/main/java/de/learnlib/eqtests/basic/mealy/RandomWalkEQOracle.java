@@ -18,7 +18,6 @@ package de.learnlib.eqtests.basic.mealy;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.SUL;
@@ -28,6 +27,8 @@ import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Performs a random walk over the hypothesis. A random walk restarts with a
@@ -45,7 +46,7 @@ import net.automatalib.words.WordBuilder;
 public class RandomWalkEQOracle<I, O>
 		implements MealyEquivalenceOracle<I,O> {
 	
-	private static final Logger LOGGER = Logger.getLogger(RandomWalkEQOracle.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(RandomWalkEQOracle.class);
 
 	/**
 	 * probability to restart before step.
@@ -119,7 +120,7 @@ public class RandomWalkEQOracle<I, O>
 		}
 
 		if (inputs.isEmpty()) {
-			LOGGER.warning("Passed empty set of inputs to equivalence oracle; no counterexample can be found!");
+			logger.warn("Passed empty set of inputs to equivalence oracle; no counterexample can be found!");
 			return null;
 		}
 
