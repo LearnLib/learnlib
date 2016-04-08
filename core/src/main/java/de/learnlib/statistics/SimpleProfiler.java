@@ -23,8 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import de.learnlib.logging.LearnLogger;
-
 /**
  * Very rudimentary profiler. 
  */
@@ -35,9 +33,7 @@ public class SimpleProfiler {
   
   private static final Map<String,Counter> cumulated = new ConcurrentHashMap<>();
   private static final Map<String,Long> pending = new ConcurrentHashMap<>();
-   
-  private static LearnLogger logger = LearnLogger.getLogger(SimpleProfiler.class.getName());
-  
+
   /**
    * reset internal data.
    */
@@ -96,15 +92,6 @@ public class SimpleProfiler {
                 append(" s)").append(System.lineSeparator());
     }
     return sb.toString();
-  }
-  
-  /**
-   * log results in category PROFILING.
-   */
-  public static void logResults() {
-    for (Entry<String, Counter> e : cumulated.entrySet()) {
-      logger.logProfilingInfo(e.getValue());
-    }  
   }
   
 }

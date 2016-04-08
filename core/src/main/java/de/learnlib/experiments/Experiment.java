@@ -24,10 +24,11 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.LearningAlgorithm;
-import de.learnlib.logging.LearnLogger;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.statistics.Counter;
 import de.learnlib.statistics.SimpleProfiler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * runs a learning experiment. 
@@ -70,8 +71,7 @@ public class Experiment<A> {
 	    
 	    public A run() {
 	        rounds.increment();
-	        logger.logPhase("Starting round " + rounds.getCount());
-	        logger.logPhase("Learning");
+	        logger.info("Starting learning round {}", rounds.getCount());
 	        profileStart("Learning");
 	        learningAlgorithm.startLearning();
 	        profileStop("Learning");
@@ -81,10 +81,10 @@ public class Experiment<A> {
 	        while (!done) {
 	        	hyp = learningAlgorithm.getHypothesisModel();
 	            if (logModels) {
-	                logger.logModel(hyp);
+					logger.info("Hypothesis: {}", hyp);
 	            }
 
-	            logger.logPhase("Searching for counterexample");
+	            logger.info("Searching for counterexample");
 	            profileStart("Searching for counterexample");
 	            DefaultQuery<I, D> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
 	            profileStop("Searching for counterexample");
@@ -92,24 +92,24 @@ public class Experiment<A> {
 	                done = true;
 	                continue;
 	            }
-	            
-	            logger.logCounterexample(ce.getInput().toString());
+
+	            logger.debug("Found counterexample: {}", ce.getInput());
 
 	            // next round ...
 	            rounds.increment();
-	            logger.logPhase("Starting round " + rounds.getCount());
-	            logger.logPhase("Learning");
+				logger.info("Starting learning round {}", rounds.getCount());
 	            profileStart("Learning");
 	            learningAlgorithm.refineHypothesis(ce);
 	            profileStop("Learning");
 	        }
 
+	        logger.info("Finished learning");
 	        return hyp;
 	    }
 	}
 
-    private static LearnLogger logger = LearnLogger.getLogger(Experiment.class);
-    
+	private static Logger logger = LoggerFactory.getLogger(Experiment.class);
+
     private boolean logModels = false;
     private boolean profile = false;
     private Counter rounds = new Counter("rounds", "#");
