@@ -118,10 +118,10 @@ public class TTTLearnerMealy<I, O> extends
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean refineHypothesis(DefaultQuery<I,Word<O>> ceQuery) {
+	public boolean refineHypothesisSingle(DefaultQuery<I,Word<O>> ceQuery) {
 		DefaultQuery<I,Word<O>> shortenedCeQuery = MealyUtil.shortenCounterExample((TTTHypothesisMealy<I, O>) hypothesis, ceQuery);
 		if (shortenedCeQuery != null) {
-			return super.refineHypothesis(shortenedCeQuery);
+			return super.refineHypothesisSingle(shortenedCeQuery);
 		}
 		return false;
 	}
