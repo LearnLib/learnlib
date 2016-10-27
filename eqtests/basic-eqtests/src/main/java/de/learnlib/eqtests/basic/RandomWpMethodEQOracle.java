@@ -1,10 +1,11 @@
-package learnlib;
+package de.learnlib.eqtests.basic;
 
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
+import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -13,12 +14,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 
 /**
- * Implements an equivalence test by applying the W-method test on the given hypothesis automaton.
- * Generally the Wp-method performs better in finding counter examples.
+ * Implements an equivalence test by applying the Wp-method test on the given hypothesis automaton,
+ * as described in "Test Selection Based on Finite State Models" by S. Fujiwara et al.
  * Instead of enumerating the test suite in order, this is a sampling implementation:
  * 1. sample uniformly from the states for a prefix
  * 2. sample geometrically a random word
- * 3. sample a word from the set of suffixes / state identifiers
+ * 3. sample a word from the set of suffixes / state identifiers (either local or global)
  * There are two parameters: minimalSize determines the minimal size of the random word, this is
  * useful when one first performs a W(p)-method with some depth and continue with this randomized
  * tester from that depth onward. The second parameter rndLength determines the expected length
@@ -30,7 +31,7 @@ import java.util.*;
  * @param <D> output domain type
  * @author Joshua Moerman
  */
-public class RandomWMethod<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
+public class RandomWpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         implements EquivalenceOracle<A, I, D> {
     private final MembershipOracle<I, D> sulOracle;
     private final int minimalSize;
@@ -44,7 +45,7 @@ public class RandomWMethod<A extends UniversalDeterministicAutomaton<?, I, ?, ?,
      * @param minimalSize minimal size of the random word
      * @param rndLength   expected length (in addition to minimalSize) of random word
      */
-    public RandomWMethod(MembershipOracle<I, D> sulOracle, int minimalSize, int rndLength) {
+    public RandomWpMethodEQOracle(MembershipOracle<I, D> sulOracle, int minimalSize, int rndLength) {
         this.sulOracle = sulOracle;
         this.minimalSize = minimalSize;
         this.rndLength = rndLength;
@@ -59,7 +60,7 @@ public class RandomWMethod<A extends UniversalDeterministicAutomaton<?, I, ?, ?,
      * @param rndLength   expected length (in addition to minimalSize) of random word
      * @param bound       specifies the bound (set to 0 for unbounded).
      */
-    public RandomWMethod(MembershipOracle<I, D> sulOracle, int minimalSize, int rndLength, int bound) {
+    public RandomWpMethodEQOracle(MembershipOracle<I, D> sulOracle, int minimalSize, int rndLength, int bound) {
         this.sulOracle = sulOracle;
         this.minimalSize = minimalSize;
         this.rndLength = rndLength;
@@ -91,9 +92,16 @@ public class RandomWMethod<A extends UniversalDeterministicAutomaton<?, I, ?, ?,
         // Then repeatedly from this for a random word
         ArrayList<I> arrayAlphabet = new ArrayList<>(inputs);
 
-        // Finally we test the state with a suffix
+        // Finally we test the state with a suffix, sometimes a global one, sometimes local
         ArrayList<Word<I>> globalSuffixes = new ArrayList<>();
         Automata.characterizingSet(hypothesis, inputs, globalSuffixes);
+
+        MutableMapping<S, ArrayList<Word<I>>> localSuffixSets = hypothesis.createStaticStateMapping();
+        for (S state : hypothesis.getStates()) {
+            ArrayList<Word<I>> suffixSet = new ArrayList<>();
+            Automata.stateCharacterizingSet(hypothesis, inputs, state, suffixSet);
+            localSuffixSets.put(state, suffixSet);
+        }
 
         Random rand = new Random();
         int currentBound = bound;
@@ -111,8 +119,19 @@ public class RandomWMethod<A extends UniversalDeterministicAutomaton<?, I, ?, ?,
             }
 
             // pick a random suffix for this state
-            if (!globalSuffixes.isEmpty()) {
-                wb.append(globalSuffixes.get(rand.nextInt(globalSuffixes.size())));
+            // 50% chance for state testing, 50% chance for transition testing
+            if (rand.nextBoolean()) {
+                // global
+                if (!globalSuffixes.isEmpty()) {
+                    wb.append(globalSuffixes.get(rand.nextInt(globalSuffixes.size())));
+                }
+            } else {
+                // local
+                S state2 = hypothesis.getState(wb);
+                ArrayList<Word<I>> localSuffixes = localSuffixSets.get(state2);
+                if (!localSuffixes.isEmpty()) {
+                    wb.append(localSuffixes.get(rand.nextInt(localSuffixes.size())));
+                }
             }
 
             Word<I> queryWord = wb.toWord();
