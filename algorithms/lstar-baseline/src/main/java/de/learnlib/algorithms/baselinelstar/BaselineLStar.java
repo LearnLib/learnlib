@@ -100,6 +100,15 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 			throw new IllegalStateException("Unable to refine hypothesis before first learn iteration!");
 		}
 
+		final DFA<?, I> currentHypothesis = getHypothesisModel();
+		final Word<I> ceInput = ceQuery.getInput();
+		final Boolean ceOutput = ceQuery.getOutput();
+
+		// no counterexample
+		if (currentHypothesis.computeOutput(ceInput).equals(ceOutput)) {
+			return false;
+		}
+
 		LinkedHashSet<Word<I>> prefixes = prefixesOfWordNotInStates(ceQuery.getInput());
 
 		for (Word<I> prefix : prefixes) {
