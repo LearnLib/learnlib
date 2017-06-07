@@ -31,13 +31,16 @@ import com.google.common.collect.Maps;
 import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner.GlobalSuffixLearnerDFA;
 import de.learnlib.algorithms.features.observationtable.OTLearner;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.oracles.DefaultQuery;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.automata.fsa.impl.FastDFAState;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 /**
  * Implementation of the L* algorithm by Dana Angluin
@@ -45,10 +48,11 @@ import net.automatalib.words.Word;
  * @param <I>
  * 		input symbol class.
  */
-public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, GlobalSuffixLearnerDFA<I> {
+public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, GlobalSuffixLearnerDFA<I>,
+		SupportsGrowingAlphabet<I> {
 
 	@Nonnull
-	private final Alphabet<I> alphabet;
+	private final GrowingAlphabet<I> alphabet;
 
 	@Nonnull
 	private final MembershipOracle<I, Boolean> oracle;
@@ -69,7 +73,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	 */
 	@GenerateBuilder
 	public BaselineLStar(@Nonnull Alphabet<I> alphabet, @Nonnull MembershipOracle<I, Boolean> oracle) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.oracle = oracle;
 		this.observationTable = new ObservationTable<>();
 
@@ -344,5 +348,29 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	@Nonnull
 	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, Boolean> getObservationTable() {
 		return observationTable;
+	}
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		this.alphabet.addSymbol(symbol);
+
+		final List<Word<I>> shortPrefixes = observationTable.getShortPrefixLabels();
+		final List<Word<I>> newLongPrefixes = new ArrayList<>(shortPrefixes.size());
+
+		for (Word<I> prefix : shortPrefixes) {
+			final Word<I> newLongPrefix = prefix.append(symbol);
+
+			observationTable.addLongPrefix(newLongPrefix);
+			newLongPrefixes.add(newLongPrefix);
+		}
+
+		processMembershipQueriesForStates(newLongPrefixes, observationTable.getSuffixes());
+
+		makeTableClosedAndConsistent();
 	}
 }
