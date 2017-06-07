@@ -22,9 +22,11 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 
+import de.learnlib.api.SupportsGrowingAlphabet;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
@@ -41,7 +43,7 @@ import de.learnlib.discriminationtree.DiscriminationTree.LCAInfo;
 import de.learnlib.discriminationtree.MultiDTree;
 import de.learnlib.mealy.MealyUtil;
 import de.learnlib.oracles.DefaultQuery;
-
+import net.automatalib.words.impl.SimpleAlphabet;
 
 /**
  * An adaption of the Kearns/Vazirani algorithm for Mealy machines.
@@ -51,7 +53,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <I> input symbol type
  * @param <O> output symbol type
  */
-public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
+public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O>, SupportsGrowingAlphabet<I> {
 	
 	static final class BuilderDefaults {
 		public static boolean repeatedCounterexampleEvaluation() {
@@ -173,7 +175,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 		}
 	}
 	
-	private final Alphabet<I> alphabet;
+	private final GrowingAlphabet<I> alphabet;
 	private final CompactMealy<I,O> hypothesis;
 	private final MembershipOracle<I,Word<O>> oracle;
 	private final boolean repeatedCounterexampleEvaluation;
@@ -189,7 +191,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 	public KearnsVaziraniMealy(Alphabet<I> alphabet, MembershipOracle<I,Word<O>> oracle,
 			boolean repeatedCounterexampleEvaluation,
 			AcexAnalyzer counterexampleAnalyzer) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.hypothesis = new CompactMealy<>(alphabet);
 		this.oracle = oracle;
 		this.repeatedCounterexampleEvaluation = repeatedCounterexampleEvaluation;
@@ -395,4 +397,25 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O> {
 		return succStateInfo;
 	}
 
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		this.hypothesis.addAlphabetSymbol(symbol);
+		final int inputIdx = this.alphabet.addSymbol(symbol);
+
+		for (final StateInfo<I, O> si : this.stateInfos) {
+			final int state = si.id;
+			final Word<I> accessSequence = si.accessSequence;
+			final Word<I> transAs = accessSequence.append(symbol);
+
+			final O output = oracle.answerQuery(accessSequence, Word.fromLetter(symbol)).firstSymbol();
+
+			final StateInfo<I, O> succ = sift(transAs);
+			setTransition(state, inputIdx, succ, output);
+		}
+	}
 }

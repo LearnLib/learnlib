@@ -21,9 +21,11 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
+import de.learnlib.api.SupportsGrowingAlphabet;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
@@ -38,7 +40,7 @@ import de.learnlib.discriminationtree.DTNode;
 import de.learnlib.discriminationtree.DTNode.SplitResult;
 import de.learnlib.discriminationtree.DiscriminationTree.LCAInfo;
 import de.learnlib.oracles.DefaultQuery;
-
+import net.automatalib.words.impl.SimpleAlphabet;
 
 /**
  * The Kearns/Vazirani algorithm for learning DFA, as described in the book
@@ -49,8 +51,8 @@ import de.learnlib.oracles.DefaultQuery;
  *
  * @param <I> input symbol type
  */
-public class KearnsVaziraniDFA<I> implements DFALearner<I> {
-	
+public class KearnsVaziraniDFA<I> implements DFALearner<I>, SupportsGrowingAlphabet<I> {
+
 	static final class BuilderDefaults {
 		public static boolean repeatedCounterexampleEvaluation() {
 			return true;
@@ -176,7 +178,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		}
 	}
 	
-	private final Alphabet<I> alphabet;
+	private final GrowingAlphabet<I> alphabet;
 	private final CompactDFA<I> hypothesis;
 	private final MembershipOracle<I,Boolean> oracle;
 	private final boolean repeatedCounterexampleEvaluation;
@@ -199,7 +201,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 	public KearnsVaziraniDFA(Alphabet<I> alphabet, MembershipOracle<I,Boolean> oracle,
 			boolean repeatedCounterexampleEvaluation,
 			AcexAnalyzer counterexampleAnalyzer) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.hypothesis = new CompactDFA<>(alphabet);
 		this.discriminationTree = new BinaryDTree<>(oracle);
 		this.oracle = oracle;
@@ -381,6 +383,26 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		}
 		
 		return succStateInfo;
+	}
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		this.hypothesis.addAlphabetSymbol(symbol);
+		final int inputIdx = this.alphabet.addSymbol(symbol);
+
+		for (final StateInfo<I> si : this.stateInfos) {
+			final int state = si.id;
+			final Word<I> accessSequence = si.accessSequence;
+			final Word<I> transAs = accessSequence.append(symbol);
+
+			final StateInfo<I> succ = sift(transAs);
+			setTransition(state, inputIdx, succ);
+		}
 	}
 
 }
