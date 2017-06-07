@@ -33,6 +33,7 @@ import de.learnlib.algorithms.adt.util.ADTUtil;
 import de.learnlib.algorithms.adt.util.SQOOTBridge;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.api.SymbolQueryOracle;
 import de.learnlib.counterexamples.LocalSuffixFinders;
 import de.learnlib.mealy.SQOToMQOWrapper;
@@ -42,8 +43,10 @@ import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.Triple;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -68,11 +71,13 @@ import java.util.stream.Collectors;
  * @author frohme
  */
 @ParametersAreNonnullByDefault
-public class ADTLearner<I, O>
-		implements LearningAlgorithm.MealyLearner<I, O>, PartialTransitionAnalyzer<ADTState<I, O>, I> {
+public class ADTLearner<I, O> implements
+		LearningAlgorithm.MealyLearner<I, O>,
+		PartialTransitionAnalyzer<ADTState<I, O>, I>,
+		SupportsGrowingAlphabet<I> {
 
 	private final ADTHypothesis<I, O> hypothesis;
-	private final Alphabet<I> alphabet;
+	private final GrowingAlphabet<I> alphabet;
 
 	private final SQOOTBridge<I, O> oracle;
 	private final MembershipOracle<I, Word<O>> membershipOracle;
@@ -93,7 +98,7 @@ public class ADTLearner<I, O>
 					  final ADTExtender adtExtender,
 					  final SubtreeReplacer subtreeReplacer) {
 
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.observationTree = new ObservationTree<>(this.alphabet);
 		this.oracle = new SQOOTBridge<>(this.observationTree, oracle, true);
 		this.membershipOracle = new SQOToMQOWrapper<>(this.oracle);
@@ -295,6 +300,24 @@ public class ADTLearner<I, O>
 	@Override
 	public boolean isTransitionDefined(ADTState<I, O> state, I input) {
 		return !this.hypothesis.getTransition(state, input).needsSifting();
+	}
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		this.alphabet.addSymbol(symbol);
+		this.hypothesis.addAlphabetSymbol(symbol);
+		this.observationTree.getObservationTree().addAlphabetSymbol(symbol);
+
+		for (final ADTState<I, O> s : this.hypothesis.getStates()) {
+			this.openTransitions.add(this.hypothesis.createOpenTransition(s, symbol, this.adt.getRoot()));
+		}
+
+		this.closeTransitions();
 	}
 
 	/**

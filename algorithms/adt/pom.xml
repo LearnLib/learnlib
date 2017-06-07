@@ -72,6 +72,12 @@ limitations under the License.
 			<artifactId>learnlib-learning-examples</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>de.learnlib.testsupport</groupId>
+			<artifactId>learnlib-learner-it-support</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -17,6 +17,7 @@ package de.learnlib.algorithms.adt.util;
 
 import de.learnlib.api.SUL;
 import de.learnlib.api.SULException;
+import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 
 /**
@@ -26,13 +27,13 @@ import net.automatalib.automata.transout.impl.compact.CompactMealy;
  * @param <O> output (symbol) type
  * @author frohme.
  */
-public class CompactMealyWrapperSUL<I, O> implements SUL<I, O> {
+public class CompactMealyWrapperSUL<S, I, O> implements SUL<I, O> {
 
-	private CompactMealy<I, O> mealyMachine;
+	private MealyMachine<S, I, ?, O> mealyMachine;
 
-	private Integer state;
+	private S state;
 
-	public CompactMealyWrapperSUL(final CompactMealy<I, O> mealyMachine) {
+	public CompactMealyWrapperSUL(final MealyMachine<S, I, ?, O> mealyMachine) {
 		this.mealyMachine = mealyMachine;
 	}
 
