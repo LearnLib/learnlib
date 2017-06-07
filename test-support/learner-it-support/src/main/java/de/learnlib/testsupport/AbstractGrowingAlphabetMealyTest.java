@@ -18,7 +18,7 @@ package de.learnlib.testsupport;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.SupportsGrowingAlphabet;
-import de.learnlib.oracles.AutomatonDelegationOracle;
+import de.learnlib.oracles.SimulatorOracle;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
@@ -57,7 +57,7 @@ public abstract class AbstractGrowingAlphabetMealyTest<L extends SupportsGrowing
 
 	@Override
 	protected MembershipOracle<Integer, Word<Character>> getOracle(MealyMachine<?, Integer, ?, Character> target) {
-		return new AutomatonDelegationOracle<>(target);
+		return new SimulatorOracle<>(target);
 	}
 
 }

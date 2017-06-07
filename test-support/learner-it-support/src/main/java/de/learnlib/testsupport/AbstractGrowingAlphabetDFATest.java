@@ -18,7 +18,7 @@ package de.learnlib.testsupport;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.SupportsGrowingAlphabet;
-import de.learnlib.oracles.AutomatonDelegationOracle;
+import de.learnlib.oracles.SimulatorOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
@@ -56,7 +56,7 @@ public abstract class AbstractGrowingAlphabetDFATest<L extends SupportsGrowingAl
 
 	@Override
 	protected MembershipOracle<Integer, Boolean> getOracle(DFA<?, Integer> target) {
-		return new AutomatonDelegationOracle<>(target);
+		return new SimulatorOracle<>(target);
 	}
 
 }
