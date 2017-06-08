@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +28,14 @@ import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.common.collect.Sets;
+import de.learnlib.api.SupportsGrowingAlphabet;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import com.google.common.collect.Interner;
@@ -49,7 +54,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @author Maik Merten 
  */
 public class MealyDHC<I, O> implements MealyLearner<I,O>,
-		AccessSequenceTransformer<I>, GlobalSuffixLearnerMealy<I, O> {
+		AccessSequenceTransformer<I>, GlobalSuffixLearnerMealy<I, O>, SupportsGrowingAlphabet<I> {
 	
 	
 	public static class BuilderDefaults {
@@ -65,7 +70,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 
 	private static final Logger log = Logger.getLogger( MealyDHC.class.getName() );
 	
-	private final Alphabet<I> alphabet;
+	private final GrowingAlphabet<I> alphabet;
 	private final MembershipOracle<I, Word<O>> oracle;
 	private LinkedHashSet<Word<I>> splitters = new LinkedHashSet<>();
 	private CompactMealy<I, O> hypothesis;
@@ -112,7 +117,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 			MembershipOracle<I, Word<O>> oracle,
 			GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
 			Collection<? extends Word<I>> initialSplitters) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.oracle = oracle;
 		this.suffixFinder = suffixFinder;
 		// ensure that the first k splitters are the k alphabet symbols,
@@ -294,6 +299,33 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		startLearning();
 		
 		return (hypothesis.size() != oldSize);
+	}
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		final Iterator<Word<I>> splitterIterator = this.splitters.iterator();
+		final LinkedHashSet<Word<I>> newSplitters = Sets.newLinkedHashSetWithExpectedSize(this.splitters.size() + 1);
+
+		// see initial initialization of the splitters
+		for (int i = 0; i < this.alphabet.size(); i++) {
+			newSplitters.add(splitterIterator.next());
+		}
+
+		newSplitters.add(Word.fromLetter(symbol));
+
+		while (splitterIterator.hasNext()) {
+			newSplitters.add(splitterIterator.next());
+		}
+
+		this.alphabet.addSymbol(symbol);
+		this.splitters = newSplitters;
+
+		this.startLearning();
 	}
 
 }
