@@ -25,13 +25,16 @@ import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.SimpleAlphabet;
 import de.learnlib.algorithms.discriminationtree.hypothesis.DTLearnerHypothesis;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HTransition;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
+import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.counterexamples.LocalSuffixFinders;
 import de.learnlib.discriminationtree.DTNode;
@@ -40,7 +43,8 @@ import de.learnlib.discriminationtree.DiscriminationTree;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.MQUtil;
 
-public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, TP> implements LearningAlgorithm<M, I, D> {
+public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, TP>
+		implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I> {
 	
 	public static class BuilderDefaults {
 		public static <I,O> LocalSuffixFinder<? super I,? super O> suffixFinder() {
@@ -51,7 +55,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		}
 	}
 
-	private final Alphabet<I> alphabet;
+	private final GrowingAlphabet<I> alphabet;
 	private final MembershipOracle<I, D> oracle;
 	private final LocalSuffixFinder<? super I, ? super D> suffixFinder;
 	private final boolean repeatedCounterexampleEvaluation;
@@ -66,7 +70,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 			LocalSuffixFinder<? super I, ? super D> suffixFinder,
 			boolean repeatedCounterexampleEvaluation,
 			DiscriminationTree<I, D, HState<I,D,SP,TP>> dtree) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.oracle = oracle;
 		this.suffixFinder = suffixFinder;
 		this.hypothesis = new DTLearnerHypothesis<I,D,SP,TP>(alphabet);
@@ -229,5 +233,27 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 	
 	public DiscriminationTree<I, D, HState<I,D,SP,TP>>.GraphView dtGraphView() {
 		return dtree.graphView();
+	}
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		final int newSymbolIdx = this.alphabet.size();
+
+		this.alphabet.addSymbol(symbol);
+		this.hypothesis.addAlphabetSymbol(symbol);
+
+		for (final HState<I, D, SP, TP> s : this.hypothesis.getStates()) {
+			final HTransition<I,D,SP,TP> newTrans = new HTransition<>(s, symbol, dtree.getRoot());
+			s.setTransition(newSymbolIdx, newTrans);
+			newTransitions.add(newTrans);
+			openTransitions.add(newTrans);
+		}
+
+		this.updateHypothesis();
 	}
 }
