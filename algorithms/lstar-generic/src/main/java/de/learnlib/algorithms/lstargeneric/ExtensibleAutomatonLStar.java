@@ -18,6 +18,7 @@ package de.learnlib.algorithms.lstargeneric;
 import java.util.Collections;
 import java.util.List;
 
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -29,7 +30,7 @@ import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 
-public abstract class ExtensibleAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableDeterministic<S,I,T,SP,TP>> extends
+public abstract class ExtensibleAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableDeterministic<S,I,T,SP,TP> & GrowableAlphabetAutomaton<I>> extends
 AbstractAutomatonLStar<A, I, D,S,T,SP,TP,AI> {
 	
 	public static final class BuilderDefaults {

@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.lstargeneric.table;
 
+import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.words.Word;
 
 
@@ -37,7 +38,7 @@ public final class Row<I> {
 	
 	private int rowContentId = -1;
 	private int lpIndex = 0;
-	private Row<I>[] successors = null; 
+	private ResizingObjectArray successors = null;
 	
 	/**
 	 * Constructor.
@@ -64,14 +65,14 @@ public final class Row<I> {
 	/**
 	 * Makes this row a short prefix row. This leads to a successor array being created.
 	 * If this row already is a short prefix row, nothing happens.
-	 * @param alphabetSize the size of the input alphabet.
+	 * @param initialAlphabetSize the size of the input alphabet.
 	 */
 	@SuppressWarnings("unchecked")
-	public void makeShort(int alphabetSize) {
+	public void makeShort(int initialAlphabetSize) {
 		if(lpIndex == -1)
 			return;
 		lpIndex = -1;
-		this.successors = (Row<I>[])new Row<?>[alphabetSize];
+		this.successors = new ResizingObjectArray(initialAlphabetSize);
 	}
 	
 	/**
@@ -80,8 +81,9 @@ public final class Row<I> {
 	 * @param inputIdx the index of the alphabet symbol.
 	 * @return the successor row (may be <code>null</code>)
 	 */
+	@SuppressWarnings("unchecked")
 	public Row<I> getSuccessor(int inputIdx) {
-		return successors[inputIdx];
+		return (Row<I>)successors.array[inputIdx];
 	}
 	
 	/**
@@ -91,7 +93,7 @@ public final class Row<I> {
 	 * @param succ the successor row
 	 */
 	public void setSuccessor(int inputIdx, Row<I> succ) {
-		successors[inputIdx] = succ;
+		successors.array[inputIdx] = succ;
 	}
 	
 	/**
@@ -146,5 +148,11 @@ public final class Row<I> {
 	void setLpIndex(int lpIndex) {
 		this.lpIndex = lpIndex;
 	}
-	
+
+	/**
+	 * See {@link ResizingObjectArray#ensureCapacity(int)}
+	 */
+	public final boolean ensureInputCapacity(int capacity) {
+		return this.successors.ensureCapacity(capacity);
+	}
 }

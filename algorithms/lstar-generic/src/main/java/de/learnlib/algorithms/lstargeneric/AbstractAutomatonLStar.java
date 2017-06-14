@@ -17,6 +17,7 @@ package de.learnlib.algorithms.lstargeneric;
 
 import java.util.ArrayList;
 
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
@@ -40,7 +41,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <SP> state property type
  * @param <TP> transition property type
  */
-public abstract class AbstractAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableDeterministic<S,I,T,SP,TP>> extends
+public abstract class AbstractAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableDeterministic<S,I,T,SP,TP> & GrowableAlphabetAutomaton<I>> extends
 		AbstractLStar<A, I, D> {
 	
 	private static final class StateInfo<S,I> {
@@ -118,9 +119,6 @@ public abstract class AbstractAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableD
 
 		int newStates = numDistinct - oldStates;
 		
-		if(newStates <= 0)
-			return;
-		
 		stateInfos.addAll(CollectionsUtil.<StateInfo<S,I>>nullList(newStates));
 		
 		
@@ -152,9 +150,6 @@ public abstract class AbstractAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableD
 				
 				Row<I> succ = sp.getSuccessor(i);
 				int succId = succ.getRowContentId();
-				
-				if(rowId < oldStates && succId < oldStates)
-					continue;
 				
 				S succState = stateInfos.get(succId).getState();
 				
@@ -195,5 +190,16 @@ public abstract class AbstractAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableD
 	protected void refineHypothesisInternal(DefaultQuery<I,D> ceQuery) {
 		super.doRefineHypothesis(ceQuery);
 	}
-	
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		super.addAlphabetSymbol(symbol);
+		this.internalHyp.addAlphabetSymbol(symbol);
+		this.updateInternalHypothesis();
+	}
 }

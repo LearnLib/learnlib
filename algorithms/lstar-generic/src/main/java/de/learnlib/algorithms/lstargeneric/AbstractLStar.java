@@ -23,7 +23,9 @@ import java.util.Objects;
 
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.SimpleAlphabet;
 import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner;
 import de.learnlib.algorithms.features.observationtable.OTLearner;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
@@ -31,6 +33,7 @@ import de.learnlib.algorithms.lstargeneric.table.Inconsistency;
 import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 import de.learnlib.algorithms.lstargeneric.table.Row;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.MQUtil;
 
@@ -47,9 +50,10 @@ import de.learnlib.oracles.MQUtil;
  * @param <I> input symbol type
  * @param <D> output domain type
  */
-public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, GlobalSuffixLearner<A, I, D> {
+public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, GlobalSuffixLearner<A, I, D>,
+		SupportsGrowingAlphabet<I> {
 	
-	protected final Alphabet<? extends I> alphabet;
+	protected final GrowingAlphabet<I> alphabet;
 	protected final MembershipOracle<I, D> oracle;
 	protected final ObservationTable<I, D> table;
 
@@ -59,7 +63,7 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 	 * @param oracle the membership oracle.
 	 */
 	public AbstractLStar(Alphabet<I> alphabet, MembershipOracle<I,D> oracle) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.oracle = oracle;
 		
 		this.table = new ObservationTable<>(alphabet);
@@ -232,6 +236,20 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 	@Override
 	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, D> getObservationTable() {
 		return table.asStandardTable();
+	}
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		this.alphabet.addSymbol(symbol);
+
+		final List<List<Row<I>>> unclosed = this.table.addAlphabetSymbol(symbol, oracle);
+
+		completeConsistentTable(unclosed, true);
 	}
 	
 	protected abstract SuffixOutput<I, D> hypothesisOutput();

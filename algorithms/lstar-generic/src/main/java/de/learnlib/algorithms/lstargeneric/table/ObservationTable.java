@@ -26,7 +26,9 @@ import java.util.Map;
 import java.util.Set;
 
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -35,7 +37,6 @@ import de.learnlib.algorithms.features.observationtable.ObservationTable.Abstrac
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
-
 
 /**
  * Observation table class.
@@ -87,7 +88,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 //	private static final int NO_ENTRY = -1;
 	
 	
-	private final Alphabet<I> alphabet;
+	private final GrowingAlphabet<I> alphabet;
 	
 	private final List<Row<I>> shortPrefixRows
 		= new ArrayList<Row<I>>();
@@ -127,9 +128,9 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 	 * @param alphabet the learning alphabet.
 	 */
 	public ObservationTable(Alphabet<I> alphabet) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 	}
-	
+
 	/**
 	 * Initializes an observation table using a specified set of suffixes.
 	 * 
@@ -627,7 +628,53 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 		int contentId = row.getRowContentId();
 		return (canonicalRows.get(contentId) == row);
 	}
-	
+
+	public List<List<Row<I>>> addAlphabetSymbol(I symbol, final MembershipOracle<I, D> oracle) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return Collections.emptyList();
+		}
+
+		this.alphabet.addSymbol(symbol);
+		final int newAlphabetSize = this.alphabet.size();
+		final int newSymbolIdx = this.alphabet.getSymbolIndex(symbol);
+
+		final List<Row<I>> shortPrefixes = getShortPrefixRows();
+		final List<Row<I>> newLongPrefixes = new ArrayList<>(shortPrefixes.size());
+
+		for (Row<I> prefix : shortPrefixes) {
+			prefix.ensureInputCapacity(newAlphabetSize);
+
+			final Word<I> newLongPrefix = prefix.getPrefix().append(symbol);
+			final Row<I> longPrefixRow = createLpRow(newLongPrefix);
+
+			newLongPrefixes.add(longPrefixRow);
+			prefix.setSuccessor(newSymbolIdx, longPrefixRow);
+		}
+
+		final int numLongPrefixes = newLongPrefixes.size();
+		final int numSuffixes = this.numSuffixes();
+		final List<DefaultQuery<I,D>> queries = new ArrayList<>(numLongPrefixes * numSuffixes);
+
+		buildRowQueries(queries, newLongPrefixes, suffixes);
+		oracle.processQueries(queries);
+
+		final Iterator<DefaultQuery<I, D>> queryIterator = queries.iterator();
+		final List<List<Row<I>>> result = new ArrayList<>(numLongPrefixes);
+
+		for(Row<I> row : newLongPrefixes) {
+			final List<D> contents = new ArrayList<>(numSuffixes);
+
+			fetchResults(queryIterator, contents, numSuffixes);
+
+			if (processContents(row, contents, false)) {
+				result.add(Collections.singletonList(row));
+			}
+		}
+
+		return result;
+	}
+
 	private class StandardRowWrapper extends AbstractRow<I, D> {
 		private final Row<I> internalRow;
 		
