@@ -70,7 +70,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I>, SupportsGrowingAlpha
 	 *
 	 * @param <I> input symbol type
 	 */
-	private static final class StateInfo<I> {
+	protected static final class StateInfo<I> {
 		public final int id;
 		public final Word<I> accessSequence;
 		private DTNode<I, Boolean, StateInfo<I>> dtNode;
@@ -105,7 +105,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I>, SupportsGrowingAlpha
 		
 	}
 	
-	private class KVAbstractCounterexample extends BaseAbstractCounterexample<Boolean> {
+	protected class KVAbstractCounterexample extends BaseAbstractCounterexample<Boolean> {
 		
 		private final Word<I> ceWord;
 		private final MembershipOracle<I, Boolean> oracle;
@@ -183,10 +183,10 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I>, SupportsGrowingAlpha
 	private final MembershipOracle<I,Boolean> oracle;
 	private final boolean repeatedCounterexampleEvaluation;
 	
-	private final BinaryDTree<I, StateInfo<I>> discriminationTree;
+	protected final BinaryDTree<I, StateInfo<I>> discriminationTree;
 		
 		
-	private final List<StateInfo<I>> stateInfos
+	protected final List<StateInfo<I>> stateInfos
 		= new ArrayList<>();
 	
 	private final AcexAnalyzer ceAnalyzer;

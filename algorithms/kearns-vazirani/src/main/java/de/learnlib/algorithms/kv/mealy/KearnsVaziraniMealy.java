@@ -64,7 +64,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O>, SupportsGrow
 		}
 	}
 	
-	private static final class StateInfo<I,O> {
+	protected static final class StateInfo<I,O> {
 		public final int id;
 		public final Word<I> accessSequence;
 		public DTNode<I, Word<O>, StateInfo<I,O>> dtNode;
@@ -98,7 +98,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O>, SupportsGrow
 		}
 	}
 	
-	private class KVAbstractCounterexample extends BaseAbstractCounterexample<Boolean> {
+	protected class KVAbstractCounterexample extends BaseAbstractCounterexample<Boolean> {
 		
 		private final Word<I> ceWord;
 		private final MembershipOracle<I, Word<O>> oracle;
@@ -180,9 +180,9 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O>, SupportsGrow
 	private final MembershipOracle<I,Word<O>> oracle;
 	private final boolean repeatedCounterexampleEvaluation;
 	
-	private final DiscriminationTree<I,Word<O>,StateInfo<I,O>> discriminationTree;
+	protected final DiscriminationTree<I,Word<O>,StateInfo<I,O>> discriminationTree;
 		
-	private final List<StateInfo<I,O>> stateInfos
+	protected  final List<StateInfo<I,O>> stateInfos
 		= new ArrayList<>();
 	
 	private final AcexAnalyzer ceAnalyzer;
