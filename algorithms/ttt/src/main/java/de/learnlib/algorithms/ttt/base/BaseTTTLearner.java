@@ -36,7 +36,9 @@ import net.automatalib.commons.smartcollections.UnorderedCollection;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 import com.google.common.collect.Iterators;
 
@@ -45,6 +47,7 @@ import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.ttt.base.TTTHypothesis.TTTEdge;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
 import de.learnlib.oracles.DefaultQuery;
 
@@ -55,15 +58,15 @@ import de.learnlib.oracles.DefaultQuery;
  *
  * @param <I> input symbol type
  */
-public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> {
-	
+public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>, SupportsGrowingAlphabet<I> {
+
 	public static class BuilderDefaults {
 		public static AcexAnalyzer analyzer() {
 			return AcexAnalyzers.BINARY_SEARCH_BWD;
 		}
 	}
 	
-	protected final Alphabet<I> alphabet;
+	protected final GrowingAlphabet<I> alphabet;
 	protected final TTTHypothesis<I,D,?> hypothesis;
 	protected final MembershipOracle<I, D> oracle;
 	
@@ -88,7 +91,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 	protected BaseTTTLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle,
 			TTTHypothesis<I, D, ?> hypothesis,
 			AcexAnalyzer analyzer) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.hypothesis = hypothesis;
 		this.oracle = oracle;
 		this.dtree = new DiscriminationTree<>(oracle);
@@ -99,7 +102,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 			TTTHypothesis<I, D, ?> hypothesis,
 			AcexAnalyzer analyzer,
 			DTNode<I,D> root) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.hypothesis = hypothesis;
 		this.oracle = oracle;
 		this.dtree = new DiscriminationTree<>(oracle, root);
@@ -163,7 +166,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 			I sym = alphabet.getSymbol(i);
 			TTTTransition<I,D> trans = createTransition(state, sym);
 			trans.setNonTreeTarget(dtree.getRoot());
-			state.transitions[i] = trans;
+			state.setTransition(i, trans);
 			openTransitions.insertIncoming(trans);
 		}
 	}
@@ -223,7 +226,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 			
 			I sym = suffix.getSymbol(breakpoint);
 			Word<I> splitSuffix = suffix.subWord(breakpoint + 1);
-			TTTTransition<I, D> trans = predState.transitions[alphabet.getSymbolIndex(sym)];
+			TTTTransition<I, D> trans = predState.getTransition(alphabet.getSymbolIndex(sym));
 			assert !trans.isTree();
 			D oldOut = acex.effect(breakpoint + 1);
 			D newOut = succEffect(acex.effect(breakpoint));
@@ -285,7 +288,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 		
 		TTTState<I,D> curr = lastSingleton;
 		for (I sym : word.subWord(lastSingletonIndex)) {
-			TTTTransition<I, D> trans = curr.transitions[alphabet.getSymbolIndex(sym)];
+			TTTTransition<I, D> trans = curr.getTransition(alphabet.getSymbolIndex(sym));
 			TTTState<I,D> next = requireSuccessor(trans);
 			curr = next;
 		}
@@ -297,7 +300,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 		Set<TTTState<I,D>> result = new HashSet<>();
 		int symIdx = alphabet.getSymbolIndex(sym);
 		for (TTTState<I,D> state : states) {
-			TTTTransition<I, D> trans = state.transitions[symIdx];
+			TTTTransition<I, D> trans = state.getTransition(symIdx);
 			if (trans.isTree()) {
 				result.add(trans.getTreeTarget());
 			}
@@ -320,7 +323,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 	
 	protected TTTState<I,D> getAnySuccessor(TTTState<I,D> state, I sym) {
 		int symIdx = alphabet.getSymbolIndex(sym);
-		TTTTransition<I, D> trans = state.transitions[symIdx];
+		TTTTransition<I, D> trans = state.getTransition(symIdx);
 		if (trans.isTree()) {
 			return trans.getTreeTarget();
 		}
@@ -337,7 +340,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 	
 	protected TTTTransition<I,D> getStateTransition(TTTState<I,D> state, I sym) {
 		int idx = alphabet.getSymbolIndex(sym);
-		return state.transitions[idx];
+		return state.getTransition(idx);
 	}
 	
 	private TTTState<I,D> requireSuccessor(TTTTransition<I, D> trans) {
@@ -478,7 +481,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 		
 		for (TTTState<I,D> state : blockRoot.subtreeStates()) {
 			for (int i = 0; i < alphabetSize; i++) {
-				TTTTransition<I, D> trans = state.transitions[i];
+				TTTTransition<I, D> trans = state.getTransition(i);
 				if (first) {
 					properties[i] = trans.getProperty();
 					lcas[i] = trans.getDTTarget();
@@ -677,7 +680,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 				TTTState<I,D> state = curr.state;
 				assert state != null;
 				
-				TTTTransition<I,D> trans = state.transitions[symbolIdx];
+				TTTTransition<I,D> trans = state.getTransition(symbolIdx);
 				D outcome = predictSuccOutcome(trans, succSeparator);
 				assert outcome != null;
 				curr.splitData.setStateLabel(outcome);
@@ -1067,5 +1070,28 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D> 
 	public void removeEventListener(TTTEventListener<I, D> listener) {
 		eventListeners.remove(listener);
 	}
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		final int newSymbolIdx = this.alphabet.size();
+
+		this.alphabet.addSymbol(symbol);
+		this.hypothesis.addAlphabetSymbol(symbol);
+
+		for (final TTTState<I, D> s : this.hypothesis.getStates()) {
+			final TTTTransition<I,D> trans = createTransition(s, symbol);
+			trans.setNonTreeTarget(dtree.getRoot());
+			s.setTransition(newSymbolIdx, trans);
+			openTransitions.insertIncoming(trans);
+		}
+
+		this.closeTransitions();
+	}
+
 	
 }

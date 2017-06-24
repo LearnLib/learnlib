@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
+import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.words.Word;
 
 /**
@@ -28,16 +29,15 @@ public class TTTState<I,D> implements AccessSequenceProvider<I> {
 	
 	final int id;
 	
-	final TTTTransition<I,D>[] transitions;
-	final TTTTransition<I,D> parentTransition;
+	private final ResizingObjectArray transitions;
+	private final TTTTransition<I,D> parentTransition;
 	
 	DTNode<I,D> dtLeaf;
 
-	@SuppressWarnings("unchecked")
-	public TTTState(int alphabetSize, TTTTransition<I,D> parentTransition, int id) {
+	public TTTState(int initialAlphabetSize, TTTTransition<I,D> parentTransition, int id) {
 		this.id = id;
 		this.parentTransition = parentTransition;
-		this.transitions = new TTTTransition[alphabetSize];
+		this.transitions = new ResizingObjectArray(initialAlphabetSize);
 	}
 	
 	/**
@@ -46,7 +46,7 @@ public class TTTState<I,D> implements AccessSequenceProvider<I> {
 	 * @return {@code true} if this state is the initial state, {@code false} otherwise
 	 */
 	public boolean isRoot() {
-		return (parentTransition == null);
+		return (getParentTransition() == null);
 	}
 	
 	/**
@@ -63,8 +63,8 @@ public class TTTState<I,D> implements AccessSequenceProvider<I> {
 	 */
 	@Override
 	public Word<I> getAccessSequence() {
-		if(parentTransition != null) {
-			return parentTransition.getAccessSequence();
+		if(getParentTransition() != null) {
+			return getParentTransition().getAccessSequence();
 		}
 		return Word.epsilon(); // root
 	}
@@ -76,5 +76,30 @@ public class TTTState<I,D> implements AccessSequenceProvider<I> {
 	@Override
 	public String toString() {
 		return "s" + id;
+	}
+
+	public void setTransition(final int idx, final TTTTransition<I, D> transition) {
+		transitions.array[idx] = transition;
+	}
+
+	@SuppressWarnings("unchecked")
+	public TTTTransition<I, D> getTransition(final int idx) {
+		return (TTTTransition<I, D>)transitions.array[idx];
+	}
+
+	@SuppressWarnings("unchecked")
+	public TTTTransition<I, D>[] getTransitions() {
+		return (TTTTransition<I, D>[])transitions.array;
+	}
+
+	public TTTTransition<I, D> getParentTransition() {
+		return parentTransition;
+	}
+
+	/**
+	 * See {@link ResizingObjectArray#ensureCapacity(int)}
+	 */
+	public boolean ensureInputCapacity(int capacity) {
+		return this.transitions.ensureCapacity(capacity);
 	}
 }

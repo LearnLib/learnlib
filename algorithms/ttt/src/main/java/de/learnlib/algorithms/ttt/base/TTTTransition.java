@@ -99,7 +99,7 @@ public class TTTTransition<I,D> extends IncomingListElem<I,D> implements AccessS
 		
 		while(curr != null) {
 			wb.add(curr.input);
-			curr = curr.source.parentTransition;
+			curr = curr.source.getParentTransition();
 		}
 		
 		return wb.reverse().toWord();
