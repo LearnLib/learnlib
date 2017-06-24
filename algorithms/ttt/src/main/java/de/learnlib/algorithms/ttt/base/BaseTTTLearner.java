@@ -523,7 +523,6 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * state, which has no incoming tree transition.
 	 * 
 	 * @param transition the "parent" transition in the spanning tree
-	 * @param accepting whether or not the new state state is accepting
 	 * @return the newly created state
 	 */
 	private TTTState<I,D> createState(@Nonnull TTTTransition<I,D> transition) {
@@ -1092,6 +1091,4 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 
 		this.closeTransitions();
 	}
-
-	
 }

@@ -254,15 +254,4 @@ public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTT
 			s.ensureInputCapacity(alphabetSize);
 		}
 	}
-	
-//
-//	
-//	- The type TTTHypothesisMealy<I,O> must implement the inherited abstract method 
-//	 DeterministicAutomaton.FullIntAbstraction<TTTTransitionMealy<I,O>>.getTransition(int, int)
-//	- The type TTTHypothesisMealy<I,O> must implement the inherited abstract method 
-//	 SimpleDeterministicAutomaton.IntAbstraction.getIntInitialState()
-//	- The type TTTHypothesisMealy<I,O> must implement the inherited abstract method 
-//	 SimpleDeterministicAutomaton.FullIntAbstraction.numInputs()
-//	- The type TTTHypothesisMealy<I,O> must implement the inherited abstract method 
-//	 DeterministicAutomaton.IntAbstraction<TTTTransitionMealy<I,O>>.getIntSuccessor(TTTTransitionMealy<I,O
 }
