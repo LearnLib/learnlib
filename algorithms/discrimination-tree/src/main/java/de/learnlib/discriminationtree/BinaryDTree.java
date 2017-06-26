@@ -21,7 +21,7 @@ public class BinaryDTree<I, D> extends DiscriminationTree<I, Boolean, D> {
 
 	public BinaryDTree(D rootData,
 			MembershipOracle<I, Boolean> oracle) {
-		super(new BinaryDTNode<I,D>(rootData), oracle);
+		super(new BinaryDTNode<>(rootData), oracle);
 	}
 	
 	public BinaryDTree(MembershipOracle<I, Boolean> oracle) {

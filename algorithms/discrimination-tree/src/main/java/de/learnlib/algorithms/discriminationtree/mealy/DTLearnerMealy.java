@@ -61,7 +61,7 @@ public class DTLearnerMealy<I, O>
 			MembershipOracle<I, Word<O>> oracle,
 			LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
 			boolean repeatedCounterexampleEvaluation) {
-		super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new MultiDTree<I,Word<O>,HState<I,Word<O>,Void,O>>(oracle));
+		super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new MultiDTree<>(oracle));
 		this.hypWrapper = new HypothesisWrapperMealy<>(hypothesis);
 	}
 

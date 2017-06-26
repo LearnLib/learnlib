@@ -115,7 +115,7 @@ public class DynamicParallelOracleBuilder<I,D> {
 				executor = Executors.newFixedThreadPool(poolSize);
 				break;
 			case CACHED:
-				executor = new ThreadPoolExecutor(0, poolSize, 100L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+				executor = new ThreadPoolExecutor(0, poolSize, 100L, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 				break;
 			default:
 				throw new IllegalStateException("Unknown pool policy: " + poolPolicy);

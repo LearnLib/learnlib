@@ -47,7 +47,7 @@ public class SuffixASCIIWriterTest {
 	@Test
 	public void testRead() {
 		ObservationTable<String,String> ot = ObservationTableSource.otWithFourSuffixes();
-		String str = OTUtils.toString(ot, new SuffixASCIIWriter<String, String>());
+		String str = OTUtils.toString(ot, new SuffixASCIIWriter<>());
 
 		Alphabet<String> alphabet = new SimpleAlphabet<>();
 		alphabet.add("A");

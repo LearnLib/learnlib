@@ -72,8 +72,8 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?,I>, I, Boolean, Boo
 			LocalSuffixFinder<? super I, ? super Boolean> suffixFinder,
 			boolean repeatedCounterexampleEvaluation,
 			boolean epsilonRoot) {
-		super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new BinaryDTree<I,HState<I,Boolean,Boolean,Void>>(oracle));
-		this.hypWrapper = new HypothesisWrapperDFA<I>(hypothesis);
+		super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new BinaryDTree<>(oracle));
+		this.hypWrapper = new HypothesisWrapperDFA<>(hypothesis);
 		if(epsilonRoot) {
 			dtree.getRoot().split(Word.<I>epsilon(), false, true, null);
 		}

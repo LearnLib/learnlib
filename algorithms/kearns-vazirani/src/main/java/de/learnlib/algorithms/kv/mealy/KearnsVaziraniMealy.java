@@ -125,8 +125,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O>, SupportsGrow
 			
 			// Output of last transition separates hypothesis from target
 			O lastHypOut = hypothesis.getOutput(states[m-1].id, ceWord.lastSymbol());
-			lcas[m] = new LCAInfo<I,Word<O>,StateInfo<I,O>>(null,
-					Word.fromLetter(lastHypOut), Word.fromLetter(output.lastSymbol()));
+			lcas[m] = new LCAInfo<>(null, Word.fromLetter(lastHypOut), Word.fromLetter(output.lastSymbol()));
 			super.setEffect(m, false);
 		}
 		

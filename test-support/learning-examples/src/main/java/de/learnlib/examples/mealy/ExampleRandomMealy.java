@@ -35,7 +35,7 @@ public class ExampleRandomMealy<I,O> extends DefaultMealyLearningExample<I, O> {
 
 	@SafeVarargs
 	public ExampleRandomMealy(Random random, Alphabet<I> alphabet, int size, O... outputs) {
-		super(RandomAutomata.randomDeterministic(random, size, alphabet, null, Arrays.asList(outputs), new CompactMealy<I,O>(alphabet)));
+		super(RandomAutomata.randomDeterministic(random, size, alphabet, null, Arrays.asList(outputs), new CompactMealy<>(alphabet)));
 	}
 	
 	@SafeVarargs

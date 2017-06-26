@@ -36,7 +36,7 @@ public class Test {
 	public static void main(String[] args) throws Exception {
 		Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
 		
-		CompactNFA<Integer> nfa = new CompactNFA<Integer>(alphabet);
+		CompactNFA<Integer> nfa = new CompactNFA<>(alphabet);
 		
 		int q0 = nfa.addIntInitialState(false);
 		int q1 = nfa.addIntState(false);

@@ -47,7 +47,7 @@ public class TTTLearnerMealy<I, O> extends
 	public TTTLearnerMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, Word<O>> oracle,
 			AcexAnalyzer analyzer) {
-		super(alphabet, oracle, new TTTHypothesisMealy<I,O>(alphabet), analyzer);
+		super(alphabet, oracle, new TTTHypothesisMealy<>(alphabet), analyzer);
 	}
 
 	@Override

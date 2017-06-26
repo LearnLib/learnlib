@@ -172,7 +172,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	}
 	
 	protected TTTTransition<I,D> createTransition(TTTState<I,D> state, I sym) {
-		return new TTTTransition<I, D>(state, sym);
+		return new TTTTransition<>(state, sym);
 	}
 	
 	
@@ -192,10 +192,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 			return false;
 		}
 		
-		OutputInconsistency<I,D> outIncons = new OutputInconsistency<I,D>(
-				state,
-				ceQuery.getSuffix(),
-				ceQuery.getOutput());
+		OutputInconsistency<I,D> outIncons = new OutputInconsistency<>(state, ceQuery.getSuffix(), ceQuery.getOutput());
 		
 		do {
 			splitState(outIncons);
@@ -805,7 +802,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	}
 	
 	protected <V> Map<D,V> createMap() {
-		return new HashMap<D,V>();
+		return new HashMap<>();
 	}
 	
 	/**

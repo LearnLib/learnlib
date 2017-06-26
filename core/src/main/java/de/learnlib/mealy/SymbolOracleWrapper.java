@@ -94,9 +94,9 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 	 */
 	@Override
 	public void processQueries(Collection<? extends Query<I, O>> queries) {
-		List<LastSymbolQuery<I,O>> lsQueries = new ArrayList<LastSymbolQuery<I,O>>(queries.size());
+		List<LastSymbolQuery<I,O>> lsQueries = new ArrayList<>(queries.size());
 		for(Query<I,O> qry : queries) {
-			lsQueries.add(new LastSymbolQuery<I,O>(qry));
+			lsQueries.add(new LastSymbolQuery<>(qry));
 		}
 		
 		wordOracle.processQueries(lsQueries);

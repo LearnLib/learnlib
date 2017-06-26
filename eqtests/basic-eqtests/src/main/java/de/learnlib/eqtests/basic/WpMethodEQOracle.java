@@ -97,8 +97,8 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 	private <S> DefaultQuery<I,D> doFindCounterExample(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
 			Output<I,D> output, Collection<? extends I> inputs) {
 		
-		List<Word<I>> stateCover = new ArrayList<Word<I>>(hypothesis.size());
-		List<Word<I>> transitions = new ArrayList<Word<I>>(hypothesis.size() * (inputs.size() - 1));
+		List<Word<I>> stateCover = new ArrayList<>(hypothesis.size());
+		List<Word<I>> transitions = new ArrayList<>(hypothesis.size() * (inputs.size() - 1));
 		
 		Automata.cover(hypothesis, inputs, stateCover, transitions);
 		

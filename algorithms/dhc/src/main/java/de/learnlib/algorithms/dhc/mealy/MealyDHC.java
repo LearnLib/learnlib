@@ -149,7 +149,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		accessSequences = hypothesis.createDynamicStateMapping();
 
 		// first element to be explored represents the initial state with no predecessor
-		queue.add(new QueueElement<I,O>(null, null, null, null));
+		queue.add(new QueueElement<>(null, null, null, null));
 
 		Interner<Word<O>> deduplicator = Interners.newStrongInterner();
 		
@@ -163,7 +163,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 			// assemble queries
 			ArrayList<DefaultQuery<I, Word<O>>> queries = new ArrayList<>(splitters.size());
 			for (Word<I> suffix : splitters) {
-				queries.add(new DefaultQuery<I, Word<O>>(access, suffix));
+				queries.add(new DefaultQuery<>(access, suffix));
 			}
 
 			// retrieve answers

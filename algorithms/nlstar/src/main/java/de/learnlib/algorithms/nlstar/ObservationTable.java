@@ -135,7 +135,7 @@ public class ObservationTable<I> {
 		for(Row<I> row : allRows) {
 			Word<I> prefix = row.getPrefix();
 			for(Word<I> suffix : newSuffixes) {
-				queries.add(new DefaultQuery<I,Boolean>(prefix, suffix));
+				queries.add(new DefaultQuery<>(prefix, suffix));
 			}
 		}
 		
@@ -201,8 +201,7 @@ public class ObservationTable<I> {
 
 		for (Row<I> newRow : newRows) {
 			for (Word<I> suffix : suffixes) {
-				queries.add(new DefaultQuery<I, Boolean>(newRow.getPrefix(),
-						suffix));
+				queries.add(new DefaultQuery<>(newRow.getPrefix(), suffix));
 			}
 		}
 

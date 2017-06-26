@@ -32,7 +32,7 @@ public class TTTLearnerDFAIT extends AbstractDFALearnerIT {
 	@Override
 	protected <I> void addLearnerVariants(Alphabet<I> alphabet, int targetSize,
 			DFAMembershipOracle<I> mqOracle, DFALearnerVariantList<I> variants) {
-		TTTLearnerDFABuilder<I> builder = new TTTLearnerDFABuilder<I>();
+		TTTLearnerDFABuilder<I> builder = new TTTLearnerDFABuilder<>();
 		builder.setAlphabet(alphabet);
 		builder.setOracle(mqOracle);
 		

@@ -85,7 +85,7 @@ public class HTransition<I, O, SP, TP> {
 	}
 
 	public Word<I> getAccessSequence() {
-		WordBuilder<I> wb = new WordBuilder<I>(source.getDepth() + 1);
+		WordBuilder<I> wb = new WordBuilder<>(source.getDepth() + 1);
 		source.appendAccessSequence(wb);
 		wb.append(symbol);
 		return wb.toWord();

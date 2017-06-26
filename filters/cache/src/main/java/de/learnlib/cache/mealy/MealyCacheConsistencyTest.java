@@ -67,7 +67,7 @@ public class MealyCacheConsistencyTest<I, O> implements
 			w = incMealy.findSeparatingWord(hypothesis, inputs, false);
 			if(w == null)
 				return null;
-			wb = new WordBuilder<O>(w.length());
+			wb = new WordBuilder<>(w.length());
 			incMealy.lookup(w, wb);
 		}
 		finally {

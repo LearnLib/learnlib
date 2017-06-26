@@ -188,7 +188,7 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 	 * to the short prefix part.
 	 */
 	protected List<Row<I>> selectClosingRows(List<List<Row<I>>> unclosed) {
-		List<Row<I>> closingRows = new ArrayList<Row<I>>(unclosed.size());
+		List<Row<I>> closingRows = new ArrayList<>(unclosed.size());
 		
 		for(List<Row<I>> rowList : unclosed)
 			closingRows.add(rowList.get(0));

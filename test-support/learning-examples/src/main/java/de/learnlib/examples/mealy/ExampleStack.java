@@ -100,7 +100,7 @@ public class ExampleStack extends DefaultMealyLearningExample<Input, Output> {
     }
     
     public static CompactMealy<Input, Output> constructMachine() {
-    	return constructMachine(new CompactMealy<Input,Output>(createInputAlphabet()));
+    	return constructMachine(new CompactMealy<>(createInputAlphabet()));
     }
     
     public static ExampleStack createExample() {

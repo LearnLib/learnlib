@@ -160,7 +160,7 @@ public class MealyDHCTest {
 		
 		List<String> outputs = Arrays.asList("o1", "o2", "o3");
 
-		CompactMealy<Character, String> fm = RandomAutomata.randomDeterministic(new Random(1337), 100, inputs, null, outputs, new CompactMealy<Character,String>(inputs));
+		CompactMealy<Character, String> fm = RandomAutomata.randomDeterministic(new Random(1337), 100, inputs, null, outputs, new CompactMealy<>(inputs));
 		
 		
 		SimulatorOracle<Character, Word<String>> simoracle = new SimulatorOracle<>(fm);

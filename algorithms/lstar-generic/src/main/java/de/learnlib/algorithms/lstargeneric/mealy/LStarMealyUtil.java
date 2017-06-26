@@ -25,7 +25,7 @@ public class LStarMealyUtil {
 	
 	public static <I> List<Word<I>> ensureSuffixCompliancy(List<Word<I>> suffixes, Alphabet<I> alphabet,
 			boolean needsConsistencyCheck) {
-		List<Word<I>> compSuffixes = new ArrayList<Word<I>>();
+		List<Word<I>> compSuffixes = new ArrayList<>();
 		if(needsConsistencyCheck) {
 			for(int i = 0; i < alphabet.size(); i++)
 				compSuffixes.add(Word.fromLetter(alphabet.getSymbol(i)));

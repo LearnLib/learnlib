@@ -73,7 +73,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.oracle = oracle;
 		this.suffixFinder = suffixFinder;
-		this.hypothesis = new DTLearnerHypothesis<I,D,SP,TP>(alphabet);
+		this.hypothesis = new DTLearnerHypothesis<>(alphabet);
 		this.dtree = dtree;
 		this.repeatedCounterexampleEvaluation = repeatedCounterexampleEvaluation;
 	}
@@ -165,7 +165,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		int size = alphabet.size();
 		for(int i = 0; i < size; i++) {
 			I sym = alphabet.getSymbol(i);
-			HTransition<I,D,SP,TP> newTrans = new HTransition<I,D,SP,TP>(newState, sym, dtree.getRoot());
+			HTransition<I,D,SP,TP> newTrans = new HTransition<>(newState, sym, dtree.getRoot());
 			newState.setTransition(i, newTrans);
 			newTransitions.add(newTrans);
 			openTransitions.offer(newTrans);

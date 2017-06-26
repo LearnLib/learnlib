@@ -52,7 +52,7 @@ public class ClosingStrategies {
 					List<List<Row<RI>>> unclosedClasses,
 					ObservationTable<RI, RD> table,
 					MembershipOracle<RI, RD> oracle) {
-				List<Row<RI>> result = new ArrayList<Row<RI>>(unclosedClasses.size());
+				List<Row<RI>> result = new ArrayList<>(unclosedClasses.size());
 				for(List<Row<RI>> clazz : unclosedClasses)
 					result.add(clazz.get(0));
 				return result;
@@ -75,7 +75,7 @@ public class ClosingStrategies {
 					ObservationTable<RI, RD> table,
 					MembershipOracle<RI, RD> oracle) {
 				
-				List<Row<RI>> result = new ArrayList<Row<RI>>();
+				List<Row<RI>> result = new ArrayList<>();
 				for(List<Row<RI>> clazz : unclosedClasses) {
 					Row<RI> shortest = null;
 					int shortestLen = Integer.MAX_VALUE;
@@ -107,7 +107,7 @@ public class ClosingStrategies {
 					List<List<Row<RI>>> unclosedClasses,
 					ObservationTable<RI, RD> table,
 					MembershipOracle<RI, RD> oracle) {
-				List<Row<RI>> result = new ArrayList<Row<RI>>(unclosedClasses.size());
+				List<Row<RI>> result = new ArrayList<>(unclosedClasses.size());
 				Alphabet<RI> alphabet = table.getInputAlphabet();
 				for(List<Row<RI>> clazz : unclosedClasses) {
 					Row<RI> lexMin = null;

@@ -96,7 +96,7 @@ public class ClassicLStarMealy<I, O> extends
 			List<Word<I>> initialSuffixes,
 			ObservationTableCEXHandler<? super I, ? super O> cexHandler,
 			ClosingStrategy<? super I, ? super O> closingStrategy) {
-		super(alphabet, oracle, new CompactMealy<I,O>(alphabet),
+		super(alphabet, oracle, new CompactMealy<>(alphabet),
 				initialPrefixes,
 				LStarMealyUtil.ensureSuffixCompliancy(initialSuffixes, alphabet, true),
 				cexHandler,
@@ -129,7 +129,7 @@ public class ClassicLStarMealy<I, O> extends
 	 */
 	@Override
 	protected List<Word<I>> initialSuffixes() {
-		List<Word<I>> suffixes = new ArrayList<Word<I>>(alphabet.size());
+		List<Word<I>> suffixes = new ArrayList<>(alphabet.size());
 		for(int i = 0; i < alphabet.size(); i++) {
 			I sym = alphabet.getSymbol(i);
 			suffixes.add(Word.fromLetter(sym));

@@ -23,7 +23,7 @@ public class SimpleEQOracle<A extends InputAlphabetHolder<I>,I,D> {
 	
 	public static <A extends InputAlphabetHolder<I>,I,D>
 	SimpleEQOracle<A,I,D> create(EquivalenceOracle<A,I,D> eqOracle) {
-		return new SimpleEQOracle<A,I,D>(eqOracle);
+		return new SimpleEQOracle<>(eqOracle);
 	}
 	
 	private final EquivalenceOracle<A, I, D> eqOracle;

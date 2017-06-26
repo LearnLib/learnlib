@@ -305,7 +305,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 		List<DefaultQuery<I, Boolean>> queries = new ArrayList<>(states.size());
 		for (Word<I> label : states) {
 			for (Word<I> suffix : suffixes) {
-				queries.add(new DefaultQuery<I, Boolean>(label, suffix));
+				queries.add(new DefaultQuery<>(label, suffix));
 			}
 		}
 
