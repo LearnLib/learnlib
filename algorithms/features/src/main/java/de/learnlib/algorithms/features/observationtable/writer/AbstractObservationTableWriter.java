@@ -20,8 +20,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.function.Function;
 
-import com.google.common.base.Function;
 import com.google.common.base.Functions;
 
 import de.learnlib.algorithms.features.observationtable.ObservationTable;

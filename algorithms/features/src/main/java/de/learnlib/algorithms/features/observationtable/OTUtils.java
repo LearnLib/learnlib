@@ -21,13 +21,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.function.Function;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-import com.google.common.base.Function;
 import com.google.common.base.Functions;
 
 import de.learnlib.algorithms.features.observationtable.reader.ObservationTableReader;

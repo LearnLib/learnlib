@@ -145,10 +145,7 @@ public class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, ReuseEdge<S
 		SystemStateHandler<S> handler = builder.systemStateHandler;
 		// If the specified handler is null, no action is required
 		if(handler == null) {
-			handler = new SystemStateHandler<S>() {
-				@Override
-				public void dispose(S state) {
-				}
+			handler = state -> {
 			};
 		}
 		this.systemStateHandler = handler;

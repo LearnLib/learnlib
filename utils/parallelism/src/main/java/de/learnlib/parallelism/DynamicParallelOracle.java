@@ -21,14 +21,13 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
-
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.settings.LearnLibSettings;
@@ -132,7 +131,7 @@ public class DynamicParallelOracle<I,D> implements ParallelOracle<I, D>{
 			}
 		}
 		catch(ExecutionException e) {
-			Throwables.propagateIfPossible(e.getCause());
+			Throwables.throwIfUnchecked(e.getCause());
 			throw new AssertionError("Runnables must not throw checked exceptions", e);
 		}
 		catch (InterruptedException e) {

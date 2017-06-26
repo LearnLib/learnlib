@@ -703,12 +703,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 	}
 	
 	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, D> asStandardTable() {
-		final Function<Row<I>,StandardRowWrapper> wrapRow = new Function<Row<I>,StandardRowWrapper>() {
-			@Override
-			public StandardRowWrapper apply(Row<I> internalRow) {
-				return wrapRow(internalRow);
-			}
-		};
+		final Function<Row<I>,StandardRowWrapper> wrapRow = this::wrapRow;
 		
 		return new de.learnlib.algorithms.features.observationtable.ObservationTable<I, D>() {
 			@Override

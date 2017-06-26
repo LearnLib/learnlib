@@ -252,12 +252,7 @@ public class DTNode<I,D> extends BlockListElem<I,D> {
 	}
 	
 	public Iterable<TTTState<I,D>> subtreeStates() {
-		return new Iterable<TTTState<I,D>>() {
-			@Override
-			public Iterator<TTTState<I,D>> iterator() {
-				return subtreeStatesIterator();
-			}
-		};
+		return this::subtreeStatesIterator;
 	}
 	public Iterator<TTTState<I,D>> subtreeStatesIterator() {
 		return new StatesIterator<>(this);
@@ -307,12 +302,7 @@ public class DTNode<I,D> extends BlockListElem<I,D> {
 	}
 	
 	public Iterable<DTNode<I,D>> subtreeLeaves() {
-		return new Iterable<DTNode<I,D>>() {
-			@Override
-			public Iterator<DTNode<I,D>> iterator() {
-				return subtreeLeavesIterator();
-			}
-		};
+		return this::subtreeLeavesIterator;
 	}
 	
 	public Iterator<DTNode<I,D>> innerNodesIterator() {
@@ -320,12 +310,7 @@ public class DTNode<I,D> extends BlockListElem<I,D> {
 	}
 	
 	public Iterable<DTNode<I,D>> innerNodes() {
-		return new Iterable<DTNode<I,D>>() {
-			@Override
-			public Iterator<DTNode<I,D>> iterator() {
-				return innerNodesIterator();
-			}
-		};
+		return this::innerNodesIterator;
 	}
 	
 	public Iterator<DTNode<I,D>> subtreeNodesIterator() {

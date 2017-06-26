@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.features.observationtable.writer;
 
-import com.google.common.base.Function;
 import de.learnlib.algorithms.features.observationtable.ObservationTable;
 import net.automatalib.words.Word;
 
@@ -23,6 +22,7 @@ import javax.annotation.Nullable;
 import javax.annotation.WillNotClose;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * A writer which stores the suffixes of an {@link ObservationTable} in plaintext. The delimiter in this format

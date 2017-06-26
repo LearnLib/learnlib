@@ -17,7 +17,7 @@ package de.learnlib.mapper.api;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 import de.learnlib.api.SUL;
 import de.learnlib.api.SULException;
@@ -84,7 +84,7 @@ public interface Mapper<AI,AO,CI,CO> {
 		
 		private MappedException(AO output) {
 			this.thisStepOutput = output;
-			this.subsequentStepsOutput = Optional.absent();
+			this.subsequentStepsOutput = Optional.empty();
 		}
 		
 		public AO getThisStepOutput() {

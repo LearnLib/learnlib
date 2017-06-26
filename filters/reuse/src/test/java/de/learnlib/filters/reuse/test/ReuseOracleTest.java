@@ -15,8 +15,6 @@
  */
 package de.learnlib.filters.reuse.test;
 
-import com.google.common.base.Supplier;
-
 import de.learnlib.filters.reuse.ReuseCapableOracle;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filters.reuse.ReuseException;
@@ -31,6 +29,8 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.function.Supplier;
 
 /**
  * Simple tests for the reuse oracle without domain knowledge.
@@ -62,13 +62,7 @@ public class ReuseOracleTest {
 			}
 		};
 
-		Supplier<? extends ReuseCapableOracle<Integer, Integer, String>> oracleSupplier =
-				new Supplier<ReuseCapableOracle<Integer, Integer, String>>() {
-					@Override
-					public ReuseCapableOracle<Integer, Integer, String> get() {
-						return reuseCapableOracle;
-					}
-				};
+		Supplier<? extends ReuseCapableOracle<Integer, Integer, String>> oracleSupplier = () -> reuseCapableOracle;
 
 		Alphabet<Integer> alphabet = Alphabets.integers(0, 10);
 

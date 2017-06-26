@@ -20,12 +20,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-
-import com.google.common.base.Supplier;
 
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.parallelism.ParallelOracle.PoolPolicy;
