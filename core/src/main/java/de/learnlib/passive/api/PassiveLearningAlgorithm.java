@@ -46,6 +46,8 @@ public interface PassiveLearningAlgorithm<M, I, D> {
 		for (Word<I> word : words) {
 			queries.add(new DefaultQuery<>(word, output));
 		}
+
+		addSamples(queries);
 	}
 	
 	@SuppressWarnings("unchecked")
