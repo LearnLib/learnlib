@@ -406,7 +406,8 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O>, SupportsGrow
 		this.hypothesis.addAlphabetSymbol(symbol);
 		final int inputIdx = this.alphabet.addSymbol(symbol);
 
-		for (final StateInfo<I, O> si : this.stateInfos) {
+		// use new list to prevent concurrent modification exception
+		for (final StateInfo<I, O> si : new ArrayList<>(this.stateInfos)) {
 			final int state = si.id;
 			final Word<I> accessSequence = si.accessSequence;
 			final Word<I> transAs = accessSequence.append(symbol);
