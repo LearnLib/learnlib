@@ -33,16 +33,17 @@ limitations under the License.
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>features</module>
+		<module>adt</module>
 		<module>dhc</module>
-		<module>lstar-generic</module>
-		<module>lstar-baseline</module>
-		<module>kearns-vazirani</module>
 		<module>discrimination-tree</module>
+		<module>features</module>
+		<module>kearns-vazirani</module>
+		<module>lstar-baseline</module>
+		<module>lstar-generic</module>
 		<module>nlstar</module>
 		<module>ttt</module>
-		<module>adt</module>
-	</modules>  
+		<module>rpni</module>
+	</modules>
 
 </project>
 
