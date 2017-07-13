@@ -71,7 +71,6 @@ public class LearnLoggerTest {
      * Test of logQuery method, of class LearnLogger.
      */
     @Test
-    @SuppressWarnings("deprecation")
     public void testLogQuery() {
         final LearnLogger learnLogger = LearnLogger.getLogger(LearnLoggerTest.class);
         final Logger logbackLogger = (Logger) LoggerFactory.getLogger(LearnLoggerTest.class);
