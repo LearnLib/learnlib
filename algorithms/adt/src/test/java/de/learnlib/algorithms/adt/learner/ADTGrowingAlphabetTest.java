@@ -18,9 +18,9 @@ package de.learnlib.algorithms.adt.learner;
 import de.learnlib.algorithms.adt.config.ADTExtenders;
 import de.learnlib.algorithms.adt.config.LeafSplitters;
 import de.learnlib.algorithms.adt.config.SubtreeReplacers;
-import de.learnlib.algorithms.adt.util.CompactMealyWrapperSUL;
 import de.learnlib.api.SymbolQueryOracle;
 import de.learnlib.oracles.SULSymbolQueryOracle;
+import de.learnlib.simulator.sul.MealySimulatorSUL;
 import de.learnlib.testsupport.AbstractGrowingAlphabetTest;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.util.automata.random.RandomAutomata;
@@ -59,7 +59,7 @@ public class ADTGrowingAlphabetTest extends AbstractGrowingAlphabetTest<
 
 	@Override
 	protected SymbolQueryOracle<Integer, Character> getOracle(MealyMachine<?, Integer, ?, Character> target) {
-		return new SULSymbolQueryOracle<>(new CompactMealyWrapperSUL<>(target));
+		return new SULSymbolQueryOracle<>(new MealySimulatorSUL<>(target));
 	}
 
 	@Override

@@ -13,20 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.adt.learner;
+package de.learnlib.algorithms.adt.it;
 
-import de.learnlib.examples.mealy.ExampleStack;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.SymbolQueryOracle;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 
 /**
- * Test for {@link ADTLearner}.
- *
- * @author frohme.
+ * @author frohme
  */
-public class ADTLearnerStackTest extends AbstractADTLearnerTest<ExampleStack.Input, ExampleStack.Output> {
+public class MQ2SQWrapper<I, O> implements SymbolQueryOracle<I, O> {
+
+	final WordBuilder<I> wb;
+	final MembershipOracle<I, Word<O>> oracle;
+
+	public MQ2SQWrapper(final MembershipOracle<I, Word<O>> oracle) {
+		this.oracle = oracle;
+		this.wb = new WordBuilder<>();
+	}
 
 	@Override
-	protected CompactMealy<ExampleStack.Input, ExampleStack.Output> getTarget() {
-		return ExampleStack.constructMachine();
+	public O query(I i) {
+		this.wb.append(i);
+		return this.oracle.answerQuery(wb.toWord()).lastSymbol();
+	}
+
+	@Override
+	public void reset() {
+		this.wb.clear();
 	}
 }
