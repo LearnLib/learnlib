@@ -15,6 +15,23 @@
  */
 package de.learnlib.algorithms.adt.learner;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithms.adt.adt.ADT;
 import de.learnlib.algorithms.adt.adt.ADTLeafNode;
 import de.learnlib.algorithms.adt.adt.ADTNode;
@@ -26,6 +43,9 @@ import de.learnlib.algorithms.adt.api.SubtreeReplacer;
 import de.learnlib.algorithms.adt.automaton.ADTHypothesis;
 import de.learnlib.algorithms.adt.automaton.ADTState;
 import de.learnlib.algorithms.adt.automaton.ADTTransition;
+import de.learnlib.algorithms.adt.config.ADTExtenders;
+import de.learnlib.algorithms.adt.config.LeafSplitters;
+import de.learnlib.algorithms.adt.config.SubtreeReplacers;
 import de.learnlib.algorithms.adt.model.ExtensionResult;
 import de.learnlib.algorithms.adt.model.ObservationTree;
 import de.learnlib.algorithms.adt.model.ReplacementResult;
@@ -48,21 +68,6 @@ import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.SimpleAlphabet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 /**
  * The main learning algorithm
  *
@@ -75,6 +80,21 @@ public class ADTLearner<I, O> implements
 		LearningAlgorithm.MealyLearner<I, O>,
 		PartialTransitionAnalyzer<ADTState<I, O>, I>,
 		SupportsGrowingAlphabet<I> {
+
+	public static class BuilderDefaults {
+
+		public static LeafSplitter leafSplitter() {
+			return LeafSplitters.DEFAULT_SPLITTER;
+		}
+
+		public static ADTExtender adtExtender() {
+			return ADTExtenders.EXTEND_BEST_EFFORT;
+		}
+
+		public static SubtreeReplacer subtreeReplacer() {
+			return SubtreeReplacers.LEVELED_BEST_EFFORT;
+		}
+	}
 
 	private final ADTHypothesis<I, O> hypothesis;
 	private final GrowingAlphabet<I> alphabet;
@@ -92,6 +112,7 @@ public class ADTLearner<I, O> implements
 	private final ADT<ADTState<I, O>, I, O> adt;
 	private final ObservationTree<ADTState<I, O>, I, O> observationTree;
 
+	@GenerateBuilder(defaults = BuilderDefaults.class)
 	public ADTLearner(final Alphabet<I> alphabet,
 					  final SymbolQueryOracle<I, O> oracle,
 					  final LeafSplitter leafSplitter,

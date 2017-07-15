@@ -56,6 +56,11 @@ limitations under the License.
 			<artifactId>automata-util</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.misberner.buildergen</groupId>
+			<artifactId>buildergen</artifactId>
+		</dependency>
+
 		<!--
 		Test dependencies
 		-->
