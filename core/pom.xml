@@ -71,6 +71,10 @@ limitations under the License.
 			<artifactId>testng</artifactId>
 		</dependency>
 
+		<!-- TODO
+		 Here we actually want a valid slf4j implementation to check the output. This conflicts with the nop
+		implementation defined in the parent, so slf4j will show a warning. However the tests will still pass
+		-->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>

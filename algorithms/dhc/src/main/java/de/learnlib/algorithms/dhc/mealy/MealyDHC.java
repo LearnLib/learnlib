@@ -25,8 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.common.collect.Sets;
 import de.learnlib.api.SupportsGrowingAlphabet;
@@ -49,6 +47,9 @@ import de.learnlib.counterexamples.GlobalSuffixFinder;
 import de.learnlib.counterexamples.GlobalSuffixFinders;
 import de.learnlib.oracles.DefaultQuery;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Maik Merten 
@@ -68,7 +69,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		}
 	}
 
-	private static final Logger log = Logger.getLogger( MealyDHC.class.getName() );
+	private static final Logger log = LoggerFactory.getLogger(MealyDHC.class);
 	
 	private final GrowingAlphabet<I> alphabet;
 	private final MembershipOracle<I, Word<O>> oracle;
@@ -292,7 +293,7 @@ public class MealyDHC<I, O> implements MealyLearner<I,O>,
 		for(Word<I> suf : newSuffixes) {
 			if(!splitters.contains(suf)) {
 				splitters.add(suf);
-				log.log(Level.FINE, "added suffix: {0}", suf);
+				log.debug("added suffix: {0}", suf);
 			}
 		}
 		
