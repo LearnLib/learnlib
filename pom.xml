@@ -572,6 +572,11 @@ limitations under the License.
 			</dependency>
 			<dependency>
 				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-ttt-vpda</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-basic-eqtests</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -614,6 +619,12 @@ limitations under the License.
 			<dependency>
 				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-discrimination-tree</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-discrimination-tree-vpda</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			

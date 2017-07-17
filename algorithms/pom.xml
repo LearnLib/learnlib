@@ -36,12 +36,14 @@ limitations under the License.
 		<module>adt</module>
 		<module>dhc</module>
 		<module>discrimination-tree</module>
+		<module>discrimination-tree-vpda</module>
 		<module>features</module>
 		<module>kearns-vazirani</module>
 		<module>lstar-baseline</module>
 		<module>lstar-generic</module>
 		<module>nlstar</module>
 		<module>ttt</module>
+		<module>ttt-vpda</module>
 		<module>rpni</module>
 	</modules>
 
