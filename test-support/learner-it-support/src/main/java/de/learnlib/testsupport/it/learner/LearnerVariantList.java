@@ -17,6 +17,7 @@ package de.learnlib.testsupport.it.learner;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Word;
 import de.learnlib.api.LearningAlgorithm;
 
@@ -38,9 +39,10 @@ import de.learnlib.api.LearningAlgorithm;
  */
 public interface LearnerVariantList<M, I, D> {
 	
-	public static interface DFALearnerVariantList<I> extends LearnerVariantList<DFA<?,I>,I,Boolean> {}
-	public static interface MealyLearnerVariantList<I,O> extends LearnerVariantList<MealyMachine<?,I,?,O>,I,Word<O>> {}
-	public static interface MealySymLearnerVariantList<I,O> extends LearnerVariantList<MealyMachine<?,I,?,O>,I,O> {}
+	interface DFALearnerVariantList<I> extends LearnerVariantList<DFA<?,I>,I,Boolean> {}
+	interface MealyLearnerVariantList<I,O> extends LearnerVariantList<MealyMachine<?,I,?,O>,I,Word<O>> {}
+	interface MealySymLearnerVariantList<I,O> extends LearnerVariantList<MealyMachine<?,I,?,O>,I,O> {}
+	interface OneSEVPALearnerVariantList<I> extends LearnerVariantList<OneSEVPA<?,I>,I,Boolean> {}
 	
 	/**
 	 * Adds a learner variant with the default maximum number of rounds (i.e., the size of the
