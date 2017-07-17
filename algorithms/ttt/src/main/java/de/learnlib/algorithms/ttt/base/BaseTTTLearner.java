@@ -30,6 +30,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import de.learnlib.api.AccessSequenceProvider;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.smartcollections.ElementReference;
 import net.automatalib.commons.smartcollections.UnorderedCollection;

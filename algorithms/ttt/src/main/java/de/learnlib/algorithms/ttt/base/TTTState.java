@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
+import de.learnlib.api.AccessSequenceProvider;
 import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.words.Word;
 

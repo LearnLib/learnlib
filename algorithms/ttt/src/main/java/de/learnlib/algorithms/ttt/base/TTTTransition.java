@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
+import de.learnlib.api.AccessSequenceProvider;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 

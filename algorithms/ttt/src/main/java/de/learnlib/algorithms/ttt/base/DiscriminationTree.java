@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import de.learnlib.api.AccessSequenceProvider;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;

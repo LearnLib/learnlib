@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.ttt.base;
+package de.learnlib.api;
 
 import net.automatalib.words.Word;
 
 /**
  * Common interface for objects that have an access sequence associated with
- * them (e.g., states and transitions of a {@link TTTHypothesis}).
+ * them (e.g., states and transitions of a hypotheses).
  * 
  * @author Malte Isberner
  *
@@ -31,6 +31,6 @@ public interface AccessSequenceProvider<I> {
 	 * Retrieves the access sequence of this object.
 	 * @return the access sequence
 	 */
-	public Word<I> getAccessSequence();
+	Word<I> getAccessSequence();
 
 }
