@@ -23,11 +23,11 @@ import org.slf4j.Marker;
  * 
  * @author frohme
  */
-public class LearnLoggerDelegate implements LearnLogger {
+public class Slf4jDelegator implements LearnLogger {
 
 	private final Logger delegate;
 
-	public LearnLoggerDelegate(final Logger delegate) {
+	public Slf4jDelegator(final Logger delegate) {
 		this.delegate = delegate;
 	}
 
@@ -343,7 +343,7 @@ public class LearnLoggerDelegate implements LearnLogger {
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		LearnLoggerDelegate that = (LearnLoggerDelegate) o;
+		Slf4jDelegator that = (Slf4jDelegator) o;
 
 		return delegate != null ? delegate.equals(that.delegate) : that.delegate == null;
 	}

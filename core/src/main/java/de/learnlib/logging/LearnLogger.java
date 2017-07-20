@@ -38,7 +38,7 @@ public interface LearnLogger extends Logger {
      * @return 
      */
     static LearnLogger getLogger(String name) {
-        return new LearnLoggerDelegate(LoggerFactory.getLogger(name));
+        return new Slf4jDelegator(LoggerFactory.getLogger(name));
     }
     
     /**
