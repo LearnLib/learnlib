@@ -16,11 +16,10 @@
 package de.learnlib.algorithms.adt.adt;
 
 import de.learnlib.api.SymbolQueryOracle;
+import net.automatalib.graphs.ads.impl.AbstractRecursiveADSSymbolNode;
 import net.automatalib.words.Word;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Symbol node implementation.
@@ -31,18 +30,11 @@ import java.util.Map;
  * @author frohme
  */
 @ParametersAreNonnullByDefault
-public class ADTSymbolNode<S, I, O> implements ADTNode<S, I, O> {
+public class ADTSymbolNode<S, I, O> extends AbstractRecursiveADSSymbolNode<S, I, O, ADTNode<S, I, O>>
+		implements ADTNode<S, I, O> {
 
-	private ADTNode<S, I, O> parent;
-
-	private I symbol;
-
-	private final Map<O, ADTNode<S, I, O>> successors;
-
-	public ADTSymbolNode(final ADTNode<S, I, O> parent, final I symbol) {
-		this.successors = new HashMap<>();
-		this.parent = parent;
-		this.symbol = symbol;
+	public ADTSymbolNode(ADTNode<S, I, O> parent, I symbol) {
+		super(parent, symbol);
 	}
 
 	@Override
@@ -51,49 +43,14 @@ public class ADTSymbolNode<S, I, O> implements ADTNode<S, I, O> {
 	}
 
 	@Override
-	public S getHypothesisState() {
-		return null;
-	}
-
-	@Override
-	public void setHypothesisState(final S state) {
-		throw new UnsupportedOperationException("Symbol nodes cannot reference a hypothesis state");
-	}
-
-	@Override
-	public I getSymbol() {
-		return this.symbol;
-	}
-
-	@Override
-	public void setSymbol(I symbol) throws UnsupportedOperationException {
-		this.symbol = symbol;
-	}
-
-	@Override
-	public ADTNode<S, I, O> getParent() {
-		return this.parent;
-	}
-
-	@Override
-	public void setParent(ADTNode<S, I, O> parent) {
-		this.parent = parent;
-	}
-
-	@Override
-	public Map<O, ADTNode<S, I, O>> getChildren() {
-		return this.successors;
-	}
-
-	@Override
 	public ADTNode<S, I, O> sift(final SymbolQueryOracle<I, O> oracle, final Word<I> prefix) {
-		final O o = oracle.query(this.symbol);
+		final O o = oracle.query(super.getSymbol());
 
-		final ADTNode<S, I, O> successor = this.successors.get(o);
+		final ADTNode<S, I, O> successor = super.getChildren().get(o);
 
 		if (successor == null) {
 			final ADTNode<S, I, O> result = new ADTLeafNode<>(this, null);
-			successors.put(o, result);
+			super.getChildren().put(o, result);
 			return result;
 		}
 
@@ -102,7 +59,7 @@ public class ADTSymbolNode<S, I, O> implements ADTNode<S, I, O> {
 
 	@Override
 	public String toString() {
-		return this.symbol.toString();
+		return super.getSymbol().toString();
 	}
 
 }

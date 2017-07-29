@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithms.adt.config.model.calculator;
 
-import net.automatalib.automata.ads.ADSNode;
+import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.util.automata.ads.BacktrackingSearch;
 import net.automatalib.words.Alphabet;

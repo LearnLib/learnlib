@@ -17,21 +17,16 @@ package de.learnlib.algorithms.adt.adt;
 
 import de.learnlib.algorithms.adt.util.ADTUtil;
 import de.learnlib.api.SymbolQueryOracle;
-import net.automatalib.automata.ads.ADSNode;
-import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.ads.RecursiveADSNode;
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Word;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 /**
- * The ADT equivalent of {@link net.automatalib.automata.ads.ADSNode}. In contrast to regular adaptive distinguishing
+ * The ADT equivalent of {@link net.automatalib.graphs.ads.ADSNode}. In contrast to regular adaptive distinguishing
  * sequences, an ADT node may also represent a reset node that semantically separates multiple ADSs.
  *
  * @param <S> (hypothesis) state type
@@ -39,8 +34,7 @@ import java.util.Queue;
  * @param <O> output alphabet type
  * @author frohme 
  */
-//TODO: May be more elegant to realize this class as a true subtype of {@link net.automatalib.automata.ads.ADSNode}.
-public interface ADTNode<S, I, O> extends Graph<ADTNode<S, I, O>, ADTNode<S, I, O>> {
+public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I, O>> {
 
 	/**
 	 * Utility enum to distinguish the 3 possible types of ADT nodes
@@ -51,47 +45,16 @@ public interface ADTNode<S, I, O> extends Graph<ADTNode<S, I, O>, ADTNode<S, I, 
 		LEAF_NODE
 	}
 
+	default boolean isLeaf() {
+		return NodeType.LEAF_NODE == this.getNodeType();
+	}
+
 	/**
 	 * Returns the node type of the current node.
 	 *
 	 * @return the node type
 	 */
 	NodeType getNodeType();
-
-	/**
-	 * See {@link ADSNode#getHypothesisState()}
-	 */
-	S getHypothesisState();
-
-	/**
-	 * See {@link ADSNode#setHypothesisState(Object)}
-	 */
-	void setHypothesisState(final S state) throws UnsupportedOperationException;
-
-	/**
-	 * See {@link ADSNode#getSymbol()}
-	 */
-	I getSymbol();
-
-	/**
-	 * See {@link ADSNode#setSymbol(Object)}
-	 */
-	void setSymbol(final I symbol) throws UnsupportedOperationException;
-
-	/**
-	 * See {@link ADSNode#getParent()}
-	 */
-	ADTNode<S, I, O> getParent();
-
-	/**
-	 * See {@link ADSNode#setParent(ADSNode)}
-	 */
-	void setParent(final ADTNode<S, I, O> parent);
-
-	/**
-	 * See {@link ADSNode#getChildren()}
-	 */
-	Map<O, ADTNode<S, I, O>> getChildren();
 
 	/**
 	 * Utility method, that sifts a given word through {@code this} ADTNode. If {@code this} node is a
@@ -117,29 +80,7 @@ public interface ADTNode<S, I, O> extends Graph<ADTNode<S, I, O>, ADTNode<S, I, 
 	// default methods for graph interface
 	@Override
 	default Collection<? extends ADTNode<S, I, O>> getNodes() {
-		final List<ADTNode<S, I, O>> result = new LinkedList<>();
-		final Queue<ADTNode<S, I, O>> queue = new LinkedList<>();
-
-		queue.add(this);
-
-		// level-order iteration of the tree nodes
-		while (!queue.isEmpty()) {
-			final ADTNode<S, I, O> node = queue.poll();
-			result.add(node);
-			queue.addAll(node.getChildren().values());
-		}
-
-		return Collections.unmodifiableList(result);
-	}
-
-	@Override
-	default Collection<? extends ADTNode<S, I, O>> getOutgoingEdges(final ADTNode<S, I, O> node) {
-		return Collections.unmodifiableCollection(node.getChildren().values());
-	}
-
-	@Override
-	default ADTNode<S, I, O> getTarget(final ADTNode<S, I, O> edge) {
-		return edge;
+		return getNodesForRoot(this);
 	}
 
 	@Override

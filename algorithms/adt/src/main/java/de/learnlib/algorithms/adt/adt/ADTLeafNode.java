@@ -16,11 +16,10 @@
 package de.learnlib.algorithms.adt.adt;
 
 import de.learnlib.api.SymbolQueryOracle;
+import net.automatalib.graphs.ads.impl.AbstractRecursiveADSLeafNode;
 import net.automatalib.words.Word;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * Leaf node implementation.
@@ -31,15 +30,11 @@ import java.util.Map;
  * @author frohme
  */
 @ParametersAreNonnullByDefault
-public class ADTLeafNode<S, I, O> implements ADTNode<S, I, O> {
+public class ADTLeafNode<S, I, O> extends AbstractRecursiveADSLeafNode<S, I, O, ADTNode<S, I, O>>
+		implements ADTNode<S, I, O> {
 
-	private ADTNode<S, I, O> parent;
-
-	private S hypothesisState;
-
-	public ADTLeafNode(final ADTNode<S, I, O> parent, final S hypothesisState) {
-		this.parent = parent;
-		this.hypothesisState = hypothesisState;
+	public ADTLeafNode(ADTNode<S, I, O> parent, S hypothesisState) {
+		super(parent, hypothesisState);
 	}
 
 	@Override
@@ -48,47 +43,7 @@ public class ADTLeafNode<S, I, O> implements ADTNode<S, I, O> {
 	}
 
 	@Override
-	public S getHypothesisState() {
-		return hypothesisState;
-	}
-
-	@Override
-	public void setHypothesisState(S state) {
-		this.hypothesisState = state;
-	}
-
-	@Override
-	public I getSymbol() {
-		return null;
-	}
-
-	@Override
-	public void setSymbol(I symbol) throws UnsupportedOperationException {
-		throw new UnsupportedOperationException("Final nodes do not have a symbol");
-	}
-
-	@Override
-	public ADTNode<S, I, O> getParent() {
-		return this.parent;
-	}
-
-	@Override
-	public void setParent(final ADTNode<S, I, O> parent) {
-		this.parent = parent;
-	}
-
-	@Override
-	public Map<O, ADTNode<S, I, O>> getChildren() {
-		return Collections.emptyMap();
-	}
-
-	@Override
 	public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, final Word<I> prefix) {
 		throw new UnsupportedOperationException("Final nodes cannot sift words");
-	}
-
-	@Override
-	public String toString() {
-		return this.getHypothesisState() == null ? "<null>" : this.getHypothesisState().toString();
 	}
 }
