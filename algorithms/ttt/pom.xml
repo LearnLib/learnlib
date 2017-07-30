@@ -44,6 +44,10 @@ limitations under the License.
 			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-counterexamples</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-datastructures</artifactId>
+		</dependency>
 		
 		<!-- AutomataLib dependencies -->
 		<dependency>

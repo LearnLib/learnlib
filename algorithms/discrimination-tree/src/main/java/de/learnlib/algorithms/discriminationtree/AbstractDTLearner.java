@@ -37,9 +37,8 @@ import de.learnlib.api.Query;
 import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.counterexamples.LocalSuffixFinders;
-import de.learnlib.discriminationtree.DTNode;
-import de.learnlib.discriminationtree.DTNode.SplitResult;
-import de.learnlib.discriminationtree.DiscriminationTree;
+import de.learnlib.datastructure.discriminationtree.model.DTNode;
+import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.MQUtil;
 
@@ -59,7 +58,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 	private final MembershipOracle<I, D> oracle;
 	private final LocalSuffixFinder<? super I, ? super D> suffixFinder;
 	private final boolean repeatedCounterexampleEvaluation;
-	protected final DiscriminationTree<I, D, HState<I,D,SP,TP>> dtree;
+	protected final AbstractWordBasedDiscriminationTree<I, D, HState<I,D,SP,TP>> dtree;
 	protected final DTLearnerHypothesis<I, D, SP, TP> hypothesis;
 	
 	private final List<HState<I,D,SP,TP>> newStates = new ArrayList<>();
@@ -69,7 +68,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 	protected AbstractDTLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle,
 			LocalSuffixFinder<? super I, ? super D> suffixFinder,
 			boolean repeatedCounterexampleEvaluation,
-			DiscriminationTree<I, D, HState<I,D,SP,TP>> dtree) {
+			AbstractWordBasedDiscriminationTree<I, D, HState<I,D,SP,TP>> dtree) {
 		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.oracle = oracle;
 		this.suffixFinder = suffixFinder;
@@ -105,7 +104,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		updateHypothesis();
 	}
 	
-	public DiscriminationTree<I, D, HState<I,D,SP,TP>> getDiscriminationTree() {
+	public AbstractWordBasedDiscriminationTree<I, D, HState<I,D,SP,TP>> getDiscriminationTree() {
 		return dtree;
 	}
 	
@@ -146,9 +145,9 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		
 		D oldOut = oracle.answerQuery(oldState.getAccessSequence(), suffix);
 		D newOut = oracle.answerQuery(newState.getAccessSequence(), suffix);
-		
-		SplitResult<I,D,HState<I,D,SP,TP>> sr = oldDt.split(suffix, oldOut, newOut, newState);
-		
+
+		DTNode<I, D, HState<I,D,SP,TP>>.SplitResult sr = oldDt.split(suffix, oldOut, newOut, newState);
+
 		oldState.fetchNonTreeIncoming(openTransitions);
 		
 		oldState.setDTLeaf(sr.nodeOld);
@@ -158,7 +157,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		
 		return true;
 	}
-	
+
 	protected void initializeState(HState<I,D,SP,TP> newState) {
 		newStates.add(newState);
 		
@@ -231,10 +230,6 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 	
 	protected abstract Query<I,D> tpQuery(HTransition<I, D, SP, TP> transition);
 	
-	public DiscriminationTree<I, D, HState<I,D,SP,TP>>.GraphView dtGraphView() {
-		return dtree.graphView();
-	}
-
 	@Override
 	public void addAlphabetSymbol(I symbol) {
 

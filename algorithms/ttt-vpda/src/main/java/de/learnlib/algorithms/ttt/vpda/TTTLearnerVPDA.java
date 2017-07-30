@@ -34,9 +34,10 @@ import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.ContextPair;
 import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.DTNode;
 import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.HypLoc;
 import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.HypTrans;
-import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.SplitData;
+import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.TransList;
 import de.learnlib.algorithms.discriminationtree.vpda.DTLearnerVPDA;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.datastructure.discriminationtree.SplitData;
 import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.vpda.StackContents;
 import net.automatalib.automata.vpda.State;
@@ -144,7 +145,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 					lcas[i] = trans.getTargetNode();
 				}
 				else {
-					lcas[i] = dtree.computeLCA(currLca, trans.getTargetNode());
+					lcas[i] = dtree.leastCommonAncestor(currLca, trans.getTargetNode());
 				}
 				i++;
 			}
@@ -158,7 +159,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 							lcas[i] = trans.getTargetNode();
 						}
 						else {
-							lcas[i] = dtree.computeLCA(currLca, trans.getTargetNode());
+							lcas[i] = dtree.leastCommonAncestor(currLca, trans.getTargetNode());
 						}
 						i++;
 
@@ -168,7 +169,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 							lcas[i] = trans.getTargetNode();
 						}
 						else {
-							lcas[i] = dtree.computeLCA(currLca, trans.getTargetNode());
+							lcas[i] = dtree.leastCommonAncestor(currLca, trans.getTargetNode());
 						}
 						i++;
 					}
@@ -289,7 +290,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 			int locAsLen = loc.getAccessSequence().length();
 			DTNode<I> node = loc.getLeaf();
 			while (!node.isRoot()) {
-				boolean expectedOut = node.getParentLabel();
+				boolean expectedOut = node.getParentOutcome();
 				node = node.getParent();
 				ContextPair<I> discr = node.getDiscriminator();
 				if (best != null && discr.getLength() + locAsLen < best.totalLength()) {
@@ -419,7 +420,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 			DTNode<I> curr = dfsStack.pop();
 			assert curr.getSplitData() == null;
 
-			curr.setSplitData(new SplitData<>());
+			curr.setSplitData(new SplitData<>(TransList::new));
 
 			for (HypTrans<I> trans : curr.getIncoming()) {
 				Boolean outcome = query(trans, discriminator);
@@ -433,7 +434,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 				}
 			}
 			else {
-				HypLoc<I> loc = curr.getLocation();
+				HypLoc<I> loc = curr.getData();
 				assert loc != null;
 
 				// Try to deduct the outcome from the DT target of
@@ -514,7 +515,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 
 			if (original.isLeaf()) {
 				if (Objects.equals(original.getSplitData().getStateLabel(), label)) {
-					link(extracted, original.getLocation());
+					link(extracted, original.getData());
 				}
 				else {
 					createNewState(extracted);
@@ -533,7 +534,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 				if (markedChildren.size() > 1) {
 					Map<Boolean, DTNode<I>> childMap = new HashMap<>();
 					for (DTNode<I> c : markedChildren) {
-						Boolean childLabel = c.getParentLabel();
+						Boolean childLabel = c.getParentOutcome();
 						DTNode<I> extractedChild = new DTNode<>(extracted, childLabel);
 						childMap.put(childLabel, extractedChild);
 						stack.push(new ExtractRecord<>(c, extractedChild));
@@ -631,13 +632,13 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 		HypLoc<I> newLoc = makeTree(trans);
 		DTNode<I> oldDtNode = succState.getLocation().getLeaf();
 		openTransitions.addAll(oldDtNode.getIncoming());
-		DTNode<I> children[] = oldDtNode.split(context, acex.effect(breakpoint), acex.effect(breakpoint + 1));
+		DTNode<I>.SplitResult children = oldDtNode.split(context, acex.effect(breakpoint), acex.effect(breakpoint + 1));
 		oldDtNode.setTemp(true);
 		if (!oldDtNode.getParent().isTemp()) {
 			blockList.add(oldDtNode);
 		}
-		link(children[0], newLoc);
-		link(children[1], succState.getLocation());
+		link(children.nodeOld, newLoc);
+		link(children.nodeNew, succState.getLocation());
 		initializeLocation(newLoc);
 	}
 

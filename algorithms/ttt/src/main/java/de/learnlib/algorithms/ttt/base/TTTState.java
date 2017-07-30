@@ -33,7 +33,7 @@ public class TTTState<I,D> implements AccessSequenceProvider<I> {
 	private final ResizingObjectArray transitions;
 	private final TTTTransition<I,D> parentTransition;
 	
-	DTNode<I,D> dtLeaf;
+	BaseDTNode<I,D> dtLeaf;
 
 	public TTTState(int initialAlphabetSize, TTTTransition<I,D> parentTransition, int id) {
 		this.id = id;
@@ -54,7 +54,7 @@ public class TTTState<I,D> implements AccessSequenceProvider<I> {
 	 * Retrieves the discrimination tree leaf associated with this state.
 	 * @return the discrimination tree leaf associated with this state
 	 */
-	public DTNode<I,D> getDTLeaf() {
+	public BaseDTNode<I,D> getDTLeaf() {
 		return dtLeaf;
 	}
 	

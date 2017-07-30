@@ -30,7 +30,6 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import de.learnlib.api.AccessSequenceProvider;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.smartcollections.ElementReference;
 import net.automatalib.commons.smartcollections.UnorderedCollection;
@@ -47,8 +46,10 @@ import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.ttt.base.TTTHypothesis.TTTEdge;
 import de.learnlib.api.LearningAlgorithm;
+import de.learnlib.api.AccessSequenceProvider;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.SupportsGrowingAlphabet;
+import de.learnlib.datastructure.discriminationtree.SplitData;
 import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
 import de.learnlib.oracles.DefaultQuery;
 
@@ -71,7 +72,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	protected final TTTHypothesis<I,D,?> hypothesis;
 	protected final MembershipOracle<I, D> oracle;
 	
-	protected final DiscriminationTree<I,D> dtree;
+	protected final BaseTTTDiscriminationTree<I,D> dtree;
 	
 	protected final AcexAnalyzer analyzer;
 	
@@ -91,25 +92,14 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	
 	protected BaseTTTLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle,
 			TTTHypothesis<I, D, ?> hypothesis,
+			BaseTTTDiscriminationTree<I, D> dtree,
 			AcexAnalyzer analyzer) {
 		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.hypothesis = hypothesis;
 		this.oracle = oracle;
-		this.dtree = new DiscriminationTree<>(oracle);
+		this.dtree = dtree;
 		this.analyzer = analyzer;
 	}
-	
-	protected BaseTTTLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle,
-			TTTHypothesis<I, D, ?> hypothesis,
-			AcexAnalyzer analyzer,
-			DTNode<I,D> root) {
-		this.alphabet = new SimpleAlphabet<>(alphabet);
-		this.hypothesis = hypothesis;
-		this.oracle = oracle;
-		this.dtree = new DiscriminationTree<>(oracle, root);
-		this.analyzer = analyzer;
-	}
-	
 	
 	/*
 	 * LearningAlgorithm interface methods
@@ -126,7 +116,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		}
 		
 		TTTState<I, D> init = hypothesis.initialize();
-		DTNode<I, D> initNode = dtree.sift(init, false);
+		BaseDTNode<I, D> initNode = dtree.sift(init, false);
 		link(initNode, init);
 		initializeState(init);
 		
@@ -303,7 +293,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 				result.add(trans.getTreeTarget());
 			}
 			else {
-				DTNode<I,D> tgtNode = trans.getNonTreeTarget();
+				BaseDTNode<I,D> tgtNode = trans.getNonTreeTarget();
 				Iterators.addAll(result, tgtNode.subtreeStatesIterator());
 			}
 		}
@@ -345,15 +335,15 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		if (trans.isTree()) {
 			return trans.getTreeTarget();
 		}
-		DTNode<I, D> newTgtNode = updateDTTarget(trans, true);
-		if (newTgtNode.state == null) {
+		BaseDTNode<I, D> newTgtNode = updateDTTarget(trans, true);
+		if (newTgtNode.getData() == null) {
 			makeTree(trans);
 			closeTransitions();
 			// FIXME: using exception handling for this is not very nice, but it appears there
 			// is no quicker way to abort counterexample analysis
 			throw new HypothesisChangedException();
 		}
-		return newTgtNode.state;
+		return newTgtNode.getData();
 	}
 	
 	
@@ -376,14 +366,14 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 */
 	public static final class Splitter<I,D> {
 		public final int symbolIdx;
-		public final DTNode<I,D> succSeparator;
+		public final BaseDTNode<I,D> succSeparator;
 		
 		public Splitter(int symbolIdx) {
 			this.symbolIdx = symbolIdx;
 			this.succSeparator = null;
 		}
 		
-		public Splitter(int symbolIdx, DTNode<I,D> succSeparator) {
+		public Splitter(int symbolIdx, BaseDTNode<I,D> succSeparator) {
 			assert !succSeparator.isTemp() && succSeparator.isInner();
 			
 			this.symbolIdx = symbolIdx;
@@ -410,9 +400,9 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 */
 	private static final class GlobalSplitter<I,D> {
 		public final Splitter<I,D> localSplitter;
-		public final DTNode<I,D> blockRoot;
+		public final BaseDTNode<I,D> blockRoot;
 		
-		public GlobalSplitter(DTNode<I,D> blockRoot, Splitter<I,D> localSplitter) {
+		public GlobalSplitter(BaseDTNode<I,D> blockRoot, Splitter<I,D> localSplitter) {
 			this.blockRoot = blockRoot;
 			this.localSplitter = localSplitter;
 		}
@@ -429,11 +419,11 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		// TODO: Make global option
 		boolean optimizeGlobal = true;
 		
-		DTNode<I,D> bestBlockRoot = null;
+		BaseDTNode<I,D> bestBlockRoot = null;
 		
 		Splitter<I,D> bestSplitter = null;
 		
-		for (DTNode<I,D> blockRoot : blockList) {
+		for (BaseDTNode<I,D> blockRoot : blockList) {
 //			if (finalDiscriminators.contains(blockRoot.getDiscriminator().subWord(1))) {
 //				declareFinal(blockRoot);
 //				continue;
@@ -470,11 +460,11 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * could be found.
 	 */
 	@SuppressWarnings("unchecked")
-	private Splitter<I,D> findSplitter(DTNode<I,D> blockRoot) {
+	private Splitter<I,D> findSplitter(BaseDTNode<I,D> blockRoot) {
 		int alphabetSize = alphabet.size();
 		
 		Object[] properties = new Object[alphabetSize];
-		DTNode<I,D>[] lcas = new DTNode[alphabetSize];
+		BaseDTNode<I,D>[] lcas = new BaseDTNode[alphabetSize];
 		boolean first = true;
 		
 		for (TTTState<I,D> state : blockRoot.subtreeStates()) {
@@ -495,11 +485,11 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		}
 		
 		int shortestLen = Integer.MAX_VALUE;
-		DTNode<I, D> shortestLca = null;
+		BaseDTNode<I, D> shortestLca = null;
 		int shortestLcaSym = -1;
 		
 		for (int i = 0; i < alphabetSize; i++) {
-			DTNode<I,D> lca = lcas[i];
+			BaseDTNode<I,D> lca = lcas[i];
 			if (!lca.isTemp() && !lca.isLeaf()) {
 				int lcaLen = lca.getDiscriminator().length();
 				if (shortestLca == null || lcaLen < shortestLen) {
@@ -560,9 +550,9 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		OutputInconsistency<I, D> best = null;
 		
 		for (TTTState<I, D> state : hypothesis.getStates()) {
-			DTNode<I, D> node = state.getDTLeaf();
+			BaseDTNode<I, D> node = state.getDTLeaf();
 			while (!node.isRoot()) {
-				D expectedOut = node.getParentEdgeLabel();
+				D expectedOut = node.getParentOutcome();
 				node = node.getParent();
 				Word<I> suffix = node.getDiscriminator();
 				if (best == null || suffix.length() < best.suffix.length()) {
@@ -584,7 +574,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param blockRoot the block root whose discriminator to finalize
 	 * @param splitter the splitter to use for finalization
 	 */
-	private void finalizeDiscriminator(DTNode<I,D> blockRoot, Splitter<I,D> splitter) {
+	private void finalizeDiscriminator(BaseDTNode<I,D> blockRoot, Splitter<I,D> splitter) {
 		assert blockRoot.isBlockRoot();
 		
 		notifyPreFinalizeDiscriminator(blockRoot, splitter);
@@ -593,8 +583,8 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		
 		if (!blockRoot.getDiscriminator().equals(succDiscr)) {
 			Word<I> finalDiscriminator = prepareSplit(blockRoot, splitter);
-			Map<D,DTNode<I,D>> repChildren = createMap();
-			for (D label : blockRoot.splitData.getLabels()) {
+			Map<D,BaseDTNode<I,D>> repChildren = createMap();
+			for (D label : blockRoot.getSplitData().getLabels()) {
 				repChildren.put(label, extractSubtree(blockRoot, label));
 			}
 			blockRoot.replaceChildren(repChildren);
@@ -608,23 +598,23 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	}
 	
 	protected boolean allNodesFinal() {
-		Iterator<? extends DTNode<I,D>> it = dtree.getRoot().subtreeNodesIterator();
+		Iterator<? extends BaseDTNode<I,D>> it = dtree.getRoot().subtreeNodesIterator();
 		while (it.hasNext()) {
-			DTNode<I,D> node = it.next();
+			BaseDTNode<I,D> node = it.next();
 			assert !node.isTemp() : "Final node with discriminator " + node.getDiscriminator();
 		}
 		return true;
 	}
-	protected void declareFinal(DTNode<I,D> blockRoot) {
-		blockRoot.temp = false;
-		blockRoot.splitData = null;
+	protected void declareFinal(BaseDTNode<I,D> blockRoot) {
+		blockRoot.setTemp(false);
+		blockRoot.setSplitData(null);
 		
 		blockRoot.removeFromBlockList();
 //		finalDiscriminators.add(blockRoot.getDiscriminator());
 		
-		for (DTNode<I,D> subtree : blockRoot.getChildren()) {
-			assert subtree.splitData == null;
-			blockRoot.setChild(subtree.getParentEdgeLabel(), subtree);
+		for (BaseDTNode<I,D> subtree : blockRoot.getChildren()) {
+			assert subtree.getSplitData() == null;
+			blockRoot.setChild(subtree.getParentOutcome(), subtree);
 			// Register as blocks, if they are non-trivial subtrees
 			if (subtree.isInner()) {
 				blockList.insertBlock(subtree);
@@ -642,45 +632,45 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param splitter the splitter to use for splitting the block
 	 * @return the discriminator to use for splitting
 	 */
-	private Word<I> prepareSplit(DTNode<I,D> node, Splitter<I,D> splitter) {
+	private Word<I> prepareSplit(BaseDTNode<I,D> node, Splitter<I,D> splitter) {
 		int symbolIdx = splitter.symbolIdx;
 		I symbol = alphabet.getSymbol(symbolIdx);
 		Word<I> discriminator = splitter.getDiscriminator().prepend(symbol);
 		
-		Deque<DTNode<I,D>> dfsStack = new ArrayDeque<>();
+		Deque<BaseDTNode<I,D>> dfsStack = new ArrayDeque<>();
 		
-		DTNode<I,D> succSeparator = splitter.succSeparator;
+		BaseDTNode<I,D> succSeparator = splitter.succSeparator;
 		
 		
 		dfsStack.push(node);
-		assert node.splitData == null;
+		assert node.getSplitData() == null;
 		
 		while(!dfsStack.isEmpty()) {
-			DTNode<I,D> curr = dfsStack.pop();
-			assert curr.splitData == null;
+			BaseDTNode<I,D> curr = dfsStack.pop();
+			assert curr.getSplitData() == null;
 			
-			curr.splitData = new SplitData<>();
+			curr.setSplitData(new SplitData<>(IncomingList::new));
 			
 			
 			for(TTTTransition<I,D> trans : curr.getIncoming()) {
 				D outcome = query(trans, discriminator);
-				curr.splitData.getIncoming(outcome).insertIncoming(trans);
+				curr.getSplitData().getIncoming(outcome).insertIncoming(trans);
 				markAndPropagate(curr, outcome);
 			}
 			
 			if(curr.isInner()) {
-				for (DTNode<I,D> child : curr.getChildren()) {
+				for (BaseDTNode<I,D> child : curr.getChildren()) {
 					dfsStack.push(child);
 				}
 			}
 			else {
-				TTTState<I,D> state = curr.state;
+				TTTState<I,D> state = curr.getData();
 				assert state != null;
 				
 				TTTTransition<I,D> trans = state.getTransition(symbolIdx);
 				D outcome = predictSuccOutcome(trans, succSeparator);
 				assert outcome != null;
-				curr.splitData.setStateLabel(outcome);
+				curr.getSplitData().setStateLabel(outcome);
 				markAndPropagate(curr, outcome);
 			}
 			
@@ -689,7 +679,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		return discriminator;
 	}
 	
-	protected abstract D predictSuccOutcome(TTTTransition<I, D> trans, DTNode<I, D> succSeparator);
+	protected abstract D predictSuccOutcome(TTTTransition<I, D> trans, BaseDTNode<I, D> succSeparator);
 	
 	/**
 	 * Marks a node, and propagates the label up to all nodes on the path from the block
@@ -698,11 +688,11 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param node the node to mark
 	 * @param label the label to mark the node with
 	 */
-	private static <I,D> void markAndPropagate(DTNode<I,D> node, D label) {
-		DTNode<I,D> curr = node;
+	private static <I,D> void markAndPropagate(BaseDTNode<I,D> node, D label) {
+		BaseDTNode<I,D> curr = node;
 		
-		while(curr != null && curr.splitData != null) {
-			if(!curr.splitData.mark(label)) {
+		while(curr != null && curr.getSplitData() != null) {
+			if(!curr.getSplitData().mark(label)) {
 				return;
 			}
 			curr = curr.getParent();
@@ -719,10 +709,10 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param <I> input symbol type
 	 */
 	private static final class ExtractRecord<I,D> {
-		public final DTNode<I,D> original;
-		public final DTNode<I,D> extracted;
+		public final BaseDTNode<I,D> original;
+		public final BaseDTNode<I,D> extracted;
 		
-		public ExtractRecord(DTNode<I,D> original, DTNode<I,D> extracted) {
+		public ExtractRecord(BaseDTNode<I,D> original, BaseDTNode<I,D> extracted) {
 			this.original = original;
 			this.extracted = extracted;
 		}
@@ -740,26 +730,26 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param label the label of the nodes to extract
 	 * @return the extracted subtree
 	 */
-	private DTNode<I,D> extractSubtree(DTNode<I,D> root, D label) {
-		assert root.splitData != null;
-		assert root.splitData.isMarked(label);
+	private BaseDTNode<I,D> extractSubtree(BaseDTNode<I,D> root, D label) {
+		assert root.getSplitData() != null;
+		assert root.getSplitData().isMarked(label);
 		
 		Deque<ExtractRecord<I,D>> stack = new ArrayDeque<>();
 		
-		DTNode<I,D> firstExtracted = new DTNode<>(root, label);
-		
+		BaseDTNode<I,D> firstExtracted = createNewNode(root, label);
+
 		stack.push(new ExtractRecord<>(root, firstExtracted));
 		while(!stack.isEmpty()) {
 			ExtractRecord<I,D> curr = stack.pop();
 			
-			DTNode<I,D> original = curr.original;
-			DTNode<I,D> extracted = curr.extracted;
+			BaseDTNode<I,D> original = curr.original;
+			BaseDTNode<I,D> extracted = curr.extracted;
 			
 			moveIncoming(extracted, original, label);
 			
 			if(original.isLeaf()) {
-				if(Objects.equals(original.splitData.getStateLabel(), label)) {
-					link(extracted, original.state);
+				if(Objects.equals(original.getSplitData().getStateLabel(), label)) {
+					link(extracted, original.getData());
 				}
 				else {
 					createNewState(extracted);
@@ -767,25 +757,26 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 				extracted.updateIncoming();
 			}
 			else {
-				List<DTNode<I,D>> markedChildren = new ArrayList<>();
+				List<BaseDTNode<I,D>> markedChildren = new ArrayList<>();
 				
-				for (DTNode<I,D> child : original.getChildren()) {
-					if (child.splitData.isMarked(label)) {
+				for (BaseDTNode<I,D> child : original.getChildren()) {
+					if (child.getSplitData().isMarked(label)) {
 						markedChildren.add(child);
 					}
 				}
 				
 				if (markedChildren.size() > 1) {
-					Map<D,DTNode<I,D>> childMap = createMap();
-					for (DTNode<I,D> c : markedChildren) {
-						D childLabel = c.getParentEdgeLabel();
-						DTNode<I,D> extractedChild = new DTNode<>(extracted, childLabel);
+					Map<D,BaseDTNode<I,D>> childMap = createMap();
+					for (BaseDTNode<I,D> c : markedChildren) {
+						D childLabel = c.getParentOutcome();
+						BaseDTNode<I,D> extractedChild = createNewNode(extracted, childLabel);
 						childMap.put(childLabel, extractedChild);
 						stack.push(new ExtractRecord<>(c, extractedChild));
 					}
-					extracted.split(original.getDiscriminator(), childMap);
+					extracted.setDiscriminator(original.getDiscriminator());
+					extracted.replaceChildren(childMap);
 					extracted.updateIncoming();
-					extracted.temp = true;
+					extracted.setTemp(true);
 				}
 				else if (markedChildren.size() == 1) {
 					stack.push(new ExtractRecord<>(markedChildren.get(0), extracted));
@@ -796,7 +787,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 				}
 			}	
 			
-			assert extracted.splitData == null;
+			assert extracted.getSplitData() == null;
 		}
 		
 		return firstExtracted;
@@ -814,8 +805,8 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param oldNode the old node
 	 * @param label the label to consider
 	 */
-	private static <I,D> void moveIncoming(DTNode<I,D> newNode, DTNode<I,D> oldNode, D label) {
-		newNode.getIncoming().insertAllIncoming(oldNode.splitData.getIncoming(label));
+	private static <I,D> void moveIncoming(BaseDTNode<I,D> newNode, BaseDTNode<I,D> oldNode, D label) {
+		newNode.getIncoming().insertAllIncoming(oldNode.getSplitData().getIncoming(label));
 	}
 	
 	/**
@@ -825,7 +816,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * 
 	 * @param newNode the extracted node
 	 */
-	private void createNewState(DTNode<I,D> newNode) {
+	private void createNewState(BaseDTNode<I,D> newNode) {
 		TTTTransition<I,D> newTreeTrans = newNode.getIncoming().choose();
 		assert newTreeTrans != null;
 		
@@ -843,19 +834,15 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param dtNode the node in the discrimination tree
 	 * @param state the state in the hypothesis
 	 */
-	protected static <I,D> void link(DTNode<I,D> dtNode, TTTState<I,D> state) {
+	protected static <I,D> void link(BaseDTNode<I,D> dtNode, TTTState<I,D> state) {
 		assert dtNode.isLeaf();
 		
-		dtNode.state = state;
+		dtNode.setData(state);
 		state.dtLeaf = dtNode;
 	}
 	
 	public TTTHypothesis<I, D, ?> getHypothesisDS() {
 		return hypothesis;
-	}
-	
-	public DiscriminationTree<I, D>.GraphView dtGraphView() {
-		return dtree.graphView();
 	}
 	
 	public GraphDOTHelper<TTTState<I,D>, TTTEdge<I, D>> getHypothesisDOTHelper() {
@@ -872,24 +859,24 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @return the discrimination tree node separating the old and the new node, labeled
 	 * by the specified temporary discriminator
 	 */
-	private DTNode<I,D> splitState(TTTTransition<I,D> transition, Word<I> tempDiscriminator,
-			D oldOut, D newOut) {
+	private BaseDTNode<I,D> splitState(TTTTransition<I,D> transition, Word<I> tempDiscriminator,
+									   D oldOut, D newOut) {
 		assert !transition.isTree();
 		
 		notifyPreSplit(transition, tempDiscriminator);
 		
-		DTNode<I,D> dtNode = transition.getNonTreeTarget();
+		BaseDTNode<I,D> dtNode = transition.getNonTreeTarget();
 		assert dtNode.isLeaf();
-		TTTState<I,D> oldState = dtNode.state;
+		TTTState<I,D> oldState = dtNode.getData();
 		assert oldState != null;
 		
 		TTTState<I,D> newState = makeTree(transition);
 		
-		DTNode<I,D>[] children = split(dtNode, tempDiscriminator, oldOut, newOut);
-		dtNode.temp = true;
+		BaseDTNode<I,D>.SplitResult children = split(dtNode, tempDiscriminator, oldOut, newOut);
+		dtNode.setTemp(true);
 		
-		link(children[0], oldState);
-		link(children[1], newState);
+		link(children.nodeOld, oldState);
+		link(children.nodeNew, newState);
 		
 		if(dtNode.getParent() == null || !dtNode.getParent().isTemp()) {
 			blockList.insertBlock(dtNode);
@@ -904,11 +891,11 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	
 	protected void closeTransitions() {
 		TTTTransition<I, D> next;
-		UnorderedCollection<DTNode<I, D>> newStateNodes = new UnorderedCollection<>();
+		UnorderedCollection<BaseDTNode<I, D>> newStateNodes = new UnorderedCollection<>();
 		
 		do {
 			while ((next = openTransitions.poll()) != null) {
-				DTNode<I,D> newStateNode = closeTransition(next, false);
+				BaseDTNode<I,D> newStateNode = closeTransition(next, false);
 				if (newStateNode != null) {
 					newStateNodes.add(newStateNode);
 				}
@@ -919,13 +906,13 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 		} while(!openTransitions.isEmpty());
 	}
 	
-	private void addNewStates(UnorderedCollection<DTNode<I,D>> newStateNodes) {
-		DTNode<I,D> minTransNode = null;
+	private void addNewStates(UnorderedCollection<BaseDTNode<I,D>> newStateNodes) {
+		BaseDTNode<I,D> minTransNode = null;
 		TTTTransition<I, D> minTrans = null;
 		int minAsLen = Integer.MAX_VALUE;
 		ElementReference minTransNodeRef = null;
 		for (ElementReference ref : newStateNodes.references()) {
-			DTNode<I, D> newStateNode = newStateNodes.get(ref);
+			BaseDTNode<I, D> newStateNode = newStateNodes.get(ref);
 			for (TTTTransition<I, D> trans : newStateNode.getIncoming()) {
 				Word<I> as = trans.getAccessSequence();
 				int asLen = as.length();
@@ -947,7 +934,7 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	
 	protected TTTState<I,D> makeTree(TTTTransition<I, D> trans) {
 		assert !trans.isTree();
-		DTNode<I,D> node = trans.nonTreeTarget;
+		BaseDTNode<I,D> node = trans.nonTreeTarget;
 		assert node.isLeaf();
 		TTTState<I,D> state = createState(trans);
 		trans.removeFromList();
@@ -962,13 +949,13 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * 
 	 * @param trans the transition
 	 */
-	private DTNode<I,D> closeTransition(TTTTransition<I,D> trans, boolean hard) {
+	private BaseDTNode<I,D> closeTransition(TTTTransition<I,D> trans, boolean hard) {
 		if(trans.isTree()) {
 			return null;
 		}
 		
-		DTNode<I,D> node = updateDTTarget(trans, hard);
-		if (node.isLeaf() && node.state == null && trans.nextIncoming == null) {
+		BaseDTNode<I,D> node = updateDTTarget(trans, hard);
+		if (node.isLeaf() && node.getData() == null && trans.getNextElement() == null) {
 			return node;
 		}
 		return null;
@@ -983,12 +970,12 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * @param hard whether to consider leaves as sufficient targets only
 	 * @return the new target node of the transition
 	 */
-	private DTNode<I,D> updateDTTarget(TTTTransition<I,D> transition, boolean hard) {
+	private BaseDTNode<I,D> updateDTTarget(TTTTransition<I,D> transition, boolean hard) {
 		if(transition.isTree()) {
 			return transition.getTreeTarget().dtLeaf;
 		}
 		
-		DTNode<I,D> dt = transition.getNonTreeTarget();
+		BaseDTNode<I,D> dt = transition.getNonTreeTarget();
 		dt = dtree.sift(dt, transition, hard);
 		transition.setNonTreeTarget(dt);
 		
@@ -1022,23 +1009,22 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 	 * Returns the discrimination tree.
 	 * @return the discrimination tree
 	 */
-	public DiscriminationTree<I,D> getDiscriminationTree() {
+	public BaseTTTDiscriminationTree<I,D> getDiscriminationTree() {
 		return dtree;
 	}
 
-	@SafeVarargs
-	protected final DTNode<I,D>[] split(DTNode<I, D> node, Word<I> discriminator, D... outputs) {
-		return node.split(discriminator, this.<DTNode<I,D>>createMap(), outputs);
+	protected final BaseDTNode<I,D>.SplitResult split(BaseDTNode<I, D> node, Word<I> discriminator, D oldOutput, D newOutput) {
+		return node.split(discriminator, oldOutput, newOutput);
 	}
 	
 	
-	private void notifyPreFinalizeDiscriminator(DTNode<I, D> blockRoot, Splitter<I,D> splitter) {
+	private void notifyPreFinalizeDiscriminator(BaseDTNode<I, D> blockRoot, Splitter<I,D> splitter) {
 		for (TTTEventListener<I, D> listener : eventListeners()) {
 			listener.preFinalizeDiscriminator(blockRoot, splitter);
 		}
 	}
 	
-	private void notifyPostFinalizeDiscriminator(DTNode<I, D> blockRoot, Splitter<I,D> splitter) {
+	private void notifyPostFinalizeDiscriminator(BaseDTNode<I, D> blockRoot, Splitter<I,D> splitter) {
 		for (TTTEventListener<I, D> listener : eventListeners()) {
 			listener.postFinalizeDiscriminator(blockRoot, splitter);
 		}
@@ -1089,4 +1075,6 @@ public abstract class BaseTTTLearner<A,I,D> implements LearningAlgorithm<A,I,D>,
 
 		this.closeTransitions();
 	}
+
+	protected abstract BaseDTNode<I, D> createNewNode(BaseDTNode<I, D> parent, D parentOutput);
 }

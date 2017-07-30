@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.discriminationtree;
+package de.learnlib.datastructure.list;
 
-import de.learnlib.api.MembershipOracle;
+/**
+ * Interface for objects that may occur in a {@link IntrusiveList}, either as a value element or the head of the list
+ * (which represents the list itself, but does not carry any value).
+ *
+ * The purpose of this class is to enable managing block lists <i>intrusively</i>.
+ *
+ * @param <T> input symbol type
+ *
+ * @author Malte Isberner
+ */
+public interface IntrusiveListElem<T> {
 
-public class MultiDTree<I, O, D> extends DiscriminationTree<I, O, D> {
+	T getNextElement();
 
-	
-	public MultiDTree(MembershipOracle<I, O> oracle) {
-		this(null, oracle);
-	}
-	
-	public MultiDTree(D rootData, MembershipOracle<I, O> oracle) {
-		super(new MultiDTNode<>(rootData), oracle);
-	}
+	void setNextElement(final T nextBlock);
 
 }

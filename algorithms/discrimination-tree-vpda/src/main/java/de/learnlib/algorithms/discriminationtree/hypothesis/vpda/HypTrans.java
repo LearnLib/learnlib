@@ -16,6 +16,7 @@
 package de.learnlib.algorithms.discriminationtree.hypothesis.vpda;
 
 import de.learnlib.api.AccessSequenceProvider;
+import de.learnlib.datastructure.list.IntrusiveListElemImpl;
 import net.automatalib.words.Word;
 
 /**
@@ -23,7 +24,7 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-public abstract class HypTrans<I> extends TransListElem<I> implements AccessSequenceProvider<I> {
+public abstract class HypTrans<I> extends IntrusiveListElemImpl<HypTrans<I>> implements AccessSequenceProvider<I> {
 
 	private final HypLoc<I> source;
 
@@ -33,7 +34,7 @@ public abstract class HypTrans<I> extends TransListElem<I> implements AccessSequ
 
 	private DTNode<I> nonTreeTarget;
 
-	protected TransListElem<I> prev;
+	protected IntrusiveListElemImpl<HypTrans<I>> prev;
 
 	public boolean isTree() {
 		return treeTarget != null;
@@ -49,8 +50,8 @@ public abstract class HypTrans<I> extends TransListElem<I> implements AccessSequ
 			return treeTarget;
 		}
 		assert nonTreeTarget.isLeaf() : "transition does not point to a leaf";
-		assert nonTreeTarget.getLocation() != null;
-		return nonTreeTarget.getLocation();
+		assert nonTreeTarget.getData() != null;
+		return nonTreeTarget.getData();
 	}
 
 	public DTNode<I> getNonTreeTarget() {
@@ -86,7 +87,7 @@ public abstract class HypTrans<I> extends TransListElem<I> implements AccessSequ
 			next.prev = prev;
 		}
 		if (prev != null) {
-			prev.setNext(next);
+			prev.setNextElement(next);
 		}
 		prev = next = null;
 	}

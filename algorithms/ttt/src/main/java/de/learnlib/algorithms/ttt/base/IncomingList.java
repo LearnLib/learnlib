@@ -15,106 +15,68 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
-import java.util.Iterator;
+import de.learnlib.datastructure.list.IntrusiveList;
 
 /**
  * The head of the intrusive linked list for storing incoming transitions of a DT node.
- * 
- * @author Malte Isberner
  *
  * @param <I> input symbol type
+ *
+ * @author Malte Isberner
  */
-public class IncomingList<I,D> extends IncomingListElem<I,D> implements Iterable<TTTTransition<I,D>> {
-	
-	private static final class ListIterator<I,D> implements Iterator<TTTTransition<I,D>> {
-		private TTTTransition<I,D> cursor;
-		
-		public ListIterator(TTTTransition<I,D> start) {
-			this.cursor = start;
-		}
+public class IncomingList<I, D> extends IntrusiveList<TTTTransition<I, D>> {
 
-		@Override
-		public boolean hasNext() {
-			return cursor != null;
-		}
-
-		@Override
-		public TTTTransition<I,D> next() {
-			TTTTransition<I,D> curr = cursor;
-			cursor = cursor.nextIncoming;
-			return curr;
-		}
-
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
-		
-		
-	}
-
-	public boolean isEmpty() {
-		return nextIncoming == null;
-	}
-	public void insertIncoming(TTTTransition<I,D> transition) {
+	public void insertIncoming(TTTTransition<I, D> transition) {
 		transition.removeFromList();
-		
-		transition.nextIncoming = nextIncoming;
+
+		transition.setNextElement(next);
 		transition.prevIncoming = this;
-		if(nextIncoming != null) {
-			nextIncoming.prevIncoming = transition;
+		if (next != null) {
+			next.prevIncoming = transition;
 		}
-		this.nextIncoming = transition;
+		this.next = transition;
 	}
-	
-	public void insertAllIncoming(IncomingList<I,D> list) {
-		insertAllIncoming(list.nextIncoming);
-		list.nextIncoming = null;
+
+	public void insertAllIncoming(IncomingList<I, D> list) {
+		insertAllIncoming(list.next);
+		list.next = null;
 	}
-	
-	public void insertAllIncoming(TTTTransition<I,D> firstTransition) {
-		if(firstTransition == null) {
+
+	public void insertAllIncoming(TTTTransition<I, D> firstTransition) {
+		if (firstTransition == null) {
 			return;
 		}
-		firstTransition.prevIncoming.nextIncoming = null;
-		
-		if(nextIncoming == null) {
-			nextIncoming = firstTransition;
+		firstTransition.prevIncoming.setNextElement(null);
+
+		if (next == null) {
+			next = firstTransition;
 			firstTransition.prevIncoming = this;
 		}
 		else {
-			TTTTransition<I,D> oldNext = nextIncoming;
-			nextIncoming = firstTransition;
+			TTTTransition<I, D> oldNext = next;
+			next = firstTransition;
 			firstTransition.prevIncoming = this;
-			TTTTransition<I,D> last = firstTransition;
-			
-			while(last.nextIncoming != null) {
-				last = last.nextIncoming;
+			TTTTransition<I, D> last = firstTransition;
+
+			while (last.getNextElement() != null) {
+				last = last.getNextElement();
 			}
-			
-			last.nextIncoming = oldNext;
+
+			last.setNextElement(oldNext);
 			oldNext.prevIncoming = last;
 		}
 	}
-	
-	public TTTTransition<I,D> choose() {
-		return nextIncoming;
-	}
-	
-	public TTTTransition<I,D> poll() {
-		TTTTransition<I,D> result = nextIncoming;
+
+	public TTTTransition<I, D> poll() {
+		TTTTransition<I, D> result = next;
 		if (result != null) {
-			this.nextIncoming = result.nextIncoming;
-			if (this.nextIncoming != null) {
-				this.nextIncoming.prevIncoming = this;
+			this.next = result.getNextElement();
+			if (this.next != null) {
+				this.next.prevIncoming = this;
 			}
-			result.prevIncoming = result.nextIncoming = null;
+			result.prevIncoming = null;
+			result.setNextElement(null);
 		}
 		return result;
-	}
-
-	@Override
-	public Iterator<TTTTransition<I,D>> iterator() {
-		return new ListIterator<>(nextIncoming);
 	}
 }

@@ -15,54 +15,22 @@
  */
 package de.learnlib.algorithms.discriminationtree.hypothesis.vpda;
 
+import de.learnlib.datastructure.list.IntrusiveList;
+
 /**
  * @param <I> input symbol type
  *
  * @author Malte Isberner
  */
-public class BlockList<I> implements BlockListElem<I>, Iterable<DTNode<I>> {
-
-	private static final class Iterator<I> implements java.util.Iterator<DTNode<I>> {
-
-		private DTNode<I> curr;
-
-		public Iterator(DTNode<I> curr) {
-			this.curr = curr;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return curr != null;
-		}
-
-		@Override
-		public DTNode<I> next() {
-			DTNode<I> result = curr;
-			curr = curr.getNextBlock();
-			return result;
-		}
-
-	}
-
-	private DTNode<I> nextBlock;
-
-	@Override
-	public void setNextBlock(DTNode<I> block) {
-		this.nextBlock = block;
-	}
+public class BlockList<I> extends IntrusiveList<DTNode<I>> {
 
 	public void add(DTNode<I> block) {
-		block.setNextBlock(nextBlock);
-		if (nextBlock != null) {
-			nextBlock.setPrevBlock(block);
+		block.setNextElement(next);
+		if (next != null) {
+			next.setPrevElement(block);
 		}
-		block.setPrevBlock(this);
-		this.nextBlock = block;
-	}
-
-	@Override
-	public Iterator<I> iterator() {
-		return new Iterator<>(nextBlock);
+		block.setPrevElement(this);
+		this.next = block;
 	}
 
 }

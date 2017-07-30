@@ -21,11 +21,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import de.learnlib.datastructure.discriminationtree.model.DTNode;
 import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-import de.learnlib.discriminationtree.DTNode;
 
 public class HState<I,O,SP,TP> {
 

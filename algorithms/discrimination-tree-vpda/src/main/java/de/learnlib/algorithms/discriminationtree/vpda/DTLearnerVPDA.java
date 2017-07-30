@@ -142,9 +142,9 @@ public class DTLearnerVPDA<I> extends AbstractVPDALearner<I> {
 		HypLoc<I> newLoc = makeTree(trans);
 		DTNode<I> oldDtNode = succState.getLocation().getLeaf();
 		openTransitions.addAll(oldDtNode.getIncoming());
-		DTNode<I> children[] = oldDtNode.split(context, acex.effect(breakpoint), acex.effect(breakpoint + 1));
-		link(children[0], newLoc);
-		link(children[1], succState.getLocation());
+		DTNode<I>.SplitResult children = oldDtNode.split(context, acex.effect(breakpoint), acex.effect(breakpoint + 1));
+		link(children.nodeOld, newLoc);
+		link(children.nodeNew, succState.getLocation());
 		initializeLocation(trans.getTreeTarget());
 
 		closeTransitions();

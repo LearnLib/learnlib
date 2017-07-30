@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,19 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.discriminationtree;
+package de.learnlib.datastructure.list;
 
-import de.learnlib.api.MembershipOracle;
-
-public class BinaryDTree<I, D> extends DiscriminationTree<I, Boolean, D> {
-
-	public BinaryDTree(D rootData,
-			MembershipOracle<I, Boolean> oracle) {
-		super(new BinaryDTNode<>(rootData), oracle);
-	}
+/**
+ * An element in an {@link IntrusiveList}.
+ *
+ * @param <T> element type
+ *
+ * @author Malte Isberner
+ */
+public abstract class IntrusiveListElemImpl<T> implements IntrusiveListElem<T> {
 	
-	public BinaryDTree(MembershipOracle<I, Boolean> oracle) {
-		this(null, oracle);
+	protected T next;
+
+	@Override
+	public T getNextElement() {
+		return next;
 	}
 
+	@Override
+	public void setNextElement(T next) {
+		this.next = next;
+	}
 }

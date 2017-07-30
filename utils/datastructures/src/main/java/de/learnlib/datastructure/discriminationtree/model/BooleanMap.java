@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.discriminationtree;
+package de.learnlib.datastructure.discriminationtree.model;
 
 import java.util.AbstractMap;
 import java.util.AbstractSet;
@@ -26,12 +26,19 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Primitive implementation for boolean maps.
+ *
+ * @param <V> value type
+ *
+ * @author Malte Isberner
+ */
 public class BooleanMap<V> extends AbstractMap<Boolean, V> {
-	
+
 	private static class BooleanSet extends AbstractSet<Boolean> {
-		
+
 		private static final List<Boolean> VALUES = Arrays.asList(false, true);
-		
+
 		private static final BooleanSet INSTANCE = new BooleanSet();
 
 		@Override
@@ -53,55 +60,60 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
 		public boolean contains(Object o) {
 			return (o.getClass() == Boolean.class);
 		}
-		
+
 	}
-	
+
 	private class Entry implements Map.Entry<Boolean, V> {
+
 		private final boolean key;
-		
+
 		public Entry(boolean key) {
 			this.key = key;
 		}
+
 		@Override
 		public Boolean getKey() {
 			return key;
 		}
+
 		@Override
 		public V getValue() {
 			return get(key);
 		}
+
 		@Override
 		public V setValue(V value) {
 			return put(key, value);
 		}
-		
+
 		@Override
 		public int hashCode() {
 			return (key) ? 1 : 0;
 		}
 	}
-	
+
 	private V falseValue;
+
 	private V trueValue;
 
 	public BooleanMap() {
 	}
-	
+
 	public BooleanMap(V falseValue, V trueValue) {
 		this.falseValue = falseValue;
 		this.trueValue = trueValue;
 	}
-	
+
 	public V get(boolean key) {
-		if(key) {
+		if (key) {
 			return trueValue;
 		}
 		return falseValue;
 	}
-	
+
 	public V put(boolean key, V value) {
 		V old;
-		if(key) {
+		if (key) {
 			old = trueValue;
 			trueValue = value;
 		}
@@ -124,8 +136,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
 
 	@Override
 	public boolean containsValue(Object value) {
-		return Objects.equals(falseValue, value)
-				|| Objects.equals(trueValue, value);
+		return Objects.equals(falseValue, value) || Objects.equals(trueValue, value);
 	}
 
 	@Override
@@ -135,25 +146,25 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
 
 	@Override
 	public V get(Object key) {
-		if(key == null || key.getClass() != Boolean.class) {
+		if (key == null || key.getClass() != Boolean.class) {
 			return null;
 		}
-		boolean bval = ((Boolean)key).booleanValue();
+		boolean bval = (Boolean) key;
 		return get(bval);
 	}
 
 	@Override
 	public V put(Boolean key, V value) {
-		if(key == null) {
+		if (key == null) {
 			throw new IllegalArgumentException("BooleanMap disallows null keys");
 		}
-		boolean bval = key.booleanValue();
+		boolean bval = key;
 		return put(bval, value);
 	}
 
 	@Override
 	public V remove(Object key) {
-		if(key == null || key.getClass() != Boolean.class) {
+		if (key == null || key.getClass() != Boolean.class) {
 			return null;
 		}
 		throw new UnsupportedOperationException("BooleanMap disallows removal");
@@ -161,13 +172,13 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
 
 	@Override
 	public void putAll(Map<? extends Boolean, ? extends V> m) {
-		if(m.containsKey(null)) {
+		if (m.containsKey(null)) {
 			throw new IllegalArgumentException("BooleanMap disallows null keys");
 		}
-		if(m.containsKey(false)) {
+		if (m.containsKey(false)) {
 			this.falseValue = m.get(false);
 		}
-		if(m.containsKey(true)) {
+		if (m.containsKey(true)) {
 			this.trueValue = m.get(true);
 		}
 	}
@@ -189,7 +200,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
 
 	@Override
 	public Set<Map.Entry<Boolean, V>> entrySet() {
-		Set<Map.Entry<Boolean,V>> entries = new HashSet<>(2);
+		Set<Map.Entry<Boolean, V>> entries = new HashSet<>(2);
 		entries.add(new Entry(false));
 		entries.add(new Entry(true));
 		return entries;

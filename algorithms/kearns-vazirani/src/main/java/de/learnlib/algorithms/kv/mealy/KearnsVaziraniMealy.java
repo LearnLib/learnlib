@@ -22,7 +22,6 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 
-import de.learnlib.api.SupportsGrowingAlphabet;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
@@ -31,16 +30,16 @@ import net.automatalib.words.Word;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
+import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.acex.impl.BaseAbstractCounterexample;
 import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.discriminationtree.DTNode;
-import de.learnlib.discriminationtree.DTNode.SplitResult;
-import de.learnlib.discriminationtree.DiscriminationTree;
-import de.learnlib.discriminationtree.DiscriminationTree.LCAInfo;
-import de.learnlib.discriminationtree.MultiDTree;
+import de.learnlib.datastructure.discriminationtree.MultiDTree;
+import de.learnlib.datastructure.discriminationtree.model.DTNode;
+import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
+import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
 import de.learnlib.mealy.MealyUtil;
 import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.words.impl.SimpleAlphabet;
@@ -103,7 +102,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O>, SupportsGrow
 		private final Word<I> ceWord;
 		private final MembershipOracle<I, Word<O>> oracle;
 		private final StateInfo<I,O>[] states;
-		private final LCAInfo<I,Word<O>,StateInfo<I,O>>[] lcas;
+		private final LCAInfo<Word<O>,DTNode<I, Word<O>, StateInfo<I,O>>>[] lcas;
 
 		@SuppressWarnings("unchecked")
 		public KVAbstractCounterexample(Word<I> ceWord, Word<O> output, MembershipOracle<I, Word<O>> oracle) {
@@ -133,7 +132,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O>, SupportsGrow
 			return states[idx];
 		}
 		
-		public LCAInfo<I,Word<O>,StateInfo<I,O>> getLCA(int idx) {
+		public LCAInfo<Word<O>,DTNode<I, Word<O>, StateInfo<I,O>>> getLCA(int idx) {
 			return lcas[idx];
 		}
 
@@ -179,7 +178,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O>, SupportsGrow
 	private final MembershipOracle<I,Word<O>> oracle;
 	private final boolean repeatedCounterexampleEvaluation;
 	
-	protected final DiscriminationTree<I,Word<O>,StateInfo<I,O>> discriminationTree;
+	protected final AbstractWordBasedDiscriminationTree<I,Word<O>,StateInfo<I,O>> discriminationTree;
 		
 	protected  final List<StateInfo<I,O>> stateInfos
 		= new ArrayList<>();
@@ -242,7 +241,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O>, SupportsGrow
 		Word<I> prefix = effInput.prefix(idx);
 		StateInfo<I,O> srcStateInfo = acex.getStateInfo(idx);
 		I sym = effInput.getSymbol(idx);
-		LCAInfo<I,Word<O>,StateInfo<I,O>> lca = acex.getLCA(idx+1);
+		LCAInfo<Word<O>,DTNode<I, Word<O>, StateInfo<I,O>>> lca = acex.getLCA(idx+1);
 		assert lca != null;
 		
 		splitState(srcStateInfo, prefix, sym, lca);
@@ -251,7 +250,7 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O>, SupportsGrow
 	}
 	
 	
-	private void splitState(StateInfo<I,O> stateInfo, Word<I> newPrefix, I sym, LCAInfo<I,Word<O>,StateInfo<I,O>> separatorInfo) {
+	private void splitState(StateInfo<I,O> stateInfo, Word<I> newPrefix, I sym, LCAInfo<Word<O>,DTNode<I, Word<O>, StateInfo<I,O>>> separatorInfo) {
 		int state = stateInfo.id;
 		
 //		TLongList oldIncoming = stateInfo.fetchIncoming();
@@ -275,11 +274,14 @@ public class KearnsVaziraniMealy<I,O> implements MealyLearner<I,O>, SupportsGrow
 			oldOut = newOutcome(transOut, separatorInfo.subtree1Label);
 			newOut = newOutcome(transOut, separatorInfo.subtree2Label);
 		}
+
+		final DTNode<I, Word<O>, StateInfo<I,O>>.SplitResult sr = stateLeaf.split(newDiscriminator,
+																				  oldOut,
+																				  newOut,
+																				  newStateInfo);
 		
-		SplitResult<I, Word<O>, StateInfo<I,O>> split = stateLeaf.split(newDiscriminator, oldOut, newOut, newStateInfo);
-		
-		stateInfo.dtNode = split.nodeOld;
-		newStateInfo.dtNode = split.nodeNew;
+		stateInfo.dtNode = sr.nodeOld;
+		newStateInfo.dtNode = sr.nodeNew;
 		
 		initState(newStateInfo);
 		

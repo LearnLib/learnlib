@@ -45,7 +45,7 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
 
 	protected final MembershipOracle<I, Boolean> oracle;
 
-	protected final DTree<I> dtree = new DTree<>();
+	protected final DTree<I> dtree;
 
 	protected final OneSEVPAHypothesis<I> hypothesis;
 
@@ -54,6 +54,7 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
 	public AbstractVPDALearner(VPDAlphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
 		this.alphabet = alphabet;
 		this.oracle = oracle;
+		this.dtree = new DTree<>(oracle);
 		dtree.getRoot().split(new ContextPair<>(Word.epsilon(), Word.epsilon()), false, true);
 		this.hypothesis = new OneSEVPAHypothesis<>(alphabet);
 	}
@@ -61,7 +62,7 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
 	@Override
 	public void startLearning() {
 		HypLoc<I> initLoc = hypothesis.initialize();
-		DTNode<I> leaf = sift(initLoc);
+		DTNode<I> leaf = dtree.sift(initLoc);
 		link(leaf, initLoc);
 		initializeLocation(initLoc);
 
@@ -119,34 +120,9 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
 		return hypothesis;
 	}
 
-	protected DTNode<I> sift(DTNode<I> start, AccessSequenceProvider<I> asp, boolean hard) {
-		return sift(start, asp.getAccessSequence(), hard);
-	}
-
-	protected DTNode<I> sift(AccessSequenceProvider<I> asp) {
-		return sift(dtree.getRoot(), asp, false);
-	}
-
-	protected DTNode<I> sift(Word<I> word) {
-		return sift(dtree.getRoot(), word, false);
-	}
-
-	protected DTNode<I> sift(DTNode<I> start, Word<I> as, boolean hard) {
-		DTNode<I> curr = start;
-		while (curr.isInner() && (hard || !curr.isTemp())) {
-			ContextPair<I> discr = curr.getDiscriminator();
-			Word<I> prefix = discr.getPrefix().concat(as);
-			Boolean outcome = oracle.answerQuery(prefix, discr.getSuffix());
-
-			curr = curr.getChild(outcome);
-		}
-
-		return curr;
-	}
-
 	protected static <I> void link(DTNode<I> leaf, HypLoc<I> loc) {
 		assert leaf.isLeaf();
-		leaf.setLocation(loc);
+		leaf.setData(loc);
 		loc.setLeaf(leaf);
 	}
 
@@ -179,7 +155,7 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
 		}
 
 		DTNode<I> node = updateDTTarget(trans, hard);
-		if (node.isLeaf() && node.getLocation() == null && trans.getNext() == null) {
+		if (node.isLeaf() && node.getData() == null && trans.getNextElement() == null) {
 			return node;
 		}
 		return null;
@@ -195,7 +171,7 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
 			trans.setNonTreeTarget(dtree.getRoot());
 			start = dtree.getRoot();
 		}
-		DTNode<I> result = sift(start, trans, hard);
+		DTNode<I> result = dtree.sift(start, trans, hard);
 		trans.setNonTreeTarget(result);
 		result.addIncoming(trans);
 
@@ -240,7 +216,7 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
 
 		assert minTransNode != null;
 		newStateNodes.remove(minTransNodeRef);
-		assert minTrans.getNonTreeTarget().getLocation() == null;
+		assert minTrans.getNonTreeTarget().getData() == null;
 		HypLoc<I> newLoc = makeTree(minTrans);
 		link(minTransNode, newLoc);
 		initializeLocation(newLoc);

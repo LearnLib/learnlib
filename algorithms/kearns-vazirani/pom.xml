@@ -21,7 +21,7 @@
   	
   	<dependency>
   		<groupId>de.learnlib</groupId>
-  		<artifactId>learnlib-discrimination-tree</artifactId>
+  		<artifactId>learnlib-datastructures</artifactId>
   	</dependency>
   	<dependency>
   		<groupId>de.learnlib</groupId>

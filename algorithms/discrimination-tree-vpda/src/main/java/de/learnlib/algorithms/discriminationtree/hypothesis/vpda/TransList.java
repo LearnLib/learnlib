@@ -15,52 +15,21 @@
  */
 package de.learnlib.algorithms.discriminationtree.hypothesis.vpda;
 
+import de.learnlib.datastructure.list.IntrusiveList;
+
 /**
  * @param <I> input symbol type
  *
  * @author Malte Isberner
  */
-public class TransList<I> extends TransListElem<I> implements Iterable<HypTrans<I>> {
-
-	private static final class Iterator<I> implements java.util.Iterator<HypTrans<I>> {
-
-		private HypTrans<I> curr;
-
-		public Iterator(HypTrans<I> start) {
-			this.curr = start;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return curr != null;
-		}
-
-		@Override
-		public HypTrans<I> next() {
-			HypTrans<I> result = curr;
-			curr = curr.next;
-			return result;
-		}
-
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
-	}
-
-	public TransList() {
-	}
-
-	public boolean isEmpty() {
-		return next == null;
-	}
+public class TransList<I> extends IntrusiveList<HypTrans<I>> {
 
 	public void add(HypTrans<I> trans) {
 		assert !trans.isTree();
 		trans.removeFromList();
 
 		if (next != null) {
-			trans.next = next;
+			trans.setNextElement(next);
 			next.prev = trans;
 		}
 		trans.prev = this;
@@ -70,13 +39,13 @@ public class TransList<I> extends TransListElem<I> implements Iterable<HypTrans<
 	public void addAll(TransList<I> list) {
 		if (list.next != null) {
 			HypTrans<I> last = list.next;
-			while (last.next != null) {
-				last = last.next;
+			while (last.getNextElement() != null) {
+				last = last.getNextElement();
 			}
 			if (next != null) {
 				next.prev = last;
 			}
-			last.next = next;
+			last.setNextElement(next);
 			list.next.prev = this;
 			next = list.next;
 		}
@@ -88,14 +57,14 @@ public class TransList<I> extends TransListElem<I> implements Iterable<HypTrans<
 		HypTrans<I> shortest = curr;
 		int shortestLen = shortest.getAccessSequence().length();
 
-		curr = curr.next;
+		curr = curr.getNextElement();
 		while (curr != null) {
 			int transLen = curr.getAccessSequence().length();
 			if (transLen < shortestLen) {
 				shortestLen = transLen;
 				shortest = curr;
 			}
-			curr = curr.next;
+			curr = curr.getNextElement();
 		}
 
 		return shortest;
@@ -106,24 +75,15 @@ public class TransList<I> extends TransListElem<I> implements Iterable<HypTrans<
 			return null;
 		}
 		HypTrans<I> result = next;
-		next = result.next;
-		if (result.next != null) {
-			result.next.prev = this;
+		next = result.getNextElement();
+		if (result.getNextElement() != null) {
+			result.getNextElement().prev = this;
 		}
 
-		result.prev = result.next = null;
+		result.prev = null;
+		result.setNextElement(null);
 
 		return result;
-	}
-
-	@Override
-	public void setNext(HypTrans<I> next) {
-		this.next = next;
-	}
-
-	@Override
-	public Iterator<I> iterator() {
-		return new Iterator<>(next);
 	}
 
 	public int size() {
@@ -131,7 +91,7 @@ public class TransList<I> extends TransListElem<I> implements Iterable<HypTrans<
 		int i = 0;
 		while (curr != null) {
 			i++;
-			curr = curr.next;
+			curr = curr.getNextElement();
 		}
 
 		return i;

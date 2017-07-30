@@ -652,6 +652,12 @@ limitations under the License.
 				<version>${project.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-datastructures</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
 			<!-- LearnLib tests -->
 			<dependency>
 				<groupId>de.learnlib.testsupport</groupId>

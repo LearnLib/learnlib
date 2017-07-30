@@ -17,6 +17,8 @@ package de.learnlib.algorithms.ttt.mealy;
 
 import java.util.Map;
 
+import de.learnlib.algorithms.ttt.base.BaseTTTDiscriminationTree;
+import de.learnlib.algorithms.ttt.dfa.TTTDTNodeDFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
@@ -28,7 +30,7 @@ import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithms.ttt.base.BaseTTTLearner;
-import de.learnlib.algorithms.ttt.base.DTNode;
+import de.learnlib.algorithms.ttt.base.BaseDTNode;
 import de.learnlib.algorithms.ttt.base.OutputInconsistency;
 import de.learnlib.algorithms.ttt.base.TTTHypothesis.TTTEdge;
 import de.learnlib.algorithms.ttt.base.TTTState;
@@ -47,7 +49,7 @@ public class TTTLearnerMealy<I, O> extends
 	public TTTLearnerMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, Word<O>> oracle,
 			AcexAnalyzer analyzer) {
-		super(alphabet, oracle, new TTTHypothesisMealy<>(alphabet), analyzer);
+		super(alphabet, oracle, new TTTHypothesisMealy<>(alphabet), new BaseTTTDiscriminationTree<>(oracle, TTTDTNodeMealy::new), analyzer);
 	}
 
 	@Override
@@ -65,7 +67,7 @@ public class TTTLearnerMealy<I, O> extends
 
 	@Override
 	protected Word<O> predictSuccOutcome(TTTTransition<I, Word<O>> trans,
-			DTNode<I, Word<O>> succSeparator) {
+			BaseDTNode<I, Word<O>> succSeparator) {
 		TTTTransitionMealy<I, O> mtrans = (TTTTransitionMealy<I, O>) trans;
 		if (succSeparator == null) {
 			return Word.fromLetter(mtrans.output);
@@ -145,9 +147,9 @@ public class TTTLearnerMealy<I, O> extends
 		OutputInconsistency<I, Word<O>> best = null;
 		
 		for (TTTState<I, Word<O>> state : hypothesis.getStates()) {
-			DTNode<I, Word<O>> node = state.getDTLeaf();
+			BaseDTNode<I, Word<O>> node = state.getDTLeaf();
 			while (!node.isRoot()) {
-				Word<O> expectedOut = node.getParentEdgeLabel();
+				Word<O> expectedOut = node.getParentOutcome();
 				node = node.getParent();
 				Word<I> suffix = node.getDiscriminator();
 				Word<O> hypOut = computeHypothesisOutput(state, suffix);
@@ -159,5 +161,10 @@ public class TTTLearnerMealy<I, O> extends
 			}
 		}
 		return best;
+	}
+
+	@Override
+	protected BaseDTNode<I, Word<O>> createNewNode(BaseDTNode<I, Word<O>> parent, Word<O> parentOutput) {
+		return new TTTDTNodeMealy<>(parent, parentOutput);
 	}
 }

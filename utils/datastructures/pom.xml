@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2014 TU Dortmund
+Copyright (C) 2017 TU Dortmund
 This file is part of LearnLib, http://www.learnlib.de/.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,23 +20,35 @@ limitations under the License.
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>learnlib-parent</artifactId>
+		<artifactId>learnlib-utils</artifactId>
 		<groupId>de.learnlib</groupId>
 		<version>0.12.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>        
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>learnlib-utils</artifactId>
-	<name>LearnLib :: Utilities</name>
-	<description>Parent module for LearnLib utilities</description>
+	<artifactId>learnlib-datastructures</artifactId>
+	<name>LearnLib :: Utilities :: Data structures</name>
+	<description>A collection of shared data structures</description>
 
-	<packaging>pom</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-core</artifactId>
+		</dependency>
 
-	<modules>
-		<module>acex</module>
-		<module>counterexamples</module>
-		<module>datastructures</module>
-		<module>parallelism</module>
-	</modules>
+		<dependency>
+			<groupId>de.learnlib</groupId>
+			<artifactId>learnlib-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+
+	</dependencies>
 </project>
-

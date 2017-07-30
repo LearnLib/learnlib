@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,18 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.ttt.base;
+package de.learnlib.datastructure.discriminationtree;
 
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
 
 /**
- * An element in an {@link IncomingList}.
- * 
- * @author Malte Isberner
+ * Generic n-ary discrimination tree specialization.
  *
  * @param <I> input symbol type
+ * @param <O> output symbol type
+ * @param <D> node data type
+ *
+ * @author Malte Isberner
  */
-public abstract class IncomingListElem<I,D> {
-	
-	protected TTTTransition<I,D> nextIncoming;
+public class MultiDTree<I, O, D> extends AbstractWordBasedDiscriminationTree<I, O, D> {
+
+	public MultiDTree(MembershipOracle<I, O> oracle) {
+		this(null, oracle);
+	}
+
+	public MultiDTree(D rootData, MembershipOracle<I, O> oracle) {
+		super(new MultiDTNode<>(rootData), oracle);
+	}
 
 }

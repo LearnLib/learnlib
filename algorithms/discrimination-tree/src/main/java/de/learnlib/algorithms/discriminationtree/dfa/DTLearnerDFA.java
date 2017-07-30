@@ -34,7 +34,7 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.counterexamples.LocalSuffixFinders;
-import de.learnlib.discriminationtree.BinaryDTree;
+import de.learnlib.datastructure.discriminationtree.BinaryDTree;
 import de.learnlib.oracles.AbstractQuery;
 
 /**
@@ -75,7 +75,7 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?,I>, I, Boolean, Boo
 		super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new BinaryDTree<>(oracle));
 		this.hypWrapper = new HypothesisWrapperDFA<>(hypothesis);
 		if(epsilonRoot) {
-			dtree.getRoot().split(Word.<I>epsilon(), false, true, null);
+			dtree.getRoot().split(Word.<I>epsilon(), false, true);
 		}
 	}
 

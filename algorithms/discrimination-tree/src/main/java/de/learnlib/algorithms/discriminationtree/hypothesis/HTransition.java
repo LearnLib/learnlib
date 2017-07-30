@@ -15,10 +15,10 @@
  */
 package de.learnlib.algorithms.discriminationtree.hypothesis;
 
+import de.learnlib.datastructure.discriminationtree.model.DTNode;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-import de.learnlib.discriminationtree.DTNode;
 
 public class HTransition<I, O, SP, TP> {
 	
