@@ -88,10 +88,8 @@ public class Example {
                 BoundedStringQueue.class.getConstructor());
                 
         // create learning alphabet
-        Method mOffer = BoundedStringQueue.class.getMethod(
-                "offer", new Class<?>[]{String.class});
-        Method mPoll = BoundedStringQueue.class.getMethod(
-                "poll", new Class<?>[]{});
+        Method mOffer = BoundedStringQueue.class.getMethod("offer", String.class);
+        Method mPoll = BoundedStringQueue.class.getMethod("poll");
                 
         // offer
         AbstractMethodInput offer_a = driver.addInput("offer_a", mOffer, "a");

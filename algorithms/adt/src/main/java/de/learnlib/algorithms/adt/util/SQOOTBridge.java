@@ -17,7 +17,6 @@ package de.learnlib.algorithms.adt.util;
 
 import de.learnlib.algorithms.adt.model.ObservationTree;
 import de.learnlib.api.SymbolQueryOracle;
-import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
 import net.automatalib.automata.transout.impl.FastMealyState;
 

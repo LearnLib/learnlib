@@ -72,12 +72,7 @@ public class DynamicParallelOracle<I,D> implements ParallelOracle<I, D>{
 	public DynamicParallelOracle(final Supplier<? extends MembershipOracle<I,D>> oracleSupplier,
 			@Nonnegative int batchSize,
 			ExecutorService executor) {
-		this.threadLocalOracle = new ThreadLocal<MembershipOracle<I,D>>() {
-			@Override
-			protected MembershipOracle<I, D> initialValue() {
-				return oracleSupplier.get();
-			}
-		};
+		this.threadLocalOracle = ThreadLocal.withInitial(oracleSupplier::get);
 		this.executor = executor;
 		this.batchSize = batchSize;
 	}

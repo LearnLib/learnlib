@@ -30,7 +30,7 @@ public abstract class TestQueries {
 	Collection<? extends Query<I,D>> createNoopQueries(int numQueries) {
 		List<Query<I,D>> result = new ArrayList<>(numQueries);
 		for(int i = 0; i < numQueries; i++) {
-			result.add(new NoopQuery<>(Word.<I>epsilon()));
+			result.add(new NoopQuery<>(Word.epsilon()));
 		}
 		return result;
 	}

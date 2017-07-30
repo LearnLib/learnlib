@@ -70,12 +70,7 @@ public class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> {
 	private final Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier;
 
 	private final ThreadLocal<ReuseCapableOracle<S, I, O>> executableOracles =
-			new ThreadLocal<ReuseCapableOracle<S, I, O>>() {
-				@Override
-				protected ReuseCapableOracle<S, I, O> initialValue() {
-					return ReuseOracle.this.oracleSupplier.get();
-				}
-			};
+			ThreadLocal.withInitial(() -> ReuseOracle.this.oracleSupplier.get());
 
 	private final ReuseTree<S, I, O> tree;
 

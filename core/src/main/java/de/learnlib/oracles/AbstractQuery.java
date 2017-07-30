@@ -33,7 +33,7 @@ public abstract class AbstractQuery<I, D> extends Query<I, D> {
 	}
 	
 	public AbstractQuery(Word<I> queryWord) {
-		this(Word.<I>epsilon(), queryWord);
+		this(Word.epsilon(), queryWord);
 	}
 	
 	public AbstractQuery(Query<I,?> query) {

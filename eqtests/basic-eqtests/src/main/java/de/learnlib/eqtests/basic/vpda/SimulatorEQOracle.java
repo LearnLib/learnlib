@@ -19,7 +19,6 @@ import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.util.automata.Automata;
-import net.automatalib.util.automata.vpda.OneSEVPAUtil;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 

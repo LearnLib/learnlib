@@ -52,12 +52,7 @@ public class SULOracle<I, O> implements MealyMembershipOracle<I,O> {
 	public SULOracle(SUL<I, O> sul) {
 		this.sul = sul;
 		if (sul.canFork()) {
-			this.localSul = new ThreadLocal<SUL<I,O>>() {
-				@Override
-				protected SUL<I,O> initialValue() {
-					return sul.fork();
-				}
-			};
+			this.localSul = ThreadLocal.withInitial(sul::fork);
 		}
 		else {
 			this.localSul = null;
