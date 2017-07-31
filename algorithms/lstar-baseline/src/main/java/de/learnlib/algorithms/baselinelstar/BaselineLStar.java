@@ -31,6 +31,7 @@ import com.google.common.collect.Maps;
 import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner.GlobalSuffixLearnerDFA;
 import de.learnlib.algorithms.features.observationtable.OTLearner;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.ResumableLearner;
 import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.oracles.DefaultQuery;
 
@@ -49,16 +50,16 @@ import net.automatalib.words.impl.SimpleAlphabet;
  * 		input symbol class.
  */
 public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, GlobalSuffixLearnerDFA<I>,
-		SupportsGrowingAlphabet<I> {
+		SupportsGrowingAlphabet<I>, ResumableLearner<BaselineLStarState<I>> {
 
 	@Nonnull
-	private final GrowingAlphabet<I> alphabet;
+	private GrowingAlphabet<I> alphabet;
+
+	@Nonnull
+	private ObservationTable<I> observationTable;
 
 	@Nonnull
 	private final MembershipOracle<I, Boolean> oracle;
-
-	@Nonnull
-	private final ObservationTable<I> observationTable;
 
 	private boolean startLearningAlreadyCalled;
 
@@ -80,6 +81,17 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 		for (I alphabetSymbol : alphabet) {
 			observationTable.addLongPrefix(Word.fromLetter(alphabetSymbol));
 		}
+	}
+
+	@Override
+	public BaselineLStarState<I> suspend() {
+		return new BaselineLStarState<>(observationTable);
+	}
+
+	@Override
+	public void resume(BaselineLStarState<I> state) {
+		this.observationTable = state.getObservationTable();
+		this.startLearningAlreadyCalled = true;
 	}
 
 	@Override
