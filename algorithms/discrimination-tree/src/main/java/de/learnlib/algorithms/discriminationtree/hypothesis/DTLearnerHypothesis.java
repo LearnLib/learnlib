@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.discriminationtree.hypothesis;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,7 +49,8 @@ public class DTLearnerHypothesis<I, O, SP, TP> implements
 		UniversalDeterministicAutomaton<HState<I,O,SP,TP>, I, HTransition<I,O,SP,TP>, SP, TP>,
 		AccessSequenceTransformer<I>,
 		StateIDs<HState<I,O,SP,TP>>,
-		GrowableAlphabetAutomaton<I> {
+		GrowableAlphabetAutomaton<I>,
+		Serializable{
 
 	private final GrowingAlphabet<I> alphabet;
 	private final HState<I, O, SP, TP> root;

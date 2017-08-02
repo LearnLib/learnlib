@@ -15,6 +15,7 @@
  */
 package de.learnlib.datastructure.discriminationtree.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,9 +43,9 @@ import net.automatalib.words.Word;
  * @author frohme
  */
 public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends AbstractDTNode<DSCR, O, D, N>>
-		implements Graph<N, Map.Entry<O, N>> {
+		implements Graph<N, Map.Entry<O, N>>, Serializable {
 
-	protected final MembershipOracle<I, O> oracle;
+	protected transient MembershipOracle<I, O> oracle;
 
 	protected final N root;
 
@@ -174,5 +175,9 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
 				return true;
 			}
 		};
+	}
+
+	public void setOracle(MembershipOracle<I, O> oracle) {
+		this.oracle = oracle;
 	}
 }

@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.discriminationtree.hypothesis;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,7 +28,7 @@ import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 
-public class HState<I,O,SP,TP> {
+public class HState<I,O,SP,TP> implements Serializable {
 
 	private final HTransition<I,O,SP,TP> treeIncoming;
 	private final int id;

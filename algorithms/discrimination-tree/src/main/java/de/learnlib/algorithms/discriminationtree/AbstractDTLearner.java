@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+import de.learnlib.api.ResumableLearner;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
@@ -42,8 +43,10 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscr
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.MQUtil;
 
-public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, TP>
-		implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I> {
+public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, TP> implements
+		LearningAlgorithm<M, I, D>,
+		SupportsGrowingAlphabet<I>,
+		ResumableLearner<DTLearnerState<I, D, SP, TP>> {
 	
 	public static class BuilderDefaults {
 		public static <I,O> LocalSuffixFinder<? super I,? super O> suffixFinder() {
@@ -54,12 +57,12 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		}
 	}
 
-	private final GrowingAlphabet<I> alphabet;
+	protected final GrowingAlphabet<I> alphabet;
 	private final MembershipOracle<I, D> oracle;
 	private final LocalSuffixFinder<? super I, ? super D> suffixFinder;
 	private final boolean repeatedCounterexampleEvaluation;
-	protected final AbstractWordBasedDiscriminationTree<I, D, HState<I,D,SP,TP>> dtree;
-	protected final DTLearnerHypothesis<I, D, SP, TP> hypothesis;
+	protected AbstractWordBasedDiscriminationTree<I, D, HState<I,D,SP,TP>> dtree;
+	protected DTLearnerHypothesis<I, D, SP, TP> hypothesis;
 	
 	private final List<HState<I,D,SP,TP>> newStates = new ArrayList<>();
 	private final List<HTransition<I,D,SP,TP>> newTransitions = new ArrayList<>();
@@ -120,9 +123,8 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		if(!MQUtil.isCounterexample(ceQuery, getHypothesisModel())) {
 			return false;
 		}
-		
-		int suffixIdx = suffixFinder.findSuffixIndex(ceQuery, hypothesis, getHypothesisModel(),
-				oracle);
+
+		int suffixIdx = suffixFinder.findSuffixIndex(ceQuery, hypothesis, getHypothesisModel(), oracle);
 		
 		if(suffixIdx == -1) {
 			throw new AssertionError("Suffix finder does not work correctly, found no suffix for valid counterexample");
@@ -251,4 +253,17 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 
 		this.updateHypothesis();
 	}
+
+	@Override
+	public DTLearnerState<I, D, SP, TP> suspend() {
+		return new DTLearnerState<>(dtree, hypothesis);
+	}
+
+	@Override
+	public void resume(DTLearnerState<I, D, SP, TP> state) {
+		this.hypothesis = state.getHypothesis();
+		this.dtree = state.getDtree();
+		this.dtree.setOracle(oracle);
+	}
+
 }

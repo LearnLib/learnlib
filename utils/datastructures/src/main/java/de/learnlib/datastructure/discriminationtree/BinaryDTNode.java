@@ -15,6 +15,7 @@
  */
 package de.learnlib.datastructure.discriminationtree;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import de.learnlib.datastructure.discriminationtree.model.BooleanMap;
@@ -28,7 +29,7 @@ import de.learnlib.datastructure.discriminationtree.model.DTNode;
  *
  * @author Malte Isberner
  */
-public class BinaryDTNode<I, D> extends DTNode<I, Boolean, D> {
+public class BinaryDTNode<I, D> extends DTNode<I, Boolean, D> implements Serializable {
 
 	public BinaryDTNode(D data) {
 		super(data);

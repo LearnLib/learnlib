@@ -18,6 +18,7 @@ package de.learnlib.algorithms.discriminationtree.dfa;
 
 import java.util.Map;
 
+import de.learnlib.algorithms.discriminationtree.DTLearnerState;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
@@ -56,7 +57,7 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?,I>, I, Boolean, Boo
 		}
 	}
 	
-	private final HypothesisWrapperDFA<I> hypWrapper;
+	private HypothesisWrapperDFA<I> hypWrapper;
 
 	/**
 	 * Constructor.
@@ -128,4 +129,11 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?,I>, I, Boolean, Boo
 			HTransition<I, Boolean, Boolean, Void> transition) {
 		return null;
 	}
+
+	@Override
+	public void resume(DTLearnerState<I, Boolean, Boolean, Void> state) {
+		super.resume(state);
+		this.hypWrapper = new HypothesisWrapperDFA<>(this.hypothesis);
+	}
+
 }

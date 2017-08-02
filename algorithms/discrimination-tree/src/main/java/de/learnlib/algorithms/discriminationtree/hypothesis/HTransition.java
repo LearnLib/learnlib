@@ -19,8 +19,9 @@ import de.learnlib.datastructure.discriminationtree.model.DTNode;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
+import java.io.Serializable;
 
-public class HTransition<I, O, SP, TP> {
+public class HTransition<I, O, SP, TP> implements Serializable {
 	
 	// GENERAL PURPOSE FIELDS
 	private final HState<I,O,SP,TP> source;
