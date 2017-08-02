@@ -15,12 +15,14 @@
  */
 package de.learnlib.algorithms.kv.dfa;
 
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
+import de.learnlib.api.ResumableLearner;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
@@ -50,7 +52,10 @@ import net.automatalib.words.impl.SimpleAlphabet;
  *
  * @param <I> input symbol type
  */
-public class KearnsVaziraniDFA<I> implements DFALearner<I>, SupportsGrowingAlphabet<I> {
+public class KearnsVaziraniDFA<I> implements
+		DFALearner<I>,
+		SupportsGrowingAlphabet<I>,
+		ResumableLearner<KearnsVaziraniDFAState<I>> {
 
 	static final class BuilderDefaults {
 		public static boolean repeatedCounterexampleEvaluation() {
@@ -69,7 +74,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I>, SupportsGrowingAlpha
 	 *
 	 * @param <I> input symbol type
 	 */
-	protected static final class StateInfo<I> {
+	protected static final class StateInfo<I> implements Serializable {
 		public final int id;
 		public final Word<I> accessSequence;
 		private DTNode<I, Boolean, StateInfo<I>> dtNode;
@@ -178,15 +183,13 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I>, SupportsGrowingAlpha
 	}
 	
 	private final GrowingAlphabet<I> alphabet;
-	private final CompactDFA<I> hypothesis;
+	private CompactDFA<I> hypothesis;
 	private final MembershipOracle<I,Boolean> oracle;
 	private final boolean repeatedCounterexampleEvaluation;
 	
-	protected final BinaryDTree<I, StateInfo<I>> discriminationTree;
-		
-		
-	protected final List<StateInfo<I>> stateInfos
-		= new ArrayList<>();
+	protected BinaryDTree<I, StateInfo<I>> discriminationTree;
+
+	protected List<StateInfo<I>> stateInfos = new ArrayList<>();
 	
 	private final AcexAnalyzer ceAnalyzer;
 
@@ -411,4 +414,16 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I>, SupportsGrowingAlpha
 		}
 	}
 
+	@Override
+	public KearnsVaziraniDFAState<I> suspend() {
+		return new KearnsVaziraniDFAState<>(hypothesis, discriminationTree, stateInfos);
+	}
+
+	@Override
+	public void resume(final KearnsVaziraniDFAState<I> state) {
+		this.hypothesis = state.getHypothesis();
+		this.discriminationTree = state.getDiscriminationTree();
+		this.discriminationTree.setOracle(oracle);
+		this.stateInfos = state.getStateInfos();
+	}
 }
