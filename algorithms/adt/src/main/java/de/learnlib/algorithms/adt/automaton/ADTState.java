@@ -34,12 +34,9 @@ public class ADTState<I, O> extends FastDetState<ADTState<I, O>, ADTTransition<I
 
 	private Word<I> accessSequence;
 
-	private final int numInputs;
-
 	public ADTState(int numInputs) {
 		super(numInputs);
 		incomingTransitions = new LinkedHashSet<>();
-		this.numInputs = numInputs;
 	}
 
 	public Set<ADTTransition<I, O>> getIncomingTransitions() {
@@ -55,18 +52,12 @@ public class ADTState<I, O> extends FastDetState<ADTState<I, O>, ADTTransition<I
 	}
 
 	@Override
-	public void clearTransitions() {
-
-		for (int i = 0; i < numInputs; i++) {
-			ADTTransition<I, O> trans = super.getTransition(i);
-			if (trans != null) {
-				ADTState<I, O> target = trans.getTarget();
-				if (target != null) {
-					target.getIncomingTransitions().remove(trans);
-				}
+	public void clearTransition(final ADTTransition<I, O> transition) {
+		if (transition != null) {
+			final ADTState<I , O> target = transition.getTarget();
+			if (target != null) {
+				target.getIncomingTransitions().remove(transition);
 			}
 		}
-
-		super.clearTransitions();
 	}
 }
