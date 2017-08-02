@@ -17,6 +17,7 @@ package de.learnlib.algorithms.adt.model;
 
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.util.ADTUtil;
+import de.learnlib.api.LearningAlgorithm;
 import net.automatalib.automata.transout.impl.FastMealy;
 import net.automatalib.automata.transout.impl.FastMealyState;
 import net.automatalib.commons.util.Pair;
@@ -25,10 +26,13 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * A class, that stores observations of the system under learning in a tree-like structure.
@@ -70,13 +74,33 @@ public class ObservationTree<S, I, O> {
 	}
 
 	/**
-	 * Initialize the observation tree.
+	 * Initialize the observation tree with initial hypothesis state. Usually used during
+	 * {@link LearningAlgorithm#startLearning()}
 	 *
 	 * @param state the initial state of the hypothesis
 	 */
 	public void initialize(final S state) {
 		final FastMealyState<O> init = this.observationTree.addInitialState();
 		this.nodeToObservationMap.put(state, init);
+	}
+
+	/**
+	 * Extended initialization method, that allows to initialize the observation tree with several hypothesis states.
+	 *
+	 * @param states The hypothesis states to initialize the observation tree with
+	 * @param asFunction Function to compute the access sequence of a node
+	 * @param outputFunction Function to compute the output of the access sequences
+	 */
+	public void initialize(final Collection<S> states,
+						   final Function<S, Word<I>> asFunction,
+						   final Function<Word<I>, Word<O>> outputFunction) {
+		final FastMealyState<O> init = this.observationTree.addInitialState();
+
+		for (final S s : states) {
+			final Word<I> as = asFunction.apply(s);
+			final FastMealyState<O> treeNode = this.addTrace(init, as, outputFunction.apply(as));
+			this.nodeToObservationMap.put(s, treeNode);
+		}
 	}
 
 	/**
@@ -140,7 +164,7 @@ public class ObservationTree<S, I, O> {
 		}
 	}
 
-	private void addTrace(final FastMealyState<O> state, final Word<I> input, final Word<O> output) {
+	private FastMealyState<O> addTrace(final FastMealyState<O> state, final Word<I> input, final Word<O> output) {
 
 		assert input.length() == output.length() : new IllegalArgumentException("traces differ in length");
 
@@ -166,6 +190,8 @@ public class ObservationTree<S, I, O> {
 
 			iter = nextState;
 		}
+
+		return iter;
 	}
 
 	/**
