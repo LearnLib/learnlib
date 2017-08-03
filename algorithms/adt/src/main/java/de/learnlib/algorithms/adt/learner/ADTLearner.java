@@ -157,7 +157,7 @@ public class ADTLearner<I, O> implements
 	@Override
 	public boolean refineHypothesis(DefaultQuery<I, Word<O>> ce) {
 
-		if (this.hypothesis.computeOutput(ce.getInput()).equals(ce.getOutput())) {
+		if (!MQUtil.isCounterexample(ce, this.hypothesis)) {
 			return false;
 		}
 
@@ -192,12 +192,11 @@ public class ADTLearner<I, O> implements
 
 	public boolean refineHypothesisInternal(DefaultQuery<I, Word<O>> ceQuery) {
 
-		final Word<I> ceInput = ceQuery.getInput();
-		final Word<O> hypothesisOutput = this.hypothesis.computeOutput(ceInput);
-
-		if (hypothesisOutput.equals(ceQuery.getOutput())) {
+		if (!MQUtil.isCounterexample(ceQuery, this.hypothesis)) {
 			return false;
 		}
+
+		final Word<I> ceInput = ceQuery.getInput();
 
 		// Determine a counterexample decomposition (u, a, v)
 		final int suffixIdx = LocalSuffixFinders.RIVEST_SCHAPIRE.findSuffixIndex(ceQuery,
@@ -248,8 +247,8 @@ public class ADTLearner<I, O> implements
 			newNode = this.adt.extendLeaf(nodeToSplit, completeSplitter, oldOutput, newOutput);
 		}
 		else {
-			this.observationTree.addTrace(uaState, v, MQUtil.output(this.membershipOracle, _ua_, v));
-			this.observationTree.addTrace(newState, v, MQUtil.output(this.membershipOracle, _u_a, v));
+			this.observationTree.addTrace(uaState, v, this.membershipOracle.answerQuery(_ua_, v));
+			this.observationTree.addTrace(newState, v, this.membershipOracle.answerQuery(_u_a, v));
 
 			// in doubt, we will always find v
 			final Word<I> otSepWord = this.observationTree.findSeparatingWord(uaState, newState);
