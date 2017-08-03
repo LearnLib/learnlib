@@ -19,6 +19,8 @@ import de.learnlib.api.AccessSequenceProvider;
 import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.words.Word;
 
+import java.io.Serializable;
+
 /**
  * A state in a {@link TTTHypothesis}.
  * 
@@ -26,7 +28,7 @@ import net.automatalib.words.Word;
  *
  * @param <I> input symbol
  */
-public class TTTState<I,D> implements AccessSequenceProvider<I> {
+public class TTTState<I,D> implements AccessSequenceProvider<I>, Serializable {
 	
 	final int id;
 	

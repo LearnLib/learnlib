@@ -15,6 +15,8 @@
  */
 package de.learnlib.datastructure.list;
 
+import java.io.Serializable;
+
 /**
  * An element in an {@link IntrusiveList}.
  *
@@ -22,7 +24,7 @@ package de.learnlib.datastructure.list;
  *
  * @author Malte Isberner
  */
-public abstract class IntrusiveListElemImpl<T> implements IntrusiveListElem<T> {
+public abstract class IntrusiveListElemImpl<T> implements IntrusiveListElem<T>, Serializable {
 	
 	protected T next;
 

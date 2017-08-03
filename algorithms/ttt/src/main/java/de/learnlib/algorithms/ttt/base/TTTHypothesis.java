@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,11 +43,13 @@ import net.automatalib.words.impl.SimpleAlphabet;
 public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTTState<I,D>,I,T>,
 		FiniteAlphabetAutomaton<TTTState<I,D>, I, T>,
 		DeterministicAutomaton.FullIntAbstraction<T>,
-		GrowableAlphabetAutomaton<I> {
+		GrowableAlphabetAutomaton<I>,
+		Serializable {
 
 	protected final List<TTTState<I,D>> states = new ArrayList<>();
 	
-	protected final GrowingAlphabet<I> alphabet;
+	protected transient GrowingAlphabet<I> alphabet;
+
 	private TTTState<I,D> initialState;
 
 	/**
@@ -253,5 +256,9 @@ public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTT
 		for (final TTTState<I, D> s : this.getStates()) {
 			s.ensureInputCapacity(alphabetSize);
 		}
+	}
+
+	void setAlphabet(Alphabet<I> alphabet) {
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 	}
 }

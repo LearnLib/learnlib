@@ -21,6 +21,8 @@ import de.learnlib.datastructure.list.IntrusiveListElemImpl;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
+import java.io.Serializable;
+
 /**
  * A transition in a {@link TTTHypothesis}.
  * 
@@ -28,7 +30,9 @@ import net.automatalib.words.WordBuilder;
  *
  * @param <I> input symbol type
  */
-public class TTTTransition<I,D> extends IntrusiveListElemImpl<TTTTransition<I,D>> implements AccessSequenceProvider<I> {
+public class TTTTransition<I,D> extends IntrusiveListElemImpl<TTTTransition<I,D>> implements
+		AccessSequenceProvider<I>,
+		Serializable {
 	
 	private final TTTState<I,D> source;
 	private final I input;
