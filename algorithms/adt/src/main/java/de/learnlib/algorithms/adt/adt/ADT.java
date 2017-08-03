@@ -23,6 +23,8 @@ import net.automatalib.commons.util.Triple;
 import net.automatalib.words.Word;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -37,16 +39,13 @@ import java.util.Set;
  * @author frohme
  */
 @ParametersAreNonnullByDefault
-public class ADT<S, I, O> {
+public class ADT<S, I, O> implements Serializable {
 
 	private ADTNode<S, I, O> root;
 
-	private final SymbolQueryOracle<I, O> oracle;
+	private transient LeafSplitter leafSplitter;
 
-	private final LeafSplitter leafSplitter;
-
-	public ADT(final SymbolQueryOracle<I, O> oracle, final LeafSplitter leafSplitter) {
-		this.oracle = oracle;
+	public ADT(final LeafSplitter leafSplitter) {
 		this.leafSplitter = leafSplitter;
 	}
 
@@ -108,12 +107,12 @@ public class ADT<S, I, O> {
 	 * @param subtree the node whose subtree is considered
 	 * @return the leaf (see {@link ADTNode#sift(SymbolQueryOracle, Word)})
 	 */
-	public ADTNode<S, I, O> sift(final Word<I> word, final ADTNode<S, I, O> subtree) {
+	public ADTNode<S, I, O> sift(final SymbolQueryOracle<I, O> oracle, final Word<I> word, final ADTNode<S, I, O> subtree) {
 
 		ADTNode<S, I, O> current = subtree;
 
 		while (!ADTUtil.isLeafNode(current)) {
-			current = current.sift(this.oracle, word);
+			current = current.sift(oracle, word);
 		}
 
 		return current;
@@ -229,5 +228,9 @@ public class ADT<S, I, O> {
 		}
 
 		throw new IllegalStateException("Nodes do not share a parent node");
+	}
+
+	public void setLeafSplitter(final LeafSplitter leafSplitter) {
+		this.leafSplitter = leafSplitter;
 	}
 }

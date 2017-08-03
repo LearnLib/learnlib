@@ -19,6 +19,8 @@ import de.learnlib.api.SymbolQueryOracle;
 import net.automatalib.words.Word;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
@@ -31,7 +33,7 @@ import java.util.Map;
  * @author frohme
  */
 @ParametersAreNonnullByDefault
-public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
+public class ADTResetNode<S, I, O> implements ADTNode<S, I, O>, Serializable {
 
 	ADTNode<S, I, O> parent;
 	final ADTNode<S, I, O> successor;

@@ -15,6 +15,8 @@
  */
 package de.learnlib.algorithms.adt.automaton;
 
+import java.io.Serializable;
+
 import de.learnlib.algorithms.adt.adt.ADTNode;
 
 /**
@@ -24,7 +26,7 @@ import de.learnlib.algorithms.adt.adt.ADTNode;
  * @param <O> output alphabet type
  * @author frohme
  */
-public class ADTTransition<I, O> {
+public class ADTTransition<I, O> implements Serializable {
 
 	private ADTState<I, O> source;
 	private ADTState<I, O> target;

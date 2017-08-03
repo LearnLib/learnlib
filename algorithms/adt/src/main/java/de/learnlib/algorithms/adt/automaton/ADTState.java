@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.adt.automaton;
 
+import de.learnlib.api.AccessSequenceProvider;
 import net.automatalib.automata.base.fast.FastDetState;
 import net.automatalib.words.Word;
 
@@ -28,7 +29,8 @@ import java.util.Set;
  * @param <O> output alphabet type
  * @author frohme
  */
-public class ADTState<I, O> extends FastDetState<ADTState<I, O>, ADTTransition<I, O>> {
+public class ADTState<I, O> extends FastDetState<ADTState<I, O>, ADTTransition<I, O>> implements
+		AccessSequenceProvider<I> {
 
 	private Set<ADTTransition<I, O>> incomingTransitions;
 
@@ -43,6 +45,7 @@ public class ADTState<I, O> extends FastDetState<ADTState<I, O>, ADTTransition<I
 		return incomingTransitions;
 	}
 
+	@Override
 	public Word<I> getAccessSequence() {
 		return accessSequence;
 	}

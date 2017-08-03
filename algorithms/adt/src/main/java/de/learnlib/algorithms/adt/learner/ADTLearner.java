@@ -53,6 +53,7 @@ import de.learnlib.algorithms.adt.util.ADTUtil;
 import de.learnlib.algorithms.adt.util.SQOOTBridge;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.ResumableLearner;
 import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.api.SymbolQueryOracle;
 import de.learnlib.counterexamples.LocalSuffixFinders;
@@ -79,7 +80,8 @@ import net.automatalib.words.impl.SimpleAlphabet;
 public class ADTLearner<I, O> implements
 		LearningAlgorithm.MealyLearner<I, O>,
 		PartialTransitionAnalyzer<ADTState<I, O>, I>,
-		SupportsGrowingAlphabet<I> {
+		SupportsGrowingAlphabet<I>,
+		ResumableLearner<ADTLearnerState<ADTState<I, O>, I, O>> {
 
 	public static class BuilderDefaults {
 
@@ -96,12 +98,13 @@ public class ADTLearner<I, O> implements
 		}
 	}
 
-	private final ADTHypothesis<I, O> hypothesis;
+	private ADTHypothesis<I, O> hypothesis;
 	private final GrowingAlphabet<I> alphabet;
 
 	private final SQOOTBridge<I, O> oracle;
 	private final MembershipOracle<I, Word<O>> membershipOracle;
 
+	private final LeafSplitter leafSplitter;
 	private final ADTExtender adtExtender;
 	private final SubtreeReplacer subtreeReplacer;
 
@@ -109,7 +112,7 @@ public class ADTLearner<I, O> implements
 	private final Queue<DefaultQuery<I, Word<O>>> openCounterExamples;
 	private final Set<DefaultQuery<I, Word<O>>> allCounterExamples;
 
-	private final ADT<ADTState<I, O>, I, O> adt;
+	private ADT<ADTState<I, O>, I, O> adt;
 	private final ObservationTree<ADTState<I, O>, I, O> observationTree;
 
 	@GenerateBuilder(defaults = BuilderDefaults.class)
@@ -124,6 +127,7 @@ public class ADTLearner<I, O> implements
 		this.oracle = new SQOOTBridge<>(this.observationTree, oracle, true);
 		this.membershipOracle = new SQOToMQOWrapper<>(this.oracle);
 
+		this.leafSplitter = leafSplitter;
 		this.adtExtender = adtExtender;
 		this.subtreeReplacer = subtreeReplacer;
 
@@ -131,7 +135,7 @@ public class ADTLearner<I, O> implements
 		this.openTransitions = new ArrayDeque<>();
 		this.openCounterExamples = new ArrayDeque<>();
 		this.allCounterExamples = new LinkedHashSet<>();
-		this.adt = new ADT<>(this.oracle, leafSplitter);
+		this.adt = new ADT<>(leafSplitter);
 	}
 
 	@Override
@@ -341,6 +345,26 @@ public class ADTLearner<I, O> implements
 		this.closeTransitions();
 	}
 
+	@Override
+	public ADTLearnerState<ADTState<I, O>, I, O> suspend() {
+		return new ADTLearnerState<>(this.hypothesis, this.adt);
+	}
+
+	@Override
+	public void resume(ADTLearnerState<ADTState<I, O>, I, O> state) {
+		this.hypothesis = state.getHypothesis();
+		this.adt = state.getAdt();
+		this.adt.setLeafSplitter(this.leafSplitter);
+
+		// startLearning has already been invoked
+		if (this.hypothesis.size() > 0) {
+			this.observationTree.initialize(this.hypothesis.getStates(),
+											ADTState::getAccessSequence,
+											this.hypothesis::computeOutput);
+			this.oracle.initialize();
+		}
+	}
+
 	/**
 	 * Close all pending open transitions
 	 */
@@ -372,7 +396,7 @@ public class ADTLearner<I, O> implements
 		transition.setOutput(this.oracle.query(symbol));
 
 		final Word<I> longPrefix = accessSequence.append(symbol);
-		final ADTNode<ADTState<I, O>, I, O> finalNode = this.adt.sift(longPrefix, transition.getSiftNode());
+		final ADTNode<ADTState<I, O>, I, O> finalNode = this.adt.sift(this.oracle, longPrefix, transition.getSiftNode());
 
 		assert ADTUtil.isLeafNode(finalNode);
 
