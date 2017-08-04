@@ -124,6 +124,7 @@ limitations under the License.
 		<compiler-plugin.version>3.6.1</compiler-plugin.version>
 		<release-plugin.version>2.5.3</release-plugin.version>
 		<checkstyle-plugin.version>2.17</checkstyle-plugin.version>
+		<checkstyle.version>8.1</checkstyle.version>
 		<jdiff-plugin.version>1.0-beta-1</jdiff-plugin.version>
 		<site-plugin.version>3.6</site-plugin.version>
 		<reports-plugin.version>2.9</reports-plugin.version>
@@ -171,13 +172,20 @@ limitations under the License.
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<version>${checkstyle-plugin.version}</version>
 					<configuration>
-						<configLocation>config/sun_checks.xml</configLocation>
+						<configLocation>sun_checks.xml</configLocation>
 						<headerLocation>license-header.txt</headerLocation>
 						<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+						<linkXRef>false</linkXRef>
+						<includeTestResources>true</includeTestResources>
 					</configuration>
 					<dependencies>
 						<dependency>
-							<groupId>${project.groupId}</groupId>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>${checkstyle.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>de.learnlib</groupId>
 							<artifactId>learnlib-build-tools</artifactId>
 							<version>${project.version}</version>
 						</dependency>
