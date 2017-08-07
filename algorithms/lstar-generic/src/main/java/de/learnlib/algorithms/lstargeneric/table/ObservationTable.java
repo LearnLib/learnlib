@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.lstargeneric.table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -68,7 +69,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <I> input symbol type
  * @param <D> output domain type
  */
-public final class ObservationTable<I,D> implements AccessSequenceTransformer<I> {
+public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>, Serializable {
 	
 	private static final <I> boolean checkPrefixClosed(Collection<? extends Word<I>> initialShortPrefixes) {
 		Set<Word<I>> prefixes = new HashSet<>(initialShortPrefixes);
@@ -88,7 +89,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 //	private static final int NO_ENTRY = -1;
 	
 	
-	private final GrowingAlphabet<I> alphabet;
+	private transient GrowingAlphabet<I> alphabet;
 	
 	private final List<Row<I>> shortPrefixRows
 		= new ArrayList<>();
@@ -746,5 +747,9 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 			
 			
 		};
+	}
+
+	public void setAlphabet(final Alphabet<I> alphabet) {
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 	}
 }

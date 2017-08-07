@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import de.learnlib.api.ResumableLearner;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
@@ -39,11 +40,11 @@ import de.learnlib.oracles.MQUtil;
 
 /**
  * An abstract base class for L*-style algorithms.
- * 
+ *
  * This class implements basic management features (table, alphabet, oracle) and
  * the main loop of alternating completeness and consistency checks. It does not take
  * care of choosing how to initialize the table and hypothesis construction.
- * 
+ *
  * @author Malte Isberner
  *
  * @param <A> automaton type
@@ -52,10 +53,10 @@ import de.learnlib.oracles.MQUtil;
  */
 public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, GlobalSuffixLearner<A, I, D>,
 		SupportsGrowingAlphabet<I> {
-	
+
 	protected final GrowingAlphabet<I> alphabet;
 	protected final MembershipOracle<I, D> oracle;
-	protected final ObservationTable<I, D> table;
+	protected ObservationTable<I, D> table;
 
 	/**
 	 * Constructor.
@@ -65,11 +66,9 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 	public AbstractLStar(Alphabet<I> alphabet, MembershipOracle<I,D> oracle) {
 		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.oracle = oracle;
-		
 		this.table = new ObservationTable<>(alphabet);
 	}
-	
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see de.learnlib.api.LearningAlgorithm#start()
@@ -79,7 +78,7 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 		List<Word<I>> prefixes = initialPrefixes();
 		List<Word<I>> suffixes = initialSuffixes();
 		List<List<Row<I>>> initialUnclosed = table.initialize(prefixes, suffixes, oracle);
-		
+
 		completeConsistentTable(initialUnclosed, table.isInitialConsistencyCheckRequired());
 	}
 
@@ -97,16 +96,16 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 		assert (table.numDistinctRows() > oldDistinctRows);
 		return true;
 	}
-	
+
 	protected void doRefineHypothesis(DefaultQuery<I,D> ceQuery) {
 		List<List<Row<I>>> unclosed = incorporateCounterExample(ceQuery);
 		completeConsistentTable(unclosed, true);
 	}
-	
+
 	/**
 	 * Iteratedly checks for unclosedness and inconsistencies in the table,
 	 * and fixes any occurrences thereof. This process is repeated until the
-	 * observation table is both closed and consistent. 
+	 * observation table is both closed and consistent.
 	 * @param unclosed the unclosed rows (equivalence classes) to start with.
 	 */
 	protected boolean completeConsistentTable(List<List<Row<I>>> unclosed, boolean checkConsistency) {
@@ -117,11 +116,11 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 				unclosed = table.toShortPrefixes(closingRows, oracle);
 				refined = true;
 			}
-			
-			
+
+
 			if(checkConsistency) {
 				Inconsistency<I,D> incons = null;
-				
+
 				do {
 					incons = table.findInconsistency();
 					if(incons != null) {
@@ -131,11 +130,11 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 				} while(unclosed.isEmpty() && (incons != null));
 			}
 		} while(!unclosed.isEmpty());
-		
+
 		return refined;
 	}
-	
-	
+
+
 	/**
 	 * Analyzes an inconsistency. This analysis consists in determining
 	 * the column in which the two successor rows differ.
@@ -144,15 +143,15 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 	 */
 	protected Word<I> analyzeInconsistency(Inconsistency<I,D> incons) {
 		int inputIdx = incons.getInputIndex();
-		
+
 		Row<I> succRow1 = incons.getFirstRow().getSuccessor(inputIdx);
 		Row<I> succRow2 = incons.getSecondRow().getSuccessor(inputIdx);
-		
+
 		int numSuffixes = table.numSuffixes();
-		
+
 		List<D> contents1 = table.rowContents(succRow1);
 		List<D> contents2 = table.rowContents(succRow2);
-		
+
 		for(int i = 0; i < numSuffixes; i++) {
 			D val1 = contents1.get(i), val2 = contents2.get(i);
 			if(!Objects.equals(val1, val2)) {
@@ -161,7 +160,7 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 				return suffix.prepend(sym);
 			}
 		}
-		
+
 		throw new IllegalArgumentException("Bogus inconsistency");
 	}
 
@@ -171,42 +170,42 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 	 * the observation data structure.
 	 * @param ce the query which contradicts the hypothesis
 	 * @return the rows (equivalence classes) which became unclosed by
-	 * adding the information. 
+	 * adding the information.
 	 */
 	protected List<List<Row<I>>> incorporateCounterExample(DefaultQuery<I,D> ce) {
 		return ObservationTableCEXHandlers.handleClassicLStar(ce, table, oracle);
 	}
-	
+
 	/**
 	 * This method selects a set of rows to use for closing the table.
 	 * It receives as input a list of row lists, such that each (inner) list contains
 	 * long prefix rows with (currently) identical contents, which have no matching
 	 * short prefix row. The outer list is the list of all those equivalence classes.
-	 * 
+	 *
 	 * @param unclosed a list of equivalence classes of unclosed rows.
 	 * @return a list containing a representative row from each class to move
 	 * to the short prefix part.
 	 */
 	protected List<Row<I>> selectClosingRows(List<List<Row<I>>> unclosed) {
 		List<Row<I>> closingRows = new ArrayList<>(unclosed.size());
-		
+
 		for(List<Row<I>> rowList : unclosed)
 			closingRows.add(rowList.get(0));
-		
+
 		return closingRows;
 	}
-	
-	
+
+
 	/**
 	 * Returns the list of initial suffixes which are used to initialize the table.
 	 * @return the list of initial suffixes.
 	 */
 	protected abstract List<Word<I>> initialSuffixes();
-	
+
 	protected List<Word<I>> initialPrefixes() {
 		return Collections.singletonList(Word.<I>epsilon());
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see de.learnlib.algorithms.features.GlobalSuffixLearner#getGlobalSuffixes()
@@ -215,7 +214,7 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 	public Collection<? extends Word<I>> getGlobalSuffixes() {
 		return Collections.unmodifiableCollection(table.getSuffixes());
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see de.learnlib.algorithms.features.GlobalSuffixLearner#addGlobalSuffixes(java.util.Collection)
@@ -228,7 +227,7 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 		}
 		return completeConsistentTable(unclosed, false);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see de.learnlib.algorithms.features.observationtable.OTLearner#getObservationTable()
@@ -251,6 +250,6 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, Glob
 
 		completeConsistentTable(unclosed, true);
 	}
-	
+
 	protected abstract SuffixOutput<I, D> hypothesisOutput();
 }

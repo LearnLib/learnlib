@@ -18,6 +18,8 @@ package de.learnlib.algorithms.lstargeneric.table;
 import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.words.Word;
 
+import java.io.Serializable;
+
 
 /**
  * A row in an observation table. Minimally, a row consists of a prefix (the row label)
@@ -32,7 +34,7 @@ import net.automatalib.words.Word;
  *
  * @param <I> input symbol class
  */
-public final class Row<I> {
+public final class Row<I> implements Serializable {
 	private final Word<I> prefix;
 	private final int rowId;
 	
