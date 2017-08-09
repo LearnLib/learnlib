@@ -175,7 +175,7 @@ limitations under the License.
 						<!-- use explicit paths instead of build-tools dependency, to prevent race conditions when
 							 using checkstyle _during_ the build process -->
 						<configLocation>build-tools/src/main/resources/automatalib-learnlib-checkstyle.xml</configLocation>
-						<headerLocation>build-tools/src/main/resources/license-header.txt</headerLocation>
+						<headerLocation>build-tools/src/main/resources/license-header-java.txt</headerLocation>
 						<linkXRef>false</linkXRef>
 						<includeTestResources>true</includeTestResources>
 					</configuration>
