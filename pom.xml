@@ -172,9 +172,10 @@ limitations under the License.
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<version>${checkstyle-plugin.version}</version>
 					<configuration>
-						<configLocation>sun_checks.xml</configLocation>
-						<headerLocation>license-header.txt</headerLocation>
-						<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+						<!-- use explicit paths instead of build-tools dependency, to prevent race conditions when
+							 using checkstyle _during_ the build process -->
+						<configLocation>build-tools/src/main/resources/automatalib-learnlib-checkstyle.xml</configLocation>
+						<headerLocation>build-tools/src/main/resources/license-header.txt</headerLocation>
 						<linkXRef>false</linkXRef>
 						<includeTestResources>true</includeTestResources>
 					</configuration>
@@ -183,11 +184,6 @@ limitations under the License.
 							<groupId>com.puppycrawl.tools</groupId>
 							<artifactId>checkstyle</artifactId>
 							<version>${checkstyle.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>de.learnlib</groupId>
-							<artifactId>learnlib-build-tools</artifactId>
-							<version>${project.version}</version>
 						</dependency>
 					</dependencies>
 				</plugin>
