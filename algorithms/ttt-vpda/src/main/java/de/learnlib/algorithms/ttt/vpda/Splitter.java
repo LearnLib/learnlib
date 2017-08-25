@@ -23,75 +23,78 @@ import net.automatalib.words.Word;
 /**
  * Data structure for representing a splitter.
  * <p>
- * A splitter is represented by an input symbol, and a DT node
- * that separates the successors (wrt. the input symbol) of the original
- * states. From this, a discriminator can be obtained by prepending the input
- * symbol to the discriminator that labels the separating successor.
+ * A splitter is represented by an input symbol, and a DT node that separates the successors (wrt. the input symbol) of
+ * the original states. From this, a discriminator can be obtained by prepending the input symbol to the discriminator
+ * that labels the separating successor.
  * <p>
- * <b>Note:</b> as the discriminator finalization is applied to the root
- * of a block and affects all nodes, there is no need to store references
- * to the source states from which this splitter was obtained.
+ * <b>Note:</b> as the discriminator finalization is applied to the root of a block and affects all nodes, there is no
+ * need to store references to the source states from which this splitter was obtained.
+ *
+ * @param <I>
+ *         input symbol type
  *
  * @author Malte Isberner
- *
- * @param <I> input symbol type
  */
 public final class Splitter<I> {
-	public enum SplitType {
-		INTERNAL,
-		CALL,
-		RETURN
-	}
 
-	public final I symbol;
+    public enum SplitType {
+        INTERNAL,
+        CALL,
+        RETURN
+    }
 
-	public final HypLoc<I> location;
-	public final I otherSymbol;
-	public final SplitType type;
+    public final I symbol;
 
-	public final DTNode<I> succSeparator;
+    public final HypLoc<I> location;
+    public final I otherSymbol;
+    public final SplitType type;
 
-	public Splitter(I symbol, DTNode<I> succSeparator) {
-		this.symbol = symbol;
-		this.location = null;
-		this.otherSymbol = null;
-		this.type = SplitType.INTERNAL;
-		this.succSeparator = succSeparator;
-	}
+    public final DTNode<I> succSeparator;
 
-	public Splitter(I symbol, HypLoc<I> location, I otherSymbol, boolean call, DTNode<I> succSeparator) {
-		this.symbol = symbol;
-		this.location = location;
-		this.otherSymbol = otherSymbol;
-		this.type = call? SplitType.CALL : SplitType.RETURN;
-		this.succSeparator = succSeparator;
-	}
+    public Splitter(I symbol, DTNode<I> succSeparator) {
+        this.symbol = symbol;
+        this.location = null;
+        this.otherSymbol = null;
+        this.type = SplitType.INTERNAL;
+        this.succSeparator = succSeparator;
+    }
 
+    public Splitter(I symbol, HypLoc<I> location, I otherSymbol, boolean call, DTNode<I> succSeparator) {
+        this.symbol = symbol;
+        this.location = location;
+        this.otherSymbol = otherSymbol;
+        this.type = call ? SplitType.CALL : SplitType.RETURN;
+        this.succSeparator = succSeparator;
+    }
 
-	public ContextPair<I> getDiscriminator() {
-		return succSeparator.getDiscriminator();
-	}
+    public ContextPair<I> getDiscriminator() {
+        return succSeparator.getDiscriminator();
+    }
 
-	public ContextPair<I> getNewDiscriminator() {
-		Word<I> prefix = succSeparator.getDiscriminator().getPrefix();
-		Word<I> suffix = succSeparator.getDiscriminator().getSuffix();
+    public ContextPair<I> getNewDiscriminator() {
+        Word<I> prefix = succSeparator.getDiscriminator().getPrefix();
+        Word<I> suffix = succSeparator.getDiscriminator().getSuffix();
 
-		switch (type) {
-		case INTERNAL:
-			return new ContextPair<>(prefix, suffix.prepend(symbol));
-		case RETURN:
-			return new ContextPair<>(prefix.concat(location.getAccessSequence()).append(otherSymbol),
-					suffix.prepend(symbol));
-		case CALL:
-			return new ContextPair<>(prefix, location.getAccessSequence().prepend(symbol).append(otherSymbol)
-					.concat(suffix));
-		}
-		throw new AssertionError();
-	}
-	public int getNewDiscriminatorLength() {
-		if (type == SplitType.INTERNAL) {
-			return succSeparator.getDiscriminator().getLength() + 1;
-		}
-		return succSeparator.getDiscriminator().getLength() + location.getAccessSequence().length() + 2;
-	}
+        switch (type) {
+            case INTERNAL:
+                return new ContextPair<>(prefix, suffix.prepend(symbol));
+            case RETURN:
+                return new ContextPair<>(prefix.concat(location.getAccessSequence()).append(otherSymbol),
+                                         suffix.prepend(symbol));
+            case CALL:
+                return new ContextPair<>(prefix,
+                                         location.getAccessSequence()
+                                                 .prepend(symbol)
+                                                 .append(otherSymbol)
+                                                 .concat(suffix));
+        }
+        throw new AssertionError();
+    }
+
+    public int getNewDiscriminatorLength() {
+        if (type == SplitType.INTERNAL) {
+            return succSeparator.getDiscriminator().getLength() + 1;
+        }
+        return succSeparator.getDiscriminator().getLength() + location.getAccessSequence().length() + 2;
+    }
 }

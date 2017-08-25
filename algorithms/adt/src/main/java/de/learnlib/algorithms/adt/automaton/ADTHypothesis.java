@@ -17,7 +17,7 @@ package de.learnlib.algorithms.adt.automaton;
 
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.api.AccessSequenceTransformer;
-import net.automatalib.automata.base.fast.FastMutableDet;
+import net.automatalib.automata.base.fast.AbstractFastMutableDet;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  * @param <O> output alphabet type
  * @author frohme
  */
-public class ADTHypothesis<I, O> extends FastMutableDet<ADTState<I, O>, I, ADTTransition<I, O>, Void, O>
+public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, I, ADTTransition<I, O>, Void, O>
 		implements MutableMealyMachine<ADTState<I, O>, I, ADTTransition<I, O>, O>, AccessSequenceTransformer<I> {
 
 	public ADTHypothesis(final Alphabet<I> alphabet) {

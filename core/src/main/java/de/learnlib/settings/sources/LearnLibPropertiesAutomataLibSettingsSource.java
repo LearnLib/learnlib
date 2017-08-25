@@ -16,9 +16,10 @@
 package de.learnlib.settings.sources;
 
 import net.automatalib.AutomataLibSettingsSource;
-import net.automatalib.commons.util.settings.ClassPathFileSource;
+import net.automatalib.commons.util.settings.AbstractClassPathFileSource;
 
-public class LearnLibPropertiesAutomataLibSettingsSource extends ClassPathFileSource implements AutomataLibSettingsSource {
+public class LearnLibPropertiesAutomataLibSettingsSource extends AbstractClassPathFileSource
+        implements AutomataLibSettingsSource {
 	public LearnLibPropertiesAutomataLibSettingsSource() {
 		super("learnlib.properties");
 	}
