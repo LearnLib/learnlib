@@ -9,7 +9,7 @@ branches:
   - master
   - develop
 before_install:
-  - git clone https://github.com/LearnLib/automatalib.git --single-branch develop /tmp/automatalib-develop
+  - git clone -b develop --single-branch https://github.com/LearnLib/automatalib.git /tmp/automatalib-develop
   - pushd /tmp/automatalib-develop
   - mvn clean install
   - popd
