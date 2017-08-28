@@ -13,5 +13,6 @@ before_install:
   - pushd /tmp/automatalib-develop
   - mvn clean install
   - popd
+install: true # skip mvn install, because we essentially run the same command in the script routine
 script:
-  - mvn verify -B -Pintergration-tests
+  - mvn verify -B -Pintegration-tests
