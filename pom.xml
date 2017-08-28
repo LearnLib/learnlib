@@ -146,7 +146,7 @@ limitations under the License.
 		
 		<!-- Javadoc links -->
 		<java.apidocs>http://docs.oracle.com/javase/8/docs/api/</java.apidocs>
-		<automatalib.apidocs>http://misberner.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
+		<automatalib.apidocs>http://learnlib.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
 		<guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/v${guava.version}/javadoc/</guava.apidocs>
 	</properties>
 
