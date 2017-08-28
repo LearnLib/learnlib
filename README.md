@@ -19,8 +19,9 @@ Also please note that many parts of the library have not yet been thoroughly tes
 
 Maintainers
 -----------
-* [Malte Isberner][4]
-* [Falk Howar][13]
+* [Markus Frohme][6] (2017 - )
+* [Falk Howar][5] (2013 - )
+* [Malte Isberner][4] (2013 - 2015)
 
 Resources
 ---------
@@ -32,4 +33,5 @@ Resources
 [2]: http://www.cs.tu-dortmund.de
 [3]: http://www.learnlib.de
 [4]: https://github.com/misberner
-[13]: https://github.com/fhowar
+[5]: https://github.com/fhowar
+[6]: https://github.com/mtf90

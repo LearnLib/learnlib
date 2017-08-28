@@ -44,6 +44,16 @@ limitations under the License.
 
 	<developers>
 		<developer>
+			<id>mtf90</id>
+			<name>Markus Frohme</name>
+			<email>markus.frohme@udo.edu</email>
+			<organization>TU Dortmund, Chair for Programming Systems</organization>
+			<organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+		<developer>
 			<id>falkhowar</id>
 			<name>Falk Howar</name>
 			<email>falk.howar@gmail.com</email>
