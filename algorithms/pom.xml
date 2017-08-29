@@ -44,7 +44,6 @@ limitations under the License.
 		<module>nlstar</module>
 		<module>ttt</module>
 		<module>ttt-vpda</module>
-		<module>rpni</module>
 	</modules>
 
 </project>
