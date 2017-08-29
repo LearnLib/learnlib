@@ -16,6 +16,7 @@
 package de.learnlib.algorithms.ttt.dfa;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 import de.learnlib.algorithms.ttt.base.BaseTTTDiscriminationTree;
 import net.automatalib.automata.fsa.DFA;
@@ -44,9 +45,16 @@ public class TTTLearnerDFA<I> extends BaseTTTLearner<DFA<?,I>,I,Boolean> impleme
 	public TTTLearnerDFA(Alphabet<I> alphabet,
 			MembershipOracle<I, Boolean> oracle,
 			AcexAnalyzer analyzer) {
-		super(alphabet, oracle, new TTTHypothesisDFA<>(alphabet), new BaseTTTDiscriminationTree<>(oracle, TTTDTNodeDFA::new), analyzer);
-		
-		split(dtree.getRoot(), Word.<I>epsilon(), false, true);
+		this(alphabet, oracle, analyzer, TTTDTNodeDFA::new);
+	}
+
+	protected TTTLearnerDFA(Alphabet<I> alphabet,
+							MembershipOracle<I, Boolean> oracle,
+							AcexAnalyzer analyzer,
+							Supplier<? extends BaseDTNode<I, Boolean>> rootSupplier) {
+		super(alphabet, oracle, new TTTHypothesisDFA<>(alphabet), new BaseTTTDiscriminationTree<>(oracle, rootSupplier), analyzer);
+
+		split(dtree.getRoot(), Word.epsilon(), false, true);
 	}
 
 	@Override

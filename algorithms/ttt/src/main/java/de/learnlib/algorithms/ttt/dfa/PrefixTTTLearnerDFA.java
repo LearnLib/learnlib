@@ -1,25 +1,24 @@
-package de.learnlib.algorithms.ttt.base;
+package de.learnlib.algorithms.ttt.dfa;
 
-import java.util.HashMap;
 import java.util.Iterator;
 
+import com.google.common.collect.AbstractIterator;
+import de.learnlib.acex.AbstractCounterexample;
+import de.learnlib.acex.AcexAnalyzer;
+import de.learnlib.algorithms.ttt.base.TTTState;
+import de.learnlib.algorithms.ttt.base.TTTTransition;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.commons.util.array.RichArray;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-import com.google.common.collect.AbstractIterator;
-
-import de.learnlib.acex.AbstractCounterexample;
-import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.algorithms.ttt.dfa.TTTHypothesisDFA;
-import de.learnlib.algorithms.ttt.dfa.TTTLearnerDFA;
-import de.learnlib.algorithms.ttt.dfa.TTTStateDFA;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.DefaultQuery;
-
-public class EasyTTTPref<I> extends TTTLearnerDFA<I> {
+/**
+ * @author Malte Isberner
+ */
+public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
 	
-	protected static class ExtDTNode<I> extends DTNode<I, Boolean> {
+	protected static class ExtDTNode<I> extends TTTDTNodeDFA<I> {
 		
 		
 		private static class UnlabeledIterator<I> extends AbstractIterator<ExtDTNode<I>> {
@@ -48,12 +47,12 @@ public class EasyTTTPref<I> extends TTTLearnerDFA<I> {
 				nextUnlabeled.prevUnlabeled = prevUnlabeled;
 			}
 		}
-		
+
 		@Override
-		protected ExtDTNode<I> createChild(DTNode<I,Boolean> parent, Boolean parentIncoming) {
-			return new ExtDTNode<>((ExtDTNode<I>) parent, parentIncoming);
+		protected ExtDTNode<I> createChild(Boolean outcome, TTTState<I, Boolean> data) {
+			return new ExtDTNode<>(this, outcome);
 		}
-		
+
 		public boolean hasUnlabeled() {
 			return nextUnlabeled != null;
 		}
@@ -78,7 +77,7 @@ public class EasyTTTPref<I> extends TTTLearnerDFA<I> {
 		public ExtDTNode() {
 			super();
 		}
-		
+
 		public ExtDTNode(ExtDTNode<I> parent, Boolean parentOut) {
 			super(parent, parentOut);
 		}
@@ -87,11 +86,9 @@ public class EasyTTTPref<I> extends TTTLearnerDFA<I> {
 	
 	private final ExtDTNode<I> unlabeledList = new ExtDTNode<>();
 	
-	public EasyTTTPref(Alphabet<I> alphabet, MembershipOracle<I,Boolean> oracle,
-			AcexAnalyzer analyzer) {
-		super(alphabet, oracle, analyzer, new ExtDTNode<I>());
-		
-		split(dtree.getRoot(), Word.<I>epsilon(), false, true);
+	public PrefixTTTLearnerDFA(Alphabet<I> alphabet, MembershipOracle<I,Boolean> oracle,
+							   AcexAnalyzer analyzer) {
+		super(alphabet, oracle, analyzer, ExtDTNode::new);
 	}
 	
 	@Override
@@ -205,16 +202,16 @@ public class EasyTTTPref<I> extends TTTLearnerDFA<I> {
 			acex.update(currReachInconsLength);
 			int breakpoint = analyzer.analyzeAbstractCounterexample(acex, 0, currReachInconsLength);
 			ExtDTNode<I> toSplit = acex.getHypNode(breakpoint);
-			TTTState<I,Boolean> splitState = toSplit.state;
+			TTTState<I,Boolean> splitState = toSplit.getData();
 			ExtDTNode<I> lca = acex.getLCA(breakpoint + 1);
 			I sym = ceWord.getSymbol(breakpoint);
 			Word<I> newDiscr = lca.getDiscriminator().prepend(sym);
 			ExtDTNode<I> succHyp = acex.getHypNode(breakpoint + 1);
 			boolean hypOut = lca.subtreeLabel(succHyp);
 			openTransitions.insertAllIncoming(toSplit.getIncoming());
-			DTNode<I,Boolean>[] children = toSplit.split(newDiscr, new HashMap<>(), hypOut, !hypOut);
-			link(children[0], splitState);
-			ExtDTNode<I> extUnlabeled = (ExtDTNode<I>) children[1];
+			ExtDTNode.SplitResult splitResult = toSplit.split(newDiscr, hypOut, !hypOut);
+			link((ExtDTNode<I>)splitResult.nodeOld, splitState);
+			ExtDTNode<I> extUnlabeled = (ExtDTNode<I>) splitResult.nodeNew;
 			extUnlabeled.tempPrefix = currReachInconsLength;
 			unlabeledList.addUnlabeled(extUnlabeled);
 			closeTransitions();
