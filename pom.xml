@@ -44,6 +44,16 @@ limitations under the License.
 
 	<developers>
 		<developer>
+			<id>mtf90</id>
+			<name>Markus Frohme</name>
+			<email>markus.frohme@udo.edu</email>
+			<organization>TU Dortmund, Chair for Programming Systems</organization>
+			<organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+		<developer>
 			<id>falkhowar</id>
 			<name>Falk Howar</name>
 			<email>falk.howar@gmail.com</email>
@@ -119,30 +129,34 @@ limitations under the License.
 			dependency versions
 		-->
 		<automatalib.version>0.6.1-SNAPSHOT</automatalib.version>
-		<testng.version>6.8.8</testng.version>
-		<javadoc-plugin.version>2.10.1</javadoc-plugin.version>
-		<compiler-plugin.version>3.1</compiler-plugin.version>
-		<release-plugin.version>2.5.1</release-plugin.version>
-		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
+		<testng.version>6.11</testng.version>
+		<javadoc-plugin.version>2.10.4</javadoc-plugin.version>
+		<compiler-plugin.version>3.6.1</compiler-plugin.version>
+		<release-plugin.version>2.5.3</release-plugin.version>
+		<checkstyle-plugin.version>2.17</checkstyle-plugin.version>
+		<checkstyle.version>8.1</checkstyle.version>
 		<jdiff-plugin.version>1.0-beta-1</jdiff-plugin.version>
-		<site-plugin.version>3.4</site-plugin.version>
-		<reports-plugin.version>2.8</reports-plugin.version>
-		<surefire-plugin.version>2.18.1</surefire-plugin.version>
-		<failsafe-plugin.version>2.18.1</failsafe-plugin.version>
-		<assembly-plugin.version>2.5.3</assembly-plugin.version>
-		<resources-plugin.version>2.7</resources-plugin.version>
+		<site-plugin.version>3.6</site-plugin.version>
+		<reports-plugin.version>2.9</reports-plugin.version>
+		<surefire-plugin.version>2.20</surefire-plugin.version>
+		<failsafe-plugin.version>2.20</failsafe-plugin.version>
+		<assembly-plugin.version>3.0.0</assembly-plugin.version>
+		<resources-plugin.version>3.0.2</resources-plugin.version>
 		<upload-plugin.version>1.1</upload-plugin.version>
-		<exec-plugin.version>1.3.2</exec-plugin.version>
+		<exec-plugin.version>1.6.0</exec-plugin.version>
 		<deploy-site-github.exec>deploy-site-github</deploy-site-github.exec>
 		
-		<guava.version>18.0</guava.version>
-		<findbugs.version>2.0.3</findbugs.version>
+		<guava.version>22.0</guava.version>
+		<findbugs.version>3.0.2</findbugs.version>
 		
 		<buildergen.version>0.1</buildergen.version>
+
+		<slf4j.version>1.7.25</slf4j.version>
+		<logback.version>1.2.3</logback.version>
 		
 		<!-- Javadoc links -->
 		<java.apidocs>http://docs.oracle.com/javase/8/docs/api/</java.apidocs>
-		<automatalib.apidocs>http://misberner.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
+		<automatalib.apidocs>http://learnlib.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
 		<guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/v${guava.version}/javadoc/</guava.apidocs>
 	</properties>
 
@@ -168,15 +182,17 @@ limitations under the License.
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<version>${checkstyle-plugin.version}</version>
 					<configuration>
-						<configLocation>config/sun_checks.xml</configLocation>
-						<headerLocation>license-header.txt</headerLocation>
-						<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+						<!-- use explicit paths instead of build-tools dependency, to prevent race conditions when
+							 using checkstyle _during_ the build process -->
+						<configLocation>build-tools/src/main/resources/automatalib-learnlib-checkstyle.xml</configLocation>
+						<headerLocation>build-tools/src/main/resources/license-header-java.txt</headerLocation>
+						<linkXRef>false</linkXRef>
 					</configuration>
 					<dependencies>
 						<dependency>
-							<groupId>${project.groupId}</groupId>
-							<artifactId>learnlib-build-tools</artifactId>
-							<version>${project.version}</version>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>${checkstyle.version}</version>
 						</dependency>
 					</dependencies>
 				</plugin>
@@ -213,11 +229,17 @@ limitations under the License.
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${surefire-plugin.version}</version>
+					<configuration>
+						<enableAssertions>true</enableAssertions>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-failsafe-plugin</artifactId>
 					<version>${failsafe-plugin.version}</version>
+					<configuration>
+						<enableAssertions>true</enableAssertions>
+					</configuration>
 					<executions>
 						<execution>
 							<goals>
@@ -554,7 +576,22 @@ limitations under the License.
 			</dependency>
 			<dependency>
 				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-adt</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-rpni</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-ttt</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-ttt-vpda</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -603,6 +640,12 @@ limitations under the License.
 				<artifactId>learnlib-discrimination-tree</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-discrimination-tree-vpda</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			
 			<dependency>
 				<groupId>de.learnlib</groupId>
@@ -619,6 +662,12 @@ limitations under the License.
 			<dependency>
 				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-acex</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-datastructures</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -678,8 +727,35 @@ limitations under the License.
 				<scope>provided</scope>
 			</dependency>
 
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-nop</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
+
+	<dependencies>
+		<!-- prevent error messages about missing slf4j implementation during test executions -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nop</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 	
 	<pluginRepositories>
 		<!-- Ensure preference over the atlassian plugin repository -->

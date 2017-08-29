@@ -65,7 +65,7 @@ public class ExtensibleLStarDFA<I>
 			List<Word<I>> initialSuffixes,
 			ObservationTableCEXHandler<? super I, ? super Boolean> cexHandler,
 			ClosingStrategy<? super I, ? super Boolean> closingStrategy) {
-		super(alphabet, oracle, new CompactDFA<I>(alphabet),
+		super(alphabet, oracle, new CompactDFA<>(alphabet),
 				initialPrefixes,
 				LStarDFAUtil.ensureSuffixCompliancy(initialSuffixes),
 				cexHandler, closingStrategy);

@@ -56,12 +56,12 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 	
 	public static <I,O>
 	SULCache<I,O> createTreeCache(Alphabet<I> alphabet, SUL<I,O> sul) {
-		return new SULCache<>(new IncrementalMealyTreeBuilder<I,O>(alphabet), sul);
+		return new SULCache<>(new IncrementalMealyTreeBuilder<>(alphabet), sul);
 	}
 	
 	public static <I,O>
 	SULCache<I,O> createDAGCache(Alphabet<I> alphabet, SUL<I,O> sul) {
-		return new SULCache<>(new IncrementalMealyDAGBuilder<I,O>(alphabet), sul);
+		return new SULCache<>(new IncrementalMealyDAGBuilder<>(alphabet), sul);
 	}
 	
 	/**
@@ -177,7 +177,7 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I,O> {
 	 */
 	@Deprecated
 	public SULCache(Alphabet<I> alphabet, SUL<I,O> sul) {
-		this(new IncrementalMealyDAGBuilder<I,O>(alphabet), sul);
+		this(new IncrementalMealyDAGBuilder<>(alphabet), sul);
 	}
 	
 	public SULCache(IncrementalMealyBuilder<I,O> incMealy, SUL<I,O> sul) {

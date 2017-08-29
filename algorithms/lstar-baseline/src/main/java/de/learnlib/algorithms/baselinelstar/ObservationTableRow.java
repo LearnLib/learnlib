@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.baselinelstar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +28,7 @@ import net.automatalib.words.Word;
  * A single row inside an {@link ObservationTable}, containing only the boolean values
  * if a combination of state/candidate and suffix is accepted by the current hypothesis.
  */
-class ObservationTableRow<I> extends ObservationTable.AbstractRow<I, Boolean> {
+class ObservationTableRow<I> extends ObservationTable.AbstractRow<I, Boolean> implements Serializable {
 
 	@Nonnull
 	private final Word<I> label;

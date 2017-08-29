@@ -21,26 +21,32 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+import de.learnlib.api.ResumableLearner;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.SimpleAlphabet;
 import de.learnlib.algorithms.discriminationtree.hypothesis.DTLearnerHypothesis;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HTransition;
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
+import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.counterexamples.LocalSuffixFinders;
-import de.learnlib.discriminationtree.DTNode;
-import de.learnlib.discriminationtree.DTNode.SplitResult;
-import de.learnlib.discriminationtree.DiscriminationTree;
+import de.learnlib.datastructure.discriminationtree.model.DTNode;
+import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.MQUtil;
 
-public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, TP> implements LearningAlgorithm<M, I, D> {
+public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, TP> implements
+		LearningAlgorithm<M, I, D>,
+		SupportsGrowingAlphabet<I>,
+		ResumableLearner<DTLearnerState<I, D, SP, TP>> {
 	
 	public static class BuilderDefaults {
 		public static <I,O> LocalSuffixFinder<? super I,? super O> suffixFinder() {
@@ -51,12 +57,12 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		}
 	}
 
-	private final Alphabet<I> alphabet;
+	protected final GrowingAlphabet<I> alphabet;
 	private final MembershipOracle<I, D> oracle;
 	private final LocalSuffixFinder<? super I, ? super D> suffixFinder;
 	private final boolean repeatedCounterexampleEvaluation;
-	protected final DiscriminationTree<I, D, HState<I,D,SP,TP>> dtree;
-	protected final DTLearnerHypothesis<I, D, SP, TP> hypothesis;
+	protected AbstractWordBasedDiscriminationTree<I, D, HState<I,D,SP,TP>> dtree;
+	protected DTLearnerHypothesis<I, D, SP, TP> hypothesis;
 	
 	private final List<HState<I,D,SP,TP>> newStates = new ArrayList<>();
 	private final List<HTransition<I,D,SP,TP>> newTransitions = new ArrayList<>();
@@ -65,11 +71,11 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 	protected AbstractDTLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle,
 			LocalSuffixFinder<? super I, ? super D> suffixFinder,
 			boolean repeatedCounterexampleEvaluation,
-			DiscriminationTree<I, D, HState<I,D,SP,TP>> dtree) {
-		this.alphabet = alphabet;
+			AbstractWordBasedDiscriminationTree<I, D, HState<I,D,SP,TP>> dtree) {
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.oracle = oracle;
 		this.suffixFinder = suffixFinder;
-		this.hypothesis = new DTLearnerHypothesis<I,D,SP,TP>(alphabet);
+		this.hypothesis = new DTLearnerHypothesis<>(alphabet);
 		this.dtree = dtree;
 		this.repeatedCounterexampleEvaluation = repeatedCounterexampleEvaluation;
 	}
@@ -101,7 +107,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		updateHypothesis();
 	}
 	
-	public DiscriminationTree<I, D, HState<I,D,SP,TP>> getDiscriminationTree() {
+	public AbstractWordBasedDiscriminationTree<I, D, HState<I,D,SP,TP>> getDiscriminationTree() {
 		return dtree;
 	}
 	
@@ -117,9 +123,8 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		if(!MQUtil.isCounterexample(ceQuery, getHypothesisModel())) {
 			return false;
 		}
-		
-		int suffixIdx = suffixFinder.findSuffixIndex(ceQuery, hypothesis, getHypothesisModel(),
-				oracle);
+
+		int suffixIdx = suffixFinder.findSuffixIndex(ceQuery, hypothesis, getHypothesisModel(), oracle);
 		
 		if(suffixIdx == -1) {
 			throw new AssertionError("Suffix finder does not work correctly, found no suffix for valid counterexample");
@@ -142,9 +147,9 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		
 		D oldOut = oracle.answerQuery(oldState.getAccessSequence(), suffix);
 		D newOut = oracle.answerQuery(newState.getAccessSequence(), suffix);
-		
-		SplitResult<I,D,HState<I,D,SP,TP>> sr = oldDt.split(suffix, oldOut, newOut, newState);
-		
+
+		DTNode<I, D, HState<I,D,SP,TP>>.SplitResult sr = oldDt.split(suffix, oldOut, newOut, newState);
+
 		oldState.fetchNonTreeIncoming(openTransitions);
 		
 		oldState.setDTLeaf(sr.nodeOld);
@@ -154,14 +159,14 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 		
 		return true;
 	}
-	
+
 	protected void initializeState(HState<I,D,SP,TP> newState) {
 		newStates.add(newState);
 		
 		int size = alphabet.size();
 		for(int i = 0; i < size; i++) {
 			I sym = alphabet.getSymbol(i);
-			HTransition<I,D,SP,TP> newTrans = new HTransition<I,D,SP,TP>(newState, sym, dtree.getRoot());
+			HTransition<I,D,SP,TP> newTrans = new HTransition<>(newState, sym, dtree.getRoot());
 			newState.setTransition(i, newTrans);
 			newTransitions.add(newTrans);
 			openTransitions.offer(newTrans);
@@ -227,7 +232,38 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I,D>, I, D, SP, T
 	
 	protected abstract Query<I,D> tpQuery(HTransition<I, D, SP, TP> transition);
 	
-	public DiscriminationTree<I, D, HState<I,D,SP,TP>>.GraphView dtGraphView() {
-		return dtree.graphView();
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		final int newSymbolIdx = this.alphabet.size();
+
+		this.alphabet.addSymbol(symbol);
+		this.hypothesis.addAlphabetSymbol(symbol);
+
+		for (final HState<I, D, SP, TP> s : this.hypothesis.getStates()) {
+			final HTransition<I,D,SP,TP> newTrans = new HTransition<>(s, symbol, dtree.getRoot());
+			s.setTransition(newSymbolIdx, newTrans);
+			newTransitions.add(newTrans);
+			openTransitions.add(newTrans);
+		}
+
+		this.updateHypothesis();
 	}
+
+	@Override
+	public DTLearnerState<I, D, SP, TP> suspend() {
+		return new DTLearnerState<>(dtree, hypothesis);
+	}
+
+	@Override
+	public void resume(DTLearnerState<I, D, SP, TP> state) {
+		this.hypothesis = state.getHypothesis();
+		this.dtree = state.getDtree();
+		this.dtree.setOracle(oracle);
+	}
+
 }

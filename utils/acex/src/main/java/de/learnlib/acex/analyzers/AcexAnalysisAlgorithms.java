@@ -126,7 +126,7 @@ public class AcexAnalysisAlgorithms {
 		E effLow = acex.effect(low);
 		E effHigh = acex.effect(high);
 		
-		assert !acex.checkEffects(effLow, effHigh);
+		assert !acex.checkEffects(effLow, effHigh) : "compatible effects at " + low + ", " + high + ": " + effLow + ", " + effHigh;
 		
 		while(high - low > 1) {
 			int mid = low + (high - low)/2;

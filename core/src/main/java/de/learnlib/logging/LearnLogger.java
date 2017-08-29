@@ -17,12 +17,10 @@
 package de.learnlib.logging;
 
 import de.learnlib.statistics.StatisticData;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Filter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 /**
  * LearnLib specific logger. Adds some methods to Logger 
@@ -30,14 +28,8 @@ import java.util.logging.Logger;
  * 
  * @author falkhowar
  */
-public class LearnLogger extends Logger {
+public interface LearnLogger extends Logger {
  
-    private LearnLogger(String name) {
-        super(name,null);
-    }
-    
-    
-                    
     /**
      * get an instance of a logger for name. assumes that there is 
      * no ordinary logger of the same name. 
@@ -45,14 +37,8 @@ public class LearnLogger extends Logger {
      * @param name
      * @return 
      */
-    public static LearnLogger getLogger(String name) {
-        LogManager m = LogManager.getLogManager();
-        Logger log = m.getLogger(name);
-        if (log == null) {
-            log = new LearnLogger(name);            
-            m.addLogger(log);
-        }
-        return (LearnLogger)log;
+    static LearnLogger getLogger(String name) {
+        return new Slf4jDelegator(LoggerFactory.getLogger(name));
     }
     
     /**
@@ -64,39 +50,18 @@ public class LearnLogger extends Logger {
      * @param clazz the class from which to retrieve the name
      * @return the logger for the given class name
      */
-    public static LearnLogger getLogger(Class<?> clazz) {
+    static LearnLogger getLogger(Class<?> clazz) {
     	return getLogger(clazz.getName());
     }
-    
+
     /**
-     * remove all handlers of root logger and add a console hander with
-     * LLConsoleFormatter instead.
-     * 
-     * @deprecated The use of this method is discouraged as it interferes with 
-     * (proper) file-based or class-based configuration of logging. 
-     * 
+     * logs a system message at level INFO.
+     *
+     * @param msg
      */
-    @Deprecated
-    public static void defaultSetup() {
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setFormatter(new LLConsoleFormatter());
-        Logger logger = Logger.getLogger("");
-        for (Handler h : logger.getHandlers()) {
-            logger.removeHandler(h);
-        }
-        logger.addHandler(handler);
-    }
-    
-    /**
-     * apply a filter to all handlers of the root logger.
-     * 
-     * 
-     */
-    public static void setGlobalFilter(Filter f) {
-        Logger logger = Logger.getLogger("");
-        for (Handler h : logger.getHandlers()) {
-            h.setFilter(f);
-        }
+    default void logSystem(String msg) {
+        final Marker marker = MarkerFactory.getMarker(Category.SYSTEM.toMarkerLabel());
+        info(marker, msg);
     }
     
     /**
@@ -104,9 +69,9 @@ public class LearnLogger extends Logger {
      * 
      * @param phase 
      */
-    public void logPhase(String phase) {
-        LearnLogRecord rec = new LearnLogRecord(Level.INFO, phase, Category.PHASE);
-        this.log(rec);
+    default void logPhase(String phase) {
+        final Marker marker = MarkerFactory.getMarker(Category.PHASE.toMarkerLabel());
+        info(marker, phase);
     }
     
     /**
@@ -114,9 +79,9 @@ public class LearnLogger extends Logger {
      * 
      * @param phase 
      */
-    public void logQuery(String phase) {
-        LearnLogRecord rec = new LearnLogRecord(Level.INFO, phase, Category.QUERY);
-        this.log(rec);
+    default void logQuery(String phase) {
+        final Marker marker = MarkerFactory.getMarker(Category.QUERY.toMarkerLabel());
+        info(marker, phase);
     }
     
     /**
@@ -124,9 +89,9 @@ public class LearnLogger extends Logger {
      * 
      * @param config 
      */
-    public void logConfig(String config) {
-        LearnLogRecord rec = new LearnLogRecord(Level.INFO, config, Category.CONFIG);
-        this.log(rec);        
+    default void logConfig(String config) {
+        final Marker marker = MarkerFactory.getMarker(Category.CONFIG.toMarkerLabel());
+        info(marker, config);
     }
 
     /**
@@ -134,9 +99,9 @@ public class LearnLogger extends Logger {
      * 
      * @param ce 
      */
-    public void logCounterexample(String ce) {    
-        LearnLogRecord rec = new LearnLogRecord(Level.INFO, ce, Category.COUNTEREXAMPLE);
-        this.log(rec);          
+    default void logCounterexample(String ce) {
+        final Marker marker = MarkerFactory.getMarker(Category.COUNTEREXAMPLE.toMarkerLabel());
+        info(marker, ce);
     }
         
     /**
@@ -144,9 +109,9 @@ public class LearnLogger extends Logger {
      * 
      * @param desc 
      */
-    public void logEvent(String desc) {
-        LearnLogRecord rec = new LearnLogRecord(Level.INFO, desc, Category.EVENT);
-        this.log(rec);
+    default void logEvent(String desc) {
+        final Marker marker = MarkerFactory.getMarker(Category.EVENT.toMarkerLabel());
+        info(marker, desc);
     }
     
     /**
@@ -154,9 +119,9 @@ public class LearnLogger extends Logger {
      * 
      * @param profiling 
      */
-    public void logProfilingInfo(StatisticData profiling) {
-        LearnLogRecord rec = new StatisticLogRecord(Level.INFO, profiling, Category.PROFILING);
-        this.log(rec);
+    default void logProfilingInfo(StatisticData profiling) {
+        final Marker marker = MarkerFactory.getMarker(Category.PROFILING.toMarkerLabel());
+        info(marker, profiling.getSummary());
     }
     
     /**
@@ -164,9 +129,9 @@ public class LearnLogger extends Logger {
      * 
      * @param statistics 
      */
-    public void logStatistic(StatisticData statistics) {
-        LearnLogRecord rec = new StatisticLogRecord(Level.INFO, statistics, Category.STATISTIC);
-        this.log(rec);        
+    default void logStatistic(StatisticData statistics) {
+        final Marker marker = MarkerFactory.getMarker(Category.STATISTIC.toMarkerLabel());
+        info(marker, statistics.getSummary());
     }
 
     /**
@@ -174,9 +139,9 @@ public class LearnLogger extends Logger {
      * 
      * @param o 
      */
-    public void logModel(Object o) {
-        LearnLogRecord rec = new PlottableLogRecord(Level.INFO, o, Category.MODEL);
-        this.log(rec);        
+    default void logModel(Object o) {
+        final Marker marker = MarkerFactory.getMarker(Category.MODEL.toMarkerLabel());
+        info(marker, o.toString());
     }
     
     /**
@@ -184,9 +149,9 @@ public class LearnLogger extends Logger {
      * 
      * @param o 
      */
-    public void logDataStructure(Object o) {
-        LearnLogRecord rec = new PlottableLogRecord(Level.INFO, o, Category.DATASTRUCTURE);
-        this.log(rec);        
+    default void logDataStructure(Object o) {
+        final Marker marker = MarkerFactory.getMarker(Category.DATASTRUCTURE.toMarkerLabel());
+        info(marker, o.toString());
     }
     
 }

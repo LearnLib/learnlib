@@ -15,12 +15,14 @@
  */
 package de.learnlib.algorithms.discriminationtree.hypothesis;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.graphs.Graph;
@@ -28,7 +30,9 @@ import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.SimpleAlphabet;
 import de.learnlib.api.AccessSequenceTransformer;
 
 /**
@@ -44,14 +48,16 @@ import de.learnlib.api.AccessSequenceTransformer;
 public class DTLearnerHypothesis<I, O, SP, TP> implements
 		UniversalDeterministicAutomaton<HState<I,O,SP,TP>, I, HTransition<I,O,SP,TP>, SP, TP>,
 		AccessSequenceTransformer<I>,
-		StateIDs<HState<I,O,SP,TP>> {
+		StateIDs<HState<I,O,SP,TP>>,
+		GrowableAlphabetAutomaton<I>,
+		Serializable{
 
-	private final Alphabet<I> alphabet;
+	private final GrowingAlphabet<I> alphabet;
 	private final HState<I, O, SP, TP> root;
 	private final List<HState<I, O, SP, TP>> nodes = new ArrayList<>();
 
 	public DTLearnerHypothesis(Alphabet<I> alphabet) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.root = new HState<>(alphabet.size());
 		this.nodes.add(root);
 	}
@@ -132,7 +138,18 @@ public class DTLearnerHypothesis<I, O, SP, TP> implements
 	public TP getTransitionProperty(HTransition<I, O, SP, TP> trans) {
 		return trans.getProperty();
 	}
-	
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		this.alphabet.addSymbol(symbol);
+		final int alphabetSize = this.alphabet.size();
+
+		for (final HState<I, O, SP, TP> s : this.getStates()) {
+			s.ensureInputCapacity(alphabetSize);
+		}
+	}
+
 	public class GraphView implements Graph<HState<I,O,SP,TP>, HTransition<I, O, SP, TP>>,
 		NodeIDs<HState<I,O,SP,TP>> {
 		

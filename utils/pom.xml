@@ -35,6 +35,7 @@ limitations under the License.
 	<modules>
 		<module>acex</module>
 		<module>counterexamples</module>
+		<module>datastructures</module>
 		<module>parallelism</module>
 	</modules>
 </project>

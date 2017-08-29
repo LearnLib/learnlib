@@ -1,0 +1,29 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/DECORATION/1.6.0"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0
+         http://maven.apache.org/xsd/decoration-1.6.0.xsd">
+
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.6</version>
+    </skin>
+
+    <bannerLeft>
+        <name>${this.name}</name>
+        <href>${this.url}</href>
+    </bannerLeft>
+
+    <version position="right"/>
+    <publishDate position="right"/>
+
+    <body>
+        <breadcrumbs>
+            <item name="${this.name}" href="${this.url}"/>
+        </breadcrumbs>
+        <menu ref="parent" inherit="top"/>
+        <menu ref="reports" inherit="top"/>
+        <menu ref="modules" inherit="top"/>
+        <footer/>
+    </body>
+</project>

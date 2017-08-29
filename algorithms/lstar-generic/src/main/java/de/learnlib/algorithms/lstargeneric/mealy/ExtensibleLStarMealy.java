@@ -42,7 +42,7 @@ public class ExtensibleLStarMealy<I, O> extends
 		implements OTLearnerMealy<I,O> {
 	
 	private final List<O> outputTable
-		= new ArrayList<O>();
+		= new ArrayList<>();
 	
 
 	public ExtensibleLStarMealy(Alphabet<I> alphabet,
@@ -60,7 +60,7 @@ public class ExtensibleLStarMealy<I, O> extends
 			List<Word<I>> initialSuffixes,
 			ObservationTableCEXHandler<? super I, ? super Word<O>> cexHandler,
 			ClosingStrategy<? super I, ? super Word<O>> closingStrategy) {
-		super(alphabet, oracle, new CompactMealy<I,O>(alphabet),
+		super(alphabet, oracle, new CompactMealy<>(alphabet),
 				initialPrefixes,
 				LStarMealyUtil.ensureSuffixCompliancy(initialSuffixes, alphabet, cexHandler.needsConsistencyCheck()),
 				cexHandler,
@@ -98,14 +98,13 @@ public class ExtensibleLStarMealy<I, O> extends
 			return;
 		
 		List<DefaultQuery<I,Word<O>>> outputQueries
-			= new ArrayList<DefaultQuery<I,Word<O>>>(numOutputs);
+			= new ArrayList<>(numOutputs);
 		
 		for(int i = numOutputs+1; i <= numTransRows; i++) {
 			Row<I> row = table.getRow(i);
 			Word<I> rowPrefix = row.getPrefix();
 			int prefixLen = rowPrefix.size();
-			outputQueries.add(new DefaultQuery<I,Word<O>>(rowPrefix.prefix(prefixLen - 1),
-					rowPrefix.suffix(1)));
+			outputQueries.add(new DefaultQuery<>(rowPrefix.prefix(prefixLen - 1), rowPrefix.suffix(1)));
 		}
 		
 		oracle.processQueries(outputQueries);

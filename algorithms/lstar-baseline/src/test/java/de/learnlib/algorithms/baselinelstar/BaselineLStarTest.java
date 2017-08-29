@@ -79,7 +79,7 @@ public class BaselineLStarTest {
 
 	@Test(dependsOnMethods = "testCounterExample")
 	public void testSecondCounterExample() throws IOException {
-		angluin.refineHypothesis(createCounterExample(false, 0, 1, 0));
+		angluin.refineHypothesis(createCounterExample(true, 0, 1, 0));
 		DFA<?,Integer> hypothesis = angluin.getHypothesisModel();
 		Assert.assertEquals(4, hypothesis.getStates().size());
 		

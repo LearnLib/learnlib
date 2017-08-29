@@ -56,8 +56,7 @@ public class SymbolEQOracleWrapper<A extends DetSuffixOutputAutomaton<?,I,?,Word
 			O hypSym = hypOut.getSymbol(i), ceSym = ceOut.getSymbol(i);
 			
 			if(!Objects.equals(hypSym, ceSym)) {
-				DefaultQuery<I,O> result = new DefaultQuery<I,O>(wordCeQry.getPrefix(),
-						wordCeQry.getSuffix().prefix(i+1));
+				DefaultQuery<I,O> result = new DefaultQuery<>(wordCeQry.getPrefix(), wordCeQry.getSuffix().prefix(i + 1));
 				result.answer(ceSym);
 				return result;
 			}

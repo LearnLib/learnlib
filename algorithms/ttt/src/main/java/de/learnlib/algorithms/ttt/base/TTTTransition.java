@@ -15,8 +15,13 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
+import de.learnlib.api.AccessSequenceProvider;
+import de.learnlib.datastructure.list.IntrusiveListElem;
+import de.learnlib.datastructure.list.IntrusiveListElemImpl;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+
+import java.io.Serializable;
 
 /**
  * A transition in a {@link TTTHypothesis}.
@@ -25,7 +30,9 @@ import net.automatalib.words.WordBuilder;
  *
  * @param <I> input symbol type
  */
-public class TTTTransition<I,D> extends IncomingListElem<I,D> implements AccessSequenceProvider<I> {
+public class TTTTransition<I,D> extends IntrusiveListElemImpl<TTTTransition<I,D>> implements
+		AccessSequenceProvider<I>,
+		Serializable {
 	
 	private final TTTState<I,D> source;
 	private final I input;
@@ -34,9 +41,9 @@ public class TTTTransition<I,D> extends IncomingListElem<I,D> implements AccessS
 	private TTTState<I,D> treeTarget;
 	
 	// NON-TREE TRANSITION
-	DTNode<I,D> nonTreeTarget;
+	BaseDTNode<I,D> nonTreeTarget;
 	
-	protected IncomingListElem<I,D> prevIncoming;
+	protected IntrusiveListElem<TTTTransition<I, D>> prevIncoming;
 	
 
 	public TTTTransition(TTTState<I,D> source, I input) {
@@ -55,13 +62,13 @@ public class TTTTransition<I,D> extends IncomingListElem<I,D> implements AccessS
 		return treeTarget;
 	}
 	
-	public DTNode<I,D> getNonTreeTarget() {
+	public BaseDTNode<I,D> getNonTreeTarget() {
 		assert !isTree();
 		
 		return nonTreeTarget;
 	}
 	
-	public DTNode<I,D> getDTTarget() {
+	public BaseDTNode<I,D> getDTTarget() {
 		if(treeTarget != null) {
 			return treeTarget.dtLeaf;
 		}
@@ -75,8 +82,8 @@ public class TTTTransition<I,D> extends IncomingListElem<I,D> implements AccessS
 		}
 		
 		assert nonTreeTarget.isLeaf() : "transition target is not a leaf, but is a " + (nonTreeTarget.isTemp() ? "temp" : "non-temp") + " node with discr" + nonTreeTarget.getDiscriminator();
-		assert nonTreeTarget.state != null;
-		return nonTreeTarget.state;
+		assert nonTreeTarget.getData() != null;
+		return nonTreeTarget.getData();
 	}
 	
 	public TTTState<I,D> getSource() {
@@ -99,7 +106,7 @@ public class TTTTransition<I,D> extends IncomingListElem<I,D> implements AccessS
 		
 		while(curr != null) {
 			wb.add(curr.input);
-			curr = curr.source.parentTransition;
+			curr = curr.source.getParentTransition();
 		}
 		
 		return wb.reverse().toWord();
@@ -111,7 +118,7 @@ public class TTTTransition<I,D> extends IncomingListElem<I,D> implements AccessS
 		this.nonTreeTarget = null;
 	}
 	
-	void setNonTreeTarget(DTNode<I,D> nonTreeTarget) {
+	void setNonTreeTarget(BaseDTNode<I,D> nonTreeTarget) {
 		this.nonTreeTarget = nonTreeTarget;
 		nonTreeTarget.getIncoming().insertIncoming(this);
 	}
@@ -119,10 +126,10 @@ public class TTTTransition<I,D> extends IncomingListElem<I,D> implements AccessS
 	
 	void removeFromList() {
 		if(prevIncoming != null) {
-			prevIncoming.nextIncoming = nextIncoming;
+			prevIncoming.setNextElement(next);
 		}
-		if(nextIncoming != null) {
-			nextIncoming.prevIncoming = prevIncoming;
+		if(next != null) {
+			next.prevIncoming = prevIncoming;
 		}
 	}
 }

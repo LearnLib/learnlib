@@ -19,13 +19,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-
 import de.learnlib.api.MembershipOracle;
 
 /**
@@ -72,7 +71,7 @@ public abstract class ParallelOracleBuilders {
 	@Nonnull
 	public static <I,D>
 	DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(MembershipOracle<I,D> sharedOracle) {
-		return newDynamicParallelOracle(Suppliers.ofInstance(sharedOracle));
+		return newDynamicParallelOracle(() -> sharedOracle);
 	}
 	
 	@Nonnull

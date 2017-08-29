@@ -129,7 +129,7 @@ public class ExampleCoffeeMachine extends DefaultMealyLearningExample<Input,Stri
     }
     
     public static CompactMealy<Input,String> constructMachine() {
-    	return constructMachine(new CompactMealy<Input,String>(createInputAlphabet()));
+    	return constructMachine(new CompactMealy<>(createInputAlphabet()));
     }
 
     

@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.lstargeneric.table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,7 +27,9 @@ import java.util.Map;
 import java.util.Set;
 
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -35,7 +38,6 @@ import de.learnlib.algorithms.features.observationtable.ObservationTable.Abstrac
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
-
 
 /**
  * Observation table class.
@@ -67,7 +69,7 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <I> input symbol type
  * @param <D> output domain type
  */
-public final class ObservationTable<I,D> implements AccessSequenceTransformer<I> {
+public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>, Serializable {
 	
 	private static final <I> boolean checkPrefixClosed(Collection<? extends Word<I>> initialShortPrefixes) {
 		Set<Word<I>> prefixes = new HashSet<>(initialShortPrefixes);
@@ -87,21 +89,21 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 //	private static final int NO_ENTRY = -1;
 	
 	
-	private final Alphabet<I> alphabet;
+	private transient GrowingAlphabet<I> alphabet;
 	
 	private final List<Row<I>> shortPrefixRows
-		= new ArrayList<Row<I>>();
+		= new ArrayList<>();
 	private final List<Row<I>> longPrefixRows
-		= new ArrayList<Row<I>>();
+		= new ArrayList<>();
 	
 	private final List<Row<I>> allRows
-		= new ArrayList<Row<I>>();
+		= new ArrayList<>();
 	
 	private final List<List<D>> allRowContents
-		= new ArrayList<List<D>>();
+		= new ArrayList<>();
 	
 	private final List<Row<I>> canonicalRows
-		= new ArrayList<Row<I>>();
+		= new ArrayList<>();
 	
 	
 //	private final TObjectIntMap<List<D>> rowContentIds
@@ -110,12 +112,12 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 		= new HashMap<>();  // TODO: replace with primitive specialization
 	
 	private final Map<Word<I>,Row<I>> rowMap
-		= new HashMap<Word<I>,Row<I>>();
+		= new HashMap<>();
 	
 	private int numRows = 0;
 	
 	private final List<Word<I>> suffixes
-		= new ArrayList<Word<I>>();
+		= new ArrayList<>();
 	
 	private final Set<Word<I>> suffixSet
 		= new HashSet<>();
@@ -127,9 +129,9 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 	 * @param alphabet the learning alphabet.
 	 */
 	public ObservationTable(Alphabet<I> alphabet) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 	}
-	
+
 	/**
 	 * Initializes an observation table using a specified set of suffixes.
 	 * 
@@ -159,7 +161,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 		
 		int numPrefixes = alphabet.size() * initialShortPrefixes.size() + 1;
 		
-		List<DefaultQuery<I,D>> queries = new ArrayList<DefaultQuery<I,D>>(numPrefixes * numSuffixes);
+		List<DefaultQuery<I,D>> queries = new ArrayList<>(numPrefixes * numSuffixes);
 		
 		// PASS 1: Add short prefix rows
 		for(Word<I> sp : initialShortPrefixes) {
@@ -198,7 +200,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 		
 		int distinctSpRows = numDistinctRows();
 		
-		List<List<Row<I>>> unclosed = new ArrayList<List<Row<I>>>();
+		List<List<Row<I>>> unclosed = new ArrayList<>();
 		
 		for(Row<I> spRow : shortPrefixRows) {
 			for(int i = 0; i < alphabet.size(); i++) {
@@ -209,7 +211,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 				List<D> rowContents = new ArrayList<>(numSuffixes);
 				fetchResults(queryIt, rowContents, numSuffixes);
 				if(processContents(succRow, rowContents, false)) {
-					unclosed.add(new ArrayList<Row<I>>());
+					unclosed.add(new ArrayList<>());
 				}
 				
 				int id = succRow.getRowContentId();
@@ -260,7 +262,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 		int numSpRows = shortPrefixRows.size();
 		int rowCount = numSpRows + longPrefixRows.size();
 		
-		List<DefaultQuery<I,D>> queries = new ArrayList<DefaultQuery<I,D>>(rowCount * numNewSuffixes);
+		List<DefaultQuery<I,D>> queries = new ArrayList<>(rowCount * numNewSuffixes);
 		
 		for(Row<I> row : shortPrefixRows)
 			buildQueries(queries, row.getPrefix(), newSuffixList);
@@ -280,14 +282,14 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 				rowContentIds.put(rowContents, row.getRowContentId());
 			}
 			else {
-				List<D> newContents = new ArrayList<D>(oldSuffixCount + numNewSuffixes);
+				List<D> newContents = new ArrayList<>(oldSuffixCount + numNewSuffixes);
 				newContents.addAll(rowContents.subList(0, oldSuffixCount));
 				fetchResults(queryIt, newContents, numNewSuffixes);
 				processContents(row, newContents, true);
 			}
 		}
 		
-		List<List<Row<I>>> unclosed = new ArrayList<List<Row<I>>>();
+		List<List<Row<I>>> unclosed = new ArrayList<>();
 		numSpRows = numDistinctRows();
 		
 		for(Row<I> row : longPrefixRows) {
@@ -298,11 +300,11 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 				rowContentIds.put(rowContents, row.getRowContentId());
 			}
 			else {
-				List<D> newContents = new ArrayList<D>(oldSuffixCount + numNewSuffixes);
+				List<D> newContents = new ArrayList<>(oldSuffixCount + numNewSuffixes);
 				newContents.addAll(rowContents.subList(0, oldSuffixCount));
 				fetchResults(queryIt, newContents, numNewSuffixes);
 				if(processContents(row, newContents, false))
-					unclosed.add(new ArrayList<Row<I>>());
+					unclosed.add(new ArrayList<>());
 				
 				int id = row.getRowContentId();
 				if(id >= numSpRows)
@@ -329,8 +331,8 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 	 * @return a list of equivalence classes of unclosed rows
 	 */
 	public List<List<Row<I>>> toShortPrefixes(List<Row<I>> lpRows, MembershipOracle<I,D> oracle) {
-		List<Row<I>> freshSpRows = new ArrayList<Row<I>>();
-		List<Row<I>> freshLpRows = new ArrayList<Row<I>>();
+		List<Row<I>> freshSpRows = new ArrayList<>();
+		List<Row<I>> freshLpRows = new ArrayList<>();
 		
 		for(Row<I> row : lpRows) {
 			if(row.isShortPrefix()) {
@@ -361,7 +363,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 		int numSuffixes = suffixes.size();
 		
 		int numFreshRows = freshSpRows.size() + freshLpRows.size();
-		List<DefaultQuery<I,D>> queries = new ArrayList<DefaultQuery<I,D>>(numFreshRows * numSuffixes);
+		List<DefaultQuery<I,D>> queries = new ArrayList<>(numFreshRows * numSuffixes);
 		buildRowQueries(queries, freshSpRows, suffixes);
 		buildRowQueries(queries, freshLpRows, suffixes);
 		
@@ -369,19 +371,19 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 		Iterator<DefaultQuery<I,D>> queryIt = queries.iterator();
 		
 		for(Row<I> row : freshSpRows) {
-			List<D> contents = new ArrayList<D>(numSuffixes);
+			List<D> contents = new ArrayList<>(numSuffixes);
 			fetchResults(queryIt, contents, numSuffixes);
 			processContents(row, contents, true);
 		}
 		
 		int numSpRows = numDistinctRows();
-		List<List<Row<I>>> unclosed = new ArrayList<List<Row<I>>>();
+		List<List<Row<I>>> unclosed = new ArrayList<>();
 		
 		for(Row<I> row : freshLpRows) {
-			List<D> contents = new ArrayList<D>(numSuffixes);
+			List<D> contents = new ArrayList<>(numSuffixes);
 			fetchResults(queryIt, contents, numSuffixes);
 			if(processContents(row, contents, false))
-				unclosed.add(new ArrayList<Row<I>>());
+				unclosed.add(new ArrayList<>());
 			
 			int id = row.getRowContentId();
 			if(id >= numSpRows)
@@ -396,7 +398,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 	}
 	
 	public List<List<Row<I>>> addShortPrefixes(List<? extends Word<I>> shortPrefixes, MembershipOracle<I,D> oracle) {	
-		List<Row<I>> toSpRows = new ArrayList<Row<I>>();
+		List<Row<I>> toSpRows = new ArrayList<>();
 		
 		for(Word<I> sp : shortPrefixes) {
 			Row<I> row = rowMap.get(sp);
@@ -430,7 +432,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 				int spSuccContent = spRow.getSuccessor(i).getRowContentId();
 				int canSuccContent = canRow.getSuccessor(i).getRowContentId();
 				if(spSuccContent != canSuccContent)
-					return new Inconsistency<I,D>(canRow, spRow, i);
+					return new Inconsistency<>(canRow, spRow, i);
 			}
 		}
 		
@@ -463,7 +465,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 	}
 	
 	protected Row<I> createLpRow(Word<I> prefix) {
-		Row<I> newRow = new Row<I>(prefix, numRows++);
+		Row<I> newRow = new Row<>(prefix, numRows++);
 		allRows.add(newRow);
 		rowMap.put(prefix, newRow);
 		int idx = longPrefixRows.size();
@@ -473,7 +475,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 	}
 	
 	protected Row<I> createSpRow(Word<I> prefix) {
-		Row<I> newRow = new Row<I>(prefix, numRows++, alphabet.size());
+		Row<I> newRow = new Row<>(prefix, numRows++, alphabet.size());
 		allRows.add(newRow);
 		rowMap.put(prefix, newRow);
 		shortPrefixRows.add(newRow);
@@ -553,7 +555,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 	protected static <I,D>
 	void buildQueries(List<DefaultQuery<I,D>> queryList, Word<I> prefix, List<? extends Word<I>> suffixes) {
 		for(Word<I> suffix : suffixes)
-			queryList.add(new DefaultQuery<I,D>(prefix, suffix));
+			queryList.add(new DefaultQuery<>(prefix, suffix));
 	}
 	
 	/**
@@ -627,7 +629,53 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 		int contentId = row.getRowContentId();
 		return (canonicalRows.get(contentId) == row);
 	}
-	
+
+	public List<List<Row<I>>> addAlphabetSymbol(I symbol, final MembershipOracle<I, D> oracle) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return Collections.emptyList();
+		}
+
+		this.alphabet.addSymbol(symbol);
+		final int newAlphabetSize = this.alphabet.size();
+		final int newSymbolIdx = this.alphabet.getSymbolIndex(symbol);
+
+		final List<Row<I>> shortPrefixes = getShortPrefixRows();
+		final List<Row<I>> newLongPrefixes = new ArrayList<>(shortPrefixes.size());
+
+		for (Row<I> prefix : shortPrefixes) {
+			prefix.ensureInputCapacity(newAlphabetSize);
+
+			final Word<I> newLongPrefix = prefix.getPrefix().append(symbol);
+			final Row<I> longPrefixRow = createLpRow(newLongPrefix);
+
+			newLongPrefixes.add(longPrefixRow);
+			prefix.setSuccessor(newSymbolIdx, longPrefixRow);
+		}
+
+		final int numLongPrefixes = newLongPrefixes.size();
+		final int numSuffixes = this.numSuffixes();
+		final List<DefaultQuery<I,D>> queries = new ArrayList<>(numLongPrefixes * numSuffixes);
+
+		buildRowQueries(queries, newLongPrefixes, suffixes);
+		oracle.processQueries(queries);
+
+		final Iterator<DefaultQuery<I, D>> queryIterator = queries.iterator();
+		final List<List<Row<I>>> result = new ArrayList<>(numLongPrefixes);
+
+		for(Row<I> row : newLongPrefixes) {
+			final List<D> contents = new ArrayList<>(numSuffixes);
+
+			fetchResults(queryIterator, contents, numSuffixes);
+
+			if (processContents(row, contents, false)) {
+				result.add(Collections.singletonList(row));
+			}
+		}
+
+		return result;
+	}
+
 	private class StandardRowWrapper extends AbstractRow<I, D> {
 		private final Row<I> internalRow;
 		
@@ -656,12 +704,7 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 	}
 	
 	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, D> asStandardTable() {
-		final Function<Row<I>,StandardRowWrapper> wrapRow = new Function<Row<I>,StandardRowWrapper>() {
-			@Override
-			public StandardRowWrapper apply(Row<I> internalRow) {
-				return wrapRow(internalRow);
-			}
-		};
+		final Function<Row<I>,StandardRowWrapper> wrapRow = this::wrapRow;
 		
 		return new de.learnlib.algorithms.features.observationtable.ObservationTable<I, D>() {
 			@Override
@@ -704,5 +747,9 @@ public final class ObservationTable<I,D> implements AccessSequenceTransformer<I>
 			
 			
 		};
+	}
+
+	public void setAlphabet(final Alphabet<I> alphabet) {
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 	}
 }

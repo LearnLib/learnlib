@@ -74,7 +74,7 @@ public class ExampleGrid extends DefaultMealyLearningExample<Character,Integer> 
     }
     
     public static CompactMealy<Character, Integer> constructMachine(int xsize, int ysize) {
-    	return constructMachine(new CompactMealy<Character,Integer>(createInputAlphabet()), xsize, ysize);
+    	return constructMachine(new CompactMealy<>(createInputAlphabet()), xsize, ysize);
     }
     
     public static ExampleGrid createExample(int xsize, int ysize) {

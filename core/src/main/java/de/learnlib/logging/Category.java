@@ -17,7 +17,7 @@
 package de.learnlib.logging;
 
 /**
- * Categories for filter.
+ * Categories for markers.
  * 
  * @author falkhowar
  */
@@ -32,4 +32,10 @@ public enum Category {
     MODEL,          // inferred hypothesis
     CONFIG,         // learning setup
     EVENT;          // splitting of a table cell or similar
+
+    private final static String LEARNLIB_PREFIX = "LEARNLIB";
+
+    public String toMarkerLabel() {
+        return LEARNLIB_PREFIX + '_' + name();
+    }
 }

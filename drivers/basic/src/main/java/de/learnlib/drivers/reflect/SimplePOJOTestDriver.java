@@ -55,7 +55,7 @@ public final class SimplePOJOTestDriver extends
     }
     
     public AbstractMethodInput addInput(String name, Method m, Object ... params) {
-        AbstractMethodInput i = new AbstractMethodInput(name, m, new HashMap<String, Integer>(), params);
+        AbstractMethodInput i = new AbstractMethodInput(name, m, new HashMap<>(), params);
         inputs.add(i);
         return i;
     }

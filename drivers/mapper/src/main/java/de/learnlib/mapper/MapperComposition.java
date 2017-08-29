@@ -15,10 +15,10 @@
  */
 package de.learnlib.mapper;
 
-import com.google.common.base.Optional;
-
 import de.learnlib.api.SULException;
 import de.learnlib.mapper.api.Mapper;
+
+import java.util.Optional;
 
 final class MapperComposition<AI, AO, ACI, CAO, CI, CO> implements Mapper<AI,AO,CI,CO> {
 	

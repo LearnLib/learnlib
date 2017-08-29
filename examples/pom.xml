@@ -90,5 +90,11 @@ limitations under the License.
 			<groupId>de.learnlib</groupId>
 			<artifactId>learnlib-discrimination-tree</artifactId>
 		</dependency>
+
+		<!-- SLF4J implementation -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
 	</dependencies>
 </project>

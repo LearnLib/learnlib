@@ -132,7 +132,7 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I,O> {
 	 */
 	@Deprecated
 	public MealyCacheOracle(Alphabet<I> alphabet, Mapping<? super O, ? extends O> errorSyms, MembershipOracle<I,Word<O>> delegate) {
-		this(new IncrementalMealyDAGBuilder<I,O>(alphabet), errorSyms, delegate);
+		this(new IncrementalMealyDAGBuilder<>(alphabet), errorSyms, delegate);
 	}
 	
 	public int getCacheSize() {

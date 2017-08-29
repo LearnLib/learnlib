@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,12 +24,14 @@ import java.util.Map;
 
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.automata.FiniteAlphabetAutomaton;
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
-
+import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 /**
  * Hypothesis DFA for the {@link BaseTTTLearner TTT algorithm}.
@@ -38,11 +41,15 @@ import net.automatalib.words.Alphabet;
  * @param <I> input symbol type
  */
 public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTTState<I,D>,I,T>,
-		FiniteAlphabetAutomaton<TTTState<I,D>, I, T> {
+		FiniteAlphabetAutomaton<TTTState<I,D>, I, T>,
+		DeterministicAutomaton.FullIntAbstraction<T>,
+		GrowableAlphabetAutomaton<I>,
+		Serializable {
 
-	private final List<TTTState<I,D>> states = new ArrayList<>();
+	protected final List<TTTState<I,D>> states = new ArrayList<>();
 	
-	protected final Alphabet<I> alphabet;
+	protected transient GrowingAlphabet<I> alphabet;
+
 	private TTTState<I,D> initialState;
 
 	/**
@@ -51,7 +58,12 @@ public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTT
 	 * @param alphabet the input alphabet
 	 */
 	public TTTHypothesis(Alphabet<I> alphabet) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
+	}
+	
+	@Override
+	public int size() {
+		return states.size();
 	}
 
 	/*
@@ -116,7 +128,11 @@ public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTT
 	 */
 	public TTTTransition<I,D> getInternalTransition(TTTState<I,D> state, I input) {
 		int inputIdx = alphabet.getSymbolIndex(input);
-		TTTTransition<I,D> trans = state.transitions[inputIdx];
+		return getInternalTransition(state, inputIdx);
+	}
+	
+	public TTTTransition<I,D> getInternalTransition(TTTState<I,D> state, int input) {
+		TTTTransition<I,D> trans = state.getTransition(input);
 		return trans;
 	}
 	
@@ -159,7 +175,7 @@ public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTT
 		public Collection<? extends TTTEdge<I,D>> getOutgoingEdges(
 				TTTState<I,D> node) {
 			List<TTTEdge<I,D>> result = new ArrayList<>();
-			for (TTTTransition<I, D> trans : node.transitions) {
+			for (TTTTransition<I, D> trans : node.getTransitions()) {
 				for (TTTState<I, D> target : trans.getDTTarget().subtreeStates()) {
 					result.add(new TTTEdge<>(trans, target));
 				}
@@ -196,8 +212,53 @@ public abstract class TTTHypothesis<I,D,T> implements DeterministicAutomaton<TTT
 		
 	}
 	
+	@Override
 	public GraphView graphView() {
 		return new GraphView();
 	}
 	
+	@Override
+	public T getTransition(int stateId, int symIdx) {
+		TTTState<I,D> state = states.get(stateId);
+		TTTTransition<I,D> trans = getInternalTransition(state, symIdx);
+		return mapTransition(trans);
+	}
+	
+	@Override
+	public int getIntInitialState() {
+		return 0;
+	}
+	
+	@Override
+	public int numInputs() {
+		return alphabet.size();
+	}
+	
+	@Override
+	public int getIntSuccessor(T trans) {
+		return getSuccessor(trans).id;
+	}
+	
+	
+	@Override
+	public DeterministicAutomaton.FullIntAbstraction<T> fullIntAbstraction(Alphabet<I> alphabet) {
+		if (alphabet == this.alphabet) {
+			return this;
+		}
+		return DeterministicAutomaton.super.fullIntAbstraction(alphabet);
+	}
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+		this.alphabet.addSymbol(symbol);
+		final int alphabetSize = this.alphabet.size();
+
+		for (final TTTState<I, D> s : this.getStates()) {
+			s.ensureInputCapacity(alphabetSize);
+		}
+	}
+
+	void setAlphabet(Alphabet<I> alphabet) {
+		this.alphabet = new SimpleAlphabet<>(alphabet);
+	}
 }

@@ -18,6 +18,7 @@ package de.learnlib.algorithms.discriminationtree.dfa;
 
 import java.util.Map;
 
+import de.learnlib.algorithms.discriminationtree.DTLearnerState;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
@@ -34,7 +35,7 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.counterexamples.LocalSuffixFinders;
-import de.learnlib.discriminationtree.BinaryDTree;
+import de.learnlib.datastructure.discriminationtree.BinaryDTree;
 import de.learnlib.oracles.AbstractQuery;
 
 /**
@@ -56,7 +57,7 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?,I>, I, Boolean, Boo
 		}
 	}
 	
-	private final HypothesisWrapperDFA<I> hypWrapper;
+	private HypothesisWrapperDFA<I> hypWrapper;
 
 	/**
 	 * Constructor.
@@ -72,10 +73,10 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?,I>, I, Boolean, Boo
 			LocalSuffixFinder<? super I, ? super Boolean> suffixFinder,
 			boolean repeatedCounterexampleEvaluation,
 			boolean epsilonRoot) {
-		super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new BinaryDTree<I,HState<I,Boolean,Boolean,Void>>(oracle));
-		this.hypWrapper = new HypothesisWrapperDFA<I>(hypothesis);
+		super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new BinaryDTree<>(oracle));
+		this.hypWrapper = new HypothesisWrapperDFA<>(hypothesis);
 		if(epsilonRoot) {
-			dtree.getRoot().split(Word.<I>epsilon(), false, true, null);
+			dtree.getRoot().split(Word.<I>epsilon(), false, true);
 		}
 	}
 
@@ -128,4 +129,11 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?,I>, I, Boolean, Boo
 			HTransition<I, Boolean, Boolean, Void> transition) {
 		return null;
 	}
+
+	@Override
+	public void resume(DTLearnerState<I, Boolean, Boolean, Void> state) {
+		super.resume(state);
+		this.hypWrapper = new HypothesisWrapperDFA<>(this.hypothesis);
+	}
+
 }

@@ -59,7 +59,7 @@ public class LStarMealyTest extends LearningTest {
 					= new SimulatorEQOracle<>(mealy);
 					
 		EquivalenceOracle<? super MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output>, ExampleStack.Input, ExampleStack.Output> mealySymEqOracle
-			= new SymbolEQOracleWrapper<MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output>,ExampleStack.Input,ExampleStack.Output>(mealyEqOracle);
+			= new SymbolEQOracleWrapper<>(mealyEqOracle);
 		
 		for(ObservationTableCEXHandler<? super ExampleStack.Input,? super ExampleStack.Output> handler : LearningTest.CEX_HANDLERS) {
 			for(ClosingStrategy<? super ExampleStack.Input,? super ExampleStack.Output> strategy : LearningTest.CLOSING_STRATEGIES) {

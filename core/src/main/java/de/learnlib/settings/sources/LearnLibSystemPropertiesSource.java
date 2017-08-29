@@ -15,9 +15,9 @@
  */
 package de.learnlib.settings.sources;
 
-import net.automatalib.commons.util.settings.SystemPropertiesSource;
+import net.automatalib.commons.util.settings.AbstractSystemPropertiesSource;
 import de.learnlib.settings.LearnLibSettingsSource;
 
-public class LearnLibSystemPropertiesSource extends SystemPropertiesSource implements LearnLibSettingsSource {
+public class LearnLibSystemPropertiesSource extends AbstractSystemPropertiesSource implements LearnLibSettingsSource {
 
 }

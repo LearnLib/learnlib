@@ -46,7 +46,7 @@ final class SingleExampleAllVariantsITSubCase<I,D,
 		SingleLearnerVariantITSubCase<?, ?, ?>[] result = new SingleLearnerVariantITSubCase[variantList.size()];
 		int i = 0;
 		for(LearnerVariant<? extends A,I,D> variant : variantList) {
-			result[i++] = new SingleLearnerVariantITSubCase<I,D,A>(variant, example);
+			result[i++] = new SingleLearnerVariantITSubCase<>(variant, example);
 		}
 		return result;
 	}

@@ -17,6 +17,8 @@ package de.learnlib.algorithms.discriminationtree.mealy;
 
 import java.util.Map;
 
+import de.learnlib.algorithms.discriminationtree.DTLearnerState;
+import de.learnlib.datastructure.discriminationtree.MultiDTree;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
@@ -32,7 +34,6 @@ import de.learnlib.api.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.counterexamples.LocalSuffixFinder;
-import de.learnlib.discriminationtree.MultiDTree;
 import de.learnlib.oracles.AbstractQuery;
 
 /**
@@ -48,7 +49,7 @@ public class DTLearnerMealy<I, O>
 		implements
 		MealyLearner<I, O> {
 	
-	private final HypothesisWrapperMealy<I, O> hypWrapper;
+	private HypothesisWrapperMealy<I, O> hypWrapper;
 
 	/**
 	 * Constructor.
@@ -61,7 +62,7 @@ public class DTLearnerMealy<I, O>
 			MembershipOracle<I, Word<O>> oracle,
 			LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
 			boolean repeatedCounterexampleEvaluation) {
-		super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new MultiDTree<I,Word<O>,HState<I,Word<O>,Void,O>>(oracle));
+		super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new MultiDTree<>(oracle));
 		this.hypWrapper = new HypothesisWrapperMealy<>(hypothesis);
 	}
 
@@ -109,4 +110,11 @@ public class DTLearnerMealy<I, O>
 
 		};
 	}
+
+	@Override
+	public void resume(final DTLearnerState<I, Word<O>, Void, O> state) {
+		super.resume(state);
+		this.hypWrapper = new HypothesisWrapperMealy<>(hypothesis);
+	}
+
 }

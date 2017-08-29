@@ -49,12 +49,12 @@ public class ObjectTest {
          SimplePOJOTestDriver driver = new SimplePOJOTestDriver(c, 2);
          SULOracle<AbstractMethodInput, AbstractMethodOutput> oracle = new SULOracle<>(driver);
          
-         Method push = Stack.class.getMethod("push", new Class<?>[] {Object.class});
+         Method push = Stack.class.getMethod("push", Object.class);
          AbstractMethodInput push_1 = driver.addInput("push_1", push, 1);
          AbstractMethodInput push_2 = driver.addInput("push_2", push, 2);
          
-         Method _pop = Stack.class.getMethod("pop", new Class<?>[] {});
-         AbstractMethodInput pop = driver.addInput("pop", _pop, new Object[] {});
+         Method _pop = Stack.class.getMethod("pop");
+         AbstractMethodInput pop = driver.addInput("pop", _pop);
                   
          DefaultQuery<AbstractMethodInput, Word<AbstractMethodOutput>> query1 = new DefaultQuery<>(
                 Word.fromSymbols(push_1, push_2, pop, pop, pop, pop));

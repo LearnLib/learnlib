@@ -17,6 +17,8 @@ package de.learnlib.algorithms.ttt.mealy;
 
 import java.util.Map;
 
+import de.learnlib.algorithms.ttt.base.BaseTTTDiscriminationTree;
+import de.learnlib.algorithms.ttt.dfa.TTTDTNodeDFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
@@ -28,7 +30,7 @@ import com.github.misberner.buildergen.annotations.GenerateBuilder;
 
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithms.ttt.base.BaseTTTLearner;
-import de.learnlib.algorithms.ttt.base.DTNode;
+import de.learnlib.algorithms.ttt.base.BaseDTNode;
 import de.learnlib.algorithms.ttt.base.OutputInconsistency;
 import de.learnlib.algorithms.ttt.base.TTTHypothesis.TTTEdge;
 import de.learnlib.algorithms.ttt.base.TTTState;
@@ -37,6 +39,8 @@ import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.counterexamples.acex.MealyOutInconsPrefixTransformAcex;
 import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
+import de.learnlib.mealy.MealyUtil;
+import de.learnlib.oracles.DefaultQuery;
 
 public class TTTLearnerMealy<I, O> extends
 		BaseTTTLearner<MealyMachine<?, I, ?, O>, I, Word<O>> implements LearningAlgorithm.MealyLearner<I, O> {
@@ -45,7 +49,7 @@ public class TTTLearnerMealy<I, O> extends
 	public TTTLearnerMealy(Alphabet<I> alphabet,
 			MembershipOracle<I, Word<O>> oracle,
 			AcexAnalyzer analyzer) {
-		super(alphabet, oracle, new TTTHypothesisMealy<I,O>(alphabet), analyzer);
+		super(alphabet, oracle, new TTTHypothesisMealy<>(alphabet), new BaseTTTDiscriminationTree<>(oracle, TTTDTNodeMealy::new), analyzer);
 	}
 
 	@Override
@@ -63,7 +67,7 @@ public class TTTLearnerMealy<I, O> extends
 
 	@Override
 	protected Word<O> predictSuccOutcome(TTTTransition<I, Word<O>> trans,
-			DTNode<I, Word<O>> succSeparator) {
+			BaseDTNode<I, Word<O>> succSeparator) {
 		TTTTransitionMealy<I, O> mtrans = (TTTTransitionMealy<I, O>) trans;
 		if (succSeparator == null) {
 			return Word.fromLetter(mtrans.output);
@@ -73,10 +77,10 @@ public class TTTLearnerMealy<I, O> extends
 
 	@Override
 	protected Word<O> computeHypothesisOutput(TTTState<I, Word<O>> state,
-			Iterable<? extends I> suffix) {
+			Word<I> suffix) {
 		TTTState<I,Word<O>> curr = state;
 		
-		WordBuilder<O> wb = new WordBuilder<>();
+		WordBuilder<O> wb = new WordBuilder<>(suffix.length());
 		
 		for (I sym : suffix) {
 			TTTTransitionMealy<I, O> trans = (TTTTransitionMealy<I,O>) hypothesis.getInternalTransition(curr, sym);
@@ -115,6 +119,16 @@ public class TTTLearnerMealy<I, O> extends
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
+	public boolean refineHypothesisSingle(DefaultQuery<I,Word<O>> ceQuery) {
+		DefaultQuery<I,Word<O>> shortenedCeQuery = MealyUtil.shortenCounterExample((TTTHypothesisMealy<I, O>) hypothesis, ceQuery);
+		if (shortenedCeQuery != null) {
+			return super.refineHypothesisSingle(shortenedCeQuery);
+		}
+		return false;
+	}
+	
+	@Override
 	protected OutInconsPrefixTransformAcex<I, Word<O>> deriveAcex(OutputInconsistency<I, Word<O>> outIncons) {
 		TTTState<I, Word<O>> source = outIncons.srcState;
 		Word<I> suffix = outIncons.suffix;
@@ -126,5 +140,31 @@ public class TTTLearnerMealy<I, O> extends
 		Word<O> lastHypOut = computeHypothesisOutput(getAnySuccessor(source, suffix.prefix(-1)), suffix.suffix(1));
 		acex.setEffect(suffix.length() - 1, lastHypOut);
 		return acex;
+	}
+	
+	@Override
+	protected OutputInconsistency<I, Word<O>> findOutputInconsistency() {
+		OutputInconsistency<I, Word<O>> best = null;
+		
+		for (TTTState<I, Word<O>> state : hypothesis.getStates()) {
+			BaseDTNode<I, Word<O>> node = state.getDTLeaf();
+			while (!node.isRoot()) {
+				Word<O> expectedOut = node.getParentOutcome();
+				node = node.getParent();
+				Word<I> suffix = node.getDiscriminator();
+				Word<O> hypOut = computeHypothesisOutput(state, suffix);
+				int mismatchIdx = MealyUtil.findMismatch(expectedOut, hypOut);
+				if (mismatchIdx != MealyUtil.NO_MISMATCH
+						&& (best == null || mismatchIdx <= best.suffix.length())) {
+					best = new OutputInconsistency<>(state, suffix.prefix(mismatchIdx + 1), expectedOut.prefix(mismatchIdx + 1));
+				}
+			}
+		}
+		return best;
+	}
+
+	@Override
+	protected BaseDTNode<I, Word<O>> createNewNode(BaseDTNode<I, Word<O>> parent, Word<O> parentOutput) {
+		return new TTTDTNodeMealy<>(parent, parentOutput);
 	}
 }

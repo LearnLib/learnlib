@@ -37,7 +37,7 @@ public class TestDriver<AI, AO, CI extends ExecutableInput<CO>, CO> implements S
 	private final SUL<AI, AO> sul;
 
     public TestDriver(Mapper<AI, AO, CI, CO> mapper) {
-    	this(Mappers.apply(mapper, new ExecutableInputSUL<CI,CO>()));
+    	this(Mappers.apply(mapper, new ExecutableInputSUL<>()));
     }   
     
     private TestDriver(SUL<AI,AO> sul) {

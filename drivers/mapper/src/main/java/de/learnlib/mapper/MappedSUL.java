@@ -15,12 +15,12 @@
  */
 package de.learnlib.mapper;
 
-import com.google.common.base.Optional;
-
 import de.learnlib.api.SUL;
 import de.learnlib.api.SULException;
 import de.learnlib.mapper.api.Mapper;
 import de.learnlib.mapper.api.Mapper.MappedException;
+
+import java.util.Optional;
 
 public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
 	

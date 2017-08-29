@@ -54,6 +54,12 @@ limitations under the License.
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
 		</dependency>
+
+		<!-- SLF4J -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
 		
 		<!--
 		Test dependencies
@@ -63,6 +69,16 @@ limitations under the License.
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
+		</dependency>
+
+		<!-- TODO
+		 Here we actually want a valid slf4j implementation to check the output. This conflicts with the nop
+		implementation defined in the parent, so slf4j will show a warning. However the tests will still pass
+		-->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

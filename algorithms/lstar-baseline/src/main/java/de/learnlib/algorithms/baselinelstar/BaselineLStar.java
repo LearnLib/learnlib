@@ -31,13 +31,17 @@ import com.google.common.collect.Maps;
 import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner.GlobalSuffixLearnerDFA;
 import de.learnlib.algorithms.features.observationtable.OTLearner;
 import de.learnlib.api.MembershipOracle;
+import de.learnlib.api.ResumableLearner;
+import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.oracles.DefaultQuery;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.automata.fsa.impl.FastDFAState;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 /**
  * Implementation of the L* algorithm by Dana Angluin
@@ -45,16 +49,17 @@ import net.automatalib.words.Word;
  * @param <I>
  * 		input symbol class.
  */
-public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, GlobalSuffixLearnerDFA<I> {
+public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, GlobalSuffixLearnerDFA<I>,
+		SupportsGrowingAlphabet<I>, ResumableLearner<BaselineLStarState<I>> {
 
 	@Nonnull
-	private final Alphabet<I> alphabet;
+	private GrowingAlphabet<I> alphabet;
+
+	@Nonnull
+	private ObservationTable<I> observationTable;
 
 	@Nonnull
 	private final MembershipOracle<I, Boolean> oracle;
-
-	@Nonnull
-	private final ObservationTable<I> observationTable;
 
 	private boolean startLearningAlreadyCalled;
 
@@ -69,13 +74,24 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	 */
 	@GenerateBuilder
 	public BaselineLStar(@Nonnull Alphabet<I> alphabet, @Nonnull MembershipOracle<I, Boolean> oracle) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.oracle = oracle;
 		this.observationTable = new ObservationTable<>();
 
 		for (I alphabetSymbol : alphabet) {
 			observationTable.addLongPrefix(Word.fromLetter(alphabetSymbol));
 		}
+	}
+
+	@Override
+	public BaselineLStarState<I> suspend() {
+		return new BaselineLStarState<>(observationTable);
+	}
+
+	@Override
+	public void resume(BaselineLStarState<I> state) {
+		this.observationTable = state.getObservationTable();
+		this.startLearningAlreadyCalled = true;
 	}
 
 	@Override
@@ -98,6 +114,15 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	public boolean refineHypothesis(@Nonnull DefaultQuery<I, Boolean> ceQuery) {
 		if (!startLearningAlreadyCalled) {
 			throw new IllegalStateException("Unable to refine hypothesis before first learn iteration!");
+		}
+
+		final DFA<?, I> currentHypothesis = getHypothesisModel();
+		final Word<I> ceInput = ceQuery.getInput();
+		final Boolean ceOutput = ceQuery.getOutput();
+
+		// no counterexample
+		if (currentHypothesis.computeOutput(ceInput).equals(ceOutput)) {
+			return false;
 		}
 
 		LinkedHashSet<Word<I>> prefixes = prefixesOfWordNotInStates(ceQuery.getInput());
@@ -292,7 +317,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 		List<DefaultQuery<I, Boolean>> queries = new ArrayList<>(states.size());
 		for (Word<I> label : states) {
 			for (Word<I> suffix : suffixes) {
-				queries.add(new DefaultQuery<I, Boolean>(label, suffix));
+				queries.add(new DefaultQuery<>(label, suffix));
 			}
 		}
 
@@ -335,5 +360,29 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>, Globa
 	@Nonnull
 	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, Boolean> getObservationTable() {
 		return observationTable;
+	}
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		this.alphabet.addSymbol(symbol);
+
+		final List<Word<I>> shortPrefixes = observationTable.getShortPrefixLabels();
+		final List<Word<I>> newLongPrefixes = new ArrayList<>(shortPrefixes.size());
+
+		for (Word<I> prefix : shortPrefixes) {
+			final Word<I> newLongPrefix = prefix.append(symbol);
+
+			observationTable.addLongPrefix(newLongPrefix);
+			newLongPrefixes.add(newLongPrefix);
+		}
+
+		processMembershipQueriesForStates(newLongPrefixes, observationTable.getSuffixes());
+
+		makeTableClosedAndConsistent();
 	}
 }

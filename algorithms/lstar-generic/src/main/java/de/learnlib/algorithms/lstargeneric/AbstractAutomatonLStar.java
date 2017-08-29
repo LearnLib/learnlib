@@ -15,8 +15,11 @@
  */
 package de.learnlib.algorithms.lstargeneric;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
+import de.learnlib.api.ResumableLearner;
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
@@ -40,10 +43,10 @@ import de.learnlib.oracles.DefaultQuery;
  * @param <SP> state property type
  * @param <TP> transition property type
  */
-public abstract class AbstractAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableDeterministic<S,I,T,SP,TP>> extends
-		AbstractLStar<A, I, D> {
+public abstract class AbstractAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableDeterministic<S,I,T,SP,TP> & GrowableAlphabetAutomaton<I>>
+		extends AbstractLStar<A,I,D> implements ResumableLearner<AutomatonLStarState<I,D,AI,S>> {
 	
-	private static final class StateInfo<S,I> {
+	static final class StateInfo<S,I> implements Serializable {
 		private final Row<I> row;
 		private final S state;
 		
@@ -63,9 +66,8 @@ public abstract class AbstractAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableD
 		// IDENTITY SEMANTICS!
 	}
 
-	protected final AI internalHyp;
-	protected final ArrayList<StateInfo<S,I>> stateInfos
-		= new ArrayList<>();
+	protected AI internalHyp;
+	protected ArrayList<StateInfo<S,I>> stateInfos = new ArrayList<>();
 	
 	/**
 	 * Constructor.
@@ -118,9 +120,6 @@ public abstract class AbstractAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableD
 
 		int newStates = numDistinct - oldStates;
 		
-		if(newStates <= 0)
-			return;
-		
 		stateInfos.addAll(CollectionsUtil.<StateInfo<S,I>>nullList(newStates));
 		
 		
@@ -152,9 +151,6 @@ public abstract class AbstractAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableD
 				
 				Row<I> succ = sp.getSuccessor(i);
 				int succId = succ.getRowContentId();
-				
-				if(rowId < oldStates && succId < oldStates)
-					continue;
 				
 				S succState = stateInfos.get(succId).getState();
 				
@@ -195,5 +191,29 @@ public abstract class AbstractAutomatonLStar<A,I,D,S,T,SP,TP,AI extends MutableD
 	protected void refineHypothesisInternal(DefaultQuery<I,D> ceQuery) {
 		super.doRefineHypothesis(ceQuery);
 	}
-	
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		super.addAlphabetSymbol(symbol);
+		this.internalHyp.addAlphabetSymbol(symbol);
+		this.updateInternalHypothesis();
+	}
+
+	@Override
+	public AutomatonLStarState<I, D, AI, S> suspend() {
+		return new AutomatonLStarState<>(table, internalHyp, stateInfos);
+	}
+
+	@Override
+	public void resume(final AutomatonLStarState<I, D, AI, S> state) {
+		this.table = state.getObservationTable();
+		this.table.setAlphabet(alphabet);
+		this.internalHyp = state.getHypothesis();
+		this.stateInfos = state.getStateInfos();
+	}
 }

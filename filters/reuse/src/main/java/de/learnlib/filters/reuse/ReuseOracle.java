@@ -18,13 +18,12 @@ package de.learnlib.filters.reuse;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-
-import com.google.common.base.Function;
-import com.google.common.base.Supplier;
 
 import de.learnlib.api.SingleQueryOracle.SingleQueryOracleMealy;
 import de.learnlib.filters.reuse.ReuseCapableOracle.QueryResult;
@@ -71,12 +70,7 @@ public class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> {
 	private final Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier;
 
 	private final ThreadLocal<ReuseCapableOracle<S, I, O>> executableOracles =
-			new ThreadLocal<ReuseCapableOracle<S, I, O>>() {
-				@Override
-				protected ReuseCapableOracle<S, I, O> initialValue() {
-					return ReuseOracle.this.oracleSupplier.get();
-				}
-			};
+			ThreadLocal.withInitial(() -> ReuseOracle.this.oracleSupplier.get());
 
 	private final ReuseTree<S, I, O> tree;
 
@@ -195,12 +189,7 @@ public class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> {
         // No system state available
 		if (nodeResult == null) {
             final QueryResult<S, O> newResult = filterAndProcessQuery(query, tree.getPartialOutput(query),
-                    new Function<Word<I>, QueryResult<S,O>>() {
-                        @Override
-                        public QueryResult<S, O> apply(Word<I> filteredInput) {
-                            return oracle.processQuery(filteredInput);
-                        }
-                    });
+																	  oracle::processQuery);
 
 			tree.insert(query, newResult);
 
@@ -218,13 +207,7 @@ public class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> {
             final S systemState = nodeResult.systemState;
 
             final QueryResult<S, O> suffixQueryResult = filterAndProcessQuery(suffix, partialSuffixOutput,
-                    new Function<Word<I>, QueryResult<S, O>>() {
-                        @Override
-                        public QueryResult<S, O> apply(Word<I> filteredInput) {
-                            return oracle.continueQuery(filteredInput, systemState);
-                        }
-                    }
-            );
+																			  filteredInput -> oracle.continueQuery(filteredInput, systemState));
 
             this.tree.insert(suffix, reuseNode, suffixQueryResult);
 

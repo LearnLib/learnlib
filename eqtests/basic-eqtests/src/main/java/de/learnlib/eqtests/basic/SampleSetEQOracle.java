@@ -135,7 +135,7 @@ public class SampleSetEQOracle<I, D> implements EquivalenceOracle<SuffixOutput<I
 		}
 		List<DefaultQuery<I,D>> newQueries = new ArrayList<>(words.size());
 		for(Word<I> w : words) {
-			newQueries.add(new DefaultQuery<I,D>(w));
+			newQueries.add(new DefaultQuery<>(w));
 		}
 		oracle.processQueries(newQueries);
 		

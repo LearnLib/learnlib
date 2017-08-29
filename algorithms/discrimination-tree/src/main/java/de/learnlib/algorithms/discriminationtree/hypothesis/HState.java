@@ -15,18 +15,20 @@
  */
 package de.learnlib.algorithms.discriminationtree.hypothesis;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import de.learnlib.datastructure.discriminationtree.model.DTNode;
+import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-import de.learnlib.discriminationtree.DTNode;
 
-public class HState<I,O,SP,TP> {
+public class HState<I,O,SP,TP> implements Serializable {
 
 	private final HTransition<I,O,SP,TP> treeIncoming;
 	private final int id;
@@ -36,7 +38,7 @@ public class HState<I,O,SP,TP> {
 	
 	private SP property;
 	
-	private final HTransition<I,O,SP,TP>[] transitions;
+	private final ResizingObjectArray transitions;
 	
 	private final List<HTransition<I,O,SP,TP>> nonTreeIncoming = new ArrayList<>();
 	
@@ -45,11 +47,11 @@ public class HState<I,O,SP,TP> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public HState(int alphabetSize, int id, HTransition<I,O,SP,TP> treeIncoming) {
+	public HState(int initialAlphabetSize, int id, HTransition<I,O,SP,TP> treeIncoming) {
 		this.id = id;
 		this.treeIncoming = treeIncoming;
 		this.depth = (treeIncoming == null) ? 0 : treeIncoming.getSource().depth + 1;
-		this.transitions = new HTransition[alphabetSize];
+		this.transitions = new ResizingObjectArray(initialAlphabetSize);
 	}
 	
 	
@@ -92,17 +94,19 @@ public class HState<I,O,SP,TP> {
 	public int getId() {
 		return id;
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	public HTransition<I,O,SP,TP> getTransition(int transIdx) {
-		return transitions[transIdx];
+		return (HTransition<I,O,SP,TP>)transitions.array[transIdx];
 	}
 	
 	public void setTransition(int transIdx, HTransition<I,O,SP,TP> transition) {
-		transitions[transIdx] = transition;
+		transitions.array[transIdx] = transition;
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	public Collection<HTransition<I,O,SP,TP>> getOutgoingTransitions() {
-		return Collections.unmodifiableList(Arrays.asList(transitions));
+		return Collections.unmodifiableList(Arrays.asList((HTransition<I,O,SP,TP>[])transitions.array));
 	}
 
 	public int getDepth() {
@@ -116,6 +120,13 @@ public class HState<I,O,SP,TP> {
 	public void fetchNonTreeIncoming(Collection<? super HTransition<I,O,SP,TP>> target) {
 		target.addAll(nonTreeIncoming);
 		nonTreeIncoming.clear();
+	}
+
+	/**
+	 * See {@link ResizingObjectArray#ensureCapacity(int)}
+	 */
+	public boolean ensureInputCapacity(int capacity) {
+		return this.transitions.ensureCapacity(capacity);
 	}
 	
 	@Override

@@ -68,7 +68,7 @@ public abstract class MQUtil {
 	
 	@Nonnull
 	public static <I,D> DefaultQuery<I,D> query(MembershipOracle<I,D> oracle, Word<I> queryWord) {
-		return query(oracle, Word.<I>epsilon(), queryWord);
+		return query(oracle, Word.epsilon(), queryWord);
 	}
 	
 	public static <I,D> void answerQueries(QueryAnswerer<I,D> answerer, Collection<? extends Query<I,D>> queries) {

@@ -77,7 +77,7 @@ public class DFACacheOracleTest {
 
 	@Test(dependsOnMethods = { "testNoQueriesReceived" })
 	public void testFirstQuery() {
-		queries.add(new DefaultQuery<Integer, Boolean>(Word.fromLetter(0)));
+		queries.add(new DefaultQuery<>(Word.fromLetter(0)));
 
 		Assert.assertTrue(queries.size() == 1);
 		oracle.processQueries(queries);
@@ -93,8 +93,7 @@ public class DFACacheOracleTest {
 
 	@Test(dependsOnMethods = { "testFirstDuplicate" })
 	public void testTwoQueriesOneDuplicate() {
-		queries.add(new DefaultQuery<Integer, Boolean>(Word.fromSymbols(0,
-				0)));
+		queries.add(new DefaultQuery<>(Word.fromSymbols(0, 0)));
 		Assert.assertTrue(queries.size() == 2);
 		oracle.processQueries(queries);
 		Assert.assertTrue(counterOracle.getCount() == 2);
@@ -105,7 +104,7 @@ public class DFACacheOracleTest {
 		queries.clear();
 
 		Assert.assertTrue(queries.size() == 0);
-		queries.add(new DefaultQuery<Integer, Boolean>(Word.fromLetter(1)));
+		queries.add(new DefaultQuery<>(Word.fromLetter(1)));
 		Assert.assertTrue(queries.size() == 1);
 		oracle.processQueries(queries);
 		count = counterOracle.getCount();

@@ -15,12 +15,13 @@
  */
 package de.learnlib.algorithms.discriminationtree.hypothesis;
 
+import de.learnlib.datastructure.discriminationtree.model.DTNode;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-import de.learnlib.discriminationtree.DTNode;
+import java.io.Serializable;
 
-public class HTransition<I, O, SP, TP> {
+public class HTransition<I, O, SP, TP> implements Serializable {
 	
 	// GENERAL PURPOSE FIELDS
 	private final HState<I,O,SP,TP> source;
@@ -85,7 +86,7 @@ public class HTransition<I, O, SP, TP> {
 	}
 
 	public Word<I> getAccessSequence() {
-		WordBuilder<I> wb = new WordBuilder<I>(source.getDepth() + 1);
+		WordBuilder<I> wb = new WordBuilder<>(source.getDepth() + 1);
 		source.appendAccessSequence(wb);
 		wb.append(symbol);
 		return wb.toWord();

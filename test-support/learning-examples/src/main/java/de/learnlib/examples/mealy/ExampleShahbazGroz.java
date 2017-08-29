@@ -84,7 +84,7 @@ public class ExampleShahbazGroz extends DefaultMealyLearningExample<Character,St
     }
     
     public static CompactMealy<Character, String> constructMachine() {
-    	return constructMachine(new CompactMealy<Character,String>(createInputAlphabet()));
+    	return constructMachine(new CompactMealy<>(createInputAlphabet()));
     }
     
     public static ExampleShahbazGroz createExample() {

@@ -96,7 +96,7 @@ public class StaticParallelOracleTest {
 	
 	@BeforeClass
 	public void setUp() {
-		List<TestMembershipOracle> oracles = new ArrayList<TestMembershipOracle>(NUM_ORACLES);
+		List<TestMembershipOracle> oracles = new ArrayList<>(NUM_ORACLES);
 		for(int i = 0; i < NUM_ORACLES; i++) {
 			oracles.add(new TestMembershipOracle(i));
 		}

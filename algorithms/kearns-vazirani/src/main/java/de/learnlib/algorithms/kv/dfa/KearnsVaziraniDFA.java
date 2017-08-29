@@ -15,15 +15,18 @@
  */
 package de.learnlib.algorithms.kv.dfa;
 
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
+import de.learnlib.api.ResumableLearner;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
@@ -33,12 +36,12 @@ import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.acex.impl.BaseAbstractCounterexample;
 import de.learnlib.api.LearningAlgorithm.DFALearner;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.discriminationtree.BinaryDTree;
-import de.learnlib.discriminationtree.DTNode;
-import de.learnlib.discriminationtree.DTNode.SplitResult;
-import de.learnlib.discriminationtree.DiscriminationTree.LCAInfo;
+import de.learnlib.api.SupportsGrowingAlphabet;
+import de.learnlib.datastructure.discriminationtree.BinaryDTree;
+import de.learnlib.datastructure.discriminationtree.model.DTNode;
+import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
 import de.learnlib.oracles.DefaultQuery;
-
+import net.automatalib.words.impl.SimpleAlphabet;
 
 /**
  * The Kearns/Vazirani algorithm for learning DFA, as described in the book
@@ -49,8 +52,11 @@ import de.learnlib.oracles.DefaultQuery;
  *
  * @param <I> input symbol type
  */
-public class KearnsVaziraniDFA<I> implements DFALearner<I> {
-	
+public class KearnsVaziraniDFA<I> implements
+		DFALearner<I>,
+		SupportsGrowingAlphabet<I>,
+		ResumableLearner<KearnsVaziraniDFAState<I>> {
+
 	static final class BuilderDefaults {
 		public static boolean repeatedCounterexampleEvaluation() {
 			return true;
@@ -68,7 +74,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 	 *
 	 * @param <I> input symbol type
 	 */
-	private static final class StateInfo<I> {
+	protected static final class StateInfo<I> implements Serializable {
 		public final int id;
 		public final Word<I> accessSequence;
 		private DTNode<I, Boolean, StateInfo<I>> dtNode;
@@ -103,12 +109,12 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		
 	}
 	
-	private class KVAbstractCounterexample extends BaseAbstractCounterexample<Boolean> {
+	protected class KVAbstractCounterexample extends BaseAbstractCounterexample<Boolean> {
 		
 		private final Word<I> ceWord;
 		private final MembershipOracle<I, Boolean> oracle;
 		private final StateInfo<I>[] states;
-		private final LCAInfo<I,Boolean,StateInfo<I>>[] lcas;
+		private final LCAInfo<Boolean,DTNode<I, Boolean, StateInfo<I>>>[] lcas;
 
 		@SuppressWarnings("unchecked")
 		public KVAbstractCounterexample(Word<I> ceWord, boolean output, MembershipOracle<I, Boolean> oracle) {
@@ -136,7 +142,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 			return states[idx];
 		}
 		
-		public LCAInfo<I,Boolean,StateInfo<I>> getLCA(int idx) {
+		public LCAInfo<Boolean,DTNode<I, Boolean, StateInfo<I>>> getLCA(int idx) {
 			return lcas[idx];
 		}
 
@@ -176,16 +182,14 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		}
 	}
 	
-	private final Alphabet<I> alphabet;
-	private final CompactDFA<I> hypothesis;
+	private final GrowingAlphabet<I> alphabet;
+	private CompactDFA<I> hypothesis;
 	private final MembershipOracle<I,Boolean> oracle;
 	private final boolean repeatedCounterexampleEvaluation;
 	
-	private final BinaryDTree<I, StateInfo<I>> discriminationTree;
-		
-		
-	private final List<StateInfo<I>> stateInfos
-		= new ArrayList<>();
+	protected BinaryDTree<I, StateInfo<I>> discriminationTree;
+
+	protected List<StateInfo<I>> stateInfos = new ArrayList<>();
 	
 	private final AcexAnalyzer ceAnalyzer;
 
@@ -199,7 +203,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 	public KearnsVaziraniDFA(Alphabet<I> alphabet, MembershipOracle<I,Boolean> oracle,
 			boolean repeatedCounterexampleEvaluation,
 			AcexAnalyzer counterexampleAnalyzer) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.hypothesis = new CompactDFA<>(alphabet);
 		this.discriminationTree = new BinaryDTree<>(oracle);
 		this.oracle = oracle;
@@ -246,15 +250,18 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		Word<I> prefix = input.prefix(idx);
 		StateInfo<I> srcStateInfo = acex.getStateInfo(idx);
 		I sym = input.getSymbol(idx);
-		LCAInfo<I,Boolean,StateInfo<I>> lca = acex.getLCA(idx+1);
+		LCAInfo<Boolean,DTNode<I, Boolean, StateInfo<I>>> lca = acex.getLCA(idx+1);
 		assert lca != null;
 		
 		splitState(srcStateInfo, prefix, sym, lca);
 		
 		return true;
 	}
-	
-	private void splitState(StateInfo<I> stateInfo, Word<I> newPrefix, I sym, LCAInfo<I,Boolean,StateInfo<I>> separatorInfo) {
+
+	private void splitState(StateInfo<I> stateInfo,
+							Word<I> newPrefix,
+							I sym,
+							LCAInfo<Boolean, DTNode<I, Boolean, StateInfo<I>>> separatorInfo) {
 		int state = stateInfo.id;
 		boolean oldAccepting = hypothesis.isAccepting(state);
 //		TLongList oldIncoming = stateInfo.fetchIncoming();
@@ -267,10 +274,13 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		DTNode<I, Boolean, StateInfo<I>> separator = separatorInfo.leastCommonAncestor;
 		Word<I> newDiscriminator = newDiscriminator(sym, separator.getDiscriminator());
 		
-		SplitResult<I, Boolean, StateInfo<I>> split = stateLeaf.split(newDiscriminator, separatorInfo.subtree1Label, separatorInfo.subtree2Label, newStateInfo);
+		DTNode<I, Boolean, StateInfo<I>>.SplitResult sr = stateLeaf.split(newDiscriminator,
+																		  separatorInfo.subtree1Label,
+																		  separatorInfo.subtree2Label,
+																		  newStateInfo);
 		
-		stateInfo.dtNode = split.nodeOld;
-		newStateInfo.dtNode = split.nodeNew;
+		stateInfo.dtNode = sr.nodeOld;
+		newStateInfo.dtNode = sr.nodeNew;
 		
 		initState(newStateInfo);
 		
@@ -316,7 +326,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		
 		DTNode<I, Boolean, StateInfo<I>> root = discriminationTree.getRoot();
 		root.setData(initStateInfo);
-		initStateInfo.dtNode = root.split(Word.<I>epsilon(), initAccepting, !initAccepting, null).nodeOld;
+		initStateInfo.dtNode = root.split(Word.epsilon(), initAccepting, !initAccepting).nodeOld;
 		
 		
 		initState(initStateInfo);
@@ -383,4 +393,37 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I> {
 		return succStateInfo;
 	}
 
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		this.hypothesis.addAlphabetSymbol(symbol);
+		final int inputIdx = this.alphabet.addSymbol(symbol);
+
+		// use new list to prevent concurrent modification exception
+		for (final StateInfo<I> si : new ArrayList<>(this.stateInfos)) {
+			final int state = si.id;
+			final Word<I> accessSequence = si.accessSequence;
+			final Word<I> transAs = accessSequence.append(symbol);
+
+			final StateInfo<I> succ = sift(transAs);
+			setTransition(state, inputIdx, succ);
+		}
+	}
+
+	@Override
+	public KearnsVaziraniDFAState<I> suspend() {
+		return new KearnsVaziraniDFAState<>(hypothesis, discriminationTree, stateInfos);
+	}
+
+	@Override
+	public void resume(final KearnsVaziraniDFAState<I> state) {
+		this.hypothesis = state.getHypothesis();
+		this.discriminationTree = state.getDiscriminationTree();
+		this.discriminationTree.setOracle(oracle);
+		this.stateInfos = state.getStateInfos();
+	}
 }

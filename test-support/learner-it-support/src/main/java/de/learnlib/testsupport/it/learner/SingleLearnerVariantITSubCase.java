@@ -62,7 +62,7 @@ final class SingleLearnerVariantITSubCase<I,D,
 		}
 
 		EquivalenceOracle<? super M, I, D> eqOracle
-			= new SimulatorEQOracle<I,D>(example.getReferenceAutomaton());
+			= new SimulatorEQOracle<>(example.getReferenceAutomaton());
 		
 		long start = System.nanoTime();
 		

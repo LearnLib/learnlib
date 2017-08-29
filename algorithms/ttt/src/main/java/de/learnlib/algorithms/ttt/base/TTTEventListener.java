@@ -20,10 +20,10 @@ import de.learnlib.algorithms.ttt.base.BaseTTTLearner.Splitter;
 
 public interface TTTEventListener<I, D> {
 	
-	public void preFinalizeDiscriminator(DTNode<I,D> blockRoot, Splitter<I,D> splitter);
-	public void postFinalizeDiscriminator(DTNode<I,D> blockRoot, Splitter<I,D> splitter);
+	public void preFinalizeDiscriminator(BaseDTNode<I,D> blockRoot, Splitter<I,D> splitter);
+	public void postFinalizeDiscriminator(BaseDTNode<I,D> blockRoot, Splitter<I,D> splitter);
 	
-	public void ensureConsistency(TTTState<I,D> state, DTNode<I,D> dtNode, D realOutcome);
+	public void ensureConsistency(TTTState<I,D> state, BaseDTNode<I,D> dtNode, D realOutcome);
 	
 	
 	public void preSplit(TTTTransition<I, D> transition, Word<I> tempDiscriminator);
