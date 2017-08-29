@@ -15,8 +15,14 @@
  */
 package de.learnlib.passive.api;
 
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.NFA;
 
-public interface PassiveDFALearner<I> extends PassiveAcceptorLearner<DFA<?,I>,I> {
-	
+/**
+ * Basic interface for passive learning algorithms that infer {@link NFA}s.
+ * 
+ * @author Malte Isberner
+ *
+ * @param <I> input symbol type
+ */
+public interface PassiveNFALearner<I> extends PassiveAcceptorLearner<NFA<?,I>,I> {
 }

@@ -114,6 +114,7 @@ limitations under the License.
 		<module>filters</module>
 		<module>drivers</module>
 		<module>examples</module>
+		<module>passive</module>
 		<module>archetypes</module>
 		
 		<module>distribution</module>
@@ -652,6 +653,24 @@ limitations under the License.
 			<dependency>
 				<groupId>de.learnlib</groupId>
 				<artifactId>learnlib-acex</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-passive-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-passive-commons</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>de.learnlib</groupId>
+				<artifactId>learnlib-rpni</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
