@@ -44,6 +44,7 @@ import net.automatalib.commons.util.functions.FunctionsUtil;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 
 import com.google.common.collect.AbstractIterator;
@@ -304,6 +305,8 @@ public class BasePTA<SP,TP,S extends BasePTAState<SP,TP,S>> implements Universal
 				}
 			}
 		}
+
+		Automata.invasiveMinimize(automaton, alphabet);
 	}
 	
 	
