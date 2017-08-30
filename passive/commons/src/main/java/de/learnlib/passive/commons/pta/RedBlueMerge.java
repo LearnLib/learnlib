@@ -2,11 +2,17 @@ package de.learnlib.passive.commons.pta;
 
 import java.awt.Color;
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
 import java.util.function.Consumer;
 
+import com.google.common.collect.Sets;
+import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.array.RichArray;
 
 public class RedBlueMerge<SP,TP,S extends AbstractBlueFringePTAState<SP, TP, S>> {
@@ -21,7 +27,9 @@ public class RedBlueMerge<SP,TP,S extends AbstractBlueFringePTAState<SP, TP, S>>
 			this.r = r;
 		}
 	}
-	
+
+	private final AbstractBlueFringePTA<SP,TP,S> pta;
+
 	private final RichArray<S>[] succMod;
 	private final RichArray<TP>[] transPropMod;
 	private final RichArray<SP> propMod;
@@ -29,6 +37,8 @@ public class RedBlueMerge<SP,TP,S extends AbstractBlueFringePTAState<SP, TP, S>>
 	
 	private final S qr;
 	private final S qb;
+
+	private boolean merged;
 	
 	@SuppressWarnings("unchecked")
 	public RedBlueMerge(AbstractBlueFringePTA<SP,TP,S> pta, S qr, S qb) {
@@ -38,6 +48,9 @@ public class RedBlueMerge<SP,TP,S extends AbstractBlueFringePTAState<SP, TP, S>>
 		if (!qb.isBlue()) {
 			throw new IllegalArgumentException("Merge source must be a blue state");
 		}
+
+		this.pta = pta;
+
 		int numRedStates = pta.getNumRedStates();
 		this.succMod = new RichArray[numRedStates];
 		this.transPropMod = new RichArray[numRedStates];
@@ -58,6 +71,7 @@ public class RedBlueMerge<SP,TP,S extends AbstractBlueFringePTAState<SP, TP, S>>
 	
 	
 	public boolean merge() {
+		this.merged = true;
 		if (!mergeRedProperties(qr, qb)) {
 			return false;
 		}
@@ -425,5 +439,88 @@ public class RedBlueMerge<SP,TP,S extends AbstractBlueFringePTAState<SP, TP, S>>
 				}
 			}
 		}
+	}
+
+	public UniversalDeterministicAutomaton<S, Integer, ?, SP, TP> toMergedAutomaton() {
+		if (!this.merged) {
+			throw new IllegalStateException("#merge has not been called yet");
+		}
+
+		return new UniversalDeterministicAutomaton<S, Integer, Pair<S, Integer>, SP, TP>() {
+
+			private Set<S> states;
+
+			@Override
+			public S getInitialState() {
+				return pta.getInitialState();
+			}
+
+			@Override
+			public S getSuccessor(Pair<S, Integer> transition) {
+				final S source = transition.getFirst();
+				final Integer input = transition.getSecond();
+
+				if (source.isRed() && succMod[source.id] != null) {
+					return succMod[source.id].get(input);
+				}
+
+				return pta.getSuccessor(source, input);
+			}
+
+			@Override
+			public SP getStateProperty(S state) {
+				if (state.isRed() && propMod.get(state.id) != null) {
+					return propMod.get(state.id);
+				}
+
+				return state.getStateProperty();
+			}
+
+			@Override
+			public TP getTransitionProperty(Pair<S, Integer> transition) {
+				final S source = transition.getFirst();
+				final Integer input = transition.getSecond();
+
+				if (source.isRed() && transPropMod[source.id] != null) {
+					return transPropMod[source.id].get(input);
+				}
+
+				return source.transProperties.get(input);
+			}
+
+			@Override
+			public Pair<S, Integer> getTransition(S state, Integer input) {
+				return new Pair<>(state, input);
+			}
+
+			@Override
+			public Collection<S> getStates() {
+
+				if (states != null) {
+					return states;
+				}
+
+				states = Sets.newHashSetWithExpectedSize(pta.size());
+				final Queue<S> discoverQueue = new ArrayDeque<>();
+
+				discoverQueue.add(getInitialState());
+
+				S iter;
+
+				while ( (iter = discoverQueue.poll()) != null) {
+					states.add(iter);
+
+					for (int i = 0; i < alphabetSize; i++) {
+						final S succ = getSuccessor(iter, i);
+
+						if (succ != null && !states.contains(succ)) {
+							discoverQueue.add(succ);
+						}
+					}
+				}
+
+				return states;
+			}
+		};
 	}
 }
