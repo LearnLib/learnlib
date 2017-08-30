@@ -1,7 +1,9 @@
 package de.learnlib.passive.rpni;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
@@ -43,9 +45,9 @@ public abstract class AbstractBlueFringeRPNI<I,D,SP,TP,M> implements PassiveLear
 	protected final int alphabetSize;
 	
 	@Nonnull
-	private ProcessingOrder order = DefaultProcessingOrders.CANONICAL_ORDER;
-	private boolean parallel = true;
-	private boolean deterministic = false;
+	protected ProcessingOrder order = DefaultProcessingOrders.CANONICAL_ORDER;
+	protected boolean parallel = true;
+	protected boolean deterministic = false;
 
 	/**
 	 * Constructor.
@@ -124,7 +126,7 @@ public abstract class AbstractBlueFringeRPNI<I,D,SP,TP,M> implements PassiveLear
 			}
 			
 			Stream<RedBlueMerge<SP,TP,BlueFringePTAState<SP,TP>>> filtered = stream.map(qr -> tryMerge(pta, qr, qb))
-					.filter(m -> m != null);
+					.filter(Objects::nonNull).filter(this::decideOnValidMerge);
 			
 			Optional<RedBlueMerge<SP,TP,BlueFringePTAState<SP,TP>>> result = (deterministic) ?
 					filtered.findFirst() : filtered.findAny();
@@ -153,5 +155,16 @@ public abstract class AbstractBlueFringeRPNI<I,D,SP,TP,M> implements PassiveLear
 	 * @return a model built from the final PTA
 	 */
 	protected abstract M ptaToModel(BlueFringePTA<SP, TP> pta);
+
+	/**
+	 * Implementing the method allows subclasses to decide (and possible reject) valid merges.
+	 *
+	 * @param merge the prosed (valid) merge
+	 * @return {@code true} if the suggested merge should be performed, {@code false} otherwise
+	 */
+	protected boolean decideOnValidMerge(RedBlueMerge<SP,TP,BlueFringePTAState<SP,TP>> merge) {
+		// by default we are greedy and try to merge the first pair of valid states
+		return true;
+	}
 	
 }

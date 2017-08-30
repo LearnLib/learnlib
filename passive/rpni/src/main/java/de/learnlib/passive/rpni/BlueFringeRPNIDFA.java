@@ -21,8 +21,8 @@ import de.learnlib.passive.commons.pta.BlueFringePTA;
 public class BlueFringeRPNIDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?,I>>
 		implements PassiveDFALearner<I> {
 	
-	private List<int[]> positive = new ArrayList<>();
-	private List<int[]> negative = new ArrayList<>();
+	protected List<int[]> positive = new ArrayList<>();
+	protected List<int[]> negative = new ArrayList<>();
 
 	/**
 	 * Constructor.
