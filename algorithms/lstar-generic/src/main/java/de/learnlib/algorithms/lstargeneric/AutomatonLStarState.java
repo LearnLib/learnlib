@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,22 +15,27 @@
  */
 package de.learnlib.algorithms.lstargeneric;
 
-import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
-
 import java.util.ArrayList;
+
+import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 
 /**
  * Class that contains all data that represent the internal state of the {@link AbstractAutomatonLStar} learner and its
  * DFA and Mealy implementations.
  *
- * @param <I>  The input alphabet type.
- * @param <D>  The output domain type.
- * @param <AI> The hypothesis type.
- * @param <S>  The hypothesis state type.
+ * @param <I>
+ *         The input alphabet type.
+ * @param <D>
+ *         The output domain type.
+ * @param <AI>
+ *         The hypothesis type.
+ * @param <S>
+ *         The hypothesis state type.
  *
  * @author bainczyk
  */
 public class AutomatonLStarState<I, D, AI, S> extends AbstractLStarState<I, D> {
+
     private final AI hypothesis;
     private final ArrayList<AbstractAutomatonLStar.StateInfo<S, I>> stateInfos;
 

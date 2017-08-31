@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,9 @@ import java.io.Serializable;
  * Learning algorithms that implement this interface can be "suspended" by means of exposing a serializable state object
  * that contains all data that is necessary to resume learning process from a previous state.
  *
- * @param <T> The type of the serializable learner state.
+ * @param <T>
+ *         The type of the serializable learner state.
+ *
  * @author bainczyk
  */
 public interface ResumableLearner<T extends Serializable> {
@@ -40,7 +42,8 @@ public interface ResumableLearner<T extends Serializable> {
      * Does not get the learner to continue learning. Instead, the learner updates its internal state according to the
      * given state object.
      *
-     * @param state The learner state.
+     * @param state
+     *         The learner state.
      */
     void resume(T state);
 }

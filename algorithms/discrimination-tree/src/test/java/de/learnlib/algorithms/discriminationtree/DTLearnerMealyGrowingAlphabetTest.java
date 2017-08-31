@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,11 +25,12 @@ import net.automatalib.words.Word;
 /**
  * @author frohme
  */
-public class DTLearnerMealyGrowingAlphabetTest extends AbstractGrowingAlphabetMealyTest<DTLearnerMealy<Integer, Character>> {
+public class DTLearnerMealyGrowingAlphabetTest
+        extends AbstractGrowingAlphabetMealyTest<DTLearnerMealy<Character, Character>> {
 
-	@Override
-	protected DTLearnerMealy<Integer, Character> getLearner(MembershipOracle<Integer, Word<Character>> oracle,
-															Alphabet<Integer> alphabet) {
-		return new DTLearnerMealy<>(alphabet, oracle, LocalSuffixFinders.RIVEST_SCHAPIRE, true);
-	}
+    @Override
+    protected DTLearnerMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                              Alphabet<Character> alphabet) {
+        return new DTLearnerMealy<>(alphabet, oracle, LocalSuffixFinders.RIVEST_SCHAPIRE, true);
+    }
 }

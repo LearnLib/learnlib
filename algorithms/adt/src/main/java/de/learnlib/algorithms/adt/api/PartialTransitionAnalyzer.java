@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,57 +19,66 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * During the refinement process of the hypothesis, ADS/Ts may be computed on partially defined automata. These
- * computations may want to skip undefined transitions (as closing them results in resets, which we want to omit)
- * and only determine the information if necessary.
- * This interface mediates between the learner and ADS/T computations by defining the basic forms of communication.
+ * computations may want to skip undefined transitions (as closing them results in resets, which we want to omit) and
+ * only determine the information if necessary. This interface mediates between the learner and ADS/T computations by
+ * defining the basic forms of communication.
  *
- * @param <S> (hypothesis) state type
- * @param <I> input alphabet type
+ * @param <S>
+ *         (hypothesis) state type
+ * @param <I>
+ *         input alphabet type
+ *
  * @author frohme
  */
 @ParametersAreNonnullByDefault
 public interface PartialTransitionAnalyzer<S, I> {
 
-	/**
-	 * Check whether the transition in question is defined or not.
-	 *
-	 * @param state the (source) state of the transition in question
-	 * @param input the input symbol of the transition in question
-	 * @return {@code true} if the transition (and thus the successor/output) is defined, {@code false} otherwise
-	 */
-	boolean isTransitionDefined(final S state, final I input);
+    /**
+     * Global exception instance to avoid (unnecessary) re-instantiation.
+     */
+    RuntimeException HYPOTHESIS_MODIFICATION_EXCEPTION = new HypothesisModificationException();
 
-	/**
-	 * Determine the successor/output of the transition in question (which is usually achieved by sifting the
-	 * corresponding long-prefix through the ADT).
-	 *
-	 * @param state the (source) state of the transition in question
-	 * @param input the input symbol of the transition in question
-	 * @throws HypothesisModificationException if closing the transition (sifting in the ADT) discovered a new
-	 *                                         hypothesis state and thus potentially invalidates previously observed
-	 *                                         behavior
-	 */
-	void closeTransition(final S state, final I input) throws HypothesisModificationException;
+    /**
+     * Check whether the transition in question is defined or not.
+     *
+     * @param state
+     *         the (source) state of the transition in question
+     * @param input
+     *         the input symbol of the transition in question
+     *
+     * @return {@code true} if the transition (and thus the successor/output) is defined, {@code false} otherwise
+     */
+    boolean isTransitionDefined(S state, I input);
 
-	/**
-	 * A helper exception to interrupt computations on an invalid hypothesis. Does not record the stacktrace when thrown
-	 * (to improve performance)
-	 */
-	class HypothesisModificationException extends RuntimeException {
+    /**
+     * Determine the successor/output of the transition in question (which is usually achieved by sifting the
+     * corresponding long-prefix through the ADT).
+     *
+     * @param state
+     *         the (source) state of the transition in question
+     * @param input
+     *         the input symbol of the transition in question
+     *
+     * @throws HypothesisModificationException
+     *         if closing the transition (sifting in the ADT) discovered a new hypothesis state and thus potentially
+     *         invalidates previously observed behavior
+     */
+    void closeTransition(S state, I input) throws HypothesisModificationException;
 
-		public HypothesisModificationException() {
-			super(null, null, false, false);
-		}
+    /**
+     * A helper exception to interrupt computations on an invalid hypothesis. Does not record the stacktrace when thrown
+     * (to improve performance)
+     */
+    class HypothesisModificationException extends RuntimeException {
 
-		@Override
-		public synchronized Throwable fillInStackTrace() {
-			return this;
-		}
+        public HypothesisModificationException() {
+            super(null, null, false, false);
+        }
 
-	}
+        @Override
+        public synchronized Throwable fillInStackTrace() {
+            return this;
+        }
 
-	/**
-	 * Global exception instance to avoid (unnecessary) re-instantiation
-	 */
-	RuntimeException HypothesisModificationException = new HypothesisModificationException();
+    }
 }

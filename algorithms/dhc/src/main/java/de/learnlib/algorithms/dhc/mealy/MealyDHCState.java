@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +15,21 @@
  */
 package de.learnlib.algorithms.dhc.mealy;
 
+import java.io.Serializable;
+import java.util.LinkedHashSet;
+
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Word;
 
-import java.io.Serializable;
-import java.util.LinkedHashSet;
-
 /**
  * Class that contains all data that represent the internal state of the {@link MealyDHC} learner.
  *
- * @param <I> The input alphabet type.
- * @param <O> The output alphabet type.
+ * @param <I>
+ *         The input alphabet type.
+ * @param <O>
+ *         The output alphabet type.
+ *
  * @author bainczyk
  */
 class MealyDHCState<I, O> implements Serializable {

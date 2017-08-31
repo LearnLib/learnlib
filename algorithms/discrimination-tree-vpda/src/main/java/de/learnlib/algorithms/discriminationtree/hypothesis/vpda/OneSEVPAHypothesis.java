@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,102 +24,103 @@ import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 
 /**
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
  *
  * @author Malte Isberner
  */
 public class OneSEVPAHypothesis<I> extends AbstractOneSEVPA<HypLoc<I>, I> {
 
-	private final List<HypLoc<I>> locations = new ArrayList<>();
+    private final List<HypLoc<I>> locations = new ArrayList<>();
 
-	private HypLoc<I> initLoc = null;
+    private HypLoc<I> initLoc;
 
-	public OneSEVPAHypothesis(VPDAlphabet<I> alphabet) {
-		super(alphabet);
-	}
+    public OneSEVPAHypothesis(VPDAlphabet<I> alphabet) {
+        super(alphabet);
+    }
 
-	public HypLoc<I> createLocation(boolean accepting, HypTrans<I> treeIncoming) {
-		HypLoc<I> loc = new HypLoc<>(alphabet, locations.size(), accepting, treeIncoming);
-		locations.add(loc);
-		return loc;
-	}
+    public AbstractHypTrans<I> getInternalTransition(State<HypLoc<I>> state, I sym) {
+        switch (alphabet.getSymbolType(sym)) {
+            case INTERNAL:
+                return state.getLocation().getInternalTransition(alphabet.getInternalSymbolIndex(sym));
+            case RETURN:
+                return state.getLocation()
+                            .getReturnTransition(alphabet.getReturnSymbolIndex(sym), state.getStackContents().peek());
+            default:
+                return null;
+        }
+    }
 
-	public HypTrans<I> getInternalTransition(HypLoc<I> loc, I intSym) {
-		return loc.getInternalTransition(alphabet.getInternalSymbolIndex(intSym));
-	}
+    public AbstractHypTrans<I> getInternalTransition(HypLoc<I> loc, I intSym) {
+        return loc.getInternalTransition(alphabet.getInternalSymbolIndex(intSym));
+    }
 
-	public HypTrans<I> getReturnTransition(HypLoc<I> loc, I retSym, int stackSym) {
-		return loc.getReturnTransition(alphabet.getReturnSymbolIndex(retSym), stackSym);
-	}
+    public AbstractHypTrans<I> getReturnTransition(HypLoc<I> loc, I retSym, int stackSym) {
+        return loc.getReturnTransition(alphabet.getReturnSymbolIndex(retSym), stackSym);
+    }
 
-	public HypTrans<I> getReturnTransition(HypLoc<I> loc, I retSym, HypLoc<I> stackLoc, I callSym) {
-		int stackSym = encodeStackSym(stackLoc, callSym);
-		return loc.getReturnTransition(alphabet.getReturnSymbolIndex(retSym), stackSym);
-	}
+    public AbstractHypTrans<I> getReturnTransition(HypLoc<I> loc, I retSym, HypLoc<I> stackLoc, I callSym) {
+        int stackSym = encodeStackSym(stackLoc, callSym);
+        return loc.getReturnTransition(alphabet.getReturnSymbolIndex(retSym), stackSym);
+    }
 
-	public HypLoc<I> createLocation(boolean accepting, Word<I> aseq) {
-		HypLoc<I> loc = new HypLoc<>(alphabet, locations.size(), accepting, aseq);
-		locations.add(loc);
-		return loc;
-	}
+    public HypLoc<I> createLocation(boolean accepting, Word<I> aseq) {
+        HypLoc<I> loc = new HypLoc<>(alphabet, locations.size(), accepting, aseq);
+        locations.add(loc);
+        return loc;
+    }
 
-	public HypLoc<I> initialize() {
-		HypLoc<I> loc = createLocation(false, (HypTrans<I>) null);
-		this.initLoc = loc;
+    public HypLoc<I> createLocation(boolean accepting, AbstractHypTrans<I> treeIncoming) {
+        HypLoc<I> loc = new HypLoc<>(alphabet, locations.size(), accepting, treeIncoming);
+        locations.add(loc);
+        return loc;
+    }
 
-		return loc;
-	}
+    public HypLoc<I> initialize() {
+        HypLoc<I> loc = createLocation(false, (AbstractHypTrans<I>) null);
+        this.initLoc = loc;
 
-	@Override
-	public HypLoc<I> getInitialLocation() {
-		return initLoc;
-	}
+        return loc;
+    }
 
-	@Override
-	public boolean isAcceptingLocation(HypLoc<I> loc) {
-		return loc.isAccepting();
-	}
+    @Override
+    public HypLoc<I> getInternalSuccessor(HypLoc<I> loc, I intSym) {
+        return loc.getInternalTransition(alphabet.getInternalSymbolIndex(intSym)).getTargetLocation();
+    }
 
-	@Override
-	public HypLoc<I> getInternalSuccessor(HypLoc<I> loc, I intSym) {
-		return loc.getInternalTransition(alphabet.getInternalSymbolIndex(intSym)).getTargetLocation();
-	}
+    @Override
+    public HypLoc<I> getLocation(int id) {
+        return locations.get(id);
+    }
 
-	@Override
-	public HypLoc<I> getReturnSuccessor(HypLoc<I> loc, I retSym, int stackSym) {
-		return loc.getReturnTransition(alphabet.getReturnSymbolIndex(retSym), stackSym).getTargetLocation();
-	}
+    @Override
+    public int getLocationId(HypLoc<I> loc) {
+        return loc.index;
+    }
 
-	@Override
-	public List<? extends HypLoc<I>> getLocations() {
-		return locations;
-	}
+    @Override
+    public List<? extends HypLoc<I>> getLocations() {
+        return locations;
+    }
 
-	@Override
-	public int size() {
-		return locations.size();
-	}
+    @Override
+    public HypLoc<I> getReturnSuccessor(HypLoc<I> loc, I retSym, int stackSym) {
+        return loc.getReturnTransition(alphabet.getReturnSymbolIndex(retSym), stackSym).getTargetLocation();
+    }
 
-	@Override
-	public int getLocationId(HypLoc<I> loc) {
-		return loc.index;
-	}
+    @Override
+    public boolean isAcceptingLocation(HypLoc<I> loc) {
+        return loc.isAccepting();
+    }
 
-	@Override
-	public HypLoc<I> getLocation(int id) {
-		return locations.get(id);
-	}
+    @Override
+    public HypLoc<I> getInitialLocation() {
+        return initLoc;
+    }
 
-	public HypTrans<I> getInternalTransition(State<HypLoc<I>> state, I sym) {
-		switch (alphabet.getSymbolType(sym)) {
-			case INTERNAL:
-				return state.getLocation().getInternalTransition(alphabet.getInternalSymbolIndex(sym));
-			case RETURN:
-				return state.getLocation()
-						.getReturnTransition(alphabet.getReturnSymbolIndex(sym), state.getStackContents().peek());
-			default:
-				return null;
-		}
-	}
+    @Override
+    public int size() {
+        return locations.size();
+    }
 
 }

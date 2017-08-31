@@ -1,12 +1,12 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,156 +23,157 @@ import java.util.Objects;
 /**
  * An abstract super class (DAO) for aggregating several information stored in a node of an discrimination tree.
  *
- * @param <DSCR> discriminator type
- * @param <O> output symbol type
- * @param <D> data type
- * @param <N> (recursive) node type
+ * @param <DSCR>
+ *         discriminator type
+ * @param <O>
+ *         output symbol type
+ * @param <D>
+ *         data type
+ * @param <N>
+ *         (recursive) node type
  *
  * @author frohme
  */
 public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, O, D, N>> implements Serializable {
 
-	public class SplitResult {
+    protected final N parent;
+    protected final O parentOutcome;
+    protected final int depth;
+    protected Map<O, N> children;
+    protected DSCR discriminator;
+    protected D data;
 
-		public final N nodeOld;
-		public final N nodeNew;
+    public AbstractDTNode(D data) {
+        this(null, null, data);
+    }
 
-		public SplitResult(N nodeOld, N nodeNew) {
-			this.nodeOld = nodeOld;
-			this.nodeNew = nodeNew;
-		}
-	}
+    protected AbstractDTNode(N parent, O parentOutcome, D data) {
+        this.parent = parent;
+        this.parentOutcome = parentOutcome;
+        this.depth = (parent != null) ? parent.depth + 1 : 0;
+        this.data = data;
+    }
 
-	protected final N parent;
-	protected final O parentOutcome;
+    public boolean isRoot() {
+        return parent == null;
+    }
 
-	protected final int depth;
+    public N getParent() {
+        return parent;
+    }
 
-	protected Map<O, N> children;
+    public DSCR getDiscriminator() {
+        return discriminator;
+    }
 
-	protected DSCR discriminator;
-	protected D data;
+    public void setDiscriminator(DSCR discriminator) {
+        this.discriminator = discriminator;
+    }
 
-	public AbstractDTNode(D data) {
-		this(null, null, data);
-	}
+    public SplitResult split(DSCR discriminator, O oldOut, O newOut) {
+        return this.split(discriminator, oldOut, newOut, null);
+    }
 
-	protected AbstractDTNode(N parent, O parentOutcome, D data) {
-		this.parent = parent;
-		this.parentOutcome = parentOutcome;
-		this.depth = (parent != null) ? parent.depth + 1 : 0;
-		this.data = data;
-	}
+    public SplitResult split(DSCR discriminator, O oldOut, O newOut, D newData) {
+        assert this.isLeaf();
+        assert !Objects.equals(oldOut, newOut);
 
-	public boolean isRoot() {
-		return parent == null;
-	}
+        this.children = createChildMap();
 
-	public N getParent() {
-		return parent;
-	}
+        final N nodeOld = addChild(oldOut, this.data);
+        final N nodeNew = addChild(newOut, newData);
 
-	public O getParentOutcome() {
-		return parentOutcome;
-	}
+        this.data = null;
+        this.discriminator = discriminator;
 
-	public DSCR getDiscriminator() {
-		return discriminator;
-	}
+        return new SplitResult(nodeOld, nodeNew);
+    }
 
-	public void setDiscriminator(DSCR discriminator) {
-		this.discriminator = discriminator;
-	}
+    public boolean isLeaf() {
+        return (children == null);
+    }
 
-	public N getChild(O out) {
-		return children.get(out);
-	}
+    protected abstract Map<O, N> createChildMap();
 
-	protected N addChild(O outcome, D data) {
-		final N child = createChild(outcome, data);
-		children.put(outcome, child);
-		return child;
-	}
+    protected N addChild(O outcome, D data) {
+        final N child = createChild(outcome, data);
+        children.put(outcome, child);
+        return child;
+    }
 
-	public SplitResult split(DSCR discriminator, O oldOut, O newOut) {
-		return this.split(discriminator, oldOut, newOut, null);
-	}
+    protected abstract N createChild(O outcome, D data);
 
-	public SplitResult split(DSCR discriminator, O oldOut, O newOut, D newData) {
-		assert this.isLeaf();
-		assert !Objects.equals(oldOut, newOut);
+    public N child(O out) {
+        return child(out, null);
+    }
 
-		this.children = createChildMap();
+    public N child(O out, D defaultData) {
+        assert !isLeaf();
 
-		final N nodeOld = addChild(oldOut, this.data);
-		final N nodeNew = addChild(newOut, newData);
+        N result = getChild(out);
+        if (result == null) {
+            result = addChild(out, defaultData);
+        }
+        return result;
+    }
 
-		this.data = null;
-		this.discriminator = discriminator;
+    public N getChild(O out) {
+        return children.get(out);
+    }
 
-		return new SplitResult(nodeOld, nodeNew);
-	}
+    public Collection<N> getChildren() {
+        return children.values();
+    }
 
-	public N child(O out) {
-		return child(out, null);
-	}
+    public Collection<Map.Entry<O, N>> getChildEntries() {
+        return children.entrySet();
+    }
 
-	public N child(O out, D defaultData) {
-		assert !isLeaf();
+    public void replaceChildren(Map<O, N> repChildren) {
+        this.children = repChildren;
+    }
 
-		N result = getChild(out);
-		if (result == null) {
-			result = addChild(out, defaultData);
-		}
-		return result;
-	}
+    public int getDepth() {
+        return depth;
+    }
 
-	public boolean isLeaf() {
-		return (children == null);
-	}
+    public D getData() {
+        assert isLeaf();
+        return data;
+    }
 
-	public Collection<N> getChildren() {
-		return children.values();
-	}
+    public void setData(D data) {
+        assert isLeaf();
+        this.data = data;
+    }
 
-	public Collection<Map.Entry<O, N>> getChildEntries() {
-		return children.entrySet();
-	}
+    public O subtreeLabel(N descendant) {
+        N curr = descendant;
 
-	public void replaceChildren(Map<O, N> repChildren) {
-		this.children = repChildren;
-	}
+        while (curr.depth > this.depth + 1) {
+            curr = curr.parent;
+        }
 
-	public int getDepth() {
-		return depth;
-	}
+        if (curr.parent != this) {
+            return null;
+        }
 
-	public D getData() {
-		assert isLeaf();
-		return data;
-	}
+        return curr.getParentOutcome();
+    }
 
-	public void setData(D data) {
-		assert isLeaf();
-		this.data = data;
-	}
+    public O getParentOutcome() {
+        return parentOutcome;
+    }
 
-	public O subtreeLabel(N descendant) {
-		N curr = descendant;
+    public class SplitResult {
 
-		while (curr.depth > this.depth + 1) {
-			curr = curr.parent;
-		}
+        public final N nodeOld;
+        public final N nodeNew;
 
-		if (curr.parent != this) {
-			return null;
-		}
-
-		return curr.getParentOutcome();
-	}
-
-	protected abstract Map<O, N> createChildMap();
-
-	protected abstract N createChild(O outcome, D data);
+        public SplitResult(N nodeOld, N nodeNew) {
+            this.nodeOld = nodeOld;
+            this.nodeNew = nodeNew;
+        }
+    }
 
 }

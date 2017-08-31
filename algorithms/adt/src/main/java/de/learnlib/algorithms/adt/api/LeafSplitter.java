@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,10 @@
  */
 package de.learnlib.algorithms.adt.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import net.automatalib.words.Word;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for configuration objects that specify how to split the ADT leaf of a hypothesis state that needs
@@ -29,21 +29,28 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface LeafSplitter {
 
-	/**
-	 * Split the specified node to correctly distinguish between the old and new hypothesis state.
-	 *
-	 * @param nodeToSplit          the existing leaf that should be split
-	 * @param distinguishingSuffix the input sequence that splits the hypothesis state of the leaf to split and the
-	 *                             new node.
-	 * @param oldOutput            the hypothesis output of the node to split given the distinguishing suffix
-	 * @param newOutput            the hypothesis output of the new leaf given the distinguishing suffix
-	 * @param <S>                  (hypothesis) state type
-	 * @param <I>                  input alphabet type
-	 * @param <O>                  output alphabet type
-	 * @return the new leaf that should reference the new hypothesis state
-	 */
-	<S, I, O> ADTNode<S, I, O> split(final ADTNode<S, I, O> nodeToSplit,
-									 final Word<I> distinguishingSuffix,
-									 final Word<O> oldOutput,
-									 final Word<O> newOutput);
+    /**
+     * Split the specified node to correctly distinguish between the old and new hypothesis state.
+     *
+     * @param nodeToSplit
+     *         the existing leaf that should be split
+     * @param distinguishingSuffix
+     *         the input sequence that splits the hypothesis state of the leaf to split and the new node.
+     * @param oldOutput
+     *         the hypothesis output of the node to split given the distinguishing suffix
+     * @param newOutput
+     *         the hypothesis output of the new leaf given the distinguishing suffix
+     * @param <S>
+     *         (hypothesis) state type
+     * @param <I>
+     *         input alphabet type
+     * @param <O>
+     *         output alphabet type
+     *
+     * @return the new leaf that should reference the new hypothesis state
+     */
+    <S, I, O> ADTNode<S, I, O> split(ADTNode<S, I, O> nodeToSplit,
+                                     Word<I> distinguishingSuffix,
+                                     Word<O> oldOutput,
+                                     Word<O> newOutput);
 }

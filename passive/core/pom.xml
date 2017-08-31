@@ -16,31 +16,33 @@ You should have received a copy of the GNU Lesser General Public
 License along with LearnLib; if not, see
 http://www.gnu.de/documents/lgpl.en.html.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<artifactId>learnlib-passive-parent</artifactId>
-		<groupId>de.learnlib</groupId>
-		<version>0.12.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>        
-	</parent>
+    <parent>
+        <artifactId>learnlib-passive-parent</artifactId>
+        <groupId>de.learnlib</groupId>
+        <version>0.12.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<artifactId>learnlib-passive-core</artifactId>
-	<name>LearnLib :: Passive :: Core</name>
-	<description>Core API for Passive Learning Algorithms</description>
+    <artifactId>learnlib-passive-core</artifactId>
+    <name>LearnLib :: Passive :: Core</name>
+    <description>Core API for Passive Learning Algorithms</description>
 
-	<dependencies>
-		<!--
-		Compile-time dependencies
-		-->
-		
-		<!-- LearnLib dependencies -->
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-core</artifactId>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <!--
+        Compile-time dependencies
+        -->
+
+        <!-- LearnLib dependencies -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-core</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

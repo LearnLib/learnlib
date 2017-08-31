@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,10 +24,11 @@ import net.automatalib.words.Alphabet;
 /**
  * @author frohme
  */
-public class DTLearnerDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<DTLearnerDFA<Integer>> {
+public class DTLearnerDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<DTLearnerDFA<Character>> {
 
-	@Override
-	protected DTLearnerDFA<Integer> getLearner(MembershipOracle<Integer, Boolean> oracle, Alphabet<Integer> alphabet) {
-		return new DTLearnerDFA<>(alphabet, oracle, LocalSuffixFinders.RIVEST_SCHAPIRE, true, false);
-	}
+    @Override
+    protected DTLearnerDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+                                                 Alphabet<Character> alphabet) {
+        return new DTLearnerDFA<>(alphabet, oracle, LocalSuffixFinders.RIVEST_SCHAPIRE, true, false);
+    }
 }

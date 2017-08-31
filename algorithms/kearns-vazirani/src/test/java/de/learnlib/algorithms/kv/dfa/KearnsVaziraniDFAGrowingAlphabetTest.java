@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,11 +23,11 @@ import net.automatalib.words.Alphabet;
 /**
  * @author frohme
  */
-public class KearnsVaziraniDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<KearnsVaziraniDFA<Integer>> {
+public class KearnsVaziraniDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<KearnsVaziraniDFA<Character>> {
 
-	@Override
-	protected KearnsVaziraniDFA<Integer> getLearner(MembershipOracle<Integer, Boolean> oracle,
-													Alphabet<Integer> alphabet) {
-		return new KearnsVaziraniDFA<>(alphabet, oracle, true, AcexAnalyzers.LINEAR_FWD);
-	}
+    @Override
+    protected KearnsVaziraniDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+                                                      Alphabet<Character> alphabet) {
+        return new KearnsVaziraniDFA<>(alphabet, oracle, true, AcexAnalyzers.LINEAR_FWD);
+    }
 }

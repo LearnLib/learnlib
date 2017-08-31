@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,34 +17,35 @@ package de.learnlib.algorithms.ttt.dfa;
 
 import java.util.Map;
 
-import de.learnlib.algorithms.ttt.base.BaseDTNode;
+import de.learnlib.algorithms.ttt.base.AbstractBaseDTNode;
 import de.learnlib.algorithms.ttt.base.TTTState;
 import de.learnlib.datastructure.discriminationtree.model.BooleanMap;
 
 /**
  * Binary discrimination tree node specialization.
  *
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
  *
  * @author frohme
  */
-public class TTTDTNodeDFA<I> extends BaseDTNode<I,Boolean> {
+public class TTTDTNodeDFA<I> extends AbstractBaseDTNode<I, Boolean> {
 
-	public TTTDTNodeDFA() {
-		this(null, null);
-	}
+    public TTTDTNodeDFA() {
+        this(null, null);
+    }
 
-	public TTTDTNodeDFA(BaseDTNode<I, Boolean> parent, Boolean parentEdgeLabel) {
-		super(parent, parentEdgeLabel);
-	}
+    public TTTDTNodeDFA(AbstractBaseDTNode<I, Boolean> parent, Boolean parentEdgeLabel) {
+        super(parent, parentEdgeLabel);
+    }
 
-	@Override
-	protected Map<Boolean, BaseDTNode<I, Boolean>> createChildMap() {
-		return new BooleanMap<>();
-	}
+    @Override
+    protected Map<Boolean, AbstractBaseDTNode<I, Boolean>> createChildMap() {
+        return new BooleanMap<>();
+    }
 
-	@Override
-	protected BaseDTNode<I, Boolean> createChild(Boolean outcome, TTTState<I, Boolean> data) {
-		return new TTTDTNodeDFA<>(this, outcome);
-	}
+    @Override
+    protected AbstractBaseDTNode<I, Boolean> createChild(Boolean outcome, TTTState<I, Boolean> data) {
+        return new TTTDTNodeDFA<>(this, outcome);
+    }
 }

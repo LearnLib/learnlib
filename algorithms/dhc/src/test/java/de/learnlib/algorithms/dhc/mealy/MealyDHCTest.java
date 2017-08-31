@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,16 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import de.learnlib.eqtests.basic.SimulatorEQOracle;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine;
 import de.learnlib.examples.mealy.ExampleGrid;
@@ -36,156 +26,169 @@ import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SimulatorOracle;
 import de.learnlib.oracles.SimulatorOracle.MealySimulatorOracle;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.util.automata.random.RandomAutomata;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.Alphabets;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
- *
  * @author merten
  */
 public class MealyDHCTest {
-	
-	@Test(expectedExceptions = Exception.class)
-	public void testMealyDHCInternalSate() {
-		ExampleStack stackExample = ExampleStack.createExample();
-		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> fm = stackExample.getReferenceAutomaton();
-		Alphabet<ExampleStack.Input> alphabet = stackExample.getAlphabet();
-		
-		MealySimulatorOracle<ExampleStack.Input,ExampleStack.Output> simoracle = new MealySimulatorOracle<>(fm);
-		MealyDHC<ExampleStack.Input, ExampleStack.Output> dhc = new MealyDHC<>(alphabet, simoracle);
-		
-		// nothing learned yet, this should throw an exception!
-		dhc.getHypothesisModel();
-	}
-	
 
-	@Test
-	public void testMealyDHCGrid() {
+    @Test(expectedExceptions = Exception.class)
+    public void testMealyDHCInternalSate() {
+        ExampleStack stackExample = ExampleStack.createExample();
+        MealyMachine<?, ExampleStack.Input, ?, ExampleStack.Output> fm = stackExample.getReferenceAutomaton();
+        Alphabet<ExampleStack.Input> alphabet = stackExample.getAlphabet();
 
-		final int xsize = 5;
-		final int ysize = 5;
+        MealySimulatorOracle<ExampleStack.Input, ExampleStack.Output> simoracle = new MealySimulatorOracle<>(fm);
+        MealyDHC<ExampleStack.Input, ExampleStack.Output> dhc = new MealyDHC<>(alphabet, simoracle);
 
-		ExampleGrid gridExample = ExampleGrid.createExample(xsize, ysize);
-		MealyMachine<?,Character,?,Integer> fm = gridExample.getReferenceAutomaton();
-		Alphabet<Character> alphabet = gridExample.getAlphabet();
+        // nothing learned yet, this should throw an exception!
+        dhc.getHypothesisModel();
+    }
 
+    @Test
+    public void testMealyDHCGrid() {
 
-		MealySimulatorOracle<Character,Integer> simoracle = new MealySimulatorOracle<>(fm);
+        final int xsize = 5;
+        final int ysize = 5;
 
-		MealyDHC<Character, Integer> dhc = new MealyDHC<>(alphabet, simoracle);
+        ExampleGrid gridExample = ExampleGrid.createExample(xsize, ysize);
+        MealyMachine<?, Character, ?, Integer> fm = gridExample.getReferenceAutomaton();
+        Alphabet<Character> alphabet = gridExample.getAlphabet();
 
-		dhc.startLearning();
-		MealyMachine<?, Character, ?, Integer> hypo = dhc.getHypothesisModel();
+        MealySimulatorOracle<Character, Integer> simoracle = new MealySimulatorOracle<>(fm);
 
-		Assert.assertEquals(hypo.size(), (xsize * ysize), "Mismatch in size of learned hypothesis");
+        MealyDHC<Character, Integer> dhc = new MealyDHC<>(alphabet, simoracle);
 
-	}
+        dhc.startLearning();
+        MealyMachine<?, Character, ?, Integer> hypo = dhc.getHypothesisModel();
 
-	@Test
-	public void testMealyDHCStack() {
-		ExampleStack stackExample = ExampleStack.createExample();
-		MealyMachine<?,ExampleStack.Input,?,ExampleStack.Output> fm = stackExample.getReferenceAutomaton();
-		Alphabet<ExampleStack.Input> alphabet = stackExample.getAlphabet();
+        Assert.assertEquals(hypo.size(), (xsize * ysize), "Mismatch in size of learned hypothesis");
 
-		MealySimulatorOracle<ExampleStack.Input,ExampleStack.Output> simoracle = new MealySimulatorOracle<>(fm);
+    }
 
-		MealyDHC<ExampleStack.Input, ExampleStack.Output> dhc = new MealyDHC<>(alphabet, simoracle);
+    @Test
+    public void testMealyDHCStack() {
+        ExampleStack stackExample = ExampleStack.createExample();
+        MealyMachine<?, ExampleStack.Input, ?, ExampleStack.Output> fm = stackExample.getReferenceAutomaton();
+        Alphabet<ExampleStack.Input> alphabet = stackExample.getAlphabet();
 
-		dhc.startLearning();
+        MealySimulatorOracle<ExampleStack.Input, ExampleStack.Output> simoracle = new MealySimulatorOracle<>(fm);
 
-		MealyMachine<?, ExampleStack.Input, ?, ExampleStack.Output> hypo = dhc.getHypothesisModel();
+        MealyDHC<ExampleStack.Input, ExampleStack.Output> dhc = new MealyDHC<>(alphabet, simoracle);
 
-		// for this example the first hypothesis should have two states
-		Assert.assertEquals(hypo.size(), 2, "Mismatch in size of learned hypothesis");
+        dhc.startLearning();
 
-		SimulatorEQOracle<ExampleStack.Input, Word<ExampleStack.Output>> eqoracle = new SimulatorEQOracle<>(fm);
+        MealyMachine<?, ExampleStack.Input, ?, ExampleStack.Output> hypo = dhc.getHypothesisModel();
 
-		DefaultQuery<ExampleStack.Input, Word<ExampleStack.Output>> cexQuery = eqoracle.findCounterExample(hypo, alphabet);
+        // for this example the first hypothesis should have two states
+        Assert.assertEquals(hypo.size(), 2, "Mismatch in size of learned hypothesis");
 
-		// a counterexample has to be found
-		Assert.assertNotNull(cexQuery, "No counterexample found for incomplete hypothesis");
+        SimulatorEQOracle<ExampleStack.Input, Word<ExampleStack.Output>> eqoracle = new SimulatorEQOracle<>(fm);
 
-		boolean refined = dhc.refineHypothesis(cexQuery);
+        DefaultQuery<ExampleStack.Input, Word<ExampleStack.Output>> cexQuery =
+                eqoracle.findCounterExample(hypo, alphabet);
 
-		// the counterexample has to lead to a refinement
-		Assert.assertTrue(refined, "No refinement reported by learning algorithm");
+        // a counterexample has to be found
+        Assert.assertNotNull(cexQuery, "No counterexample found for incomplete hypothesis");
 
-		hypo = dhc.getHypothesisModel();
+        boolean refined = dhc.refineHypothesis(cexQuery);
 
-		// the refined hypothesis should now have the correct size
-		Assert.assertEquals(hypo.size(), fm.size(), "Refined hypothesis does not have correct size");
+        // the counterexample has to lead to a refinement
+        Assert.assertTrue(refined, "No refinement reported by learning algorithm");
 
-		// no counterexample shall be found now
-		cexQuery = eqoracle.findCounterExample(hypo, alphabet);
-		Assert.assertNull(cexQuery, "Counterexample found despite correct model size");
+        hypo = dhc.getHypothesisModel();
 
+        // the refined hypothesis should now have the correct size
+        Assert.assertEquals(hypo.size(), fm.size(), "Refined hypothesis does not have correct size");
 
-	}
+        // no counterexample shall be found now
+        cexQuery = eqoracle.findCounterExample(hypo, alphabet);
+        Assert.assertNull(cexQuery, "Counterexample found despite correct model size");
 
-	@Test
-	public void testMealyDHCCoffee() {
+    }
 
-		ExampleCoffeeMachine cmExample = ExampleCoffeeMachine.createExample();
-		
-		MealyMachine<?,ExampleCoffeeMachine.Input,?,String> fm = cmExample.getReferenceAutomaton();
-		Alphabet<ExampleCoffeeMachine.Input> alphabet = cmExample.getAlphabet();
+    @Test
+    public void testMealyDHCCoffee() {
 
-		SimulatorOracle<ExampleCoffeeMachine.Input, Word<String>> simoracle = new SimulatorOracle<>(fm);
-		SimulatorEQOracle<ExampleCoffeeMachine.Input, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
+        ExampleCoffeeMachine cmExample = ExampleCoffeeMachine.createExample();
 
-		MealyDHC<ExampleCoffeeMachine.Input, String> dhc = new MealyDHC<>(alphabet, simoracle);
+        MealyMachine<?, ExampleCoffeeMachine.Input, ?, String> fm = cmExample.getReferenceAutomaton();
+        Alphabet<ExampleCoffeeMachine.Input> alphabet = cmExample.getAlphabet();
 
-		int rounds = 0;
-		DefaultQuery<ExampleCoffeeMachine.Input, Word<String>> counterexample = null;
-		do {
-			if (counterexample == null) {
-				dhc.startLearning();
-			} else {
-				Assert.assertTrue(dhc.refineHypothesis(counterexample), "Counterexample did not refine hypothesis");
-			}
+        SimulatorOracle<ExampleCoffeeMachine.Input, Word<String>> simoracle = new SimulatorOracle<>(fm);
+        SimulatorEQOracle<ExampleCoffeeMachine.Input, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
 
-			counterexample = eqoracle.findCounterExample(dhc.getHypothesisModel(), alphabet);
+        MealyDHC<ExampleCoffeeMachine.Input, String> dhc = new MealyDHC<>(alphabet, simoracle);
 
-			Assert.assertTrue(rounds++ < fm.size(), "Learning took more rounds than states in target model");
+        int rounds = 0;
+        DefaultQuery<ExampleCoffeeMachine.Input, Word<String>> counterexample = null;
+        do {
+            if (counterexample == null) {
+                dhc.startLearning();
+            } else {
+                Assert.assertTrue(dhc.refineHypothesis(counterexample), "Counterexample did not refine hypothesis");
+            }
 
-		} while (counterexample != null);
+            counterexample = eqoracle.findCounterExample(dhc.getHypothesisModel(), alphabet);
 
-		Assert.assertEquals(dhc.getHypothesisModel().size(), fm.size(), "Mismatch in size of learned hypothesis and target model");
+            Assert.assertTrue(rounds++ < fm.size(), "Learning took more rounds than states in target model");
 
-	}
-	
-	
-	@Test
-	public void testMealyDHCRandom() {
-		
-		Alphabet<Character> inputs = Alphabets.characters('a', 'c');
-		
-		List<String> outputs = Arrays.asList("o1", "o2", "o3");
+        } while (counterexample != null);
 
-		CompactMealy<Character, String> fm = RandomAutomata.randomDeterministic(new Random(1337), 100, inputs, null, outputs, new CompactMealy<>(inputs));
-		
-		
-		SimulatorOracle<Character, Word<String>> simoracle = new SimulatorOracle<>(fm);
-		SimulatorEQOracle<Character, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
+        Assert.assertEquals(dhc.getHypothesisModel().size(),
+                            fm.size(),
+                            "Mismatch in size of learned hypothesis and target model");
 
-		MealyDHC<Character, String> dhc = new MealyDHC<>(inputs, simoracle);
+    }
 
-		int rounds = 0;
-		DefaultQuery<Character, Word<String>> counterexample = null;
-		do {
-			if (counterexample == null) {
-				dhc.startLearning();
-			} else {
-				System.out.println("found counterexample: " + counterexample.getInput() + " / " + counterexample.getOutput());
-				Assert.assertTrue(dhc.refineHypothesis(counterexample), "Counterexample did not refine hypothesis");
-			}
+    @Test
+    public void testMealyDHCRandom() {
 
-			counterexample = eqoracle.findCounterExample(dhc.getHypothesisModel(), inputs);
-			
-			Assert.assertTrue(rounds++ < fm.size(), "Learning took more rounds than states in target model");
+        Alphabet<Character> inputs = Alphabets.characters('a', 'c');
 
-		} while (counterexample != null);
-		
-		Assert.assertEquals(dhc.getHypothesisModel().size(), fm.size(), "Mismatch in size of learned hypothesis and target model");
-		System.err.println("Hypothesis has " + dhc.getHypothesisModel().size() + " states");
+        List<String> outputs = Arrays.asList("o1", "o2", "o3");
 
-	}
+        CompactMealy<Character, String> fm = RandomAutomata.randomDeterministic(new Random(1337),
+                                                                                100,
+                                                                                inputs,
+                                                                                null,
+                                                                                outputs,
+                                                                                new CompactMealy<>(inputs));
+
+        SimulatorOracle<Character, Word<String>> simoracle = new SimulatorOracle<>(fm);
+        SimulatorEQOracle<Character, Word<String>> eqoracle = new SimulatorEQOracle<>(fm);
+
+        MealyDHC<Character, String> dhc = new MealyDHC<>(inputs, simoracle);
+
+        int rounds = 0;
+        DefaultQuery<Character, Word<String>> counterexample = null;
+        do {
+            if (counterexample == null) {
+                dhc.startLearning();
+            } else {
+                System.out.println(
+                        "found counterexample: " + counterexample.getInput() + " / " + counterexample.getOutput());
+                Assert.assertTrue(dhc.refineHypothesis(counterexample), "Counterexample did not refine hypothesis");
+            }
+
+            counterexample = eqoracle.findCounterExample(dhc.getHypothesisModel(), inputs);
+
+            Assert.assertTrue(rounds++ < fm.size(), "Learning took more rounds than states in target model");
+
+        } while (counterexample != null);
+
+        Assert.assertEquals(dhc.getHypothesisModel().size(),
+                            fm.size(),
+                            "Mismatch in size of learned hypothesis and target model");
+        System.err.println("Hypothesis has " + dhc.getHypothesisModel().size() + " states");
+
+    }
 }

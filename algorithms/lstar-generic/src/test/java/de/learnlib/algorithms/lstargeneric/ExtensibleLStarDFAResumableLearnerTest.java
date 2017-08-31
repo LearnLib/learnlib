@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,17 +25,13 @@ import net.automatalib.words.Alphabet;
 /**
  * @author bainczyk
  */
-public class ExtensibleLStarDFAResumableLearnerTest extends AbstractResumableLearnerDFATest<
-        ExtensibleLStarDFA<Integer>,
-        AutomatonLStarState<Integer, Boolean, CompactDFA<Integer>, Integer>> {
+public class ExtensibleLStarDFAResumableLearnerTest
+        extends AbstractResumableLearnerDFATest<ExtensibleLStarDFA<Character>, AutomatonLStarState<Character, Boolean, CompactDFA<Character>, Integer>> {
 
     @Override
-    protected ExtensibleLStarDFA<Integer> getLearner(final MembershipOracle<Integer, Boolean> oracle,
-                                                     final Alphabet<Integer> alphabet) {
-        return new ExtensibleLStarDFABuilder<Integer>()
-                .withAlphabet(alphabet)
-                .withOracle(oracle)
-                .create();
+    protected ExtensibleLStarDFA<Character> getLearner(final MembershipOracle<Character, Boolean> oracle,
+                                                       final Alphabet<Character> alphabet) {
+        return new ExtensibleLStarDFABuilder<Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }
 
     @Override

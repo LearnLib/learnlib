@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,13 +27,10 @@ import net.automatalib.words.Word;
 public class MalerPnueliMealyResumableLearnerTest extends ExtensibleLStarMealyResumableLearnerTest {
 
     @Override
-    protected ExtensibleLStarMealy<Integer, Character> getLearner(final MembershipOracle<Integer, Word<Character>> oracle,
-                                                                  final Alphabet<Integer> alphabet) {
+    protected ExtensibleLStarMealy<Character, Character> getLearner(final MembershipOracle<Character, Word<Character>> oracle,
+                                                                    final Alphabet<Character> alphabet) {
 
-        return new MalerPnueliMealyBuilder<Integer, Character>()
-                .withAlphabet(alphabet)
-                .withOracle(oracle)
-                .create();
+        return new MalerPnueliMealyBuilder<Character, Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }
 
     @Override

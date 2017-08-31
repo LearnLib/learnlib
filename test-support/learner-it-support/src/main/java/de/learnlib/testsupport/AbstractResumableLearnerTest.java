@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,12 @@
  */
 package de.learnlib.testsupport;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.ResumableLearner;
 import de.learnlib.oracles.DefaultQuery;
@@ -27,24 +33,14 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-
 /**
  * Test class that checks the workflow of a learning algorithm that implements {@link ResumableLearner}.
  *
  * @author bainczyk
  */
-public abstract class AbstractResumableLearnerTest<
-        L extends ResumableLearner<T> & LearningAlgorithm<M, I, D>,
-        M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>,
-        OR,
-        I,
-        D,
-        T extends Serializable> {
+public abstract class AbstractResumableLearnerTest<L extends ResumableLearner<T> & LearningAlgorithm<M, I, D>, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, OR, I, D, T extends Serializable> {
+
+    protected static final int RANDOM_SEED = 42;
 
     private M target;
 
@@ -66,6 +62,16 @@ public abstract class AbstractResumableLearnerTest<
         this.rounds = getRounds();
     }
 
+    protected abstract Alphabet<I> getInitialAlphabet();
+
+    protected abstract M getTarget(Alphabet<I> alphabet);
+
+    protected abstract OR getOracle(M target);
+
+    protected abstract L getLearner(OR oracle, Alphabet<I> alphabet);
+
+    protected abstract int getRounds();
+
     @Test
     public void testSuspendAndResumeLearner() throws Exception {
         final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
@@ -76,8 +82,11 @@ public abstract class AbstractResumableLearnerTest<
         int roundsPre = 0, roundsPost = 0;
 
         while (true) {
-            final Word<I> separatingWord = Automata.findSeparatingWord(target, learner.getHypothesisModel(), inputAlphabet);
-            if (separatingWord == null) break;
+            final Word<I> separatingWord =
+                    Automata.findSeparatingWord(target, learner.getHypothesisModel(), inputAlphabet);
+            if (separatingWord == null) {
+                break;
+            }
             learner.refineHypothesis(new DefaultQuery<>(separatingWord, target.computeOutput(separatingWord)));
             roundsPre++;
 
@@ -101,26 +110,17 @@ public abstract class AbstractResumableLearnerTest<
 
         while (true) {
             final Word<I> word = Automata.findSeparatingWord(target, learner2.getHypothesisModel(), inputAlphabet);
-            if (word == null) break;
+            if (word == null) {
+                break;
+            }
             learner2.refineHypothesis(new DefaultQuery<>(word, target.computeOutput(word)));
             roundsPost++;
         }
 
-        final boolean modelsAreEquivalent = Automata.testEquivalence(learner.getHypothesisModel(),
-                                                                     learner2.getHypothesisModel(),
-                                                                     inputAlphabet);
+        final boolean modelsAreEquivalent =
+                Automata.testEquivalence(learner.getHypothesisModel(), learner2.getHypothesisModel(), inputAlphabet);
 
         Assert.assertTrue(modelsAreEquivalent);
         Assert.assertTrue(roundsPre - roundsPost == rounds);
     }
-
-    protected abstract Alphabet<I> getInitialAlphabet();
-
-    protected abstract M getTarget(final Alphabet<I> alphabet);
-
-    protected abstract OR getOracle(M target);
-
-    protected abstract L getLearner(OR oracle, Alphabet<I> alphabet);
-
-    protected abstract int getRounds();
 }

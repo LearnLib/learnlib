@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,22 +25,22 @@ import net.automatalib.words.WordBuilder;
  */
 public class MQ2SQWrapper<I, O> implements SymbolQueryOracle<I, O> {
 
-	final WordBuilder<I> wb;
-	final MembershipOracle<I, Word<O>> oracle;
+    final WordBuilder<I> wb;
+    final MembershipOracle<I, Word<O>> oracle;
 
-	public MQ2SQWrapper(final MembershipOracle<I, Word<O>> oracle) {
-		this.oracle = oracle;
-		this.wb = new WordBuilder<>();
-	}
+    public MQ2SQWrapper(final MembershipOracle<I, Word<O>> oracle) {
+        this.oracle = oracle;
+        this.wb = new WordBuilder<>();
+    }
 
-	@Override
-	public O query(I i) {
-		this.wb.append(i);
-		return this.oracle.answerQuery(wb.toWord()).lastSymbol();
-	}
+    @Override
+    public O query(I i) {
+        this.wb.append(i);
+        return this.oracle.answerQuery(wb.toWord()).lastSymbol();
+    }
 
-	@Override
-	public void reset() {
-		this.wb.clear();
-	}
+    @Override
+    public void reset() {
+        this.wb.clear();
+    }
 }

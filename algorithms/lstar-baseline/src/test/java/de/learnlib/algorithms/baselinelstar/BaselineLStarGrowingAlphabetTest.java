@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,11 +19,12 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.words.Alphabet;
 
-public class BaselineLStarGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<BaselineLStar<Integer>> {
+public class BaselineLStarGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<BaselineLStar<Character>> {
 
-	@Override
-	protected BaselineLStar<Integer> getLearner(MembershipOracle<Integer, Boolean> oracle, Alphabet<Integer> alphabet) {
-		return new BaselineLStar<>(alphabet, oracle);
-	}
+    @Override
+    protected BaselineLStar<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+                                                  Alphabet<Character> alphabet) {
+        return new BaselineLStar<>(alphabet, oracle);
+    }
 
 }

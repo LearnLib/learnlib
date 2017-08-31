@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,11 +21,11 @@ import java.util.List;
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import com.google.common.collect.Iterables;
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.acex.impl.BaseAbstractCounterexample;
+import de.learnlib.acex.impl.AbstractBaseCounterexample;
+import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.AbstractHypTrans;
 import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.ContextPair;
 import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.DTNode;
 import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.HypLoc;
-import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.HypTrans;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.vpda.StackContents;
@@ -35,121 +35,125 @@ import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 /**
- * @param <I> input alphabet type
+ * @param <I>
+ *         input alphabet type
  *
  * @author Malte Isberner
  */
 public class DTLearnerVPDA<I> extends AbstractVPDALearner<I> {
 
-	protected AcexAnalyzer analyzer;
+    protected AcexAnalyzer analyzer;
 
-	protected class PrefixTransformAcex extends BaseAbstractCounterexample<Boolean> {
+    @GenerateBuilder
+    public DTLearnerVPDA(VPDAlphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, AcexAnalyzer analyzer) {
+        super(alphabet, oracle);
+        this.analyzer = analyzer;
+    }
 
-		private final Word<I> suffix;
+    protected State<HypLoc<I>> getDefinitiveSuccessor(State<HypLoc<I>> baseState, Word<I> suffix) {
+        return hypothesis.getSuccessor(baseState, suffix);
+    }
 
-		private final State<HypLoc<I>> baseState;
+    protected Word<I> transformAccessSequence(State<HypLoc<I>> state) {
+        return transformAccessSequence(state.getStackContents(), state.getLocation());
+    }
 
-		public PrefixTransformAcex(Word<I> word, ContextPair<I> context) {
-			super(context.getSuffix().length() + 1);
-			this.suffix = context.getSuffix();
-			this.baseState = hypothesis.getState(Iterables.concat(context.getPrefix(), word));
-		}
+    protected Word<I> transformAccessSequence(StackContents contents) {
+        return transformAccessSequence(contents, hypothesis.getInitialLocation());
+    }
 
-		public State<HypLoc<I>> getBaseState() {
-			return baseState;
-		}
+    protected Word<I> transformAccessSequence(StackContents contents, HypLoc<I> loc) {
+        List<Integer> stackElems = new ArrayList<>();
+        if (contents != null) {
+            StackContents iter = contents;
+            while (iter != null) {
+                stackElems.add(iter.peek());
+                iter = iter.pop();
+            }
+        }
+        WordBuilder<I> wb = new WordBuilder<>();
+        for (int i = stackElems.size() - 1; i >= 0; i--) {
+            int elem = stackElems.get(i);
+            HypLoc<I> stackLoc = hypothesis.getStackLoc(elem);
+            wb.append(stackLoc.getAccessSequence());
+            I callSym = hypothesis.getCallSym(elem);
+            wb.append(callSym);
+        }
+        wb.append(loc.getAccessSequence());
+        return wb.toWord();
+    }
 
-		public Word<I> getSuffix() {
-			return suffix;
-		}
+    @Override
+    protected boolean refineHypothesisSingle(DefaultQuery<I, Boolean> ceQuery) {
+        Word<I> ceWord = ceQuery.getInput();
+        boolean hypOut = hypothesis.computeOutput(ceWord);
+        if (hypOut == ceQuery.getOutput()) {
+            return false;
+        }
+        PrefixTransformAcex acex = new PrefixTransformAcex(Word.epsilon(), new ContextPair<>(Word.epsilon(), ceWord));
+        acex.setEffect(0, !hypOut);
+        acex.setEffect(acex.getLength() - 1, hypOut);
 
-		@Override
-		public boolean checkEffects(Boolean eff1, Boolean eff2) {
-			return eff1.equals(eff2);
-		}
+        int breakpoint = analyzer.analyzeAbstractCounterexample(acex);
 
-		@Override
-		protected Boolean computeEffect(int index) {
-			Word<I> suffPref = suffix.prefix(index);
-			State<HypLoc<I>> state = getDefinitiveSuccessor(baseState, suffPref);
-			Word<I> suffSuff = suffix.subWord(index);
+        Word<I> prefix = ceWord.prefix(breakpoint);
+        I act = ceWord.getSymbol(breakpoint);
+        Word<I> suffix = ceWord.subWord(breakpoint + 1);
 
-			return oracle.answerQuery(transformAccessSequence(state), suffSuff);
-		}
+        State<HypLoc<I>> state = hypothesis.getState(prefix);
+        State<HypLoc<I>> succState = hypothesis.getSuccessor(state, act);
 
-	}
+        ContextPair<I> context = new ContextPair<>(transformAccessSequence(succState.getStackContents()), suffix);
 
-	protected State<HypLoc<I>> getDefinitiveSuccessor(State<HypLoc<I>> baseState, Word<I> suffix) {
-		return hypothesis.getSuccessor(baseState, suffix);
-	}
+        AbstractHypTrans<I> trans = hypothesis.getInternalTransition(state, act);
 
-	@GenerateBuilder
-	public DTLearnerVPDA(VPDAlphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, AcexAnalyzer analyzer) {
-		super(alphabet, oracle);
-		this.analyzer = analyzer;
-	}
+        HypLoc<I> newLoc = makeTree(trans);
+        DTNode<I> oldDtNode = succState.getLocation().getLeaf();
+        openTransitions.addAll(oldDtNode.getIncoming());
+        DTNode<I>.SplitResult children = oldDtNode.split(context, acex.effect(breakpoint), acex.effect(breakpoint + 1));
+        link(children.nodeOld, newLoc);
+        link(children.nodeNew, succState.getLocation());
+        initializeLocation(trans.getTreeTarget());
 
-	protected Word<I> transformAccessSequence(State<HypLoc<I>> state) {
-		return transformAccessSequence(state.getStackContents(), state.getLocation());
-	}
+        closeTransitions();
 
-	protected Word<I> transformAccessSequence(StackContents contents) {
-		return transformAccessSequence(contents, hypothesis.getInitialLocation());
-	}
+        return true;
+    }
 
-	protected Word<I> transformAccessSequence(StackContents contents, HypLoc<I> loc) {
-		List<Integer> stackElems = new ArrayList<>();
-		while (contents != null) {
-			stackElems.add(contents.peek());
-			contents = contents.pop();
-		}
-		WordBuilder<I> wb = new WordBuilder<>();
-		for (int i = stackElems.size() - 1; i >= 0; i--) {
-			int elem = stackElems.get(i);
-			HypLoc<I> stackLoc = hypothesis.getStackLoc(elem);
-			wb.append(stackLoc.getAccessSequence());
-			I callSym = hypothesis.getCallSym(elem);
-			wb.append(callSym);
-		}
-		wb.append(loc.getAccessSequence());
-		return wb.toWord();
-	}
+    protected class PrefixTransformAcex extends AbstractBaseCounterexample<Boolean> {
 
-	@Override
-	protected boolean refineHypothesisSingle(DefaultQuery<I, Boolean> ceQuery) {
-		Word<I> ceWord = ceQuery.getInput();
-		boolean hypOut = hypothesis.computeOutput(ceWord);
-		if (hypOut == ceQuery.getOutput()) {
-			return false;
-		}
-		PrefixTransformAcex acex = new PrefixTransformAcex(Word.epsilon(), new ContextPair<>(Word.epsilon(), ceWord));
-		acex.setEffect(0, !hypOut);
-		acex.setEffect(acex.getLength() - 1, hypOut);
+        private final Word<I> suffix;
 
-		int breakpoint = analyzer.analyzeAbstractCounterexample(acex);
+        private final State<HypLoc<I>> baseState;
 
-		Word<I> prefix = ceWord.prefix(breakpoint);
-		I act = ceWord.getSymbol(breakpoint);
-		Word<I> suffix = ceWord.subWord(breakpoint + 1);
+        public PrefixTransformAcex(Word<I> word, ContextPair<I> context) {
+            super(context.getSuffix().length() + 1);
+            this.suffix = context.getSuffix();
+            this.baseState = hypothesis.getState(Iterables.concat(context.getPrefix(), word));
+        }
 
-		State<HypLoc<I>> state = hypothesis.getState(prefix);
-		State<HypLoc<I>> succState = hypothesis.getSuccessor(state, act);
+        public State<HypLoc<I>> getBaseState() {
+            return baseState;
+        }
 
-		ContextPair<I> context = new ContextPair<>(transformAccessSequence(succState.getStackContents()), suffix);
+        public Word<I> getSuffix() {
+            return suffix;
+        }
 
-		HypTrans<I> trans = hypothesis.getInternalTransition(state, act);
+        @Override
+        public boolean checkEffects(Boolean eff1, Boolean eff2) {
+            return eff1.equals(eff2);
+        }
 
-		HypLoc<I> newLoc = makeTree(trans);
-		DTNode<I> oldDtNode = succState.getLocation().getLeaf();
-		openTransitions.addAll(oldDtNode.getIncoming());
-		DTNode<I>.SplitResult children = oldDtNode.split(context, acex.effect(breakpoint), acex.effect(breakpoint + 1));
-		link(children.nodeOld, newLoc);
-		link(children.nodeNew, succState.getLocation());
-		initializeLocation(trans.getTreeTarget());
+        @Override
+        protected Boolean computeEffect(int index) {
+            Word<I> suffPref = suffix.prefix(index);
+            State<HypLoc<I>> state = getDefinitiveSuccessor(baseState, suffPref);
+            Word<I> suffSuff = suffix.subWord(index);
 
-		closeTransitions();
+            return oracle.answerQuery(transformAccessSequence(state), suffSuff);
+        }
 
-		return true;
-	}
+    }
 
 }

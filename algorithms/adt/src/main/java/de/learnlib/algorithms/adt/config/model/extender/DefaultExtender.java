@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,15 @@
  */
 package de.learnlib.algorithms.adt.config.model.extender;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.ADTExtender;
 import de.learnlib.algorithms.adt.api.PartialTransitionAnalyzer;
@@ -27,116 +36,108 @@ import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 /**
  * @author frohme
  */
 @ParametersAreNonnullByDefault
 public class DefaultExtender implements ADTExtender {
 
-	private final DefensiveADSCalculator adsCalculator;
+    private final DefensiveADSCalculator adsCalculator;
 
-	public DefaultExtender(final DefensiveADSCalculator adsCalculator) {
-		this.adsCalculator = adsCalculator;
-	}
+    public DefaultExtender(final DefensiveADSCalculator adsCalculator) {
+        this.adsCalculator = adsCalculator;
+    }
 
-	@Override
-	public <I, O> ExtensionResult<ADTState<I, O>, I, O> computeExtension(final ADTHypothesis<I, O> hypothesis,
-																		 final PartialTransitionAnalyzer<ADTState<I, O>, I> partialTransitionAnalyzer,
-																		 final ADTNode<ADTState<I, O>, I, O> ads) {
-		// cannot compute extension for root node
-		if (ads.getParent() == null) {
-			return ExtensionResult.empty();
-		}
+    @Override
+    public <I, O> ExtensionResult<ADTState<I, O>, I, O> computeExtension(final ADTHypothesis<I, O> hypothesis,
+                                                                         final PartialTransitionAnalyzer<ADTState<I, O>, I> partialTransitionAnalyzer,
+                                                                         final ADTNode<ADTState<I, O>, I, O> ads) {
+        // cannot compute extension for root node
+        if (ads.getParent() == null) {
+            return ExtensionResult.empty();
+        }
 
-		final Set<ADTNode<ADTState<I, O>, I, O>> initialNodes = ADTUtil.collectLeaves(ads);
+        final Set<ADTNode<ADTState<I, O>, I, O>> initialNodes = ADTUtil.collectLeaves(ads);
 
-		// currently can't handle more than two initial nodes
-		if (initialNodes.size() > 2) {
-			return ExtensionResult.empty();
-		}
+        // currently can't handle more than two initial nodes
+        if (initialNodes.size() > 2) {
+            return ExtensionResult.empty();
+        }
 
-		final Pair<Word<I>, Word<O>> parentTrace = ADTUtil.buildTraceForNode(ads.getParent());
+        final Pair<Word<I>, Word<O>> parentTrace = ADTUtil.buildTraceForNode(ads.getParent());
 
-		// as long as we encounter exceptions, repeat
-		while (true) {
-			final Word<I> inputTrace = parentTrace.getFirst();
-			final Word<O> outputTrace = parentTrace.getSecond();
+        // as long as we encounter exceptions, repeat
+        while (true) {
+            final Word<I> inputTrace = parentTrace.getFirst();
+            final Word<O> outputTrace = parentTrace.getSecond();
 
-			try {
-				Map<ADTState<I, O>, ADTState<I, O>> currentToInitialMapping = ADTUtil.collectLeaves(ads)
-						.stream()
-						.map(ADTNode::getHypothesisState)
-						.collect(Collectors.toMap(Function.identity(), Function.identity()));
+            try {
+                Map<ADTState<I, O>, ADTState<I, O>> currentToInitialMapping = ADTUtil.collectLeaves(ads)
+                                                                                     .stream()
+                                                                                     .map(ADTNode::getHypothesisState)
+                                                                                     .collect(Collectors.toMap(Function.identity(),
+                                                                                                               Function.identity()));
 
-				// apply parent trace
-				for (int idx = 0; idx < inputTrace.length(); idx++) {
+                // apply parent trace
+                for (int idx = 0; idx < inputTrace.length(); idx++) {
 
-					final Map<ADTState<I, O>, ADTState<I, O>> nextCurrentToInitialMapping = new HashMap<>();
-					final I input = inputTrace.getSymbol(idx);
-					final O output = outputTrace.getSymbol(idx);
+                    final Map<ADTState<I, O>, ADTState<I, O>> nextCurrentToInitialMapping = new HashMap<>();
+                    final I input = inputTrace.getSymbol(idx);
+                    final O output = outputTrace.getSymbol(idx);
 
-					for (final ADTState<I, O> s : currentToInitialMapping.keySet()) {
-						if (!partialTransitionAnalyzer.isTransitionDefined(s, input)) {
-							partialTransitionAnalyzer.closeTransition(s, input);
-						}
+                    for (final ADTState<I, O> s : currentToInitialMapping.keySet()) {
+                        if (!partialTransitionAnalyzer.isTransitionDefined(s, input)) {
+                            partialTransitionAnalyzer.closeTransition(s, input);
+                        }
 
-						final ADTState<I, O> successor = hypothesis.getSuccessor(s, input);
+                        final ADTState<I, O> successor = hypothesis.getSuccessor(s, input);
 
-						if (!hypothesis.getOutput(s, input).equals(output)) {
-							final ADTState<I, O> initial = currentToInitialMapping.get(s);
-							final Word<I> as = initial.getAccessSequence();
-							final Word<O> asOut = hypothesis.computeOutput(as);
-							final Word<I> traceIn = inputTrace.prefix(idx + 1);
-							final Word<O> traceOut = outputTrace.prefix(idx + 1);
+                        if (!hypothesis.getOutput(s, input).equals(output)) {
+                            final ADTState<I, O> initial = currentToInitialMapping.get(s);
+                            final Word<I> as = initial.getAccessSequence();
+                            final Word<O> asOut = hypothesis.computeOutput(as);
+                            final Word<I> traceIn = inputTrace.prefix(idx + 1);
+                            final Word<O> traceOut = outputTrace.prefix(idx + 1);
 
-							final DefaultQuery<I, Word<O>> ce =
-									new DefaultQuery<>(as.concat(traceIn), asOut.concat(traceOut));
+                            final DefaultQuery<I, Word<O>> ce =
+                                    new DefaultQuery<>(as.concat(traceIn), asOut.concat(traceOut));
 
-							return new ExtensionResult(ce);
-						}
+                            return new ExtensionResult(ce);
+                        }
 
-						// converging states, cannot distinguish
-						if (nextCurrentToInitialMapping.containsKey(successor)) {
-							return ExtensionResult.empty();
-						}
+                        // converging states, cannot distinguish
+                        if (nextCurrentToInitialMapping.containsKey(successor)) {
+                            return ExtensionResult.empty();
+                        }
 
-						nextCurrentToInitialMapping.put(successor, currentToInitialMapping.get(s));
-					}
+                        nextCurrentToInitialMapping.put(successor, currentToInitialMapping.get(s));
+                    }
 
-					currentToInitialMapping = nextCurrentToInitialMapping;
-				}
+                    currentToInitialMapping = nextCurrentToInitialMapping;
+                }
 
-				final Set<ADTState<I, O>> currentSet = currentToInitialMapping.keySet();
-				final Optional<ADTNode<ADTState<I, O>, I, O>> potentialExtension = adsCalculator.compute(hypothesis,
-																										 hypothesis.getInputAlphabet(),
-																										 currentSet,
-																										 partialTransitionAnalyzer);
+                final Set<ADTState<I, O>> currentSet = currentToInitialMapping.keySet();
+                final Optional<ADTNode<ADTState<I, O>, I, O>> potentialExtension = adsCalculator.compute(hypothesis,
+                                                                                                         hypothesis.getInputAlphabet(),
+                                                                                                         currentSet,
+                                                                                                         partialTransitionAnalyzer);
 
-				if (!potentialExtension.isPresent()) {
-					return ExtensionResult.empty();
-				}
+                if (!potentialExtension.isPresent()) {
+                    return ExtensionResult.empty();
+                }
 
-				final ADTNode<ADTState<I, O>, I, O> extension = potentialExtension.get();
+                final ADTNode<ADTState<I, O>, I, O> extension = potentialExtension.get();
 
-				// set the original intial states
-				for (ADTNode<ADTState<I, O>, I, O> finalNode : ADTUtil.collectLeaves(extension)) {
-					finalNode.setHypothesisState(currentToInitialMapping.get(finalNode.getHypothesisState()));
-				}
+                // set the original intial states
+                for (ADTNode<ADTState<I, O>, I, O> finalNode : ADTUtil.collectLeaves(extension)) {
+                    finalNode.setHypothesisState(currentToInitialMapping.get(finalNode.getHypothesisState()));
+                }
 
-				return new ExtensionResult(extension);
-			}
-			catch (PartialTransitionAnalyzer.HypothesisModificationException hme) {
-				//do nothing, repeat
-			}
-		}
-	}
+                return new ExtensionResult(extension);
+            } catch (PartialTransitionAnalyzer.HypothesisModificationException hme) {
+                //do nothing, repeat
+            }
+        }
+    }
 
 }

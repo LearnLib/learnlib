@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,15 +20,13 @@ import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-public class MealyDHCResumableLearnerTest extends AbstractResumableLearnerMealyTest<MealyDHC<Integer, Character>, MealyDHCState<Integer, Character>> {
+public class MealyDHCResumableLearnerTest
+        extends AbstractResumableLearnerMealyTest<MealyDHC<Character, Character>, MealyDHCState<Character, Character>> {
 
     @Override
-    protected MealyDHC<Integer, Character> getLearner(MembershipOracle<Integer, Word<Character>> oracle,
-                                                      Alphabet<Integer> alphabet) {
-        return new MealyDHCBuilder<Integer, Character>()
-                .withAlphabet(alphabet)
-                .withOracle(oracle)
-                .create();
+    protected MealyDHC<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                        Alphabet<Character> alphabet) {
+        return new MealyDHCBuilder<Character, Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }
 
     @Override

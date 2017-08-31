@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,11 +23,11 @@ import net.automatalib.words.Word;
 /**
  * @author frohme
  */
-public class MealyDHCGrowingAlphabetTest extends AbstractGrowingAlphabetMealyTest<MealyDHC<Integer, Character>> {
+public class MealyDHCGrowingAlphabetTest extends AbstractGrowingAlphabetMealyTest<MealyDHC<Character, Character>> {
 
-	@Override
-	protected MealyDHC<Integer, Character> getLearner(MembershipOracle<Integer, Word<Character>> oracle,
-													  Alphabet<Integer> alphabet) {
-		return new MealyDHC<>(alphabet, oracle);
-	}
+    @Override
+    protected MealyDHC<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                        Alphabet<Character> alphabet) {
+        return new MealyDHC<>(alphabet, oracle);
+    }
 }

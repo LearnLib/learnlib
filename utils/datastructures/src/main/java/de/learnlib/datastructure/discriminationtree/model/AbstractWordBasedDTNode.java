@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,19 +20,22 @@ import net.automatalib.words.Word;
 /**
  * Convenient class for word-based discrimination tree nodes that already binds certain generics.
  *
- * @param <I> input symbol type
- * @param <O> output symbol type
- * @param <D> node data type
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ * @param <D>
+ *         node data type
  *
  * @author frohme
  */
-public abstract class DTNode<I, O, D> extends AbstractDTNode<Word<I>, O, D, DTNode<I, O, D>> {
+public abstract class AbstractWordBasedDTNode<I, O, D> extends AbstractDTNode<Word<I>, O, D, AbstractWordBasedDTNode<I, O, D>> {
 
-	public DTNode(D data) {
-		super(data);
-	}
+    public AbstractWordBasedDTNode(D data) {
+        super(data);
+    }
 
-	public DTNode(DTNode<I, O, D> parent, O parentOutcome, D data) {
-		super(parent, parentOutcome, data);
-	}
+    public AbstractWordBasedDTNode(AbstractWordBasedDTNode<I, O, D> parent, O parentOutcome, D data) {
+        super(parent, parentOutcome, data);
+    }
 }

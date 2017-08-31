@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,16 +15,17 @@
  */
 package de.learnlib.algorithms.kv.dfa;
 
-import de.learnlib.datastructure.discriminationtree.BinaryDTree;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-
 import java.io.Serializable;
 import java.util.List;
+
+import de.learnlib.datastructure.discriminationtree.BinaryDTree;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 
 /**
  * Class that contains all data that represent the internal state of the {@link KearnsVaziraniDFA} learner.
  *
- * @param <I>  The input alphabet type.
+ * @param <I>
+ *         The input alphabet type.
  *
  * @author bainczyk
  */

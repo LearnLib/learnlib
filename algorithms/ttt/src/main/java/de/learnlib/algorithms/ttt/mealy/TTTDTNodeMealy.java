@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,34 +18,36 @@ package de.learnlib.algorithms.ttt.mealy;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.learnlib.algorithms.ttt.base.BaseDTNode;
+import de.learnlib.algorithms.ttt.base.AbstractBaseDTNode;
 import de.learnlib.algorithms.ttt.base.TTTState;
 
 /**
  * Generic n-ary discrimination tree node specialization.
  *
- * @param <I> input symbol type
- * @param <D> output symbol type
+ * @param <I>
+ *         input symbol type
+ * @param <D>
+ *         output symbol type
  *
  * @author frohme
  */
-public class TTTDTNodeMealy<I, D> extends BaseDTNode<I, D> {
+public class TTTDTNodeMealy<I, D> extends AbstractBaseDTNode<I, D> {
 
-	public TTTDTNodeMealy() {
-		this(null, null);
-	}
+    public TTTDTNodeMealy() {
+        this(null, null);
+    }
 
-	public TTTDTNodeMealy(BaseDTNode<I, D> parent, D parentEdgeLabel) {
-		super(parent, parentEdgeLabel);
-	}
+    public TTTDTNodeMealy(AbstractBaseDTNode<I, D> parent, D parentEdgeLabel) {
+        super(parent, parentEdgeLabel);
+    }
 
-	@Override
-	protected Map<D, BaseDTNode<I, D>> createChildMap() {
-		return new HashMap<>();
-	}
+    @Override
+    protected Map<D, AbstractBaseDTNode<I, D>> createChildMap() {
+        return new HashMap<>();
+    }
 
-	@Override
-	protected BaseDTNode<I, D> createChild(D outcome, TTTState<I, D> data) {
-		return new TTTDTNodeMealy<>(this, outcome);
-	}
+    @Override
+    protected AbstractBaseDTNode<I, D> createChild(D outcome, TTTState<I, D> data) {
+        return new TTTDTNodeMealy<>(this, outcome);
+    }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,33 +24,34 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractDTNode;
 /**
  * Iterator that traverses all inner nodes (no leaves) of a subtree of a given discrimination tree node.
  *
- * @param <N> node type
+ * @param <N>
+ *         node type
  *
  * @author Malte Isberner
  * @author frohme
  */
 public class InnerNodesIterator<N extends AbstractDTNode<?, ?, ?, N>> extends AbstractIterator<N> {
 
-	private final Deque<N> stack = new ArrayDeque<>();
+    private final Deque<N> stack = new ArrayDeque<>();
 
-	public InnerNodesIterator(N root) {
-		if (!root.isLeaf()) {
-			stack.push(root);
-		}
-	}
+    public InnerNodesIterator(N root) {
+        if (!root.isLeaf()) {
+            stack.push(root);
+        }
+    }
 
-	@Override
-	protected N computeNext() {
-		while (!stack.isEmpty()) {
-			N curr = stack.pop();
+    @Override
+    protected N computeNext() {
+        while (!stack.isEmpty()) {
+            N curr = stack.pop();
 
-			if (!curr.isLeaf()) {
-				for (N child : curr.getChildren()) {
-					stack.push(child);
-				}
-				return curr;
-			}
-		}
-		return endOfData();
-	}
+            if (!curr.isLeaf()) {
+                for (N child : curr.getChildren()) {
+                    stack.push(child);
+                }
+                return curr;
+            }
+        }
+        return endOfData();
+    }
 }

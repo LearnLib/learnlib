@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,80 +22,83 @@ import de.learnlib.algorithms.adt.adt.ADTNode;
 /**
  * Hypothesis transition model.
  *
- * @param <I> input alphabet type
- * @param <O> output alphabet type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
+ *
  * @author frohme
  */
 public class ADTTransition<I, O> implements Serializable {
 
-	private ADTState<I, O> source;
-	private ADTState<I, O> target;
+    private ADTState<I, O> source;
+    private ADTState<I, O> target;
 
-	private I input;
-	private O output;
+    private I input;
+    private O output;
 
-	private ADTNode<ADTState<I, O>, I, O> siftNode;
+    private ADTNode<ADTState<I, O>, I, O> siftNode;
 
-	private boolean isSpanningTreeEdge;
+    private boolean isSpanningTreeEdge;
 
-	public ADTState<I, O> getSource() {
-		return source;
-	}
+    public ADTState<I, O> getSource() {
+        return source;
+    }
 
-	public ADTState<I, O> getTarget() {
-		return target;
-	}
+    public void setSource(ADTState<I, O> source) {
+        this.source = source;
+    }
 
-	public I getInput() {
-		return input;
-	}
+    public ADTState<I, O> getTarget() {
+        return target;
+    }
 
-	public O getOutput() {
-		return output;
-	}
+    public void setTarget(ADTState<I, O> target) {
+        if (this.target != null) {
+            this.target.getIncomingTransitions().remove(this);
+        }
 
-	public ADTNode<ADTState<I, O>, I, O> getSiftNode() {
-		return siftNode;
-	}
+        this.target = target;
 
-	public boolean isSpanningTreeEdge() {
-		return isSpanningTreeEdge;
-	}
+        if (this.target != null) {
+            this.target.getIncomingTransitions().add(this);
+            this.siftNode = null; // prevent memory leak
+        }
+    }
 
-	public void setSource(ADTState<I, O> source) {
-		this.source = source;
-	}
+    public I getInput() {
+        return input;
+    }
 
-	public void setTarget(ADTState<I, O> target) {
-		if (this.target != null) {
-			this.target.getIncomingTransitions().remove(this);
-		}
+    public void setInput(I input) {
+        this.input = input;
+    }
 
-		this.target = target;
+    public O getOutput() {
+        return output;
+    }
 
-		if (this.target != null) {
-			this.target.getIncomingTransitions().add(this);
-			this.siftNode = null; // prevent memory leak
-		}
-	}
+    public void setOutput(O output) {
+        this.output = output;
+    }
 
-	public void setInput(I input) {
-		this.input = input;
-	}
+    public ADTNode<ADTState<I, O>, I, O> getSiftNode() {
+        return siftNode;
+    }
 
-	public void setOutput(O output) {
-		this.output = output;
-	}
+    public void setSiftNode(ADTNode<ADTState<I, O>, I, O> siftNode) {
+        this.siftNode = siftNode;
+    }
 
-	public void setSiftNode(ADTNode<ADTState<I, O>, I, O> siftNode) {
-		this.siftNode = siftNode;
-	}
+    public boolean isSpanningTreeEdge() {
+        return isSpanningTreeEdge;
+    }
 
-	public void setIsSpanningTreeEdge(boolean isSpanningTreeEdge) {
-		this.isSpanningTreeEdge = isSpanningTreeEdge;
-	}
+    public void setIsSpanningTreeEdge(boolean isSpanningTreeEdge) {
+        this.isSpanningTreeEdge = isSpanningTreeEdge;
+    }
 
-	public boolean needsSifting() {
-		return this.target == null || this.output == null;
-	}
+    public boolean needsSifting() {
+        return this.target == null || this.output == null;
+    }
 }

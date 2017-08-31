@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,69 +20,67 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.learnlib.api.SULException;
 import de.learnlib.mapper.AbstractMapper;
 import de.learnlib.mapper.api.Mapper;
 
 /**
  * Basic stateless data mapper for objects.
- * 
+ *
  * @author falkhowar
  */
-public class SimplePOJODataMapper extends AbstractMapper<AbstractMethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
+public class SimplePOJODataMapper
+        extends AbstractMapper<MethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
 
     private final Constructor<?> initMethod;
     private final Object[] initParams;
-                
-    protected Object _this; 
+
+    protected Object delegate;
 
     protected SimplePOJODataMapper(Constructor<?> initMethod, Object... initParams) {
         this.initMethod = initMethod;
         this.initParams = initParams;
     }
-    
+
     @Override
     public void pre() {
         try {
-            _this = initMethod.newInstance(initParams);
-        } catch (InstantiationException | IllegalAccessException | 
-                IllegalArgumentException | InvocationTargetException ex) {
+            delegate = initMethod.newInstance(initParams);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new RuntimeException(ex);
         }
     }
 
     @Override
     public void post() {
-        _this = null;
+        delegate = null;
     }
-    
 
-	@Override
-	public ConcreteMethodInput mapInput(AbstractMethodInput abstractInput) {
-		Map<String, Object> params = new HashMap<>();
-        
-        return new ConcreteMethodInput(abstractInput, params, _this);
-	}
+    @Override
+    public de.learnlib.mapper.api.Mapper.MappedException<? extends AbstractMethodOutput> mapUnwrappedException(
+            RuntimeException exception) throws RuntimeException {
+        return MappedException.repeatOutput(new Error(exception.getCause()), Unobserved.INSTANCE);
+    }
 
-	@Override
-	public AbstractMethodOutput mapOutput(Object concreteOutput) {
+    @Override
+    public ConcreteMethodInput mapInput(MethodInput abstractInput) {
+        Map<String, Object> params = new HashMap<>();
+
+        return new ConcreteMethodInput(abstractInput, params, delegate);
+    }
+
+    @Override
+    public AbstractMethodOutput mapOutput(Object concreteOutput) {
         return new ReturnValue(concreteOutput);
-	}
+    }
 
-	@Override
-	public de.learnlib.mapper.api.Mapper.MappedException<? extends AbstractMethodOutput> mapUnwrappedException(
-			RuntimeException exception) throws SULException, RuntimeException {
-		return MappedException.repeatOutput(new Error(exception.getCause()), Unobserved.INSTANCE);
-	}
-	
-	@Override
-	public boolean canFork() {
-		return true;
-	}
-	
-	@Override
-	public Mapper<AbstractMethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> fork() {
-		return new SimplePOJODataMapper(initMethod, initParams);
-	}
+    @Override
+    public boolean canFork() {
+        return true;
+    }
+
+    @Override
+    public Mapper<MethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> fork() {
+        return new SimplePOJODataMapper(initMethod, initParams);
+    }
 
 }

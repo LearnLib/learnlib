@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,26 +16,27 @@
 package de.learnlib.algorithms.discriminationtree.hypothesis.vpda;
 
 /**
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
  *
  * @author Malte Isberner
  */
-public class HypIntTrans<I> extends HypTrans<I> {
+public class HypIntTrans<I> extends AbstractHypTrans<I> {
 
-	private final I intSymbol;
+    private final I intSymbol;
 
-	public HypIntTrans(HypLoc<I> src, I intSym) {
-		super(src, src.getAccessSequence().append(intSym));
-		this.intSymbol = intSym;
-	}
+    public HypIntTrans(HypLoc<I> src, I intSym) {
+        super(src, src.getAccessSequence().append(intSym));
+        this.intSymbol = intSym;
+    }
 
-	public I getIntSymbol() {
-		return intSymbol;
-	}
+    public I getIntSymbol() {
+        return intSymbol;
+    }
 
-	@Override
-	public boolean isInternal() {
-		return true;
-	}
+    @Override
+    public boolean isInternal() {
+        return true;
+    }
 
 }

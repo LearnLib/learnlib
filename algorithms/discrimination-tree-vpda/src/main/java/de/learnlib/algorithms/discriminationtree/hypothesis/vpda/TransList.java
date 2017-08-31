@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,83 +18,84 @@ package de.learnlib.algorithms.discriminationtree.hypothesis.vpda;
 import de.learnlib.datastructure.list.IntrusiveList;
 
 /**
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
  *
  * @author Malte Isberner
  */
-public class TransList<I> extends IntrusiveList<HypTrans<I>> {
+public class TransList<I> extends IntrusiveList<AbstractHypTrans<I>> {
 
-	public void add(HypTrans<I> trans) {
-		assert !trans.isTree();
-		trans.removeFromList();
+    public void add(AbstractHypTrans<I> trans) {
+        assert !trans.isTree();
+        trans.removeFromList();
 
-		if (next != null) {
-			trans.setNextElement(next);
-			next.prev = trans;
-		}
-		trans.prev = this;
-		next = trans;
-	}
+        if (next != null) {
+            trans.setNextElement(next);
+            next.prev = trans;
+        }
+        trans.prev = this;
+        next = trans;
+    }
 
-	public void addAll(TransList<I> list) {
-		if (list.next != null) {
-			HypTrans<I> last = list.next;
-			while (last.getNextElement() != null) {
-				last = last.getNextElement();
-			}
-			if (next != null) {
-				next.prev = last;
-			}
-			last.setNextElement(next);
-			list.next.prev = this;
-			next = list.next;
-		}
-		list.next = null;
-	}
+    public void addAll(TransList<I> list) {
+        if (list.next != null) {
+            AbstractHypTrans<I> last = list.next;
+            while (last.getNextElement() != null) {
+                last = last.getNextElement();
+            }
+            if (next != null) {
+                next.prev = last;
+            }
+            last.setNextElement(next);
+            list.next.prev = this;
+            next = list.next;
+        }
+        list.next = null;
+    }
 
-	public HypTrans<I> chooseMinimal() {
-		HypTrans<I> curr = next;
-		HypTrans<I> shortest = curr;
-		int shortestLen = shortest.getAccessSequence().length();
+    public AbstractHypTrans<I> chooseMinimal() {
+        AbstractHypTrans<I> curr = next;
+        AbstractHypTrans<I> shortest = curr;
+        int shortestLen = shortest.getAccessSequence().length();
 
-		curr = curr.getNextElement();
-		while (curr != null) {
-			int transLen = curr.getAccessSequence().length();
-			if (transLen < shortestLen) {
-				shortestLen = transLen;
-				shortest = curr;
-			}
-			curr = curr.getNextElement();
-		}
+        curr = curr.getNextElement();
+        while (curr != null) {
+            int transLen = curr.getAccessSequence().length();
+            if (transLen < shortestLen) {
+                shortestLen = transLen;
+                shortest = curr;
+            }
+            curr = curr.getNextElement();
+        }
 
-		return shortest;
-	}
+        return shortest;
+    }
 
-	public HypTrans<I> poll() {
-		if (next == null) {
-			return null;
-		}
-		HypTrans<I> result = next;
-		next = result.getNextElement();
-		if (result.getNextElement() != null) {
-			result.getNextElement().prev = this;
-		}
+    public AbstractHypTrans<I> poll() {
+        if (next == null) {
+            return null;
+        }
+        AbstractHypTrans<I> result = next;
+        next = result.getNextElement();
+        if (result.getNextElement() != null) {
+            result.getNextElement().prev = this;
+        }
 
-		result.prev = null;
-		result.setNextElement(null);
+        result.prev = null;
+        result.setNextElement(null);
 
-		return result;
-	}
+        return result;
+    }
 
-	public int size() {
-		HypTrans<I> curr = next;
-		int i = 0;
-		while (curr != null) {
-			i++;
-			curr = curr.getNextElement();
-		}
+    public int size() {
+        AbstractHypTrans<I> curr = next;
+        int i = 0;
+        while (curr != null) {
+            i++;
+            curr = curr.getNextElement();
+        }
 
-		return i;
-	}
+        return i;
+    }
 
 }

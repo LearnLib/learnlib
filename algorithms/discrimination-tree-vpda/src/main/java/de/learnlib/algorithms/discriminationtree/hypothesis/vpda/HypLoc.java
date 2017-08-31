@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,113 +25,110 @@ import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 
 /**
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
  *
  * @author Malte Isberner
  */
 public class HypLoc<I> implements AccessSequenceProvider<I> {
 
-	int index;
-	private boolean accepting;
+    private final AbstractHypTrans<I> treeIncoming;
+    private final Word<I> aseq;
+    private final RichArray<HypIntTrans<I>> intSuccessors;
+    private final RichArray<List<HypRetTrans<I>>> returnSuccessors;
+    int index;
+    private boolean accepting;
+    private DTNode<I> leaf;
 
-	private DTNode<I> leaf;
+    public HypLoc(VPDAlphabet<I> alphabet, int index, boolean accepting, AbstractHypTrans<I> treeIncoming) {
+        this.index = index;
+        this.accepting = accepting;
+        this.intSuccessors = new RichArray<>(alphabet.getNumInternals());
+        this.returnSuccessors = new RichArray<>(alphabet.getNumReturns(), () -> new ArrayList<>());
+        this.treeIncoming = treeIncoming;
+        this.aseq = (treeIncoming != null) ? treeIncoming.getAccessSequence() : Word.epsilon();
+    }
 
-	private final HypTrans<I> treeIncoming;
+    public HypLoc(VPDAlphabet<I> alphabet, int index, boolean accepting, Word<I> aseq) {
+        this.index = index;
+        this.accepting = accepting;
+        this.intSuccessors = new RichArray<>(alphabet.getNumInternals());
+        this.returnSuccessors = new RichArray<>(alphabet.getNumReturns(), () -> new ArrayList<>());
+        this.treeIncoming = null;
+        this.aseq = aseq;
+    }
 
-	private final Word<I> aseq;
+    public void updateStackAlphabetSize(int newStackAlphaSize) {
+        for (int i = 0; i < returnSuccessors.length; i++) {
+            List<HypRetTrans<I>> transList = returnSuccessors.get(i);
+            if (transList == null) {
+                transList = new ArrayList<>(Collections.nCopies(newStackAlphaSize, null));
+                returnSuccessors.set(i, transList);
+            } else if (transList.size() < newStackAlphaSize) {
+                transList.addAll(Collections.nCopies(newStackAlphaSize - transList.size(), null));
+            }
+        }
+    }
 
-	private final RichArray<HypIntTrans<I>> intSuccessors;
-	private final RichArray<List<HypRetTrans<I>>> returnSuccessors;
+    public DTNode<I> getLeaf() {
+        return leaf;
+    }
 
-	public HypLoc(VPDAlphabet<I> alphabet, int index, boolean accepting, HypTrans<I> treeIncoming) {
-		this.index = index;
-		this.accepting = accepting;
-		this.intSuccessors = new RichArray<>(alphabet.getNumInternals());
-		this.returnSuccessors = new RichArray<>(alphabet.getNumReturns(), () -> new ArrayList<>());
-		this.treeIncoming = treeIncoming;
-		this.aseq = (treeIncoming != null) ? treeIncoming.getAccessSequence() : Word.epsilon();
-	}
+    public void setLeaf(DTNode<I> leaf) {
+        this.leaf = leaf;
+    }
 
-	public HypLoc(VPDAlphabet<I> alphabet, int index, boolean accepting, Word<I> aseq) {
-		this.index = index;
-		this.accepting = accepting;
-		this.intSuccessors = new RichArray<>(alphabet.getNumInternals());
-		this.returnSuccessors = new RichArray<>(alphabet.getNumReturns(), () -> new ArrayList<>());
-		this.treeIncoming = null;
-		this.aseq = aseq;
-	}
+    public boolean isRoot() {
+        return treeIncoming == null;
+    }
 
-	public void updateStackAlphabetSize(int newStackAlphaSize) {
-		for (int i = 0; i < returnSuccessors.length; i++) {
-			List<HypRetTrans<I>> transList = returnSuccessors.get(i);
-			if (transList == null) {
-				transList = new ArrayList<>(Collections.nCopies(newStackAlphaSize, null));
-				returnSuccessors.set(i, transList);
-			}
-			else if (transList.size() < newStackAlphaSize) {
-				transList.addAll(Collections.nCopies(newStackAlphaSize - transList.size(), null));
-			}
-		}
-	}
+    public Word<I> getAccessSequence() {
+        return aseq;
+    }
 
-	public DTNode<I> getLeaf() {
-		return leaf;
-	}
+    public int getIndex() {
+        return index;
+    }
 
-	public void setLeaf(DTNode<I> leaf) {
-		this.leaf = leaf;
-	}
+    public boolean isAccepting() {
+        return accepting;
+    }
 
-	public boolean isRoot() {
-		return treeIncoming == null;
-	}
+    public void setAccepting(boolean accepting) {
+        this.accepting = accepting;
+    }
 
-	public Word<I> getAccessSequence() {
-		return aseq;
-	}
+    public HypRetTrans<I> getReturnTransition(int retSymId, int stackSym) {
+        List<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
+        if (succList != null && stackSym < succList.size()) {
+            return succList.get(stackSym);
+        }
+        return null;
+    }
 
-	public int getIndex() {
-		return index;
-	}
+    public void setReturnTransition(int retSymId, int stackSym, HypRetTrans<I> trans) {
+        List<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
+        if (succList == null) {
+            succList = new ArrayList<>(stackSym + 1);
+            returnSuccessors.set(retSymId, succList);
+        }
+        int numSuccs = succList.size();
+        if (numSuccs <= stackSym) {
+            succList.addAll(Collections.nCopies(stackSym + 1 - numSuccs, null));
+        }
+        succList.set(stackSym, trans);
+    }
 
-	public void setAccepting(boolean accepting) {
-		this.accepting = accepting;
-	}
+    public HypIntTrans<I> getInternalTransition(int intSymId) {
+        return intSuccessors.get(intSymId);
+    }
 
-	public boolean isAccepting() {
-		return accepting;
-	}
+    public void setInternalTransition(int intSymId, HypIntTrans<I> succ) {
+        intSuccessors.set(intSymId, succ);
+    }
 
-	public HypRetTrans<I> getReturnTransition(int retSymId, int stackSym) {
-		List<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
-		if (succList != null && stackSym < succList.size()) {
-			return succList.get(stackSym);
-		}
-		return null;
-	}
-
-	public void setReturnTransition(int retSymId, int stackSym, HypRetTrans<I> trans) {
-		List<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
-		if (succList == null) {
-			returnSuccessors.set(retSymId, succList = new ArrayList<>(stackSym + 1));
-		}
-		int numSuccs = succList.size();
-		if (numSuccs <= stackSym) {
-			succList.addAll(Collections.nCopies(stackSym + 1 - numSuccs, null));
-		}
-		succList.set(stackSym, trans);
-	}
-
-	public HypIntTrans<I> getInternalTransition(int intSymId) {
-		return intSuccessors.get(intSymId);
-	}
-
-	public void setInternalTransition(int intSymId, HypIntTrans<I> succ) {
-		intSuccessors.set(intSymId, succ);
-	}
-
-	@Override
-	public String toString() {
-		return Integer.toString(index);
-	}
+    @Override
+    public String toString() {
+        return Integer.toString(index);
+    }
 }

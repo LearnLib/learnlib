@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,12 +24,12 @@ import net.automatalib.words.Word;
 /**
  * @author frohme
  */
-public class KearnsVaziraniMealyGrowingAlphabetTest extends
-		AbstractGrowingAlphabetMealyTest<KearnsVaziraniMealy<Integer, Character>> {
+public class KearnsVaziraniMealyGrowingAlphabetTest
+        extends AbstractGrowingAlphabetMealyTest<KearnsVaziraniMealy<Character, Character>> {
 
-	@Override
-	protected KearnsVaziraniMealy<Integer, Character> getLearner(MembershipOracle<Integer, Word<Character>> oracle,
-																 Alphabet<Integer> alphabet) {
-		return new KearnsVaziraniMealy<>(alphabet, oracle, true, AcexAnalyzers.LINEAR_FWD);
-	}
+    @Override
+    protected KearnsVaziraniMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                                   Alphabet<Character> alphabet) {
+        return new KearnsVaziraniMealy<>(alphabet, oracle, true, AcexAnalyzers.LINEAR_FWD);
+    }
 }

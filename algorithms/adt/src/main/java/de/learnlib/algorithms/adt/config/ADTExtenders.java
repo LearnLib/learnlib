@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,21 +25,25 @@ import de.learnlib.algorithms.adt.config.model.extender.DefaultExtender;
 import de.learnlib.algorithms.adt.model.ExtensionResult;
 
 /**
- * A collection of default {@link ADTExtender} configurations
+ * A collection of default {@link ADTExtender} configurations.
  *
  * @author frohme
  */
-public class ADTExtenders {
+public final class ADTExtenders {
 
-	public final static ADTExtender NOP = new ADTExtender() {
+    public static final ADTExtender NOP = new ADTExtender() {
 
-		@Override
-		public <I, O> ExtensionResult<ADTState<I, O>, I, O> computeExtension(final ADTHypothesis<I, O> hypothesis,
-																			 final PartialTransitionAnalyzer<ADTState<I, O>, I> partialTransitionAnalyzer,
-																			 final ADTNode<ADTState<I, O>, I, O> ads) {
-			return ExtensionResult.empty();
-		}
-	};
+        @Override
+        public <I, O> ExtensionResult<ADTState<I, O>, I, O> computeExtension(final ADTHypothesis<I, O> hypothesis,
+                                                                             final PartialTransitionAnalyzer<ADTState<I, O>, I> partialTransitionAnalyzer,
+                                                                             final ADTNode<ADTState<I, O>, I, O> ads) {
+            return ExtensionResult.empty();
+        }
+    };
 
-	public final static ADTExtender EXTEND_BEST_EFFORT = new DefaultExtender(new BestEffortDefensiveCalculator());
+    public static final ADTExtender EXTEND_BEST_EFFORT = new DefaultExtender(new BestEffortDefensiveCalculator());
+
+    private ADTExtenders() {
+        // prevent instantiation
+    }
 }

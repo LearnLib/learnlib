@@ -1,12 +1,12 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,83 +34,75 @@ import de.learnlib.api.MembershipOracle;
  * <p>
  * <b>Usage examples</b>
  * <p>
- * Creating a static parallel oracle with a minimum batch size of 20 and a fixed thread pool, using
- * a membership oracle shared by 4 threads:
+ * Creating a static parallel oracle with a minimum batch size of 20 and a fixed thread pool, using a membership oracle
+ * shared by 4 threads:
  * <pre>
  * ParallelOracleBuilders.newStaticParallelOracle(membershipOracle)
- * 		.withMinBatchSize(20)
- * 		.withNumInstances(4)
- * 		.withPoolPolicy(PoolPolicy.FIXED)
- * 		.create();
+ *      .withMinBatchSize(20)
+ *      .withNumInstances(4)
+ *      .withPoolPolicy(PoolPolicy.FIXED)
+ *      .create();
  * </pre>
  * <p>
  * Creating a dynamic parallel oracle with a custom executor, and a batch size of 5, using a shared membership oracle:
  * <pre>
  * ParallelOracleBuilders.newDynamicParallelOracle(membershipOracle)
- * 		.withBatchSize(5)
- * 		.withCustomExecutor(myExecutor)
- * 		.create();
+ *      .withBatchSize(5)
+ *      .withCustomExecutor(myExecutor)
+ *      .create();
  * </pre>
  * <p>
- * Creating a dynamic parallel oracle with a cached thread pool of maximum size 4, a batch size of 5, using an
- * oracle supplier:
+ * Creating a dynamic parallel oracle with a cached thread pool of maximum size 4, a batch size of 5, using an oracle
+ * supplier:
  * <pre>
  * ParallelOracleBuilders.newDynamicParallelOracle(oracleSupplier)
- * 		.withBatchSize(5)
- * 		.withPoolSize(4)
- * 		.withPoolPolicy(PoolPolicy.CACHED)
- * 		.create();
+ *      .withBatchSize(5)
+ *      .withPoolSize(4)
+ *      .withPoolPolicy(PoolPolicy.CACHED)
+ *      .create();
  * </pre>
- * 
- * @author Malte Isberner
  *
+ * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public abstract class ParallelOracleBuilders {
-	
-	@Nonnull
-	public static <I,D>
-	DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(MembershipOracle<I,D> sharedOracle) {
-		return newDynamicParallelOracle(() -> sharedOracle);
-	}
-	
-	@Nonnull
-	public static <I,D>
-	DynamicParallelOracleBuilder<I,D> newDynamicParallelOracle(Supplier<? extends MembershipOracle<I,D>> oracleSupplier) {
-		return new DynamicParallelOracleBuilder<>(oracleSupplier);
-	}
-	
-	@Nonnull
-	public static <I,D>
-	StaticParallelOracleBuilder<I, D> newStaticParallelOracle(MembershipOracle<I,D> sharedOracle) {
-		return newStaticParallelOracle(Suppliers.ofInstance(sharedOracle));
-	}
-	
-	@Nonnull
-	public static <I,D>
-	StaticParallelOracleBuilder<I,D> newStaticParallelOracle(Supplier<? extends MembershipOracle<I,D>> oracleSupplier) {
-		return new StaticParallelOracleBuilder<>(oracleSupplier);
-	}
-	
-	@Nonnull
-	@SafeVarargs
-	public static <I,D>
-	StaticParallelOracleBuilder<I,D> newStaticParallelOracle(
-			MembershipOracle<I,D> firstOracle,
-			MembershipOracle<I,D>... otherOracles) {
-		List<MembershipOracle<I,D>> oracles = new ArrayList<>(otherOracles.length + 1);
-		oracles.add(firstOracle);
-		Collections.addAll(oracles, otherOracles);
-		return newStaticParallelOracle(oracles);
-	}
-	
-	@Nonnull
-	public static <I,D>
-	StaticParallelOracleBuilder<I,D> newStaticParallelOracle(Collection<? extends MembershipOracle<I,D>> oracles) {
-		return new StaticParallelOracleBuilder<>(oracles);
-	}
-	
-	private ParallelOracleBuilders() {
-		throw new AssertionError("Constructor should not be invoked");
-	}
+public final class ParallelOracleBuilders {
+
+    private ParallelOracleBuilders() {
+        throw new AssertionError("Constructor should not be invoked");
+    }
+
+    @Nonnull
+    public static <I, D> DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(MembershipOracle<I, D> sharedOracle) {
+        return newDynamicParallelOracle(() -> sharedOracle);
+    }
+
+    @Nonnull
+    public static <I, D> DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(Supplier<? extends MembershipOracle<I, D>> oracleSupplier) {
+        return new DynamicParallelOracleBuilder<>(oracleSupplier);
+    }
+
+    @Nonnull
+    public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(MembershipOracle<I, D> sharedOracle) {
+        return newStaticParallelOracle(Suppliers.ofInstance(sharedOracle));
+    }
+
+    @Nonnull
+    public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(Supplier<? extends MembershipOracle<I, D>> oracleSupplier) {
+        return new StaticParallelOracleBuilder<>(oracleSupplier);
+    }
+
+    @Nonnull
+    @SafeVarargs
+    public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(MembershipOracle<I, D> firstOracle,
+                                                                                   MembershipOracle<I, D>... otherOracles) {
+        List<MembershipOracle<I, D>> oracles = new ArrayList<>(otherOracles.length + 1);
+        oracles.add(firstOracle);
+        Collections.addAll(oracles, otherOracles);
+        return newStaticParallelOracle(oracles);
+    }
+
+    @Nonnull
+    public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(Collection<? extends MembershipOracle<I, D>> oracles) {
+        return new StaticParallelOracleBuilder<>(oracles);
+    }
 }

@@ -1,12 +1,12 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,181 +30,194 @@ import java.util.Set;
 /**
  * Primitive implementation for boolean maps.
  *
- * @param <V> value type
+ * @param <V>
+ *         value type
  *
  * @author Malte Isberner
  */
 public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializable {
 
-	private static class BooleanSet extends AbstractSet<Boolean> {
+    private V falseValue;
+    private V trueValue;
 
-		private static final List<Boolean> VALUES = Arrays.asList(false, true);
+    public BooleanMap() {
+    }
 
-		private static final BooleanSet INSTANCE = new BooleanSet();
+    public BooleanMap(V falseValue, V trueValue) {
+        this.falseValue = falseValue;
+        this.trueValue = trueValue;
+    }
 
-		@Override
-		public Iterator<Boolean> iterator() {
-			return VALUES.iterator();
-		}
+    @Override
+    public int size() {
+        return 2;
+    }
 
-		@Override
-		public int size() {
-			return 2;
-		}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-		@Override
-		public boolean isEmpty() {
-			return false;
-		}
+    @Override
+    public boolean containsValue(Object value) {
+        return Objects.equals(falseValue, value) || Objects.equals(trueValue, value);
+    }
 
-		@Override
-		public boolean contains(Object o) {
-			return (o.getClass() == Boolean.class);
-		}
+    @Override
+    public boolean containsKey(Object key) {
+        return key != null && key.getClass() == Boolean.class;
+    }
 
-	}
+    @Override
+    public V get(Object key) {
+        if (key == null || key.getClass() != Boolean.class) {
+            return null;
+        }
+        boolean bval = (Boolean) key;
+        return get(bval);
+    }
 
-	private class Entry implements Map.Entry<Boolean, V> {
+    public V get(boolean key) {
+        if (key) {
+            return trueValue;
+        }
+        return falseValue;
+    }
 
-		private final boolean key;
+    @Override
+    public V put(Boolean key, V value) {
+        if (key == null) {
+            throw new IllegalArgumentException("BooleanMap disallows null keys");
+        }
+        boolean bval = key;
+        return put(bval, value);
+    }
 
-		public Entry(boolean key) {
-			this.key = key;
-		}
+    public V put(boolean key, V value) {
+        V old;
+        if (key) {
+            old = trueValue;
+            trueValue = value;
+        } else {
+            old = falseValue;
+            falseValue = value;
+        }
+        return old;
+    }
 
-		@Override
-		public Boolean getKey() {
-			return key;
-		}
+    @Override
+    public V remove(Object key) {
+        if (key == null || key.getClass() != Boolean.class) {
+            return null;
+        }
+        throw new UnsupportedOperationException("BooleanMap disallows removal");
+    }
 
-		@Override
-		public V getValue() {
-			return get(key);
-		}
+    @Override
+    public void putAll(Map<? extends Boolean, ? extends V> m) {
+        if (m.containsKey(null)) {
+            throw new IllegalArgumentException("BooleanMap disallows null keys");
+        }
+        if (m.containsKey(false)) {
+            this.falseValue = m.get(false);
+        }
+        if (m.containsKey(true)) {
+            this.trueValue = m.get(true);
+        }
+    }
 
-		@Override
-		public V setValue(V value) {
-			return put(key, value);
-		}
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("BooleanMap disallows removal");
+    }
 
-		@Override
-		public int hashCode() {
-			return (key) ? 1 : 0;
-		}
-	}
+    @Override
+    public Set<Boolean> keySet() {
+        return BooleanSet.INSTANCE;
+    }
 
-	private V falseValue;
+    @Override
+    public Collection<V> values() {
+        return Arrays.asList(falseValue, trueValue);
+    }
 
-	private V trueValue;
+    @Override
+    public Set<Map.Entry<Boolean, V>> entrySet() {
+        Set<Map.Entry<Boolean, V>> entries = new HashSet<>(2);
+        entries.add(new Entry(false));
+        entries.add(new Entry(true));
+        return entries;
+    }
 
-	public BooleanMap() {
-	}
+    private static class BooleanSet extends AbstractSet<Boolean> {
 
-	public BooleanMap(V falseValue, V trueValue) {
-		this.falseValue = falseValue;
-		this.trueValue = trueValue;
-	}
+        private static final List<Boolean> VALUES = Arrays.asList(false, true);
 
-	public V get(boolean key) {
-		if (key) {
-			return trueValue;
-		}
-		return falseValue;
-	}
+        private static final BooleanSet INSTANCE = new BooleanSet();
 
-	public V put(boolean key, V value) {
-		V old;
-		if (key) {
-			old = trueValue;
-			trueValue = value;
-		}
-		else {
-			old = falseValue;
-			falseValue = value;
-		}
-		return old;
-	}
+        @Override
+        public Iterator<Boolean> iterator() {
+            return VALUES.iterator();
+        }
 
-	@Override
-	public int size() {
-		return 2;
-	}
+        @Override
+        public int size() {
+            return 2;
+        }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
 
-	@Override
-	public boolean containsValue(Object value) {
-		return Objects.equals(falseValue, value) || Objects.equals(trueValue, value);
-	}
+        @Override
+        public boolean contains(Object o) {
+            return (o.getClass() == Boolean.class);
+        }
 
-	@Override
-	public boolean containsKey(Object key) {
-		return key != null && key.getClass() == Boolean.class;
-	}
+    }
 
-	@Override
-	public V get(Object key) {
-		if (key == null || key.getClass() != Boolean.class) {
-			return null;
-		}
-		boolean bval = (Boolean) key;
-		return get(bval);
-	}
+    private class Entry implements Map.Entry<Boolean, V> {
 
-	@Override
-	public V put(Boolean key, V value) {
-		if (key == null) {
-			throw new IllegalArgumentException("BooleanMap disallows null keys");
-		}
-		boolean bval = key;
-		return put(bval, value);
-	}
+        private final boolean key;
 
-	@Override
-	public V remove(Object key) {
-		if (key == null || key.getClass() != Boolean.class) {
-			return null;
-		}
-		throw new UnsupportedOperationException("BooleanMap disallows removal");
-	}
+        Entry(boolean key) {
+            this.key = key;
+        }
 
-	@Override
-	public void putAll(Map<? extends Boolean, ? extends V> m) {
-		if (m.containsKey(null)) {
-			throw new IllegalArgumentException("BooleanMap disallows null keys");
-		}
-		if (m.containsKey(false)) {
-			this.falseValue = m.get(false);
-		}
-		if (m.containsKey(true)) {
-			this.trueValue = m.get(true);
-		}
-	}
+        @Override
+        public Boolean getKey() {
+            return key;
+        }
 
-	@Override
-	public void clear() {
-		throw new UnsupportedOperationException("BooleanMap disallows removal");
-	}
+        @Override
+        public V getValue() {
+            return get(key);
+        }
 
-	@Override
-	public Set<Boolean> keySet() {
-		return BooleanSet.INSTANCE;
-	}
+        @Override
+        public V setValue(V value) {
+            return put(key, value);
+        }
 
-	@Override
-	public Collection<V> values() {
-		return Arrays.asList(falseValue, trueValue);
-	}
+        @Override
+        public int hashCode() {
+            return (key) ? 1 : 0;
+        }
 
-	@Override
-	public Set<Map.Entry<Boolean, V>> entrySet() {
-		Set<Map.Entry<Boolean, V>> entries = new HashSet<>(2);
-		entries.add(new Entry(false));
-		entries.add(new Entry(true));
-		return entries;
-	}
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            Entry entry = (Entry) o;
+
+            return getKey() == entry.getKey();
+        }
+    }
 
 }

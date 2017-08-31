@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,20 +15,23 @@
  */
 package de.learnlib.algorithms.lstargeneric;
 
-import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
-
 import java.io.Serializable;
+
+import de.learnlib.algorithms.lstargeneric.table.ObservationTable;
 
 /**
  * Class that contains all data that represent the internal state of the {@link AbstractLStar} learner.
  *
- * @param <I>  The input alphabet type.
- * @param <D>  The output domain type.
+ * @param <I>
+ *         The input alphabet type.
+ * @param <D>
+ *         The output domain type.
  *
  * @author bainczyk
  */
 public abstract class AbstractLStarState<I, D> implements Serializable {
-    final private ObservationTable<I, D> observationTable;
+
+    private final ObservationTable<I, D> observationTable;
 
     public AbstractLStarState(final ObservationTable<I, D> observationTable) {
         this.observationTable = observationTable;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,8 @@
  */
 package de.learnlib.algorithms.lstargeneric;
 
+import java.util.Random;
+
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealy;
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.MembershipOracle;
@@ -26,31 +28,27 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
-import java.util.Random;
-
 /**
  * @author bainczyk
  */
-public class ExtensibleLStarMealyResumableLearnerTest extends AbstractResumableLearnerMealyTest<
-        ExtensibleLStarMealy<Integer, Character>,
-        AutomatonLStarState<Integer, Word<Character>, CompactMealy<Integer, Character>, Integer>> {
+public class ExtensibleLStarMealyResumableLearnerTest
+        extends AbstractResumableLearnerMealyTest<ExtensibleLStarMealy<Character, Character>, AutomatonLStarState<Character, Word<Character>, CompactMealy<Character, Character>, Integer>> {
 
     @Override
-    protected ExtensibleLStarMealy<Integer, Character> getLearner(final MembershipOracle<Integer, Word<Character>> oracle,
-                                                                  final Alphabet<Integer> alphabet) {
-        return new ExtensibleLStarMealyBuilder<Integer, Character>()
-                .withAlphabet(alphabet)
-                .withOracle(oracle)
-                .create();
-    }
-
-    @Override
-    protected MealyMachine<?, Integer, ?, Character> getTarget(final Alphabet<Integer> alphabet) {
-        return RandomAutomata.randomMealy(new Random(42), 100, alphabet, Alphabets.characters('a', 'd'));
+    protected ExtensibleLStarMealy<Character, Character> getLearner(final MembershipOracle<Character, Word<Character>> oracle,
+                                                                    final Alphabet<Character> alphabet) {
+        return new ExtensibleLStarMealyBuilder<Character, Character>().withAlphabet(alphabet)
+                                                                      .withOracle(oracle)
+                                                                      .create();
     }
 
     @Override
     protected int getRounds() {
         return 2;
+    }
+
+    @Override
+    protected MealyMachine<?, Character, ?, Character> getTarget(final Alphabet<Character> alphabet) {
+        return RandomAutomata.randomMealy(new Random(42), 100, alphabet, Alphabets.characters('a', 'd'));
     }
 }

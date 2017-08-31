@@ -15,22 +15,22 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<assembly xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
     <id>dependencies-bundle</id>
     <formats>
         <format>jar</format>
     </formats>
-  
+
     <includeBaseDirectory>false</includeBaseDirectory>
-    
+
     <containerDescriptorHandlers>
-    	<containerDescriptorHandler>
-    		<handlerName>metaInf-services</handlerName>
-    	</containerDescriptorHandler>
+        <containerDescriptorHandler>
+            <handlerName>metaInf-services</handlerName>
+        </containerDescriptorHandler>
     </containerDescriptorHandlers>
-    
+
     <fileSets>
         <fileSet>
             <directory>../</directory>
@@ -39,17 +39,17 @@ limitations under the License.
                 <include>COPYING.txt</include>
                 <include>README.md</include>
             </includes>
-        </fileSet>   
+        </fileSet>
     </fileSets>
-    
+
     <dependencySets>
-    	<dependencySet>
-    		<includes>
-    			<include>*:jar</include>
-    		</includes>
-    		<outputDirectory>/</outputDirectory>
-    		<useProjectArtifact>false</useProjectArtifact>
-    		<unpack>true</unpack>
-    	</dependencySet>
+        <dependencySet>
+            <includes>
+                <include>*:jar</include>
+            </includes>
+            <outputDirectory>/</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <unpack>true</unpack>
+        </dependencySet>
     </dependencySets>
 </assembly>

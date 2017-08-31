@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,36 +15,39 @@
  */
 package de.learnlib.oracles;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.api.SUL;
 import de.learnlib.api.SymbolQueryOracle;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * A wrapper that allows to use a {@link SUL} where a {@link SymbolQueryOracle} is expected.
  *
- * @param <I> input alphabet type
- * @param <O> output alphabet type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
+ *
  * @author frohme
  */
 @ParametersAreNonnullByDefault
 public class SULSymbolQueryOracle<I, O> implements SymbolQueryOracle<I, O> {
 
-	private final SUL<I, O> sul;
+    private final SUL<I, O> sul;
 
-	public SULSymbolQueryOracle(final SUL<I, O> sul) {
-		this.sul = sul;
-		this.sul.pre();
-	}
+    public SULSymbolQueryOracle(final SUL<I, O> sul) {
+        this.sul = sul;
+        this.sul.pre();
+    }
 
-	@Override
-	public O query(I i) {
-		return this.sul.step(i);
-	}
+    @Override
+    public O query(I i) {
+        return this.sul.step(i);
+    }
 
-	@Override
-	public void reset() {
-		this.sul.post();
-		this.sul.pre();
-	}
+    @Override
+    public void reset() {
+        this.sul.post();
+        this.sul.pre();
+    }
 }

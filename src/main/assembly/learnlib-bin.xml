@@ -15,16 +15,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<assembly xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
     <id>bin</id>
     <formats>
         <format>zip</format>
     </formats>
-  
-    <includeBaseDirectory>true</includeBaseDirectory>  
-   
+
+    <includeBaseDirectory>true</includeBaseDirectory>
+
     <fileSets>
         <fileSet>
             <directory>./target/apidocs</directory>
@@ -39,7 +39,7 @@ limitations under the License.
             <includes>
                 <include>*.jar</include>
             </includes>
-        </fileSet>  
+        </fileSet>
         <fileSet>
             <directory>./</directory>
             <outputDirectory>/</outputDirectory>
@@ -47,7 +47,7 @@ limitations under the License.
                 <include>COPYING.txt</include>
                 <include>README.md</include>
             </includes>
-        </fileSet>   
+        </fileSet>
     </fileSets>
 
     <!-- what about generated sources and resources? -->
@@ -59,7 +59,7 @@ limitations under the License.
             <excludes>
                 <exclude>de.learnlib:learnlib-test-support</exclude>
                 <exclude>de.learnlib.archetypes:*</exclude>
-            </excludes>                
+            </excludes>
             <sources>
                 <includeModuleDirectory>false</includeModuleDirectory>
                 <fileSets>
@@ -74,5 +74,5 @@ limitations under the License.
             </sources>
         </moduleSet>
     </moduleSets>
-    
+
 </assembly>

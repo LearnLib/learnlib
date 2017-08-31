@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,25 +19,26 @@ import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.ContextPair;
 import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.HypLoc;
 
 /**
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
  *
  * @author Malte Isberner
  */
 final class OutputInconsistency<I> {
 
-	public final HypLoc<I> location;
+    public final HypLoc<I> location;
 
-	public final ContextPair<I> discriminator;
+    public final ContextPair<I> discriminator;
 
-	public boolean expectedOut;
+    public boolean expectedOut;
 
-	public OutputInconsistency(HypLoc<I> location, ContextPair<I> discriminator, boolean expectedOut) {
-		this.location = location;
-		this.discriminator = discriminator;
-		this.expectedOut = expectedOut;
-	}
+    OutputInconsistency(HypLoc<I> location, ContextPair<I> discriminator, boolean expectedOut) {
+        this.location = location;
+        this.discriminator = discriminator;
+        this.expectedOut = expectedOut;
+    }
 
-	public int totalLength() {
-		return location.getAccessSequence().length() + discriminator.getLength();
-	}
+    public int totalLength() {
+        return location.getAccessSequence().length() + discriminator.getLength();
+    }
 }

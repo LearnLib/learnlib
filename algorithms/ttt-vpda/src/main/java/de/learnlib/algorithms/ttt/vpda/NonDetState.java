@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,40 +21,41 @@ import java.util.Set;
 import net.automatalib.automata.vpda.State;
 
 /**
- * @param <L> location type
+ * @param <L>
+ *         location type
  *
  * @author Malte Isberner
  */
 final class NonDetState<L> {
 
-	private final NondetStackContents stack;
-	private final Set<L> locations;
+    private final NondetStackContents stack;
+    private final Set<L> locations;
 
-	public boolean isNonDet() {
-		return locations.size() > 1 || (stack != null && stack.isTrueNondet());
-	}
+    NonDetState(Set<L> locations, NondetStackContents stack) {
+        this.locations = locations;
+        this.stack = stack;
+    }
 
-	public State<L> determinize() {
-		assert !isNonDet();
-		return new State<>(locations.iterator().next(), NondetStackContents.toDet(stack));
-	}
+    public static <L> NonDetState<L> fromDet(State<L> state) {
+        return new NonDetState<>(Collections.singleton(state.getLocation()),
+                                 NondetStackContents.fromDet(state.getStackContents()));
+    }
 
-	public NonDetState(Set<L> locations, NondetStackContents stack) {
-		this.locations = locations;
-		this.stack = stack;
-	}
+    public State<L> determinize() {
+        assert !isNonDet();
+        return new State<>(locations.iterator().next(), NondetStackContents.toDet(stack));
+    }
 
-	public NondetStackContents getStack() {
-		return stack;
-	}
+    public boolean isNonDet() {
+        return locations.size() > 1 || (stack != null && stack.isTrueNondet());
+    }
 
-	public Set<L> getLocations() {
-		return locations;
-	}
+    public NondetStackContents getStack() {
+        return stack;
+    }
 
-	public static <L> NonDetState<L> fromDet(State<L> state) {
-		return new NonDetState<>(Collections.singleton(state.getLocation()),
-								 NondetStackContents.fromDet(state.getStackContents()));
-	}
+    public Set<L> getLocations() {
+        return locations;
+    }
 
 }

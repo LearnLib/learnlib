@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,9 @@
  */
 package de.learnlib.algorithms.adt.config;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import de.learnlib.algorithms.adt.adt.ADTLeafNode;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.adt.ADTResetNode;
@@ -24,147 +27,148 @@ import de.learnlib.algorithms.adt.util.ADTUtil;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 
-import java.util.Iterator;
-import java.util.Map;
-
 /**
- * A collection of default {@link LeafSplitter} configurations
+ * A collection of default {@link LeafSplitter} configurations.
  *
  * @author frohme
  */
-public class LeafSplitters {
+public final class LeafSplitters {
 
-	public final static LeafSplitter DEFAULT_SPLITTER = LeafSplitters::splitIntoNewADS;
+    public static final LeafSplitter DEFAULT_SPLITTER = LeafSplitters::splitIntoNewADS;
 
-	public final static LeafSplitter EXTEND_PARENT = new LeafSplitter() {
+    public static final LeafSplitter EXTEND_PARENT = new LeafSplitter() {
 
-		@Override
-		public <S, I, O> ADTNode<S, I, O> split(ADTNode<S, I, O> nodeToSplit,
-												Word<I> distinguishingSuffix,
-												Word<O> oldOutput,
-												Word<O> newOutput) {
+        @Override
+        public <S, I, O> ADTNode<S, I, O> split(ADTNode<S, I, O> nodeToSplit,
+                                                Word<I> distinguishingSuffix,
+                                                Word<O> oldOutput,
+                                                Word<O> newOutput) {
 
-			if (canSplitParent(nodeToSplit, distinguishingSuffix, oldOutput, newOutput)) {
-				return splitParent(nodeToSplit, distinguishingSuffix, oldOutput, newOutput);
-			}
+            if (canSplitParent(nodeToSplit, distinguishingSuffix, oldOutput, newOutput)) {
+                return splitParent(nodeToSplit, distinguishingSuffix, oldOutput, newOutput);
+            }
 
-			return splitIntoNewADS(nodeToSplit, distinguishingSuffix, oldOutput, newOutput);
-		}
-	};
+            return splitIntoNewADS(nodeToSplit, distinguishingSuffix, oldOutput, newOutput);
+        }
+    };
 
-	private static <S, I, O> boolean canSplitParent(final ADTNode<S, I, O> nodeToSplit,
-													final Word<I> distinguishingSuffix,
-													final Word<O> hypothesisOutput,
-													final Word<O> newOutput) {
+    private LeafSplitters() {
+        // prevent instantiation
+    }
 
-		// initial split
-		if (nodeToSplit.getParent() == null) {
-			return false;
-		}
+    private static <S, I, O> boolean canSplitParent(final ADTNode<S, I, O> nodeToSplit,
+                                                    final Word<I> distinguishingSuffix,
+                                                    final Word<O> hypothesisOutput,
+                                                    final Word<O> newOutput) {
 
-		final Pair<Word<I>, Word<O>> trace = ADTUtil.buildTraceForNode(nodeToSplit);
-		final Word<I> traceInput = trace.getFirst();
-		final Word<O> traceOutput = trace.getSecond();
+        // initial split
+        if (nodeToSplit.getParent() == null) {
+            return false;
+        }
 
-		return traceInput.isPrefixOf(distinguishingSuffix) && traceOutput.isPrefixOf(newOutput)
-				&& traceOutput.isPrefixOf(hypothesisOutput);
-	}
+        final Pair<Word<I>, Word<O>> trace = ADTUtil.buildTraceForNode(nodeToSplit);
+        final Word<I> traceInput = trace.getFirst();
+        final Word<O> traceOutput = trace.getSecond();
 
-	private static <S, I, O> ADTNode<S, I, O> splitIntoNewADS(final ADTNode<S, I, O> nodeToSplit,
-															  final Word<I> distinguishingSuffix,
-															  final Word<O> oldOutput,
-															  final Word<O> newOutput) {
+        return traceInput.isPrefixOf(distinguishingSuffix) && traceOutput.isPrefixOf(newOutput) &&
+               traceOutput.isPrefixOf(hypothesisOutput);
+    }
 
-		final Iterator<I> suffixIter = distinguishingSuffix.iterator();
-		final Iterator<O> oldIter = oldOutput.iterator();
-		final Iterator<O> newIter = newOutput.iterator();
+    private static <S, I, O> ADTNode<S, I, O> splitIntoNewADS(final ADTNode<S, I, O> nodeToSplit,
+                                                              final Word<I> distinguishingSuffix,
+                                                              final Word<O> oldOutput,
+                                                              final Word<O> newOutput) {
 
-		// Replace old final state
-		final ADTNode<S, I, O> parent = nodeToSplit.getParent();
-		final ADTNode<S, I, O> newADS = new ADTSymbolNode<>(null, suffixIter.next());
+        final Iterator<I> suffixIter = distinguishingSuffix.iterator();
+        final Iterator<O> oldIter = oldOutput.iterator();
+        final Iterator<O> newIter = newOutput.iterator();
 
-		if (parent != null) { // if parent == null, we split the initial node
-			boolean foundSuccessor = false;
-			for (Map.Entry<O, ADTNode<S, I, O>> entry : parent.getChildren().entrySet()) {
-				if (entry.getValue().equals(nodeToSplit)) {
-					final ADTNode<S, I, O> reset = new ADTResetNode<>(newADS);
+        // Replace old final state
+        final ADTNode<S, I, O> parent = nodeToSplit.getParent();
+        final ADTNode<S, I, O> newADS = new ADTSymbolNode<>(null, suffixIter.next());
 
-					reset.setParent(parent);
-					parent.getChildren().put(entry.getKey(), reset);
-					newADS.setParent(reset);
+        if (parent != null) { // if parent == null, we split the initial node
+            boolean foundSuccessor = false;
+            for (Map.Entry<O, ADTNode<S, I, O>> entry : parent.getChildren().entrySet()) {
+                if (entry.getValue().equals(nodeToSplit)) {
+                    final ADTNode<S, I, O> reset = new ADTResetNode<>(newADS);
 
-					foundSuccessor = true;
-					break;
-				}
-			}
+                    reset.setParent(parent);
+                    parent.getChildren().put(entry.getKey(), reset);
+                    newADS.setParent(reset);
 
-			if (!foundSuccessor) {
-				throw new IllegalStateException();
-			}
-		}
+                    foundSuccessor = true;
+                    break;
+                }
+            }
 
-		return finalizeSplit(nodeToSplit, newADS, suffixIter, oldIter, newIter);
-	}
+            if (!foundSuccessor) {
+                throw new IllegalStateException();
+            }
+        }
 
-	public static <S, I, O> ADTNode<S, I, O> splitParent(final ADTNode<S, I, O> nodeToSplit,
-														 final Word<I> distinguishingSuffix,
-														 final Word<O> oldOutput,
-														 final Word<O> newOutput) {
+        return finalizeSplit(nodeToSplit, newADS, suffixIter, oldIter, newIter);
+    }
 
-		final ADTNode<S, I, O> previousADS = ADTUtil.getStartOfADS(nodeToSplit);
+    private static <S, I, O> ADTNode<S, I, O> finalizeSplit(final ADTNode<S, I, O> nodeToSplit,
+                                                            final ADTNode<S, I, O> adtRoot,
+                                                            final Iterator<I> suffixIter,
+                                                            final Iterator<O> oldIter,
+                                                            final Iterator<O> newIter) {
 
-		final Iterator<I> suffixIter = distinguishingSuffix.iterator();
-		final Iterator<O> oldIter = oldOutput.iterator();
-		final Iterator<O> newIter = newOutput.iterator();
-		ADTNode<S, I, O> adsIter = previousADS;
-		O newSuffixOutput = null;
+        ADTNode<S, I, O> previous = adtRoot;
+        O oldOut = oldIter.next();
+        O newOut = newIter.next();
 
-		while (!ADTUtil.isLeafNode(adsIter)) {
+        while (oldOut.equals(newOut)) {
+            final ADTNode<S, I, O> next = new ADTSymbolNode<>(previous, suffixIter.next());
 
-			// Forward other iterators
-			suffixIter.next();
-			newIter.next();
-			newSuffixOutput = oldIter.next();
+            previous.getChildren().put(oldOut, next);
 
-			adsIter = adsIter.getChildren().get(newSuffixOutput);
-		}
+            oldOut = oldIter.next();
+            newOut = newIter.next();
+            previous = next;
+        }
 
-		final ADTNode<S, I, O> continuedADS = new ADTSymbolNode<>(adsIter.getParent(), suffixIter.next());
+        final ADTNode<S, I, O> oldFinalNode = nodeToSplit;
+        final ADTNode<S, I, O> newFinalNode = new ADTLeafNode<>(previous, null);
 
-		adsIter.getParent().getChildren().put(newSuffixOutput, continuedADS);
+        oldFinalNode.setParent(previous);
+        newFinalNode.setParent(previous);
 
-		return finalizeSplit(nodeToSplit, continuedADS, suffixIter, oldIter, newIter);
-	}
+        previous.getChildren().put(oldOut, oldFinalNode);
+        previous.getChildren().put(newOut, newFinalNode);
 
-	private static <S, I, O> ADTNode<S, I, O> finalizeSplit(final ADTNode<S, I, O> nodeToSplit,
-															final ADTNode<S, I, O> adtRoot,
-															final Iterator<I> suffixIter,
-															final Iterator<O> oldIter,
-															final Iterator<O> newIter) {
+        return newFinalNode;
+    }
 
-		ADTNode<S, I, O> previous = adtRoot;
-		O oldOut = oldIter.next();
-		O newOut = newIter.next();
+    public static <S, I, O> ADTNode<S, I, O> splitParent(final ADTNode<S, I, O> nodeToSplit,
+                                                         final Word<I> distinguishingSuffix,
+                                                         final Word<O> oldOutput,
+                                                         final Word<O> newOutput) {
 
-		while (oldOut.equals(newOut)) {
-			final ADTNode<S, I, O> next = new ADTSymbolNode<>(previous, suffixIter.next());
+        final ADTNode<S, I, O> previousADS = ADTUtil.getStartOfADS(nodeToSplit);
 
-			previous.getChildren().put(oldOut, next);
+        final Iterator<I> suffixIter = distinguishingSuffix.iterator();
+        final Iterator<O> oldIter = oldOutput.iterator();
+        final Iterator<O> newIter = newOutput.iterator();
+        ADTNode<S, I, O> adsIter = previousADS;
+        O newSuffixOutput = null;
 
-			oldOut = oldIter.next();
-			newOut = newIter.next();
-			previous = next;
-		}
+        while (!ADTUtil.isLeafNode(adsIter)) {
 
-		final ADTNode<S, I, O> oldFinalNode = nodeToSplit;
-		final ADTNode<S, I, O> newFinalNode = new ADTLeafNode<>(previous, null);
+            // Forward other iterators
+            suffixIter.next();
+            newIter.next();
+            newSuffixOutput = oldIter.next();
 
-		oldFinalNode.setParent(previous);
-		newFinalNode.setParent(previous);
+            adsIter = adsIter.getChildren().get(newSuffixOutput);
+        }
 
-		previous.getChildren().put(oldOut, oldFinalNode);
-		previous.getChildren().put(newOut, newFinalNode);
+        final ADTNode<S, I, O> continuedADS = new ADTSymbolNode<>(adsIter.getParent(), suffixIter.next());
 
-		return newFinalNode;
-	}
+        adsIter.getParent().getChildren().put(newSuffixOutput, continuedADS);
+
+        return finalizeSplit(nodeToSplit, continuedADS, suffixIter, oldIter, newIter);
+    }
 }

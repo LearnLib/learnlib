@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,27 +21,30 @@ import net.automatalib.words.Word;
 /**
  * Convenient class for word-based discrimination trees that already binds certain generics.
  *
- * @param <I> input symbol type
- * @param <O> output symbol type
- * @param <D> node data type
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ * @param <D>
+ *         node data type
  *
  * @author frohme
  */
 public abstract class AbstractWordBasedDiscriminationTree<I, O, D>
-		extends AbstractDiscriminationTree<Word<I>, I, O, D, DTNode<I, O, D>> {
+        extends AbstractDiscriminationTree<Word<I>, I, O, D, AbstractWordBasedDTNode<I, O, D>> {
 
-	public AbstractWordBasedDiscriminationTree(DTNode<I, O, D> root, MembershipOracle<I, O> oracle) {
-		super(root, oracle);
-	}
+    public AbstractWordBasedDiscriminationTree(AbstractWordBasedDTNode<I, O, D> root, MembershipOracle<I, O> oracle) {
+        super(root, oracle);
+    }
 
-	public DTNode<I, O, D> sift(DTNode<I, O, D> start, Word<I> prefix) {
-		DTNode<I, O, D> curr = start;
+    public AbstractWordBasedDTNode<I, O, D> sift(AbstractWordBasedDTNode<I, O, D> start, Word<I> prefix) {
+        AbstractWordBasedDTNode<I, O, D> curr = start;
 
-		while (!curr.isLeaf()) {
-			O out = super.oracle.answerQuery(prefix, curr.getDiscriminator());
-			curr = curr.child(out);
-		}
+        while (!curr.isLeaf()) {
+            O out = super.oracle.answerQuery(prefix, curr.getDiscriminator());
+            curr = curr.child(out);
+        }
 
-		return curr;
-	}
+        return curr;
+    }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,24 +21,28 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Symbol query interface. Semantically similar to {@link de.learnlib.api.MembershipOracle.MealyMembershipOracle}, but
  * allows to pose queries symbol-wise.
  *
- * @param <I> input alphabet type
- * @param <O> output alphabet type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
+ *
  * @author frohme
  */
 @ParametersAreNonnullByDefault
 public interface SymbolQueryOracle<I, O> {
 
-	/**
-	 * Query the system under learning for a new symbol.
-	 * <b>This is a stateful operation.</b>
-	 *
-	 * @param i the symbol to query
-	 * @return the observed output
-	 */
-	O query(final I i);
+    /**
+     * Query the system under learning for a new symbol. <b>This is a stateful operation.</b>
+     *
+     * @param i
+     *         the symbol to query
+     *
+     * @return the observed output
+     */
+    O query(I i);
 
-	/**
-	 * Reset the system under learning.
-	 */
-	void reset();
+    /**
+     * Reset the system under learning.
+     */
+    void reset();
 }

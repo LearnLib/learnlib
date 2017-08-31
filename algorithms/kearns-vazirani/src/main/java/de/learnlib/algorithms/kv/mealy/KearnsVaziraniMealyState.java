@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,25 +15,28 @@
  */
 package de.learnlib.algorithms.kv.mealy;
 
+import java.io.Serializable;
+import java.util.List;
+
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Word;
 
-import java.io.Serializable;
-import java.util.List;
-
 /**
  * Class that contains all data that represent the internal state of the {@link KearnsVaziraniMealy} learner.
  *
- * @param <I>  The input alphabet type.
- * @param <O>  The output alphabet type.
+ * @param <I>
+ *         The input alphabet type.
+ * @param <O>
+ *         The output alphabet type.
  *
  * @author bainczyk
  */
 class KearnsVaziraniMealyState<I, O> implements Serializable {
 
     private final CompactMealy<I, O> hypothesis;
-    private final AbstractWordBasedDiscriminationTree<I, Word<O>, KearnsVaziraniMealy.StateInfo<I, O>> discriminationTree;
+    private final AbstractWordBasedDiscriminationTree<I, Word<O>, KearnsVaziraniMealy.StateInfo<I, O>>
+            discriminationTree;
     private final List<KearnsVaziraniMealy.StateInfo<I, O>> stateInfos;
 
     KearnsVaziraniMealyState(final CompactMealy<I, O> hypothesis,

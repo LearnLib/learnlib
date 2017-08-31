@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,15 @@
  */
 package de.learnlib.algorithms.adt.config.model;
 
+import java.util.Optional;
+import java.util.Set;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.PartialTransitionAnalyzer;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Alphabet;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author frohme
@@ -30,8 +31,8 @@ import java.util.Set;
 @ParametersAreNonnullByDefault
 public interface DefensiveADSCalculator {
 
-	<S, I, O> Optional<ADTNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
-												 final Alphabet<I> alphabet,
-												 final Set<S> states,
-												 final PartialTransitionAnalyzer<S, I> partialTransitionAnalyzer);
+    <S, I, O> Optional<ADTNode<S, I, O>> compute(MealyMachine<S, I, ?, O> automaton,
+                                                 Alphabet<I> alphabet,
+                                                 Set<S> states,
+                                                 PartialTransitionAnalyzer<S, I> partialTransitionAnalyzer);
 }

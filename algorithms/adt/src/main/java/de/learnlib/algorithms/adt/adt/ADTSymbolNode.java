@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,51 +15,55 @@
  */
 package de.learnlib.algorithms.adt.adt;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.api.SymbolQueryOracle;
 import net.automatalib.graphs.ads.impl.AbstractRecursiveADSSymbolNode;
 import net.automatalib.words.Word;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Symbol node implementation.
  *
- * @param <S> (hypothesis) state type
- * @param <I> input alphabet type
- * @param <O> output alphabet type
+ * @param <S>
+ *         (hypothesis) state type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
+ *
  * @author frohme
  */
 @ParametersAreNonnullByDefault
 public class ADTSymbolNode<S, I, O> extends AbstractRecursiveADSSymbolNode<S, I, O, ADTNode<S, I, O>>
-		implements ADTNode<S, I, O> {
+        implements ADTNode<S, I, O> {
 
-	public ADTSymbolNode(ADTNode<S, I, O> parent, I symbol) {
-		super(parent, symbol);
-	}
+    public ADTSymbolNode(ADTNode<S, I, O> parent, I symbol) {
+        super(parent, symbol);
+    }
 
-	@Override
-	public NodeType getNodeType() {
-		return NodeType.SYMBOL_NODE;
-	}
+    @Override
+    public ADTNode<S, I, O> sift(final SymbolQueryOracle<I, O> oracle, final Word<I> prefix) {
+        final O o = oracle.query(super.getSymbol());
 
-	@Override
-	public ADTNode<S, I, O> sift(final SymbolQueryOracle<I, O> oracle, final Word<I> prefix) {
-		final O o = oracle.query(super.getSymbol());
+        final ADTNode<S, I, O> successor = super.getChildren().get(o);
 
-		final ADTNode<S, I, O> successor = super.getChildren().get(o);
+        if (successor == null) {
+            final ADTNode<S, I, O> result = new ADTLeafNode<>(this, null);
+            super.getChildren().put(o, result);
+            return result;
+        }
 
-		if (successor == null) {
-			final ADTNode<S, I, O> result = new ADTLeafNode<>(this, null);
-			super.getChildren().put(o, result);
-			return result;
-		}
+        return successor;
+    }
 
-		return successor;
-	}
+    @Override
+    public NodeType getNodeType() {
+        return NodeType.SYMBOL_NODE;
+    }
 
-	@Override
-	public String toString() {
-		return super.getSymbol().toString();
-	}
+    @Override
+    public String toString() {
+        return super.getSymbol().toString();
+    }
 
 }

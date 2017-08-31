@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,8 @@
  */
 
 package de.learnlib.logging;
+
+import java.io.ByteArrayOutputStream;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -27,10 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayOutputStream;
-
 /**
- *
  * @author falkhowar
  */
 public class LearnLoggerTest {
@@ -67,6 +66,25 @@ public class LearnLoggerTest {
         Assert.assertEquals(logStatement, loggedOutput);
     }
 
+    private OutputStreamAppender<ILoggingEvent> buildAppender(final ByteArrayOutputStream outputStream) {
+        final LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+        final PatternLayoutEncoder encoder = new PatternLayoutEncoder();
+        encoder.setContext(context);
+        encoder.setPattern("%msg");
+        encoder.start();
+
+        final OutputStreamAppender<ILoggingEvent> appender = new OutputStreamAppender<>();
+        appender.setName("Dummy Appender");
+        appender.setContext(context);
+        appender.setEncoder(encoder);
+        appender.setOutputStream(outputStream);
+
+        appender.start();
+
+        return appender;
+    }
+
     /**
      * Test of logQuery method, of class LearnLogger.
      */
@@ -93,29 +111,10 @@ public class LearnLoggerTest {
         Assert.assertTrue(loggedOutput.isEmpty());
     }
 
-    private OutputStreamAppender<ILoggingEvent> buildAppender(final ByteArrayOutputStream outputStream) {
-        final LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-        final PatternLayoutEncoder encoder = new PatternLayoutEncoder();
-        encoder.setContext(context);
-        encoder.setPattern("%msg");
-        encoder.start();
-
-        final OutputStreamAppender<ILoggingEvent> appender = new OutputStreamAppender<>();
-        appender.setName("Dummy Appender");
-        appender.setContext(context);
-        appender.setEncoder(encoder);
-        appender.setOutputStream(outputStream);
-
-        appender.start();
-
-        return appender;
-    }
-
     private MarkerFilter buildMarkerFilter(final Category category) {
         final MarkerFilter result = new MarkerFilter();
 
-        result.setMarker(category.PHASE.toMarkerLabel());
+        result.setMarker(Category.PHASE.toMarkerLabel());
         result.setOnMatch(FilterReply.ACCEPT.name());
         result.setOnMismatch(FilterReply.DENY.name());
         result.start();

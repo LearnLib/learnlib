@@ -55,9 +55,8 @@ public class MDLScoreTest {
         final Word<Character> p7 = Word.fromString("abba");
         final Word<Character> p8 = Word.fromString("bbbb");
 
-        positiveSamplesAsIntArray = Stream.of(p1, p2, p3, p4, p5, p6, p7, p8)
-                                          .map(w -> w.toIntArray(alphabet))
-                                          .collect(Collectors.toList());
+        positiveSamplesAsIntArray =
+                Stream.of(p1, p2, p3, p4, p5, p6, p7, p8).map(w -> w.toIntArray(alphabet)).collect(Collectors.toList());
     }
 
     @Test

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,12 @@
  */
 package de.learnlib.testsupport;
 
+import java.io.Serializable;
+import java.util.Random;
+
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.ResumableLearner;
-import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.oracles.SimulatorOracle;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.util.automata.random.RandomAutomata;
@@ -26,34 +28,29 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Random;
-
 /**
  * @author bainczyk
  */
-public abstract class AbstractResumableLearnerMealyTest<L extends ResumableLearner<T> & LearningAlgorithm<MealyMachine<?, Integer, ?, Character>, Integer, Word<Character>>, T extends Serializable>
-        extends AbstractResumableLearnerTest<
-        L,
-        MealyMachine<?, Integer, ?, Character>,
-        MembershipOracle<Integer, Word<Character>>,
-        Integer,
-        Word<Character>,
-        T> {
+public abstract class AbstractResumableLearnerMealyTest<L extends ResumableLearner<T> & LearningAlgorithm<MealyMachine<?, Character, ?, Character>, Character, Word<Character>>, T extends Serializable>
+        extends AbstractResumableLearnerTest<L, MealyMachine<?, Character, ?, Character>, MembershipOracle<Character, Word<Character>>, Character, Word<Character>, T> {
+
+    private static final int AUTOMATON_SIZE = 20;
 
     @Override
-    protected Alphabet<Integer> getInitialAlphabet() {
-        return Alphabets.integers(1, 4);
+    protected Alphabet<Character> getInitialAlphabet() {
+        return Alphabets.characters('1', '4');
     }
 
     @Override
-    protected MealyMachine<?, Integer, ?, Character> getTarget(Alphabet<Integer> alphabet) {
-        return RandomAutomata.randomMealy(new Random(42), 20, alphabet, Alphabets.characters('a', 'd'));
+    protected MealyMachine<?, Character, ?, Character> getTarget(Alphabet<Character> alphabet) {
+        return RandomAutomata.randomMealy(new Random(RANDOM_SEED),
+                                          AUTOMATON_SIZE,
+                                          alphabet,
+                                          Alphabets.characters('a', 'd'));
     }
 
     @Override
-    protected MembershipOracle<Integer, Word<Character>> getOracle(MealyMachine<?, Integer, ?, Character> target) {
+    protected MembershipOracle<Character, Word<Character>> getOracle(MealyMachine<?, Character, ?, Character> target) {
         return new SimulatorOracle<>(target);
     }
 }

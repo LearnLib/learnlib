@@ -15,16 +15,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<assembly xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
     <id>jar</id>
     <formats>
         <format>jar</format>
     </formats>
-  
+
     <includeBaseDirectory>false</includeBaseDirectory>
-    
+
     <fileSets>
         <fileSet>
             <directory>./</directory>
@@ -33,9 +33,9 @@ limitations under the License.
                 <include>COPYING.txt</include>
                 <include>README.md</include>
             </includes>
-        </fileSet>   
+        </fileSet>
     </fileSets>
-        
+
     <moduleSets>
         <moduleSet>
             <useAllReactorProjects>true</useAllReactorProjects>
@@ -44,9 +44,9 @@ limitations under the License.
             </includes>
             <excludes>
                 <exclude>de.learnlib:learnlib-test-support</exclude>
-            </excludes>    
+            </excludes>
             <sources>
-                <includeModuleDirectory>false</includeModuleDirectory>	      
+                <includeModuleDirectory>false</includeModuleDirectory>
                 <fileSets>
                     <fileSet>
                         <directory>target/classes</directory>
@@ -58,7 +58,7 @@ limitations under the License.
                             <exclude>*</exclude>
                         </excludes>
                     </fileSet>
-                </fileSets>	      
+                </fileSets>
             </sources>
         </moduleSet>
     </moduleSets>

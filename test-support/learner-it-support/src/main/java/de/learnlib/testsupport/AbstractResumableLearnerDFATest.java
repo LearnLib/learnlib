@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,44 +15,38 @@
  */
 package de.learnlib.testsupport;
 
+import java.io.Serializable;
+import java.util.Random;
+
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.ResumableLearner;
-import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.oracles.SimulatorOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Random;
-
 /**
  * @author bainczyk
  */
-public abstract class AbstractResumableLearnerDFATest<L extends ResumableLearner<T> & LearningAlgorithm<DFA<?, Integer>, Integer, Boolean>, T extends Serializable>
-        extends AbstractResumableLearnerTest<
-        L,
-        DFA<?, Integer>,
-        MembershipOracle<Integer, Boolean>,
-        Integer,
-        Boolean,
-        T> {
+public abstract class AbstractResumableLearnerDFATest<L extends ResumableLearner<T> & LearningAlgorithm<DFA<?, Character>, Character, Boolean>, T extends Serializable>
+        extends AbstractResumableLearnerTest<L, DFA<?, Character>, MembershipOracle<Character, Boolean>, Character, Boolean, T> {
+
+    private static final int AUTOMATON_SIZE = 50;
 
     @Override
-    protected Alphabet<Integer> getInitialAlphabet() {
-        return Alphabets.integers(1, 6);
+    protected Alphabet<Character> getInitialAlphabet() {
+        return Alphabets.characters('1', '6');
     }
 
     @Override
-    protected DFA<?, Integer> getTarget(Alphabet<Integer> alphabet) {
-        return RandomAutomata.randomDFA(new Random(42), 50, alphabet);
+    protected DFA<?, Character> getTarget(Alphabet<Character> alphabet) {
+        return RandomAutomata.randomDFA(new Random(RANDOM_SEED), AUTOMATON_SIZE, alphabet);
     }
 
     @Override
-    protected MembershipOracle<Integer, Boolean> getOracle(DFA<?, Integer> target) {
+    protected MembershipOracle<Character, Boolean> getOracle(DFA<?, Character> target) {
         return new SimulatorOracle<>(target);
     }
 

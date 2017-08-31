@@ -1,12 +1,12 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,12 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import de.learnlib.api.ResumableLearner;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
 import de.learnlib.algorithms.features.globalsuffixes.GlobalSuffixLearner;
 import de.learnlib.algorithms.features.observationtable.OTLearner;
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
@@ -37,219 +31,234 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.MQUtil;
+import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.Word;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 /**
  * An abstract base class for L*-style algorithms.
+ * <p>
+ * This class implements basic management features (table, alphabet, oracle) and the main loop of alternating
+ * completeness and consistency checks. It does not take care of choosing how to initialize the table and hypothesis
+ * construction.
  *
- * This class implements basic management features (table, alphabet, oracle) and
- * the main loop of alternating completeness and consistency checks. It does not take
- * care of choosing how to initialize the table and hypothesis construction.
+ * @param <A>
+ *         automaton type
+ * @param <I>
+ *         input symbol type
+ * @param <D>
+ *         output domain type
  *
  * @author Malte Isberner
- *
- * @param <A> automaton type
- * @param <I> input symbol type
- * @param <D> output domain type
  */
-public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>, GlobalSuffixLearner<A, I, D>,
-		SupportsGrowingAlphabet<I> {
+public abstract class AbstractLStar<A, I, D>
+        implements OTLearner<A, I, D>, GlobalSuffixLearner<A, I, D>, SupportsGrowingAlphabet<I> {
 
-	protected final GrowingAlphabet<I> alphabet;
-	protected final MembershipOracle<I, D> oracle;
-	protected ObservationTable<I, D> table;
+    protected final GrowingAlphabet<I> alphabet;
+    protected final MembershipOracle<I, D> oracle;
+    protected ObservationTable<I, D> table;
 
-	/**
-	 * Constructor.
-	 * @param alphabet the learning alphabet.
-	 * @param oracle the membership oracle.
-	 */
-	public AbstractLStar(Alphabet<I> alphabet, MembershipOracle<I,D> oracle) {
-		this.alphabet = new SimpleAlphabet<>(alphabet);
-		this.oracle = oracle;
-		this.table = new ObservationTable<>(alphabet);
-	}
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet.
+     * @param oracle
+     *         the membership oracle.
+     */
+    public AbstractLStar(Alphabet<I> alphabet, MembershipOracle<I, D> oracle) {
+        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.oracle = oracle;
+        this.table = new ObservationTable<>(alphabet);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.api.LearningAlgorithm#start()
-	 */
-	@Override
-	public void startLearning() {
-		List<Word<I>> prefixes = initialPrefixes();
-		List<Word<I>> suffixes = initialSuffixes();
-		List<List<Row<I>>> initialUnclosed = table.initialize(prefixes, suffixes, oracle);
+    /*
+     * (non-Javadoc)
+     * @see de.learnlib.api.LearningAlgorithm#start()
+     */
+    @Override
+    public void startLearning() {
+        List<Word<I>> prefixes = initialPrefixes();
+        List<Word<I>> suffixes = initialSuffixes();
+        List<List<Row<I>>> initialUnclosed = table.initialize(prefixes, suffixes, oracle);
 
-		completeConsistentTable(initialUnclosed, table.isInitialConsistencyCheckRequired());
-	}
+        completeConsistentTable(initialUnclosed, table.isInitialConsistencyCheckRequired());
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.api.LearningAlgorithm#refineHypothesis(de.learnlib.api.Query)
-	 */
-	@Override
-	public final boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
-		if(!MQUtil.isCounterexample(ceQuery, hypothesisOutput())) {
-			return false;
-		}
-		int oldDistinctRows = table.numDistinctRows();
-		doRefineHypothesis(ceQuery);
-		assert (table.numDistinctRows() > oldDistinctRows);
-		return true;
-	}
+    /*
+     * (non-Javadoc)
+     * @see de.learnlib.api.LearningAlgorithm#refineHypothesis(de.learnlib.api.Query)
+     */
+    @Override
+    public final boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
+        if (!MQUtil.isCounterexample(ceQuery, hypothesisOutput())) {
+            return false;
+        }
+        int oldDistinctRows = table.numDistinctRows();
+        doRefineHypothesis(ceQuery);
+        assert (table.numDistinctRows() > oldDistinctRows);
+        return true;
+    }
 
-	protected void doRefineHypothesis(DefaultQuery<I,D> ceQuery) {
-		List<List<Row<I>>> unclosed = incorporateCounterExample(ceQuery);
-		completeConsistentTable(unclosed, true);
-	}
+    protected abstract SuffixOutput<I, D> hypothesisOutput();
 
-	/**
-	 * Iteratedly checks for unclosedness and inconsistencies in the table,
-	 * and fixes any occurrences thereof. This process is repeated until the
-	 * observation table is both closed and consistent.
-	 * @param unclosed the unclosed rows (equivalence classes) to start with.
-	 */
-	protected boolean completeConsistentTable(List<List<Row<I>>> unclosed, boolean checkConsistency) {
-		boolean refined = false;
-		do {
-			while(!unclosed.isEmpty()) {
-				List<Row<I>> closingRows = selectClosingRows(unclosed);
-				unclosed = table.toShortPrefixes(closingRows, oracle);
-				refined = true;
-			}
+    protected void doRefineHypothesis(DefaultQuery<I, D> ceQuery) {
+        List<List<Row<I>>> unclosed = incorporateCounterExample(ceQuery);
+        completeConsistentTable(unclosed, true);
+    }
 
+    /**
+     * Incorporates the information provided by a counterexample into the observation data structure.
+     *
+     * @param ce
+     *         the query which contradicts the hypothesis
+     *
+     * @return the rows (equivalence classes) which became unclosed by adding the information.
+     */
+    protected List<List<Row<I>>> incorporateCounterExample(DefaultQuery<I, D> ce) {
+        return ObservationTableCEXHandlers.handleClassicLStar(ce, table, oracle);
+    }
 
-			if(checkConsistency) {
-				Inconsistency<I,D> incons = null;
+    protected List<Word<I>> initialPrefixes() {
+        return Collections.singletonList(Word.<I>epsilon());
+    }
 
-				do {
-					incons = table.findInconsistency();
-					if(incons != null) {
-						Word<I> newSuffix = analyzeInconsistency(incons);
-						unclosed = table.addSuffix(newSuffix, oracle);
-					}
-				} while(unclosed.isEmpty() && (incons != null));
-			}
-		} while(!unclosed.isEmpty());
+    /**
+     * Returns the list of initial suffixes which are used to initialize the table.
+     *
+     * @return the list of initial suffixes.
+     */
+    protected abstract List<Word<I>> initialSuffixes();
 
-		return refined;
-	}
+    /**
+     * Iteratedly checks for unclosedness and inconsistencies in the table, and fixes any occurrences thereof. This
+     * process is repeated until the observation table is both closed and consistent.
+     *
+     * @param unclosed
+     *         the unclosed rows (equivalence classes) to start with.
+     */
+    protected boolean completeConsistentTable(List<List<Row<I>>> unclosed, boolean checkConsistency) {
+        boolean refined = false;
+        List<List<Row<I>>> unclosedIter = unclosed;
+        do {
+            while (!unclosedIter.isEmpty()) {
+                List<Row<I>> closingRows = selectClosingRows(unclosedIter);
+                unclosedIter = table.toShortPrefixes(closingRows, oracle);
+                refined = true;
+            }
 
+            if (checkConsistency) {
+                Inconsistency<I, D> incons;
 
-	/**
-	 * Analyzes an inconsistency. This analysis consists in determining
-	 * the column in which the two successor rows differ.
-	 * @param incons the inconsistency description
-	 * @return the suffix to add in order to fix the inconsistency
-	 */
-	protected Word<I> analyzeInconsistency(Inconsistency<I,D> incons) {
-		int inputIdx = incons.getInputIndex();
+                do {
+                    incons = table.findInconsistency();
+                    if (incons != null) {
+                        Word<I> newSuffix = analyzeInconsistency(incons);
+                        unclosedIter = table.addSuffix(newSuffix, oracle);
+                    }
+                } while (unclosedIter.isEmpty() && (incons != null));
+            }
+        } while (!unclosedIter.isEmpty());
 
-		Row<I> succRow1 = incons.getFirstRow().getSuccessor(inputIdx);
-		Row<I> succRow2 = incons.getSecondRow().getSuccessor(inputIdx);
+        return refined;
+    }
 
-		int numSuffixes = table.numSuffixes();
+    /**
+     * This method selects a set of rows to use for closing the table. It receives as input a list of row lists, such
+     * that each (inner) list contains long prefix rows with (currently) identical contents, which have no matching
+     * short prefix row. The outer list is the list of all those equivalence classes.
+     *
+     * @param unclosed
+     *         a list of equivalence classes of unclosed rows.
+     *
+     * @return a list containing a representative row from each class to move to the short prefix part.
+     */
+    protected List<Row<I>> selectClosingRows(List<List<Row<I>>> unclosed) {
+        List<Row<I>> closingRows = new ArrayList<>(unclosed.size());
 
-		List<D> contents1 = table.rowContents(succRow1);
-		List<D> contents2 = table.rowContents(succRow2);
+        for (List<Row<I>> rowList : unclosed) {
+            closingRows.add(rowList.get(0));
+        }
 
-		for(int i = 0; i < numSuffixes; i++) {
-			D val1 = contents1.get(i), val2 = contents2.get(i);
-			if(!Objects.equals(val1, val2)) {
-				I sym = alphabet.getSymbol(inputIdx);
-				Word<I> suffix = table.getSuffixes().get(i);
-				return suffix.prepend(sym);
-			}
-		}
+        return closingRows;
+    }
 
-		throw new IllegalArgumentException("Bogus inconsistency");
-	}
+    /**
+     * Analyzes an inconsistency. This analysis consists in determining the column in which the two successor rows
+     * differ.
+     *
+     * @param incons
+     *         the inconsistency description
+     *
+     * @return the suffix to add in order to fix the inconsistency
+     */
+    protected Word<I> analyzeInconsistency(Inconsistency<I, D> incons) {
+        int inputIdx = incons.getInputIndex();
 
+        Row<I> succRow1 = incons.getFirstRow().getSuccessor(inputIdx);
+        Row<I> succRow2 = incons.getSecondRow().getSuccessor(inputIdx);
 
-	/**
-	 * Incorporates the information provided by a counterexample into
-	 * the observation data structure.
-	 * @param ce the query which contradicts the hypothesis
-	 * @return the rows (equivalence classes) which became unclosed by
-	 * adding the information.
-	 */
-	protected List<List<Row<I>>> incorporateCounterExample(DefaultQuery<I,D> ce) {
-		return ObservationTableCEXHandlers.handleClassicLStar(ce, table, oracle);
-	}
+        int numSuffixes = table.numSuffixes();
 
-	/**
-	 * This method selects a set of rows to use for closing the table.
-	 * It receives as input a list of row lists, such that each (inner) list contains
-	 * long prefix rows with (currently) identical contents, which have no matching
-	 * short prefix row. The outer list is the list of all those equivalence classes.
-	 *
-	 * @param unclosed a list of equivalence classes of unclosed rows.
-	 * @return a list containing a representative row from each class to move
-	 * to the short prefix part.
-	 */
-	protected List<Row<I>> selectClosingRows(List<List<Row<I>>> unclosed) {
-		List<Row<I>> closingRows = new ArrayList<>(unclosed.size());
+        List<D> contents1 = table.rowContents(succRow1);
+        List<D> contents2 = table.rowContents(succRow2);
 
-		for(List<Row<I>> rowList : unclosed)
-			closingRows.add(rowList.get(0));
+        for (int i = 0; i < numSuffixes; i++) {
+            D val1 = contents1.get(i), val2 = contents2.get(i);
+            if (!Objects.equals(val1, val2)) {
+                I sym = alphabet.getSymbol(inputIdx);
+                Word<I> suffix = table.getSuffixes().get(i);
+                return suffix.prepend(sym);
+            }
+        }
 
-		return closingRows;
-	}
+        throw new IllegalArgumentException("Bogus inconsistency");
+    }
 
+    /*
+     * (non-Javadoc)
+     * @see de.learnlib.algorithms.features.GlobalSuffixLearner#getGlobalSuffixes()
+     */
+    @Override
+    public Collection<? extends Word<I>> getGlobalSuffixes() {
+        return Collections.unmodifiableCollection(table.getSuffixes());
+    }
 
-	/**
-	 * Returns the list of initial suffixes which are used to initialize the table.
-	 * @return the list of initial suffixes.
-	 */
-	protected abstract List<Word<I>> initialSuffixes();
+    /*
+     * (non-Javadoc)
+     * @see de.learnlib.algorithms.features.GlobalSuffixLearner#addGlobalSuffixes(java.util.Collection)
+     */
+    @Override
+    public boolean addGlobalSuffixes(Collection<? extends Word<I>> newGlobalSuffixes) {
+        List<List<Row<I>>> unclosed = table.addSuffixes(newGlobalSuffixes, oracle);
+        if (unclosed.isEmpty()) {
+            return false;
+        }
+        return completeConsistentTable(unclosed, false);
+    }
 
-	protected List<Word<I>> initialPrefixes() {
-		return Collections.singletonList(Word.<I>epsilon());
-	}
+    /*
+     * (non-Javadoc)
+     * @see de.learnlib.algorithms.features.observationtable.OTLearner#getObservationTable()
+     */
+    @Override
+    public de.learnlib.algorithms.features.observationtable.ObservationTable<I, D> getObservationTable() {
+        return table.asStandardTable();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.algorithms.features.GlobalSuffixLearner#getGlobalSuffixes()
-	 */
-	@Override
-	public Collection<? extends Word<I>> getGlobalSuffixes() {
-		return Collections.unmodifiableCollection(table.getSuffixes());
-	}
+    @Override
+    public void addAlphabetSymbol(I symbol) {
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.algorithms.features.GlobalSuffixLearner#addGlobalSuffixes(java.util.Collection)
-	 */
-	@Override
-	public boolean addGlobalSuffixes(Collection<? extends Word<I>> newGlobalSuffixes) {
-		List<List<Row<I>>> unclosed = table.addSuffixes(newGlobalSuffixes, oracle);
-		if(unclosed.isEmpty()) {
-			return false;
-		}
-		return completeConsistentTable(unclosed, false);
-	}
+        if (this.alphabet.containsSymbol(symbol)) {
+            return;
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.algorithms.features.observationtable.OTLearner#getObservationTable()
-	 */
-	@Override
-	public de.learnlib.algorithms.features.observationtable.ObservationTable<I, D> getObservationTable() {
-		return table.asStandardTable();
-	}
+        this.alphabet.addSymbol(symbol);
 
-	@Override
-	public void addAlphabetSymbol(I symbol) {
+        final List<List<Row<I>>> unclosed = this.table.addAlphabetSymbol(symbol, oracle);
 
-		if (this.alphabet.containsSymbol(symbol)) {
-			return;
-		}
-
-		this.alphabet.addSymbol(symbol);
-
-		final List<List<Row<I>>> unclosed = this.table.addAlphabetSymbol(symbol, oracle);
-
-		completeConsistentTable(unclosed, true);
-	}
-
-	protected abstract SuffixOutput<I, D> hypothesisOutput();
+        completeConsistentTable(unclosed, true);
+    }
 }

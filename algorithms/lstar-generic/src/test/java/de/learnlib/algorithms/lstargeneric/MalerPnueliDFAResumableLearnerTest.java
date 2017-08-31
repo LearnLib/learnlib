@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,13 +26,10 @@ import net.automatalib.words.Alphabet;
 public class MalerPnueliDFAResumableLearnerTest extends ExtensibleLStarDFAResumableLearnerTest {
 
     @Override
-    protected ExtensibleLStarDFA<Integer> getLearner(final MembershipOracle<Integer, Boolean> oracle,
-                                                     final Alphabet<Integer> alphabet) {
+    protected ExtensibleLStarDFA<Character> getLearner(final MembershipOracle<Character, Boolean> oracle,
+                                                       final Alphabet<Character> alphabet) {
 
-        return new MalerPnueliDFABuilder<Integer>()
-                .withAlphabet(alphabet)
-                .withOracle(oracle)
-                .create();
+        return new MalerPnueliDFABuilder<Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }
 
     @Override

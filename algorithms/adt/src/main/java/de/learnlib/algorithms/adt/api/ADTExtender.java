@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,12 @@
  */
 package de.learnlib.algorithms.adt.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.automaton.ADTHypothesis;
 import de.learnlib.algorithms.adt.automaton.ADTState;
 import de.learnlib.algorithms.adt.model.ExtensionResult;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for configuration objects that specify how to finalize the temporary splitter given by regular
@@ -31,18 +31,24 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface ADTExtender {
 
-	/**
-	 * Compute the ADT whose root node should replace the root of the temporary splitter in the current ADT.
-	 *
-	 * @param hypothesis        the current hypothesis (with potentially undefined transitions/outputs)
-	 * @param pta               the {@link PartialTransitionAnalyzer} for managing partial transitions
-	 * @param temporarySplitter the current temporary ADT based on the decomposed counterexample
-	 * @param <I>               input alphabet type
-	 * @param <O>               output alphabet type
-	 * @return the extension result
-	 */
-	<I, O> ExtensionResult<ADTState<I, O>, I, O> computeExtension(final ADTHypothesis<I, O> hypothesis,
-																  final PartialTransitionAnalyzer<ADTState<I, O>, I> pta,
-																  final ADTNode<ADTState<I, O>, I, O> temporarySplitter);
+    /**
+     * Compute the ADT whose root node should replace the root of the temporary splitter in the current ADT.
+     *
+     * @param hypothesis
+     *         the current hypothesis (with potentially undefined transitions/outputs)
+     * @param pta
+     *         the {@link PartialTransitionAnalyzer} for managing partial transitions
+     * @param temporarySplitter
+     *         the current temporary ADT based on the decomposed counterexample
+     * @param <I>
+     *         input alphabet type
+     * @param <O>
+     *         output alphabet type
+     *
+     * @return the extension result
+     */
+    <I, O> ExtensionResult<ADTState<I, O>, I, O> computeExtension(ADTHypothesis<I, O> hypothesis,
+                                                                  PartialTransitionAnalyzer<ADTState<I, O>, I> pta,
+                                                                  ADTNode<ADTState<I, O>, I, O> temporarySplitter);
 
 }

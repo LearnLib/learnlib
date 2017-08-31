@@ -1,13 +1,12 @@
-/* 
- * Copyright (C) 2013-2015 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,8 +28,10 @@ import de.learnlib.statistics.StatisticOracle;
 /**
  * Collects a histogram of passed query lengths.
  *
- * @param <I> input symbol class
- * @param <D> output symbol class
+ * @param <I>
+ *         input symbol class
+ * @param <D>
+ *         output symbol class
  *
  * @author falkhowar
  */
@@ -48,21 +49,22 @@ public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
     private MembershipOracle<I, D> nextOracle;
 
     /**
-     *
-     * @param next real oracle
-     * @param name name of the collected data set
+     * @param next
+     *         real oracle
+     * @param name
+     *         name of the collected data set
      */
     public HistogramOracle(MembershipOracle<I, D> next, String name) {
-	this.nextOracle = next;
-	this.dataSet = new HistogramDataSet(name, "query length");
+        this.nextOracle = next;
+        this.dataSet = new HistogramDataSet(name, "query length");
     }
 
     @Override
     public final void processQueries(Collection<? extends Query<I, D>> queries) {
-	for (Query<I, D> q : queries) {
-	    this.dataSet.addDataPoint((long) q.getInput().size());
-	}
-	nextOracle.processQueries(queries);
+        for (Query<I, D> q : queries) {
+            this.dataSet.addDataPoint((long) q.getInput().size());
+        }
+        nextOracle.processQueries(queries);
     }
 
     /**
@@ -71,16 +73,17 @@ public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
     @Override
     @Nonnull
     public final HistogramDataSet getStatisticalData() {
-	return this.dataSet;
+        return this.dataSet;
     }
 
     /**
      * set used oracle.
      *
-     * @param next oracle to be used
+     * @param next
+     *         oracle to be used
      */
     @Override
     public final void setNext(final MembershipOracle<I, D> next) {
-	this.nextOracle = next;
+        this.nextOracle = next;
     }
 }

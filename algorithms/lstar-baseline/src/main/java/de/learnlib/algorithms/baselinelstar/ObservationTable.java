@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,28 +24,27 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.collect.Lists;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-
-import com.google.common.collect.Lists;
 
 /**
  * The internal storage mechanism for {@link BaselineLStar}.
  *
- * @param <I> input symbol class.
+ * @param <I>
+ *         input symbol class.
  */
-public class ObservationTable<I> implements de.learnlib.algorithms.features.observationtable.ObservationTable<I, Boolean>,
-                                            Serializable {
+public class ObservationTable<I>
+        implements de.learnlib.algorithms.features.observationtable.ObservationTable<I, Boolean>, Serializable {
 
     @Nonnull
     private final List<ObservationTableRow<I>> shortPrefixRows; // S
 
     @Nonnull
-    private final List<ObservationTableRow<I>> longPrefixRows;  // SA
+    private final List<ObservationTableRow<I>> longPrefixRows; // SA
 
     @Nonnull
-    private final List<Word<I>> suffixes;                       // E
-
+    private final List<Word<I>> suffixes; // E
 
     public ObservationTable() {
         Word<I> emptyWord = Word.epsilon();
@@ -62,46 +61,14 @@ public class ObservationTable<I> implements de.learnlib.algorithms.features.obse
         longPrefixRows = new ArrayList<>();
     }
 
-    /**
-     * The set of suffixes in the observation table, often called "E".
-     *
-     * @return The set of candidates.
-     */
-    @Override
-    public List<Word<I>> getSuffixes() {
-        return Collections.unmodifiableList(suffixes);
-    }
-
-    void addSuffix(Word<I> suffix) {
-        suffixes.add(suffix);
-    }
-
     @Override
     public Collection<ObservationTableRow<I>> getShortPrefixRows() {
         return Collections.unmodifiableCollection(shortPrefixRows);
     }
 
-    @Nonnull
-    public List<Word<I>> getShortPrefixLabels() {
-        List<Word<I>> labels = Lists.newArrayListWithExpectedSize(shortPrefixRows.size());
-        for (ObservationTableRow<I> row : shortPrefixRows) {
-            labels.add(row.getLabel());
-        }
-        return labels;
-    }
-
     @Override
     public Collection<ObservationTableRow<I>> getLongPrefixRows() {
         return Collections.unmodifiableCollection(longPrefixRows);
-    }
-
-    @Nonnull
-    public List<Word<I>> getLongPrefixLabels() {
-        List<Word<I>> labels = Lists.newArrayListWithExpectedSize(longPrefixRows.size());
-        for (ObservationTableRow<I> row : longPrefixRows) {
-            labels.add(row.getLabel());
-        }
-        return labels;
     }
 
     @Override
@@ -124,6 +91,20 @@ public class ObservationTable<I> implements de.learnlib.algorithms.features.obse
         }
 
         return successor;
+    }
+
+    /**
+     * The set of suffixes in the observation table, often called "E".
+     *
+     * @return The set of candidates.
+     */
+    @Override
+    public List<Word<I>> getSuffixes() {
+        return Collections.unmodifiableList(suffixes);
+    }
+
+    void addSuffix(Word<I> suffix) {
+        suffixes.add(suffix);
     }
 
     void addShortPrefix(@Nonnull Word<I> shortPrefix) {
@@ -153,12 +134,33 @@ public class ObservationTable<I> implements de.learnlib.algorithms.features.obse
         longPrefixRows.removeAll(rowsToRemove);
     }
 
+    @Nonnull
+    public List<Word<I>> getLongPrefixLabels() {
+        List<Word<I>> labels = Lists.newArrayListWithExpectedSize(longPrefixRows.size());
+        for (ObservationTableRow<I> row : longPrefixRows) {
+            labels.add(row.getLabel());
+        }
+        return labels;
+    }
+
+    @Nonnull
+    public List<Word<I>> getShortPrefixLabels() {
+        List<Word<I>> labels = Lists.newArrayListWithExpectedSize(shortPrefixRows.size());
+        for (ObservationTableRow<I> row : shortPrefixRows) {
+            labels.add(row.getLabel());
+        }
+        return labels;
+    }
+
     /**
      * Adds the result of a membership query to this table.
      *
-     * @param prefix The prefix of the {@link Word} asked with the membership query.
-     * @param suffix The prefix of the {@link Word} asked with the membership query.
-     * @param result The result of the query.
+     * @param prefix
+     *         The prefix of the {@link Word} asked with the membership query.
+     * @param suffix
+     *         The prefix of the {@link Word} asked with the membership query.
+     * @param result
+     *         The result of the query.
      */
     void addResult(@Nonnull Word<I> prefix, @Nonnull Word<I> suffix, @Nonnull Boolean result) {
         if (!suffixes.contains(suffix)) {
@@ -169,6 +171,23 @@ public class ObservationTable<I> implements de.learnlib.algorithms.features.obse
         ObservationTableRow<I> row = getRowForPrefix(prefix);
 
         addResultToRow(result, suffixPosition, row);
+    }
+
+    @Nonnull
+    ObservationTableRow<I> getRowForPrefix(@Nonnull Word<I> state) {
+        for (ObservationTableRow<I> row : shortPrefixRows) {
+            if (row.getLabel().equals(state)) {
+                return row;
+            }
+        }
+
+        for (ObservationTableRow<I> row : longPrefixRows) {
+            if (row.getLabel().equals(state)) {
+                return row;
+            }
+        }
+
+        throw new IllegalArgumentException("Unable to find a row for '" + state + "'");
     }
 
     private void addResultToRow(@Nonnull Boolean result, int suffixPosition, @Nonnull ObservationTableRow<I> row) {
@@ -186,8 +205,8 @@ public class ObservationTable<I> implements de.learnlib.algorithms.features.obse
     /**
      * Determines the next state for which the observation table needs to be closed.
      *
-     * @return The next state for which the observation table needs to be closed. If the
-     * table is closed, this returns {@code null}.
+     * @return The next state for which the observation table needs to be closed. If the table is closed, this returns
+     * {@code null}.
      */
     @Nullable
     Word<I> findUnclosedState() {
@@ -210,7 +229,9 @@ public class ObservationTable<I> implements de.learnlib.algorithms.features.obse
     }
 
     /**
-     * @param alphabet The {@link Alphabet} for which the consistency is checked
+     * @param alphabet
+     *         The {@link Alphabet} for which the consistency is checked
+     *
      * @return if the observation table is consistent with the given alphabet.
      */
     boolean isConsistentWithAlphabet(@Nonnull Alphabet<I> alphabet) {
@@ -223,7 +244,8 @@ public class ObservationTable<I> implements de.learnlib.algorithms.features.obse
             for (int firstStateCounter = 0; firstStateCounter < shortPrefixRows.size(); firstStateCounter++) {
                 ObservationTableRow<I> firstRow = shortPrefixRows.get(firstStateCounter);
 
-                for (int secondStateCounter = firstStateCounter + 1; secondStateCounter < shortPrefixRows.size();
+                for (int secondStateCounter = firstStateCounter + 1;
+                     secondStateCounter < shortPrefixRows.size();
                      secondStateCounter++) {
                     ObservationTableRow<I> secondRow = shortPrefixRows.get(secondStateCounter);
 
@@ -275,28 +297,11 @@ public class ObservationTable<I> implements de.learnlib.algorithms.features.obse
         throw new IllegalStateException("Both rows are identical, unable to determine a witness!");
     }
 
-    @Nonnull
-    ObservationTableRow<I> getRowForPrefix(@Nonnull Word<I> state) {
-        for (ObservationTableRow<I> row : shortPrefixRows) {
-            if (row.getLabel().equals(state)) {
-                return row;
-            }
-        }
-
-        for (ObservationTableRow<I> row : longPrefixRows) {
-            if (row.getLabel().equals(state)) {
-                return row;
-            }
-        }
-
-        throw new IllegalArgumentException("Unable to find a row for '" + state + "'");
-    }
-
     /**
      * Moves a single row from long prefix rows to short prefix rows.
      *
-     * @param longPrefix A row which must be part of the long prefix rows and
-     *                   should be moved to the short prefix rows.
+     * @param longPrefix
+     *         A row which must be part of the long prefix rows and should be moved to the short prefix rows.
      */
     void moveLongPrefixToShortPrefixes(@Nonnull Word<I> longPrefix) {
         ObservationTableRow<I> rowToMove = null;

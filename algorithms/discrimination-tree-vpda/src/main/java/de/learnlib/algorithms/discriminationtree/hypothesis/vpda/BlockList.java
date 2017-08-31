@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,19 +18,20 @@ package de.learnlib.algorithms.discriminationtree.hypothesis.vpda;
 import de.learnlib.datastructure.list.IntrusiveList;
 
 /**
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
  *
  * @author Malte Isberner
  */
 public class BlockList<I> extends IntrusiveList<DTNode<I>> {
 
-	public void add(DTNode<I> block) {
-		block.setNextElement(next);
-		if (next != null) {
-			next.setPrevElement(block);
-		}
-		block.setPrevElement(this);
-		this.next = block;
-	}
+    public void add(DTNode<I> block) {
+        block.setNextElement(next);
+        if (next != null) {
+            next.setPrevElement(block);
+        }
+        block.setPrevElement(this);
+        this.next = block;
+    }
 
 }

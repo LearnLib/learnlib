@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,17 +23,15 @@ import net.automatalib.words.Word;
 /**
  * @author bainczyk
  */
-public class KearnsVaziraniMealyResumableLearnerTest extends AbstractResumableLearnerMealyTest<
-        KearnsVaziraniMealy<Integer, Character>,
-        KearnsVaziraniMealyState<Integer, Character>> {
+public class KearnsVaziraniMealyResumableLearnerTest
+        extends AbstractResumableLearnerMealyTest<KearnsVaziraniMealy<Character, Character>, KearnsVaziraniMealyState<Character, Character>> {
 
     @Override
-    protected KearnsVaziraniMealy<Integer, Character> getLearner(final MembershipOracle<Integer, Word<Character>> oracle,
-                                                                 final Alphabet<Integer> alphabet) {
-        return new KearnsVaziraniMealyBuilder<Integer, Character>()
-                .withOracle(oracle)
-                .withAlphabet(alphabet)
-                .create();
+    protected KearnsVaziraniMealy<Character, Character> getLearner(final MembershipOracle<Character, Word<Character>> oracle,
+                                                                   final Alphabet<Character> alphabet) {
+        return new KearnsVaziraniMealyBuilder<Character, Character>().withOracle(oracle)
+                                                                     .withAlphabet(alphabet)
+                                                                     .create();
     }
 
     @Override

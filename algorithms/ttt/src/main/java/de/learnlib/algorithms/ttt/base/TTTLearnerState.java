@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,26 +18,29 @@ package de.learnlib.algorithms.ttt.base;
 import java.io.Serializable;
 
 /**
- * Class that contains all data that represent the internal state of the {@link BaseTTTLearner} learner and its DFA and
- * Mealy implementations.
+ * Class that contains all data that represent the internal state of the {@link AbstractTTTLearner} learner and its DFA
+ * and Mealy implementations.
  *
- * @param <I> The input alphabet type.
- * @param <D> The output domain type.
+ * @param <I>
+ *         The input alphabet type.
+ * @param <D>
+ *         The output domain type.
  *
  * @author bainczyk
  */
 public class TTTLearnerState<I, D> implements Serializable {
-    private final TTTHypothesis<I, D, ?> hypothesis;
+
+    private final AbstractTTTHypothesis<I, D, ?> hypothesis;
     private final BaseTTTDiscriminationTree<I, D> discriminationTree;
 
-    TTTLearnerState(final TTTHypothesis<I, D, ?> hypothesis,
+    TTTLearnerState(final AbstractTTTHypothesis<I, D, ?> hypothesis,
                     final BaseTTTDiscriminationTree<I, D> discriminationTree) {
 
         this.hypothesis = hypothesis;
         this.discriminationTree = discriminationTree;
     }
 
-    TTTHypothesis<I, D, ?> getHypothesis() {
+    AbstractTTTHypothesis<I, D, ?> getHypothesis() {
         return hypothesis;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,22 +18,22 @@ package de.learnlib.algorithms.ttt.vpda;
 import de.learnlib.algorithms.discriminationtree.hypothesis.vpda.DTNode;
 
 /**
- * A global splitter. In addition to the information stored in a (local)
- * {@link Splitter}, this class also stores the block the local splitter
- * applies to.
+ * A global splitter. In addition to the information stored in a (local) {@link Splitter}, this class also stores the
+ * block the local splitter applies to.
  *
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
  *
  * @author Malte Isberner
  */
 final class GlobalSplitter<I> {
 
-	public final Splitter<I> localSplitter;
+    public final Splitter<I> localSplitter;
 
-	public final DTNode<I> blockRoot;
+    public final DTNode<I> blockRoot;
 
-	public GlobalSplitter(DTNode<I> blockRoot, Splitter<I> localSplitter) {
-		this.blockRoot = blockRoot;
-		this.localSplitter = localSplitter;
-	}
+    GlobalSplitter(DTNode<I> blockRoot, Splitter<I> localSplitter) {
+        this.blockRoot = blockRoot;
+        this.localSplitter = localSplitter;
+    }
 }

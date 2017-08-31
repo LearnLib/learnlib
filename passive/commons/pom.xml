@@ -16,41 +16,43 @@ You should have received a copy of the GNU Lesser General Public
 License along with LearnLib; if not, see
 http://www.gnu.de/documents/lgpl.en.html.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<artifactId>learnlib-passive-parent</artifactId>
-		<groupId>de.learnlib</groupId>
-		<version>0.12.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>        
-	</parent>
+    <parent>
+        <artifactId>learnlib-passive-parent</artifactId>
+        <groupId>de.learnlib</groupId>
+        <version>0.12.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<artifactId>learnlib-passive-commons</artifactId>
-	<name>LearnLib :: Passive :: Commons</name>
-	<description>Common data structures and functionalities for passive learning algorithms</description>
+    <artifactId>learnlib-passive-commons</artifactId>
+    <name>LearnLib :: Passive :: Commons</name>
+    <description>Common data structures and functionalities for passive learning algorithms</description>
 
-	<dependencies>
-		<!--
-		Compile-time dependencies
-		-->
-		
-		<!-- LearnLib dependencies -->
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-passive-core</artifactId>
-		</dependency>
+    <dependencies>
+        <!--
+        Compile-time dependencies
+        -->
 
-		<!--
-		Test dependencies
-		-->
+        <!-- LearnLib dependencies -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-passive-core</artifactId>
+        </dependency>
 
-		<!-- TestNG -->
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-		</dependency>
-	</dependencies>
+        <!--
+        Test dependencies
+        -->
+
+        <!-- TestNG -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

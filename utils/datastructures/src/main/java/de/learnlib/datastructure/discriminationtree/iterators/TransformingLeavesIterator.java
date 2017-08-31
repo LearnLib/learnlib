@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,40 +27,41 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractDTNode;
  * allows to specify a transformer that is applied to the leaf nodes. If the transformer yields {@code null} for an
  * iterated leaf, the transformed value will be skipped.
  *
- * @param <N> node type
- * @param <D> type of transformation result
+ * @param <N>
+ *         node type
+ * @param <D>
+ *         type of transformation result
  *
  * @author MalteIsberner
  * @author frohme
  */
 public class TransformingLeavesIterator<N extends AbstractDTNode<?, ?, ?, N>, D> extends AbstractIterator<D> {
 
-	private final Deque<N> stack = new ArrayDeque<>();
-	private final Function<N, D> extractor;
+    private final Deque<N> stack = new ArrayDeque<>();
+    private final Function<N, D> extractor;
 
-	public TransformingLeavesIterator(N root, Function<N, D> extractor) {
-		stack.push(root);
-		this.extractor = extractor;
-	}
+    public TransformingLeavesIterator(N root, Function<N, D> extractor) {
+        stack.push(root);
+        this.extractor = extractor;
+    }
 
-	@Override
-	protected D computeNext() {
-		while (!stack.isEmpty()) {
-			N curr = stack.pop();
+    @Override
+    protected D computeNext() {
+        while (!stack.isEmpty()) {
+            N curr = stack.pop();
 
-			if (curr.isLeaf()) {
-				final D value = this.extractor.apply(curr);
-				if (value != null) {
-					return value;
-				}
-			}
-			else {
-				for (N child : curr.getChildren()) {
-					stack.push(child);
-				}
-			}
-		}
+            if (curr.isLeaf()) {
+                final D value = this.extractor.apply(curr);
+                if (value != null) {
+                    return value;
+                }
+            } else {
+                for (N child : curr.getChildren()) {
+                    stack.push(child);
+                }
+            }
+        }
 
-		return endOfData();
-	}
+        return endOfData();
+    }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,18 +37,10 @@ import net.automatalib.words.Word;
  */
 public final class Splitter<I> {
 
-    public enum SplitType {
-        INTERNAL,
-        CALL,
-        RETURN
-    }
-
     public final I symbol;
-
     public final HypLoc<I> location;
     public final I otherSymbol;
     public final SplitType type;
-
     public final DTNode<I> succSeparator;
 
     public Splitter(I symbol, DTNode<I> succSeparator) {
@@ -87,8 +79,9 @@ public final class Splitter<I> {
                                                  .prepend(symbol)
                                                  .append(otherSymbol)
                                                  .concat(suffix));
+            default:
+                throw new IllegalStateException("Unhandled type " + type);
         }
-        throw new AssertionError();
     }
 
     public int getNewDiscriminatorLength() {
@@ -96,5 +89,11 @@ public final class Splitter<I> {
             return succSeparator.getDiscriminator().getLength() + 1;
         }
         return succSeparator.getDiscriminator().getLength() + location.getAccessSequence().length() + 2;
+    }
+
+    public enum SplitType {
+        INTERNAL,
+        CALL,
+        RETURN
     }
 }

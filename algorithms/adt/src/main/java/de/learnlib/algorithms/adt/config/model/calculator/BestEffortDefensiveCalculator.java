@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,11 @@
  */
 package de.learnlib.algorithms.adt.config.model.calculator;
 
+import java.util.Optional;
+import java.util.Set;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.algorithms.adt.ads.DefensiveADS;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.PartialTransitionAnalyzer;
@@ -22,21 +27,17 @@ import de.learnlib.algorithms.adt.config.model.DefensiveADSCalculator;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Alphabet;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Optional;
-import java.util.Set;
-
 /**
  * @author frohme
  */
 @ParametersAreNonnullByDefault
 public class BestEffortDefensiveCalculator implements DefensiveADSCalculator {
 
-	@Override
-	public <S, I, O> Optional<ADTNode<S, I, O>> compute(MealyMachine<S, I, ?, O> automaton,
-														Alphabet<I> alphabet,
-														Set<S> states,
-														PartialTransitionAnalyzer<S, I> partialTransitionAnalyzer) {
-		return DefensiveADS.compute(automaton, alphabet, states, partialTransitionAnalyzer);
-	}
+    @Override
+    public <S, I, O> Optional<ADTNode<S, I, O>> compute(MealyMachine<S, I, ?, O> automaton,
+                                                        Alphabet<I> alphabet,
+                                                        Set<S> states,
+                                                        PartialTransitionAnalyzer<S, I> partialTransitionAnalyzer) {
+        return DefensiveADS.compute(automaton, alphabet, states, partialTransitionAnalyzer);
+    }
 }

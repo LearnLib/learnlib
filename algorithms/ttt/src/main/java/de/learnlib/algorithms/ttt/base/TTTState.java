@@ -1,12 +1,12 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,94 +15,96 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
+import java.io.Serializable;
+
 import de.learnlib.api.AccessSequenceProvider;
 import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.words.Word;
 
-import java.io.Serializable;
-
 /**
- * A state in a {@link TTTHypothesis}.
- * 
- * @author Malte Isberner
+ * A state in a {@link AbstractTTTHypothesis}.
  *
- * @param <I> input symbol
+ * @param <I>
+ *         input symbol
+ *
+ * @author Malte Isberner
  */
-public class TTTState<I,D> implements AccessSequenceProvider<I>, Serializable {
-	
-	final int id;
-	
-	private final ResizingObjectArray transitions;
-	private final TTTTransition<I,D> parentTransition;
-	
-	BaseDTNode<I,D> dtLeaf;
+public class TTTState<I, D> implements AccessSequenceProvider<I>, Serializable {
 
-	public TTTState(int initialAlphabetSize, TTTTransition<I,D> parentTransition, int id) {
-		this.id = id;
-		this.parentTransition = parentTransition;
-		this.transitions = new ResizingObjectArray(initialAlphabetSize);
-	}
-	
-	/**
-	 * Checks whether this state is the initial state (i.e., the root of the
-	 * spanning tree).
-	 * @return {@code true} if this state is the initial state, {@code false} otherwise
-	 */
-	public boolean isRoot() {
-		return (getParentTransition() == null);
-	}
-	
-	/**
-	 * Retrieves the discrimination tree leaf associated with this state.
-	 * @return the discrimination tree leaf associated with this state
-	 */
-	public BaseDTNode<I,D> getDTLeaf() {
-		return dtLeaf;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see de.learnlib.algorithms.ttt.dfa.AccessSequenceProvider#getAccessSequence()
-	 */
-	@Override
-	public Word<I> getAccessSequence() {
-		if(getParentTransition() != null) {
-			return getParentTransition().getAccessSequence();
-		}
-		return Word.epsilon(); // root
-	}
+    final int id;
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "s" + id;
-	}
+    private final ResizingObjectArray transitions;
+    private final TTTTransition<I, D> parentTransition;
 
-	public void setTransition(final int idx, final TTTTransition<I, D> transition) {
-		transitions.array[idx] = transition;
-	}
+    AbstractBaseDTNode<I, D> dtLeaf;
 
-	@SuppressWarnings("unchecked")
-	public TTTTransition<I, D> getTransition(final int idx) {
-		return (TTTTransition<I, D>)transitions.array[idx];
-	}
+    public TTTState(int initialAlphabetSize, TTTTransition<I, D> parentTransition, int id) {
+        this.id = id;
+        this.parentTransition = parentTransition;
+        this.transitions = new ResizingObjectArray(initialAlphabetSize);
+    }
 
-	@SuppressWarnings("unchecked")
-	public TTTTransition<I, D>[] getTransitions() {
-		return (TTTTransition<I, D>[])transitions.array;
-	}
+    /**
+     * Checks whether this state is the initial state (i.e., the root of the spanning tree).
+     *
+     * @return {@code true} if this state is the initial state, {@code false} otherwise
+     */
+    public boolean isRoot() {
+        return (getParentTransition() == null);
+    }
 
-	public TTTTransition<I, D> getParentTransition() {
-		return parentTransition;
-	}
+    public TTTTransition<I, D> getParentTransition() {
+        return parentTransition;
+    }
 
-	/**
-	 * See {@link ResizingObjectArray#ensureCapacity(int)}
-	 */
-	public boolean ensureInputCapacity(int capacity) {
-		return this.transitions.ensureCapacity(capacity);
-	}
+    /**
+     * Retrieves the discrimination tree leaf associated with this state.
+     *
+     * @return the discrimination tree leaf associated with this state
+     */
+    public AbstractBaseDTNode<I, D> getDTLeaf() {
+        return dtLeaf;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see de.learnlib.algorithms.ttt.dfa.AccessSequenceProvider#getAccessSequence()
+     */
+    @Override
+    public Word<I> getAccessSequence() {
+        if (getParentTransition() != null) {
+            return getParentTransition().getAccessSequence();
+        }
+        return Word.epsilon(); // root
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "s" + id;
+    }
+
+    public void setTransition(final int idx, final TTTTransition<I, D> transition) {
+        transitions.array[idx] = transition;
+    }
+
+    @SuppressWarnings("unchecked")
+    public TTTTransition<I, D> getTransition(final int idx) {
+        return (TTTTransition<I, D>) transitions.array[idx];
+    }
+
+    @SuppressWarnings("unchecked")
+    public TTTTransition<I, D>[] getTransitions() {
+        return (TTTTransition<I, D>[]) transitions.array;
+    }
+
+    /**
+     * See {@link ResizingObjectArray#ensureCapacity(int)}.
+     */
+    public boolean ensureInputCapacity(int capacity) {
+        return this.transitions.ensureCapacity(capacity);
+    }
 }

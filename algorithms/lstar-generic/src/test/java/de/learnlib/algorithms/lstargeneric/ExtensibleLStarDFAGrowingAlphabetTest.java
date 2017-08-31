@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,8 @@
  */
 package de.learnlib.algorithms.lstargeneric;
 
+import java.util.Collections;
+
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
@@ -22,20 +24,19 @@ import de.learnlib.api.MembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.words.Alphabet;
 
-import java.util.Collections;
-
 /**
  * @author frohme
  */
-public class ExtensibleLStarDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<ExtensibleLStarDFA<Integer>> {
+public class ExtensibleLStarDFAGrowingAlphabetTest
+        extends AbstractGrowingAlphabetDFATest<ExtensibleLStarDFA<Character>> {
 
-	@Override
-	protected ExtensibleLStarDFA<Integer> getLearner(MembershipOracle<Integer, Boolean> oracle,
-													 Alphabet<Integer> alphabet) {
-		return new ExtensibleLStarDFA<>(alphabet,
-										oracle,
-										Collections.emptyList(),
-										ObservationTableCEXHandlers.FIND_LINEAR_REVERSE,
-										ClosingStrategies.CLOSE_SHORTEST);
-	}
+    @Override
+    protected ExtensibleLStarDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+                                                       Alphabet<Character> alphabet) {
+        return new ExtensibleLStarDFA<>(alphabet,
+                                        oracle,
+                                        Collections.emptyList(),
+                                        ObservationTableCEXHandlers.FIND_LINEAR_REVERSE,
+                                        ClosingStrategies.CLOSE_SHORTEST);
+    }
 }

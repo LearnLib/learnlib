@@ -15,73 +15,75 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<artifactId>learnlib-algorithms</artifactId>
-		<groupId>de.learnlib</groupId>
-		<version>0.12.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>        
-	</parent>
+    <parent>
+        <artifactId>learnlib-algorithms</artifactId>
+        <groupId>de.learnlib</groupId>
+        <version>0.12.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<artifactId>learnlib-discrimination-tree</artifactId>
-	<name>LearnLib :: Algorithms :: Discrimination Tree</name>
+    <artifactId>learnlib-discrimination-tree</artifactId>
+    <name>LearnLib :: Algorithms :: Discrimination Tree</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-counterexamples</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-datastructures</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-util</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.github.misberner.buildergen</groupId>
-			<artifactId>buildergen</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		
-		<!-- Test dependencies -->
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib.testsupport</groupId>
-			<artifactId>learnlib-learner-it-support</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-basic-eqtests</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-simulator</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-counterexamples</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-datastructures</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.misberner.buildergen</groupId>
+            <artifactId>buildergen</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-learner-it-support</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-basic-eqtests</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-simulator</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,9 @@
  */
 package de.learnlib.algorithms.adt.automaton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.automata.base.fast.AbstractFastMutableDet;
@@ -22,92 +25,92 @@ import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
  * Hypothesis model.
  *
- * @param <I> input alphabet type
- * @param <O> output alphabet type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
+ *
  * @author frohme
  */
 public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, I, ADTTransition<I, O>, Void, O>
-		implements MutableMealyMachine<ADTState<I, O>, I, ADTTransition<I, O>, O>, AccessSequenceTransformer<I> {
+        implements MutableMealyMachine<ADTState<I, O>, I, ADTTransition<I, O>, O>, AccessSequenceTransformer<I> {
 
-	public ADTHypothesis(final Alphabet<I> alphabet) {
-		super(alphabet);
-	}
+    public ADTHypothesis(final Alphabet<I> alphabet) {
+        super(alphabet);
+    }
 
-	@Nonnull
-	@Override
-	public ADTState<I, O> getSuccessor(final ADTTransition<I, O> transition) {
-		return transition.getTarget();
-	}
+    @Nonnull
+    @Override
+    public ADTState<I, O> getSuccessor(final ADTTransition<I, O> transition) {
+        return transition.getTarget();
+    }
 
-	@Override
-	public void setTransition(final ADTState<I, O> state, I input, final ADTTransition<I, O> transition) {
-		final ADTTransition<I, O> oldTrans = getTransition(state, input);
+    @Nonnull
+    public ADTTransition<I, O> createOpenTransition(final ADTState<I, O> source,
+                                                    final I input,
+                                                    final ADTNode<ADTState<I, O>, I, O> siftTarget) {
+        ADTTransition<I, O> result = new ADTTransition<>();
+        result.setSource(source);
+        result.setInput(input);
+        result.setSiftNode(siftTarget);
 
-		if (oldTrans != null) {
-			oldTrans.getTarget().getIncomingTransitions().remove(oldTrans);
-		}
+        this.setTransition(source, input, result);
 
-		super.setTransition(state, input, transition);
+        return result;
+    }
 
-		if (transition != null) {
-			transition.setSource(state);
-			transition.setInput(input);
-		}
-	}
+    @Override
+    public void setTransition(final ADTState<I, O> state, I input, final ADTTransition<I, O> transition) {
+        final ADTTransition<I, O> oldTrans = getTransition(state, input);
 
-	@Nonnull
-	public ADTTransition<I, O> createOpenTransition(final ADTState<I, O> source,
-													final I input,
-													final ADTNode<ADTState<I, O>, I, O> siftTarget) {
-		ADTTransition<I, O> result = new ADTTransition<>();
-		result.setSource(source);
-		result.setInput(input);
-		result.setSiftNode(siftTarget);
+        if (oldTrans != null) {
+            oldTrans.getTarget().getIncomingTransitions().remove(oldTrans);
+        }
 
-		this.setTransition(source, input, result);
+        super.setTransition(state, input, transition);
 
-		return result;
-	}
+        if (transition != null) {
+            transition.setSource(state);
+            transition.setInput(input);
+        }
+    }
 
-	@Override
-	protected ADTState<I, O> createState(final Void property) {
-		return new ADTState<>(this.inputAlphabet.size());
-	}
+    @Override
+    protected ADTState<I, O> createState(final Void property) {
+        return new ADTState<>(this.inputAlphabet.size());
+    }
 
-	@Nonnull
-	@Override
-	public ADTTransition<I, O> createTransition(final ADTState<I, O> successor, @Nullable final O properties) {
-		ADTTransition<I, O> result = new ADTTransition<>();
-		result.setTarget(successor);
-		result.setOutput(properties);
-		return result;
-	}
+    @Nonnull
+    @Override
+    public ADTTransition<I, O> createTransition(final ADTState<I, O> successor, @Nullable final O properties) {
+        ADTTransition<I, O> result = new ADTTransition<>();
+        result.setTarget(successor);
+        result.setOutput(properties);
+        return result;
+    }
 
-	@Override
-	public void setTransitionOutput(final ADTTransition<I, O> transition, @Nullable final O output) {
-		transition.setOutput(output);
-	}
+    @Override
+    public void setTransitionOutput(final ADTTransition<I, O> transition, @Nullable final O output) {
+        transition.setOutput(output);
+    }
 
-	@Nullable
-	@Override
-	public O getTransitionOutput(final ADTTransition<I, O> transition) {
-		return transition.getOutput();
-	}
+    @Nullable
+    @Override
+    public O getTransitionOutput(final ADTTransition<I, O> transition) {
+        return transition.getOutput();
+    }
 
-	@Override
-	public Word<I> transformAccessSequence(final Word<I> word) {
-		return this.getState(word).getAccessSequence();
-	}
+    @Override
+    public Word<I> transformAccessSequence(final Word<I> word) {
+        return this.getState(word).getAccessSequence();
+    }
 
-	@Override
-	public boolean isAccessSequence(final Word<I> word) {
-		return this.getState(word).getAccessSequence().equals(word);
-	}
+    @Override
+    public boolean isAccessSequence(final Word<I> word) {
+        return this.getState(word).getAccessSequence().equals(word);
+    }
 
 }

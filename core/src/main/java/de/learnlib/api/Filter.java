@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,20 +16,19 @@
 package de.learnlib.api;
 
 /**
- * A filter is an oracle that can be used as the middle 
- * element in a chain of oracles.
- * 
- * @param <I> input symbol class
- * @param <D> output domain type
- * 
+ * A filter is an oracle that can be used as the middle element in a chain of oracles.
+ *
+ * @param <I>
+ *         input symbol class
+ * @param <D>
+ *         output domain type
+ *
  * @author falkhowar
  */
 public interface Filter<I, D> extends MembershipOracle<I, D> {
 
     /**
      * sets oracle for processing membership queries.
-     * 
-     * @param next 
      */
     void setNext(MembershipOracle<I, D> next);
 

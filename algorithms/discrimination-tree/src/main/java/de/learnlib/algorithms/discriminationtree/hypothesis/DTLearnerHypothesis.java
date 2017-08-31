@@ -1,12 +1,12 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
@@ -33,215 +34,214 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.SimpleAlphabet;
-import de.learnlib.api.AccessSequenceTransformer;
 
 /**
  * Basic hypothesis data structure for Discrimination Tree learning algorithms.
- * 
- * @author Malte Isberner 
  *
- * @param <I> input symbol type
- * @param <O> SUL output type
- * @param <SP> state property type
- * @param <TP> transition property type
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         SUL output type
+ * @param <SP>
+ *         state property type
+ * @param <TP>
+ *         transition property type
+ *
+ * @author Malte Isberner
  */
-public class DTLearnerHypothesis<I, O, SP, TP> implements
-		UniversalDeterministicAutomaton<HState<I,O,SP,TP>, I, HTransition<I,O,SP,TP>, SP, TP>,
-		AccessSequenceTransformer<I>,
-		StateIDs<HState<I,O,SP,TP>>,
-		GrowableAlphabetAutomaton<I>,
-		Serializable{
+public class DTLearnerHypothesis<I, O, SP, TP>
+        implements UniversalDeterministicAutomaton<HState<I, O, SP, TP>, I, HTransition<I, O, SP, TP>, SP, TP>,
+                   AccessSequenceTransformer<I>,
+                   StateIDs<HState<I, O, SP, TP>>,
+                   GrowableAlphabetAutomaton<I>,
+                   Serializable {
 
-	private final GrowingAlphabet<I> alphabet;
-	private final HState<I, O, SP, TP> root;
-	private final List<HState<I, O, SP, TP>> nodes = new ArrayList<>();
+    private final GrowingAlphabet<I> alphabet;
+    private final HState<I, O, SP, TP> root;
+    private final List<HState<I, O, SP, TP>> nodes = new ArrayList<>();
 
-	public DTLearnerHypothesis(Alphabet<I> alphabet) {
-		this.alphabet = new SimpleAlphabet<>(alphabet);
-		this.root = new HState<>(alphabet.size());
-		this.nodes.add(root);
-	}
+    public DTLearnerHypothesis(Alphabet<I> alphabet) {
+        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.root = new HState<>(alphabet.size());
+        this.nodes.add(root);
+    }
 
-	public HState<I, O, SP, TP> createState(
-			HTransition<I, O, SP, TP> treeIncoming) {
-		HState<I, O, SP, TP> state = new HState<>(alphabet.size(),
-				nodes.size(), treeIncoming);
-		nodes.add(state);
-		treeIncoming.makeTree(state);
-		return state;
-	}
+    public HState<I, O, SP, TP> createState(HTransition<I, O, SP, TP> treeIncoming) {
+        HState<I, O, SP, TP> state = new HState<>(alphabet.size(), nodes.size(), treeIncoming);
+        nodes.add(state);
+        treeIncoming.makeTree(state);
+        return state;
+    }
 
-	@Override
-	public HTransition<I, O, SP, TP> getTransition(
-			HState<I, O, SP, TP> state, I symbol) {
-		int symIdx = alphabet.getSymbolIndex(symbol);
-		return state.getTransition(symIdx);
-	}
+    @Override
+    public HTransition<I, O, SP, TP> getTransition(HState<I, O, SP, TP> state, I symbol) {
+        int symIdx = alphabet.getSymbolIndex(symbol);
+        return state.getTransition(symIdx);
+    }
 
+    @Override
+    public HState<I, O, SP, TP> getInitialState() {
+        return root;
+    }
 
-	@Override
-	public Collection<HState<I, O, SP, TP>> getStates() {
-		return Collections.unmodifiableCollection(nodes);
-	}
+    @Override
+    public SP getStateProperty(HState<I, O, SP, TP> state) {
+        return state.getProperty();
+    }
 
-	@Override
-	public StateIDs<HState<I, O, SP, TP>> stateIDs() {
-		return this;
-	}
+    @Override
+    public TP getTransitionProperty(HTransition<I, O, SP, TP> trans) {
+        return trans.getProperty();
+    }
 
-	@Override
-	public HState<I, O, SP, TP> getInitialState() {
-		return root;
-	}
+    @Override
+    public int getStateId(HState<I, O, SP, TP> state) {
+        return state.getId();
+    }
 
-	@Override
-	public SP getStateProperty(HState<I, O, SP, TP> state) {
-		return state.getProperty();
-	}
+    @Override
+    public HState<I, O, SP, TP> getState(int id) {
+        return nodes.get(id);
+    }
 
-	@Override
-	public HState<I, O, SP, TP> getState(int id) {
-		return nodes.get(id);
-	}
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
+        HState<I, O, SP, TP> state = getState(word);
+        return state.getAccessSequence();
+    }
 
-	@Override
-	public int getStateId(HState<I, O, SP, TP> state) {
-		return state.getId();
-	}
+    @Override
+    public boolean isAccessSequence(Word<I> word) {
+        HState<I, O, SP, TP> curr = root;
+        for (I sym : word) {
+            int symIdx = alphabet.getSymbolIndex(sym);
+            HTransition<I, O, SP, TP> trans = curr.getTransition(symIdx);
+            if (!trans.isTree()) {
+                return false;
+            }
+            curr = trans.getTreeTarget();
+        }
+        return true;
+    }
 
-	
-	@Override
-	public boolean isAccessSequence(Word<I> word) {
-		HState<I, O, SP, TP> curr = root;
-		for (I sym : word) {
-			int symIdx = alphabet.getSymbolIndex(sym);
-			HTransition<I, O, SP, TP> trans = curr.getTransition(symIdx);
-			if (!trans.isTree())
-				return false;
-			curr = trans.getTreeTarget();
-		}
-		return true;
-	}
+    @Override
+    public HState<I, O, SP, TP> getSuccessor(HTransition<I, O, SP, TP> trans) {
+        return trans.currentTarget();
+    }
 
-	@Override
-	public Word<I> transformAccessSequence(Word<I> word) {
-		HState<I, O, SP, TP> state = getState(word);
-		return state.getAccessSequence();
-	}
+    @Override
+    public void addAlphabetSymbol(I symbol) {
 
-	@Override
-	public HState<I, O, SP, TP> getSuccessor(HTransition<I, O, SP, TP> trans) {
-		return trans.currentTarget();
-	}
+        this.alphabet.addSymbol(symbol);
+        final int alphabetSize = this.alphabet.size();
 
-	@Override
-	public TP getTransitionProperty(HTransition<I, O, SP, TP> trans) {
-		return trans.getProperty();
-	}
+        for (final HState<I, O, SP, TP> s : this.getStates()) {
+            s.ensureInputCapacity(alphabetSize);
+        }
+    }
 
-	@Override
-	public void addAlphabetSymbol(I symbol) {
+    @Override
+    public Collection<HState<I, O, SP, TP>> getStates() {
+        return Collections.unmodifiableCollection(nodes);
+    }
 
-		this.alphabet.addSymbol(symbol);
-		final int alphabetSize = this.alphabet.size();
+    @Override
+    public StateIDs<HState<I, O, SP, TP>> stateIDs() {
+        return this;
+    }
 
-		for (final HState<I, O, SP, TP> s : this.getStates()) {
-			s.ensureInputCapacity(alphabetSize);
-		}
-	}
+    public GraphView graphView() {
+        return new GraphView();
+    }
 
-	public class GraphView implements Graph<HState<I,O,SP,TP>, HTransition<I, O, SP, TP>>,
-		NodeIDs<HState<I,O,SP,TP>> {
-		
-		@Override
-		public Collection<HState<I, O, SP, TP>> getNodes() {
-			return Collections.unmodifiableCollection(nodes);
-		}
+    public class GraphView
+            implements Graph<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>>, NodeIDs<HState<I, O, SP, TP>> {
 
-		@Override
-		public Collection<HTransition<I, O, SP, TP>> getOutgoingEdges(
-				HState<I, O, SP, TP> node) {
-			return node.getOutgoingTransitions();
-		}
+        @Override
+        public Collection<HState<I, O, SP, TP>> getNodes() {
+            return Collections.unmodifiableCollection(nodes);
+        }
 
-		@Override
-		public HState<I, O, SP, TP> getTarget(HTransition<I, O, SP, TP> edge) {
-			return edge.currentTarget();
-		}
+        @Override
+        public NodeIDs<HState<I, O, SP, TP>> nodeIDs() {
+            return this;
+        }
 
-		@Override
-		public NodeIDs<HState<I, O, SP, TP>> nodeIDs() {
-			return this;
-		}
-		
-		@Override
-		public HState<I, O, SP, TP> getNode(int id) {
-			return nodes.get(id);
-		}
+        @Override
+        public Collection<HTransition<I, O, SP, TP>> getOutgoingEdges(HState<I, O, SP, TP> node) {
+            return node.getOutgoingTransitions();
+        }
 
-		@Override
-		public int getNodeId(HState<I, O, SP, TP> node) {
-			return node.getId();
-		}
+        @Override
+        public HState<I, O, SP, TP> getTarget(HTransition<I, O, SP, TP> edge) {
+            return edge.currentTarget();
+        }
 
-		@Override
-		public GraphDOTHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>> getGraphDOTHelper() {
-			return new DefaultDOTHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>>() {
+        @Override
+        public int getNodeId(HState<I, O, SP, TP> node) {
+            return node.getId();
+        }
 
-				/*
-				 * (non-Javadoc)
-				 * 
-				 * @see
-				 * net.automatalib.graphs.dot.DefaultDOTHelper#initialNodes()
-				 */
-				@Override
-				protected Collection<? extends HState<I, O, SP, TP>> initialNodes() {
-					return Collections.singleton(root);
-				}
+        @Override
+        public HState<I, O, SP, TP> getNode(int id) {
+            return nodes.get(id);
+        }
 
-				/*
-				 * (non-Javadoc)
-				 * 
-				 * @see
-				 * net.automatalib.graphs.dot.DefaultDOTHelper#getNodeProperties
-				 * (java.lang.Object, java.util.Map)
-				 */
-				@Override
-				public boolean getNodeProperties(HState<I, O, SP, TP> node,
-						Map<String, String> properties) {
-					if (!super.getNodeProperties(node, properties))
-						return false;
-					properties.put(NodeAttrs.LABEL, node.toString());
-					return true;
-				}
+        @Override
+        public GraphDOTHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>> getGraphDOTHelper() {
+            return new DefaultDOTHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>>() {
 
-				/*
-				 * (non-Javadoc)
-				 * 
-				 * @see
-				 * net.automatalib.graphs.dot.DefaultDOTHelper#getEdgeProperties
-				 * (java.lang.Object, java.lang.Object, java.lang.Object,
-				 * java.util.Map)
-				 */
-				@Override
-				public boolean getEdgeProperties(HState<I, O, SP, TP> src,
-						HTransition<I, O, SP, TP> edge,
-						HState<I, O, SP, TP> tgt, Map<String, String> properties) {
-					if (!super.getEdgeProperties(src, edge, tgt, properties))
-						return false;
-					properties.put(EdgeAttrs.LABEL, String.valueOf(edge.getSymbol()));
-					if (edge.isTree()) {
-						properties.put(EdgeAttrs.STYLE, "bold");
-					}
-					return true;
-				}
-			};
-		}
-	}
-	
-	public GraphView graphView() {
-		return new GraphView();
-	}
-		
+                /*
+                 * (non-Javadoc)
+                 *
+                 * @see
+                 * net.automatalib.graphs.dot.DefaultDOTHelper#initialNodes()
+                 */
+                @Override
+                protected Collection<? extends HState<I, O, SP, TP>> initialNodes() {
+                    return Collections.singleton(root);
+                }
+
+                /*
+                 * (non-Javadoc)
+                 *
+                 * @see
+                 * net.automatalib.graphs.dot.DefaultDOTHelper#getNodeProperties
+                 * (java.lang.Object, java.util.Map)
+                 */
+                @Override
+                public boolean getNodeProperties(HState<I, O, SP, TP> node, Map<String, String> properties) {
+                    if (!super.getNodeProperties(node, properties)) {
+                        return false;
+                    }
+                    properties.put(NodeAttrs.LABEL, node.toString());
+                    return true;
+                }
+
+                /*
+                 * (non-Javadoc)
+                 *
+                 * @see
+                 * net.automatalib.graphs.dot.DefaultDOTHelper#getEdgeProperties
+                 * (java.lang.Object, java.lang.Object, java.lang.Object,
+                 * java.util.Map)
+                 */
+                @Override
+                public boolean getEdgeProperties(HState<I, O, SP, TP> src,
+                                                 HTransition<I, O, SP, TP> edge,
+                                                 HState<I, O, SP, TP> tgt,
+                                                 Map<String, String> properties) {
+                    if (!super.getEdgeProperties(src, edge, tgt, properties)) {
+                        return false;
+                    }
+                    properties.put(EdgeAttrs.LABEL, String.valueOf(edge.getSymbol()));
+                    if (edge.isTree()) {
+                        properties.put(EdgeAttrs.STYLE, "bold");
+                    }
+                    return true;
+                }
+            };
+        }
+    }
 
 }

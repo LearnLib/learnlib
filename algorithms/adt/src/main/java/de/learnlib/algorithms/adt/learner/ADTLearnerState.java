@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,30 +21,33 @@ import de.learnlib.algorithms.adt.adt.ADT;
 import de.learnlib.algorithms.adt.automaton.ADTHypothesis;
 
 /**
- * Utility class that captures all essential state of a {@link ADTLearner} run
+ * Utility class that captures all essential state of a {@link ADTLearner} run.
  *
- * @param <S> hypothesis state type
- * @param <I> input symbol type
- * @param <O> output symbol type
+ * @param <S>
+ *         hypothesis state type
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
  *
  * @author frohme
  */
 public class ADTLearnerState<S, I, O> implements Serializable {
 
-	private final ADTHypothesis<I, O> hypothesis;
-	private final ADT<S, I, O> adt;
+    private final ADTHypothesis<I, O> hypothesis;
+    private final ADT<S, I, O> adt;
 
-	public ADTLearnerState(ADTHypothesis<I, O> hypothesis, ADT<S, I, O> adt) {
-		this.hypothesis = hypothesis;
-		this.adt = adt;
-	}
+    public ADTLearnerState(ADTHypothesis<I, O> hypothesis, ADT<S, I, O> adt) {
+        this.hypothesis = hypothesis;
+        this.adt = adt;
+    }
 
-	ADTHypothesis<I, O> getHypothesis() {
-		return hypothesis;
-	}
+    ADTHypothesis<I, O> getHypothesis() {
+        return hypothesis;
+    }
 
-	ADT<S, I, O> getAdt() {
-		return adt;
-	}
+    ADT<S, I, O> getAdt() {
+        return adt;
+    }
 
 }

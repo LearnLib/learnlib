@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,17 +25,13 @@ import net.automatalib.words.Word;
 /**
  * @author bainczyk
  */
-public class DTLearnerMealyResumableLearnerTest extends AbstractResumableLearnerMealyTest<
-        DTLearnerMealy<Integer, Character>,
-        DTLearnerState<Integer, Word<Character>, Void, Character>> {
+public class DTLearnerMealyResumableLearnerTest
+        extends AbstractResumableLearnerMealyTest<DTLearnerMealy<Character, Character>, DTLearnerState<Character, Word<Character>, Void, Character>> {
 
     @Override
-    protected DTLearnerMealy<Integer, Character> getLearner(final MembershipOracle<Integer, Word<Character>> oracle,
-                                                            final Alphabet<Integer> alphabet) {
-        return new DTLearnerMealyBuilder<Integer, Character>()
-                .withAlphabet(alphabet)
-                .withOracle(oracle)
-                .create();
+    protected DTLearnerMealy<Character, Character> getLearner(final MembershipOracle<Character, Word<Character>> oracle,
+                                                              final Alphabet<Character> alphabet) {
+        return new DTLearnerMealyBuilder<Character, Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }
 
     @Override

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,8 @@
  */
 package de.learnlib.algorithms.ttt.dfa.it;
 
+import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
-import de.learnlib.acex.analyzers.NamedAcexAnalyzer;
 import de.learnlib.algorithms.ttt.vpda.TTTLearnerVPDABuilder;
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractVPDALearnerIT;
@@ -30,19 +30,19 @@ import org.testng.annotations.Test;
 @Test
 public class TTTLearnerVPDAIT extends AbstractVPDALearnerIT {
 
-	@Override
-	protected <I> void addLearnerVariants(final VPDAlphabet<I> alphabet,
-										  final MembershipOracle<I, Boolean> mqOracle,
-										  final LearnerVariantList.OneSEVPALearnerVariantList<I> variants) {
+    @Override
+    protected <I> void addLearnerVariants(final VPDAlphabet<I> alphabet,
+                                          final MembershipOracle<I, Boolean> mqOracle,
+                                          final LearnerVariantList.OneSEVPALearnerVariantList<I> variants) {
 
-		final TTTLearnerVPDABuilder<I> builder = new TTTLearnerVPDABuilder<>();
-		builder.setAlphabet(alphabet);
-		builder.setOracle(mqOracle);
+        final TTTLearnerVPDABuilder<I> builder = new TTTLearnerVPDABuilder<>();
+        builder.setAlphabet(alphabet);
+        builder.setOracle(mqOracle);
 
-		for (final NamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
-			builder.setAnalyzer(analyzer);
-			variants.addLearnerVariant("analyzer=" + analyzer, builder.create());
-		}
+        for (final AbstractNamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
+            builder.setAnalyzer(analyzer);
+            variants.addLearnerVariant("analyzer=" + analyzer, builder.create());
+        }
 
-	}
+    }
 }

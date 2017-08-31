@@ -1,12 +1,12 @@
-/* Copyright (C) 2015 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,41 +17,41 @@ package de.learnlib.acex.analyzers;
 
 import de.learnlib.acex.AcexAnalyzer;
 
-
 /**
  * An abstract counterexample analyzer that carries a name.
- * 
- * @author Malte Isberner
  *
+ * @author Malte Isberner
  */
-public abstract class NamedAcexAnalyzer implements AcexAnalyzer {
-	
-	private final String name;
+public abstract class AbstractNamedAcexAnalyzer implements AcexAnalyzer {
 
-	/**
-	 * Constructor.
-	 * @param name the name of the counterexample analyzer
-	 */
-	public NamedAcexAnalyzer(String name) {
-		this.name = name;
-	}
-	
+    private final String name;
 
-	/**
-	 * Retrieves the name of this analyzer.
-	 * @return the name of this analyzer
-	 */
-	public String getName() {
-		return name;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return getName();
-	}
-	
+    /**
+     * Constructor.
+     *
+     * @param name
+     *         the name of the counterexample analyzer
+     */
+    public AbstractNamedAcexAnalyzer(String name) {
+        this.name = name;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getName();
+    }
+
+    /**
+     * Retrieves the name of this analyzer.
+     *
+     * @return the name of this analyzer
+     */
+    public String getName() {
+        return name;
+    }
+
 }

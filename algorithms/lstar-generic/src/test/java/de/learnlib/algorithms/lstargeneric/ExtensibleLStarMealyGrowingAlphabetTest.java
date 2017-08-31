@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,8 @@
  */
 package de.learnlib.algorithms.lstargeneric;
 
+import java.util.Collections;
+
 import de.learnlib.algorithms.lstargeneric.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstargeneric.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealy;
@@ -23,21 +25,19 @@ import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-import java.util.Collections;
-
 /**
  * @author frohme
  */
 public class ExtensibleLStarMealyGrowingAlphabetTest
-		extends AbstractGrowingAlphabetMealyTest<ExtensibleLStarMealy<Integer, Character>> {
+        extends AbstractGrowingAlphabetMealyTest<ExtensibleLStarMealy<Character, Character>> {
 
-	@Override
-	protected ExtensibleLStarMealy<Integer, Character> getLearner(MembershipOracle<Integer, Word<Character>> oracle,
-																  Alphabet<Integer> alphabet) {
-		return new ExtensibleLStarMealy<>(alphabet,
-										  oracle,
-										  Collections.emptyList(),
-										  ObservationTableCEXHandlers.FIND_LINEAR_REVERSE,
-										  ClosingStrategies.CLOSE_SHORTEST);
-	}
+    @Override
+    protected ExtensibleLStarMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                                    Alphabet<Character> alphabet) {
+        return new ExtensibleLStarMealy<>(alphabet,
+                                          oracle,
+                                          Collections.emptyList(),
+                                          ObservationTableCEXHandlers.FIND_LINEAR_REVERSE,
+                                          ClosingStrategies.CLOSE_SHORTEST);
+    }
 }

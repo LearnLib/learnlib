@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,32 +18,33 @@ package de.learnlib.datastructure.discriminationtree.model;
 /**
  * DAO for aggregating information about the least common ancestor of two subtrees in a discrimination tree.
  *
- * @param <O> output symbol type
- * @param <N> node type
+ * @param <O>
+ *         output symbol type
+ * @param <N>
+ *         node type
  *
  * @author Malte Isberner
  */
 public class LCAInfo<O, N> {
 
-	public final N leastCommonAncestor;
+    public final N leastCommonAncestor;
 
-	public final O subtree1Label;
+    public final O subtree1Label;
 
-	public final O subtree2Label;
+    public final O subtree2Label;
 
-	public LCAInfo(N leastCommonAncestor, O subtree1Label, O subtree2Label) {
-		this(leastCommonAncestor, subtree1Label, subtree2Label, false);
-	}
+    public LCAInfo(N leastCommonAncestor, O subtree1Label, O subtree2Label) {
+        this(leastCommonAncestor, subtree1Label, subtree2Label, false);
+    }
 
-	LCAInfo(N leastCommonAncestor, O subtree1Label, O subtree2Label, boolean swap) {
-		this.leastCommonAncestor = leastCommonAncestor;
-		if (swap) {
-			this.subtree1Label = subtree2Label;
-			this.subtree2Label = subtree1Label;
-		}
-		else {
-			this.subtree1Label = subtree1Label;
-			this.subtree2Label = subtree2Label;
-		}
-	}
+    LCAInfo(N leastCommonAncestor, O subtree1Label, O subtree2Label, boolean swap) {
+        this.leastCommonAncestor = leastCommonAncestor;
+        if (swap) {
+            this.subtree1Label = subtree2Label;
+            this.subtree2Label = subtree1Label;
+        } else {
+            this.subtree1Label = subtree1Label;
+            this.subtree2Label = subtree2Label;
+        }
+    }
 }

@@ -1,112 +1,112 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>${groupId}</groupId>
-	<artifactId>${artifactId}</artifactId>
-	<version>${version}</version>
-	<packaging>jar</packaging>
+    <groupId>${groupId}</groupId>
+    <artifactId>${artifactId}</artifactId>
+    <version>${version}</version>
+    <packaging>jar</packaging>
 
-	<properties>
-		<!-- AutomataLib requires Java 8 -->
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		
-		<!-- Version of LearnLib to use -->
-		<learnlib.version>${learnlibVersion}</learnlib.version>
-	</properties>
+    <properties>
+        <!-- AutomataLib requires Java 8 -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>de.learnlib</groupId>
-				<artifactId>learnlib-parent</artifactId>
-				<version>${learnlib.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	
-	<dependencies>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-basic-eqtests</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-counterexamples</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-simulator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-cache</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-lstar-generic</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-lstar-baseline</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-dhc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-parallelism</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-mapper</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-drivers-basic</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-discrimination-tree</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib</groupId>
-			<artifactId>learnlib-ttt</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.learnlib.testsupport</groupId>
-			<artifactId>learnlib-learning-examples</artifactId>
-			<scope>compile</scope>
-		</dependency>
+        <!-- Version of LearnLib to use -->
+        <learnlib.version>${learnlibVersion}</learnlib.version>
+    </properties>
 
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-jung-visualizer</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-	</dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-parent</artifactId>
+                <version>${learnlib.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-	<repositories>
-		<repository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>Sonatype Nexus Snapshots</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+    <dependencies>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-basic-eqtests</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-counterexamples</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-simulator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-lstar-generic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-lstar-baseline</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-dhc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-parallelism</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-mapper</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-drivers-basic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-discrimination-tree</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-ttt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-learning-examples</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-jung-visualizer</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>
 

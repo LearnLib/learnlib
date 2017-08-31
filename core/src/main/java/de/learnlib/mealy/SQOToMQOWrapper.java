@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,51 +15,55 @@
  */
 package de.learnlib.mealy;
 
+import java.util.Collection;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.api.MembershipOracle;
 import de.learnlib.api.Query;
 import de.learnlib.api.SymbolQueryOracle;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Collection;
-
 /**
- * A wrapper that allows to use a {@link SymbolQueryOracle} where a
- * {@link de.learnlib.api.MembershipOracle.MealyMembershipOracle} is expected.
+ * A wrapper that allows to use a {@link SymbolQueryOracle} where a {@link de.learnlib.api.MembershipOracle.MealyMembershipOracle}
+ * is expected.
  *
- * @param <I> input alphabet type
- * @param <O> output alphabet type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
+ *
  * @author frohme
  */
 @ParametersAreNonnullByDefault
 public class SQOToMQOWrapper<I, O> implements MembershipOracle<I, Word<O>> {
 
-	private final SymbolQueryOracle<I, O> delegate;
+    private final SymbolQueryOracle<I, O> delegate;
 
-	public SQOToMQOWrapper(final SymbolQueryOracle<I, O> delegate) {
-		this.delegate = delegate;
-	}
+    public SQOToMQOWrapper(final SymbolQueryOracle<I, O> delegate) {
+        this.delegate = delegate;
+    }
 
-	@Override
-	public void processQueries(Collection<? extends Query<I, Word<O>>> collection) {
+    @Override
+    public void processQueries(Collection<? extends Query<I, Word<O>>> collection) {
 
-		for (final Query<I, Word<O>> q : collection) {
-			this.delegate.reset();
+        for (final Query<I, Word<O>> q : collection) {
+            this.delegate.reset();
 
-			final WordBuilder<O> wb = new WordBuilder<>(q.getSuffix().size() + 1);
-			wb.append(Word.epsilon());
+            final WordBuilder<O> wb = new WordBuilder<>(q.getSuffix().size() + 1);
+            wb.append(Word.epsilon());
 
-			for (final I i : q.getPrefix()) {
-				this.delegate.query(i);
-			}
+            for (final I i : q.getPrefix()) {
+                this.delegate.query(i);
+            }
 
-			for (final I i : q.getSuffix()) {
-				wb.append(this.delegate.query(i));
-			}
+            for (final I i : q.getSuffix()) {
+                wb.append(this.delegate.query(i));
+            }
 
-			q.answer(wb.toWord());
-		}
+            q.answer(wb.toWord());
+        }
 
-	}
+    }
 }

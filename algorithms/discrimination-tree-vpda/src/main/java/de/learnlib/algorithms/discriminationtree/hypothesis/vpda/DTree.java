@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,44 +21,45 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractDiscrimination
 import net.automatalib.words.Word;
 
 /**
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
  *
  * @author Malte Isberner
  */
 public class DTree<I> extends AbstractDiscriminationTree<ContextPair<I>, I, Boolean, HypLoc<I>, DTNode<I>> {
 
-	public DTree(MembershipOracle<I, Boolean> oracle) {
-		super(new DTNode<>(null, false), oracle);
-	}
+    public DTree(MembershipOracle<I, Boolean> oracle) {
+        super(new DTNode<>(null, false), oracle);
+    }
 
-	public DTree(DTNode<I> root, MembershipOracle<I, Boolean> oracle) {
-		super(root, oracle);
-	}
+    public DTree(DTNode<I> root, MembershipOracle<I, Boolean> oracle) {
+        super(root, oracle);
+    }
 
-	@Override
-	public DTNode<I> sift(DTNode<I> start, Word<I> prefix) {
-		return sift(start, prefix, true);
-	}
+    @Override
+    public DTNode<I> sift(DTNode<I> start, Word<I> prefix) {
+        return sift(start, prefix, true);
+    }
 
-	public DTNode<I> sift(DTNode<I> start, AccessSequenceProvider<I> asp, boolean hard) {
-		return sift(start, asp.getAccessSequence(), hard);
-	}
+    public DTNode<I> sift(DTNode<I> start, Word<I> as, boolean hard) {
+        DTNode<I> curr = start;
+        while (curr.isInner() && (hard || !curr.isTemp())) {
+            ContextPair<I> discr = curr.getDiscriminator();
+            Word<I> prefix = discr.getPrefix().concat(as);
+            Boolean outcome = oracle.answerQuery(prefix, discr.getSuffix());
 
-	public DTNode<I> sift(AccessSequenceProvider<I> asp) {
-		return sift(getRoot(), asp, false);
-	}
+            curr = curr.getChild(outcome);
+        }
 
-	public DTNode<I> sift(DTNode<I> start, Word<I> as, boolean hard) {
-		DTNode<I> curr = start;
-		while (curr.isInner() && (hard || !curr.isTemp())) {
-			ContextPair<I> discr = curr.getDiscriminator();
-			Word<I> prefix = discr.getPrefix().concat(as);
-			Boolean outcome = oracle.answerQuery(prefix, discr.getSuffix());
+        return curr;
+    }
 
-			curr = curr.getChild(outcome);
-		}
+    public DTNode<I> sift(AccessSequenceProvider<I> asp) {
+        return sift(getRoot(), asp, false);
+    }
 
-		return curr;
-	}
+    public DTNode<I> sift(DTNode<I> start, AccessSequenceProvider<I> asp, boolean hard) {
+        return sift(start, asp.getAccessSequence(), hard);
+    }
 
 }

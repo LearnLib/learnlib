@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,11 @@
  */
 package de.learnlib.testsupport;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+
 import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.SupportsGrowingAlphabet;
 import de.learnlib.oracles.DefaultQuery;
@@ -30,111 +35,107 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-
 /**
- * Simple (abstract super) test class that checks the basic workflow of a learning algorithm that implements
- * {@link SupportsGrowingAlphabet}.
+ * Simple (abstract super) test class that checks the basic workflow of a learning algorithm that implements {@link
+ * SupportsGrowingAlphabet}.
  *
  * @author frohme
  */
-public abstract class AbstractGrowingAlphabetTest<
-		L extends SupportsGrowingAlphabet<I> & LearningAlgorithm<M, I, D>,
-		M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>,
-		OR,
-		I,
-		D> {
+public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlphabet<I> & LearningAlgorithm<M, I, D>, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, OR, I, D> {
 
-	private final static int MAX_VERIFICATION_TRIES = 100;
+    private static final int MAX_VERIFICATION_TRIES = 100;
+    protected static final int RANDOM_SEED = 42;
+    protected static final int DEFAULT_AUTOMATON_SIZE = 15;
 
-	private Random random;
+    private Random random;
 
-	private M target;
+    private M target;
 
-	private L learner;
+    private L learner;
 
-	private Alphabet<I> initialAlphabet;
+    private Alphabet<I> initialAlphabet;
 
-	private Collection<I> alphabetExtensions;
+    private Collection<I> alphabetExtensions;
 
-	@BeforeClass
-	public void setup() {
-		random = new Random(42);
+    @BeforeClass
+    public void setup() {
+        random = new Random(RANDOM_SEED);
 
-		initialAlphabet = getInitialAlphabet();
-		alphabetExtensions = getAlphabetExtensions();
+        initialAlphabet = getInitialAlphabet();
+        alphabetExtensions = getAlphabetExtensions();
 
-		final List<I> compoundAlphabet = new ArrayList<>(initialAlphabet.size() + alphabetExtensions.size());
-		compoundAlphabet.addAll(initialAlphabet);
-		compoundAlphabet.addAll(alphabetExtensions);
+        final List<I> compoundAlphabet = new ArrayList<>(initialAlphabet.size() + alphabetExtensions.size());
+        compoundAlphabet.addAll(initialAlphabet);
+        compoundAlphabet.addAll(alphabetExtensions);
 
-		target = getTarget(Alphabets.fromList(compoundAlphabet));
-		final OR oracle = getOracle(target);
+        target = getTarget(Alphabets.fromList(compoundAlphabet));
+        final OR oracle = getOracle(target);
 
-		learner = getLearner(oracle, initialAlphabet);
-	}
+        learner = getLearner(oracle, initialAlphabet);
+    }
 
+    protected abstract Alphabet<I> getInitialAlphabet();
 
-	@Test
-	public void testInitialAlphabet() {
-		learner.startLearning();
-		this.performLearnLoop(initialAlphabet);
-	}
+    protected abstract Collection<I> getAlphabetExtensions();
 
-	@Test(dependsOnMethods = "testInitialAlphabet")
-	public void testAddingAlphabetSymbols() {
-		final Alphabet<I> currentAlphabet = new SimpleAlphabet<>(initialAlphabet);
+    protected abstract M getTarget(Alphabet<I> alphabet);
 
-		for (final I i : alphabetExtensions) {
-			currentAlphabet.add(i);
-			learner.addAlphabetSymbol(i);
+    protected abstract OR getOracle(M target);
 
-			this.checkCompletenessOfHypothesis(currentAlphabet);
-			this.performLearnLoop(currentAlphabet);
-		}
-	}
+    protected abstract L getLearner(OR oracle, Alphabet<I> alphabet);
 
-	private void performLearnLoop(final Alphabet<I> effectiveAlphabet) {
+    @Test
+    public void testInitialAlphabet() {
+        learner.startLearning();
+        this.performLearnLoop(initialAlphabet);
+    }
 
-		M hyp = learner.getHypothesisModel();
-		Word<I> sepWord = Automata.findSeparatingWord(target, hyp, effectiveAlphabet);
+    private void performLearnLoop(final Alphabet<I> effectiveAlphabet) {
 
-		while (sepWord != null) {
-			final DefaultQuery<I, D> ce = new DefaultQuery<>(sepWord, target.computeOutput(sepWord));
+        M hyp = learner.getHypothesisModel();
+        Word<I> sepWord = Automata.findSeparatingWord(target, hyp, effectiveAlphabet);
 
-			while (learner.refineHypothesis(ce));
+        while (sepWord != null) {
+            final DefaultQuery<I, D> ce = new DefaultQuery<>(sepWord, target.computeOutput(sepWord));
 
-			hyp = learner.getHypothesisModel();
-			sepWord = Automata.findSeparatingWord(target, hyp, effectiveAlphabet);
-		}
+            while (learner.refineHypothesis(ce)) {
+            }
 
-		Assert.assertTrue(Automata.testEquivalence(target, hyp, effectiveAlphabet));
-	}
+            hyp = learner.getHypothesisModel();
+            sepWord = Automata.findSeparatingWord(target, hyp, effectiveAlphabet);
+        }
 
-	private void checkCompletenessOfHypothesis(final Alphabet<I> alphabet) {
+        Assert.assertTrue(Automata.testEquivalence(target, hyp, effectiveAlphabet));
+    }
 
-		final int alphabetSize = alphabet.size();
-		final M hypothesis = learner.getHypothesisModel();
+    @Test(dependsOnMethods = "testInitialAlphabet")
+    public void testAddingAlphabetSymbols() {
+        final Alphabet<I> currentAlphabet = new SimpleAlphabet<>(initialAlphabet);
 
-		for (int i = 0; i < MAX_VERIFICATION_TRIES; i++) {
-			final WordBuilder<I> testTraceBuilder = new WordBuilder<>(i);
+        for (final I i : alphabetExtensions) {
+            currentAlphabet.add(i);
+            learner.addAlphabetSymbol(i);
 
-			for (int j = 0; j < i; j++) {
-				testTraceBuilder.add(alphabet.getSymbol(random.nextInt(alphabetSize)));
-			}
+            this.checkCompletenessOfHypothesis(currentAlphabet);
+            this.performLearnLoop(currentAlphabet);
+        }
+    }
 
-			// simply try to compute output without an exception
-			hypothesis.computeOutput(testTraceBuilder.toWord());
-		}
-	}
+    private void checkCompletenessOfHypothesis(final Alphabet<I> alphabet) {
 
-	protected abstract Alphabet<I> getInitialAlphabet();
-	protected abstract Collection<I> getAlphabetExtensions();
-	protected abstract M getTarget(final Alphabet<I> alphabet);
-	protected abstract OR getOracle(M target);
-	protected abstract L getLearner(OR oracle, Alphabet<I> alphabet);
+        final int alphabetSize = alphabet.size();
+        final M hypothesis = learner.getHypothesisModel();
+
+        for (int i = 0; i < MAX_VERIFICATION_TRIES; i++) {
+            final WordBuilder<I> testTraceBuilder = new WordBuilder<>(i);
+
+            for (int j = 0; j < i; j++) {
+                testTraceBuilder.add(alphabet.getSymbol(random.nextInt(alphabetSize)));
+            }
+
+            // simply try to compute output without an exception
+            hypothesis.computeOutput(testTraceBuilder.toWord());
+        }
+    }
 
 }

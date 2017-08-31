@@ -1,12 +1,12 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,48 +22,48 @@ import com.google.common.collect.AbstractIterator;
 /**
  * The head of the intrusive linked list for storing incoming transitions of a DT node.
  *
- * @param <T> element type
+ * @param <T>
+ *         element type
  *
  * @author Malte Isberner
  */
 public class IntrusiveList<T extends IntrusiveListElem<T>> extends IntrusiveListElemImpl<T> implements Iterable<T> {
 
-	private class ListIterator extends AbstractIterator<T> {
+    public boolean isEmpty() {
+        return next == null;
+    }
 
-		private T cursor;
+    /**
+     * Retrieves any block from the list. If the list is empty, {@code null} is returned.
+     *
+     * @return any block from the list, or {@code null} if the list is empty.
+     */
+    public T choose() {
+        return next;
+    }
 
-		public ListIterator(T start) {
-			this.cursor = start;
-		}
+    @Override
+    public Iterator<T> iterator() {
+        return new ListIterator(next);
+    }
 
-		@Override
-		protected T computeNext() {
-			if (cursor == null) {
-				return endOfData();
-			}
+    private class ListIterator extends AbstractIterator<T> {
 
-			final T result = cursor;
-			cursor = cursor.getNextElement();
-			return result;
-		}
-	}
+        private T cursor;
 
-	public boolean isEmpty() {
-		return next == null;
-	}
+        ListIterator(T start) {
+            this.cursor = start;
+        }
 
-	/**
-	 * Retrieves any block from the list. If the list is empty,
-	 * {@code null} is returned.
-	 *
-	 * @return any block from the list, or {@code null} if the list is empty.
-	 */
-	public T choose() {
-		return next;
-	}
+        @Override
+        protected T computeNext() {
+            if (cursor == null) {
+                return endOfData();
+            }
 
-	@Override
-	public Iterator<T> iterator() {
-		return new ListIterator(next);
-	}
+            final T result = cursor;
+            cursor = cursor.getNextElement();
+            return result;
+        }
+    }
 }

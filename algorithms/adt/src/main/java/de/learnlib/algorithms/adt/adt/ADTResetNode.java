@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,86 +15,90 @@
  */
 package de.learnlib.algorithms.adt.adt;
 
-import de.learnlib.api.SymbolQueryOracle;
-import net.automatalib.words.Word;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import de.learnlib.api.SymbolQueryOracle;
+import net.automatalib.words.Word;
+
 /**
  * Reset node implementation.
  *
- * @param <S> (hypothesis) state type
- * @param <I> input alphabet type
- * @param <O> output alphabet type
+ * @param <S>
+ *         (hypothesis) state type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
+ *
  * @author frohme
  */
 @ParametersAreNonnullByDefault
 public class ADTResetNode<S, I, O> implements ADTNode<S, I, O>, Serializable {
 
-	ADTNode<S, I, O> parent;
-	final ADTNode<S, I, O> successor;
+    final ADTNode<S, I, O> successor;
+    ADTNode<S, I, O> parent;
 
-	public ADTResetNode(final ADTNode<S, I, O> successor) {
-		this.successor = successor;
-	}
+    public ADTResetNode(final ADTNode<S, I, O> successor) {
+        this.successor = successor;
+    }
 
-	@Override
-	public NodeType getNodeType() {
-		return NodeType.RESET_NODE;
-	}
+    @Override
+    public I getSymbol() {
+        return null;
+    }
 
-	@Override
-	public S getHypothesisState() {
-		return null;
-	}
+    @Override
+    public void setSymbol(I symbol) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Reset nodes do not have a symbol");
+    }
 
-	@Override
-	public void setHypothesisState(S state) {
-		throw new UnsupportedOperationException("Reset nodes cannot reference a hypothesis state");
-	}
+    @Override
+    public ADTNode<S, I, O> getParent() {
+        return this.parent;
+    }
 
-	@Override
-	public I getSymbol() {
-		return null;
-	}
+    @Override
+    public void setParent(final ADTNode<S, I, O> parent) {
+        this.parent = parent;
+    }
 
-	@Override
-	public void setSymbol(I symbol) throws UnsupportedOperationException {
-		throw new UnsupportedOperationException("Reset nodes do not have a symbol");
-	}
+    @Override
+    public Map<O, ADTNode<S, I, O>> getChildren() {
+        return Collections.singletonMap(null, this.successor);
+    }
 
-	@Override
-	public ADTNode<S, I, O> getParent() {
-		return this.parent;
-	}
+    @Override
+    public S getHypothesisState() {
+        return null;
+    }
 
-	@Override
-	public void setParent(final ADTNode<S, I, O> parent) {
-		this.parent = parent;
-	}
+    @Override
+    public void setHypothesisState(S state) {
+        throw new UnsupportedOperationException("Reset nodes cannot reference a hypothesis state");
+    }
 
-	@Override
-	public Map<O, ADTNode<S, I, O>> getChildren() {
-		return Collections.singletonMap(null, this.successor);
-	}
+    @Override
+    public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> prefix) {
+        oracle.reset();
 
-	@Override
-	public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> prefix) {
-		oracle.reset();
+        for (final I i : prefix) {
+            oracle.query(i);
+        }
 
-		for (final I i : prefix) {
-			oracle.query(i);
-		}
+        return successor;
+    }
 
-		return successor;
-	}
+    @Override
+    public NodeType getNodeType() {
+        return NodeType.RESET_NODE;
+    }
 
-	@Override
-	public String toString() {
-		return "reset";
-	}
+    @Override
+    public String toString() {
+        return "reset";
+    }
 }

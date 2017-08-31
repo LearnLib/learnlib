@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,46 +25,46 @@ import net.automatalib.automata.vpda.StackContents;
  */
 final class NondetStackContents {
 
-	private final Set<Integer> syms;
+    private final Set<Integer> syms;
 
-	private final NondetStackContents rest;
+    private final NondetStackContents rest;
 
-	private final boolean isTrueNondet;
+    private final boolean isTrueNondet;
 
-	public NondetStackContents(Set<Integer> syms, NondetStackContents rest) {
-		this.syms = syms;
-		this.rest = rest;
-		this.isTrueNondet = syms.size() > 1 || (rest != null && rest.isTrueNondet);
-	}
+    NondetStackContents(Set<Integer> syms, NondetStackContents rest) {
+        this.syms = syms;
+        this.rest = rest;
+        this.isTrueNondet = syms.size() > 1 || (rest != null && rest.isTrueNondet);
+    }
 
-	public Set<Integer> peek() {
-		return syms;
-	}
+    public static NondetStackContents push(Set<Integer> syms, NondetStackContents rest) {
+        return new NondetStackContents(syms, rest);
+    }
 
-	public NondetStackContents pop() {
-		return rest;
-	}
+    public static NondetStackContents fromDet(StackContents sc) {
+        if (sc == null) {
+            return null;
+        }
+        return push(Collections.singleton(sc.peek()), fromDet(sc.pop()));
+    }
 
-	public static NondetStackContents push(Set<Integer> syms, NondetStackContents rest) {
-		return new NondetStackContents(syms, rest);
-	}
+    public static StackContents toDet(NondetStackContents nsc) {
+        if (nsc == null) {
+            return null;
+        }
+        return StackContents.push(nsc.syms.iterator().next(), toDet(nsc.pop()));
+    }
 
-	public static NondetStackContents fromDet(StackContents sc) {
-		if (sc == null) {
-			return null;
-		}
-		return push(Collections.singleton(sc.peek()), fromDet(sc.pop()));
-	}
+    public Set<Integer> peek() {
+        return syms;
+    }
 
-	public static StackContents toDet(NondetStackContents nsc) {
-		if (nsc == null) {
-			return null;
-		}
-		return StackContents.push(nsc.syms.iterator().next(), toDet(nsc.pop()));
-	}
+    public NondetStackContents pop() {
+        return rest;
+    }
 
-	public boolean isTrueNondet() {
-		return this.isTrueNondet;
-	}
+    public boolean isTrueNondet() {
+        return this.isTrueNondet;
+    }
 
 }

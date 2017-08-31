@@ -1,12 +1,12 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,110 +18,106 @@ package de.learnlib.algorithms.ttt.dfa;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import de.learnlib.acex.AcexAnalyzer;
+import de.learnlib.algorithms.ttt.base.AbstractBaseDTNode;
+import de.learnlib.algorithms.ttt.base.AbstractTTTHypothesis.TTTEdge;
+import de.learnlib.algorithms.ttt.base.AbstractTTTLearner;
 import de.learnlib.algorithms.ttt.base.BaseTTTDiscriminationTree;
+import de.learnlib.algorithms.ttt.base.OutputInconsistency;
+import de.learnlib.algorithms.ttt.base.TTTState;
+import de.learnlib.algorithms.ttt.base.TTTTransition;
+import de.learnlib.api.LearningAlgorithm.DFALearner;
+import de.learnlib.api.MembershipOracle;
+import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
+public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> implements DFALearner<I> {
 
-import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.algorithms.ttt.base.BaseTTTLearner;
-import de.learnlib.algorithms.ttt.base.BaseDTNode;
-import de.learnlib.algorithms.ttt.base.OutputInconsistency;
-import de.learnlib.algorithms.ttt.base.TTTHypothesis.TTTEdge;
-import de.learnlib.algorithms.ttt.base.TTTState;
-import de.learnlib.algorithms.ttt.base.TTTTransition;
-import de.learnlib.api.LearningAlgorithm.DFALearner;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
+    @GenerateBuilder(defaults = AbstractTTTLearner.BuilderDefaults.class)
+    public TTTLearnerDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, AcexAnalyzer analyzer) {
+        this(alphabet, oracle, analyzer, TTTDTNodeDFA::new);
+    }
 
+    protected TTTLearnerDFA(Alphabet<I> alphabet,
+                            MembershipOracle<I, Boolean> oracle,
+                            AcexAnalyzer analyzer,
+                            Supplier<? extends AbstractBaseDTNode<I, Boolean>> rootSupplier) {
+        super(alphabet,
+              oracle,
+              new TTTHypothesisDFA<>(alphabet),
+              new BaseTTTDiscriminationTree<>(oracle, rootSupplier),
+              analyzer);
 
-public class TTTLearnerDFA<I> extends BaseTTTLearner<DFA<?,I>,I,Boolean> implements DFALearner<I> {
+        split(dtree.getRoot(), Word.epsilon(), false, true);
+    }
 
-	@GenerateBuilder(defaults = BaseTTTLearner.BuilderDefaults.class)
-	public TTTLearnerDFA(Alphabet<I> alphabet,
-			MembershipOracle<I, Boolean> oracle,
-			AcexAnalyzer analyzer) {
-		this(alphabet, oracle, analyzer, TTTDTNodeDFA::new);
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public DFA<?, I> getHypothesisModel() {
+        return (TTTHypothesisDFA<I>) hypothesis;
+    }
 
-	protected TTTLearnerDFA(Alphabet<I> alphabet,
-							MembershipOracle<I, Boolean> oracle,
-							AcexAnalyzer analyzer,
-							Supplier<? extends BaseDTNode<I, Boolean>> rootSupplier) {
-		super(alphabet, oracle, new TTTHypothesisDFA<>(alphabet), new BaseTTTDiscriminationTree<>(oracle, rootSupplier), analyzer);
+    @Override
+    protected void initializeState(TTTState<I, Boolean> state) {
+        super.initializeState(state);
 
-		split(dtree.getRoot(), Word.epsilon(), false, true);
-	}
+        TTTStateDFA<I> dfaState = (TTTStateDFA<I>) state;
+        dfaState.accepting = dtree.getRoot().subtreeLabel(dfaState.getDTLeaf());
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public TTTHypothesisDFA<I> getHypothesisDS() {
-		return (TTTHypothesisDFA<I>) hypothesis;
-	}
+    @Override
+    protected OutInconsPrefixTransformAcex<I, Boolean> deriveAcex(OutputInconsistency<I, Boolean> outIncons) {
+        OutInconsPrefixTransformAcex<I, Boolean> acex = super.deriveAcex(outIncons);
+        acex.setEffect(acex.getLength() - 1, !outIncons.targetOut);
+        return acex;
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public DFA<?, I> getHypothesisModel() {
-		return (TTTHypothesisDFA<I>) hypothesis;
-	}
-	
-	@Override
-	protected void initializeState(TTTState<I,Boolean> state) {
-		super.initializeState(state);
-		
-		TTTStateDFA<I> dfaState = (TTTStateDFA<I>)state;
-		dfaState.accepting = dtree.getRoot().subtreeLabel(dfaState.getDTLeaf());
-	}
-	
+    @Override
+    protected Boolean succEffect(Boolean effect) {
+        return effect;
+    }
 
-	@Override
-	protected Boolean predictSuccOutcome(TTTTransition<I, Boolean> trans,
-			BaseDTNode<I, Boolean> succSeparator) {
-		return succSeparator.subtreeLabel(trans.getDTTarget());
-	}
+    @Override
+    protected Boolean predictSuccOutcome(TTTTransition<I, Boolean> trans,
+                                         AbstractBaseDTNode<I, Boolean> succSeparator) {
+        return succSeparator.subtreeLabel(trans.getDTTarget());
+    }
 
-	@Override
-	protected Boolean computeHypothesisOutput(TTTState<I, Boolean> state,
-			Word<I> suffix) {
-		TTTState<I,Boolean> endState = getAnySuccessor(state, suffix);
-		return ((TTTStateDFA<I>) endState).accepting;
-	}
+    @Override
+    protected Boolean computeHypothesisOutput(TTTState<I, Boolean> state, Word<I> suffix) {
+        TTTState<I, Boolean> endState = getAnySuccessor(state, suffix);
+        return ((TTTStateDFA<I>) endState).accepting;
+    }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public TTTHypothesisDFA<I> getHypothesisDS() {
+        return (TTTHypothesisDFA<I>) hypothesis;
+    }
 
-	@Override
-	public GraphDOTHelper<TTTState<I,Boolean>, TTTEdge<I, Boolean>> getHypothesisDOTHelper() {
-		return new EmptyDOTHelper<TTTState<I,Boolean>,TTTEdge<I,Boolean>>() {
-			@Override
-			public boolean getNodeProperties(TTTState<I, Boolean> node,
-					Map<String, String> properties) {
-				TTTStateDFA<I> dfaState = (TTTStateDFA<I>) node;
-				if (dfaState.isAccepting()) {
-					properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);
-				}
-				return true;
-			}
-		};
-	}
+    @Override
+    public GraphDOTHelper<TTTState<I, Boolean>, TTTEdge<I, Boolean>> getHypothesisDOTHelper() {
+        return new EmptyDOTHelper<TTTState<I, Boolean>, TTTEdge<I, Boolean>>() {
 
-	@Override
-	protected BaseDTNode<I, Boolean> createNewNode(BaseDTNode<I, Boolean> parent, Boolean parentOutput) {
-		return new TTTDTNodeDFA<>(parent, parentOutput);
-	}
+            @Override
+            public boolean getNodeProperties(TTTState<I, Boolean> node, Map<String, String> properties) {
+                TTTStateDFA<I> dfaState = (TTTStateDFA<I>) node;
+                if (dfaState.isAccepting()) {
+                    properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);
+                }
+                return true;
+            }
+        };
+    }
 
-	@Override
-	protected OutInconsPrefixTransformAcex<I, Boolean> deriveAcex(
-			OutputInconsistency<I, Boolean> outIncons) {
-		OutInconsPrefixTransformAcex<I, Boolean> acex = super.deriveAcex(outIncons);
-		acex.setEffect(acex.getLength() - 1, !outIncons.targetOut);
-		return acex;
-	}
-
-	@Override
-	protected Boolean succEffect(Boolean effect) {
-		return effect;
-	}
+    @Override
+    protected AbstractBaseDTNode<I, Boolean> createNewNode(AbstractBaseDTNode<I, Boolean> parent,
+                                                           Boolean parentOutput) {
+        return new TTTDTNodeDFA<>(parent, parentOutput);
+    }
 }

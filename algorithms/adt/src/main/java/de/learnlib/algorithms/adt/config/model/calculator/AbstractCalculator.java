@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,16 +15,17 @@
  */
 package de.learnlib.algorithms.adt.config.model.calculator;
 
+import java.util.Optional;
+import java.util.Set;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.config.model.ADSCalculator;
 import de.learnlib.algorithms.adt.util.ADTUtil;
-import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.words.Alphabet;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author frohme
@@ -32,22 +33,22 @@ import java.util.Set;
 @ParametersAreNonnullByDefault
 public abstract class AbstractCalculator implements ADSCalculator {
 
-	@Override
-	public <S, I, O> Optional<ADTNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> hypothesis,
-														final Alphabet<I> alphabet,
-														final Set<S> targets) {
+    @Override
+    public <S, I, O> Optional<ADTNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> hypothesis,
+                                                        final Alphabet<I> alphabet,
+                                                        final Set<S> targets) {
 
-		final Optional<ADSNode<S, I, O>> result = computeInternal(hypothesis, alphabet, targets);
+        final Optional<ADSNode<S, I, O>> result = computeInternal(hypothesis, alphabet, targets);
 
-		if (!result.isPresent()) {
-			return Optional.empty();
-		}
+        if (!result.isPresent()) {
+            return Optional.empty();
+        }
 
-		return Optional.of(ADTUtil.buildFromADS(result.get()));
-	}
+        return Optional.of(ADTUtil.buildFromADS(result.get()));
+    }
 
-	protected abstract <S, I, O> Optional<ADSNode<S, I, O>> computeInternal(final MealyMachine<S, I, ?, O> hypothesis,
-																			final Alphabet<I> alphabet,
-																			final Set<S> targets);
+    protected abstract <S, I, O> Optional<ADSNode<S, I, O>> computeInternal(MealyMachine<S, I, ?, O> hypothesis,
+                                                                            Alphabet<I> alphabet,
+                                                                            Set<S> targets);
 
 }

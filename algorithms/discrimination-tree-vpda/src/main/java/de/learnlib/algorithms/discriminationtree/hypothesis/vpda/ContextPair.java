@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,34 +18,35 @@ package de.learnlib.algorithms.discriminationtree.hypothesis.vpda;
 import net.automatalib.words.Word;
 
 /**
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
  *
  * @author Malte Isberner
  */
 public class ContextPair<I> {
 
-	private final Word<I> prefix;
-	private final Word<I> suffix;
+    private final Word<I> prefix;
+    private final Word<I> suffix;
 
-	public ContextPair(Word<I> prefix, Word<I> suffix) {
-		this.prefix = prefix;
-		this.suffix = suffix;
-	}
+    public ContextPair(Word<I> prefix, Word<I> suffix) {
+        this.prefix = prefix;
+        this.suffix = suffix;
+    }
 
-	public Word<I> getPrefix() {
-		return prefix;
-	}
+    public Word<I> getPrefix() {
+        return prefix;
+    }
 
-	public Word<I> getSuffix() {
-		return suffix;
-	}
+    public Word<I> getSuffix() {
+        return suffix;
+    }
 
-	public int getLength() {
-		return prefix.length() + suffix.length();
-	}
+    public int getLength() {
+        return prefix.length() + suffix.length();
+    }
 
-	@Override
-	public String toString() {
-		return "<" + prefix + ", " + suffix + ">";
-	}
+    @Override
+    public String toString() {
+        return "<" + prefix + ", " + suffix + ">";
+    }
 }

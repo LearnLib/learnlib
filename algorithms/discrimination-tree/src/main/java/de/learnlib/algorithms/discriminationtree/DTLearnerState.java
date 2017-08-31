@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,20 +15,25 @@
  */
 package de.learnlib.algorithms.discriminationtree;
 
+import java.io.Serializable;
+
 import de.learnlib.algorithms.discriminationtree.hypothesis.DTLearnerHypothesis;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
 
-import java.io.Serializable;
-
 /**
- * Class that contains all data that represent the internal state of the {@link DTLearnerState} learner and its
- * DFA and Mealy implementations.
+ * Class that contains all data that represent the internal state of the {@link DTLearnerState} learner and its DFA and
+ * Mealy implementations.
  *
- * @param <I>  The input alphabet type.
- * @param <D>  The output domain type.
+ * @param <I>
+ *         The input alphabet type.
+ * @param <D>
+ *         The output domain type.
  * @param <SP>
+ *         The state property type.
  * @param <TP>
+ *         The transition property type.
+ *
  * @author bainczyk
  */
 public class DTLearnerState<I, D, SP, TP> implements Serializable {
