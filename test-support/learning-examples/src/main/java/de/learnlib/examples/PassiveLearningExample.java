@@ -13,16 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.passive.api;
+package de.learnlib.examples;
 
-import net.automatalib.automata.fsa.DFA;
+import java.util.Collection;
 
-/**
- * Basic interface for passive learning algorithms that infer {@link DFA}s.
- *
- * @param <I>
- *         input symbol type
- *
- * @author Malte Isberner
- */
-public interface PassiveDFALearner<I> extends PassiveAcceptorLearner<DFA<?, I>, I> {}
+import de.learnlib.oracles.DefaultQuery;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+
+public interface PassiveLearningExample<I, D> {
+
+    Collection<DefaultQuery<I, D>> getSamples();
+
+    Alphabet<I> getAlphabet();
+
+    interface DFAPassiveLearningExample<I> extends PassiveLearningExample<I, Boolean> {}
+
+    interface MealyPassiveLearningExample<I, O> extends PassiveLearningExample<I, Word<O>> {}
+}

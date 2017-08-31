@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.learnlib.api.PassiveLearningAlgorithm;
 import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.passive.api.PassiveMealyLearner;
 import de.learnlib.passive.commons.pta.BlueFringePTA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
@@ -39,7 +39,7 @@ import net.automatalib.words.Word;
  * @author Malte Isberner
  */
 public class BlueFringeRPNIMealy<I, O> extends AbstractBlueFringeRPNI<I, Word<O>, Void, O, MealyMachine<?, I, ?, O>>
-        implements PassiveMealyLearner<I, O> {
+        implements PassiveLearningAlgorithm.PassiveMealyLearner<I, O> {
 
     private final List<Pair<int[], Word<O>>> samples = new ArrayList<>();
 

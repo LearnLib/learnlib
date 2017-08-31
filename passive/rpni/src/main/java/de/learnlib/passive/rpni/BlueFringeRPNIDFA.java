@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.learnlib.api.PassiveLearningAlgorithm;
 import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.passive.api.PassiveDFALearner;
 import de.learnlib.passive.commons.pta.BlueFringePTA;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -35,7 +35,7 @@ import net.automatalib.words.Alphabet;
  * @author Malte Isberner
  */
 public class BlueFringeRPNIDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>>
-        implements PassiveDFALearner<I> {
+        implements PassiveLearningAlgorithm.PassiveDFALearner<I> {
 
     protected List<int[]> positive = new ArrayList<>();
     protected List<int[]> negative = new ArrayList<>();

@@ -36,6 +36,10 @@ limitations under the License.
         <!--
         Compile-time dependencies
         -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-core</artifactId>
+        </dependency>
 
         <!-- AutomataLib dependencies -->
         <dependency>

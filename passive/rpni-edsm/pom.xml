@@ -40,10 +40,6 @@ limitations under the License.
         <!-- LearnLib dependencies -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-passive-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-passive-commons</artifactId>
         </dependency>
         <dependency>

@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import de.learnlib.api.PassiveLearningAlgorithm;
 import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.passive.api.PassiveLearningAlgorithm;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;

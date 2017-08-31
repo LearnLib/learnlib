@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 
-import de.learnlib.passive.api.PassiveLearningAlgorithm;
+import de.learnlib.api.PassiveLearningAlgorithm;
 import de.learnlib.passive.commons.bluefringe.DefaultProcessingOrders;
 import de.learnlib.passive.commons.bluefringe.ProcessingOrder;
 import de.learnlib.passive.commons.pta.BlueFringePTA;

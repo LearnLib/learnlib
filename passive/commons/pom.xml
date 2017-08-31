@@ -37,11 +37,17 @@ http://www.gnu.de/documents/lgpl.en.html.
         <!--
         Compile-time dependencies
         -->
-
-        <!-- LearnLib dependencies -->
         <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-passive-core</artifactId>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
         </dependency>
 
         <!--
