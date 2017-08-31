@@ -32,7 +32,7 @@ final class SingleLearnerVariantITSubCase<I, D, M extends UniversalDeterministic
         implements ITest {
 
     private static final long NANOS_PER_SECOND = 1000000;
-    private static final long MILLIS_PER_SECOND = 1000000;
+    private static final long MILLIS_PER_SECOND = 1000;
 
     private final LearnerVariant<? extends M, I, D> variant;
     private final LearningExample<I, D, ? extends M> example;
