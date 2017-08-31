@@ -188,9 +188,10 @@ limitations under the License.
                     <configuration>
                         <!-- use explicit paths instead of build-tools dependency, to prevent race conditions when
                              using checkstyle _during_ the build process -->
-                        <configLocation>build-tools/src/main/resources/automatalib-learnlib-checkstyle.xml
-                        </configLocation>
+                        <configLocation>build-tools/src/main/resources/automatalib-learnlib-checkstyle.xml</configLocation>
                         <headerLocation>build-tools/src/main/resources/license-header-java.txt</headerLocation>
+                        <suppressionsLocation>build-tools/src/main/resources/learnlib-checkstyle-suppressions.xml</suppressionsLocation>
+                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         <linkXRef>false</linkXRef>
                     </configuration>
                     <dependencies>
@@ -367,6 +368,19 @@ limitations under the License.
                                 <argument>-l</argument>
                             </arguments>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
