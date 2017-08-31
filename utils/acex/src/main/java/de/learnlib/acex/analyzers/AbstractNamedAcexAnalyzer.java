@@ -36,10 +36,6 @@ public abstract class AbstractNamedAcexAnalyzer implements AcexAnalyzer {
         this.name = name;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return getName();

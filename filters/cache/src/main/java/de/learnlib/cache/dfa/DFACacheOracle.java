@@ -109,10 +109,6 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
         return new DFACacheConsistencyTest<>(incDfa, incDfaLock);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
-     */
     @Override
     public void processQueries(Collection<? extends Query<I, Boolean>> queries) {
         List<ProxyQuery<I>> unanswered = new ArrayList<>();

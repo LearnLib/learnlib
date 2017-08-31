@@ -52,10 +52,6 @@ public abstract class AbstractExtensibleAutomatonLStar<A, I, D, S, T, SP, TP, AI
         this.closingStrategy = closingStrategy;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.algorithms.lstargeneric.AbstractLStar#doRefineHypothesis(de.learnlib.oracles.DefaultQuery)
-     */
     @Override
     protected void refineHypothesisInternal(DefaultQuery<I, D> ceQuery) {
         List<List<Row<I>>> unclosed = cexHandler.handleCounterexample(ceQuery, table, hypothesisOutput(), oracle);
@@ -67,19 +63,11 @@ public abstract class AbstractExtensibleAutomatonLStar<A, I, D, S, T, SP, TP, AI
         return initialPrefixes;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.algorithms.lstargeneric.AbstractLStar#initialSuffixes()
-     */
     @Override
     protected List<Word<I>> initialSuffixes() {
         return initialSuffixes;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.algorithms.lstargeneric.AbstractLStar#selectClosingRows(java.util.List)
-     */
     @Override
     protected List<Row<I>> selectClosingRows(List<List<Row<I>>> unclosed) {
         return closingStrategy.selectClosingRows(unclosed, table, oracle);

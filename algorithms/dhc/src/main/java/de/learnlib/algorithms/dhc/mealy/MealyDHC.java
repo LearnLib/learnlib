@@ -242,10 +242,6 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
         return addSuffixesUnchecked(ceSuffixes);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.LearningAlgorithm#getHypothesisModel()
-     */
     @Override
     public CompactMealy<I, O> getHypothesisModel() {
         checkInternalState();

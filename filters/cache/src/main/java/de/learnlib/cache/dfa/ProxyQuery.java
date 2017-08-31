@@ -41,29 +41,17 @@ final class ProxyQuery<I> extends Query<I, Boolean> {
         this.origQuery = origQuery;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.Query#answer(java.lang.Object)
-     */
     @Override
     public void answer(Boolean output) {
         origQuery.answer(output);
         this.answer = output;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.Query#getPrefix()
-     */
     @Override
     public Word<I> getPrefix() {
         return origQuery.getPrefix();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.Query#getSuffix()
-     */
     @Override
     public Word<I> getSuffix() {
         return origQuery.getSuffix();

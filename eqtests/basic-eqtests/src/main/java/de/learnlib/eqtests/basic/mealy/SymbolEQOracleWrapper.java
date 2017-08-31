@@ -32,10 +32,6 @@ public class SymbolEQOracleWrapper<A extends DetSuffixOutputAutomaton<?, I, ?, W
         this.wordEqOracle = wordEqOracle;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, net.automatalib.words.Alphabet)
-     */
     @Override
     public DefaultQuery<I, O> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
         DefaultQuery<I, Word<O>> wordCeQry = wordEqOracle.findCounterExample(hypothesis, inputs);

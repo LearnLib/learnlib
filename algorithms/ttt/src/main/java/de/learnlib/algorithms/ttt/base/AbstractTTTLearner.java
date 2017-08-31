@@ -146,10 +146,6 @@ public abstract class AbstractTTTLearner<A, I, D>
      * Private helper methods.
      */
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.LearningAlgorithm#startLearning()
-     */
     @Override
     public void startLearning() {
         if (hypothesis.isInitialized()) {
@@ -164,10 +160,6 @@ public abstract class AbstractTTTLearner<A, I, D>
         closeTransitions();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.LearningAlgorithm#refineHypothesis(de.learnlib.oracles.DefaultQuery)
-     */
     @Override
     public boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
         if (!refineHypothesisSingle(ceQuery)) {

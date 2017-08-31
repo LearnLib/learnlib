@@ -50,10 +50,6 @@ public final class DFACacheConsistencyTest<I> implements DFAEquivalenceOracle<I>
         this.incDfaLock = lock;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
-     */
     @Override
     public DefaultQuery<I, Boolean> findCounterExample(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
         Word<I> w;

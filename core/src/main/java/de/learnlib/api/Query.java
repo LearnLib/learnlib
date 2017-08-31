@@ -107,10 +107,6 @@ public abstract class Query<I, D> {
     @Nonnull
     public abstract Word<I> getSuffix();
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public final int hashCode() {
         if (hashCode != 0) {
@@ -124,10 +120,6 @@ public abstract class Query<I, D> {
         return hashCode;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public final boolean equals(Object o) {
         if (o == null) {

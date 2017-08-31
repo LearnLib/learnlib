@@ -72,19 +72,11 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?, I>, I, Boolean, Bo
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.LearningAlgorithm#getHypothesisModel()
-     */
     @Override
     public DFA<?, I> getHypothesisModel() {
         return hypWrapper;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.algorithms.discriminationtree.AbstractDTLearner#spQuery(de.learnlib.algorithms.discriminationtree.hypothesis.HState)
-     */
     @Override
     protected Query<I, Boolean> spQuery(final HState<I, Boolean, Boolean, Void> state) {
         return new AbstractQuery<I, Boolean>(state.getAccessSequence(), Word.epsilon()) {
@@ -96,10 +88,6 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?, I>, I, Boolean, Bo
         };
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.algorithms.discriminationtree.AbstractDTLearner#tpQuery(de.learnlib.algorithms.discriminationtree.hypothesis.HTransition)
-     */
     @Override
     protected Query<I, Boolean> tpQuery(HTransition<I, Boolean, Boolean, Void> transition) {
         return null;

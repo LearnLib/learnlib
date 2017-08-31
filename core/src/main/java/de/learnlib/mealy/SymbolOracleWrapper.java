@@ -54,10 +54,6 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
         this.wordOracle = wordOracle;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
-     */
     @Override
     public void processQueries(Collection<? extends Query<I, O>> queries) {
         List<LastSymbolQuery<I, O>> lsQueries = new ArrayList<>(queries.size());

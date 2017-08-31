@@ -40,25 +40,16 @@ public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
         this.counter = counter;
     }
 
-    /* (non-Javadoc)
-     * @see de.learnlib.api.SUL#pre()
-     */
     @Override
     public void pre() {
         sul.pre();
     }
 
-    /* (non-Javadoc)
-     * @see de.learnlib.api.SUL#post()
-     */
     @Override
     public void post() {
         sul.post();
     }
 
-    /* (non-Javadoc)
-     * @see de.learnlib.api.SUL#step(java.lang.Object)
-     */
     @Override
     @Nullable
     public O step(@Nullable I in) throws SULException {
@@ -76,9 +67,6 @@ public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
         return new SymbolCounterSUL<>(counter, sul.fork());
     }
 
-    /* (non-Javadoc)
-     * @see de.learnlib.statistics.StatisticSUL#getStatisticalData()
-     */
     @Override
     @Nonnull
     public Counter getStatisticalData() {

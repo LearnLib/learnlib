@@ -93,10 +93,6 @@ public class StaticParallelOracle<I, D> implements ParallelOracle<I, D> {
         this.minBatchSize = minBatchSize;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
-     */
     @Override
     public void processQueries(Collection<? extends Query<I, D>> queries) {
         int num = queries.size();

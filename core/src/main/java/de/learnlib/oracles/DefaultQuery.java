@@ -74,10 +74,6 @@ public class DefaultQuery<I, D> extends AbstractQuery<I, D> {
         return prefix.isEmpty();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.Query#setOutput(java.lang.Object)
-     */
     @Override
     public void answer(@Nullable D output) {
         this.output = output;

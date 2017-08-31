@@ -585,10 +585,6 @@ public final class ObservationTable<I, D> implements AccessSequenceTransformer<I
         return alphabet;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.AccessSequenceTransformer#transformAccessSequence(net.automatalib.words.Word)
-     */
     @Override
     public Word<I> transformAccessSequence(Word<I> word) {
         Row<I> current = shortPrefixRows.get(0);
@@ -605,10 +601,6 @@ public final class ObservationTable<I, D> implements AccessSequenceTransformer<I
         return row.getSuccessor(alphabet.getSymbolIndex(sym));
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.AccessSequenceTransformer#isAccessSequence(net.automatalib.words.Word)
-     */
     @Override
     public boolean isAccessSequence(Word<I> word) {
         Row<I> current = shortPrefixRows.get(0);

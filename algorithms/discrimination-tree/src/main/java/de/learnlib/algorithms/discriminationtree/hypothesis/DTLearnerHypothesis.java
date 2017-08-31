@@ -191,24 +191,11 @@ public class DTLearnerHypothesis<I, O, SP, TP>
         public GraphDOTHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>> getGraphDOTHelper() {
             return new DefaultDOTHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>>() {
 
-                /*
-                 * (non-Javadoc)
-                 *
-                 * @see
-                 * net.automatalib.graphs.dot.DefaultDOTHelper#initialNodes()
-                 */
                 @Override
                 protected Collection<? extends HState<I, O, SP, TP>> initialNodes() {
                     return Collections.singleton(root);
                 }
 
-                /*
-                 * (non-Javadoc)
-                 *
-                 * @see
-                 * net.automatalib.graphs.dot.DefaultDOTHelper#getNodeProperties
-                 * (java.lang.Object, java.util.Map)
-                 */
                 @Override
                 public boolean getNodeProperties(HState<I, O, SP, TP> node, Map<String, String> properties) {
                     if (!super.getNodeProperties(node, properties)) {
@@ -218,14 +205,6 @@ public class DTLearnerHypothesis<I, O, SP, TP>
                     return true;
                 }
 
-                /*
-                 * (non-Javadoc)
-                 *
-                 * @see
-                 * net.automatalib.graphs.dot.DefaultDOTHelper#getEdgeProperties
-                 * (java.lang.Object, java.lang.Object, java.lang.Object,
-                 * java.util.Map)
-                 */
                 @Override
                 public boolean getEdgeProperties(HState<I, O, SP, TP> src,
                                                  HTransition<I, O, SP, TP> edge,

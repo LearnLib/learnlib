@@ -100,11 +100,6 @@ public class ReuseEdge<S, I, O> {
         return output;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
-     */
     @Override
     public final String toString() {
         return source.toString() + " -> " + target.toString() + " i/o " + input + "/" + output;

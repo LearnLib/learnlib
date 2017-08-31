@@ -46,10 +46,6 @@ public class SimulatorOracle<I, D> implements SingleQueryOracle<I, D> {
         this.automaton = automaton;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
-     */
     @Override
     public D answerQuery(Word<I> prefix, Word<I> suffix) {
         return automaton.computeSuffixOutput(prefix, suffix);

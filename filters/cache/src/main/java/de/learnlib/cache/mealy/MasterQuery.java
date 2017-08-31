@@ -67,10 +67,6 @@ final class MasterQuery<I, O> extends AbstractQuery<I, Word<O>> {
         return (answer != null);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.Query#answer(java.lang.Object)
-     */
     @Override
     public void answer(Word<O> output) {
         this.answer = truncateOutput(output);

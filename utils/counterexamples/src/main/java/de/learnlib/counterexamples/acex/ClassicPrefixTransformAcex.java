@@ -64,10 +64,6 @@ public class ClassicPrefixTransformAcex<I, D> extends AbstractBaseCounterexample
         this.hypOut = hypOut;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.abstractcounterexamples.AbstractCounterexample#doComputeEffect(int)
-     */
     @Override
     protected Boolean computeEffect(int index) {
         Word<I> prefix = this.suffix.prefix(index);

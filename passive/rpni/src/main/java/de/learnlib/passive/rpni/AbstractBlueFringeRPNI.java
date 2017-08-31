@@ -105,10 +105,6 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M> implements Passive
         this.deterministic = deterministic;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.passive.api.PassiveLearningAlgorithm#computeModel()
-     */
     @Override
     public M computeModel() {
         BlueFringePTA<SP, TP> pta = new BlueFringePTA<>(alphabetSize);

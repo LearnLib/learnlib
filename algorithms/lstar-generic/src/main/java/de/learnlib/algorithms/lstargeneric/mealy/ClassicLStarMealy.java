@@ -101,10 +101,6 @@ public class ClassicLStarMealy<I, O>
                                        closingStrategy);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.lstar.AbstractLStar#initialSuffixes()
-     */
     @Override
     protected List<Word<I>> initialSuffixes() {
         List<Word<I>> suffixes = new ArrayList<>(alphabet.size());
@@ -115,28 +111,16 @@ public class ClassicLStarMealy<I, O>
         return suffixes;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.lstar.AbstractAutomatonLStar#exposeInternalHypothesis()
-     */
     @Override
     protected MealyMachine<?, I, ?, O> exposeInternalHypothesis() {
         return internalHyp;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.lstar.AbstractAutomatonLStar#stateProperty(de.learnlib.lstar.Row)
-     */
     @Override
     protected Void stateProperty(Row<I> stateRow) {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.lstar.AbstractAutomatonLStar#transitionProperty(de.learnlib.lstar.Row, int)
-     */
     @Override
     protected O transitionProperty(Row<I> stateRow, int inputIdx) {
         return table.cellContents(stateRow, inputIdx);

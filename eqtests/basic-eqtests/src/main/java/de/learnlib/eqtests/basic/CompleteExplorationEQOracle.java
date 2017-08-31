@@ -73,10 +73,6 @@ public class CompleteExplorationEQOracle<I, D> implements EquivalenceOracle<DetO
         this.sulOracle = sulOracle;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
-     */
     @Override
     public DefaultQuery<I, D> findCounterExample(DetOutputAutomaton<?, I, ?, D> hypothesis,
                                                  Collection<? extends I> alphabet) {

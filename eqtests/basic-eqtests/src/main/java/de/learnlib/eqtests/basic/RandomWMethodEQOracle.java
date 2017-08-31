@@ -95,10 +95,6 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
         this.bound = bound;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
-     */
     @Override
     @ParametersAreNonnullByDefault
     public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {

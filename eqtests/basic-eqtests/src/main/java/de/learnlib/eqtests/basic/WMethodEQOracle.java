@@ -68,10 +68,6 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
         this.maxDepth = maxDepth;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
-     */
     @Override
     public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
 

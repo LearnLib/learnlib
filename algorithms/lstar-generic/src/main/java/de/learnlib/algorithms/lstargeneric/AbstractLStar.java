@@ -74,10 +74,6 @@ public abstract class AbstractLStar<A, I, D>
         this.table = new ObservationTable<>(alphabet);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.LearningAlgorithm#start()
-     */
     @Override
     public void startLearning() {
         List<Word<I>> prefixes = initialPrefixes();
@@ -87,10 +83,6 @@ public abstract class AbstractLStar<A, I, D>
         completeConsistentTable(initialUnclosed, table.isInitialConsistencyCheckRequired());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.LearningAlgorithm#refineHypothesis(de.learnlib.api.Query)
-     */
     @Override
     public final boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
         if (!MQUtil.isCounterexample(ceQuery, hypothesisOutput())) {
@@ -217,19 +209,11 @@ public abstract class AbstractLStar<A, I, D>
         throw new IllegalArgumentException("Bogus inconsistency");
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.algorithms.features.GlobalSuffixLearner#getGlobalSuffixes()
-     */
     @Override
     public Collection<? extends Word<I>> getGlobalSuffixes() {
         return Collections.unmodifiableCollection(table.getSuffixes());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.algorithms.features.GlobalSuffixLearner#addGlobalSuffixes(java.util.Collection)
-     */
     @Override
     public boolean addGlobalSuffixes(Collection<? extends Word<I>> newGlobalSuffixes) {
         List<List<Row<I>>> unclosed = table.addSuffixes(newGlobalSuffixes, oracle);
@@ -239,10 +223,6 @@ public abstract class AbstractLStar<A, I, D>
         return completeConsistentTable(unclosed, false);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.algorithms.features.observationtable.OTLearner#getObservationTable()
-     */
     @Override
     public de.learnlib.algorithms.features.observationtable.ObservationTable<I, D> getObservationTable() {
         return table.asStandardTable();

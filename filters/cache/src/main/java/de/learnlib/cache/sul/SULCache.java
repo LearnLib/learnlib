@@ -85,37 +85,21 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCache<I, O> {
         return new SULCache<>(new IncrementalMealyDAGBuilder<>(alphabet), sul);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.SUL#pre()
-     */
     @Override
     public void pre() {
         impl.pre();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.SUL#post()
-     */
     @Override
     public void post() {
         impl.post();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.SUL#step(java.lang.Object)
-     */
     @Override
     public O step(I in) {
         return impl.step(in);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.cache.LearningCache#createCacheConsistencyTest()
-     */
     @Override
     public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
         return impl.createCacheConsistencyTest();

@@ -156,37 +156,21 @@ public class BoundedDeque<E> extends AbstractCollection<E> implements Serializab
         return (capacity > 0);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#iterator()
-     */
     @Override
     public Iterator<E> iterator() {
         return deque.iterator();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
     @Override
     public int size() {
         return deque.size();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#isEmpty()
-     */
     @Override
     public boolean isEmpty() {
         return deque.isEmpty();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#clear()
-     */
     @Override
     public void clear() {
         deque.clear();

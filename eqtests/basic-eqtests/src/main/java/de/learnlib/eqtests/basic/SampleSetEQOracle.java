@@ -154,10 +154,6 @@ public class SampleSetEQOracle<I, D> implements EquivalenceOracle<SuffixOutput<I
         return this;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
-     */
     @Override
     public DefaultQuery<I, D> findCounterExample(SuffixOutput<I, D> hypothesis, Collection<? extends I> inputs) {
         Iterator<DefaultQuery<I, D>> queryIt = testQueries.iterator();

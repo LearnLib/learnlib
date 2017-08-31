@@ -35,10 +35,6 @@ import net.automatalib.graphs.dot.GraphDOTHelper;
  */
 class ReuseTreeDotHelper<S, I, O> extends DefaultDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.DefaultDOTHelper#getNodeProperties(java.lang.Object, java.util.Map)
-     */
     @Override
     public boolean getNodeProperties(ReuseNode<S, I, O> node, Map<String, String> properties) {
         super.getNodeProperties(node, properties);
@@ -53,10 +49,6 @@ class ReuseTreeDotHelper<S, I, O> extends DefaultDOTHelper<ReuseNode<S, I, O>, R
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.DefaultDOTHelper#getEdgeProperties(java.lang.Object, java.lang.Object, java.lang.Object, java.util.Map)
-     */
     @Override
     public boolean getEdgeProperties(ReuseNode<S, I, O> src,
                                      ReuseEdge<S, I, O> edge,

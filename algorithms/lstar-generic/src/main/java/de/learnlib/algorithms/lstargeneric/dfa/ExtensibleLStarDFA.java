@@ -76,46 +76,26 @@ public class ExtensibleLStarDFA<I>
               closingStrategy);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.lstar.AbstractLStar#initialSuffixes()
-     */
     @Override
     protected List<Word<I>> initialSuffixes() {
         return Collections.singletonList(Word.<I>epsilon());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.algorithms.lstargeneric.AbstractAutomatonLStar#exposeInternalHypothesis()
-     */
     @Override
     protected DFA<?, I> exposeInternalHypothesis() {
         return internalHyp;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.lstar.AbstractAutomatonLStar#stateProperty(de.learnlib.lstar.Row)
-     */
     @Override
     protected Boolean stateProperty(Row<I> stateRow) {
         return table.cellContents(stateRow, 0);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.lstar.AbstractAutomatonLStar#transitionProperty(de.learnlib.lstar.Row, int)
-     */
     @Override
     protected Void transitionProperty(Row<I> stateRow, int inputIdx) {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.algorithms.lstargeneric.ExtensibleAutomatonLStar#hypothesisOutput()
-     */
     @Override
     protected SuffixOutput<I, Boolean> hypothesisOutput() {
         return internalHyp;

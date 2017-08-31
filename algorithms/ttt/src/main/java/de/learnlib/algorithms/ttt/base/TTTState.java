@@ -66,10 +66,6 @@ public class TTTState<I, D> implements AccessSequenceProvider<I>, Serializable {
         return dtLeaf;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.algorithms.ttt.dfa.AccessSequenceProvider#getAccessSequence()
-     */
     @Override
     public Word<I> getAccessSequence() {
         if (getParentTransition() != null) {
@@ -78,10 +74,6 @@ public class TTTState<I, D> implements AccessSequenceProvider<I>, Serializable {
         return Word.epsilon(); // root
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "s" + id;

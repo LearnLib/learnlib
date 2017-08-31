@@ -346,10 +346,6 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.Graph#getNodes()
-     */
     @Override
     public Collection<ReuseNode<S, I, O>> getNodes() {
         Collection<ReuseNode<S, I, O>> collection = new ArrayList<>();
@@ -370,19 +366,11 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.IndefiniteGraph#getOutgoingEdges(java.lang.Object)
-     */
     @Override
     public synchronized Collection<ReuseEdge<S, I, O>> getOutgoingEdges(ReuseNode<S, I, O> node) {
         return node.getEdges();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.IndefiniteGraph#getTarget(java.lang.Object)
-     */
     @Override
     public synchronized ReuseNode<S, I, O> getTarget(ReuseEdge<S, I, O> edge) {
         if (edge != null) {
@@ -391,10 +379,6 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.DOTPlottableGraph#getGraphDOTHelper()
-     */
     @Override
     public synchronized GraphDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> getGraphDOTHelper() {
         return new ReuseTreeDotHelper<>();

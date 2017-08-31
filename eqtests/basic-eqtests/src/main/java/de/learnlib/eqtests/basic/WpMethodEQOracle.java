@@ -68,10 +68,6 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
         this.sulOracle = sulOracle;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
-     */
     @Override
     public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
         UniversalDeterministicAutomaton<?, I, ?, ?, ?> aut = hypothesis;

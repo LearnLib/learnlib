@@ -63,10 +63,6 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
         this.alphabet = new SimpleAlphabet<>(alphabet);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.simple.SimpleDTS#getInitialState()
-     */
     @Override
     public TTTState<I, D> getInitialState() {
         return initialState;
@@ -187,10 +183,6 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.simple.SimpleAutomaton#getStates()
-     */
     @Override
     public Collection<TTTState<I, D>> getStates() {
         return Collections.unmodifiableList(states);

@@ -57,10 +57,6 @@ public class OutInconsPrefixTransformAcex<I, D> extends AbstractBaseCounterexamp
         this.asTransform = asTransform;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.abstractcounterexamples.AbstractCounterexample#doComputeEffect(int)
-     */
     @Override
     protected D computeEffect(int index) {
         Word<I> prefix = this.suffix.prefix(index);

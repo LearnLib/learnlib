@@ -53,10 +53,6 @@ public class MealyCacheConsistencyTest<I, O> implements MealyEquivalenceOracle<I
         this.incMealyLock = lock;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.EquivalenceOracle#findCounterExample(java.lang.Object, java.util.Collection)
-     */
     @Override
     public DefaultQuery<I, Word<O>> findCounterExample(MealyMachine<?, I, ?, O> hypothesis,
                                                        Collection<? extends I> inputs) {

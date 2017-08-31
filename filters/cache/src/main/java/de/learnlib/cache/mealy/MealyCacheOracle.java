@@ -145,19 +145,11 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O> {
         return incMealy.asGraph().size();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.cache.LearningCache#createCacheConsistencyTest()
-     */
     @Override
     public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
         return new MealyCacheConsistencyTest<>(incMealy, incMealyLock);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.api.MembershipOracle#processQueries(java.util.Collection)
-     */
     @Override
     public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
         if (queries.isEmpty()) {

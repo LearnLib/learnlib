@@ -51,10 +51,6 @@ public class AcexLocalSuffixFinder implements LocalSuffixFinder<Object, Object> 
         this.name = name;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.learnlib.counterexamples.LocalSuffixFinder#findSuffixIndex(de.learnlib.api.Query, de.learnlib.api.AccessSequenceTransformer, net.automatalib.automata.concepts.SuffixOutput, de.learnlib.api.MembershipOracle)
-     */
     @Override
     public <RI, RO> int findSuffixIndex(Query<RI, RO> ceQuery,
                                         AccessSequenceTransformer<RI> asTransformer,
