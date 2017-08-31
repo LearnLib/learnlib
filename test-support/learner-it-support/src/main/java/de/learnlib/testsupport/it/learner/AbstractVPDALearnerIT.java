@@ -15,23 +15,19 @@
  */
 package de.learnlib.testsupport.it.learner;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-import de.learnlib.api.EquivalenceOracle;
-import de.learnlib.api.LearningAlgorithm;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.eqtests.basic.vpda.SimulatorEQOracle;
-import de.learnlib.oracles.DefaultQuery;
 import de.learnlib.oracles.SimulatorOracle;
 import net.automatalib.automata.vpda.OneSEVPA;
-import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultVPDAlphabet;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.testng.annotations.Factory;
 
 /**
  * Abstract integration test for VPDA learning algorithms.
@@ -56,37 +52,29 @@ public abstract class AbstractVPDALearnerIT {
     private static final VPDAlphabet<Character> VPD_ALPHABET =
             new DefaultVPDAlphabet<>(INTERNAL_ALPHABET, CALL_ALPHABET, RETURN_ALPHABET);
 
-    @Test
-    public void testRandomVPDA() {
+    @Factory
+    public Object[] testRandomVPDA() {
         final OneSEVPA<?, Character> target =
                 RandomAutomata.randomOneSEVPA(RANDOM, LOC_COUNT, VPD_ALPHABET, ACCEPTANCE_PROB, RETURN_PROB, true);
-        checkAllVariants(target, VPD_ALPHABET);
+
+        return buildAllVariants(target, VPD_ALPHABET);
     }
 
-    private <I> void checkAllVariants(final OneSEVPA<?, I> target, final VPDAlphabet<I> alphabet) {
+    private <I> Object[] buildAllVariants(final OneSEVPA<?, I> target, final VPDAlphabet<I> alphabet) {
 
         final MembershipOracle<I, Boolean> mqOracle = new SimulatorOracle<>(target);
-        final EquivalenceOracle<OneSEVPA<?, I>, I, Boolean> eqOracle = new SimulatorEQOracle<>(target, alphabet);
         final LearnerVariantListImpl.OneSEVPALearnerVariantListImpl<I> variants =
                 new LearnerVariantListImpl.OneSEVPALearnerVariantListImpl<>();
 
         addLearnerVariants(alphabet, mqOracle, variants);
 
+        final List<VPDALearnerITCase<I>> result = new ArrayList<>();
+
         for (LearnerVariant<OneSEVPA<?, I>, I, Boolean> v : variants.getLearnerVariants()) {
-            final LearningAlgorithm<? extends OneSEVPA<?, I>, I, Boolean> learner = v.getLearner();
-
-            learner.startLearning();
-            DefaultQuery<I, Boolean> ceQuery;
-
-            while ((ceQuery = eqOracle.findCounterExample(learner.getHypothesisModel(), alphabet)) != null) {
-                boolean refined = learner.refineHypothesis(ceQuery);
-                Assert.assertTrue(refined, "Real counterexample " + ceQuery.getInput() + " did not refine hypothesis");
-            }
-
-            Assert.assertTrue(Automata.testEquivalence(target, learner.getHypothesisModel(), alphabet),
-                              "Final hypothesis does not match reference automaton");
-
+            result.add(new VPDALearnerITCase<>(v, target, alphabet));
         }
+
+        return result.toArray();
     }
 
     /**
