@@ -61,12 +61,7 @@ public class ClassicLStarMealy<I, O>
                              List<Word<I>> initialSuffixes,
                              ObservationTableCEXHandler<? super I, ? super O> cexHandler,
                              ClosingStrategy<? super I, ? super O> closingStrategy) {
-        this(alphabet,
-             oracle,
-             Collections.singletonList(Word.epsilon()),
-             initialSuffixes,
-             cexHandler,
-             closingStrategy);
+        this(alphabet, oracle, Collections.singletonList(Word.epsilon()), initialSuffixes, cexHandler, closingStrategy);
     }
 
     @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)

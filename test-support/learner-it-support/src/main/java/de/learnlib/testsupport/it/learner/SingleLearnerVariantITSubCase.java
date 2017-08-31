@@ -38,7 +38,7 @@ final class SingleLearnerVariantITSubCase<I, D, M extends UniversalDeterministic
     private final LearningExample<I, D, ? extends M> example;
 
     SingleLearnerVariantITSubCase(LearnerVariant<? extends M, I, D> variant,
-                                         LearningExample<I, D, ? extends M> example) {
+                                  LearningExample<I, D, ? extends M> example) {
         this.variant = variant;
         this.example = example;
     }

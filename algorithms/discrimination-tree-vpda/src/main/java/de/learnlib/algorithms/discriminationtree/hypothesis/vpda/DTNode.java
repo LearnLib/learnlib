@@ -29,7 +29,8 @@ import de.learnlib.datastructure.list.IntrusiveListElem;
  *
  * @author Malte Isberner
  */
-public class DTNode<I> extends AbstractTemporaryIntrusiveDTNode<ContextPair<I>, Boolean, HypLoc<I>, TransList<I>, DTNode<I>>
+public class DTNode<I>
+        extends AbstractTemporaryIntrusiveDTNode<ContextPair<I>, Boolean, HypLoc<I>, TransList<I>, DTNode<I>>
         implements IntrusiveListElem<DTNode<I>> {
 
     private final TransList<I> nonTreeIncoming = new TransList<>();

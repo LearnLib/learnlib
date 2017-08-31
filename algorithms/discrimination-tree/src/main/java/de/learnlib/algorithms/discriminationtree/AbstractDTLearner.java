@@ -125,7 +125,8 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
         D oldOut = oracle.answerQuery(oldState.getAccessSequence(), suffix);
         D newOut = oracle.answerQuery(newState.getAccessSequence(), suffix);
 
-        AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>>.SplitResult sr = oldDt.split(suffix, oldOut, newOut, newState);
+        AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>>.SplitResult sr =
+                oldDt.split(suffix, oldOut, newOut, newState);
 
         oldState.fetchNonTreeIncoming(openTransitions);
 

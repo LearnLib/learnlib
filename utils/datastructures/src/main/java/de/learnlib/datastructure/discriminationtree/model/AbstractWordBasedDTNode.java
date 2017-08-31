@@ -29,7 +29,8 @@ import net.automatalib.words.Word;
  *
  * @author frohme
  */
-public abstract class AbstractWordBasedDTNode<I, O, D> extends AbstractDTNode<Word<I>, O, D, AbstractWordBasedDTNode<I, O, D>> {
+public abstract class AbstractWordBasedDTNode<I, O, D>
+        extends AbstractDTNode<Word<I>, O, D, AbstractWordBasedDTNode<I, O, D>> {
 
     public AbstractWordBasedDTNode(D data) {
         super(data);

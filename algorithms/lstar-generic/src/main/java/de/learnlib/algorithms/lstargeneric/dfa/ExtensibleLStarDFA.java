@@ -57,12 +57,7 @@ public class ExtensibleLStarDFA<I>
                               List<Word<I>> initialSuffixes,
                               ObservationTableCEXHandler<? super I, ? super Boolean> cexHandler,
                               ClosingStrategy<? super I, ? super Boolean> closingStrategy) {
-        this(alphabet,
-             oracle,
-             Collections.singletonList(Word.epsilon()),
-             initialSuffixes,
-             cexHandler,
-             closingStrategy);
+        this(alphabet, oracle, Collections.singletonList(Word.epsilon()), initialSuffixes, cexHandler, closingStrategy);
     }
 
     @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)

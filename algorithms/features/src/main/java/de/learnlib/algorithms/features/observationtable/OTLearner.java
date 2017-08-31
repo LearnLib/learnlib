@@ -24,6 +24,5 @@ public interface OTLearner<M, I, D> extends LearningAlgorithm<M, I, D>, Observat
 
     interface OTLearnerDFA<I> extends DFALearner<I>, OTLearner<DFA<?, I>, I, Boolean> {}
 
-    interface OTLearnerMealy<I, O>
-            extends MealyLearner<I, O>, OTLearner<MealyMachine<?, I, ?, O>, I, Word<O>> {}
+    interface OTLearnerMealy<I, O> extends MealyLearner<I, O>, OTLearner<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 }

@@ -37,6 +37,5 @@ public interface GlobalSuffixLearner<M, I, D> extends LearningAlgorithm<M, I, D>
 
     interface GlobalSuffixLearnerDFA<I> extends GlobalSuffixLearner<DFA<?, I>, I, Boolean> {}
 
-    interface GlobalSuffixLearnerMealy<I, O>
-            extends GlobalSuffixLearner<MealyMachine<?, I, ?, O>, I, Word<O>> {}
+    interface GlobalSuffixLearnerMealy<I, O> extends GlobalSuffixLearner<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 }

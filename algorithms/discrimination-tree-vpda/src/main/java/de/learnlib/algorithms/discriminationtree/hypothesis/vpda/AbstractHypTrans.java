@@ -25,7 +25,8 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-public abstract class AbstractHypTrans<I> extends IntrusiveListElemImpl<AbstractHypTrans<I>> implements AccessSequenceProvider<I> {
+public abstract class AbstractHypTrans<I> extends IntrusiveListElemImpl<AbstractHypTrans<I>>
+        implements AccessSequenceProvider<I> {
 
     private final HypLoc<I> source;
 

@@ -27,8 +27,7 @@ import de.learnlib.algorithms.features.observationtable.ObservationTable;
 @ParametersAreNonnullByDefault
 public interface ObservationTableWriter<I, D> {
 
-    void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose Appendable out)
-            throws IOException;
+    void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose Appendable out) throws IOException;
 
     void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose PrintStream out);
 

@@ -25,8 +25,8 @@ import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Word;
 
 /**
- * Wraps a {@link AbstractNamedAcexAnalyzer}. This class is both responsible for adapting it to the standard LearnLib {@link
- * LocalSuffixFinder} interface, and for maintaining statistics. Hence, a new object of this class should be
+ * Wraps a {@link AbstractNamedAcexAnalyzer}. This class is both responsible for adapting it to the standard LearnLib
+ * {@link LocalSuffixFinder} interface, and for maintaining statistics. Hence, a new object of this class should be
  * instantiated for every learning process.
  *
  * @author Malte Isberner

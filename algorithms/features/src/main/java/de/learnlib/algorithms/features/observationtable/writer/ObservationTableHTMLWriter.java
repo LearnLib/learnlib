@@ -68,9 +68,7 @@ public class ObservationTableHTMLWriter<I, D> extends AbstractObservationTableWr
             out.append("</tr>\n");
         }
 
-        out.append("\t\t<tr><td colspan=\"")
-           .append(Integer.toString(suffixes.size() + 1))
-           .append("\"></td></tr>\n");
+        out.append("\t\t<tr><td colspan=\"").append(Integer.toString(suffixes.size() + 1)).append("\"></td></tr>\n");
 
         for (Row<? extends I, ? extends D> row : table.getLongPrefixRows()) {
             out.append("\t\t<tr class=\"long-prefix\"><td>").append(wordToString(row.getLabel())).append("</td>");

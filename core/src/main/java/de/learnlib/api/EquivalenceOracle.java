@@ -86,7 +86,6 @@ public interface EquivalenceOracle<A, I, D> {
      *
      * @author Malte Isberner
      */
-    interface MealyEquivalenceOracle<I, O>
-            extends EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> {}
+    interface MealyEquivalenceOracle<I, O> extends EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 
 }

@@ -34,7 +34,9 @@ public class HTransition<I, O, SP, TP> implements Serializable {
     // NON-TREE EDGE FIELDS
     private AbstractWordBasedDTNode<I, O, HState<I, O, SP, TP>> dt;
 
-    public HTransition(HState<I, O, SP, TP> source, I symbol, AbstractWordBasedDTNode<I, O, HState<I, O, SP, TP>> dtTgt) {
+    public HTransition(HState<I, O, SP, TP> source,
+                       I symbol,
+                       AbstractWordBasedDTNode<I, O, HState<I, O, SP, TP>> dtTgt) {
         this.source = source;
         this.symbol = symbol;
         this.treeTgt = null;

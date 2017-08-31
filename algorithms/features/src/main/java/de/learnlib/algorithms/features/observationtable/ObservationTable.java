@@ -256,7 +256,8 @@ public interface ObservationTable<I, D> {
     /**
      * Retrieves a suffix by its (column) index.
      *
-     * @param index the index
+     * @param index
+     *         the index
      *
      * @return the suffix
      */

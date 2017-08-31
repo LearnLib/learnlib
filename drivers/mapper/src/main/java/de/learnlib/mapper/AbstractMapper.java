@@ -53,8 +53,7 @@ public abstract class AbstractMapper<AI, AO, CI, CO> implements Mapper<AI, AO, C
     }
 
     @Override
-    public MappedException<? extends AO> mapUnwrappedException(RuntimeException exception)
-            throws RuntimeException {
+    public MappedException<? extends AO> mapUnwrappedException(RuntimeException exception) throws RuntimeException {
         throw exception;
     }
 

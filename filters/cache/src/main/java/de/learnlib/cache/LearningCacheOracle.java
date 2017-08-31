@@ -55,8 +55,7 @@ public interface LearningCacheOracle<A, I, D> extends LearningCache<A, I, D>, Me
      *
      * @author Malte Isberner
      */
-    interface MealyLearningCacheOracle<I, O>
-            extends LearningCacheOracle<MealyMachine<?, I, ?, O>, I, Word<O>>,
-                    MealyLearningCache<I, O>,
-                    MealyMembershipOracle<I, O> {}
+    interface MealyLearningCacheOracle<I, O> extends LearningCacheOracle<MealyMachine<?, I, ?, O>, I, Word<O>>,
+                                                     MealyLearningCache<I, O>,
+                                                     MealyMembershipOracle<I, O> {}
 }

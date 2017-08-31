@@ -45,12 +45,7 @@ public class ExtensibleLStarMealy<I, O>
                                 List<Word<I>> initialSuffixes,
                                 ObservationTableCEXHandler<? super I, ? super Word<O>> cexHandler,
                                 ClosingStrategy<? super I, ? super Word<O>> closingStrategy) {
-        this(alphabet,
-             oracle,
-             Collections.singletonList(Word.epsilon()),
-             initialSuffixes,
-             cexHandler,
-             closingStrategy);
+        this(alphabet, oracle, Collections.singletonList(Word.epsilon()), initialSuffixes, cexHandler, closingStrategy);
     }
 
     @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
