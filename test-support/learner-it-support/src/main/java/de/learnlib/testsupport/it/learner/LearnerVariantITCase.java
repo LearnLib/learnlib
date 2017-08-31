@@ -28,7 +28,7 @@ import org.testng.Assert;
 import org.testng.ITest;
 import org.testng.annotations.Test;
 
-final class SingleLearnerVariantITSubCase<I, D, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>>
+final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>>
         implements ITest {
 
     private static final long NANOS_PER_MILLISECOND = 1000000;
@@ -37,8 +37,7 @@ final class SingleLearnerVariantITSubCase<I, D, M extends UniversalDeterministic
     private final LearnerVariant<? extends M, I, D> variant;
     private final LearningExample<I, D, ? extends M> example;
 
-    SingleLearnerVariantITSubCase(LearnerVariant<? extends M, I, D> variant,
-                                  LearningExample<I, D, ? extends M> example) {
+    LearnerVariantITCase(LearnerVariant<? extends M, I, D> variant, LearningExample<I, D, ? extends M> example) {
         this.variant = variant;
         this.example = example;
     }

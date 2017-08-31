@@ -15,6 +15,7 @@
  */
 package de.learnlib.testsupport.it.learner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.learnlib.api.MembershipOracle;
@@ -28,6 +29,7 @@ import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MealySymLearner
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.testng.annotations.Factory;
 
 /**
  * Abstract integration test for Mealy machine learning algorithms.
@@ -40,28 +42,27 @@ import net.automatalib.words.Word;
  */
 public abstract class AbstractMealySymLearnerIT extends AbstractLearnerIT {
 
-    // @Factory FIXME
-    @Override
-    public SingleExampleAllVariantsITSubCase<?, ?, ?>[] createExampleITCases() {
-        List<? extends MealyLearningExample<?, ?>> examples = LearningExamples.createMealyExamples();
+    @Factory
+    public Object[] createExampleITCases() {
+        final List<LearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
+        final List<? extends MealyLearningExample<?, ?>> examples = LearningExamples.createMealyExamples();
 
-        SingleExampleAllVariantsITSubCase<?, ?, ?>[] result = new SingleExampleAllVariantsITSubCase[examples.size()];
-        int i = 0;
         for (MealyLearningExample<?, ?> example : examples) {
-            result[i++] = createAllVariantsITCase(example);
+            result.addAll(createAllVariantsITCase(example));
         }
 
-        return result;
+        return result.toArray();
     }
 
-    private <I, O> SingleExampleAllVariantsITSubCase<I, Word<O>, MealyMachine<?, I, ?, O>> createAllVariantsITCase(
+    private <I, O> List<LearnerVariantITCase<I, Word<O>, MealyMachine<?, I, ?, O>>> createAllVariantsITCase(
             MealyLearningExample<I, O> example) {
-        Alphabet<I> alphabet = example.getAlphabet();
-        MealyMembershipOracle<I, O> mqOracle = new MealySimulatorOracle<>(example.getReferenceAutomaton());
-        MealySymLearnerVariantListImpl<I, O> variants = new MealySymLearnerVariantListImpl<>();
+
+        final Alphabet<I> alphabet = example.getAlphabet();
+        final MealyMembershipOracle<I, O> mqOracle = new MealySimulatorOracle<>(example.getReferenceAutomaton());
+        final MealySymLearnerVariantListImpl<I, O> variants = new MealySymLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, MealyUtil.wrapWordOracle(mqOracle), variants);
 
-        return new SingleExampleAllVariantsITSubCase<>(example, variants.getMealyLearnerVariants());
+        return super.createExampleITCases(example, variants.getMealyLearnerVariants());
     }
 
     /**

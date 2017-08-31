@@ -15,7 +15,12 @@
  */
 package de.learnlib.testsupport.it.learner;
 
-import org.testng.annotations.Test;
+import java.util.ArrayList;
+import java.util.List;
+
+import de.learnlib.examples.LearningExample;
+import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.automata.concepts.SuffixOutput;
 
 /**
  * Abstract integration test for a learning algorithm (or "learner").
@@ -29,26 +34,23 @@ import org.testng.annotations.Test;
  */
 public abstract class AbstractLearnerIT {
 
-    /*
-     * FIXME: Nested @Factory not working as expected, so we use this workaround ...
-     */
-    @Test
-    public void testAll() {
-        int testCounter = 0;
-        for (SingleExampleAllVariantsITSubCase<?, ?, ?> exampleSubCase : createExampleITCases()) {
-            for (SingleLearnerVariantITSubCase<?, ?, ?> variantSubCase : exampleSubCase.createSingleVariantITCases()) {
-                variantSubCase.testLearning();
-                testCounter++;
-            }
-        }
-        System.out.println("Ran " + testCounter + " tests");
-    }
-
     /**
-     * Creates an array of per-example test cases for all learner variants.
+     * Creates a list of per-example test cases for all learner variants.
      *
-     * @return the array of test cases, one for each example
+     * @return the list of test cases, one for each example
      */
-    public abstract SingleExampleAllVariantsITSubCase<?, ?, ?>[] createExampleITCases();
+    protected <I, D, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>> List<LearnerVariantITCase<I, D, A>> createExampleITCases(
+            LearningExample<I, D, A> example,
+            LearnerVariantListImpl<A, I, D> variants) {
+
+        final List<? extends LearnerVariant<? extends A, I, D>> variantList = variants.getLearnerVariants();
+        final List<LearnerVariantITCase<I, D, A>> result = new ArrayList<>(variantList.size());
+
+        for (LearnerVariant<? extends A, I, D> variant : variantList) {
+            result.add(new LearnerVariantITCase<>(variant, example));
+        }
+
+        return result;
+    }
 
 }

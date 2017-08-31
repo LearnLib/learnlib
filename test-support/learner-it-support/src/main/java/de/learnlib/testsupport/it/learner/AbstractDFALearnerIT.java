@@ -15,6 +15,7 @@
  */
 package de.learnlib.testsupport.it.learner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
@@ -25,6 +26,7 @@ import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantLi
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.DFALearnerVariantListImpl;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
+import org.testng.annotations.Factory;
 
 /**
  * Abstract integration test for DFA learning algorithms.
@@ -37,26 +39,26 @@ import net.automatalib.words.Alphabet;
  */
 public abstract class AbstractDFALearnerIT extends AbstractLearnerIT {
 
-    @Override
-    public SingleExampleAllVariantsITSubCase<?, ?, ?>[] createExampleITCases() {
-        List<? extends DFALearningExample<?>> examples = LearningExamples.createDFAExamples();
+    @Factory
+    public Object[] createExampleITCases() {
+        final List<LearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
+        final List<? extends DFALearningExample<?>> examples = LearningExamples.createDFAExamples();
 
-        SingleExampleAllVariantsITSubCase<?, ?, ?>[] result = new SingleExampleAllVariantsITSubCase[examples.size()];
-        int i = 0;
         for (DFALearningExample<?> example : examples) {
-            result[i++] = createAllVariantsITCase(example);
+            result.addAll(createAllVariantsITCase(example));
         }
 
-        return result;
+        return result.toArray();
     }
 
-    private <I> SingleExampleAllVariantsITSubCase<I, Boolean, DFA<?, I>> createAllVariantsITCase(DFALearningExample<I> example) {
-        Alphabet<I> alphabet = example.getAlphabet();
-        DFAMembershipOracle<I> mqOracle = new DFASimulatorOracle<>(example.getReferenceAutomaton());
-        DFALearnerVariantListImpl<I> variants = new DFALearnerVariantListImpl<>();
+    private <I> List<LearnerVariantITCase<I, Boolean, DFA<?, I>>> createAllVariantsITCase(DFALearningExample<I> example) {
+
+        final Alphabet<I> alphabet = example.getAlphabet();
+        final DFAMembershipOracle<I> mqOracle = new DFASimulatorOracle<>(example.getReferenceAutomaton());
+        final DFALearnerVariantListImpl<I> variants = new DFALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, example.getReferenceAutomaton().size(), mqOracle, variants);
 
-        return new SingleExampleAllVariantsITSubCase<>(example, variants);
+        return super.createExampleITCases(example, variants);
     }
 
     /**
