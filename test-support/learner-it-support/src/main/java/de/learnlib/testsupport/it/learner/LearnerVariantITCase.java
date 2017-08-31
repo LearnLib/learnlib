@@ -24,12 +24,16 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.ITest;
 import org.testng.annotations.Test;
 
 final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>>
         implements ITest {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LearnerVariantITCase.class);
 
     private static final long NANOS_PER_MILLISECOND = 1000000;
     private static final long MILLIS_PER_SECOND = 1000;
@@ -44,9 +48,6 @@ final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton
 
     @Test
     public void testLearning() {
-        System.out.print("Running learner integration test " + getTestName() + " ... ");
-        System.out.flush();
-
         LearningAlgorithm<? extends M, I, D> learner = variant.getLearner();
 
         Alphabet<I> alphabet = example.getAlphabet();
@@ -80,8 +81,9 @@ final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton
                                                       alphabet), "Final hypothesis does not match reference automaton");
 
         long duration = (System.nanoTime() - start) / NANOS_PER_MILLISECOND;
-        System.out.printf("ok [%d.%03ds]", duration / MILLIS_PER_SECOND, duration % MILLIS_PER_SECOND);
-        System.out.println();
+        LOGGER.info("Passed learner integration test {} ... took [{}]",
+                    getTestName(),
+                    String.format("%d.%03ds", duration / MILLIS_PER_SECOND, duration % MILLIS_PER_SECOND));
     }
 
     @Override
