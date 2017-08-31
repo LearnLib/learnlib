@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 final class SingleLearnerVariantITSubCase<I, D, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>>
         implements ITest {
 
-    private static final long NANOS_PER_SECOND = 1000000;
+    private static final long NANOS_PER_MILLISECOND = 1000000;
     private static final long MILLIS_PER_SECOND = 1000;
 
     private final LearnerVariant<? extends M, I, D> variant;
@@ -80,7 +80,7 @@ final class SingleLearnerVariantITSubCase<I, D, M extends UniversalDeterministic
                                                       learner.getHypothesisModel(),
                                                       alphabet), "Final hypothesis does not match reference automaton");
 
-        long duration = (System.nanoTime() - start) / NANOS_PER_SECOND;
+        long duration = (System.nanoTime() - start) / NANOS_PER_MILLISECOND;
         System.out.printf("ok [%d.%03ds]", duration / MILLIS_PER_SECOND, duration % MILLIS_PER_SECOND);
         System.out.println();
     }
