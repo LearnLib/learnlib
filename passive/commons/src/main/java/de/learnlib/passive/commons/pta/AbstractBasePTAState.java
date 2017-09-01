@@ -138,6 +138,6 @@ public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAStat
         if (successors == null) {
             return Stream.empty();
         }
-        return successors.stream().filter(x -> x != null);
+        return successors.stream().filter(Objects::nonNull);
     }
 }

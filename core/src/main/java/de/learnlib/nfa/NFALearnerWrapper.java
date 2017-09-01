@@ -51,8 +51,7 @@ public class NFALearnerWrapper<I> implements LearningAlgorithm.DFALearner<I> {
     @Override
     public CompactDFA<I> getHypothesisModel() {
         NFA<?, I> nfaHyp = nfaLearner.getHypothesisModel();
-        CompactDFA<I> dfaHyp = NFAs.determinize(nfaHyp, alphabet);
-        return dfaHyp;
+        return NFAs.determinize(nfaHyp, alphabet);
     }
 
     @Override

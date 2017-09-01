@@ -109,13 +109,7 @@ public class SplitData<O, T extends IntrusiveList<?>> {
      * @return the (possibly empty) list associated with the given state label
      */
     public T getIncoming(O label) {
-        T list = incomingTransitions.get(label);
-        if (list == null) {
-            list = listSuppllier.get();
-            incomingTransitions.put(label, list);
-        }
-
-        return list;
+        return incomingTransitions.computeIfAbsent(label, k -> listSuppllier.get());
     }
 
     /**

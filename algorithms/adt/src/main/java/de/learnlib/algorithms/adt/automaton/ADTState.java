@@ -35,7 +35,7 @@ import net.automatalib.words.Word;
 public class ADTState<I, O> extends AbstractFastDetState<ADTState<I, O>, ADTTransition<I, O>>
         implements AccessSequenceProvider<I> {
 
-    private Set<ADTTransition<I, O>> incomingTransitions;
+    private final Set<ADTTransition<I, O>> incomingTransitions;
 
     private Word<I> accessSequence;
 

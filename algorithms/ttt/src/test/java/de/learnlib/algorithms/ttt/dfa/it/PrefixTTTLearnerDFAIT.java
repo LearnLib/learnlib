@@ -34,7 +34,7 @@ public class PrefixTTTLearnerDFAIT extends AbstractDFALearnerIT {
                                           DFALearnerVariantList<I> variants) {
 
         for (AbstractNamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
-            PrefixTTTLearnerDFA<I> learner = new PrefixTTTLearnerDFA<I>(alphabet, mqOracle, analyzer);
+            PrefixTTTLearnerDFA<I> learner = new PrefixTTTLearnerDFA<>(alphabet, mqOracle, analyzer);
             variants.addLearnerVariant("analyzer=" + analyzer, learner);
         }
     }

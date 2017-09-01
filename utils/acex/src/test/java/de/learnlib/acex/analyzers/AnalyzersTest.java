@@ -34,7 +34,7 @@ public class AnalyzersTest {
     private static final int NUM_RANDOM = 10;
 
     @DataProvider(name = "analyzers")
-    public AbstractNamedAcexAnalyzer[][] analyzers() {
+    public Object[][] analyzers() {
         Collection<AbstractNamedAcexAnalyzer> analyzers = AcexAnalyzers.getAllAnalyzers();
         AbstractNamedAcexAnalyzer[][] result = new AbstractNamedAcexAnalyzer[analyzers.size()][1];
         int i = 0;

@@ -47,11 +47,11 @@ import net.automatalib.words.impl.SimpleAlphabet;
  */
 public class Example {
 
-    private String offer1 = "offer_1";
-    private String offer2 = "offer_2";
-    private String poll = "poll";
-    private Alphabet<String> sigma;
-    private List<Word<String>> initialSuffixes;
+    private final String offer1 = "offer_1";
+    private final String offer2 = "offer_2";
+    private final String poll = "poll";
+    private final Alphabet<String> sigma;
+    private final List<Word<String>> initialSuffixes;
 
     public Example() {
         sigma = new SimpleAlphabet<>();
@@ -77,7 +77,7 @@ public class Example {
         System.out.println("Model 1: " + result1.size() + " states");
         System.out.println("Model 2: " + result2.size() + " states");
 
-        Word<String> sepWord = null;
+        Word<String> sepWord;
         sepWord = Automata.findSeparatingWord(result1, result2, example.sigma);
 
         System.out.println("Difference (separating word)? " + sepWord);
@@ -97,7 +97,7 @@ public class Example {
     /*
      * A "normal" scenario without reuse filter technique.
      */
-    public MealyMachine<?, String, ?, String> runExperiment1() throws Exception {
+    public MealyMachine<?, String, ?, String> runExperiment1() {
         // For each membership query a new instance of BoundedStringQueue will
         // be created (normal learning scenario without filters)
         FullMembershipQueryOracle oracle = new FullMembershipQueryOracle();
@@ -105,14 +105,14 @@ public class Example {
         // construct L* instance (almost classic Mealy version)
         // almost: we use words (Word<String>) in cells of the table
         // instead of single outputs.
-        MealyLearner<String, String> lstar = null;
+        MealyLearner<String, String> lstar;
         lstar = new ExtensibleLStarMealyBuilder<String, String>().withAlphabet(sigma)
                                                                  .withInitialSuffixes(initialSuffixes)
                                                                  .withOracle(oracle)
                                                                  .create();
 
         lstar.startLearning();
-        MealyMachine<?, String, ?, String> result = null;
+        MealyMachine<?, String, ?, String> result;
         result = lstar.getHypothesisModel();
 
         System.out.println("Resets:  " + oracle.resets);
@@ -124,7 +124,7 @@ public class Example {
     /*
      * Scenario with reuse filter technique.
      */
-    public MealyMachine<?, String, ?, String> runExperiment2() throws Exception {
+    public MealyMachine<?, String, ?, String> runExperiment2() {
         MySystemStateHandler ssh = new MySystemStateHandler();
 
         // This time we use the reuse filter to avoid some resets and
@@ -137,7 +137,7 @@ public class Example {
         // almost: we use words (Word<String>) in cells of the table
         // instead of single outputs.
 
-        MealyLearner<String, String> lstar = null;
+        MealyLearner<String, String> lstar;
         lstar = new ExtensibleLStarMealyBuilder<String, String>().withAlphabet(sigma)
                                                                  .withInitialSuffixes(initialSuffixes)
                                                                  .withOracle(reuseOracle)
@@ -162,13 +162,15 @@ public class Example {
     }
 
     private String exec(BoundedStringQueue s, String input) {
-        if (input.equals(offer1) || input.equals(offer2)) {
-            s.offer(input);
-            return "void";
-        } else if (input.equals(poll)) {
-            return s.poll();
-        } else {
-            throw new RuntimeException("unknown input symbol");
+        switch (input) {
+            case offer1:
+            case offer2:
+                s.offer(input);
+                return "void";
+            case poll:
+                return s.poll();
+            default:
+                throw new RuntimeException("unknown input symbol");
         }
     }
 

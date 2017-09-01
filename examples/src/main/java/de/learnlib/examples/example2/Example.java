@@ -168,7 +168,7 @@ public final class Example {
         // capacity
         public static final int MAX_SIZE = 3;
         // storage
-        private Deque<String> data = new ArrayDeque<>(3);
+        private final Deque<String> data = new ArrayDeque<>(3);
 
         // add a String to the queue if capacity allows
         public void offer(String s) {

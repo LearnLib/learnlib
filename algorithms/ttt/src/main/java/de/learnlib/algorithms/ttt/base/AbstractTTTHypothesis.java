@@ -99,8 +99,7 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
     }
 
     public TTTTransition<I, D> getInternalTransition(TTTState<I, D> state, int input) {
-        TTTTransition<I, D> trans = state.getTransition(input);
-        return trans;
+        return state.getTransition(input);
     }
 
     protected abstract T mapTransition(TTTTransition<I, D> internalTransition);

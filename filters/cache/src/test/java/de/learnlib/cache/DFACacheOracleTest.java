@@ -43,7 +43,6 @@ public class DFACacheOracleTest {
     private MembershipOracle<Integer, Boolean> oracle;
     private CounterOracle<Integer, Boolean> counterOracle;
     private Collection<Query<Integer, Boolean>> queries;
-    private long count;
 
     @BeforeClass
     public void setup() {
@@ -104,7 +103,7 @@ public class DFACacheOracleTest {
         queries.add(new DefaultQuery<>(Word.fromLetter(1)));
         Assert.assertTrue(queries.size() == 1);
         oracle.processQueries(queries);
-        count = counterOracle.getCount();
+        long count = counterOracle.getCount();
         Assert.assertTrue(count == 3);
     }
 }

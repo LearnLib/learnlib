@@ -153,7 +153,7 @@ public class ReuseOracleTest {
         Integer systemState = node.systemState;
 
         Assert.assertNotNull(systemState);
-        Assert.assertTrue(systemState.equals(new Integer(2)));
+        Assert.assertTrue(systemState.equals(2));
 
         // we have automatic invalidation, so the reuseNode already has system state set to null
         // and although querying again reveals nothing reusable

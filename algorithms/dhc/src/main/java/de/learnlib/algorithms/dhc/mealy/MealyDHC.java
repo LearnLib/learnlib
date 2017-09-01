@@ -60,11 +60,11 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
     private static final Logger LOG = LoggerFactory.getLogger(MealyDHC.class);
     private final MembershipOracle<I, Word<O>> oracle;
-    private GrowingAlphabet<I> alphabet;
+    private final GrowingAlphabet<I> alphabet;
     private LinkedHashSet<Word<I>> splitters = new LinkedHashSet<>();
     private CompactMealy<I, O> hypothesis;
     private MutableMapping<Integer, QueueElement<I, O>> accessSequences;
-    private GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder;
+    private final GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder;
 
     /**
      * Constructor, provided for backwards compatibility reasons.
@@ -314,11 +314,11 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
     static final class QueueElement<I, O> implements Serializable {
 
-        private Integer parentState;
-        private QueueElement<I, O> parentElement;
-        private I transIn;
-        private O transOut;
-        private int depth;
+        private final Integer parentState;
+        private final QueueElement<I, O> parentElement;
+        private final I transIn;
+        private final O transOut;
+        private final int depth;
 
         private QueueElement(Integer parentState, QueueElement<I, O> parentElement, I transIn, O transOut) {
             this.parentState = parentState;

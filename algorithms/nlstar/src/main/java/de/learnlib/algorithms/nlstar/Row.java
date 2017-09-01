@@ -152,7 +152,7 @@ public class Row<I> {
         for (int i = 0; i < num; i++) {
             assert queryIt.hasNext();
 
-            boolean value = queryIt.next().getOutput().booleanValue();
+            boolean value = queryIt.next().getOutput();
             if (value) {
                 contents.set(idx);
             }

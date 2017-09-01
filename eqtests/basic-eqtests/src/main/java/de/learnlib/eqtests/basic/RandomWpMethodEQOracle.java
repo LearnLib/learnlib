@@ -100,8 +100,7 @@ public class RandomWpMethodEQOracle<A extends UniversalDeterministicAutomaton<?,
     @ParametersAreNonnullByDefault
     public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
         UniversalDeterministicAutomaton<?, I, ?, ?, ?> aut = hypothesis;
-        Output<I, D> out = hypothesis;
-        return doFindCounterExample(aut, out, inputs);
+        return doFindCounterExample(aut, hypothesis, inputs);
     }
 
     /*

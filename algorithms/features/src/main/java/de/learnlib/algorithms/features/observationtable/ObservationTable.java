@@ -197,8 +197,6 @@ public interface ObservationTable<I, D> {
     }
 
     /**
-     * @param inconsistency
-     *
      * @return the suffix (column) index where the contents of the rows differ, or {@code #NO_DISTINGUISHING_SUFFIX} if
      * the contents of the rows are equal.
      *

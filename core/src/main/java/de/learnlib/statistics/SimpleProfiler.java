@@ -33,7 +33,7 @@ public final class SimpleProfiler {
 
     private static final Map<String, Counter> CUMULATED = new ConcurrentHashMap<>();
     private static final Map<String, Long> PENDING = new ConcurrentHashMap<>();
-    private static boolean PROFILE = true;
+    private static final boolean PROFILE = true;
     private static final LearnLogger LOGGER = LearnLogger.getLogger(SimpleProfiler.class.getName());
     private static final double MILLISECONDS_PER_SECOND = 1000.0;
 

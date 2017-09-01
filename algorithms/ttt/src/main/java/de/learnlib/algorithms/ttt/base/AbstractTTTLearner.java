@@ -166,9 +166,7 @@ public abstract class AbstractTTTLearner<A, I, D>
             return false;
         }
 
-        DefaultQuery<I, D> currCe = ceQuery;
-        while (refineHypothesisSingle(currCe)) {
-        }
+        while (refineHypothesisSingle(ceQuery)) {}
 
         return true;
     }
@@ -290,8 +288,7 @@ public abstract class AbstractTTTLearner<A, I, D>
             D newOut = succEffect(acex.effect(breakpoint));
 
             splitState(trans, splitSuffix, oldOut, newOut);
-        } catch (HypothesisChangedException ex) {
-            return;
+        } catch (HypothesisChangedException ignored) {
         }
     }
 
@@ -347,8 +344,7 @@ public abstract class AbstractTTTLearner<A, I, D>
         TTTState<I, D> curr = lastSingleton;
         for (I sym : word.subWord(lastSingletonIndex)) {
             TTTTransition<I, D> trans = curr.getTransition(alphabet.getSymbolIndex(sym));
-            TTTState<I, D> next = requireSuccessor(trans);
-            curr = next;
+            curr = requireSuccessor(trans);
         }
 
         return curr;
@@ -516,9 +512,7 @@ public abstract class AbstractTTTLearner<A, I, D>
      * @return the newly created state
      */
     private TTTState<I, D> createState(@Nonnull TTTTransition<I, D> transition) {
-        TTTState<I, D> newState = hypothesis.createState(transition);
-
-        return newState;
+        return hypothesis.createState(transition);
     }
 
     /**

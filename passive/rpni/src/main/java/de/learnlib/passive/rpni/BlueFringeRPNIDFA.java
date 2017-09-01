@@ -37,8 +37,8 @@ import net.automatalib.words.Alphabet;
 public class BlueFringeRPNIDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>>
         implements PassiveLearningAlgorithm.PassiveDFALearner<I> {
 
-    protected List<int[]> positive = new ArrayList<>();
-    protected List<int[]> negative = new ArrayList<>();
+    protected final List<int[]> positive = new ArrayList<>();
+    protected final List<int[]> negative = new ArrayList<>();
 
     /**
      * Constructor.

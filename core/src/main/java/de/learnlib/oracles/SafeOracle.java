@@ -32,7 +32,7 @@ import de.learnlib.api.Query;
 @Deprecated
 public class SafeOracle<I, D> implements MembershipOracle<I, D> {
 
-    private MembershipOracle<I, D> nextOracle;
+    private final MembershipOracle<I, D> nextOracle;
 
     public SafeOracle(MembershipOracle<I, D> nextOracle) {
         this.nextOracle = nextOracle;

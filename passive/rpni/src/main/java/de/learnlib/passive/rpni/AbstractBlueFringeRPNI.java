@@ -61,7 +61,7 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M> implements Passive
     protected final int alphabetSize;
 
     @Nonnull
-    protected ProcessingOrder order = DefaultProcessingOrders.CANONICAL_ORDER;
+    protected final ProcessingOrder order = DefaultProcessingOrders.CANONICAL_ORDER;
     protected boolean parallel = true;
     protected boolean deterministic;
 

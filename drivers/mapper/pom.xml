@@ -26,7 +26,6 @@ limitations under the License.
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>de.learnlib</groupId>
     <artifactId>learnlib-mapper</artifactId>
 
     <name>LearnLib :: Drivers :: Mapper</name>

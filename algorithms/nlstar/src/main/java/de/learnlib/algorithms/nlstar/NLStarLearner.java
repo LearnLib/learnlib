@@ -120,7 +120,7 @@ public class NLStarLearner<I> implements NFALearner<I> {
     private void completeConsistentTable(List<List<Row<I>>> initialUnclosed) {
         List<List<Row<I>>> unclosed = initialUnclosed;
 
-        Inconsistency<I> incons = null;
+        Inconsistency<I> incons;
 
         do {
             while (!unclosed.isEmpty()) {

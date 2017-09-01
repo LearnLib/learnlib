@@ -52,7 +52,7 @@ import net.automatalib.words.Word;
  */
 public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 
-    private BlockList<I> blockList = new BlockList<>();
+    private final BlockList<I> blockList = new BlockList<>();
 
     @GenerateBuilder
     public TTTLearnerVPDA(VPDAlphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, AcexAnalyzer analyzer) {
@@ -250,7 +250,6 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
         acex.setEffect(0, outIncons.expectedOut);
         acex.setEffect(acex.getLength() - 1, !outIncons.expectedOut);
 
-        prepareAcex(acex);
         return acex;
     }
 
@@ -311,10 +310,6 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
         }
 
         declareFinal(blockRoot);
-    }
-
-    protected void prepareAcex(PrefixTransformAcex acex) {
-        // determinize(acex.getBaseState(), acex.getSuffix());
     }
 
     /**

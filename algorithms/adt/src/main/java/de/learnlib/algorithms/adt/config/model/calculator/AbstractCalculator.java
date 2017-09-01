@@ -40,11 +40,7 @@ public abstract class AbstractCalculator implements ADSCalculator {
 
         final Optional<ADSNode<S, I, O>> result = computeInternal(hypothesis, alphabet, targets);
 
-        if (!result.isPresent()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(ADTUtil.buildFromADS(result.get()));
+        return result.map(ADTUtil::buildFromADS);
     }
 
     protected abstract <S, I, O> Optional<ADSNode<S, I, O>> computeInternal(MealyMachine<S, I, ?, O> hypothesis,

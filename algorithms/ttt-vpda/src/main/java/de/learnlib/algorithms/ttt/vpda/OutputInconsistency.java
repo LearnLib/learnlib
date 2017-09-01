@@ -30,7 +30,7 @@ final class OutputInconsistency<I> {
 
     public final ContextPair<I> discriminator;
 
-    public boolean expectedOut;
+    public final boolean expectedOut;
 
     OutputInconsistency(HypLoc<I> location, ContextPair<I> discriminator, boolean expectedOut) {
         this.location = location;

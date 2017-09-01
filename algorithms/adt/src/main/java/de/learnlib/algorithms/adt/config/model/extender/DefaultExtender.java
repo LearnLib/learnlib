@@ -102,7 +102,7 @@ public class DefaultExtender implements ADTExtender {
                             final DefaultQuery<I, Word<O>> ce =
                                     new DefaultQuery<>(as.concat(traceIn), asOut.concat(traceOut));
 
-                            return new ExtensionResult(ce);
+                            return new ExtensionResult<>(ce);
                         }
 
                         // converging states, cannot distinguish
@@ -133,7 +133,7 @@ public class DefaultExtender implements ADTExtender {
                     finalNode.setHypothesisState(currentToInitialMapping.get(finalNode.getHypothesisState()));
                 }
 
-                return new ExtensionResult(extension);
+                return new ExtensionResult<>(extension);
             } catch (PartialTransitionAnalyzer.HypothesisModificationException hme) {
                 //do nothing, repeat
             }

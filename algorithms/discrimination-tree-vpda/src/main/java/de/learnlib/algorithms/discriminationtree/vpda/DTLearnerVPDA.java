@@ -42,7 +42,7 @@ import net.automatalib.words.WordBuilder;
  */
 public class DTLearnerVPDA<I> extends AbstractVPDALearner<I> {
 
-    protected AcexAnalyzer analyzer;
+    protected final AcexAnalyzer analyzer;
 
     @GenerateBuilder
     public DTLearnerVPDA(VPDAlphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, AcexAnalyzer analyzer) {

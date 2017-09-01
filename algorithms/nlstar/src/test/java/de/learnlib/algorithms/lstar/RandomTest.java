@@ -60,7 +60,7 @@ public final class RandomTest {
 
         nlstar.startLearning();
 
-        boolean refined = false;
+        boolean refined;
         do {
             CompactDFA<Integer> detHyp = NFAs.determinize(nlstar.getHypothesisModel());
 
@@ -88,7 +88,6 @@ public final class RandomTest {
 
         lstar.startLearning();
 
-        refined = false;
         do {
             DFA<?, Integer> detHyp = lstar.getHypothesisModel();
 

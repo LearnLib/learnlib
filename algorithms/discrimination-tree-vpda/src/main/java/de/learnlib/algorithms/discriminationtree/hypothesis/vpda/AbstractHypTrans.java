@@ -28,15 +28,12 @@ import net.automatalib.words.Word;
 public abstract class AbstractHypTrans<I> extends IntrusiveListElemImpl<AbstractHypTrans<I>>
         implements AccessSequenceProvider<I> {
 
-    private final HypLoc<I> source;
-
     private final Word<I> aseq;
     protected IntrusiveListElemImpl<AbstractHypTrans<I>> prev;
     private HypLoc<I> treeTarget;
     private DTNode<I> nonTreeTarget;
 
     public AbstractHypTrans(HypLoc<I> source, Word<I> aseq) {
-        this.source = source;
         this.aseq = aseq;
     }
 

@@ -41,8 +41,8 @@ import net.automatalib.words.Word;
 public class CompleteExplorationEQOracle<I, D> implements EquivalenceOracle<DetOutputAutomaton<?, I, ?, D>, I, D> {
 
     private final MembershipOracle<I, D> sulOracle;
-    private int minDepth;
-    private int maxDepth;
+    private final int minDepth;
+    private final int maxDepth;
 
     /**
      * Constructor.

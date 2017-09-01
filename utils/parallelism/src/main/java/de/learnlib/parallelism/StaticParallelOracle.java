@@ -152,7 +152,7 @@ public class StaticParallelOracle<I, D> implements ParallelOracle<I, D> {
                 f.get();
             }
         } catch (ExecutionException ex) {
-            Throwables.propagateIfPossible(ex.getCause());
+            Throwables.throwIfUnchecked(ex.getCause());
             throw new AssertionError("Runnable must not throw checked exceptions", ex);
         } catch (InterruptedException ex) {
             Thread.interrupted();

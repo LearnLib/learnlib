@@ -33,8 +33,6 @@ import net.automatalib.words.Word;
 public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         implements EquivalenceOracle<A, I, D> {
 
-    @SuppressWarnings("unused")
-    private final Alphabet<I> alphabet;
     private final MembershipOracle<I, D> oracle;
     private final IncrementalWMethodTestsIterator<I> incrementalWMethodIt;
     private int maxDepth;
@@ -44,7 +42,6 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
     }
 
     public IncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, D> oracle, int maxDepth) {
-        this.alphabet = alphabet;
         this.oracle = oracle;
         this.incrementalWMethodIt = new IncrementalWMethodTestsIterator<>(alphabet);
         this.incrementalWMethodIt.setMaxDepth(maxDepth);

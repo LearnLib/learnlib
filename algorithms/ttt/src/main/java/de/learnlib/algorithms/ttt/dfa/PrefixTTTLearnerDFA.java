@@ -146,7 +146,7 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
         }
 
         public Iterable<ExtDTNode<I>> unlabeled() {
-            return () -> unlabeledIterator();
+            return this::unlabeledIterator;
         }
 
         public Iterator<ExtDTNode<I>> unlabeledIterator() {

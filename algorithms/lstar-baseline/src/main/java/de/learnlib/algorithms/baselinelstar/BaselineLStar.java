@@ -55,7 +55,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>,
     @Nonnull
     private final MembershipOracle<I, Boolean> oracle;
     @Nonnull
-    private GrowingAlphabet<I> alphabet;
+    private final GrowingAlphabet<I> alphabet;
     @Nonnull
     private ObservationTable<I> observationTable;
     private boolean startLearningAlreadyCalled;

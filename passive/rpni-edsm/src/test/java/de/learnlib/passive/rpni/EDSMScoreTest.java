@@ -39,7 +39,6 @@ import org.testng.annotations.Test;
 public class EDSMScoreTest {
 
     private Alphabet<Character> alphabet;
-    private Alphabet<Integer> alphabetAsInt;
 
     private List<int[]> positiveSamplesAsIntArray;
     private List<int[]> negativeSamplesAsIntArray;
@@ -47,7 +46,6 @@ public class EDSMScoreTest {
     @BeforeClass
     public void setUp() throws Exception {
         alphabet = Alphabets.fromArray('a', 'b');
-        alphabetAsInt = Alphabets.fromArray(0, 1);
 
         final Word<Character> p1 = Word.fromString("a");
         final Word<Character> p2 = Word.fromString("aaa");

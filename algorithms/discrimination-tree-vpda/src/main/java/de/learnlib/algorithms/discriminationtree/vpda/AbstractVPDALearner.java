@@ -215,13 +215,11 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
     }
 
     protected HypLoc<I> createLocation(AbstractHypTrans<I> trans) {
-        HypLoc<I> newLoc = hypothesis.createLocation(false, trans);
-        return newLoc;
+        return hypothesis.createLocation(false, trans);
     }
 
     protected HypLoc<I> createLocation(Word<I> as) {
-        HypLoc<I> newLoc = hypothesis.createLocation(false, as);
-        return newLoc;
+        return hypothesis.createLocation(false, as);
     }
 
     protected Boolean query(AccessSequenceProvider<I> asp, ContextPair<I> context) {

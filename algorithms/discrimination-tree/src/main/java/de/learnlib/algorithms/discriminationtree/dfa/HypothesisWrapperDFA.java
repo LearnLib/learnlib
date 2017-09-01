@@ -46,7 +46,7 @@ final class HypothesisWrapperDFA<I> implements DFA<HState<I, Boolean, Boolean, V
 
     @Override
     public boolean isAccepting(HState<I, Boolean, Boolean, Void> state) {
-        return state.getProperty().booleanValue();
+        return state.getProperty();
     }
 
 }

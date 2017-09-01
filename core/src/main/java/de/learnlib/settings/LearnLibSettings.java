@@ -65,7 +65,7 @@ public final class LearnLibSettings {
     public boolean getBool(String propName, boolean defaultValue) {
         Boolean b = getBoolean(propName);
         if (b != null) {
-            return b.booleanValue();
+            return b;
         }
         return defaultValue;
     }
@@ -81,7 +81,7 @@ public final class LearnLibSettings {
     public int getInt(String propName, int defaultValue) {
         Integer prop = getInteger(propName);
         if (prop != null) {
-            return prop.intValue();
+            return prop;
         }
         return defaultValue;
     }
@@ -90,8 +90,7 @@ public final class LearnLibSettings {
         String prop = getProperty(propName);
         if (prop != null) {
             try {
-                int val = Integer.parseInt(prop);
-                return val;
+                return Integer.parseInt(prop);
             } catch (NumberFormatException ex) {
                 LOG.warn("Could not parse LearnLib integer property '" + propName + "'.", ex);
             }

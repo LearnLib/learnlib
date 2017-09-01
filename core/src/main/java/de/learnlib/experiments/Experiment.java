@@ -39,11 +39,11 @@ import net.automatalib.words.Word;
 @ParametersAreNonnullByDefault
 public class Experiment<A> {
 
-    private static LearnLogger logger = LearnLogger.getLogger(Experiment.class);
+    private static final LearnLogger LOGGER = LearnLogger.getLogger(Experiment.class);
     private final ExperimentImpl<?, ?> impl;
     private boolean logModels;
     private boolean profile;
-    private Counter rounds = new Counter("rounds", "#");
+    private final Counter rounds = new Counter("rounds", "#");
     private A finalHypothesis;
 
     public <I, D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
@@ -140,8 +140,8 @@ public class Experiment<A> {
 
         public A run() {
             rounds.increment();
-            logger.logPhase("Starting round " + rounds.getCount());
-            logger.logPhase("Learning");
+            LOGGER.logPhase("Starting round " + rounds.getCount());
+            LOGGER.logPhase("Learning");
             profileStart("Learning");
             learningAlgorithm.startLearning();
             profileStop("Learning");
@@ -151,10 +151,10 @@ public class Experiment<A> {
             while (!done) {
                 hyp = learningAlgorithm.getHypothesisModel();
                 if (logModels) {
-                    logger.logModel(hyp);
+                    LOGGER.logModel(hyp);
                 }
 
-                logger.logPhase("Searching for counterexample");
+                LOGGER.logPhase("Searching for counterexample");
                 profileStart("Searching for counterexample");
                 DefaultQuery<I, D> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
                 profileStop("Searching for counterexample");
@@ -163,12 +163,12 @@ public class Experiment<A> {
                     continue;
                 }
 
-                logger.logCounterexample(ce.getInput().toString());
+                LOGGER.logCounterexample(ce.getInput().toString());
 
                 // next round ...
                 rounds.increment();
-                logger.logPhase("Starting round " + rounds.getCount());
-                logger.logPhase("Learning");
+                LOGGER.logPhase("Starting round " + rounds.getCount());
+                LOGGER.logPhase("Learning");
                 profileStart("Learning");
                 learningAlgorithm.refineHypothesis(ce);
                 profileStop("Learning");

@@ -39,8 +39,7 @@ public final class EquivalenceQueries {
 
     public static <A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D> SimulatorEQOracle<I, D> simulator(
             A target) {
-        A automaton = target;
-        return new SimulatorEQOracle<>(automaton);
+        return new SimulatorEQOracle<>(target);
     }
 
 }

@@ -137,7 +137,6 @@ public final class AcexAnalysisAlgorithms {
             E effMid = acex.effect(mid);
             if (!acex.checkEffects(effMid, effHigh)) {
                 lowIter = mid;
-                effLow = effMid;
             } else {
                 highIter = mid;
                 effHigh = effMid;
@@ -160,7 +159,6 @@ public final class AcexAnalysisAlgorithms {
             int next = lowIter + ofs;
             E eff = acex.effect(next);
             if (!acex.checkEffects(effLow, eff)) {
-                highIter = next;
                 break;
             }
             lowIter = next;
@@ -185,7 +183,6 @@ public final class AcexAnalysisAlgorithms {
             E effMid = acex.effect(mid);
             if (!acex.checkEffects(effLow, effMid)) {
                 highIter = mid;
-                effHigh = effMid;
             } else {
                 lowIter = mid;
                 effLow = effMid;

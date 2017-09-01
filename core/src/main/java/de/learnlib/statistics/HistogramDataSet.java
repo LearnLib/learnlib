@@ -31,7 +31,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class HistogramDataSet extends AbstractStatisticData {
 
-    private SortedMap<Long, Integer> histogram = new TreeMap<>();
+    private final SortedMap<Long, Integer> histogram = new TreeMap<>();
 
     private long size;
 

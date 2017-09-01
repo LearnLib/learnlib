@@ -40,8 +40,10 @@ public class RandomWordsEQOracle<I, D, A extends OutputAutomaton<?, I, ?, D>> im
     private static final Logger LOGGER = LoggerFactory.getLogger(RandomWordsEQOracle.class);
     private final Random random;
     private final int batchSize;
-    private MembershipOracle<I, D> oracle;
-    private int maxTests, minLength, maxLength;
+    private final MembershipOracle<I, D> oracle;
+    private final int maxTests;
+    private final int minLength;
+    private final int maxLength;
 
     public RandomWordsEQOracle(MembershipOracle<I, D> mqOracle,
                                int minLength,
