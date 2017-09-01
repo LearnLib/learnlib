@@ -40,11 +40,23 @@ limitations under the License.
         <!-- LearnLib dependencies -->
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-passive-commons</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-rpni</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-learning-examples</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-learner-it-support</artifactId>
         </dependency>
 
         <!-- AutomataLib dependencies -->
@@ -56,9 +68,10 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
+            <groupId>com.github.misberner.buildergen</groupId>
+            <artifactId>buildergen</artifactId>
         </dependency>
 
         <!--
@@ -70,28 +83,10 @@ limitations under the License.
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
         </dependency>
-
-        <!-- LearnLib dependencies -->
-        <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-learning-examples</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-learner-it-support</artifactId>
-        </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-simulator</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.misberner.buildergen</groupId>
-            <artifactId>buildergen</artifactId>
         </dependency>
     </dependencies>
 

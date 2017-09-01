@@ -33,14 +33,18 @@ limitations under the License.
     <description>Membership and equivalence oracles using an automaton model as backend</description>
 
     <dependencies>
-        <!--
-        Compile-time dependencies
-        -->
-
-        <!-- LearnLib dependencies -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
         </dependency>
 
         <!--
@@ -57,6 +61,7 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learning-examples</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

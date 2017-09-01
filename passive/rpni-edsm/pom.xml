@@ -58,7 +58,7 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
+            <artifactId>automata-commons-util</artifactId>
         </dependency>
 
         <!--
@@ -81,17 +81,18 @@ limitations under the License.
             <artifactId>learnlib-learner-it-support</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-simulator</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.misberner.buildergen</groupId>
             <artifactId>buildergen</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-simulator</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

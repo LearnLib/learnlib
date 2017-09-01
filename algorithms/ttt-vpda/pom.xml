@@ -40,11 +40,15 @@ limitations under the License.
         <!-- LearnLib dependencies -->
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-acex</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-core</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-counterexamples</artifactId>
+            <artifactId>learnlib-datastructures</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
@@ -55,10 +59,6 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-core</artifactId>
         </dependency>
 
         <!-- Guava -->

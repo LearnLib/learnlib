@@ -48,6 +48,10 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
         </dependency>
 
@@ -77,6 +81,11 @@ limitations under the License.
          Here we actually want a valid slf4j implementation to check the output. This conflicts with the nop
         implementation defined in the parent, so slf4j will show a warning. However the tests will still pass
         -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

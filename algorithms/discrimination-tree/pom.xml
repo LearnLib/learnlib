@@ -55,7 +55,7 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
+            <artifactId>automata-commons-util</artifactId>
         </dependency>
 
         <dependency>

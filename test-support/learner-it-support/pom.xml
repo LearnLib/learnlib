@@ -33,18 +33,6 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <dependencies>
-        <!--
-        Compile-time dependencies
-        -->
-
-        <!-- TestNG -->
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>compile</scope> <!-- Override! -->
-        </dependency>
-
-        <!-- LearnLib dependencies -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-core</artifactId>
@@ -60,6 +48,30 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learning-examples</artifactId>
+            <scope>compile</scope> <!-- Override! -->
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- TestNG -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
             <scope>compile</scope> <!-- Override! -->
         </dependency>
     </dependencies>

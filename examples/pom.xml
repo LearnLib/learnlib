@@ -40,6 +40,10 @@ limitations under the License.
         <!-- LearnLib dependencies -->
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-algorithm-features</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-core</artifactId>
         </dependency>
         <dependency>
@@ -84,19 +88,10 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-dotutil</artifactId>
         </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-parallelism</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-discrimination-tree</artifactId>
-        </dependency>
 
-        <!-- SLF4J implementation -->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -36,5 +36,20 @@ limitations under the License.
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-core</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

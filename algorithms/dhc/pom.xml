@@ -64,6 +64,10 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
+        </dependency>
 
         <!-- Guava -->
         <dependency>
@@ -71,6 +75,10 @@ limitations under the License.
             <artifactId>guava</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
 
         <!--
         Test dependencies
