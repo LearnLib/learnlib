@@ -40,6 +40,9 @@ import net.automatalib.words.WordBuilder;
  */
 public abstract class AbstractPassiveLearnerIT {
 
+    private static final int MAX_LENGTH = 50;
+    private static final int MAX_SIZE = 100;
+
     /**
      * Creates a list of per-example test cases for all learner variants (passive version).
      *
@@ -64,8 +67,8 @@ public abstract class AbstractPassiveLearnerIT {
             M reference) {
 
         final Random r = new Random(0);
-        final int maxLength = reference.size() * 2;
-        final int size = reference.size() * 2;
+        final int maxLength = Math.min(reference.size() * 2, MAX_LENGTH);
+        final int size = Math.min(reference.size() * 2, MAX_SIZE);
 
         List<DefaultQuery<I, D>> result = new ArrayList<>(size);
         int alphabetSize = alphabet.size();
