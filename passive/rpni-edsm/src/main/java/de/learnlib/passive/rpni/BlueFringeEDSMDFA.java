@@ -17,6 +17,7 @@ package de.learnlib.passive.rpni;
 
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -70,9 +71,13 @@ public class BlueFringeEDSMDFA<I> extends BlueFringeRPNIDFA<I> {
         while (!blue.isEmpty()) {
             boolean promotion = false;
             RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>> bestMerge = null;
+            PTATransition<BlueFringePTAState<Boolean, Void>> bestTransition = null;
             long bestScore = Long.MIN_VALUE;
 
-            for (final PTATransition<BlueFringePTAState<Boolean, Void>> qbRef : blue) {
+            final Iterator<PTATransition<BlueFringePTAState<Boolean, Void>>> blueIter = blue.iterator();
+
+            while (blueIter.hasNext()) {
+                final PTATransition<BlueFringePTAState<Boolean, Void>> qbRef = blueIter.next();
                 final BlueFringePTAState<Boolean, Void> qb = qbRef.getTarget();
 
                 Stream<BlueFringePTAState<Boolean, Void>> stream = pta.redStatesStream();
@@ -95,15 +100,17 @@ public class BlueFringeEDSMDFA<I> extends BlueFringeRPNIDFA<I> {
 
                     if (mergeResult.getSecond() > bestScore) {
                         bestMerge = mergeResult.getFirst();
+                        bestTransition = qbRef;
                     }
                 } else {
                     promotion = true;
+                    blueIter.remove();
                     pta.promote(qb, blue::add);
                     break;
                 }
             }
             if (!promotion) {
-                blue.remove(bestMerge.getBlueState());
+                blue.remove(bestTransition);
                 bestMerge.apply(pta, blue::add);
             }
         }
