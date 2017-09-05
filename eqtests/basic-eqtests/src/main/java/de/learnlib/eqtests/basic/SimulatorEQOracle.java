@@ -40,14 +40,13 @@ public class SimulatorEQOracle<I, D>
     @Override
     public DefaultQuery<I, D> findCounterExample(UniversalDeterministicAutomaton<?, I, ?, ?, ?> hypothesis,
                                                  Collection<? extends I> inputs) {
-        Word<I> sep = Automata.findSeparatingWord(reference, hypothesis, inputs);
+        final Word<I> sep = Automata.findSeparatingWord(reference, hypothesis, inputs);
+
         if (sep == null) {
             return null;
         }
-        D out = output.computeOutput(sep);
-        DefaultQuery<I, D> qry = new DefaultQuery<>(sep);
-        qry.answer(out);
-        return qry;
+
+        return new DefaultQuery<>(sep, output.computeOutput(sep));
     }
 
     public static class DFASimulatorEQOracle<I> implements DFAEquivalenceOracle<I> {
