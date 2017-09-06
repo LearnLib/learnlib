@@ -141,7 +141,7 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
             cache.put(state, localSuffixes);
         }
 
-        return Streams.stream(Iterables.transform(localSuffixes, as::concat));
+        return localSuffixes.stream().map(as::concat);
     }
 
     public static class DFAWpMethodEQOracle<I> extends WpMethodEQOracle<DFA<?, I>, I, Boolean>
