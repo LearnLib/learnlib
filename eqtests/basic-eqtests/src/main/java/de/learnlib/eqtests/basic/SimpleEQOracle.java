@@ -15,11 +15,19 @@
  */
 package de.learnlib.eqtests.basic;
 
+import java.util.Collection;
+
+import javax.annotation.Nullable;
+
 import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class SimpleEQOracle<A extends InputAlphabetHolder<I>, I, D> {
+public class SimpleEQOracle<A extends InputAlphabetHolder<I>, I, D> implements EquivalenceOracle<A, I, D> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleEQOracle.class);
 
     private final EquivalenceOracle<A, I, D> eqOracle;
 
@@ -31,7 +39,11 @@ public class SimpleEQOracle<A extends InputAlphabetHolder<I>, I, D> {
         return new SimpleEQOracle<>(eqOracle);
     }
 
-    public DefaultQuery<I, D> findCounterExample(A hypothesis) {
+    @Nullable
+    @Override
+    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+        LOGGER.debug("Ignoring the set of inputs '{}', because I always use the complete hypothesis' input alphabet",
+                     inputs);
         return eqOracle.findCounterExample(hypothesis, hypothesis.getInputAlphabet());
     }
 }
