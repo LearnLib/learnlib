@@ -18,11 +18,11 @@ package de.learnlib.eqtests.basic;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Stream;
 
-import de.learnlib.api.EquivalenceOracle;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Streams;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
@@ -30,7 +30,6 @@ import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
 
 /**
  * Implements an equivalence test by applying the W-method test on the given hypothesis automaton, as described in
@@ -46,9 +45,8 @@ import net.automatalib.words.WordBuilder;
  * @author Malte Isberner
  */
 public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
-        implements EquivalenceOracle<A, I, D> {
+        extends AbstractTestWordEQOracle<A, I, D> {
 
-    private final MembershipOracle<I, D> sulOracle;
     private int maxDepth;
 
     /**
@@ -60,8 +58,22 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
      *         interface to the system under learning
      */
     public WMethodEQOracle(int maxDepth, MembershipOracle<I, D> sulOracle) {
+        this(maxDepth, sulOracle, 1);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param maxDepth
+     *         the maximum length of the "middle" part of the test cases
+     * @param sulOracle
+     *         interface to the system under learning
+     * @param batchSize
+     *         size of the batches sent to the membership oracle
+     */
+    public WMethodEQOracle(int maxDepth, MembershipOracle<I, D> sulOracle, int batchSize) {
+        super(sulOracle, batchSize);
         this.maxDepth = maxDepth;
-        this.sulOracle = sulOracle;
     }
 
     public void setMaxDepth(int maxDepth) {
@@ -69,36 +81,23 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
     }
 
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
 
-        List<Word<I>> transCover = Automata.transitionCover(hypothesis, inputs);
-        List<Word<I>> charSuffixes = Automata.characterizingSet(hypothesis, inputs);
+        final List<Word<I>> transCover = Automata.transitionCover(hypothesis, inputs);
+        final Iterable<Word<I>> middleTuples =
+                Iterables.transform(CollectionsUtil.allTuples(inputs, 0, maxDepth), Word::fromList);
+        List<Word<I>> characterizingSet = Automata.characterizingSet(hypothesis, inputs);
 
         // Special case: List of characterizing suffixes may be empty,
         // but in this case we still need to test!
-        if (charSuffixes.isEmpty()) {
-            charSuffixes = Collections.singletonList(Word.<I>epsilon());
+        if (characterizingSet.isEmpty()) {
+            characterizingSet = Collections.singletonList(Word.epsilon());
         }
 
-        WordBuilder<I> wb = new WordBuilder<>();
+        final Iterable<List<Word<I>>> wMethodIter =
+                CollectionsUtil.allCombinations(transCover, middleTuples, characterizingSet);
 
-        for (List<? extends I> middle : CollectionsUtil.allTuples(inputs, 1, maxDepth)) {
-            for (Word<I> trans : transCover) {
-                for (Word<I> suffix : charSuffixes) {
-                    wb.append(trans).append(middle).append(suffix);
-                    Word<I> queryWord = wb.toWord();
-                    wb.clear();
-                    DefaultQuery<I, D> query = new DefaultQuery<>(queryWord);
-                    D hypOutput = hypothesis.computeOutput(queryWord);
-                    sulOracle.processQueries(Collections.singleton(query));
-                    if (!Objects.equals(hypOutput, query.getOutput())) {
-                        return query;
-                    }
-                }
-            }
-        }
-
-        return null;
+        return Streams.stream(wMethodIter).map(Word::fromWords);
     }
 
     public static class DFAWMethodEQOracle<I> extends WMethodEQOracle<DFA<?, I>, I, Boolean>
@@ -107,6 +106,10 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
         public DFAWMethodEQOracle(int maxDepth, MembershipOracle<I, Boolean> sulOracle) {
             super(maxDepth, sulOracle);
         }
+
+        public DFAWMethodEQOracle(int maxDepth, MembershipOracle<I, Boolean> sulOracle, int batchSize) {
+            super(maxDepth, sulOracle, batchSize);
+        }
     }
 
     public static class MealyWMethodEQOracle<I, O> extends WMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
@@ -114,6 +117,10 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
 
         public MealyWMethodEQOracle(int maxDepth, MembershipOracle<I, Word<O>> sulOracle) {
             super(maxDepth, sulOracle);
+        }
+
+        public MealyWMethodEQOracle(int maxDepth, MembershipOracle<I, Word<O>> sulOracle, int batchSize) {
+            super(maxDepth, sulOracle, batchSize);
         }
     }
 

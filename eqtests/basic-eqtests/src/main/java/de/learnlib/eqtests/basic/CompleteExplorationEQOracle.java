@@ -16,13 +16,10 @@
 package de.learnlib.eqtests.basic;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.stream.Stream;
 
-import de.learnlib.api.EquivalenceOracle;
+import com.google.common.collect.Streams;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
@@ -38,9 +35,8 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-public class CompleteExplorationEQOracle<I, D> implements EquivalenceOracle<DetOutputAutomaton<?, I, ?, D>, I, D> {
+public class CompleteExplorationEQOracle<I, D> extends AbstractTestWordEQOracle<DetOutputAutomaton<?, I, ?, D>, I, D> {
 
-    private final MembershipOracle<I, D> sulOracle;
     private final int minDepth;
     private final int maxDepth;
 
@@ -67,28 +63,31 @@ public class CompleteExplorationEQOracle<I, D> implements EquivalenceOracle<DetO
      *         maximum exploration depth
      */
     public CompleteExplorationEQOracle(MembershipOracle<I, D> sulOracle, int minDepth, int maxDepth) {
+        this(sulOracle, 1, minDepth, maxDepth);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param sulOracle
+     *         interface to the system under learning
+     * @param minDepth
+     *         minimum exploration depth
+     * @param maxDepth
+     *         maximum exploration depth
+     * @param batchSize
+     *         size of the batches sent to the membership oracle
+     */
+    public CompleteExplorationEQOracle(MembershipOracle<I, D> sulOracle, int minDepth, int maxDepth, int batchSize) {
+        super(sulOracle, batchSize);
         this.minDepth = Math.min(minDepth, maxDepth);
         this.maxDepth = Math.max(minDepth, maxDepth);
-
-        this.sulOracle = sulOracle;
     }
 
     @Override
-    public DefaultQuery<I, D> findCounterExample(DetOutputAutomaton<?, I, ?, D> hypothesis,
-                                                 Collection<? extends I> alphabet) {
-        for (List<? extends I> symList : CollectionsUtil.allTuples(alphabet, minDepth, maxDepth)) {
-            Word<I> queryWord = Word.fromList(symList);
-
-            DefaultQuery<I, D> query = new DefaultQuery<>(queryWord);
-            D hypOutput = hypothesis.computeOutput(queryWord);
-            sulOracle.processQueries(Collections.singleton(query));
-
-            if (!Objects.equals(hypOutput, query.getOutput())) {
-                return query;
-            }
-        }
-
-        return null;
+    protected Stream<Word<I>> generateTestWords(DetOutputAutomaton<?, I, ?, D> hypothesis,
+                                                Collection<? extends I> inputs) {
+        return Streams.stream(CollectionsUtil.allTuples(inputs, minDepth, maxDepth)).map(Word::fromList);
     }
 
 }

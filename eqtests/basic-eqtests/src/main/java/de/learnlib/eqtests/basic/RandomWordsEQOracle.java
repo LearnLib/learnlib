@@ -18,29 +18,23 @@ package de.learnlib.eqtests.basic;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Stream;
 
-import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.concepts.OutputAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Maik Merten
  */
-public class RandomWordsEQOracle<I, D, A extends OutputAutomaton<?, I, ?, D>> implements EquivalenceOracle<A, I, D> {
+public class RandomWordsEQOracle<I, D, A extends OutputAutomaton<?, I, ?, D>>
+        extends AbstractTestWordEQOracle<A, I, D> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RandomWordsEQOracle.class);
     private final Random random;
-    private final int batchSize;
-    private final MembershipOracle<I, D> oracle;
     private final int maxTests;
     private final int minLength;
     private final int maxLength;
@@ -59,71 +53,38 @@ public class RandomWordsEQOracle<I, D, A extends OutputAutomaton<?, I, ?, D>> im
                                int maxTests,
                                Random random,
                                int batchSize) {
-        this.oracle = mqOracle;
+        super(mqOracle, batchSize);
         this.maxTests = maxTests;
         this.minLength = minLength;
         this.maxLength = maxLength;
         this.random = random;
-        this.batchSize = batchSize;
     }
 
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
-        // Fail fast on empty inputs
-        if (inputs.isEmpty()) {
-            LOGGER.warn("Passed empty set of inputs to equivalence oracle; no counterexample can be found!");
-            return null;
-        }
+    protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
 
-        List<? extends I> symbolList;
+        final List<? extends I> symbolList;
         if (inputs instanceof List) {
             symbolList = (List<? extends I>) inputs;
         } else {
             symbolList = new ArrayList<>(inputs);
         }
 
-        int numSyms = symbolList.size();
+        return Stream.generate(() -> generateTestWord(symbolList, symbolList.size())).limit(maxTests);
+    }
 
-        final Collection<DefaultQuery<I, D>> queryBatch = new ArrayList<>(batchSize);
+    private Word<I> generateTestWord(List<? extends I> symbolList, int numSyms) {
 
-        for (int i = 0; i < maxTests; ++i) {
-            int length = minLength + random.nextInt((maxLength - minLength) + 1);
+        final int length = minLength + random.nextInt((maxLength - minLength) + 1);
+        final WordBuilder<I> result = new WordBuilder<>(length);
 
-            WordBuilder<I> testtrace = new WordBuilder<>(length);
-            for (int j = 0; j < length; ++j) {
-                int symidx = random.nextInt(numSyms);
-                I sym = symbolList.get(symidx);
-                testtrace.append(sym);
-            }
-
-            final DefaultQuery<I, D> query = new DefaultQuery<>(testtrace.toWord());
-            queryBatch.add(query);
-
-            final boolean batchFilled = queryBatch.size() >= batchSize;
-            final boolean maxTestsReached = i >= maxTests - 1;
-
-            if (batchFilled || maxTestsReached) {
-                // query oracle
-                oracle.processQueries(queryBatch);
-
-                for (final DefaultQuery<I, D> ioQuery : queryBatch) {
-                    D oracleoutput = ioQuery.getOutput();
-
-                    // trace hypothesis
-                    D hypOutput = hypothesis.computeOutput(ioQuery.getInput());
-
-                    // compare output of hypothesis and oracle
-                    if (!Objects.equals(oracleoutput, hypOutput)) {
-                        return ioQuery;
-                    }
-                }
-
-                queryBatch.clear();
-            }
+        for (int j = 0; j < length; ++j) {
+            int symidx = random.nextInt(numSyms);
+            I sym = symbolList.get(symidx);
+            result.append(sym);
         }
 
-        // no counterexample found
-        return null;
+        return result.toWord();
     }
 
     public static class DFARandomWordsEQOracle<I> extends RandomWordsEQOracle<I, Boolean, DFA<?, I>>

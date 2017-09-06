@@ -19,13 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Stream;
 
 import com.google.common.collect.Iterables;
-import de.learnlib.api.EquivalenceOracle;
+import com.google.common.collect.Streams;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.MQUtil;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
@@ -34,7 +32,6 @@ import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
 
 /**
  * Implements an equivalence test by applying the Wp-method test on the given hypothesis automaton, as described in
@@ -50,10 +47,9 @@ import net.automatalib.words.WordBuilder;
  * @author Malte Isberner
  */
 public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
-        implements EquivalenceOracle<A, I, D> {
+        extends AbstractTestWordEQOracle<A, I, D> {
 
     private final int maxDepth;
-    private final MembershipOracle<I, D> sulOracle;
 
     /**
      * Constructor.
@@ -64,81 +60,88 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
      *         interface to the system under learning
      */
     public WpMethodEQOracle(int maxDepth, MembershipOracle<I, D> sulOracle) {
+        this(maxDepth, sulOracle, 1);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param maxDepth
+     *         the maximum length of the "middle" part of the test cases
+     * @param sulOracle
+     *         interface to the system under learning
+     * @param batchSize
+     *         size of the batches sent to the membership oracle
+     */
+    public WpMethodEQOracle(int maxDepth, MembershipOracle<I, D> sulOracle, int batchSize) {
+        super(sulOracle, batchSize);
         this.maxDepth = maxDepth;
-        this.sulOracle = sulOracle;
     }
 
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
         UniversalDeterministicAutomaton<?, I, ?, ?, ?> aut = hypothesis;
-        return doFindCounterExample(aut, hypothesis, inputs);
+        return doGenerateTestWords(aut, inputs);
     }
 
     /*
      * Delegate target, used to bind the state-parameter of the automaton
      */
-    private <S> DefaultQuery<I, D> doFindCounterExample(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
-                                                        Output<I, D> output,
-                                                        Collection<? extends I> inputs) {
+    private <S> Stream<Word<I>> doGenerateTestWords(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
+                                                    Collection<? extends I> inputs) {
 
-        List<Word<I>> stateCover = new ArrayList<>(hypothesis.size());
-        List<Word<I>> transitions = new ArrayList<>(hypothesis.size() * (inputs.size() - 1));
+        final List<Word<I>> stateCover = new ArrayList<>(hypothesis.size());
+        final List<Word<I>> transitionCover = new ArrayList<>(hypothesis.size() * (inputs.size() - 1));
 
-        Automata.cover(hypothesis, inputs, stateCover, transitions);
+        Automata.cover(hypothesis, inputs, stateCover, transitionCover);
 
-        List<Word<I>> globalSuffixes = Automata.characterizingSet(hypothesis, inputs);
-        if (globalSuffixes.isEmpty()) {
-            globalSuffixes = Collections.singletonList(Word.<I>epsilon());
+        List<Word<I>> characterizingSet = Automata.characterizingSet(hypothesis, inputs);
+        if (characterizingSet.isEmpty()) {
+            characterizingSet = Collections.singletonList(Word.<I>epsilon());
         }
 
-        WordBuilder<I> wb = new WordBuilder<>();
+        // TODO maybe we can skip this wasted word allocation?
+        final Iterable<Word<I>> middleTuples =
+                Iterables.transform(CollectionsUtil.allTuples(inputs, 0, maxDepth), Word::fromList);
 
         // Phase 1: state cover * middle part * global suffixes
-        for (List<? extends I> middle : CollectionsUtil.allTuples(inputs, 1, maxDepth)) {
-            for (Word<I> as : stateCover) {
-                for (Word<I> suffix : globalSuffixes) {
-                    wb.append(as).append(middle).append(suffix);
-                    Word<I> queryWord = wb.toWord();
-                    wb.clear();
-                    DefaultQuery<I, D> query = new DefaultQuery<>(queryWord);
-                    D hypOutput = output.computeOutput(queryWord);
-                    sulOracle.processQueries(Collections.singleton(query));
-                    if (!Objects.equals(hypOutput, query.getOutput())) {
-                        return query;
-                    }
-                }
-            }
-        }
+        final Stream<Word<I>> firstPhaseStream =
+                Streams.stream(CollectionsUtil.allCombinations(stateCover, middleTuples, characterizingSet))
+                       .map(Word::fromWords);
 
         // Phase 2: transitions (not in state cover) * middle part * local suffixes
-        MutableMapping<S, List<Word<I>>> localSuffixSets = hypothesis.createStaticStateMapping();
+        final MutableMapping<S, List<Word<I>>> localSuffixSets = hypothesis.createStaticStateMapping();
+        final Iterable<List<Word<I>>> accessSequenceIter =
+                CollectionsUtil.allCombinations(transitionCover, middleTuples);
 
-        for (List<? extends I> middle : CollectionsUtil.allTuples(inputs, 1, maxDepth)) {
-            for (Word<I> trans : transitions) {
-                S state = hypothesis.getState(Iterables.concat(trans, middle));
-                List<Word<I>> localSuffixes = localSuffixSets.get(state);
-                if (localSuffixes == null) {
-                    localSuffixes = Automata.stateCharacterizingSet(hypothesis, inputs, state);
-                    if (localSuffixes.isEmpty()) {
-                        localSuffixes = Collections.singletonList(Word.<I>epsilon());
-                    }
-                    localSuffixSets.put(state, localSuffixes);
-                }
+        final Stream<Word<I>> secondPhaseStream = Streams.stream(accessSequenceIter)
+                                                         .flatMap(as -> appendLocalSuffixes(hypothesis,
+                                                                                            inputs,
+                                                                                            as,
+                                                                                            localSuffixSets));
 
-                for (Word<I> suffix : localSuffixes) {
-                    wb.append(trans).append(middle).append(suffix);
-                    Word<I> queryWord = wb.toWord();
-                    wb.clear();
-                    DefaultQuery<I, D> query = MQUtil.query(sulOracle, queryWord);
-                    D hypOutput = output.computeOutput(queryWord);
-                    if (!Objects.equals(hypOutput, query.getOutput())) {
-                        return query;
-                    }
-                }
+        return Stream.concat(firstPhaseStream, secondPhaseStream);
+    }
+
+    private <S> Stream<Word<I>> appendLocalSuffixes(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
+                                                    Collection<? extends I> inputs,
+                                                    List<Word<I>> accessSequence,
+                                                    MutableMapping<S, List<Word<I>>> cache) {
+
+        final Word<I> as = Word.fromWords(accessSequence);
+
+        final S state = hypothesis.getState(as);
+        List<Word<I>> localSuffixes = cache.get(state);
+
+        if (localSuffixes == null) {
+            localSuffixes = Automata.stateCharacterizingSet(hypothesis, inputs, state);
+            if (localSuffixes.isEmpty()) {
+                localSuffixes = Collections.singletonList(Word.epsilon());
             }
+            cache.put(state, localSuffixes);
         }
 
-        return null;
+        return Streams.stream(Iterables.transform(localSuffixes, as::concat));
     }
 
     public static class DFAWpMethodEQOracle<I> extends WpMethodEQOracle<DFA<?, I>, I, Boolean>
@@ -147,12 +150,20 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
         public DFAWpMethodEQOracle(int maxDepth, MembershipOracle<I, Boolean> sulOracle) {
             super(maxDepth, sulOracle);
         }
+
+        public DFAWpMethodEQOracle(int maxDepth, MembershipOracle<I, Boolean> sulOracle, int batchSize) {
+            super(maxDepth, sulOracle, batchSize);
+        }
     }
 
     public static class MealyWpMethodEQOracle<I, O> extends WpMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>> {
 
         public MealyWpMethodEQOracle(int maxDepth, MembershipOracle<I, Word<O>> sulOracle) {
             super(maxDepth, sulOracle);
+        }
+
+        public MealyWpMethodEQOracle(int maxDepth, MembershipOracle<I, Word<O>> sulOracle, int batchSize) {
+            super(maxDepth, sulOracle, batchSize);
         }
     }
 

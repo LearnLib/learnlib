@@ -17,15 +17,10 @@ package de.learnlib.eqtests.basic;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Stream;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.util.automata.Automata;
@@ -52,12 +47,12 @@ import net.automatalib.words.WordBuilder;
  * @author Joshua Moerman
  */
 public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
-        implements EquivalenceOracle<A, I, D> {
+        extends AbstractTestWordEQOracle<A, I, D> {
 
-    private final MembershipOracle<I, D> sulOracle;
     private final int minimalSize;
     private final int rndLength;
     private final int bound;
+    private final Random rand;
 
     /**
      * Constructor for an unbounded testing oracle.
@@ -70,10 +65,7 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
      *         expected length (in addition to minimalSize) of random word
      */
     public RandomWMethodEQOracle(MembershipOracle<I, D> sulOracle, int minimalSize, int rndLength) {
-        this.sulOracle = sulOracle;
-        this.minimalSize = minimalSize;
-        this.rndLength = rndLength;
-        this.bound = 0;
+        this(sulOracle, minimalSize, rndLength, 0);
     }
 
     /**
@@ -89,25 +81,46 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
      *         specifies the bound (set to 0 for unbounded).
      */
     public RandomWMethodEQOracle(MembershipOracle<I, D> sulOracle, int minimalSize, int rndLength, int bound) {
-        this.sulOracle = sulOracle;
+        this(sulOracle, minimalSize, rndLength, bound, 1);
+    }
+
+    /**
+     * Constructor for a bounded testing oracle with a specific batch size.
+     *
+     * @param sulOracle
+     *         oracle which answers tests.
+     * @param minimalSize
+     *         minimal size of the random word
+     * @param rndLength
+     *         expected length (in addition to minimalSize) of random word
+     * @param bound
+     *         specifies the bound (set to 0 for unbounded).
+     * @param batchSize
+     *         size of the batches sent to the membership oracle
+     */
+    public RandomWMethodEQOracle(MembershipOracle<I, D> sulOracle,
+                                 int minimalSize,
+                                 int rndLength,
+                                 int bound,
+                                 int batchSize) {
+        super(sulOracle, batchSize);
         this.minimalSize = minimalSize;
         this.rndLength = rndLength;
         this.bound = bound;
+        this.rand = new Random();
     }
 
     @Override
-    @ParametersAreNonnullByDefault
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
         UniversalDeterministicAutomaton<?, I, ?, ?, ?> aut = hypothesis;
-        return doFindCounterExample(aut, hypothesis, inputs);
+        return doGenerateTestWords(aut, inputs);
     }
 
     /*
      * Delegate target, used to bind the state-parameter of the automaton
      */
-    private <S> DefaultQuery<I, D> doFindCounterExample(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
-                                                        Output<I, D> output,
-                                                        Collection<? extends I> inputs) {
+    private <S> Stream<Word<I>> doGenerateTestWords(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
+                                                    Collection<? extends I> inputs) {
         // Note that we want to use ArrayLists because we want constant time random access
         // We will sample from this for a prefix
         ArrayList<Word<I>> stateCover = new ArrayList<>(hypothesis.size());
@@ -120,38 +133,34 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
         ArrayList<Word<I>> globalSuffixes = new ArrayList<>();
         Automata.characterizingSet(hypothesis, inputs, globalSuffixes);
 
-        Random rand = new Random();
-        int currentBound = bound;
-        while (bound == 0 || currentBound-- > 0) {
-            WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
+        final Stream<Word<I>> result =
+                Stream.generate(() -> generateSingleTestWord(stateCover, arrayAlphabet, globalSuffixes));
 
-            // pick a random state
-            wb.append(stateCover.get(rand.nextInt(stateCover.size())));
+        return bound > 0 ? result.limit(bound) : result;
+    }
 
-            // construct random middle part (of some expected length)
-            int size = minimalSize;
-            while ((size > 0) || (rand.nextDouble() > 1 / (rndLength + 1.0))) {
-                wb.append(arrayAlphabet.get(rand.nextInt(arrayAlphabet.size())));
-                if (size > 0) {
-                    size--;
-                }
-            }
+    private Word<I> generateSingleTestWord(ArrayList<Word<I>> stateCover,
+                                           ArrayList<I> arrayAlphabet,
+                                           ArrayList<Word<I>> globalSuffixes) {
+        final WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
 
-            // pick a random suffix for this state
-            if (!globalSuffixes.isEmpty()) {
-                wb.append(globalSuffixes.get(rand.nextInt(globalSuffixes.size())));
-            }
+        // pick a random state
+        wb.append(stateCover.get(rand.nextInt(stateCover.size())));
 
-            Word<I> queryWord = wb.toWord();
-            DefaultQuery<I, D> query = new DefaultQuery<>(queryWord);
-            D hypOutput = output.computeOutput(queryWord);
-            sulOracle.processQueries(Collections.singleton(query));
-            if (!Objects.equals(hypOutput, query.getOutput())) {
-                return query;
+        // construct random middle part (of some expected length)
+        int size = minimalSize;
+        while ((size > 0) || (rand.nextDouble() > 1 / (rndLength + 1.0))) {
+            wb.append(arrayAlphabet.get(rand.nextInt(arrayAlphabet.size())));
+            if (size > 0) {
+                size--;
             }
         }
 
-        // no counter example found within the bound
-        return null;
+        // pick a random suffix for this state
+        if (!globalSuffixes.isEmpty()) {
+            wb.append(globalSuffixes.get(rand.nextInt(globalSuffixes.size())));
+        }
+
+        return wb.toWord();
     }
 }

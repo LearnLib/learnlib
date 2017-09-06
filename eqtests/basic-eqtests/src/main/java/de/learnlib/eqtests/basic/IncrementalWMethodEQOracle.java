@@ -16,12 +16,10 @@
 package de.learnlib.eqtests.basic;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.stream.Stream;
 
-import de.learnlib.api.EquivalenceOracle;
+import com.google.common.collect.Streams;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
@@ -31,9 +29,8 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
-        implements EquivalenceOracle<A, I, D> {
+        extends AbstractTestWordEQOracle<A, I, D> {
 
-    private final MembershipOracle<I, D> oracle;
     private final IncrementalWMethodTestsIterator<I> incrementalWMethodIt;
     private int maxDepth;
 
@@ -42,7 +39,15 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
     }
 
     public IncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, D> oracle, int maxDepth) {
-        this.oracle = oracle;
+        this(alphabet, oracle, maxDepth, 1);
+    }
+
+    public IncrementalWMethodEQOracle(Alphabet<I> alphabet,
+                                      MembershipOracle<I, D> oracle,
+                                      int maxDepth,
+                                      int batchSize) {
+        super(oracle, batchSize);
+
         this.incrementalWMethodIt = new IncrementalWMethodTestsIterator<>(alphabet);
         this.incrementalWMethodIt.setMaxDepth(maxDepth);
 
@@ -54,38 +59,34 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
     }
 
     public void setMaxDepth(int maxDepth) {
+        this.incrementalWMethodIt.setMaxDepth(maxDepth);
         this.maxDepth = maxDepth;
     }
 
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
         // FIXME: warn about inputs being ignored?
         incrementalWMethodIt.update(hypothesis);
 
-        while (incrementalWMethodIt.hasNext()) {
-            Word<I> testCase = incrementalWMethodIt.next();
-
-            DefaultQuery<I, D> query = new DefaultQuery<>(testCase);
-            oracle.processQueries(Collections.singleton(query));
-            D hypOut = hypothesis.computeOutput(testCase);
-            if (!Objects.equals(query.getOutput(), hypOut)) {
-                // found counterexample
-                return query;
-            }
-        }
-
-        return null;
+        return Streams.stream(incrementalWMethodIt);
     }
 
     public static class DFAIncrementalWMethodEQOracle<I> extends IncrementalWMethodEQOracle<DFA<?, I>, I, Boolean>
             implements DFAEquivalenceOracle<I> {
 
+        public DFAIncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
+            super(alphabet, oracle);
+        }
+
         public DFAIncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, int maxDepth) {
             super(alphabet, oracle, maxDepth);
         }
 
-        public DFAIncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
-            super(alphabet, oracle);
+        public DFAIncrementalWMethodEQOracle(Alphabet<I> alphabet,
+                                             MembershipOracle<I, Boolean> oracle,
+                                             int maxDepth,
+                                             int batchSize) {
+            super(alphabet, oracle, maxDepth, batchSize);
         }
     }
 
@@ -93,14 +94,21 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
             extends IncrementalWMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
             implements MealyEquivalenceOracle<I, O> {
 
+        public MealyIncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
+            super(alphabet, oracle);
+        }
+
         public MealyIncrementalWMethodEQOracle(Alphabet<I> alphabet,
                                                MembershipOracle<I, Word<O>> oracle,
                                                int maxDepth) {
             super(alphabet, oracle, maxDepth);
         }
 
-        public MealyIncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
-            super(alphabet, oracle);
+        public MealyIncrementalWMethodEQOracle(Alphabet<I> alphabet,
+                                               MembershipOracle<I, Word<O>> oracle,
+                                               int maxDepth,
+                                               int batchSize) {
+            super(alphabet, oracle, maxDepth, batchSize);
         }
     }
 

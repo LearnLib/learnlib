@@ -16,13 +16,12 @@
 package de.learnlib.eqtests.basic.vpda;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import com.google.common.base.Preconditions;
-import de.learnlib.api.EquivalenceOracle;
 import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.DefaultQuery;
+import de.learnlib.eqtests.basic.AbstractTestWordEQOracle;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
@@ -36,11 +35,9 @@ import net.automatalib.words.WordBuilder;
  *
  * @author Malte Isberner
  */
-public class RandomWellMatchedWordsEQOracle<I> implements EquivalenceOracle<OneSEVPA<?, I>, I, Boolean> {
+public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<OneSEVPA<?, I>, I, Boolean> {
 
     private final Random random;
-
-    private final MembershipOracle<I, Boolean> oracle;
 
     private final VPDAlphabet<I> alphabet;
 
@@ -55,15 +52,33 @@ public class RandomWellMatchedWordsEQOracle<I> implements EquivalenceOracle<OneS
                                           final int maxTests,
                                           final int minLength,
                                           final int maxLength) {
+        this(random, oracle, alphabet, callProb, maxTests, minLength, maxLength, 1);
+    }
+
+    public RandomWellMatchedWordsEQOracle(final Random random,
+                                          final MembershipOracle<I, Boolean> oracle,
+                                          final VPDAlphabet<I> alphabet,
+                                          final double callProb,
+                                          final int maxTests,
+                                          final int minLength,
+                                          final int maxLength,
+                                          final int batchSize) {
+        super(oracle, batchSize);
+
         Preconditions.checkArgument(minLength <= maxLength, "minLength is smaller than maxLength");
 
         this.random = random;
-        this.oracle = oracle;
         this.alphabet = alphabet;
         this.callProb = callProb;
         this.maxTests = maxTests;
         this.minLength = minLength;
         this.maxLength = maxLength;
+    }
+
+    @Override
+    protected Stream<Word<I>> generateTestWords(OneSEVPA<?, I> hypothesis, Collection<? extends I> inputs) {
+        final int lengthRange = (maxLength - minLength) + 1;
+        return Stream.generate(() -> generateWellMatched(minLength + random.nextInt(lengthRange))).limit(maxTests);
     }
 
     private Word<I> generateWellMatched(final int len) {
@@ -105,27 +120,6 @@ public class RandomWellMatchedWordsEQOracle<I> implements EquivalenceOracle<OneS
             generateWellMatched(wb, sep);
             generateWellMatched(wb, length - sep);
         }
-    }
-
-    @Override
-    public DefaultQuery<I, Boolean> findCounterExample(final OneSEVPA<?, I> hypothesis,
-                                                       final Collection<? extends I> inputs) {
-
-        final int lengthRange = (maxLength - minLength) + 1;
-
-        for (int i = 0; i < this.maxTests; i++) {
-            final Word<I> queryWord = generateWellMatched(minLength + random.nextInt(lengthRange));
-            final DefaultQuery<I, Boolean> query = new DefaultQuery<>(queryWord);
-
-            final Boolean hypOutput = hypothesis.computeOutput(queryWord);
-            oracle.processQuery(query);
-
-            if (!Objects.equals(hypOutput, query.getOutput())) {
-                return query;
-            }
-        }
-
-        return null;
     }
 
 }
