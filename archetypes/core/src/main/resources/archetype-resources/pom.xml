@@ -32,7 +32,7 @@
     <dependencies>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-core</artifactId>
+            <artifactId>learnlib-api</artifactId>
         </dependency>
     </dependencies>
 

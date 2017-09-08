@@ -18,8 +18,8 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.api.LearningAlgorithm;
-import de.learnlib.mealy.MealyUtil;
+import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.vpda.OneSEVPA;

@@ -21,9 +21,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import de.learnlib.api.LearningAlgorithm;
-import de.learnlib.api.ResumableLearner;
-import de.learnlib.oracles.DefaultQuery;
+import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.api.algorithm.feature.ResumableLearner;
+import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.util.automata.Automata;

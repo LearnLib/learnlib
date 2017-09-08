@@ -16,7 +16,7 @@
 package de.learnlib.mapper;
 
 import de.learnlib.api.SUL;
-import de.learnlib.api.SULException;
+import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.api.ExecutableInput;
 
 /**

@@ -15,7 +15,7 @@
  */
 package de.learnlib.testsupport.it.learner;
 
-import de.learnlib.api.PassiveLearningAlgorithm;
+import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.vpda.OneSEVPA;

@@ -20,8 +20,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.examples.PassiveLearningExample;
-import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Alphabet;

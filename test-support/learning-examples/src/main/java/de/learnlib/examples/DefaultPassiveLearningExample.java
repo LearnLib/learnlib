@@ -17,7 +17,7 @@ package de.learnlib.examples;
 
 import java.util.Collection;
 
-import de.learnlib.oracles.DefaultQuery;
+import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.words.Alphabet;
 
 /**

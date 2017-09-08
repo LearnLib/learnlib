@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.oracles.SimulatorOracle;
+import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.membership.SimulatorOracle;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;

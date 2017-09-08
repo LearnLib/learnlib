@@ -15,7 +15,7 @@
  */
 package de.learnlib.testsupport.it.learner;
 
-import de.learnlib.api.PassiveLearningAlgorithm;
+import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 
 public class PassiveLearnerVariant<M, I, D> {
 

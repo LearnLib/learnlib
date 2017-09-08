@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2014 TU Dortmund
+Copyright (C) 2013-2017 TU Dortmund
 This file is part of LearnLib, http://www.learnlib.de/.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,11 +40,7 @@ limitations under the License.
         <!-- LearnLib dependencies -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-algorithm-features</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-core</artifactId>
+            <artifactId>learnlib-api</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
@@ -60,15 +56,27 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-basic-eqtests</artifactId>
+            <artifactId>learnlib-equivalence-oracles</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-simulator</artifactId>
+            <artifactId>learnlib-membership-oracles</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-reuse</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-statistics</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-datastructure-ot</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-util</artifactId>
         </dependency>
 
         <!-- AutomataLib dependencies -->

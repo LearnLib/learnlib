@@ -17,7 +17,7 @@ package de.learnlib.mapper;
 
 import java.util.Optional;
 
-import de.learnlib.api.SULException;
+import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.api.Mapper;
 
 final class MapperComposition<AI, AO, ACI, CAO, CI, CO> implements Mapper<AI, AO, CI, CO> {

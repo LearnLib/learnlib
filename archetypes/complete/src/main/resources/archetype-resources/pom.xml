@@ -32,11 +32,11 @@
     <dependencies>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-core</artifactId>
+            <artifactId>learnlib-api</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-basic-eqtests</artifactId>
+            <artifactId>learnlib-equivalence-oracles</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-simulator</artifactId>
+            <artifactId>learnlib-membership-oracles</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>

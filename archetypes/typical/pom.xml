@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Copyright (C) 2013-2015 TU Dortmund
+Copyright (C) 2013-2017 TU Dortmund
 This file is part of LearnLib, http://www.learnlib.de/.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,7 +37,7 @@ limitations under the License.
     <dependencies>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-core</artifactId>
+            <artifactId>learnlib-api</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -47,12 +47,12 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-basic-eqtests</artifactId>
+            <artifactId>learnlib-equivalence-oracles</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-simulator</artifactId>
+            <artifactId>learnlib-membership-oracles</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

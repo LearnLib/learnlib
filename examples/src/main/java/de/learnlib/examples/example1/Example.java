@@ -17,16 +17,16 @@ package de.learnlib.examples.example1;
 
 import java.io.IOException;
 
-import de.learnlib.algorithms.features.observationtable.OTUtils;
-import de.learnlib.algorithms.features.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
 import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFABuilder;
-import de.learnlib.api.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.eqtests.basic.WMethodEQOracle.DFAWMethodEQOracle;
-import de.learnlib.experiments.Experiment.DFAExperiment;
-import de.learnlib.oracles.CounterOracle.DFACounterOracle;
-import de.learnlib.oracles.SimulatorOracle.DFASimulatorOracle;
-import de.learnlib.statistics.SimpleProfiler;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.datastructure.observationtable.OTUtils;
+import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
+import de.learnlib.filter.statistic.oracle.CounterOracle.DFACounterOracle;
+import de.learnlib.oracle.equivalence.WMethodEQOracle.DFAWMethodEQOracle;
+import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
+import de.learnlib.util.Experiment.DFAExperiment;
+import de.learnlib.util.statistics.SimpleProfiler;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.util.automata.builders.AutomatonBuilders;

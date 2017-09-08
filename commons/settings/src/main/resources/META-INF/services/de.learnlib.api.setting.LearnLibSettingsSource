@@ -1,0 +1,3 @@
+de.learnlib.setting.sources.LearnLibPropertiesSource
+de.learnlib.setting.sources.LearnLibSystemPropertiesSource
+de.learnlib.setting.sources.LearnLibLocalPropertiesSource

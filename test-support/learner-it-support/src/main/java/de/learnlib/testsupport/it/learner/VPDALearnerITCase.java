@@ -15,10 +15,10 @@
  */
 package de.learnlib.testsupport.it.learner;
 
-import de.learnlib.api.EquivalenceOracle;
-import de.learnlib.api.LearningAlgorithm;
-import de.learnlib.eqtests.basic.vpda.SimulatorEQOracle;
-import de.learnlib.oracles.DefaultQuery;
+import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.api.oracle.EquivalenceOracle;
+import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.equivalence.vpda.SimulatorEQOracle;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.VPDAlphabet;

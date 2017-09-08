@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.examples.DefaultPassiveLearningExample;
 import de.learnlib.examples.LearningExample;
 import de.learnlib.examples.LearningExamples;
 import de.learnlib.examples.PassiveLearningExample;
-import de.learnlib.oracles.DefaultQuery;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;

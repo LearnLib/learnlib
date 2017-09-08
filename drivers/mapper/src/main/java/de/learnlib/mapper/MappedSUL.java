@@ -18,7 +18,7 @@ package de.learnlib.mapper;
 import java.util.Optional;
 
 import de.learnlib.api.SUL;
-import de.learnlib.api.SULException;
+import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.api.Mapper;
 import de.learnlib.mapper.api.Mapper.MappedException;
 

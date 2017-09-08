@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Copyright (C) 2013 TU Dortmund
+Copyright (C) 2013-2017 TU Dortmund
 This file is part of LearnLib, http://www.learnlib.de/.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,9 +25,7 @@ limitations under the License.
     <packaging>pom</packaging>
 
     <name>LearnLib :: Archetypes</name>
-    <description>
-        Parent metaproject for archetypes that facilitate getting started with LearnLib.
-    </description>
+    <description>Parent metaproject for archetypes that facilitate getting started with LearnLib.</description>
 
     <parent>
         <groupId>de.learnlib</groupId>

@@ -20,9 +20,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.api.LearningAlgorithm;
-import de.learnlib.api.SupportsGrowingAlphabet;
-import de.learnlib.oracles.DefaultQuery;
+import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
+import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.util.automata.Automata;

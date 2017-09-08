@@ -18,10 +18,10 @@ package de.learnlib.testsupport;
 import java.util.Collection;
 import java.util.Random;
 
-import de.learnlib.api.LearningAlgorithm;
-import de.learnlib.api.MembershipOracle;
-import de.learnlib.api.SupportsGrowingAlphabet;
-import de.learnlib.oracles.SimulatorOracle;
+import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
+import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.membership.SimulatorOracle;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;

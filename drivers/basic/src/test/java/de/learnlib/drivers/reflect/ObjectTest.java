@@ -20,9 +20,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import de.learnlib.api.Query;
-import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.SULOracle;
+import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.api.query.Query;
+import de.learnlib.oracle.membership.SULOracle;
 import net.automatalib.words.Word;
 import org.testng.annotations.Test;
 

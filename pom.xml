@@ -15,8 +15,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -106,20 +106,17 @@ limitations under the License.
     ================================= MODULES ===================================
     -->
     <modules>
-        <module>test-support</module>
-        <module>build-tools</module>
-        <module>core</module>
         <module>algorithms</module>
-        <module>eqtests</module>
-        <module>simulator</module>
-        <module>utils</module>
-        <module>filters</module>
+        <module>api</module>
+        <module>archetypes</module>
+        <module>build-tools</module>
+        <module>commons</module>
+        <module>datastructures</module>
+        <module>distribution</module>
         <module>drivers</module>
         <module>examples</module>
-        <module>passive</module>
-        <module>archetypes</module>
-
-        <module>distribution</module>
+        <module>oracles</module>
+        <module>test-support</module>
     </modules>
 
     <!--
@@ -596,12 +593,37 @@ limitations under the License.
         <dependencies>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-core</artifactId>
+                <artifactId>learnlib-algorithms</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-algorithm-features</artifactId>
+                <artifactId>learnlib-algorithms-active</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-adt</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-dhc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-discrimination-tree</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-discrimination-tree-vpda</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-kearns-vazirani</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -616,7 +638,7 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-dhc</artifactId>
+                <artifactId>learnlib-nlstar</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -631,17 +653,122 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-basic-eqtests</artifactId>
+                <artifactId>learnlib-algorithms-passive</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-simulator</artifactId>
+                <artifactId>learnlib-rpni</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-counterexamples</artifactId>
+                <artifactId>learnlib-rpni-edsm</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-rpni-mdl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib.archetypes</groupId>
+                <artifactId>learnlib-archetypes-parent</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib.archetypes</groupId>
+                <artifactId>complete</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib.archetypes</groupId>
+                <artifactId>core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib.archetypes</groupId>
+                <artifactId>typical</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-build-tools</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-datastructures</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-datastructure-dt</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-datastructure-list</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-datastructure-ot</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-datasctructure-pta</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib.distribution</groupId>
+                <artifactId>learnlib-distribution</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-drivers</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-drivers-basic</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-drivers-util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-mapper</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-examples</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-oracles</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-equivalence-oracles</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-filters</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -656,7 +783,12 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-drivers-basic</artifactId>
+                <artifactId>learnlib-statistics</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-membership-oracles</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -666,61 +798,27 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-nlstar</artifactId>
+                <artifactId>learnlib-commons</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-discrimination-tree</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-discrimination-tree-vpda</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-kearns-vazirani</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-mapper</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-acex</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-passive-core</artifactId>
+                <artifactId>learnlib-counterexamples</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-passive-commons</artifactId>
+                <artifactId>learnlib-settings</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-rpni</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-datastructures</artifactId>
+                <artifactId>learnlib-util</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

@@ -15,11 +15,11 @@
  */
 package de.learnlib.testsupport.it.learner;
 
-import de.learnlib.api.EquivalenceOracle;
-import de.learnlib.api.LearningAlgorithm;
-import de.learnlib.eqtests.basic.SimulatorEQOracle;
+import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.api.oracle.EquivalenceOracle;
+import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.examples.LearningExample;
-import de.learnlib.oracles.DefaultQuery;
+import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.util.automata.Automata;
