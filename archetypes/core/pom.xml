@@ -34,7 +34,7 @@ limitations under the License.
     </parent>
 
     <dependencies>
-        <!-- LearnLib core required for integration test -->
+        <!-- LearnLib API required for integration test -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
