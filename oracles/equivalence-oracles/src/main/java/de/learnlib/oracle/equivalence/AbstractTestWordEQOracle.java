@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * to solely focus on test word generation by implementing {@link #generateTestWords(Output, Collection)}.
  * <p>
  * Being {@link Stream stream}-based, this oracle encourages the lazy computation of counterexamples, so that all
- * counterexamples do not have to be computed upfront, but only as long as the first valid counterexample is found.
+ * counterexamples do not have to be computed upfront, but only until the first valid counterexample is found.
  *
  * @param <A>
  *         hypothesis type
