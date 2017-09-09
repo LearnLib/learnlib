@@ -22,7 +22,7 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.automata.concepts.OutputAutomaton;
+import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Word;
@@ -31,7 +31,7 @@ import net.automatalib.words.WordBuilder;
 /**
  * @author Maik Merten
  */
-public class RandomWordsEQOracle<I, D, A extends OutputAutomaton<?, I, ?, D>>
+public class RandomWordsEQOracle<I, D, A extends Output<I, D>>
         extends AbstractTestWordEQOracle<A, I, D> {
 
     private final Random random;
