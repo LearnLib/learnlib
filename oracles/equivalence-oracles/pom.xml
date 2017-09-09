@@ -79,11 +79,21 @@ limitations under the License.
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-    </dependency>
-    <dependency>
-	    <groupId>de.learnlib</groupId>
-	    <artifactId>learnlib-membership-oracles</artifactId>
-	    <scope>test</scope>
-    </dependency>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-membership-oracles</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-learning-examples</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
