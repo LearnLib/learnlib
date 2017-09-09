@@ -63,7 +63,7 @@ public class CompleteExplorationEQOracle<I, D> extends AbstractTestWordEQOracle<
      *         maximum exploration depth
      */
     public CompleteExplorationEQOracle(MembershipOracle<I, D> sulOracle, int minDepth, int maxDepth) {
-        this(sulOracle, 1, minDepth, maxDepth);
+        this(sulOracle, minDepth, maxDepth, 1);
     }
 
     /**
