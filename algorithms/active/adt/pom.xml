@@ -98,7 +98,7 @@ limitations under the License.
 
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-drivers-util</artifactId>
+            <artifactId>learnlib-drivers-simulator</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

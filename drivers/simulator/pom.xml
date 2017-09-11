@@ -28,8 +28,8 @@ limitations under the License.
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>learnlib-drivers-util</artifactId>
-    <name>LearnLib :: Drivers :: Util</name>
+    <artifactId>learnlib-drivers-simulator</artifactId>
+    <name>LearnLib :: Drivers :: Simulator</name>
     <description>Utilities Driver Generation Support</description>
 
     <dependencies>

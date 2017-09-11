@@ -37,6 +37,6 @@ limitations under the License.
     <modules>
         <module>basic</module>
         <module>mapper</module>
-        <module>util</module>
+        <module>simulator</module>
     </modules>
 </project>
