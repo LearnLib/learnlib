@@ -146,6 +146,7 @@ limitations under the License.
         <resources-plugin.version>3.0.2</resources-plugin.version>
         <upload-plugin.version>1.1</upload-plugin.version>
         <exec-plugin.version>1.6.0</exec-plugin.version>
+        <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <deploy-site-github.exec>deploy-site-github</deploy-site-github.exec>
 
         <guava.version>22.0</guava.version>
@@ -370,6 +371,11 @@ limitations under the License.
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>${antrun.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>${lifecycle-mapping.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -427,7 +433,6 @@ limitations under the License.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>${reports-plugin.version}</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -447,7 +452,6 @@ limitations under the License.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${javadoc-plugin.version}</version>
                 <configuration>
                     <quiet>false</quiet>
                     <source>1.8</source>
@@ -509,7 +513,6 @@ limitations under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>${checkstyle-plugin.version}</version>
                         <executions>
                             <execution>
                                 <phase>verify</phase>
@@ -522,7 +525,6 @@ limitations under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
-                        <version>${dependency-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>analyze</id>
@@ -566,7 +568,6 @@ limitations under the License.
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>${jacoco.version}</version>
                     </plugin>
                 </plugins>
             </build>
@@ -607,7 +608,6 @@ limitations under the License.
                         <plugin>
                             <groupId>org.eclipse.m2e</groupId>
                             <artifactId>lifecycle-mapping</artifactId>
-                            <version>1.0.0</version>
                             <configuration>
                                 <lifecycleMappingMetadata>
                                     <pluginExecutions>
