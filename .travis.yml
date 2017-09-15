@@ -4,6 +4,13 @@ dist: trusty
 jdk:
   - oraclejdk8
   - openjdk8
+cache:
+  directories:
+  - $HOME/.m2
+before_cache:
+  # do not cache our local archives
+  - rm -rf $HOME/.m2/repository/net/automatalib/
+  - rm -rf $HOME/.m2/repository/de/learnlib/
 branches:
   only:
   - master
