@@ -151,6 +151,7 @@ limitations under the License.
         <guava.version>22.0</guava.version>
         <findbugs.version>3.0.2</findbugs.version>
         <jacoco.version>0.7.9</jacoco.version>
+        <coveralls.version>4.3.0</coveralls.version>
 
         <buildergen.version>0.1</buildergen.version>
 
@@ -339,6 +340,27 @@ limitations under the License.
                             <link>${guava.apidocs}</link>
                             <link>${automatalib.apidocs}</link>
                         </links>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.eluder.coveralls</groupId>
+                    <artifactId>coveralls-maven-plugin</artifactId>
+                    <version>${coveralls.version}</version>
+                    <configuration>
+                        <sourceDirectories>
+                            <!-- TODO: find a more easy-to-maintain solution -->
+                            <sourceDirectory>${basedir}/algorithms/active/adt/target/generated-sources</sourceDirectory>
+                            <sourceDirectory>${basedir}/algorithms/active/dhc/target/generated-sources</sourceDirectory>
+                            <sourceDirectory>${basedir}/algorithms/active/discrimination-tree/target/generated-sources</sourceDirectory>
+                            <sourceDirectory>${basedir}/algorithms/active/discrimination-tree-vpda/target/generated-sources</sourceDirectory>
+                            <sourceDirectory>${basedir}/algorithms/active/kearns-vazirani/target/generated-sources</sourceDirectory>
+                            <sourceDirectory>${basedir}/algorithms/active/lstar-baseline/target/generated-sources</sourceDirectory>
+                            <sourceDirectory>${basedir}/algorithms/active/lstar-generic/target/generated-sources</sourceDirectory>
+                            <sourceDirectory>${basedir}/algorithms/active/nlstar/target/generated-sources</sourceDirectory>
+                            <sourceDirectory>${basedir}/algorithms/active/ttt/target/generated-sources</sourceDirectory>
+                            <sourceDirectory>${basedir}/algorithms/active/ttt-vpda/target/generated-sources</sourceDirectory>
+                        </sourceDirectories>
+                        <scanForSources>true</scanForSources>
                     </configuration>
                 </plugin>
             </plugins>
