@@ -149,6 +149,8 @@ limitations under the License.
         <deploy-site-github.exec>deploy-site-github</deploy-site-github.exec>
 
         <guava.version>22.0</guava.version>
+        <antrun.version>1.8</antrun.version>
+
         <findbugs.version>3.0.2</findbugs.version>
         <jacoco.version>0.7.9</jacoco.version>
         <coveralls.version>4.3.0</coveralls.version>
@@ -363,6 +365,11 @@ limitations under the License.
                         <scanForSources>true</scanForSources>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>${antrun.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -538,6 +545,24 @@ limitations under the License.
             <id>code-coverage</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>touch-jacoco</id>
+                                <phase>generate-test-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <touch file="${project.build.directory}/jacoco.exec"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
