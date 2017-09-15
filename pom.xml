@@ -312,31 +312,6 @@ limitations under the License.
                         </links>
                     </configuration>
                 </plugin>
-                <!-- This gets rid of the nasty "maven-enforcer-plugin will be ignored" warning by m2e -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.apache.maven.plugins</groupId>
-                                        <artifactId>maven-enforcer-plugin</artifactId>
-                                        <versionRange>[1.0.0,)</versionRange>
-                                        <goals>
-                                            <goal>enforce</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore/>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -527,6 +502,46 @@ limitations under the License.
                         </configuration>
                     </plugin>
                 </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>eclipse-m2e-configs</id>
+            <activation>
+                <property>
+                    <!-- property is set by eclipse's m2e plugin -->
+                    <name>m2e.version</name>
+                </property>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <!-- This gets rid of the nasty "maven-enforcer-plugin will be ignored" warning by m2e -->
+                        <plugin>
+                            <groupId>org.eclipse.m2e</groupId>
+                            <artifactId>lifecycle-mapping</artifactId>
+                            <version>1.0.0</version>
+                            <configuration>
+                                <lifecycleMappingMetadata>
+                                    <pluginExecutions>
+                                        <pluginExecution>
+                                            <pluginExecutionFilter>
+                                                <groupId>org.apache.maven.plugins</groupId>
+                                                <artifactId>maven-enforcer-plugin</artifactId>
+                                                <versionRange>[1.0.0,)</versionRange>
+                                                <goals>
+                                                    <goal>enforce</goal>
+                                                </goals>
+                                            </pluginExecutionFilter>
+                                            <action>
+                                                <ignore/>
+                                            </action>
+                                        </pluginExecution>
+                                    </pluginExecutions>
+                                </lifecycleMappingMetadata>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
             </build>
         </profile>
         <profile>
