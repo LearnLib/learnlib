@@ -32,6 +32,23 @@ limitations under the License.
     <name>LearnLib :: Algorithms :: Baseline L*</name>
     <description>A simple, straightforward implementation of Dana Angluin's L* algorithm</description>
 
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- If we run coverage analysis, skip generated sources -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/BaselineLStarBuilder.class</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
     <dependencies>
         <!--
         Compile-time dependencies

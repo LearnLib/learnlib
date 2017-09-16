@@ -31,6 +31,23 @@ limitations under the License.
     <artifactId>learnlib-discrimination-tree-vpda</artifactId>
     <name>LearnLib :: Algorithms :: Discrimination Tree [VPDA]</name>
 
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- If we run coverage analysis, skip generated sources -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/DTLearnerVPDABuilder.class</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>de.learnlib</groupId>
