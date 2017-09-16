@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.api.algorithm.NFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
@@ -53,6 +54,7 @@ public class NLStarLearner<I> implements NFALearner<I> {
      * @param oracle
      *         the membership oracle
      */
+    @GenerateBuilder
     public NLStarLearner(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
         this.alphabet = alphabet;
         this.table = new ObservationTable<>(alphabet, oracle);

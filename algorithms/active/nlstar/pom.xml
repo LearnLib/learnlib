@@ -26,6 +26,24 @@ limitations under the License.
     </parent>
     <name>LearnLib :: Algorithms :: NL*</name>
     <artifactId>learnlib-nlstar</artifactId>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- If we run coverage analysis, skip generated sources -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/NLStarLearnerBuilder.class</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>de.learnlib</groupId>
