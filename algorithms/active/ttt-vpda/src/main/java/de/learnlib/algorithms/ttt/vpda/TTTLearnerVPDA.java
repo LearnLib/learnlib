@@ -197,13 +197,14 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
                 boolean expectedOut = node.getParentOutcome();
                 node = node.getParent();
                 ContextPair<I> discr = node.getDiscriminator();
-                if (best != null && discr.getLength() + locAsLen < best.totalLength()) {
-                    boolean hypOut = computeHypothesisOutput(discr.getPrefix()
-                                                                  .concat(loc.getAccessSequence(), discr.getSuffix()));
-                    if (hypOut != expectedOut) {
-                        best = new OutputInconsistency<>(loc, discr, expectedOut);
-                    }
-                }
+                // TODO: this was dead code before, but probably shouldn't be. Reviving it breaks ITs. Investigate!
+                // if (best != null && discr.getLength() + locAsLen < best.totalLength()) {
+                //     boolean hypOut = computeHypothesisOutput(discr.getPrefix()
+                //         .concat(loc.getAccessSequence(), discr.getSuffix()));
+                //     if (hypOut != expectedOut) {
+                //         best = new OutputInconsistency<>(loc, discr, expectedOut);
+                //     }
+                // }
             }
         }
         return best;

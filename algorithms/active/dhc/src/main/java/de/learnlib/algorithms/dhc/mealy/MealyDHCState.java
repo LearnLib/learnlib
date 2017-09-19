@@ -17,7 +17,9 @@ package de.learnlib.algorithms.dhc.mealy;
 
 import java.io.Serializable;
 import java.util.LinkedHashSet;
+import java.util.Map;
 
+import com.google.common.collect.Maps;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Word;
@@ -36,14 +38,21 @@ class MealyDHCState<I, O> implements Serializable {
 
     private final LinkedHashSet<Word<I>> splitters;
     private final CompactMealy<I, O> hypothesis;
-    private final MutableMapping<Integer, MealyDHC.QueueElement<I, O>> accessSequences;
+    private final Map<Integer, MealyDHC.QueueElement<I, O>> accessSequences;
 
     MealyDHCState(final LinkedHashSet<Word<I>> splitters,
                   final CompactMealy<I, O> hypothesis,
                   final MutableMapping<Integer, MealyDHC.QueueElement<I, O>> accessSequences) {
         this.splitters = splitters;
         this.hypothesis = hypothesis;
-        this.accessSequences = accessSequences;
+        this.accessSequences = Maps.newHashMapWithExpectedSize(hypothesis.size());
+
+        for (final Integer s : hypothesis.getStates()) {
+            final MealyDHC.QueueElement<I, O> elem = accessSequences.get(s);
+            if (elem != null) {
+                this.accessSequences.put(s, elem);
+            }
+        }
     }
 
     LinkedHashSet<Word<I>> getSplitters() {
@@ -54,7 +63,7 @@ class MealyDHCState<I, O> implements Serializable {
         return hypothesis;
     }
 
-    MutableMapping<Integer, MealyDHC.QueueElement<I, O>> getAccessSequences() {
+    Map<Integer, MealyDHC.QueueElement<I, O>> getAccessSequences() {
         return accessSequences;
     }
 }

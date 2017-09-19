@@ -15,6 +15,7 @@
  */
 package de.learnlib.filter.cache.mealy;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -248,7 +249,7 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O> {
         }
     }
 
-    private static final class ReverseLexCmp<I> implements Comparator<Query<I, ?>> {
+    private static final class ReverseLexCmp<I> implements Comparator<Query<I, ?>>, Serializable {
 
         private final Alphabet<I> alphabet;
 

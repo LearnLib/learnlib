@@ -45,7 +45,6 @@ public class DynamicParallelOracleBuilder<I, D> {
     private static final int DEFAULT_KEEP_ALIVE_TIME = 100;
     @Nonnull
     private final Supplier<? extends MembershipOracle<I, D>> oracleSupplier;
-    @Nonnull
     private ExecutorService customExecutor;
     @Nonnegative
     private int batchSize = DynamicParallelOracle.BATCH_SIZE;

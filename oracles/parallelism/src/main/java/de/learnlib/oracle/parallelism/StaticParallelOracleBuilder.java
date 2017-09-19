@@ -40,9 +40,7 @@ import de.learnlib.oracle.parallelism.ParallelOracle.PoolPolicy;
 @ParametersAreNonnullByDefault
 public class StaticParallelOracleBuilder<I, D> {
 
-    @Nonnull
     private final Collection<? extends MembershipOracle<I, D>> oracles;
-    @Nonnull
     private final Supplier<? extends MembershipOracle<I, D>> oracleSupplier;
     @Nonnegative
     private int minBatchSize = StaticParallelOracle.MIN_BATCH_SIZE;

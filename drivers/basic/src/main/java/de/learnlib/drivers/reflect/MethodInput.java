@@ -22,14 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.automatalib.commons.util.nid.AbstractMutableNumericID;
-
 /**
  * abstract method input, may have abstract parameters.
  *
  * @author falkhowar
  */
-public class MethodInput extends AbstractMutableNumericID {
+public class MethodInput {
 
     private final String name;
 

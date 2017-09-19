@@ -35,7 +35,6 @@ public final class DFABenchmarks {
 
     public static DFALearningExample<Integer> loadLearnLibV2Benchmark(String name) {
         String resourceName = "/automata/learnlibv2/" + name + ".dfa";
-        DFABenchmarks.class.getResource(resourceName);
         if (DFABenchmarks.class.getResource(resourceName) == null) {
             resourceName += ".gz"; // look for GZip compressed resource
             if (DFABenchmarks.class.getResource(resourceName) == null) {

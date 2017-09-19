@@ -17,13 +17,13 @@ package de.learnlib.datastructure.observationtable.writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.function.Function;
 
 import com.google.common.base.Functions;
 import de.learnlib.datastructure.observationtable.ObservationTable;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.words.Word;
 
 public abstract class AbstractObservationTableWriter<I, D> implements ObservationTableWriter<I, D> {
@@ -84,7 +84,7 @@ public abstract class AbstractObservationTableWriter<I, D> implements Observatio
 
     @Override
     public void write(ObservationTable<? extends I, ? extends D> table, File file) throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter bw = new BufferedWriter(IOUtil.asUTF8Writer(file))) {
             write(table, bw);
         }
     }

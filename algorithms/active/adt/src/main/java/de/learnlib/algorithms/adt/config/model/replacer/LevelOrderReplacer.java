@@ -88,15 +88,15 @@ public class LevelOrderReplacer implements SubtreeReplacer {
 
                     final Map<S, S> nextMapping = new HashMap<>();
 
-                    for (final S s : currentToInitialMapping.keySet()) {
-                        final S successor = hypothesis.getSuccessor(s, i);
+                    for (final Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
+                        final S successor = hypothesis.getSuccessor(entry.getKey(), i);
 
                         // converging states
                         if (nextMapping.containsKey(successor)) {
                             break extensionCase;
                         }
 
-                        nextMapping.put(successor, currentToInitialMapping.get(s));
+                        nextMapping.put(successor, entry.getValue());
                     }
 
                     currentToInitialMapping = nextMapping;

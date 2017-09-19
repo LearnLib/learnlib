@@ -27,13 +27,13 @@ import java.io.Serializable;
  */
 class BaselineLStarState<I> implements Serializable {
 
-    private final ObservationTable<I> observationTable;
+    private final BaselineObservationTable<I> observationTable;
 
-    BaselineLStarState(final ObservationTable<I> observationTable) {
+    BaselineLStarState(final BaselineObservationTable<I> observationTable) {
         this.observationTable = observationTable;
     }
 
-    ObservationTable<I> getObservationTable() {
+    BaselineObservationTable<I> getObservationTable() {
         return observationTable;
     }
 }

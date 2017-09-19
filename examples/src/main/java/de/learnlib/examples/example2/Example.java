@@ -97,6 +97,7 @@ public final class Example {
         MealyLearner<MethodInput, AbstractMethodOutput> lstar =
                 new ExtensibleLStarMealyBuilder<MethodInput, AbstractMethodOutput>().withAlphabet(driver.getInputs()) // input alphabet
                                                                                     .withOracle(mqOracle) // membership oracle
+                                                                                    .withInitialSuffixes(suffixes) // initial suffixes
                                                                                     .create();
 
         // create random walks equivalence test

@@ -32,7 +32,6 @@ public class InconsistencyDataHolder<I> implements Inconsistency<I, Boolean> {
     @Nonnull
     private final ObservationTableRow<I> secondRow;
 
-    @Nonnull
     private final I differingSymbol;
 
     public InconsistencyDataHolder(ObservationTableRow<I> firstRow,

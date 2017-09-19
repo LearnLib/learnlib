@@ -57,7 +57,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>,
     @Nonnull
     private final GrowingAlphabet<I> alphabet;
     @Nonnull
-    private ObservationTable<I> observationTable;
+    private BaselineObservationTable<I> observationTable;
     private boolean startLearningAlreadyCalled;
 
     /**
@@ -73,7 +73,7 @@ public class BaselineLStar<I> implements OTLearner<DFA<?, I>, I, Boolean>,
     public BaselineLStar(@Nonnull Alphabet<I> alphabet, @Nonnull MembershipOracle<I, Boolean> oracle) {
         this.alphabet = new SimpleAlphabet<>(alphabet);
         this.oracle = oracle;
-        this.observationTable = new ObservationTable<>();
+        this.observationTable = new BaselineObservationTable<>();
 
         for (I alphabetSymbol : alphabet) {
             observationTable.addLongPrefix(Word.fromLetter(alphabetSymbol));

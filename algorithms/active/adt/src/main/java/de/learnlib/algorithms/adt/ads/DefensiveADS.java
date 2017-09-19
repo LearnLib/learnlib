@@ -178,8 +178,7 @@ public final class DefensiveADS<S, I, O> {
                 if (!statesWithMissingTransitions.isEmpty()) {
 
                     // override existing refinement candidate, if we can assure progress with fewer transitions to refine
-                    if ((refinementStates == null && refinementInput == null) ||
-                        statesWithMissingTransitions.size() < refinementStates.size()) {
+                    if (refinementStates == null || statesWithMissingTransitions.size() < refinementStates.size()) {
                         refinementStates = statesWithMissingTransitions;
                         refinementInput = i;
                     }
@@ -190,9 +189,10 @@ public final class DefensiveADS<S, I, O> {
                 // compute successors
                 final Map<O, Map<S, S>> successors = new HashMap<>();
 
-                for (final S s : currentToInitialMapping.keySet()) {
-                    final S nextState = automaton.getSuccessor(s, i);
-                    final O nextOutput = automaton.getOutput(s, i);
+                for (final Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
+                    final S current = entry.getKey();
+                    final S nextState = automaton.getSuccessor(current, i);
+                    final O nextOutput = automaton.getOutput(current, i);
 
                     final Map<S, S> nextMapping;
                     if (!successors.containsKey(nextOutput)) {
@@ -203,7 +203,7 @@ public final class DefensiveADS<S, I, O> {
                     }
 
                     // invalid input
-                    if (nextMapping.put(nextState, currentToInitialMapping.get(s)) != null) {
+                    if (nextMapping.put(nextState, entry.getValue()) != null) {
                         continue oneSymbolFuture;
                     }
                 }

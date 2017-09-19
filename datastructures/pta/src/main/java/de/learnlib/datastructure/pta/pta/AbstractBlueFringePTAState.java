@@ -70,10 +70,10 @@ public abstract class AbstractBlueFringePTAState<SP, TP, S extends AbstractBlueF
         if (!isWhite()) {
             throw new IllegalStateException();
         }
+        assert parent != null;
         if (!parent.isRed()) {
             throw new IllegalStateException();
         }
-        assert parent != null && parent.isRed();
 
         this.color = Color.BLUE;
 

@@ -61,6 +61,9 @@ public class TTTHypothesisDFA<I> extends AbstractTTTHypothesis<I, Boolean, TTTSt
 
     @Override
     public boolean isAccepting(TTTState<I, Boolean> state) {
+        if (!(state instanceof TTTStateDFA)) {
+            throw new IllegalArgumentException("State is not an expected DFA state, but " + state);
+        }
         return ((TTTStateDFA<I>) state).accepting;
     }
 

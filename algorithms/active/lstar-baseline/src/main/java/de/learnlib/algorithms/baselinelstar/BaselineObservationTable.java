@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
+import de.learnlib.datastructure.observationtable.ObservationTable;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -34,8 +35,7 @@ import net.automatalib.words.Word;
  * @param <I>
  *         input symbol class.
  */
-public class ObservationTable<I>
-        implements de.learnlib.datastructure.observationtable.ObservationTable<I, Boolean>, Serializable {
+public class BaselineObservationTable<I> implements ObservationTable<I, Boolean>, Serializable {
 
     @Nonnull
     private final List<ObservationTableRow<I>> shortPrefixRows; // S
@@ -46,7 +46,7 @@ public class ObservationTable<I>
     @Nonnull
     private final List<Word<I>> suffixes; // E
 
-    public ObservationTable() {
+    public BaselineObservationTable() {
         Word<I> emptyWord = Word.epsilon();
 
         suffixes = new ArrayList<>();

@@ -47,17 +47,17 @@ import net.automatalib.words.impl.SimpleAlphabet;
  */
 public class Example {
 
-    private final String offer1 = "offer_1";
-    private final String offer2 = "offer_2";
-    private final String poll = "poll";
+    private static final String OFFER_1 = "offer_1";
+    private static final String OFFER_2 = "offer_2";
+    private static final String POLL = "poll";
     private final Alphabet<String> sigma;
     private final List<Word<String>> initialSuffixes;
 
     public Example() {
         sigma = new SimpleAlphabet<>();
-        sigma.add(offer1);
-        sigma.add(offer2);
-        sigma.add(poll);
+        sigma.add(OFFER_1);
+        sigma.add(OFFER_2);
+        sigma.add(POLL);
 
         initialSuffixes = new ArrayList<>();
         for (String symbol : sigma) {
@@ -163,11 +163,11 @@ public class Example {
 
     private String exec(BoundedStringQueue s, String input) {
         switch (input) {
-            case offer1:
-            case offer2:
+            case OFFER_1:
+            case OFFER_2:
                 s.offer(input);
                 return "void";
-            case poll:
+            case POLL:
                 return s.poll();
             default:
                 throw new RuntimeException("unknown input symbol");
@@ -177,7 +177,7 @@ public class Example {
     /**
      * For running the example this class could also be removed/ignored. It is only here for documentation purposes.
      */
-    class MySystemStateHandler implements SystemStateHandler<BoundedStringQueue> {
+    static class MySystemStateHandler implements SystemStateHandler<BoundedStringQueue> {
 
         private int disposed;
 

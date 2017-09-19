@@ -216,7 +216,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
 
             Entry entry = (Entry) o;
 
-            return getKey() == entry.getKey();
+            return getKey().equals(entry.getKey());
         }
     }
 

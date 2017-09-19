@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.adt.adt;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.oracle.SymbolQueryOracle;
@@ -37,7 +38,7 @@ import net.automatalib.words.Word;
 public class ADTSymbolNode<S, I, O> extends AbstractRecursiveADSSymbolNode<S, I, O, ADTNode<S, I, O>>
         implements ADTNode<S, I, O> {
 
-    public ADTSymbolNode(ADTNode<S, I, O> parent, I symbol) {
+    public ADTSymbolNode(@Nullable ADTNode<S, I, O> parent, I symbol) {
         super(parent, symbol);
     }
 

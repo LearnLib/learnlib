@@ -19,7 +19,6 @@ import java.awt.Desktop;
 import java.awt.HeadlessException;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.function.Function;
 
@@ -29,6 +28,7 @@ import com.google.common.base.Functions;
 import de.learnlib.datastructure.observationtable.reader.ObservationTableReader;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableHTMLWriter;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableWriter;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -73,7 +73,7 @@ public final class OTUtils {
                                               Function<? super Word<? extends I>, ? extends String> wordToString,
                                               Function<? super D, ? extends String> outputToString) throws IOException {
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter bw = new BufferedWriter(IOUtil.asUTF8Writer(file))) {
             bw.write(HTML_FILE_HEADER);
             ObservationTableHTMLWriter<I, D> otWriter = new ObservationTableHTMLWriter<>(wordToString, outputToString);
             otWriter.write(table, bw);

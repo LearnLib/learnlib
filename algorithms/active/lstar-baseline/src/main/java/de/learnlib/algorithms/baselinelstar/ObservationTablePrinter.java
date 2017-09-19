@@ -20,7 +20,7 @@ import java.util.Collection;
 import net.automatalib.words.Word;
 
 /**
- * With this class the contents of an {@link ObservationTable} can be printed in a human-readable format.
+ * With this class the contents of an {@link BaselineObservationTable} can be printed in a human-readable format.
  */
 public final class ObservationTablePrinter {
 
@@ -28,7 +28,7 @@ public final class ObservationTablePrinter {
         // prevent instantiation
     }
 
-    public static <I> String getPrintableStringRepresentation(ObservationTable<I> observationTable) {
+    public static <I> String getPrintableStringRepresentation(BaselineObservationTable<I> observationTable) {
         StringBuilder sb = new StringBuilder();
 
         int firstColumnWidth = getFirstColumnWidth(observationTable);
@@ -59,7 +59,7 @@ public final class ObservationTablePrinter {
         return sb.toString();
     }
 
-    private static <I> int getFirstColumnWidth(ObservationTable<I> observationTable) {
+    private static <I> int getFirstColumnWidth(BaselineObservationTable<I> observationTable) {
         int maxStateLength = getMaxWordLength(observationTable.getShortPrefixLabels());
         int maxCandidateLength = getMaxWordLength(observationTable.getLongPrefixLabels());
         return Math.max(maxStateLength, maxCandidateLength);

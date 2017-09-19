@@ -106,6 +106,9 @@ public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> 
 
             @Override
             public boolean getNodeProperties(TTTState<I, Boolean> node, Map<String, String> properties) {
+                if (!(node instanceof TTTStateDFA)) {
+                    throw new IllegalArgumentException("node is not an expected DFA node, but " + node);
+                }
                 TTTStateDFA<I> dfaState = (TTTStateDFA<I>) node;
                 if (dfaState.isAccepting()) {
                     properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);

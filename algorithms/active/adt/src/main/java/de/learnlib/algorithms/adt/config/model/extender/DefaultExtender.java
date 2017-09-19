@@ -85,7 +85,8 @@ public class DefaultExtender implements ADTExtender {
                     final I input = inputTrace.getSymbol(idx);
                     final O output = outputTrace.getSymbol(idx);
 
-                    for (final ADTState<I, O> s : currentToInitialMapping.keySet()) {
+                    for (final Map.Entry<ADTState<I, O>, ADTState<I, O>> entry : currentToInitialMapping.entrySet()) {
+                        final ADTState<I, O> s = entry.getKey();
                         if (!partialTransitionAnalyzer.isTransitionDefined(s, input)) {
                             partialTransitionAnalyzer.closeTransition(s, input);
                         }
@@ -93,7 +94,7 @@ public class DefaultExtender implements ADTExtender {
                         final ADTState<I, O> successor = hypothesis.getSuccessor(s, input);
 
                         if (!hypothesis.getOutput(s, input).equals(output)) {
-                            final ADTState<I, O> initial = currentToInitialMapping.get(s);
+                            final ADTState<I, O> initial = entry.getValue();
                             final Word<I> as = initial.getAccessSequence();
                             final Word<O> asOut = hypothesis.computeOutput(as);
                             final Word<I> traceIn = inputTrace.prefix(idx + 1);

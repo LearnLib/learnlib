@@ -25,10 +25,10 @@ import javax.annotation.Nonnull;
 import net.automatalib.words.Word;
 
 /**
- * A single row inside an {@link ObservationTable}, containing only the boolean values if a combination of
+ * A single row inside an {@link BaselineObservationTable}, containing only the boolean values if a combination of
  * state/candidate and suffix is accepted by the current hypothesis.
  */
-class ObservationTableRow<I> extends ObservationTable.AbstractRow<I, Boolean> implements Serializable {
+class ObservationTableRow<I> extends BaselineObservationTable.AbstractRow<I, Boolean> implements Serializable {
 
     @Nonnull
     private final Word<I> label;

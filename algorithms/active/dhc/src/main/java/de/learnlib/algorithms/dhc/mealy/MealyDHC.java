@@ -41,6 +41,7 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexamples.GlobalSuffixFinder;
 import de.learnlib.counterexamples.GlobalSuffixFinders;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.commons.util.mappings.MapMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
@@ -283,7 +284,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     @Override
     public void resume(final MealyDHCState<I, O> state) {
         this.splitters = state.getSplitters();
-        this.accessSequences = state.getAccessSequences();
+        this.accessSequences = new MapMapping<>(state.getAccessSequences());
         this.hypothesis = state.getHypothesis();
     }
 
@@ -307,7 +308,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
             return GlobalSuffixFinders.RIVEST_SCHAPIRE;
         }
 
-        public static <I, O> Collection<? extends Word<I>> initialSplitters() {
+        public static <I> Collection<? extends Word<I>> initialSplitters() {
             return null;
         }
     }
