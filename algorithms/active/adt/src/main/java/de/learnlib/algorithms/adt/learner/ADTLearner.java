@@ -54,12 +54,10 @@ import de.learnlib.algorithms.adt.util.SQOOTBridge;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.SymbolQueryOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexamples.LocalSuffixFinders;
 import de.learnlib.util.MQUtil;
-import de.learnlib.util.mealy.SQOToMQOWrapper;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.Triple;
@@ -87,7 +85,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
     private final GrowingAlphabet<I> alphabet;
     private final SQOOTBridge<I, O> oracle;
-    private final MembershipOracle<I, Word<O>> membershipOracle;
     private final LeafSplitter leafSplitter;
     private final ADTExtender adtExtender;
     private final SubtreeReplacer subtreeReplacer;
@@ -108,7 +105,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         this.alphabet = new SimpleAlphabet<>(alphabet);
         this.observationTree = new ObservationTree<>(this.alphabet);
         this.oracle = new SQOOTBridge<>(this.observationTree, oracle, true);
-        this.membershipOracle = new SQOToMQOWrapper<>(this.oracle);
 
         this.leafSplitter = leafSplitter;
         this.adtExtender = adtExtender;
@@ -185,7 +181,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         final int suffixIdx = LocalSuffixFinders.RIVEST_SCHAPIRE.findSuffixIndex(ceQuery,
                                                                                  this.hypothesis,
                                                                                  this.hypothesis,
-                                                                                 this.membershipOracle);
+                                                                                 this.oracle);
 
         if (suffixIdx == -1) {
             throw new IllegalStateException();
@@ -229,8 +225,8 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
             newNode = this.adt.extendLeaf(nodeToSplit, completeSplitter, oldOutput, newOutput);
         } else {
-            this.observationTree.addTrace(uaState, v, this.membershipOracle.answerQuery(uaAccessSequence, v));
-            this.observationTree.addTrace(newState, v, this.membershipOracle.answerQuery(uAccessSequenceWithA, v));
+            this.observationTree.addTrace(uaState, v, this.oracle.answerQuery(uaAccessSequence, v));
+            this.observationTree.addTrace(newState, v, this.oracle.answerQuery(uAccessSequenceWithA, v));
 
             // in doubt, we will always find v
             final Word<I> otSepWord = this.observationTree.findSeparatingWord(uaState, newState);

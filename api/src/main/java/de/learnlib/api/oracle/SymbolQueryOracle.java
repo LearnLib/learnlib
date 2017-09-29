@@ -15,7 +15,13 @@
  */
 package de.learnlib.api.oracle;
 
+import java.util.Collection;
+
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import de.learnlib.api.query.Query;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 
 /**
  * Symbol query interface. Semantically similar to {@link MembershipOracle.MealyMembershipOracle}, but allows to pose
@@ -29,7 +35,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author frohme
  */
 @ParametersAreNonnullByDefault
-public interface SymbolQueryOracle<I, O> {
+public interface SymbolQueryOracle<I, O> extends MembershipOracle<I, Word<O>> {
 
     /**
      * Query the system under learning for a new symbol. <b>This is a stateful operation.</b>
@@ -45,4 +51,24 @@ public interface SymbolQueryOracle<I, O> {
      * Reset the system under learning.
      */
     void reset();
+
+    @Override
+    default void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
+
+        for (final Query<I, Word<O>> q : queries) {
+            reset();
+
+            final WordBuilder<O> wb = new WordBuilder<>(q.getSuffix().size());
+
+            for (final I i : q.getPrefix()) {
+                query(i);
+            }
+
+            for (final I i : q.getSuffix()) {
+                wb.append(query(i));
+            }
+
+            q.answer(wb.toWord());
+        }
+    }
 }
