@@ -506,6 +506,19 @@ limitations under the License.
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>code-analysis</id>
+            <activation>
+                <property>
+                    <name>learnlib.release</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>findbugs-maven-plugin</artifactId>
