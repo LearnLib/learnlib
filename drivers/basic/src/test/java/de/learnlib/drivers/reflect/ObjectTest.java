@@ -24,6 +24,8 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.Query;
 import de.learnlib.oracle.membership.SULOracle;
 import net.automatalib.words.Word;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 /**
@@ -31,6 +33,8 @@ import org.testng.annotations.Test;
  */
 @Test
 public class ObjectTest {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ObjectTest.class);
 
     @Test
     public void testDriver() throws Exception {
@@ -57,8 +61,8 @@ public class ObjectTest {
 
         oracle.processQueries(queries);
 
-        System.out.println(query1.getInput() + "  :  " + query1.getOutput());
-        System.out.println(query2.getInput() + "  :  " + query2.getOutput());
+        LOGGER.debug("{}  :  {}", query1.getInput(), query1.getOutput());
+        LOGGER.debug("{}  :  {}", query2.getInput(), query2.getOutput());
     }
 
 }

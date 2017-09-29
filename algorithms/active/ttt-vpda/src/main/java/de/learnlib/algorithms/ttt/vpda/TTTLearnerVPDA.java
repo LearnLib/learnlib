@@ -43,6 +43,8 @@ import net.automatalib.automata.vpda.StackContents;
 import net.automatalib.automata.vpda.State;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @param <I>
@@ -51,6 +53,8 @@ import net.automatalib.words.Word;
  * @author Malte Isberner
  */
 public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TTTLearnerVPDA.class);
 
     private final BlockList<I> blockList = new BlockList<>();
 
@@ -106,7 +110,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
         }
 
         if (lastDet < suffix.length()) {
-            System.err.println("last det: " + lastDet);
+            LOGGER.debug("last det: {}", lastDet);
             determinize(lastDetState.determinize(), suffix.subWord(lastDet));
         }
         return hypothesis.getSuccessor(baseState, suffix);
@@ -307,7 +311,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 
             blockRoot.setDiscriminator(finalDiscriminator);
         } else {
-            System.err.println("Weird..");
+            LOGGER.debug("Weird..");
         }
 
         declareFinal(blockRoot);
@@ -605,7 +609,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
      *         the extracted node
      */
     private void createNewState(DTNode<I> newNode) {
-        System.err.println("Create new state");
+        LOGGER.debug("Create new state");
         AbstractHypTrans<I> newTreeTrans = newNode.getIncoming().chooseMinimal();
         assert newTreeTrans != null;
 
