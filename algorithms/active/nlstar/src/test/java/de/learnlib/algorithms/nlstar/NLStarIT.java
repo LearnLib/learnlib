@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.lstar;
+package de.learnlib.algorithms.nlstar;
 
-import de.learnlib.algorithms.nlstar.NLStarLearner;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
