@@ -19,24 +19,21 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
+import de.learnlib.api.Mapper;
 import de.learnlib.api.SUL;
 import de.learnlib.api.exception.SULException;
-import de.learnlib.mapper.Mappers;
+import de.learnlib.mapper.SULMappers;
 
 /**
- * A mapper that lifts a {@link SUL} from an "abstract" to a "concrete" level.
+ * An extension of the {@link Mapper} interface specifically for {@link SUL}s.
  * <p>
- * The notion of "abstract" and "concrete" is not universally defined, and mostly depends on the chosen perspective.
- * Generally speaking, the point of a {@code Mapper<AI,AO,CI,CO>} is to translate a {@code SUL<CI,CO>} into a {@code
- * SUL<AI,AO>}, and additionally provide facilities to map exceptions occurring at the concrete level to symbols at the
- * abstract level.
+ * The class {@link SULMappers} provides static utility functions for manipulating mappers.
  * <p>
- * The class {@link Mappers} provides static utility functions for manipulating mappers.
- * <p>
- * Mappers, like {@link SUL}s, may be {@link SUL#fork() forkable}. The requirements and semantics of {@link #fork()} are
- * basically the same as set forth for {@link SUL#fork()}. Stateless mappers (e.g., with empty {@link #pre()} and {@link
- * #post()} implementations), should always be forkable, and {@link #fork()} may just return {@code this}. Stateful
- * mappers may require more sophisticated fork logic, but in general it should be possible to fork them as well.
+ * SULMappers, like {@link SUL}s, may be {@link SUL#fork() forkable}. The requirements and semantics of {@link #fork()}
+ * are basically the same as set forth for {@link SUL#fork()}. Stateless mappers (e.g., with empty {@link #pre()} and
+ * {@link #post()} implementations), should always be forkable, and {@link #fork()} may just return {@code this}.
+ * Stateful mappers may require more sophisticated fork logic, but in general it should be possible to fork them as
+ * well.
  * <p>
  * Note: despite the above recommendation that mappers should almost always be forkable, the default implementations of
  * {@link #canFork()} and {@link #fork()} indicate non-forkability for backwards compatibility reasons.
@@ -52,7 +49,7 @@ import de.learnlib.mapper.Mappers;
  *
  * @author Malte Isberner
  */
-public interface Mapper<AI, AO, CI, CO> {
+public interface SULMapper<AI, AO, CI, CO> extends Mapper<AI, AO, CI, CO> {
 
     /**
      * Method that is invoked before any translation steps on a word are performed.
@@ -63,55 +60,6 @@ public interface Mapper<AI, AO, CI, CO> {
      * Method that is invoked after all translation steps on a word are performed.
      */
     void post();
-
-    /**
-     * Method that maps an abstract input to a corresponding concrete input.
-     *
-     * @param abstractInput
-     *         the abstract input
-     *
-     * @return the concrete input
-     */
-    CI mapInput(AI abstractInput);
-
-    /**
-     * Method that maps a concrete output to a corresponding abstract output.
-     *
-     * @param concreteOutput
-     *         the concrete output
-     *
-     * @return the abstract output
-     */
-    AO mapOutput(CO concreteOutput);
-
-    /**
-     * Maps a wrapped {@link SULException} to an abstract output symbol, or rethrows it if it is unmappable.
-     *
-     * @param exception
-     *         the wrapped exception that was thrown
-     *
-     * @return the concrete output symbol the exception was mapped to, if applicable
-     *
-     * @throws SULException
-     *         if the exception cannot be mapped, or if a new exception occurs while trying to map the given exception
-     */
-    MappedException<? extends AO> mapWrappedException(SULException exception) throws SULException;
-
-    /**
-     * Maps an unwrapped {@link RuntimeException} to an abstract output symbol, or rethrows it if it is unmappable.
-     *
-     * @param exception
-     *         the runtime exception that was thrown
-     *
-     * @return the concrete output symbol the exception was mapped to, if applicable
-     *
-     * @throws SULException
-     *         if a new exception occurs while trying to map the given exception
-     * @throws RuntimeException
-     *         if the given exception cannot be mapped, or if a new exception occurs while trying to map the given
-     *         exception
-     */
-    MappedException<? extends AO> mapUnwrappedException(RuntimeException exception);
 
     /**
      * Checks whether it is possible to {@link #fork() fork} this mapper.
@@ -135,8 +83,41 @@ public interface Mapper<AI, AO, CI, CO> {
      *         if this mapper is not forkable
      */
     @Nonnull
-    default Mapper<AI, AO, CI, CO> fork() throws UnsupportedOperationException {
+    default SULMapper<AI, AO, CI, CO> fork() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Maps a wrapped {@link SULException} to an abstract output symbol, or rethrows it if it is unmappable.
+     *
+     * @param exception
+     *         the wrapped exception that was thrown
+     *
+     * @return the concrete output symbol the exception was mapped to, if applicable
+     *
+     * @throws SULException
+     *         if the exception cannot be mapped, or if a new exception occurs while trying to map the given exception
+     */
+    default MappedException<? extends AO> mapWrappedException(SULException exception) throws SULException {
+        return mapUnwrappedException(exception);
+    }
+
+    /**
+     * Maps an unwrapped {@link RuntimeException} to an abstract output symbol, or rethrows it if it is unmappable.
+     *
+     * @param exception
+     *         the runtime exception that was thrown
+     *
+     * @return the concrete output symbol the exception was mapped to, if applicable
+     *
+     * @throws SULException
+     *         if a new exception occurs while trying to map the given exception
+     * @throws RuntimeException
+     *         if the given exception cannot be mapped, or if a new exception occurs while trying to map the given
+     *         exception
+     */
+    default MappedException<? extends AO> mapUnwrappedException(RuntimeException exception) {
+        throw exception;
     }
 
     final class MappedException<AO> {

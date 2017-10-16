@@ -19,18 +19,18 @@ import java.util.Optional;
 
 import de.learnlib.api.SUL;
 import de.learnlib.api.exception.SULException;
-import de.learnlib.mapper.api.Mapper;
-import de.learnlib.mapper.api.Mapper.MappedException;
+import de.learnlib.mapper.api.SULMapper;
+import de.learnlib.mapper.api.SULMapper.MappedException;
 
 public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
 
-    private final Mapper<? super AI, ? extends AO, ? extends CI, ? super CO> mapper;
+    private final SULMapper<? super AI, ? extends AO, ? extends CI, ? super CO> mapper;
     private final SUL<? super CI, ? extends CO> sul;
 
     private boolean inError;
     private AO repeatedErrorOutput;
 
-    public MappedSUL(Mapper<? super AI, ? extends AO, ? extends CI, ? super CO> mapper,
+    public MappedSUL(SULMapper<? super AI, ? extends AO, ? extends CI, ? super CO> mapper,
                      SUL<? super CI, ? extends CO> sul) {
         this.mapper = mapper;
         this.sul = sul;

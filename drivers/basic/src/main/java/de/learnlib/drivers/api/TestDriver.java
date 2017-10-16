@@ -17,9 +17,9 @@ package de.learnlib.drivers.api;
 
 import de.learnlib.api.SUL;
 import de.learnlib.mapper.ExecutableInputSUL;
-import de.learnlib.mapper.Mappers;
+import de.learnlib.mapper.SULMappers;
 import de.learnlib.mapper.api.ExecutableInput;
-import de.learnlib.mapper.api.Mapper;
+import de.learnlib.mapper.api.SULMapper;
 
 /**
  * A test driver executes.
@@ -39,8 +39,8 @@ public class TestDriver<AI, AO, CI extends ExecutableInput<CO>, CO> implements S
 
     private final SUL<AI, AO> sul;
 
-    public TestDriver(Mapper<AI, AO, CI, CO> mapper) {
-        this(Mappers.apply(mapper, new ExecutableInputSUL<>()));
+    public TestDriver(SULMapper<AI, AO, CI, CO> mapper) {
+        this(SULMappers.apply(mapper, new ExecutableInputSUL<>()));
     }
 
     private TestDriver(SUL<AI, AO> sul) {

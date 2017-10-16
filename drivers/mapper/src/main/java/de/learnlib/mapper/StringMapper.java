@@ -21,7 +21,7 @@ import java.util.Map;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.SimpleAlphabet;
 
-public class StringMapper<CI> extends AbstractMapper<String, String, CI, Object> {
+public class StringMapper<CI> extends AbstractSULMapper<String, String, CI, Object> {
 
     private final Map<String, CI> inputs = new HashMap<>();
     private final Alphabet<String> mappedInputs = new SimpleAlphabet<>();

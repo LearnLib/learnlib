@@ -16,10 +16,10 @@
 package de.learnlib.mapper;
 
 import de.learnlib.api.exception.SULException;
-import de.learnlib.mapper.api.Mapper;
+import de.learnlib.mapper.api.SULMapper;
 
 /**
- * Abstract base for a {@link Mapper}.
+ * Abstract base for a {@link SULMapper}.
  * <p>
  * This class comes with the following default behavior: <ul> <li>both {@link #pre()} and {@link #post()} do
  * nothing.</li> <li>if a {@link SULException} occurs, it is treated like an ordinary {@link RuntimeException} and hence
@@ -37,7 +37,7 @@ import de.learnlib.mapper.api.Mapper;
  *
  * @author Malte Isberner
  */
-public abstract class AbstractMapper<AI, AO, CI, CO> implements Mapper<AI, AO, CI, CO> {
+public abstract class AbstractSULMapper<AI, AO, CI, CO> implements SULMapper<AI, AO, CI, CO> {
 
     @Override
     public void pre() {
@@ -45,16 +45,6 @@ public abstract class AbstractMapper<AI, AO, CI, CO> implements Mapper<AI, AO, C
 
     @Override
     public void post() {
-    }
-
-    @Override
-    public MappedException<? extends AO> mapWrappedException(SULException exception) throws SULException {
-        return mapUnwrappedException(exception);
-    }
-
-    @Override
-    public MappedException<? extends AO> mapUnwrappedException(RuntimeException exception) throws RuntimeException {
-        throw exception;
     }
 
 }

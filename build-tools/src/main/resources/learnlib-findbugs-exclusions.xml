@@ -9,7 +9,7 @@
     <Match>
         <!-- Could be refactored ... -->
         <Bug pattern="NM_CLASS_NOT_EXCEPTION"/>
-        <Class name="de.learnlib.mapper.api.Mapper$MappedException"/>
+        <Class name="de.learnlib.mapper.api.SULMapper$MappedException"/>
     </Match>
     <Match>
         <!-- TODO: mostly due to performance. However, usage should be checked again -->

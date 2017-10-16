@@ -18,15 +18,15 @@ package de.learnlib.mapper;
 import java.util.Optional;
 
 import de.learnlib.api.exception.SULException;
-import de.learnlib.mapper.api.Mapper;
+import de.learnlib.mapper.api.SULMapper;
 
-final class MapperComposition<AI, AO, ACI, CAO, CI, CO> implements Mapper<AI, AO, CI, CO> {
+final class SULMapperComposition<AI, AO, ACI, CAO, CI, CO> implements SULMapper<AI, AO, CI, CO> {
 
-    private final Mapper<? super AI, ? extends AO, ACI, CAO> mapper1;
-    private final Mapper<? super ACI, ? extends CAO, ? extends CI, ? super CO> mapper2;
+    private final SULMapper<? super AI, ? extends AO, ACI, CAO> mapper1;
+    private final SULMapper<? super ACI, ? extends CAO, ? extends CI, ? super CO> mapper2;
 
-    MapperComposition(Mapper<? super AI, ? extends AO, ACI, CAO> outerMapper,
-                      Mapper<? super ACI, ? extends CAO, ? extends CI, ? super CO> innerMapper) {
+    SULMapperComposition(SULMapper<? super AI, ? extends AO, ACI, CAO> outerMapper,
+                         SULMapper<? super ACI, ? extends CAO, ? extends CI, ? super CO> innerMapper) {
         this.mapper1 = outerMapper;
         this.mapper2 = innerMapper;
     }
@@ -89,8 +89,8 @@ final class MapperComposition<AI, AO, ACI, CAO, CI, CO> implements Mapper<AI, AO
     }
 
     @Override
-    public Mapper<AI, AO, CI, CO> fork() {
-        return new MapperComposition<>(mapper1.fork(), mapper2.fork());
+    public SULMapper<AI, AO, CI, CO> fork() {
+        return new SULMapperComposition<>(mapper1.fork(), mapper2.fork());
     }
 
     private MappedException<? extends AO> mapMappedException(MappedException<? extends CAO> mappedEx) {

@@ -20,8 +20,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.learnlib.mapper.AbstractMapper;
-import de.learnlib.mapper.api.Mapper;
+import de.learnlib.mapper.AbstractSULMapper;
+import de.learnlib.mapper.api.SULMapper;
 
 /**
  * Basic stateless data mapper for objects.
@@ -29,7 +29,7 @@ import de.learnlib.mapper.api.Mapper;
  * @author falkhowar
  */
 public class SimplePOJODataMapper
-        extends AbstractMapper<MethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
+        extends AbstractSULMapper<MethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
 
     private final Constructor<?> initMethod;
     private final Object[] initParams;
@@ -56,7 +56,7 @@ public class SimplePOJODataMapper
     }
 
     @Override
-    public de.learnlib.mapper.api.Mapper.MappedException<? extends AbstractMethodOutput> mapUnwrappedException(
+    public SULMapper.MappedException<? extends AbstractMethodOutput> mapUnwrappedException(
             RuntimeException exception) throws RuntimeException {
         return MappedException.repeatOutput(new Error(exception.getCause()), Unobserved.INSTANCE);
     }
@@ -79,7 +79,7 @@ public class SimplePOJODataMapper
     }
 
     @Override
-    public Mapper<MethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> fork() {
+    public SULMapper<MethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> fork() {
         return new SimplePOJODataMapper(initMethod, initParams);
     }
 
