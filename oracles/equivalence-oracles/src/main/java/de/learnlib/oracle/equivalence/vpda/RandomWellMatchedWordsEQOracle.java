@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 import com.google.common.base.Preconditions;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
-import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -35,7 +35,8 @@ import net.automatalib.words.WordBuilder;
  *
  * @author Malte Isberner
  */
-public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<OneSEVPA<?, I>, I, Boolean> {
+public class RandomWellMatchedWordsEQOracle<I>
+        extends AbstractTestWordEQOracle<DeterministicAcceptorTS<?, I>, I, Boolean> {
 
     private final Random random;
 
@@ -76,7 +77,8 @@ public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<
     }
 
     @Override
-    protected Stream<Word<I>> generateTestWords(OneSEVPA<?, I> hypothesis, Collection<? extends I> inputs) {
+    protected Stream<Word<I>> generateTestWords(DeterministicAcceptorTS<?, I> hypothesis,
+                                                Collection<? extends I> inputs) {
         final int lengthRange = (maxLength - minLength) + 1;
         return Stream.generate(() -> generateWellMatched(minLength + random.nextInt(lengthRange))).limit(maxTests);
     }
