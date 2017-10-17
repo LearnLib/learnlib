@@ -38,9 +38,9 @@ public class BlockList<I, D> extends IntrusiveList<AbstractBaseDTNode<I, D>> {
     public void insertBlock(AbstractBaseDTNode<I, D> blockRoot) {
         blockRoot.removeFromBlockList();
 
-        blockRoot.setNextElement(getNextElement());
+        blockRoot.setNextElement(next);
         if (getNextElement() != null) {
-            next.setNextElement(blockRoot);
+            next.setPrevElement(blockRoot);
         }
         blockRoot.setPrevElement(this);
         next = blockRoot;
