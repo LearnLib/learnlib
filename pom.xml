@@ -131,6 +131,7 @@ limitations under the License.
         <automatalib.version>0.6.1-SNAPSHOT</automatalib.version>
         <testng.version>6.11</testng.version>
         <javadoc-plugin.version>2.10.4</javadoc-plugin.version>
+        <info-reports-plugin.version>2.9</info-reports-plugin.version>
         <compiler-plugin.version>3.6.1</compiler-plugin.version>
         <dependency-plugin.version>3.0.1</dependency-plugin.version>
         <maven-archetype.version>3.0.1</maven-archetype.version>
@@ -356,6 +357,11 @@ limitations under the License.
                             <link>${automatalib.apidocs}</link>
                         </links>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>${info-reports-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.eluder.coveralls</groupId>
