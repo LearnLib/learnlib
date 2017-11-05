@@ -25,6 +25,7 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
@@ -122,7 +123,7 @@ public class RandomWpMethodEQOracle<A extends UniversalDeterministicAutomaton<?,
         // Note that we want to use ArrayLists because we want constant time random access
         // We will sample from this for a prefix
         ArrayList<Word<I>> stateCover = new ArrayList<>(hypothesis.size());
-        Automata.cover(hypothesis, inputs, stateCover, null);
+        Covers.stateCover(hypothesis, inputs, stateCover);
 
         // Then repeatedly from this for a random word
         ArrayList<I> arrayAlphabet = new ArrayList<>(inputs);

@@ -16,19 +16,15 @@
 package de.learnlib.oracle.equivalence;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Stream;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.conformance.WMethodTestsIterator;
 import net.automatalib.words.Word;
 
 /**
@@ -82,22 +78,7 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
 
     @Override
     protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
-
-        final List<Word<I>> transCover = Automata.transitionCover(hypothesis, inputs);
-        final Iterable<Word<I>> middleTuples =
-                Iterables.transform(CollectionsUtil.allTuples(inputs, 0, maxDepth), Word::fromList);
-        List<Word<I>> characterizingSet = Automata.characterizingSet(hypothesis, inputs);
-
-        // Special case: List of characterizing suffixes may be empty,
-        // but in this case we still need to test!
-        if (characterizingSet.isEmpty()) {
-            characterizingSet = Collections.singletonList(Word.epsilon());
-        }
-
-        final Iterable<List<Word<I>>> wMethodIter =
-                CollectionsUtil.allCombinations(transCover, middleTuples, characterizingSet);
-
-        return Streams.stream(wMethodIter).map(Word::fromWords);
+        return Streams.stream(new WMethodTestsIterator<>(hypothesis, inputs, maxDepth));
     }
 
     public static class DFAWMethodEQOracle<I> extends WMethodEQOracle<DFA<?, I>, I, Boolean>

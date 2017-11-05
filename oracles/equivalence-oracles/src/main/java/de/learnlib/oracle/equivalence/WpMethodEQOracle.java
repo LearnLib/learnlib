@@ -15,22 +15,16 @@
  */
 package de.learnlib.oracle.equivalence;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Stream;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.conformance.WpMethodTestsIterator;
 import net.automatalib.words.Word;
 
 /**
@@ -80,68 +74,7 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 
     @Override
     protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
-        UniversalDeterministicAutomaton<?, I, ?, ?, ?> aut = hypothesis;
-        return doGenerateTestWords(aut, inputs);
-    }
-
-    /*
-     * Delegate target, used to bind the state-parameter of the automaton
-     */
-    private <S> Stream<Word<I>> doGenerateTestWords(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
-                                                    Collection<? extends I> inputs) {
-
-        final List<Word<I>> stateCover = new ArrayList<>(hypothesis.size());
-        final List<Word<I>> transitionCover = new ArrayList<>(hypothesis.size() * (inputs.size() - 1));
-
-        Automata.cover(hypothesis, inputs, stateCover, transitionCover);
-
-        List<Word<I>> characterizingSet = Automata.characterizingSet(hypothesis, inputs);
-        if (characterizingSet.isEmpty()) {
-            characterizingSet = Collections.singletonList(Word.<I>epsilon());
-        }
-
-        // TODO maybe we can skip this wasted word allocation?
-        final Iterable<Word<I>> middleTuples =
-                Iterables.transform(CollectionsUtil.allTuples(inputs, 0, maxDepth), Word::fromList);
-
-        // Phase 1: state cover * middle part * global suffixes
-        final Stream<Word<I>> firstPhaseStream =
-                Streams.stream(CollectionsUtil.allCombinations(stateCover, middleTuples, characterizingSet))
-                       .map(Word::fromWords);
-
-        // Phase 2: transitions (not in state cover) * middle part * local suffixes
-        final MutableMapping<S, List<Word<I>>> localSuffixSets = hypothesis.createStaticStateMapping();
-        final Iterable<List<Word<I>>> accessSequenceIter =
-                CollectionsUtil.allCombinations(transitionCover, middleTuples);
-
-        final Stream<Word<I>> secondPhaseStream = Streams.stream(accessSequenceIter)
-                                                         .flatMap(as -> appendLocalSuffixes(hypothesis,
-                                                                                            inputs,
-                                                                                            as,
-                                                                                            localSuffixSets));
-
-        return Stream.concat(firstPhaseStream, secondPhaseStream);
-    }
-
-    private <S> Stream<Word<I>> appendLocalSuffixes(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
-                                                    Collection<? extends I> inputs,
-                                                    List<Word<I>> accessSequence,
-                                                    MutableMapping<S, List<Word<I>>> cache) {
-
-        final Word<I> as = Word.fromWords(accessSequence);
-
-        final S state = hypothesis.getState(as);
-        List<Word<I>> localSuffixes = cache.get(state);
-
-        if (localSuffixes == null) {
-            localSuffixes = Automata.stateCharacterizingSet(hypothesis, inputs, state);
-            if (localSuffixes.isEmpty()) {
-                localSuffixes = Collections.singletonList(Word.epsilon());
-            }
-            cache.put(state, localSuffixes);
-        }
-
-        return localSuffixes.stream().map(as::concat);
+        return Streams.stream(new WpMethodTestsIterator<>(hypothesis, inputs, maxDepth));
     }
 
     public static class DFAWpMethodEQOracle<I> extends WpMethodEQOracle<DFA<?, I>, I, Boolean>
