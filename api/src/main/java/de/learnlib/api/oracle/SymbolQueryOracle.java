@@ -55,10 +55,10 @@ public interface SymbolQueryOracle<I, O> extends MembershipOracle<I, Word<O>> {
     @Override
     default void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
 
+        final WordBuilder<O> wb = new WordBuilder<>();
+
         for (final Query<I, Word<O>> q : queries) {
             reset();
-
-            final WordBuilder<O> wb = new WordBuilder<>(q.getSuffix().size());
 
             for (final I i : q.getPrefix()) {
                 query(i);
@@ -69,6 +69,7 @@ public interface SymbolQueryOracle<I, O> extends MembershipOracle<I, Word<O>> {
             }
 
             q.answer(wb.toWord());
+            wb.clear();
         }
     }
 }
