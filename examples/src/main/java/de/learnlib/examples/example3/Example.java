@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.google.common.base.Supplier;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
@@ -129,9 +128,8 @@ public class Example {
 
         // This time we use the reuse filter to avoid some resets and
         // save execution of symbols
-        ReuseCapableImplFactory factory = new ReuseCapableImplFactory();
-        ReuseOracle<BoundedStringQueue, String, String> reuseOracle;
-        reuseOracle = new ReuseOracleBuilder<>(sigma, factory).withSystemStateHandler(ssh).build();
+        ReuseOracle<BoundedStringQueue, String, String> reuseOracle =
+                new ReuseOracleBuilder<>(sigma, ReuseCapableImpl::new).withSystemStateHandler(ssh).build();
 
         // construct L* instance (almost classic Mealy version)
         // almost: we use words (Word<String>) in cells of the table
@@ -216,14 +214,6 @@ public class Example {
 
                 query.answer(output.toWord().suffix(query.getSuffix().size()));
             }
-        }
-    }
-
-    class ReuseCapableImplFactory implements Supplier<ReuseCapableOracle<BoundedStringQueue, String, String>> {
-
-        @Override
-        public ReuseCapableOracle<BoundedStringQueue, String, String> get() {
-            return new ReuseCapableImpl();
         }
     }
 
