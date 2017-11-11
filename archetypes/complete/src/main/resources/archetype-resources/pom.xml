@@ -70,11 +70,7 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-lstar-generic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-lstar-baseline</artifactId>
+            <artifactId>learnlib-lstar</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>

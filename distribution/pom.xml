@@ -128,24 +128,12 @@ limitations under the License.
 
                 <dependency>
                     <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-lstar-baseline</artifactId>
+                    <artifactId>learnlib-lstar</artifactId>
                     <version>${project.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-lstar-baseline</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-lstar-generic</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-lstar-generic</artifactId>
+                    <artifactId>learnlib-lstar</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

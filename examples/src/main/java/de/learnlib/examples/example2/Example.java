@@ -24,7 +24,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
+import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.SUL;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;

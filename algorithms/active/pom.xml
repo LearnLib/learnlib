@@ -40,8 +40,7 @@ limitations under the License.
         <module>discrimination-tree</module>
         <module>discrimination-tree-vpda</module>
         <module>kearns-vazirani</module>
-        <module>lstar-baseline</module>
-        <module>lstar-generic</module>
+        <module>lstar</module>
         <module>nlstar</module>
         <module>ttt</module>
         <module>ttt-vpda</module>

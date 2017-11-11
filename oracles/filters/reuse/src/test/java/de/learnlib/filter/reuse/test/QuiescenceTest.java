@@ -16,7 +16,7 @@
 package de.learnlib.filter.reuse.test;
 
 import com.google.common.base.Supplier;
-import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
+import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseOracle;

@@ -17,8 +17,8 @@ package de.learnlib.examples.example1;
 
 import java.io.IOException;
 
-import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFA;
-import de.learnlib.algorithms.lstargeneric.dfa.ExtensibleLStarDFABuilder;
+import de.learnlib.algorithms.lstar.dfa.ClassicLStarDFA;
+import de.learnlib.algorithms.lstar.dfa.ClassicLStarDFABuilder;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
@@ -63,10 +63,10 @@ public final class Example {
         DFACounterOracle<Character> mqOracle = new DFACounterOracle<>(sul, "membership queries");
 
         // construct L* instance
-        ExtensibleLStarDFA<Character> lstar =
-                new ExtensibleLStarDFABuilder<Character>().withAlphabet(inputs) // input alphabet
-                                                          .withOracle(mqOracle) // membership oracle
-                                                          .create();
+        ClassicLStarDFA<Character> lstar =
+                new ClassicLStarDFABuilder<Character>().withAlphabet(inputs) // input alphabet
+                                                       .withOracle(mqOracle) // membership oracle
+                                                       .create();
 
         // construct a W-method conformance test
         // exploring the system up to depth 4 from

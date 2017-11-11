@@ -62,7 +62,7 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-lstar-generic</artifactId>
+            <artifactId>learnlib-lstar</artifactId>
             <scope>test</scope>
         </dependency>
 
