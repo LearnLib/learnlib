@@ -9,13 +9,14 @@ LearnLib is a free, open source ([Apache License, v2.0][1]) Java library for aut
 
 ## About
 
-LearnLib is mainly developed at the [Dortmund University of Technology, Germany][2]. Its original purpose is to
-provide a framework for research on automata learning algorithms as well as for their application in practice.
+LearnLib is mainly developed at the [Dortmund University of Technology, Germany][2].
+Its original purpose is to provide a framework for research on automata learning algorithms as well as for their application in practice.
 
-Please note that the development of LearnLib is still in a very early stage. The public version is a re-implemented
-version of the former closed-source version of LearnLib. It does not yet have the complete functionality of the
-original version. Features will be added and made available as time permits. On the other hand, everyone is
-invited to contribute.
+Please note that the development of LearnLib is still in a very early stage.
+The public version is a re-implemented version of the former closed-source version of LearnLib.
+It does not yet have the complete functionality of the original version.
+Features will be added and made available as time permits.
+On the other hand, everyone is invited to contribute.
 
 Also please note that many parts of the library have not yet been thoroughly tested.
 
@@ -23,7 +24,8 @@ Also please note that many parts of the library have not yet been thoroughly tes
 ## Build Instructions
 
 For simply using LearnLib, you may use the Maven artifacts which are available in the [Maven Central repository][maven-central].
-It is also possible to download a bundled [distribution artifact][maven-central-distr], if you want to use LearnLib without Maven support. Note that LearnLib requires Java 8.
+It is also possible to download a bundled [distribution artifact][maven-central-distr], if you want to use LearnLib without Maven support.
+Note, that LearnLib requires Java 8.
 
 #### Building development versions
 
@@ -36,8 +38,8 @@ git clone -b develop --single-branch https://github.com/LearnLib/learnlib.git
 and run a single `mvn clean install`.
 This will build all the required maven artifacts and will install them in your local Maven repository, so that you can reference them in other projects.
 
-**Note: Development versions of LearnLib usually depend on development version of [AutomataLib][7].**
-For building development version of AutomataLib, see the corresponding documentation on the project's README.
+**Note: Development versions of LearnLib usually depend on development versions of [AutomataLib][7].**
+For building development versions of AutomataLib, see the corresponding documentation on the project's README.
 
 #### Developing LearnLib
 
@@ -51,7 +53,7 @@ For developing the code base of LearnLib, it is suggested to use one of the majo
   1. In order to have both development versions of AutomataLib and LearnLib available at once, continue to import AutomataLib as documented in the project's README, but choose `File` -> `New` -> `Module from existing sources` as the first step.
 
 * For [Eclipse][eclipse]:
-  1. **Note**: AutomataLib uses annotation processing on several occasions throughout the build process.
+  1. **Note**: LearnLib uses annotation processing on several occasions throughout the build process.
   This is usually handled correctly by Maven, however, for Eclipse you need to install the [m2e-apt-plugin](https://marketplace.eclipse.org/content/m2e-apt) and activate annotation processing afterwards (see the [issue #32](https://github.com/LearnLib/learnlib/issues/32)).
   1. Select `File` -> `Import...` and select "Existing Maven Projects".
   1. Select the folder containing the development checkout as the root directory and click `Finish`.
