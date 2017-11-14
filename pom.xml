@@ -132,6 +132,7 @@ limitations under the License.
         <automatalib.version>0.6.1-SNAPSHOT</automatalib.version>
         <testng.version>6.11</testng.version>
         <javadoc-plugin.version>2.10.4</javadoc-plugin.version>
+        <source-plugin.version>3.0.1</source-plugin.version>
         <info-reports-plugin.version>2.9</info-reports-plugin.version>
         <compiler-plugin.version>3.6.1</compiler-plugin.version>
         <dependency-plugin.version>3.0.1</dependency-plugin.version>
@@ -318,6 +319,11 @@ limitations under the License.
                         <serverId>learnlib-de</serverId>
                         <url>sftp://www155.your-server.de/</url>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${source-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -639,7 +645,7 @@ limitations under the License.
             </build>
         </profile>
         <profile>
-            <id>binary-release</id>
+            <id>bundles</id>
             <activation>
                 <property>
                     <name>learnlib.release</name>
@@ -648,49 +654,30 @@ limitations under the License.
             </activation>
             <build>
                 <plugins>
-                    <!-- aggregate javadoc of modules in one jar -->
-                    <!--
-                        Note: we don't use the assembly plugin here, since then
-                        inter-module links wouldn't work correctly
-                    -->
-                    <!-- Moved to distribution -->
-                    <!--
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <inherited>false</inherited>
-                        <configuration>
-                            <finalName>learnlib-${project.version}</finalName>
-                        </configuration>
                         <executions>
                             <execution>
-                                <id>aggregate</id>
+                                <id>attach-javadocs</id>
                                 <goals>
-                                    <goal>aggregate-jar</goal>
+                                    <goal>jar</goal>
                                 </goals>
-                                <phase>package</phase>
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin>
-                        <groupId>com.atlassian.maven.plugins</groupId>
-                        <artifactId>maven-upload-plugin</artifactId>
-                        <inherited>false</inherited>
-                        <executions>
-                            <execution>
-                                <id>upload-javadoc-jar</id>
-                                <phase>site-deploy</phase>
-                                <goals>
-                                    <goal>upload</goal>
-                                </goals>
-                                <configuration>
-                                    <resourceSrc>${project.build.directory}/learnlib-${project.version}-javadoc.jar</resourceSrc>
-                                    <resourceDest>/files/releases/${project.version}/</resourceDest>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                -->
                 </plugins>
             </build>
         </profile>
@@ -701,6 +688,10 @@ limitations under the License.
     -->
     <dependencyManagement>
         <dependencies>
+            <!-- internal dependencies in a 'bill of material' fashion  -->
+            <!-- sorted alphabetically/hierarchical to allow for a better check for completeness using a file explorer -->
+
+            <!-- algorithms -->
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-algorithms</artifactId>
@@ -776,11 +767,15 @@ limitations under the License.
                 <artifactId>learnlib-rpni-mdl</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- api -->
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- archetypes -->
             <dependency>
                 <groupId>de.learnlib.archetypes</groupId>
                 <artifactId>learnlib-archetypes-parent</artifactId>
@@ -801,11 +796,49 @@ limitations under the License.
                 <artifactId>typical</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- build-parent -->
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-build-parent</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- build-tools -->
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-build-tools</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- commons -->
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-commons</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-acex</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-counterexamples</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-settings</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- data-structures -->
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-datastructures</artifactId>
@@ -831,11 +864,15 @@ limitations under the License.
                 <artifactId>learnlib-datasctructure-pta</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- distribution -->
             <dependency>
                 <groupId>de.learnlib.distribution</groupId>
                 <artifactId>learnlib-distribution</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- drivers -->
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-drivers</artifactId>
@@ -848,19 +885,23 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-drivers-simulator</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-mapper</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-drivers-simulator</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- examples -->
+            <dependency>
+                <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-examples</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- oracles -->
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-oracles</artifactId>
@@ -901,40 +942,19 @@ limitations under the License.
                 <artifactId>learnlib-parallelism</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-commons</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-acex</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-counterexamples</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-settings</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-util</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
-            <!-- LearnLib tests -->
+            <!-- test-support -->
+            <dependency>
+                <groupId>de.learnlib.testsupport</groupId>
+                <artifactId>learnlib-test-support-parent</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>de.learnlib.testsupport</groupId>
                 <artifactId>learnlib-learning-examples</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
-
             <dependency>
                 <groupId>de.learnlib.testsupport</groupId>
                 <artifactId>learnlib-learner-it-support</artifactId>

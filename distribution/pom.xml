@@ -33,71 +33,30 @@ limitations under the License.
 
     <profiles>
         <profile>
-            <id>bundle</id>
+            <id>bundles</id>
             <activation>
                 <property>
                     <name>learnlib.release</name>
                     <value>true</value>
                 </property>
             </activation>
+            <!--
+            All packaged LearnLib dependencies.
+            Note: These exist for two purposes:
+            - allowing an easy dependencySets specification in the assembly descriptor
+            - enforcing the correct reactor build order
+            sorted alphabetically/hierarchical to allow for a better check for completeness using a file explorer
+            -->
             <dependencies>
+                <!-- algorithms -->
                 <dependency>
                     <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-core</artifactId>
+                    <artifactId>learnlib-adt</artifactId>
                     <version>${project.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-core</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-algorithm-features</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-algorithm-features</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-basic-eqtests</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-basic-eqtests</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-cache</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-cache</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-counterexamples</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-counterexamples</artifactId>
+                    <artifactId>learnlib-adt</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
@@ -116,36 +75,24 @@ limitations under the License.
 
                 <dependency>
                     <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-drivers-basic</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-drivers-basic</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-lstar</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-lstar</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-discrimination-tree</artifactId>
                     <version>${project.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-discrimination-tree</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-discrimination-tree-vpda</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-discrimination-tree-vpda</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
@@ -164,60 +111,12 @@ limitations under the License.
 
                 <dependency>
                     <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-parallelism</artifactId>
+                    <artifactId>learnlib-lstar</artifactId>
                     <version>${project.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-parallelism</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-reuse</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-reuse</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-simulator</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-simulator</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-mapper</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-mapper</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-ttt</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-ttt</artifactId>
+                    <artifactId>learnlib-lstar</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
@@ -236,6 +135,80 @@ limitations under the License.
 
                 <dependency>
                     <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-ttt</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-ttt</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-ttt-vpda</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-ttt-vpda</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-rpni</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-rpni</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-rpni-edsm</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-rpni-edsm</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-rpni-mdl</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-rpni-mdl</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <!-- api -->
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-api</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-api</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <!-- commons -->
+                <dependency>
+                    <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-acex</artifactId>
                     <version>${project.version}</version>
                 </dependency>
@@ -246,174 +219,198 @@ limitations under the License.
                     <classifier>sources</classifier>
                 </dependency>
 
-                <!-- AutomataLib dependencies - to ensure bundle completeness TODO: Having
-                    to keep this up-to-date manually is somewhat error-prone; should there exist
-                    something like meta-packages? -->
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-api</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-counterexamples</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-api</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-counterexamples</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-core</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-settings</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-core</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-settings</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-util</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-util</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-util</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-util</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <!-- data-structures -->
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-datastructure-dt</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-datastructure-dt</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-commons-util</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-datastructure-list</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-commons-util</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-datastructure-list</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-commons-dotutil</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-datastructure-ot</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-commons-dotutil</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-datastructure-ot</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-commons-smartcollections</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-datasctructure-pta</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-commons-smartcollections</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-datasctructure-pta</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <!-- drivers -->
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-drivers-basic</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-drivers-basic</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-incremental</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-mapper</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-incremental</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-mapper</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-brics</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-drivers-simulator</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-brics</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-drivers-simulator</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <!-- oracles -->
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-equivalence-oracles</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-equivalence-oracles</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-misc-algorithms</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-cache</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-misc-algorithms</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-cache</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-jung-visualizer</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-reuse</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-jung-visualizer</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-reuse</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-core</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-statistics</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-core</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-statistics</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-saf</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-membership-oracles</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-saf</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-membership-oracles</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-learnlibv2</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-parallelism</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-learnlibv2</artifactId>
-                    <version>${automatalib.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-taf</artifactId>
-                    <version>${automatalib.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-taf</artifactId>
-                    <version>${automatalib.version}</version>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-parallelism</artifactId>
+                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
             </dependencies>
@@ -438,18 +435,6 @@ limitations under the License.
                                 <configuration>
                                     <descriptors>
                                         <descriptor>src/main/assembly/learnlib-bundle.xml</descriptor>
-                                    </descriptors>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>automatalib-bundle</id>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                                <phase>package</phase>
-                                <configuration>
-                                    <descriptors>
-                                        <descriptor>src/main/assembly/learnlib-automatalib-bundle.xml</descriptor>
                                     </descriptors>
                                 </configuration>
                             </execution>
