@@ -299,7 +299,7 @@ limitations under the License.
                         We use a property rather than a profile such that several different profiles
                         can be activated upon a release, without us having to add them here
                         -->
-                        <arguments>-Psonatype-oss-release -Dlearnlib.release=true -Dmaven.javadoc.failOnError=false
+                        <arguments>-Psonatype-oss-release -Dlearnlib.release=true
                         </arguments>
                         <!-- False to allow rebasing in case of errors -->
                         <pushChanges>false</pushChanges>
@@ -335,7 +335,6 @@ limitations under the License.
                         <verbose>true</verbose>
                         <detectLinks>true</detectLinks>
                         <linksource>false</linksource>
-                        <failOnError>false</failOnError>
                         <links>
                             <link>${java.apidocs}</link>
                             <link>${guava.apidocs}</link>
@@ -445,7 +444,6 @@ limitations under the License.
                     <verbose>true</verbose>
                     <detectLinks>true</detectLinks>
                     <linksource>false</linksource>
-                    <failOnError>false</failOnError>
                     <links>
                         <link>${java.apidocs}</link>
                         <link>${guava.apidocs}</link>
