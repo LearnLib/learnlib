@@ -14,8 +14,7 @@ Its original purpose is to provide a framework for research on automata learning
 
 Please note that the development of LearnLib is still in a very early stage.
 The public version is a re-implemented version of the former closed-source version of LearnLib.
-It does not yet have the complete functionality of the original version.
-Features will be added and made available as time permits.
+It does not yet have the complete functionality of the original version, but features will be added and made available as time permits.
 On the other hand, everyone is invited to contribute.
 
 Also please note that many parts of the library have not yet been thoroughly tested.
@@ -37,6 +36,9 @@ git clone -b develop --single-branch https://github.com/LearnLib/learnlib.git
 
 and run a single `mvn clean install`.
 This will build all the required maven artifacts and will install them in your local Maven repository, so that you can reference them in other projects.
+
+If you plan to use a development version of LearnLib in an environment where no Maven support is available, simply run `mvn clean package -Pbundles`.
+The respective JARs are then available under `distribution/target/bundles`.
 
 **Note: Development versions of LearnLib usually depend on development versions of [AutomataLib][7].**
 For building development versions of AutomataLib, see the corresponding documentation on the project's README.
@@ -65,6 +67,7 @@ For developing the code base of LearnLib, it is suggested to use one of the majo
 * [Markus Frohme][6] (2017 - )
 * [Falk Howar][5] (2013 - )
 * [Malte Isberner][4] (2013 - 2015)
+
 
 ## Resources
 
