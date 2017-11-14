@@ -23,6 +23,6 @@ before_install:
   - popd
 install: true # skip mvn install, because we essentially run the same command in the script routine
 script:
-  - mvn install -B -Pintegration-tests,code-analysis,code-coverage
+  - mvn install -B -Pintegration-tests,code-analysis,code-coverage,bundles
 after_success:
  - mvn coveralls:report
