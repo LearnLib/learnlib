@@ -34,7 +34,7 @@ limitations under the License.
     <fileSets>
         <fileSet>
             <directory>../</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory/>
             <includes>
                 <include>LICENSE.txt</include>
                 <include>README.md</include>
@@ -51,7 +51,7 @@ limitations under the License.
                 -->
                 <include>*:sources</include>
             </includes>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory/>
             <useProjectArtifact>false</useProjectArtifact>
             <unpack>true</unpack>
         </dependencySet>
