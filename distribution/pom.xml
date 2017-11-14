@@ -21,9 +21,9 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.learnlib</groupId>
-        <artifactId>learnlib-parent</artifactId>
+        <artifactId>learnlib-build-parent</artifactId>
         <version>0.12.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
     <groupId>de.learnlib.distribution</groupId>

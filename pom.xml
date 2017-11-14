@@ -109,6 +109,7 @@ limitations under the License.
         <module>algorithms</module>
         <module>api</module>
         <module>archetypes</module>
+        <module>build-parent</module>
         <module>build-tools</module>
         <module>commons</module>
         <module>datastructures</module>
@@ -196,33 +197,11 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>${checkstyle-plugin.version}</version>
-                    <configuration>
-                        <!-- use explicit paths instead of build-tools dependency, to prevent race conditions when
-                             using checkstyle _during_ the build process -->
-                        <configLocation>build-tools/src/main/resources/automatalib-learnlib-checkstyle.xml</configLocation>
-                        <headerLocation>build-tools/src/main/resources/license-header-java.txt</headerLocation>
-                        <suppressionsLocation>build-tools/src/main/resources/learnlib-checkstyle-suppressions.xml</suppressionsLocation>
-                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                        <linkXRef>false</linkXRef>
-                    </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.puppycrawl.tools</groupId>
-                            <artifactId>checkstyle</artifactId>
-                            <version>${checkstyle.version}</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>findbugs-maven-plugin</artifactId>
                     <version>${findbugs-plugin.version}</version>
-                    <configuration>
-                        <!-- use explicit paths instead of build-tools dependency, to prevent race conditions when
-                             using checkstyle _during_ the build process -->
-                        <excludeFilterFile>build-tools/src/main/resources/learnlib-findbugs-exclusions.xml</excludeFilterFile>
-                        <effort>Max</effort>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
