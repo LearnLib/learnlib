@@ -861,7 +861,7 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-datasctructure-pta</artifactId>
+                <artifactId>learnlib-datastructure-pta</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

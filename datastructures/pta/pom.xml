@@ -28,7 +28,7 @@ limitations under the License.
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>learnlib-datasctructure-pta</artifactId>
+    <artifactId>learnlib-datastructure-pta</artifactId>
     <name>LearnLib :: Datastructures :: PTA</name>
     <description>Data- and utility classes for Prefix-Tree-Acceptors</description>
 

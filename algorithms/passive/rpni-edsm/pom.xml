@@ -40,7 +40,7 @@ limitations under the License.
         <!-- LearnLib dependencies -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datasctructure-pta</artifactId>
+            <artifactId>learnlib-datastructure-pta</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
