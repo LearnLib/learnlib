@@ -126,6 +126,8 @@ limitations under the License.
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <!--
             dependency versions
         -->
@@ -134,7 +136,6 @@ limitations under the License.
         <javadoc-plugin.version>2.10.4</javadoc-plugin.version>
         <source-plugin.version>3.0.1</source-plugin.version>
         <info-reports-plugin.version>2.9</info-reports-plugin.version>
-        <compiler-plugin.version>3.6.1</compiler-plugin.version>
         <dependency-plugin.version>3.0.1</dependency-plugin.version>
         <maven-archetype.version>3.0.1</maven-archetype.version>
         <release-plugin.version>2.5.3</release-plugin.version>
@@ -183,16 +184,6 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>${dependency-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${compiler-plugin.version}</version>
-                    <configuration>
-                        <fork>true</fork>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
