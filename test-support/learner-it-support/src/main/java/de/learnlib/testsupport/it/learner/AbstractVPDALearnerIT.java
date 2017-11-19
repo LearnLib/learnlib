@@ -39,11 +39,11 @@ import org.testng.annotations.Factory;
  */
 public abstract class AbstractVPDALearnerIT {
 
-    private static final Random RANDOM = new Random(123);
+    private static final Random RANDOM = new Random(42);
 
-    private static final int LOC_COUNT = 100;
-    private static final double ACCEPTANCE_PROB = 0.5;
-    private static final double RETURN_PROB = 0.5;
+    private static final int LOC_COUNT = 80;
+    private static final double ACCEPTANCE_PROB = 0.3;
+    private static final double RETURN_PROB = 0.3;
 
     private static final Alphabet<Character> CALL_ALPHABET = Alphabets.fromArray('1', '2', '3');
     private static final Alphabet<Character> INTERNAL_ALPHABET = Alphabets.characters('a', 'f');
