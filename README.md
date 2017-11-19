@@ -62,18 +62,18 @@ For developing the code base of LearnLib, it is suggested to use one of the majo
   1. In order to have both development versions of AutomataLib and LearnLib available at once, continue to import AutomataLib as documented in the project's README.
 
 
+## Documentation
+
+* **Maven Project Site:** [snapshot](http://learnlib.github.io/learnlib/maven-site/latest-snapshot/) | [latest release](http://learnlib.github.io/learnlib/maven-site/latest-release/)
+* **API Documentation:** [snapshot](http://learnlib.github.io/learnlib/maven-site/latest-snapshot/apidocs/) | [latest release](http://learnlib.github.io/learnlib/maven-site/latest-release/apidocs/)
+
+
 ## Maintainers
 
 * [Markus Frohme][6] (2017 - )
 * [Falk Howar][5] (2013 - )
 * [Malte Isberner][4] (2013 - 2015)
 
-
-## Resources
-
-* **[LearnLib Web-page][3]**
-* **Maven Project Site:** [snapshot](http://learnlib.github.io/learnlib/maven-site/latest-snapshot/) | [latest release](http://learnlib.github.io/learnlib/maven-site/latest-release/)
-* **API Documentation:** [snapshot](http://learnlib.github.io/learnlib/maven-site/latest-snapshot/apidocs/) | [latest release](http://learnlib.github.io/learnlib/maven-site/latest-release/apidocs/)
 
 [1]: http://www.apache.org/licenses/LICENSE-2.0
 [2]: http://www.cs.tu-dortmund.de
