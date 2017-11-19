@@ -124,53 +124,48 @@ limitations under the License.
     ================================= PROPERTIES ================================
     -->
     <properties>
+        <!-- general config -->
+        <deploy-site-github.exec>deploy-site-github</deploy-site-github.exec>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <!--
-            dependency versions
-        -->
-        <automatalib.version>0.6.1-SNAPSHOT</automatalib.version>
-        <testng.version>6.11</testng.version>
-        <javadoc-plugin.version>2.10.4</javadoc-plugin.version>
-        <source-plugin.version>3.0.1</source-plugin.version>
-        <info-reports-plugin.version>2.9</info-reports-plugin.version>
-        <dependency-plugin.version>3.0.1</dependency-plugin.version>
-        <maven-archetype.version>3.0.1</maven-archetype.version>
-        <release-plugin.version>2.5.3</release-plugin.version>
-        <pmd-plugin.version>3.8</pmd-plugin.version>
-        <checkstyle-plugin.version>2.17</checkstyle-plugin.version>
-        <checkstyle.version>8.1</checkstyle.version>
-        <jdiff-plugin.version>1.0-beta-1</jdiff-plugin.version>
-        <site-plugin.version>3.6</site-plugin.version>
-        <reports-plugin.version>2.9</reports-plugin.version>
-        <surefire-plugin.version>2.20</surefire-plugin.version>
-        <failsafe-plugin.version>2.20</failsafe-plugin.version>
+
+        <!-- plugin versions -->
+        <antrun-plugin.version>1.8</antrun-plugin.version>
+        <archetype-plugin.version>3.0.1</archetype-plugin.version>
         <assembly-plugin.version>3.0.0</assembly-plugin.version>
-        <resources-plugin.version>3.0.2</resources-plugin.version>
-        <upload-plugin.version>1.1</upload-plugin.version>
+        <checkstyle-plugin.version>2.17</checkstyle-plugin.version>
+        <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
+        <dependency-plugin.version>3.0.1</dependency-plugin.version>
         <exec-plugin.version>1.6.0</exec-plugin.version>
-        <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
-        <deploy-site-github.exec>deploy-site-github</deploy-site-github.exec>
-
-        <guava.version>22.0</guava.version>
-        <antrun.version>1.8</antrun.version>
-
-        <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
+        <failsafe-plugin.version>2.20</failsafe-plugin.version>
         <findbugs-plugin.version>3.0.5</findbugs-plugin.version>
-        <jacoco.version>0.7.9</jacoco.version>
-        <coveralls.version>4.3.0</coveralls.version>
+        <info-reports-plugin.version>2.9</info-reports-plugin.version>
+        <jacoco-plugin.version>0.7.9</jacoco-plugin.version>
+        <javadoc-plugin.version>2.10.4</javadoc-plugin.version>
+        <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+        <pmd-plugin.version>3.8</pmd-plugin.version>
+        <release-plugin.version>2.5.3</release-plugin.version>
+        <resources-plugin.version>3.0.2</resources-plugin.version>
+        <site-plugin.version>3.6</site-plugin.version>
+        <source-plugin.version>3.0.1</source-plugin.version>
+        <surefire-plugin.version>2.20</surefire-plugin.version>
+        <upload-plugin.version>1.1</upload-plugin.version>
 
+        <!-- dependency versions -->
+        <automatalib.version>0.6.1-SNAPSHOT</automatalib.version>
         <buildergen.version>0.1</buildergen.version>
-
-        <slf4j.version>1.7.25</slf4j.version>
+        <checkstyle.version>8.1</checkstyle.version>
+        <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
+        <guava.version>22.0</guava.version>
         <logback.version>1.2.3</logback.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <testng.version>6.11</testng.version>
 
         <!-- Javadoc links -->
         <java.apidocs>http://docs.oracle.com/javase/8/docs/api/</java.apidocs>
-        <automatalib.apidocs>http://learnlib.github.io/automatalib/maven-site/${automatalib.version}/apidocs/
-        </automatalib.apidocs>
+        <automatalib.apidocs>http://learnlib.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
         <guava.apidocs>http://google.github.io/guava/releases/${guava.version}/api/docs/</guava.apidocs>
     </properties>
 
@@ -261,7 +256,7 @@ limitations under the License.
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco.version}</version>
+                    <version>${jacoco-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>prepare-report</id>
@@ -350,7 +345,7 @@ limitations under the License.
                 <plugin>
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>${coveralls.version}</version>
+                    <version>${coveralls-plugin.version}</version>
                     <configuration>
                         <jacocoReports>
                             <jacocoReport>${basedir}/distribution/target/site/jacoco-aggregate/jacoco.xml</jacocoReport>
@@ -360,7 +355,7 @@ limitations under the License.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>${antrun.version}</version>
+                    <version>${antrun-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
@@ -470,14 +465,6 @@ limitations under the License.
                     </reportSet>
                 </reportSets>
             </plugin>
-            <!-- jdiff-maven-plugin not in central! -->
-            <!--
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jdiff-maven-plugin</artifactId>
-                <version>${jdiff-plugin.version}</version>
-            </plugin>
-            -->
         </plugins>
     </reporting>
 
