@@ -32,23 +32,6 @@ limitations under the License.
     <name>LearnLib :: Algorithms :: DHC</name>
     <description>The Direct Hypothesis Construction algorithm for active learning of Mealy machines</description>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <!-- If we run coverage analysis, skip generated sources -->
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <configuration>
-                        <excludes>
-                            <exclude>**/MealyDHCBuilder.class</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
     <dependencies>
         <!--
         Compile-time dependencies

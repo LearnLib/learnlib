@@ -31,7 +31,194 @@ limitations under the License.
     <packaging>pom</packaging>
     <name>LearnLib :: Distribution</name>
 
+    <!--
+    All packaged AutomataLib dependencies.
+
+    Note: These exist for two purposes:
+    - allowing an easy dependencySets specification in the assembly descriptor
+    - enforcing the correct reactor build order
+
+    Sorted alphabetically/hierarchical to allow for a better check for completeness using a file explorer
+    -->
+    <dependencies>
+        <!-- algorithms -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-adt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-dhc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-discrimination-tree</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-discrimination-tree-vpda</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-kearns-vazirani</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-lstar</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-nlstar</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-ttt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-ttt-vpda</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-rpni</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-rpni-edsm</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-rpni-mdl</artifactId>
+        </dependency>
+
+        <!-- api -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-api</artifactId>
+        </dependency>
+
+        <!-- commons -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-acex</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-counterexamples</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-settings</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-util</artifactId>
+        </dependency>
+
+        <!-- data-structures -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-datastructure-dt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-datastructure-list</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-datastructure-ot</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-datastructure-pta</artifactId>
+        </dependency>
+
+        <!-- drivers -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-drivers-basic</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-mapper</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-drivers-simulator</artifactId>
+        </dependency>
+
+        <!-- oracles -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-equivalence-oracles</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-cache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-reuse</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-statistics</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-membership-oracles</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-parallelism</artifactId>
+        </dependency>
+    </dependencies>
+
     <profiles>
+        <profile>
+            <id>code-coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>report-aggregate</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>report-aggregate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>bundles</id>
             <activation>
@@ -40,12 +227,10 @@ limitations under the License.
                     <value>true</value>
                 </property>
             </activation>
+
             <!--
-            All packaged LearnLib dependencies.
-            Note: These exist for two purposes:
-            - allowing an easy dependencySets specification in the assembly descriptor
-            - enforcing the correct reactor build order
-            sorted alphabetically/hierarchical to allow for a better check for completeness using a file explorer
+            Additionally specify source-classified dependencies for building source assemblies.
+            Again, sorted alphabetically/hierarchical to allow for a better check for completeness using a file explorer.
             -->
             <dependencies>
                 <!-- algorithms -->
@@ -53,19 +238,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-adt</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-adt</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-dhc</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-dhc</artifactId>
@@ -77,19 +252,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-discrimination-tree</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-discrimination-tree</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-discrimination-tree-vpda</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-discrimination-tree-vpda</artifactId>
@@ -101,19 +266,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-kearns-vazirani</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-kearns-vazirani</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-lstar</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-lstar</artifactId>
@@ -125,19 +280,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-nlstar</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-nlstar</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-ttt</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-ttt</artifactId>
@@ -149,19 +294,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-ttt-vpda</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-ttt-vpda</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-rpni</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-rpni</artifactId>
@@ -173,19 +308,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-rpni-edsm</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-rpni-edsm</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-rpni-mdl</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-rpni-mdl</artifactId>
@@ -198,11 +323,6 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-api</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-api</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
@@ -211,19 +331,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-acex</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-acex</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-counterexamples</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-counterexamples</artifactId>
@@ -235,19 +345,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-settings</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-settings</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-util</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-util</artifactId>
@@ -260,19 +360,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-datastructure-dt</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-datastructure-dt</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-datastructure-list</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-datastructure-list</artifactId>
@@ -284,19 +374,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-datastructure-ot</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-datastructure-ot</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-datastructure-pta</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-datastructure-pta</artifactId>
@@ -309,11 +389,6 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-drivers-basic</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-drivers-basic</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
@@ -321,19 +396,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-mapper</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-mapper</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-drivers-simulator</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-drivers-simulator</artifactId>
@@ -346,19 +411,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-equivalence-oracles</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-equivalence-oracles</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-cache</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-cache</artifactId>
@@ -370,19 +425,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-reuse</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-reuse</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-statistics</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-statistics</artifactId>
@@ -394,19 +439,9 @@ limitations under the License.
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-membership-oracles</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-membership-oracles</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-parallelism</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-parallelism</artifactId>
