@@ -15,8 +15,9 @@
  */
 package de.learnlib.algorithms.lstar;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import de.learnlib.algorithms.lstar.AbstractAutomatonLStar.StateInfo;
 import de.learnlib.algorithms.lstar.table.ObservationTable;
 
 /**
@@ -37,11 +38,11 @@ import de.learnlib.algorithms.lstar.table.ObservationTable;
 public class AutomatonLStarState<I, D, AI, S> extends AbstractLStarState<I, D> {
 
     private final AI hypothesis;
-    private final ArrayList<AbstractAutomatonLStar.StateInfo<S, I>> stateInfos;
+    private final List<AbstractAutomatonLStar.StateInfo<S, I>> stateInfos;
 
     public AutomatonLStarState(final ObservationTable<I, D> observationTable,
                                final AI hypothesis,
-                               final ArrayList<AbstractAutomatonLStar.StateInfo<S, I>> stateInfos) {
+                               final List<StateInfo<S, I>> stateInfos) {
         super(observationTable);
         this.hypothesis = hypothesis;
         this.stateInfos = stateInfos;
@@ -51,7 +52,7 @@ public class AutomatonLStarState<I, D, AI, S> extends AbstractLStarState<I, D> {
         return hypothesis;
     }
 
-    ArrayList<AbstractAutomatonLStar.StateInfo<S, I>> getStateInfos() {
+    List<AbstractAutomatonLStar.StateInfo<S, I>> getStateInfos() {
         return stateInfos;
     }
 }

@@ -135,14 +135,15 @@ public abstract class Query<I, D> {
         Query<?, ?> other = (Query<?, ?>) o;
 
         Word<I> thisPref = getPrefix();
-        Word<I> thisSuff = getSuffix();
-
         Word<?> otherPref = other.getPrefix();
-        Word<?> otherSuff = other.getSuffix();
 
         if (thisPref != otherPref && !thisPref.equals(otherPref)) {
             return false;
         }
+
+        Word<I> thisSuff = getSuffix();
+        Word<?> otherSuff = other.getSuffix();
+
         return thisSuff == otherSuff || thisSuff.equals(otherSuff);
     }
 

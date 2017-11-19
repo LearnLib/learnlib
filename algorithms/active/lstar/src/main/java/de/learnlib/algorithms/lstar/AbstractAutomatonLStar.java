@@ -17,6 +17,7 @@ package de.learnlib.algorithms.lstar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.learnlib.algorithms.lstar.table.Row;
 import de.learnlib.api.algorithm.feature.ResumableLearner;
@@ -50,7 +51,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
         extends AbstractLStar<A, I, D> implements ResumableLearner<AutomatonLStarState<I, D, AI, S>> {
 
     protected AI internalHyp;
-    protected ArrayList<StateInfo<S, I>> stateInfos = new ArrayList<>();
+    protected List<StateInfo<S, I>> stateInfos = new ArrayList<>();
 
     /**
      * Constructor.
@@ -117,7 +118,6 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
         // SECOND PASS: Create hypothesis transitions
         for (StateInfo<S, I> info : stateInfos) {
             Row<I> sp = info.getRow();
-            int rowId = sp.getRowContentId();
             S state = info.getState();
 
             for (int i = 0; i < alphabet.size(); i++) {

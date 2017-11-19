@@ -18,6 +18,7 @@ package de.learnlib.algorithms.kv.dfa;
 import java.io.Serializable;
 import java.util.List;
 
+import de.learnlib.algorithms.kv.StateInfo;
 import de.learnlib.datastructure.discriminationtree.BinaryDTree;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 
@@ -32,12 +33,12 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 class KearnsVaziraniDFAState<I> implements Serializable {
 
     private final CompactDFA<I> hypothesis;
-    private final BinaryDTree<I, KearnsVaziraniDFA.StateInfo<I>> discriminationTree;
-    private final List<KearnsVaziraniDFA.StateInfo<I>> stateInfos;
+    private final BinaryDTree<I, StateInfo<I, Boolean>> discriminationTree;
+    private final List<StateInfo<I, Boolean>> stateInfos;
 
     KearnsVaziraniDFAState(final CompactDFA<I> hypothesis,
-                           final BinaryDTree<I, KearnsVaziraniDFA.StateInfo<I>> discriminationTree,
-                           final List<KearnsVaziraniDFA.StateInfo<I>> stateInfos) {
+                           final BinaryDTree<I, StateInfo<I, Boolean>> discriminationTree,
+                           final List<StateInfo<I, Boolean>> stateInfos) {
         this.hypothesis = hypothesis;
         this.discriminationTree = discriminationTree;
         this.stateInfos = stateInfos;
@@ -47,11 +48,11 @@ class KearnsVaziraniDFAState<I> implements Serializable {
         return hypothesis;
     }
 
-    BinaryDTree<I, KearnsVaziraniDFA.StateInfo<I>> getDiscriminationTree() {
+    BinaryDTree<I, StateInfo<I, Boolean>> getDiscriminationTree() {
         return discriminationTree;
     }
 
-    List<KearnsVaziraniDFA.StateInfo<I>> getStateInfos() {
+    List<StateInfo<I, Boolean>> getStateInfos() {
         return stateInfos;
     }
 }

@@ -55,12 +55,6 @@ public abstract class AbstractContextExecutableInputSUL<I extends ContextExecuta
 
     @Override
     public O step(I in) throws SULException {
-        try {
-            return in.execute(currentContext);
-        } catch (SULException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new SULException(ex);
-        }
+        return in.execute(currentContext);
     }
 }

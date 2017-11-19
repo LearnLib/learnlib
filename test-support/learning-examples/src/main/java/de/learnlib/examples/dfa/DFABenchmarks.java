@@ -22,8 +22,12 @@ import de.learnlib.examples.DefaultLearningExample.DefaultDFALearningExample;
 import de.learnlib.examples.LearningExample.DFALearningExample;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.serialization.learnlibv2.LearnLibV2Serialization;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class DFABenchmarks {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DFABenchmarks.class);
 
     private DFABenchmarks() {
         // prevent instantiation
@@ -34,19 +38,16 @@ public final class DFABenchmarks {
     }
 
     public static DFALearningExample<Integer> loadLearnLibV2Benchmark(String name) {
-        String resourceName = "/automata/learnlibv2/" + name + ".dfa";
+        String resourceName = "/automata/learnlibv2/" + name + ".dfa.gz";
         if (DFABenchmarks.class.getResource(resourceName) == null) {
-            resourceName += ".gz"; // look for GZip compressed resource
-            if (DFABenchmarks.class.getResource(resourceName) == null) {
-                return null;
-            }
+            return null;
         }
 
         try (InputStream is = DFABenchmarks.class.getResourceAsStream(resourceName)) {
             CompactDFA<Integer> dfa = LearnLibV2Serialization.getInstance().readGenericDFA(is);
             return new DefaultDFALearningExample<>(dfa);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Could not load benchmark", ex);
             return null;
         }
     }

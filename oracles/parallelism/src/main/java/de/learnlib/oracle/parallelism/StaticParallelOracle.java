@@ -105,11 +105,6 @@ public class StaticParallelOracle<I, D> implements ParallelOracle<I, D> {
             numBatches = oracles.length;
         }
 
-        // Calculate the number of full and non-full batches. The difference in size
-        // will never exceed one (cf. pidgeonhole principle)
-        int fullBatchSize = (num - 1) / numBatches + 1;
-        int nonFullBatches = fullBatchSize * numBatches - num;
-
         // One batch is always executed in the local thread. This saves the thread creation
         // overhead for the common case where the batch size is quite small.
         int externalBatches = numBatches - 1;
@@ -118,6 +113,11 @@ public class StaticParallelOracle<I, D> implements ParallelOracle<I, D> {
             processQueriesLocally(queries);
             return;
         }
+
+        // Calculate the number of full and non-full batches. The difference in size
+        // will never exceed one (cf. pidgeonhole principle)
+        int fullBatchSize = (num - 1) / numBatches + 1;
+        int nonFullBatches = fullBatchSize * numBatches - num;
 
         List<Future<?>> futures = new ArrayList<>(externalBatches);
 

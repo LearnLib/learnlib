@@ -33,7 +33,7 @@ public abstract class AbstractHypTrans<I> extends IntrusiveListElemImpl<Abstract
     private HypLoc<I> treeTarget;
     private DTNode<I> nonTreeTarget;
 
-    public AbstractHypTrans(HypLoc<I> source, Word<I> aseq) {
+    public AbstractHypTrans(Word<I> aseq) {
         this.aseq = aseq;
     }
 

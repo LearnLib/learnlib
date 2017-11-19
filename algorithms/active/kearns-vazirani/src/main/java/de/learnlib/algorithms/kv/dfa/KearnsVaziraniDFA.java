@@ -15,10 +15,8 @@
  */
 package de.learnlib.algorithms.kv.dfa;
 
-import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
@@ -26,6 +24,7 @@ import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.acex.impl.AbstractBaseCounterexample;
+import de.learnlib.algorithms.kv.StateInfo;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
@@ -53,14 +52,12 @@ import net.automatalib.words.impl.SimpleAlphabet;
 public class KearnsVaziraniDFA<I>
         implements DFALearner<I>, SupportsGrowingAlphabet<I>, ResumableLearner<KearnsVaziraniDFAState<I>> {
 
-    private static final short INTEGER_WORD_WIDTH = 32;
-
     private final GrowingAlphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;
     private final boolean repeatedCounterexampleEvaluation;
     private final AcexAnalyzer ceAnalyzer;
-    protected BinaryDTree<I, StateInfo<I>> discriminationTree;
-    protected List<StateInfo<I>> stateInfos = new ArrayList<>();
+    protected BinaryDTree<I, StateInfo<I, Boolean>> discriminationTree;
+    protected List<StateInfo<I, Boolean>> stateInfos = new ArrayList<>();
     private CompactDFA<I> hypothesis;
 
     /**
@@ -129,9 +126,9 @@ public class KearnsVaziraniDFA<I>
         int idx = ceAnalyzer.analyzeAbstractCounterexample(acex, 1);
 
         Word<I> prefix = input.prefix(idx);
-        StateInfo<I> srcStateInfo = acex.getStateInfo(idx);
+        StateInfo<I, Boolean> srcStateInfo = acex.getStateInfo(idx);
         I sym = input.getSymbol(idx);
-        LCAInfo<Boolean, AbstractWordBasedDTNode<I, Boolean, StateInfo<I>>> lca = acex.getLCA(idx + 1);
+        LCAInfo<Boolean, AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>>> lca = acex.getLCA(idx + 1);
         assert lca != null;
 
         splitState(srcStateInfo, prefix, sym, lca);
@@ -139,26 +136,26 @@ public class KearnsVaziraniDFA<I>
         return true;
     }
 
-    private void splitState(StateInfo<I> stateInfo,
+    private void splitState(StateInfo<I, Boolean> stateInfo,
                             Word<I> newPrefix,
                             I sym,
-                            LCAInfo<Boolean, AbstractWordBasedDTNode<I, Boolean, StateInfo<I>>> separatorInfo) {
+                            LCAInfo<Boolean, AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>>> separatorInfo) {
         int state = stateInfo.id;
         boolean oldAccepting = hypothesis.isAccepting(state);
         // TLongList oldIncoming = stateInfo.fetchIncoming();
         List<Long> oldIncoming = stateInfo.fetchIncoming(); // TODO: replace with primitive specialization
 
-        StateInfo<I> newStateInfo = createState(newPrefix, oldAccepting);
+        StateInfo<I, Boolean> newStateInfo = createState(newPrefix, oldAccepting);
 
-        AbstractWordBasedDTNode<I, Boolean, StateInfo<I>> stateLeaf = stateInfo.dtNode;
+        AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> stateLeaf = stateInfo.dtNode;
 
-        AbstractWordBasedDTNode<I, Boolean, StateInfo<I>> separator = separatorInfo.leastCommonAncestor;
+        AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> separator = separatorInfo.leastCommonAncestor;
         Word<I> newDiscriminator = newDiscriminator(sym, separator.getDiscriminator());
 
-        AbstractWordBasedDTNode<I, Boolean, StateInfo<I>>.SplitResult sr = stateLeaf.split(newDiscriminator,
-                                                                                           separatorInfo.subtree1Label,
-                                                                                           separatorInfo.subtree2Label,
-                                                                                           newStateInfo);
+        AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>>.SplitResult sr = stateLeaf.split(newDiscriminator,
+                                                                                                    separatorInfo.subtree1Label,
+                                                                                                    separatorInfo.subtree2Label,
+                                                                                                    newStateInfo);
 
         stateInfo.dtNode = sr.nodeOld;
         newStateInfo.dtNode = sr.nodeNew;
@@ -170,18 +167,18 @@ public class KearnsVaziraniDFA<I>
 
     // private void updateTransitions(TLongList transList, DTNode<I, Boolean, StateInfo<I>> oldDtTarget) {
     private void updateTransitions(List<Long> transList,
-                                   AbstractWordBasedDTNode<I, Boolean, StateInfo<I>> oldDtTarget) { // TODO: replace with primitive specialization
+                                   AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> oldDtTarget) { // TODO: replace with primitive specialization
         int numTrans = transList.size();
         for (int i = 0; i < numTrans; i++) {
             long encodedTrans = transList.get(i);
 
-            int sourceState = (int) (encodedTrans >> INTEGER_WORD_WIDTH);
+            int sourceState = (int) (encodedTrans >> StateInfo.INTEGER_WORD_WIDTH);
             int transIdx = (int) (encodedTrans);
 
-            StateInfo<I> sourceInfo = stateInfos.get(sourceState);
+            StateInfo<I, Boolean> sourceInfo = stateInfos.get(sourceState);
             I symbol = alphabet.getSymbol(transIdx);
 
-            StateInfo<I> succ = sift(oldDtTarget, sourceInfo.accessSequence.append(symbol));
+            StateInfo<I, Boolean> succ = sift(oldDtTarget, sourceInfo.accessSequence.append(symbol));
             setTransition(sourceState, transIdx, succ);
         }
     }
@@ -192,34 +189,34 @@ public class KearnsVaziraniDFA<I>
 
     private void initialize() {
         boolean initAccepting = oracle.answerQuery(Word.epsilon()).booleanValue();
-        StateInfo<I> initStateInfo = createInitialState(initAccepting);
+        StateInfo<I, Boolean> initStateInfo = createInitialState(initAccepting);
 
-        AbstractWordBasedDTNode<I, Boolean, StateInfo<I>> root = discriminationTree.getRoot();
+        AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> root = discriminationTree.getRoot();
         root.setData(initStateInfo);
         initStateInfo.dtNode = root.split(Word.epsilon(), initAccepting, !initAccepting).nodeOld;
 
         initState(initStateInfo);
     }
 
-    private StateInfo<I> createInitialState(boolean accepting) {
+    private StateInfo<I, Boolean> createInitialState(boolean accepting) {
         int state = hypothesis.addIntInitialState(accepting);
-        StateInfo<I> si = new StateInfo<>(state, Word.<I>epsilon());
+        StateInfo<I, Boolean> si = new StateInfo<>(state, Word.<I>epsilon());
         assert stateInfos.size() == state;
         stateInfos.add(si);
 
         return si;
     }
 
-    private StateInfo<I> createState(Word<I> accessSequence, boolean accepting) {
+    private StateInfo<I, Boolean> createState(Word<I> accessSequence, boolean accepting) {
         int state = hypothesis.addIntState(accepting);
-        StateInfo<I> si = new StateInfo<>(state, accessSequence);
+        StateInfo<I, Boolean> si = new StateInfo<>(state, accessSequence);
         assert stateInfos.size() == state;
         stateInfos.add(si);
 
         return si;
     }
 
-    private void initState(StateInfo<I> stateInfo) {
+    private void initState(StateInfo<I, Boolean> stateInfo) {
         int alphabetSize = alphabet.size();
 
         int state = stateInfo.id;
@@ -230,24 +227,25 @@ public class KearnsVaziraniDFA<I>
 
             Word<I> transAs = accessSequence.append(sym);
 
-            StateInfo<I> succ = sift(transAs);
+            StateInfo<I, Boolean> succ = sift(transAs);
             setTransition(state, i, succ);
         }
     }
 
-    private void setTransition(int state, int symIdx, StateInfo<I> succInfo) {
+    private void setTransition(int state, int symIdx, StateInfo<I, Boolean> succInfo) {
         succInfo.addIncoming(state, symIdx);
         hypothesis.setTransition(state, symIdx, succInfo.id);
     }
 
-    private StateInfo<I> sift(Word<I> prefix) {
+    private StateInfo<I, Boolean> sift(Word<I> prefix) {
         return sift(discriminationTree.getRoot(), prefix);
     }
 
-    private StateInfo<I> sift(AbstractWordBasedDTNode<I, Boolean, StateInfo<I>> start, Word<I> prefix) {
-        AbstractWordBasedDTNode<I, Boolean, StateInfo<I>> leaf = discriminationTree.sift(start, prefix);
+    private StateInfo<I, Boolean> sift(AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> start,
+                                       Word<I> prefix) {
+        AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> leaf = discriminationTree.sift(start, prefix);
 
-        StateInfo<I> succStateInfo = leaf.getData();
+        StateInfo<I, Boolean> succStateInfo = leaf.getData();
         if (succStateInfo == null) {
             // Special case: this is the *first* state of a different
             // acceptance than the initial state
@@ -273,12 +271,12 @@ public class KearnsVaziraniDFA<I>
         final int inputIdx = this.alphabet.addSymbol(symbol);
 
         // use new list to prevent concurrent modification exception
-        for (final StateInfo<I> si : new ArrayList<>(this.stateInfos)) {
+        for (final StateInfo<I, Boolean> si : new ArrayList<>(this.stateInfos)) {
             final int state = si.id;
             final Word<I> accessSequence = si.accessSequence;
             final Word<I> transAs = accessSequence.append(symbol);
 
-            final StateInfo<I> succ = sift(transAs);
+            final StateInfo<I, Boolean> succ = sift(transAs);
             setTransition(state, inputIdx, succ);
         }
     }
@@ -307,57 +305,12 @@ public class KearnsVaziraniDFA<I>
         }
     }
 
-    /**
-     * The information associated with a state: it's access sequence (or access string), and the list of incoming
-     * transitions.
-     *
-     * @param <I>
-     *         input symbol type
-     *
-     * @author Malte Isberner
-     */
-    protected static final class StateInfo<I> implements Serializable {
-
-        public final int id;
-        public final Word<I> accessSequence;
-        private AbstractWordBasedDTNode<I, Boolean, StateInfo<I>> dtNode;
-        // private TLongList incoming;
-        private List<Long> incoming; // TODO: replace with primitive specialization
-
-        public StateInfo(int id, Word<I> accessSequence) {
-            this.id = id;
-            this.accessSequence = accessSequence.trimmed();
-        }
-
-        public void addIncoming(int sourceState, int transIdx) {
-            long encodedTrans = ((long) sourceState << INTEGER_WORD_WIDTH) | transIdx;
-            if (incoming == null) {
-                // incoming = new TLongArrayList();
-                incoming = new ArrayList<>(); // TODO: replace with primitive specialization
-            }
-            incoming.add(encodedTrans);
-        }
-
-        // public TLongList fetchIncoming() {
-        public List<Long> fetchIncoming() { // TODO: replace with primitive specialization
-            if (incoming == null || incoming.isEmpty()) {
-                // return EMPTY_LONG_LIST;
-                return Collections.emptyList(); // TODO: replace with primitive specialization
-            }
-            // TLongList result = incoming;
-            List<Long> result = incoming; // TODO: replace with primitive specialization
-            this.incoming = null;
-            return result;
-        }
-
-    }
-
     protected class KVAbstractCounterexample extends AbstractBaseCounterexample<Boolean> {
 
         private final Word<I> ceWord;
         private final MembershipOracle<I, Boolean> oracle;
-        private final StateInfo<I>[] states;
-        private final LCAInfo<Boolean, AbstractWordBasedDTNode<I, Boolean, StateInfo<I>>>[] lcas;
+        private final StateInfo<I, Boolean>[] states;
+        private final LCAInfo<Boolean, AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>>>[] lcas;
 
         @SuppressWarnings("unchecked")
         public KVAbstractCounterexample(Word<I> ceWord, boolean output, MembershipOracle<I, Boolean> oracle) {
@@ -381,29 +334,29 @@ public class KearnsVaziraniDFA<I>
             lcas[m] = new LCAInfo<>(discriminationTree.getRoot(), !output, output);
         }
 
-        public StateInfo<I> getStateInfo(int idx) {
+        public StateInfo<I, Boolean> getStateInfo(int idx) {
             return states[idx];
         }
 
-        public LCAInfo<Boolean, AbstractWordBasedDTNode<I, Boolean, StateInfo<I>>> getLCA(int idx) {
+        public LCAInfo<Boolean, AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>>> getLCA(int idx) {
             return lcas[idx];
         }
 
         @Override
         protected Boolean computeEffect(int index) {
             Word<I> prefix = ceWord.prefix(index);
-            StateInfo<I> info = states[index];
+            StateInfo<I, Boolean> info = states[index];
 
             // Save the expected outcomes on the path from the leaf representing the state
             // to the root on a stack
-            AbstractWordBasedDTNode<I, Boolean, StateInfo<I>> node = info.dtNode;
+            AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> node = info.dtNode;
             Deque<Boolean> expect = new ArrayDeque<>();
             while (!node.isRoot()) {
                 expect.push(node.getParentOutcome());
                 node = node.getParent();
             }
 
-            AbstractWordBasedDTNode<I, Boolean, StateInfo<I>> currNode = discriminationTree.getRoot();
+            AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> currNode = discriminationTree.getRoot();
 
             while (!expect.isEmpty()) {
                 Word<I> suffix = currNode.getDiscriminator();

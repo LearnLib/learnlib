@@ -156,13 +156,13 @@ public class TTTLearnerMealy<I, O> extends AbstractTTTLearner<MealyMachine<?, I,
                 if (!super.getEdgeProperties(src, edge, tgt, properties)) {
                     return false;
                 }
-                String label = String.valueOf(edge.transition.getInput());
-                label += " / ";
+                final StringBuilder labelBuilder = new StringBuilder();
+                labelBuilder.append(String.valueOf(edge.transition.getInput())).append(" / ");
                 TTTTransitionMealy<I, O> trans = (TTTTransitionMealy<I, O>) edge.transition;
                 if (trans.output != null) {
-                    label += trans.output;
+                    labelBuilder.append(trans.output);
                 }
-                properties.put(EdgeAttrs.LABEL, label);
+                properties.put(EdgeAttrs.LABEL, labelBuilder.toString());
                 return true;
             }
         };

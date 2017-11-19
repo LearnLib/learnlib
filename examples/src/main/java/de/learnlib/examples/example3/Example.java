@@ -64,7 +64,7 @@ public class Example {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Example example = new Example();
         System.out.println("--");
         System.out.println("Run experiment 1 (ReuseOracle):");
@@ -168,7 +168,7 @@ public class Example {
             case POLL:
                 return s.poll();
             default:
-                throw new RuntimeException("unknown input symbol");
+                throw new IllegalArgumentException("unknown input symbol");
         }
     }
 

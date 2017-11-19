@@ -91,8 +91,6 @@ public class DefaultExtender implements ADTExtender {
                             partialTransitionAnalyzer.closeTransition(s, input);
                         }
 
-                        final ADTState<I, O> successor = hypothesis.getSuccessor(s, input);
-
                         if (!hypothesis.getOutput(s, input).equals(output)) {
                             final ADTState<I, O> initial = entry.getValue();
                             final Word<I> as = initial.getAccessSequence();
@@ -105,6 +103,8 @@ public class DefaultExtender implements ADTExtender {
 
                             return new ExtensionResult<>(ce);
                         }
+
+                        final ADTState<I, O> successor = hypothesis.getSuccessor(s, input);
 
                         // converging states, cannot distinguish
                         if (nextCurrentToInitialMapping.containsKey(successor)) {

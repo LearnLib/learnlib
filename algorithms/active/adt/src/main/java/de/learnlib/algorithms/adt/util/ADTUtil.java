@@ -329,12 +329,13 @@ public final class ADTUtil {
                 return false;
             }
 
-            final Map<O, ADTNode<S, I, O>> parentSuccessors = parentIter.getChildren(), childSuccessors =
-                    childIter.getChildren();
+            final Map<O, ADTNode<S, I, O>> childSuccessors = childIter.getChildren();
 
             if (childSuccessors.size() != 1) {
                 throw new IllegalArgumentException("No single trace child");
             }
+
+            final Map<O, ADTNode<S, I, O>> parentSuccessors = parentIter.getChildren();
 
             final Map.Entry<O, ADTNode<S, I, O>> childSuccessor = childSuccessors.entrySet().iterator().next();
             final O childOutput = childSuccessor.getKey();

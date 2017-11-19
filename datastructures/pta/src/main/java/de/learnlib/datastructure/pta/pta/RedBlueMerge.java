@@ -102,11 +102,8 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
                         }
                     } else {
                         SP rSuccSP = rSucc.property, qSuccSP = qSucc.property;
-                        RichArray<TP> rSuccTPs = rSucc.transProperties;
-                        RichArray<TP> qSuccTPs = qSucc.transProperties;
 
                         SP newSP = null;
-                        RichArray<TP> newTPs = null;
                         if (qSuccSP == null && rSuccSP != null) {
                             newSP = rSuccSP;
                         } else if (rSuccSP != null) { // && qSucc.property != null
@@ -114,6 +111,10 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
                                 return false;
                             }
                         }
+
+                        RichArray<TP> newTPs = null;
+                        RichArray<TP> rSuccTPs = rSucc.transProperties;
+                        RichArray<TP> qSuccTPs = qSucc.transProperties;
 
                         if (rSuccTPs != null) {
                             if (qSuccTPs != null) {

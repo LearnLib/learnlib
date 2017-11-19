@@ -315,7 +315,6 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
         for (int i = 0; i < query.size(); i++) {
             I in = query.getSymbol(i);
             O out = queryResult.output.getSymbol(i);
-            ReuseNode<S, I, O> rn;
 
             ReuseEdge<S, I, O> edge = effectiveSink.getEdgeWithInput(alphabet.getSymbolIndex(in));
             if (edge != null) {
@@ -328,6 +327,8 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
                         "Conflict: input '" + query + "', output '" + queryResult.output + "', i=" + i +
                         ", cached output '" + edge.getOutput() + "'");
             }
+
+            ReuseNode<S, I, O> rn;
 
             if (failureOutputSymbols.contains(out)) {
                 rn = effectiveSink;

@@ -80,8 +80,6 @@ public final class LeafSplitters {
                                                               final Word<O> newOutput) {
 
         final Iterator<I> suffixIter = distinguishingSuffix.iterator();
-        final Iterator<O> oldIter = oldOutput.iterator();
-        final Iterator<O> newIter = newOutput.iterator();
 
         // Replace old final state
         final ADTNode<S, I, O> parent = nodeToSplit.getParent();
@@ -107,7 +105,7 @@ public final class LeafSplitters {
             }
         }
 
-        return finalizeSplit(nodeToSplit, newADS, suffixIter, oldIter, newIter);
+        return finalizeSplit(nodeToSplit, newADS, suffixIter, oldOutput.iterator(), newOutput.iterator());
     }
 
     private static <S, I, O> ADTNode<S, I, O> finalizeSplit(final ADTNode<S, I, O> nodeToSplit,

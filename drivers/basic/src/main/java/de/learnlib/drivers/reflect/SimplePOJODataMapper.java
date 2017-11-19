@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.AbstractSULMapper;
 import de.learnlib.mapper.api.SULMapper;
 
@@ -45,8 +46,10 @@ public class SimplePOJODataMapper
     public void pre() {
         try {
             delegate = initMethod.newInstance(initParams);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw new RuntimeException(ex);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new SULException(e.getCause());
         }
     }
 
@@ -56,8 +59,8 @@ public class SimplePOJODataMapper
     }
 
     @Override
-    public SULMapper.MappedException<? extends AbstractMethodOutput> mapUnwrappedException(
-            RuntimeException exception) throws RuntimeException {
+    public SULMapper.MappedException<? extends AbstractMethodOutput> mapUnwrappedException(RuntimeException exception)
+            throws RuntimeException {
         return MappedException.repeatOutput(new Error(exception.getCause()), Unobserved.INSTANCE);
     }
 

@@ -24,7 +24,7 @@ package de.learnlib.algorithms.discriminationtree.hypothesis.vpda;
 public class HypRetTrans<I> extends AbstractHypTrans<I> {
 
     public HypRetTrans(HypLoc<I> src, I retSym, I callSym, HypLoc<I> stackLoc) {
-        super(src, stackLoc.getAccessSequence().append(callSym).concat(src.getAccessSequence().append(retSym)));
+        super(stackLoc.getAccessSequence().append(callSym).concat(src.getAccessSequence().append(retSym)));
     }
 
     @Override

@@ -15,7 +15,9 @@
  */
 package de.learnlib.mapper.api;
 
+import de.learnlib.api.exception.SULException;
+
 public interface ContextExecutableInput<O, C> {
 
-    O execute(C context) throws Exception;
+    O execute(C context) throws SULException;
 }

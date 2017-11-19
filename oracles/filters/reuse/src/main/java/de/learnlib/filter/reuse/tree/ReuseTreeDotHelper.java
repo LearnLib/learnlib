@@ -55,12 +55,14 @@ class ReuseTreeDotHelper<S, I, O> extends DefaultDOTHelper<ReuseNode<S, I, O>, R
                                      ReuseNode<S, I, O> tgt,
                                      Map<String, String> properties) {
         super.getEdgeProperties(src, edge, tgt, properties);
-        String label = String.valueOf(edge.getInput()) + " / ";
+
+        final StringBuilder labelBuilder = new StringBuilder();
+        labelBuilder.append(String.valueOf(edge.getInput())).append(" / ");
         O output = edge.getOutput();
         if (output != null) {
-            label += String.valueOf(output);
+            labelBuilder.append(String.valueOf(output));
         }
-        properties.put(EdgeAttrs.LABEL, label);
+        properties.put(EdgeAttrs.LABEL, labelBuilder.toString());
         return true;
     }
 }

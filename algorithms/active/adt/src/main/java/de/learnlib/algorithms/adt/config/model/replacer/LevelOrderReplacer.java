@@ -16,14 +16,11 @@
 package de.learnlib.algorithms.adt.config.model.replacer;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -36,7 +33,6 @@ import de.learnlib.algorithms.adt.model.ReplacementResult;
 import de.learnlib.algorithms.adt.util.ADTUtil;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 
 /**
  * @author frohme
@@ -65,56 +61,21 @@ public class LevelOrderReplacer implements SubtreeReplacer {
 
         queue.add(adt.getRoot());
 
-        replacementLoop:
         while (!queue.isEmpty()) {
             final ADTNode<S, I, O> node = queue.poll();
             final Set<S> targetStates =
                     ADTUtil.collectLeaves(node).stream().map(ADTNode::getHypothesisState).collect(Collectors.toSet());
 
             // try to extendLeaf the parent ADS
-            extensionCase:
 
             // cannot extendLeaf parent
             if (!adt.getRoot().equals(node)) {
-                final ADTNode<S, I, O> parentReset = node.getParent();
+                final ReplacementResult<S, I, O> replacementResult =
+                        SingleReplacer.computeParentExtension(hypothesis, inputs, node, targetStates, adsCalculator);
 
-                assert ADTUtil.isResetNode(parentReset) : new IllegalStateException("should not happen");
-
-                final Word<I> incomingTraceInput = ADTUtil.buildTraceForNode(parentReset).getFirst();
-
-                Map<S, S> currentToInitialMapping =
-                        targetStates.stream().collect(Collectors.toMap(Function.identity(), Function.identity()));
-                for (final I i : incomingTraceInput) {
-
-                    final Map<S, S> nextMapping = new HashMap<>();
-
-                    for (final Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
-                        final S successor = hypothesis.getSuccessor(entry.getKey(), i);
-
-                        // converging states
-                        if (nextMapping.containsKey(successor)) {
-                            break extensionCase;
-                        }
-
-                        nextMapping.put(successor, entry.getValue());
-                    }
-
-                    currentToInitialMapping = nextMapping;
-                }
-
-                final Optional<ADTNode<S, I, O>> potentialExtension =
-                        adsCalculator.compute(hypothesis, inputs, currentToInitialMapping.keySet());
-
-                if (potentialExtension.isPresent()) {
-
-                    final ADTNode<S, I, O> extension = potentialExtension.get();
-
-                    for (final ADTNode<S, I, O> finalNode : ADTUtil.collectLeaves(extension)) {
-                        finalNode.setHypothesisState(currentToInitialMapping.get(finalNode.getHypothesisState()));
-                    }
-
-                    result.add(new ReplacementResult<>(parentReset, potentialExtension.get()));
-                    continue replacementLoop;
+                if (replacementResult != null) {
+                    result.add(replacementResult);
+                    continue;
                 }
             }
 

@@ -41,13 +41,7 @@ public class ExecutableInputSUL<I extends ExecutableInput<? extends O>, O> imple
 
     @Override
     public O step(I in) throws SULException {
-        try {
-            return in.execute();
-        } catch (SULException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new SULException(ex);
-        }
+        return in.execute();
     }
 
     @Override

@@ -61,10 +61,7 @@ import net.automatalib.words.WordBuilder;
  */
 public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> {
 
-    private final Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier;
-
-    private final ThreadLocal<ReuseCapableOracle<S, I, O>> executableOracles =
-            ThreadLocal.withInitial(() -> ReuseOracle.this.oracleSupplier.get());
+    private final ThreadLocal<ReuseCapableOracle<S, I, O>> executableOracles;
 
     private final ReuseTree<S, I, O> tree;
 
@@ -72,7 +69,7 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
      * Default constructor.
      */
     private ReuseOracle(ReuseOracleBuilder<S, I, O> builder) {
-        this.oracleSupplier = builder.oracleSupplier;
+        this.executableOracles = ThreadLocal.withInitial(builder.oracleSupplier::get);
         this.tree = new ReuseTreeBuilder<S, I, O>(builder.alphabet).withSystemStateHandler(builder.systemStateHandler)
                                                                    .withFailureOutputs(builder.failureOutputSymbols)
                                                                    .withInvariantInputs(builder.invariantInputSymbols)

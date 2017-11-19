@@ -175,8 +175,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             return false;
         }
 
-        final Word<I> ceInput = ceQuery.getInput();
-
         // Determine a counterexample decomposition (u, a, v)
         final int suffixIdx = LocalSuffixFinders.RIVEST_SCHAPIRE.findSuffixIndex(ceQuery,
                                                                                  this.hypothesis,
@@ -186,6 +184,8 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         if (suffixIdx == -1) {
             throw new IllegalStateException();
         }
+
+        final Word<I> ceInput = ceQuery.getInput();
 
         final Word<I> u = ceInput.prefix(suffixIdx - 1);
         final Word<I> ua = ceInput.prefix(suffixIdx);

@@ -18,6 +18,7 @@ package de.learnlib.algorithms.kv.mealy;
 import java.io.Serializable;
 import java.util.List;
 
+import de.learnlib.algorithms.kv.StateInfo;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Word;
@@ -35,13 +36,12 @@ import net.automatalib.words.Word;
 class KearnsVaziraniMealyState<I, O> implements Serializable {
 
     private final CompactMealy<I, O> hypothesis;
-    private final AbstractWordBasedDiscriminationTree<I, Word<O>, KearnsVaziraniMealy.StateInfo<I, O>>
-            discriminationTree;
-    private final List<KearnsVaziraniMealy.StateInfo<I, O>> stateInfos;
+    private final AbstractWordBasedDiscriminationTree<I, Word<O>, StateInfo<I, Word<O>>> discriminationTree;
+    private final List<StateInfo<I, Word<O>>> stateInfos;
 
     KearnsVaziraniMealyState(final CompactMealy<I, O> hypothesis,
-                             final AbstractWordBasedDiscriminationTree<I, Word<O>, KearnsVaziraniMealy.StateInfo<I, O>> discriminationTree,
-                             final List<KearnsVaziraniMealy.StateInfo<I, O>> stateInfos) {
+                             final AbstractWordBasedDiscriminationTree<I, Word<O>, StateInfo<I, Word<O>>> discriminationTree,
+                             final List<StateInfo<I, Word<O>>> stateInfos) {
         this.hypothesis = hypothesis;
         this.discriminationTree = discriminationTree;
         this.stateInfos = stateInfos;
@@ -51,11 +51,11 @@ class KearnsVaziraniMealyState<I, O> implements Serializable {
         return hypothesis;
     }
 
-    AbstractWordBasedDiscriminationTree<I, Word<O>, KearnsVaziraniMealy.StateInfo<I, O>> getDiscriminationTree() {
+    AbstractWordBasedDiscriminationTree<I, Word<O>, StateInfo<I, Word<O>>> getDiscriminationTree() {
         return discriminationTree;
     }
 
-    List<KearnsVaziraniMealy.StateInfo<I, O>> getStateInfos() {
+    List<StateInfo<I, Word<O>>> getStateInfos() {
         return stateInfos;
     }
 }

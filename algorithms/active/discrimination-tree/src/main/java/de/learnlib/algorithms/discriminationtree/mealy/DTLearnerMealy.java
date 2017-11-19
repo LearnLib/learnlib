@@ -100,12 +100,12 @@ public class DTLearnerMealy<I, O> extends AbstractDTLearner<MealyMachine<?, I, ?
                 if (!super.getEdgeProperties(src, edge, tgt, properties)) {
                     return false;
                 }
-                String label = String.valueOf(edge.getSymbol());
-                label += " / ";
+                final StringBuilder labelBuilder = new StringBuilder();
+                labelBuilder.append(String.valueOf(edge.getSymbol())).append(" / ");
                 if (edge.getProperty() != null) {
-                    label += edge.getProperty();
+                    labelBuilder.append(edge.getProperty());
                 }
-                properties.put(EdgeAttrs.LABEL, label);
+                properties.put(EdgeAttrs.LABEL, labelBuilder.toString());
 
                 return true;
             }

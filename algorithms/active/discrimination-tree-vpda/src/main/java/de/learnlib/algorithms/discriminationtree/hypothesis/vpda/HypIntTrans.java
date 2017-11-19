@@ -26,7 +26,7 @@ public class HypIntTrans<I> extends AbstractHypTrans<I> {
     private final I intSymbol;
 
     public HypIntTrans(HypLoc<I> src, I intSym) {
-        super(src, src.getAccessSequence().append(intSym));
+        super(src.getAccessSequence().append(intSym));
         this.intSymbol = intSym;
     }
 
