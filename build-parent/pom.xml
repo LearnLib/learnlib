@@ -70,6 +70,68 @@ limitations under the License.
                             </execution>
                         </executions>
                     </plugin>
+                    <!-- TODO FIXME XXX oh boy, here we go:
+                    Since the pmd-plugin (at least until now) reads its 'violation exclusion' file as a real file
+                    (i.e. not as a resource from the classpath) we need to provide an actual file path. Since Maven
+                    evaluates any variables such as ${basedir} in the context of the _active_ project it will change
+                    for every child module (so we cannot specify an absolute path relative to the git checkout)
+
+                    For now, we use the dependency plugin to extract our build-tools artifact (only the pmd-exclusions)
+                    into the ${project.build.directory} for every module, where we can correctly reference it using
+                    Maven variables again. Since this all happens in the 'verify' phase, this will not pollute the
+                    contents of the jars (packaged in the 'package' phase).
+
+                    This should be cleaned up as soon as the PMD plugins can read exclusion files from the classpath
+                    -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-pmd</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifact>de.learnlib:learnlib-build-tools:${project.version}</artifact>
+                                    <includes>learnlib-pmd-exclusions.properties</includes>
+                                    <outputDirectory>${project.build.directory}/pmd/</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <configuration>
+                            <rulesets>
+                                <ruleset>/learnlib-pmd-ruleset.xml</ruleset>
+                            </rulesets>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>de.learnlib</groupId>
+                                <artifactId>learnlib-build-tools</artifactId>
+                                <version>${project.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>pmd</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- Path is loaded as a file, not as a resource, thus we need the absolute path -->
+                                    <excludeFromFailureFile>
+                                        ${project.build.directory}/pmd/learnlib-pmd-exclusions.properties
+                                    </excludeFromFailureFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -109,7 +171,6 @@ limitations under the License.
     <build>
         <pluginManagement>
             <plugins>
-
                 <!-- If we run coverage analysis, skip generated sources -->
                 <plugin>
                     <groupId>org.jacoco</groupId>
@@ -131,23 +192,6 @@ limitations under the License.
                             <exclude>**/TTTLearnerVPDABuilder.class</exclude>
                         </excludes>
                     </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-pmd-plugin</artifactId>
-                    <configuration>
-                        <rulesets>
-                            <ruleset>/learnlib-pmd-ruleset.xml</ruleset>
-                        </rulesets>
-                    </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>de.learnlib</groupId>
-                            <artifactId>learnlib-build-tools</artifactId>
-                            <version>${project.version}</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
