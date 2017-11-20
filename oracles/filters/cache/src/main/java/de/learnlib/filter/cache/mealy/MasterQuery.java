@@ -107,7 +107,7 @@ final class MasterQuery<I, O> extends AbstractQuery<I, Word<O>> {
     }
 
     /**
-     * @see de.learnlib.util.oracle.AbstractQuery#toStringWithAnswer(Object)
+     * @see AbstractQuery#toStringWithAnswer(Object)
      */
     @Override
     public String toString() {
