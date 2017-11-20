@@ -210,12 +210,12 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
     public class GraphView implements Graph<TTTState<I, D>, TTTEdge<I, D>> {
 
         @Override
-        public Collection<? extends TTTState<I, D>> getNodes() {
+        public Collection<TTTState<I, D>> getNodes() {
             return states;
         }
 
         @Override
-        public Collection<? extends TTTEdge<I, D>> getOutgoingEdges(TTTState<I, D> node) {
+        public Collection<TTTEdge<I, D>> getOutgoingEdges(TTTState<I, D> node) {
             List<TTTEdge<I, D>> result = new ArrayList<>();
             for (TTTTransition<I, D> trans : node.getTransitions()) {
                 for (TTTState<I, D> target : trans.getDTTarget().subtreeStates()) {

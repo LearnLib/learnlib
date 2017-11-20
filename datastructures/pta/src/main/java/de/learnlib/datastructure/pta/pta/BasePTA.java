@@ -248,7 +248,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
         return new Graph<S, PTATransition<S>>() {
 
             @Override
-            public Collection<? extends PTATransition<S>> getOutgoingEdges(S node) {
+            public Collection<PTATransition<S>> getOutgoingEdges(S node) {
                 return IntStream.range(0, alphabetSize)
                                 .filter(i -> node.getSuccessor(i) != null)
                                 .mapToObj(i -> new PTATransition<>(node, i))
@@ -261,7 +261,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
             }
 
             @Override
-            public Collection<? extends S> getNodes() {
+            public Collection<S> getNodes() {
                 return bfsStates();
             }
 

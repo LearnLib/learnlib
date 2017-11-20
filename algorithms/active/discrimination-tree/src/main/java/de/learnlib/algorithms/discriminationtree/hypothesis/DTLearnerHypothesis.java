@@ -192,7 +192,7 @@ public class DTLearnerHypothesis<I, O, SP, TP>
             return new DefaultDOTHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>>() {
 
                 @Override
-                protected Collection<? extends HState<I, O, SP, TP>> initialNodes() {
+                protected Collection<HState<I, O, SP, TP>> initialNodes() {
                     return Collections.singleton(root);
                 }
 

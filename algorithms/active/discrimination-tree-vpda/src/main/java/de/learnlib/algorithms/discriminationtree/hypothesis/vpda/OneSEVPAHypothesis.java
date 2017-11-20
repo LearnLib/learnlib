@@ -99,7 +99,7 @@ public class OneSEVPAHypothesis<I> extends AbstractOneSEVPA<HypLoc<I>, I> {
     }
 
     @Override
-    public List<? extends HypLoc<I>> getLocations() {
+    public List<HypLoc<I>> getLocations() {
         return locations;
     }
 

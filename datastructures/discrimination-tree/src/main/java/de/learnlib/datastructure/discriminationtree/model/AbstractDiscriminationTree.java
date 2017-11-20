@@ -135,7 +135,7 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
      * AutomataLib Graph API
      */
     @Override
-    public Collection<? extends N> getNodes() {
+    public Collection<N> getNodes() {
         List<N> nodes = new ArrayList<>();
         Iterables.addAll(nodes, GraphTraversal.breadthFirstOrder(this, Collections.singleton(root)));
         return nodes;

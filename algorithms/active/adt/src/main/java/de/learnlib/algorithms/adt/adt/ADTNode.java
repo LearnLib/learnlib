@@ -61,7 +61,7 @@ public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I
 
     // default methods for graph interface
     @Override
-    default Collection<? extends ADTNode<S, I, O>> getNodes() {
+    default Collection<ADTNode<S, I, O>> getNodes() {
         return getNodesForRoot(this);
     }
 

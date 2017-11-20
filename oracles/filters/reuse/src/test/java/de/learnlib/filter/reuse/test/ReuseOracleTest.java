@@ -57,7 +57,7 @@ public class ReuseOracleTest {
                     }
                 };
 
-        Supplier<? extends ReuseCapableOracle<Integer, Integer, String>> oracleSupplier = () -> reuseCapableOracle;
+        Supplier<ReuseCapableOracle<Integer, Integer, String>> oracleSupplier = () -> reuseCapableOracle;
 
         Alphabet<Integer> alphabet = Alphabets.integers(0, 10);
 
