@@ -29,7 +29,7 @@ class LearnerVariantListImpl<M, I, D> implements LearnerVariantList<M, I, D> {
 
     private final List<LearnerVariant<M, I, D>> learnerVariants = new ArrayList<>();
 
-    public List<? extends LearnerVariant<M, I, D>> getLearnerVariants() {
+    public List<LearnerVariant<M, I, D>> getLearnerVariants() {
         return learnerVariants;
     }
 

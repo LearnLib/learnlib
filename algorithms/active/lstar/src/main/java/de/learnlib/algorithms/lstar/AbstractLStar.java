@@ -210,7 +210,7 @@ public abstract class AbstractLStar<A, I, D>
     }
 
     @Override
-    public Collection<? extends Word<I>> getGlobalSuffixes() {
+    public Collection<Word<I>> getGlobalSuffixes() {
         return Collections.unmodifiableCollection(table.getSuffixes());
     }
 

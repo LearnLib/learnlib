@@ -682,17 +682,17 @@ public final class ObservationTable<I, D> implements AccessSequenceTransformer<I
         return new de.learnlib.datastructure.observationtable.ObservationTable<I, D>() {
 
             @Override
-            public Collection<? extends Word<I>> getAllPrefixes() {
+            public Collection<Word<I>> getAllPrefixes() {
                 return Collections.unmodifiableSet(rowMap.keySet());
             }
 
             @Override
-            public Collection<? extends de.learnlib.datastructure.observationtable.ObservationTable.Row<I, D>> getShortPrefixRows() {
+            public Collection<de.learnlib.datastructure.observationtable.ObservationTable.Row<I, D>> getShortPrefixRows() {
                 return Collections.unmodifiableList(Lists.transform(shortPrefixRows, wrapRow));
             }
 
             @Override
-            public Collection<? extends de.learnlib.datastructure.observationtable.ObservationTable.Row<I, D>> getLongPrefixRows() {
+            public Collection<de.learnlib.datastructure.observationtable.ObservationTable.Row<I, D>> getLongPrefixRows() {
                 return Collections.unmodifiableList(Lists.transform(longPrefixRows, wrapRow));
             }
 
@@ -702,7 +702,7 @@ public final class ObservationTable<I, D> implements AccessSequenceTransformer<I
             }
 
             @Override
-            public List<? extends de.learnlib.datastructure.observationtable.ObservationTable.Row<I, D>> getAllRows() {
+            public List<de.learnlib.datastructure.observationtable.ObservationTable.Row<I, D>> getAllRows() {
                 return Collections.unmodifiableList(Lists.transform(allRows, wrapRow));
             }
 
@@ -717,7 +717,7 @@ public final class ObservationTable<I, D> implements AccessSequenceTransformer<I
             }
 
             @Override
-            public List<? extends Word<I>> getSuffixes() {
+            public List<Word<I>> getSuffixes() {
                 return Collections.unmodifiableList(suffixes);
             }
 

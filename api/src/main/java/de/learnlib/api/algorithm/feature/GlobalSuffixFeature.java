@@ -32,7 +32,7 @@ public interface GlobalSuffixFeature<I> {
      *
      * @return the global suffixes used by this algorithm
      */
-    Collection<? extends Word<I>> getGlobalSuffixes();
+    Collection<Word<I>> getGlobalSuffixes();
 
     /**
      * Add the provided suffixes to the collection of global suffixes. As this method is designed to possibly trigger a

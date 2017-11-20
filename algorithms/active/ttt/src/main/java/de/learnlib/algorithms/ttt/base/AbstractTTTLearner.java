@@ -350,15 +350,6 @@ public abstract class AbstractTTTLearner<A, I, D>
         return curr;
     }
 
-    protected Collection<? extends TTTState<I, D>> getNondetSuccessors(Collection<? extends TTTState<I, D>> states,
-                                                                       Iterable<? extends I> suffix) {
-        Collection<? extends TTTState<I, D>> curr = states;
-        for (I sym : suffix) {
-            curr = getNondetSuccessors(curr, sym);
-        }
-        return curr;
-    }
-
     protected Set<TTTState<I, D>> getNondetSuccessors(Collection<? extends TTTState<I, D>> states, I sym) {
         Set<TTTState<I, D>> result = new HashSet<>();
         int symIdx = alphabet.getSymbolIndex(sym);
@@ -596,7 +587,7 @@ public abstract class AbstractTTTLearner<A, I, D>
     }
 
     protected boolean allNodesFinal() {
-        Iterator<? extends AbstractBaseDTNode<I, D>> it = dtree.getRoot().subtreeNodesIterator();
+        Iterator<AbstractBaseDTNode<I, D>> it = dtree.getRoot().subtreeNodesIterator();
         while (it.hasNext()) {
             AbstractBaseDTNode<I, D> node = it.next();
             assert !node.isTemp() : "Final node with discriminator " + node.getDiscriminator();

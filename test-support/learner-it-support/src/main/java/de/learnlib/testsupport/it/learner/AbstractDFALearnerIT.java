@@ -42,7 +42,7 @@ public abstract class AbstractDFALearnerIT extends AbstractLearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<LearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
-        final List<? extends DFALearningExample<?>> examples = LearningExamples.createDFAExamples();
+        final List<DFALearningExample<?>> examples = LearningExamples.createDFAExamples();
 
         for (DFALearningExample<?> example : examples) {
             result.addAll(createAllVariantsITCase(example));

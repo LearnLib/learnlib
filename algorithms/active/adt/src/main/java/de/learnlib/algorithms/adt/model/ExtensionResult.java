@@ -73,6 +73,7 @@ public class ExtensionResult<S, I, O> {
      *
      * @return the empty result
      */
+    @SuppressWarnings("unchecked")
     public static <S, I, O> ExtensionResult<S, I, O> empty() {
         return (ExtensionResult<S, I, O>) EMPTY;
     }

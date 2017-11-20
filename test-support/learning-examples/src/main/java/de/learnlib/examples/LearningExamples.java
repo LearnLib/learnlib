@@ -46,14 +46,14 @@ public final class LearningExamples {
         throw new AssertionError("Constructor should not be invoked");
     }
 
-    public static List<? extends DFALearningExample<?>> createDFAExamples() {
+    public static List<DFALearningExample<?>> createDFAExamples() {
         return Arrays.asList(ExampleAngluin.createExample(),
                              ExamplePaulAndMary.createExample(),
                              ExampleKeylock.createExample(KEYLOCK_SIZE, false),
                              ExampleKeylock.createExample(KEYLOCK_SIZE, true));
     }
 
-    public static List<? extends MealyLearningExample<?, ?>> createMealyExamples() {
+    public static List<MealyLearningExample<?, ?>> createMealyExamples() {
         return Arrays.asList(ExampleCoffeeMachine.createExample(),
                              ExampleGrid.createExample(GRID_XSIZE, GRID_YSIZE),
                              ExampleShahbazGroz.createExample(),

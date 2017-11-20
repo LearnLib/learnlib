@@ -40,10 +40,10 @@ public final class GlobalSuffixFinders {
     public static final GlobalSuffixFinder<Object, Object> MALER_PNUELI = new GlobalSuffixFinder<Object, Object>() {
 
         @Override
-        public <RI, RD> List<? extends Word<RI>> findSuffixes(Query<RI, RD> ceQuery,
-                                                              AccessSequenceTransformer<RI> asTransformer,
-                                                              SuffixOutput<RI, RD> hypOutput,
-                                                              MembershipOracle<RI, RD> oracle) {
+        public <RI, RD> List<Word<RI>> findSuffixes(Query<RI, RD> ceQuery,
+                                                    AccessSequenceTransformer<RI> asTransformer,
+                                                    SuffixOutput<RI, RD> hypOutput,
+                                                    MembershipOracle<RI, RD> oracle) {
             return findMalerPnueli(ceQuery);
         }
 
@@ -62,10 +62,10 @@ public final class GlobalSuffixFinders {
     public static final GlobalSuffixFinder<Object, Object> SHAHBAZ = new GlobalSuffixFinder<Object, Object>() {
 
         @Override
-        public <RI, RD> List<? extends Word<RI>> findSuffixes(Query<RI, RD> ceQuery,
-                                                              AccessSequenceTransformer<RI> asTransformer,
-                                                              SuffixOutput<RI, RD> hypOutput,
-                                                              MembershipOracle<RI, RD> oracle) {
+        public <RI, RD> List<Word<RI>> findSuffixes(Query<RI, RD> ceQuery,
+                                                    AccessSequenceTransformer<RI> asTransformer,
+                                                    SuffixOutput<RI, RD> hypOutput,
+                                                    MembershipOracle<RI, RD> oracle) {
             return findShahbaz(ceQuery, asTransformer);
         }
 
@@ -160,7 +160,7 @@ public final class GlobalSuffixFinders {
         return new GlobalSuffixFinder<I, D>() {
 
             @Override
-            public <RI extends I, RD extends D> List<? extends Word<RI>> findSuffixes(Query<RI, RD> ceQuery,
+            public <RI extends I, RD extends D> List<Word<RI>> findSuffixes(Query<RI, RD> ceQuery,
                                                                                       AccessSequenceTransformer<RI> asTransformer,
                                                                                       SuffixOutput<RI, RD> hypOutput,
                                                                                       MembershipOracle<RI, RD> oracle) {
@@ -179,7 +179,7 @@ public final class GlobalSuffixFinders {
      * Transforms a suffix index returned by a {@link LocalSuffixFinder} into a list containing the single
      * distinguishing suffix.
      */
-    public static <I, D> List<? extends Word<I>> suffixesForLocalOutput(Query<I, D> ceQuery, int localSuffixIdx) {
+    public static <I, D> List<Word<I>> suffixesForLocalOutput(Query<I, D> ceQuery, int localSuffixIdx) {
         return suffixesForLocalOutput(ceQuery, localSuffixIdx, false);
     }
 
@@ -194,9 +194,9 @@ public final class GlobalSuffixFinders {
      * the returned global suffix finder should not only contain the single suffix, but also all of its suffixes,
      * ensuring suffix-closedness.
      */
-    public static <I, D> List<? extends Word<I>> suffixesForLocalOutput(Query<I, D> ceQuery,
-                                                                        int localSuffixIdx,
-                                                                        boolean allSuffixes) {
+    public static <I, D> List<Word<I>> suffixesForLocalOutput(Query<I, D> ceQuery,
+                                                              int localSuffixIdx,
+                                                              boolean allSuffixes) {
 
         if (localSuffixIdx == -1) {
             return Collections.emptyList();
@@ -219,7 +219,7 @@ public final class GlobalSuffixFinders {
      *
      * @return all suffixes of the counterexample input
      */
-    public static <I, D> List<? extends Word<I>> findMalerPnueli(Query<I, D> ceQuery) {
+    public static <I, D> List<Word<I>> findMalerPnueli(Query<I, D> ceQuery) {
         return ceQuery.getInput().suffixes(false);
     }
 
@@ -235,8 +235,7 @@ public final class GlobalSuffixFinders {
      * @return all suffixes from the counterexample after stripping a maximal one-letter extension of an access
      * sequence.
      */
-    public static <I, D> List<? extends Word<I>> findShahbaz(Query<I, D> ceQuery,
-                                                             AccessSequenceTransformer<I> asTransformer) {
+    public static <I, D> List<Word<I>> findShahbaz(Query<I, D> ceQuery, AccessSequenceTransformer<I> asTransformer) {
         Word<I> queryWord = ceQuery.getInput();
         int queryLen = queryWord.length();
 
@@ -274,11 +273,11 @@ public final class GlobalSuffixFinders {
      *
      * @see LocalSuffixFinders#findLinear(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)
      */
-    public static <I, D> List<? extends Word<I>> findLinear(Query<I, D> ceQuery,
-                                                            AccessSequenceTransformer<I> asTransformer,
-                                                            SuffixOutput<I, D> hypOutput,
-                                                            MembershipOracle<I, D> oracle,
-                                                            boolean allSuffixes) {
+    public static <I, D> List<Word<I>> findLinear(Query<I, D> ceQuery,
+                                                  AccessSequenceTransformer<I> asTransformer,
+                                                  SuffixOutput<I, D> hypOutput,
+                                                  MembershipOracle<I, D> oracle,
+                                                  boolean allSuffixes) {
         int idx = LocalSuffixFinders.findLinear(ceQuery, asTransformer, hypOutput, oracle);
         return suffixesForLocalOutput(ceQuery, idx, allSuffixes);
     }
@@ -302,11 +301,11 @@ public final class GlobalSuffixFinders {
      *
      * @see LocalSuffixFinders#findLinearReverse(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)
      */
-    public static <I, D> List<? extends Word<I>> findLinearReverse(Query<I, D> ceQuery,
-                                                                   AccessSequenceTransformer<I> asTransformer,
-                                                                   SuffixOutput<I, D> hypOutput,
-                                                                   MembershipOracle<I, D> oracle,
-                                                                   boolean allSuffixes) {
+    public static <I, D> List<Word<I>> findLinearReverse(Query<I, D> ceQuery,
+                                                         AccessSequenceTransformer<I> asTransformer,
+                                                         SuffixOutput<I, D> hypOutput,
+                                                         MembershipOracle<I, D> oracle,
+                                                         boolean allSuffixes) {
         int idx = LocalSuffixFinders.findLinearReverse(ceQuery, asTransformer, hypOutput, oracle);
         return suffixesForLocalOutput(ceQuery, idx, allSuffixes);
     }
@@ -330,11 +329,11 @@ public final class GlobalSuffixFinders {
      *
      * @see LocalSuffixFinders#findRivestSchapire(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)
      */
-    public static <I, O> List<? extends Word<I>> findRivestSchapire(Query<I, O> ceQuery,
-                                                                    AccessSequenceTransformer<I> asTransformer,
-                                                                    SuffixOutput<I, O> hypOutput,
-                                                                    MembershipOracle<I, O> oracle,
-                                                                    boolean allSuffixes) {
+    public static <I, O> List<Word<I>> findRivestSchapire(Query<I, O> ceQuery,
+                                                          AccessSequenceTransformer<I> asTransformer,
+                                                          SuffixOutput<I, O> hypOutput,
+                                                          MembershipOracle<I, O> oracle,
+                                                          boolean allSuffixes) {
         int idx = LocalSuffixFinders.findRivestSchapire(ceQuery, asTransformer, hypOutput, oracle);
         return suffixesForLocalOutput(ceQuery, idx, allSuffixes);
     }

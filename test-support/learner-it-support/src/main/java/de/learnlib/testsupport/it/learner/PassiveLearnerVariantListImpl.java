@@ -27,7 +27,7 @@ public class PassiveLearnerVariantListImpl<M, I, D> implements PassiveLearnerVar
 
     private final List<PassiveLearnerVariant<M, I, D>> learnerVariants = new ArrayList<>();
 
-    public List<? extends PassiveLearnerVariant<M, I, D>> getLearnerVariants() {
+    public List<PassiveLearnerVariant<M, I, D>> getLearnerVariants() {
         return learnerVariants;
     }
 

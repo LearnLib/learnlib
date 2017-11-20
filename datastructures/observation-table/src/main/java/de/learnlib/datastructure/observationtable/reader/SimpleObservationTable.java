@@ -49,31 +49,31 @@ public class SimpleObservationTable<I, D> implements ObservationTable<I, D> {
 
     @Nonnull
     @Override
-    public Collection<? extends Word<I>> getAllPrefixes() {
+    public Collection<Word<I>> getAllPrefixes() {
         return Collections.emptyList();
     }
 
     @Nonnull
     @Override
-    public Collection<? extends Word<I>> getShortPrefixes() {
+    public Collection<Word<I>> getShortPrefixes() {
         return Collections.emptyList();
     }
 
     @Nonnull
     @Override
-    public Collection<? extends Word<I>> getLongPrefixes() {
+    public Collection<Word<I>> getLongPrefixes() {
         return Collections.emptyList();
     }
 
     @Nonnull
     @Override
-    public Collection<? extends Row<I, D>> getShortPrefixRows() {
+    public Collection<Row<I, D>> getShortPrefixRows() {
         return Collections.emptyList();
     }
 
     @Nonnull
     @Override
-    public Collection<? extends Row<I, D>> getLongPrefixRows() {
+    public Collection<Row<I, D>> getLongPrefixRows() {
         throw new UnsupportedOperationException();
     }
 
@@ -85,7 +85,7 @@ public class SimpleObservationTable<I, D> implements ObservationTable<I, D> {
 
     @Nonnull
     @Override
-    public Collection<? extends Row<I, D>> getAllRows() {
+    public Collection<Row<I, D>> getAllRows() {
         return Collections.emptyList();
     }
 
@@ -138,7 +138,7 @@ public class SimpleObservationTable<I, D> implements ObservationTable<I, D> {
 
     @Nonnull
     @Override
-    public List<? extends Word<I>> getSuffixes() {
+    public List<Word<I>> getSuffixes() {
         return Collections.unmodifiableList(suffixes);
     }
 

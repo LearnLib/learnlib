@@ -44,7 +44,7 @@ public class CounterOracleTest {
 
     @Test(dependsOnMethods = "testInitialState")
     public void testFirstQueryBatch() {
-        Collection<? extends Query<Object, Object>> queries = AbstractTestQueries.createNoopQueries(2);
+        Collection<Query<Object, Object>> queries = AbstractTestQueries.createNoopQueries(2);
         long oldCount = oracle.getCount();
         oracle.processQueries(queries);
         Assert.assertEquals(oracle.getCount(), oldCount + 2L);
@@ -52,7 +52,7 @@ public class CounterOracleTest {
 
     @Test(dependsOnMethods = "testFirstQueryBatch")
     public void testEmptyQueryBatch() {
-        Collection<? extends Query<Object, Object>> noQueries = Collections.emptySet();
+        Collection<Query<Object, Object>> noQueries = Collections.emptySet();
         long oldCount = oracle.getCount();
         oracle.processQueries(noQueries);
         Assert.assertEquals(oracle.getCount(), oldCount);
@@ -60,7 +60,7 @@ public class CounterOracleTest {
 
     @Test(dependsOnMethods = "testEmptyQueryBatch")
     public void testSecondQueryBatch() {
-        Collection<? extends Query<Object, Object>> queries = AbstractTestQueries.createNoopQueries(1);
+        Collection<Query<Object, Object>> queries = AbstractTestQueries.createNoopQueries(1);
         long oldCount = oracle.getCount();
         oracle.processQueries(queries);
         Assert.assertEquals(oracle.getCount(), oldCount + 1L);

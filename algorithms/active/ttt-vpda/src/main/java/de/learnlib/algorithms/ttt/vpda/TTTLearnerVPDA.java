@@ -325,11 +325,11 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
      *
      * @return a splitter for this block, or {@code null} if no such splitter could be found.
      */
-    @SuppressWarnings("unchecked")
     private Splitter<I> findSplitter(DTNode<I> blockRoot) {
         int alphabetSize =
                 alphabet.getNumInternals() + alphabet.getNumCalls() * alphabet.getNumReturns() * hypothesis.size() * 2;
 
+        @SuppressWarnings("unchecked")
         DTNode<I>[] lcas = new DTNode[alphabetSize];
 
         for (HypLoc<I> loc : blockRoot.subtreeLocations()) {

@@ -101,6 +101,7 @@ public abstract class AbstractResumableLearnerTest<L extends ResumableLearner<T>
         // deserialize the state
         final ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
         final ObjectInputStream objectIn = new ObjectInputStream(byteIn);
+        @SuppressWarnings("unchecked")
         final T serializedState = (T) objectIn.readObject();
         objectIn.close();
 

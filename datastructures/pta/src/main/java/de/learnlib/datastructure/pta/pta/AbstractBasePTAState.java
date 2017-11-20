@@ -43,9 +43,9 @@ public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAStat
         return copy((transProperties != null) ? transProperties.clone() : null);
     }
 
-    @SuppressWarnings("unchecked")
     public S copy(RichArray<TP> newTPs) {
         try {
+            @SuppressWarnings("unchecked")
             S copy = (S) clone();
             copy.transProperties = newTPs;
             if (successors != null) {
@@ -89,12 +89,11 @@ public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAStat
 
     protected abstract S createState();
 
-    @SuppressWarnings("unchecked")
     public void forEachSucc(Consumer<? super S> cons) {
         if (successors != null) {
-            for (Object succ : successors) {
+            for (S succ : successors) {
                 if (succ != null) {
-                    cons.accept((S) succ);
+                    cons.accept(succ);
                 }
             }
         }

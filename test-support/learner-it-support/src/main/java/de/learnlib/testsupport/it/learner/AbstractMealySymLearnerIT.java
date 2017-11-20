@@ -45,7 +45,7 @@ public abstract class AbstractMealySymLearnerIT extends AbstractLearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<LearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
-        final List<? extends MealyLearningExample<?, ?>> examples = LearningExamples.createMealyExamples();
+        final List<MealyLearningExample<?, ?>> examples = LearningExamples.createMealyExamples();
 
         for (MealyLearningExample<?, ?> example : examples) {
             result.addAll(createAllVariantsITCase(example));

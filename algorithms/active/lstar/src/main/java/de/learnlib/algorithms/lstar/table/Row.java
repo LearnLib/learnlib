@@ -78,7 +78,6 @@ public final class Row<I> implements Serializable {
      * @param initialAlphabetSize
      *         the size of the input alphabet.
      */
-    @SuppressWarnings("unchecked")
     public void makeShort(int initialAlphabetSize) {
         if (lpIndex == -1) {
             return;

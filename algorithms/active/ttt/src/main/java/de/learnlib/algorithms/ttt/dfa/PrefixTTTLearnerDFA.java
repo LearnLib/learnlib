@@ -53,6 +53,7 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected boolean refineHypothesisSingle(DefaultQuery<I, Boolean> ceQuery) {
         if (((TTTHypothesisDFA<I>) hypothesis).computeSuffixOutput(ceQuery.getPrefix(), ceQuery.getSuffix())
                                               .equals(ceQuery.getOutput())) {

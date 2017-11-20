@@ -214,6 +214,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
                 return false;
             }
 
+            @SuppressWarnings("unchecked")
             Entry entry = (Entry) o;
 
             return getKey().equals(entry.getKey());

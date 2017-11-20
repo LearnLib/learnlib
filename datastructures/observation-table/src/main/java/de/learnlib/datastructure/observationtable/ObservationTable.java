@@ -84,9 +84,9 @@ public interface ObservationTable<I, D> {
      * @return all prefixes in the table
      */
     @Nonnull
-    default Collection<? extends Word<I>> getAllPrefixes() {
-        Collection<? extends Word<I>> shortPrefixes = getShortPrefixes();
-        Collection<? extends Word<I>> longPrefixes = getLongPrefixes();
+    default Collection<Word<I>> getAllPrefixes() {
+        Collection<Word<I>> shortPrefixes = getShortPrefixes();
+        Collection<Word<I>> longPrefixes = getLongPrefixes();
         List<Word<I>> result = new ArrayList<>(shortPrefixes.size() + longPrefixes.size());
 
         result.addAll(shortPrefixes);
@@ -101,8 +101,8 @@ public interface ObservationTable<I, D> {
      * @return the short prefixes in the table
      */
     @Nonnull
-    default Collection<? extends Word<I>> getShortPrefixes() {
-        Collection<? extends Row<I, D>> spRows = getShortPrefixRows();
+    default Collection<Word<I>> getShortPrefixes() {
+        Collection<Row<I, D>> spRows = getShortPrefixRows();
         return spRows.stream().map(Row::getLabel).collect(Collectors.toList());
 
     }
@@ -113,16 +113,16 @@ public interface ObservationTable<I, D> {
      * @return the long prefixes in the table
      */
     @Nonnull
-    default Collection<? extends Word<I>> getLongPrefixes() {
-        Collection<? extends Row<I, D>> lpRows = getLongPrefixRows();
+    default Collection<Word<I>> getLongPrefixes() {
+        Collection<Row<I, D>> lpRows = getLongPrefixRows();
         return lpRows.stream().map(Row::getLabel).collect(Collectors.toList());
     }
 
     @Nonnull
-    Collection<? extends Row<I, D>> getShortPrefixRows();
+    Collection<Row<I, D>> getShortPrefixRows();
 
     @Nonnull
-    Collection<? extends Row<I, D>> getLongPrefixRows();
+    Collection<Row<I, D>> getLongPrefixRows();
 
     @Nullable
     default Row<I, D> getRow(Word<I> prefix) {
@@ -136,9 +136,9 @@ public interface ObservationTable<I, D> {
     }
 
     @Nonnull
-    default Collection<? extends Row<I, D>> getAllRows() {
-        Collection<? extends Row<I, D>> spRows = getShortPrefixRows();
-        Collection<? extends Row<I, D>> lpRows = getLongPrefixRows();
+    default Collection<Row<I, D>> getAllRows() {
+        Collection<Row<I, D>> spRows = getShortPrefixRows();
+        Collection<Row<I, D>> lpRows = getLongPrefixRows();
 
         List<Row<I, D>> result = new ArrayList<>(spRows.size() + lpRows.size());
         result.addAll(spRows);
@@ -229,8 +229,8 @@ public interface ObservationTable<I, D> {
      */
     @Signed
     default int findDistinguishingSuffixIndex(Row<I, D> row1, Row<I, D> row2) {
-        Iterator<? extends D> values1It = row1.getContents().iterator();
-        Iterator<? extends D> values2It = row2.getContents().iterator();
+        Iterator<D> values1It = row1.getContents().iterator();
+        Iterator<D> values2It = row2.getContents().iterator();
 
         int i = 0;
         while (values1It.hasNext() && values2It.hasNext()) {
@@ -273,7 +273,7 @@ public interface ObservationTable<I, D> {
      * @return all suffixes in the table
      */
     @Nonnull
-    List<? extends Word<I>> getSuffixes();
+    List<Word<I>> getSuffixes();
 
     default boolean isConsistent(Collection<? extends I> inputs) {
         return (findInconsistency(inputs) == null);
@@ -281,9 +281,9 @@ public interface ObservationTable<I, D> {
 
     @Nullable
     default Inconsistency<I, D> findInconsistency(Collection<? extends I> inputs) {
-        Map<List<? extends D>, Row<I, D>> spRowsByContent = new HashMap<>();
+        Map<List<D>, Row<I, D>> spRowsByContent = new HashMap<>();
         for (Row<I, D> spRow : getShortPrefixRows()) {
-            List<? extends D> content = spRow.getContents();
+            List<D> content = spRow.getContents();
             Row<I, D> canonicalRow = spRowsByContent.get(content);
             if (canonicalRow != null) {
                 for (I inputSym : inputs) {
@@ -336,7 +336,7 @@ public interface ObservationTable<I, D> {
          * @return the cell contents in this row
          */
         @Nonnull
-        List<? extends D> getContents();
+        List<D> getContents();
 
         /**
          * Retrieves the size (length) of this row.
@@ -404,9 +404,8 @@ public interface ObservationTable<I, D> {
     abstract class AbstractRow<I, D> implements Row<I, D> {
 
         @Override
-        @SuppressWarnings("unchecked")
         public Iterator<D> iterator() {
-            return (Iterator<D>) Collections.unmodifiableCollection(getContents()).iterator();
+            return Collections.unmodifiableCollection(getContents()).iterator();
         }
 
         @Override

@@ -28,7 +28,7 @@ public abstract class AbstractTestQueries {
         throw new AssertionError("Constructor should not be invoked");
     }
 
-    public static <I, D> Collection<? extends Query<I, D>> createNoopQueries(int numQueries) {
+    public static <I, D> Collection<Query<I, D>> createNoopQueries(int numQueries) {
         List<Query<I, D>> result = new ArrayList<>(numQueries);
         for (int i = 0; i < numQueries; i++) {
             result.add(new NoopQuery<>(Word.epsilon()));

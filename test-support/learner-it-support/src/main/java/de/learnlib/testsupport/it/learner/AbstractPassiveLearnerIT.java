@@ -52,10 +52,10 @@ public abstract class AbstractPassiveLearnerIT {
             PassiveLearningExample<I, D> example,
             PassiveLearnerVariantListImpl<A, I, D> variants) {
 
-        final List<? extends PassiveLearnerVariant<? extends A, I, D>> variantList = variants.getLearnerVariants();
+        final List<PassiveLearnerVariant<A, I, D>> variantList = variants.getLearnerVariants();
         final List<PassiveLearnerVariantTICase<I, D, A>> result = new ArrayList<>(variantList.size());
 
-        for (PassiveLearnerVariant<? extends A, I, D> variant : variantList) {
+        for (PassiveLearnerVariant<A, I, D> variant : variantList) {
             result.add(new PassiveLearnerVariantTICase<>(variant, example));
         }
 

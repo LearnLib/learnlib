@@ -43,10 +43,10 @@ public abstract class AbstractLearnerIT {
             LearningExample<I, D, A> example,
             LearnerVariantListImpl<A, I, D> variants) {
 
-        final List<? extends LearnerVariant<? extends A, I, D>> variantList = variants.getLearnerVariants();
+        final List<LearnerVariant<A, I, D>> variantList = variants.getLearnerVariants();
         final List<LearnerVariantITCase<I, D, A>> result = new ArrayList<>(variantList.size());
 
-        for (LearnerVariant<? extends A, I, D> variant : variantList) {
+        for (LearnerVariant<A, I, D> variant : variantList) {
             result.add(new LearnerVariantITCase<>(variant, example));
         }
 

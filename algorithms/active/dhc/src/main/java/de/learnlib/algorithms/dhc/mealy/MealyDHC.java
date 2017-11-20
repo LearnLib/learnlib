@@ -111,7 +111,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     }
 
     @Override
-    public Collection<? extends Word<I>> getGlobalSuffixes() {
+    public Collection<Word<I>> getGlobalSuffixes() {
         return Collections.unmodifiableCollection(splitters);
     }
 
@@ -238,7 +238,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
         checkInternalState();
 
-        Collection<? extends Word<I>> ceSuffixes = suffixFinder.findSuffixes(ceQuery, this, hypothesis, oracle);
+        Collection<Word<I>> ceSuffixes = suffixFinder.findSuffixes(ceQuery, this, hypothesis, oracle);
 
         return addSuffixesUnchecked(ceSuffixes);
     }
@@ -308,7 +308,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
             return GlobalSuffixFinders.RIVEST_SCHAPIRE;
         }
 
-        public static <I> Collection<? extends Word<I>> initialSplitters() {
+        public static <I> Collection<Word<I>> initialSplitters() {
             return null;
         }
     }

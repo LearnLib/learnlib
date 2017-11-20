@@ -42,8 +42,7 @@ public abstract class AbstractMealyPassiveLearnerIT extends AbstractPassiveLearn
     @Factory
     public Object[] createExampleITCases() {
         final List<PassiveLearnerVariantTICase<?, ?, ?>> result = new ArrayList<>();
-        final List<? extends LearningExample.MealyLearningExample<?, ?>> examples =
-                LearningExamples.createMealyExamples();
+        final List<LearningExample.MealyLearningExample<?, ?>> examples = LearningExamples.createMealyExamples();
 
         for (LearningExample.MealyLearningExample<?, ?> example : examples) {
             result.addAll(createAllVariantsITCase(example));

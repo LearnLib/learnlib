@@ -113,7 +113,7 @@ public final class ObservationTableCEXHandlers {
                                                                                          ObservationTable<RI, RD> table,
                                                                                          SuffixOutput<RI, RD> hypOutput,
                                                                                          MembershipOracle<RI, RD> oracle) {
-                List<? extends Word<RI>> suffixes = globalFinder.findSuffixes(ceQuery, table, hypOutput, oracle);
+                List<Word<RI>> suffixes = globalFinder.findSuffixes(ceQuery, table, hypOutput, oracle);
                 return handleGlobalSuffixes(table, suffixes, oracle);
             }
 
@@ -176,8 +176,7 @@ public final class ObservationTableCEXHandlers {
                                                               int suffixIndex,
                                                               boolean allSuffixes,
                                                               MembershipOracle<I, D> oracle) {
-        List<? extends Word<I>> suffixes =
-                GlobalSuffixFinders.suffixesForLocalOutput(ceQuery, suffixIndex, allSuffixes);
+        List<Word<I>> suffixes = GlobalSuffixFinders.suffixesForLocalOutput(ceQuery, suffixIndex, allSuffixes);
         return handleGlobalSuffixes(table, suffixes, oracle);
     }
 
@@ -185,7 +184,7 @@ public final class ObservationTableCEXHandlers {
                                                                ObservationTable<I, D> table,
                                                                MembershipOracle<I, D> oracle) {
 
-        List<? extends Word<I>> prefixes = ceQuery.getInput().prefixes(false);
+        List<Word<I>> prefixes = ceQuery.getInput().prefixes(false);
 
         return table.addShortPrefixes(prefixes, oracle);
     }
