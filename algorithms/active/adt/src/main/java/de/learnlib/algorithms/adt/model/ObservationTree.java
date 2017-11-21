@@ -117,7 +117,7 @@ public class ObservationTree<S, I, O> {
 
     private FastMealyState<O> addTrace(final FastMealyState<O> state, final Word<I> input, final Word<O> output) {
 
-        assert input.length() == output.length() : new IllegalArgumentException("traces differ in length");
+        assert input.length() == output.length() : "Traces differ in length";
 
         final Iterator<I> inputIter = input.iterator();
         final Iterator<O> outputIter = output.iterator();
@@ -133,8 +133,7 @@ public class ObservationTree<S, I, O> {
                 nextState = this.observationTree.addState();
                 this.observationTree.addTransition(iter, nextInput, nextState, nextOuput);
             } else {
-                assert this.observationTree.getOutput(iter, nextInput).equals(nextOuput) :
-                        new IllegalStateException("Inconsistent observations");
+                assert this.observationTree.getOutput(iter, nextInput).equals(nextOuput) : "Inconsistent observations";
                 nextState = this.observationTree.getSuccessor(iter, nextInput);
             }
 

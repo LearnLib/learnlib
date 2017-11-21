@@ -187,7 +187,7 @@ public class KearnsVaziraniDFA<I>
     }
 
     private void initialize() {
-        boolean initAccepting = oracle.answerQuery(Word.epsilon()).booleanValue();
+        boolean initAccepting = oracle.answerQuery(Word.epsilon());
         StateInfo<I, Boolean> initStateInfo = createInitialState(initAccepting);
 
         AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> root = discriminationTree.getRoot();

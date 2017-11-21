@@ -69,10 +69,7 @@ public class TTTLearnerMealy<I, O> extends AbstractTTTLearner<MealyMachine<?, I,
     public boolean refineHypothesisSingle(DefaultQuery<I, Word<O>> ceQuery) {
         DefaultQuery<I, Word<O>> shortenedCeQuery =
                 MealyUtil.shortenCounterExample((TTTHypothesisMealy<I, O>) hypothesis, ceQuery);
-        if (shortenedCeQuery != null) {
-            return super.refineHypothesisSingle(shortenedCeQuery);
-        }
-        return false;
+        return shortenedCeQuery != null && super.refineHypothesisSingle(shortenedCeQuery);
     }
 
     @Override

@@ -152,10 +152,9 @@ public final class AcexAnalysisAlgorithms {
         int ofs = 1;
         E effLow = acex.effect(low);
 
-        int highIter = high;
         int lowIter = low;
 
-        while (lowIter + ofs < highIter) {
+        while (lowIter + ofs < high) {
             int next = lowIter + ofs;
             E eff = acex.effect(next);
             if (!acex.checkEffects(effLow, eff)) {

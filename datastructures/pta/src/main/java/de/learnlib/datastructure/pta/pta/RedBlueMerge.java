@@ -272,10 +272,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
     }
 
     private boolean mergeRedProperties(S qr, S qb) {
-        if (!mergeRedStateProperty(qr, qb)) {
-            return false;
-        }
-        return mergeRedTransProperties(qr, qb);
+        return mergeRedStateProperty(qr, qb) && mergeRedTransProperties(qr, qb);
     }
 
     private boolean mergeRedTransProperties(S qr, S qb) {

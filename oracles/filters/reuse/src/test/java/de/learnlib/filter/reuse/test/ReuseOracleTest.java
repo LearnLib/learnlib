@@ -114,7 +114,7 @@ public class ReuseOracleTest {
         ReuseCapableOracle.QueryResult<Integer, String> qr =
                 new ReuseCapableOracle.QueryResult<>(getOutput("ok", "ok"), 2);
         reuseOracle.getReuseTree().insert(getInput(1, 1), qr);
-        /**
+        /*
          * Should result in
          * <pre>
          *  o
@@ -135,7 +135,7 @@ public class ReuseOracleTest {
                 new ReuseCapableOracle.QueryResult<>(getOutput("ok", "ok"), 2);
         reuseOracle.getReuseTree().insert(getInput(1, 1), qr);
 
-        /**
+        /*
          * Should result in
          * <pre>
          *  o
@@ -169,7 +169,7 @@ public class ReuseOracleTest {
                 new ReuseCapableOracle.QueryResult<>(getOutput("ok", "ok"), 2);
         reuseOracle.getReuseTree().insert(getInput(1, 1), qr);
 
-        /**
+        /*
          * Should result in
          * <pre>
          *  o
@@ -188,7 +188,7 @@ public class ReuseOracleTest {
         qr = new ReuseCapableOracle.QueryResult<>(getOutput("ok"), 4);
         reuseOracle.getReuseTree().insert(getInput(2), node.reuseNode, qr);
 
-        /**
+        /*
          * Should result in
          * <pre>
          *  o
@@ -212,7 +212,7 @@ public class ReuseOracleTest {
 
     @Test(expectedExceptions = {ReuseException.class})
     public void testConflictException() {
-        /**
+        /*
          * Create:
          * <pre>
          *       o

@@ -18,6 +18,7 @@ package de.learnlib.algorithms.discriminationtree.hypothesis.vpda;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 import de.learnlib.api.AccessSequenceProvider;
 import net.automatalib.commons.util.array.RichArray;
@@ -44,7 +45,8 @@ public class HypLoc<I> implements AccessSequenceProvider<I> {
         this.index = index;
         this.accepting = accepting;
         this.intSuccessors = new RichArray<>(alphabet.getNumInternals());
-        this.returnSuccessors = new RichArray<>(alphabet.getNumReturns(), () -> new ArrayList<>());
+        this.returnSuccessors = new RichArray<>(alphabet.getNumReturns(),
+                                                (Supplier<List<HypRetTrans<I>>>) ArrayList::new);
         this.treeIncoming = treeIncoming;
         this.aseq = (treeIncoming != null) ? treeIncoming.getAccessSequence() : Word.epsilon();
     }
@@ -53,7 +55,8 @@ public class HypLoc<I> implements AccessSequenceProvider<I> {
         this.index = index;
         this.accepting = accepting;
         this.intSuccessors = new RichArray<>(alphabet.getNumInternals());
-        this.returnSuccessors = new RichArray<>(alphabet.getNumReturns(), () -> new ArrayList<>());
+        this.returnSuccessors = new RichArray<>(alphabet.getNumReturns(),
+                                                (Supplier<List<HypRetTrans<I>>>) ArrayList::new);
         this.treeIncoming = null;
         this.aseq = aseq;
     }

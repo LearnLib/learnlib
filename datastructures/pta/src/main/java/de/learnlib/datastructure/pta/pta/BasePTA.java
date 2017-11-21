@@ -359,7 +359,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
 
     @Override
     public S getSuccessor(S state, Integer input) {
-        return state.getSuccessor(input.intValue());
+        return state.getSuccessor(input);
     }
 
     @Override
@@ -394,7 +394,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
 
     @Override
     public PTATransition<S> getTransition(S state, Integer input) {
-        return new PTATransition<>(state, input.intValue());
+        return new PTATransition<>(state, input);
     }
 
     @Override

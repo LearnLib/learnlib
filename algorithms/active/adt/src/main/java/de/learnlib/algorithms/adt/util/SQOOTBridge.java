@@ -97,8 +97,7 @@ public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
             this.observationTree.addTransition(this.currentState, i, newState, output);
             nextState = newState;
         } else {
-            assert this.observationTree.getOutput(this.currentState, i).equals(output) :
-                    new IllegalStateException("Inconsistent observations");
+            assert this.observationTree.getOutput(this.currentState, i).equals(output) : "Inconsistent observations";
             nextState = succ;
         }
 
