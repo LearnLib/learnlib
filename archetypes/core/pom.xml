@@ -33,11 +33,13 @@ limitations under the License.
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <!-- The distribution dependency ensures that archetypes are build last, so that all required artifacts for their
+         integration tests are build before -->
     <dependencies>
-        <!-- LearnLib API required for integration test -->
         <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-api</artifactId>
+            <groupId>de.learnlib.distribution</groupId>
+            <artifactId>learnlib-distribution</artifactId>
+            <type>pom</type>
             <scope>test</scope>
         </dependency>
     </dependencies>

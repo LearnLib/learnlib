@@ -201,6 +201,7 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib.distribution</groupId>
             <artifactId>automata-distribution</artifactId>
+            <type>pom</type>
         </dependency>
     </dependencies>
 

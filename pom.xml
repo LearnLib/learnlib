@@ -685,11 +685,13 @@ limitations under the License.
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-algorithms</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-algorithms-active</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
@@ -740,6 +742,7 @@ limitations under the License.
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-algorithms-passive</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
@@ -769,6 +772,7 @@ limitations under the License.
                 <groupId>de.learnlib.archetypes</groupId>
                 <artifactId>learnlib-archetypes-parent</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>de.learnlib.archetypes</groupId>
@@ -791,6 +795,7 @@ limitations under the License.
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-build-parent</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
 
             <!-- build-tools -->
@@ -805,6 +810,7 @@ limitations under the License.
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-commons</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
@@ -832,6 +838,7 @@ limitations under the License.
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-datastructures</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
@@ -859,6 +866,7 @@ limitations under the License.
                 <groupId>de.learnlib.distribution</groupId>
                 <artifactId>learnlib-distribution</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
 
             <!-- drivers -->
@@ -866,6 +874,7 @@ limitations under the License.
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-drivers</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
@@ -895,6 +904,7 @@ limitations under the License.
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-oracles</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
@@ -937,6 +947,7 @@ limitations under the License.
                 <groupId>de.learnlib.testsupport</groupId>
                 <artifactId>learnlib-test-support-parent</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>de.learnlib.testsupport</groupId>
