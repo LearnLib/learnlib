@@ -196,6 +196,12 @@ limitations under the License.
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-parallelism</artifactId>
         </dependency>
+
+        <!-- (bundled) AutomataLib dependency -->
+        <dependency>
+            <groupId>net.automatalib.distribution</groupId>
+            <artifactId>automata-distribution</artifactId>
+        </dependency>
     </dependencies>
 
     <profiles>
