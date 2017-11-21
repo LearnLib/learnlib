@@ -38,16 +38,15 @@ import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, TP>
         implements LearningAlgorithm<M, I, D>,
                    SupportsGrowingAlphabet<I>,
                    ResumableLearner<DTLearnerState<I, D, SP, TP>> {
 
-    protected final GrowingAlphabet<I> alphabet;
+    protected Alphabet<I> alphabet;
     private final MembershipOracle<I, D> oracle;
     private final LocalSuffixFinder<? super I, ? super D> suffixFinder;
     private final boolean repeatedCounterexampleEvaluation;
@@ -62,7 +61,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
                                 LocalSuffixFinder<? super I, ? super D> suffixFinder,
                                 boolean repeatedCounterexampleEvaluation,
                                 AbstractWordBasedDiscriminationTree<I, D, HState<I, D, SP, TP>> dtree) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.oracle = oracle;
         this.suffixFinder = suffixFinder;
         this.hypothesis = new DTLearnerHypothesis<>(alphabet);
@@ -229,7 +228,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
 
         final int newSymbolIdx = this.alphabet.size();
 
-        this.alphabet.addSymbol(symbol);
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.hypothesis.addAlphabetSymbol(symbol);
 
         for (final HState<I, D, SP, TP> s : this.hypothesis.getStates()) {

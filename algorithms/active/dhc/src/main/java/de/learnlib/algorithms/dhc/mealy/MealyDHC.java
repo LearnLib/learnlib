@@ -44,9 +44,8 @@ import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.commons.util.mappings.MapMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +60,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
     private static final Logger LOG = LoggerFactory.getLogger(MealyDHC.class);
     private final MembershipOracle<I, Word<O>> oracle;
-    private final GrowingAlphabet<I> alphabet;
+    private Alphabet<I> alphabet;
     private LinkedHashSet<Word<I>> splitters = new LinkedHashSet<>();
     private CompactMealy<I, O> hypothesis;
     private MutableMapping<Integer, QueueElement<I, O>> accessSequences;
@@ -97,7 +96,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
                     MembershipOracle<I, Word<O>> oracle,
                     GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
                     Collection<? extends Word<I>> initialSplitters) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.oracle = oracle;
         this.suffixFinder = suffixFinder;
         // ensure that the first k splitters are the k alphabet symbols,
@@ -270,7 +269,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
             newSplitters.add(splitterIterator.next());
         }
 
-        this.alphabet.addSymbol(symbol);
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.splitters = newSplitters;
 
         this.startLearning();

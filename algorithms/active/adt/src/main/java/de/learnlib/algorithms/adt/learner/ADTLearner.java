@@ -62,10 +62,9 @@ import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.Triple;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * The main learning algorithm.
@@ -83,7 +82,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                                          SupportsGrowingAlphabet<I>,
                                          ResumableLearner<ADTLearnerState<ADTState<I, O>, I, O>> {
 
-    private final GrowingAlphabet<I> alphabet;
+    private Alphabet<I> alphabet;
     private final SQOOTBridge<I, O> oracle;
     private final LeafSplitter leafSplitter;
     private final ADTExtender adtExtender;
@@ -102,7 +101,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                       final ADTExtender adtExtender,
                       final SubtreeReplacer subtreeReplacer) {
 
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.observationTree = new ObservationTree<>(this.alphabet);
         this.oracle = new SQOOTBridge<>(this.observationTree, oracle, true);
 
@@ -371,7 +370,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             return;
         }
 
-        this.alphabet.addSymbol(symbol);
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.hypothesis.addAlphabetSymbol(symbol);
         this.observationTree.getObservationTree().addAlphabetSymbol(symbol);
 

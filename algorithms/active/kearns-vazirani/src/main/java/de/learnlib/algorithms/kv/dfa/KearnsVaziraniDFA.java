@@ -36,9 +36,8 @@ import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * The Kearns/Vazirani algorithm for learning DFA, as described in the book "An Introduction to Computational Learning
@@ -52,7 +51,7 @@ import net.automatalib.words.impl.SimpleAlphabet;
 public class KearnsVaziraniDFA<I>
         implements DFALearner<I>, SupportsGrowingAlphabet<I>, ResumableLearner<KearnsVaziraniDFAState<I>> {
 
-    private final GrowingAlphabet<I> alphabet;
+    private Alphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;
     private final boolean repeatedCounterexampleEvaluation;
     private final AcexAnalyzer ceAnalyzer;
@@ -73,7 +72,7 @@ public class KearnsVaziraniDFA<I>
                              MembershipOracle<I, Boolean> oracle,
                              boolean repeatedCounterexampleEvaluation,
                              AcexAnalyzer counterexampleAnalyzer) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.hypothesis = new CompactDFA<>(alphabet);
         this.discriminationTree = new BinaryDTree<>(oracle);
         this.oracle = oracle;
@@ -267,8 +266,9 @@ public class KearnsVaziraniDFA<I>
             return;
         }
 
+        final int inputIdx = this.alphabet.size();
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.hypothesis.addAlphabetSymbol(symbol);
-        final int inputIdx = this.alphabet.addSymbol(symbol);
 
         // use new list to prevent concurrent modification exception
         for (final StateInfo<I, Boolean> si : new ArrayList<>(this.stateInfos)) {

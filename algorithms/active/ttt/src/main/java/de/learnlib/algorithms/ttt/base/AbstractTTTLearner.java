@@ -48,9 +48,8 @@ import net.automatalib.commons.smartcollections.UnorderedCollection;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * The TTT learning algorithm for {@link DFA}.
@@ -63,7 +62,7 @@ import net.automatalib.words.impl.SimpleAlphabet;
 public abstract class AbstractTTTLearner<A, I, D>
         implements LearningAlgorithm<A, I, D>, SupportsGrowingAlphabet<I>, ResumableLearner<TTTLearnerState<I, D>> {
 
-    protected final GrowingAlphabet<I> alphabet;
+    protected Alphabet<I> alphabet;
     protected final MembershipOracle<I, D> oracle;
     protected final AcexAnalyzer analyzer;
     /**
@@ -84,7 +83,7 @@ public abstract class AbstractTTTLearner<A, I, D>
                                  AbstractTTTHypothesis<I, D, ?> hypothesis,
                                  BaseTTTDiscriminationTree<I, D> dtree,
                                  AcexAnalyzer analyzer) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.hypothesis = hypothesis;
         this.oracle = oracle;
         this.dtree = dtree;
@@ -957,7 +956,7 @@ public abstract class AbstractTTTLearner<A, I, D>
 
         final int newSymbolIdx = this.alphabet.size();
 
-        this.alphabet.addSymbol(symbol);
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.hypothesis.addAlphabetSymbol(symbol);
 
         for (final TTTState<I, D> s : this.hypothesis.getStates()) {

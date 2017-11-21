@@ -33,7 +33,7 @@ import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * Basic hypothesis data structure for Discrimination Tree learning algorithms.
@@ -56,12 +56,12 @@ public class DTLearnerHypothesis<I, O, SP, TP>
                    GrowableAlphabetAutomaton<I>,
                    Serializable {
 
-    private final GrowingAlphabet<I> alphabet;
+    private Alphabet<I> alphabet;
     private final HState<I, O, SP, TP> root;
     private final List<HState<I, O, SP, TP>> nodes = new ArrayList<>();
 
     public DTLearnerHypothesis(Alphabet<I> alphabet) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.root = new HState<>(alphabet.size());
         this.nodes.add(root);
     }
@@ -132,7 +132,11 @@ public class DTLearnerHypothesis<I, O, SP, TP>
     @Override
     public void addAlphabetSymbol(I symbol) {
 
-        this.alphabet.addSymbol(symbol);
+        if (this.alphabet instanceof GrowingAlphabet) {
+            ((GrowingAlphabet<I>) this.alphabet).addSymbol(symbol);
+        }
+
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         final int alphabetSize = this.alphabet.size();
 
         for (final HState<I, O, SP, TP> s : this.getStates()) {

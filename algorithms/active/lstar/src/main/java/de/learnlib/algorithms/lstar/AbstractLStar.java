@@ -33,9 +33,8 @@ import de.learnlib.datastructure.observationtable.OTLearner;
 import de.learnlib.util.MQUtil;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * An abstract base class for L*-style algorithms.
@@ -56,7 +55,7 @@ import net.automatalib.words.impl.SimpleAlphabet;
 public abstract class AbstractLStar<A, I, D>
         implements OTLearner<A, I, D>, GlobalSuffixLearner<A, I, D>, SupportsGrowingAlphabet<I> {
 
-    protected final GrowingAlphabet<I> alphabet;
+    protected Alphabet<I> alphabet;
     protected final MembershipOracle<I, D> oracle;
     protected ObservationTable<I, D> table;
 
@@ -69,7 +68,7 @@ public abstract class AbstractLStar<A, I, D>
      *         the membership oracle.
      */
     public AbstractLStar(Alphabet<I> alphabet, MembershipOracle<I, D> oracle) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.oracle = oracle;
         this.table = new ObservationTable<>(alphabet);
     }
@@ -235,7 +234,7 @@ public abstract class AbstractLStar<A, I, D>
             return;
         }
 
-        this.alphabet.addSymbol(symbol);
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
 
         final List<List<Row<I>>> unclosed = this.table.addAlphabetSymbol(symbol, oracle);
 

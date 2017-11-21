@@ -32,9 +32,8 @@ import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * Observation table class.
@@ -78,7 +77,7 @@ public final class ObservationTable<I, D> implements AccessSequenceTransformer<I
     private final Map<Word<I>, Row<I>> rowMap = new HashMap<>();
     private final List<Word<I>> suffixes = new ArrayList<>();
     private final Set<Word<I>> suffixSet = new HashSet<>();
-    private transient GrowingAlphabet<I> alphabet;
+    private transient Alphabet<I> alphabet;
     private int numRows;
     private boolean initialConsistencyCheckRequired;
 
@@ -89,7 +88,7 @@ public final class ObservationTable<I, D> implements AccessSequenceTransformer<I
      *         the learning alphabet.
      */
     public ObservationTable(Alphabet<I> alphabet) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
     }
 
     protected static <I, D> void buildQueries(List<DefaultQuery<I, D>> queryList,
@@ -512,8 +511,8 @@ public final class ObservationTable<I, D> implements AccessSequenceTransformer<I
         }
     }
 
-    @SuppressWarnings("unchecked")
     public Inconsistency<I, D> findInconsistency() {
+        @SuppressWarnings("unchecked")
         Row<I>[] canonicalRows = (Row<I>[]) new Row<?>[numDistinctRows()];
 
         for (Row<I> spRow : shortPrefixRows) {
@@ -628,7 +627,7 @@ public final class ObservationTable<I, D> implements AccessSequenceTransformer<I
             return Collections.emptyList();
         }
 
-        this.alphabet.addSymbol(symbol);
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         final int newAlphabetSize = this.alphabet.size();
         final int newSymbolIdx = this.alphabet.getSymbolIndex(symbol);
 
@@ -732,7 +731,7 @@ public final class ObservationTable<I, D> implements AccessSequenceTransformer<I
     }
 
     public void setAlphabet(final Alphabet<I> alphabet) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
     }
 
     private class StandardRowWrapper

@@ -39,9 +39,8 @@ import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * An adaption of the Kearns/Vazirani algorithm for Mealy machines.
@@ -56,7 +55,7 @@ import net.automatalib.words.impl.SimpleAlphabet;
 public class KearnsVaziraniMealy<I, O>
         implements MealyLearner<I, O>, SupportsGrowingAlphabet<I>, ResumableLearner<KearnsVaziraniMealyState<I, O>> {
 
-    private final GrowingAlphabet<I> alphabet;
+    private Alphabet<I> alphabet;
     private final MembershipOracle<I, Word<O>> oracle;
     private final boolean repeatedCounterexampleEvaluation;
     private final AcexAnalyzer ceAnalyzer;
@@ -69,7 +68,7 @@ public class KearnsVaziraniMealy<I, O>
                                MembershipOracle<I, Word<O>> oracle,
                                boolean repeatedCounterexampleEvaluation,
                                AcexAnalyzer counterexampleAnalyzer) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.hypothesis = new CompactMealy<>(alphabet);
         this.oracle = oracle;
         this.repeatedCounterexampleEvaluation = repeatedCounterexampleEvaluation;
@@ -283,8 +282,9 @@ public class KearnsVaziraniMealy<I, O>
             return;
         }
 
+        final int inputIdx = this.alphabet.size();
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.hypothesis.addAlphabetSymbol(symbol);
-        final int inputIdx = this.alphabet.addSymbol(symbol);
 
         // use new list to prevent concurrent modification exception
         for (final StateInfo<I, Word<O>> si : new ArrayList<>(this.stateInfos)) {

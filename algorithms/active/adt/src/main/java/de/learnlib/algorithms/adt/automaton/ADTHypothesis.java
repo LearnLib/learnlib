@@ -80,7 +80,7 @@ public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, 
 
     @Override
     protected ADTState<I, O> createState(final Void property) {
-        return new ADTState<>(this.inputAlphabet.size());
+        return new ADTState<>(inputAlphabet.size());
     }
 
     @Nonnull

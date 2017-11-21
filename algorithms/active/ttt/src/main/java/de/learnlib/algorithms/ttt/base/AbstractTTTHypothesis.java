@@ -30,8 +30,7 @@ import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * Hypothesis DFA for the {@link AbstractTTTLearner TTT algorithm}.
@@ -49,7 +48,7 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
 
     protected final List<TTTState<I, D>> states = new ArrayList<>();
 
-    protected transient GrowingAlphabet<I> alphabet;
+    protected transient Alphabet<I> alphabet;
 
     private TTTState<I, D> initialState;
 
@@ -60,7 +59,7 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
      *         the input alphabet
      */
     public AbstractTTTHypothesis(Alphabet<I> alphabet) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
     }
 
     @Override
@@ -174,7 +173,12 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
 
     @Override
     public void addAlphabetSymbol(I symbol) {
-        this.alphabet.addSymbol(symbol);
+        if (this.alphabet.containsSymbol(symbol)) {
+            return;
+        }
+
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
+
         final int alphabetSize = this.alphabet.size();
 
         for (final TTTState<I, D> s : this.getStates()) {
@@ -193,7 +197,7 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
     }
 
     void setAlphabet(Alphabet<I> alphabet) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
     }
 
     public static final class TTTEdge<I, D> {
