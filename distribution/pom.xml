@@ -519,16 +519,72 @@ limitations under the License.
                                 <dependencySourceInclude>de.learnlib:*</dependencySourceInclude>
                             </dependencySourceIncludes>
                         </configuration>
-                        <executions>
-                            <execution>
+                        <!--
+                        Due to a bug (or intended behavior?) in the maven-javadoc-plugin (see e.g. MJAVADOC-400,
+                        MJAVADOC-311, MJAVADOC-134) the aggregated javadoc JAR is only created, if the plugin is
+                        executed from the same directory.
+
+                        Thus, if we build or deploy from the parent project, the aggregated javadoc JAR is skipped. To
+                        workaround this issue, we programmatically invoke the javadoc plugin using the exec-plugin and
+                        attach the generated JAR afterwards.
+
+                        If this issue is fixed in future versions of the javadoc plugin, this workaround can be removed.
+                        -->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<id>aggregate</id>-->
+                                <!--<goals>-->
+                                    <!--<goal>aggregate-jar</goal>-->
+                                <!--</goals>-->
+                                <!--<phase>package</phase>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                         <executions>
+                             <execution>
                                 <id>aggregate</id>
-                                <goals>
-                                    <goal>aggregate-jar</goal>
-                                </goals>
                                 <phase>package</phase>
+                                 <goals>
+                                    <goal>exec</goal>
+                                 </goals>
+                                <configuration>
+                                    <executable>mvn</executable>
+                                    <workingDirectory>${project.basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>-Pbundles</argument>
+                                        <argument>javadoc:aggregate-jar</argument>
+                                    </arguments>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>add-javadoc-jar</id>
+                                <goals>
+                                    <goal>attach-artifact</goal>
+                                </goals>
+                                <configuration>
+                                    <artifacts>
+                                        <artifact>
+                                            <file>
+                                                ${project.build.directory}/bundles/learnlib-${project.version}-javadoc.jar
+                                            </file>
+                                            <classifier>javadoc</classifier>
+                                        </artifact>
+                                    </artifacts>
+                                </configuration>
+                             </execution>
+                         </executions>
+                     </plugin>
+
+
 
                     <plugin>
                         <groupId>com.atlassian.maven.plugins</groupId>

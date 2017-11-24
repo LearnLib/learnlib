@@ -135,6 +135,7 @@ limitations under the License.
         <antrun-plugin.version>1.8</antrun-plugin.version>
         <archetype-plugin.version>3.0.1</archetype-plugin.version>
         <assembly-plugin.version>3.0.0</assembly-plugin.version>
+        <buildhelper-plugin.version>3.0.0</buildhelper-plugin.version>
         <checkstyle-plugin.version>2.17</checkstyle-plugin.version>
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
         <dependency-plugin.version>3.0.1</dependency-plugin.version>
@@ -285,6 +286,11 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>${assembly-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${buildhelper-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
