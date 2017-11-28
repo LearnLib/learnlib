@@ -30,7 +30,7 @@ public class ReturnValue extends AbstractMethodOutput {
 
     public ReturnValue(Object ret) {
         this.ret = ret;
-        this.id = ret.toString();
+        this.id = String.valueOf(ret);
     }
 
     @Override

@@ -18,15 +18,17 @@ package de.learnlib.drivers.reflect;
 import java.util.LinkedList;
 
 /**
+ * A stack implementation with limited size, that throws exception when pushing/pop beyond its capacity/size.
+ *
  * @author falkhowar
  */
-public class Stack {
+public class StackWithException {
 
     private final int capacity;
 
     private final LinkedList<Object> back = new LinkedList<>();
 
-    public Stack(int capacity) {
+    public StackWithException(int capacity) {
         this.capacity = capacity;
     }
 

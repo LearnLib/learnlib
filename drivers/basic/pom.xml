@@ -66,12 +66,6 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <!-- LearnLib dependencies -->
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
