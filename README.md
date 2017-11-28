@@ -68,6 +68,13 @@ For developing the code base of LearnLib, it is suggested to use one of the majo
 * **API Documentation:** [snapshot](http://learnlib.github.io/learnlib/maven-site/latest-snapshot/apidocs/) | [latest release](http://learnlib.github.io/learnlib/maven-site/latest-release/apidocs/)
 
 
+## Mailing Lists
+
+  * [Q&A @ Google Groups][learnlib-qa] -- General questions regarding the usage of LearnLib.
+  * [Discussion @ Google Groups][learnlib-discussion] -- Discussions about the internals of LearnLib.
+  * [Internal (private) @ Google Groups][learnlib-internal] -- Discussions about future development plans.
+
+
 ## Maintainers
 
 * [Markus Frohme][6] (2017 - )
@@ -82,6 +89,10 @@ For developing the code base of LearnLib, it is suggested to use one of the majo
 [5]: https://github.com/fhowar
 [6]: https://github.com/mtf90
 [7]: https://github.com/LearnLib/automatalib
+
+[learnlib-qa]: https://groups.google.com/d/forum/learnlib-qa
+[learnlib-discussion]: https://groups.google.com/d/forum/learnlib-discussion
+[learnlib-internal]: https://groups.google.com/d/forum/learnlib-internal
 
 [maven-central]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib%22
 [maven-central-distr]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib.distribution%22
