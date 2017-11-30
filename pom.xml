@@ -162,6 +162,7 @@ limitations under the License.
         <pmd-plugin.version>3.8</pmd-plugin.version>
         <release-plugin.version>2.5.3</release-plugin.version>
         <resources-plugin.version>3.0.2</resources-plugin.version>
+        <scm-publish-plugin.version>1.1</scm-publish-plugin.version>
         <site-plugin.version>3.6</site-plugin.version>
         <source-plugin.version>3.0.1</source-plugin.version>
         <surefire-plugin.version>2.20</surefire-plugin.version>
@@ -218,23 +219,8 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>${site-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>attach-descriptor</id>
-                            <goals>
-                                <goal>attach-descriptor</goal>
-                            </goals>
-                        </execution>
-                        <!-- Skip site creation; this will be done by deploy-site-github -->
-                        <execution>
-                            <id>default-site</id>
-                            <phase>site</phase>
-                            <configuration>
-                                <skip>true</skip>
-                            </configuration>
-                        </execution>
-                    </executions>
                     <configuration>
+                        <!-- Skip site deployment; this will be done by scm-publish plugin -->
                         <skipDeploy>true</skipDeploy>
                     </configuration>
                 </plugin>
@@ -315,14 +301,13 @@ limitations under the License.
                         can be activated upon a release, without us having to add them here
                         -->
                         <arguments>-Dlearnlib.release=true</arguments>
+                        <goals>deploy site site:stage scm-publish:publish-scm</goals>
                         <!-- False to allow rebasing in case of errors -->
                         <pushChanges>false</pushChanges>
                         <!-- Automatically use the parent version for all submodules, do not prompt for each one -->
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <!-- Use prefix learnlib, not learnlib-parent -->
                         <tagNameFormat>learnlib-@{version}</tagNameFormat>
-                        <!-- The default "clean verify" causes javadoc and archetype integration tests to fail -->
-                        <preparationGoals>clean install</preparationGoals>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -390,41 +375,25 @@ limitations under the License.
                     <artifactId>maven-enforcer-plugin</artifactId>
                     <version>${enforcer-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-publish-plugin</artifactId>
+                    <version>${scm-publish-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
                 <executions>
-                    <!-- Deploy site @ GitHub pages -->
-                    <!--
-                        Note: In order to be able to deploy the Maven site,
-                        you need the script deploy-site-github to reside
-                        in your PATH, or manually specify the path to the
-                        executable script using the "deploy-site-github.exec"
-                        property.
-                        You can download the shell script from this URL:
-                        https://raw.github.com/misberner/shell-scripts/master/maven/deploy-site-github.sh
-                    -->
                     <execution>
-                        <id>deploy-site-github</id>
+                        <id>attach-descriptor</id>
                         <inherited>false</inherited>
-                        <phase>site-deploy</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>attach-descriptor</goal>
                         </goals>
-                        <configuration>
-                            <executable>${deploy-site-github.exec}</executable>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                            <arguments>
-                                <argument>-p</argument> <!-- Purge contents before copying -->
-                                <argument>-P/maven-site</argument>
-                                <argument>-V</argument>
-                                <argument>-l</argument>
-                            </arguments>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -740,6 +709,43 @@ limitations under the License.
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>learnlib.release</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-site-plugin</artifactId>
+                        <configuration>
+                            <!-- Adjust directory structure to our gh-pages branch -->
+                            <stagingDirectory>${session.executionRootDirectory}/target/staging/maven-site/${project.version}</stagingDirectory>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-scm-publish-plugin</artifactId>
+                        <configuration>
+                            <pubScmUrl>${project.scm.connection}</pubScmUrl>
+                            <scmBranch>gh-pages</scmBranch>
+                            <tryUpdate>true</tryUpdate>
+                            <!--
+                            Sets everything up, but does not commit any changes. Perfect for us to perform final
+                            adjustments (such as updating the LATEST symlink, etc.)
+                            -->
+                            <dryRun>true</dryRun>
+                            <skipCheckin>true</skipCheckin>
+                            <skipDeletedFiles>true</skipDeletedFiles>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -1150,7 +1156,7 @@ limitations under the License.
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <!-- Dummy - this will NOT actually be used, but is required for mvn site:stage -->
-        <!-- Use build-tools/deploy-site.sh for site deployment on GitHub pages -->
+        <!-- Use scm-publish plugin for site deployment on GitHub pages -->
         <site>
             <id>local</id>
             <url>file://${user.home}/learnlib-site</url>
