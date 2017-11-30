@@ -64,8 +64,8 @@ For developing the code base of LearnLib, it is suggested to use one of the majo
 
 ## Documentation
 
-* **Maven Project Site:** [snapshot](http://learnlib.github.io/learnlib/maven-site/latest-snapshot/) | [latest release](http://learnlib.github.io/learnlib/maven-site/latest-release/)
-* **API Documentation:** [snapshot](http://learnlib.github.io/learnlib/maven-site/latest-snapshot/apidocs/) | [latest release](http://learnlib.github.io/learnlib/maven-site/latest-release/apidocs/)
+* **Maven Project Site:** [latest release](http://learnlib.github.io/learnlib/maven-site/latest/) | [older versions](http://learnlib.github.io/learnlib/maven-site/)
+* **API Documentation:** [latest release](http://learnlib.github.io/learnlib/maven-site/latest/apidocs/) | [older versions](http://learnlib.github.io/learnlib/maven-site/)
 
 
 ## Mailing Lists
