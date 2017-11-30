@@ -470,6 +470,7 @@ limitations under the License.
     -->
     <profiles>
         <profile>
+            <!-- perform additional integration tests -->
             <id>integration-tests</id>
             <activation>
                 <property>
@@ -487,6 +488,7 @@ limitations under the License.
             </build>
         </profile>
         <profile>
+            <!-- enables additional plugins that perform static code analysis, also see the 'build-parent' pom -->
             <id>code-analysis</id>
             <activation>
                 <property>
@@ -542,6 +544,7 @@ limitations under the License.
             </build>
         </profile>
         <profile>
+            <!-- enables generation of test-coverage reports -->
             <id>code-coverage</id>
             <build>
                 <plugins>
@@ -592,6 +595,7 @@ limitations under the License.
             </build>
         </profile>
         <profile>
+            <!-- add workarounds when importing the project in Eclipse -->
             <id>eclipse-m2e-configs</id>
             <activation>
                 <property>
@@ -631,6 +635,7 @@ limitations under the License.
             </build>
         </profile>
         <profile>
+            <!-- enables building of JavaDoc- and source JARs as well as bundled artifacts in 'distribution' module -->
             <id>bundles</id>
             <activation>
                 <property>
@@ -668,6 +673,7 @@ limitations under the License.
             </build>
         </profile>
         <profile>
+            <!-- enables the signing of artifacts using gpg -->
             <id>sign-artifacts</id>
             <activation>
                 <property>
@@ -714,6 +720,7 @@ limitations under the License.
             </build>
         </profile>
         <profile>
+            <!-- set certain configurations when performing a release -->
             <id>release</id>
             <activation>
                 <property>
