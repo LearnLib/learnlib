@@ -113,16 +113,6 @@ limitations under the License.
         <tag>HEAD</tag>
     </scm>
 
-
-    <!--
-    ================================ SONATYPE PARENT ==============================
-    -->
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
-
     <!--
     ================================= MODULES ===================================
     -->
@@ -160,9 +150,11 @@ limitations under the License.
         <checkstyle-plugin.version>2.17</checkstyle-plugin.version>
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
         <dependency-plugin.version>3.0.1</dependency-plugin.version>
+        <enforcer-plugin.version>1.4.1</enforcer-plugin.version>
         <exec-plugin.version>1.6.0</exec-plugin.version>
         <failsafe-plugin.version>2.20</failsafe-plugin.version>
         <findbugs-plugin.version>3.0.5</findbugs-plugin.version>
+        <gpg-plugin.version>1.6</gpg-plugin.version>
         <info-reports-plugin.version>2.9</info-reports-plugin.version>
         <jacoco-plugin.version>0.7.9</jacoco-plugin.version>
         <javadoc-plugin.version>2.10.4</javadoc-plugin.version>
@@ -322,8 +314,7 @@ limitations under the License.
                         We use a property rather than a profile such that several different profiles
                         can be activated upon a release, without us having to add them here
                         -->
-                        <arguments>-Psonatype-oss-release -Dlearnlib.release=true
-                        </arguments>
+                        <arguments>-Dlearnlib.release=true</arguments>
                         <!-- False to allow rebasing in case of errors -->
                         <pushChanges>false</pushChanges>
                         <!-- Automatically use the parent version for all submodules, do not prompt for each one -->
@@ -388,6 +379,16 @@ limitations under the License.
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
                     <version>${lifecycle-mapping.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${gpg-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${enforcer-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -691,6 +692,52 @@ limitations under the License.
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>learnlib.release</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>enforce-maven</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireMavenVersion>
+                                            <version>(,2.1.0),(2.1.0,2.2.0),(2.2.0,)</version>
+                                            <message>Maven 2.1.0 and 2.2.0 produce incorrect GPG signatures and checksums respectively.</message>
+                                        </requireMavenVersion>
+                                    </rules>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -1094,6 +1141,14 @@ limitations under the License.
     ================================= DISTRIBUTION ==============================
     -->
     <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
         <!-- Dummy - this will NOT actually be used, but is required for mvn site:stage -->
         <!-- Use build-tools/deploy-site.sh for site deployment on GitHub pages -->
         <site>
