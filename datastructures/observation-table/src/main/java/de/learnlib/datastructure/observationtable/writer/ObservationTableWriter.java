@@ -15,6 +15,7 @@
  */
 package de.learnlib.datastructure.observationtable.writer;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -23,15 +24,32 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.WillNotClose;
 
 import de.learnlib.datastructure.observationtable.ObservationTable;
+import net.automatalib.commons.util.IOUtil;
 
 @ParametersAreNonnullByDefault
 public interface ObservationTableWriter<I, D> {
 
     void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose Appendable out) throws IOException;
 
-    void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose PrintStream out);
+    default void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose PrintStream out) {
+        try {
+            write(table, (Appendable) out);
+        } catch (IOException ex) {
+            throw new AssertionError("Writing to PrintStream must not throw");
+        }
+    }
 
-    void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose StringBuilder out);
+    default void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose StringBuilder out) {
+        try {
+            write(table, (Appendable) out);
+        } catch (IOException ex) {
+            throw new AssertionError("Writing to StringBuilder must not throw");
+        }
+    }
 
-    void write(ObservationTable<? extends I, ? extends D> table, File file) throws IOException;
+    default void write(ObservationTable<? extends I, ? extends D> table, File file) throws IOException {
+        try (BufferedWriter bw = new BufferedWriter(IOUtil.asUTF8Writer(file))) {
+            write(table, bw);
+        }
+    }
 }

@@ -49,9 +49,6 @@ public class LStarMealyTest extends LearningTest {
 
         MealyMembershipOracle<ExampleStack.Input, ExampleStack.Output> oracle = new MealySimulatorOracle<>(mealy);
 
-        // Empty list of suffixes => minimal compliant set
-        List<Word<ExampleStack.Input>> initSuffixes = Collections.emptyList();
-
         EquivalenceOracle<? super MealyMachine<?, ExampleStack.Input, ?, ExampleStack.Output>, ExampleStack.Input, Word<ExampleStack.Output>>
                 mealyEqOracle = new SimulatorEQOracle<>(mealy);
 
@@ -61,8 +58,7 @@ public class LStarMealyTest extends LearningTest {
         for (ObservationTableCEXHandler<? super ExampleStack.Input, ? super ExampleStack.Output> handler : LearningTest.CEX_HANDLERS) {
             for (ClosingStrategy<? super ExampleStack.Input, ? super ExampleStack.Output> strategy : LearningTest.CLOSING_STRATEGIES) {
                 LearningAlgorithm<MealyMachine<?, ExampleStack.Input, ?, ExampleStack.Output>, ExampleStack.Input, ExampleStack.Output>
-                        learner =
-                        ClassicLStarMealy.createForWordOracle(alphabet, oracle, initSuffixes, handler, strategy);
+                        learner = ClassicLStarMealy.createForWordOracle(alphabet, oracle, handler, strategy);
 
                 testLearnModel(mealy, alphabet, learner, MealyUtil.wrapWordOracle(oracle), mealySymEqOracle);
             }

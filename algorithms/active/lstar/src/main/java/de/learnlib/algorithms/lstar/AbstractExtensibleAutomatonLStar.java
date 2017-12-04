@@ -22,9 +22,9 @@ import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstar.closing.ClosingStrategy;
-import de.learnlib.algorithms.lstar.table.Row;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.words.Alphabet;
@@ -38,13 +38,13 @@ public abstract class AbstractExtensibleAutomatonLStar<A, I, D, S, T, SP, TP, AI
     protected final List<Word<I>> initialPrefixes;
     protected final List<Word<I>> initialSuffixes;
 
-    public AbstractExtensibleAutomatonLStar(Alphabet<I> alphabet,
-                                            MembershipOracle<I, D> oracle,
-                                            AI internalHyp,
-                                            List<Word<I>> initialPrefixes,
-                                            List<Word<I>> initialSuffixes,
-                                            ObservationTableCEXHandler<? super I, ? super D> cexHandler,
-                                            ClosingStrategy<? super I, ? super D> closingStrategy) {
+    protected AbstractExtensibleAutomatonLStar(Alphabet<I> alphabet,
+                                               MembershipOracle<I, D> oracle,
+                                               AI internalHyp,
+                                               List<Word<I>> initialPrefixes,
+                                               List<Word<I>> initialSuffixes,
+                                               ObservationTableCEXHandler<? super I, ? super D> cexHandler,
+                                               ClosingStrategy<? super I, ? super D> closingStrategy) {
         super(alphabet, oracle, internalHyp);
         this.initialPrefixes = initialPrefixes;
         this.initialSuffixes = initialSuffixes;
@@ -80,7 +80,6 @@ public abstract class AbstractExtensibleAutomatonLStar<A, I, D, S, T, SP, TP, AI
         }
 
         public static <I> List<Word<I>> initialSuffixes() {
-
             return Collections.emptyList();
         }
 

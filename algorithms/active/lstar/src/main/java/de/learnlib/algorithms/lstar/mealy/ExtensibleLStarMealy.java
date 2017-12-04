@@ -23,10 +23,11 @@ import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithms.lstar.AbstractExtensibleAutomatonLStar;
 import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstar.closing.ClosingStrategy;
-import de.learnlib.algorithms.lstar.table.Row;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerMealy;
+import de.learnlib.datastructure.observationtable.ObservationTable;
+import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
@@ -86,19 +87,19 @@ public class ExtensibleLStarMealy<I, O>
     }
 
     @Override
-    protected Void stateProperty(Row<I> stateRow) {
+    protected Void stateProperty(ObservationTable<I, Word<O>> table, Row<I> stateRow) {
         return null;
     }
 
     @Override
-    protected O transitionProperty(Row<I> stateRow, int inputIdx) {
+    protected O transitionProperty(ObservationTable<I, Word<O>> table, Row<I> stateRow, int inputIdx) {
         Row<I> transRow = stateRow.getSuccessor(inputIdx);
         return outputTable.get(transRow.getRowId() - 1);
     }
 
     protected void updateOutputs() {
         int numOutputs = outputTable.size();
-        int numTransRows = table.numTotalRows() - 1;
+        int numTransRows = table.numberOfRows() - 1;
 
         int newOutputs = numTransRows - numOutputs;
         if (newOutputs == 0) {
@@ -109,7 +110,7 @@ public class ExtensibleLStarMealy<I, O>
 
         for (int i = numOutputs + 1; i <= numTransRows; i++) {
             Row<I> row = table.getRow(i);
-            Word<I> rowPrefix = row.getPrefix();
+            Word<I> rowPrefix = row.getLabel();
             int prefixLen = rowPrefix.size();
             outputQueries.add(new DefaultQuery<>(rowPrefix.prefix(prefixLen - 1), rowPrefix.suffix(1)));
         }

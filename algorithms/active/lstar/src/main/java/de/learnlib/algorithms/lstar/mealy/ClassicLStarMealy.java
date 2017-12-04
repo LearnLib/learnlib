@@ -23,8 +23,9 @@ import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithms.lstar.AbstractExtensibleAutomatonLStar;
 import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstar.closing.ClosingStrategy;
-import de.learnlib.algorithms.lstar.table.Row;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.datastructure.observationtable.ObservationTable;
+import de.learnlib.datastructure.observationtable.Row;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.transout.MealyMachine;
@@ -58,10 +59,14 @@ public class ClassicLStarMealy<I, O>
      */
     public ClassicLStarMealy(Alphabet<I> alphabet,
                              MembershipOracle<I, O> oracle,
-                             List<Word<I>> initialSuffixes,
                              ObservationTableCEXHandler<? super I, ? super O> cexHandler,
                              ClosingStrategy<? super I, ? super O> closingStrategy) {
-        this(alphabet, oracle, Collections.singletonList(Word.epsilon()), initialSuffixes, cexHandler, closingStrategy);
+        this(alphabet,
+             oracle,
+             Collections.singletonList(Word.epsilon()),
+             Collections.emptyList(),
+             cexHandler,
+             closingStrategy);
     }
 
     @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
@@ -83,22 +88,16 @@ public class ClassicLStarMealy<I, O>
     public static <A extends MutableMealyMachine<?, I, ?, O>, I, O> ClassicLStarMealy<I, O> createForSymbolOracle(
             Alphabet<I> alphabet,
             MembershipOracle<I, O> oracle,
-            List<Word<I>> initialSuffixes,
             ObservationTableCEXHandler<I, O> cexHandler,
             ClosingStrategy<? super I, ? super O> closingStrategy) {
-        return new ClassicLStarMealy<>(alphabet, oracle, initialSuffixes, cexHandler, closingStrategy);
+        return new ClassicLStarMealy<>(alphabet, oracle, cexHandler, closingStrategy);
     }
 
     public static <A extends MutableMealyMachine<?, I, ?, O>, I, O> ClassicLStarMealy<I, O> createForWordOracle(Alphabet<I> alphabet,
                                                                                                                 MembershipOracle<I, Word<O>> oracle,
-                                                                                                                List<Word<I>> initialSuffixes,
                                                                                                                 ObservationTableCEXHandler<? super I, ? super O> cexHandler,
                                                                                                                 ClosingStrategy<? super I, ? super O> closingStrategy) {
-        return new ClassicLStarMealy<>(alphabet,
-                                       MealyUtil.wrapWordOracle(oracle),
-                                       initialSuffixes,
-                                       cexHandler,
-                                       closingStrategy);
+        return new ClassicLStarMealy<>(alphabet, MealyUtil.wrapWordOracle(oracle), cexHandler, closingStrategy);
     }
 
     @Override
@@ -117,12 +116,12 @@ public class ClassicLStarMealy<I, O>
     }
 
     @Override
-    protected Void stateProperty(Row<I> stateRow) {
+    protected Void stateProperty(ObservationTable<I, O> table, Row<I> stateRow) {
         return null;
     }
 
     @Override
-    protected O transitionProperty(Row<I> stateRow, int inputIdx) {
+    protected O transitionProperty(ObservationTable<I, O> table, Row<I> stateRow, int inputIdx) {
         return table.cellContents(stateRow, inputIdx);
     }
 

@@ -17,22 +17,17 @@ package de.learnlib.datastructure.observationtable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.Signed;
 
-import com.google.common.base.Objects;
+import de.learnlib.api.AccessSequenceTransformer;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 /**
@@ -70,13 +65,20 @@ import net.automatalib.words.Word;
  * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public interface ObservationTable<I, D> {
+public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
 
     /**
      * Used to indicate that no distinguishing suffix exists in {@link #findDistinguishingSuffixIndex(Inconsistency)}
      * and {@link #findDistinguishingSuffixIndex(Row, Row)}.
      */
     int NO_DISTINGUISHING_SUFFIX = -1;
+
+    /**
+     * Retrieves the input alphabet used in this observation table.
+     *
+     * @return the input alphabet
+     */
+    Alphabet<I> getInputAlphabet();
 
     /**
      * Retrieves all prefixes (short and long) in the table. The prefixes are returned in no specified order.
@@ -102,7 +104,7 @@ public interface ObservationTable<I, D> {
      */
     @Nonnull
     default Collection<Word<I>> getShortPrefixes() {
-        Collection<Row<I, D>> spRows = getShortPrefixRows();
+        Collection<Row<I>> spRows = getShortPrefixRows();
         return spRows.stream().map(Row::getLabel).collect(Collectors.toList());
 
     }
@@ -114,19 +116,22 @@ public interface ObservationTable<I, D> {
      */
     @Nonnull
     default Collection<Word<I>> getLongPrefixes() {
-        Collection<Row<I, D>> lpRows = getLongPrefixRows();
+        Collection<Row<I>> lpRows = getLongPrefixRows();
         return lpRows.stream().map(Row::getLabel).collect(Collectors.toList());
     }
 
     @Nonnull
-    Collection<Row<I, D>> getShortPrefixRows();
+    Collection<Row<I>> getShortPrefixRows();
 
     @Nonnull
-    Collection<Row<I, D>> getLongPrefixRows();
+    Collection<Row<I>> getLongPrefixRows();
 
     @Nullable
-    default Row<I, D> getRow(Word<I> prefix) {
-        for (Row<I, D> row : getAllRows()) {
+    Row<I> getRow(int idx);
+
+    @Nullable
+    default Row<I> getRow(Word<I> prefix) {
+        for (Row<I> row : getAllRows()) {
             if (prefix.equals(row.getLabel())) {
                 return row;
             }
@@ -136,30 +141,61 @@ public interface ObservationTable<I, D> {
     }
 
     @Nonnull
-    default Collection<Row<I, D>> getAllRows() {
-        Collection<Row<I, D>> spRows = getShortPrefixRows();
-        Collection<Row<I, D>> lpRows = getLongPrefixRows();
+    default Collection<Row<I>> getAllRows() {
+        Collection<Row<I>> spRows = getShortPrefixRows();
+        Collection<Row<I>> lpRows = getLongPrefixRows();
 
-        List<Row<I, D>> result = new ArrayList<>(spRows.size() + lpRows.size());
+        List<Row<I>> result = new ArrayList<>(spRows.size() + lpRows.size());
         result.addAll(spRows);
         result.addAll(lpRows);
 
         return result;
     }
 
+    /**
+     * Returns the total number of rows in this observation table. This number may be used as the upper bound for the
+     * (row) ids of the table rows.
+     *
+     * @return the number of rows
+     *
+     * @see Row#getRowId()
+     */
+    default int numberOfRows() {
+        return getShortPrefixRows().size() + getLongPrefixRows().size();
+    }
+
+    default int numberOfShortPrefixRows() {
+        return getShortPrefixRows().size();
+    }
+
+    default int numberOfLongPrefixRows() {
+        return getShortPrefixRows().size();
+    }
+
+    /**
+     * Returns the number of distinct (regarding row values) rows in this observation table. This number may be used as
+     * the upper bound for the (content ids of the table rows.
+     *
+     * @return the number of distinct rows
+     *
+     * @see Row#getRowContentId()
+     */
+    int numberOfDistinctRows();
+
     default boolean isClosed() {
         return (findUnclosedRow() == null);
     }
 
     @Nullable
-    default Row<I, D> findUnclosedRow() {
-        Set<List<? extends D>> spRowContents = new HashSet<>();
-        for (Row<I, D> spRow : getShortPrefixRows()) {
-            spRowContents.add(spRow.getContents());
+    default Row<I> findUnclosedRow() {
+        final boolean[] spContents = new boolean[numberOfDistinctRows()];
+
+        for (Row<I> spRow : getShortPrefixRows()) {
+            spContents[spRow.getRowContentId()] = true;
         }
 
-        for (Row<I, D> lpRow : getLongPrefixRows()) {
-            if (!spRowContents.contains(lpRow.getContents())) {
+        for (Row<I> lpRow : getLongPrefixRows()) {
+            if (!spContents[lpRow.getRowContentId()]) {
                 return lpRow;
             }
         }
@@ -168,7 +204,7 @@ public interface ObservationTable<I, D> {
     }
 
     @Nullable
-    default Word<I> findDistinguishingSuffix(Inconsistency<I, D> inconsistency) {
+    default Word<I> findDistinguishingSuffix(Inconsistency<I> inconsistency) {
         int suffixIndex = findDistinguishingSuffixIndex(inconsistency);
         if (suffixIndex != NO_DISTINGUISHING_SUFFIX) {
             return null;
@@ -188,7 +224,7 @@ public interface ObservationTable<I, D> {
      *         if the rows do not belong to this observation table
      */
     @Nullable
-    default Word<I> findDistinguishingSuffix(Row<I, D> row1, Row<I, D> row2) {
+    default Word<I> findDistinguishingSuffix(Row<I> row1, Row<I> row2) {
         int suffixIndex = findDistinguishingSuffixIndex(row1, row2);
         if (suffixIndex != NO_DISTINGUISHING_SUFFIX) {
             return null;
@@ -204,15 +240,12 @@ public interface ObservationTable<I, D> {
      *         if the
      */
     @Signed
-    default int findDistinguishingSuffixIndex(Inconsistency<I, D> inconsistency) {
-        Row<I, D> row1 = inconsistency.getFirstRow();
-        Row<I, D> row2 = inconsistency.getSecondRow();
-        I sym = inconsistency.getSymbol();
+    default int findDistinguishingSuffixIndex(Inconsistency<I> inconsistency) {
+        Row<I> row1 = inconsistency.getFirstRow();
+        Row<I> row2 = inconsistency.getSecondRow();
+        int symIdx = getInputAlphabet().getSymbolIndex(inconsistency.getSymbol());
 
-        Row<I, D> succRow1 = getSuccessorRow(row1, sym);
-        Row<I, D> succRow2 = getSuccessorRow(row2, sym);
-
-        return findDistinguishingSuffixIndex(succRow1, succRow2);
+        return findDistinguishingSuffixIndex(row1.getSuccessor(symIdx), row2.getSuccessor(symIdx));
     }
 
     /**
@@ -228,24 +261,11 @@ public interface ObservationTable<I, D> {
      *         if the rows do not belong to this observation table
      */
     @Signed
-    default int findDistinguishingSuffixIndex(Row<I, D> row1, Row<I, D> row2) {
-        Iterator<D> values1It = row1.getContents().iterator();
-        Iterator<D> values2It = row2.getContents().iterator();
-
-        int i = 0;
-        while (values1It.hasNext() && values2It.hasNext()) {
-            D value1 = values1It.next();
-            D value2 = values2It.next();
-
-            if (!Objects.equal(value1, value2)) {
+    default int findDistinguishingSuffixIndex(Row<I> row1, Row<I> row2) {
+        for (int i = 0; i < getSuffixes().size(); i++) {
+            if (!Objects.equals(cellContents(row1, i), cellContents(row2, i))) {
                 return i;
             }
-            i++;
-        }
-
-        if (values1It.hasNext() || values2It.hasNext()) {
-            throw new IllegalStateException(
-                    "Rows [" + row1.getLabel() + "] and/or [" + row2.getLabel() + "] have invalid length");
         }
 
         return NO_DISTINGUISHING_SUFFIX;
@@ -264,9 +284,6 @@ public interface ObservationTable<I, D> {
         return getSuffixes().get(index);
     }
 
-    @Nullable
-    Row<I, D> getSuccessorRow(Row<I, D> spRow, @Nullable I symbol) throws InvalidRowException;
-
     /**
      * Retrieves all suffixes in the table.
      *
@@ -275,177 +292,47 @@ public interface ObservationTable<I, D> {
     @Nonnull
     List<Word<I>> getSuffixes();
 
-    default boolean isConsistent(Collection<? extends I> inputs) {
-        return (findInconsistency(inputs) == null);
+    default int numberOfSuffixes() {
+        return getSuffixes().size();
+    }
+
+    default boolean isConsistent() {
+        return (findInconsistency() == null);
     }
 
     @Nullable
-    default Inconsistency<I, D> findInconsistency(Collection<? extends I> inputs) {
-        Map<List<D>, Row<I, D>> spRowsByContent = new HashMap<>();
-        for (Row<I, D> spRow : getShortPrefixRows()) {
-            List<D> content = spRow.getContents();
-            Row<I, D> canonicalRow = spRowsByContent.get(content);
-            if (canonicalRow != null) {
-                for (I inputSym : inputs) {
-                    Row<I, D> spRowSucc = getSuccessorRow(spRow, inputSym);
-                    Row<I, D> canRowSucc = getSuccessorRow(canonicalRow, inputSym);
-                    if (spRowSucc != canRowSucc) {
-                        if (!spRowSucc.getContents().equals(canRowSucc.getContents())) {
-                            return new DefaultInconsistency<>(spRow, canonicalRow, inputSym);
-                        }
-                    }
+    default Inconsistency<I> findInconsistency() {
+        @SuppressWarnings("unchecked")
+        final Row<I>[] canonicalRows = (Row<I>[]) new Row<?>[numberOfDistinctRows()];
+        final Alphabet<I> alphabet = getInputAlphabet();
+
+        for (Row<I> spRow : getShortPrefixRows()) {
+            int contentId = spRow.getRowContentId();
+
+            Row<I> canRow = canonicalRows[contentId];
+            if (canRow == null) {
+                canonicalRows[contentId] = spRow;
+                continue;
+            }
+
+            for (int i = 0; i < alphabet.size(); i++) {
+                int spSuccContent = spRow.getSuccessor(i).getRowContentId();
+                int canSuccContent = canRow.getSuccessor(i).getRowContentId();
+                if (spSuccContent != canSuccContent) {
+                    return new Inconsistency<>(canRow, spRow, alphabet.getSymbol(i));
                 }
-            } else {
-                spRowsByContent.put(content, spRow);
             }
         }
 
         return null;
     }
 
-    /**
-     * A single row in the observation table.
-     *
-     * @param <I>
-     *         input symbol type
-     * @param <D>
-     *         output domain type
-     *
-     * @author Malte Isberner
-     */
-    interface Row<I, D> extends Iterable<D> {
-
-        /**
-         * Retrieves the label of this row.
-         *
-         * @return the label of this row
-         */
-        @Nonnull
-        Word<I> getLabel();
-
-        /**
-         * Retrieves whether this row is a short or a long prefix row.
-         *
-         * @return {@code true} if this row is a short prefix row, {@code false} otherwise.
-         */
-        boolean isShortPrefixRow();
-
-        /**
-         * Retrieves a list of the cell contents in this row.
-         *
-         * @return the cell contents in this row
-         */
-        @Nonnull
-        List<D> getContents();
-
-        /**
-         * Retrieves the size (length) of this row.
-         *
-         * @return the size of this row
-         */
-        int size();
-
-        /**
-         * Retrieves the cell content at the given index.
-         *
-         * @param index
-         *         the index
-         *
-         * @return the cell content at the given index
-         *
-         * @throws IndexOutOfBoundsException
-         *         if the given index is invalid, i.e., is less than {@code 0} or greater than or equal to {@code
-         *         size()}
-         */
-        @Nullable
-        D getCellContent(@Nonnegative int index) throws IndexOutOfBoundsException;
+    default Row<I> getRowSuccessor(Row<I> row, I sym) {
+        return row.getSuccessor(getInputAlphabet().getSymbolIndex(sym));
     }
 
-    /**
-     * Representation of an inconsistency in the observation table.
-     * <p>
-     * An inconsistency is represented by two short prefix rows with matching contents, and an input symbol such that
-     * the rows indexed by one-letter extensions have differing contents.
-     *
-     * @param <I>
-     *         input symbol type
-     * @param <D>
-     *         observation type
-     *
-     * @author Malte Isberner
-     */
-    interface Inconsistency<I, D> {
+    List<D> rowContents(Row<I> row);
 
-        /**
-         * Retrieves the first (short prefix) row constituting the inconsistency.
-         *
-         * @return the first row
-         */
-        @Nonnull
-        Row<I, D> getFirstRow();
-
-        /**
-         * Retrieves the second (short prefix) row constituting the inconsistency.
-         *
-         * @return the second row
-         */
-        @Nonnull
-        Row<I, D> getSecondRow();
-
-        /**
-         * Retrieves the symbol for which's one-letter extensions the corresponding rows have different contents.
-         *
-         * @return the symbol
-         */
-        @Nullable
-        I getSymbol();
-    }
-
-    abstract class AbstractRow<I, D> implements Row<I, D> {
-
-        @Override
-        public Iterator<D> iterator() {
-            return Collections.unmodifiableCollection(getContents()).iterator();
-        }
-
-        @Override
-        public int size() {
-            return getContents().size();
-        }
-
-        @Override
-        public D getCellContent(int index) {
-            return getContents().get(index);
-        }
-
-    }
-
-    class DefaultInconsistency<I, D> implements Inconsistency<I, D> {
-
-        private final Row<I, D> firstRow;
-        private final Row<I, D> secondRow;
-        private final I symbol;
-
-        public DefaultInconsistency(Row<I, D> firstRow, Row<I, D> secondRow, I symbol) {
-            this.firstRow = firstRow;
-            this.secondRow = secondRow;
-            this.symbol = symbol;
-        }
-
-        @Override
-        public Row<I, D> getFirstRow() {
-            return firstRow;
-        }
-
-        @Override
-        public Row<I, D> getSecondRow() {
-            return secondRow;
-        }
-
-        @Override
-        public I getSymbol() {
-            return symbol;
-        }
-    }
+    D cellContents(Row<I> row, int columnId);
 
 }

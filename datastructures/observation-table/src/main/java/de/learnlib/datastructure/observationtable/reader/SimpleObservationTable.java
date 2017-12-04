@@ -19,19 +19,20 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import de.learnlib.datastructure.observationtable.InvalidRowException;
 import de.learnlib.datastructure.observationtable.NoSuchRowException;
 import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.ObservationTable;
+import de.learnlib.datastructure.observationtable.Row;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.Alphabets;
 
 /**
- * This class represents the data structure of an {@link ObservationTable} wihout providing any meaningful
- * functionalily. It is used to store the result of reading string representations like with {@link
+ * This class represents the data structure of an {@link ObservationTable} without providing any meaningful
+ * functionality. It is used to store the result of reading string representations like with {@link
  * OTUtils#fromString(String, net.automatalib.words.Alphabet, ObservationTableReader)}.
  *
  * @param <I>
@@ -49,91 +50,31 @@ public class SimpleObservationTable<I, D> implements ObservationTable<I, D> {
 
     @Nonnull
     @Override
-    public Collection<Word<I>> getAllPrefixes() {
+    public Collection<Row<I>> getShortPrefixRows() {
         return Collections.emptyList();
     }
 
     @Nonnull
     @Override
-    public Collection<Word<I>> getShortPrefixes() {
+    public Collection<Row<I>> getLongPrefixRows() {
         return Collections.emptyList();
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public Collection<Word<I>> getLongPrefixes() {
-        return Collections.emptyList();
+    public Row<I> getRow(int idx) {
+        return null;
     }
 
     @Nonnull
     @Override
-    public Collection<Row<I, D>> getShortPrefixRows() {
-        return Collections.emptyList();
-    }
-
-    @Nonnull
-    @Override
-    public Collection<Row<I, D>> getLongPrefixRows() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Nonnull
-    @Override
-    public Row<I, D> getRow(Word<I> prefix) throws NoSuchRowException {
+    public Row<I> getRow(Word<I> prefix) throws NoSuchRowException {
         throw new NoSuchRowException();
     }
 
-    @Nonnull
     @Override
-    public Collection<Row<I, D>> getAllRows() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public boolean isClosed() {
-        return false;
-    }
-
-    @Nullable
-    @Override
-    public Row<I, D> findUnclosedRow() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Nullable
-    @Override
-    public Word<I> findDistinguishingSuffix(Inconsistency<I, D> inconsistency)
-            throws NoSuchRowException, InvalidRowException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Nullable
-    @Override
-    public Word<I> findDistinguishingSuffix(Row<I, D> firstRow, Row<I, D> secondRow) throws InvalidRowException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int findDistinguishingSuffixIndex(Inconsistency<I, D> inconsistency)
-            throws NoSuchRowException, InvalidRowException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int findDistinguishingSuffixIndex(Row<I, D> firstRow, Row<I, D> secondRow) throws InvalidRowException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Nonnull
-    @Override
-    public Word<I> getSuffix(@Nonnegative int index) throws IndexOutOfBoundsException {
-        return suffixes.get(index);
-    }
-
-    @Nullable
-    @Override
-    public Row<I, D> getSuccessorRow(Row<I, D> spRow, @Nullable I symbol) throws InvalidRowException {
-        throw new InvalidRowException();
+    public int numberOfDistinctRows() {
+        return 0;
     }
 
     @Nonnull
@@ -143,13 +84,27 @@ public class SimpleObservationTable<I, D> implements ObservationTable<I, D> {
     }
 
     @Override
-    public boolean isConsistent(Collection<? extends I> inputs) {
-        return false;
+    public Alphabet<I> getInputAlphabet() {
+        return Alphabets.fromArray();
     }
 
-    @Nullable
     @Override
-    public Inconsistency<I, D> findInconsistency(Collection<? extends I> inputs) {
+    public D cellContents(Row<I> row, int columnId) {
+        return null;
+    }
+
+    @Override
+    public List<D> rowContents(Row<I> row) {
+        return null;
+    }
+
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isAccessSequence(Word<I> word) {
+        return false;
     }
 }

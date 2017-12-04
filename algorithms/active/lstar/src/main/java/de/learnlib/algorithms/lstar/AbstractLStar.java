@@ -22,14 +22,15 @@ import java.util.List;
 import java.util.Objects;
 
 import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandlers;
-import de.learnlib.algorithms.lstar.table.Inconsistency;
-import de.learnlib.algorithms.lstar.table.ObservationTable;
-import de.learnlib.algorithms.lstar.table.Row;
 import de.learnlib.api.algorithm.feature.GlobalSuffixLearner;
 import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.datastructure.observationtable.GenericObservationTable;
+import de.learnlib.datastructure.observationtable.Inconsistency;
 import de.learnlib.datastructure.observationtable.OTLearner;
+import de.learnlib.datastructure.observationtable.ObservationTable;
+import de.learnlib.datastructure.observationtable.Row;
 import de.learnlib.util.MQUtil;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Alphabet;
@@ -57,7 +58,7 @@ public abstract class AbstractLStar<A, I, D>
 
     protected Alphabet<I> alphabet;
     protected final MembershipOracle<I, D> oracle;
-    protected ObservationTable<I, D> table;
+    protected GenericObservationTable<I, D> table;
 
     /**
      * Constructor.
@@ -67,10 +68,10 @@ public abstract class AbstractLStar<A, I, D>
      * @param oracle
      *         the membership oracle.
      */
-    public AbstractLStar(Alphabet<I> alphabet, MembershipOracle<I, D> oracle) {
+    protected AbstractLStar(Alphabet<I> alphabet, MembershipOracle<I, D> oracle) {
         this.alphabet = alphabet;
         this.oracle = oracle;
-        this.table = new ObservationTable<>(alphabet);
+        this.table = new GenericObservationTable<>(alphabet);
     }
 
     @Override
@@ -87,9 +88,9 @@ public abstract class AbstractLStar<A, I, D>
         if (!MQUtil.isCounterexample(ceQuery, hypothesisOutput())) {
             return false;
         }
-        int oldDistinctRows = table.numDistinctRows();
+        int oldDistinctRows = table.numberOfDistinctRows();
         doRefineHypothesis(ceQuery);
-        assert (table.numDistinctRows() > oldDistinctRows);
+        assert (table.numberOfDistinctRows() > oldDistinctRows);
         return true;
     }
 
@@ -141,7 +142,7 @@ public abstract class AbstractLStar<A, I, D>
             }
 
             if (checkConsistency) {
-                Inconsistency<I, D> incons;
+                Inconsistency<I> incons;
 
                 do {
                     incons = table.findInconsistency();
@@ -185,19 +186,16 @@ public abstract class AbstractLStar<A, I, D>
      *
      * @return the suffix to add in order to fix the inconsistency
      */
-    protected Word<I> analyzeInconsistency(Inconsistency<I, D> incons) {
-        int inputIdx = incons.getInputIndex();
+    protected Word<I> analyzeInconsistency(Inconsistency<I> incons) {
+        int inputIdx = alphabet.getSymbolIndex(incons.getSymbol());
 
         Row<I> succRow1 = incons.getFirstRow().getSuccessor(inputIdx);
         Row<I> succRow2 = incons.getSecondRow().getSuccessor(inputIdx);
 
-        int numSuffixes = table.numSuffixes();
-
-        List<D> contents1 = table.rowContents(succRow1);
-        List<D> contents2 = table.rowContents(succRow2);
+        int numSuffixes = table.getSuffixes().size();
 
         for (int i = 0; i < numSuffixes; i++) {
-            D val1 = contents1.get(i), val2 = contents2.get(i);
+            D val1 = table.cellContents(succRow1, i), val2 = table.cellContents(succRow2, i);
             if (!Objects.equals(val1, val2)) {
                 I sym = alphabet.getSymbol(inputIdx);
                 Word<I> suffix = table.getSuffixes().get(i);
@@ -223,8 +221,8 @@ public abstract class AbstractLStar<A, I, D>
     }
 
     @Override
-    public de.learnlib.datastructure.observationtable.ObservationTable<I, D> getObservationTable() {
-        return table.asStandardTable();
+    public ObservationTable<I, D> getObservationTable() {
+        return table;
     }
 
     @Override

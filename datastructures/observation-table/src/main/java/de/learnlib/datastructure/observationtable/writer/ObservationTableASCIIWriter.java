@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import de.learnlib.datastructure.observationtable.ObservationTable;
+import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.words.Word;
 
 public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableWriter<I, D> {
@@ -47,25 +48,37 @@ public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableW
 
     @Override
     public void write(ObservationTable<? extends I, ? extends D> table, Appendable out) throws IOException {
-        List<? extends Word<? extends I>> suffixes = table.getSuffixes();
+        writeInternal(table, super.wordToString, super.outputToString, out);
+    }
+
+    /**
+     * Utility method to bind wildcard generics.
+     *
+     * @see #write(ObservationTable, Appendable)
+     */
+    private <I, D> void writeInternal(ObservationTable<I, D> table,
+                                      Function<? super Word<? extends I>, ? extends String> wordToString,
+                                      Function<? super D, ? extends String> outputToString,
+                                      Appendable out) throws IOException {
+        List<Word<I>> suffixes = table.getSuffixes();
         int numSuffixes = suffixes.size();
 
         int[] colWidth = new int[numSuffixes + 1];
 
         int i = 1;
-        for (Word<? extends I> suffix : suffixes) {
-            colWidth[i++] = wordToString(suffix).length();
+        for (Word<I> suffix : suffixes) {
+            colWidth[i++] = wordToString.apply(suffix).length();
         }
 
-        for (ObservationTable.Row<? extends I, ? extends D> row : table.getAllRows()) {
-            int thisWidth = wordToString(row.getLabel()).length();
+        for (Row<I> row : table.getAllRows()) {
+            int thisWidth = wordToString.apply(row.getLabel()).length();
             if (thisWidth > colWidth[0]) {
                 colWidth[0] = thisWidth;
             }
 
             i = 1;
-            for (D value : row) {
-                thisWidth = outputToString(value).length();
+            for (D value : table.rowContents(row)) {
+                thisWidth = outputToString.apply(value).length();
                 if (thisWidth > colWidth[i]) {
                     colWidth[i] = thisWidth;
                 }
@@ -79,23 +92,23 @@ public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableW
         // Header
         content[0] = "";
         i = 1;
-        for (Word<? extends I> suffix : suffixes) {
-            content[i++] = wordToString(suffix);
+        for (Word<I> suffix : suffixes) {
+            content[i++] = wordToString.apply(suffix);
         }
         appendContentRow(out, content, colWidth);
         appendSeparatorRow(out, '=', colWidth);
 
         boolean first = true;
-        for (ObservationTable.Row<? extends I, ? extends D> spRow : table.getShortPrefixRows()) {
+        for (Row<I> spRow : table.getShortPrefixRows()) {
             if (first) {
                 first = false;
             } else if (rowSeparators) {
                 appendSeparatorRow(out, '-', colWidth);
             }
-            content[0] = wordToString(spRow.getLabel());
+            content[0] = wordToString.apply(spRow.getLabel());
             i = 1;
-            for (D value : spRow) {
-                content[i++] = outputToString(value);
+            for (D value : table.rowContents(spRow)) {
+                content[i++] = outputToString.apply(value);
             }
             appendContentRow(out, content, colWidth);
         }
@@ -103,16 +116,16 @@ public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableW
         appendSeparatorRow(out, '=', colWidth);
 
         first = true;
-        for (ObservationTable.Row<? extends I, ? extends D> lpRow : table.getLongPrefixRows()) {
+        for (Row<I> lpRow : table.getLongPrefixRows()) {
             if (first) {
                 first = false;
             } else if (rowSeparators) {
                 appendSeparatorRow(out, '-', colWidth);
             }
-            content[0] = wordToString(lpRow.getLabel());
+            content[0] = wordToString.apply(lpRow.getLabel());
             i = 1;
-            for (D value : lpRow.getContents()) {
-                content[i++] = outputToString(value);
+            for (D value : table.rowContents(lpRow)) {
+                content[i++] = outputToString.apply(value);
             }
             appendContentRow(out, content, colWidth);
         }

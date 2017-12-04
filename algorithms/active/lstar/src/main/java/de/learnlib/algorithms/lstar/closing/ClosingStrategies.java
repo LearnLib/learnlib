@@ -18,9 +18,9 @@ package de.learnlib.algorithms.lstar.closing;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.algorithms.lstar.table.ObservationTable;
-import de.learnlib.algorithms.lstar.table.Row;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.datastructure.observationtable.ObservationTable;
+import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.words.Alphabet;
 
@@ -75,7 +75,7 @@ public final class ClosingStrategies {
                 Row<RI> shortest = null;
                 int shortestLen = Integer.MAX_VALUE;
                 for (Row<RI> row : clazz) {
-                    int prefixLen = row.getPrefix().length();
+                    int prefixLen = row.getLabel().length();
                     if (shortest == null || prefixLen < shortestLen) {
                         shortest = row;
                         shortestLen = prefixLen;
@@ -109,7 +109,7 @@ public final class ClosingStrategies {
                 for (Row<RI> row : clazz) {
                     if (lexMin == null) {
                         lexMin = row;
-                    } else if (CmpUtil.lexCompare(row.getPrefix(), lexMin.getPrefix(), alphabet) < 0) {
+                    } else if (CmpUtil.lexCompare(row.getLabel(), lexMin.getLabel(), alphabet) < 0) {
                         lexMin = row;
                     }
                 }

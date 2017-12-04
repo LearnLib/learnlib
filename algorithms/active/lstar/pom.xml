@@ -76,11 +76,6 @@ limitations under the License.
             <artifactId>automata-util</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
         <!-- BuilderGen -->
         <dependency>
             <groupId>com.github.misberner.buildergen</groupId>

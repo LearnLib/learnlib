@@ -19,10 +19,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.algorithms.lstar.table.Row;
 import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.datastructure.observationtable.ObservationTable;
+import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.commons.util.collections.CollectionsUtil;
@@ -61,7 +62,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
      * @param oracle
      *         the learning oracle
      */
-    public AbstractAutomatonLStar(Alphabet<I> alphabet, MembershipOracle<I, D> oracle, AI internalHyp) {
+    protected AbstractAutomatonLStar(Alphabet<I> alphabet, MembershipOracle<I, D> oracle, AI internalHyp) {
         super(alphabet, oracle);
         this.internalHyp = internalHyp;
         internalHyp.clear();
@@ -82,8 +83,8 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
 
     /**
      * Performs the L*-style hypothesis construction. For creating states and transitions, the {@link
-     * #stateProperty(Row)} and {@link #transitionProperty(Row, int)} methods are used to derive the respective
-     * properties.
+     * #stateProperty(ObservationTable, Row)} and {@link #transitionProperty(ObservationTable, Row, int)} methods are
+     * used to derive the respective properties.
      */
     protected void updateInternalHypothesis() {
         if (!table.isInitialized()) {
@@ -91,7 +92,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
         }
 
         int oldStates = internalHyp.size();
-        int numDistinct = table.numDistinctRows();
+        int numDistinct = table.numberOfDistinctRows();
 
         int newStates = numDistinct - oldStates;
 
@@ -105,7 +106,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
             if (info != null) {
                 // State from previous hypothesis, property might have changed
                 if (info.getRow() == sp) {
-                    internalHyp.setStateProperty(info.getState(), stateProperty(sp));
+                    internalHyp.setStateProperty(info.getState(), stateProperty(table, sp));
                 }
                 continue;
             }
@@ -128,7 +129,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
 
                 S succState = stateInfos.get(succId).getState();
 
-                setTransition(state, input, succState, sp, i, succ);
+                setTransition(state, input, succState, sp, i);
             }
         }
     }
@@ -136,23 +137,25 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     /**
      * Derives a state property from the corresponding row.
      *
+     * @param table
+     *         the current observation table
      * @param stateRow
      *         the row for which the state is created
      *
      * @return the state property of the corresponding state
      */
-    protected abstract SP stateProperty(Row<I> stateRow);
+    protected abstract SP stateProperty(ObservationTable<I, D> table, Row<I> stateRow);
 
     protected S createState(boolean initial, Row<I> row) {
-        SP prop = stateProperty(row);
+        SP prop = stateProperty(table, row);
         if (initial) {
             return internalHyp.addInitialState(prop);
         }
         return internalHyp.addState(prop);
     }
 
-    protected void setTransition(S from, I input, S to, Row<I> fromRow, int inputIdx, Row<I> toRow) {
-        TP prop = transitionProperty(fromRow, inputIdx);
+    protected void setTransition(S from, I input, S to, Row<I> fromRow, int inputIdx) {
+        TP prop = transitionProperty(table, fromRow, inputIdx);
         internalHyp.setTransition(from, input, to, prop);
     }
 
@@ -169,7 +172,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
      *
      * @return the transition property of the corresponding transition
      */
-    protected abstract TP transitionProperty(Row<I> stateRow, int inputIdx);
+    protected abstract TP transitionProperty(ObservationTable<I, D> table, Row<I> stateRow, int inputIdx);
 
     @Override
     protected final void doRefineHypothesis(DefaultQuery<I, D> ceQuery) {
@@ -201,7 +204,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     @Override
     public void resume(final AutomatonLStarState<I, D, AI, S> state) {
         this.table = state.getObservationTable();
-        this.table.setAlphabet(alphabet);
+        this.table.setInputAlphabet(alphabet);
         this.internalHyp = state.getHypothesis();
         this.stateInfos = state.getStateInfos();
     }

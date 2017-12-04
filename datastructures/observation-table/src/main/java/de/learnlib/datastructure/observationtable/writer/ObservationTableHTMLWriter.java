@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import de.learnlib.datastructure.observationtable.ObservationTable;
-import de.learnlib.datastructure.observationtable.ObservationTable.Row;
+import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.words.Word;
 
 /**
@@ -43,7 +43,19 @@ public class ObservationTableHTMLWriter<I, D> extends AbstractObservationTableWr
 
     @Override
     public void write(ObservationTable<? extends I, ? extends D> table, Appendable out) throws IOException {
-        List<? extends Word<? extends I>> suffixes = table.getSuffixes();
+        writeInternal(table, super.wordToString, super.outputToString, out);
+    }
+
+    /**
+     * Utility method to bind wildcard generics.
+     *
+     * @see #write(ObservationTable, Appendable)
+     */
+    private <I, D> void writeInternal(ObservationTable<I, D> table,
+                                     Function<? super Word<? extends I>, ? extends String> wordToString,
+                                     Function<? super D, ? extends String> outputToString,
+                                     Appendable out) throws IOException {
+        List<Word<I>> suffixes = table.getSuffixes();
 
         out.append("<table class=\"learnlib-observationtable\">\n");
         out.append("\t<thead>\n");
@@ -51,29 +63,29 @@ public class ObservationTableHTMLWriter<I, D> extends AbstractObservationTableWr
            .append(Integer.toString(suffixes.size()))
            .append("\" class=\"suffixes-header\">Suffixes</th></tr>\n");
         out.append("\t\t<tr>");
-        for (Word<? extends I> suffix : suffixes) {
-            out.append("<td>").append(wordToString(suffix)).append("</td>");
+        for (Word<I> suffix : suffixes) {
+            out.append("<td>").append(wordToString.apply(suffix)).append("</td>");
         }
         out.append("</tr>\n");
         out.append("\t</thead>\n");
         out.append("\t<tbody>\n");
 
-        for (Row<? extends I, ? extends D> row : table.getShortPrefixRows()) {
+        for (Row<I> row : table.getShortPrefixRows()) {
             out.append("\t\t<tr class=\"short-prefix\"><td class=\"prefix\">")
-               .append(wordToString(row.getLabel()))
+               .append(wordToString.apply(row.getLabel()))
                .append("</td>");
-            for (D value : row) {
-                out.append("<td class=\"suffix-column\">").append(outputToString(value)).append("</td>");
+            for (D value : table.rowContents(row)) {
+                out.append("<td class=\"suffix-column\">").append(outputToString.apply(value)).append("</td>");
             }
             out.append("</tr>\n");
         }
 
         out.append("\t\t<tr><td colspan=\"").append(Integer.toString(suffixes.size() + 1)).append("\"></td></tr>\n");
 
-        for (Row<? extends I, ? extends D> row : table.getLongPrefixRows()) {
-            out.append("\t\t<tr class=\"long-prefix\"><td>").append(wordToString(row.getLabel())).append("</td>");
-            for (D value : row) {
-                out.append("<td class=\"suffix-column\">").append(outputToString(value)).append("</td>");
+        for (Row<I> row : table.getLongPrefixRows()) {
+            out.append("\t\t<tr class=\"long-prefix\"><td>").append(wordToString.apply(row.getLabel())).append("</td>");
+            for (D value : table.rowContents(row)) {
+                out.append("<td class=\"suffix-column\">").append(outputToString.apply(value)).append("</td>");
             }
             out.append("</tr>\n");
         }

@@ -17,16 +17,16 @@ package de.learnlib.algorithms.lstar.ce;
 
 import java.util.List;
 
-import de.learnlib.algorithms.lstar.table.ObservationTable;
-import de.learnlib.algorithms.lstar.table.Row;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.datastructure.observationtable.MutableObservationTable;
+import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.automata.concepts.SuffixOutput;
 
 public interface ObservationTableCEXHandler<I, D> {
 
     <RI extends I, RD extends D> List<List<Row<RI>>> handleCounterexample(DefaultQuery<RI, RD> ceQuery,
-                                                                          ObservationTable<RI, RD> table,
+                                                                          MutableObservationTable<RI, RD> table,
                                                                           SuffixOutput<RI, RD> hypOutput,
                                                                           MembershipOracle<RI, RD> oracle);
 

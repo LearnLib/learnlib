@@ -24,7 +24,6 @@ import java.util.function.Function;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.google.common.base.Functions;
 import de.learnlib.datastructure.observationtable.reader.ObservationTableReader;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableHTMLWriter;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableWriter;
@@ -50,8 +49,7 @@ public final class OTUtils {
         throw new AssertionError("Constructor should never be invoked");
     }
 
-    public static <I, D> String toString(ObservationTable<? extends I, ? extends D> table,
-                                         ObservationTableWriter<I, D> writer) {
+    public static <I, D> String toString(ObservationTable<I, D> table, ObservationTableWriter<I, D> writer) {
         StringBuilder sb = new StringBuilder();
         writer.write(table, sb);
 
@@ -65,7 +63,7 @@ public final class OTUtils {
     }
 
     public static <I, D> void writeHTMLToFile(ObservationTable<I, D> table, File file) throws IOException {
-        writeHTMLToFile(table, file, Functions.toStringFunction(), Functions.toStringFunction());
+        writeHTMLToFile(table, file, Object::toString, Object::toString);
     }
 
     public static <I, D> void writeHTMLToFile(ObservationTable<I, D> table,
@@ -83,7 +81,7 @@ public final class OTUtils {
 
     public static <I, D> void displayHTMLInBrowser(ObservationTable<I, D> table)
             throws IOException, UnsupportedOperationException {
-        displayHTMLInBrowser(table, Functions.toStringFunction(), Functions.toStringFunction());
+        displayHTMLInBrowser(table, Object::toString, Object::toString);
     }
 
     /**

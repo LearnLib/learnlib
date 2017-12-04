@@ -17,9 +17,9 @@ package de.learnlib.algorithms.lstar.closing;
 
 import java.util.List;
 
-import de.learnlib.algorithms.lstar.table.ObservationTable;
-import de.learnlib.algorithms.lstar.table.Row;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.datastructure.observationtable.ObservationTable;
+import de.learnlib.datastructure.observationtable.Row;
 
 /**
  * A closing strategy, determining how to proceed when an observation table needs to be closed.

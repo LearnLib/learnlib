@@ -15,24 +15,18 @@
  */
 package de.learnlib.datastructure.observationtable.writer;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.util.Objects;
 import java.util.function.Function;
 
-import com.google.common.base.Functions;
-import de.learnlib.datastructure.observationtable.ObservationTable;
-import net.automatalib.commons.util.IOUtil;
 import net.automatalib.words.Word;
 
 public abstract class AbstractObservationTableWriter<I, D> implements ObservationTableWriter<I, D> {
 
-    private Function<? super Word<? extends I>, ? extends String> wordToString;
-    private Function<? super D, ? extends String> outputToString;
+    protected Function<? super Word<? extends I>, ? extends String> wordToString;
+    protected Function<? super D, ? extends String> outputToString;
 
     public AbstractObservationTableWriter() {
-        this(Functions.toStringFunction(), Functions.toStringFunction());
+        this(Objects::toString, Objects::toString);
     }
 
     public AbstractObservationTableWriter(Function<? super Word<? extends I>, ? extends String> wordToString,
@@ -45,7 +39,7 @@ public abstract class AbstractObservationTableWriter<I, D> implements Observatio
         if (toStringFunction != null) {
             return toStringFunction;
         }
-        return Functions.toStringFunction();
+        return Objects::toString;
     }
 
     public void setWordToString(Function<? super Word<? extends I>, ? extends String> wordToString) {
@@ -62,31 +56,6 @@ public abstract class AbstractObservationTableWriter<I, D> implements Observatio
 
     protected String outputToString(D output) {
         return outputToString.apply(output);
-    }
-
-    @Override
-    public void write(ObservationTable<? extends I, ? extends D> table, PrintStream out) {
-        try {
-            write(table, (Appendable) out);
-        } catch (IOException ex) {
-            throw new AssertionError("Writing to PrintStream must not throw");
-        }
-    }
-
-    @Override
-    public void write(ObservationTable<? extends I, ? extends D> table, StringBuilder out) {
-        try {
-            write(table, (Appendable) out);
-        } catch (IOException ex) {
-            throw new AssertionError("Writing to StringBuilder must not throw");
-        }
-    }
-
-    @Override
-    public void write(ObservationTable<? extends I, ? extends D> table, File file) throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(IOUtil.asUTF8Writer(file))) {
-            write(table, bw);
-        }
     }
 
 }

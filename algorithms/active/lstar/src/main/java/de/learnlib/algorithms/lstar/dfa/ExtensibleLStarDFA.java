@@ -22,9 +22,10 @@ import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithms.lstar.AbstractExtensibleAutomatonLStar;
 import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstar.closing.ClosingStrategy;
-import de.learnlib.algorithms.lstar.table.Row;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerDFA;
+import de.learnlib.datastructure.observationtable.ObservationTable;
+import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -87,12 +88,12 @@ public class ExtensibleLStarDFA<I>
     }
 
     @Override
-    protected Boolean stateProperty(Row<I> stateRow) {
+    protected Boolean stateProperty(ObservationTable<I, Boolean> table, Row<I> stateRow) {
         return table.cellContents(stateRow, 0);
     }
 
     @Override
-    protected Void transitionProperty(Row<I> stateRow, int inputIdx) {
+    protected Void transitionProperty(ObservationTable<I, Boolean> table, Row<I> stateRow, int inputIdx) {
         return null;
     }
 
