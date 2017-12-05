@@ -15,14 +15,10 @@
  */
 package de.learnlib.oracle.membership;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import de.learnlib.api.Mapper;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.api.query.Query;
+import de.learnlib.api.Mapper.AsynchronousMapper;
+import de.learnlib.api.oracle.QueryAnswerer;
+import de.learnlib.api.oracle.SingleQueryOracle;
+import net.automatalib.words.Word;
 
 /**
  * A utility class that allows to lift a membership oracle of concrete input/output symbols to a membership oracle of
@@ -39,31 +35,26 @@ import de.learnlib.api.query.Query;
  *
  * @author frohme
  */
-public class MappedOracle<AI, AO, CI, CO> implements MembershipOracle<AI, AO> {
+public class MappedOracle<AI, AO, CI, CO> implements SingleQueryOracle<AI, AO> {
 
-    private final MembershipOracle<CI, CO> delegate;
+    private final QueryAnswerer<CI, CO> delegate;
 
-    private final Mapper<AI, AO, CI, CO> mapper;
+    private final AsynchronousMapper<AI, AO, CI, CO> mapper;
 
-    public MappedOracle(MembershipOracle<CI, CO> delegate, Mapper<AI, AO, CI, CO> mapper) {
+    public MappedOracle(QueryAnswerer<CI, CO> delegate, AsynchronousMapper<AI, AO, CI, CO> mapper) {
         this.delegate = delegate;
         this.mapper = mapper;
     }
 
     @Override
-    public void processQueries(Collection<? extends Query<AI, AO>> queries) {
-        final List<Query<AI, AO>> orderedQueries = new ArrayList<>(queries);
-        final List<DefaultQuery<CI, CO>> mappedQueries = new ArrayList<>(queries.size());
+    public AO answerQuery(Word<AI> prefix, Word<AI> suffix) {
+        mapper.pre();
 
-        for (final Query<AI, AO> q : orderedQueries) {
-            mappedQueries.add(new DefaultQuery<>(q.getPrefix().transform(mapper::mapInput),
-                                                 q.getSuffix().transform(mapper::mapInput)));
-        }
+        final CO output = delegate.answerQuery(prefix.transform(mapper::mapInput), suffix.transform(mapper::mapInput));
+        final AO result = mapper.mapOutput(output);
 
-        this.delegate.processQueries(mappedQueries);
+        mapper.post();
 
-        for (int i = 0; i < orderedQueries.size(); i++) {
-            orderedQueries.get(i).answer(mapper.mapOutput(mappedQueries.get(i).getOutput()));
-        }
+        return result;
     }
 }

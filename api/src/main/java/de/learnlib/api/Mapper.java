@@ -39,6 +39,18 @@ import de.learnlib.api.oracle.MembershipOracle;
 public interface Mapper<AI, AO, CI, CO> {
 
     /**
+     * Method that is invoked before any translation steps on a word are performed. Usually left un-implemented for
+     * stateless mappers.
+     */
+    default void pre() {}
+
+    /**
+     * Method that is invoked after all translation steps on a word are performed. Usually left un-implemented for
+     * stateless mappers.
+     */
+    default void post() {}
+
+    /**
      * Method that maps an abstract input to a corresponding concrete input.
      *
      * @param abstractInput
@@ -57,4 +69,47 @@ public interface Mapper<AI, AO, CI, CO> {
      * @return the abstract output
      */
     AO mapOutput(CO concreteOutput);
+
+    /**
+     * A mapper refinement to establish the contract of a synchronized, symbol-wise translation of input words for
+     * reactive systems. This means, after each call to {@link #mapInput(Object)} the next call on {@code this} object
+     * will be {@link #mapOutput(Object)} which is passed the immediate answer to the previously mapped input.
+     *
+     * @param <AI>
+     *         abstract input symbol type.
+     * @param <AO>
+     *         abstract output symbol type.
+     * @param <CI>
+     *         concrete input symbol type.
+     * @param <CO>
+     *         concrete output symbol type.
+     *
+     * @author frohme
+     * @see AsynchronousMapper
+     */
+    interface SynchronousMapper<AI, AO, CI, CO> extends Mapper<AI, AO, CI, CO> {}
+
+    /**
+     * A mapper refinement to establish the contract of a asynchronous, query-wise translation of input words. This
+     * means, for a sequence of input symbols, {@link #mapInput(Object)} may be called multiple times before any call to
+     * {@link #mapOutput(Object)} occurs.
+     * <p>
+     * Especially in the context of translating {@link de.learnlib.api.query.Query queries} for mealy machines, which
+     * support the concept of un-answered prefixes (combined with answered suffixes) this means, the number of {@link
+     * #mapInput(Object)} invocations may be larger than the size of the output word passed to the {@link
+     * #mapOutput(Object)} function.
+     *
+     * @param <AI>
+     *         abstract input symbol type.
+     * @param <AO>
+     *         abstract output symbol type.
+     * @param <CI>
+     *         concrete input symbol type.
+     * @param <CO>
+     *         concrete output symbol type.
+     *
+     * @author frohme
+     * @see SynchronousMapper
+     */
+    interface AsynchronousMapper<AI, AO, CI, CO> extends Mapper<AI, AO, CI, CO> {}
 }

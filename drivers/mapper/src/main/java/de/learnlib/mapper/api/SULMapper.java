@@ -20,6 +20,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 
 import de.learnlib.api.Mapper;
+import de.learnlib.api.Mapper.SynchronousMapper;
 import de.learnlib.api.SUL;
 import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.SULMappers;
@@ -49,17 +50,7 @@ import de.learnlib.mapper.SULMappers;
  *
  * @author Malte Isberner
  */
-public interface SULMapper<AI, AO, CI, CO> extends Mapper<AI, AO, CI, CO> {
-
-    /**
-     * Method that is invoked before any translation steps on a word are performed.
-     */
-    void pre();
-
-    /**
-     * Method that is invoked after all translation steps on a word are performed.
-     */
-    void post();
+public interface SULMapper<AI, AO, CI, CO> extends SynchronousMapper<AI, AO, CI, CO> {
 
     /**
      * Checks whether it is possible to {@link #fork() fork} this mapper.
