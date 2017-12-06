@@ -18,10 +18,11 @@ package de.learnlib.mapper;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.learnlib.mapper.api.SULMapper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.SimpleAlphabet;
 
-public class StringMapper<CI> extends AbstractSULMapper<String, String, CI, Object> {
+public class StringMapper<CI> implements SULMapper<String, String, CI, Object> {
 
     private final Map<String, CI> inputs = new HashMap<>();
     private final Alphabet<String> mappedInputs = new SimpleAlphabet<>();

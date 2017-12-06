@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.learnlib.api.exception.SULException;
-import de.learnlib.mapper.AbstractSULMapper;
 import de.learnlib.mapper.api.SULMapper;
 
 /**
@@ -29,8 +28,7 @@ import de.learnlib.mapper.api.SULMapper;
  *
  * @author falkhowar
  */
-public class SimplePOJODataMapper
-        extends AbstractSULMapper<MethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
+public class SimplePOJODataMapper implements SULMapper<MethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
 
     private final Constructor<?> initMethod;
     private final Object[] initParams;

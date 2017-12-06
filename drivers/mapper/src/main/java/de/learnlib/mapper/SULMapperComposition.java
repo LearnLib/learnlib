@@ -20,39 +20,13 @@ import java.util.Optional;
 import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.api.SULMapper;
 
-final class SULMapperComposition<AI, AO, ACI, CAO, CI, CO> implements SULMapper<AI, AO, CI, CO> {
-
-    private final SULMapper<? super AI, ? extends AO, ACI, CAO> mapper1;
-    private final SULMapper<? super ACI, ? extends CAO, ? extends CI, ? super CO> mapper2;
+final class SULMapperComposition<AI, AO, ACI, CAO, CI, CO>
+        extends MapperComposition<AI, AO, ACI, CAO, CI, CO, SULMapper<? super AI, ? extends AO, ACI, CAO>, SULMapper<? super ACI, ? extends CAO, ? extends CI, ? super CO>>
+        implements SULMapper<AI, AO, CI, CO> {
 
     SULMapperComposition(SULMapper<? super AI, ? extends AO, ACI, CAO> outerMapper,
                          SULMapper<? super ACI, ? extends CAO, ? extends CI, ? super CO> innerMapper) {
-        this.mapper1 = outerMapper;
-        this.mapper2 = innerMapper;
-    }
-
-    @Override
-    public void pre() {
-        mapper1.pre();
-        mapper2.pre();
-    }
-
-    @Override
-    public void post() {
-        mapper2.post();
-        mapper1.post();
-    }
-
-    @Override
-    public CI mapInput(AI abstractInput) {
-        ACI aci = mapper1.mapInput(abstractInput);
-        return mapper2.mapInput(aci);
-    }
-
-    @Override
-    public AO mapOutput(CO concreteOutput) {
-        CAO cao = mapper2.mapOutput(concreteOutput);
-        return mapper1.mapOutput(cao);
+        super(outerMapper, innerMapper);
     }
 
     @Override
