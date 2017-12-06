@@ -26,7 +26,6 @@ import de.learnlib.algorithms.adt.api.LeafSplitter;
 import de.learnlib.algorithms.adt.config.LeafSplitters;
 import de.learnlib.algorithms.adt.util.ADTUtil;
 import de.learnlib.api.oracle.SymbolQueryOracle;
-import net.automatalib.commons.util.Triple;
 import net.automatalib.words.Word;
 
 /**
@@ -215,10 +214,10 @@ public class ADT<S, I, O> implements Serializable {
      * @param s2
      *         second node
      *
-     * @return A {@link Triple} containing the lowest common {@link ADTNode}, the output determining the subtree of the
-     * first node and the outuput determining the subtree of the second node
+     * @return A {@link LCAInfo} containing the lowest common {@link ADTNode}, the output determining the subtree of the
+     * first node and the output determining the subtree of the second node
      */
-    public Triple<ADTNode<S, I, O>, O, O> findLCA(final ADTNode<S, I, O> s1, final ADTNode<S, I, O> s2) {
+    public LCAInfo<S, I, O> findLCA(final ADTNode<S, I, O> s1, final ADTNode<S, I, O> s2) {
 
         final Map<ADTNode<S, I, O>, ADTNode<S, I, O>> s1ParentsToS1 = new HashMap<>();
 
@@ -243,7 +242,7 @@ public class ADT<S, I, O> implements Serializable {
                 final O s1Out = ADTUtil.getOutputForSuccessor(lca, s1ParentsToS1.get(lca));
                 final O s2Out = ADTUtil.getOutputForSuccessor(lca, s2Iter);
 
-                return new Triple<>(lca, s1Out, s2Out);
+                return new LCAInfo<>(lca, s1Out, s2Out);
             }
 
             s2Iter = s2Iter.getParent();
@@ -254,5 +253,17 @@ public class ADT<S, I, O> implements Serializable {
 
     public void setLeafSplitter(final LeafSplitter leafSplitter) {
         this.leafSplitter = leafSplitter;
+    }
+
+    public static class LCAInfo<S, I, O> {
+        public final ADTNode<S, I, O> adtNode;
+        public final O firstOutput;
+        public final O secondOutput;
+
+        LCAInfo(ADTNode<S, I, O> adtNode, O firstOutput, O secondOutput) {
+            this.adtNode = adtNode;
+            this.firstOutput = firstOutput;
+            this.secondOutput = secondOutput;
+        }
     }
 }

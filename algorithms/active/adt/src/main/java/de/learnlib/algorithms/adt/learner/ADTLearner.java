@@ -33,6 +33,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithms.adt.adt.ADT;
+import de.learnlib.algorithms.adt.adt.ADT.LCAInfo;
 import de.learnlib.algorithms.adt.adt.ADTLeafNode;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.adt.ADTResetNode;
@@ -60,7 +61,6 @@ import de.learnlib.counterexamples.LocalSuffixFinders;
 import de.learnlib.util.MQUtil;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.Triple;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -749,13 +749,13 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             }
         }
 
-        final Triple<ADTNode<ADTState<I, O>, I, O>, O, O> lcaResult = this.adt.findLCA(oldReference, newReference);
-        final ADTNode<ADTState<I, O>, I, O> lca = lcaResult.getFirst();
+        final LCAInfo<ADTState<I, O>, I, O> lcaResult = this.adt.findLCA(oldReference, newReference);
+        final ADTNode<ADTState<I, O>, I, O> lca = lcaResult.adtNode;
         final Pair<Word<I>, Word<O>> lcaTrace = ADTUtil.buildTraceForNode(lca);
 
         final Word<I> sepWord = lcaTrace.getFirst().append(lca.getSymbol());
-        final Word<O> oldOutputTrace = lcaTrace.getSecond().append(lcaResult.getSecond());
-        final Word<O> newOutputTrace = lcaTrace.getSecond().append(lcaResult.getThird());
+        final Word<O> oldOutputTrace = lcaTrace.getSecond().append(lcaResult.firstOutput);
+        final Word<O> newOutputTrace = lcaTrace.getSecond().append(lcaResult.secondOutput);
 
         final ADTNode<ADTState<I, O>, I, O> oldTrace =
                 ADTUtil.buildADSFromObservation(sepWord, oldOutputTrace, iter.getHypothesisState());
