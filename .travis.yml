@@ -4,13 +4,15 @@ dist: trusty
 jdk:
   - oraclejdk8
   - openjdk8
-cache:
-  directories:
-  - $HOME/.m2
-before_cache:
-  # do not cache our local archives
-  - rm -rf $HOME/.m2/repository/net/automatalib/
-  - rm -rf $HOME/.m2/repository/de/learnlib/
+# disable caching for now, because it breaks reporting to coveralls
+# see https://github.com/travis-ci/travis-ci/issues/8208#issuecomment-349240845
+#cache:
+#  directories:
+#  - $HOME/.m2
+#before_cache:
+#  # do not cache our local archives
+#  - rm -rf $HOME/.m2/repository/net/automatalib/
+#  - rm -rf $HOME/.m2/repository/de/learnlib/
 branches:
   only:
   - master
