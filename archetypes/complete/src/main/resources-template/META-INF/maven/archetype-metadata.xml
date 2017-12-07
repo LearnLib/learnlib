@@ -17,7 +17,7 @@ limitations under the License.
 -->
 <archetype-descriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                       xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd"
-                      name="LearnLib Core Project"
+                      name="LearnLib Complete Project"
                       partial="true"
                       xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0">
     <requiredProperties>
@@ -27,13 +27,13 @@ limitations under the License.
     </requiredProperties>
 
     <fileSets>
-        <fileSet filtered="false" packaged="true" encoding="UTF-8">
+        <fileSet filtered="true" packaged="true" encoding="UTF-8">
             <directory>src/main/java</directory>
             <includes>
                 <include>**/*.java</include>
             </includes>
         </fileSet>
-        <fileSet filtered="false" packaged="true" encoding="UTF-8">
+        <fileSet filtered="true" packaged="true" encoding="UTF-8">
             <directory>src/test/java</directory>
             <includes>
                 <include>**/*.java</include>

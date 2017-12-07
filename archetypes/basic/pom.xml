@@ -20,11 +20,11 @@ limitations under the License.
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>core</artifactId>
+    <artifactId>basic</artifactId>
     <packaging>maven-archetype</packaging>
 
-    <name>LearnLib :: Archetypes :: Core</name>
-    <description>Archetype providing dependencies for core functionalities of LearnLib</description>
+    <name>LearnLib :: Archetypes :: Basic</name>
+    <description>Archetype for a basic LearnLib setup, including the most commonly used dependencies</description>
 
     <parent>
         <groupId>de.learnlib.archetypes</groupId>
@@ -43,5 +43,6 @@ limitations under the License.
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>
 
