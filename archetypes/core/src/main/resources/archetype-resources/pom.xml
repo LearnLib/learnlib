@@ -52,6 +52,13 @@ limitations under the License.
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
         </dependency>
+
+        <!-- provide an SLF4J implementation -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 </project>
 

@@ -53,6 +53,13 @@ limitations under the License.
             <artifactId>learnlib-distribution</artifactId>
             <type>pom</type>
         </dependency>
+
+        <!-- provide an SLF4J implementation -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
 </project>
