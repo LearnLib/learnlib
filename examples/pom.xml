@@ -30,7 +30,10 @@ limitations under the License.
 
     <artifactId>learnlib-examples</artifactId>
     <name>LearnLib :: Examples</name>
-    <description>A collection of examples of how to use LearnLib</description>
+    <description>
+        A collection of various small example applications that illustrate several use cases of LearnLib.
+        *Note:* This artifact is not intended as a library, but only exists for educational purposes.
+    </description>
 
     <build>
         <pluginManagement>
@@ -38,6 +41,14 @@ limitations under the License.
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <!-- Do not deploy binaries -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
                     <configuration>
                         <skip>true</skip>
                     </configuration>

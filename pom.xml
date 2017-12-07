@@ -983,11 +983,12 @@ limitations under the License.
             </dependency>
 
             <!-- examples -->
-            <dependency>
+            <!-- artifact will not be deployed, so don't allow any accidental reference to it -->
+            <!--dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-examples</artifactId>
                 <version>${project.version}</version>
-            </dependency>
+            </dependency-->
 
             <!-- oracles -->
             <dependency>
