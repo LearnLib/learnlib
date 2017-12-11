@@ -24,8 +24,8 @@ import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
+import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.exception.UndefinedPropertyAccessException;
@@ -54,8 +54,7 @@ public class EmptyAutomatonOracleTest {
         final Alphabet<I> alphabet = example.getAlphabet();
 
         final MembershipOracle<I, D> oracle = new SimulatorOracle<>(automaton);
-        final EquivalenceOracle<DetOutputAutomaton<?, I, ?, D>, I, D> eqTest =
-                new CompleteExplorationEQOracle<>(oracle, automaton.size());
+        final EquivalenceOracle<Output<I, D>, I, D> eqTest = new CompleteExplorationEQOracle<>(oracle, automaton.size());
         final A emptyHypothesis = emptyCreator.createAutomaton(alphabet);
 
         final DefaultQuery<I, D> counterExample = eqTest.findCounterExample(emptyHypothesis, alphabet);

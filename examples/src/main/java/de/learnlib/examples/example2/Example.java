@@ -102,11 +102,11 @@ public final class Example {
 
         // create random walks equivalence test
         MealyEquivalenceOracle<MethodInput, AbstractMethodOutput> randomWalks =
-                new RandomWalkEQOracle<>(RESET_PROBABILITY, // reset SUL w/ this probability before a step
+                new RandomWalkEQOracle<>(driver, // system under learning
+                                         RESET_PROBABILITY, // reset SUL w/ this probability before a step
                                          MAX_STEPS, // max steps (overall)
                                          false, // reset step count after counterexample
-                                         new Random(RANDOM_SEED), // make results reproducible
-                                         driver // system under learning
+                                         new Random(RANDOM_SEED) // make results reproducible
                 );
 
         // construct a learning experiment from

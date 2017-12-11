@@ -71,7 +71,7 @@ public final class Example {
         // construct a W-method conformance test
         // exploring the system up to depth 4 from
         // every state of a hypothesis
-        DFAWMethodEQOracle<Character> wMethod = new DFAWMethodEQOracle<>(EXPLORATION_DEPTH, mqOracle);
+        DFAWMethodEQOracle<Character> wMethod = new DFAWMethodEQOracle<>(mqOracle, EXPLORATION_DEPTH);
 
         // construct a learning experiment from
         // the learning algorithm and the conformance test.

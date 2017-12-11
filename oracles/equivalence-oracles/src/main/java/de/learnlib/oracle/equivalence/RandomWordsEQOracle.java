@@ -31,13 +31,19 @@ import net.automatalib.words.WordBuilder;
 /**
  * @author Maik Merten
  */
-public class RandomWordsEQOracle<I, D, A extends Output<I, D>>
-        extends AbstractTestWordEQOracle<A, I, D> {
+public class RandomWordsEQOracle<A extends Output<I, D>, I, D> extends AbstractTestWordEQOracle<A, I, D> {
 
     private final Random random;
     private final int maxTests;
     private final int minLength;
     private final int maxLength;
+
+    public RandomWordsEQOracle(MembershipOracle<I, D> mqOracle,
+                               int minLength,
+                               int maxLength,
+                               int maxTests) {
+        this(mqOracle, minLength, maxLength, maxTests, new Random(), 1);
+    }
 
     public RandomWordsEQOracle(MembershipOracle<I, D> mqOracle,
                                int minLength,
@@ -87,7 +93,7 @@ public class RandomWordsEQOracle<I, D, A extends Output<I, D>>
         return result.toWord();
     }
 
-    public static class DFARandomWordsEQOracle<I> extends RandomWordsEQOracle<I, Boolean, DFA<?, I>>
+    public static class DFARandomWordsEQOracle<I> extends RandomWordsEQOracle<DFA<?, I>, I, Boolean>
             implements DFAEquivalenceOracle<I> {
 
         public DFARandomWordsEQOracle(MembershipOracle<I, Boolean> mqOracle,
@@ -108,7 +114,7 @@ public class RandomWordsEQOracle<I, D, A extends Output<I, D>>
         }
     }
 
-    public static class MealyRandomWordsEQOracle<I, O> extends RandomWordsEQOracle<I, Word<O>, MealyMachine<?, I, ?, O>>
+    public static class MealyRandomWordsEQOracle<I, O> extends RandomWordsEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
             implements MealyEquivalenceOracle<I, O> {
 
         public MealyRandomWordsEQOracle(MembershipOracle<I, Word<O>> mqOracle,

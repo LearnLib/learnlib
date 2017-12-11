@@ -34,16 +34,15 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
     private final IncrementalWMethodTestsIterator<I> incrementalWMethodIt;
     private int maxDepth;
 
-    public IncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, D> oracle) {
-        this(alphabet, oracle, 1);
+    public IncrementalWMethodEQOracle(MembershipOracle<I, D> oracle, Alphabet<I> alphabet) {
+        this(oracle, alphabet, 1);
     }
 
-    public IncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, D> oracle, int maxDepth) {
-        this(alphabet, oracle, maxDepth, 1);
+    public IncrementalWMethodEQOracle(MembershipOracle<I, D> oracle, Alphabet<I> alphabet, int maxDepth) {
+        this(oracle, alphabet, maxDepth, 1);
     }
 
-    public IncrementalWMethodEQOracle(Alphabet<I> alphabet,
-                                      MembershipOracle<I, D> oracle,
+    public IncrementalWMethodEQOracle(MembershipOracle<I, D> oracle, Alphabet<I> alphabet,
                                       int maxDepth,
                                       int batchSize) {
         super(oracle, batchSize);
@@ -74,19 +73,18 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
     public static class DFAIncrementalWMethodEQOracle<I> extends IncrementalWMethodEQOracle<DFA<?, I>, I, Boolean>
             implements DFAEquivalenceOracle<I> {
 
-        public DFAIncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
-            super(alphabet, oracle);
+        public DFAIncrementalWMethodEQOracle(MembershipOracle<I, Boolean> oracle, Alphabet<I> alphabet) {
+            super(oracle, alphabet);
         }
 
-        public DFAIncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, int maxDepth) {
-            super(alphabet, oracle, maxDepth);
+        public DFAIncrementalWMethodEQOracle(MembershipOracle<I, Boolean> oracle, Alphabet<I> alphabet, int maxDepth) {
+            super(oracle, alphabet, maxDepth);
         }
 
-        public DFAIncrementalWMethodEQOracle(Alphabet<I> alphabet,
-                                             MembershipOracle<I, Boolean> oracle,
+        public DFAIncrementalWMethodEQOracle(MembershipOracle<I, Boolean> oracle, Alphabet<I> alphabet,
                                              int maxDepth,
                                              int batchSize) {
-            super(alphabet, oracle, maxDepth, batchSize);
+            super(oracle, alphabet, maxDepth, batchSize);
         }
     }
 
@@ -94,21 +92,19 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
             extends IncrementalWMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
             implements MealyEquivalenceOracle<I, O> {
 
-        public MealyIncrementalWMethodEQOracle(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
-            super(alphabet, oracle);
+        public MealyIncrementalWMethodEQOracle(MembershipOracle<I, Word<O>> oracle, Alphabet<I> alphabet) {
+            super(oracle, alphabet);
         }
 
-        public MealyIncrementalWMethodEQOracle(Alphabet<I> alphabet,
-                                               MembershipOracle<I, Word<O>> oracle,
+        public MealyIncrementalWMethodEQOracle(MembershipOracle<I, Word<O>> oracle, Alphabet<I> alphabet,
                                                int maxDepth) {
-            super(alphabet, oracle, maxDepth);
+            super(oracle, alphabet, maxDepth);
         }
 
-        public MealyIncrementalWMethodEQOracle(Alphabet<I> alphabet,
-                                               MembershipOracle<I, Word<O>> oracle,
+        public MealyIncrementalWMethodEQOracle(MembershipOracle<I, Word<O>> oracle, Alphabet<I> alphabet,
                                                int maxDepth,
                                                int batchSize) {
-            super(alphabet, oracle, maxDepth, batchSize);
+            super(oracle, alphabet, maxDepth, batchSize);
         }
     }
 

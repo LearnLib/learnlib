@@ -23,6 +23,8 @@ import java.util.stream.Stream;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.words.Word;
@@ -81,8 +83,11 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
      * @param bound
      *         specifies the bound (set to 0 for unbounded).
      */
-    public RandomWMethodEQOracle(MembershipOracle<I, D> sulOracle, int minimalSize, int rndLength, int bound) {
-        this(sulOracle, minimalSize, rndLength, bound, 1);
+    public RandomWMethodEQOracle(MembershipOracle<I, D> sulOracle,
+                                 int minimalSize,
+                                 int rndLength,
+                                 int bound) {
+        this(sulOracle, minimalSize, rndLength, bound, new Random(), 1);
     }
 
     /**
@@ -104,11 +109,36 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
                                  int rndLength,
                                  int bound,
                                  int batchSize) {
+        this(sulOracle, minimalSize, rndLength, bound, new Random(), batchSize);
+    }
+
+    /**
+     * Constructor for a bounded testing oracle with a specific batch size.
+     *
+     * @param sulOracle
+     *         oracle which answers tests.
+     * @param minimalSize
+     *         minimal size of the random word
+     * @param rndLength
+     *         expected length (in addition to minimalSize) of random word
+     * @param bound
+     *         specifies the bound (set to 0 for unbounded).
+     * @param random
+     *          custom Random generator.
+     * @param batchSize
+     *         size of the batches sent to the membership oracle
+     */
+    public RandomWMethodEQOracle(MembershipOracle<I, D> sulOracle,
+                                 int minimalSize,
+                                 int rndLength,
+                                 int bound,
+                                 Random random,
+                                 int batchSize) {
         super(sulOracle, batchSize);
         this.minimalSize = minimalSize;
         this.rndLength = rndLength;
         this.bound = bound;
-        this.rand = new Random();
+        this.rand = random;
     }
 
     @Override
@@ -163,5 +193,77 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
         }
 
         return wb.toWord();
+    }
+
+    public static class DFARandomWMethodEQOracle<I>
+            extends RandomWMethodEQOracle<DFA<?, I>, I, Boolean>
+            implements DFAEquivalenceOracle<I> {
+
+        public DFARandomWMethodEQOracle(MembershipOracle<I, Boolean> mqOracle,
+                                        int minimalSize,
+                                        int rndLength) {
+            super(mqOracle, minimalSize, rndLength);
+        }
+
+        public DFARandomWMethodEQOracle(MembershipOracle<I, Boolean> mqOracle,
+                                        int minimalSize,
+                                        int rndLength,
+                                        int bound) {
+            super(mqOracle, minimalSize, rndLength, bound);
+        }
+
+        public DFARandomWMethodEQOracle(MembershipOracle<I, Boolean> mqOracle,
+                                        int minimalSize,
+                                        int rndLength,
+                                        int bound,
+                                        int batchSize) {
+            super(mqOracle, minimalSize, rndLength, bound, batchSize);
+        }
+
+        public DFARandomWMethodEQOracle(MembershipOracle<I, Boolean> mqOracle,
+                                        int minimalSize,
+                                        int rndLength,
+                                        int bound,
+                                        Random random,
+                                        int batchSize) {
+            super(mqOracle, minimalSize, rndLength, bound, random, batchSize);
+        }
+
+    }
+
+    public static class MealyRandomWMethodEQOracle<I, O>
+            extends RandomWMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
+            implements MealyEquivalenceOracle<I, O> {
+
+        public MealyRandomWMethodEQOracle(MembershipOracle<I, Word<O>> mqOracle,
+                                          int minimalSize,
+                                          int rndLength) {
+            super(mqOracle, minimalSize, rndLength);
+        }
+
+        public MealyRandomWMethodEQOracle(MembershipOracle<I, Word<O>> mqOracle,
+                                          int minimalSize,
+                                          int rndLength,
+                                          int bound) {
+            super(mqOracle, minimalSize, rndLength, bound);
+        }
+
+        public MealyRandomWMethodEQOracle(MembershipOracle<I, Word<O>> mqOracle,
+                                          int minimalSize,
+                                          int rndLength,
+                                          int bound,
+                                          int batchSize) {
+            super(mqOracle, minimalSize, rndLength, bound, batchSize);
+        }
+
+        public MealyRandomWMethodEQOracle(MembershipOracle<I, Word<O>> mqOracle,
+                                          int minimalSize,
+                                          int rndLength,
+                                          int bound,
+                                          Random random,
+                                          int batchSize) {
+            super(mqOracle, minimalSize, rndLength, bound, random, batchSize);
+        }
+
     }
 }

@@ -48,28 +48,27 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
     /**
      * Constructor.
      *
-     * @param maxDepth
-     *         the maximum length of the "middle" part of the test cases
      * @param sulOracle
      *         interface to the system under learning
+     * @param maxDepth
+ *         the maximum length of the "middle" part of the test cases
      */
-    public WMethodEQOracle(int maxDepth, MembershipOracle<I, D> sulOracle) {
-        this(maxDepth, sulOracle, 1);
+    public WMethodEQOracle(MembershipOracle<I, D> sulOracle, int maxDepth) {
+        this(sulOracle, maxDepth, 1);
     }
 
     /**
      * Constructor.
-     *
+     *  @param sulOracle
+     *         interface to the system under learning
      * @param maxDepth
      *         the maximum length of the "middle" part of the test cases
-     * @param sulOracle
-     *         interface to the system under learning
      * @param batchSize
      *         size of the batches sent to the membership oracle
      */
-    public WMethodEQOracle(int maxDepth, MembershipOracle<I, D> sulOracle, int batchSize) {
+    public WMethodEQOracle(MembershipOracle<I, D> sulOracle, int maxDepth, int batchSize) {
         super(sulOracle, batchSize);
-        this.maxDepth = maxDepth;
+           this.maxDepth = maxDepth;
     }
 
     public void setMaxDepth(int maxDepth) {
@@ -84,24 +83,24 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
     public static class DFAWMethodEQOracle<I> extends WMethodEQOracle<DFA<?, I>, I, Boolean>
             implements DFAEquivalenceOracle<I> {
 
-        public DFAWMethodEQOracle(int maxDepth, MembershipOracle<I, Boolean> sulOracle) {
-            super(maxDepth, sulOracle);
+        public DFAWMethodEQOracle(MembershipOracle<I, Boolean> sulOracle, int maxDepth) {
+            super(sulOracle, maxDepth);
         }
 
-        public DFAWMethodEQOracle(int maxDepth, MembershipOracle<I, Boolean> sulOracle, int batchSize) {
-            super(maxDepth, sulOracle, batchSize);
+        public DFAWMethodEQOracle(MembershipOracle<I, Boolean> sulOracle, int maxDepth, int batchSize) {
+            super(sulOracle, maxDepth, batchSize);
         }
     }
 
     public static class MealyWMethodEQOracle<I, O> extends WMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
             implements MealyEquivalenceOracle<I, O> {
 
-        public MealyWMethodEQOracle(int maxDepth, MembershipOracle<I, Word<O>> sulOracle) {
-            super(maxDepth, sulOracle);
+        public MealyWMethodEQOracle(MembershipOracle<I, Word<O>> sulOracle, int maxDepth) {
+            super(sulOracle, maxDepth);
         }
 
-        public MealyWMethodEQOracle(int maxDepth, MembershipOracle<I, Word<O>> sulOracle, int batchSize) {
-            super(maxDepth, sulOracle, batchSize);
+        public MealyWMethodEQOracle(MembershipOracle<I, Word<O>> sulOracle, int maxDepth, int batchSize) {
+            super(sulOracle, maxDepth, batchSize);
         }
     }
 

@@ -71,16 +71,19 @@ public class RandomWalkEQOracle<I, O> implements MealyEquivalenceOracle<I, O> {
      */
     private boolean resetStepCount;
 
-    public RandomWalkEQOracle(double restartProbability,
+    public RandomWalkEQOracle(SUL<I, O> sul,
+                              double restartProbability,
                               long maxSteps,
                               boolean resetStepCount,
-                              Random random,
-                              SUL<I, O> sul) {
-        this(restartProbability, maxSteps, random, sul);
+                              Random random) {
+        this(sul, restartProbability, maxSteps, random);
         this.resetStepCount = resetStepCount;
     }
 
-    public RandomWalkEQOracle(double restartProbability, long maxSteps, Random random, SUL<I, O> sul) {
+    public RandomWalkEQOracle(SUL<I, O> sul,
+                              double restartProbability,
+                              long maxSteps,
+                              Random random) {
         this.restartProbability = restartProbability;
         this.maxSteps = maxSteps;
         this.random = random;

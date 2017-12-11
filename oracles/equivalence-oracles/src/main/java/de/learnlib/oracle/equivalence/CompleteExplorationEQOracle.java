@@ -20,7 +20,9 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.Streams;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.automata.concepts.DetOutputAutomaton;
+import net.automatalib.automata.concepts.Output;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
 
@@ -35,7 +37,7 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-public class CompleteExplorationEQOracle<I, D> extends AbstractTestWordEQOracle<DetOutputAutomaton<?, I, ?, D>, I, D> {
+public class CompleteExplorationEQOracle<I, D> extends AbstractTestWordEQOracle<Output<I, D>, I, D> {
 
     private final int minDepth;
     private final int maxDepth;
@@ -85,9 +87,81 @@ public class CompleteExplorationEQOracle<I, D> extends AbstractTestWordEQOracle<
     }
 
     @Override
-    protected Stream<Word<I>> generateTestWords(DetOutputAutomaton<?, I, ?, D> hypothesis,
+    protected Stream<Word<I>> generateTestWords(Output<I, D> hypothesis,
                                                 Collection<? extends I> inputs) {
         return Streams.stream(CollectionsUtil.allTuples(inputs, minDepth, maxDepth)).map(Word::fromList);
     }
+
+    public static class DFACompleteExplorationEQOracle<I>
+            extends AbstractTestWordEQOracle<DFA<?, I>, I, Boolean>
+            implements DFAEquivalenceOracle<I> {
+
+        private final CompleteExplorationEQOracle<I, Boolean> delegate;
+
+        public DFACompleteExplorationEQOracle(MembershipOracle<I, Boolean> mqOracle,
+                                              int maxDepth) {
+            super(mqOracle);
+            this.delegate = new CompleteExplorationEQOracle<>(mqOracle, maxDepth);
+        }
+
+        public DFACompleteExplorationEQOracle(MembershipOracle<I, Boolean> mqOracle,
+                                              int minDepth,
+                                              int maxDepth) {
+            super(mqOracle);
+            this.delegate = new CompleteExplorationEQOracle<>(mqOracle, minDepth, maxDepth);
+        }
+
+        public DFACompleteExplorationEQOracle(MembershipOracle<I, Boolean> mqOracle,
+                                              int minDepth,
+                                              int maxDepth,
+                                              int batchSize) {
+            super(mqOracle, batchSize);
+            this.delegate = new CompleteExplorationEQOracle<>(mqOracle, minDepth, maxDepth, batchSize);
+        }
+
+        @Override
+        protected Stream<Word<I>> generateTestWords(DFA<?, I> hypothesis,
+                                                    Collection<? extends I> inputs) {
+            return delegate.generateTestWords(hypothesis, inputs);
+        }
+
+    }
+
+    public static class MealyCompleteExplorationEQOracle<I, O>
+            extends AbstractTestWordEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
+            implements MealyEquivalenceOracle<I, O> {
+
+        private final CompleteExplorationEQOracle<I, Word<O>> delegate;
+
+        public MealyCompleteExplorationEQOracle(MembershipOracle<I, Word<O>> mqOracle,
+                                                int maxDepth) {
+            super(mqOracle);
+            this.delegate = new CompleteExplorationEQOracle<>(mqOracle, maxDepth);
+        }
+
+        public MealyCompleteExplorationEQOracle(MembershipOracle<I, Word<O>> mqOracle,
+                                                int minDepth,
+                                                int maxDepth) {
+            super(mqOracle);
+            this.delegate = new CompleteExplorationEQOracle<>(mqOracle,
+                                                              minDepth, maxDepth);
+        }
+
+        public MealyCompleteExplorationEQOracle(MembershipOracle<I, Word<O>> mqOracle,
+                                                int minDepth,
+                                                int maxDepth,
+                                                int batchSize) {
+            super(mqOracle, batchSize);
+            this.delegate = new CompleteExplorationEQOracle<>(mqOracle, minDepth, maxDepth, batchSize);
+        }
+
+        @Override
+        protected Stream<Word<I>> generateTestWords(MealyMachine<?, I, ?, O> hypothesis,
+                                                    Collection<? extends I> inputs) {
+            return delegate.generateTestWords(hypothesis, inputs);
+        }
+
+    }
+
 
 }
