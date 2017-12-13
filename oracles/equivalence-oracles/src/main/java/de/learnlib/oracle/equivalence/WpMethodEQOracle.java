@@ -88,7 +88,8 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
         }
     }
 
-    public static class MealyWpMethodEQOracle<I, O> extends WpMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>> {
+    public static class MealyWpMethodEQOracle<I, O> extends WpMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
+            implements MealyEquivalenceOracle<I, O> {
 
         public MealyWpMethodEQOracle(MembershipOracle<I, Word<O>> sulOracle, int maxDepth) {
             super(sulOracle, maxDepth);

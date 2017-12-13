@@ -34,6 +34,7 @@ limitations under the License.
     <modules>
         <module>learning-examples</module>
         <module>learner-it-support</module>
+        <module>learnlib-oracles-support</module>
     </modules>
 
     <build>

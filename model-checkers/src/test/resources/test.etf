@@ -1,0 +1,26 @@
+begin state
+id:id
+end state
+begin edge
+letter:letter
+end edge
+begin init
+0
+end init
+begin sort id
+"0"
+end sort
+begin sort letter
+"a"
+"b"
+end sort
+begin trans
+0/0 0
+end trans
+begin sort label
+"reject"
+"accept"
+end sort
+begin map label:label
+0 1
+end map

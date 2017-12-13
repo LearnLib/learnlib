@@ -32,33 +32,117 @@ import net.automatalib.words.Word;
 /**
  * runs a learning experiment.
  *
- * @param <A>
+ * @param <A> the automaton type
+ * @param <I> the input type
+ * @param <D> the output type
  *
  * @author falkhowar
+ * @author Jeroen Meijer
  */
 @ParametersAreNonnullByDefault
-public class Experiment<A> {
+public class Experiment<A, I, D> {
 
     private static final LearnLogger LOGGER = LearnLogger.getLogger(Experiment.class);
-    private final ExperimentImpl<?, ?> impl;
+
     private boolean logModels;
+
     private boolean profile;
-    private final Counter rounds = new Counter("rounds", "#");
+
+    private final Counter rounds = new Counter("learning rounds", "#");
+
     private A finalHypothesis;
 
-    public <I, D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
-                             EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
-                             Alphabet<I> inputs) {
-        this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs);
+    private final LearningAlgorithm<? extends A, I, D> learningAlgorithm;
+
+    private final EquivalenceOracle<? super A, I, D> equivalenceAlgorithm;
+
+    private final Alphabet<I> inputs;
+
+    public Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
+                      EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
+                      Alphabet<I> inputs) {
+        this.learningAlgorithm = learningAlgorithm;
+        this.equivalenceAlgorithm = equivalenceAlgorithm;
+        this.inputs = inputs;
     }
 
-    /**
-     *
-     */
+    public boolean isLogModels() {
+        return logModels;
+    }
+
+    public Counter getRounds() {
+        return rounds;
+    }
+
+    public LearningAlgorithm<? extends A, I, D> getLearningAlgorithm() {
+        return learningAlgorithm;
+    }
+
+    public EquivalenceOracle<? super A, I, D> getEquivalenceAlgorithm() {
+        return equivalenceAlgorithm;
+    }
+
+    public Alphabet<I> getInputs() {
+        return inputs;
+    }
+
+    public void setLogModels(boolean logModels) {
+        this.logModels = logModels;
+    }
+
+    public void setProfile(boolean profile) {
+        this.profile = profile;
+    }
+
+    protected void init() {
+        getRounds().increment();
+        LOGGER.logPhase("Starting round " + getRounds().getCount());
+        LOGGER.logPhase("Learning");
+        profileStart("Learning");
+        getLearningAlgorithm().startLearning();
+        profileStop("Learning");
+    }
+
+    protected boolean refineHypothesis() {
+        A hyp = getLearningAlgorithm().getHypothesisModel();
+
+        if (isLogModels()) {
+            LOGGER.logModel(hyp);
+        }
+
+        LOGGER.logPhase("Searching for counterexample");
+        profileStart("Searching for counterexample");
+        DefaultQuery<I, D> ce = getEquivalenceAlgorithm().findCounterExample(hyp, getInputs());
+        profileStop("Searching for counterexample");
+        if (ce != null) {
+            LOGGER.logCounterexample(ce.toString());
+
+            // next round ...
+            getRounds().increment();
+            LOGGER.logPhase("Starting round " + getRounds().getCount());
+            LOGGER.logPhase("Learning");
+            profileStart("Learning");
+            getLearningAlgorithm().refineHypothesis(ce);
+            profileStop("Learning");
+        }
+        return ce != null;
+    }
+
     @Nonnull
     public A run() {
-        finalHypothesis = impl.run();
+
+        init();
+
+        while (refineHypothesis()) { }
+
+        finalHypothesis = getLearningAlgorithm().getHypothesisModel();
+
         return finalHypothesis;
+
+    }
+
+    protected void setFinalHypothesis(A hyp) {
+        finalHypothesis = hyp;
     }
 
     @Nonnull
@@ -69,112 +153,34 @@ public class Experiment<A> {
         return finalHypothesis;
     }
 
-    private void profileStart(String taskname) {
+    protected void profileStart(String taskname) {
         if (profile) {
             SimpleProfiler.start(taskname);
         }
     }
 
-    private void profileStop(String taskname) {
+    protected void profileStop(String taskname) {
         if (profile) {
             SimpleProfiler.stop(taskname);
         }
     }
 
-    /**
-     * @param logModels
-     *         the logModels to set
-     */
-    public void setLogModels(boolean logModels) {
-        this.logModels = logModels;
-    }
+    public static class DFAExperiment<I> extends Experiment<DFA<?, I>, I, Boolean> {
 
-    /**
-     * @param profile
-     *         the profile to set
-     */
-    public void setProfile(boolean profile) {
-        this.profile = profile;
-    }
-
-    /**
-     * @return the rounds
-     */
-    @Nonnull
-    public Counter getRounds() {
-        return rounds;
-    }
-
-    public static class DFAExperiment<I> extends Experiment<DFA<?, I>> {
-
-        public DFAExperiment(LearningAlgorithm<? extends DFA<?, I>, I, Boolean> learningAlgorithm,
-                             EquivalenceOracle<? super DFA<?, I>, I, Boolean> equivalenceAlgorithm,
+        public DFAExperiment(LearningAlgorithm.DFALearner<I> learningAlgorithm,
+                             EquivalenceOracle.DFAEquivalenceOracle<I> equivalenceAlgorithm,
                              Alphabet<I> inputs) {
             super(learningAlgorithm, equivalenceAlgorithm, inputs);
         }
     }
 
-    public static class MealyExperiment<I, O> extends Experiment<MealyMachine<?, I, ?, O>> {
+    public static class MealyExperiment<I, O> extends Experiment<MealyMachine<?, I, ?, O>, I, Word<O>> {
 
-        public MealyExperiment(LearningAlgorithm<? extends MealyMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
-                               EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
+        public MealyExperiment(LearningAlgorithm.MealyLearner<I, O> learningAlgorithm,
+                               EquivalenceOracle.MealyEquivalenceOracle<I, O> equivalenceAlgorithm,
                                Alphabet<I> inputs) {
             super(learningAlgorithm, equivalenceAlgorithm, inputs);
         }
-
-    }
-
-    private final class ExperimentImpl<I, D> {
-
-        private final LearningAlgorithm<? extends A, I, D> learningAlgorithm;
-        private final EquivalenceOracle<? super A, I, D> equivalenceAlgorithm;
-        private final Alphabet<I> inputs;
-
-        ExperimentImpl(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
-                       EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
-                       Alphabet<I> inputs) {
-            this.learningAlgorithm = learningAlgorithm;
-            this.equivalenceAlgorithm = equivalenceAlgorithm;
-            this.inputs = inputs;
-        }
-
-        public A run() {
-            rounds.increment();
-            LOGGER.logPhase("Starting round " + rounds.getCount());
-            LOGGER.logPhase("Learning");
-            profileStart("Learning");
-            learningAlgorithm.startLearning();
-            profileStop("Learning");
-
-            boolean done = false;
-            A hyp = null;
-            while (!done) {
-                hyp = learningAlgorithm.getHypothesisModel();
-                if (logModels) {
-                    LOGGER.logModel(hyp);
-                }
-
-                LOGGER.logPhase("Searching for counterexample");
-                profileStart("Searching for counterexample");
-                DefaultQuery<I, D> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
-                profileStop("Searching for counterexample");
-                if (ce == null) {
-                    done = true;
-                    continue;
-                }
-
-                LOGGER.logCounterexample(ce.getInput().toString());
-
-                // next round ...
-                rounds.increment();
-                LOGGER.logPhase("Starting round " + rounds.getCount());
-                LOGGER.logPhase("Learning");
-                profileStart("Learning");
-                learningAlgorithm.refineHypothesis(ce);
-                profileStop("Learning");
-            }
-
-            return hyp;
-        }
     }
 }
+

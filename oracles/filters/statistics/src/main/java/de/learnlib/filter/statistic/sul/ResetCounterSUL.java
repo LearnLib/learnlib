@@ -31,13 +31,12 @@ public class ResetCounterSUL<I, O> implements StatisticSUL<I, O> {
     private final Counter counter;
 
     public ResetCounterSUL(String name, SUL<I, O> sul) {
-        this.sul = sul;
-        this.counter = new Counter(name, "resets");
+        this(new Counter(name, "resets"), sul);
     }
 
-    private ResetCounterSUL(Counter counter, SUL<I, O> sul) {
-        this.sul = sul;
+    protected ResetCounterSUL(Counter counter, SUL<I, O> sul) {
         this.counter = counter;
+        this.sul = sul;
     }
 
     @Override
@@ -71,5 +70,20 @@ public class ResetCounterSUL<I, O> implements StatisticSUL<I, O> {
     @Nonnull
     public Counter getStatisticalData() {
         return counter;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return sul.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return sul.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return sul.toString();
     }
 }
