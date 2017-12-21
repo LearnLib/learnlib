@@ -28,7 +28,7 @@ import de.learnlib.filter.reuse.ReuseOracle;
 import de.learnlib.filter.reuse.tree.BoundedDeque.AccessPolicy;
 import de.learnlib.filter.reuse.tree.BoundedDeque.EvictPolicy;
 import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -383,7 +383,7 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
     }
 
     @Override
-    public synchronized GraphDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> getGraphDOTHelper() {
+    public synchronized VisualizationHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> getVisualizationHelper() {
         return new ReuseTreeDotHelper<>();
     }
 

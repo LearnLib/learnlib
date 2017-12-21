@@ -29,8 +29,8 @@ import de.learnlib.util.Experiment.DFAExperiment;
 import de.learnlib.util.statistics.SimpleProfiler;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
-import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
@@ -110,7 +110,7 @@ public final class Example {
         System.out.println("Model: ");
         GraphDOT.write(result, inputs, System.out); // may throw IOException!
 
-        Visualization.visualizeAutomaton(result, inputs, true);
+        Visualization.visualize(result, inputs);
 
         System.out.println("-------------------------------------------------------");
 

@@ -16,13 +16,13 @@
 package de.learnlib.algorithms.ttt.base;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Supplier;
 
 import de.learnlib.api.AccessSequenceProvider;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.discriminationtree.model.AbstractDiscriminationTree;
-import net.automatalib.graphs.dot.DefaultDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Word;
 
 /**
@@ -95,8 +95,8 @@ public class BaseTTTDiscriminationTree<I, D>
     }
 
     @Override
-    public GraphDOTHelper<AbstractBaseDTNode<I, D>, Map.Entry<D, AbstractBaseDTNode<I, D>>> getGraphDOTHelper() {
-        return new DefaultDOTHelper<AbstractBaseDTNode<I, D>, Map.Entry<D, AbstractBaseDTNode<I, D>>>() {
+    public VisualizationHelper<AbstractBaseDTNode<I, D>, Entry<D, AbstractBaseDTNode<I, D>>> getVisualizationHelper() {
+        return new VisualizationHelper<AbstractBaseDTNode<I, D>, Entry<D, AbstractBaseDTNode<I, D>>>() {
 
             @Override
             public boolean getNodeProperties(AbstractBaseDTNode<I, D> node, Map<String, String> properties) {

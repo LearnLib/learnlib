@@ -15,8 +15,6 @@
  */
 package de.learnlib.algorithms.discriminationtree.dfa;
 
-import java.util.Map;
-
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithms.discriminationtree.AbstractDTLearner;
 import de.learnlib.algorithms.discriminationtree.DTLearnerState;
@@ -30,8 +28,6 @@ import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.counterexamples.LocalSuffixFinders;
 import de.learnlib.datastructure.discriminationtree.BinaryDTree;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.graphs.dot.EmptyDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -91,20 +87,6 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?, I>, I, Boolean, Bo
     @Override
     protected Query<I, Boolean> tpQuery(HTransition<I, Boolean, Boolean, Void> transition) {
         return null;
-    }
-
-    @Override
-    public GraphDOTHelper<HState<I, Boolean, Boolean, Void>, HTransition<I, Boolean, Boolean, Void>> getHypothesisDOTHelper() {
-        return new EmptyDOTHelper<HState<I, Boolean, Boolean, Void>, HTransition<I, Boolean, Boolean, Void>>() {
-
-            @Override
-            public boolean getNodeProperties(HState<I, Boolean, Boolean, Void> node, Map<String, String> properties) {
-                if (node.getProperty()) {
-                    properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);
-                }
-                return true;
-            }
-        };
     }
 
     @Override

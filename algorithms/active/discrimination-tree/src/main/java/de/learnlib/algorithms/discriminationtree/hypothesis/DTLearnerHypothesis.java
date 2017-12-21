@@ -28,8 +28,8 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.NodeIDs;
-import net.automatalib.graphs.dot.DefaultDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
@@ -192,8 +192,8 @@ public class DTLearnerHypothesis<I, O, SP, TP>
         }
 
         @Override
-        public GraphDOTHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>> getGraphDOTHelper() {
-            return new DefaultDOTHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>>() {
+        public VisualizationHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>> getVisualizationHelper() {
+            return new DefaultVisualizationHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>>() {
 
                 @Override
                 protected Collection<HState<I, O, SP, TP>> initialNodes() {
@@ -219,7 +219,7 @@ public class DTLearnerHypothesis<I, O, SP, TP>
                     }
                     properties.put(EdgeAttrs.LABEL, String.valueOf(edge.getSymbol()));
                     if (edge.isTree()) {
-                        properties.put(EdgeAttrs.STYLE, "bold");
+                        properties.put(EdgeAttrs.STYLE, EdgeStyles.BOLD);
                     }
                     return true;
                 }

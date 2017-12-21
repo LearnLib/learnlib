@@ -33,7 +33,6 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.Iterators;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
-import de.learnlib.algorithms.ttt.base.AbstractTTTHypothesis.TTTEdge;
 import de.learnlib.api.AccessSequenceProvider;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.feature.ResumableLearner;
@@ -45,8 +44,6 @@ import de.learnlib.datastructure.discriminationtree.SplitData;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.smartcollections.ElementReference;
 import net.automatalib.commons.smartcollections.UnorderedCollection;
-import net.automatalib.graphs.dot.EmptyDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -765,10 +762,6 @@ public abstract class AbstractTTTLearner<A, I, D>
 
     public AbstractTTTHypothesis<I, D, ?> getHypothesisDS() {
         return hypothesis;
-    }
-
-    public GraphDOTHelper<TTTState<I, D>, TTTEdge<I, D>> getHypothesisDOTHelper() {
-        return new EmptyDOTHelper<>();
     }
 
     protected void closeTransitions() {

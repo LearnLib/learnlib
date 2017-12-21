@@ -35,8 +35,6 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNod
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
 import de.learnlib.util.MQUtil;
 import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.graphs.dot.EmptyDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -213,10 +211,6 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
 
     public DTLearnerHypothesis<I, D, SP, TP> getHypothesisDS() {
         return hypothesis;
-    }
-
-    public GraphDOTHelper<HState<I, D, SP, TP>, HTransition<I, D, SP, TP>> getHypothesisDOTHelper() {
-        return new EmptyDOTHelper<>();
     }
 
     @Override

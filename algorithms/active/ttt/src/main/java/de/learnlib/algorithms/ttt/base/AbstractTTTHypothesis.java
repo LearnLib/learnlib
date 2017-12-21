@@ -27,8 +27,8 @@ import net.automatalib.automata.FiniteAlphabetAutomaton;
 import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.dot.DefaultDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -235,8 +235,8 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
         }
 
         @Override
-        public GraphDOTHelper<TTTState<I, D>, TTTEdge<I, D>> getGraphDOTHelper() {
-            return new DefaultDOTHelper<TTTState<I, D>, TTTEdge<I, D>>() {
+        public VisualizationHelper<TTTState<I, D>, TTTEdge<I, D>> getVisualizationHelper() {
+            return new DefaultVisualizationHelper<TTTState<I, D>, TTTEdge<I, D>>() {
 
                 @Override
                 public boolean getEdgeProperties(TTTState<I, D> src,
@@ -245,9 +245,9 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
                                                  Map<String, String> properties) {
                     properties.put(EdgeAttrs.LABEL, String.valueOf(edge.transition.getInput()));
                     if (edge.transition.isTree()) {
-                        properties.put(EdgeAttrs.STYLE, "bold");
+                        properties.put(EdgeAttrs.STYLE, EdgeStyles.BOLD);
                     } else if (edge.transition.getDTTarget().isInner()) {
-                        properties.put(EdgeAttrs.STYLE, "dotted");
+                        properties.put(EdgeAttrs.STYLE, EdgeStyles.DOTTED);
                     }
                     return true;
                 }

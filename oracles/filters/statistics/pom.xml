@@ -47,11 +47,6 @@ limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-dotutil</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>

@@ -15,13 +15,11 @@
  */
 package de.learnlib.algorithms.ttt.dfa;
 
-import java.util.Map;
 import java.util.function.Supplier;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithms.ttt.base.AbstractBaseDTNode;
-import de.learnlib.algorithms.ttt.base.AbstractTTTHypothesis.TTTEdge;
 import de.learnlib.algorithms.ttt.base.AbstractTTTLearner;
 import de.learnlib.algorithms.ttt.base.BaseTTTDiscriminationTree;
 import de.learnlib.algorithms.ttt.base.OutputInconsistency;
@@ -31,8 +29,6 @@ import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.graphs.dot.EmptyDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -98,24 +94,6 @@ public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> 
     @SuppressWarnings("unchecked")
     public TTTHypothesisDFA<I> getHypothesisDS() {
         return (TTTHypothesisDFA<I>) hypothesis;
-    }
-
-    @Override
-    public GraphDOTHelper<TTTState<I, Boolean>, TTTEdge<I, Boolean>> getHypothesisDOTHelper() {
-        return new EmptyDOTHelper<TTTState<I, Boolean>, TTTEdge<I, Boolean>>() {
-
-            @Override
-            public boolean getNodeProperties(TTTState<I, Boolean> node, Map<String, String> properties) {
-                if (!(node instanceof TTTStateDFA)) {
-                    throw new IllegalArgumentException("node is not an expected DFA node, but " + node);
-                }
-                TTTStateDFA<I> dfaState = (TTTStateDFA<I>) node;
-                if (dfaState.isAccepting()) {
-                    properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);
-                }
-                return true;
-            }
-        };
     }
 
     @Override

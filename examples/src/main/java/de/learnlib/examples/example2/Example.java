@@ -16,7 +16,6 @@
 package de.learnlib.examples.example2;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -39,8 +38,8 @@ import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.util.Experiment.MealyExperiment;
 import de.learnlib.util.statistics.SimpleProfiler;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.commons.dotutil.DOT;
-import net.automatalib.util.graphs.dot.GraphDOT;
+import net.automatalib.serialization.dot.GraphDOT;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Word;
 
 /**
@@ -147,9 +146,7 @@ public final class Example {
         System.out.println("Model: ");
 
         GraphDOT.write(result, driver.getInputs(), System.out); // may throw IOException!
-        Writer w = DOT.createDotWriter(true);
-        GraphDOT.write(result, driver.getInputs(), w);
-        w.close();
+        Visualization.visualize(result, driver.getInputs());
 
         System.out.println("-------------------------------------------------------");
 

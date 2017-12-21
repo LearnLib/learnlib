@@ -15,8 +15,6 @@
  */
 package de.learnlib.algorithms.discriminationtree.mealy;
 
-import java.util.Map;
-
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithms.discriminationtree.AbstractDTLearner;
 import de.learnlib.algorithms.discriminationtree.DTLearnerState;
@@ -29,8 +27,6 @@ import de.learnlib.api.query.Query;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.datastructure.discriminationtree.MultiDTree;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.graphs.dot.EmptyDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -85,31 +81,6 @@ public class DTLearnerMealy<I, O> extends AbstractDTLearner<MealyMachine<?, I, ?
             public void answer(Word<O> output) {
                 transition.setProperty(output.firstSymbol());
             }
-        };
-    }
-
-    @Override
-    public GraphDOTHelper<HState<I, Word<O>, Void, O>, HTransition<I, Word<O>, Void, O>> getHypothesisDOTHelper() {
-        return new EmptyDOTHelper<HState<I, Word<O>, Void, O>, HTransition<I, Word<O>, Void, O>>() {
-
-            @Override
-            public boolean getEdgeProperties(HState<I, Word<O>, Void, O> src,
-                                             HTransition<I, Word<O>, Void, O> edge,
-                                             HState<I, Word<O>, Void, O> tgt,
-                                             Map<String, String> properties) {
-                if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-                    return false;
-                }
-                final StringBuilder labelBuilder = new StringBuilder();
-                labelBuilder.append(String.valueOf(edge.getSymbol())).append(" / ");
-                if (edge.getProperty() != null) {
-                    labelBuilder.append(edge.getProperty());
-                }
-                properties.put(EdgeAttrs.LABEL, labelBuilder.toString());
-
-                return true;
-            }
-
         };
     }
 

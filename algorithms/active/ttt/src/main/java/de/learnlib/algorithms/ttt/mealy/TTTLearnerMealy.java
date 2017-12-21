@@ -15,12 +15,9 @@
  */
 package de.learnlib.algorithms.ttt.mealy;
 
-import java.util.Map;
-
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithms.ttt.base.AbstractBaseDTNode;
-import de.learnlib.algorithms.ttt.base.AbstractTTTHypothesis.TTTEdge;
 import de.learnlib.algorithms.ttt.base.AbstractTTTLearner;
 import de.learnlib.algorithms.ttt.base.BaseTTTDiscriminationTree;
 import de.learnlib.algorithms.ttt.base.OutputInconsistency;
@@ -33,8 +30,6 @@ import de.learnlib.counterexamples.acex.MealyOutInconsPrefixTransformAcex;
 import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.graphs.dot.EmptyDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -139,30 +134,6 @@ public class TTTLearnerMealy<I, O> extends AbstractTTTLearner<MealyMachine<?, I,
         }
 
         return wb.toWord();
-    }
-
-    @Override
-    public GraphDOTHelper<TTTState<I, Word<O>>, TTTEdge<I, Word<O>>> getHypothesisDOTHelper() {
-        return new EmptyDOTHelper<TTTState<I, Word<O>>, TTTEdge<I, Word<O>>>() {
-
-            @Override
-            public boolean getEdgeProperties(TTTState<I, Word<O>> src,
-                                             TTTEdge<I, Word<O>> edge,
-                                             TTTState<I, Word<O>> tgt,
-                                             Map<String, String> properties) {
-                if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-                    return false;
-                }
-                final StringBuilder labelBuilder = new StringBuilder();
-                labelBuilder.append(String.valueOf(edge.transition.getInput())).append(" / ");
-                TTTTransitionMealy<I, O> trans = (TTTTransitionMealy<I, O>) edge.transition;
-                if (trans.output != null) {
-                    labelBuilder.append(trans.output);
-                }
-                properties.put(EdgeAttrs.LABEL, labelBuilder.toString());
-                return true;
-            }
-        };
     }
 
     @Override

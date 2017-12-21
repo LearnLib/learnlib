@@ -43,9 +43,9 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.functions.FunctionsUtil;
 import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.dot.EmptyDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.util.automata.Automata;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -271,8 +271,8 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
             }
 
             @Override
-            public GraphDOTHelper<S, PTATransition<S>> getGraphDOTHelper() {
-                return new EmptyDOTHelper<S, PTATransition<S>>() {
+            public VisualizationHelper<S, PTATransition<S>> getVisualizationHelper() {
+                return new DefaultVisualizationHelper<S, PTATransition<S>>() {
 
                     @Override
                     public boolean getEdgeProperties(S src,

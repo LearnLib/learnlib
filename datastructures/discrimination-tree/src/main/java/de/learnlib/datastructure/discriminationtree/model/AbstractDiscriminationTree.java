@@ -26,9 +26,9 @@ import java.util.Map.Entry;
 import com.google.common.collect.Iterables;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.dot.DefaultDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Word;
 
 /**
@@ -155,8 +155,8 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
     }
 
     @Override
-    public GraphDOTHelper<N, Entry<O, N>> getGraphDOTHelper() {
-        return new DefaultDOTHelper<N, Entry<O, N>>() {
+    public VisualizationHelper<N, Entry<O, N>> getVisualizationHelper() {
+        return new DefaultVisualizationHelper<N, Entry<O, N>>() {
 
             @Override
             public boolean getNodeProperties(N node, Map<String, String> properties) {

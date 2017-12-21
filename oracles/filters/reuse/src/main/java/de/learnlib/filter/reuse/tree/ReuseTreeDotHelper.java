@@ -17,12 +17,13 @@ package de.learnlib.filter.reuse.tree;
 
 import java.util.Map;
 
-import net.automatalib.graphs.dot.DefaultDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 
 /**
- * {@link GraphDOTHelper} implementation for the {@link ReuseTree} that renders nodes as white circles (if no system
- * state is available on the node) or black diamonds (otherwise). Edges are labeled with input / output behavior.
+ * {@link VisualizationHelper} implementation for the {@link ReuseTree} that renders nodes as white circles (if no
+ * system state is available on the node) or black diamonds (otherwise). Edges are labeled with input / output
+ * behavior.
  *
  * @param <S>
  *         system state class
@@ -33,7 +34,7 @@ import net.automatalib.graphs.dot.GraphDOTHelper;
  *
  * @author Oliver Bauer
  */
-class ReuseTreeDotHelper<S, I, O> extends DefaultDOTHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
+class ReuseTreeDotHelper<S, I, O> extends DefaultVisualizationHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
 
     @Override
     public boolean getNodeProperties(ReuseNode<S, I, O> node, Map<String, String> properties) {
