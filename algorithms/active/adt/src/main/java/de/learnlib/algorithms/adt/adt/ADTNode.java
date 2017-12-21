@@ -21,7 +21,6 @@ import java.util.Map;
 import de.learnlib.algorithms.adt.util.ADTUtil;
 import de.learnlib.api.oracle.SymbolQueryOracle;
 import net.automatalib.graphs.ads.RecursiveADSNode;
-import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Word;
 
@@ -67,7 +66,7 @@ public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I
 
     @Override
     default VisualizationHelper<ADTNode<S, I, O>, ADTNode<S, I, O>> getVisualizationHelper() {
-        return new DefaultVisualizationHelper<ADTNode<S, I, O>, ADTNode<S, I, O>>() {
+        return new VisualizationHelper<ADTNode<S, I, O>, ADTNode<S, I, O>>() {
 
             @Override
             public boolean getNodeProperties(final ADTNode<S, I, O> node, final Map<String, String> properties) {
@@ -92,7 +91,7 @@ public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I
                                              final Map<String, String> properties) {
 
                 for (final Map.Entry<O, ADTNode<S, I, O>> e : src.getChildren().entrySet()) {
-                    if (e.getValue().equals(tgt)) {
+                    if (e.getValue().equals(tgt) && !ADTUtil.isResetNode(src)) {
                         properties.put(EdgeAttrs.LABEL, e.getKey().toString());
                         return true;
                     }
