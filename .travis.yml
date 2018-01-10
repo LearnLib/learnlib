@@ -36,7 +36,7 @@ install:
   - PATH="$PATH:$HOME/ltsmin/bin"
 
 script:
-  - mvn install -B -Pintegration-tests,code-analysis,code-coverage,bundles
+  - mvn install -B -Pintegration-tests,code-analysis,code-coverage,bundles --fail-at-end
   - mvn coveralls:report
 
 jobs:
