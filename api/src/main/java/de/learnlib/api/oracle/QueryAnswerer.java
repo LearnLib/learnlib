@@ -41,8 +41,7 @@ public interface QueryAnswerer<I, D> {
     D answerQuery(Word<I> prefix, Word<I> suffix);
 
     @Nonnull
-    MembershipOracle<I, D> asOracle();
-    // TODO    {
-    //        return new QueryAnswererOracle<>(this);
-    //    }
+    default MembershipOracle<I, D> asOracle() {
+        return queries -> queries.forEach(q -> q.answer(answerQuery(q.getPrefix(), q.getSuffix())));
+    }
 }
