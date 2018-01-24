@@ -580,27 +580,6 @@ limitations under the License.
                                         </artifact>
                                     </artifacts>
                                 </configuration>
-                             </execution>
-                         </executions>
-                     </plugin>
-
-
-
-                    <plugin>
-                        <groupId>com.atlassian.maven.plugins</groupId>
-                        <artifactId>maven-upload-plugin</artifactId>
-                        <inherited>false</inherited>
-                        <executions>
-                            <execution>
-                                <id>upload-bundles</id>
-                                <phase>deploy</phase>
-                                <goals>
-                                    <goal>upload</goal>
-                                </goals>
-                                <configuration>
-                                    <resourceSrc>${project.build.directory}/bundles/*</resourceSrc>
-                                    <resourceDest>/files/releases/${project.version}</resourceDest>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -608,5 +587,4 @@ limitations under the License.
             </build>
         </profile>
     </profiles>
-
 </project>

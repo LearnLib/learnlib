@@ -313,15 +313,6 @@ limitations under the License.
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>com.atlassian.maven.plugins</groupId>
-                    <artifactId>maven-upload-plugin</artifactId>
-                    <version>${upload-plugin.version}</version>
-                    <configuration>
-                        <serverId>learnlib-de</serverId>
-                        <url>sftp://www155.your-server.de/</url>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>${source-plugin.version}</version>
@@ -1113,30 +1104,6 @@ limitations under the License.
 
         </dependencies>
     </dependencyManagement>
-
-    <pluginRepositories>
-        <!-- Ensure preference over the atlassian plugin repository -->
-        <pluginRepository>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <url>http://repo1.maven.org/maven2</url>
-        </pluginRepository>
-
-        <!-- For maven-upload-plugin -->
-        <pluginRepository>
-            <id>atlassian-public</id>
-            <url>https://maven.atlassian.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
 
     <!--
     ================================= DISTRIBUTION ==============================
