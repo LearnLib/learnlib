@@ -210,6 +210,9 @@ limitations under the License.
                     <configuration>
                         <printFailingErrors>true</printFailingErrors>
                         <linkXRef>false</linkXRef>
+                        <excludeRoots>
+                            <excludeRoot>target/generated-sources</excludeRoot>
+                        </excludeRoots>
                     </configuration>
                 </plugin>
                 <plugin>
