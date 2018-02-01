@@ -202,6 +202,27 @@ limitations under the License.
             <artifactId>learnlib-parallelism</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-black-box-oracles</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-emptiness-oracles</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-inclusion-oracles</artifactId>
+        </dependency>
+
+        <!-- model-checkers -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-model-checkers</artifactId>
+        </dependency>
+
         <!-- (bundled) AutomataLib dependency -->
         <dependency>
             <groupId>net.automatalib.distribution</groupId>
