@@ -21,12 +21,10 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
-            <version>0.6.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>

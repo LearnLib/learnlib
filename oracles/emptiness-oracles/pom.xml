@@ -37,23 +37,21 @@ limitations under the License.
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.0.59-beta</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-oracle-support</artifactId>
-            <version>0.12.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learning-examples</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -62,17 +60,14 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
-            <version>0.6.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
-            <version>0.6.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
-            <version>0.6.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
