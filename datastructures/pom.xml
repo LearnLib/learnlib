@@ -28,7 +28,7 @@ limitations under the License.
         <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>learnlib-datastructures</artifactId>
+    <artifactId>learnlib-datastructures-parent</artifactId>
     <name>LearnLib :: Datastructures</name>
     <description>Parent module for data structures shared across multiple modules of LearnLib</description>
 

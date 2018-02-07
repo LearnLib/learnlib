@@ -22,7 +22,7 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>learnlib-commons</artifactId>
+        <artifactId>learnlib-commons-parent</artifactId>
         <groupId>de.learnlib</groupId>
         <version>0.12.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>

@@ -21,7 +21,7 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.learnlib</groupId>
-        <artifactId>learnlib-algorithms-active</artifactId>
+        <artifactId>learnlib-algorithms-active-parent</artifactId>
         <version>0.12.1-SNAPSHOT</version>
     </parent>
     <name>LearnLib :: Algorithms :: NL*</name>

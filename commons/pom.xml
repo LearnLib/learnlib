@@ -28,7 +28,7 @@ limitations under the License.
         <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>learnlib-commons</artifactId>
+    <artifactId>learnlib-commons-parent</artifactId>
     <name>LearnLib :: Commons</name>
     <description>Parent module for common LearnLib utilities</description>
 

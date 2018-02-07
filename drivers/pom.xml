@@ -28,7 +28,7 @@ limitations under the License.
         <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>learnlib-drivers</artifactId>
+    <artifactId>learnlib-drivers-parent</artifactId>
     <name>LearnLib :: Drivers</name>
     <description>Parent module for test drivers</description>
 

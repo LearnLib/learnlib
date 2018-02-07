@@ -28,7 +28,7 @@ limitations under the License.
         <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>learnlib-algorithms</artifactId>
+    <artifactId>learnlib-algorithms-parent</artifactId>
     <name>LearnLib :: Algorithms</name>
     <description>Parent module for automata learning algorithms shipped with LearnLib</description>
 

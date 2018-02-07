@@ -28,7 +28,7 @@ limitations under the License.
         <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>learnlib-oracles</artifactId>
+    <artifactId>learnlib-oracles-parent</artifactId>
     <name>LearnLib :: Oracles</name>
     <description>Parent module for oracles and oracle-related modules</description>
 

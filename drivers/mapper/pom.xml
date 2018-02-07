@@ -21,7 +21,7 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.learnlib</groupId>
-        <artifactId>learnlib-drivers</artifactId>
+        <artifactId>learnlib-drivers-parent</artifactId>
         <version>0.12.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
