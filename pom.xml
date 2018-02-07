@@ -325,12 +325,12 @@ limitations under the License.
                         -->
                         <arguments>-Dlearnlib.release=true</arguments>
                         <goals>deploy site site:stage scm-publish:publish-scm</goals>
-                        <!-- False to allow rebasing in case of errors -->
-                        <pushChanges>false</pushChanges>
                         <!-- Automatically use the parent version for all submodules, do not prompt for each one -->
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <!-- Use prefix learnlib, not learnlib-parent -->
                         <tagNameFormat>learnlib-@{version}</tagNameFormat>
+                        <!-- The default "clean verify" causes javadoc and archetype integration tests to fail -->
+                        <preparationGoals>clean install</preparationGoals>
                     </configuration>
                 </plugin>
                 <plugin>
