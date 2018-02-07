@@ -877,17 +877,12 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib.archetypes</groupId>
+                <artifactId>basic</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib.archetypes</groupId>
                 <artifactId>complete</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib.archetypes</groupId>
-                <artifactId>core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib.archetypes</groupId>
-                <artifactId>typical</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
