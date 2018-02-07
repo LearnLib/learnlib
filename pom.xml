@@ -77,32 +77,50 @@ limitations under the License.
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
+                <role>Maintainer</role>
             </roles>
         </developer>
         <developer>
             <id>falkhowar</id>
             <name>Falk Howar</name>
             <email>falk.howar@gmail.com</email>
+            <organization>TU Dortmund, Chair for Software Engineering</organization>
+            <organizationUrl>http://ls14-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
         </developer>
         <developer>
             <id>misberner</id>
             <name>Malte Isberner</name>
             <email>malte.isberner@gmail.com</email>
+            <roles>
+                <role>Developer (inactive)</role>
+            </roles>
         </developer>
         <developer>
             <id>stovocor</id>
             <name>Stephan Windmüller</name>
             <email>stephan.windmueller@tu-dortmund.de</email>
+            <roles>
+                <role>Developer (inactive)</role>
+            </roles>
         </developer>
         <developer>
             <id>merten</id>
             <name>Maik Merten</name>
             <email>maikmerten@googlemail.com</email>
+            <roles>
+                <role>Developer (inactive)</role>
+            </roles>
         </developer>
         <developer>
             <id>oliverbauer8</id>
             <name>Oliver Bauer</name>
             <email>oliver.bauer@tu-dortmund.de</email>
+            <roles>
+                <role>Developer (inactive)</role>
+            </roles>
         </developer>
     </developers>
 
