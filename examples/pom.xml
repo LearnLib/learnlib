@@ -32,7 +32,8 @@ limitations under the License.
     <name>LearnLib :: Examples</name>
     <description>
         A collection of various small example applications that illustrate several use cases of LearnLib.
-        *Note:* This artifact is not intended as a library, but only exists for educational purposes.
+        *Note:* This artifact is not intended as a library, but only exists for educational purposes. No artifacts are
+        deployed for this module.
     </description>
 
     <build>
