@@ -30,7 +30,7 @@ limitations under the License.
 
     <artifactId>learnlib-drivers-simulator</artifactId>
     <name>LearnLib :: Drivers :: Simulator</name>
-    <description>Utilities Driver Generation Support</description>
+    <description>Utilities for simulating SULs</description>
 
     <dependencies>
         <!--

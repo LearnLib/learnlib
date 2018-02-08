@@ -29,7 +29,10 @@ limitations under the License.
 
     <artifactId>learnlib-adt</artifactId>
     <name>LearnLib :: Algorithms :: ADT</name>
-    <description>The ADT Algorithm</description>
+    <description>
+        The ADT Algorithm. Uses adaptive distinguishing trees (a generalization of adaptive distinguishing sequences) to
+        separate hypothesis states and focuses on minimizing the amount of resets during the learning process.
+    </description>
 
     <dependencies>
         <!-- LearnLib dependencies -->

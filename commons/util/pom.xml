@@ -29,8 +29,8 @@ limitations under the License.
     </parent>
 
     <artifactId>learnlib-util</artifactId>
-    <name>LearnLib :: Commons :: Commons</name>
-    <description>A collection of standard algorithms for handling counterexamples in automata learning</description>
+    <name>LearnLib :: Commons :: Util</name>
+    <description>A collection of utility methods for learning setups (oracle wrappers, etc.)</description>
 
     <dependencies>
         <!--

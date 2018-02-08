@@ -30,6 +30,7 @@ limitations under the License.
 
     <artifactId>learnlib-discrimination-tree</artifactId>
     <name>LearnLib :: Algorithms :: Discrimination Tree</name>
+    <description>A learning algorithm, which distinguishes hypothesis states using a discrimination tree.</description>
 
     <dependencies>
         <dependency>

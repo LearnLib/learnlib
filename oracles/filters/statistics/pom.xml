@@ -27,6 +27,7 @@ limitations under the License.
 
     <artifactId>learnlib-statistics</artifactId>
     <name>LearnLib :: Filters :: Statistics</name>
+    <description>Filters for collecting statistical data</description>
 
     <modelVersion>4.0.0</modelVersion>
 

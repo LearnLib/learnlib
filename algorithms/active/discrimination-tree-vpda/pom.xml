@@ -30,6 +30,10 @@ limitations under the License.
 
     <artifactId>learnlib-discrimination-tree-vpda</artifactId>
     <name>LearnLib :: Algorithms :: Discrimination Tree [VPDA]</name>
+    <description>
+        A learning algorithm, which distinguishes hypothesis states using a discrimination tree (visibly push-down
+        automata variant).
+    </description>
 
     <dependencies>
         <dependency>

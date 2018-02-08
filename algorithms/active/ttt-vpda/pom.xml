@@ -30,7 +30,7 @@ limitations under the License.
 
     <artifactId>learnlib-ttt-vpda</artifactId>
     <name>LearnLib :: Algorithms :: TTT [VPDA]</name>
-    <description>The TTT Algorithm</description>
+    <description>The TTT Algorithm (visibly push-down automata variant)</description>
 
     <dependencies>
         <!--

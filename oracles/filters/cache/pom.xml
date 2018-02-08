@@ -30,7 +30,7 @@ limitations under the License.
 
     <artifactId>learnlib-cache</artifactId>
     <name>LearnLib :: Filters :: Cache</name>
-    <description>Cache filter to avoid posing duplicate membership queries</description>
+    <description>Caches to avoid posing duplicate membership queries</description>
 
     <dependencies>
         <!--

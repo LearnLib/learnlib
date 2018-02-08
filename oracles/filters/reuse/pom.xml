@@ -27,6 +27,7 @@ limitations under the License.
 
     <artifactId>learnlib-reuse</artifactId>
     <name>LearnLib :: Filters :: Reuse</name>
+    <description>Reuse Tree for (intelligently) caching membership queries</description>
 
     <modelVersion>4.0.0</modelVersion>
 

@@ -29,6 +29,7 @@ limitations under the License.
     <artifactId>learnlib-mapper</artifactId>
 
     <name>LearnLib :: Drivers :: Mapper</name>
+    <description>Translation utilities for mapping abstract hypothesis symbols to concrete SUL symbols</description>
 
     <dependencies>
         <dependency>

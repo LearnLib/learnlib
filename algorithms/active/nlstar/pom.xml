@@ -26,6 +26,7 @@ limitations under the License.
     </parent>
     <name>LearnLib :: Algorithms :: NL*</name>
     <artifactId>learnlib-nlstar</artifactId>
+    <description>A variant of the L* algorithm for inferring non-deterministic hypothesis automata.</description>
 
     <dependencies>
         <dependency>
