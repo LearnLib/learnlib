@@ -1,17 +1,14 @@
+# Maven output
+target/
+
+# Eclipse output directory
+bin/
+
+# Eclipse settings
 .settings/
 .classpath
-.idea/
 .project
-hs_err_*
-*~
+
+#Intellij settings
 *.iml
-pom.xml.versionsBackup
-test-output/
-importers/
-/target/
-.factorypath
-C:\\nppdf32Log\\debuglog.txt
-/release.properties
-pom.xml.releaseBackup
-
-
+.idea/

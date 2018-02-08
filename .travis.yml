@@ -1,0 +1,30 @@
+language: java
+sudo: false
+dist: trusty
+jdk:
+  - oraclejdk8
+  - openjdk8
+# disable caching for now, because it breaks reporting to coveralls
+# see https://github.com/travis-ci/travis-ci/issues/8208#issuecomment-349240845
+#cache:
+#  directories:
+#  - $HOME/.m2
+#before_cache:
+#  # do not cache our local archives
+#  - rm -rf $HOME/.m2/repository/net/automatalib/
+#  - rm -rf $HOME/.m2/repository/de/learnlib/
+branches:
+  only:
+  - master
+  - develop
+before_install:
+  - git clone -b develop --single-branch https://github.com/LearnLib/automatalib.git /tmp/automatalib-develop
+  - pushd /tmp/automatalib-develop
+    # skip several aspects of the build process, because we are only interested in the compiled code
+  - mvn install -DskipTests -Dmaven.javadoc.skip=true
+  - popd
+install: true # skip mvn install, because we essentially run the same command in the script routine
+script:
+  - mvn install -B -Pintegration-tests,code-analysis,code-coverage,bundles
+after_success:
+ - mvn coveralls:report

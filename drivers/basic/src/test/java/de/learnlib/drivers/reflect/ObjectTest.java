@@ -1,90 +1,128 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2018 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
- * LearnLib is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License version 3.0 as published by the Free Software Foundation.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * LearnLib is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with LearnLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.learnlib.drivers.reflect;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
 
-import de.learnlib.api.Query;
-import de.learnlib.oracles.DefaultQuery;
-import de.learnlib.oracles.SULOracle;
-
+import de.learnlib.oracle.membership.SULOracle;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
+import net.automatalib.words.WordBuilder;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- *
  * @author falk
  */
 @Test
 public class ObjectTest {
-    
-    public ObjectTest() {
+
+    @Test
+    public void testDriver() throws Exception {
+
+        final StackData testCase = buildStackData(StackWithException.class);
+
+        // push1, push2, pop, pop, pop, pop
+        final Word<AbstractMethodOutput> output1 = answerFirstQuery(testCase);
+        // push1, push2, push1, pop
+        final Word<AbstractMethodOutput> output2 = answerSecondQuery(testCase);
+
+        Assert.assertTrue(output1.getSymbol(0) instanceof ReturnValue);
+        Assert.assertTrue(output1.getSymbol(1) instanceof ReturnValue);
+        Assert.assertTrue(output1.getSymbol(2) instanceof ReturnValue);
+        Assert.assertTrue(output1.getSymbol(3) instanceof ReturnValue);
+        Assert.assertTrue(output1.getSymbol(4) instanceof Error);
+        Assert.assertTrue(output1.getSymbol(5) instanceof Unobserved);
+
+        Assert.assertTrue(output2.getSymbol(0) instanceof ReturnValue);
+        Assert.assertTrue(output2.getSymbol(1) instanceof ReturnValue);
+        Assert.assertTrue(output2.getSymbol(2) instanceof Error);
+        Assert.assertTrue(output2.getSymbol(3) instanceof Unobserved);
     }
 
-     @Test
-     public void testDriver() throws Exception {
-     
-         Constructor<?> c = Stack.class.getConstructor(int.class);
-         SimplePOJOTestDriver driver = new SimplePOJOTestDriver(c, 2);
-         SULOracle<AbstractMethodInput, AbstractMethodOutput> oracle = new SULOracle<>(driver);
-         
-         Method push = Stack.class.getMethod("push", new Class<?>[] {Object.class});
-         AbstractMethodInput push_1 = driver.addInput("push_1", push, 1);
-         AbstractMethodInput push_2 = driver.addInput("push_2", push, 2);
-         
-         Method _pop = Stack.class.getMethod("pop", new Class<?>[] {});
-         AbstractMethodInput pop = driver.addInput("pop", _pop, new Object[] {});
-                  
-         DefaultQuery<AbstractMethodInput, Word<AbstractMethodOutput>> query1 = new DefaultQuery<>(
-                Word.fromSymbols(push_1, push_2, pop, pop, pop, pop));
-         DefaultQuery<AbstractMethodInput, Word<AbstractMethodOutput>> query2 = new DefaultQuery<>(
-                Word.fromSymbols(push_1, push_2, push_1, pop));
-         
-         Collection<Query<AbstractMethodInput, Word<AbstractMethodOutput>>> queries = new ArrayList<>();
-         queries.add(query1);
-         queries.add(query2);
-         
-         oracle.processQueries(queries);
+    @Test
+    public void testDriver2() throws Exception {
 
-         System.out.println(query1.getInput() + "  :  " + query1.getOutput());
-         System.out.println(query2.getInput() + "  :  " + query2.getOutput());
-     }
-     
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+        final StackData testCase = buildStackData(StackWithNull.class);
+
+        // push1, push2, pop, pop, pop, pop
+        final Word<AbstractMethodOutput> output1 = answerFirstQuery(testCase);
+        // push1, push2, push1, pop
+        final Word<AbstractMethodOutput> output2 = answerSecondQuery(testCase);
+
+        for (AbstractMethodOutput out : output1) {
+            Assert.assertTrue(out instanceof ReturnValue);
+        }
+
+        for (AbstractMethodOutput out : output2) {
+            Assert.assertTrue(out instanceof ReturnValue);
+        }
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
+    private Word<AbstractMethodOutput> answerFirstQuery(StackData stackData) {
+        // push1, push2, pop, pop, pop, pop
+        return answerQuery(stackData, 0, 1, 2, 2, 2, 2);
+
     }
 
-    @BeforeMethod
-    public void setUpMethod() throws Exception {
+    private Word<AbstractMethodOutput> answerSecondQuery(StackData stackData) {
+        // push1, push2, push1, pop
+        return answerQuery(stackData, 0, 1, 0, 2);
+
     }
 
-    @AfterMethod
-    public void tearDownMethod() throws Exception {
+    private Word<AbstractMethodOutput> answerQuery(StackData stackData, int... inputIndexes) {
+
+        final Alphabet<MethodInput> alphabet = stackData.driver.getInputs();
+        SULOracle<MethodInput, AbstractMethodOutput> oracle = stackData.oracle;
+
+        final WordBuilder<MethodInput> wb = new WordBuilder<>(inputIndexes.length);
+
+        for (int i : inputIndexes) {
+            wb.add(alphabet.apply(i));
+        }
+
+        return oracle.answerQuery(wb.toWord());
     }
+
+    private StackData buildStackData(final Class<?> stackClass) throws NoSuchMethodException {
+        Constructor<?> c = stackClass.getConstructor(int.class);
+        SimplePOJOTestDriver driver = new SimplePOJOTestDriver(c, 2);
+        SULOracle<MethodInput, AbstractMethodOutput> oracle = new SULOracle<>(driver);
+
+        Method push = stackClass.getMethod("push", Object.class);
+        driver.addInput("push_1", push, 1);
+        driver.addInput("push_2", push, 2);
+
+        Method popMethod = stackClass.getMethod("pop");
+        driver.addInput("pop", popMethod);
+
+        return new StackData(driver, oracle);
+    }
+
+    private static class StackData {
+
+        private final SimplePOJOTestDriver driver;
+        private final SULOracle<MethodInput, AbstractMethodOutput> oracle;
+
+        StackData(SimplePOJOTestDriver driver, SULOracle<MethodInput, AbstractMethodOutput> oracle) {
+            this.driver = driver;
+            this.oracle = oracle;
+        }
+    }
+
 }

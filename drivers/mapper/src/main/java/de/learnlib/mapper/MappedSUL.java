@@ -1,82 +1,89 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2013-2018 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
- * LearnLib is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License version 3.0 as published by the Free Software Foundation.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * LearnLib is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with LearnLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.learnlib.mapper;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 import de.learnlib.api.SUL;
-import de.learnlib.api.SULException;
-import de.learnlib.mapper.api.Mapper;
-import de.learnlib.mapper.api.Mapper.MappedException;
+import de.learnlib.api.exception.SULException;
+import de.learnlib.mapper.api.SULMapper;
+import de.learnlib.mapper.api.SULMapper.MappedException;
 
 public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
-	
-	private final Mapper<? super AI,? extends AO,? extends CI,? super CO> mapper;
-	private final SUL<? super CI,? extends CO> sul;
-	
-	private boolean inError = false;
-	private AO repeatedErrorOutput = null;
 
-	public MappedSUL(Mapper<? super AI,? extends AO,? extends CI,? super CO> mapper, SUL<? super CI,? extends CO> sul) {
-		this.mapper = mapper;
-		this.sul = sul;
-	}
+    private final SULMapper<? super AI, ? extends AO, ? extends CI, ? super CO> mapper;
+    private final SUL<? super CI, ? extends CO> sul;
 
-	@Override
-	public void pre() {
-		mapper.pre();
-		sul.pre();
-	}
+    private boolean inError;
+    private AO repeatedErrorOutput;
 
-	@Override
-	public void post() {
-		sul.post();
-		mapper.post();
-		this.inError = false;
-		this.repeatedErrorOutput = null;
-	}
+    public MappedSUL(SULMapper<? super AI, ? extends AO, ? extends CI, ? super CO> mapper,
+                     SUL<? super CI, ? extends CO> sul) {
+        this.mapper = mapper;
+        this.sul = sul;
+    }
 
-	@Override
-	public AO step(AI in) throws SULException {
-		if(inError) {
-			return repeatedErrorOutput;
-		}
-		
-		CI concreteInput = mapper.mapInput(in);
-		MappedException<? extends AO> mappedEx;
-		try {
-			CO concreteOutput = sul.step(concreteInput);
-			return mapper.mapOutput(concreteOutput);
-		}
-		catch(SULException ex) {
-			mappedEx = mapper.mapWrappedException(ex);
-		}
-		catch(RuntimeException ex) {
-			mappedEx = mapper.mapUnwrappedException(ex);
-		}
-		Optional<? extends AO> repeatOutput = mappedEx
-				.getSubsequentStepsOutput();
+    @Override
+    public void pre() {
+        this.inError = false;
+        this.repeatedErrorOutput = null;
+        mapper.pre();
+        sul.pre();
+    }
 
-		if (repeatOutput.isPresent()) {
-			this.inError = true;
-			this.repeatedErrorOutput = repeatOutput.get();
-		}
+    @Override
+    public void post() {
+        sul.post();
+        mapper.post();
+    }
 
-		return mappedEx.getThisStepOutput();
-	}
+    @Override
+    public AO step(AI in) throws SULException {
+        if (inError) {
+            return repeatedErrorOutput;
+        }
+
+        CI concreteInput = mapper.mapInput(in);
+        MappedException<? extends AO> mappedEx;
+        try {
+            CO concreteOutput = sul.step(concreteInput);
+            return mapper.mapOutput(concreteOutput);
+        } catch (SULException ex) {
+            mappedEx = mapper.mapWrappedException(ex);
+        } catch (RuntimeException ex) {
+            mappedEx = mapper.mapUnwrappedException(ex);
+        }
+        Optional<? extends AO> repeatOutput = mappedEx.getSubsequentStepsOutput();
+
+        if (repeatOutput.isPresent()) {
+            this.inError = true;
+            this.repeatedErrorOutput = repeatOutput.get();
+        }
+
+        return mappedEx.getThisStepOutput();
+    }
+
+    @Override
+    public boolean canFork() {
+        return mapper.canFork() && sul.canFork();
+    }
+
+    @Override
+    public MappedSUL<AI, AO, CI, CO> fork() {
+        return new MappedSUL<>(mapper.fork(), sul.fork());
+    }
 
 }

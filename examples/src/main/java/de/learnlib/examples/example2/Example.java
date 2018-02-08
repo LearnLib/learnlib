@@ -1,23 +1,21 @@
-/* Copyright (C) 2013-2014 TU Dortmund
+/* Copyright (C) 2013-2018 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
- * 
- * LearnLib is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License version 3.0 as published by the Free Software Foundation.
- * 
- * LearnLib is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with LearnLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.learnlib.examples.example2;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -25,123 +23,96 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Random;
 
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.commons.dotutil.DOT;
-import net.automatalib.util.graphs.dot.GraphDOT;
-import net.automatalib.words.Word;
-import de.learnlib.algorithms.lstargeneric.mealy.ExtensibleLStarMealyBuilder;
-import de.learnlib.api.EquivalenceOracle.MealyEquivalenceOracle;
-import de.learnlib.api.LearningAlgorithm.MealyLearner;
+import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.SUL;
-import de.learnlib.cache.sul.SULCaches;
-import de.learnlib.drivers.reflect.AbstractMethodInput;
+import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
+import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.api.statistic.StatisticSUL;
 import de.learnlib.drivers.reflect.AbstractMethodOutput;
+import de.learnlib.drivers.reflect.MethodInput;
 import de.learnlib.drivers.reflect.SimplePOJOTestDriver;
-import de.learnlib.eqtests.basic.mealy.RandomWalkEQOracle;
-import de.learnlib.experiments.Experiment.MealyExperiment;
-import de.learnlib.oracles.ResetCounterSUL;
-import de.learnlib.oracles.SULOracle;
-import de.learnlib.statistics.SimpleProfiler;
-import de.learnlib.statistics.StatisticSUL;
+import de.learnlib.filter.cache.sul.SULCaches;
+import de.learnlib.filter.statistic.sul.ResetCounterSUL;
+import de.learnlib.oracle.equivalence.mealy.RandomWalkEQOracle;
+import de.learnlib.oracle.membership.SULOracle;
+import de.learnlib.util.Experiment.MealyExperiment;
+import de.learnlib.util.statistics.SimpleProfiler;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.serialization.dot.GraphDOT;
+import net.automatalib.visualization.Visualization;
+import net.automatalib.words.Word;
 
 /**
- * This example shows how a model of a Java class can be learned using the SUL
- * (system under learning) interfaces and the random walks equivalence test.
+ * This example shows how a model of a Java class can be learned using the SUL (system under learning) interfaces and
+ * the random walks equivalence test.
  *
  * @author falkhowar
  */
-public class Example {
+public final class Example {
 
-    /*
-     * The BoundedStringQueue is the class of which we are going to 
-     * infer a model. It wraps an ordinary queue of Strings, limiting
-     * its size to MAX_SIZE (3). Once the queue is full, additional 
-     * offers will be ignored.
-     * <p>
-     * However, the implementation uses the underlying queue in a strange
-     * way as the model will reveal.
-     */
-    public static class BoundedStringQueue {
+    private static final double RESET_PROBABILITY = 0.05;
+    private static final int MAX_STEPS = 10000;
+    private static final int RANDOM_SEED = 46346293;
 
-        // capacity
-        public static final int MAX_SIZE = 3;
-        // storage
-        private Deque<String> data = new ArrayDeque<>(3);
-
-        // add a String to the queue if capacity allows
-        public void offer(String s) {
-            if (data.size() < MAX_SIZE) {
-                data.offerFirst(s);
-            }
-        }
-
-        // get next element from queue (null for empty queue)
-        public String poll() {
-            return data.poll();
-        }
+    private Example() {
+        // prevent instantiation
     }
-    
-    
+
     public static void main(String[] args) throws NoSuchMethodException, IOException {
 
         // instantiate test driver
-        SimplePOJOTestDriver driver = new SimplePOJOTestDriver(
-                BoundedStringQueue.class.getConstructor());
-                
+        SimplePOJOTestDriver driver = new SimplePOJOTestDriver(BoundedStringQueue.class.getConstructor());
+
         // create learning alphabet
-        Method mOffer = BoundedStringQueue.class.getMethod(
-                "offer", new Class<?>[]{String.class});
-        Method mPoll = BoundedStringQueue.class.getMethod(
-                "poll", new Class<?>[]{});
-                
+        Method mOffer = BoundedStringQueue.class.getMethod("offer", String.class);
+        Method mPoll = BoundedStringQueue.class.getMethod("poll");
+
         // offer
-        AbstractMethodInput offer_a = driver.addInput("offer_a", mOffer, "a");
-        AbstractMethodInput offer_b = driver.addInput("offer_b", mOffer, "b");
+        MethodInput offerA = driver.addInput("offer_a", mOffer, "a");
+        MethodInput offerB = driver.addInput("offer_b", mOffer, "b");
 
         // poll
-        AbstractMethodInput poll = driver.addInput("poll", mPoll);
+        MethodInput poll = driver.addInput("poll", mPoll);
 
         // oracle for counting queries wraps sul
-        StatisticSUL<AbstractMethodInput, AbstractMethodOutput> statisticSul = 
+        StatisticSUL<MethodInput, AbstractMethodOutput> statisticSul =
                 new ResetCounterSUL<>("membership queries", driver);
-        
-        SUL<AbstractMethodInput, AbstractMethodOutput> effectiveSul = statisticSul;
+
+        SUL<MethodInput, AbstractMethodOutput> effectiveSul = statisticSul;
         // use caching in order to avoid duplicate queries
         effectiveSul = SULCaches.createCache(driver.getInputs(), effectiveSul);
-        
-        SULOracle<AbstractMethodInput, AbstractMethodOutput> mqOracle = new SULOracle<>(effectiveSul);
+
+        SULOracle<MethodInput, AbstractMethodOutput> mqOracle = new SULOracle<>(effectiveSul);
 
         // create initial set of suffixes
-        List<Word<AbstractMethodInput>> suffixes = new ArrayList<>();
-        suffixes.add(Word.fromSymbols(offer_a));
-        suffixes.add(Word.fromSymbols(offer_b));
+        List<Word<MethodInput>> suffixes = new ArrayList<>();
+        suffixes.add(Word.fromSymbols(offerA));
+        suffixes.add(Word.fromSymbols(offerB));
         suffixes.add(Word.fromSymbols(poll));
 
         // construct L* instance (almost classic Mealy version)
-        // almost: we use words (Word<String>) in cells of the table 
+        // almost: we use words (Word<String>) in cells of the table
         // instead of single outputs.
-        MealyLearner<AbstractMethodInput, AbstractMethodOutput> lstar
-        	= new ExtensibleLStarMealyBuilder<AbstractMethodInput,AbstractMethodOutput>()
-        		.withAlphabet(driver.getInputs()) // input alphabet
-        		.withOracle(mqOracle)			  // membership oracle
-        		.create();
-                
+        MealyLearner<MethodInput, AbstractMethodOutput> lstar =
+                new ExtensibleLStarMealyBuilder<MethodInput, AbstractMethodOutput>().withAlphabet(driver.getInputs()) // input alphabet
+                                                                                    .withOracle(mqOracle) // membership oracle
+                                                                                    .withInitialSuffixes(suffixes) // initial suffixes
+                                                                                    .create();
 
         // create random walks equivalence test
-        MealyEquivalenceOracle<AbstractMethodInput, AbstractMethodOutput> randomWalks =
-                new RandomWalkEQOracle<>(
-                0.05, // reset SUL w/ this probability before a step 
-                10000, // max steps (overall)
-                false, // reset step count after counterexample 
-                new Random(46346293), // make results reproducible 
-                driver // system under learning
+        MealyEquivalenceOracle<MethodInput, AbstractMethodOutput> randomWalks =
+                new RandomWalkEQOracle<>(driver, // system under learning
+                                         RESET_PROBABILITY, // reset SUL w/ this probability before a step
+                                         MAX_STEPS, // max steps (overall)
+                                         false, // reset step count after counterexample
+                                         new Random(RANDOM_SEED) // make results reproducible
                 );
 
         // construct a learning experiment from
         // the learning algorithm and the random walks test.
         // The experiment will execute the main loop of
         // active learning
-        MealyExperiment<AbstractMethodInput, AbstractMethodOutput> experiment =
+        MealyExperiment<MethodInput, AbstractMethodOutput> experiment =
                 new MealyExperiment<>(lstar, randomWalks, driver.getInputs());
 
         // turn on time profiling
@@ -154,8 +125,7 @@ public class Example {
         experiment.run();
 
         // get learned model
-        MealyMachine<?, AbstractMethodInput, ?, AbstractMethodOutput> result = 
-                experiment.getFinalHypothesis();
+        MealyMachine<?, MethodInput, ?, AbstractMethodOutput> result = experiment.getFinalHypothesis();
 
         // report results
         System.out.println("-------------------------------------------------------");
@@ -174,13 +144,40 @@ public class Example {
         // show model
         System.out.println();
         System.out.println("Model: ");
-        
+
         GraphDOT.write(result, driver.getInputs(), System.out); // may throw IOException!
-        Writer w = DOT.createDotWriter(true);
-        GraphDOT.write(result, driver.getInputs(), w);
-        w.close();
+        Visualization.visualize(result, driver.getInputs());
 
         System.out.println("-------------------------------------------------------");
 
+    }
+
+    /*
+     * The BoundedStringQueue is the class of which we are going to
+     * infer a model. It wraps an ordinary queue of Strings, limiting
+     * its size to MAX_SIZE (3). Once the queue is full, additional
+     * offers will be ignored.
+     * <p>
+     * However, the implementation uses the underlying queue in a strange
+     * way as the model will reveal.
+     */
+    public static class BoundedStringQueue {
+
+        // capacity
+        public static final int MAX_SIZE = 3;
+        // storage
+        private final Deque<String> data = new ArrayDeque<>(3);
+
+        // add a String to the queue if capacity allows
+        public void offer(String s) {
+            if (data.size() < MAX_SIZE) {
+                data.offerFirst(s);
+            }
+        }
+
+        // get next element from queue (null for empty queue)
+        public String poll() {
+            return data.poll();
+        }
     }
 }

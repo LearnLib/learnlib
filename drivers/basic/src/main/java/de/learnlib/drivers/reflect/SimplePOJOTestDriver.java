@@ -1,18 +1,17 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2018 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
- * LearnLib is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License version 3.0 as published by the Free Software Foundation.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * LearnLib is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with LearnLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.learnlib.drivers.reflect;
 
@@ -23,40 +22,41 @@ import java.util.HashMap;
 import de.learnlib.drivers.api.TestDriver;
 import net.automatalib.commons.util.ReflectUtil;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.FastAlphabet;
+import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 /**
- * Simple test driver for plain java objects. Uses a very simple data mapper
- * without state or storage. Inputs cannot have abstract parameters.
- * 
+ * Simple test driver for plain java objects. Uses a very simple data mapper without state or storage. Inputs cannot
+ * have abstract parameters.
+ *
  * @author falkhowar
  */
-public final class SimplePOJOTestDriver extends 
-        TestDriver<AbstractMethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
- 
-    private final FastAlphabet<AbstractMethodInput> inputs = new FastAlphabet<>();
-    
+public final class SimplePOJOTestDriver
+        extends TestDriver<MethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
+
+    private final GrowingAlphabet<MethodInput> inputs = new SimpleAlphabet<>();
+
     private final Class<?> instanceClass;
-    
-    public SimplePOJOTestDriver(Constructor<?> c, Object ... cParams) {
+
+    public SimplePOJOTestDriver(Class<?> c) throws NoSuchMethodException {
+        this(c.getConstructor());
+    }
+
+    public SimplePOJOTestDriver(Constructor<?> c, Object... cParams) {
         super(new SimplePOJODataMapper(c, cParams));
         this.instanceClass = c.getDeclaringClass();
     }
-    
-    public SimplePOJOTestDriver(Class<?> c) throws NoSuchMethodException {
-    	this(c.getConstructor());
+
+    public MethodInput addInput(String name, String methodName, Object... params) {
+        Method m = ReflectUtil.findMatchingMethod(instanceClass, methodName, params);
+        if (m == null) {
+            throw new IllegalArgumentException();
+        }
+        return addInput(name, m, params);
     }
-    
-    public AbstractMethodInput addInput(String name, String methodName, Object... params) {
-    	Method m = ReflectUtil.findMatchingMethod(instanceClass, methodName, params);
-    	if (m == null) {
-    		throw new IllegalArgumentException();
-    	}
-    	return addInput(name, m, params);
-    }
-    
-    public AbstractMethodInput addInput(String name, Method m, Object ... params) {
-        AbstractMethodInput i = new AbstractMethodInput(name, m, new HashMap<String, Integer>(), params);
+
+    public MethodInput addInput(String name, Method m, Object... params) {
+        MethodInput i = new MethodInput(name, m, new HashMap<>(), params);
         inputs.add(i);
         return i;
     }
@@ -64,8 +64,8 @@ public final class SimplePOJOTestDriver extends
     /**
      * @return the inputs
      */
-    public Alphabet<AbstractMethodInput> getInputs() {
+    public Alphabet<MethodInput> getInputs() {
         return this.inputs;
     }
-    
+
 }

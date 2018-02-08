@@ -1,18 +1,17 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2018 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
- * LearnLib is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License version 3.0 as published by the Free Software Foundation.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * LearnLib is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with LearnLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.learnlib.drivers.reflect;
 
@@ -20,64 +19,62 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Map;
 
-import de.learnlib.api.SULException;
+import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.api.ExecutableInput;
 
 /**
  * A concrete inputs contains the information for one specific method call.
- * 
+ *
  * @author falkhowar
  */
 public class ConcreteMethodInput implements ExecutableInput<Object> {
-    
+
     /**
-     * corresponding abstract input
+     * corresponding abstract input.
      */
-    private final AbstractMethodInput input;
-    
+    private final MethodInput input;
+
     /**
-     * parameter values
+     * parameter values.
      */
     private final Map<String, Object> values;
-    
+
     /**
-     * invocation target
+     * invocation target.
      */
     private final Object target;
 
-    public ConcreteMethodInput(AbstractMethodInput input, Map<String, Object> values, Object target) {
+    public ConcreteMethodInput(MethodInput input, Map<String, Object> values, Object target) {
         this.input = input;
         this.values = values;
         this.target = target;
-    }    
-
-    private Object[] getParameterValues() {
-        return this.input.getParameters(values);
     }
 
     @Override
     public String toString() {
         return target + "." + this.input.getMethod().getName() + Arrays.toString(getParameterValues());
     }
-  
+
+    private Object[] getParameterValues() {
+        return this.input.getParameters(values);
+    }
+
     @Override
-    public Object execute() throws Exception {
-        Object out = null;
-        try {                        
+    public Object execute() throws SULException {
+        Object out;
+        try {
             Object ret = this.input.getMethod().invoke(this.target, getParameterValues());
             if (this.input.getMethod().getReturnType().equals(Void.TYPE)) {
                 out = Void.TYPE;
-            } else {            
+            } else {
                 out = ret;
             }
-        } 
-        catch (IllegalAccessException | IllegalArgumentException e) {
+        } catch (IllegalAccessException | IllegalArgumentException e) {
             throw new RuntimeException(e);
-        } 
-        catch (InvocationTargetException e) {
-        	throw new SULException(e.getCause());
-        }        
-        return out;                
+        } catch (InvocationTargetException e) {
+            throw new SULException(e.getCause());
+        }
+        return out;
     }
-    
+
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2013-2018 TU Dortmund
+This file is part of LearnLib, http://www.learnlib.de/.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<FindBugsFilter>
+    <Match>
+        <!-- this is intended -->
+        <Bug pattern="NP_BOOLEAN_RETURN_NULL"/>
+        <Class name="de.learnlib.setting.LearnLibSettings"/>
+        <Method name="getBoolean"/>
+    </Match>
+    <Match>
+        <!-- Could be refactored ... -->
+        <Bug pattern="NM_CLASS_NOT_EXCEPTION"/>
+        <Class name="de.learnlib.mapper.api.SULMapper$MappedException"/>
+    </Match>
+    <Match>
+        <!-- TODO: mostly due to performance. However, usage should be checked again -->
+        <Bug pattern="EI_EXPOSE_REP2"/>
+        <Or>
+            <Class name="de.learnlib.drivers.reflect.MethodInput"/>
+        </Or>
+    </Match>
+    <Match>
+        <!-- currently the Serialization interface is just used as a means to end, so implementations are raw and we
+             discourage users to use it.
+        -->
+        <Bug pattern="SE_NO_SERIALVERSIONID,SE_TRANSIENT_FIELD_NOT_RESTORED"/>
+    </Match>
+</FindBugsFilter>
