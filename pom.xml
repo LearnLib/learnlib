@@ -189,7 +189,7 @@ limitations under the License.
         <upload-plugin.version>1.1</upload-plugin.version>
 
         <!-- dependency versions -->
-        <automatalib.version>0.6.1-SNAPSHOT</automatalib.version>
+        <automatalib.version>0.7.0</automatalib.version>
         <buildergen.version>0.1</buildergen.version>
         <checkstyle.version>8.1</checkstyle.version>
         <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
