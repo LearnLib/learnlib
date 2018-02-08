@@ -12,13 +12,27 @@ LearnLib is a free, open source ([Apache License, v2.0][1]) Java library for aut
 LearnLib is mainly developed at the [Dortmund University of Technology, Germany][2].
 Its original purpose is to provide a framework for research on automata learning algorithms as well as for their application in practice.
 
-Please note that the development of LearnLib is still in a very early stage.
 The public version is a re-implemented version of the former closed-source version of LearnLib.
-It does not yet have the complete functionality of the original version, but features will be added and made available as time permits.
-On the other hand, everyone is invited to contribute.
+While certain features have been stripped for improved modularity, development has since then extended the features offered.
+Currently the following learning algorithms with respective target models are supported:
 
-Also please note that many parts of the library have not yet been thoroughly tested.
 
+Algorithm (active)  | Target models        || Algorithm (passive) | Models
+--- | --- | --- | --- | ---
+ADT                 | `Mealy`              || RPNI                | `DFA` `Mealy`
+DHC                 | `Mealy`              || RPNI (EDSM)         | `DFA`
+Discrimination Tree | `DFA` `Mealy` `VPDA` || RPNI (MDL)          | `DFA`
+Kearns & Vazirani   | `DFA` `Mealy`
+L* (incl. variants) | `DFA` `Mealy`
+NL*                 | `NFA`
+TTT                 | `DFA` `Mealy` `VPDA`
+
+
+Additionally, LearnLib offers a variety of tools to ease the practical application of automata learning on real-world systems.
+This includes drivers and mappers for interfacing software systems with the LearnLib API as well as caches and parallelization for improving the overall performance of the learning setup.
+
+While we strive to deliver code at a high quality, please note, that there exist parts of the library that still need thorough testing.
+Contributions -- whether it is in the form of new features, better documentation or tests -- are welcome.
 
 ## Build Instructions
 
