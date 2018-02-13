@@ -42,7 +42,8 @@ Note, that LearnLib requires Java 8.
 
 #### Building development versions
 
-If you intend to use development versions of LearnLib, simply clone the development branch of the repository
+If you intend to use development versions of LearnLib, you can either use the deployed SNAPSHOT artifacts from the continuous integration server (see [Using Development Versions](https://github.com/LearnLib/learnlib/wiki/Using-Development-Versions)), or build them yourself.
+Simply clone the development branch of the repository
 
 ```
 git clone -b develop --single-branch https://github.com/LearnLib/learnlib.git
