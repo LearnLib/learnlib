@@ -21,7 +21,7 @@ branches:
   - master
   - develop
 
-pre_install:
+before_install:
   - cp build-tools/travis-settings.xml $HOME/.m2/settings.xml
 
 install: true # skip mvn install, because we essentially run the same command in the script routine
