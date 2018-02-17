@@ -30,7 +30,7 @@ limitations under the License.
     <name>LearnLib :: Distribution</name>
 
     <description>
-        An afrtifact that aggregates all other artifacts of LearnLib to produce an Uber-JAR that can be used in
+        An artifact that aggregates all other artifacts of LearnLib to produce an Uber-JAR that can be used in
         non-maven environments. Likewise, this single artifact may be used in maven-aware environments to declare a
         dependency on all LearnLib artifacts.
     </description>
