@@ -66,10 +66,6 @@ limitations under the License.
 
         <!-- LearnLib dependencies -->
         <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-learning-examples</artifactId>
-        </dependency>
-        <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-membership-oracles</artifactId>
             <scope>test</scope>

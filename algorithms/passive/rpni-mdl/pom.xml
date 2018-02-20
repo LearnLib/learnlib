@@ -50,10 +50,6 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-learning-examples</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learner-it-support</artifactId>
         </dependency>
 

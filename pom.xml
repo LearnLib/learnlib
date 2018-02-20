@@ -1012,12 +1012,11 @@ limitations under the License.
             </dependency>
 
             <!-- examples -->
-            <!-- artifact will not be deployed, so don't allow any accidental reference to it -->
-            <!--dependency>
+            <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-examples</artifactId>
                 <version>${project.version}</version>
-            </dependency-->
+            </dependency>
 
             <!-- oracles -->
             <dependency>
@@ -1095,7 +1094,6 @@ limitations under the License.
                 <groupId>de.learnlib.testsupport</groupId>
                 <artifactId>learnlib-learning-examples</artifactId>
                 <version>${project.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>de.learnlib.testsupport</groupId>

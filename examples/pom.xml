@@ -154,7 +154,6 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learning-examples</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
