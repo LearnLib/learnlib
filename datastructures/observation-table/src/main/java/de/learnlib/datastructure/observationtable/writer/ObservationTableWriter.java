@@ -15,10 +15,10 @@
  */
 package de.learnlib.datastructure.observationtable.writer;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Writer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.WillNotClose;
@@ -48,8 +48,8 @@ public interface ObservationTableWriter<I, D> {
     }
 
     default void write(ObservationTable<? extends I, ? extends D> table, File file) throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(IOUtil.asUTF8Writer(file))) {
-            write(table, bw);
+        try (Writer w = IOUtil.asBufferedUTF8Writer(file)) {
+            write(table, w);
         }
     }
 }

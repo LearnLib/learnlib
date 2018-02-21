@@ -17,9 +17,9 @@ package de.learnlib.datastructure.observationtable;
 
 import java.awt.Desktop;
 import java.awt.HeadlessException;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.function.Function;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -71,11 +71,11 @@ public final class OTUtils {
                                               Function<? super Word<? extends I>, ? extends String> wordToString,
                                               Function<? super D, ? extends String> outputToString) throws IOException {
 
-        try (BufferedWriter bw = new BufferedWriter(IOUtil.asUTF8Writer(file))) {
-            bw.write(HTML_FILE_HEADER);
+        try (Writer w = IOUtil.asBufferedUTF8Writer(file)) {
+            w.write(HTML_FILE_HEADER);
             ObservationTableHTMLWriter<I, D> otWriter = new ObservationTableHTMLWriter<>(wordToString, outputToString);
-            otWriter.write(table, bw);
-            bw.write(HTML_FILE_FOOTER);
+            otWriter.write(table, w);
+            w.write(HTML_FILE_FOOTER);
         }
     }
 
