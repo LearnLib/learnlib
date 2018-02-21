@@ -22,7 +22,12 @@ branches:
   - develop
 
 before_install:
-  - cp build-tools/travis-settings.xml $HOME/.m2/settings.xml
+    # set Travis environment variables "AUTOMATALIB_FORK" and "AUTOMATALIB_BRANCH" to build custom AutomataLib versions.
+    # Defaults are "LearnLib" and "develop".
+  - git clone -b ${AUTOMATALIB_BRANCH:-develop} --single-branch https://github.com/${AUTOMATALIB_FORK:-LearnLib}/automatalib.git /tmp/automatalib-develop
+  - pushd /tmp/automatalib-develop
+  - mvn install -DskipTests
+  - popd
 
 install: true # skip mvn install, because we essentially run the same command in the script routine
 
@@ -39,6 +44,6 @@ jobs:
       deploy:
         # define deployment in deploy phase, which is skipped for pull-requests
         provider: script
-        script: mvn -DskipTests=true deploy
+        script: mvn --settings build-tools/travis-settings.xml -DskipTests=true deploy
         on:
           branch: develop # only auto deploy snapshots
