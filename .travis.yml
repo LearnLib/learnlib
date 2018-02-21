@@ -39,6 +39,7 @@ jobs:
   include:
     - stage: deploy
       jdk: openjdk8 # use openjdk build
+      before_install: true # skip building AutomataLib, because we actually want to link against the deployed artifacts.
       install: true # skip the normal build
       script: skip # skip the normal build
       deploy:
