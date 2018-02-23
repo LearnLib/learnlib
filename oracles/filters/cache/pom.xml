@@ -40,6 +40,10 @@ limitations under the License.
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-membership-oracles</artifactId>
+        </dependency>
 
         <!-- AutomataLib dependencies -->
         <dependency>
@@ -57,6 +61,10 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-incremental</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
         </dependency>
 
         <!-- JSR-305 -->
@@ -76,7 +84,6 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
 
-
         <!-- LearnLib dependencies -->
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
@@ -84,12 +91,12 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-membership-oracles</artifactId>
+            <artifactId>learnlib-statistics</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-statistics</artifactId>
+            <artifactId>learnlib-drivers-simulator</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -52,26 +52,11 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
     private final Lock incDfaLock;
     private final MembershipOracle<I, Boolean> delegate;
 
-    /**
-     * Constructor.
-     *
-     * @param alphabet
-     *         the alphabet of the cache
-     * @param delegate
-     *         the delegate oracle
-     *
-     * @deprecated since 2014-01-24. Use {@link DFACaches#createCache(Alphabet, MembershipOracle)}
-     */
-    @Deprecated
-    public DFACacheOracle(Alphabet<I> alphabet, MembershipOracle<I, Boolean> delegate) {
-        this(new IncrementalDFADAGBuilder<>(alphabet), delegate);
-    }
-
-    public DFACacheOracle(IncrementalDFABuilder<I> incDfa, MembershipOracle<I, Boolean> delegate) {
+    DFACacheOracle(IncrementalDFABuilder<I> incDfa, MembershipOracle<I, Boolean> delegate) {
         this(incDfa, new ReentrantLock(), delegate);
     }
 
-    private DFACacheOracle(IncrementalDFABuilder<I> incDfa, Lock lock, MembershipOracle<I, Boolean> delegate) {
+    DFACacheOracle(IncrementalDFABuilder<I> incDfa, Lock lock, MembershipOracle<I, Boolean> delegate) {
         this.incDfa = incDfa;
         this.incDfaLock = lock;
         this.delegate = delegate;

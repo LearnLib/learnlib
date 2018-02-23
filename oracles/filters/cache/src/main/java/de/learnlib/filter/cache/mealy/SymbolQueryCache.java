@@ -16,12 +16,19 @@
 package de.learnlib.filter.cache.mealy;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.SymbolQueryOracle;
+import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
+import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
 import net.automatalib.automata.transout.impl.FastMealyState;
+import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 
 /**
  * A cache for a {@link SymbolQueryOracle}. Upon construction, it is provided with a delegate oracle. Queries that can
@@ -37,8 +44,7 @@ import net.automatalib.words.Alphabet;
  *
  * @author frohme
  */
-// TODO: integrate in existing LearningCache hierarchy
-public class SymbolQueryCache<I, O> implements SymbolQueryOracle<I, O> {
+public class SymbolQueryCache<I, O> implements SymbolQueryOracle<I, O>, MealyLearningCacheOracle<I, O> {
 
     private final FastMealy<I, O> cache;
     private final SymbolQueryOracle<I, O> delegate;
@@ -100,5 +106,25 @@ public class SymbolQueryCache<I, O> implements SymbolQueryOracle<I, O> {
         this.currentState = this.cache.getInitialState();
         this.currentTrace.clear();
         this.currentTraceValid = true;
+    }
+
+    @Override
+    public EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createCacheConsistencyTest() {
+        return this::findCounterexample;
+    }
+
+    private DefaultQuery<I, Word<O>> findCounterexample(MealyMachine<?, I, ?, O> hypothesis,
+                                                        Collection<? extends I> alphabet) {
+        /*
+        TODO: potential optimization: If the hypothesis has undefined transitions, but the cache doesn't, it is a clear
+        counterexample!
+         */
+        final Word<I> sepWord = NearLinearEquivalenceTest.findSeparatingWord(cache, hypothesis, alphabet, true);
+
+        if (sepWord != null) {
+            return new DefaultQuery<>(sepWord, cache.computeOutput(sepWord));
+        }
+
+        return null;
     }
 }

@@ -65,7 +65,7 @@ public class SULOracle<I, O> implements MealyMembershipOracle<I, O> {
         }
     }
 
-    private static <I, O> void processQueries(SUL<I, O> sul, Collection<? extends Query<I, Word<O>>> queries) {
+    public static <I, O> void processQueries(SUL<I, O> sul, Collection<? extends Query<I, Word<O>>> queries) {
         for (Query<I, Word<O>> q : queries) {
             Word<O> output = answerQuery(sul, q.getPrefix(), q.getSuffix());
             q.answer(output);
@@ -73,7 +73,7 @@ public class SULOracle<I, O> implements MealyMembershipOracle<I, O> {
     }
 
     @Nonnull
-    private static <I, O> Word<O> answerQuery(SUL<I, O> sul, Word<I> prefix, Word<I> suffix) throws SULException {
+    public static <I, O> Word<O> answerQuery(SUL<I, O> sul, Word<I> prefix, Word<I> suffix) throws SULException {
         sul.pre();
         try {
             // Prefix: Execute symbols, don't record output

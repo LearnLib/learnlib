@@ -15,6 +15,7 @@
  */
 package de.learnlib.filter.cache.sul;
 
+import java.util.Collection;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -23,13 +24,16 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.SUL;
-import de.learnlib.filter.cache.LearningCache;
+import de.learnlib.api.query.Query;
+import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.cache.mealy.MealyCacheConsistencyTest;
+import de.learnlib.oracle.membership.SULOracle;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.ts.transout.MealyTransitionSystem;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 /**
@@ -50,30 +54,15 @@ import net.automatalib.words.WordBuilder;
  * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public class SULCache<I, O> implements SUL<I, O>, LearningCache.MealyLearningCache<I, O> {
+public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O> {
 
     private final SULCacheImpl<?, I, ?, O> impl;
 
-    /**
-     * Constructor.
-     *
-     * @param alphabet
-     *         the input alphabet
-     * @param sul
-     *         the system under learning
-     *
-     * @deprecated since 2014-01-24. Use {@link SULCaches#createCache(Alphabet, SUL)}
-     */
-    @Deprecated
-    public SULCache(Alphabet<I> alphabet, SUL<I, O> sul) {
-        this(new IncrementalMealyDAGBuilder<>(alphabet), sul);
-    }
-
-    public SULCache(IncrementalMealyBuilder<I, O> incMealy, SUL<I, O> sul) {
+    SULCache(IncrementalMealyBuilder<I, O> incMealy, SUL<I, O> sul) {
         this(incMealy, new ReentrantLock(), sul);
     }
 
-    public SULCache(IncrementalMealyBuilder<I, O> incMealy, Lock lock, SUL<I, O> sul) {
+    SULCache(IncrementalMealyBuilder<I, O> incMealy, Lock lock, SUL<I, O> sul) {
         this.impl = new SULCacheImpl<>(incMealy, lock, incMealy.asTransitionSystem(), sul);
     }
 
@@ -105,6 +94,11 @@ public class SULCache<I, O> implements SUL<I, O>, LearningCache.MealyLearningCac
         return impl.createCacheConsistencyTest();
     }
 
+    @Override
+    public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
+        SULOracle.processQueries(impl, queries);
+    }
+
     /**
      * Implementation class; we need this to bind the {@code T} and {@code S} type parameters of the transition system
      * returned by {@link IncrementalMealyBuilder#asTransitionSystem()}.
@@ -121,7 +115,7 @@ public class SULCache<I, O> implements SUL<I, O>, LearningCache.MealyLearningCac
      * @author Malte Isberner
      */
     @ParametersAreNonnullByDefault
-    private static final class SULCacheImpl<S, I, T, O> {
+    private static final class SULCacheImpl<S, I, T, O> implements SUL<I, O>, MealyLearningCache<I, O> {
 
         private final IncrementalMealyBuilder<I, O> incMealy;
         private final MealyTransitionSystem<S, I, T, O> mealyTs;
@@ -142,12 +136,14 @@ public class SULCache<I, O> implements SUL<I, O>, LearningCache.MealyLearningCac
             this.incMealyLock = lock;
         }
 
+        @Override
         public void pre() {
             incMealyLock.lock();
             this.current = mealyTs.getInitialState();
         }
 
         @Nullable
+        @Override
         public O step(@Nullable I in) {
             O out = null;
 
@@ -184,6 +180,7 @@ public class SULCache<I, O> implements SUL<I, O>, LearningCache.MealyLearningCac
         // TODO: The SUL interface might need a cleanup() method which, by contract,
         // is to be called regardless of whether preceding step()s threw unrecoverable
         // errors!
+        @Override
         public void post() {
             try {
                 if (outputWord != null) {
@@ -207,6 +204,7 @@ public class SULCache<I, O> implements SUL<I, O>, LearningCache.MealyLearningCac
         }
 
         @Nonnull
+        @Override
         public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
             return new MealyCacheConsistencyTest<>(incMealy, incMealyLock);
         }

@@ -65,52 +65,16 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O> {
     private final Comparator<? super Query<I, ?>> queryCmp;
     private final Mapping<? super O, ? extends O> errorSyms;
 
-    /**
-     * Constructor.
-     *
-     * @param alphabet
-     *         the input alphabet for the cache
-     * @param delegate
-     *         the delegate Mealy oracle
-     *
-     * @deprecated since 2014-01-23. Use {@link #createDAGCacheOracle(Alphabet, MembershipOracle)} to reproduce old
-     * behavior.
-     */
-    @Deprecated
-    public MealyCacheOracle(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> delegate) {
-        this(alphabet, null, delegate);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param alphabet
-     *         the input alphabet for the cache
-     * @param errorSyms
-     *         the error symbol mapping (see class description)
-     * @param delegate
-     *         the delegate Mealy oracle
-     *
-     * @deprecated since 2014-01-23. Use {@link #createDAGCacheOracle(Alphabet, Mapping, MembershipOracle)} to reproduce
-     * old behavior.
-     */
-    @Deprecated
-    public MealyCacheOracle(Alphabet<I> alphabet,
-                            Mapping<? super O, ? extends O> errorSyms,
-                            MembershipOracle<I, Word<O>> delegate) {
-        this(new IncrementalMealyDAGBuilder<>(alphabet), errorSyms, delegate);
-    }
-
-    public MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder,
-                            Mapping<? super O, ? extends O> errorSyms,
-                            MembershipOracle<I, Word<O>> delegate) {
+    MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder,
+                     Mapping<? super O, ? extends O> errorSyms,
+                     MembershipOracle<I, Word<O>> delegate) {
         this(incrementalBuilder, new ReentrantLock(), errorSyms, delegate);
     }
 
-    public MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder,
-                            Lock lock,
-                            Mapping<? super O, ? extends O> errorSyms,
-                            MembershipOracle<I, Word<O>> delegate) {
+    MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder,
+                     Lock lock,
+                     Mapping<? super O, ? extends O> errorSyms,
+                     MembershipOracle<I, Word<O>> delegate) {
         this.incMealy = incrementalBuilder;
         this.incMealyLock = lock;
         this.queryCmp = new ReverseLexCmp<>(incrementalBuilder.getInputAlphabet());
@@ -206,7 +170,7 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O> {
     }
 
     private MasterQuery<I, O> createMasterQuery(Word<I> word) {
-        WordBuilder<O> wb = new WordBuilder<>();
+        WordBuilder<O> wb = new WordBuilder<>(word.size());
         if (incMealy.lookup(word, wb)) {
             return new MasterQuery<>(word, wb.toWord());
         }
