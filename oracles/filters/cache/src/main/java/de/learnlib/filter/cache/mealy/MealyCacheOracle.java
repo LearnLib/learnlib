@@ -214,9 +214,15 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O> {
         if (errorSyms == null) {
             return new MasterQuery<>(word);
         }
+
         int wbSize = wb.size();
+
+        if (wbSize == 0) {
+            return new MasterQuery<>(word, errorSyms);
+        }
+
         O repSym = errorSyms.get(wb.getSymbol(wbSize - 1));
-        if (wbSize == 0 || repSym == null) {
+        if (repSym == null) {
             return new MasterQuery<>(word, errorSyms);
         }
 
