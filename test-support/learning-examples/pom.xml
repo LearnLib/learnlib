@@ -19,16 +19,17 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>learnlib-test-support-parent</artifactId>
         <groupId>de.learnlib.testsupport</groupId>
+        <artifactId>learnlib-test-support-parent</artifactId>
         <version>0.14.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>learnlib-learning-examples</artifactId>
+    <packaging>jar</packaging>
+
     <name>LearnLib :: Test Support :: Learning Examples</name>
     <description>Example learning setups, to be used for integration testing</description>
-    <packaging>jar</packaging>
 
     <dependencies>
         <!--
@@ -62,5 +63,4 @@ limitations under the License.
             <artifactId>automata-serialization-learnlibv2</artifactId>
         </dependency>
     </dependencies>
-
 </project>

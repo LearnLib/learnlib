@@ -16,21 +16,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>learnlib-algorithms-parent</artifactId>
         <groupId>de.learnlib</groupId>
+        <artifactId>learnlib-algorithms-parent</artifactId>
         <version>0.14.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>learnlib-algorithms-active-parent</artifactId>
+    <packaging>pom</packaging>
+
     <name>LearnLib :: Algorithms :: Active</name>
     <description>Parent module for (active) automata learning algorithms shipped with LearnLib</description>
-
-    <packaging>pom</packaging>
 
     <modules>
         <module>adt</module>
@@ -43,5 +42,4 @@ limitations under the License.
         <module>ttt</module>
         <module>ttt-vpda</module>
     </modules>
-
 </project>

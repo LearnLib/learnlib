@@ -16,21 +16,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>learnlib-build-parent</artifactId>
         <groupId>de.learnlib</groupId>
+        <artifactId>learnlib-build-parent</artifactId>
         <version>0.14.0-SNAPSHOT</version>
         <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>learnlib-drivers-parent</artifactId>
+    <packaging>pom</packaging>
+
     <name>LearnLib :: Drivers</name>
     <description>Parent module for test drivers</description>
-
-    <packaging>pom</packaging>
 
     <modules>
         <module>basic</module>

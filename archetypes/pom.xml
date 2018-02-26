@@ -18,13 +18,6 @@ limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.learnlib.archetypes</groupId>
-    <artifactId>learnlib-archetypes-parent</artifactId>
-    <packaging>pom</packaging>
-
-    <name>LearnLib :: Archetypes</name>
-    <description>Parent metaproject for archetypes that facilitate getting started with LearnLib.</description>
-
     <parent>
         <groupId>de.learnlib</groupId>
         <artifactId>learnlib-build-parent</artifactId>
@@ -32,28 +25,26 @@ limitations under the License.
         <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
+    <groupId>de.learnlib.archetypes</groupId>
+    <artifactId>learnlib-archetypes-parent</artifactId>
+    <packaging>pom</packaging>
+
+    <name>LearnLib :: Archetypes</name>
+    <description>Parent metaproject for archetypes that facilitate getting started with LearnLib.</description>
+
     <modules>
         <module>basic</module>
         <module>complete</module>
     </modules>
 
     <build>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.archetype</groupId>
-                <artifactId>archetype-packaging</artifactId>
-                <version>${archetype-plugin.version}</version>
-            </extension>
-        </extensions>
-
-
-        <!-- Custom resource rules:
-        We use the ${project.version} property in
-        - src/main/resources-template/META-INF/maven/archetype-metadata.xml
-        - src/test/resources-template/projects/*/archetype.properties
-        These must hence be filtered!
-        -->
         <resources>
+            <!-- Custom resource rules:
+            We use the ${project.version} property in
+            - src/main/resources-template/META-INF/maven/archetype-metadata.xml
+            - src/test/resources-template/projects/*/archetype.properties
+            These must hence be filtered!
+            -->
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
@@ -73,7 +64,6 @@ limitations under the License.
                 <filtering>true</filtering>
             </testResource>
         </testResources>
-
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -82,6 +72,12 @@ limitations under the License.
                 </plugin>
             </plugins>
         </pluginManagement>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.archetype</groupId>
+                <artifactId>archetype-packaging</artifactId>
+                <version>${archetype-plugin.version}</version>
+            </extension>
+        </extensions>
     </build>
 </project>
-

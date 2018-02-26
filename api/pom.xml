@@ -26,9 +26,9 @@ limitations under the License.
     </parent>
 
     <artifactId>learnlib-api</artifactId>
+
     <name>LearnLib :: API</name>
     <description>Infrastructure and core interfaces of LearnLib</description>
-
 
     <dependencies>
         <!--
@@ -92,5 +92,4 @@ limitations under the License.
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>

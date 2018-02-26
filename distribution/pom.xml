@@ -17,6 +17,7 @@ limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>de.learnlib</groupId>
         <artifactId>learnlib-build-parent</artifactId>
@@ -27,14 +28,13 @@ limitations under the License.
     <groupId>de.learnlib.distribution</groupId>
     <artifactId>learnlib-distribution</artifactId>
     <packaging>pom</packaging>
-    <name>LearnLib :: Distribution</name>
 
+    <name>LearnLib :: Distribution</name>
     <description>
         An artifact that aggregates all other artifacts of LearnLib to produce an Uber-JAR that can be used in
         non-maven environments. Likewise, this single artifact may be used in maven-aware environments to declare a
         dependency on all LearnLib artifacts.
     </description>
-
 
     <!--
     All packaged AutomataLib dependencies.
@@ -574,7 +574,7 @@ limitations under the License.
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                         <executions>
+                        <executions>
                              <execution>
                                 <id>aggregate</id>
                                 <phase>package</phase>

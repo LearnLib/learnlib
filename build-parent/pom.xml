@@ -18,6 +18,13 @@ limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>de.learnlib</groupId>
+        <artifactId>learnlib-parent</artifactId>
+        <version>0.14.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <artifactId>learnlib-build-parent</artifactId>
     <packaging>pom</packaging>
 
@@ -27,12 +34,37 @@ limitations under the License.
         dependencies on the "build-tools" artifact without introducing cyclic dependencies with the general parent.
     </description>
 
-    <parent>
-        <groupId>de.learnlib</groupId>
-        <artifactId>learnlib-parent</artifactId>
-        <version>0.14.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- If we run coverage analysis, skip generated sources -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <!-- generated builders for learning algorithms -->
+                            <exclude>**/ADTLearnerBuilder.class</exclude>
+                            <exclude>**/MealyDHCBuilder.class</exclude>
+                            <exclude>**/DTLearner*Builder.class</exclude>
+                            <exclude>**/DTLearnerVPDABuilder.class</exclude>
+                            <exclude>**/KearnsVazirani*Builder.class</exclude>
+                            <exclude>**/ClassicLStar*Builder.class</exclude>
+                            <exclude>**/ExtensibleLStar*Builder.class</exclude>
+                            <exclude>**/MalerPnueli*Builder.class</exclude>
+                            <exclude>**/RivestSchapire*Builder.class</exclude>
+                            <exclude>**/NLStarLearnerBuilder.class</exclude>
+                            <exclude>**/TTTLearner*Builder.class</exclude>
+                            <exclude>**/TTTLearnerVPDABuilder.class</exclude>
+                            <exclude>**/LTSminLTLAlternatingBuilder.class</exclude>
+                            <exclude>**/LTSminLTLDFABuilder.class</exclude>
+                            <exclude>**/LTSminLTLIOBuilder.class</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <profiles>
         <profile>
@@ -165,36 +197,4 @@ limitations under the License.
             </build>
         </profile>
     </profiles>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <!-- If we run coverage analysis, skip generated sources -->
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <configuration>
-                        <excludes>
-                            <!-- generated builders for learning algorithms -->
-                            <exclude>**/ADTLearnerBuilder.class</exclude>
-                            <exclude>**/MealyDHCBuilder.class</exclude>
-                            <exclude>**/DTLearner*Builder.class</exclude>
-                            <exclude>**/DTLearnerVPDABuilder.class</exclude>
-                            <exclude>**/KearnsVazirani*Builder.class</exclude>
-                            <exclude>**/ClassicLStar*Builder.class</exclude>
-                            <exclude>**/ExtensibleLStar*Builder.class</exclude>
-                            <exclude>**/MalerPnueli*Builder.class</exclude>
-                            <exclude>**/RivestSchapire*Builder.class</exclude>
-                            <exclude>**/NLStarLearnerBuilder.class</exclude>
-                            <exclude>**/TTTLearner*Builder.class</exclude>
-                            <exclude>**/TTTLearnerVPDABuilder.class</exclude>
-                            <exclude>**/LTSminLTLAlternatingBuilder.class</exclude>
-                            <exclude>**/LTSminLTLDFABuilder.class</exclude>
-                            <exclude>**/LTSminLTLIOBuilder.class</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>

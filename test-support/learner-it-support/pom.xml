@@ -19,16 +19,17 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>learnlib-test-support-parent</artifactId>
         <groupId>de.learnlib.testsupport</groupId>
+        <artifactId>learnlib-test-support-parent</artifactId>
         <version>0.14.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>learnlib-learner-it-support</artifactId>
+    <packaging>jar</packaging>
+
     <name>LearnLib :: Test Support :: Learner IT Support</name>
     <description>Support classes for easily writing integration test cases for learning algorithms</description>
-    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -46,7 +47,8 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learning-examples</artifactId>
-            <scope>compile</scope> <!-- Override! -->
+            <scope>compile</scope>
+            <!-- Override! -->
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
@@ -74,8 +76,8 @@ limitations under the License.
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <scope>compile</scope> <!-- Override! -->
+            <scope>compile</scope>
+            <!-- Override! -->
         </dependency>
     </dependencies>
-
 </project>
