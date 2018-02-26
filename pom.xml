@@ -920,9 +920,10 @@ limitations under the License.
                 <plugins>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <artifactId>tidy-maven-plugin</artifactId>
                         <executions>
                             <execution>
+                                <id>validate</id>
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>check</goal>
@@ -945,31 +946,6 @@ limitations under the License.
                                     <!-- workaround our default slf4j-nop dependency -->
                                     <ignoreNonCompile>true</ignoreNonCompile>
                                 </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>tidy-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>validate</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
                             </execution>
                         </executions>
                     </plugin>
