@@ -19,7 +19,7 @@ limitations under the License.
         "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-    <suppress checks="AbstractClassName" files="Query.java"/>
+    <suppress checks="AbstractClassName" files="Query.java|Lasso.java|LassoTest.java"/>
     <suppress checks="IllegalCatch" files="AbstractContextExecutableInputSUL.java|ExecutableInputSUL.java"/>
     <suppress checks="." files="target/*"/>
 

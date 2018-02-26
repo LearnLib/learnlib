@@ -120,6 +120,16 @@ limitations under the License.
                 <role>Developer (inactive)</role>
             </roles>
         </developer>
+        <developer>
+            <id>meijuh</id>
+            <name>Jeroen Meijer</name>
+            <email>j.j.g.meijer@utwente.nl</email>
+            <organization>University of Twente, Formal Methods and Tools</organization>
+            <organizationUrl>http://fmt.cs.utwente.nl/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
     </developers>
 
     <!--
@@ -148,6 +158,7 @@ limitations under the License.
         <module>examples</module>
         <module>oracles</module>
         <module>test-support</module>
+        <module>model-checkers</module>
     </modules>
 
     <!--
@@ -166,6 +177,7 @@ limitations under the License.
         <assembly-plugin.version>3.0.0</assembly-plugin.version>
         <buildhelper-plugin.version>3.0.0</buildhelper-plugin.version>
         <checkstyle-plugin.version>2.17</checkstyle-plugin.version>
+        <compiler-plugin.version>3.7.0</compiler-plugin.version>
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
         <dependency-plugin.version>3.0.1</dependency-plugin.version>
         <enforcer-plugin.version>1.4.1</enforcer-plugin.version>
@@ -187,12 +199,15 @@ limitations under the License.
         <upload-plugin.version>1.1</upload-plugin.version>
 
         <!-- dependency versions -->
+        <apache-commons.version>3.6</apache-commons.version>
         <automatalib.version>0.8.0-SNAPSHOT</automatalib.version>
         <buildergen.version>0.1</buildergen.version>
         <checkstyle.version>8.1</checkstyle.version>
         <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
         <guava.version>22.0</guava.version>
+        <junit.version>4.12</junit.version>
         <logback.version>1.2.3</logback.version>
+        <mockito.version>2.0.59-beta</mockito.version>
         <slf4j.version>1.7.25</slf4j.version>
         <testng.version>6.11</testng.version>
 
@@ -391,6 +406,16 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-publish-plugin</artifactId>
                     <version>${scm-publish-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${compiler-plugin.version}</version>
+                    <configuration>
+                        <compilerArgs>
+                            <arg>-Xlint:all,-options,-path</arg>
+                        </compilerArgs>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -987,12 +1012,11 @@ limitations under the License.
             </dependency>
 
             <!-- examples -->
-            <!-- artifact will not be deployed, so don't allow any accidental reference to it -->
-            <!--dependency>
+            <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-examples</artifactId>
                 <version>${project.version}</version>
-            </dependency-->
+            </dependency>
 
             <!-- oracles -->
             <dependency>
@@ -1036,6 +1060,28 @@ limitations under the License.
                 <artifactId>learnlib-parallelism</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-black-box-oracles</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-emptiness-oracles</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-inclusion-oracles</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- model-checkers -->
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-model-checkers</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- test-support -->
             <dependency>
@@ -1048,11 +1094,16 @@ limitations under the License.
                 <groupId>de.learnlib.testsupport</groupId>
                 <artifactId>learnlib-learning-examples</artifactId>
                 <version>${project.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>de.learnlib.testsupport</groupId>
                 <artifactId>learnlib-learner-it-support</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib.testsupport</groupId>
+                <artifactId>learnlib-oracle-support</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -1073,6 +1124,17 @@ limitations under the License.
                 <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
 
 
             <!-- Guava -->
@@ -1080,6 +1142,12 @@ limitations under the License.
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache-commons.version}</version>
             </dependency>
 
             <!-- FindBugs - JSR 305 Annotations (@Nullable, @Nonnull, ...) -->

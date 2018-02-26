@@ -10,6 +10,7 @@ jdk:
 cache:
   directories:
   - $HOME/.m2
+  - $HOME/ltsmin
 
 before_cache:
   # do not cache our local archives
@@ -29,10 +30,13 @@ before_install:
   - mvn install -DskipTests
   - popd
 
-install: true # skip mvn install, because we essentially run the same command in the script routine
+install:
+  # install LTSmin
+  - build-tools/install-ltsmin.sh
+  - PATH="$PATH:$HOME/ltsmin/bin"
 
 script:
-  - mvn install -B -Pintegration-tests,code-analysis,code-coverage,bundles
+  - mvn install -B -Pintegration-tests,code-analysis,code-coverage,bundles --fail-at-end
   - mvn coveralls:report
 
 jobs:

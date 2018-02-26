@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 /**
  * @author Maik Merten
  */
-public class OracleTest {
+public class SimulatorOracleTest {
 
     @Test
     public void testDFASimulatorOracle() {

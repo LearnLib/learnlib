@@ -37,6 +37,9 @@ limitations under the License.
         <module>membership-oracles</module>
         <module>equivalence-oracles</module>
         <module>parallelism</module>
+        <module>emptiness-oracles</module>
+        <module>inclusion-oracles</module>
+        <module>black-box-oracles</module>
     </modules>
 
 </project>

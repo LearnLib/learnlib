@@ -16,18 +16,23 @@
 package de.learnlib.util;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.OmegaQueryAnswerer;
 import de.learnlib.api.oracle.QueryAnswerer;
 import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.api.query.OmegaQuery;
 import de.learnlib.api.query.Query;
 import de.learnlib.setting.LearnLibSettings;
 import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 
 @ParametersAreNonnullByDefault
@@ -84,12 +89,33 @@ public final class MQUtil {
         }
     }
 
+    public static <S, I, D> void answerOmegaQueriesAuto(OmegaQueryAnswerer<S, I, D> answerer,
+                                                Collection<? extends OmegaQuery<S, I, D>> queries) {
+        if (PARALLEL_THRESHOLD < 0 || queries.size() < PARALLEL_THRESHOLD) {
+            answerOmegaQueries(answerer, queries);
+        } else {
+            answerOmegaQueriesParallel(answerer, queries);
+        }
+    }
+
     public static <I, D> void answerQueries(QueryAnswerer<I, D> answerer, Collection<? extends Query<I, D>> queries) {
         for (Query<I, D> query : queries) {
             Word<I> prefix = query.getPrefix();
             Word<I> suffix = query.getSuffix();
             D answer = answerer.answerQuery(prefix, suffix);
             query.answer(answer);
+        }
+    }
+
+    public static <S, I, D> void answerOmegaQueries(OmegaQueryAnswerer<S, I, D> answerer,
+                                                    Collection<? extends OmegaQuery<S, I, D>> queries) {
+        for (OmegaQuery<S, I, D> query : queries) {
+            Word<I> prefix = query.getPrefix();
+            Word<I> suffix = query.getSuffix();
+            Set<Integer> indices = query.getIndices();
+            Pair<D, List<S>> answer = answerer.answerQuery(prefix, suffix, indices);
+            query.answer(answer.getFirst());
+            query.setStates(answer.getSecond());
         }
     }
 
@@ -100,6 +126,18 @@ public final class MQUtil {
             Word<I> suffix = q.getSuffix();
             D answer = answerer.answerQuery(prefix, suffix);
             q.answer(answer);
+        });
+    }
+
+    public static <S, I, D> void answerOmegaQueriesParallel(OmegaQueryAnswerer<S, I, D> answerer,
+                                                            Collection<? extends OmegaQuery<S, I, D>> queries) {
+        queries.parallelStream().forEach(q -> {
+            Word<I> prefix = q.getPrefix();
+            Word<I> suffix = q.getSuffix();
+            Set<Integer> indices = q.getIndices();
+            Pair<D, List<S>> answer = answerer.answerQuery(prefix, suffix, indices);
+            q.answer(answer.getFirst());
+            q.setStates(answer.getSecond());
         });
     }
 

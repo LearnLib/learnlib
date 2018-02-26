@@ -24,11 +24,13 @@ import de.learnlib.examples.LearningExample.MealyLearningExample;
 import de.learnlib.examples.dfa.ExampleAngluin;
 import de.learnlib.examples.dfa.ExampleKeylock;
 import de.learnlib.examples.dfa.ExamplePaulAndMary;
+import de.learnlib.examples.dfa.ExampleTinyDFA;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine;
 import de.learnlib.examples.mealy.ExampleGrid;
 import de.learnlib.examples.mealy.ExampleRandomMealy;
 import de.learnlib.examples.mealy.ExampleShahbazGroz;
 import de.learnlib.examples.mealy.ExampleStack;
+import de.learnlib.examples.mealy.ExampleTinyMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -50,7 +52,8 @@ public final class LearningExamples {
         return Arrays.asList(ExampleAngluin.createExample(),
                              ExamplePaulAndMary.createExample(),
                              ExampleKeylock.createExample(KEYLOCK_SIZE, false),
-                             ExampleKeylock.createExample(KEYLOCK_SIZE, true));
+                             ExampleKeylock.createExample(KEYLOCK_SIZE, true),
+                             ExampleTinyDFA.createExample());
     }
 
     public static List<MealyLearningExample<?, ?>> createMealyExamples() {
@@ -61,7 +64,8 @@ public final class LearningExamples {
                              ExampleRandomMealy.createExample(new Random(RANDOM_SEED),
                                                               RANDOM_ALPHABET,
                                                               RANDOM_SIZE,
-                                                              RANDOM_MEALY_OUTPUTS));
+                                                              RANDOM_MEALY_OUTPUTS),
+                             ExampleTinyMealy.createExample());
     }
 
 }

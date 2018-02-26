@@ -30,6 +30,7 @@ import de.learnlib.api.exception.SULException;
  *
  * @author falkhowar
  * @author Malte Isberner
+ * @author Jeroen Meijer
  */
 public interface SUL<I, O> {
 
@@ -87,4 +88,5 @@ public interface SUL<I, O> {
     default SUL<I, O> fork() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
+
 }
