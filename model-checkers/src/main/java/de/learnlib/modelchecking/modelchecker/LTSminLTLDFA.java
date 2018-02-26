@@ -103,7 +103,7 @@ public class LTSminLTLDFA<I>
 
         // remove all rejecting states
         final MutableDFA<?, I> copy = new CompactDFA<>(alphabet, dfa.size());
-        AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE, dfa, inputs, copy, s -> dfa.isAccepting(s), (s, i, t) -> true);
+        AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE, dfa, inputs, copy, dfa::isAccepting, (s, i, t) -> true);
         DFA2ETFWriter.write(etf, copy, alphabet);
     }
 

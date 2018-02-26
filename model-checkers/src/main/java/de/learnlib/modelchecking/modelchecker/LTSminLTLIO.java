@@ -57,8 +57,7 @@ public class LTSminLTLIO<I, O> extends AbstractLTSminLTLMealy<I, O> {
 
     @Override
     protected CompactMealy<I, O> fsm2Mealy(File fsm) throws IOException, FSMParseException {
-        final CompactMealy<I, O> mealy = FSM2MealyParserIO.parse(fsm, getString2Input(), getString2Output());
-        return mealy;
+        return FSM2MealyParserIO.parse(fsm, getString2Input(), getString2Output());
     }
 
     @Override

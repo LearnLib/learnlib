@@ -77,8 +77,7 @@ public abstract class AbstractBreadthFirstOracle<A extends SimpleDTS<?, I>, I, D
      */
     @Override
     public Word<I> nextInput() {
-        final Word<I> input = queue.remove();
-        return input;
+        return queue.remove();
     }
 
     /**
