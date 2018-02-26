@@ -31,6 +31,8 @@ import net.automatalib.serialization.etf.writer.AbstractETFWriter;
 import net.automatalib.serialization.fsm.parser.AbstractFSMParser;
 import net.automatalib.serialization.fsm.parser.FSMParseException;
 import net.automatalib.ts.simple.SimpleDTS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An LTL model checker using LTSmin.
@@ -62,6 +64,8 @@ public abstract class AbstractLTSminLTL<I,
                                 A extends SimpleDTS<?, I> & Output<I, ?>,
                                 L extends Lasso<?, ? extends A, I, ?>>
         extends AbstractUnfoldingModelChecker<I, A, String, L> implements ModelChecker<I, A, String, L> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSminLTL.class);
 
     public static final String LTSMIN_PATH;
 
@@ -131,8 +135,9 @@ public abstract class AbstractLTSminLTL<I,
         this.inheritIO = inheritIO;
 
         if (!binariesChecked) {
-            checkBinary(ETF2LTS_MC);
-            checkBinary(LTSMIN_CONVERT);
+            if (!checkUsable()) {
+                throw new ModelCheckingException("LTSmin binary could not be executed correctly");
+            }
             binariesChecked = true;
         }
     }
@@ -329,11 +334,20 @@ public abstract class AbstractLTSminLTL<I,
     /**
      * Checks whether the given binary can be executed, by performing a version check.
      *
+     * @throws ModelCheckingException when the given binary can not be run successfully.
+     */
+    public static boolean checkUsable() {
+        return checkUsable(ETF2LTS_MC) && checkUsable(LTSMIN_CONVERT);
+    }
+
+    /**
+     * Checks whether the given binary can be executed, by performing a version check.
+     *
      * @param bin the binary to check.
      *
      * @throws ModelCheckingException when the given binary can not be run successfully.
      */
-    private void checkBinary(String bin) throws ModelCheckingException {
+    private static boolean checkUsable(String bin) {
 
         // the command lines for the ProcessBuilder
         final List<String> commandLines = new ArrayList<>();
@@ -347,19 +361,19 @@ public abstract class AbstractLTSminLTL<I,
         final Process check;
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(commandLines);
-            if (inheritIO) {
-                processBuilder = processBuilder.inheritIO();
-            }
             check = processBuilder.start();
             check.waitFor();
         } catch (IOException | InterruptedException e) {
-            throw new ModelCheckingException(String.format(CHECK, bin, e.toString()));
+            LOGGER.error(String.format(CHECK, bin, e.toString()), e);
+            return false;
         }
 
         if (check.exitValue() != VERSION_EXIT) {
-            throw new ModelCheckingException(
-                    String.format(CHECK, bin, String.format("Command '%s --version' did not exit with 255", bin)));
+            LOGGER.error(String.format(CHECK, bin, String.format("Command '%s --version' did not exit with 255", bin)));
+            return false;
         }
+
+        return true;
     }
 
     public static class BuilderDefaults {

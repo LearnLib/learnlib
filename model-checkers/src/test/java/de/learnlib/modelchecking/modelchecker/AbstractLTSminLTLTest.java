@@ -22,6 +22,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -58,6 +59,7 @@ public abstract class AbstractLTSminLTLTest<A extends SimpleDTS<?, String> & Out
 
     @BeforeClass
     public static void setUpBeforeClass() {
+        Assume.assumeTrue(AbstractLTSminLTL.checkUsable());
         ltsminPathPropertyDefault = System.getProperty(AbstractLTSminLTL.LTSMIN_PATH_PROPERTY);
     }
 
