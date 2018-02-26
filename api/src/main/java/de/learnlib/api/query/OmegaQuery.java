@@ -78,7 +78,7 @@ public class OmegaQuery<S, I, D> extends DefaultQuery<I, D> {
     }
 
     public Pair<D, List<S>> getOutputStates() {
-        return Pair.make(getOutput(), states);
+        return Pair.of(getOutput(), states);
     }
 
     @Override

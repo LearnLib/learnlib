@@ -113,7 +113,7 @@ public class SimulatorOmegaOracle<S, I, D, SO extends SimulatorOracle<I, D>>
             states.add(simpleDTS.getState(prefix.concat(suffix).prefix(i)));
         }
 
-        return Pair.make(simulatorOracle.answerQuery(prefix, suffix), states);
+        return Pair.of(simulatorOracle.answerQuery(prefix, suffix), states);
     }
 
     public static class DFASimulatorOmegaOracle<S, I>
