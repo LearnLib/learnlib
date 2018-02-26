@@ -31,15 +31,17 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * An LTL model checker using LTSmin for Mealy machines using alternating edge semantics.
- *
+ * <p>
  * The implementation uses {@link FSM2MealyParserAlternating}, and {@link Mealy2ETFWriterAlternating}, to read the
  * {@link de.learnlib.api.modelchecking.counterexample.Lasso.MealyLasso}, and write the {@link MealyMachine}
  * respectively.
  *
- * @author Jeroen Meijer
+ * @param <I>
+ *         the input type
+ * @param <O>
+ *         the output type
  *
- * @param <I> the input type
- * @param <O> the output type
+ * @author Jeroen Meijer
  */
 public class LTSminLTLAlternating<I, O> extends AbstractLTSminLTLMealy<I, O> {
 
@@ -49,9 +51,8 @@ public class LTSminLTLAlternating<I, O> extends AbstractLTSminLTLMealy<I, O> {
                                 Function<String, O> string2Output,
                                 int minimumUnfolds,
                                 double multiplier,
-                                boolean inheritIO,
                                 Collection<? super O> skipOutputs) {
-        super(keepFiles, string2Input, string2Output, minimumUnfolds, multiplier, inheritIO, skipOutputs);
+        super(keepFiles, string2Input, string2Output, minimumUnfolds, multiplier, skipOutputs);
     }
 
     @Override

@@ -171,18 +171,18 @@ limitations under the License.
             <artifactId>learnlib-drivers-simulator</artifactId>
         </dependency>
 
-        <!-- examples -->
+        <!-- model-checkers -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-examples</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-learning-examples</artifactId>
+            <artifactId>learnlib-model-checkers</artifactId>
         </dependency>
 
         <!-- oracles -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-bbc-oracles</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-equivalence-oracles</artifactId>
@@ -211,27 +211,6 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-parallelism</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-black-box-oracles</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-emptiness-oracles</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-inclusion-oracles</artifactId>
-        </dependency>
-
-        <!-- model-checkers -->
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-model-checkers</artifactId>
         </dependency>
 
         <!-- (bundled) AutomataLib dependency -->
@@ -450,22 +429,22 @@ limitations under the License.
                     <classifier>sources</classifier>
                 </dependency>
 
-                <!-- examples -->
+                <!-- model-checkers -->
                 <dependency>
                     <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-examples</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib.testsupport</groupId>
-                    <artifactId>learnlib-learning-examples</artifactId>
+                    <artifactId>learnlib-model-checkers</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <!-- oracles -->
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-bbc-oracles</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-equivalence-oracles</artifactId>
@@ -504,35 +483,6 @@ limitations under the License.
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-parallelism</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-black-box-oracles</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-emptiness-oracles</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-inclusion-oracles</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <!-- model-checkers -->
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-model-checkers</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

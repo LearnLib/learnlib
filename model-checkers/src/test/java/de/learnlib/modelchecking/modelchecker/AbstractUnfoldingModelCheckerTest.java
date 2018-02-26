@@ -15,9 +15,9 @@
  */
 package de.learnlib.modelchecking.modelchecker;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author Jeroen Meijer
@@ -32,41 +32,41 @@ public abstract class AbstractUnfoldingModelCheckerTest<M extends AbstractUnfold
 
     protected abstract M createModelChecker();
 
-    @Before
+    @BeforeMethod
     public void setUp() throws Exception {
         modelChecker = createModelChecker();
     }
 
     @Test
-    public void testComputeUnfolds() throws Exception {
+    public void testComputeUnfolds() {
         Assert.assertEquals(modelChecker.computeUnfolds(1), 3);
         modelChecker.setMultiplier(2.0);
         Assert.assertEquals(modelChecker.computeUnfolds(2), 4);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testComputeUnfoldsExcept() {
         modelChecker.computeUnfolds(0);
     }
 
     @Test
-    public void testSetMinimumUnfolds() throws Exception {
+    public void testSetMinimumUnfolds() {
         modelChecker.setMinimumUnfolds(1337);
         Assert.assertEquals(modelChecker.getMinimumUnfolds(), 1337);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetMinimumUnfoldsExcept() {
         modelChecker.setMinimumUnfolds(0);
     }
 
     @Test
-    public void testSetMultiplier() throws Exception {
+    public void testSetMultiplier() {
         modelChecker.setMultiplier(1337.0);
         Assert.assertEquals(modelChecker.getMultiplier(), 1337.0, 0.0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetMultiplierExcept() {
         modelChecker.setMultiplier(-1.0);
     }

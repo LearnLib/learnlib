@@ -33,13 +33,11 @@ limitations under the License.
     <packaging>pom</packaging>
 
     <modules>
+        <module>bbc-oracles</module>
         <module>filters</module>
         <module>membership-oracles</module>
         <module>equivalence-oracles</module>
         <module>parallelism</module>
-        <module>emptiness-oracles</module>
-        <module>inclusion-oracles</module>
-        <module>black-box-oracles</module>
     </modules>
 
 </project>

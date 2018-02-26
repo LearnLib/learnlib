@@ -67,12 +67,8 @@ public class LTSminLTLDFA<I>
     public static final String LABEL_VALUE = "accept";
 
     @GenerateBuilder(defaults = BuilderDefaults.class)
-    public LTSminLTLDFA(boolean keepFiles,
-                        Function<String, I> string2Input,
-                        int minimumUnfolds,
-                        double multiplier,
-                        boolean inheritIO) {
-        super(keepFiles, string2Input, minimumUnfolds, multiplier, inheritIO);
+    public LTSminLTLDFA(boolean keepFiles, Function<String, I> string2Input, int minimumUnfolds, double multiplier) {
+        super(keepFiles, string2Input, minimumUnfolds, multiplier);
     }
 
 

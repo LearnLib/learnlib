@@ -68,15 +68,13 @@ public abstract class AbstractLTSminLTLMealy<I, O>
      *
      * @see AbstractLTSminLTL
      */
-    protected AbstractLTSminLTLMealy(
-            boolean keepFiles,
-            Function<String, I> string2Input,
-            Function<String, O> string2Output,
-            int minimumUnfolds,
-            double multiplier,
-            boolean inheritIO,
-            Collection<? super O> skipOutputs) {
-        super(keepFiles, string2Input, minimumUnfolds, multiplier, inheritIO);
+    protected AbstractLTSminLTLMealy(boolean keepFiles,
+                                     Function<String, I> string2Input,
+                                     Function<String, O> string2Output,
+                                     int minimumUnfolds,
+                                     double multiplier,
+                                     Collection<? super O> skipOutputs) {
+        super(keepFiles, string2Input, minimumUnfolds, multiplier);
         this.string2Output = string2Output;
         this.skipOutputs = skipOutputs == null ? Collections.emptyList() : skipOutputs;
     }

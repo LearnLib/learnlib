@@ -31,15 +31,13 @@ import net.automatalib.serialization.etf.writer.AbstractETFWriter;
 import net.automatalib.serialization.fsm.parser.AbstractFSMParser;
 import net.automatalib.serialization.fsm.parser.FSMParseException;
 import net.automatalib.ts.simple.SimpleDTS;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An LTL model checker using LTSmin.
  *
  * The user must install LTSmin in order for {@link AbstractLTSminLTL} to run without exceptions. Once LTSmin is installed
  * the user may specify the path to the installed LTSmin binaries with the property
- * <b>de.learnlib.external.ltsmin.path</b>. If this property is not set the binaries will be run as usual (e.g. simply
+ * <b>learnlib.external.ltsmin.path</b>. If this property is not set the binaries will be run as usual (e.g. simply
  * by invoking etf2lts-mc, and ltsmin-convert), which means the user can also specify the location of the binaries
  * in the PATH environment variable.
  *
@@ -65,43 +63,10 @@ public abstract class AbstractLTSminLTL<I,
                                 L extends Lasso<?, ? extends A, I, ?>>
         extends AbstractUnfoldingModelChecker<I, A, String, L> implements ModelChecker<I, A, String, L> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSminLTL.class);
-
-    public static final String LTSMIN_PATH;
-
-    public static final String LTSMIN_PATH_PROPERTY = "de.learnlib.external.ltsmin.path";
-
-    static {
-        LearnLibSettings settings = LearnLibSettings.getInstance();
-
-        LTSMIN_PATH = settings.getProperty(LTSMIN_PATH_PROPERTY, "");
-    }
-
-    public static final String ETF2LTS_MC = LTSMIN_PATH + "etf2lts-mc";
-
-    public static final String LTSMIN_CONVERT = LTSMIN_PATH + "ltsmin-convert";
-
-    public static final String CHECK = "An exception occurred while checking if LTSmin is installed. " +
-                                       "Could not run binary '%s', the following exception occurred: %s. " +
-                                       "LTSmin can be obtained at https://ltsmin.utwente.nl. If you installed LTSmin " +
-                                       "in a non standard location you can set the property: " +
-                                       "'de.learnlib.external.ltsmin.path', which must end with a '/'. Setting the " +
-                                       "PATH variable works too.";
-
-    /**
-     * The exit code for running an LTSmin binary with --version.
-     */
-    public static final int VERSION_EXIT = 255;
-
     /**
      * @see #isKeepFiles()
      */
     private final boolean keepFiles;
-
-    /**
-     * @see #isInheritIO()
-     */
-    private final boolean inheritIO;
 
     /**
      * @see #getString2Input()
@@ -120,22 +85,18 @@ public abstract class AbstractLTSminLTL<I,
      * @param string2Input a function that transforms edges in FSM files to actual input.
      * @param minimumUnfolds the minimum number of unfolds.
      * @param multiplier the multiplier
-     * @param inheritIO whether to print output from LTSmin on stdout, and stderr.
-     *
      * @throws ModelCheckingException when the LTSmin binaries can not be run successfully.
      */
     protected AbstractLTSminLTL(boolean keepFiles,
                                 Function<String, I> string2Input,
                                 int minimumUnfolds,
-                                double multiplier,
-                                boolean inheritIO) throws ModelCheckingException {
+                                double multiplier) throws ModelCheckingException {
         super(minimumUnfolds, multiplier);
         this.keepFiles = keepFiles;
         this.string2Input = string2Input;
-        this.inheritIO = inheritIO;
 
         if (!binariesChecked) {
-            if (!checkUsable()) {
+            if (!LTSminUtil.checkUsable()) {
                 throw new ModelCheckingException("LTSmin binary could not be executed correctly");
             }
             binariesChecked = true;
@@ -158,15 +119,6 @@ public abstract class AbstractLTSminLTL<I,
      */
     public Function<String, I> getString2Input() {
         return string2Input;
-    }
-
-    /**
-     * Returns whether all streams from standard-in, -out, and -error should be inherited.
-     *
-     * @return the boolean
-     */
-    public boolean isInheritIO() {
-        return inheritIO;
     }
 
     /**
@@ -220,7 +172,7 @@ public abstract class AbstractLTSminLTL<I,
         final List<String> commandLines = new ArrayList<>();
 
         // add the etf2lts-mc binary
-        commandLines.add(ETF2LTS_MC);
+        commandLines.add(LTSminUtil.ETF2LTS_MC);
 
         // add the ETF file that contains the LTS of the hypothesis
         commandLines.add(etf.getAbsolutePath());
@@ -250,9 +202,6 @@ public abstract class AbstractLTSminLTL<I,
         try {
             // run the etf2lts-mc binary
             ProcessBuilder processBuilder = new ProcessBuilder(commandLines);
-            if (inheritIO) {
-                processBuilder = processBuilder.inheritIO();
-            }
             ltsmin = processBuilder.start();
             ltsmin.waitFor();
         } catch (IOException | InterruptedException e) {
@@ -279,7 +228,7 @@ public abstract class AbstractLTSminLTL<I,
             }
 
             // add the ltsmin-convert binary
-            commandLines.add(LTSMIN_CONVERT);
+            commandLines.add(LTSminUtil.LTSMIN_CONVERT);
 
             // use the GCF as input
             commandLines.add(gcf.getAbsolutePath());
@@ -294,9 +243,6 @@ public abstract class AbstractLTSminLTL<I,
             try {
                 // convert the GCF to FSM
                 ProcessBuilder processBuilder = new ProcessBuilder(commandLines);
-                if (inheritIO) {
-                    processBuilder = processBuilder.inheritIO();
-                }
                 convert = processBuilder.start();
                 convert.waitFor();
             } catch (IOException | InterruptedException e) {
@@ -331,51 +277,6 @@ public abstract class AbstractLTSminLTL<I,
         return result;
     }
 
-    /**
-     * Checks whether the given binary can be executed, by performing a version check.
-     *
-     * @throws ModelCheckingException when the given binary can not be run successfully.
-     */
-    public static boolean checkUsable() {
-        return checkUsable(ETF2LTS_MC) && checkUsable(LTSMIN_CONVERT);
-    }
-
-    /**
-     * Checks whether the given binary can be executed, by performing a version check.
-     *
-     * @param bin the binary to check.
-     *
-     * @throws ModelCheckingException when the given binary can not be run successfully.
-     */
-    private static boolean checkUsable(String bin) {
-
-        // the command lines for the ProcessBuilder
-        final List<String> commandLines = new ArrayList<>();
-
-        // add the binary
-        commandLines.add(bin);
-
-        // just run a version check
-        commandLines.add("--version");
-
-        final Process check;
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder(commandLines);
-            check = processBuilder.start();
-            check.waitFor();
-        } catch (IOException | InterruptedException e) {
-            LOGGER.error(String.format(CHECK, bin, e.toString()), e);
-            return false;
-        }
-
-        if (check.exitValue() != VERSION_EXIT) {
-            LOGGER.error(String.format(CHECK, bin, String.format("Command '%s --version' did not exit with 255", bin)));
-            return false;
-        }
-
-        return true;
-    }
-
     public static class BuilderDefaults {
 
         public static boolean keepFiles() {
@@ -388,10 +289,6 @@ public abstract class AbstractLTSminLTL<I,
 
         public static double multiplier() {
             return 1.0; // quite arbitrary too
-        }
-
-        public static boolean inheritIO() {
-            return false;
         }
     }
 }

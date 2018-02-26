@@ -47,13 +47,13 @@ public class SimulatorOmegaOracleTest {
         List<OmegaQuery<Integer, Symbol, Boolean>> queries = new ArrayList<>();
 
         OmegaQuery<Integer, Symbol, Boolean> q1 = new OmegaQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_PAUL,
-                                                                               ExamplePaulAndMary.IN_LOVES,
-                                                                               ExamplePaulAndMary.IN_MARY),
-                                                                new HashSet<>(Arrays.asList(new Integer[] {0, 1, 2, 3})));
+                                                                                    ExamplePaulAndMary.IN_LOVES,
+                                                                                    ExamplePaulAndMary.IN_MARY),
+                                                                   new HashSet<>(Arrays.asList(0, 1, 2, 3)));
         OmegaQuery<Integer, Symbol, Boolean> q2 = new OmegaQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_MARY,
-                                                                               ExamplePaulAndMary.IN_LOVES,
-                                                                               ExamplePaulAndMary.IN_PAUL),
-                                                                new HashSet<>(Arrays.asList(new Integer[] {0, 1, 2, 3})));
+                                                                                    ExamplePaulAndMary.IN_LOVES,
+                                                                                    ExamplePaulAndMary.IN_PAUL),
+                                                                   new HashSet<>(Arrays.asList(0, 1, 2, 3)));
         queries.add(q1);
         queries.add(q2);
 
@@ -66,10 +66,10 @@ public class SimulatorOmegaOracleTest {
 
         // Paul loves Mary...
         Assert.assertEquals(queries.get(0).getOutput(), Boolean.TRUE);
-        Assert.assertEquals(queries.get(0).getStates(), Arrays.asList(new Integer[] {0, 1, 3, 4}));
+        Assert.assertEquals(queries.get(0).getStates(), Arrays.asList(0, 1, 3, 4));
 
         // ... but Mary does not love Paul :-(
         Assert.assertEquals(queries.get(1).getOutput(), Boolean.FALSE);
-        Assert.assertEquals(queries.get(1).getStates(), Arrays.asList(new Integer[] {0, 2, 2, 2}));
+        Assert.assertEquals(queries.get(1).getStates(), Arrays.asList(0, 2, 2, 2));
     }
 }

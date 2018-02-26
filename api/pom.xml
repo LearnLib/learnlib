@@ -67,13 +67,8 @@ limitations under the License.
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
 
-        <!-- TODO
+        <!--
          Here we actually want a valid slf4j implementation to check the output. This conflicts with the nop
         implementation defined in the parent, so slf4j will show a warning. However the tests will still pass
         -->

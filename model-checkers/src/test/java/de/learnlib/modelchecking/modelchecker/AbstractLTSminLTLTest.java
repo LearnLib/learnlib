@@ -20,12 +20,11 @@ import net.automatalib.automata.concepts.Output;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.SkipException;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * Tests for AbstractLTSminLTL with arbitrary LTSs.
@@ -36,8 +35,6 @@ public abstract class AbstractLTSminLTLTest<A extends SimpleDTS<?, String> & Out
                                     M extends AbstractLTSminLTL<String, A, L>,
                                     L extends Lasso<?, ? extends A, String, ?>>
         extends AbstractUnfoldingModelCheckerTest<M> {
-
-    private static String ltsminPathPropertyDefault;
 
     private final Alphabet<String> alphabet = Alphabets.fromArray("a", "b");
 
@@ -58,24 +55,18 @@ public abstract class AbstractLTSminLTLTest<A extends SimpleDTS<?, String> & Out
     protected abstract String createFalseProperty();
 
     @BeforeClass
-    public static void setUpBeforeClass() {
-        Assume.assumeTrue(AbstractLTSminLTL.checkUsable());
-        ltsminPathPropertyDefault = System.getProperty(AbstractLTSminLTL.LTSMIN_PATH_PROPERTY);
+    public void setupBeforeClass() {
+        if (!LTSminUtil.checkUsable()) {
+            throw new SkipException("LTSmin not installed");
+        }
     }
 
-    @Before
+    @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
         lasso = createLasso();
         automaton = createAutomaton();
         falseProperty = createFalseProperty();
-    }
-
-    @After
-    public void tearDown() {
-        if (ltsminPathPropertyDefault != null) {
-            System.setProperty(AbstractLTSminLTL.LTSMIN_PATH_PROPERTY, ltsminPathPropertyDefault);
-        }
     }
 
     /**
