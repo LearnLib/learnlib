@@ -159,9 +159,10 @@ limitations under the License.
         <url>https://github.com/LearnLib/learnlib/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
-    <!--
-    ================================= DISTRIBUTION ==============================
-    -->
+    <ciManagement>
+        <system>Travis</system>
+        <url>https://travis-ci.org/LearnLib/automatalib</url>
+    </ciManagement>
     <distributionManagement>
         <repository>
             <id>ossrh</id>
@@ -843,8 +844,9 @@ limitations under the License.
                             <report>license</report>
                             <report>project-team</report>
                             <report>mailing-list</report>
-                            <report>issue-tracking</report>
                             <report>scm</report>
+                            <report>issue-tracking</report>
+                            <report>cim</report>
                             <report>dependencies</report>
                             <report>dependency-info</report>
                             <report>modules</report>
