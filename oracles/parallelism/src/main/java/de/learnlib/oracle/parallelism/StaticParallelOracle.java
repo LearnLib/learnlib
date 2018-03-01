@@ -31,6 +31,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.common.base.Throwables;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
+import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
 
 /**
@@ -58,12 +59,11 @@ public class StaticParallelOracle<I, D> implements ParallelOracle<I, D> {
     static {
         LearnLibSettings settings = LearnLibSettings.getInstance();
 
-        MIN_BATCH_SIZE = settings.getInt("parallel.static.min_batch_size", DEFAULT_MIN_BATCH_SIZE);
-
         int numCores = Runtime.getRuntime().availableProcessors();
-        NUM_INSTANCES = settings.getInt("parallel.static.num_instances", numCores);
 
-        POOL_POLICY = settings.getEnumValue("parallel.static.pool_policy", PoolPolicy.class, PoolPolicy.CACHED);
+        MIN_BATCH_SIZE = settings.getInt(LearnLibProperty.PARALLEL_BATCH_SIZE_STATIC, DEFAULT_MIN_BATCH_SIZE);
+        NUM_INSTANCES = settings.getInt(LearnLibProperty.PARALLEL_POOL_SIZE, numCores);
+        POOL_POLICY = settings.getEnumValue(LearnLibProperty.PARALLEL_POOL_SIZE, PoolPolicy.class, PoolPolicy.CACHED);
     }
 
     @Nonnegative

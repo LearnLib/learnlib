@@ -37,24 +37,24 @@ public final class LearnLibSettings {
         return INSTANCE;
     }
 
-    public String getProperty(String propName, String defaultValue) {
-        return properties.getProperty("learnlib." + propName, defaultValue);
+    public String getProperty(LearnLibProperty property, String defaultValue) {
+        return properties.getProperty(property.getPropertyKey(), defaultValue);
     }
 
-    public String getProperty(String propName) {
-        return properties.getProperty("learnlib." + propName);
+    public String getProperty(LearnLibProperty property) {
+        return properties.getProperty(property.getPropertyKey());
     }
 
-    public <E extends Enum<E>> E getEnumValue(String propName, Class<E> enumClazz, E defaultValue) {
-        E value = getEnumValue(propName, enumClazz);
+    public <E extends Enum<E>> E getEnumValue(LearnLibProperty property, Class<E> enumClazz, E defaultValue) {
+        E value = getEnumValue(property, enumClazz);
         if (value != null) {
             return value;
         }
         return defaultValue;
     }
 
-    public <E extends Enum<E>> E getEnumValue(String propName, Class<E> enumClazz) {
-        String prop = getProperty(propName);
+    public <E extends Enum<E>> E getEnumValue(LearnLibProperty property, Class<E> enumClazz) {
+        String prop = getProperty(property);
         if (prop == null) {
             return null;
         }
@@ -63,37 +63,37 @@ public final class LearnLibSettings {
         return Enum.valueOf(enumClazz, prop.toUpperCase());
     }
 
-    public boolean getBool(String propName, boolean defaultValue) {
-        Boolean b = getBoolean(propName);
+    public boolean getBool(LearnLibProperty property, boolean defaultValue) {
+        Boolean b = getBoolean(property);
         if (b != null) {
             return b;
         }
         return defaultValue;
     }
 
-    public Boolean getBoolean(String propName) {
-        String prop = getProperty(propName);
+    public Boolean getBoolean(LearnLibProperty property) {
+        String prop = getProperty(property);
         if (prop != null) {
             return Boolean.parseBoolean(prop);
         }
         return null;
     }
 
-    public int getInt(String propName, int defaultValue) {
-        Integer prop = getInteger(propName);
+    public int getInt(LearnLibProperty property, int defaultValue) {
+        Integer prop = getInteger(property);
         if (prop != null) {
             return prop;
         }
         return defaultValue;
     }
 
-    public Integer getInteger(String propName) {
-        String prop = getProperty(propName);
+    public Integer getInteger(LearnLibProperty property) {
+        String prop = getProperty(property);
         if (prop != null) {
             try {
                 return Integer.parseInt(prop);
             } catch (NumberFormatException ex) {
-                LOG.warn("Could not parse LearnLib integer property '" + propName + "'.", ex);
+                LOG.warn("Could not parse LearnLib integer property '" + property + "'.", ex);
             }
         }
         return null;

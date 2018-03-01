@@ -30,6 +30,7 @@ import de.learnlib.api.oracle.QueryAnswerer;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
 import de.learnlib.api.query.Query;
+import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.commons.util.Pair;
@@ -42,7 +43,7 @@ public final class MQUtil {
 
     static {
         LearnLibSettings settings = LearnLibSettings.getInstance();
-        PARALLEL_THRESHOLD = settings.getInt("queries.parallel.threshold", -1);
+        PARALLEL_THRESHOLD = settings.getInt(LearnLibProperty.PARALLEL_QUERIES_THRESHOLD, -1);
     }
 
     private MQUtil() {

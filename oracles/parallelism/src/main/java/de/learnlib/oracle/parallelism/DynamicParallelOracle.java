@@ -30,6 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.common.base.Throwables;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
+import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
 
 /**
@@ -52,12 +53,11 @@ public class DynamicParallelOracle<I, D> implements ParallelOracle<I, D> {
     static {
         LearnLibSettings settings = LearnLibSettings.getInstance();
 
-        BATCH_SIZE = settings.getInt("parallel.dynamic.batch_size", 1);
-
         int numProcessors = Runtime.getRuntime().availableProcessors();
-        POOL_SIZE = settings.getInt("parallel.dynamic.pool_size", numProcessors);
 
-        POOL_POLICY = settings.getEnumValue("parallel.static.pool_policy", PoolPolicy.class, PoolPolicy.CACHED);
+        BATCH_SIZE = settings.getInt(LearnLibProperty.PARALLEL_BATCH_SIZE_DYNAMIC, 1);
+        POOL_SIZE = settings.getInt(LearnLibProperty.PARALLEL_POOL_SIZE, numProcessors);
+        POOL_POLICY = settings.getEnumValue(LearnLibProperty.PARALLEL_POOL_POLICY, PoolPolicy.class, PoolPolicy.CACHED);
     }
 
     @Nonnull

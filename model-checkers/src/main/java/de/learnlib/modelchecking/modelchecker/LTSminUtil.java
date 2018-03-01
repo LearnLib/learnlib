@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +32,6 @@ import org.slf4j.LoggerFactory;
  * @author frohme
  */
 public final class LTSminUtil {
-
-    public static final String LTSMIN_PATH_PROPERTY_SUFFIX = "external.ltsmin.path";
 
     /**
      * Path to the "etf2lts-mc" binary.
@@ -49,8 +48,9 @@ public final class LTSminUtil {
     private static final String CHECK = "An exception occurred while checking if LTSmin is installed. " +
                                         "Could not run binary '%s', the following exception occurred: %s. " +
                                         "LTSmin can be obtained at https://ltsmin.utwente.nl. If you installed LTSmin " +
-                                        "in a non standard location you can set the property: " +
-                                        "'learnlib.external.ltsmin.path'. Setting the $PATH variable works too.";
+                                        "in a non standard location you can set the property: '" +
+                                        LearnLibProperty.LTSMIN_PATH.getPropertyKey() +
+                                        "'. Setting the $PATH variable works too.";
 
     /**
      * The exit code for running an LTSmin binary with --version.
@@ -60,7 +60,7 @@ public final class LTSminUtil {
     static {
         LearnLibSettings settings = LearnLibSettings.getInstance();
 
-        final String ltsMinPath = settings.getProperty(LTSMIN_PATH_PROPERTY_SUFFIX, "");
+        final String ltsMinPath = settings.getProperty(LearnLibProperty.LTSMIN_PATH, "");
 
         ETF2LTS_MC = Paths.get(ltsMinPath, "etf2lts-mc").toString();
         LTSMIN_CONVERT = Paths.get(ltsMinPath, "ltsmin-convert").toString();
