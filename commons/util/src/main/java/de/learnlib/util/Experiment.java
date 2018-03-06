@@ -42,6 +42,9 @@ import net.automatalib.words.Word;
 @ParametersAreNonnullByDefault
 public class Experiment<A, I, D> {
 
+    public static final String LEARNING_PROFILE_KEY = "Learning";
+    public static final String COUNTEREXAMPLE_PROFILE_KEY = "Searching for counterexample";
+
     private static final LearnLogger LOGGER = LearnLogger.getLogger(Experiment.class);
 
     private boolean logModels;
@@ -94,51 +97,69 @@ public class Experiment<A, I, D> {
         this.profile = profile;
     }
 
+    /**
+     * Returns whether this experiment has already been run.
+     *
+     * @return {@code true} if this experiment has been run, {@code false} otherwise.
+     */
+    public boolean isRun() {
+        return this.finalHypothesis != null;
+    }
+
     protected void init() {
-        getRounds().increment();
-        LOGGER.logPhase("Starting round " + getRounds().getCount());
+        rounds.increment();
+        LOGGER.logPhase("Starting round " + rounds.getCount());
         LOGGER.logPhase("Learning");
-        profileStart("Learning");
-        getLearningAlgorithm().startLearning();
-        profileStop("Learning");
+
+        profileStart(LEARNING_PROFILE_KEY);
+        learningAlgorithm.startLearning();
+        profileStop(LEARNING_PROFILE_KEY);
     }
 
     protected boolean refineHypothesis() {
         A hyp = getLearningAlgorithm().getHypothesisModel();
 
-        if (isLogModels()) {
+        if (logModels) {
             LOGGER.logModel(hyp);
         }
 
         LOGGER.logPhase("Searching for counterexample");
-        profileStart("Searching for counterexample");
-        DefaultQuery<I, D> ce = getEquivalenceAlgorithm().findCounterExample(hyp, getInputs());
-        profileStop("Searching for counterexample");
+
+        profileStart(COUNTEREXAMPLE_PROFILE_KEY);
+        DefaultQuery<I, D> ce = equivalenceAlgorithm.findCounterExample(hyp, getInputs());
+        profileStop(COUNTEREXAMPLE_PROFILE_KEY);
+
         if (ce != null) {
             LOGGER.logCounterexample(ce.toString());
 
             // next round ...
-            getRounds().increment();
+            rounds.increment();
             LOGGER.logPhase("Starting round " + getRounds().getCount());
             LOGGER.logPhase("Learning");
-            profileStart("Learning");
-            getLearningAlgorithm().refineHypothesis(ce);
-            profileStop("Learning");
+
+            profileStart(LEARNING_PROFILE_KEY);
+            final boolean refined = learningAlgorithm.refineHypothesis(ce);
+            profileStop(LEARNING_PROFILE_KEY);
+
+            assert refined;
         }
+
         return ce != null;
     }
 
     @Nonnull
     public A run() {
+        if (isRun()) {
+            throw new IllegalStateException("Experiment has already been run");
+        }
 
         init();
 
         while (refineHypothesis()) { }
 
-        finalHypothesis = getLearningAlgorithm().getHypothesisModel();
+        finalHypothesis = learningAlgorithm.getHypothesisModel();
 
         return finalHypothesis;
-
     }
 
     protected void setFinalHypothesis(A hyp) {
@@ -147,7 +168,7 @@ public class Experiment<A, I, D> {
 
     @Nonnull
     public A getFinalHypothesis() {
-        if (finalHypothesis == null) {
+        if (!isRun()) {
             throw new IllegalStateException("Experiment has not yet been run");
         }
         return finalHypothesis;

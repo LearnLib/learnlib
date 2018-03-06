@@ -40,6 +40,8 @@ import net.automatalib.words.Word;
  */
 public class BBCExperiment<A, I, D> extends Experiment<A, I, D> {
 
+    public static final String PROPERTY_VIOLATION_PROFILE_KEY = "Searching for property violation";
+
     private static final LearnLogger LOGGER = LearnLogger.getLogger(BBCExperiment.class);
 
     /**
@@ -117,6 +119,10 @@ public class BBCExperiment<A, I, D> extends Experiment<A, I, D> {
     @Nonnull
     @Override
     public A run() {
+        if (isRun()) {
+            throw new IllegalStateException("Experiment has already been run");
+        }
+
         init();
 
         do {
@@ -125,16 +131,18 @@ public class BBCExperiment<A, I, D> extends Experiment<A, I, D> {
             do {
                 roundsPropertyViolation.increment();
                 LOGGER.logPhase("Searching for property violation");
-                profileStart("Searching for property violation");
+
+                profileStart(PROPERTY_VIOLATION_PROFILE_KEY);
                 ce = blackBoxOracle.findCounterExample(getLearningAlgorithm().getHypothesisModel(), getInputs());
-                profileStop("Searching for property violation");
+                profileStop(PROPERTY_VIOLATION_PROFILE_KEY);
                 assert blackBoxOracle.allPropertiesViolated() == (ce == null);
             } while (!blackBoxOracle.allPropertiesViolated() && ce != null && getLearningAlgorithm().refineHypothesis(ce));
         } while ((keepLearning || !blackBoxOracle.allPropertiesViolated()) && refineHypothesis());
 
-        setFinalHypothesis(getLearningAlgorithm().getHypothesisModel());
+        final A finalHyp = getLearningAlgorithm().getHypothesisModel();
+        setFinalHypothesis(finalHyp);
 
-        return getLearningAlgorithm().getHypothesisModel();
+        return finalHyp;
     }
 
     public static class DFABBCExperiment<I> extends BBCExperiment<DFA<?, I>, I, Boolean> {
