@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.util.statistics;
 
 import java.util.Map;
@@ -34,7 +33,6 @@ public final class SimpleProfiler {
 
     private static final Map<String, Counter> CUMULATED = new ConcurrentHashMap<>();
     private static final Map<String, Long> PENDING = new ConcurrentHashMap<>();
-    private static final boolean PROFILE = true;
     private static final LearnLogger LOGGER = LearnLogger.getLogger(SimpleProfiler.class.getName());
     private static final double MILLISECONDS_PER_SECOND = 1000.0;
 
@@ -43,7 +41,7 @@ public final class SimpleProfiler {
     }
 
     /**
-     * reset internal data.
+     * Reset internal data.
      */
     public static void reset() {
         CUMULATED.clear();
@@ -51,40 +49,46 @@ public final class SimpleProfiler {
     }
 
     /**
-     * start activity.
+     * Start the timer identified by the given key.
+     *
+     * @param name
+     *         The name of the timer to be started.
      */
     public static void start(String name) {
-        if (!PROFILE) {
-            return;
-        }
-        long start = System.currentTimeMillis();
-
-        PENDING.put(name, start);
-
+        PENDING.put(name, System.currentTimeMillis());
     }
 
     /**
-     * stop activity.
+     * Stop the timer identified by the given key. After stopping a timer, the time passed from its
+     * {@link #start(String) initialization} will be added to the cumulated time of the specific timer.
+     *
+     * @param name
+     *         The name of the timer to be stopped.
      */
     public static void stop(String name) {
-        if (!PROFILE) {
-            return;
-        }
         Long start = PENDING.remove(name);
         if (start == null) {
             return;
         }
         long duration = System.currentTimeMillis() - start;
-        Counter sum = CUMULATED.get(name);
-        if (sum == null) {
-            sum = new Counter(name, "ms");
-        }
+        Counter sum = CUMULATED.computeIfAbsent(name, k -> new Counter(k, "ms"));
         sum.increment(duration);
-        CUMULATED.put(name, sum);
     }
 
     /**
-     * get profiling results as string.
+     * Return the counter for the cumulated (passed) time of the given timer.
+     *
+     * @param name
+     *         The name of the timer to be returned.
+     *
+     * @return The counter for tracking the passed milliseconds of the timer
+     */
+    public static Counter cumulated(String name) {
+        return CUMULATED.get(name);
+    }
+
+    /**
+     * Get profiling results as string.
      */
     @Nonnull
     public static String getResults() {
@@ -100,7 +104,7 @@ public final class SimpleProfiler {
     }
 
     /**
-     * log results in category PROFILING.
+     * Log results in category PROFILING.
      */
     public static void logResults() {
         for (Entry<String, Counter> e : CUMULATED.entrySet()) {
