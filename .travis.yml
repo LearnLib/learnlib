@@ -3,10 +3,6 @@ language: java
 sudo: false
 dist: trusty
 
-jdk:
-  - oraclejdk8
-  - openjdk8
-
 cache:
   directories:
   - $HOME/.m2
@@ -36,11 +32,24 @@ install:
   - PATH="$PATH:$HOME/ltsmin/bin"
 
 script:
-  - mvn install -B -Pintegration-tests,code-analysis,code-coverage,bundles --fail-at-end
-  - mvn coveralls:report
+  - mvn install -B -Pintegration-tests,code-analysis,bundles
 
 jobs:
+  fast_finish: true
+  allow_failures:
+    - jdk: oraclejdk9
+      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=1.9 -Dmaven.compiler.target=1.9"
   include:
+    - jdk: openjdk8
+    - jdk: oraclejdk8
+    - jdk: oraclejdk9
+    - jdk: oraclejdk9
+      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=1.9 -Dmaven.compiler.target=1.9"
+    - stage: coverage
+      jdk: openjdk8 # use openjdk8 build
+      script:
+        - mvn install -B -Pintegration-tests,code-coverage
+        - mvn coveralls:report
     - stage: deploy
       jdk: openjdk8 # use openjdk build
       before_install: true # skip building AutomataLib, because we actually want to link against the deployed artifacts.
