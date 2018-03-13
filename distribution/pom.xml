@@ -549,6 +549,18 @@ limitations under the License.
                             <dependencySourceIncludes>
                                 <dependencySourceInclude>de.learnlib:*</dependencySourceInclude>
                             </dependencySourceIncludes>
+                            <additionalDependencies>
+                                <additionalDependency>
+                                    <groupId>com.github.misberner.buildergen</groupId>
+                                    <artifactId>buildergen</artifactId>
+                                    <version>${buildergen.version}</version>
+                                </additionalDependency>
+                                <additionalDependency>
+                                    <groupId>org.kohsuke.metainf-services</groupId>
+                                    <artifactId>metainf-services</artifactId>
+                                    <version>${metainf-services.version}</version>
+                                </additionalDependency>
+                            </additionalDependencies>
                         </configuration>
                         <!--
                         Due to a bug (or intended behavior?) in the maven-javadoc-plugin (see e.g. MJAVADOC-400,

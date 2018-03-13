@@ -222,9 +222,10 @@ limitations under the License.
         <buildergen.version>0.1</buildergen.version>
         <checkstyle.version>8.1</checkstyle.version>
         <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
-        <guava.version>22.0</guava.version>
+        <guava.version>24.0-jre</guava.version>
         <logback.version>1.2.3</logback.version>
         <mockito.version>2.0.59-beta</mockito.version>
+        <metainf-services.version>1.7</metainf-services.version>
         <slf4j.version>1.7.25</slf4j.version>
         <testng.version>6.11</testng.version>
 
@@ -575,6 +576,13 @@ limitations under the License.
                 <artifactId>buildergen</artifactId>
                 <version>${buildergen.version}</version>
                 <!-- Compile-time only -->
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.kohsuke.metainf-services</groupId>
+                <artifactId>metainf-services</artifactId>
+                <version>${metainf-services.version}</version>
                 <scope>provided</scope>
             </dependency>
 
