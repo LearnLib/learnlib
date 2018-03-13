@@ -202,7 +202,6 @@ limitations under the License.
         <enforcer-plugin.version>1.4.1</enforcer-plugin.version>
         <exec-plugin.version>1.6.0</exec-plugin.version>
         <failsafe-plugin.version>2.20</failsafe-plugin.version>
-        <findbugs-plugin.version>3.0.5</findbugs-plugin.version>
         <gpg-plugin.version>1.6</gpg-plugin.version>
         <info-reports-plugin.version>2.9</info-reports-plugin.version>
         <jacoco-plugin.version>0.8.0</jacoco-plugin.version>
@@ -214,6 +213,7 @@ limitations under the License.
         <scm-publish-plugin.version>1.1</scm-publish-plugin.version>
         <site-plugin.version>3.6</site-plugin.version>
         <source-plugin.version>3.0.1</source-plugin.version>
+        <spotbugs-plugin.version>3.1.2</spotbugs-plugin.version>
         <surefire-plugin.version>2.20</surefire-plugin.version>
         <tidy-pom.version>1.1.0</tidy-pom.version>
 
@@ -628,9 +628,9 @@ limitations under the License.
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>findbugs-maven-plugin</artifactId>
-                    <version>${findbugs-plugin.version}</version>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>${spotbugs-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
