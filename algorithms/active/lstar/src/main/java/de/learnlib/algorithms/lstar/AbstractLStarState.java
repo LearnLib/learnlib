@@ -33,7 +33,7 @@ public abstract class AbstractLStarState<I, D> implements Serializable {
 
     private final GenericObservationTable<I, D> observationTable;
 
-    public AbstractLStarState(final GenericObservationTable<I, D> observationTable) {
+    AbstractLStarState(final GenericObservationTable<I, D> observationTable) {
         this.observationTable = observationTable;
     }
 

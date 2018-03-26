@@ -37,7 +37,7 @@ public class ADTLearnerState<S, I, O> implements Serializable {
     private final ADTHypothesis<I, O> hypothesis;
     private final ADT<S, I, O> adt;
 
-    public ADTLearnerState(ADTHypothesis<I, O> hypothesis, ADT<S, I, O> adt) {
+    ADTLearnerState(ADTHypothesis<I, O> hypothesis, ADT<S, I, O> adt) {
         this.hypothesis = hypothesis;
         this.adt = adt;
     }

@@ -34,7 +34,7 @@ import net.automatalib.words.Word;
  *
  * @author bainczyk
  */
-class MealyDHCState<I, O> implements Serializable {
+public class MealyDHCState<I, O> implements Serializable {
 
     private final LinkedHashSet<Word<I>> splitters;
     private final CompactMealy<I, O> hypothesis;
