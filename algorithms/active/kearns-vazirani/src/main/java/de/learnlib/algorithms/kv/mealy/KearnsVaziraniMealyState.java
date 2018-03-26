@@ -33,7 +33,7 @@ import net.automatalib.words.Word;
  *
  * @author bainczyk
  */
-class KearnsVaziraniMealyState<I, O> implements Serializable {
+public class KearnsVaziraniMealyState<I, O> implements Serializable {
 
     private final CompactMealy<I, O> hypothesis;
     private final AbstractWordBasedDiscriminationTree<I, Word<O>, StateInfo<I, Word<O>>> discriminationTree;

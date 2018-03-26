@@ -30,7 +30,7 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
  *
  * @author bainczyk
  */
-class KearnsVaziraniDFAState<I> implements Serializable {
+public class KearnsVaziraniDFAState<I> implements Serializable {
 
     private final CompactDFA<I> hypothesis;
     private final BinaryDTree<I, StateInfo<I, Boolean>> discriminationTree;
