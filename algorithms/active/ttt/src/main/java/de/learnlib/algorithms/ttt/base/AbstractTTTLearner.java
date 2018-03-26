@@ -949,8 +949,13 @@ public abstract class AbstractTTTLearner<A, I, D>
 
         final int newSymbolIdx = this.alphabet.size();
 
-        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.hypothesis.addAlphabetSymbol(symbol);
+
+        // since we share the alphabet instance with our hypothesis, our alphabet might have already been updated (if it
+        // was already a GrowableAlphabet)
+        if (!this.alphabet.containsSymbol(symbol)) {
+            this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
+        }
 
         for (final TTTState<I, D> s : this.hypothesis.getStates()) {
             final TTTTransition<I, D> trans = createTransition(s, symbol);

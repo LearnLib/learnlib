@@ -232,9 +232,13 @@ public abstract class AbstractLStar<A, I, D>
             return;
         }
 
-        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
-
         final List<List<Row<I>>> unclosed = this.table.addAlphabetSymbol(symbol, oracle);
+
+        // since we share the alphabet instance with our observation table, our alphabet might have already been updated
+        // (if it was already a GrowableAlphabet)
+        if (!this.alphabet.containsSymbol(symbol)) {
+            this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
+        }
 
         completeConsistentTable(unclosed, true);
     }

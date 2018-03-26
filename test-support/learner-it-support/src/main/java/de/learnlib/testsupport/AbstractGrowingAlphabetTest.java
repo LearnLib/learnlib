@@ -18,7 +18,6 @@ package de.learnlib.testsupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
@@ -28,7 +27,6 @@ import net.automatalib.automata.concepts.Output;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.SimpleAlphabet;
 import org.testng.Assert;
@@ -43,15 +41,12 @@ import org.testng.annotations.Test;
  */
 public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlphabet<I> & LearningAlgorithm<M, I, D>, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, OR, I, D> {
 
-    private static final int MAX_VERIFICATION_TRIES = 100;
     protected static final int RANDOM_SEED = 42;
     protected static final int DEFAULT_AUTOMATON_SIZE = 15;
 
-    private Random random;
-
     private M target;
 
-    private L learner;
+    private OR oracle;
 
     private Alphabet<I> initialAlphabet;
 
@@ -59,8 +54,6 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
 
     @BeforeClass
     public void setup() {
-        random = new Random(RANDOM_SEED);
-
         initialAlphabet = getInitialAlphabet();
         alphabetExtensions = getAlphabetExtensions();
 
@@ -69,9 +62,7 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
         compoundAlphabet.addAll(alphabetExtensions);
 
         target = getTarget(Alphabets.fromList(compoundAlphabet));
-        final OR oracle = getOracle(target);
-
-        learner = getLearner(oracle, initialAlphabet);
+        oracle = getOracle(target);
     }
 
     protected abstract Alphabet<I> getInitialAlphabet();
@@ -86,11 +77,41 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
 
     @Test
     public void testInitialAlphabet() {
-        learner.startLearning();
-        this.performLearnLoop(initialAlphabet);
+        testAlphabet(initialAlphabet);
     }
 
-    private void performLearnLoop(final Alphabet<I> effectiveAlphabet) {
+    /**
+     * In case of passing a growing alphabet, the learners may use the existing
+     * {@link net.automatalib.words.GrowingAlphabet#addSymbol(Object)} functionality. Due to references, this may alter
+     * their behavior. Check it!
+     */
+    @Test
+    public void testGrowingAlphabetAlphabet() {
+        testAlphabet(new SimpleAlphabet<>(initialAlphabet));
+    }
+
+    private void testAlphabet(Alphabet<I> alphabet) {
+        final L learner = getLearner(oracle, alphabet);
+
+        learner.startLearning();
+        this.performLearnLoopAndCheck(learner, alphabet);
+
+        final List<I> currentAlphabet = new ArrayList<>(alphabet.size() + alphabetExtensions.size());
+        currentAlphabet.addAll(alphabet);
+
+        for (final I i : alphabetExtensions) {
+            currentAlphabet.add(i);
+            learner.addAlphabetSymbol(i);
+
+            final UniversalDeterministicAutomaton<?, I, ?, ?, ?> hyp = learner.getHypothesisModel();
+
+            this.checkCompletenessOfHypothesis(hyp, currentAlphabet);
+            this.performLearnLoopAndCheck(learner, currentAlphabet);
+        }
+
+    }
+
+    private void performLearnLoopAndCheck(final L learner, final Collection<? extends I> effectiveAlphabet) {
 
         M hyp = learner.getHypothesisModel();
         Word<I> sepWord = Automata.findSeparatingWord(target, hyp, effectiveAlphabet);
@@ -108,33 +129,14 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
         Assert.assertTrue(Automata.testEquivalence(target, hyp, effectiveAlphabet));
     }
 
-    @Test(dependsOnMethods = "testInitialAlphabet")
-    public void testAddingAlphabetSymbols() {
-        final Alphabet<I> currentAlphabet = new SimpleAlphabet<>(initialAlphabet);
+    private <S, T> void checkCompletenessOfHypothesis(final UniversalDeterministicAutomaton<S, I, T, ?, ?> hypothesis, final Collection<? extends I> alphabet) {
+        for (final S s : hypothesis.getStates()) {
+            for (final I i : alphabet) {
+                final T trans = hypothesis.getTransition(s, i);
 
-        for (final I i : alphabetExtensions) {
-            currentAlphabet.add(i);
-            learner.addAlphabetSymbol(i);
-
-            this.checkCompletenessOfHypothesis(currentAlphabet);
-            this.performLearnLoop(currentAlphabet);
-        }
-    }
-
-    private void checkCompletenessOfHypothesis(final Alphabet<I> alphabet) {
-
-        final int alphabetSize = alphabet.size();
-        final M hypothesis = learner.getHypothesisModel();
-
-        for (int i = 0; i < MAX_VERIFICATION_TRIES; i++) {
-            final WordBuilder<I> testTraceBuilder = new WordBuilder<>(i);
-
-            for (int j = 0; j < i; j++) {
-                testTraceBuilder.add(alphabet.getSymbol(random.nextInt(alphabetSize)));
+                Assert.assertNotNull(trans);
+                Assert.assertNotNull(hypothesis.getSuccessor(trans));
             }
-
-            // simply try to compute output without an exception
-            hypothesis.computeOutput(testTraceBuilder.toWord());
         }
     }
 
