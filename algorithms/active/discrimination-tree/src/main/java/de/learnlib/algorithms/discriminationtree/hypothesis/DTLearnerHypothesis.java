@@ -31,7 +31,6 @@ import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
@@ -132,8 +131,8 @@ public class DTLearnerHypothesis<I, O, SP, TP>
     @Override
     public void addAlphabetSymbol(I symbol) {
 
-        if (this.alphabet instanceof GrowingAlphabet) {
-            ((GrowingAlphabet<I>) this.alphabet).addSymbol(symbol);
+        if (this.alphabet.containsSymbol(symbol)) {
+            return;
         }
 
         this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);

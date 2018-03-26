@@ -267,8 +267,13 @@ public class KearnsVaziraniDFA<I>
         }
 
         final int inputIdx = this.alphabet.size();
-        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.hypothesis.addAlphabetSymbol(symbol);
+
+        // since we share the alphabet instance with our hypothesis, our alphabet might have already been updated (if it
+        // was already a GrowableAlphabet)
+        if (!this.alphabet.containsSymbol(symbol)) {
+            this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
+        }
 
         // use new list to prevent concurrent modification exception
         for (final StateInfo<I, Boolean> si : new ArrayList<>(this.stateInfos)) {

@@ -222,8 +222,13 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
 
         final int newSymbolIdx = this.alphabet.size();
 
-        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.hypothesis.addAlphabetSymbol(symbol);
+
+        // since we share the alphabet instance with our hypothesis, our alphabet might have already been updated (if it
+        // was already a GrowableAlphabet)
+        if (!this.alphabet.containsSymbol(symbol)) {
+            this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
+        }
 
         for (final HState<I, D, SP, TP> s : this.hypothesis.getStates()) {
             final HTransition<I, D, SP, TP> newTrans = new HTransition<>(s, symbol, dtree.getRoot());

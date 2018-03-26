@@ -65,6 +65,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
+import net.automatalib.words.impl.SymbolHidingAlphabet;
 
 /**
  * The main learning algorithm.
@@ -101,7 +102,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                       final ADTExtender adtExtender,
                       final SubtreeReplacer subtreeReplacer) {
 
-        this.alphabet = alphabet;
+        this.alphabet = SymbolHidingAlphabet.wrapIfMutable(alphabet);
         this.observationTree = new ObservationTree<>(this.alphabet);
         this.oracle = new SQOOTBridge<>(this.observationTree, oracle, true);
 
@@ -370,9 +371,17 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             return;
         }
 
-        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.hypothesis.addAlphabetSymbol(symbol);
-        this.observationTree.getObservationTree().addAlphabetSymbol(symbol);
+
+        SymbolHidingAlphabet.runWhileHiding(alphabet,
+                                            symbol,
+                                            () -> this.observationTree.getObservationTree().addAlphabetSymbol(symbol));
+
+        // since we share the alphabet instance with our hypothesis, our alphabet might have already been updated (if it
+        // was already a GrowableAlphabet)
+        if (!this.alphabet.containsSymbol(symbol)) {
+            this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
+        }
 
         for (final ADTState<I, O> s : this.hypothesis.getStates()) {
             this.openTransitions.add(this.hypothesis.createOpenTransition(s, symbol, this.adt.getRoot()));
