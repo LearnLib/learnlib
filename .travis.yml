@@ -17,11 +17,13 @@ branches:
   only:
   - master
   - develop
+  - release
 
 before_install:
     # set Travis environment variables "AUTOMATALIB_FORK" and "AUTOMATALIB_BRANCH" to build custom AutomataLib versions.
-    # Defaults are "LearnLib" and "develop".
-  - git clone -b ${AUTOMATALIB_BRANCH:-develop} --single-branch https://github.com/${AUTOMATALIB_FORK:-LearnLib}/automatalib.git /tmp/automatalib-develop
+    # Defaults are "LearnLib" and the current/targeted LearnLib branch ($TRAVIS_BRANCH, relies on the same naming
+    # conventions between AutomataLib and LearnLib branches).
+  - git clone -b ${AUTOMATALIB_BRANCH:-$TRAVIS_BRANCH} --single-branch https://github.com/${AUTOMATALIB_FORK:-LearnLib}/automatalib.git /tmp/automatalib-develop
   - pushd /tmp/automatalib-develop
   - mvn install -DskipTests
   - popd
