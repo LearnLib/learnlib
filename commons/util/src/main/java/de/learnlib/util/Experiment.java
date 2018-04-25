@@ -188,8 +188,8 @@ public class Experiment<A, I, D> {
 
     public static class DFAExperiment<I> extends Experiment<DFA<?, I>, I, Boolean> {
 
-        public DFAExperiment(LearningAlgorithm<DFA<?, I>, I, Boolean> learningAlgorithm,
-                             EquivalenceOracle<DFA<?, I>, I, Boolean> equivalenceAlgorithm,
+        public DFAExperiment(LearningAlgorithm<? extends DFA<?, I>, I, Boolean> learningAlgorithm,
+                             EquivalenceOracle<? super DFA<?, I>, I, Boolean> equivalenceAlgorithm,
                              Alphabet<I> inputs) {
             super(learningAlgorithm, equivalenceAlgorithm, inputs);
         }
@@ -197,8 +197,8 @@ public class Experiment<A, I, D> {
 
     public static class MealyExperiment<I, O> extends Experiment<MealyMachine<?, I, ?, O>, I, Word<O>> {
 
-        public MealyExperiment(LearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
-                               EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
+        public MealyExperiment(LearningAlgorithm<? extends MealyMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
+                               EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
                                Alphabet<I> inputs) {
             super(learningAlgorithm, equivalenceAlgorithm, inputs);
         }

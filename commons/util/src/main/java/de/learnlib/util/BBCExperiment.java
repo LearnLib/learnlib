@@ -147,16 +147,16 @@ public class BBCExperiment<A, I, D> extends Experiment<A, I, D> {
 
     public static class DFABBCExperiment<I> extends BBCExperiment<DFA<?, I>, I, Boolean> {
 
-        public DFABBCExperiment(LearningAlgorithm.DFALearner<I> learningAlgorithm,
-                                EquivalenceOracle.DFAEquivalenceOracle<I> equivalenceAlgorithm,
+        public DFABBCExperiment(LearningAlgorithm<? extends DFA<?, I>, I, Boolean> learningAlgorithm,
+                                EquivalenceOracle<? super DFA<?, I>, I, Boolean> equivalenceAlgorithm,
                                 Alphabet<I> inputs,
                                 BlackBoxOracle.DFABlackBoxOracle<I> blackBoxOracle,
                                 boolean keepLearning) {
             super(learningAlgorithm, equivalenceAlgorithm, inputs, blackBoxOracle, keepLearning);
         }
 
-        public DFABBCExperiment(LearningAlgorithm.DFALearner<I> learningAlgorithm,
-                                EquivalenceOracle.DFAEquivalenceOracle<I> equivalenceAlgorithm,
+        public DFABBCExperiment(LearningAlgorithm<? extends DFA<?, I>, I, Boolean> learningAlgorithm,
+                                EquivalenceOracle<? super DFA<?, I>, I, Boolean> equivalenceAlgorithm,
                                 Alphabet<I> inputs,
                                 BlackBoxOracle.DFABlackBoxOracle<I> blackBoxOracle) {
             this(learningAlgorithm, equivalenceAlgorithm, inputs, blackBoxOracle, false);
@@ -165,18 +165,18 @@ public class BBCExperiment<A, I, D> extends Experiment<A, I, D> {
 
     public static class MealyBBCExperiment<I, O> extends BBCExperiment<MealyMachine<?, I, ?, O>, I, Word<O>> {
 
-        public MealyBBCExperiment(LearningAlgorithm.MealyLearner<I, O> learningAlgorithm,
-                                  EquivalenceOracle.MealyEquivalenceOracle<I, O> equivalenceAlgorithm,
+        public MealyBBCExperiment(LearningAlgorithm<? extends MealyMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
+                                  EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
                                   Alphabet<I> inputs,
                                   BlackBoxOracle.MealyBlackBoxOracle<I, O> blackBoxOracle,
                                   boolean keepLearning) {
             super(learningAlgorithm, equivalenceAlgorithm, inputs, blackBoxOracle, keepLearning);
         }
 
-        public MealyBBCExperiment(LearningAlgorithm.MealyLearner<I, O> learningAlgorithm,
-                               EquivalenceOracle.MealyEquivalenceOracle<I, O> equivalenceAlgorithm,
-                               Alphabet<I> inputs,
-                               BlackBoxOracle.MealyBlackBoxOracle<I, O> blackBoxOracle) {
+        public MealyBBCExperiment(LearningAlgorithm<? extends MealyMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
+                                  EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
+                                  Alphabet<I> inputs,
+                                  BlackBoxOracle.MealyBlackBoxOracle<I, O> blackBoxOracle) {
             this(learningAlgorithm, equivalenceAlgorithm, inputs, blackBoxOracle, false);
         }
     }
