@@ -224,7 +224,7 @@ limitations under the License.
         <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
         <guava.version>24.0-jre</guava.version>
         <logback.version>1.2.3</logback.version>
-        <mockito.version>2.0.59-beta</mockito.version>
+        <mockito.version>2.18.3</mockito.version>
         <metainf-services.version>1.7</metainf-services.version>
         <slf4j.version>1.7.25</slf4j.version>
         <testng.version>6.11</testng.version>
