@@ -40,13 +40,13 @@ jobs:
   fast_finish: true
   allow_failures:
     - jdk: oraclejdk9
-      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=1.9 -Dmaven.compiler.target=1.9"
+      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=9 -Dmaven.compiler.target=9"
   include:
     - jdk: openjdk8
     - jdk: oraclejdk8
     - jdk: oraclejdk9
     - jdk: oraclejdk9
-      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=1.9 -Dmaven.compiler.target=1.9"
+      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=9 -Dmaven.compiler.target=9"
     - stage: coverage
       jdk: openjdk8 # use openjdk8 build
       script:
