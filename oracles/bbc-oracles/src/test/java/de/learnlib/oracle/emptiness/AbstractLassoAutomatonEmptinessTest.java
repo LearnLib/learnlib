@@ -38,7 +38,7 @@ import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -105,11 +105,11 @@ public abstract class AbstractLassoAutomatonEmptinessTest<L extends Lasso<?, ?, 
                     q.answer(false);
                 }
                 return null;
-            }).when(dfaOmegaMembershipOracle).processQuery(Matchers.any());
-            Mockito.when(dfaOmegaMembershipOracle.isSameState(Matchers.any(),
-                                                              Matchers.any(),
-                                                              Matchers.any(),
-                                                              Matchers.any())).thenReturn(true);
+            }).when(dfaOmegaMembershipOracle).processQuery(ArgumentMatchers.any());
+            Mockito.when(dfaOmegaMembershipOracle.isSameState(ArgumentMatchers.any(),
+                                                              ArgumentMatchers.any(),
+                                                              ArgumentMatchers.any(),
+                                                              ArgumentMatchers.any())).thenReturn(true);
         }
 
         @Override
@@ -165,11 +165,11 @@ public abstract class AbstractLassoAutomatonEmptinessTest<L extends Lasso<?, ?, 
                     q.answer(Word.fromSymbols("not-an-output"));
                 }
                 return null;
-            }).when(mealyOmegaMembershipOracle).processQuery(Matchers.any());
-            Mockito.when(mealyOmegaMembershipOracle.isSameState(Matchers.any(),
-                                                                Matchers.any(),
-                                                                Matchers.any(),
-                                                                Matchers.any())).thenReturn(true);
+            }).when(mealyOmegaMembershipOracle).processQuery(ArgumentMatchers.any());
+            Mockito.when(mealyOmegaMembershipOracle.isSameState(ArgumentMatchers.any(),
+                                                                ArgumentMatchers.any(),
+                                                                ArgumentMatchers.any(),
+                                                                ArgumentMatchers.any())).thenReturn(true);
         }
 
         @Override

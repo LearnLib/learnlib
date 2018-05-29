@@ -31,7 +31,7 @@ import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -95,7 +95,7 @@ public abstract class AbstractBreadthFirstEmptinessOracleTest<A extends SimpleDT
                     q.answer(true);
                 }
                 return null;
-            }).when(dfaMembershipOracle).processQuery(Matchers.any());
+            }).when(dfaMembershipOracle).processQuery(ArgumentMatchers.any());
         }
 
         @Override
@@ -147,7 +147,7 @@ public abstract class AbstractBreadthFirstEmptinessOracleTest<A extends SimpleDT
                     q.answer(Word.fromSymbols("not-an-output"));
                 }
                 return null;
-            }).when(mealyMembershipOracle).processQuery(Matchers.any());
+            }).when(mealyMembershipOracle).processQuery(ArgumentMatchers.any());
         }
 
         @Override
