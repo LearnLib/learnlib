@@ -198,16 +198,16 @@ limitations under the License.
         <checkstyle-plugin.version>2.17</checkstyle-plugin.version>
         <compiler-plugin.version>3.7.0</compiler-plugin.version>
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
-        <dependency-plugin.version>3.0.1</dependency-plugin.version>
+        <dependency-plugin.version>3.1.1</dependency-plugin.version>
         <enforcer-plugin.version>1.4.1</enforcer-plugin.version>
         <exec-plugin.version>1.6.0</exec-plugin.version>
         <failsafe-plugin.version>2.21.0</failsafe-plugin.version>
         <gpg-plugin.version>1.6</gpg-plugin.version>
         <info-reports-plugin.version>2.9</info-reports-plugin.version>
         <jacoco-plugin.version>0.8.0</jacoco-plugin.version>
-        <javadoc-plugin.version>2.10.4</javadoc-plugin.version>
+        <javadoc-plugin.version>3.0.0</javadoc-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
-        <pmd-plugin.version>3.8</pmd-plugin.version>
+        <pmd-plugin.version>3.9.0</pmd-plugin.version>
         <release-plugin.version>2.5.3</release-plugin.version>
         <resources-plugin.version>3.0.2</resources-plugin.version>
         <scm-publish-plugin.version>1.1</scm-publish-plugin.version>
@@ -628,6 +628,7 @@ limitations under the License.
                     <artifactId>maven-pmd-plugin</artifactId>
                     <version>${pmd-plugin.version}</version>
                     <configuration>
+                        <analysisCache>true</analysisCache>
                         <printFailingErrors>true</printFailingErrors>
                         <linkXRef>false</linkXRef>
                         <excludeRoots>
@@ -746,7 +747,7 @@ limitations under the License.
                     <version>${javadoc-plugin.version}</version>
                     <configuration>
                         <quiet>true</quiet>
-                        <source>1.8</source>
+                        <source>${maven.compiler.source}</source>
                         <detectLinks>true</detectLinks>
                         <linksource>false</linksource>
                         <links>
@@ -860,7 +861,7 @@ limitations under the License.
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <quiet>true</quiet>
-                    <source>1.8</source>
+                    <source>${maven.compiler.source}</source>
                     <detectLinks>true</detectLinks>
                     <linksource>false</linksource>
                     <links>

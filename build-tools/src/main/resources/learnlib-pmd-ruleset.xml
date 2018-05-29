@@ -20,6 +20,8 @@ limitations under the License.
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
 
+    <description>LearnLib PMD ruleset</description>
+
     <rule ref="rulesets/java/basic.xml">
         <exclude name="CollapsibleIfStatements"/>
         <exclude name="AvoidBranchingStatementAsLastInLoop"/>
@@ -36,7 +38,7 @@ limitations under the License.
     </rule>
     <rule ref="rulesets/java/finalizers.xml"/>
     <!--<rule ref="rulesets/java/imports.xml"/>-->
-    <rule ref="rulesets/java/logging-java.xml"/>
+    <!--<rule ref="rulesets/java/logging-java.xml"/>-->
     <rule ref="rulesets/java/migrating.xml">
         <exclude name="JUnit4TestShouldUseBeforeAnnotation"/>
         <exclude name="JUnit4TestShouldUseAfterAnnotation"/>
