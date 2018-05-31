@@ -213,7 +213,7 @@ limitations under the License.
         <scm-publish-plugin.version>1.1</scm-publish-plugin.version>
         <site-plugin.version>3.6</site-plugin.version>
         <source-plugin.version>3.0.1</source-plugin.version>
-        <spotbugs-plugin.version>3.1.2</spotbugs-plugin.version>
+        <spotbugs-plugin.version>3.1.3.1</spotbugs-plugin.version>
         <surefire-plugin.version>2.20</surefire-plugin.version>
         <tidy-pom.version>1.1.0</tidy-pom.version>
 
