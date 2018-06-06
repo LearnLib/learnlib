@@ -59,7 +59,7 @@ public class KearnsVaziraniMealy<I, O>
     private final MembershipOracle<I, Word<O>> oracle;
     private final boolean repeatedCounterexampleEvaluation;
     private final AcexAnalyzer ceAnalyzer;
-    protected AbstractWordBasedDiscriminationTree<I, Word<O>, StateInfo<I, Word<O>>> discriminationTree;
+    protected MultiDTree<I, Word<O>, StateInfo<I, Word<O>>> discriminationTree;
     protected List<StateInfo<I, Word<O>>> stateInfos = new ArrayList<>();
     private CompactMealy<I, O> hypothesis;
 
@@ -104,6 +104,10 @@ public class KearnsVaziraniMealy<I, O>
             throw new IllegalStateException("Not started");
         }
         return hypothesis;
+    }
+
+    public MultiDTree<I, Word<O>, StateInfo<I, Word<O>>> getDiscriminationTree() {
+        return discriminationTree;
     }
 
     private boolean refineHypothesisSingle(Word<I> input, Word<O> output) {

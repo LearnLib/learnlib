@@ -110,6 +110,10 @@ public class KearnsVaziraniDFA<I>
         return hypothesis;
     }
 
+    public BinaryDTree<I, StateInfo<I, Boolean>> getDiscriminationTree() {
+        return discriminationTree;
+    }
+
     private boolean refineHypothesisSingle(Word<I> input, boolean output) {
         int inputLen = input.length();
 
