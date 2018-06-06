@@ -33,7 +33,6 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.MultiDTree;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
-import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
 import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.automata.transout.MealyMachine;
