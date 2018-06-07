@@ -207,7 +207,7 @@ limitations under the License.
         <jacoco-plugin.version>0.8.0</jacoco-plugin.version>
         <javadoc-plugin.version>3.0.0</javadoc-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
-        <pmd-plugin.version>3.9.0</pmd-plugin.version>
+        <pmd-plugin.version>3.10.0</pmd-plugin.version>
         <release-plugin.version>2.5.3</release-plugin.version>
         <resources-plugin.version>3.0.2</resources-plugin.version>
         <scm-publish-plugin.version>1.1</scm-publish-plugin.version>
