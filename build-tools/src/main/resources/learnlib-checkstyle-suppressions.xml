@@ -20,7 +20,6 @@ limitations under the License.
 
 <suppressions>
     <suppress checks="AbstractClassName" files="Query.java|Lasso.java"/>
-    <suppress checks="IllegalCatch" files="AbstractContextExecutableInputSUL.java|ExecutableInputSUL.java"/>
     <suppress checks="." files="target/*"/>
 
     <suppress checks="MagicNumber" files="src/test/*"/>
