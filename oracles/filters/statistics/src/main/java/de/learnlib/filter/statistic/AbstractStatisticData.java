@@ -38,18 +38,22 @@ public abstract class AbstractStatisticData implements StatisticData {
     }
 
     @Nonnull
+    @Override
     public String getName() {
         return name;
     }
 
     @Nonnull
+    @Override
     public String getUnit() {
         return unit;
     }
 
     @Nonnull
+    @Override
     public abstract String getSummary();
 
     @Nonnull
+    @Override
     public abstract String getDetails();
 }

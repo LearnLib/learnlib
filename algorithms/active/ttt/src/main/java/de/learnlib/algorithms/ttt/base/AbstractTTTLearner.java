@@ -982,7 +982,11 @@ public abstract class AbstractTTTLearner<A, I, D>
         this.dtree.setOracle(oracle);
     }
 
-    public static class BuilderDefaults {
+    public static final class BuilderDefaults {
+
+        private BuilderDefaults() {
+            // prevent instantiation
+        }
 
         public static AcexAnalyzer analyzer() {
             return AcexAnalyzers.BINARY_SEARCH_BWD;

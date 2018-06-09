@@ -63,6 +63,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
         super(alphabet, oracle, analyzer);
     }
 
+    @Override
     protected State<HypLoc<I>> getDefinitiveSuccessor(State<HypLoc<I>> baseState, Word<I> suffix) {
         NonDetState<HypLoc<I>> curr = NonDetState.fromDet(baseState);
         int lastDet = 0;

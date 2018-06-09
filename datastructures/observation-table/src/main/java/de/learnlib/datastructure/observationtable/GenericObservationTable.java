@@ -98,10 +98,11 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         }
     }
 
+    @Override
     public List<List<Row<I>>> initialize(List<Word<I>> initialShortPrefixes,
                                          List<Word<I>> initialSuffixes,
                                          MembershipOracle<I, D> oracle) {
-        if (allRows.size() > 0) {
+        if (!allRows.isEmpty()) {
             throw new IllegalStateException("Called initialize, but there are already rows present");
         }
 
@@ -254,14 +255,17 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         return added;
     }
 
+    @Override
     public int numberOfDistinctRows() {
         return allRowContents.size();
     }
 
+    @Override
     public List<List<Row<I>>> addSuffix(Word<I> suffix, MembershipOracle<I, D> oracle) {
         return addSuffixes(Collections.singletonList(suffix), oracle);
     }
 
+    @Override
     public List<List<Row<I>>> addSuffixes(Collection<? extends Word<I>> newSuffixes, MembershipOracle<I, D> oracle) {
         int oldSuffixCount = suffixes.size();
         // we need a stable iteration order, and only List guarantees this
@@ -338,10 +342,12 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         return unclosed;
     }
 
+    @Override
     public boolean isInitialConsistencyCheckRequired() {
         return initialConsistencyCheckRequired;
     }
 
+    @Override
     public List<List<Row<I>>> addShortPrefixes(List<? extends Word<I>> shortPrefixes, MembershipOracle<I, D> oracle) {
         List<Row<I>> toSpRows = new ArrayList<>();
 
@@ -360,6 +366,7 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         return toShortPrefixes(toSpRows, oracle);
     }
 
+    @Override
     public List<List<Row<I>>> toShortPrefixes(List<Row<I>> lpRows, MembershipOracle<I, D> oracle) {
         List<RowImpl<I>> freshSpRows = new ArrayList<>();
         List<RowImpl<I>> freshLpRows = new ArrayList<>();
@@ -461,31 +468,38 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         }
     }
 
+    @Override
     public D cellContents(Row<I> row, int columnId) {
         List<D> contents = rowContents(row);
         return contents.get(columnId);
     }
 
+    @Override
     public List<D> rowContents(Row<I> row) {
         return allRowContents.get(row.getRowContentId());
     }
 
+    @Override
     public RowImpl<I> getRow(int rowId) {
         return allRows.get(rowId);
     }
 
+    @Override
     public int numberOfRows() {
         return shortPrefixRows.size() + longPrefixRows.size();
     }
 
+    @Override
     public List<Word<I>> getSuffixes() {
         return suffixes;
     }
 
+    @Override
     public boolean isInitialized() {
-        return (allRows.size() > 0);
+        return !allRows.isEmpty();
     }
 
+    @Override
     public Alphabet<I> getInputAlphabet() {
         return alphabet;
     }

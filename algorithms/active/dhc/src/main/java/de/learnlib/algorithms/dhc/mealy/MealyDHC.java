@@ -301,7 +301,11 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
         return canonical.equals(word);
     }
 
-    public static class BuilderDefaults {
+    public static final class BuilderDefaults {
+
+        private BuilderDefaults() {
+            // prevent instantiation
+        }
 
         public static <I, O> GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder() {
             return GlobalSuffixFinders.RIVEST_SCHAPIRE;

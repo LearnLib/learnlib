@@ -47,6 +47,7 @@ public interface InclusionOracle<A extends Output<I, D> & SimpleDTS<?, I>, I, D,
      *
      * @see AutomatonOracle#isCounterExample(SimpleDTS, Query)
      */
+    @Override
     default boolean isCounterExample(A hypothesis, Q query) {
         return !query.getOutput().equals(hypothesis.computeOutput(query.getInput()));
     }

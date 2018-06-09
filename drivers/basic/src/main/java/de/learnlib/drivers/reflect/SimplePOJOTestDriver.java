@@ -32,7 +32,7 @@ import net.automatalib.words.impl.SimpleAlphabet;
  * @author falkhowar
  */
 public final class SimplePOJOTestDriver
-        extends TestDriver<MethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
+        extends TestDriver<MethodInput, MethodOutput, ConcreteMethodInput, Object> {
 
     private final GrowingAlphabet<MethodInput> inputs = new SimpleAlphabet<>();
 

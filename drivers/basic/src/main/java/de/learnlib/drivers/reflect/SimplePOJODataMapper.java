@@ -28,7 +28,7 @@ import de.learnlib.mapper.api.SULMapper;
  *
  * @author falkhowar
  */
-public class SimplePOJODataMapper implements SULMapper<MethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> {
+public class SimplePOJODataMapper implements SULMapper<MethodInput, MethodOutput, ConcreteMethodInput, Object> {
 
     private final Constructor<?> initMethod;
     private final Object[] initParams;
@@ -57,7 +57,7 @@ public class SimplePOJODataMapper implements SULMapper<MethodInput, AbstractMeth
     }
 
     @Override
-    public MappedException<? extends AbstractMethodOutput> mapUnwrappedException(RuntimeException exception)
+    public MappedException<? extends MethodOutput> mapUnwrappedException(RuntimeException exception)
             throws RuntimeException {
         return MappedException.repeatOutput(new Error(exception.getCause()), Unobserved.INSTANCE);
     }
@@ -70,7 +70,7 @@ public class SimplePOJODataMapper implements SULMapper<MethodInput, AbstractMeth
     }
 
     @Override
-    public AbstractMethodOutput mapOutput(Object concreteOutput) {
+    public MethodOutput mapOutput(Object concreteOutput) {
         return new ReturnValue(concreteOutput);
     }
 
@@ -80,7 +80,7 @@ public class SimplePOJODataMapper implements SULMapper<MethodInput, AbstractMeth
     }
 
     @Override
-    public SULMapper<MethodInput, AbstractMethodOutput, ConcreteMethodInput, Object> fork() {
+    public SULMapper<MethodInput, MethodOutput, ConcreteMethodInput, Object> fork() {
         return new SimplePOJODataMapper(initMethod, initParams);
     }
 

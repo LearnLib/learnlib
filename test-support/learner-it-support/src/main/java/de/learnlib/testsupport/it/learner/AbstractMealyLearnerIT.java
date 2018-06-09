@@ -38,7 +38,7 @@ import org.testng.annotations.Factory;
  *
  * @author Malte Isberner
  */
-public abstract class AbstractMealyLearnerIT extends AbstractLearnerIT {
+public abstract class AbstractMealyLearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
@@ -60,7 +60,7 @@ public abstract class AbstractMealyLearnerIT extends AbstractLearnerIT {
         final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, mqOracle, variants);
 
-        return super.createExampleITCases(example, variants);
+        return LearnerITUtil.createExampleITCases(example, variants);
     }
 
     /**

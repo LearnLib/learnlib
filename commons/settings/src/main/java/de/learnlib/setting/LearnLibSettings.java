@@ -16,8 +16,10 @@
 package de.learnlib.setting;
 
 import java.util.Properties;
+import java.util.function.Function;
 
 import de.learnlib.api.setting.LearnLibSettingsSource;
+import net.automatalib.commons.util.WrapperUtil;
 import net.automatalib.commons.util.settings.SettingsSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,49 +56,39 @@ public final class LearnLibSettings {
     }
 
     public <E extends Enum<E>> E getEnumValue(LearnLibProperty property, Class<E> enumClazz) {
+        // TODO: the assumption that enum constants are all-uppercase does not *always* hold!
+        return getTypedValue(property, p -> Enum.valueOf(enumClazz, p.toUpperCase()));
+    }
+
+    public boolean getBool(LearnLibProperty property, boolean defaultValue) {
+        return WrapperUtil.booleanValue(getBoolean(property), defaultValue);
+    }
+
+    public Boolean getBoolean(LearnLibProperty property) {
+        return getTypedValue(property, Boolean::parseBoolean);
+    }
+
+    public int getInt(LearnLibProperty property, int defaultValue) {
+        return WrapperUtil.intValue(getInteger(property), defaultValue);
+    }
+
+    public Integer getInteger(LearnLibProperty property) {
+        return getTypedValue(property, Integer::parseInt);
+    }
+
+    private <T> T getTypedValue(LearnLibProperty property, Function<String, T> valueExtractor) {
         String prop = getProperty(property);
+
         if (prop == null) {
             return null;
         }
 
-        // TODO: the assumption that enum constants are all-uppercase does not *always* hold!
-        return Enum.valueOf(enumClazz, prop.toUpperCase());
-    }
-
-    public boolean getBool(LearnLibProperty property, boolean defaultValue) {
-        Boolean b = getBoolean(property);
-        if (b != null) {
-            return b;
+        try {
+            return valueExtractor.apply(prop);
+        } catch (IllegalArgumentException ex) {
+            LOG.warn("Could not parse LearnLib property '" + property + "'.", ex);
+            return null;
         }
-        return defaultValue;
-    }
-
-    public Boolean getBoolean(LearnLibProperty property) {
-        String prop = getProperty(property);
-        if (prop != null) {
-            return Boolean.parseBoolean(prop);
-        }
-        return null;
-    }
-
-    public int getInt(LearnLibProperty property, int defaultValue) {
-        Integer prop = getInteger(property);
-        if (prop != null) {
-            return prop;
-        }
-        return defaultValue;
-    }
-
-    public Integer getInteger(LearnLibProperty property) {
-        String prop = getProperty(property);
-        if (prop != null) {
-            try {
-                return Integer.parseInt(prop);
-            } catch (NumberFormatException ex) {
-                LOG.warn("Could not parse LearnLib integer property '" + property + "'.", ex);
-            }
-        }
-        return null;
     }
 
 }

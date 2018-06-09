@@ -42,6 +42,7 @@ public abstract class AbstractBaseCounterexample<E> implements AbstractCounterex
         return values.length;
     }
 
+    @Override
     public E effect(int index) {
         E eff = values.get(index);
         if (eff == null) {

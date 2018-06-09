@@ -72,6 +72,7 @@ public abstract class AbstractHypTrans<I> extends IntrusiveListElemImpl<Abstract
         return nonTreeTarget;
     }
 
+    @Override
     public Word<I> getAccessSequence() {
         return aseq;
     }

@@ -37,7 +37,7 @@ import org.testng.annotations.Factory;
  *
  * @author frohme
  */
-public abstract class AbstractMealyPassiveLearnerIT extends AbstractPassiveLearnerIT {
+public abstract class AbstractMealyPassiveLearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
@@ -57,7 +57,7 @@ public abstract class AbstractMealyPassiveLearnerIT extends AbstractPassiveLearn
         final Alphabet<I> alphabet = example.getAlphabet();
         final MealyMachine<?, I, ?, O> reference = example.getReferenceAutomaton();
 
-        Collection<DefaultQuery<I, Word<O>>> queries = super.generateSamples(alphabet, reference);
+        Collection<DefaultQuery<I, Word<O>>> queries = LearnerITUtil.generateSamples(alphabet, reference);
 
         final PassiveLearnerVariantListImpl<MealyMachine<?, I, ?, O>, I, Word<O>> variants =
                 new PassiveLearnerVariantListImpl<>();
@@ -66,7 +66,7 @@ public abstract class AbstractMealyPassiveLearnerIT extends AbstractPassiveLearn
         final PassiveLearningExample<I, Word<O>> effectiveExample =
                 new DefaultPassiveLearningExample<>(queries, alphabet);
 
-        return super.createPassiveExampleITCases(effectiveExample, variants);
+        return LearnerITUtil.createPassiveExampleITCases(effectiveExample, variants);
     }
 
     /**

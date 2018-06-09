@@ -78,7 +78,7 @@ public class StaticParallelOracle<I, D> implements ParallelOracle<I, D> {
                                 @Nonnegative int minBatchSize,
                                 PoolPolicy policy) {
 
-        this.oracles = oracles.toArray(new MembershipOracle[oracles.size()]);
+        this.oracles = oracles.toArray(new MembershipOracle[0]);
 
         switch (policy) {
             case FIXED:

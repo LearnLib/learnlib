@@ -74,11 +74,6 @@ public abstract class AbstractLTSminLTL<I,
     private final Function<String, I> string2Input;
 
     /**
-     * Whether or not we made sure the LTSmin binaries can be run.
-     */
-    private static boolean binariesChecked;
-
-    /**
      * Constructs a new AbstractLTSminLTL.
      *
      * @param keepFiles whether to keep intermediate files, (e.g. etfs, gcfs etc.).
@@ -95,11 +90,8 @@ public abstract class AbstractLTSminLTL<I,
         this.keepFiles = keepFiles;
         this.string2Input = string2Input;
 
-        if (!binariesChecked) {
-            if (!LTSminUtil.checkUsable()) {
-                throw new ModelCheckingException("LTSmin binary could not be executed correctly");
-            }
-            binariesChecked = true;
+        if (!LazyBinaryChecker.AVAILABLE) {
+            throw new ModelCheckingException("LTSmin binary could not be executed correctly");
         }
     }
 
@@ -277,7 +269,24 @@ public abstract class AbstractLTSminLTL<I,
         return result;
     }
 
-    public static class BuilderDefaults {
+    /**
+     * Lazy holder for checking availability of LTSMin binary. See
+     * <a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom">
+     * Initialization-on-demand holder idiom</a>
+     */
+    private static class LazyBinaryChecker {
+
+        /**
+         * Whether or not we made sure the LTSmin binaries can be run.
+         */
+        private static boolean AVAILABLE = LTSminUtil.checkUsable();
+    }
+
+    public static final class BuilderDefaults {
+
+        private BuilderDefaults() {
+            // prevent instantiation
+        }
 
         public static boolean keepFiles() {
             return false;

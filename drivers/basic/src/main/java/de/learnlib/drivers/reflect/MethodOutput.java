@@ -20,6 +20,9 @@ package de.learnlib.drivers.reflect;
  *
  * @author falk
  */
-public abstract class AbstractMethodOutput {
+public class MethodOutput {
 
+    protected MethodOutput() {
+        // prevent public instantiation
+    }
 }

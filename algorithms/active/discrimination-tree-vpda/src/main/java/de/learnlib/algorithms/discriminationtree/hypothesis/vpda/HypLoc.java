@@ -85,6 +85,7 @@ public class HypLoc<I> implements AccessSequenceProvider<I> {
         return treeIncoming == null;
     }
 
+    @Override
     public Word<I> getAccessSequence() {
         return aseq;
     }

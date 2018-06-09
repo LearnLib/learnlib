@@ -22,7 +22,7 @@ import java.util.Objects;
  *
  * @author falkhowar
  */
-public class Error extends AbstractMethodOutput {
+public class Error extends MethodOutput {
 
     private final Throwable cause;
 

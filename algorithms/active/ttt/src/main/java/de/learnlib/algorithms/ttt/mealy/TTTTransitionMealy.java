@@ -31,6 +31,7 @@ public class TTTTransitionMealy<I, O> extends TTTTransition<I, Word<O>> {
         return this.output;
     }
 
+    @Override
     public Object getProperty() {
         return output;
     }

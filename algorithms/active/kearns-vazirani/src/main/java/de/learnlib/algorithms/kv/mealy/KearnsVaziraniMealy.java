@@ -320,7 +320,11 @@ public class KearnsVaziraniMealy<I, O>
         this.stateInfos = state.getStateInfos();
     }
 
-    static final class BuilderDefaults {
+    public static final class BuilderDefaults {
+
+        private BuilderDefaults() {
+            // prevent instantiation
+        }
 
         public static boolean repeatedCounterexampleEvaluation() {
             return true;

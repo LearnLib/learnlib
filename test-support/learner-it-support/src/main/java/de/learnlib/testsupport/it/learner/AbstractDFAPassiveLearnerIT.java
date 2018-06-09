@@ -40,7 +40,7 @@ import org.testng.annotations.Factory;
  *
  * @author frohme
  */
-public abstract class AbstractDFAPassiveLearnerIT extends AbstractPassiveLearnerIT {
+public abstract class AbstractDFAPassiveLearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
@@ -67,7 +67,7 @@ public abstract class AbstractDFAPassiveLearnerIT extends AbstractPassiveLearner
         final PassiveLearningExample<I, Boolean> effectiveExample =
                 new DefaultPassiveLearningExample<>(queries, alphabet);
 
-        return super.createPassiveExampleITCases(effectiveExample, variants);
+        return LearnerITUtil.createPassiveExampleITCases(effectiveExample, variants);
     }
 
     /**
@@ -84,7 +84,7 @@ public abstract class AbstractDFAPassiveLearnerIT extends AbstractPassiveLearner
      */
     protected <I> Collection<DefaultQuery<I, Boolean>> generateSamplesInternal(Alphabet<I> alphabet,
                                                                                DFA<?, I> reference) {
-        return super.generateSamples(alphabet, reference);
+        return LearnerITUtil.generateSamples(alphabet, reference);
     }
 
     /**

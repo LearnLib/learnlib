@@ -22,7 +22,7 @@ import java.util.Objects;
  *
  * @author falkhowar
  */
-public class ReturnValue extends AbstractMethodOutput {
+public class ReturnValue extends MethodOutput {
 
     private final Object ret;
 

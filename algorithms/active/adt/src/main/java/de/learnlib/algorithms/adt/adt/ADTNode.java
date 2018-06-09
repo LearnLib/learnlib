@@ -101,6 +101,7 @@ public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I
         };
     }
 
+    @Override
     default boolean isLeaf() {
         return NodeType.LEAF_NODE == this.getNodeType();
     }

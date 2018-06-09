@@ -21,7 +21,7 @@ package de.learnlib.drivers.reflect;
  *
  * @author falkhowar
  */
-public final class Unobserved extends AbstractMethodOutput {
+public final class Unobserved extends MethodOutput {
 
     public static final Unobserved INSTANCE = new Unobserved();
 

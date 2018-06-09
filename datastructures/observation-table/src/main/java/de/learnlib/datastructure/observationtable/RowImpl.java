@@ -73,6 +73,7 @@ final class RowImpl<I> implements Row<I>, Serializable {
         this.successors = new ResizingObjectArray(initialAlphabetSize);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public RowImpl<I> getSuccessor(int inputIdx) {
         return (RowImpl<I>) successors.array[inputIdx];
@@ -91,14 +92,17 @@ final class RowImpl<I> implements Row<I>, Serializable {
         successors.array[inputIdx] = succ;
     }
 
+    @Override
     public Word<I> getLabel() {
         return label;
     }
 
+    @Override
     public int getRowId() {
         return rowId;
     }
 
+    @Override
     public int getRowContentId() {
         return rowContentId;
     }

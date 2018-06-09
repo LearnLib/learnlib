@@ -28,8 +28,8 @@ import de.learnlib.api.SUL;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.statistic.StatisticSUL;
-import de.learnlib.drivers.reflect.AbstractMethodOutput;
 import de.learnlib.drivers.reflect.MethodInput;
+import de.learnlib.drivers.reflect.MethodOutput;
 import de.learnlib.drivers.reflect.SimplePOJOTestDriver;
 import de.learnlib.filter.cache.sul.SULCaches;
 import de.learnlib.filter.statistic.sul.ResetCounterSUL;
@@ -75,14 +75,14 @@ public final class Example {
         MethodInput poll = driver.addInput("poll", mPoll);
 
         // oracle for counting queries wraps sul
-        StatisticSUL<MethodInput, AbstractMethodOutput> statisticSul =
+        StatisticSUL<MethodInput, MethodOutput> statisticSul =
                 new ResetCounterSUL<>("membership queries", driver);
 
-        SUL<MethodInput, AbstractMethodOutput> effectiveSul = statisticSul;
+        SUL<MethodInput, MethodOutput> effectiveSul = statisticSul;
         // use caching in order to avoid duplicate queries
         effectiveSul = SULCaches.createCache(driver.getInputs(), effectiveSul);
 
-        SULOracle<MethodInput, AbstractMethodOutput> mqOracle = new SULOracle<>(effectiveSul);
+        SULOracle<MethodInput, MethodOutput> mqOracle = new SULOracle<>(effectiveSul);
 
         // create initial set of suffixes
         List<Word<MethodInput>> suffixes = new ArrayList<>();
@@ -93,14 +93,14 @@ public final class Example {
         // construct L* instance (almost classic Mealy version)
         // almost: we use words (Word<String>) in cells of the table
         // instead of single outputs.
-        MealyLearner<MethodInput, AbstractMethodOutput> lstar =
-                new ExtensibleLStarMealyBuilder<MethodInput, AbstractMethodOutput>().withAlphabet(driver.getInputs()) // input alphabet
-                                                                                    .withOracle(mqOracle) // membership oracle
-                                                                                    .withInitialSuffixes(suffixes) // initial suffixes
-                                                                                    .create();
+        MealyLearner<MethodInput, MethodOutput> lstar =
+                new ExtensibleLStarMealyBuilder<MethodInput, MethodOutput>().withAlphabet(driver.getInputs()) // input alphabet
+                                                                            .withOracle(mqOracle) // membership oracle
+                                                                            .withInitialSuffixes(suffixes) // initial suffixes
+                                                                            .create();
 
         // create random walks equivalence test
-        MealyEquivalenceOracle<MethodInput, AbstractMethodOutput> randomWalks =
+        MealyEquivalenceOracle<MethodInput, MethodOutput> randomWalks =
                 new RandomWalkEQOracle<>(driver, // system under learning
                                          RESET_PROBABILITY, // reset SUL w/ this probability before a step
                                          MAX_STEPS, // max steps (overall)
@@ -112,7 +112,7 @@ public final class Example {
         // the learning algorithm and the random walks test.
         // The experiment will execute the main loop of
         // active learning
-        MealyExperiment<MethodInput, AbstractMethodOutput> experiment =
+        MealyExperiment<MethodInput, MethodOutput> experiment =
                 new MealyExperiment<>(lstar, randomWalks, driver.getInputs());
 
         // turn on time profiling
@@ -125,7 +125,7 @@ public final class Example {
         experiment.run();
 
         // get learned model
-        MealyMachine<?, MethodInput, ?, AbstractMethodOutput> result = experiment.getFinalHypothesis();
+        MealyMachine<?, MethodInput, ?, MethodOutput> result = experiment.getFinalHypothesis();
 
         // report results
         System.out.println("-------------------------------------------------------");

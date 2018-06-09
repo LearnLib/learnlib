@@ -37,6 +37,7 @@ public abstract class AbstractWordBasedDiscriminationTree<I, O, D>
         super(root, oracle);
     }
 
+    @Override
     public AbstractWordBasedDTNode<I, O, D> sift(AbstractWordBasedDTNode<I, O, D> start, Word<I> prefix) {
         AbstractWordBasedDTNode<I, O, D> curr = start;
 

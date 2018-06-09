@@ -809,7 +809,11 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         }
     }
 
-    public static class BuilderDefaults {
+    public static final class BuilderDefaults {
+
+        private BuilderDefaults() {
+            // prevent instantiation
+        }
 
         public static LeafSplitter leafSplitter() {
             return LeafSplitters.DEFAULT_SPLITTER;

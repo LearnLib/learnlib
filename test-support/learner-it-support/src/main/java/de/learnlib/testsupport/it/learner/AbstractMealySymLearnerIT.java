@@ -40,7 +40,7 @@ import org.testng.annotations.Factory;
  *
  * @author Malte Isberner
  */
-public abstract class AbstractMealySymLearnerIT extends AbstractLearnerIT {
+public abstract class AbstractMealySymLearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
@@ -62,7 +62,7 @@ public abstract class AbstractMealySymLearnerIT extends AbstractLearnerIT {
         final MealySymLearnerVariantListImpl<I, O> variants = new MealySymLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, MealyUtil.wrapWordOracle(mqOracle), variants);
 
-        return super.createExampleITCases(example, variants.getMealyLearnerVariants());
+        return LearnerITUtil.createExampleITCases(example, variants.getMealyLearnerVariants());
     }
 
     /**

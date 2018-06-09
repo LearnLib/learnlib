@@ -35,7 +35,7 @@ public interface ObservationTableWriter<I, D> {
         try {
             write(table, (Appendable) out);
         } catch (IOException ex) {
-            throw new AssertionError("Writing to PrintStream must not throw");
+            throw new AssertionError("Writing to PrintStream must not throw", ex);
         }
     }
 
@@ -43,7 +43,7 @@ public interface ObservationTableWriter<I, D> {
         try {
             write(table, (Appendable) out);
         } catch (IOException ex) {
-            throw new AssertionError("Writing to StringBuilder must not throw");
+            throw new AssertionError("Writing to StringBuilder must not throw", ex);
         }
     }
 

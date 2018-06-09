@@ -37,9 +37,9 @@ public class ObjectTest {
         final StackData testCase = buildStackData(StackWithException.class);
 
         // push1, push2, pop, pop, pop, pop
-        final Word<AbstractMethodOutput> output1 = answerFirstQuery(testCase);
+        final Word<MethodOutput> output1 = answerFirstQuery(testCase);
         // push1, push2, push1, pop
-        final Word<AbstractMethodOutput> output2 = answerSecondQuery(testCase);
+        final Word<MethodOutput> output2 = answerSecondQuery(testCase);
 
         Assert.assertTrue(output1.getSymbol(0) instanceof ReturnValue);
         Assert.assertTrue(output1.getSymbol(1) instanceof ReturnValue);
@@ -60,35 +60,35 @@ public class ObjectTest {
         final StackData testCase = buildStackData(StackWithNull.class);
 
         // push1, push2, pop, pop, pop, pop
-        final Word<AbstractMethodOutput> output1 = answerFirstQuery(testCase);
+        final Word<MethodOutput> output1 = answerFirstQuery(testCase);
         // push1, push2, push1, pop
-        final Word<AbstractMethodOutput> output2 = answerSecondQuery(testCase);
+        final Word<MethodOutput> output2 = answerSecondQuery(testCase);
 
-        for (AbstractMethodOutput out : output1) {
+        for (MethodOutput out : output1) {
             Assert.assertTrue(out instanceof ReturnValue);
         }
 
-        for (AbstractMethodOutput out : output2) {
+        for (MethodOutput out : output2) {
             Assert.assertTrue(out instanceof ReturnValue);
         }
     }
 
-    private Word<AbstractMethodOutput> answerFirstQuery(StackData stackData) {
+    private Word<MethodOutput> answerFirstQuery(StackData stackData) {
         // push1, push2, pop, pop, pop, pop
         return answerQuery(stackData, 0, 1, 2, 2, 2, 2);
 
     }
 
-    private Word<AbstractMethodOutput> answerSecondQuery(StackData stackData) {
+    private Word<MethodOutput> answerSecondQuery(StackData stackData) {
         // push1, push2, push1, pop
         return answerQuery(stackData, 0, 1, 0, 2);
 
     }
 
-    private Word<AbstractMethodOutput> answerQuery(StackData stackData, int... inputIndexes) {
+    private Word<MethodOutput> answerQuery(StackData stackData, int... inputIndexes) {
 
         final Alphabet<MethodInput> alphabet = stackData.driver.getInputs();
-        SULOracle<MethodInput, AbstractMethodOutput> oracle = stackData.oracle;
+        SULOracle<MethodInput, MethodOutput> oracle = stackData.oracle;
 
         final WordBuilder<MethodInput> wb = new WordBuilder<>(inputIndexes.length);
 
@@ -102,7 +102,7 @@ public class ObjectTest {
     private StackData buildStackData(final Class<?> stackClass) throws NoSuchMethodException {
         Constructor<?> c = stackClass.getConstructor(int.class);
         SimplePOJOTestDriver driver = new SimplePOJOTestDriver(c, 2);
-        SULOracle<MethodInput, AbstractMethodOutput> oracle = new SULOracle<>(driver);
+        SULOracle<MethodInput, MethodOutput> oracle = new SULOracle<>(driver);
 
         Method push = stackClass.getMethod("push", Object.class);
         driver.addInput("push_1", push, 1);
@@ -117,9 +117,9 @@ public class ObjectTest {
     private static class StackData {
 
         private final SimplePOJOTestDriver driver;
-        private final SULOracle<MethodInput, AbstractMethodOutput> oracle;
+        private final SULOracle<MethodInput, MethodOutput> oracle;
 
-        StackData(SimplePOJOTestDriver driver, SULOracle<MethodInput, AbstractMethodOutput> oracle) {
+        StackData(SimplePOJOTestDriver driver, SULOracle<MethodInput, MethodOutput> oracle) {
             this.driver = driver;
             this.oracle = oracle;
         }

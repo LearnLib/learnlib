@@ -95,7 +95,11 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?, I>, I, Boolean, Bo
         this.hypWrapper = new HypothesisWrapperDFA<>(this.hypothesis);
     }
 
-    public static class BuilderDefaults {
+    public static final class BuilderDefaults {
+
+        private BuilderDefaults() {
+            // prevent instantiation
+        }
 
         public static boolean epsilonRoot() {
             return true;

@@ -37,7 +37,7 @@ import org.testng.annotations.Factory;
  *
  * @author Malte Isberner
  */
-public abstract class AbstractDFALearnerIT extends AbstractLearnerIT {
+public abstract class AbstractDFALearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
@@ -58,7 +58,7 @@ public abstract class AbstractDFALearnerIT extends AbstractLearnerIT {
         final DFALearnerVariantListImpl<I> variants = new DFALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, example.getReferenceAutomaton().size(), mqOracle, variants);
 
-        return super.createExampleITCases(example, variants);
+        return LearnerITUtil.createExampleITCases(example, variants);
     }
 
     /**

@@ -252,7 +252,11 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
         this.dtree.setOracle(oracle);
     }
 
-    public static class BuilderDefaults {
+    public static final class BuilderDefaults {
+
+        private BuilderDefaults() {
+            // prevent instantiation
+        }
 
         public static <I, O> LocalSuffixFinder<? super I, ? super O> suffixFinder() {
             return LocalSuffixFinders.RIVEST_SCHAPIRE;
