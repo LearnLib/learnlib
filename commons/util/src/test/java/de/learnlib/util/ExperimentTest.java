@@ -65,7 +65,7 @@ public class ExperimentTest {
         DFA<?, Character> finalModel = experiment.getFinalHypothesis();
 
         Assert.assertNotNull(experiment.getFinalHypothesis());
-        Assert.assertTrue(finalModel == target);
+        Assert.assertSame(finalModel, target);
 
         Assert.assertTrue(learner.startLearningCalled);
         Assert.assertEquals(learner.refinementSteps, REFINEMENT_STEPS);
@@ -120,7 +120,7 @@ public class ExperimentTest {
         @Override
         public DefaultQuery<I, Boolean> findCounterExample(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
             if (counterexamples < REFINEMENT_STEPS) {
-                Assert.assertTrue(hypothesis == intermediateTarget);
+                Assert.assertSame(hypothesis, intermediateTarget);
 
                 counterexamples++;
                 return new DefaultQuery<>(Word.epsilon(), true);

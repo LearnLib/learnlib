@@ -122,6 +122,6 @@ public abstract class AbstractResumableLearnerTest<L extends ResumableLearner<T>
                 Automata.testEquivalence(learner.getHypothesisModel(), learner2.getHypothesisModel(), inputAlphabet);
 
         Assert.assertTrue(modelsAreEquivalent);
-        Assert.assertTrue(roundsPre - roundsPost == rounds);
+        Assert.assertEquals(roundsPre - roundsPost, rounds);
     }
 }

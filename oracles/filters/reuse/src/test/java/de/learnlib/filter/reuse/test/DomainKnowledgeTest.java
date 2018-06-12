@@ -90,7 +90,7 @@ public class DomainKnowledgeTest {
         Word<Integer> input = getInput(1, 0, 1, 1);
         NodeResult<Integer, Integer, String> node = reuseOracle.getReuseTree().fetchSystemState(input);
 
-        Assert.assertTrue(node.prefixLength == 3); // ''1 0 1''
+        Assert.assertEquals(node.prefixLength, 3); // ''1 0 1''
         // reuse the prefix
         qr = new QueryResult<>(getOutput("ok"), 3);
         reuseOracle.getReuseTree().insert(getInput(1), node.reuseNode, qr);
@@ -102,7 +102,7 @@ public class DomainKnowledgeTest {
         // There should be a "1 1 1" system state, even this query was never seen
         node = reuseOracle.getReuseTree().fetchSystemState(getInput(1, 1, 1));
         Assert.assertNotNull(node);
-        Assert.assertTrue(node.prefixLength == 3); // query "1 1 1"
+        Assert.assertEquals(node.prefixLength, 3); // query "1 1 1"
 
         // The system state is invalidated, so querying again "1 1 1" reveals null this time
         node = reuseOracle.getReuseTree().fetchSystemState(getInput(1, 1, 1));
@@ -111,7 +111,7 @@ public class DomainKnowledgeTest {
         // The output of "1 0 0 0 0 1 1" should be known, even the query was never seen
         Word<String> output = reuseOracle.getReuseTree().getOutput(getInput(1, 0, 0, 0, 0, 1, 1));
         Assert.assertNotNull(output);
-        Assert.assertTrue(output.size() == 7);
+        Assert.assertEquals(output.size(), 7);
     }
 
     private class NullReuseCapableFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {

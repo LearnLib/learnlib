@@ -153,7 +153,7 @@ public class ReuseOracleTest {
         Integer systemState = node.systemState;
 
         Assert.assertNotNull(systemState);
-        Assert.assertTrue(systemState.equals(2));
+        Assert.assertEquals((int) systemState, 2);
 
         // we have automatic invalidation, so the reuseNode already has system state set to null
         // and although querying again reveals nothing reusable
@@ -183,7 +183,7 @@ public class ReuseOracleTest {
         // now we check query 112, reuse possible in 11
         NodeResult<Integer, Integer, String> node = reuseOracle.getReuseTree().fetchSystemState(getInput(1, 1, 2));
         Assert.assertNotNull(node);
-        Assert.assertTrue(node.prefixLength == 2); // query '1 1'
+        Assert.assertEquals(node.prefixLength, 2); // query '1 1'
 
         qr = new ReuseCapableOracle.QueryResult<>(getOutput("ok"), 4);
         reuseOracle.getReuseTree().insert(getInput(2), node.reuseNode, qr);
