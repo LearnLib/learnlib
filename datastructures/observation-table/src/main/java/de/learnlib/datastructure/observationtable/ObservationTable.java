@@ -235,9 +235,6 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
     /**
      * @return the suffix (column) index where the contents of the rows differ, or {@code #NO_DISTINGUISHING_SUFFIX} if
      * the contents of the rows are equal.
-     *
-     * @throws NoSuchRowException
-     *         if the
      */
     @Signed
     default int findDistinguishingSuffixIndex(Inconsistency<I> inconsistency) {
@@ -333,6 +330,8 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
 
     List<D> rowContents(Row<I> row);
 
-    D cellContents(Row<I> row, int columnId);
+    default D cellContents(Row<I> row, int columnId) {
+        return rowContents(row).get(columnId);
+    }
 
 }

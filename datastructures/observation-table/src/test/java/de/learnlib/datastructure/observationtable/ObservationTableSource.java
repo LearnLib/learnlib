@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.datastructures.writer.otsource;
+package de.learnlib.datastructure.observationtable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import de.learnlib.datastructure.observationtable.ObservationTable;
-import de.learnlib.datastructure.observationtable.reader.SimpleObservationTable;
 import net.automatalib.words.Word;
 
 /**
@@ -35,8 +34,12 @@ public final class ObservationTableSource {
         suffixes.add(Word.epsilon());
         suffixes.add(Word.fromLetter("A"));
         suffixes.add(Word.fromLetter("B"));
-        suffixes.add(Word.fromLetter("A").concat(Word.fromLetter("B")));
-        return new SimpleObservationTable<>(suffixes);
+        suffixes.add(Word.fromSymbols("A", "B"));
+
+        final MockedObservationTable<String, String> result = new MockedObservationTable<>(suffixes);
+        addPrefixes(result);
+
+        return result;
     }
 
     public static ObservationTable<String, String> otWithFourSuffixesUsingDelimiterInNames() {
@@ -44,8 +47,18 @@ public final class ObservationTableSource {
         suffixes.add(Word.epsilon());
         suffixes.add(Word.fromLetter("A,"));
         suffixes.add(Word.fromLetter("B"));
-        suffixes.add(Word.fromLetter("A,").concat(Word.fromLetter("B")));
-        return new SimpleObservationTable<>(suffixes);
+        suffixes.add(Word.fromSymbols("A,", "B"));
+
+        final MockedObservationTable<String, String> result = new MockedObservationTable<>(suffixes);
+        addPrefixes(result);
+
+        return result;
+    }
+
+    private static void addPrefixes(MockedObservationTable<String, String> ot) {
+        ot.addShortPrefix(Word.fromLetter("A"), Arrays.asList("0", "1", "2", "3"));
+        ot.addShortPrefix(Word.fromSymbols("A", "B"), Arrays.asList("3", "2", "1", "0"));
+        ot.addLongPrefix(Word.fromSymbols("A", "B", "C"), Arrays.asList("0123", "0123", "0123", "0123"));
     }
 
 }

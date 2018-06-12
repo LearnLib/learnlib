@@ -22,7 +22,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import de.learnlib.datastructure.observationtable.NoSuchRowException;
 import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
@@ -68,8 +67,8 @@ public class SimpleObservationTable<I, D> implements ObservationTable<I, D> {
 
     @Nonnull
     @Override
-    public Row<I> getRow(Word<I> prefix) throws NoSuchRowException {
-        throw new NoSuchRowException();
+    public Row<I> getRow(Word<I> prefix) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

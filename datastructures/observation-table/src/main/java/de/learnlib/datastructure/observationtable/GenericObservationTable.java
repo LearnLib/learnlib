@@ -469,12 +469,6 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
     }
 
     @Override
-    public D cellContents(Row<I> row, int columnId) {
-        List<D> contents = rowContents(row);
-        return contents.get(columnId);
-    }
-
-    @Override
     public List<D> rowContents(Row<I> row) {
         return allRowContents.get(row.getRowContentId());
     }

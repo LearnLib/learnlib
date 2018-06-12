@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.datastructures.writer;
+package de.learnlib.datastructure.observationtable.writer;
 
 import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.ObservationTable;
+import de.learnlib.datastructure.observationtable.ObservationTableSource;
 import de.learnlib.datastructure.observationtable.reader.SuffixASCIIReader;
-import de.learnlib.datastructure.observationtable.writer.SuffixASCIIWriter;
-import de.learnlib.datastructures.writer.otsource.ObservationTableSource;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.SimpleAlphabet;
 import org.testng.Assert;
