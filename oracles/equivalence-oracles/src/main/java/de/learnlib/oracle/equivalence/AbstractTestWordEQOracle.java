@@ -77,7 +77,7 @@ public abstract class AbstractTestWordEQOracle<A extends Output<I, D>, I, D> imp
         }
 
         final Stream<Word<I>> testWordStream = generateTestWords(hypothesis, inputs);
-        final Stream<DefaultQuery<I, D>> queryStream = testWordStream.map(DefaultQuery<I, D>::new);
+        final Stream<DefaultQuery<I, D>> queryStream = testWordStream.map(DefaultQuery::new);
         final Stream<DefaultQuery<I, D>> answeredQueryStream = answerQueries(queryStream);
 
         final Stream<DefaultQuery<I, D>> ceStream = answeredQueryStream.filter(query -> {

@@ -114,7 +114,7 @@ public abstract class AbstractLStar<A, I, D>
     }
 
     protected List<Word<I>> initialPrefixes() {
-        return Collections.singletonList(Word.<I>epsilon());
+        return Collections.singletonList(Word.epsilon());
     }
 
     /**

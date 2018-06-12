@@ -203,7 +203,7 @@ public class KearnsVaziraniDFA<I>
 
     private StateInfo<I, Boolean> createInitialState(boolean accepting) {
         int state = hypothesis.addIntInitialState(accepting);
-        StateInfo<I, Boolean> si = new StateInfo<>(state, Word.<I>epsilon());
+        StateInfo<I, Boolean> si = new StateInfo<>(state, Word.epsilon());
         assert stateInfos.size() == state;
         stateInfos.add(si);
 

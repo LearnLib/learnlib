@@ -79,7 +79,7 @@ public class ExtensibleLStarDFA<I>
 
     @Override
     protected List<Word<I>> initialSuffixes() {
-        return Collections.singletonList(Word.<I>epsilon());
+        return Collections.singletonList(Word.epsilon());
     }
 
     @Override

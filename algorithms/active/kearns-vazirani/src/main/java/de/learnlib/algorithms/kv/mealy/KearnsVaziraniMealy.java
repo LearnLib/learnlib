@@ -209,7 +209,7 @@ public class KearnsVaziraniMealy<I, O>
         int state = hypothesis.addIntInitialState();
         assert state == stateInfos.size();
 
-        StateInfo<I, Word<O>> stateInfo = new StateInfo<>(state, Word.<I>epsilon());
+        StateInfo<I, Word<O>> stateInfo = new StateInfo<>(state, Word.epsilon());
         stateInfos.add(stateInfo);
 
         return stateInfo;

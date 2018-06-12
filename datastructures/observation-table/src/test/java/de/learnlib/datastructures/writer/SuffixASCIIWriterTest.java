@@ -52,8 +52,7 @@ public class SuffixASCIIWriterTest {
         alphabet.add("A");
         alphabet.add("B");
 
-        ObservationTable<String, String> parsedOt =
-                OTUtils.fromString(str, alphabet, new SuffixASCIIReader<String, String>());
+        ObservationTable<String, String> parsedOt = OTUtils.fromString(str, alphabet, new SuffixASCIIReader<>());
 
         Assert.assertEquals(ot.getSuffixes(), parsedOt.getSuffixes());
     }
