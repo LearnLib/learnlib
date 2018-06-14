@@ -25,28 +25,32 @@ public final class EquivalenceQueries {
         // prevent instantiation
     }
 
-    public static <A extends Output<I, D>, I, D> RandomWordsEQOracle<A, I, D>
-    randomWords(MembershipOracle<I, D> sulOracle, int minLength, int maxLength, int maxTests) {
+    public static <A extends Output<I, D>, I, D> RandomWordsEQOracle<A, I, D> randomWords(MembershipOracle<I, D> sulOracle,
+                                                                                          int minLength,
+                                                                                          int maxLength,
+                                                                                          int maxTests) {
         return new RandomWordsEQOracle<>(sulOracle, minLength, maxLength, maxTests);
     }
 
-    public static <I, D> CompleteExplorationEQOracle<I, D>
-    complete(MembershipOracle<I, D> sulOracle, int maxDepth) {
+    public static <A extends Output<I, D>, I, D> CompleteExplorationEQOracle<A, I, D> complete(MembershipOracle<I, D> sulOracle,
+                                                                                               int maxDepth) {
         return new CompleteExplorationEQOracle<>(sulOracle, maxDepth);
     }
 
-    public static <A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D> WMethodEQOracle<A, I, D>
-    wMethod(MembershipOracle<I, D> sulOracle, int maxDepth) {
+    public static <A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D> WMethodEQOracle<A, I, D> wMethod(
+            MembershipOracle<I, D> sulOracle,
+            int maxDepth) {
         return new WMethodEQOracle<>(sulOracle, maxDepth);
     }
 
-    public static <A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D> WpMethodEQOracle<A, I, D>
-    wpMethod(MembershipOracle<I, D> sulOracle, int maxDepth) {
+    public static <A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D> WpMethodEQOracle<A, I, D> wpMethod(
+            MembershipOracle<I, D> sulOracle,
+            int maxDepth) {
         return new WpMethodEQOracle<>(sulOracle, maxDepth);
     }
 
-    public static <A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D> SimulatorEQOracle<I, D>
-    simulator(A target) {
+    public static <A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D> SimulatorEQOracle<I, D> simulator(
+            A target) {
         return new SimulatorEQOracle<>(target);
     }
 

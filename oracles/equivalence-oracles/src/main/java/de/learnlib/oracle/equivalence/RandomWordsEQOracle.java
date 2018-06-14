@@ -15,7 +15,6 @@
  */
 package de.learnlib.oracle.equivalence;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -25,6 +24,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
@@ -69,12 +69,7 @@ public class RandomWordsEQOracle<A extends Output<I, D>, I, D> extends AbstractT
     @Override
     protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
 
-        final List<? extends I> symbolList;
-        if (inputs instanceof List) {
-            symbolList = (List<? extends I>) inputs;
-        } else {
-            symbolList = new ArrayList<>(inputs);
-        }
+        final List<? extends I> symbolList = CollectionsUtil.randomAccessList(inputs);
 
         return Stream.generate(() -> generateTestWord(symbolList, symbolList.size())).limit(maxTests);
     }

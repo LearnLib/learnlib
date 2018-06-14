@@ -51,7 +51,7 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
      * @param sulOracle
      *         interface to the system under learning
      * @param maxDepth
- *         the maximum length of the "middle" part of the test cases
+     *         the maximum length of the "middle" part of the test cases
      */
     public WpMethodEQOracle(MembershipOracle<I, D> sulOracle, int maxDepth) {
         this(sulOracle, maxDepth, 1);

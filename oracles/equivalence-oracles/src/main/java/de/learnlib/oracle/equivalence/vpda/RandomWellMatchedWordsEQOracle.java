@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 import com.google.common.base.Preconditions;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
-import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
+import net.automatalib.automata.concepts.Output;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -35,12 +35,9 @@ import net.automatalib.words.WordBuilder;
  *
  * @author Malte Isberner
  */
-public class RandomWellMatchedWordsEQOracle<I>
-        extends AbstractTestWordEQOracle<DeterministicAcceptorTS<?, I>, I, Boolean> {
+public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<Output<I, Boolean>, I, Boolean> {
 
     private final Random random;
-
-    private final VPDAlphabet<I> alphabet;
 
     private final double callProb;
 
@@ -48,17 +45,15 @@ public class RandomWellMatchedWordsEQOracle<I>
 
     public RandomWellMatchedWordsEQOracle(final Random random,
                                           final MembershipOracle<I, Boolean> oracle,
-                                          final VPDAlphabet<I> alphabet,
                                           final double callProb,
                                           final int maxTests,
                                           final int minLength,
                                           final int maxLength) {
-        this(random, oracle, alphabet, callProb, maxTests, minLength, maxLength, 1);
+        this(random, oracle, callProb, maxTests, minLength, maxLength, 1);
     }
 
     public RandomWellMatchedWordsEQOracle(final Random random,
                                           final MembershipOracle<I, Boolean> oracle,
-                                          final VPDAlphabet<I> alphabet,
                                           final double callProb,
                                           final int maxTests,
                                           final int minLength,
@@ -69,7 +64,6 @@ public class RandomWellMatchedWordsEQOracle<I>
         Preconditions.checkArgument(minLength <= maxLength, "minLength is smaller than maxLength");
 
         this.random = random;
-        this.alphabet = alphabet;
         this.callProb = callProb;
         this.maxTests = maxTests;
         this.minLength = minLength;
@@ -77,19 +71,28 @@ public class RandomWellMatchedWordsEQOracle<I>
     }
 
     @Override
-    protected Stream<Word<I>> generateTestWords(DeterministicAcceptorTS<?, I> hypothesis,
-                                                Collection<? extends I> inputs) {
+    protected Stream<Word<I>> generateTestWords(Output<I, Boolean> hypothesis, Collection<? extends I> inputs) {
+
+        if (!(inputs instanceof VPDAlphabet)) {
+            throw new IllegalArgumentException(
+                    "In order to generate well-matched words, a structured alphabet is required");
+        }
+
+        @SuppressWarnings("unchecked")
+        final VPDAlphabet<I> alphabet = (VPDAlphabet<I>) inputs;
+
         final int lengthRange = (maxLength - minLength) + 1;
-        return Stream.generate(() -> generateWellMatched(minLength + random.nextInt(lengthRange))).limit(maxTests);
+        return Stream.generate(() -> generateWellMatched(alphabet, minLength + random.nextInt(lengthRange)))
+                     .limit(maxTests);
     }
 
-    private Word<I> generateWellMatched(final int len) {
+    private Word<I> generateWellMatched(VPDAlphabet<I> alphabet, final int len) {
         WordBuilder<I> wb = new WordBuilder<>(len);
-        generateWellMatched(wb, len);
+        generateWellMatched(wb, alphabet, len);
         return wb.toWord();
     }
 
-    private void generateWellMatched(WordBuilder<I> wb, int length) {
+    private void generateWellMatched(WordBuilder<I> wb, VPDAlphabet<I> alphabet, int length) {
         if (length == 0) {
             return;
         }
@@ -102,25 +105,25 @@ public class RandomWellMatchedWordsEQOracle<I>
             boolean dir = random.nextBoolean();
             if (dir) {
                 final int cpos = random.nextInt(length - 1);
-                generateWellMatched(wb, cpos);
+                generateWellMatched(wb, alphabet, cpos);
                 wb.append(alphabet.getCallSymbol(random.nextInt(alphabet.getNumCalls())));
                 final int rpos = cpos + 1 + random.nextInt(length - cpos - 1);
-                generateWellMatched(wb, rpos - cpos - 1);
+                generateWellMatched(wb, alphabet, rpos - cpos - 1);
                 wb.append(alphabet.getReturnSymbol(random.nextInt(alphabet.getNumReturns())));
-                generateWellMatched(wb, length - rpos - 1);
+                generateWellMatched(wb, alphabet, length - rpos - 1);
             } else {
                 final int rpos = 1 + random.nextInt(length - 1);
                 final int cpos = random.nextInt(rpos);
-                generateWellMatched(wb, cpos);
+                generateWellMatched(wb, alphabet, cpos);
                 wb.append(alphabet.getCallSymbol(random.nextInt(alphabet.getNumCalls())));
-                generateWellMatched(wb, rpos - cpos - 1);
+                generateWellMatched(wb, alphabet, rpos - cpos - 1);
                 wb.append(alphabet.getReturnSymbol(random.nextInt(alphabet.getNumReturns())));
-                generateWellMatched(wb, length - rpos - 1);
+                generateWellMatched(wb, alphabet, length - rpos - 1);
             }
         } else {
             final int sep = 1 + random.nextInt(length - 1);
-            generateWellMatched(wb, sep);
-            generateWellMatched(wb, length - sep);
+            generateWellMatched(wb, alphabet, sep);
+            generateWellMatched(wb, alphabet, length - sep);
         }
     }
 
