@@ -19,14 +19,14 @@ import java.util.Collection;
 
 import javax.annotation.Nullable;
 
-import de.learnlib.api.modelchecking.counterexample.Lasso;
-import de.learnlib.api.modelchecking.counterexample.Lasso.DFALasso;
-import de.learnlib.api.modelchecking.counterexample.Lasso.MealyLasso;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
 import de.learnlib.api.query.Query;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.modelchecking.Lasso;
+import net.automatalib.modelchecking.Lasso.DFALasso;
+import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Word;
 
@@ -294,7 +294,7 @@ public interface AutomatonOracle<A extends SimpleDTS<?, I>, I, D, Q extends Quer
             LassoOracle<DFALasso<?, I>, S, I, Boolean> {}
 
     interface MealyLassoOracle<S, I, O> extends
-            MealyOracle<MealyLasso<?, I, O>, I, O, OmegaQuery<S, I, Word<O>>>,
-            LassoOracle<MealyLasso<?, I, O>, S, I, Word<O>> {}
+            MealyOracle<MealyLasso<?, I, ?, O>, I, O, OmegaQuery<S, I, Word<O>>>,
+            LassoOracle<MealyLasso<?, I, ?, O>, S, I, Word<O>> {}
 
 }

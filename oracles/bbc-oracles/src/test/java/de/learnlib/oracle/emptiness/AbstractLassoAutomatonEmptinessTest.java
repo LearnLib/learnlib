@@ -15,32 +15,11 @@
  */
 package de.learnlib.oracle.emptiness;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.learnlib.api.modelchecking.counterexample.Lasso;
-import de.learnlib.api.modelchecking.counterexample.Lasso.DFALasso;
-import de.learnlib.api.modelchecking.counterexample.Lasso.MealyLasso;
-import de.learnlib.api.oracle.OmegaMembershipOracle.DFAOmegaMembershipOracle;
-import de.learnlib.api.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.api.query.OmegaQuery;
-import de.learnlib.oracle.AbstractBreadthFirstOracle;
 import de.learnlib.oracle.AbstractBreadthFirstOracleTest;
-import de.learnlib.oracle.emptiness.AbstractLassoAutomatonEmptinessOracle.DFALassoDFAEmptinessOracle;
-import de.learnlib.oracle.emptiness.AbstractLassoAutomatonEmptinessOracle.MealyLassoMealyEmptinessOracle;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.ts.simple.SimpleDTS;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.modelchecking.Lasso;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -79,124 +58,4 @@ public abstract class AbstractLassoAutomatonEmptinessTest<L extends Lasso<?, ?, 
         Assert.assertEquals(query, cex);
     }
 
-    public static class DFALassoDFAEmptinessOracleTest
-            extends AbstractLassoAutomatonEmptinessTest<DFALasso<?, String>, Boolean> {
-
-        @Mock
-        private DFAOmegaMembershipOracle<Integer, String> dfaOmegaMembershipOracle;
-
-        @Mock
-        private DFAOmegaMembershipOracle<Integer, Character> dfaOmegaMembershipOracle2;
-
-        @BeforeMethod
-        public void setUp() {
-            super.setUp();
-            Mockito.doAnswer(invocation -> {
-                final OmegaQuery<Integer, String, Boolean> q = invocation.getArgument(0);
-                if (q.getInput().equals(Word.fromSymbols("a", "a", "a"))) {
-                    q.answer(true);
-                    final List<Integer> states = new ArrayList<>();
-                    states.add(0);
-                    states.add(0);
-                    states.add(0);
-                    states.add(0);
-                    q.setStates(states);
-                } else {
-                    q.answer(false);
-                }
-                return null;
-            }).when(dfaOmegaMembershipOracle).processQuery(ArgumentMatchers.any());
-            Mockito.when(dfaOmegaMembershipOracle.isSameState(ArgumentMatchers.any(),
-                                                              ArgumentMatchers.any(),
-                                                              ArgumentMatchers.any(),
-                                                              ArgumentMatchers.any())).thenReturn(true);
-        }
-
-        @Override
-        protected AbstractLassoAutomatonEmptinessOracle<DFALasso<?, String>, ?, String, ?>
-                createLassoAutomatonEmptinessOracle() {
-            return new DFALassoDFAEmptinessOracle<>(dfaOmegaMembershipOracle);
-        }
-
-        @Override
-        protected DFALasso<?, String> createLasso() {
-            final DFA<?, String> dfa = AutomatonBuilders.forDFA(new CompactDFA<>(ALPHABET)).
-                    from("q0").on("a").loop().withAccepting("q0").withInitial("q0").create();
-            return new DFALasso<>(dfa, ALPHABET, 3);
-        }
-
-        @Override
-        protected DefaultQuery<String, ?> createQuery() {
-            return new DefaultQuery<>(Word.fromSymbols("a", "a", "a"), true);
-        }
-
-        @Override
-        protected AbstractBreadthFirstOracle<? extends SimpleDTS<?, Character>,
-                                             Character,
-                                             Boolean,
-                                             OmegaQuery<Integer, Character, Boolean>> createBreadthFirstOracle(int maxWords) {
-            return new DFALassoDFAEmptinessOracle<>(dfaOmegaMembershipOracle2);
-        }
-    }
-
-    public static class MealyLassoMealyEmptinessOracleTest
-            extends AbstractLassoAutomatonEmptinessTest<MealyLasso<?, String, String>, Word<String>> {
-
-        @Mock
-        private MealyOmegaMembershipOracle<Integer, String, String> mealyOmegaMembershipOracle;
-
-        @Mock
-        private MealyOmegaMembershipOracle<Integer, Character, String> mealyOmegaMembershipOracle2;
-
-        @BeforeMethod
-        public void setUp() {
-            super.setUp();
-            Mockito.doAnswer(invocation -> {
-                final OmegaQuery<Integer, String, Word<String>> q = invocation.getArgument(0);
-                if (q.getInput().equals(Word.fromSymbols("a", "a", "a"))) {
-                    q.answer(Word.fromSymbols("1", "1", "1"));
-                    final List<Integer> states = new ArrayList<>();
-                    states.add(0);
-                    states.add(0);
-                    states.add(0);
-                    states.add(0);
-                    q.setStates(states);
-                } else {
-                    q.answer(Word.fromSymbols("not-an-output"));
-                }
-                return null;
-            }).when(mealyOmegaMembershipOracle).processQuery(ArgumentMatchers.any());
-            Mockito.when(mealyOmegaMembershipOracle.isSameState(ArgumentMatchers.any(),
-                                                                ArgumentMatchers.any(),
-                                                                ArgumentMatchers.any(),
-                                                                ArgumentMatchers.any())).thenReturn(true);
-        }
-
-        @Override
-        protected AbstractLassoAutomatonEmptinessOracle<MealyLasso<?, String, String>, ?, String, ?>
-                createLassoAutomatonEmptinessOracle() {
-            return new MealyLassoMealyEmptinessOracle<>(mealyOmegaMembershipOracle);
-        }
-
-        @Override
-        protected MealyLasso<?, String, String> createLasso() {
-            final MealyMachine<?, String, ?, String> mealy = AutomatonBuilders.forMealy(
-                    new CompactMealy<String, String>(ALPHABET)).
-                    from("q0").on("a").withOutput("1").loop().withInitial("q0").create();
-            return new MealyLasso<>(mealy, ALPHABET, 3);
-        }
-
-        @Override
-        protected DefaultQuery<String, Word<String>> createQuery() {
-            return new DefaultQuery<>(Word.epsilon(), Word.fromSymbols("a", "a", "a"), Word.fromSymbols("1", "1", "1"));
-        }
-
-        @Override
-        protected AbstractBreadthFirstOracle<? extends SimpleDTS<?, Character>,
-                                            Character,
-                                            Word<String>,
-                                            OmegaQuery<Integer, Character, Word<String>>> createBreadthFirstOracle(int maxWords) {
-            return new MealyLassoMealyEmptinessOracle<>(mealyOmegaMembershipOracle2);
-        }
-    }
 }

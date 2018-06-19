@@ -17,11 +17,11 @@ package de.learnlib.oracle.blackbox;
 
 import java.util.Collection;
 
-import de.learnlib.api.modelchecking.modelchecker.ModelChecker;
 import de.learnlib.api.oracle.EmptinessOracle;
 import de.learnlib.api.oracle.InclusionOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.concepts.Output;
+import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;

@@ -20,10 +20,10 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import de.learnlib.api.modelchecking.counterexample.Lasso.MealyLasso;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
 import net.automatalib.commons.util.collections.CollectionsUtil;
+import net.automatalib.modelchecking.MealyLassoImpl;
 import net.automatalib.words.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -31,16 +31,16 @@ import org.testng.annotations.Test;
 /**
  * @author Jeroen Meijer
  */
-public class MealyLassoTest extends AbstractLassoTest<MealyLasso<?, String, String>> {
+public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<?, String, String>> {
 
     @Override
-    protected MealyLasso<?, String, String> getLasso(Word<String> prefix, Word<String> loop, int unfoldTimes) {
-        return new MealyLasso<>(new MealyMachineMock(prefix, loop), getAlphabet(), 1);
+    protected MealyLassoImpl<?, String, String> getLasso(Word<String> prefix, Word<String> loop, int unfoldTimes) {
+        return new MealyLassoImpl<>(new MealyMachineMock(prefix, loop), getAlphabet(), 1);
     }
 
     @Test
     public void testGetOutput() {
-        final MealyLasso<?, String, String> lasso = getLasso(Word.epsilon(), Word.fromSymbols("a"), 1);
+        final MealyLassoImpl<?, String, String> lasso = getLasso(Word.epsilon(), Word.fromSymbols("a"), 1);
         Assert.assertEquals(lasso.getOutput(), Word.fromSymbols(MealyMachineMock.OUTPUT));
     }
 

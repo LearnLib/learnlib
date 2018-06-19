@@ -30,7 +30,6 @@ public class LearnLibSettingsTest {
     public void setUp() {
         final File properties = new File(LearnLibSettingsTest.class.getResource("/learnlib.properties").getFile());
         System.setProperty("learnlib.properties", properties.getAbsolutePath());
-        System.setProperty(LearnLibProperty.LTSMIN_PATH.getPropertyKey(), "OVERRIDDEN");
     }
 
     @Test
@@ -39,9 +38,6 @@ public class LearnLibSettingsTest {
 
         for (LearnLibProperty p : LearnLibProperty.values()) {
             switch (p) {
-                case LTSMIN_PATH:
-                    Assert.assertEquals("OVERRIDDEN", settings.getProperty(LearnLibProperty.LTSMIN_PATH));
-                    break;
                 case PARALLEL_BATCH_SIZE_DYNAMIC:
                     Assert.assertEquals(1, settings.getInt(LearnLibProperty.PARALLEL_BATCH_SIZE_DYNAMIC, 0));
                     break;

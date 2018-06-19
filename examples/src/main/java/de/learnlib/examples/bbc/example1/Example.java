@@ -21,7 +21,6 @@ import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.logging.LoggingBlackBoxProperty.DFALoggingBlackBoxProperty;
-import de.learnlib.api.modelchecking.modelchecker.ModelChecker.DFAModelCheckerLasso;
 import de.learnlib.api.oracle.BlackBoxOracle.DFABlackBoxOracle;
 import de.learnlib.api.oracle.BlackBoxOracle.DFABlackBoxProperty;
 import de.learnlib.api.oracle.EmptinessOracle.DFALassoEmptinessOracle;
@@ -31,7 +30,6 @@ import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle.DFAOmegaMembershipOracle;
 import de.learnlib.examples.LearningExample.DFALearningExample;
 import de.learnlib.examples.dfa.ExampleTinyDFA;
-import de.learnlib.modelchecking.modelchecker.LTSminLTLDFABuilder;
 import de.learnlib.oracle.blackbox.CExFirstBBOracle.CExFirstDFABBOracle;
 import de.learnlib.oracle.blackbox.ModelCheckingBBProperty.DFABBPropertyDFALasso;
 import de.learnlib.oracle.emptiness.AbstractLassoAutomatonEmptinessOracle.DFALassoDFAEmptinessOracle;
@@ -40,6 +38,8 @@ import de.learnlib.oracle.inclusion.AbstractBreadthFirstInclusionOracle.DFABread
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.DFASimulatorOmegaOracle;
 import de.learnlib.util.BBCExperiment.DFABBCExperiment;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.modelcheckers.ltsmin.LTSminLTLDFABuilder;
+import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.words.Alphabet;
 

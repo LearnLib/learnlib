@@ -19,14 +19,6 @@ import java.util.Collection;
 
 import javax.annotation.Nullable;
 
-import de.learnlib.api.exception.ModelCheckingException;
-import de.learnlib.api.modelchecking.counterexample.Lasso.DFALasso;
-import de.learnlib.api.modelchecking.counterexample.Lasso.MealyLasso;
-import de.learnlib.api.modelchecking.modelchecker.ModelChecker;
-import de.learnlib.api.modelchecking.modelchecker.ModelChecker.DFAModelChecker;
-import de.learnlib.api.modelchecking.modelchecker.ModelChecker.DFAModelCheckerLasso;
-import de.learnlib.api.modelchecking.modelchecker.ModelChecker.MealyModelChecker;
-import de.learnlib.api.modelchecking.modelchecker.ModelChecker.MealyModelCheckerLasso;
 import de.learnlib.api.oracle.BlackBoxOracle.BlackBoxProperty;
 import de.learnlib.api.oracle.BlackBoxOracle.DFABlackBoxProperty;
 import de.learnlib.api.oracle.BlackBoxOracle.MealyBlackBoxProperty;
@@ -42,6 +34,14 @@ import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.exception.ModelCheckingException;
+import net.automatalib.modelchecking.Lasso.DFALasso;
+import net.automatalib.modelchecking.Lasso.MealyLasso;
+import net.automatalib.modelchecking.ModelChecker;
+import net.automatalib.modelchecking.ModelChecker.DFAModelChecker;
+import net.automatalib.modelchecking.ModelChecker.MealyModelChecker;
+import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
+import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Word;
 
@@ -265,7 +265,7 @@ public class ModelCheckingBBProperty<P, A extends Output<I, D> & SimpleDTS<?, I>
     }
 
     public static class MealyBBPropertyMealyLasso<P, I, O>
-            extends ModelCheckingBBProperty<P, MealyMachine<?, I, ?, O>, I, Word<O>, MealyLasso<?, I, O>>
+            extends ModelCheckingBBProperty<P, MealyMachine<?, I, ?, O>, I, Word<O>, MealyLasso<?, I, ?, O>>
             implements MealyBlackBoxProperty<P, I, O> {
 
         public MealyBBPropertyMealyLasso(

@@ -23,13 +23,6 @@ package de.learnlib.setting;
 public enum LearnLibProperty {
 
     /**
-     * {@code learnlib.external.ltsmin.path}.
-     * <p>
-     * Path to the binary folder of the LTSmin installation.
-     */
-    LTSMIN_PATH("external.ltsmin.path"),
-
-    /**
      * {@code learnlib.parallel.batch_size.dynamic}.
      * <p>
      * Size of query batches for dynamic parallel oracles.

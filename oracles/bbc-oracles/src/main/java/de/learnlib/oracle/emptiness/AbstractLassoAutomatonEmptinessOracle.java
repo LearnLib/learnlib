@@ -19,15 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 
-import de.learnlib.api.modelchecking.counterexample.Lasso;
-import de.learnlib.api.modelchecking.counterexample.Lasso.DFALasso;
-import de.learnlib.api.modelchecking.counterexample.Lasso.MealyLasso;
 import de.learnlib.api.oracle.EmptinessOracle.LassoEmptinessOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
 import de.learnlib.oracle.AbstractBreadthFirstOracle;
 import net.automatalib.automata.concepts.Output;
+import net.automatalib.modelchecking.Lasso;
+import net.automatalib.modelchecking.Lasso.DFALasso;
+import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.words.Word;
 
 /**
@@ -128,7 +128,7 @@ public abstract class AbstractLassoAutomatonEmptinessOracle<L extends Lasso<?, ?
     }
 
     public static class MealyLassoMealyEmptinessOracle<S, I, O>
-            extends AbstractLassoAutomatonEmptinessOracle<MealyLasso<?, I, O>, S, I, Word<O>>
+            extends AbstractLassoAutomatonEmptinessOracle<MealyLasso<?, I, ?, O>, S, I, Word<O>>
             implements MealyLassoEmptinessOracle<S, I, O> {
 
         public MealyLassoMealyEmptinessOracle(OmegaMembershipOracle<S, I, Word<O>> membershipOracle) {

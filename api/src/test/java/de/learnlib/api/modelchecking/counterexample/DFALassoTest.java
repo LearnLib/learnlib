@@ -20,9 +20,9 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import de.learnlib.api.modelchecking.counterexample.Lasso.DFALasso;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.collections.CollectionsUtil;
+import net.automatalib.modelchecking.DFALassoImpl;
 import net.automatalib.words.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,16 +30,16 @@ import org.testng.annotations.Test;
 /**
  * @author Jeroen Meijer
  */
-public class DFALassoTest extends AbstractLassoTest<DFALasso<?, String>> {
+public class DFALassoTest extends AbstractLassoTest<DFALassoImpl<?, String>> {
 
     @Override
-    protected DFALasso<?, String> getLasso(Word<String> prefix, Word<String> loop, int unfoldTimes) {
-        return new DFALasso<>(new DFAMock(prefix, loop), getAlphabet(), unfoldTimes);
+    protected DFALassoImpl<?, String> getLasso(Word<String> prefix, Word<String> loop, int unfoldTimes) {
+        return new DFALassoImpl<>(new DFAMock(prefix, loop), getAlphabet(), unfoldTimes);
     }
 
     @Test
     public void testGetOutput() {
-        final DFALasso<?, String> lasso = getLasso(Word.epsilon(), Word.fromSymbols("a"), 1);
+        final DFALassoImpl<?, String> lasso = getLasso(Word.epsilon(), Word.fromSymbols("a"), 1);
         Assert.assertTrue(lasso.getOutput());
     }
 

@@ -171,12 +171,6 @@ limitations under the License.
             <artifactId>learnlib-drivers-simulator</artifactId>
         </dependency>
 
-        <!-- model-checkers -->
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-model-checkers</artifactId>
-        </dependency>
-
         <!-- oracles -->
         <dependency>
             <groupId>de.learnlib</groupId>
@@ -425,14 +419,6 @@ limitations under the License.
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-drivers-simulator</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <!-- model-checkers -->
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-model-checkers</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

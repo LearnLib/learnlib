@@ -93,10 +93,6 @@ limitations under the License.
             <artifactId>learnlib-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-model-checkers</artifactId>
-        </dependency>
-        <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learning-examples</artifactId>
             <scope>compile</scope>
@@ -119,6 +115,10 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-dot</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-modelchecking-ltsmin</artifactId>
         </dependency>
 
         <dependency>

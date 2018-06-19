@@ -18,6 +18,7 @@ package de.learnlib.api.modelchecking.counterexample;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import net.automatalib.modelchecking.AbstractLasso;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -28,11 +29,11 @@ import org.testng.annotations.Test;
 /**
  * Tests whether lassos are constructed correctly for any automaton.
  *
- * @param <L> the {@link Lasso} type to test.
+ * @param <L> the {@link AbstractLasso} type to test.
  *
  * @author Jeroen Meijer
  */
-public abstract class AbstractLassoTest<L extends Lasso<?, ?, String, ?>> {
+public abstract class AbstractLassoTest<L extends AbstractLasso<?, ?, String, ?>> {
 
     private Alphabet<String> alphabet = Alphabets.fromArray("a");
 

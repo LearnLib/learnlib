@@ -56,9 +56,6 @@ limitations under the License.
                             <exclude>**/NLStarLearnerBuilder.class</exclude>
                             <exclude>**/TTTLearner*Builder.class</exclude>
                             <exclude>**/TTTLearnerVPDABuilder.class</exclude>
-                            <exclude>**/LTSminLTLAlternatingBuilder.class</exclude>
-                            <exclude>**/LTSminLTLDFABuilder.class</exclude>
-                            <exclude>**/LTSminLTLIOBuilder.class</exclude>
                         </excludes>
                     </configuration>
                 </plugin>

@@ -20,7 +20,6 @@ import java.util.function.Function;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.ttt.mealy.TTTLearnerMealy;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.api.modelchecking.modelchecker.ModelChecker.MealyModelCheckerLasso;
 import de.learnlib.api.oracle.BlackBoxOracle.MealyBlackBoxOracle;
 import de.learnlib.api.oracle.BlackBoxOracle.MealyBlackBoxProperty;
 import de.learnlib.api.oracle.EmptinessOracle.MealyLassoEmptinessOracle;
@@ -30,7 +29,6 @@ import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
 import de.learnlib.examples.mealy.ExampleTinyMealy;
-import de.learnlib.modelchecking.modelchecker.LTSminLTLAlternatingBuilder;
 import de.learnlib.oracle.blackbox.CExFirstBBOracle.CExFirstMealyBBOracle;
 import de.learnlib.oracle.blackbox.ModelCheckingBBProperty.MealyBBPropertyMealyLasso;
 import de.learnlib.oracle.emptiness.AbstractLassoAutomatonEmptinessOracle.MealyLassoMealyEmptinessOracle;
@@ -39,6 +37,8 @@ import de.learnlib.oracle.inclusion.AbstractBreadthFirstInclusionOracle.MealyBre
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOracle;
 import de.learnlib.util.BBCExperiment.MealyBBCExperiment;
 import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.modelcheckers.ltsmin.LTSminLTLAlternatingBuilder;
+import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.words.Alphabet;
 
