@@ -21,7 +21,7 @@ import java.util.Set;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.examples.dfa.ExamplePaulAndMary;
-import de.learnlib.oracle.equivalence.RandomWMethodEQOracle.DFARandomWMethodEQOracle;
+import de.learnlib.oracle.equivalence.RandomWpMethodEQOracle.DFARandomWpMethodEQOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 /**
  * @author frohme
  */
-public class RandomWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, Symbol>, Symbol, Boolean> {
+public class RandomWpMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, Symbol>, Symbol, Boolean> {
 
     private static final int MAX_TESTS;
     private static final int MIN_LENGTH;
@@ -42,7 +42,7 @@ public class RandomWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, Symbo
 
     private int numberOfGeneratedQueries;
     private DFA<?, Symbol> dfa;
-    private Set<Word<Symbol>> transitionCover;
+    private Set<Word<Symbol>> stateCover;
     private Set<Word<Symbol>> characterizingSet;
 
     static {
@@ -56,7 +56,7 @@ public class RandomWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, Symbo
         this.numberOfGeneratedQueries = 0;
         this.dfa = ExamplePaulAndMary.constructMachine();
 
-        this.transitionCover = new HashSet<>(Automata.transitionCover(this.dfa, getAlphabet()));
+        this.stateCover = new HashSet<>(Automata.stateCover(this.dfa, getAlphabet()));
         this.characterizingSet = new HashSet<>(Automata.characterizingSet(this.dfa, getAlphabet()));
     }
 
@@ -69,13 +69,13 @@ public class RandomWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, Symbo
     protected void checkGeneratedQuery(Word<Symbol> query) {
         numberOfGeneratedQueries++;
 
-        transitionCover.stream().filter(w -> w.isPrefixOf(query)).findAny().orElseThrow(AssertionError::new);
+        stateCover.stream().filter(w -> w.isPrefixOf(query)).findAny().orElseThrow(AssertionError::new);
         characterizingSet.stream().filter(w -> w.isSuffixOf(query)).findAny().orElseThrow(AssertionError::new);
     }
 
     @Override
     protected EquivalenceOracle<DFA<?, Symbol>, Symbol, Boolean> getOracle(MembershipOracle<Symbol, Boolean> mOracle) {
-        return new DFARandomWMethodEQOracle<>(mOracle, MIN_LENGTH, MAX_LENGTH, MAX_TESTS);
+        return new DFARandomWpMethodEQOracle<>(mOracle, MIN_LENGTH, MAX_LENGTH, MAX_TESTS);
     }
 
     @Override
@@ -88,4 +88,3 @@ public class RandomWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, Symbo
         return ExamplePaulAndMary.createInputAlphabet();
     }
 }
-

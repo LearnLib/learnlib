@@ -33,12 +33,16 @@ import net.automatalib.words.WordBuilder;
 /**
  * Implements an equivalence test by applying the W-method test on the given hypothesis automaton. Generally the
  * Wp-method performs better in finding counter examples. Instead of enumerating the test suite in order, this is a
- * sampling implementation: 1. sample uniformly from the states for a prefix 2. sample geometrically a random word 3.
- * sample a word from the set of suffixes / state identifiers There are two parameters: minimalSize determines the
- * minimal size of the random word, this is useful when one first performs a W(p)-method with some depth and continue
- * with this randomized tester from that depth onward. The second parameter rndLength determines the expected length of
- * the random word. (The expected length in effect is minimalSize + rndLength.) In the unbounded case it will not
- * terminate for a correct hypothesis.
+ * sampling implementation:
+ * <ul>
+ * <li>1. sample uniformly from the transitions for a prefix</li>
+ * <li>2. sample geometrically a random word</li>
+ * <li>3. sample a word from the set of suffixes / state identifiers</li>
+ * </ul>
+ * There are two parameters: minimalSize determines the minimal size of the random word, this is useful when one first
+ * performs a W(p)-method with some depth and continue with this randomized tester from that depth onward. The second
+ * parameter rndLength determines the expected length of the random word. (The expected length in effect is minimalSize
+ * + rndLength.) In the unbounded case it will not terminate for a correct hypothesis.
  *
  * @param <A>
  *         automaton type
@@ -83,10 +87,7 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
      * @param bound
      *         specifies the bound (set to 0 for unbounded).
      */
-    public RandomWMethodEQOracle(MembershipOracle<I, D> sulOracle,
-                                 int minimalSize,
-                                 int rndLength,
-                                 int bound) {
+    public RandomWMethodEQOracle(MembershipOracle<I, D> sulOracle, int minimalSize, int rndLength, int bound) {
         this(sulOracle, minimalSize, rndLength, bound, new Random(), 1);
     }
 
@@ -124,7 +125,7 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
      * @param bound
      *         specifies the bound (set to 0 for unbounded).
      * @param random
-     *          custom Random generator.
+     *         custom Random generator.
      * @param batchSize
      *         size of the batches sent to the membership oracle
      */
@@ -154,8 +155,8 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
                                                     Collection<? extends I> inputs) {
         // Note that we want to use ArrayLists because we want constant time random access
         // We will sample from this for a prefix
-        ArrayList<Word<I>> stateCover = new ArrayList<>(hypothesis.size());
-        Covers.stateCover(hypothesis, inputs, stateCover);
+        ArrayList<Word<I>> transitionCover = new ArrayList<>(hypothesis.size());
+        Covers.transitionCover(hypothesis, inputs, transitionCover);
 
         // Then repeatedly from this for a random word
         ArrayList<I> arrayAlphabet = new ArrayList<>(inputs);
@@ -165,7 +166,7 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
         Automata.characterizingSet(hypothesis, inputs, globalSuffixes);
 
         final Stream<Word<I>> result =
-                Stream.generate(() -> generateSingleTestWord(stateCover, arrayAlphabet, globalSuffixes));
+                Stream.generate(() -> generateSingleTestWord(transitionCover, arrayAlphabet, globalSuffixes));
 
         return bound > 0 ? result.limit(bound) : result;
     }
@@ -195,13 +196,10 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
         return wb.toWord();
     }
 
-    public static class DFARandomWMethodEQOracle<I>
-            extends RandomWMethodEQOracle<DFA<?, I>, I, Boolean>
+    public static class DFARandomWMethodEQOracle<I> extends RandomWMethodEQOracle<DFA<?, I>, I, Boolean>
             implements DFAEquivalenceOracle<I> {
 
-        public DFARandomWMethodEQOracle(MembershipOracle<I, Boolean> mqOracle,
-                                        int minimalSize,
-                                        int rndLength) {
+        public DFARandomWMethodEQOracle(MembershipOracle<I, Boolean> mqOracle, int minimalSize, int rndLength) {
             super(mqOracle, minimalSize, rndLength);
         }
 
@@ -235,9 +233,7 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
             extends RandomWMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
             implements MealyEquivalenceOracle<I, O> {
 
-        public MealyRandomWMethodEQOracle(MembershipOracle<I, Word<O>> mqOracle,
-                                          int minimalSize,
-                                          int rndLength) {
+        public MealyRandomWMethodEQOracle(MembershipOracle<I, Word<O>> mqOracle, int minimalSize, int rndLength) {
             super(mqOracle, minimalSize, rndLength);
         }
 

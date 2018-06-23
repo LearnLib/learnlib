@@ -17,6 +17,7 @@ package de.learnlib.oracle.equivalence.mealy;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import de.learnlib.api.SUL;
@@ -67,7 +68,7 @@ public class RandomWalkEQOracle<I, O> implements MealyEquivalenceOracle<I, O> {
      */
     private long steps;
     /**
-     * flag for reseting step count after every search.
+     * flag for resetting step count after every search.
      */
     private boolean resetStepCount;
 
@@ -141,13 +142,12 @@ public class RandomWalkEQOracle<I, O> implements MealyEquivalenceOracle<I, O> {
 
                 outSul = sul.step(in);
 
-                T hypTrans = hypothesis.getTransition(cur, in);
-                O outHyp = hypothesis.getTransitionOutput(hypTrans);
+                O outHyp = hypothesis.getTransitionProperty(cur, in);
                 wbIn.add(in);
                 wbOut.add(outSul);
 
                 // ce?
-                if (!outSul.equals(outHyp)) {
+                if (!Objects.equals(outSul, outHyp)) {
                     DefaultQuery<I, Word<O>> ce = new DefaultQuery<>(wbIn.toWord());
                     ce.answer(wbOut.toWord());
                     return ce;

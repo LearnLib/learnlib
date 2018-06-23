@@ -34,12 +34,16 @@ import net.automatalib.words.WordBuilder;
 /**
  * Implements an equivalence test by applying the Wp-method test on the given hypothesis automaton, as described in
  * "Test Selection Based on Finite State Models" by S. Fujiwara et al. Instead of enumerating the test suite in order,
- * this is a sampling implementation: 1. sample uniformly from the states for a prefix 2. sample geometrically a random
- * word 3. sample a word from the set of suffixes / state identifiers (either local or global) There are two parameters:
- * minimalSize determines the minimal size of the random word, this is useful when one first performs a W(p)-method with
- * some depth and continue with this randomized tester from that depth onward. The second parameter rndLength determines
- * the expected length of the random word. (The expected length in effect is minimalSize + rndLength.) In the unbounded
- * case it will not terminate for a correct hypothesis.
+ * this is a sampling implementation:
+ * <ul>
+ * <li>1. sample uniformly from the states for a prefix</li>
+ * <li>2. sample geometrically a random word</li>
+ * <li>3. sample a word from the set of suffixes / state identifiers</li>
+ * </ul>
+ * There are two parameters:minimalSize determines the minimal size of the random word, this is useful when one first
+ * performs a W(p)-method with some depth and continue with this randomized tester from that depth onward. The second
+ * parameter rndLength determines the expected length of the random word. (The expected length in effect is minimalSize
+ * + rndLength.) In the unbounded case it will not terminate for a correct hypothesis.
  *
  * @param <A>
  *         automaton type
@@ -126,7 +130,7 @@ public class RandomWpMethodEQOracle<A extends UniversalDeterministicAutomaton<?,
      * @param bound
      *         specifies the bound (set to 0 for unbounded).
      * @param random
-     *          custom Random generator.
+     *         custom Random generator.
      * @param batchSize
      *         size of the batches sent to the membership oracle
      */
@@ -218,13 +222,10 @@ public class RandomWpMethodEQOracle<A extends UniversalDeterministicAutomaton<?,
         return wb.toWord();
     }
 
-    public static class DFARandomWpMethodEQOracle<I>
-            extends RandomWpMethodEQOracle<DFA<?, I>, I, Boolean>
+    public static class DFARandomWpMethodEQOracle<I> extends RandomWpMethodEQOracle<DFA<?, I>, I, Boolean>
             implements DFAEquivalenceOracle<I> {
 
-        public DFARandomWpMethodEQOracle(MembershipOracle<I, Boolean> mqOracle,
-                                         int minimalSize,
-                                         int rndLength) {
+        public DFARandomWpMethodEQOracle(MembershipOracle<I, Boolean> mqOracle, int minimalSize, int rndLength) {
             super(mqOracle, minimalSize, rndLength);
         }
 
@@ -258,9 +259,7 @@ public class RandomWpMethodEQOracle<A extends UniversalDeterministicAutomaton<?,
             extends RandomWpMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
             implements MealyEquivalenceOracle<I, O> {
 
-        public MealyRandomWpMethodEQOracle(MembershipOracle<I, Word<O>> mqOracle,
-                                           int minimalSize,
-                                           int rndLength) {
+        public MealyRandomWpMethodEQOracle(MembershipOracle<I, Word<O>> mqOracle, int minimalSize, int rndLength) {
             super(mqOracle, minimalSize, rndLength);
         }
 
