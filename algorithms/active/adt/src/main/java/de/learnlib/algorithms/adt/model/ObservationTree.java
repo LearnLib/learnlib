@@ -186,7 +186,7 @@ public class ObservationTree<S, I, O> {
                 this.observationTree.getSuccessor(this.observationTree.getInitialState(), prefix);
         final FastMealyState<O> target;
 
-        if (pred.getTransition(alphabet.getSymbolIndex(sym)) == null) {
+        if (pred.getTransitionObject(alphabet.getSymbolIndex(sym)) == null) {
             target = this.observationTree.addState();
             this.observationTree.addTransition(pred, sym, target, output);
         } else {
