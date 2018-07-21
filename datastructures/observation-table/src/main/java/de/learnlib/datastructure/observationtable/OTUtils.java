@@ -35,15 +35,20 @@ import net.automatalib.words.Word;
 public final class OTUtils {
 
     private static final String HTML_FILE_HEADER =
-            "<html><head>\n" + "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n" +
-            "<style type=\"text/css\">\n" + "table.learnlib-observationtable { border-width: 1px; border: solid; }\n" +
-            "table.learnlib-observationtable th.suffixes-header { text-align: center; }\n" +
-            "table.learnlib-observationtable th.prefix { vertical-align: top; }\n" +
-            "table.learnlib-observationtable .suffix-column { text-align: left; }\n" +
-            "table.learnlib-observationtable tr { border-width: 1px; border: solid; }\n" +
-            "table.learnlib-observationtable tr.long-prefix { background-color: #dfdfdf; }\n" + "</style></head>\n" +
-            "<body>\n";
-    private static final String HTML_FILE_FOOTER = "</body></html>\n";
+            "<!doctype html>" + System.lineSeparator()
+                    + "<html><head>" + System.lineSeparator()
+                    + "<meta charset=\"UTF-8\">" + System.lineSeparator()
+                    + "<style type=\"text/css\">" + System.lineSeparator()
+                    + "table.learnlib-observationtable { border-width: 1px; border: solid; }" + System.lineSeparator()
+                    + "table.learnlib-observationtable th.suffixes-header { text-align: center; }" + System.lineSeparator()
+                    + "table.learnlib-observationtable th.prefix { vertical-align: top; }" + System.lineSeparator()
+                    + "table.learnlib-observationtable .suffix-column { text-align: left; }" + System.lineSeparator()
+                    + "table.learnlib-observationtable tr { border-width: 1px; border: solid; }" + System.lineSeparator()
+                    + "table.learnlib-observationtable tr.long-prefix { background-color: #dfdfdf; }" + System.lineSeparator()
+                    + "</style></head>" + System.lineSeparator()
+                    + "<body>" + System.lineSeparator();
+
+    private static final String HTML_FILE_FOOTER = "</body></html>" + System.lineSeparator();
 
     private OTUtils() {
         throw new AssertionError("Constructor should never be invoked");

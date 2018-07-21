@@ -57,18 +57,18 @@ public class ObservationTableHTMLWriter<I, D> extends AbstractObservationTableWr
                                      Appendable out) throws IOException {
         List<Word<I>> suffixes = table.getSuffixes();
 
-        out.append("<table class=\"learnlib-observationtable\">\n");
-        out.append("\t<thead>\n");
+        out.append("<table class=\"learnlib-observationtable\">").append(System.lineSeparator());
+        out.append("\t<thead>").append(System.lineSeparator());
         out.append("\t\t<tr><th rowspan=\"2\" class=\"prefix\">Prefix</th><th colspan=\"")
            .append(Integer.toString(suffixes.size()))
-           .append("\" class=\"suffixes-header\">Suffixes</th></tr>\n");
+           .append("\" class=\"suffixes-header\">Suffixes</th></tr>").append(System.lineSeparator());
         out.append("\t\t<tr>");
         for (Word<I> suffix : suffixes) {
             out.append("<td>").append(wordToString.apply(suffix)).append("</td>");
         }
-        out.append("</tr>\n");
-        out.append("\t</thead>\n");
-        out.append("\t<tbody>\n");
+        out.append("</tr>").append(System.lineSeparator());
+        out.append("\t</thead>").append(System.lineSeparator());
+        out.append("\t<tbody>").append(System.lineSeparator());
 
         for (Row<I> row : table.getShortPrefixRows()) {
             out.append("\t\t<tr class=\"short-prefix\"><td class=\"prefix\">")
@@ -77,20 +77,20 @@ public class ObservationTableHTMLWriter<I, D> extends AbstractObservationTableWr
             for (D value : table.rowContents(row)) {
                 out.append("<td class=\"suffix-column\">").append(outputToString.apply(value)).append("</td>");
             }
-            out.append("</tr>\n");
+            out.append("</tr>").append(System.lineSeparator());
         }
 
-        out.append("\t\t<tr><td colspan=\"").append(Integer.toString(suffixes.size() + 1)).append("\"></td></tr>\n");
+        out.append("\t\t<tr><td colspan=\"").append(Integer.toString(suffixes.size() + 1)).append("\"></td></tr>").append(System.lineSeparator());
 
         for (Row<I> row : table.getLongPrefixRows()) {
             out.append("\t\t<tr class=\"long-prefix\"><td>").append(wordToString.apply(row.getLabel())).append("</td>");
             for (D value : table.rowContents(row)) {
                 out.append("<td class=\"suffix-column\">").append(outputToString.apply(value)).append("</td>");
             }
-            out.append("</tr>\n");
+            out.append("</tr>").append(System.lineSeparator());
         }
 
-        out.append("</table>\n");
+        out.append("</table>").append(System.lineSeparator());
     }
 
 }

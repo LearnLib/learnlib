@@ -140,7 +140,7 @@ public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableW
             a.append(sepChar).append('+').append(sepChar);
             appendRepeated(a, sepChar, colWidth[i]);
         }
-        a.append(sepChar).append("+\n");
+        a.append(sepChar).append("+").append(System.lineSeparator());
     }
 
     private static void appendContentRow(Appendable a, String[] content, int[] colWidth) throws IOException {
@@ -150,7 +150,7 @@ public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableW
             a.append(" | ");
             appendRightPadded(a, content[i], colWidth[i]);
         }
-        a.append(" |\n");
+        a.append(" |").append(System.lineSeparator());
     }
 
     private static void appendRepeated(Appendable a, char c, int count) throws IOException {
