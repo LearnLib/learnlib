@@ -1,6 +1,7 @@
 # LearnLib
 
 [![Build Status](https://travis-ci.org/LearnLib/learnlib.svg?branch=develop)](https://travis-ci.org/LearnLib/learnlib)
+[![Build Status](https://ci.appveyor.com/api/projects/status/bc0co2w6vu58c2pr?svg=true)](https://ci.appveyor.com/project/mtf90/learnlib)
 [![Coverage Status](https://coveralls.io/repos/github/LearnLib/learnlib/badge.svg?branch=develop)](https://coveralls.io/github/LearnLib/learnlib?branch=develop)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.learnlib/learnlib-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.learnlib/learnlib-parent)
 
