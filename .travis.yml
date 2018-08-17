@@ -19,10 +19,13 @@ branches:
   - develop
   - release
 
+env:
+  - LTSMIN_VERSION=v3.0.2
+
 install:
     # install LTSmin
   - build-tools/install-ltsmin.sh
-  - PATH="$PATH:$HOME/ltsmin/v3.0.0/bin"
+  - PATH="$PATH:$HOME/ltsmin/$LTSMIN_VERSION/bin"
     # override any "sane" defaults of Travis VMs
   - cp ${TRAVIS_BUILD_DIR}/build-tools/travis-settings.xml ${HOME}/.m2/settings.xml
     # set Travis environment variables "AUTOMATALIB_FORK" and "AUTOMATALIB_BRANCH" to build custom AutomataLib versions.
@@ -42,7 +45,7 @@ jobs:
     - jdk: openjdk8
     - jdk: openjdk10
     - jdk: openjdk10
-      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=10 -Dmaven.compiler.target=10"
+      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=10 -Dmaven.compiler.target=10" LTSMIN_VERSION=v3.0.2
     - stage: coverage
       jdk: openjdk8 # use openjdk8 build
       script:
