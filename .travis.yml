@@ -38,17 +38,9 @@ script:
 
 jobs:
   fast_finish: true
-  allow_failures:
-    - jdk: openjdk9
-      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=9 -Dmaven.compiler.target=9"
-    - jdk: openjdk10
-      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=10 -Dmaven.compiler.target=10"
   include:
     - jdk: openjdk8
-    - jdk: openjdk9
     - jdk: openjdk10
-    - jdk: openjdk9
-      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=9 -Dmaven.compiler.target=9"
     - jdk: openjdk10
       env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=10 -Dmaven.compiler.target=10"
     - stage: coverage

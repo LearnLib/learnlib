@@ -6,6 +6,8 @@ branches:
   - develop
   - release
 
+clone_depth: 50
+
 init:
   - cmd: git config --global core.autocrlf true
   - cmd: mvn --version
@@ -13,7 +15,6 @@ init:
 environment:
   matrix:
   - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
-  - JAVA_HOME: C:\Program Files\Java\jdk9
   - JAVA_HOME: C:\Program Files\Java\jdk10
 
 install:
