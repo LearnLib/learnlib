@@ -24,6 +24,7 @@ import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.ObservationTable;
+import de.learnlib.datastructure.observationtable.ResumeSupportingObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
@@ -207,7 +208,11 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     @Override
     public void resume(final AutomatonLStarState<I, D, AI, S> state) {
         this.table = state.getObservationTable();
-        this.table.setInputAlphabet(alphabet);
+        if (!(this.table instanceof ResumeSupportingObservationTable<?, ?>)) {
+            throw new UnsupportedOperationException("the observation table does not support resuming");
+        }
+        ResumeSupportingObservationTable<I, D> table = (ResumeSupportingObservationTable<I, D>)this.table;
+        table.setInputAlphabet(alphabet);
         this.internalHyp = state.getHypothesis();
         this.stateInfos = state.getStateInfos();
     }

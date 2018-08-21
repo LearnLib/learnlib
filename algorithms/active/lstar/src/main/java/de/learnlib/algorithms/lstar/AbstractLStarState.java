@@ -18,6 +18,7 @@ package de.learnlib.algorithms.lstar;
 import java.io.Serializable;
 
 import de.learnlib.datastructure.observationtable.GenericObservationTable;
+import de.learnlib.datastructure.observationtable.MutableObservationTable;
 
 /**
  * Class that contains all data that represent the internal state of the {@link AbstractLStar} learner.
@@ -31,13 +32,13 @@ import de.learnlib.datastructure.observationtable.GenericObservationTable;
  */
 public abstract class AbstractLStarState<I, D> implements Serializable {
 
-    private final GenericObservationTable<I, D> observationTable;
+    private final MutableObservationTable<I, D> observationTable;
 
-    AbstractLStarState(final GenericObservationTable<I, D> observationTable) {
+    AbstractLStarState(final MutableObservationTable<I, D> observationTable) {
         this.observationTable = observationTable;
     }
 
-    GenericObservationTable<I, D> getObservationTable() {
+    MutableObservationTable<I, D> getObservationTable() {
         return observationTable;
     }
 }

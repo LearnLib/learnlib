@@ -62,7 +62,7 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author Malte Isberner
  */
-public final class GenericObservationTable<I, D> implements MutableObservationTable<I, D>, Serializable {
+public final class GenericObservationTable<I, D> implements ResumeSupportingObservationTable<I, D>, Serializable {
 
     private static final Integer NO_ENTRY = null; // TODO: replace with primitive specialization
     private final List<RowImpl<I>> shortPrefixRows = new ArrayList<>();
@@ -497,12 +497,7 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         return alphabet;
     }
 
-    /**
-     * This is an internal method used for de-serializing. Do not deliberately set input alphabets.
-     *
-     * @param alphabet
-     *         the input alphabet corresponding to the previously serialized one.
-     */
+    @Override
     public void setInputAlphabet(Alphabet<I> alphabet) {
         this.alphabet = alphabet;
     }

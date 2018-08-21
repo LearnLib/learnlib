@@ -36,23 +36,23 @@ import net.automatalib.words.WordBuilder;
  *
  * @author Malte Isberner
  */
-final class MasterQuery<I, O> extends AbstractQuery<I, Word<O>> {
+public class MasterQuery<I, O> extends AbstractQuery<I, Word<O>> {
 
     private final Mapping<? super O, ? extends O> errorSyms;
     private final List<Query<I, Word<O>>> slaves;
     private Word<O> answer;
 
-    MasterQuery(Word<I> word) {
+    public MasterQuery(Word<I> word) {
         this(word, (Mapping<? super O, ? extends O>) null);
     }
 
-    MasterQuery(Word<I> word, Mapping<? super O, ? extends O> errorSyms) {
+    public MasterQuery(Word<I> word, Mapping<? super O, ? extends O> errorSyms) {
         super(word);
         this.errorSyms = errorSyms;
         this.slaves = new ArrayList<>();
     }
 
-    MasterQuery(Word<I> word, Word<O> output) {
+    public MasterQuery(Word<I> word, Word<O> output) {
         super(word);
         this.answer = output;
         this.errorSyms = null;
@@ -102,7 +102,7 @@ final class MasterQuery<I, O> extends AbstractQuery<I, Word<O>> {
 
     private void answerSlave(Query<I, Word<O>> slave) {
         int start = slave.getPrefix().length();
-        int end = start + slave.getSuffix().length();
+        int end = answer.length() - (getInput().length() - slave.getInput().length());
         slave.answer(answer.subWord(start, end));
     }
 

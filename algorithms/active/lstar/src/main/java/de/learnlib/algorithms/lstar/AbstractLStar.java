@@ -26,11 +26,7 @@ import de.learnlib.api.algorithm.feature.GlobalSuffixLearner;
 import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.datastructure.observationtable.GenericObservationTable;
-import de.learnlib.datastructure.observationtable.Inconsistency;
-import de.learnlib.datastructure.observationtable.OTLearner;
-import de.learnlib.datastructure.observationtable.ObservationTable;
-import de.learnlib.datastructure.observationtable.Row;
+import de.learnlib.datastructure.observationtable.*;
 import de.learnlib.util.MQUtil;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Alphabet;
@@ -58,7 +54,7 @@ public abstract class AbstractLStar<A, I, D>
 
     protected Alphabet<I> alphabet;
     protected final MembershipOracle<I, D> oracle;
-    protected GenericObservationTable<I, D> table;
+    protected MutableObservationTable<I, D> table;
 
     /**
      * Constructor.
