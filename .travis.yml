@@ -19,7 +19,12 @@ branches:
   - develop
   - release
 
-before_install:
+install:
+    # install LTSmin
+  - build-tools/install-ltsmin.sh
+  - PATH="$PATH:$HOME/ltsmin/v3.0.0/bin"
+    # override any "sane" defaults of Travis VMs
+  - cp ${TRAVIS_BUILD_DIR}/build-tools/travis-settings.xml ${HOME}/.m2/settings.xml
     # set Travis environment variables "AUTOMATALIB_FORK" and "AUTOMATALIB_BRANCH" to build custom AutomataLib versions.
     # Defaults are "LearnLib" and the current/targeted LearnLib branch ($TRAVIS_BRANCH, relies on the same naming
     # conventions between AutomataLib and LearnLib branches).
@@ -27,11 +32,6 @@ before_install:
   - pushd /tmp/automatalib-develop
   - mvn install -DskipTests
   - popd
-
-install:
-  # install LTSmin
-  - build-tools/install-ltsmin.sh
-  - PATH="$PATH:$HOME/ltsmin/v3.0.0/bin"
 
 script:
   - mvn install -B -Pintegration-tests,code-analysis,bundles
@@ -50,12 +50,10 @@ jobs:
         - mvn coveralls:report
     - stage: deploy
       jdk: openjdk8 # use openjdk build
-      before_install: true # skip building AutomataLib, because we actually want to link against the deployed artifacts.
-      install: true # skip the normal build
       script: skip # skip the normal build
       deploy:
         # define deployment in deploy phase, which is skipped for pull-requests
         provider: script
-        script: mvn --settings build-tools/travis-settings.xml -DskipTests=true deploy
+        script: mvn -DskipTests=true deploy
         on:
           branch: develop # only auto deploy snapshots
