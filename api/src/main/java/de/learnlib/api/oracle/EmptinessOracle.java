@@ -15,27 +15,23 @@
  */
 package de.learnlib.api.oracle;
 
+import java.util.Collection;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import de.learnlib.api.SUL;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.api.query.OmegaQuery;
-import de.learnlib.api.query.Query;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.modelchecking.Lasso;
-import net.automatalib.modelchecking.Lasso.DFALasso;
-import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Word;
 
 /**
  * Decides whether the intersection of the language of a given hypothesis and some other language (e.g. from a {@link
- * de.learnlib.api.SUL} is empty. If the intersection is not empty it provides a counterexample, such that is a word in
- * the intersection.
- * <p>
- * A {@link DFAEmptinessOracle}, and {@link MealyEmptinessOracle} use {@link DefaultQuery}s, while {@link
- * DFALassoEmptinessOracle}, and {@link MealyLassoEmptinessOracle} use {@link OmegaQuery}s.
+ * SUL} is empty. If the intersection is not empty it provides a counterexample, such that it is a word in the
+ * intersection. More precisely an emptiness oracle decides whether L(H) ∩ L(SUL) = ∅.
  *
  * @param <A>
  *         the automaton type
@@ -43,39 +39,20 @@ import net.automatalib.words.Word;
  *         the input type
  * @param <D>
  *         the output type
- * @param <Q>
- *         the DefaultQuery type
  *
  * @author Jeroen Meijer
  */
 @ParametersAreNonnullByDefault
-public interface EmptinessOracle<A extends Output<I, D> & SimpleDTS<?, I>, I, D, Q extends DefaultQuery<I, D>>
-        extends AutomatonOracle<A, I, D, Q> {
+public interface EmptinessOracle<A extends Output<I, D>, I, D> {
 
-    /**
-     * Returns whether the given (answered) {@code query} indicates the word is in the language of the given {@code
-     * hypothesis}.
-     *
-     * @see AutomatonOracle#isCounterExample(SimpleDTS, Query)
-     */
-    @Override
-    default boolean isCounterExample(A hypothesis, Q query) {
-        return query.getOutput().equals(hypothesis.computeOutput(query.getInput()));
+    default boolean isCounterExample(A hypothesis, Iterable<? extends I> input, @Nullable D output) {
+        return Objects.equals(hypothesis.computeOutput(input), output);
     }
 
-    interface DFAEmptinessOracle<I>
-            extends EmptinessOracle<DFA<?, I>, I, Boolean, DefaultQuery<I, Boolean>>, DFADefaultOracle<I> {}
+    @Nullable
+    DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs);
 
-    interface MealyEmptinessOracle<I, O>
-            extends EmptinessOracle<MealyMachine<?, I, ?, O>, I, Word<O>, DefaultQuery<I, Word<O>>>,
-                    MealyDefaultOracle<I, O> {}
+    interface DFAEmptinessOracle<I> extends EmptinessOracle<DFA<?, I>, I, Boolean> {}
 
-    interface LassoEmptinessOracle<L extends Lasso<?, ?, I, D>, S, I, D>
-            extends EmptinessOracle<L, I, D, OmegaQuery<S, I, D>>, LassoOracle<L, S, I, D> {}
-
-    interface DFALassoEmptinessOracle<S, I>
-            extends LassoEmptinessOracle<DFALasso<?, I>, S, I, Boolean>, DFALassoOracle<S, I> {}
-
-    interface MealyLassoEmptinessOracle<S, I, O>
-            extends LassoEmptinessOracle<MealyLasso<?, I, ?, O>, S, I, Word<O>>, MealyLassoOracle<S, I, O> {}
+    interface MealyEmptinessOracle<I, O> extends EmptinessOracle<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 }

@@ -18,14 +18,15 @@ package de.learnlib.oracle.membership;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
+import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle;
 import de.learnlib.api.oracle.OmegaQueryAnswerer;
 import de.learnlib.api.oracle.SingleQueryOmegaOracle;
 import de.learnlib.api.query.OmegaQuery;
+import de.learnlib.api.query.Query;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
 import de.learnlib.util.MQUtil;
@@ -35,6 +36,7 @@ import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 
 /**
  * Answers {@link OmegaQuery}s by simulating an automaton.
@@ -46,9 +48,8 @@ import net.automatalib.words.Word;
  * @param <S> the state type.
  * @param <I> the input type.
  * @param <D> the output type.
- * @param <SO> the SimulatorOracle type.
  */
-public class SimulatorOmegaOracle<S, I, D, SO extends SimulatorOracle<I, D>>
+public class SimulatorOmegaOracle<S, I, D>
         implements SingleQueryOmegaOracle<S, I, D> {
 
     /**
@@ -57,18 +58,18 @@ public class SimulatorOmegaOracle<S, I, D, SO extends SimulatorOracle<I, D>>
     private final SimpleDTS<S, I> simpleDTS;
 
     /**
-     * @see #getSimulatorOracle()
+     * @see #getMembershipOracle()
      */
-    private final SO simulatorOracle;
+    private final SimulatorOracle<I, D> simulatorOracle;
 
     /**
      * Constructs a new {@link SimulatorOmegaOracle}.
      *
      * @param automaton the automaton to simulate.
-     * @param simulatorOracle the {@link SimulatorOracle} used to answer {@link de.learnlib.api.query.Query}s.
+     * @param simulatorOracle the {@link SimulatorOracle} used to answer {@link Query}s.
      * @param <A> the automaton type.
      */
-    public <A extends SuffixOutput<I, D> & SimpleDTS<S, I>> SimulatorOmegaOracle(A automaton, SO simulatorOracle) {
+    public <A extends SuffixOutput<I, D> & SimpleDTS<S, I>> SimulatorOmegaOracle(A automaton, SimulatorOracle<I, D> simulatorOracle) {
         this.simpleDTS = automaton;
         this.simulatorOracle = simulatorOracle;
     }
@@ -78,7 +79,8 @@ public class SimulatorOmegaOracle<S, I, D, SO extends SimulatorOracle<I, D>>
      *
      * @return the SimulatorOracle.
      */
-    public SO getSimulatorOracle() {
+    @Override
+    public MembershipOracle<I, D> getMembershipOracle() {
         return simulatorOracle;
     }
 
@@ -101,46 +103,56 @@ public class SimulatorOmegaOracle<S, I, D, SO extends SimulatorOracle<I, D>>
      * Returns an answer for an {@link OmegaQuery}.
      *
      * The output is obtained through the {@link SimulatorOracle}, while the states are obtained by means of creating
-     * several access sequences to states in the simulated automaton.
+     * two access sequences to states in the simulated automaton.
      *
-     * @see OmegaQueryAnswerer#answerQuery(Word, Word, Set)
+     * @see OmegaQueryAnswerer#answerQuery(Word, Word, int)
      */
     @Override
-    public Pair<D, List<S>> answerQuery(Word<I> prefix, Word<I> suffix, Set<Integer> indices) {
+    public Pair<D, List<S>> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
+        assert repeat > 0;
         final List<S> states = new ArrayList<>();
-
-        for (int i : indices) {
-            states.add(simpleDTS.getState(prefix.concat(suffix).prefix(i)));
+        final WordBuilder<I> wb = new WordBuilder<>(prefix.length() + loop.length() * repeat);
+        wb.append(prefix);
+        states.add(simpleDTS.getState(wb.toWord()));
+        for (int i = 0; i < repeat; i++) {
+            wb.append(loop);
+            states.add(simpleDTS.getState(wb.toWord()));
         }
 
-        return Pair.of(simulatorOracle.answerQuery(prefix, suffix), states);
+        return Pair.of(simulatorOracle.answerQuery(wb.toWord()), states);
     }
 
     public static class DFASimulatorOmegaOracle<S, I>
-            extends SimulatorOmegaOracle<S, I, Boolean, DFASimulatorOracle<I>>
+            extends SimulatorOmegaOracle<S, I, Boolean>
             implements DFAOmegaMembershipOracle<S, I> {
+
+        private final DFA<S, I> automaton;
 
         public DFASimulatorOmegaOracle(DFA<S, I> automaton) {
             super(automaton, new DFASimulatorOracle<>(automaton));
+            this.automaton = automaton;
         }
 
         @Override
-        public DFAMembershipOracle<I> getDFAMembershipOracle() {
-            return getSimulatorOracle();
+        public DFAMembershipOracle<I> getMembershipOracle() {
+            return new DFASimulatorOracle<>(automaton);
         }
     }
 
     public static class MealySimulatorOmegaOracle<S, I, O>
-            extends SimulatorOmegaOracle<S, I, Word<O>, MealySimulatorOracle<I, O>>
+            extends SimulatorOmegaOracle<S, I, Word<O>>
             implements MealyOmegaMembershipOracle<S, I, O> {
+
+        private final MealyMachine<?, I, ?, O> automaton;
 
         public MealySimulatorOmegaOracle(MealyMachine<S, I, ?, O> automaton) {
             super(automaton, new MealySimulatorOracle<>(automaton));
+            this.automaton = automaton;
         }
 
         @Override
-        public MealyMembershipOracle<I, O> getMealyMembershipOracle() {
-            return getSimulatorOracle();
+        public MealyMembershipOracle<I, O> getMembershipOracle() {
+            return new MealySimulatorOracle<>(automaton);
         }
     }
 }

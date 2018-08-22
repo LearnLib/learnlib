@@ -226,6 +226,8 @@ limitations under the License.
         <metainf-services.version>1.7</metainf-services.version>
         <slf4j.version>1.7.25</slf4j.version>
         <testng.version>6.11</testng.version>
+        <lombok.version>1.16.22</lombok.version>
+        <mockito.version>2.18.3</mockito.version>
 
         <!-- Javadoc links -->
         <java.apidocs>http://docs.oracle.com/javase/8/docs/api/</java.apidocs>
@@ -456,13 +458,6 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency-->
 
-            <!-- model-checkers -->
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-model-checkers</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
             <!-- oracles -->
             <dependency>
                 <groupId>de.learnlib</groupId>
@@ -478,6 +473,11 @@ limitations under the License.
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-equivalence-oracles</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-emptiness-oracles</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -510,6 +510,11 @@ limitations under the License.
                 <artifactId>learnlib-parallelism</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-property-oracles</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- test-support -->
             <dependency>
@@ -530,6 +535,13 @@ limitations under the License.
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>de.learnlib.testsupport</groupId>
+                <artifactId>learnlib-oracle-support</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+
 
             <!-- Import AutomataLib dependencies -->
             <dependency>
@@ -545,6 +557,14 @@ limitations under the License.
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Mockito -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -594,6 +614,13 @@ limitations under the License.
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
             </dependency>
 
         </dependencies>

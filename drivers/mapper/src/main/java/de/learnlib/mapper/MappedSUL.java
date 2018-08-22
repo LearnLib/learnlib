@@ -63,7 +63,7 @@ public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
             return mapper.mapOutput(concreteOutput);
         } catch (SULException ex) {
             mappedEx = mapper.mapWrappedException(ex);
-        } catch (RuntimeException ex) {
+        } catch (RuntimeException ex) { //NOPMD
             mappedEx = mapper.mapUnwrappedException(ex);
         }
         Optional<? extends AO> repeatOutput = mappedEx.getSubsequentStepsOutput();

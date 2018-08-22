@@ -36,7 +36,7 @@ final class SULMapperComposition<AI, AO, ACI, CAO, CI, CO>
             mappedEx = mapper2.mapWrappedException(exception);
         } catch (SULException ex) {
             return mapper1.mapWrappedException(ex);
-        } catch (RuntimeException ex) {
+        } catch (RuntimeException ex) { //NOPMD
             return mapper1.mapUnwrappedException(ex);
         }
 
@@ -50,7 +50,7 @@ final class SULMapperComposition<AI, AO, ACI, CAO, CI, CO>
             mappedEx = mapper2.mapUnwrappedException(exception);
         } catch (SULException ex) {
             return mapper1.mapWrappedException(ex);
-        } catch (RuntimeException ex) {
+        } catch (RuntimeException ex) { //NOPMD
             return mapper1.mapUnwrappedException(ex);
         }
 

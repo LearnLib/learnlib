@@ -39,6 +39,10 @@ public class EQOracleChain<A, I, D> implements EquivalenceOracle<A, I, D> {
         this.oracles = new ArrayList<>(oracles);
     }
 
+    public void addOracle(EquivalenceOracle<? super A, I, D> oracle) {
+        oracles.add(oracle);
+    }
+
     @Override
     public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
         for (EquivalenceOracle<? super A, I, D> eqOracle : oracles) {

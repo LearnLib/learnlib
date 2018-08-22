@@ -18,7 +18,6 @@ package de.learnlib.oracle.membership;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -38,8 +37,8 @@ import net.automatalib.words.WordBuilder;
  *
  * The behavior is similar to a {@link SULOracle}, except that this class answers {@link OmegaQuery}s.
  *
- * After some symbols (as specified in {@link OmegaQuery#getIndices()}) in an input word the state of the {@link
- * ObservableSUL} is retrieved, and used to answer the query.
+ * After some symbols (i.e. after {@link OmegaQuery#getPrefix()}, and after each {@link OmegaQuery#getLoop()}) the state
+ * of the {@link ObservableSUL} is retrieved, and used to answer the query.
  *
  * Like {@link SULOracle} this class is thread-safe.
  *
@@ -86,7 +85,7 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
 
     private void processQueries(ObservableSUL<S, I, O> sul, Collection<? extends OmegaQuery<Q, I, Word<O>>> queries) {
         for (OmegaQuery<Q, I, Word<O>> q : queries) {
-            final Pair<Word<O>, List<Q>> output = answerQuery(sul, q.getPrefix(), q.getSuffix(), q.getIndices());
+            final Pair<Word<O>, List<Q>> output = answerQuery(sul, q.getPrefix(), q.getLoop(), q.getRepeat());
             q.answer(output.getFirst());
             q.setStates(output.getSecond());
         }
@@ -95,31 +94,26 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
     protected abstract Q getQueryState(ObservableSUL<S, I, O> sul);
 
     @Nonnull
-    private Pair<Word<O>, List<Q>> answerQuery(ObservableSUL<S, I, O> sul,
-                                               Word<I> prefix,
-                                               Word<I> suffix,
-                                               Set<Integer> indices) throws SULException {
+    private Pair<Word<O>, List<Q>> answerQuery(ObservableSUL<S, I, O> sul, Word<I> prefix, Word<I> loop, int repeat)
+            throws SULException {
+        assert repeat > 0;
         sul.pre();
         try {
-            int index = 0;
+
+            final WordBuilder<I> input = new WordBuilder<>(prefix.length() + loop.length() * repeat);
+            final WordBuilder<O> wb = new WordBuilder<>(input.size());
             final List<Q> states = new ArrayList<>();
 
-            // Prefix: Execute symbols, don't record output
-            for (I sym : prefix) {
-                sul.step(sym);
+            for (int i = 0; i < prefix.length(); i++) {
+                wb.append(sul.step(prefix.getSymbol(i)));
             }
+            states.add(getQueryState(sul));
 
-            if (indices.contains(index++)) {
-                states.add(getQueryState(sul));
-            }
-
-            // Suffix: Execute symbols, outputs constitute output word
-            WordBuilder<O> wb = new WordBuilder<>(suffix.length());
-            for (I sym : suffix) {
-                wb.add(sul.step(sym));
-                if (indices.contains(index++)) {
-                    states.add(getQueryState(sul));
+            for (int i = 0; i < repeat; i++) {
+                for (int j = 0; j < loop.length(); j++) {
+                    wb.append(sul.step(loop.getSymbol(j)));
                 }
+                states.add(getQueryState(sul));
             }
 
             return Pair.of(wb.toWord(), states);
@@ -129,7 +123,7 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
     }
 
     @Override
-    public MealyMembershipOracle<I, O> getMealyMembershipOracle() {
+    public MealyMembershipOracle<I, O> getMembershipOracle() {
         return new SULOracle<>(sul);
     }
 

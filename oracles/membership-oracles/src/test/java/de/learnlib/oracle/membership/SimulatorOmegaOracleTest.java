@@ -16,8 +16,6 @@
 package de.learnlib.oracle.membership;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import de.learnlib.api.query.OmegaQuery;
@@ -46,30 +44,28 @@ public class SimulatorOmegaOracleTest {
 
         List<OmegaQuery<Integer, Symbol, Boolean>> queries = new ArrayList<>();
 
-        OmegaQuery<Integer, Symbol, Boolean> q1 = new OmegaQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_PAUL,
+        OmegaQuery<Integer, Symbol, Boolean> q1 = new OmegaQuery<>(Word.epsilon(),
+                                                                   Word.fromSymbols(ExamplePaulAndMary.IN_PAUL,
                                                                                     ExamplePaulAndMary.IN_LOVES,
-                                                                                    ExamplePaulAndMary.IN_MARY),
-                                                                   new HashSet<>(Arrays.asList(0, 1, 2, 3)));
-        OmegaQuery<Integer, Symbol, Boolean> q2 = new OmegaQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_MARY,
+                                                                                    ExamplePaulAndMary.IN_MARY), 1);
+        OmegaQuery<Integer, Symbol, Boolean> q2 = new OmegaQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_MARY),
+                                                                   Word.fromSymbols(ExamplePaulAndMary.IN_MARY,
                                                                                     ExamplePaulAndMary.IN_LOVES,
-                                                                                    ExamplePaulAndMary.IN_PAUL),
-                                                                   new HashSet<>(Arrays.asList(0, 1, 2, 3)));
+                                                                                    ExamplePaulAndMary.IN_PAUL), 1);
         queries.add(q1);
         queries.add(q2);
 
-        Assert.assertEquals(queries.get(0).getInput().size(), 3);
-        Assert.assertEquals(queries.get(0).getIndices().size(), 4);
-        Assert.assertEquals(queries.get(1).getInput().size(), 3);
-        Assert.assertEquals(queries.get(1).getIndices().size(), 4);
+        Assert.assertEquals(queries.get(0).getLoop().size(), 3);
+        Assert.assertEquals(queries.get(1).getLoop().size(), 3);
 
         oracle.processQueries(queries);
 
         // Paul loves Mary...
         Assert.assertEquals(queries.get(0).getOutput(), Boolean.TRUE);
-        Assert.assertEquals(queries.get(0).getStates(), Arrays.asList(0, 1, 3, 4));
+        Assert.assertNotEquals(queries.get(0).getStates().get(0), queries.get(0).getStates().get(1));
 
         // ... but Mary does not love Paul :-(
         Assert.assertEquals(queries.get(1).getOutput(), Boolean.FALSE);
-        Assert.assertEquals(queries.get(1).getStates(), Arrays.asList(0, 2, 2, 2));
+        Assert.assertEquals(queries.get(1).getStates().get(0), queries.get(1).getStates().get(1));
     }
 }

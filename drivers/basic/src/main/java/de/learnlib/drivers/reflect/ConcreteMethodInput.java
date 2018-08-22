@@ -70,7 +70,7 @@ public class ConcreteMethodInput implements ExecutableInput<Object> {
                 out = ret;
             }
         } catch (IllegalAccessException | IllegalArgumentException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); //NOPMD
         } catch (InvocationTargetException e) {
             throw new SULException(e.getCause());
         }

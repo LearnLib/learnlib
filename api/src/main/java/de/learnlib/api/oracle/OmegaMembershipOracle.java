@@ -18,7 +18,6 @@ package de.learnlib.api.oracle;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -43,15 +42,10 @@ import net.automatalib.words.Word;
 public interface OmegaMembershipOracle<S, I, D> extends OmegaQueryAnswerer<S, I, D> {
 
     @Override
-    default Pair<D, List<S>> answerQuery(Word<I> input, Set<Integer> indices) {
-        return answerQuery(Word.epsilon(), input, indices);
-    }
-
-    @Override
-    default Pair<D, List<S>> answerQuery(Word<I> prefix, Word<I> suffix, Set<Integer> indices) {
-        final OmegaQuery<S, I, D> query = new OmegaQuery<>(prefix, suffix, indices);
+    default Pair<D, List<S>> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
+        final OmegaQuery<S, I, D> query = new OmegaQuery<>(prefix, loop, repeat);
         processQuery(query);
-        return query.getOutputStates();
+        return Pair.of(query.getOutput(), query.getStates());
     }
 
     default void processQuery(OmegaQuery<S, I, D> query) {
@@ -64,6 +58,13 @@ public interface OmegaMembershipOracle<S, I, D> extends OmegaQueryAnswerer<S, I,
     default OmegaMembershipOracle<S, I, D> asOracle() {
         return this;
     }
+
+    /**
+     * Returns a regular membership oracle.
+     *
+     * @return a regular membership oracle.
+     */
+    MembershipOracle<I, D> getMembershipOracle();
 
     /**
      * Returns whether two states are equal, or if both access sequences {@code w1}, and {@code w2} end up in the
@@ -82,11 +83,13 @@ public interface OmegaMembershipOracle<S, I, D> extends OmegaQueryAnswerer<S, I,
 
     interface DFAOmegaMembershipOracle<S, I> extends OmegaMembershipOracle<S, I, Boolean> {
 
-        DFAMembershipOracle<I> getDFAMembershipOracle();
+        @Override
+        DFAMembershipOracle<I> getMembershipOracle();
     }
 
     interface MealyOmegaMembershipOracle<S, I, O> extends OmegaMembershipOracle<S, I, Word<O>> {
 
-        MealyMembershipOracle<I, O> getMealyMembershipOracle();
+        @Override
+        MealyMembershipOracle<I, O> getMembershipOracle();
     }
 }

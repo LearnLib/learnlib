@@ -17,7 +17,6 @@ package de.learnlib.api.oracle;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.commons.util.Pair;
@@ -35,7 +34,7 @@ public interface SingleQueryOmegaOracle<S, I, D> extends OmegaMembershipOracle<S
 
     @Override
     default void processQuery(OmegaQuery<S, I, D> query) {
-        Pair<D, List<S>> output = answerQuery(query.getPrefix(), query.getSuffix(), query.getIndices());
+        Pair<D, List<S>> output = answerQuery(query.getPrefix(), query.getLoop(), query.getRepeat());
         query.answer(output.getFirst());
         query.setStates(output.getSecond());
     }
@@ -44,9 +43,6 @@ public interface SingleQueryOmegaOracle<S, I, D> extends OmegaMembershipOracle<S
     default void processQueries(Collection<? extends OmegaQuery<S, I, D>> queries) {
         queries.forEach(this::processQuery);
     }
-
-    @Override
-    Pair<D, List<S>> answerQuery(Word<I> prefix, Word<I> suffix, Set<Integer> indices);
 
     interface SingleQueryOmegaOracleDFA<S, I> extends SingleQueryOmegaOracle<S, I, Boolean>, DFAOmegaMembershipOracle<S, I> {}
 

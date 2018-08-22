@@ -172,14 +172,15 @@ limitations under the License.
         </dependency>
 
         <!-- oracles -->
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-bbc-oracles</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-equivalence-oracles</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-emptiness-oracles</artifactId>
         </dependency>
 
         <dependency>
@@ -205,6 +206,11 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-parallelism</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-property-oracles</artifactId>
         </dependency>
 
         <!-- (bundled) AutomataLib dependency -->
@@ -424,12 +430,6 @@ limitations under the License.
                 </dependency>
 
                 <!-- oracles -->
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-bbc-oracles</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
 
                 <dependency>
                     <groupId>de.learnlib</groupId>

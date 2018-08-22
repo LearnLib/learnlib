@@ -18,7 +18,6 @@ package de.learnlib.util;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -91,7 +90,7 @@ public final class MQUtil {
     }
 
     public static <S, I, D> void answerOmegaQueriesAuto(OmegaQueryAnswerer<S, I, D> answerer,
-                                                Collection<? extends OmegaQuery<S, I, D>> queries) {
+                                                        Collection<? extends OmegaQuery<S, I, D>> queries) {
         if (PARALLEL_THRESHOLD < 0 || queries.size() < PARALLEL_THRESHOLD) {
             answerOmegaQueries(answerer, queries);
         } else {
@@ -111,10 +110,10 @@ public final class MQUtil {
     public static <S, I, D> void answerOmegaQueries(OmegaQueryAnswerer<S, I, D> answerer,
                                                     Collection<? extends OmegaQuery<S, I, D>> queries) {
         for (OmegaQuery<S, I, D> query : queries) {
-            Word<I> prefix = query.getPrefix();
-            Word<I> suffix = query.getSuffix();
-            Set<Integer> indices = query.getIndices();
-            Pair<D, List<S>> answer = answerer.answerQuery(prefix, suffix, indices);
+            final Word<I> prefix = query.getPrefix();
+            final Word<I> loop = query.getLoop();
+            final int repeat = query.getRepeat();
+            Pair<D, List<S>> answer = answerer.answerQuery(prefix, loop, repeat);
             query.answer(answer.getFirst());
             query.setStates(answer.getSecond());
         }
@@ -133,10 +132,10 @@ public final class MQUtil {
     public static <S, I, D> void answerOmegaQueriesParallel(OmegaQueryAnswerer<S, I, D> answerer,
                                                             Collection<? extends OmegaQuery<S, I, D>> queries) {
         queries.parallelStream().forEach(q -> {
-            Word<I> prefix = q.getPrefix();
-            Word<I> suffix = q.getSuffix();
-            Set<Integer> indices = q.getIndices();
-            Pair<D, List<S>> answer = answerer.answerQuery(prefix, suffix, indices);
+            final Word<I> prefix = q.getPrefix();
+            final Word<I> loop = q.getLoop();
+            final int repeat = q.getRepeat();
+            Pair<D, List<S>> answer = answerer.answerQuery(prefix, loop, repeat);
             q.answer(answer.getFirst());
             q.setStates(answer.getSecond());
         });
