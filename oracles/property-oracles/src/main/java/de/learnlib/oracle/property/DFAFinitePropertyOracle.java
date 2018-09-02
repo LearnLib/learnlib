@@ -34,12 +34,12 @@ import net.automatalib.modelchecking.ModelChecker;
 public class DFAFinitePropertyOracle<I, P> extends AbstractPropertyOracle<I, DFA<?, I>, P, Boolean, DFA<?, I>>
         implements PropertyOracle.DFAPropertyOracle<I, P> {
 
-    private final ModelChecker.DFAModelChecker<I, P> modelChecker;
+    private final ModelChecker.DFAModelChecker<I, P, DFA<?, I>> modelChecker;
 
     public DFAFinitePropertyOracle(P property,
                                    InclusionOracle.DFAInclusionOracle<I> inclusionOracle,
                                    EmptinessOracle.DFAEmptinessOracle<I> emptinessOracle,
-                                   ModelChecker.DFAModelChecker<I, P> modelChecker) {
+                                   ModelChecker.DFAModelChecker<I, P, DFA<?, I>> modelChecker) {
         super(property, inclusionOracle, emptinessOracle);
         this.modelChecker = modelChecker;
     }

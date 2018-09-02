@@ -37,12 +37,12 @@ public class MealyFinitePropertyOracle<I, O, P>
         extends AbstractPropertyOracle<I, MealyMachine<?, I, ?, O>, P, Word<O>, MealyMachine<?, I, ?, O>>
         implements PropertyOracle.MealyPropertyOracle<I, O, P> {
 
-    private final ModelChecker.MealyModelChecker<I, O, P> modelChecker;
+    private final ModelChecker.MealyModelChecker<I, O, P, MealyMachine<?, I, ?, O>> modelChecker;
 
     public MealyFinitePropertyOracle(P property,
                                      InclusionOracle.MealyInclusionOracle<I, O> inclusionOracle,
                                      EmptinessOracle.MealyEmptinessOracle<I, O> emptinessOracle,
-                                     ModelChecker.MealyModelChecker<I, O, P> modelChecker) {
+                                     ModelChecker.MealyModelChecker<I, O, P, MealyMachine<?, I, ?, O>> modelChecker) {
         super(property, inclusionOracle, emptinessOracle);
         this.modelChecker = modelChecker;
     }
