@@ -38,7 +38,7 @@ import de.learnlib.oracle.membership.SimulatorOmegaOracle.DFASimulatorOmegaOracl
 import de.learnlib.oracle.property.DFALassoPropertyOracle;
 import de.learnlib.util.Experiment;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.modelcheckers.ltsmin.LTSminLTLDFABuilder;
+import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLDFABuilder;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.words.Alphabet;
