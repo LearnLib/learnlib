@@ -15,45 +15,46 @@
  */
 package de.learnlib.api.query;
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.ObservableSUL;
-import lombok.EqualsAndHashCode;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 /**
  * A query that contains information about infinite words.
- *
+ * <p>
  * In addition to the behavior of {@link DefaultQuery}, an {@link OmegaQuery} contains information about which states
  * have been visited. So that an oracle can decide whether an infinite word is in a language or not.
- *
+ * <p>
  * States that are recorded are those after every applied {@link #getLoop()} and the state after {@link #getPrefix()}.
  * States that are recorded can be obtained with {@link #getStates()}
- *
+ * <p>
  * Invariant: {@code ({@link #getStates()}.isEmpty()) == ({@link #getOutput()} == null)}.
- *
+ * <p>
  * Every constructor in this class accepts an integer, that indicates how often {@link #getLoop()} should be applied.
  * The integer should be greater than zero.
+ * <p>
+ * Answering this query with output is done obviously via {@link #answer(Object)}, but additionally one has to call
+ * {@link #setStates(List)} to satisfy the invariant.
  *
- * Answering this query with output is done obviously via {@link #answer(Object)}, but additionally one
- * has to call {@link #setStates(List)} to satisfy the invariant.
+ * @param <S>
+ *         the state type
+ * @param <I>
+ *         the input type
+ * @param <D>
+ *         the output type
  *
  * @see DefaultQuery
  * @see Query
  * @see ObservableSUL#getState()
- *
- * @param <S> the state type
- * @param <I> the input type
- * @param <D> the output type
  */
 @ParametersAreNonnullByDefault
-@EqualsAndHashCode
 public final class OmegaQuery<S, I, D> {
 
     private final List<S> states;
@@ -129,10 +130,31 @@ public final class OmegaQuery<S, I, D> {
 
             @Override
             public String toString() {
-                return OmegaQuery.toString(OmegaQuery.this.prefix, OmegaQuery.this.loop, OmegaQuery.this.repeat,
-                                           output, states);
+                return OmegaQuery.toString(OmegaQuery.this.prefix,
+                                           OmegaQuery.this.loop,
+                                           OmegaQuery.this.repeat,
+                                           output,
+                                           states);
             }
         };
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        OmegaQuery<?, ?, ?> that = (OmegaQuery<?, ?, ?>) o;
+        return repeat == that.repeat && Objects.equals(states, that.states) && Objects.equals(prefix, that.prefix) &&
+               Objects.equals(loop, that.loop) && Objects.equals(output, that.output);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(states, prefix, loop, repeat, output);
     }
 }
 

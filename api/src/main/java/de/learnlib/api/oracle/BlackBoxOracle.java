@@ -43,7 +43,7 @@ public interface BlackBoxOracle<A extends Output<I, D>, I, D> extends InclusionO
      *
      * @return the property oracles.
      */
-    Collection<? extends PropertyOracle<I, A, ?, D>> getPropertyOracles();
+    Collection<PropertyOracle<I, A, ?, D>> getPropertyOracles();
 
     interface DFABlackBoxOracle<I> extends BlackBoxOracle<DFA<?, I>, I, Boolean> {}
 

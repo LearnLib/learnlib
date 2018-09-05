@@ -172,15 +172,14 @@ limitations under the License.
         </dependency>
 
         <!-- oracles -->
-
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-equivalence-oracles</artifactId>
+            <artifactId>learnlib-emptiness-oracles</artifactId>
         </dependency>
 
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-emptiness-oracles</artifactId>
+            <artifactId>learnlib-equivalence-oracles</artifactId>
         </dependency>
 
         <dependency>
@@ -430,6 +429,12 @@ limitations under the License.
                 </dependency>
 
                 <!-- oracles -->
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-emptiness-oracles</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
 
                 <dependency>
                     <groupId>de.learnlib</groupId>
@@ -469,6 +474,13 @@ limitations under the License.
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-parallelism</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-property-oracles</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

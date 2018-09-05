@@ -226,7 +226,6 @@ limitations under the License.
         <metainf-services.version>1.7</metainf-services.version>
         <slf4j.version>1.7.25</slf4j.version>
         <testng.version>6.11</testng.version>
-        <lombok.version>1.16.22</lombok.version>
         <mockito.version>2.18.3</mockito.version>
 
         <!-- Javadoc links -->
@@ -467,17 +466,12 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-bbc-oracles</artifactId>
+                <artifactId>learnlib-emptiness-oracles</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-equivalence-oracles</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-emptiness-oracles</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -541,7 +535,6 @@ limitations under the License.
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
-
 
             <!-- Import AutomataLib dependencies -->
             <dependency>
@@ -614,13 +607,6 @@ limitations under the License.
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
             </dependency>
 
         </dependencies>

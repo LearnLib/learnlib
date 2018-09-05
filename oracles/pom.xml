@@ -32,11 +32,11 @@ limitations under the License.
     <description>Parent module for oracles and oracle-related modules</description>
 
     <modules>
+        <module>emptiness-oracles</module>
+        <module>equivalence-oracles</module>
         <module>filters</module>
         <module>membership-oracles</module>
-        <module>equivalence-oracles</module>
         <module>parallelism</module>
         <module>property-oracles</module>
-        <module>emptiness-oracles</module>
     </modules>
 </project>

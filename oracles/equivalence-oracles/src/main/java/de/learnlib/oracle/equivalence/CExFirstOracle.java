@@ -45,7 +45,7 @@ import net.automatalib.words.Word;
  */
 public class CExFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOracle<A, I, D> {
 
-    private final Collection<? extends PropertyOracle<I, A, ?, D>> propertyOracles;
+    private final Collection<PropertyOracle<I, A, ?, D>> propertyOracles;
 
     public CExFirstOracle() {
         this(Collections.emptySet());
@@ -56,11 +56,11 @@ public class CExFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOra
     }
 
     public CExFirstOracle(Collection<? extends PropertyOracle<I, A, ?, D>> propertyOracles) {
-        this.propertyOracles = propertyOracles;
+        this.propertyOracles = Collections.unmodifiableCollection(propertyOracles);
     }
 
     @Override
-    public Collection<? extends PropertyOracle<I, A, ?, D>> getPropertyOracles() {
+    public Collection<PropertyOracle<I, A, ?, D>> getPropertyOracles() {
         return propertyOracles;
     }
 

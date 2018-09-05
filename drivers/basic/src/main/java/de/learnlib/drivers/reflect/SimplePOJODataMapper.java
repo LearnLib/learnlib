@@ -45,7 +45,7 @@ public class SimplePOJODataMapper implements SULMapper<MethodInput, MethodOutput
         try {
             delegate = initMethod.newInstance(initParams);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException e) {
-            throw new RuntimeException(e); //NOPMD
+            throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
             throw new SULException(e.getCause());
         }
