@@ -20,7 +20,8 @@ branches:
   - release
 
 env:
-  - LTSMIN_VERSION=v3.0.2
+  global:
+    - LTSMIN_VERSION=v3.0.2
 
 install:
     # install LTSmin
@@ -45,7 +46,7 @@ jobs:
     - jdk: openjdk8
     - jdk: openjdk10
     - jdk: openjdk10
-      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=10 -Dmaven.compiler.target=10" LTSMIN_VERSION=v3.0.2
+      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=10 -Dmaven.compiler.target=10"
     - stage: coverage
       jdk: openjdk8 # use openjdk8 build
       script:
