@@ -25,12 +25,12 @@ import de.learnlib.api.oracle.Filter;
  *
  * @param <I>
  *         input symbol class
- * @param <O>
+ * @param <D>
  *         output symbol class
  *
  * @author falkhowar
  */
-public interface StatisticOracle<I, O> extends Filter<I, O> {
+public interface StatisticOracle<I, D> extends Filter<I, D> {
 
     /**
      * @return the statistical data gathered by this oracle
