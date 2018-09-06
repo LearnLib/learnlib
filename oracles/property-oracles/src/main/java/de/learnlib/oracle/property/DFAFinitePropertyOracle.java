@@ -45,7 +45,7 @@ public class DFAFinitePropertyOracle<I, P> extends AbstractPropertyOracle<I, DFA
     }
 
     @Override
-    protected DFA<?, I> doFindCounterExample(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
+    protected DFA<?, I> modelCheck(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
         return modelChecker.findCounterExample(hypothesis, inputs, getProperty());
     }
 }

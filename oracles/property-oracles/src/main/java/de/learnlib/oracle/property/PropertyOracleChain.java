@@ -25,6 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.api.query.DefaultQuery;
+import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Word;
@@ -45,7 +46,7 @@ import net.automatalib.words.Word;
  * @author Jeroen Meijer
  */
 @ParametersAreNonnullByDefault
-public class PropertyOracleChain<I, A, P, D> implements PropertyOracle<I, A, P, D> {
+public class PropertyOracleChain<I, A extends Output<I, D>, P, D> implements PropertyOracle<I, A, P, D> {
 
     private P property;
 
@@ -58,7 +59,7 @@ public class PropertyOracleChain<I, A, P, D> implements PropertyOracle<I, A, P, 
         this(Arrays.asList(oracles));
     }
 
-    public PropertyOracleChain(List<? extends PropertyOracle<I, ? super A, P, D>> oracles) {
+    public PropertyOracleChain(Collection<? extends PropertyOracle<I, ? super A, P, D>> oracles) {
         this.oracles = new ArrayList<>(oracles);
         if (!this.oracles.isEmpty()) {
             property = this.oracles.iterator().next().getProperty();
@@ -74,7 +75,7 @@ public class PropertyOracleChain<I, A, P, D> implements PropertyOracle<I, A, P, 
     }
 
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    public DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {
         for (PropertyOracle<I, ? super A, P, D> oracle : oracles) {
             DefaultQuery<I, D> ceQry = oracle.findCounterExample(hypothesis, inputs);
             if (ceQry != null) {
@@ -124,7 +125,7 @@ public class PropertyOracleChain<I, A, P, D> implements PropertyOracle<I, A, P, 
             super(oracles);
         }
 
-        public DFAPropertyOracleChain(List<? extends PropertyOracle<I, ? super DFA<?, I>, P, Boolean>> oracles) {
+        public DFAPropertyOracleChain(Collection<? extends PropertyOracle<I, ? super DFA<?, I>, P, Boolean>> oracles) {
             super(oracles);
         }
     }
@@ -138,7 +139,8 @@ public class PropertyOracleChain<I, A, P, D> implements PropertyOracle<I, A, P, 
             super(oracles);
         }
 
-        public MealyPropertyOracleChain(List<? extends PropertyOracle<I, ? super MealyMachine<?, I, ?, O>, P, Word<O>>> oracles) {
+        public MealyPropertyOracleChain(
+                Collection<? extends PropertyOracle<I, ? super MealyMachine<?, I, ?, O>, P, Word<O>>> oracles) {
             super(oracles);
         }
     }

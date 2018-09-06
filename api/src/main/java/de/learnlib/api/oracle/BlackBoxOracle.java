@@ -15,7 +15,7 @@
  */
 package de.learnlib.api.oracle;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -43,7 +43,7 @@ public interface BlackBoxOracle<A extends Output<I, D>, I, D> extends InclusionO
      *
      * @return the property oracles.
      */
-    Collection<PropertyOracle<I, A, ?, D>> getPropertyOracles();
+    List<PropertyOracle<I, ? super A, ?, D>> getPropertyOracles();
 
     interface DFABlackBoxOracle<I> extends BlackBoxOracle<DFA<?, I>, I, Boolean> {}
 

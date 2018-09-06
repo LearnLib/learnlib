@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 
 import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.api.query.DefaultQuery;
+import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.exception.ModelCheckingException;
@@ -39,7 +40,7 @@ import net.automatalib.words.Word;
  * @param <P> the property type
  * @param <D> the output type
  */
-public class LoggingPropertyOracle<I, A, P, D> implements PropertyOracle<I, A, P, D> {
+public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements PropertyOracle<I, A, P, D> {
 
     private static final LearnLogger LOGGER = LearnLogger.getLogger(LoggingPropertyOracle.class);
 
@@ -81,7 +82,7 @@ public class LoggingPropertyOracle<I, A, P, D> implements PropertyOracle<I, A, P
     /**
      * Try to disprove this propertyOracle, and log whenever it is disproved.
      *
-     * @see PropertyOracle#disprove(Object, Collection)
+     * @see PropertyOracle#disprove(Output, Collection)
      */
     @Nullable
     @Override
@@ -102,7 +103,7 @@ public class LoggingPropertyOracle<I, A, P, D> implements PropertyOracle<I, A, P
      */
     @Nullable
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) throws
+    public DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) throws
                                                                                                ModelCheckingException {
         final DefaultQuery<I, D> result = propertyOracle.findCounterExample(hypothesis, inputs);
         if (result != null) {

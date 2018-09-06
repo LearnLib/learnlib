@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 
 public class CExFirstOracleTest {
 
-    @Mock
+    @Mock()
     private PropertyOracle<Boolean, Output<Boolean, Boolean>, Boolean, Boolean> po1;
 
     @Mock
@@ -59,8 +59,10 @@ public class CExFirstOracleTest {
         Mockito.when(automaton.computeOutput(Mockito.any())).thenReturn(Boolean.FALSE);
 
         oracle = new CExFirstOracle<>(Lists.newArrayList(po1, po2));
-        Mockito.when(po1.findCounterExample(automaton, inputs)).thenReturn(query);
-        Mockito.when(po2.findCounterExample(automaton, inputs)).thenReturn(query);
+        Mockito.when(po1.findCounterExample(automaton, inputs)).thenCallRealMethod();
+        Mockito.when(po1.doFindCounterExample(automaton, inputs)).thenReturn(query);
+        Mockito.when(po2.findCounterExample(automaton, inputs)).thenCallRealMethod();
+        Mockito.when(po2.doFindCounterExample(automaton, inputs)).thenReturn(query);
     }
 
     @Test
@@ -71,7 +73,7 @@ public class CExFirstOracleTest {
     /**
      * Tests:
      *  1. whether the correct counterexample is given by the {@link CExFirstOracle}, and
-     *  2. whether {@link PropertyOracle#disprove(Object, Collection)} is called only on {@link #po2}.
+     *  2. whether {@link PropertyOracle#disprove(Output, Collection)} is called only on {@link #po2}.
      */
     @Test
     public void testFindCounterExample() throws Exception {

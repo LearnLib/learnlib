@@ -15,8 +15,10 @@
  */
 package de.learnlib.oracle.equivalence;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -45,7 +47,7 @@ import net.automatalib.words.Word;
  */
 public class CExFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOracle<A, I, D> {
 
-    private final Collection<PropertyOracle<I, A, ?, D>> propertyOracles;
+    private final List<PropertyOracle<I, ? super A, ?, D>> propertyOracles;
 
     public CExFirstOracle() {
         this(Collections.emptySet());
@@ -55,28 +57,23 @@ public class CExFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOra
         this(Collections.singleton(propertyOracle));
     }
 
-    public CExFirstOracle(Collection<? extends PropertyOracle<I, A, ?, D>> propertyOracles) {
-        this.propertyOracles = Collections.unmodifiableCollection(propertyOracles);
+    public CExFirstOracle(Collection<? extends PropertyOracle<I, ? super A, ?, D>> propertyOracles) {
+        this.propertyOracles = new ArrayList<>(propertyOracles);
     }
 
     @Override
-    public Collection<PropertyOracle<I, A, ?, D>> getPropertyOracles() {
+    public List<PropertyOracle<I, ? super A, ?, D>> getPropertyOracles() {
         return propertyOracles;
     }
 
     @Nullable
     @Override
     public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
-        for (PropertyOracle<I, A, ?, D> propertyOracle : propertyOracles) {
-            if (!propertyOracle.isDisproved()) {
-                final DefaultQuery<I, D> ce = propertyOracle.disprove(hypothesis, inputs);
-                if (ce == null) {
-                    final DefaultQuery<I, D> result = propertyOracle.findCounterExample(hypothesis, inputs);
-                    if (result != null) {
-                        assert isCounterExample(hypothesis, result.getInput(), result.getOutput());
-                        return result;
-                    }
-                }
+        for (PropertyOracle<I, ? super A, ?, D> propertyOracle : propertyOracles) {
+            final DefaultQuery<I, D> result = propertyOracle.findCounterExample(hypothesis, inputs);
+            if (result != null) {
+                assert isCounterExample(hypothesis, result.getInput(), result.getOutput());
+                return result;
             }
         }
 

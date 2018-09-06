@@ -59,8 +59,10 @@ public class DisproveFirstOracleTest {
         Mockito.when(automaton.computeOutput(Mockito.any())).thenReturn(Boolean.FALSE);
 
         oracle = new DisproveFirstOracle<>(Lists.newArrayList(po1, po2));
-        Mockito.when(po1.findCounterExample(automaton, inputs)).thenReturn(query);
-        Mockito.when(po2.findCounterExample(automaton, inputs)).thenReturn(query);
+        Mockito.when(po1.findCounterExample(automaton, inputs)).thenCallRealMethod();
+        Mockito.when(po1.doFindCounterExample(automaton, inputs)).thenReturn(query);
+        Mockito.when(po2.findCounterExample(automaton, inputs)).thenCallRealMethod();
+        Mockito.when(po2.doFindCounterExample(automaton, inputs)).thenReturn(query);
     }
 
     @Test
@@ -71,7 +73,7 @@ public class DisproveFirstOracleTest {
     /**
      * Tests:
      *  1. whether the correct counterexample is given by the {@link DisproveFirstOracle}, and
-     *  2. whether {@link PropertyOracle#disprove(Object, Collection)} is called only on {@link #po2}.
+     *  2. whether {@link PropertyOracle#disprove(Output, Collection)} is called only on {@link #po2}.
      */
     @Test
     public void testFindCounterExample() throws Exception {
@@ -79,8 +81,8 @@ public class DisproveFirstOracleTest {
 
         Assert.assertEquals(ce, query);
 
-        Mockito.verify(po1).disprove(automaton, inputs);
+        Mockito.verify(po1, Mockito.times(1)).disprove(automaton, inputs);
         Mockito.verify(po2).disprove(automaton, inputs);
-        Mockito.verify(po2, Mockito.never()).findCounterExample(automaton, inputs);
+        Mockito.verify(po2, Mockito.never()).doFindCounterExample(automaton, inputs);
     }
 }
