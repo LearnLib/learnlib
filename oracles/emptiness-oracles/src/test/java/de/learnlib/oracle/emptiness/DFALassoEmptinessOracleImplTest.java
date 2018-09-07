@@ -46,11 +46,9 @@ public class DFALassoEmptinessOracleImplTest
         Mockito.doAnswer(invocation -> {
             final OmegaQuery<Integer, Character, Boolean> q = invocation.getArgument(0);
             if (q.getLoop().equals(Word.fromSymbols('a'))) {
-                q.answer(true);
-                q.setStates(Lists.newArrayList(0, 0));
+                q.answer(true, Lists.newArrayList(0, 0));
             } else {
-                q.answer(false);
-                q.setStates(Lists.newArrayList(-1, -1));
+                q.answer(false, Lists.newArrayList(-1, -1));
             }
             return null;
         }).when(omo).processQuery(ArgumentMatchers.any());

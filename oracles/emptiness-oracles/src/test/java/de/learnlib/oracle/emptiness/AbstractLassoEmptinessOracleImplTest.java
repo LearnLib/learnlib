@@ -82,11 +82,9 @@ public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Chara
         Mockito.doAnswer(invocation -> {
             final OmegaQuery<Integer, Character, D> q = invocation.getArgument(0);
             if (q.getLoop().equals(Word.fromSymbols('a'))) {
-                q.answer(output);
-                q.setStates(Lists.newArrayList(1, 1));
+                q.answer(output, Lists.newArrayList(1, 1));
             } else {
-                q.answer(null);
-                q.setStates(Lists.newArrayList(-1, -1));
+                q.answer(null, Lists.newArrayList(-1, -1));
             }
             return null;
         }).when(leo.getOmegaMembershipOracle()).processQuery(ArgumentMatchers.any());

@@ -46,11 +46,9 @@ public class MealyLassoEmptinessOracleImplTest
         Mockito.doAnswer(invocation -> {
             final OmegaQuery<Integer, Character, Word<Character>> q = invocation.getArgument(0);
             if (q.getLoop().equals(Word.fromSymbols('a'))) {
-                q.answer(Word.fromSymbols('1'));
-                q.setStates(Lists.newArrayList(0, 0));
+                q.answer(Word.fromSymbols('1'), Lists.newArrayList(0, 0));
             } else {
-                q.answer(Word.epsilon());
-                q.setStates(Lists.newArrayList(-1, -1));
+                q.answer(Word.epsilon(), Lists.newArrayList(-1, -1));
             }
             return null;
         }).when(omo).processQuery(ArgumentMatchers.any());

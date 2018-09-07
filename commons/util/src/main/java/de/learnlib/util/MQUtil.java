@@ -114,8 +114,7 @@ public final class MQUtil {
             final Word<I> loop = query.getLoop();
             final int repeat = query.getRepeat();
             Pair<D, List<S>> answer = answerer.answerQuery(prefix, loop, repeat);
-            query.answer(answer.getFirst());
-            query.setStates(answer.getSecond());
+            query.answer(answer.getFirst(), answer.getSecond());
         }
     }
 
@@ -136,8 +135,7 @@ public final class MQUtil {
             final Word<I> loop = q.getLoop();
             final int repeat = q.getRepeat();
             Pair<D, List<S>> answer = answerer.answerQuery(prefix, loop, repeat);
-            q.answer(answer.getFirst());
-            q.setStates(answer.getSecond());
+            q.answer(answer.getFirst(), answer.getSecond());
         });
     }
 

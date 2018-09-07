@@ -35,8 +35,7 @@ public interface SingleQueryOmegaOracle<S, I, D> extends OmegaMembershipOracle<S
     @Override
     default void processQuery(OmegaQuery<S, I, D> query) {
         Pair<D, List<S>> output = answerQuery(query.getPrefix(), query.getLoop(), query.getRepeat());
-        query.answer(output.getFirst());
-        query.setStates(output.getSecond());
+        query.answer(output.getFirst(), output.getSecond());
     }
 
     @Override

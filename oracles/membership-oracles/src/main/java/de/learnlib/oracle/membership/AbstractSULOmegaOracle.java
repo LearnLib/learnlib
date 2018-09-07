@@ -86,8 +86,7 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
     private void processQueries(ObservableSUL<S, I, O> sul, Collection<? extends OmegaQuery<Q, I, Word<O>>> queries) {
         for (OmegaQuery<Q, I, Word<O>> q : queries) {
             final Pair<Word<O>, List<Q>> output = answerQuery(sul, q.getPrefix(), q.getLoop(), q.getRepeat());
-            q.answer(output.getFirst());
-            q.setStates(output.getSecond());
+            q.answer(output.getFirst(), output.getSecond());
         }
     }
 
@@ -99,10 +98,8 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
         assert repeat > 0;
         sul.pre();
         try {
-
-            final WordBuilder<I> input = new WordBuilder<>(prefix.length() + loop.length() * repeat);
-            final WordBuilder<O> wb = new WordBuilder<>(input.size());
-            final List<Q> states = new ArrayList<>();
+            final WordBuilder<O> wb = new WordBuilder<>(prefix.length() + loop.length() * repeat);
+            final List<Q> states = new ArrayList<>(repeat + 1);
 
             for (int i = 0; i < prefix.length(); i++) {
                 wb.append(sul.step(prefix.getSymbol(i)));
@@ -230,9 +227,8 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
          */
         @Override
         public boolean isSameState(Word<I> input1, Integer s1, Word<I> input2, Integer s2) {
-            final boolean result;
             if (!s1.equals(s2)) {
-                result = false;
+                return false;
             } else {
                 // in this case the hash codes are equal, now we must check if we accidentally had a hash-collision.
                 final ObservableSUL<S, I, O> sul1 = getSul();
@@ -255,17 +251,14 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
                         assert s2.equals(sul2.getState().hashCode());
 
                         // check for state equivalence
-                        result = sul1.getState().equals(sul2.getState());
+                        return sul1.getState().equals(sul2.getState());
                     } finally {
                         sul2.post();
                     }
-
                 } finally {
                     sul1.post();
                 }
             }
-
-            return result;
         }
     }
 

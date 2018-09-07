@@ -59,7 +59,7 @@ public interface LassoOracle<L extends Lasso<I, D>, S, I, D> extends AutomatonOr
     boolean isSameState(Word<I> w1, S s1, Word<I> w2, S s2);
 
     /**
-     * Procsses the given input word. The default implemenation will check if the processed query actually loops.
+     * Processes the given input word. The default implementation will check if the processed query actually loops.
      *
      * @see AutomatonOracle#processInput(DeterministicAutomaton, Word)
      *
@@ -85,25 +85,22 @@ public interface LassoOracle<L extends Lasso<I, D>, S, I, D> extends AutomatonOr
 
         assert states.size() > 1;
 
-        boolean loops = false;
-
-        final WordBuilder<I> wb = new WordBuilder<>(input.length());
-        wb.append(prefix);
         Word<I> w1;
-        Word<I> w2 = wb.toWord();
+        Word<I> w2 = prefix;
 
-        for (int i = 0; i < states.size() && !loops; i++) {
+        for (int i = 0; i < states.size(); i++) {
             w1 = w2;
             final S s1 = states.get(i);
-            for (int j = i + 1; j < states.size() && !loops; j++) {
+            for (int j = i + 1; j < states.size(); j++) {
                 final S s2 = states.get(j);
-                wb.append(loop);
-                w2 = wb.toWord();
-                loops = isSameState(w1, s1, w2, s2);
+                w2 = w1.concat(loop);
+                if (isSameState(w1, s1, w2, s2)) {
+                    return omegaQuery.asDefaultQuery();
+                }
             }
         }
 
-        return loops ? omegaQuery.asDefaultQuery() : null;
+        return null;
     }
 
     /**

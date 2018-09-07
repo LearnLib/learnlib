@@ -57,7 +57,6 @@ import net.automatalib.words.WordBuilder;
 @ParametersAreNonnullByDefault
 public final class OmegaQuery<S, I, D> {
 
-    private final List<S> states;
 
     private final Word<I> prefix;
 
@@ -66,30 +65,18 @@ public final class OmegaQuery<S, I, D> {
     private final int repeat;
 
     private D output;
+    private List<S> states;
 
-    public OmegaQuery(Word<I> prefix, Word<I> loop, int repeat, @Nullable D output, @Nullable List<S> states) {
+    public OmegaQuery(Word<I> prefix, Word<I> loop, int repeat) {
         assert repeat > 0;
         this.prefix = prefix;
         this.loop = loop;
         this.repeat = repeat;
+    }
+
+    public void answer(D output, List<S> states) {
         this.output = output;
         this.states = states;
-    }
-
-    public OmegaQuery(Word<I> prefix, Word<I> loop, int repeat) {
-        this(prefix, loop, repeat, null, new ArrayList<>());
-    }
-
-    public void addState(S state) {
-        states.add(state);
-    }
-
-    public void setStates(List<S> states) {
-        this.states.addAll(states);
-    }
-
-    public void answer(D output) {
-        this.output = output;
     }
 
     public Word<I> getPrefix() {
