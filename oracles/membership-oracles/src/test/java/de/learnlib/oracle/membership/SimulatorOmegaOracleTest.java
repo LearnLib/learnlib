@@ -42,16 +42,18 @@ public class SimulatorOmegaOracleTest {
 
         DFASimulatorOmegaOracle<Integer, Symbol> oracle = new DFASimulatorOmegaOracle<>(dfa);
 
-        List<OmegaQuery<Integer, Symbol, Boolean>> queries = new ArrayList<>();
+        List<OmegaQuery<Symbol, Boolean>> queries = new ArrayList<>();
 
-        OmegaQuery<Integer, Symbol, Boolean> q1 = new OmegaQuery<>(Word.epsilon(),
-                                                                   Word.fromSymbols(ExamplePaulAndMary.IN_PAUL,
-                                                                                    ExamplePaulAndMary.IN_LOVES,
-                                                                                    ExamplePaulAndMary.IN_MARY), 1);
-        OmegaQuery<Integer, Symbol, Boolean> q2 = new OmegaQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_MARY),
-                                                                   Word.fromSymbols(ExamplePaulAndMary.IN_MARY,
-                                                                                    ExamplePaulAndMary.IN_LOVES,
-                                                                                    ExamplePaulAndMary.IN_PAUL), 1);
+        OmegaQuery<Symbol, Boolean> q1 = new OmegaQuery<>(Word.epsilon(),
+                                                          Word.fromSymbols(ExamplePaulAndMary.IN_PAUL,
+                                                                           ExamplePaulAndMary.IN_LOVES,
+                                                                           ExamplePaulAndMary.IN_MARY),
+                                                          1);
+        OmegaQuery<Symbol, Boolean> q2 = new OmegaQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_MARY),
+                                                          Word.fromSymbols(ExamplePaulAndMary.IN_MARY,
+                                                                           ExamplePaulAndMary.IN_LOVES,
+                                                                           ExamplePaulAndMary.IN_PAUL),
+                                                          1);
         queries.add(q1);
         queries.add(q2);
 
@@ -61,11 +63,10 @@ public class SimulatorOmegaOracleTest {
         oracle.processQueries(queries);
 
         // Paul loves Mary...
-        Assert.assertEquals(queries.get(0).getOutput(), Boolean.TRUE);
-        Assert.assertNotEquals(queries.get(0).getStates().get(0), queries.get(0).getStates().get(1));
+        Assert.assertFalse(queries.get(0).isUltimatelyPeriodic());
 
         // ... but Mary does not love Paul :-(
+        Assert.assertTrue(queries.get(1).isUltimatelyPeriodic());
         Assert.assertEquals(queries.get(1).getOutput(), Boolean.FALSE);
-        Assert.assertEquals(queries.get(1).getStates().get(0), queries.get(1).getStates().get(1));
     }
 }

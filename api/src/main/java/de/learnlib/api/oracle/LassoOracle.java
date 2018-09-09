@@ -16,7 +16,6 @@
 package de.learnlib.api.oracle;
 
 import java.util.Collection;
-import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -25,8 +24,8 @@ import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.Lasso.DFALasso;
+import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
 
 /**
  * An automaton oracle for lassos.
@@ -34,13 +33,12 @@ import net.automatalib.words.WordBuilder;
  * @see AutomatonOracle
  *
  * @param <L> the type of Lasso.
- * @param <S> the type of state.
  * @param <I> the type of input.
  * @param <D> the type of output.
  *
  * @author Jeroen Meijer
  */
-public interface LassoOracle<L extends Lasso<I, D>, S, I, D> extends AutomatonOracle<L, I, D> {
+public interface LassoOracle<L extends Lasso<I, D>, I, D> extends AutomatonOracle<L, I, D> {
 
     /**
      * Processes the given omega query.
@@ -49,14 +47,7 @@ public interface LassoOracle<L extends Lasso<I, D>, S, I, D> extends AutomatonOr
      *
      * @return the processed omega query.
      */
-    OmegaQuery<S, I, D> processOmegaQuery(OmegaQuery<S, I, D> query);
-
-    /**
-     * Returns whether two states are equal.
-     *
-     * @see OmegaMembershipOracle#isSameState(Word, Object, Word, Object)
-     */
-    boolean isSameState(Word<I> w1, S s1, Word<I> w2, S s2);
+    OmegaQuery<I, D> processOmegaQuery(OmegaQuery<I, D> query);
 
     /**
      * Processes the given input word. The default implementation will check if the processed query actually loops.
@@ -79,28 +70,9 @@ public interface LassoOracle<L extends Lasso<I, D>, S, I, D> extends AutomatonOr
 
         int repeat = (input.length() - prefix.length()) / loop.length();
 
-        final OmegaQuery<S, I, D> omegaQuery = processOmegaQuery(new OmegaQuery<>(prefix, loop, repeat));
+        final OmegaQuery<I, D> omegaQuery = processOmegaQuery(new OmegaQuery<>(prefix, loop, repeat));
 
-        final List<S> states = omegaQuery.getStates();
-
-        assert states.size() > 1;
-
-        Word<I> w1;
-        Word<I> w2 = prefix;
-
-        for (int i = 0; i < states.size(); i++) {
-            w1 = w2;
-            final S s1 = states.get(i);
-            for (int j = i + 1; j < states.size(); j++) {
-                final S s2 = states.get(j);
-                w2 = w1.concat(loop);
-                if (isSameState(w1, s1, w2, s2)) {
-                    return omegaQuery.asDefaultQuery();
-                }
-            }
-        }
-
-        return null;
+        return omegaQuery.isUltimatelyPeriodic() ? omegaQuery.asDefaultQuery() : null;
     }
 
     /**
@@ -132,8 +104,8 @@ public interface LassoOracle<L extends Lasso<I, D>, S, I, D> extends AutomatonOr
        return findCounterExample(hypothesis, inputs, maxQueries);
     }
 
-    interface DFALassoOracle<S, I> extends LassoOracle<DFALasso<I>, S, I, Boolean> {}
+    interface DFALassoOracle<I> extends LassoOracle<DFALasso<I>, I, Boolean> {}
 
-    interface MealyLassoOracle<S, I, O> extends LassoOracle<Lasso.MealyLasso<I, O>, S, I, Word<O>> {}
+    interface MealyLassoOracle<I, O> extends LassoOracle<MealyLasso<I, O>, I, Word<O>> {}
 
 }

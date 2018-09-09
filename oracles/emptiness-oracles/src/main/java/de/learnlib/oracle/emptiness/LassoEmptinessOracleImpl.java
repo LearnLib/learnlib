@@ -30,7 +30,7 @@ import net.automatalib.words.Word;
 
 public class LassoEmptinessOracleImpl<L extends Lasso<I, D>, S, I, D>
         extends AbstractBFOracle<L, I, D>
-        implements LassoEmptinessOracle<L, I, D>, LassoOracle<L, S, I, D> {
+        implements LassoEmptinessOracle<L, I, D>, LassoOracle<L, I, D> {
 
     /**
      * The {@link OmegaMembershipOracle} used to answer {@link OmegaQuery}s.
@@ -47,14 +47,9 @@ public class LassoEmptinessOracleImpl<L extends Lasso<I, D>, S, I, D>
     }
 
     @Override
-    public OmegaQuery<S, I, D> processOmegaQuery(OmegaQuery<S, I, D> query) {
+    public OmegaQuery<I, D> processOmegaQuery(OmegaQuery<I, D> query) {
         omegaMembershipOracle.processQuery(query);
         return query;
-    }
-
-    @Override
-    public boolean isSameState(Word<I> w1, S s1, Word<I> w2, S s2) {
-        return omegaMembershipOracle.isSameState(w1, s1, w2, s2);
     }
 
     @Override

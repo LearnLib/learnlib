@@ -95,7 +95,7 @@ public class SimulatorOmegaOracle<S, I, D>
     }
 
     @Override
-    public void processQueries(Collection<? extends OmegaQuery<S, I, D>> queries) {
+    public void processQueries(Collection<? extends OmegaQuery<I, D>> queries) {
         MQUtil.answerOmegaQueriesAuto(this, queries);
     }
 
@@ -108,18 +108,42 @@ public class SimulatorOmegaOracle<S, I, D>
      * @see OmegaQueryAnswerer#answerQuery(Word, Word, int)
      */
     @Override
-    public Pair<D, List<S>> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
+    public Pair<D, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
         assert repeat > 0;
-        final List<S> states = new ArrayList<>();
-        final WordBuilder<I> wb = new WordBuilder<>(prefix.length() + loop.length() * repeat);
-        wb.append(prefix);
-        states.add(simpleDTS.getState(wb.toWord()));
-        for (int i = 0; i < repeat; i++) {
-            wb.append(loop);
-            states.add(simpleDTS.getState(wb.toWord()));
+
+        final List<S> states = new ArrayList<>(repeat + 1);
+        final WordBuilder<I> wb = new WordBuilder<>(prefix.length() + loop.length() * repeat, prefix);
+
+        S stateIter = simpleDTS.getState(wb);
+
+        if (stateIter == null) {
+            return Pair.of(null, -1);
         }
 
-        return Pair.of(simulatorOracle.answerQuery(wb.toWord()), states);
+        states.add(stateIter);
+
+        for (int i = 0; i < repeat; i++) {
+            final S nextState = simpleDTS.getSuccessor(stateIter, loop);
+
+            if (nextState == null) {
+                return Pair.of(null, -1);
+            }
+
+            wb.append(loop);
+
+            int prefixLength = prefix.length();
+            for (S s : states) {
+                if (isSameState(wb.toWord(0, prefixLength), s, wb.toWord(), nextState)) {
+                    return Pair.of(simulatorOracle.answerQuery(wb.toWord()), i + 1);
+                }
+                prefixLength += loop.length();
+            }
+
+            states.add(nextState);
+            stateIter = nextState;
+        }
+
+        return Pair.of(null, -1);
     }
 
     public static class DFASimulatorOmegaOracle<S, I>

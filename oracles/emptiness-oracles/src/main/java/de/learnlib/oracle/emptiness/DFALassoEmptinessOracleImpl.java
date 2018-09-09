@@ -22,7 +22,7 @@ import net.automatalib.modelchecking.Lasso;
 
 public class DFALassoEmptinessOracleImpl<S, I>
         extends LassoEmptinessOracleImpl<Lasso.DFALasso<I>, S, I, Boolean>
-        implements LassoEmptinessOracle.DFALassoEmptinessOracle<I>, LassoOracle.DFALassoOracle<S, I> {
+        implements LassoEmptinessOracle.DFALassoEmptinessOracle<I>, LassoOracle.DFALassoOracle<I> {
 
     public DFALassoEmptinessOracleImpl(OmegaMembershipOracle<S, I, Boolean> omegaMembershipOracle) {
         super(omegaMembershipOracle);

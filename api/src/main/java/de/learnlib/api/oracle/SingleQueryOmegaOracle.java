@@ -16,7 +16,6 @@
 package de.learnlib.api.oracle;
 
 import java.util.Collection;
-import java.util.List;
 
 import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.commons.util.Pair;
@@ -33,13 +32,13 @@ import net.automatalib.words.Word;
 public interface SingleQueryOmegaOracle<S, I, D> extends OmegaMembershipOracle<S, I, D> {
 
     @Override
-    default void processQuery(OmegaQuery<S, I, D> query) {
-        Pair<D, List<S>> output = answerQuery(query.getPrefix(), query.getLoop(), query.getRepeat());
+    default void processQuery(OmegaQuery<I, D> query) {
+        Pair<D, Integer> output = answerQuery(query.getPrefix(), query.getLoop(), query.getRepeat());
         query.answer(output.getFirst(), output.getSecond());
     }
 
     @Override
-    default void processQueries(Collection<? extends OmegaQuery<S, I, D>> queries) {
+    default void processQueries(Collection<? extends OmegaQuery<I, D>> queries) {
         queries.forEach(this::processQuery);
     }
 

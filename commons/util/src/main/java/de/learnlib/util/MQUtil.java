@@ -16,7 +16,6 @@
 package de.learnlib.util;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
@@ -90,7 +89,7 @@ public final class MQUtil {
     }
 
     public static <S, I, D> void answerOmegaQueriesAuto(OmegaQueryAnswerer<S, I, D> answerer,
-                                                        Collection<? extends OmegaQuery<S, I, D>> queries) {
+                                                        Collection<? extends OmegaQuery<I, D>> queries) {
         if (PARALLEL_THRESHOLD < 0 || queries.size() < PARALLEL_THRESHOLD) {
             answerOmegaQueries(answerer, queries);
         } else {
@@ -108,12 +107,12 @@ public final class MQUtil {
     }
 
     public static <S, I, D> void answerOmegaQueries(OmegaQueryAnswerer<S, I, D> answerer,
-                                                    Collection<? extends OmegaQuery<S, I, D>> queries) {
-        for (OmegaQuery<S, I, D> query : queries) {
+                                                    Collection<? extends OmegaQuery<I, D>> queries) {
+        for (OmegaQuery<I, D> query : queries) {
             final Word<I> prefix = query.getPrefix();
             final Word<I> loop = query.getLoop();
             final int repeat = query.getRepeat();
-            Pair<D, List<S>> answer = answerer.answerQuery(prefix, loop, repeat);
+            Pair<D, Integer> answer = answerer.answerQuery(prefix, loop, repeat);
             query.answer(answer.getFirst(), answer.getSecond());
         }
     }
@@ -129,12 +128,12 @@ public final class MQUtil {
     }
 
     public static <S, I, D> void answerOmegaQueriesParallel(OmegaQueryAnswerer<S, I, D> answerer,
-                                                            Collection<? extends OmegaQuery<S, I, D>> queries) {
+                                                            Collection<? extends OmegaQuery<I, D>> queries) {
         queries.parallelStream().forEach(q -> {
             final Word<I> prefix = q.getPrefix();
             final Word<I> loop = q.getLoop();
             final int repeat = q.getRepeat();
-            Pair<D, List<S>> answer = answerer.answerQuery(prefix, loop, repeat);
+            Pair<D, Integer> answer = answerer.answerQuery(prefix, loop, repeat);
             q.answer(answer.getFirst(), answer.getSecond());
         });
     }

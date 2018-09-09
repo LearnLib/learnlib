@@ -15,7 +15,6 @@
  */
 package de.learnlib.oracle.emptiness;
 
-import com.google.common.collect.Lists;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
 import de.learnlib.oracle.AbstractBFOracleTest;
@@ -77,14 +76,14 @@ public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Chara
 
     @Test
     public void testProcessOmegaQuery() throws Exception {
-        final OmegaQuery<Integer, Character, D> test = new OmegaQuery<>(prefix, loop, 1);
+        final OmegaQuery<Character, D> test = new OmegaQuery<>(prefix, loop, 1);
 
         Mockito.doAnswer(invocation -> {
-            final OmegaQuery<Integer, Character, D> q = invocation.getArgument(0);
+            final OmegaQuery<Character, D> q = invocation.getArgument(0);
             if (q.getLoop().equals(Word.fromSymbols('a'))) {
-                q.answer(output, Lists.newArrayList(1, 1));
+                q.answer(output, 1);
             } else {
-                q.answer(null, Lists.newArrayList(-1, -1));
+                q.answer(null, -1);
             }
             return null;
         }).when(leo.getOmegaMembershipOracle()).processQuery(ArgumentMatchers.any());
@@ -92,17 +91,7 @@ public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Chara
         leo.processOmegaQuery(test);
 
         Assert.assertEquals(test.getOutput(), output);
-        Assert.assertEquals(test.getStates(), Lists.newArrayList(1, 1));
-    }
-
-    @Test
-    public void testIsSameState() throws Exception {
-
-        Mockito.when(leo.getOmegaMembershipOracle().isSameState(prefix, 1, prefix.concat(loop), 1)).thenReturn(true);
-        Mockito.when(leo.getOmegaMembershipOracle().isSameState(prefix, 1, prefix.concat(loop), 2)).thenReturn(false);
-
-        Assert.assertTrue(leo.isSameState(prefix, 1, prefix.concat(loop), 1));
-        Assert.assertFalse(leo.isSameState(prefix, 1, prefix.concat(loop), 2));
+        Assert.assertEquals(test.getPeriodicity(), 1);
     }
 
     @Override

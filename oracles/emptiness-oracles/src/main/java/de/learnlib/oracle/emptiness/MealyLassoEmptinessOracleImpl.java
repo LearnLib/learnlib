@@ -23,7 +23,7 @@ import net.automatalib.words.Word;
 
 public class MealyLassoEmptinessOracleImpl<S, I, O>
         extends LassoEmptinessOracleImpl<Lasso.MealyLasso<I, O>, S, I, Word<O>>
-        implements LassoEmptinessOracle.MealyLassoEmptinessOracle<I, O>, LassoOracle.MealyLassoOracle<S, I, O> {
+        implements LassoEmptinessOracle.MealyLassoEmptinessOracle<I, O>, LassoOracle.MealyLassoOracle<I, O> {
 
     public MealyLassoEmptinessOracleImpl(OmegaMembershipOracle<S, I, Word<O>> omegaMembershipOracle) {
         super(omegaMembershipOracle);

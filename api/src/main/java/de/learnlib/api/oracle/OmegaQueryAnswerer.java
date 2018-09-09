@@ -15,8 +15,6 @@
  */
 package de.learnlib.api.oracle;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -27,14 +25,13 @@ import net.automatalib.words.Word;
  * Answers {@link de.learnlib.api.query.OmegaQuery}s.
  *
  * @author Jeroen Meijer
- *
  * @see OmegaMembershipOracle
  * @see QueryAnswerer
  */
 public interface OmegaQueryAnswerer<S, I, D> {
 
     @Nullable
-    Pair<D, List<S>> answerQuery(Word<I> prefix, Word<I> loop, int repeat);
+    Pair<D, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat);
 
     @Nonnull
     OmegaMembershipOracle<S, I, D> asOracle();

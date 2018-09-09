@@ -15,7 +15,6 @@
  */
 package de.learnlib.oracle.emptiness;
 
-import com.google.common.collect.Lists;
 import de.learnlib.api.oracle.OmegaMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
@@ -44,11 +43,11 @@ public class DFALassoEmptinessOracleImplTest
         super.setUp();
 
         Mockito.doAnswer(invocation -> {
-            final OmegaQuery<Integer, Character, Boolean> q = invocation.getArgument(0);
+            final OmegaQuery<Character, Boolean> q = invocation.getArgument(0);
             if (q.getLoop().equals(Word.fromSymbols('a'))) {
-                q.answer(true, Lists.newArrayList(0, 0));
+                q.answer(true, 1);
             } else {
-                q.answer(false, Lists.newArrayList(-1, -1));
+                q.answer(false, 1);
             }
             return null;
         }).when(omo).processQuery(ArgumentMatchers.any());

@@ -15,7 +15,6 @@
  */
 package de.learnlib.api.query;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,28 +54,24 @@ import net.automatalib.words.WordBuilder;
  * @see ObservableSUL#getState()
  */
 @ParametersAreNonnullByDefault
-public final class OmegaQuery<S, I, D> {
-
+public final class OmegaQuery<I, D> {
 
     private final Word<I> prefix;
-
     private final Word<I> loop;
-
     private final int repeat;
 
     private D output;
-    private List<S> states;
+    private int periodicity;
 
     public OmegaQuery(Word<I> prefix, Word<I> loop, int repeat) {
-        assert repeat > 0;
         this.prefix = prefix;
         this.loop = loop;
         this.repeat = repeat;
     }
 
-    public void answer(D output, List<S> states) {
+    public void answer(D output, int periodicity) {
         this.output = output;
-        this.states = states;
+        this.periodicity = periodicity;
     }
 
     public Word<I> getPrefix() {
@@ -87,43 +82,34 @@ public final class OmegaQuery<S, I, D> {
         return loop;
     }
 
+    public int getRepeat() {
+        return repeat;
+    }
+
     @Nullable
     public D getOutput() {
         return output;
     }
 
-    public List<S> getStates() {
-        return states;
+    public int getPeriodicity() {
+        return periodicity;
     }
 
-    public int getRepeat() {
-        return repeat;
+    public boolean isUltimatelyPeriodic() {
+        return periodicity > 0;
     }
 
-    private static <S, I, D> String toString(Word<I> prefix, Word<I> loop, int repeat, D output, List<S> states) {
-        return "OmegaQuery[" + prefix + ".(" + loop + ")^" + repeat + " / " + output + ", " + states + ']';
+    public DefaultQuery<I, D> asDefaultQuery() {
+        final WordBuilder<I> wb = new WordBuilder<>(prefix.length() + loop.length() * periodicity);
+        wb.append(prefix);
+        wb.repeatAppend(periodicity, loop);
+        return new DefaultQuery<>(wb.toWord(), output);
     }
 
     @Override
     public String toString() {
-        return toString(prefix, loop, repeat, output, states);
-    }
-
-    public DefaultQuery<I, D> asDefaultQuery() {
-        final WordBuilder<I> wb = new WordBuilder<>(prefix.length() + loop.length() * repeat);
-        wb.append(prefix);
-        wb.repeatAppend(repeat, loop);
-        return new DefaultQuery<I, D>(wb.toWord(), output) {
-
-            @Override
-            public String toString() {
-                return OmegaQuery.toString(OmegaQuery.this.prefix,
-                                           OmegaQuery.this.loop,
-                                           OmegaQuery.this.repeat,
-                                           output,
-                                           states);
-            }
-        };
+        return "OmegaQuery{" + "prefix=" + prefix + ", loop=" + loop + ", repeat=" + repeat + ", output=" + output +
+               ", periodicity=" + periodicity + '}';
     }
 
     @Override
@@ -131,17 +117,17 @@ public final class OmegaQuery<S, I, D> {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof OmegaQuery)) {
             return false;
         }
-        OmegaQuery<?, ?, ?> that = (OmegaQuery<?, ?, ?>) o;
-        return repeat == that.repeat && Objects.equals(states, that.states) && Objects.equals(prefix, that.prefix) &&
+        OmegaQuery<?, ?> that = (OmegaQuery<?, ?>) o;
+        return periodicity == that.periodicity && Objects.equals(prefix, that.prefix) &&
                Objects.equals(loop, that.loop) && Objects.equals(output, that.output);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(states, prefix, loop, repeat, output);
+        return Objects.hash(prefix, loop, output, periodicity);
     }
 }
 

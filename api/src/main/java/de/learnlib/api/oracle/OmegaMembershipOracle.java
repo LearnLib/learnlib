@@ -17,7 +17,6 @@ package de.learnlib.api.oracle;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -42,17 +41,17 @@ import net.automatalib.words.Word;
 public interface OmegaMembershipOracle<S, I, D> extends OmegaQueryAnswerer<S, I, D> {
 
     @Override
-    default Pair<D, List<S>> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
-        final OmegaQuery<S, I, D> query = new OmegaQuery<>(prefix, loop, repeat);
+    default Pair<D, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
+        final OmegaQuery<I, D> query = new OmegaQuery<>(prefix, loop, repeat);
         processQuery(query);
-        return Pair.of(query.getOutput(), query.getStates());
+        return Pair.of(query.getOutput(), query.getPeriodicity());
     }
 
-    default void processQuery(OmegaQuery<S, I, D> query) {
+    default void processQuery(OmegaQuery<I, D> query) {
         processQueries(Collections.singleton(query));
     }
 
-    void processQueries(Collection<? extends OmegaQuery<S, I, D>> queries);
+    void processQueries(Collection<? extends OmegaQuery<I, D>> queries);
 
     @Override
     default OmegaMembershipOracle<S, I, D> asOracle() {

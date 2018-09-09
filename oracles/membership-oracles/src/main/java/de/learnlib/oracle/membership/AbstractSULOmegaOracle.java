@@ -73,7 +73,7 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
     }
 
     @Override
-    public void processQueries(Collection<? extends OmegaQuery<Q, I, Word<O>>> queries) {
+    public void processQueries(Collection<? extends OmegaQuery<I, Word<O>>> queries) {
         if (localSul != null) {
             processQueries(localSul.get(), queries);
         } else {
@@ -83,9 +83,9 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
         }
     }
 
-    private void processQueries(ObservableSUL<S, I, O> sul, Collection<? extends OmegaQuery<Q, I, Word<O>>> queries) {
-        for (OmegaQuery<Q, I, Word<O>> q : queries) {
-            final Pair<Word<O>, List<Q>> output = answerQuery(sul, q.getPrefix(), q.getLoop(), q.getRepeat());
+    private void processQueries(ObservableSUL<S, I, O> sul, Collection<? extends OmegaQuery<I, Word<O>>> queries) {
+        for (OmegaQuery<I, Word<O>> q : queries) {
+            final Pair<Word<O>, Integer> output = answerQuery(sul, q.getPrefix(), q.getLoop(), q.getRepeat());
             q.answer(output.getFirst(), output.getSecond());
         }
     }
@@ -93,27 +93,38 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
     protected abstract Q getQueryState(ObservableSUL<S, I, O> sul);
 
     @Nonnull
-    private Pair<Word<O>, List<Q>> answerQuery(ObservableSUL<S, I, O> sul, Word<I> prefix, Word<I> loop, int repeat)
+    private Pair<Word<O>, Integer> answerQuery(ObservableSUL<S, I, O> sul, Word<I> prefix, Word<I> loop, int repeat)
             throws SULException {
         assert repeat > 0;
         sul.pre();
         try {
-            final WordBuilder<O> wb = new WordBuilder<>(prefix.length() + loop.length() * repeat);
+            final int traceLength = prefix.length() + loop.length() * repeat;
+            final WordBuilder<I> inputBuilder = new WordBuilder<>(traceLength, prefix);
+            final WordBuilder<O> outputBuilder = new WordBuilder<>(traceLength);
             final List<Q> states = new ArrayList<>(repeat + 1);
 
             for (int i = 0; i < prefix.length(); i++) {
-                wb.append(sul.step(prefix.getSymbol(i)));
+                outputBuilder.append(sul.step(prefix.getSymbol(i)));
             }
             states.add(getQueryState(sul));
 
             for (int i = 0; i < repeat; i++) {
+                inputBuilder.append(loop);
                 for (int j = 0; j < loop.length(); j++) {
-                    wb.append(sul.step(loop.getSymbol(j)));
+                    outputBuilder.append(sul.step(loop.getSymbol(j)));
                 }
-                states.add(getQueryState(sul));
+                final Q nextState = getQueryState(sul);
+
+                int prefixLength = prefix.length();
+                for (Q q: states) {
+                    if (isSameState(inputBuilder.toWord(0, prefixLength), q, inputBuilder.toWord(), nextState)) {
+                        return Pair.of(outputBuilder.toWord(), i + 1);
+                    }
+                    prefixLength += loop.length();
+                }
             }
 
-            return Pair.of(wb.toWord(), states);
+            return Pair.of(null, -1);
         } finally {
             sul.post();
         }
