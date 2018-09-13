@@ -15,7 +15,6 @@
  */
 package de.learnlib.api.query;
 
-import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
@@ -26,24 +25,17 @@ import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 /**
- * A query that contains information about infinite words.
+ * A query that represents information about infinite words in an ultimately periodic pattern. That is, for two finite
+ * strings <i>u</i>, <i>v</i>, this class represents the query of the infinite word <i>uv<sup>ω</sup></i>.
  * <p>
- * In addition to the behavior of {@link DefaultQuery}, an {@link OmegaQuery} contains information about which states
- * have been visited. So that an oracle can decide whether an infinite word is in a language or not.
+ * When answering OmegaQueries, one needs to specify the periodicity <i>p</i> of the looping suffix <i>v</i>, i.e. for
+ * what <i>p</i> the answer contains information about the response to the query <i>uv<sup>p</sup></i> (which can then
+ * be generalized to the infinite case since <i>u(v<sup>p</sup>)<sup>ω</sup></i> = <i>uv<sup>ω</sup></i>.
  * <p>
- * States that are recorded are those after every applied {@link #getLoop()} and the state after {@link #getPrefix()}.
- * States that are recorded can be obtained with {@link #getStates()}
- * <p>
- * Invariant: {@code ({@link #getStates()}.isEmpty()) == ({@link #getOutput()} == null)}.
- * <p>
- * Every constructor in this class accepts an integer, that indicates how often {@link #getLoop()} should be applied.
- * The integer should be greater than zero.
- * <p>
- * Answering this query with output is done obviously via {@link #answer(Object)}, but additionally one has to call
- * {@link #setStates(List)} to satisfy the invariant.
+ * If one cannot determine this value (e.g. because the response exhibits a non periodic pattern), one may specify a
+ * negative value for <i>p</i>. {@link #isUltimatelyPeriodic()} then consequently returns {@code false}. In this case
+ * the output of the query ({@link #getOutput()}) may be undefined.
  *
- * @param <S>
- *         the state type
  * @param <I>
  *         the input type
  * @param <D>
