@@ -15,87 +15,111 @@
  */
 package de.learnlib.api.query;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.ObservableSUL;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 
 /**
- * A query that contains information about infinite words.
+ * A query that represents information about infinite words in an ultimately periodic pattern. That is, for two finite
+ * strings <i>u</i>, <i>v</i>, this class represents the query of the infinite word <i>uv<sup>ω</sup></i>.
+ * <p>
+ * When answering OmegaQueries, one needs to specify the periodicity <i>p</i> of the looping suffix <i>v</i>, i.e. for
+ * what <i>p</i> the answer contains information about the response to the query <i>uv<sup>p</sup></i> (which can then
+ * be generalized to the infinite case since <i>u(v<sup>p</sup>)<sup>ω</sup></i> = <i>uv<sup>ω</sup></i>.
+ * <p>
+ * If one cannot determine this value (e.g. because the response exhibits a non periodic pattern), one may specify a
+ * negative value for <i>p</i>. {@link #isUltimatelyPeriodic()} then consequently returns {@code false}. In this case
+ * the output of the query ({@link #getOutput()}) may be undefined.
  *
- * In addition to the behavior of {@link DefaultQuery}, an {@link OmegaQuery} contains information about which states
- * have been visited. So that an oracle can decide whether an infinite word is in a language or not.
- *
- * States that need to be recorded are given in {@link #getIndices()}. Every index therein is the <i>i</i>th state
- * obtained after the <i>i</i>th symbol. Actual states in {@link #getStates()} correspond to those indices in
- * {@link #getIndices()}.
- *
- * Invariant: {@code ({@link #getStates()} == null) == ({@link #getOutput()} == null)}.
- *
- * Every constructor in this class accepts a set of integers, that can later be retrieved with {@code
- * {@link #getIndices()}}.
- *
- * Answering this query with output is done obviously via {@link DefaultQuery#answer(Object)}, but additionally one
- * has to call {@link #setStates(List)} to satisfy the invariant.
+ * @param <I>
+ *         the input type
+ * @param <D>
+ *         the output type
  *
  * @see DefaultQuery
  * @see Query
  * @see ObservableSUL#getState()
- *
- * @param <S> the state type
- * @param <I> the input type
- * @param <D> the output type
  */
-public class OmegaQuery<S, I, D> extends DefaultQuery<I, D> {
+@ParametersAreNonnullByDefault
+public final class OmegaQuery<I, D> {
 
-    private Set<Integer> indices;
+    private final Word<I> prefix;
+    private final Word<I> loop;
+    private final int repeat;
 
-    private List<S> states;
+    private D output;
+    private int periodicity;
 
-    public OmegaQuery(Word<I> prefix, Word<I> suffix, @Nullable D output, Set<Integer> indices) {
-        super(prefix, suffix, output);
-        this.indices = indices;
+    public OmegaQuery(Word<I> prefix, Word<I> loop, int repeat) {
+        this.prefix = prefix;
+        this.loop = loop;
+        this.repeat = repeat;
     }
 
-    public OmegaQuery(Word<I> prefix, Word<I> suffix, Set<Integer> indices) {
-        this(prefix, suffix, null, indices);
+    public void answer(D output, int periodicity) {
+        this.output = output;
+        this.periodicity = periodicity;
     }
 
-    public OmegaQuery(Word<I> input, Set<Integer> indices) {
-        this(Word.epsilon(), input, null, indices);
+    public Word<I> getPrefix() {
+        return prefix;
     }
 
-    public OmegaQuery(Word<I> input, @Nullable D output, Set<Integer> indices) {
-        this(Word.epsilon(), input, output, indices);
+    public Word<I> getLoop() {
+        return loop;
     }
 
-    public OmegaQuery(Query<I, ?> query, Set<Integer> indices) {
-        this(query.getPrefix(), query.getSuffix(), null, indices);
+    public int getRepeat() {
+        return repeat;
     }
 
-    public Pair<D, List<S>> getOutputStates() {
-        return Pair.of(getOutput(), states);
+    @Nullable
+    public D getOutput() {
+        return output;
+    }
+
+    public int getPeriodicity() {
+        return periodicity;
+    }
+
+    public boolean isUltimatelyPeriodic() {
+        return periodicity > 0;
+    }
+
+    public DefaultQuery<I, D> asDefaultQuery() {
+        final WordBuilder<I> wb = new WordBuilder<>(prefix.length() + loop.length() * periodicity);
+        wb.append(prefix);
+        wb.repeatAppend(periodicity, loop);
+        return new DefaultQuery<>(wb.toWord(), output);
     }
 
     @Override
     public String toString() {
-        return "OmegaQuery[" + prefix + '|' + suffix + " / " + getOutput() + ", " + indices + " - " + states + ']';
+        return "OmegaQuery{" + "prefix=" + prefix + ", loop=" + loop + ", repeat=" + repeat + ", output=" + output +
+               ", periodicity=" + periodicity + '}';
     }
 
-    public Set<Integer> getIndices() {
-        return indices;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof OmegaQuery)) {
+            return false;
+        }
+        OmegaQuery<?, ?> that = (OmegaQuery<?, ?>) o;
+        return periodicity == that.periodicity && Objects.equals(prefix, that.prefix) &&
+               Objects.equals(loop, that.loop) && Objects.equals(output, that.output);
     }
 
-    public List<S> getStates() {
-        return states;
-    }
-
-    public void setStates(List<S> states) {
-        this.states = states;
+    @Override
+    public int hashCode() {
+        return Objects.hash(prefix, loop, output, periodicity);
     }
 }
 

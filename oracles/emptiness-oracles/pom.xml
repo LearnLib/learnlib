@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.learnlib</groupId>
+        <artifactId>learnlib-oracles-parent</artifactId>
+        <version>0.14.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>learnlib-emptiness-oracles</artifactId>
+
+    <name>LearnLib :: Oracles :: Emptiness Oracles</name>
+    <description>A collection of emptiness oracles</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-oracle-support</artifactId>
+        </dependency>
+    </dependencies>
+</project>

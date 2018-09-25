@@ -15,46 +15,43 @@
  */
 package de.learnlib.api.oracle;
 
+import java.util.Objects;
+
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.api.query.Query;
+import de.learnlib.api.SUL;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Word;
 
 /**
- * Decides whether the language of a given hypothesis is included in some other language (e.g. from a
- * {@link de.learnlib.api.SUL}. If the whole language is not included, it provides a counterexample, such that is
- * a word in the given hypothesis, and not in the other language.
+ * Decides whether the language of a given hypothesis is included in some other language (e.g. from a {@link SUL}. If
+ * the whole language is not included, it provides a counterexample, such that it is a word in the given hypothesis, and
+ * not in the other language.
+ *
+ * Note that from the perspective of a learner an inclusion oracle is also an equivalence oracle, but a poor one, i.e.
+ * an inclusion oracle only implements L(H) ⊆ L(SUL), not L(H) ⊇ L(SUL).
+ *
+ * @param <A>
+ *         the automaton type
+ * @param <I>
+ *         the input type
+ * @param <D>
+ *         the output type
  *
  * @author Jeroen Meijer
- *
- * @param <A> the automaton type
- * @param <I> the input type
- * @param <D> the output type
- * @param <Q> the DefaultQuery type
  */
 @ParametersAreNonnullByDefault
-public interface InclusionOracle<A extends Output<I, D> & SimpleDTS<?, I>, I, D, Q extends DefaultQuery<I, D>>
-        extends AutomatonOracle<A, I, D, Q> {
+public interface InclusionOracle<A extends Output<I, D>, I, D> extends EquivalenceOracle<A, I, D> {
 
-    /**
-     * Returns whether the given (answered) {@code query} indicates the word is not in the language of the given {@code
-     * hypothesis}.
-     *
-     * @see AutomatonOracle#isCounterExample(SimpleDTS, Query)
-     */
-    @Override
-    default boolean isCounterExample(A hypothesis, Q query) {
-        return !query.getOutput().equals(hypothesis.computeOutput(query.getInput()));
+    default boolean isCounterExample(A hypothesis, Iterable<? extends I> input, @Nullable D output) {
+        return !Objects.equals(hypothesis.computeOutput(input), output);
     }
 
-    interface DFAInclusionOracle<I>
-            extends InclusionOracle<DFA<?, I>, I, Boolean, DefaultQuery<I, Boolean>>, DFADefaultOracle<I> {}
+    interface DFAInclusionOracle<I> extends InclusionOracle<DFA<?, I>, I, Boolean>, DFAEquivalenceOracle<I> {}
 
-    interface MealyInclusionOracle<I, O> extends
-            InclusionOracle<MealyMachine<?, I, ?, O>, I, Word<O>, DefaultQuery<I, Word<O>>>, MealyDefaultOracle<I, O> {}
+    interface MealyInclusionOracle<I, O>
+            extends InclusionOracle<MealyMachine<?, I, ?, O>, I, Word<O>>, MealyEquivalenceOracle<I, O> {}
 }

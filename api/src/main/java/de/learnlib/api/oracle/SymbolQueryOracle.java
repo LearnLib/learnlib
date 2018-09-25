@@ -35,7 +35,7 @@ import net.automatalib.words.WordBuilder;
  * @author frohme
  */
 @ParametersAreNonnullByDefault
-public interface SymbolQueryOracle<I, O> extends MembershipOracle<I, Word<O>> {
+public interface SymbolQueryOracle<I, O> extends MembershipOracle.MealyMembershipOracle<I, O> {
 
     /**
      * Query the system under learning for a new symbol. <b>This is a stateful operation.</b>
