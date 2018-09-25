@@ -27,14 +27,13 @@ import org.testng.annotations.Test;
 public class MapperCompositionTest {
 
     private ToUpperCaseMapper toUpperCaseMapper;
-    private StringMapper<Character> toCharacterMapper;
 
     private Mapper<String, String, Character, Character> mapper;
 
     @BeforeClass
     public void setUp() {
         toUpperCaseMapper = new ToUpperCaseMapper();
-        toCharacterMapper = new StringMapper<>(Alphabets.characters('A', 'z'));
+        StringMapper<Character> toCharacterMapper = new StringMapper<>(Alphabets.characters('A', 'z'));
         mapper = Mappers.compose(toCharacterMapper, toUpperCaseMapper);
     }
 

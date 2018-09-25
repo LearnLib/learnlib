@@ -17,6 +17,7 @@ package de.learnlib.algorithms.lstar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.learnlib.api.algorithm.feature.ResumableLearner;
@@ -26,7 +27,6 @@ import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
-import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.SymbolHidingAlphabet;
 
@@ -97,7 +97,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
 
         int newStates = numDistinct - oldStates;
 
-        stateInfos.addAll(CollectionsUtil.nullList(newStates));
+        stateInfos.addAll(Collections.nCopies(newStates, null));
 
         // TODO: Is there a quicker way than iterating over *all* rows?
         // FIRST PASS: Create new hypothesis states

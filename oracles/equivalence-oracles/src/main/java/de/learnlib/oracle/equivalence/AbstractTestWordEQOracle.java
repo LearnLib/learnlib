@@ -23,12 +23,12 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Streams;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.concepts.Output;
-import net.automatalib.commons.util.collections.BatchingIterator;
 import net.automatalib.words.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +108,7 @@ public abstract class AbstractTestWordEQOracle<A extends Output<I, D>, I, D> imp
              * FIXME: currently necessary because of a bug in the JDK
              * see https://bugs.openjdk.java.net/browse/JDK-8075939
              */
-            return Streams.stream(Streams.stream(new BatchingIterator<>(stream.iterator(), this.batchSize))
+            return Streams.stream(Streams.stream(Iterators.partition(stream.iterator(), this.batchSize))
                                          .peek(membershipOracle::processQueries)
                                          .flatMap(List::stream)
                                          .iterator());
