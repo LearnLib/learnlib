@@ -443,11 +443,11 @@ public abstract class AbstractTTTLearner<A, I, D>
      *
      * @return a splitter for this block, or {@code null} if no such splitter could be found.
      */
-    @SuppressWarnings("unchecked")
     private Splitter<I, D> findSplitter(AbstractBaseDTNode<I, D> blockRoot) {
         int alphabetSize = alphabet.size();
 
         Object[] properties = new Object[alphabetSize];
+        @SuppressWarnings("unchecked")
         AbstractBaseDTNode<I, D>[] lcas = new AbstractBaseDTNode[alphabetSize];
         boolean first = true;
 

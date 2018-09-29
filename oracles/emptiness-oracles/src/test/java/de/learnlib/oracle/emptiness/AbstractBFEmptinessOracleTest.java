@@ -59,7 +59,7 @@ public abstract class AbstractBFEmptinessOracleTest<A extends DetOutputAutomaton
 
     @Test
     public void testFindCounterExample() {
-        final DefaultQuery cex = bfeo.findCounterExample(automaton, ALPHABET);
+        final DefaultQuery<Character, D> cex = bfeo.findCounterExample(automaton, ALPHABET);
         Assert.assertEquals(cex, query);
     }
 

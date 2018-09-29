@@ -75,7 +75,7 @@ public class DisproveFirstOracleTest {
      */
     @Test
     public void testFindCounterExample() throws Exception {
-        final DefaultQuery ce = oracle.findCounterExample(automaton, inputs);
+        final DefaultQuery<Boolean, Boolean> ce = oracle.findCounterExample(automaton, inputs);
 
         Assert.assertEquals(ce, query);
 

@@ -53,10 +53,9 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected boolean refineHypothesisSingle(DefaultQuery<I, Boolean> ceQuery) {
-        if (((TTTHypothesisDFA<I>) hypothesis).computeSuffixOutput(ceQuery.getPrefix(), ceQuery.getSuffix())
-                                              .equals(ceQuery.getOutput())) {
+        if (getHypothesisModel().computeSuffixOutput(ceQuery.getPrefix(), ceQuery.getSuffix())
+                                .equals(ceQuery.getOutput())) {
             return false;
         }
 
@@ -75,8 +74,8 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             ExtDTNode<I> succHyp = acex.getHypNode(breakpoint + 1);
             boolean hypOut = lca.subtreeLabel(succHyp);
             openTransitions.insertAllIncoming(toSplit.getIncoming());
-            ExtDTNode.SplitResult splitResult = toSplit.split(newDiscr, hypOut, !hypOut);
-            link((ExtDTNode<I>) splitResult.nodeOld, splitState);
+            ExtDTNode<I>.SplitResult splitResult = toSplit.split(newDiscr, hypOut, !hypOut);
+            link(splitResult.nodeOld, splitState);
             ExtDTNode<I> extUnlabeled = (ExtDTNode<I>) splitResult.nodeNew;
             extUnlabeled.tempPrefix = currReachInconsLength;
             unlabeledList.addUnlabeled(extUnlabeled);

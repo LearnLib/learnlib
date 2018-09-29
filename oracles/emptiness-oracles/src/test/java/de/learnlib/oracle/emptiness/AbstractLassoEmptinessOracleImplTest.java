@@ -101,7 +101,7 @@ public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Chara
 
     @Test
     public void testFindCounterExample() {
-        final DefaultQuery cex = leo.findCounterExample(automaton, ALPHABET);
+        final DefaultQuery<Character, D> cex = leo.findCounterExample(automaton, ALPHABET);
         Assert.assertEquals(cex, query);
     }
 
