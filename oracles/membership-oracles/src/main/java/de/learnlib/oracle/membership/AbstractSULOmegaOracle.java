@@ -69,7 +69,11 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
      * @return the {@link ObservableSUL}.
      */
     public ObservableSUL<S, I, O> getSul() {
-        return sul;
+        if (sul.canFork()) {
+            return localSul.get();
+        } else {
+            return sul;
+        }
     }
 
     @Override
@@ -117,7 +121,7 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
 
                 int prefixLength = prefix.length();
                 for (Q q: states) {
-                    if (isSameState(inputBuilder.toWord(0, prefixLength), q, inputBuilder.toWord(), nextState)) {
+                    if (isSameState(inputBuilder.toWord(), nextState, inputBuilder.toWord(0, prefixLength), q)) {
                         return Pair.of(outputBuilder.toWord(), i + 1);
                     }
                     prefixLength += loop.length();
@@ -245,30 +249,24 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
                 // in this case the hash codes are equal, now we must check if we accidentally had a hash-collision.
                 final ObservableSUL<S, I, O> sul1 = getSul();
                 final ObservableSUL<S, I, O> sul2 = forkedSUL;
-                sul1.pre();
+
+                // assert sul1 is already in the correct state
+                assert s1.equals(sul1.getState().hashCode());
+
+                sul2.pre();
                 try {
-                    // step through the first SUL
-                    for (I sym : input1) {
-                        sul1.step(sym);
+                    // step through the second SUL
+                    for (I sym : input2) {
+                        sul2.step(sym);
                     }
-                    sul2.pre();
-                    try {
-                        // step through the second SUL
-                        for (I sym : input2) {
-                            sul2.step(sym);
-                        }
 
-                        assert sul1.getState().hashCode() == sul2.getState().hashCode();
-                        assert s1.equals(sul1.getState().hashCode());
-                        assert s2.equals(sul2.getState().hashCode());
+                    assert sul1.getState().hashCode() == sul2.getState().hashCode();
+                    assert s2.equals(sul2.getState().hashCode());
 
-                        // check for state equivalence
-                        return sul1.getState().equals(sul2.getState());
-                    } finally {
-                        sul2.post();
-                    }
+                    // check for state equivalence
+                    return sul1.getState().equals(sul2.getState());
                 } finally {
-                    sul1.post();
+                    sul2.post();
                 }
             }
         }
