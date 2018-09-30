@@ -122,6 +122,7 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
                     }
                     prefixLength += loop.length();
                 }
+                states.add(nextState);
             }
 
             return Pair.of(null, -1);
