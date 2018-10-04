@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
-import net.automatalib.automata.DeterministicAutomaton;
+import net.automatalib.automata.concepts.Output;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
@@ -38,74 +38,66 @@ import net.automatalib.words.Word;
  *
  * @author Jeroen Meijer
  */
-public interface LassoOracle<L extends Lasso<I, D>, I, D> extends AutomatonOracle<L, I, D> {
+public interface LassoOracle<L extends Lasso<I, D>, I, D> {
 
     /**
      * Processes the given omega query.
      *
-     * @param query the omega query to process.
+     * @param prefix
+     *          the prefix
+     * @param loop
+     *          the loop
+     * @param repeat
+     *          the maximum number of times the loop may be repeated
      *
-     * @return the processed omega query.
+     * @return the omega query.
      */
-    OmegaQuery<I, D> processOmegaQuery(OmegaQuery<I, D> query);
+    OmegaQuery<I, D> processInput(Word<I> prefix, Word<I> loop, int repeat);
 
     /**
-     * Processes the given input word. The default implementation will check if the processed query actually loops.
-     *
-     * @see AutomatonOracle#processInput(DeterministicAutomaton, Word)
-     *
-     * @param lassoHypothesis
-     *          the hypothesis lasso.
-     * @param input
-     *          the input to process.
-     */
-    @Nullable
-    @Override
-    default DefaultQuery<I, D> processInput(L lassoHypothesis, Word<I> input) {
-        final Word<I> prefix = lassoHypothesis.getPrefix();
-        final Word<I> loop = lassoHypothesis.getLoop();
-
-        assert prefix.isPrefixOf(input);
-        assert loop.isSuffixOf(input);
-
-        int repeat = (input.length() - prefix.length()) / loop.length();
-
-        final OmegaQuery<I, D> omegaQuery = processOmegaQuery(new OmegaQuery<>(prefix, loop, repeat));
-
-        return omegaQuery.isUltimatelyPeriodic() ? omegaQuery.asDefaultQuery() : null;
-    }
-
-    /**
-     * The default implementation accepts an input if it loops at least once and if it makes exactly a loop.
-     * This behavior is fine for a {@link DFALasso}, because they are assumed to be prefix-closed.
-     *
-     * @see AutomatonOracle#accepts(DeterministicAutomaton, Iterable, int)
+     * Returns whether the given input and output is a counter example for the given hypothesis.
      *
      * @param hypothesis
-     *          the hypothesis automaton.
-     * @param input
-     *          the input.
-     * @param length
-     *          the length of the input.
+     *          the hypothesis
+     * @param inputs
+     *          the input sequence
+     * @param output
+     *          the output corresponding to the input.
      *
-     * @return whether the given lasso accepts the given input.
+     * @return whether the given input and output is a counter example.
      */
-    @Override
-    default boolean accepts(L hypothesis, Iterable<? extends I> input, int length) {
-        return length >= hypothesis.getPrefix().length() + hypothesis.getLoop().length()
-                && (length - hypothesis.getPrefix().length()) % hypothesis.getLoop().length() == 0;
-    }
+    boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> inputs, @Nullable D output);
+
+    /**
+     * Returns whether a lasso that is ultimately periodic could serve as a counter example.
+     *
+     * @param isUltimatelyPeriodic
+     *          whether the lasso is ultimately periodic
+     *
+     * @return true when lasso that is ultimately periodic could serve as a counter example, false otherwise.
+     */
+    boolean isOmegaCounterExample(boolean isUltimatelyPeriodic);
 
     @Nullable
-    @Override
     default DefaultQuery<I, D> findCounterExample(L hypothesis, Collection<? extends I> inputs) {
-       final int maxQueries = hypothesis.getUnfolds();
+        final Word<I> prefix = hypothesis.getPrefix();
+        final Word<I> loop = hypothesis.getLoop();
+        final int repeat = hypothesis.getUnfolds();
 
-       return findCounterExample(hypothesis, inputs, maxQueries);
+        final OmegaQuery<I, D> omegaQuery = processInput(prefix, loop, repeat);
+
+        final DefaultQuery<I, D> query;
+        if (isOmegaCounterExample(omegaQuery.isUltimatelyPeriodic())) {
+            final DefaultQuery<I, D> ce = omegaQuery.asDefaultQuery();
+            query = isCounterExample(hypothesis.getAutomaton(), ce.getInput(), ce.getOutput()) ? ce : null;
+        } else {
+            query = null;
+        }
+
+        return query;
     }
 
     interface DFALassoOracle<I> extends LassoOracle<DFALasso<I>, I, Boolean> {}
 
     interface MealyLassoOracle<I, O> extends LassoOracle<MealyLasso<I, O>, I, Word<O>> {}
-
 }

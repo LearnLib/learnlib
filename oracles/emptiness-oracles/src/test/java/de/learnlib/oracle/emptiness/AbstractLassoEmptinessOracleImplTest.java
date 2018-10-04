@@ -17,13 +17,13 @@ package de.learnlib.oracle.emptiness;
 
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
-import de.learnlib.oracle.AbstractBFOracleTest;
-import de.learnlib.util.AbstractBFOracle;
 import net.automatalib.modelchecking.Lasso;
-import net.automatalib.ts.simple.SimpleDTS;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.Alphabets;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -36,8 +36,9 @@ import org.testng.annotations.Test;
  * @param <L> the lasso type
  * @param <D> the output type
  */
-public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Character, D>, D>
-        extends AbstractBFOracleTest<D> {
+public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Character, D>, D> {
+
+    public static final Alphabet<Character> ALPHABET = Alphabets.singleton('a');
 
     private LassoEmptinessOracleImpl<L, Integer, Character, D> leo;
 
@@ -61,23 +62,15 @@ public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Chara
 
     @BeforeMethod
     public void setUp() {
-        super.setUp();
+        MockitoAnnotations.initMocks(this);
         leo = createLassoEmptinessOracleImpl();
         automaton = createAutomaton();
         query = createQuery();
         output = createOutput();
     }
 
-    @Override
     @Test
-    public void testGetMultiplier() {
-        Assert.assertEquals(leo.getMultiplier(), -1.0);
-    }
-
-    @Test
-    public void testProcessOmegaQuery() throws Exception {
-        final OmegaQuery<Character, D> test = new OmegaQuery<>(prefix, loop, 1);
-
+    public void testProcessInput() throws Exception {
         Mockito.doAnswer(invocation -> {
             final OmegaQuery<Character, D> q = invocation.getArgument(0);
             if (q.getLoop().equals(Word.fromSymbols('a'))) {
@@ -88,15 +81,13 @@ public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Chara
             return null;
         }).when(leo.getOmegaMembershipOracle()).processQuery(ArgumentMatchers.any());
 
-        leo.processOmegaQuery(test);
+        final OmegaQuery<Character, D> test = leo.processInput(prefix, loop, 1);
 
+        Assert.assertEquals(test.getPrefix(), Word.epsilon());
+        Assert.assertEquals(test.getLoop(), Word.fromSymbols('a'));
+        Assert.assertEquals(test.getRepeat(), 1);
         Assert.assertEquals(test.getOutput(), output);
         Assert.assertEquals(test.getPeriodicity(), 1);
-    }
-
-    @Override
-    protected AbstractBFOracle<? extends SimpleDTS<?, Character>, Character, D> createBreadthFirstOracle(double multiplier) {
-        return createLassoEmptinessOracleImpl();
     }
 
     @Test

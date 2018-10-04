@@ -15,15 +15,14 @@
  */
 package de.learnlib.oracle.emptiness;
 
-import de.learnlib.api.oracle.LassoEmptinessOracle;
-import de.learnlib.api.oracle.LassoOracle;
+import de.learnlib.api.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
+import de.learnlib.api.oracle.LassoOracle.MealyLassoOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle;
-import net.automatalib.modelchecking.Lasso;
+import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.words.Word;
 
-public class MealyLassoEmptinessOracleImpl<S, I, O>
-        extends LassoEmptinessOracleImpl<Lasso.MealyLasso<I, O>, S, I, Word<O>>
-        implements LassoEmptinessOracle.MealyLassoEmptinessOracle<I, O>, LassoOracle.MealyLassoOracle<I, O> {
+public class MealyLassoEmptinessOracleImpl<S, I, O> extends LassoEmptinessOracleImpl<MealyLasso<I, O>, S, I, Word<O>>
+        implements MealyLassoEmptinessOracle<I, O>, MealyLassoOracle<I, O> {
 
     public MealyLassoEmptinessOracleImpl(OmegaMembershipOracle<S, I, Word<O>> omegaMembershipOracle) {
         super(omegaMembershipOracle);

@@ -15,11 +15,9 @@
  */
 package de.learnlib.api.oracle;
 
-import java.util.Objects;
-
-import javax.annotation.Nullable;
-
 import net.automatalib.modelchecking.Lasso;
+import net.automatalib.modelchecking.Lasso.DFALasso;
+import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.words.Word;
 
 /**
@@ -35,12 +33,19 @@ import net.automatalib.words.Word;
  */
 public interface LassoEmptinessOracle<L extends Lasso<I, D>, I, D> extends EmptinessOracle<L, I, D> {
 
-    @Override
-    default boolean isCounterExample(L hypothesis, Iterable<? extends I> inputs, @Nullable D output) {
-        return Objects.equals(hypothesis.getAutomaton().computeOutput(inputs), output);
+    /**
+     * Return that when a lasso is ultimately periodic, it could serve as a counter example.
+     *
+     * @param isUltimatelyPeriodic
+     *          whether the lasso is ultimately periodic
+     *
+     * @return true when a lasso is ultimately periodic, false otherwise.
+     */
+    default boolean isOmegaCounterExample(boolean isUltimatelyPeriodic) {
+        return isUltimatelyPeriodic;
     }
 
-    interface DFALassoEmptinessOracle<I> extends LassoEmptinessOracle<Lasso.DFALasso<I>, I, Boolean> {}
+    interface DFALassoEmptinessOracle<I> extends LassoEmptinessOracle<DFALasso<I>, I, Boolean> {}
 
-    interface MealyLassoEmptinessOracle<I, O> extends LassoEmptinessOracle<Lasso.MealyLasso<I, O>, I, Word<O>> {}
+    interface MealyLassoEmptinessOracle<I, O> extends LassoEmptinessOracle<MealyLasso<I, O>, I, Word<O>> {}
 }
