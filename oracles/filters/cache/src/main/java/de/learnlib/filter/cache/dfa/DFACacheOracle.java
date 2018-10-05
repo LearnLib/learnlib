@@ -62,21 +62,77 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
         this.delegate = delegate;
     }
 
+    /**
+     * Creates a cache oracle for a DFA learning setup, using a tree for internal cache organization.
+     *
+     * @param alphabet
+     *         the alphabet containing the symbols of possible queries
+     * @param delegate
+     *         the oracle to delegate queries to, in case of a cache-miss.
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the cached {@link DFACacheOracle}.
+     *
+     * @see IncrementalDFATreeBuilder
+     */
     public static <I> DFACacheOracle<I> createTreeCacheOracle(Alphabet<I> alphabet,
                                                               MembershipOracle<I, Boolean> delegate) {
         return new DFACacheOracle<>(new IncrementalDFATreeBuilder<>(alphabet), delegate);
     }
 
+    /**
+     * Creates a prefix-closed cache oracle for a DFA learning setup, using a tree for internal cache organization.
+     *
+     * @param alphabet
+     *         the alphabet containing the symbols of possible queries
+     * @param delegate
+     *         the oracle to delegate queries to, in case of a cache-miss.
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the cached {@link DFACacheOracle}.
+     *
+     * @see IncrementalPCDFATreeBuilder
+     */
     public static <I> DFACacheOracle<I> createTreePCCacheOracle(Alphabet<I> alphabet,
                                                                 MembershipOracle<I, Boolean> delegate) {
         return new DFACacheOracle<>(new IncrementalPCDFATreeBuilder<>(alphabet), delegate);
     }
 
+    /**
+     * Creates a cache oracle for a DFA learning setup, using a DAG for internal cache organization.
+     *
+     * @param alphabet
+     *         the alphabet containing the symbols of possible queries
+     * @param delegate
+     *         the oracle to delegate queries to, in case of a cache-miss.
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the cached {@link DFACacheOracle}.
+     *
+     * @see IncrementalDFADAGBuilder
+     */
     public static <I> DFACacheOracle<I> createDAGCacheOracle(Alphabet<I> alphabet,
                                                              MembershipOracle<I, Boolean> delegate) {
         return new DFACacheOracle<>(new IncrementalDFADAGBuilder<>(alphabet), delegate);
     }
 
+    /**
+     * Creates a prefix-closed cache oracle for a DFA learning setup, using a DAG for internal cache organization.
+     *
+     * @param alphabet
+     *         the alphabet containing the symbols of possible queries
+     * @param delegate
+     *         the oracle to delegate queries to, in case of a cache-miss.
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the cached {@link DFACacheOracle}.
+     *
+     * @see IncrementalPCDFADAGBuilder
+     */
     public static <I> DFACacheOracle<I> createDAGPCCacheOracle(Alphabet<I> alphabet,
                                                                MembershipOracle<I, Boolean> delegate) {
         return new DFACacheOracle<>(new IncrementalPCDFADAGBuilder<>(alphabet), delegate);
