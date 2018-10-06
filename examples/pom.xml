@@ -34,6 +34,11 @@ limitations under the License.
         deployed for this module.
     </description>
 
+    <properties>
+        <!-- This property needs to exist, so that the surefire-plugin can correctly pick it up using @{argLine} -->
+        <argLine/>
+    </properties>
+
     <dependencies>
         <!--
         Compile-time dependencies
@@ -106,6 +111,10 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
         </dependency>
         <dependency>
@@ -135,18 +144,25 @@ limitations under the License.
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-property-oracles</artifactId>
         </dependency>
+
+        <!-- testing dependencies, can be ignored for running the examples -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.java.openjdk.cacio</groupId>
+            <artifactId>cacio-tta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <configuration>
-                        <skip>true</skip>
-                    </configuration>
-                </plugin>
                 <plugin><!-- Do not deploy binaries -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -154,7 +170,34 @@ limitations under the License.
                         <skip>true</skip>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <awt.toolkit>net.java.openjdk.cacio.ctc.CTCToolkit</awt.toolkit>
+                            <java.awt.graphicsenv>net.java.openjdk.cacio.ctc.CTCGraphicsEnvironment</java.awt.graphicsenv>
+                            <java.awt.headless>false</java.awt.headless>
+                        </systemPropertyVariables>
+                        <!-- append to existing argLine to nicely work together with jacoco plugin -->
+                        <argLine>@{argLine} -javaagent:${org.jmockit:jmockit:jar}</argLine>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <!-- set properties, so we can easily resolve the file path to the JMockit jar in the surefire-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

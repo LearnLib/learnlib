@@ -219,14 +219,16 @@ limitations under the License.
         <!-- dependency versions -->
         <automatalib.version>0.8.0-SNAPSHOT</automatalib.version>
         <buildergen.version>0.1</buildergen.version>
+        <cacio.version>1.9</cacio.version>
         <checkstyle.version>8.1</checkstyle.version>
         <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
         <guava.version>24.0-jre</guava.version>
+        <jmockit.version>1.43</jmockit.version>
         <logback.version>1.2.3</logback.version>
         <metainf-services.version>1.7</metainf-services.version>
+        <mockito.version>2.18.3</mockito.version>
         <slf4j.version>1.7.25</slf4j.version>
         <testng.version>6.11</testng.version>
-        <mockito.version>2.18.3</mockito.version>
 
         <!-- Javadoc links -->
         <java.apidocs>http://docs.oracle.com/javase/8/docs/api/</java.apidocs>
@@ -558,6 +560,22 @@ limitations under the License.
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- JMockit -->
+            <dependency>
+                <groupId>org.jmockit</groupId>
+                <artifactId>jmockit</artifactId>
+                <version>${jmockit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Caciocavallo -->
+            <dependency>
+                <groupId>net.java.openjdk.cacio</groupId>
+                <artifactId>cacio-tta</artifactId>
+                <version>${cacio.version}</version>
                 <scope>test</scope>
             </dependency>
 

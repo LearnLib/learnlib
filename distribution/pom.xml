@@ -240,6 +240,16 @@ limitations under the License.
                     </plugin>
                 </plugins>
             </build>
+            <dependencies>
+                <!-- when checking coverage, make sure we run the example tests before report aggregation -->
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-examples</artifactId>
+                    <version>${project.version}</version>
+                    <scope>test</scope>
+                    <optional>true</optional>
+                </dependency>
+            </dependencies>
         </profile>
         <profile>
             <id>bundles</id>
