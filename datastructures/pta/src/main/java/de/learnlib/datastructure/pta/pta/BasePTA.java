@@ -217,7 +217,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
 
         SP2 initProp = safeSPExtractor.apply(root.getStateProperty());
         S2 resultInit = automaton.addInitialState(initProp);
-        queue.add(new Pair<>(root, resultInit));
+        queue.add(Pair.of(root, resultInit));
 
         Pair<S, S2> curr;
         while ((curr = queue.poll()) != null) {
@@ -232,7 +232,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
                         SP2 prop = safeSPExtractor.apply(ptaSucc.getStateProperty());
                         resultSucc = automaton.addState(prop);
                         resultStates.put(ptaSucc, resultSucc);
-                        queue.offer(new Pair<>(ptaSucc, resultSucc));
+                        queue.offer(Pair.of(ptaSucc, resultSucc));
                     }
                     I sym = alphabet.getSymbol(i);
                     TP2 transProp = safeTPExtractor.apply(ptaState.getTransProperty(i));

@@ -88,10 +88,10 @@ public class BlueFringeEDSMDFA<I> extends BlueFringeRPNIDFA<I> {
                 final Optional<Pair<RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>>, Long>> result =
                         stream.map(qr -> tryMerge(pta, qr, qb))
                               .filter(Objects::nonNull)
-                              .map(merge -> new Pair<>(merge,
-                                                       EDSMUtil.score(merge.toMergedAutomaton(),
-                                                                      super.positive,
-                                                                      super.negative)))
+                              .map(merge -> Pair.of(merge,
+                                                    EDSMUtil.score(merge.toMergedAutomaton(),
+                                                                   super.positive,
+                                                                   super.negative)))
                               .max(Comparator.comparingLong(Pair::getSecond));
 
                 if (result.isPresent()) {

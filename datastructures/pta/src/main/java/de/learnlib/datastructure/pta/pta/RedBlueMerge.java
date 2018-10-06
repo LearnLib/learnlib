@@ -466,7 +466,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
 
             @Override
             public Pair<S, Integer> getTransition(S state, Integer input) {
-                return new Pair<>(state, input);
+                return Pair.of(state, input);
             }
 
             @Override

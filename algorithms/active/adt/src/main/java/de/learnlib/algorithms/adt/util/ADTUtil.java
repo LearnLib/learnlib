@@ -148,7 +148,7 @@ public final class ADTUtil {
             parentIter = parentIter.getParent();
         }
 
-        return new Pair<>(inputBuilder.reverse().toWord(), outputBuilder.reverse().toWord());
+        return Pair.of(inputBuilder.reverse().toWord(), outputBuilder.reverse().toWord());
     }
 
     public static <S, I, O> O getOutputForSuccessor(final ADTNode<S, I, O> node, final ADTNode<S, I, O> successor) {
@@ -254,7 +254,7 @@ public final class ADTUtil {
             tempInput = nextInput;
         }
 
-        return new Pair<>(head, tempADS);
+        return Pair.of(head, tempADS);
     }
 
     /**

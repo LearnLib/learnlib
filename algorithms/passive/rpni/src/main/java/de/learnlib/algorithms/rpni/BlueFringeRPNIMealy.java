@@ -50,7 +50,7 @@ public class BlueFringeRPNIMealy<I, O> extends AbstractBlueFringeRPNI<I, Word<O>
     @Override
     public void addSamples(Collection<? extends DefaultQuery<I, Word<O>>> samples) {
         for (DefaultQuery<I, Word<O>> qry : samples) {
-            this.samples.add(new Pair<>(qry.getInput().toIntArray(alphabet), qry.getOutput()));
+            this.samples.add(Pair.of(qry.getInput().toIntArray(alphabet), qry.getOutput()));
         }
     }
 
