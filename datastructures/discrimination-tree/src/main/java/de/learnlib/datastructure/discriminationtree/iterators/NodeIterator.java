@@ -30,11 +30,11 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractDTNode;
  * @author Malte Isberner
  * @author frohme
  */
-public class NodesIterator<N extends AbstractDTNode<?, ?, ?, N>> extends AbstractIterator<N> {
+class NodeIterator<N extends AbstractDTNode<?, ?, ?, N>> extends AbstractIterator<N> {
 
     private final Deque<N> stack = new ArrayDeque<>();
 
-    public NodesIterator(N root) {
+    NodeIterator(N root) {
         stack.push(root);
     }
 

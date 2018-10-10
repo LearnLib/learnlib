@@ -91,6 +91,23 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
         return lower;
     }
 
+    /**
+     * Fetches for two nodes information about their lowest common ancestor in {@code this} discrimination tree. {@link
+     * LCAInfo#subtree1Label} will reference the label of the outgoing child transition for the node closer to the LCA,
+     * {@link LCAInfo#subtree2Label} the label of the outgoing child transition for the node farther away from the LCA.
+     * If both nodes have equal depth, {@link LCAInfo#subtree1Label} contains {@code node1}'s label and {@link
+     * LCAInfo#subtree2Label} {@code node2}'s label.
+     * <p>
+     * Either {@link LCAInfo#subtree1Label} or {@link LCAInfo#subtree2Label} is {@code null}, if {@code node1} ({@code
+     * node2} respectively) already is the LCA.
+     *
+     * @param node1
+     *         first node
+     * @param node2
+     *         second node
+     *
+     * @return the corresponding {@link LCAInfo}.
+     */
     public LCAInfo<O, N> lcaInfo(N node1, N node2) {
         int d1 = node1.depth;
         int d2 = node2.depth;
