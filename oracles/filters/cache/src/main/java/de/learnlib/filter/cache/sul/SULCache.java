@@ -28,6 +28,7 @@ import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.cache.mealy.MealyCacheConsistencyTest;
 import de.learnlib.oracle.membership.SULOracle;
+import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
@@ -58,20 +59,28 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O>
 
     private final SULCacheImpl<?, I, ?, O> impl;
 
-    SULCache(IncrementalMealyBuilder<I, O> incMealy, SUL<I, O> sul) {
-        this(incMealy, new ReentrantLock(), sul);
+    SULCache(IncrementalMealyBuilder<I, O> incMealy, SUL<I, O> sul, Mapping<O, O> errorSyms) {
+        this(incMealy, new ReentrantLock(), sul, errorSyms);
     }
 
-    SULCache(IncrementalMealyBuilder<I, O> incMealy, Lock lock, SUL<I, O> sul) {
-        this.impl = new SULCacheImpl<>(incMealy, lock, incMealy.asTransitionSystem(), sul);
+    SULCache(IncrementalMealyBuilder<I, O> incMealy, Lock lock, SUL<I, O> sul, Mapping<O, O> errorSyms) {
+        this.impl = new SULCacheImpl<>(incMealy, lock, incMealy.asTransitionSystem(), sul, errorSyms);
     }
 
     public static <I, O> SULCache<I, O> createTreeCache(Alphabet<I> alphabet, SUL<I, O> sul) {
-        return new SULCache<>(new IncrementalMealyTreeBuilder<>(alphabet), sul);
+        return createTreeCache(alphabet, sul, null);
+    }
+
+    public static <I, O> SULCache<I, O> createTreeCache(Alphabet<I> alphabet, SUL<I, O> sul, Mapping<O, O> errorSyms) {
+        return new SULCache<>(new IncrementalMealyTreeBuilder<>(alphabet), sul, errorSyms);
     }
 
     public static <I, O> SULCache<I, O> createDAGCache(Alphabet<I> alphabet, SUL<I, O> sul) {
-        return new SULCache<>(new IncrementalMealyDAGBuilder<>(alphabet), sul);
+        return createDAGCache(alphabet, sul, null);
+    }
+
+    public static <I, O> SULCache<I, O> createDAGCache(Alphabet<I> alphabet, SUL<I, O> sul, Mapping<O, O> errorSyms) {
+        return new SULCache<>(new IncrementalMealyDAGBuilder<>(alphabet), sul, errorSyms);
     }
 
     @Override
@@ -122,29 +131,38 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O>
         private final SUL<I, O> delegate;
         private final WordBuilder<I> inputWord = new WordBuilder<>();
         private final Lock incMealyLock;
+        private final Mapping<O, O> errorSyms;
         private boolean delegatePreCalled;
         private S current;
         private WordBuilder<O> outputWord;
+        private O errorSym = null;
 
         SULCacheImpl(IncrementalMealyBuilder<I, O> incMealy,
                      Lock lock,
                      MealyTransitionSystem<S, I, T, O> mealyTs,
-                     SUL<I, O> sul) {
+                     SUL<I, O> sul,
+                     Mapping<O, O> errorSyms) {
             this.incMealy = incMealy;
             this.mealyTs = mealyTs;
             this.delegate = sul;
             this.incMealyLock = lock;
+            this.errorSyms = errorSyms;
         }
 
         @Override
         public void pre() {
             incMealyLock.lock();
             this.current = mealyTs.getInitialState();
+            this.errorSym = null;
         }
 
         @Nullable
         @Override
         public O step(@Nullable I in) {
+            if (errorSym != null) {
+                return errorSym;
+            }
+
             O out = null;
 
             if (current != null) {
@@ -172,6 +190,10 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O>
             if (current == null) {
                 out = delegate.step(in);
                 outputWord.add(out);
+            }
+
+            if (errorSyms != null) {
+                errorSym = errorSyms.get(out);
             }
 
             return out;

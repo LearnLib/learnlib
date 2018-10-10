@@ -16,6 +16,7 @@
 package de.learnlib.filter.cache.sul;
 
 import de.learnlib.api.SUL;
+import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.Alphabet;
 
 public final class SULCaches {
@@ -25,14 +26,26 @@ public final class SULCaches {
     }
 
     public static <I, O> SULCache<I, O> createTreeCache(Alphabet<I> alphabet, SUL<I, O> sul) {
-        return SULCache.createTreeCache(alphabet, sul);
+        return createTreeCache(alphabet, sul, null);
+    }
+
+    public static <I, O> SULCache<I, O> createTreeCache(Alphabet<I> alphabet, SUL<I, O> sul, Mapping<O,O> errorSyms) {
+        return SULCache.createTreeCache(alphabet, sul, errorSyms);
     }
 
     public static <I, O> SULCache<I, O> createCache(Alphabet<I> alphabet, SUL<I, O> sul) {
-        return createDAGCache(alphabet, sul);
+        return createCache(alphabet, sul, null);
+    }
+
+    public static <I, O> SULCache<I, O> createCache(Alphabet<I> alphabet, SUL<I, O> sul, Mapping<O, O> errorSyms) {
+        return createDAGCache(alphabet, sul, errorSyms);
     }
 
     public static <I, O> SULCache<I, O> createDAGCache(Alphabet<I> alphabet, SUL<I, O> sul) {
-        return SULCache.createDAGCache(alphabet, sul);
+        return createDAGCache(alphabet, sul, null);
+    }
+
+    public static <I, O> SULCache<I, O> createDAGCache(Alphabet<I> alphabet, SUL<I, O> sul, Mapping<O, O> errorSyms) {
+        return SULCache.createDAGCache(alphabet, sul, errorSyms);
     }
 }
