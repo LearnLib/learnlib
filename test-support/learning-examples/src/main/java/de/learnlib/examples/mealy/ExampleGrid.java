@@ -47,12 +47,12 @@ public class ExampleGrid extends DefaultMealyLearningExample<Character, Integer>
      *
      * @return a Mealy machine with (xsize * ysize) states
      */
-    @SuppressWarnings("unchecked")
     public static <S, A extends MutableMealyMachine<S, Character, ?, Integer>> A constructMachine(A fm,
                                                                                                   int xsize,
                                                                                                   int ysize) {
 
         // create 2D grid of states
+        @SuppressWarnings("unchecked")
         S[][] stategrid = (S[][]) new Object[xsize][ysize];
         for (int x = 0; x < xsize; ++x) {
             for (int y = 0; y < ysize; ++y) {
