@@ -18,7 +18,7 @@ package de.learnlib.algorithms.ttt.base;
 import java.io.Serializable;
 
 import de.learnlib.api.AccessSequenceProvider;
-import net.automatalib.commons.util.array.ResizingObjectArray;
+import net.automatalib.commons.util.array.ResizingArrayStorage;
 import net.automatalib.words.Word;
 
 /**
@@ -33,7 +33,7 @@ public class TTTState<I, D> implements AccessSequenceProvider<I>, Serializable {
 
     final int id;
 
-    private final ResizingObjectArray transitions;
+    private final ResizingArrayStorage<TTTTransition<I, D>> transitions;
     private final TTTTransition<I, D> parentTransition;
 
     AbstractBaseDTNode<I, D> dtLeaf;
@@ -41,7 +41,7 @@ public class TTTState<I, D> implements AccessSequenceProvider<I>, Serializable {
     public TTTState(int initialAlphabetSize, TTTTransition<I, D> parentTransition, int id) {
         this.id = id;
         this.parentTransition = parentTransition;
-        this.transitions = new ResizingObjectArray(initialAlphabetSize);
+        this.transitions = new ResizingArrayStorage<>(TTTTransition.class, initialAlphabetSize);
     }
 
     /**
@@ -83,18 +83,16 @@ public class TTTState<I, D> implements AccessSequenceProvider<I>, Serializable {
         transitions.array[idx] = transition;
     }
 
-    @SuppressWarnings("unchecked")
     public TTTTransition<I, D> getTransition(final int idx) {
-        return (TTTTransition<I, D>) transitions.array[idx];
+        return transitions.array[idx];
     }
 
-    @SuppressWarnings("unchecked")
     public TTTTransition<I, D>[] getTransitions() {
-        return (TTTTransition<I, D>[]) transitions.array;
+        return transitions.array;
     }
 
     /**
-     * See {@link ResizingObjectArray#ensureCapacity(int)}.
+     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
      */
     public boolean ensureInputCapacity(int capacity) {
         return this.transitions.ensureCapacity(capacity);
