@@ -26,7 +26,7 @@ import de.learnlib.api.oracle.Filter;
  * @param <I>
  *         input symbol class
  * @param <D>
- *         output symbol class
+ *         output domain class
  *
  * @author falkhowar
  */
