@@ -16,11 +16,11 @@
 package de.learnlib.acex.impl;
 
 import de.learnlib.acex.AbstractCounterexample;
-import net.automatalib.commons.util.array.RichArray;
+import net.automatalib.commons.util.array.ArrayStorage;
 
 public abstract class AbstractBaseCounterexample<E> implements AbstractCounterexample<E> {
 
-    private final RichArray<E> values;
+    private final ArrayStorage<E> values;
 
     /**
      * Constructor.
@@ -29,7 +29,7 @@ public abstract class AbstractBaseCounterexample<E> implements AbstractCounterex
      *         length of the counterexample
      */
     public AbstractBaseCounterexample(int m) {
-        this.values = new RichArray<>(m);
+        this.values = new ArrayStorage<>(m);
     }
 
     /**
@@ -39,7 +39,7 @@ public abstract class AbstractBaseCounterexample<E> implements AbstractCounterex
      */
     @Override
     public int getLength() {
-        return values.length;
+        return values.size();
     }
 
     @Override
@@ -60,7 +60,7 @@ public abstract class AbstractBaseCounterexample<E> implements AbstractCounterex
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(values.length);
+        StringBuilder sb = new StringBuilder(values.size());
 
         boolean first = true;
         for (E v : values) {

@@ -28,20 +28,19 @@ import java.util.function.Consumer;
 import com.google.common.collect.Sets;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.array.RichArray;
+import net.automatalib.commons.util.array.ArrayStorage;
 
 public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S>> {
 
     private final AbstractBlueFringePTA<SP, TP, S> pta;
-    private final RichArray<S>[] succMod;
-    private final RichArray<TP>[] transPropMod;
-    private final RichArray<SP> propMod;
+    private final ArrayStorage<ArrayStorage<S>> succMod;
+    private final ArrayStorage<ArrayStorage<TP>> transPropMod;
+    private final ArrayStorage<SP> propMod;
     private final int alphabetSize;
     private final S qr;
     private final S qb;
     private boolean merged;
 
-    @SuppressWarnings("unchecked")
     public RedBlueMerge(AbstractBlueFringePTA<SP, TP, S> pta, S qr, S qb) {
         if (!qr.isRed()) {
             throw new IllegalArgumentException("Merge target must be a red state");
@@ -53,9 +52,9 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         this.pta = pta;
 
         int numRedStates = pta.getNumRedStates();
-        this.succMod = new RichArray[numRedStates];
-        this.transPropMod = new RichArray[numRedStates];
-        this.propMod = new RichArray<>(numRedStates);
+        this.succMod = new ArrayStorage<>(numRedStates);
+        this.transPropMod = new ArrayStorage<>(numRedStates);
+        this.propMod = new ArrayStorage<>(numRedStates);
         this.alphabetSize = pta.alphabetSize;
 
         this.qr = qr;
@@ -112,13 +111,13 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
                             }
                         }
 
-                        RichArray<TP> newTPs = null;
-                        RichArray<TP> rSuccTPs = rSucc.transProperties;
-                        RichArray<TP> qSuccTPs = qSucc.transProperties;
+                        ArrayStorage<TP> newTPs = null;
+                        ArrayStorage<TP> rSuccTPs = rSucc.transProperties;
+                        ArrayStorage<TP> qSuccTPs = qSucc.transProperties;
 
                         if (rSuccTPs != null) {
                             if (qSuccTPs != null) {
-                                RichArray<TP> mergedTPs = mergeTransProperties(qSuccTPs, rSuccTPs);
+                                ArrayStorage<TP> mergedTPs = mergeTransProperties(qSuccTPs, rSuccTPs);
                                 if (mergedTPs == null) {
                                     return false;
                                 } else if (mergedTPs != qSuccTPs) {
@@ -153,7 +152,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         return true;
     }
 
-    private S cloneTopSucc(S succ, int i, Deque<FoldRecord<S>> stack, RichArray<TP> newTPs) {
+    private S cloneTopSucc(S succ, int i, Deque<FoldRecord<S>> stack, ArrayStorage<TP> newTPs) {
         S succClone = (newTPs != null) ? succ.copy(newTPs) : succ.copy();
         if (succClone == succ) {
             return succ;
@@ -188,7 +187,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
 
         while (!currSrc.isRed()) {
             S currSrcClone = currSrc.copy();
-            currSrcClone.successors.update(currRec.i, currTgt);
+            currSrcClone.successors.set(currRec.i, currTgt);
             if (currSrcClone == currSrc) {
                 return topClone; // we're done
             }
@@ -206,10 +205,10 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         return topClone;
     }
 
-    private RichArray<TP> getTransProperties(S q) {
+    private ArrayStorage<TP> getTransProperties(S q) {
         if (q.isRed()) {
             int qId = q.id;
-            RichArray<TP> props = transPropMod[qId];
+            ArrayStorage<TP> props = transPropMod.get(qId);
             if (props != null) {
                 return props;
             }
@@ -231,7 +230,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
     private S getSucc(S q, int i) {
         if (q.isRed()) {
             int qId = q.id;
-            RichArray<S> modSuccs = succMod[qId];
+            ArrayStorage<S> modSuccs = succMod.get(qId);
             if (modSuccs != null) {
                 return modSuccs.get(i);
             }
@@ -247,27 +246,27 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         assert redSrc.isRed();
 
         int id = redSrc.id;
-        RichArray<S> newSuccs = succMod[id];
+        ArrayStorage<S> newSuccs = succMod.get(id);
         if (newSuccs == null) {
             if (redSrc.successors == null) {
-                newSuccs = new RichArray<>(alphabetSize);
+                newSuccs = new ArrayStorage<>(alphabetSize);
             } else {
                 newSuccs = redSrc.successors.clone();
             }
-            succMod[id] = newSuccs;
+            succMod.set(id, newSuccs);
         }
-        newSuccs.update(input, tgt);
+        newSuccs.set(input, tgt);
         if (transProp != null) {
-            RichArray<TP> newTransProps = transPropMod[id];
+            ArrayStorage<TP> newTransProps = transPropMod.get(id);
             if (newTransProps == null) {
                 if (redSrc.transProperties == null) {
-                    newTransProps = new RichArray<>(alphabetSize);
+                    newTransProps = new ArrayStorage<>(alphabetSize);
                 } else {
                     newTransProps = redSrc.transProperties.clone();
                 }
-                transPropMod[id] = newTransProps;
+                transPropMod.set(id, newTransProps);
             }
-            newTransProps.update(input, transProp);
+            newTransProps.set(input, transProp);
         }
     }
 
@@ -278,12 +277,12 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
     private boolean mergeRedTransProperties(S qr, S qb) {
         assert qr.isRed();
 
-        RichArray<TP> qbProps = qb.transProperties;
+        ArrayStorage<TP> qbProps = qb.transProperties;
         if (qbProps == null) {
             return true;
         }
-        RichArray<TP> qrProps = getTransProperties(qr);
-        RichArray<TP> mergedProps = qbProps;
+        ArrayStorage<TP> qrProps = getTransProperties(qr);
+        ArrayStorage<TP> mergedProps = qbProps;
         if (qrProps != null) {
             mergedProps = mergeTransProperties(qrProps, qbProps);
             if (mergedProps == null) {
@@ -291,7 +290,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
             }
         }
         if (mergedProps != qrProps) {
-            transPropMod[qr.id] = mergedProps;
+            transPropMod.set(qr.id, mergedProps);
         }
         return true;
     }
@@ -307,21 +306,21 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         if (qrProp != null) {
             return Objects.equals(qbProp, qrProp);
         }
-        propMod.update(qr.id, qbProp);
+        propMod.set(qr.id, qbProp);
         return true;
     }
 
     /**
      * Merges two non-null transition property arrays. The behavior of this method is as follows: <ul> <li>if {@code
      * tps1} subsumes {@code tps2}, then {@code tps1} is returned.</li> <li>otherwise, if {@code tps1} and {@code tps2}
-     * can be merged, a new {@link RichArray} containing the result of the merge is returned. <li>otherwise (i.e., if no
-     * merge is possible), {@code null} is returned. </ul>
+     * can be merged, a new {@link ArrayStorage} containing the result of the merge is returned. <li>otherwise
+     * (i.e., if no merge is possible), {@code null} is returned. </ul>
      */
-    private RichArray<TP> mergeTransProperties(RichArray<TP> tps1, RichArray<TP> tps2) {
-        int len = tps1.length;
+    private ArrayStorage<TP> mergeTransProperties(ArrayStorage<TP> tps1, ArrayStorage<TP> tps2) {
+        int len = tps1.size();
         int i;
 
-        RichArray<TP> tps1OrCopy = tps1;
+        ArrayStorage<TP> tps1OrCopy = tps1;
 
         for (i = 0; i < len; i++) {
             TP tp1 = tps1OrCopy.get(i);
@@ -333,7 +332,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
                     }
                 } else {
                     tps1OrCopy = tps1.clone();
-                    tps1OrCopy.update(i++, tp2);
+                    tps1OrCopy.set(i++, tp2);
                     break;
                 }
             }
@@ -348,7 +347,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
                         return null;
                     }
                 } else {
-                    tps1OrCopy.update(i, tp2);
+                    tps1OrCopy.set(i, tp2);
                 }
             }
         }
@@ -359,12 +358,12 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
     public void apply(AbstractBlueFringePTA<SP, TP, S> pta, Consumer<? super PTATransition<S>> newFrontierConsumer) {
         int alphabetSize = pta.alphabetSize;
 
-        for (int i = 0; i < succMod.length; i++) {
+        for (int i = 0; i < succMod.size(); i++) {
             S redState = pta.redStates.get(i);
             assert redState.isRed();
-            RichArray<S> newSuccs = succMod[i];
+            ArrayStorage<S> newSuccs = succMod.get(i);
             if (newSuccs != null) {
-                int len = newSuccs.length;
+                int len = newSuccs.size();
                 for (int j = 0; j < len; j++) {
                     S newSucc = newSuccs.get(j);
                     if (newSucc != null) {
@@ -386,7 +385,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
             if (newProp != null) {
                 redState.property = newProp;
             }
-            RichArray<TP> newTransProps = transPropMod[i];
+            ArrayStorage<TP> newTransProps = transPropMod.get(i);
             if (newTransProps != null) {
                 redState.transProperties = newTransProps;
             }
@@ -404,7 +403,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         S curr;
 
         while ((curr = queue.poll()) != null) {
-            RichArray<S> succs = curr.successors;
+            ArrayStorage<S> succs = curr.successors;
             if (succs == null) {
                 continue;
             }
@@ -436,8 +435,8 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
                 final S source = transition.getFirst();
                 final Integer input = transition.getSecond();
 
-                if (source.isRed() && succMod[source.id] != null) {
-                    return succMod[source.id].get(input);
+                if (source.isRed() && succMod.get(source.id) != null) {
+                    return succMod.get(source.id).get(input);
                 }
 
                 return pta.getSuccessor(source, input);
@@ -457,8 +456,8 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
                 final S source = transition.getFirst();
                 final Integer input = transition.getSecond();
 
-                if (source.isRed() && transPropMod[source.id] != null) {
-                    return transPropMod[source.id].get(input);
+                if (source.isRed() && transPropMod.get(source.id) != null) {
+                    return transPropMod.get(source.id).get(input);
                 }
 
                 return source.transProperties.get(input);

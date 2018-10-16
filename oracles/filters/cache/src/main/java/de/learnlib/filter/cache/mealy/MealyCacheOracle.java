@@ -27,7 +27,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
-import net.automatalib.commons.util.array.RichArray;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
@@ -121,8 +120,8 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O> {
             return;
         }
 
-        RichArray<Query<I, Word<O>>> qrys = new RichArray<>(queries);
-        qrys.parallelSort(queryCmp);
+        List<Query<I, Word<O>>> qrys = new ArrayList<>(queries);
+        qrys.sort(queryCmp);
 
         List<MasterQuery<I, O>> masterQueries = new ArrayList<>();
 

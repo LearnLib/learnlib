@@ -19,13 +19,13 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import net.automatalib.commons.util.array.RichArray;
+import net.automatalib.commons.util.array.ArrayStorage;
 
 public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAState<SP, TP, S>> implements Cloneable {
 
     protected SP property;
-    protected RichArray<TP> transProperties;
-    protected RichArray<S> successors;
+    protected ArrayStorage<TP> transProperties;
+    protected ArrayStorage<S> successors;
     protected int id = -1;
 
     public SP getStateProperty() {
@@ -43,7 +43,7 @@ public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAStat
         return copy((transProperties != null) ? transProperties.clone() : null);
     }
 
-    public S copy(RichArray<TP> newTPs) {
+    public S copy(ArrayStorage<TP> newTPs) {
         try {
             @SuppressWarnings("unchecked")
             S copy = (S) clone();
@@ -66,19 +66,19 @@ public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAStat
 
     public void setSuccessor(int index, S succ, int alphabetSize) {
         if (successors == null) {
-            successors = new RichArray<>(alphabetSize);
+            successors = new ArrayStorage<>(alphabetSize);
         }
-        successors.update(index, succ);
+        successors.set(index, succ);
     }
 
     public S getOrCreateSuccessor(int index, int alphabetSize) {
         if (successors == null) {
-            successors = new RichArray<>(alphabetSize);
+            successors = new ArrayStorage<>(alphabetSize);
         }
         S succ = successors.get(index);
         if (succ == null) {
             succ = createSuccessor(index);
-            successors.update(index, succ);
+            successors.set(index, succ);
         }
         return succ;
     }
@@ -112,10 +112,10 @@ public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAStat
                 return Objects.equals(oldTp, newTP);
             }
         } else {
-            transProperties = new RichArray<>(alphabetSize);
+            transProperties = new ArrayStorage<>(alphabetSize);
         }
 
-        transProperties.update(index, newTP);
+        transProperties.set(index, newTP);
         return true;
     }
 

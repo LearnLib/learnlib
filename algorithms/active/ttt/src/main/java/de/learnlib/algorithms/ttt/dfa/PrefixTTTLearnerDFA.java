@@ -24,7 +24,7 @@ import de.learnlib.algorithms.ttt.base.TTTState;
 import de.learnlib.algorithms.ttt.base.TTTTransition;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.commons.util.array.RichArray;
+import net.automatalib.commons.util.array.ArrayStorage;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -175,13 +175,13 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
     private final class EasyTTTPrefAcex implements AbstractCounterexample<Boolean> {
 
         private final Word<I> ceWord;
-        private final RichArray<ExtDTNode<I>> hypNodes;
-        private final RichArray<ExtDTNode<I>> siftNodes;
+        private final ArrayStorage<ExtDTNode<I>> hypNodes;
+        private final ArrayStorage<ExtDTNode<I>> siftNodes;
 
         EasyTTTPrefAcex(Word<I> ceWord) {
             this.ceWord = ceWord;
-            this.hypNodes = new RichArray<>(ceWord.length() + 1);
-            this.siftNodes = new RichArray<>(ceWord.length() + 1);
+            this.hypNodes = new ArrayStorage<>(ceWord.length() + 1);
+            this.siftNodes = new ArrayStorage<>(ceWord.length() + 1);
 
             update(ceWord.length());
         }
