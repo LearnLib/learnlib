@@ -49,7 +49,7 @@ public class MealyLassoPropertyOracle<I, O, P>
     }
 
     @Override
-    protected Lasso.MealyLasso<I, O> doFindCounterExample(MealyMachine<?, I, ?, O> hypothesis,
+    protected Lasso.MealyLasso<I, O> modelCheck(MealyMachine<?, I, ?, O> hypothesis,
                                                           Collection<? extends I> inputs) {
         return modelChecker.findCounterExample(hypothesis, inputs, getProperty());
     }

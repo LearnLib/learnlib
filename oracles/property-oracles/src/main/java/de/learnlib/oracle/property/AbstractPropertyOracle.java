@@ -78,19 +78,19 @@ abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends
         return counterExample;
     }
 
-    protected abstract R doFindCounterExample(A hypothesis, Collection<? extends I> inputs);
+    protected abstract R modelCheck(A hypothesis, Collection<? extends I> inputs);
 
     @Nullable
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
-        final A result = doFindCounterExample(hypothesis, inputs);
+    public DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {
+        final A result = modelCheck(hypothesis, inputs);
         return result != null ? inclusionOracle.findCounterExample(result, inputs) : null;
     }
 
     @Nullable
     @Override
     public DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs) {
-        final R ce = doFindCounterExample(hypothesis, inputs);
+        final R ce = modelCheck(hypothesis, inputs);
 
         return ce != null ? setCounterExample(emptinessOracle.findCounterExample(ce, inputs)) : null;
     }

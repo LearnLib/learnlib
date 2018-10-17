@@ -48,7 +48,7 @@ public class MealyFinitePropertyOracle<I, O, P>
     }
 
     @Override
-    protected MealyMachine<?, I, ?, O> doFindCounterExample(MealyMachine<?, I, ?, O> hypothesis,
+    protected MealyMachine<?, I, ?, O> modelCheck(MealyMachine<?, I, ?, O> hypothesis,
                                                             Collection<? extends I> inputs) {
 
         return modelChecker.findCounterExample(hypothesis, inputs, getProperty());

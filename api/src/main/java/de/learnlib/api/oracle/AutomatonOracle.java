@@ -166,7 +166,7 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
             if (accepts(hypothesis, input, input.length())) {
                 final DefaultQuery<I, D> query = processInput(hypothesis, input);
                 if (query != null) {
-                    ce = isCounterExample(hypothesis, input, query.getOutput()) ? query : null;
+                    ce = isCounterExample(hypothesis, query.getInput(), query.getOutput()) ? query : null;
                 }
                 queries++;
             }

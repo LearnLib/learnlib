@@ -47,7 +47,7 @@ public class DFALassoEmptinessOracleImplTest
             if (q.getLoop().equals(Word.fromSymbols('a'))) {
                 q.answer(true, 1);
             } else {
-                q.answer(false, 1);
+                q.answer(false, -1);
             }
             return null;
         }).when(omo).processQuery(ArgumentMatchers.any());

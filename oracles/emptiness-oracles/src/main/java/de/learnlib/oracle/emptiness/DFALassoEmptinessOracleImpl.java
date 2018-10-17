@@ -15,14 +15,13 @@
  */
 package de.learnlib.oracle.emptiness;
 
-import de.learnlib.api.oracle.LassoEmptinessOracle;
-import de.learnlib.api.oracle.LassoOracle;
+import de.learnlib.api.oracle.LassoEmptinessOracle.DFALassoEmptinessOracle;
+import de.learnlib.api.oracle.LassoOracle.DFALassoOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle;
-import net.automatalib.modelchecking.Lasso;
+import net.automatalib.modelchecking.Lasso.DFALasso;
 
-public class DFALassoEmptinessOracleImpl<S, I>
-        extends LassoEmptinessOracleImpl<Lasso.DFALasso<I>, S, I, Boolean>
-        implements LassoEmptinessOracle.DFALassoEmptinessOracle<I>, LassoOracle.DFALassoOracle<I> {
+public class DFALassoEmptinessOracleImpl<S, I> extends LassoEmptinessOracleImpl<DFALasso<I>, S, I, Boolean>
+        implements DFALassoEmptinessOracle<I>, DFALassoOracle<I> {
 
     public DFALassoEmptinessOracleImpl(OmegaMembershipOracle<S, I, Boolean> omegaMembershipOracle) {
         super(omegaMembershipOracle);

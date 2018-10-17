@@ -13,28 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.api.statistic;
 
 import javax.annotation.Nonnull;
 
-import de.learnlib.api.oracle.Filter;
+import de.learnlib.api.algorithm.LearningAlgorithm;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.words.Word;
 
 /**
- * Common interface for oracles keeping statistics.
+ * Common interface for learners keeping statistics.
  *
+ * @param <M>
+ *         the automaton type
  * @param <I>
  *         input symbol class
  * @param <D>
- *         output domain class
+ *         output symbol class
  *
- * @author falkhowar
+ * @author Jeroen Meijer
  */
-public interface StatisticOracle<I, D> extends Filter<I, D> {
+public interface StatisticLearner<M, I, D> extends LearningAlgorithm<M, I, D> {
 
-    /**
-     * @return the statistical data gathered by this oracle
-     */
     @Nonnull
     StatisticData getStatisticalData();
+
+    interface DFAStatisticLearner<I> extends StatisticLearner<DFA<?, I>, I, Boolean> {}
+
+    interface MealyStatisticLearner<I, O> extends StatisticLearner<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 }

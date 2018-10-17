@@ -24,12 +24,11 @@ import de.learnlib.api.oracle.LassoOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
-import de.learnlib.util.AbstractBFOracle;
+import net.automatalib.automata.concepts.Output;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.words.Word;
 
 public class LassoEmptinessOracleImpl<L extends Lasso<I, D>, S, I, D>
-        extends AbstractBFOracle<L, I, D>
         implements LassoEmptinessOracle<L, I, D>, LassoOracle<L, I, D> {
 
     /**
@@ -38,7 +37,6 @@ public class LassoEmptinessOracleImpl<L extends Lasso<I, D>, S, I, D>
     private final OmegaMembershipOracle<S, I, D> omegaMembershipOracle;
 
     public LassoEmptinessOracleImpl(OmegaMembershipOracle<S, I, D> omegaMembershipOracle) {
-        super(omegaMembershipOracle.getMembershipOracle(), -1.0);
         this.omegaMembershipOracle = omegaMembershipOracle;
     }
 
@@ -47,14 +45,16 @@ public class LassoEmptinessOracleImpl<L extends Lasso<I, D>, S, I, D>
     }
 
     @Override
-    public OmegaQuery<I, D> processOmegaQuery(OmegaQuery<I, D> query) {
+    public OmegaQuery<I, D> processInput(Word<I> prefix, Word<I> loop, int repeat) {
+        final OmegaQuery<I, D> query = new OmegaQuery<>(prefix, loop, repeat);
         omegaMembershipOracle.processQuery(query);
+
         return query;
     }
 
     @Override
-    public boolean isCounterExample(L hypothesis, Iterable<? extends I> inputs, @Nullable D output) {
-        return LassoEmptinessOracle.super.isCounterExample(hypothesis, inputs, output);
+    public boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> input, @Nullable D output) {
+        return LassoEmptinessOracle.super.isCounterExample(hypothesis, input, output);
     }
 
     @Nullable
@@ -64,7 +64,7 @@ public class LassoEmptinessOracleImpl<L extends Lasso<I, D>, S, I, D>
     }
 
     @Override
-    public DefaultQuery<I, D> processInput(L hypothesis, Word<I> input) {
-        return LassoOracle.super.processInput(hypothesis, input);
+    public boolean isOmegaCounterExample(boolean isUltimatelyPeriodic) {
+        return LassoEmptinessOracle.super.isOmegaCounterExample(isUltimatelyPeriodic);
     }
 }

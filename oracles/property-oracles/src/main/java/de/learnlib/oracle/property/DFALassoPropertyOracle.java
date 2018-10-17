@@ -46,7 +46,7 @@ public class DFALassoPropertyOracle<I, P> extends AbstractPropertyOracle<I, DFA<
     }
 
     @Override
-    protected Lasso.DFALasso<I> doFindCounterExample(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
+    protected Lasso.DFALasso<I> modelCheck(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
         return modelChecker.findCounterExample(hypothesis, inputs, getProperty());
     }
 }

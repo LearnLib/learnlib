@@ -46,7 +46,7 @@ import net.automatalib.words.Word;
 @ParametersAreNonnullByDefault
 public interface InclusionOracle<A extends Output<I, D>, I, D> extends EquivalenceOracle<A, I, D> {
 
-    default boolean isCounterExample(A hypothesis, Iterable<? extends I> input, @Nullable D output) {
+    default boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> input, @Nullable D output) {
         return !Objects.equals(hypothesis.computeOutput(input), output);
     }
 

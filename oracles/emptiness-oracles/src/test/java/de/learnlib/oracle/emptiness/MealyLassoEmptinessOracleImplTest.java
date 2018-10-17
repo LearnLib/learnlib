@@ -47,7 +47,7 @@ public class MealyLassoEmptinessOracleImplTest
             if (q.getLoop().equals(Word.fromSymbols('a'))) {
                 q.answer(Word.fromSymbols('1'), 1);
             } else {
-                q.answer(Word.epsilon(), 1);
+                q.answer(Word.epsilon(), -1);
             }
             return null;
         }).when(omo).processQuery(ArgumentMatchers.any());

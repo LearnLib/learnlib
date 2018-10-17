@@ -21,13 +21,17 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.query.DefaultQuery;
+import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Word;
 
 /**
  * A {@link PropertyOracle} can disprove a property, and used to find a counter example to an hypothesis.
- *
+ * <p>
+ * Note that a property oracle is also an {@link InclusionOracle} and thus an {@link EquivalenceOracle}, hence it can
+ * be use used to find counterexamples to hypotheses.
+ * <p>
  * An implementation should keep track of whether the property is already disproved.
  *
  * @param <I> the input type
@@ -38,7 +42,7 @@ import net.automatalib.words.Word;
  * @author Jeroen Meijer
  */
 @ParametersAreNonnullByDefault
-public interface PropertyOracle<I, A, P, D> {
+public interface PropertyOracle<I, A extends Output<I, D>, P, D> extends InclusionOracle<A, I, D> {
 
     /**
      * Returns whether the property is disproved.
@@ -66,7 +70,7 @@ public interface PropertyOracle<I, A, P, D> {
     /**
      * Returns the counterexample for the property if {@link #isDisproved()}, {@code null} otherwise.
      *
-     * If this method does not return {@code null}, a previous call to {@link #disprove(Object, Collection)} must
+     * If this method does not return {@code null}, a previous call to {@link #disprove(Output, Collection)} must
      * have returned a {@link DefaultQuery}.
      *
      * @return the counterexample for the property if {@link #isDisproved()}, {@code null} otherwise.
@@ -87,19 +91,32 @@ public interface PropertyOracle<I, A, P, D> {
     DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs);
 
     /**
-     * Try to find a counterexample to the given {@code hypothesis}.
+     * Try to find a counterexample to the given {@code hypothesis} if the property can not be disproved.
      *
      * @param hypothesis the hypothesis to find a counterexample to.
      * @param inputs the input alphabet.
      *
      * @return the {@link DefaultQuery} that is a counterexample to the given {@code hypothesis}, or {@code
-     * null}, a counterexample could not be found.
+     * null}, a counterexample could not be found or the property could be disproved.
+     */
+    @Override
+    @Nullable
+    default DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+        return isDisproved() || disprove(hypothesis, inputs) != null ? null : doFindCounterExample(hypothesis, inputs);
+    }
+
+    /**
+     * Unconditionally find a counterexample, i.e. regardless of whether the property can be disproved. In fact,
+     * {@link #disprove(Output, Collection)} is not even be called.
+     *
+     * @see #findCounterExample(Output, Collection)
      */
     @Nullable
-    DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs);
+    DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs);
 
-    interface DFAPropertyOracle<I, P> extends PropertyOracle<I, DFA<?, I>, P, Boolean> {}
+    interface DFAPropertyOracle<I, P> extends PropertyOracle<I, DFA<?, I>, P, Boolean>, DFAInclusionOracle<I> {}
 
-    interface MealyPropertyOracle<I, O, P> extends PropertyOracle<I, MealyMachine<?, I, ?, O>, P, Word<O>> {}
+    interface MealyPropertyOracle<I, O, P>
+            extends PropertyOracle<I, MealyMachine<?, I, ?, O>, P, Word<O>>, MealyInclusionOracle<I, O> {}
 }
 
