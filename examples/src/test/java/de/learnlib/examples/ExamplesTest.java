@@ -31,6 +31,7 @@ import mockit.Mock;
 import mockit.MockUp;
 import net.automatalib.commons.util.system.JVMUtil;
 import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
+import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.words.Word;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
@@ -53,20 +54,26 @@ public class ExamplesTest {
 
     @Test
     public void testBBCExample1() {
-        checkLTSminAvailability();
-        de.learnlib.examples.bbc.example1.Example.main(new String[0]);
+        checkLTSminAvailability(3, 0, 0);
+        de.learnlib.examples.bbc.Example1.main(new String[0]);
     }
 
     @Test
     public void testBBCExample2() {
-        checkLTSminAvailability();
-        de.learnlib.examples.bbc.example2.Example.main(new String[0]);
+        checkLTSminAvailability(3, 0, 0);
+        de.learnlib.examples.bbc.Example2.main(new String[0]);
     }
 
     @Test
     public void testBBCExample3() {
-        checkLTSminAvailability();
-        de.learnlib.examples.bbc.example3.Example.main(new String[0]);
+        checkLTSminAvailability(3, 0, 0);
+        de.learnlib.examples.bbc.Example3.main(new String[0]);
+    }
+
+    @Test
+    public void testBBCExample4() {
+        checkLTSminAvailability(3, 1, 0);
+        de.learnlib.examples.bbc.Example4.main(new String[0]);
     }
 
     @Test
@@ -86,7 +93,7 @@ public class ExamplesTest {
 
         SwingUtilities.invokeAndWait(() -> {
             try {
-                de.learnlib.examples.example1.Example.main(new String[0]);
+                Example1.main(new String[0]);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -98,7 +105,7 @@ public class ExamplesTest {
         checkJVMCompatibility();
         SwingUtilities.invokeAndWait(() -> {
             try {
-                de.learnlib.examples.example2.Example.main(new String[0]);
+                Example2.main(new String[0]);
             } catch (IOException | NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
@@ -108,7 +115,7 @@ public class ExamplesTest {
     @Test
     public void testExample3() throws InvocationTargetException, InterruptedException {
         checkJVMCompatibility();
-        SwingUtilities.invokeAndWait(() -> de.learnlib.examples.example3.Example.main(new String[0]));
+        SwingUtilities.invokeAndWait(() -> Example3.main(new String[0]));
     }
 
     private static void checkJVMCompatibility() {
@@ -117,9 +124,9 @@ public class ExamplesTest {
         }
     }
 
-    private static void checkLTSminAvailability() {
-        if (!LTSminUtil.checkUsable()) {
-            throw new SkipException("LTSmin is not installed");
+    private static void checkLTSminAvailability(int major, int minor, int patch) {
+        if (!LTSminUtil.supports(LTSminVersion.of(major, minor, patch))) {
+            throw new SkipException("LTSmin is not installed in the proper version");
         }
     }
 

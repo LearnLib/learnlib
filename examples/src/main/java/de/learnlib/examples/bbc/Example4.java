@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.examples.bbc.example4;
+package de.learnlib.examples.bbc;
 
 import java.util.function.Function;
 
@@ -29,6 +29,7 @@ import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle.DFAOmegaMembershipOracle;
 import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.examples.LearningExample.DFALearningExample;
+import de.learnlib.examples.bbc.Example1;
 import de.learnlib.examples.dfa.ExampleTinyDFA;
 import de.learnlib.oracle.emptiness.DFABFEmptinessOracle;
 import de.learnlib.oracle.emptiness.DFALassoEmptinessOracleImpl;
@@ -54,19 +55,19 @@ import net.automatalib.words.Alphabet;
 /**
  * Runs a black-box checking experiment for a DFA.
  * <p>
- * This example is similar to {@link de.learnlib.examples.bbc.example1.Example}, except that is also uses a monitor
+ * This example is similar to {@link Example1}, except that is also uses a monitor
  * to disprove properties for the learned DFA.
  *
  * @author Jeroen Meijer
  */
-public final class Example {
+public final class Example4 {
 
     /**
      * A function that transforms edges in an FSM source to actual input for a DFA.
      */
     public static final Function<String, Character> EDGE_PARSER = s -> s.charAt(0);
 
-    private Example() {}
+    private Example4() {}
 
     public static void main(String[] args) {
 
@@ -113,6 +114,7 @@ public final class Example {
 
         // create an LTL property oracle, that also logs stuff
         // also it chains the property oracle that uses monitors and Buchi automata
+        @SuppressWarnings("unchecked")
         PropertyOracle.DFAPropertyOracle<Character, String> ltl = new LoggingPropertyOracle.DFALoggingPropertyOracle<>(
                 new PropertyOracleChain.DFAPropertyOracleChain<>(
                         new DFAFinitePropertyOracle<>("letter==\"b\"", inclusionOracle, emptinessOracle, modelCheckerMonitor),
@@ -120,6 +122,7 @@ public final class Example {
 
         // create an equivalence oracle, that first searches for a counter example using the ltl properties, and next
         // with the W-method.
+        @SuppressWarnings("unchecked")
         DFAEquivalenceOracle<Character> eqOracle = new EQOracleChain.DFAEQOracleChain<>(
                 new CExFirstOracle.DFACExFirstOracle<>(ltl),
                 new DFAWpMethodEQOracle<>(mqOracle, 3));

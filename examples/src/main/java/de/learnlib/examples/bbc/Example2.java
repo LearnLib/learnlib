@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.examples.bbc.example2;
+package de.learnlib.examples.bbc;
 
 import java.util.function.Function;
 
@@ -46,20 +46,20 @@ import net.automatalib.words.Alphabet;
 /**
  * Run a black-box checking experiment with Mealy machines and straightforward edge semantics.
  *
- * The main difference with {@link de.learnlib.examples.bbc.example3.Example} is how the LTL formula is written.
+ * The main difference with {@link Example3} is how the LTL formula is written.
  *
- * @see de.learnlib.examples.bbc.example3.Example
+ * @see Example3
  *
  * @author Jeroen Meijer
  */
-public final class Example {
+public final class Example2 {
 
     /**
      * A function that transforms edges in an FSM source to actual input, and output in the Mealy machine.
      */
     public static final Function<String, Character> EDGE_PARSER = s -> s.charAt(0);
 
-    private Example() { }
+    private Example2() { }
 
     public static void main(String[] args) {
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.examples.example1;
+package de.learnlib.examples;
 
 import java.io.IOException;
 
@@ -41,11 +41,11 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author falkhowar
  */
-public final class Example {
+public final class Example1 {
 
     private static final int EXPLORATION_DEPTH = 4;
 
-    private Example() {
+    private Example1() {
         // prevent instantiation
     }
 

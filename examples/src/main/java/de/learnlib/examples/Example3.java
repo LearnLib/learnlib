@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.examples.example3;
+package de.learnlib.examples;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +23,7 @@ import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
-import de.learnlib.examples.example2.Example.BoundedStringQueue;
+import de.learnlib.examples.Example2.BoundedStringQueue;
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseOracle;
 import de.learnlib.filter.reuse.ReuseOracle.ReuseOracleBuilder;
@@ -37,14 +37,14 @@ import net.automatalib.words.impl.SimpleAlphabet;
 
 /**
  * This example shows how to use the reuse filter on the {@link BoundedStringQueue} of {@link
- * de.learnlib.examples.example2.Example}.
+ * Example2}.
  * <p>
  * Please note that there is no equivalence oracle used in this example so the resulting mealy machines are only first
  * "guesses".
  *
  * @author Oliver Bauer
  */
-public class Example {
+public class Example3 {
 
     private static final String OFFER_1 = "offer_1";
     private static final String OFFER_2 = "offer_2";
@@ -52,7 +52,7 @@ public class Example {
     private final Alphabet<String> sigma;
     private final List<Word<String>> initialSuffixes;
 
-    public Example() {
+    public Example3() {
         sigma = new SimpleAlphabet<>();
         sigma.add(OFFER_1);
         sigma.add(OFFER_2);
@@ -65,7 +65,7 @@ public class Example {
     }
 
     public static void main(String[] args) {
-        Example example = new Example();
+        Example3 example = new Example3();
         System.out.println("--");
         System.out.println("Run experiment 1 (ReuseOracle):");
         MealyMachine<?, String, ?, String> result1 = example.runExperiment1();

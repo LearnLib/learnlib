@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.examples.example2;
+package de.learnlib.examples;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -48,13 +48,13 @@ import net.automatalib.words.Word;
  *
  * @author falkhowar
  */
-public final class Example {
+public final class Example2 {
 
     private static final double RESET_PROBABILITY = 0.05;
     private static final int MAX_STEPS = 10000;
     private static final int RANDOM_SEED = 46346293;
 
-    private Example() {
+    private Example2() {
         // prevent instantiation
     }
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.examples.bbc.example1;
+package de.learnlib.examples.bbc;
 
 import java.util.function.Function;
 
@@ -48,14 +48,14 @@ import net.automatalib.words.Alphabet;
  *
  * @author Jeroen Meijer
  */
-public final class Example {
+public final class Example1 {
 
     /**
      * A function that transforms edges in an FSM source to actual input for a DFA.
      */
     public static final Function<String, Character> EDGE_PARSER = s -> s.charAt(0);
 
-    private Example() {}
+    private Example1() {}
 
     public static void main(String[] args) {
 

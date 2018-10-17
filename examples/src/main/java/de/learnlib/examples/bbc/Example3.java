@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.examples.bbc.example3;
+package de.learnlib.examples.bbc;
 
 import java.util.function.Function;
 
@@ -28,6 +28,7 @@ import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
 import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
+import de.learnlib.examples.bbc.Example2;
 import de.learnlib.examples.mealy.ExampleTinyMealy;
 import de.learnlib.oracle.emptiness.MealyLassoEmptinessOracleImpl;
 import de.learnlib.oracle.equivalence.CExFirstOracle;
@@ -46,17 +47,17 @@ import net.automatalib.words.Alphabet;
 /**
  * Run a black-box checking experiment with a Mealy machine and alternating edge semantics.
  *
- * The main difference with {@link de.learnlib.examples.bbc.example2.Example} is how the LTL formula is written.
+ * The main difference with {@link Example2} is how the LTL formula is written.
  *
- * @see de.learnlib.examples.bbc.example2.Example
+ * @see Example2
  *
  * @author Jeroen Meijer
  */
-public final class Example {
+public final class Example3 {
 
     public static final Function<String, Character> EDGE_PARSER = s -> s.charAt(0);
 
-    private Example() { }
+    private Example3() { }
 
     public static void main(String[] args) {
 
