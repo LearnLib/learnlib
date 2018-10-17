@@ -29,7 +29,6 @@ import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle.DFAOmegaMembershipOracle;
 import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.examples.LearningExample.DFALearningExample;
-import de.learnlib.examples.bbc.Example1;
 import de.learnlib.examples.dfa.ExampleTinyDFA;
 import de.learnlib.oracle.emptiness.DFABFEmptinessOracle;
 import de.learnlib.oracle.emptiness.DFALassoEmptinessOracleImpl;

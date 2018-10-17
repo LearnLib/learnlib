@@ -28,7 +28,6 @@ import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
 import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
-import de.learnlib.examples.bbc.Example2;
 import de.learnlib.examples.mealy.ExampleTinyMealy;
 import de.learnlib.oracle.emptiness.MealyLassoEmptinessOracleImpl;
 import de.learnlib.oracle.equivalence.CExFirstOracle;
