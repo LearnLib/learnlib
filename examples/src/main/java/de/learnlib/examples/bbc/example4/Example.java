@@ -43,6 +43,7 @@ import de.learnlib.oracle.property.PropertyOracleChain;
 import de.learnlib.util.Experiment;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
+import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLDFABuilder;
 import net.automatalib.modelcheckers.ltsmin.monitor.LTSminMonitorDFABuilder;
 import net.automatalib.modelchecking.ModelChecker;
@@ -94,7 +95,11 @@ public final class Example {
         LassoEmptinessOracle.DFALassoEmptinessOracle<Character>
                 lassoEmptinessOracle = new DFALassoEmptinessOracleImpl<>(omqOracle);
 
-        LTSminUtil.setCheckVersion(false);
+        // The following code requires v3.1.0
+        if (!LTSminUtil.supports(LTSminVersion.of(3, 1, 0))) {
+            return;
+        }
+
         // create a model checker that uses monitors
         ModelChecker.DFAModelChecker<Character, String, DFA<?, Character>> modelCheckerMonitor =
                 new LTSminMonitorDFABuilder<Character>().withString2Input(EDGE_PARSER).create();
