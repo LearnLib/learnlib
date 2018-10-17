@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LTSMIN_NAME="ltsmin-${LTSMIN_VERSION}-$TRAVIS_OS_NAME.tgz"
-LTSMIN_URL="https://github.com/utwente-fmt/ltsmin/releases/download/$LTSMIN_VERSION/$LTSMIN_NAME"
+LTSMIN_URL="https://github.com/${LTSMIN_REPO:-utwente-fmt}/ltsmin/releases/download/$LTSMIN_VERSION/$LTSMIN_NAME"
 
 # test if we have a cached version
 test -f "$HOME/ltsmin/${LTSMIN_VERSION}/bin/ltsmin-convert" -a -f "$HOME/ltsmin/${LTSMIN_VERSION}/bin/etf2lts-mc" && exit 0
