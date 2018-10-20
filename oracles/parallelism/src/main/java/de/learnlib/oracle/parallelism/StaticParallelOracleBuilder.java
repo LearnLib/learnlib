@@ -24,6 +24,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.base.Preconditions;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.parallelism.ParallelOracle.PoolPolicy;
 
@@ -50,6 +51,7 @@ public class StaticParallelOracleBuilder<I, D> {
     private PoolPolicy poolPolicy = StaticParallelOracle.POOL_POLICY;
 
     public StaticParallelOracleBuilder(Collection<? extends MembershipOracle<I, D>> oracles) {
+        Preconditions.checkArgument(!oracles.isEmpty(), "No oracles specified");
         this.oracles = oracles;
         this.oracleSupplier = null;
     }
@@ -60,32 +62,14 @@ public class StaticParallelOracleBuilder<I, D> {
     }
 
     @Nonnull
-    public StaticParallelOracleBuilder<I, D> withDefaultMinBatchSize() {
-        this.minBatchSize = StaticParallelOracle.MIN_BATCH_SIZE;
-        return this;
-    }
-
-    @Nonnull
     public StaticParallelOracleBuilder<I, D> withMinBatchSize(@Nonnegative int minBatchSize) {
         this.minBatchSize = minBatchSize;
         return this;
     }
 
     @Nonnull
-    public StaticParallelOracleBuilder<I, D> withDefaultPoolPolicy() {
-        this.poolPolicy = StaticParallelOracle.POOL_POLICY;
-        return this;
-    }
-
-    @Nonnull
     public StaticParallelOracleBuilder<I, D> withPoolPolicy(PoolPolicy policy) {
         this.poolPolicy = policy;
-        return this;
-    }
-
-    @Nonnull
-    public StaticParallelOracleBuilder<I, D> withDefaultNumInstances() {
-        this.numInstances = StaticParallelOracle.NUM_INSTANCES;
         return this;
     }
 

@@ -25,13 +25,15 @@ import java.util.Random;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.Query;
+import de.learnlib.oracle.parallelism.DynamicParallelOracleBuilder.StaticOracleProvider;
+import de.learnlib.oracle.parallelism.ParallelOracle.PoolPolicy;
 import net.automatalib.words.Word;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
-@Test
 public class StaticParallelOracleTest {
 
     public static final int NUM_ORACLES = 10;
@@ -39,17 +41,31 @@ public class StaticParallelOracleTest {
     public static final int MAX_WORD_LEN = 30;
 
     private static final Random RANDOM = new Random();
-    private StaticParallelOracle<Integer, TestOutput> parallelOracle;
+    private final StaticParallelOracle<Integer, TestOutput> parallelOracle;
 
-    @BeforeClass
-    public void setUp() {
+    @Factory(dataProvider = "staticOracles")
+    public StaticParallelOracleTest(StaticParallelOracle<Integer, TestOutput> parallelOracle) {
+        this.parallelOracle = parallelOracle;
+    }
+
+    @DataProvider(name = "staticOracles")
+    public static Object[][] createStaticParallelOracles() {
         List<TestMembershipOracle> oracles = new ArrayList<>(NUM_ORACLES);
         for (int i = 0; i < NUM_ORACLES; i++) {
             oracles.add(new TestMembershipOracle(i));
         }
 
-        parallelOracle =
+        final Object[][] result = new Object[2][1];
+
+        result[0][0] =
                 ParallelOracleBuilders.newStaticParallelOracle(oracles).withMinBatchSize(MIN_BATCH_SIZE).create();
+        result[1][0] = ParallelOracleBuilders.newStaticParallelOracle(new StaticOracleProvider<>(oracles))
+                                             .withMinBatchSize(MIN_BATCH_SIZE)
+                                             .withNumInstances(NUM_ORACLES)
+                                             .withPoolPolicy(PoolPolicy.CACHED)
+                                             .create();
+
+        return result;
     }
 
     @AfterClass

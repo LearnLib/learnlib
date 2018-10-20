@@ -65,7 +65,7 @@ public interface ParallelOracle<I, D> extends MembershipOracle<I, D> {
         FIXED,
         /**
          * Maintain a "cached" thread pool. Threads will be created on-demand, but will be kept alive for re-use when
-         * all jobs are processed. However, they will be terminated when they have been idle for 100 seconds.
+         * all jobs are processed. However, they will be terminated when they have been idle for 60 seconds.
          * <p>
          * Note that as opposed to {@link Executors#newCachedThreadPool()}, the specified pool size will never be
          * exceeded.

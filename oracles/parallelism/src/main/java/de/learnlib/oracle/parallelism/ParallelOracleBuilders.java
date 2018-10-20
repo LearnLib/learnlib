@@ -15,17 +15,15 @@
  */
 package de.learnlib.oracle.parallelism;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.google.common.base.Suppliers;
+import com.google.common.collect.Lists;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.parallelism.ParallelOracle.PoolPolicy;
 
 /**
  * Builders for (static and dynamic) parallel oracles.
@@ -34,19 +32,17 @@ import de.learnlib.api.oracle.MembershipOracle;
  * <p>
  * <b>Usage examples</b>
  * <p>
- * Creating a static parallel oracle with a minimum batch size of 20 and a fixed thread pool, using a membership oracle
- * shared by 4 threads:
+ * Creating a static parallel oracle with a minimum batch size of 20 and a fixed thread pool, using two membership
+ * oracles (running in two separate threads):
  * <pre>
- * ParallelOracleBuilders.newStaticParallelOracle(membershipOracle)
+ * ParallelOracleBuilders.newStaticParallelOracle(oracle1, oracle2)
  *      .withMinBatchSize(20)
- *      .withNumInstances(4)
- *      .withPoolPolicy(PoolPolicy.FIXED)
  *      .create();
  * </pre>
  * <p>
  * Creating a dynamic parallel oracle with a custom executor, and a batch size of 5, using a shared membership oracle:
  * <pre>
- * ParallelOracleBuilders.newDynamicParallelOracle(membershipOracle)
+ * ParallelOracleBuilders.newDynamicParallelOracle(() -&gt; membershipOracle)
  *      .withBatchSize(5)
  *      .withCustomExecutor(myExecutor)
  *      .create();
@@ -71,36 +67,119 @@ public final class ParallelOracleBuilders {
         throw new AssertionError("Constructor should not be invoked");
     }
 
-    @Nonnull
-    public static <I, D> DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(MembershipOracle<I, D> sharedOracle) {
-        return newDynamicParallelOracle(() -> sharedOracle);
-    }
-
+    /**
+     * Creates a {@link DynamicParallelOracleBuilder} using the provided supplier. Uses the further specified
+     * {@link DynamicParallelOracleBuilder#withPoolPolicy(PoolPolicy)} and
+     * {@link DynamicParallelOracleBuilder#withPoolSize(int)} (or its defaults) to determine the thread pool.
+     *
+     * @param oracleSupplier
+     *         the supplier for spawning new thread-specific membership oracle instances
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @return a preconfigured oracle builder
+     */
     @Nonnull
     public static <I, D> DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(Supplier<? extends MembershipOracle<I, D>> oracleSupplier) {
         return new DynamicParallelOracleBuilder<>(oracleSupplier);
     }
 
+    /**
+     * Convenience method for {@link #newDynamicParallelOracle(Collection)}.
+     *
+     * @param firstOracle
+     *         the first (mandatory) oracle
+     * @param otherOracles
+     *         further (optional) oracles to be used by other threads
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @return a preconfigured oracle builder
+     */
     @Nonnull
-    public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(MembershipOracle<I, D> sharedOracle) {
-        return newStaticParallelOracle(Suppliers.ofInstance(sharedOracle));
+    @SafeVarargs
+    public static <I, D> DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(MembershipOracle<I, D> firstOracle,
+                                                                                     MembershipOracle<I, D>... otherOracles) {
+        return newDynamicParallelOracle(Lists.asList(firstOracle, otherOracles));
     }
 
+    /**
+     * Creates a {@link DynamicParallelOracleBuilder} using the provided collection of membership oracles. The resulting
+     * parallel oracle will always use a {@link PoolPolicy#FIXED} pool policy and spawn a separate thread for each of
+     * the provided oracles (so that the oracles do not need to care about synchronization if they don't share state).
+     *
+     * @param oracles
+     *         the oracle instances to distribute the queries to
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @return the preconfigured oracle builder
+     */
+    @Nonnull
+    public static <I, D> DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(Collection<? extends MembershipOracle<I, D>> oracles) {
+        return new DynamicParallelOracleBuilder<>(oracles);
+    }
+
+    /**
+     * Creates a {@link StaticParallelOracleBuilder} using the provided supplier. Uses the further specified
+     * {@link StaticParallelOracleBuilder#withPoolPolicy(PoolPolicy)} and
+     * {@link StaticParallelOracleBuilder#withNumInstances(int)}} (or its defaults) to determine the thread pool.
+     *
+     * @param oracleSupplier
+     *         the supplier for spawning new thread-specific membership oracle instances
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @return a preconfigured oracle builder
+     */
     @Nonnull
     public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(Supplier<? extends MembershipOracle<I, D>> oracleSupplier) {
         return new StaticParallelOracleBuilder<>(oracleSupplier);
     }
 
+    /**
+     * Convenience method for {@link #newStaticParallelOracle(Collection)}.
+     *
+     * @param firstOracle
+     *         the first (mandatory) oracle
+     * @param otherOracles
+     *         further (optional) oracles to be used by other threads
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @return a preconfigured oracle builder
+     */
     @Nonnull
     @SafeVarargs
     public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(MembershipOracle<I, D> firstOracle,
                                                                                    MembershipOracle<I, D>... otherOracles) {
-        List<MembershipOracle<I, D>> oracles = new ArrayList<>(otherOracles.length + 1);
-        oracles.add(firstOracle);
-        Collections.addAll(oracles, otherOracles);
-        return newStaticParallelOracle(oracles);
+        return newStaticParallelOracle(Lists.asList(firstOracle, otherOracles));
     }
 
+    /**
+     * Creates a {@link StaticParallelOracleBuilder} using the provided collection of membership oracles. The resulting
+     * parallel oracle will always use a {@link PoolPolicy#FIXED} pool policy and spawn a separate thread for each of
+     * the provided oracles (so that the oracles do not need to care about synchronization if they don't share state).
+     *
+     * @param oracles
+     *         the oracle instances to distribute the queries to
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @return the preconfigured oracle builder
+     */
     @Nonnull
     public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(Collection<? extends MembershipOracle<I, D>> oracles) {
         return new StaticParallelOracleBuilder<>(oracles);
