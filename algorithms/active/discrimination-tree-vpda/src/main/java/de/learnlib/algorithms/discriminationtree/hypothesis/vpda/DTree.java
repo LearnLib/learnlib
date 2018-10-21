@@ -15,8 +15,11 @@
  */
 package de.learnlib.algorithms.discriminationtree.hypothesis.vpda;
 
-import de.learnlib.api.AccessSequenceProvider;
+import java.util.List;
+import java.util.function.Predicate;
+
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.model.AbstractDiscriminationTree;
 import net.automatalib.words.Word;
 
@@ -32,34 +35,33 @@ public class DTree<I> extends AbstractDiscriminationTree<ContextPair<I>, I, Bool
         super(new DTNode<>(null, false), oracle);
     }
 
-    public DTree(DTNode<I> root, MembershipOracle<I, Boolean> oracle) {
-        super(root, oracle);
-    }
-
     @Override
     public DTNode<I> sift(DTNode<I> start, Word<I> prefix) {
         return sift(start, prefix, true);
     }
 
+    @Override
+    public List<DTNode<I>> sift(List<DTNode<I>> starts, List<Word<I>> prefixes) {
+        return sift(starts, prefixes, true);
+    }
+
     public DTNode<I> sift(DTNode<I> start, Word<I> as, boolean hard) {
-        DTNode<I> curr = start;
-        while (curr.isInner() && (hard || !curr.isTemp())) {
-            ContextPair<I> discr = curr.getDiscriminator();
-            Word<I> prefix = discr.getPrefix().concat(as);
-            Boolean outcome = oracle.answerQuery(prefix, discr.getSuffix());
-
-            curr = curr.getChild(outcome);
-        }
-
-        return curr;
+        return super.sift(start, as, getSiftPredicate(hard));
     }
 
-    public DTNode<I> sift(AccessSequenceProvider<I> asp) {
-        return sift(getRoot(), asp, false);
+    public List<DTNode<I>> sift(List<DTNode<I>> starts, List<Word<I>> prefixes, boolean hard) {
+        return super.sift(starts, prefixes, getSiftPredicate(hard));
     }
 
-    public DTNode<I> sift(DTNode<I> start, AccessSequenceProvider<I> asp, boolean hard) {
-        return sift(start, asp.getAccessSequence(), hard);
+    @Override
+    protected DefaultQuery<I, Boolean> buildQuery(DTNode<I> node, Word<I> prefix) {
+        final ContextPair<I> discr = node.getDiscriminator();
+        final Word<I> completePrefix = discr.getPrefix().concat(prefix);
+        return new DefaultQuery<>(completePrefix, node.getDiscriminator().getSuffix());
+    }
+
+    private static <I> Predicate<DTNode<I>> getSiftPredicate(boolean hard) {
+        return n -> n.isInner() && (hard || !n.isTemp());
     }
 
 }

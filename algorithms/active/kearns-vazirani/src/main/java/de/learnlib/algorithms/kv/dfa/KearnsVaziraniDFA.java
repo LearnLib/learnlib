@@ -17,7 +17,9 @@ package de.learnlib.algorithms.kv.dfa;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
@@ -35,6 +37,7 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNod
 import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.util.array.ArrayStorage;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -172,6 +175,9 @@ public class KearnsVaziraniDFA<I>
     private void updateTransitions(List<Long> transList,
                                    AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> oldDtTarget) { // TODO: replace with primitive specialization
         int numTrans = transList.size();
+
+        final List<Word<I>> transAs = new ArrayList<>(numTrans);
+
         for (int i = 0; i < numTrans; i++) {
             long encodedTrans = transList.get(i);
 
@@ -181,8 +187,18 @@ public class KearnsVaziraniDFA<I>
             StateInfo<I, Boolean> sourceInfo = stateInfos.get(sourceState);
             I symbol = alphabet.getSymbol(transIdx);
 
-            StateInfo<I, Boolean> succ = sift(oldDtTarget, sourceInfo.accessSequence.append(symbol));
-            setTransition(sourceState, transIdx, succ);
+            transAs.add(sourceInfo.accessSequence.append(symbol));
+        }
+
+        final List<StateInfo<I, Boolean>> succs = sift(Collections.nCopies(numTrans, oldDtTarget), transAs);
+
+        for (int i = 0; i < numTrans; i++) {
+            long encodedTrans = transList.get(i);
+
+            int sourceState = (int) (encodedTrans >> StateInfo.INTEGER_WORD_WIDTH);
+            int transIdx = (int) (encodedTrans);
+
+            setTransition(sourceState, transIdx, succs.get(i));
         }
     }
 
@@ -225,13 +241,17 @@ public class KearnsVaziraniDFA<I>
         int state = stateInfo.id;
         Word<I> accessSequence = stateInfo.accessSequence;
 
+        final ArrayStorage<Word<I>> transAs = new ArrayStorage<>(alphabetSize);
+
         for (int i = 0; i < alphabetSize; i++) {
             I sym = alphabet.getSymbol(i);
+            transAs.set(i, accessSequence.append(sym));
+        }
 
-            Word<I> transAs = accessSequence.append(sym);
+        final List<StateInfo<I, Boolean>> succs = sift(transAs);
 
-            StateInfo<I, Boolean> succ = sift(transAs);
-            setTransition(state, i, succ);
+        for (int i = 0; i < alphabetSize; i++) {
+            setTransition(state, i, succs.get(i));
         }
     }
 
@@ -240,27 +260,36 @@ public class KearnsVaziraniDFA<I>
         hypothesis.setTransition(state, symIdx, succInfo.id);
     }
 
-    private StateInfo<I, Boolean> sift(Word<I> prefix) {
-        return sift(discriminationTree.getRoot(), prefix);
+    private List<StateInfo<I, Boolean>> sift(List<Word<I>> prefixes) {
+        return sift(Collections.nCopies(prefixes.size(), discriminationTree.getRoot()), prefixes);
     }
 
-    private StateInfo<I, Boolean> sift(AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> start,
-                                       Word<I> prefix) {
-        AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> leaf = discriminationTree.sift(start, prefix);
+    private List<StateInfo<I, Boolean>> sift(List<AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>>> starts,
+                                             List<Word<I>> prefixes) {
 
-        StateInfo<I, Boolean> succStateInfo = leaf.getData();
-        if (succStateInfo == null) {
-            // Special case: this is the *first* state of a different
-            // acceptance than the initial state
-            boolean initAccepting = hypothesis.isAccepting(hypothesis.getIntInitialState());
-            succStateInfo = createState(prefix, !initAccepting);
-            leaf.setData(succStateInfo);
-            succStateInfo.dtNode = leaf;
+        final List<AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>>> leaves =
+                discriminationTree.sift(starts, prefixes);
+        final ArrayStorage<StateInfo<I, Boolean>> result = new ArrayStorage<>(leaves.size());
 
-            initState(succStateInfo);
+        for (int i = 0; i < leaves.size(); i++) {
+            final AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> leaf = leaves.get(i);
+
+            StateInfo<I, Boolean> succStateInfo = leaf.getData();
+            if (succStateInfo == null) {
+                // Special case: this is the *first* state of a different
+                // acceptance than the initial state
+                boolean initAccepting = hypothesis.isAccepting(hypothesis.getIntInitialState());
+                succStateInfo = createState(prefixes.get(i), !initAccepting);
+                leaf.setData(succStateInfo);
+                succStateInfo.dtNode = leaf;
+
+                initState(succStateInfo);
+            }
+
+            result.set(i, succStateInfo);
         }
 
-        return succStateInfo;
+        return result;
     }
 
     @Override
@@ -280,14 +309,22 @@ public class KearnsVaziraniDFA<I>
         }
 
         // use new list to prevent concurrent modification exception
-        for (final StateInfo<I, Boolean> si : new ArrayList<>(this.stateInfos)) {
-            final int state = si.id;
-            final Word<I> accessSequence = si.accessSequence;
-            final Word<I> transAs = accessSequence.append(symbol);
-
-            final StateInfo<I, Boolean> succ = sift(transAs);
-            setTransition(state, inputIdx, succ);
+        final List<Word<I>> transAs = new ArrayList<>(this.stateInfos.size());
+        for (final StateInfo<I, Boolean> si : this.stateInfos) {
+            transAs.add(si.accessSequence.append(symbol));
         }
+
+        final List<StateInfo<I, Boolean>> succs = sift(transAs);
+
+        final Iterator<StateInfo<I, Boolean>> stateIter = this.stateInfos.iterator();
+        final Iterator<StateInfo<I, Boolean>> leafsIter = succs.iterator();
+
+        while (stateIter.hasNext() && leafsIter.hasNext()) {
+            setTransition(stateIter.next().id, inputIdx, leafsIter.next());
+        }
+
+        assert !stateIter.hasNext();
+        assert !leafsIter.hasNext();
     }
 
     @Override

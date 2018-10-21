@@ -149,7 +149,7 @@ public abstract class AbstractTTTLearner<A, I, D>
         }
 
         TTTState<I, D> init = hypothesis.initialize();
-        AbstractBaseDTNode<I, D> initNode = dtree.sift(init, false);
+        AbstractBaseDTNode<I, D> initNode = dtree.sift(init.getAccessSequence(), false);
         link(initNode, init);
         initializeState(init);
 
@@ -765,20 +765,56 @@ public abstract class AbstractTTTLearner<A, I, D>
     }
 
     protected void closeTransitions() {
-        TTTTransition<I, D> next;
         UnorderedCollection<AbstractBaseDTNode<I, D>> newStateNodes = new UnorderedCollection<>();
 
         do {
-            while ((next = openTransitions.poll()) != null) {
-                AbstractBaseDTNode<I, D> newStateNode = closeTransition(next, false);
-                if (newStateNode != null) {
-                    newStateNodes.add(newStateNode);
-                }
-            }
+            newStateNodes.addAll(closeTransitions(openTransitions, false));
             if (!newStateNodes.isEmpty()) {
                 addNewStates(newStateNodes);
             }
         } while (!openTransitions.isEmpty());
+    }
+
+    /**
+     * Ensures that the specified transitions point to a leaf-node. If a transition is a tree transition, this method
+     * has no effect.
+     * <p>
+     * The provided transList is consumed in this process.
+     * <p>
+     * If a transition needs sifting, the reached leaf node will be collected in the returned collection.
+     *
+     * @param transList
+     *         the list of transitions
+     *
+     * @return a collection containing the reached leaves of transitions that needed sifting
+     */
+    private List<AbstractBaseDTNode<I, D>> closeTransitions(IncomingList<I, D> transList, boolean hard) {
+
+        final List<TTTTransition<I, D>> transToSift = new ArrayList<>(transList.size());
+
+        TTTTransition<I, D> t;
+        while ((t = transList.poll()) != null) {
+            if (!t.isTree()) {
+                transToSift.add(t);
+            }
+        }
+
+        if (transToSift.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        final Iterator<AbstractBaseDTNode<I, D>> leavesIter = updateDTTargets(transToSift, hard).iterator();
+        final List<AbstractBaseDTNode<I, D>> result = new ArrayList<>(transToSift.size());
+
+        for (final TTTTransition<I, D> transition : transToSift) {
+            final AbstractBaseDTNode<I, D> node = leavesIter.next();
+            if (node.isLeaf() && node.getData() == null && transition.getNextElement() == null) {
+                result.add(node);
+            }
+        }
+
+        assert !leavesIter.hasNext();
+        return result;
     }
 
     private void addNewStates(UnorderedCollection<AbstractBaseDTNode<I, D>> newStateNodes) {
@@ -819,25 +855,6 @@ public abstract class AbstractTTTLearner<A, I, D>
     }
 
     /**
-     * Ensures that the specified transition points to a leaf-node. If the transition is a tree transition, this method
-     * has no effect.
-     *
-     * @param trans
-     *         the transition
-     */
-    private AbstractBaseDTNode<I, D> closeTransition(TTTTransition<I, D> trans, boolean hard) {
-        if (trans.isTree()) {
-            return null;
-        }
-
-        AbstractBaseDTNode<I, D> node = updateDTTarget(trans, hard);
-        if (node.isLeaf() && node.getData() == null && trans.getNextElement() == null) {
-            return node;
-        }
-        return null;
-    }
-
-    /**
      * Updates the transition to point to either a leaf in the discrimination tree, or---if the {@code hard} parameter
      * is set to {@code false}---to a block root.
      *
@@ -854,10 +871,44 @@ public abstract class AbstractTTTLearner<A, I, D>
         }
 
         AbstractBaseDTNode<I, D> dt = transition.getNonTreeTarget();
-        dt = dtree.sift(dt, transition, hard);
+        dt = dtree.sift(dt, transition.getAccessSequence(), hard);
         transition.setNonTreeTarget(dt);
 
         return dt;
+    }
+
+    /**
+     * Bulk version of {@link #updateDTTarget(TTTTransition, boolean)}.
+     */
+    private List<AbstractBaseDTNode<I, D>> updateDTTargets(List<TTTTransition<I, D>> transitions, boolean hard) {
+
+        final List<AbstractBaseDTNode<I, D>> nodes = new ArrayList<>(transitions.size());
+        final List<Word<I>> prefixes = new ArrayList<>(transitions.size());
+
+        for (final TTTTransition<I, D> t : transitions) {
+            if (!t.isTree()) {
+                AbstractBaseDTNode<I, D> dt = t.getNonTreeTarget();
+
+                nodes.add(dt);
+                prefixes.add(t.getAccessSequence());
+            }
+        }
+
+        final Iterator<AbstractBaseDTNode<I, D>> leavesIter = dtree.sift(nodes, prefixes, hard).iterator();
+        final List<AbstractBaseDTNode<I, D>> result = new ArrayList<>(transitions.size());
+
+        for (final TTTTransition<I, D> t : transitions) {
+            if (t.isTree()) {
+                result.add(t.getTreeTarget().dtLeaf);
+            } else {
+                AbstractBaseDTNode<I, D> leaf = leavesIter.next();
+                t.setNonTreeTarget(leaf);
+                result.add(leaf);
+            }
+        }
+
+        assert !leavesIter.hasNext();
+        return result;
     }
 
     /**

@@ -16,6 +16,7 @@
 package de.learnlib.datastructure.discriminationtree.model;
 
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.words.Word;
 
 /**
@@ -38,14 +39,7 @@ public abstract class AbstractWordBasedDiscriminationTree<I, O, D>
     }
 
     @Override
-    public AbstractWordBasedDTNode<I, O, D> sift(AbstractWordBasedDTNode<I, O, D> start, Word<I> prefix) {
-        AbstractWordBasedDTNode<I, O, D> curr = start;
-
-        while (!curr.isLeaf()) {
-            O out = super.oracle.answerQuery(prefix, curr.getDiscriminator());
-            curr = curr.child(out);
-        }
-
-        return curr;
+    protected DefaultQuery<I, O> buildQuery(AbstractWordBasedDTNode<I, O, D> node, Word<I> prefix) {
+        return new DefaultQuery<>(prefix, node.getDiscriminator());
     }
 }

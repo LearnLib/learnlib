@@ -87,15 +87,4 @@ public class TransList<I> extends IntrusiveList<AbstractHypTrans<I>> {
         return result;
     }
 
-    public int size() {
-        AbstractHypTrans<I> curr = next;
-        int i = 0;
-        while (curr != null) {
-            i++;
-            curr = curr.getNextElement();
-        }
-
-        return i;
-    }
-
 }

@@ -624,7 +624,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
             if (!alphabet.isCallSymbol(sym)) {
                 AbstractHypTrans<I> trans = hypothesis.getInternalTransition(curr, sym);
                 if (!trans.isTree() && !trans.getNonTreeTarget().isLeaf()) {
-                    updateDTTarget(trans, true);
+                    updateDTTargets(Collections.singletonList(trans), true);
                 }
             }
             curr = hypothesis.getSuccessor(curr, sym);

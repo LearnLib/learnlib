@@ -17,14 +17,21 @@ package de.learnlib.datastructure.discriminationtree.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.RandomAccess;
+import java.util.function.Predicate;
 
 import com.google.common.collect.Iterables;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.query.DefaultQuery;
+import net.automatalib.commons.util.BitSetIterator;
+import net.automatalib.commons.util.array.ArrayStorage;
 import net.automatalib.graphs.Graph;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -62,7 +69,81 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
         return sift(root, prefix);
     }
 
-    public abstract N sift(N start, Word<I> prefix);
+    public N sift(N start, Word<I> prefix) {
+        return sift(start, prefix, n -> !n.isLeaf());
+    }
+
+    protected N sift(N start, Word<I> prefix, Predicate<N> continueExploring) {
+        N curr = start;
+
+        while (continueExploring.test(curr)) {
+            final DefaultQuery<I, O> query = buildQuery(curr, prefix);
+            oracle.processQuery(query);
+            curr = curr.child(query.getOutput());
+        }
+
+        return curr;
+    }
+
+    public List<N> sift(List<N> starts, List<Word<I>> prefixes) {
+        assert starts.size() == prefixes.size();
+        return sift(starts, prefixes, n -> !n.isLeaf());
+    }
+
+    protected List<N> sift(List<N> starts, List<Word<I>> prefixes, Predicate<N> continueExploring) {
+        assert starts.size() == prefixes.size();
+
+        if (starts.isEmpty()) {
+            return Collections.emptyList();
+        } else if (starts.size() == 1) {
+            return Collections.singletonList(sift(starts.get(0), prefixes.get(0), continueExploring));
+        }
+
+        final int size = starts.size();
+        final ArrayStorage<N> result = new ArrayStorage<>(starts);
+        final BitSet activeVector = new BitSet(size);
+
+        for (int i = 0; i < size; i++) {
+            activeVector.set(i, continueExploring.test(result.get(i)));
+        }
+
+        final List<Word<I>> prefixStorage;
+        if (prefixes instanceof RandomAccess) {
+            prefixStorage = prefixes;
+        } else {
+            prefixStorage = new ArrayStorage<>(prefixes);
+        }
+
+        while (!activeVector.isEmpty()) {
+
+            final List<DefaultQuery<I, O>> queries = new ArrayList<>(activeVector.cardinality());
+            final BitSetIterator preIter = new BitSetIterator(activeVector);
+
+            while (preIter.hasNext()) {
+                final int idx = preIter.nextInt();
+                queries.add(buildQuery(result.get(idx), prefixStorage.get(idx)));
+            }
+
+            oracle.processQueries(queries);
+
+            final BitSetIterator postIter = new BitSetIterator(activeVector);
+            final Iterator<DefaultQuery<I, O>> responseIter = queries.iterator();
+
+            while (postIter.hasNext()) {
+                final int idx = postIter.nextInt();
+                final N current = result.get(idx);
+                final O out = responseIter.next().getOutput();
+                final N child = current.child(out);
+                result.set(idx, child);
+
+                if (!continueExploring.test(child)) {
+                    activeVector.clear(idx);
+                }
+            }
+        }
+
+        return result;
+    }
 
     public N getRoot() {
         return root;
@@ -147,6 +228,8 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
 
         return new LCAInfo<>(curr1, out1, out2, swap);
     }
+
+    protected abstract DefaultQuery<I, O> buildQuery(N node, Word<I> prefix);
 
     /*
      * AutomataLib Graph API

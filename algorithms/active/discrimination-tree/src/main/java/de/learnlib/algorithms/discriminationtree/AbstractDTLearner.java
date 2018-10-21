@@ -149,9 +149,8 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
     }
 
     protected void updateHypothesis() {
-        HTransition<I, D, SP, TP> current;
-        while ((current = openTransitions.poll()) != null) {
-            updateTransition(current);
+        while (!openTransitions.isEmpty()) {
+            updateTransitions();
         }
 
         List<Query<I, D>> queries = new ArrayList<>();
@@ -174,22 +173,37 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
         oracle.processQueries(queries);
     }
 
-    protected void updateTransition(HTransition<I, D, SP, TP> trans) {
-        if (trans.isTree()) {
-            return;
+    protected void updateTransitions() {
+        final List<HTransition<I, D, SP, TP>> transitionsToSift = new ArrayList<>(openTransitions.size());
+        final List<AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>>> nodes = new ArrayList<>(openTransitions.size());
+        final List<Word<I>> prefixes = new ArrayList<>(openTransitions.size());
+
+        for (HTransition<I, D, SP, TP> t : openTransitions) {
+            if (!t.isTree()) {
+                transitionsToSift.add(t);
+                nodes.add(t.getDT());
+                prefixes.add(t.getAccessSequence());
+            }
         }
 
-        AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>> currDt = trans.getDT();
-        currDt = dtree.sift(currDt, trans.getAccessSequence());
-        trans.setDT(currDt);
+        openTransitions.clear();
 
-        HState<I, D, SP, TP> state = currDt.getData();
-        if (state == null) {
-            state = createState(trans);
-            currDt.setData(state);
-            state.setDTLeaf(currDt);
-        } else {
-            state.addNonTreeIncoming(trans);
+        final List<AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>>> results = dtree.sift(nodes, prefixes);
+
+        for (int i = 0; i < transitionsToSift.size(); i++) {
+            final HTransition<I, D, SP, TP> trans = transitionsToSift.get(i);
+            final AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>> currDt = results.get(i);
+
+            trans.setDT(currDt);
+
+            HState<I, D, SP, TP> state = currDt.getData();
+            if (state == null) {
+                state = createState(trans);
+                currDt.setData(state);
+                state.setDTLeaf(currDt);
+            } else {
+                state.addNonTreeIncoming(trans);
+            }
         }
     }
 

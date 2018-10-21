@@ -42,6 +42,17 @@ public class IntrusiveList<T extends IntrusiveListElem<T>> extends IntrusiveList
         return next;
     }
 
+    public int size() {
+        T curr = next;
+        int i = 0;
+        while (curr != null) {
+            i++;
+            curr = curr.getNextElement();
+        }
+
+        return i;
+    }
+
     @Override
     public Iterator<T> iterator() {
         return new ListIterator(next);

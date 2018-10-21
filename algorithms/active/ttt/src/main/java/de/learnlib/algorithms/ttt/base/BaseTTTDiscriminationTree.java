@@ -15,12 +15,14 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import de.learnlib.api.AccessSequenceProvider;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.model.AbstractDiscriminationTree;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Word;
@@ -46,52 +48,48 @@ public class BaseTTTDiscriminationTree<I, D>
     }
 
     /**
-     * Sifts an access sequence provided by an object into the tree, starting at the root. This operation performs a
-     * "hard" sift, i.e., it will not stop at temporary nodes.
-     *
-     * @param asp
-     *         the object providing the access sequence
-     *
-     * @return the leaf resulting from the sift operation
-     */
-    public AbstractBaseDTNode<I, D> sift(AccessSequenceProvider<I> asp) {
-        return sift(asp, true);
-    }
-
-    /**
      * Sifts an access sequence provided by an object into the tree, starting at the root. This can either be a "soft"
      * sift, which stops either at the leaf <b>or</b> at the first temporary node, or a "hard" sift, stopping only at a
      * leaf.
      *
-     * @param asp
+     * @param word
      *         the object providing the access sequence
+     * @param hard
+     *         flag, whether this should be a soft or a hard sift
+     *
+     * @return the leaf resulting from the sift operation
      */
-    public AbstractBaseDTNode<I, D> sift(AccessSequenceProvider<I> asp, boolean hard) {
-        return sift(asp.getAccessSequence(), hard);
-    }
-
     public AbstractBaseDTNode<I, D> sift(Word<I> word, boolean hard) {
         return sift(root, word, hard);
     }
 
-    public AbstractBaseDTNode<I, D> sift(AbstractBaseDTNode<I, D> start, Word<I> word, boolean hard) {
-        AbstractBaseDTNode<I, D> curr = start;
-
-        while (!curr.isLeaf() && (hard || !curr.isTemp())) {
-            D outcome = super.oracle.answerQuery(word, curr.getDiscriminator());
-            curr = curr.child(outcome);
-        }
-
-        return curr;
+    public AbstractBaseDTNode<I, D> sift(AbstractBaseDTNode<I, D> start, Word<I> prefix, boolean hard) {
+        return super.sift(start, prefix, getSiftPredicate(hard));
     }
 
-    public AbstractBaseDTNode<I, D> sift(AbstractBaseDTNode<I, D> start, AccessSequenceProvider<I> asp, boolean hard) {
-        return sift(start, asp.getAccessSequence(), hard);
+    public List<AbstractBaseDTNode<I, D>> sift(List<AbstractBaseDTNode<I, D>> starts,
+                                               List<Word<I>> prefixes,
+                                               boolean hard) {
+        return super.sift(starts, prefixes, getSiftPredicate(hard));
     }
 
     @Override
     public AbstractBaseDTNode<I, D> sift(AbstractBaseDTNode<I, D> start, Word<I> prefix) {
         return sift(start, prefix, true);
+    }
+
+    @Override
+    public List<AbstractBaseDTNode<I, D>> sift(List<AbstractBaseDTNode<I, D>> starts, List<Word<I>> prefixes) {
+        return sift(starts, prefixes, true);
+    }
+
+    @Override
+    protected DefaultQuery<I, D> buildQuery(AbstractBaseDTNode<I, D> node, Word<I> prefix) {
+        return new DefaultQuery<>(prefix, node.getDiscriminator());
+    }
+
+    private static <I, D> Predicate<AbstractBaseDTNode<I, D>> getSiftPredicate(boolean hard) {
+        return n -> !n.isLeaf() && (hard || !n.isTemp());
     }
 
     @Override
