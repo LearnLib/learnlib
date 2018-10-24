@@ -34,4 +34,12 @@ limitations under the License.
         -->
         <Bug pattern="SE_NO_SERIALVERSIONID,SE_TRANSIENT_FIELD_NOT_RESTORED"/>
     </Match>
+    <Match>
+        <!-- False-positive on Java 11. See https://github.com/spotbugs/spotbugs/issues/756 -->
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+        <Or>
+            <Class name="de.learnlib.datastructure.observationtable.OTUtils"/>
+            <Class name="de.learnlib.datastructure.observationtable.writer.ObservationTableWriter"/>
+        </Or>
+    </Match>
 </FindBugsFilter>
