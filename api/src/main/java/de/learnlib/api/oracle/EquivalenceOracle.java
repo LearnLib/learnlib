@@ -33,7 +33,7 @@ import net.automatalib.words.Word;
  * <p>
  * <b>CAVEAT:</b> Equivalence oracles serve as an abstraction to tackle the (generally undecidable) problem of black-box
  * equivalence testing. The contract imposed by this interface is that results returned by the {@link
- * #findCounterExample(Object, Collection)} method are in fact counterexamples, <b>BUT</b> a <tt>null</tt> result
+ * #findCounterExample(Object, Collection)} method are in fact counterexamples, <b>BUT</b> a {@code null} result
  * signalling no counterexample was found does <b>not</b> mean that there can be none.
  *
  * @param <A>
@@ -52,15 +52,15 @@ public interface EquivalenceOracle<A, I, D> {
     /**
      * Searches for a counterexample disproving the subjected hypothesis. A counterexample is query which, when
      * performed on the SUL, yields a different output than what was predicted by the hypothesis. If no counterexample
-     * could be found (this does not necessarily mean that none exists), <code>null</code> is returned.
+     * could be found (this does not necessarily mean that none exists), {@code null} is returned.
      *
      * @param hypothesis
      *         the conjecture
      * @param inputs
      *         the set of inputs to consider, this should be a subset of the input alphabet of the provided hypothesis
      *
-     * @return a query exposing different behavior, or <tt>null</tt> if no counterexample could be found. In case a
-     * non-<tt>null</tt> value is returned, the output field in the {@link DefaultQuery} contains the SUL output for the
+     * @return a query exposing different behavior, or {@code null} if no counterexample could be found. In case a
+     * non-{@code null} value is returned, the output field in the {@link DefaultQuery} contains the SUL output for the
      * respective query.
      */
     @Nullable

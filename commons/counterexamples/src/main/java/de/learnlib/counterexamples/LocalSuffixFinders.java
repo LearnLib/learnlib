@@ -73,7 +73,7 @@ public final class LocalSuffixFinders {
      * @param oracle
      *         interface to the SUL
      *
-     * @return the index of the respective suffix, or <tt>-1</tt> if no counterexample could be found
+     * @return the index of the respective suffix, or {@code -1} if no counterexample could be found
      *
      * @see LocalSuffixFinder
      */
@@ -103,7 +103,7 @@ public final class LocalSuffixFinders {
      * @param oracle
      *         interface to the SUL
      *
-     * @return the index of the respective suffix, or <tt>-1</tt> if no counterexample could be found
+     * @return the index of the respective suffix, or {@code -1} if no counterexample could be found
      *
      * @see LocalSuffixFinder
      */
@@ -133,7 +133,7 @@ public final class LocalSuffixFinders {
      * @param oracle
      *         interface to the SUL
      *
-     * @return the index of the respective suffix, or <tt>-1</tt> if no counterexample could be found
+     * @return the index of the respective suffix, or {@code -1} if no counterexample could be found
      *
      * @see LocalSuffixFinder
      */

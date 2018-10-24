@@ -55,7 +55,7 @@ public interface LearningAlgorithm<M, I, D> {
      * @param ceQuery
      *         the query which exposes diverging behavior, as posed to the real SUL (i.e. with the SULs output).
      *
-     * @return <tt>true</tt> if the counterexample triggered a refinement of the hypothesis, <tt>false</tt> otherwise
+     * @return {@code true} if the counterexample triggered a refinement of the hypothesis, {@code false} otherwise
      * (i.e., it was no counterexample).
      */
     boolean refineHypothesis(@Nonnull DefaultQuery<I, D> ceQuery);

@@ -129,7 +129,7 @@ public final class GlobalSuffixFinders {
 
     /**
      * Transforms a {@link LocalSuffixFinder} into a global one. This is a convenience method, behaving like
-     * <tt>fromLocalFinder(localFinder, false)</tt>.
+     * {@link #fromLocalFinder(LocalSuffixFinder, boolean)}.
      *
      * @see #fromLocalFinder(LocalSuffixFinder, boolean)
      */
@@ -142,7 +142,7 @@ public final class GlobalSuffixFinders {
      * suffix-closedness of the set of distinguishing suffixes might not be preserved. Note that for correctly
      * implemented local suffix finders, this does not impair correctness of the learning algorithm. However, without
      * suffix closedness, intermediate hypothesis models might be non-canonical, if no additional precautions are taken.
-     * For that reasons, the <tt>allSuffixes</tt> parameter can be specified to control whether or not the list returned
+     * For that reasons, the {@code allSuffixes} parameter can be specified to control whether or not the list returned
      * by {@link GlobalSuffixFinder#findSuffixes(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)} of
      * the returned global suffix finder should not only contain the single suffix, but also all of its suffixes,
      * ensuring suffix-closedness.
@@ -189,7 +189,7 @@ public final class GlobalSuffixFinders {
      * suffix-closedness of the set of distinguishing suffixes might not be preserved. Note that for correctly
      * implemented local suffix finders, this does not impair correctness of the learning algorithm. However, without
      * suffix closedness, intermediate hypothesis models might be non-canonical, if no additional precautions are taken.
-     * For that reasons, the <tt>allSuffixes</tt> parameter can be specified to control whether or not the list returned
+     * For that reasons, the {@code allSuffixes} parameter can be specified to control whether or not the list returned
      * by {@link GlobalSuffixFinder#findSuffixes(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)} of
      * the returned global suffix finder should not only contain the single suffix, but also all of its suffixes,
      * ensuring suffix-closedness.
@@ -255,7 +255,7 @@ public final class GlobalSuffixFinders {
     }
 
     /**
-     * Returns the suffix (plus all of its suffixes, if <tt>allSuffixes</tt> is true) found by the access sequence
+     * Returns the suffix (plus all of its suffixes, if {@code allSuffixes} is true) found by the access sequence
      * transformation in ascending linear order.
      *
      * @param ceQuery
@@ -283,7 +283,7 @@ public final class GlobalSuffixFinders {
     }
 
     /**
-     * Returns the suffix (plus all of its suffixes, if <tt>allSuffixes</tt> is true) found by the access sequence
+     * Returns the suffix (plus all of its suffixes, if {@code allSuffixes} is true) found by the access sequence
      * transformation in descending linear order.
      *
      * @param ceQuery
@@ -311,7 +311,7 @@ public final class GlobalSuffixFinders {
     }
 
     /**
-     * Returns the suffix (plus all of its suffixes, if <tt>allSuffixes</tt> is true) found by the binary search access
+     * Returns the suffix (plus all of its suffixes, if {@code allSuffixes} is true) found by the binary search access
      * sequence transformation.
      *
      * @param ceQuery

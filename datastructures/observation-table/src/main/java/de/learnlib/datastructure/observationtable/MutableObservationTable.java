@@ -41,7 +41,7 @@ public interface MutableObservationTable<I, D> extends ObservationTable<I, D> {
     /**
      * Checks whether this observation table has been initialized yet (i.e., contains any rows).
      *
-     * @return <tt>true</tt> iff the table has been initialized
+     * @return {@code true} iff the table has been initialized
      */
     boolean isInitialized();
 
@@ -49,7 +49,7 @@ public interface MutableObservationTable<I, D> extends ObservationTable<I, D> {
 
     /**
      * Adds a suffix to the list of distinguishing suffixes. This is a convenience method that can be used as shorthand
-     * for <code>addSufixes(Collections.singletonList(suffix), oracle)</code>
+     * for {@code addSufixes(Collections.singletonList(suffix), oracle)}.
      *
      * @param suffix
      *         the suffix to add

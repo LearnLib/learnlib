@@ -39,13 +39,13 @@ public class ReuseEdge<S, I, O> {
     /**
      * Default constructor.
      *
-     * @param source,
+     * @param source
      *         not allowed to be {@code null}.
-     * @param target,
+     * @param target
      *         not allowed to be {@code null}.
-     * @param input,
+     * @param input
      *         not allowed to be {@code null}.
-     * @param output,
+     * @param output
      *         in case of quiescence maybe {@code null}.
      */
     public ReuseEdge(final ReuseNode<S, I, O> source, final ReuseNode<S, I, O> target, final I input, final O output) {

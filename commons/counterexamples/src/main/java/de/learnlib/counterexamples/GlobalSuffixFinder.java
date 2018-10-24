@@ -31,8 +31,8 @@ import net.automatalib.words.Word;
  * <p>
  * Please note that the type parameters of these class only constitute <i>upper</i> bounds for the respective input
  * symbol and output classes, denoting the requirements of the process in general. A suffix finder which does not
- * exploit any properties of the used classes will implement this interface with <tt>&lt;Object,Object&gt;</tt> generic
- * arguments only. The genericity is still maintained due to the <tt>RI</tt> and <tt>RO</tt> generic parameters in the
+ * exploit any properties of the used classes will implement this interface with {@code <Object,Object>} generic
+ * arguments only. The genericity is still maintained due to the {@code RI} and {@code RO} generic parameters in the
  * {@link #findSuffixes(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)} method.
  *
  * @param <I>
