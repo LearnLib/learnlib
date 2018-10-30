@@ -75,13 +75,14 @@ jobs:
 #      - export PATH=${JAVA_HOME}/bin:${PATH}
 #      - cinst maven -params 'installdir=C:\\maven'
     # Run coverage in default environment
-    - stage: coverage
+    - stage: Coverage & Deploy
+      name: Coverage
       jdk: openjdk8
       script:
         - mvn install -B -Pintegration-tests,code-coverage
         - mvn coveralls:report
     # Run deployment in default environment
-    - stage: deploy
+    - name: Deploy
       jdk: openjdk8
       # skip regular build and define deployment in deploy phase, which is skipped for pull-requests
       script: skip
