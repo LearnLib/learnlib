@@ -73,21 +73,68 @@ limitations under the License.
                 </property>
             </activation>
             <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.github.spotbugs</groupId>
+                            <artifactId>spotbugs-maven-plugin</artifactId>
+                            <configuration>
+                                <excludeFilterFile>/learnlib-spotbugs-exclusions.xml</excludeFilterFile>
+                                <effort>Max</effort>
+                            </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>de.learnlib</groupId>
+                                    <artifactId>learnlib-build-tools</artifactId>
+                                    <version>${project.version}</version>
+                                </dependency>
+                            </dependencies>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-pmd-plugin</artifactId>
+                            <configuration>
+                                <rulesets>
+                                    <ruleset>/learnlib-pmd-ruleset.xml</ruleset>
+                                </rulesets>
+                            </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>de.learnlib</groupId>
+                                    <artifactId>learnlib-build-tools</artifactId>
+                                    <version>${project.version}</version>
+                                </dependency>
+                            </dependencies>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-checkstyle-plugin</artifactId>
+                            <configuration>
+                                <configLocation>/automatalib-learnlib-checkstyle.xml</configLocation>
+                                <headerLocation>/license-header-java.txt</headerLocation>
+                                <suppressionsLocation>/learnlib-checkstyle-suppressions.xml</suppressionsLocation>
+                                <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                                <linkXRef>false</linkXRef>
+                            </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>com.puppycrawl.tools</groupId>
+                                    <artifactId>checkstyle</artifactId>
+                                    <version>${checkstyle.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>de.learnlib</groupId>
+                                    <artifactId>learnlib-build-tools</artifactId>
+                                    <version>${project.version}</version>
+                                </dependency>
+                            </dependencies>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
                 <plugins>
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs-maven-plugin</artifactId>
-                        <configuration>
-                            <excludeFilterFile>/learnlib-spotbugs-exclusions.xml</excludeFilterFile>
-                            <effort>Max</effort>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>de.learnlib</groupId>
-                                <artifactId>learnlib-build-tools</artifactId>
-                                <version>${project.version}</version>
-                            </dependency>
-                        </dependencies>
                         <executions>
                             <execution>
                                 <phase>verify</phase>
@@ -131,18 +178,6 @@ limitations under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-pmd-plugin</artifactId>
-                        <configuration>
-                            <rulesets>
-                                <ruleset>/learnlib-pmd-ruleset.xml</ruleset>
-                            </rulesets>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>de.learnlib</groupId>
-                                <artifactId>learnlib-build-tools</artifactId>
-                                <version>${project.version}</version>
-                            </dependency>
-                        </dependencies>
                         <executions>
                             <execution>
                                 <id>pmd</id>
@@ -162,25 +197,6 @@ limitations under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
-                        <configuration>
-                            <configLocation>/automatalib-learnlib-checkstyle.xml</configLocation>
-                            <headerLocation>/license-header-java.txt</headerLocation>
-                            <suppressionsLocation>/learnlib-checkstyle-suppressions.xml</suppressionsLocation>
-                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                            <linkXRef>false</linkXRef>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.puppycrawl.tools</groupId>
-                                <artifactId>checkstyle</artifactId>
-                                <version>${checkstyle.version}</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>de.learnlib</groupId>
-                                <artifactId>learnlib-build-tools</artifactId>
-                                <version>${project.version}</version>
-                            </dependency>
-                        </dependencies>
                         <executions>
                             <execution>
                                 <phase>verify</phase>
