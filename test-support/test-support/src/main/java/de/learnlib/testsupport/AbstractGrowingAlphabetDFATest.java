@@ -21,18 +21,17 @@ import java.util.Random;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.oracle.membership.SimulatorOracle;
-import net.automatalib.automata.transout.MealyMachine;
+import de.learnlib.api.oracle.QueryAnswerer;
+import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
 /**
  * @author frohme
  */
-public abstract class AbstractGrowingAlphabetMealyTest<L extends SupportsGrowingAlphabet<Character> & LearningAlgorithm<MealyMachine<?, Character, ?, Character>, Character, Word<Character>>>
-        extends AbstractGrowingAlphabetTest<L, MealyMachine<?, Character, ?, Character>, MembershipOracle<Character, Word<Character>>, Character, Word<Character>> {
+public abstract class AbstractGrowingAlphabetDFATest<L extends SupportsGrowingAlphabet<Character> & LearningAlgorithm<DFA<?, Character>, Character, Boolean>>
+        extends AbstractGrowingAlphabetTest<L, DFA<?, Character>, MembershipOracle<Character, Boolean>, Character, Boolean> {
 
     @Override
     protected Alphabet<Character> getInitialAlphabet() {
@@ -45,16 +44,13 @@ public abstract class AbstractGrowingAlphabetMealyTest<L extends SupportsGrowing
     }
 
     @Override
-    protected MealyMachine<?, Character, ?, Character> getTarget(Alphabet<Character> alphabet) {
-        return RandomAutomata.randomMealy(new Random(RANDOM_SEED),
-                                          DEFAULT_AUTOMATON_SIZE,
-                                          alphabet,
-                                          Alphabets.characters('a', 'f'));
+    protected DFA<?, Character> getTarget(Alphabet<Character> alphabet) {
+        return RandomAutomata.randomDFA(new Random(RANDOM_SEED), DEFAULT_AUTOMATON_SIZE, alphabet);
     }
 
     @Override
-    protected MembershipOracle<Character, Word<Character>> getOracle(MealyMachine<?, Character, ?, Character> target) {
-        return new SimulatorOracle<>(target);
+    protected MembershipOracle<Character, Boolean> getOracle(DFA<?, Character> target) {
+        return ((QueryAnswerer<Character, Boolean>) target::computeSuffixOutput).asOracle();
     }
 
 }

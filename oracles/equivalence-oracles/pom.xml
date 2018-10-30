@@ -104,7 +104,7 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-oracle-support</artifactId>
+            <artifactId>learnlib-test-support</artifactId>
         </dependency>
     </dependencies>
 </project>

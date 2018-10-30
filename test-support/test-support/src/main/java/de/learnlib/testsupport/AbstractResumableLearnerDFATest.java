@@ -21,36 +21,33 @@ import java.util.Random;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.oracle.membership.SimulatorOracle;
-import net.automatalib.automata.transout.MealyMachine;
+import de.learnlib.api.oracle.QueryAnswerer;
+import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
 /**
  * @author bainczyk
  */
-public abstract class AbstractResumableLearnerMealyTest<L extends ResumableLearner<T> & LearningAlgorithm<MealyMachine<?, Character, ?, Character>, Character, Word<Character>>, T extends Serializable>
-        extends AbstractResumableLearnerTest<L, MealyMachine<?, Character, ?, Character>, MembershipOracle<Character, Word<Character>>, Character, Word<Character>, T> {
+public abstract class AbstractResumableLearnerDFATest<L extends ResumableLearner<T> & LearningAlgorithm<DFA<?, Character>, Character, Boolean>, T extends Serializable>
+        extends AbstractResumableLearnerTest<L, DFA<?, Character>, MembershipOracle<Character, Boolean>, Character, Boolean, T> {
 
-    private static final int AUTOMATON_SIZE = 20;
+    private static final int AUTOMATON_SIZE = 50;
 
     @Override
     protected Alphabet<Character> getInitialAlphabet() {
-        return Alphabets.characters('1', '4');
+        return Alphabets.characters('1', '6');
     }
 
     @Override
-    protected MealyMachine<?, Character, ?, Character> getTarget(Alphabet<Character> alphabet) {
-        return RandomAutomata.randomMealy(new Random(RANDOM_SEED),
-                                          AUTOMATON_SIZE,
-                                          alphabet,
-                                          Alphabets.characters('a', 'd'));
+    protected DFA<?, Character> getTarget(Alphabet<Character> alphabet) {
+        return RandomAutomata.randomDFA(new Random(RANDOM_SEED), AUTOMATON_SIZE, alphabet);
     }
 
     @Override
-    protected MembershipOracle<Character, Word<Character>> getOracle(MealyMachine<?, Character, ?, Character> target) {
-        return new SimulatorOracle<>(target);
+    protected MembershipOracle<Character, Boolean> getOracle(DFA<?, Character> target) {
+        return ((QueryAnswerer<Character, Boolean>) target::computeSuffixOutput).asOracle();
     }
+
 }

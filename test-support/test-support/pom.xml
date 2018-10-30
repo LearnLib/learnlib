@@ -9,11 +9,11 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>learnlib-oracle-support</artifactId>
+    <artifactId>learnlib-test-support</artifactId>
     <packaging>jar</packaging>
 
-    <name>LearnLib :: Test Support :: Oracle Support</name>
-    <description>Support classes for easily writing integration test cases for oracle algorithms</description>
+    <name>LearnLib :: Test Support :: Test Support</name>
+    <description>Support classes for easily writing unit tests for various components of LearnLib</description>
 
     <dependencies>
         <dependency>
@@ -23,6 +23,14 @@
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-api</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
