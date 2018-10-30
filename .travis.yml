@@ -23,10 +23,7 @@ env:
   global:
     - LTSMIN_VERSION=v3.1.0
 
-install:
-    # install LTSmin
-  - ${TRAVIS_BUILD_DIR}/build-tools/install-ltsmin.sh
-  - PATH="$PATH:$HOME/ltsmin/$LTSMIN_VERSION/bin"
+before_install:
     # override any "sane" defaults of Travis VMs
   - cp ${TRAVIS_BUILD_DIR}/build-tools/travis-settings.xml ${HOME}/.m2/settings.xml
     # set Travis environment variables "AUTOMATALIB_FORK" and "AUTOMATALIB_BRANCH" to build custom AutomataLib versions.
@@ -37,8 +34,12 @@ install:
   - mvn install -DskipTests
   - cd ${TRAVIS_BUILD_DIR}
 
-script:
-  - mvn install -B
+install:
+  # install LTSmin
+  - ${TRAVIS_BUILD_DIR}/build-tools/install-ltsmin.sh
+  - PATH="$PATH:$HOME/ltsmin/$LTSMIN_VERSION/bin"
+
+script: mvn install -B
 
 jobs:
   fast_finish: true
@@ -48,14 +49,14 @@ jobs:
       script: mvn install -B -Pintegration-tests,code-analysis,bundles
     - jdk: openjdk11
       script: mvn install -B -Pintegration-tests,code-analysis,bundles
-    # Run "normal" tests in other environments
-    - stage: Integration Tests
+    # Run "integration" tests in other environments
+    - stage: "Integration Tests"
       jdk: openjdk11
       env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=11 -Dmaven.compiler.target=11"
+      install: true # Make sure we can build without LTSmin
     - os: osx
       jdk: openjdk8
-      # Force old xcode version so JDK8 isn't overridden from newer xcode version
-      osx_image: xcode9.3
+      osx_image: xcode9.3 # Force old xcode version so JDK8 isn't overridden from newer xcode version
     - os: osx
       jdk: openjdk11
 #    - os: windows
@@ -74,20 +75,18 @@ jobs:
 #      - export JAVA_HOME="C:\jdk11"
 #      - export PATH=${JAVA_HOME}/bin:${PATH}
 #      - cinst maven -params 'installdir=C:\\maven'
-    # Run coverage in default environment
-    - stage: Coverage & Deploy
+    # Run coverage & deploy in default environment
+    - stage: "Coverage & Deploy"
       name: Coverage
       jdk: openjdk8
       script:
         - mvn install -B -Pintegration-tests,code-coverage
         - mvn coveralls:report
-    # Run deployment in default environment
     - name: Deploy
       jdk: openjdk8
-      # skip regular build and define deployment in deploy phase, which is skipped for pull-requests
-      script: skip
+      script: skip # skip regular build and define deployment in deploy phase, which is skipped for pull-requests
       deploy:
         provider: script
-        script: mvn -DskipTests=true deploy
+        script: mvn -B -DskipTests=true deploy
         on:
           branch: develop # only auto deploy snapshots
