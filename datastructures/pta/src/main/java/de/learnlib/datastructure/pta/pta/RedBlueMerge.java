@@ -27,8 +27,8 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.Sets;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.array.ArrayStorage;
 
 public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S>> {
 

@@ -17,7 +17,7 @@ package de.learnlib.datastructure.observationtable;
 
 import java.io.Serializable;
 
-import net.automatalib.commons.util.array.ResizingArrayStorage;
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.words.Word;
 
 final class RowImpl<I> implements Row<I>, Serializable {

@@ -28,7 +28,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.common.base.Preconditions;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.parallelism.ParallelOracle.PoolPolicy;
-import net.automatalib.commons.util.array.ArrayStorage;
+import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.commons.util.concurrent.ScalingThreadPoolExecutor;
 
 /**

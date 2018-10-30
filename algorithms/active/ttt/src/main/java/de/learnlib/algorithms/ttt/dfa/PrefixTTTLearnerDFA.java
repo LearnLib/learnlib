@@ -24,7 +24,7 @@ import de.learnlib.algorithms.ttt.base.TTTState;
 import de.learnlib.algorithms.ttt.base.TTTTransition;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.commons.util.array.ArrayStorage;
+import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 

@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import net.automatalib.commons.util.array.ArrayStorage;
+import net.automatalib.commons.smartcollections.ArrayStorage;
 
 public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAState<SP, TP, S>> implements Cloneable {
 

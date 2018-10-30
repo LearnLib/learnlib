@@ -63,10 +63,6 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-smartcollections</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-util</artifactId>
-        </dependency>
 
         <!-- Guava -->
         <dependency>

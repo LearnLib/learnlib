@@ -18,7 +18,7 @@ package de.learnlib.algorithms.ttt.base;
 import java.io.Serializable;
 
 import de.learnlib.api.AccessSequenceProvider;
-import net.automatalib.commons.util.array.ResizingArrayStorage;
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.words.Word;
 
 /**

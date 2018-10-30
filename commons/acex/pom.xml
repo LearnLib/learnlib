@@ -33,7 +33,7 @@ limitations under the License.
     <dependencies>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-util</artifactId>
+            <artifactId>automata-commons-smartcollections</artifactId>
         </dependency>
         <!--
         Test dependencies

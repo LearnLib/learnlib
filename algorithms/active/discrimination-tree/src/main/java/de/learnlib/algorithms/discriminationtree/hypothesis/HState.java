@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
-import net.automatalib.commons.util.array.ResizingArrayStorage;
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 

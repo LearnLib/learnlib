@@ -16,7 +16,7 @@
 package de.learnlib.acex.impl;
 
 import de.learnlib.acex.AbstractCounterexample;
-import net.automatalib.commons.util.array.ArrayStorage;
+import net.automatalib.commons.smartcollections.ArrayStorage;
 
 public abstract class AbstractBaseCounterexample<E> implements AbstractCounterexample<E> {
 
