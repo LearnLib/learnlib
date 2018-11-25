@@ -64,7 +64,7 @@ public abstract class AbstractBFEmptinessOracleTest<A extends DetOutputAutomaton
     }
 
     @Test
-    public void testIsCounterExample() throws Exception {
+    public void testIsCounterExample() {
         bfeo.isCounterExample(automaton, query.getInput(), query.getOutput());
     }
 }

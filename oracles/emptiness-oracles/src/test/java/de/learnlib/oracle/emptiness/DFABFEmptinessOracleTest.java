@@ -41,9 +41,8 @@ public class DFABFEmptinessOracleTest extends AbstractBFEmptinessOracleTest<DFA<
 
     @Override
     protected DFA<?, Character> createAutomaton() {
-        final DFA<?, Character> dfa = AutomatonBuilders.forDFA(new CompactDFA<>(ALPHABET)).
+        return AutomatonBuilders.forDFA(new CompactDFA<>(ALPHABET)).
                 from("q0").on('a').loop().withAccepting("q0").withInitial("q0").create();
-        return dfa;
     }
 
     @Override

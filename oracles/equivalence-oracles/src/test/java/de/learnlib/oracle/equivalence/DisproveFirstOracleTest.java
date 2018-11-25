@@ -66,7 +66,7 @@ public class DisproveFirstOracleTest {
     }
 
     @Test
-    public void testGetPropertyOracles() throws Exception {
+    public void testGetPropertyOracles() {
         Assert.assertEquals(oracle.getPropertyOracles().size(), 2);
     }
 
@@ -76,7 +76,7 @@ public class DisproveFirstOracleTest {
      *  2. whether {@link PropertyOracle#disprove(Output, Collection)} is called only on {@link #po2}.
      */
     @Test
-    public void testFindCounterExample() throws Exception {
+    public void testFindCounterExample() {
         final DefaultQuery<Boolean, Boolean> ce = oracle.findCounterExample(automaton, inputs);
 
         Assert.assertEquals(ce, query);

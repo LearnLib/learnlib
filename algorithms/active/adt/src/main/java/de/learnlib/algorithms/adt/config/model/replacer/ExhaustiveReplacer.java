@@ -79,7 +79,7 @@ public class ExhaustiveReplacer implements SubtreeReplacer {
                                                                                                                                       .toSet())));
 
         final List<ADTNode<S, I, O>> sortedCandidates = new ArrayList<>(candidates);
-        Collections.sort(sortedCandidates, Comparator.comparingInt(n -> subtreesToFinalNodes.get(n).size()));
+        sortedCandidates.sort(Comparator.comparingInt(n -> subtreesToFinalNodes.get(n).size()));
 
         for (final ADTNode<S, I, O> node : sortedCandidates) {
 

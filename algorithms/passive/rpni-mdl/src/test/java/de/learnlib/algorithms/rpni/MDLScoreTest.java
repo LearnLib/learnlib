@@ -42,7 +42,7 @@ public class MDLScoreTest {
     private List<int[]> positiveSamplesAsIntArray;
 
     @BeforeClass
-    public void setUp() throws Exception {
+    public void setUp() {
         alphabet = Alphabets.fromArray('a', 'b');
         alphabetAsInt = Alphabets.fromArray(0, 1);
 

@@ -70,7 +70,7 @@ public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Chara
     }
 
     @Test
-    public void testProcessInput() throws Exception {
+    public void testProcessInput() {
         Mockito.doAnswer(invocation -> {
             final OmegaQuery<Character, D> q = invocation.getArgument(0);
             if (q.getLoop().equals(Word.fromSymbols('a'))) {
@@ -97,7 +97,7 @@ public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Chara
     }
 
     @Test
-    public void testIsCounterExample() throws Exception {
+    public void testIsCounterExample() {
         leo.isCounterExample(automaton, query.getInput(), query.getOutput());
     }
 }

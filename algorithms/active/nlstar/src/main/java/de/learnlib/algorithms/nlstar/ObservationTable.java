@@ -82,8 +82,8 @@ public class ObservationTable<I> {
         return addSuffixes(Collections.singletonList(suffixToAdd));
     }
 
-    private List<List<Row<I>>> makeUpper(Row<I> row) {
-        return makeUpper(Collections.singletonList(row));
+    private void makeUpper(Row<I> row) {
+        makeUpper(Collections.singletonList(row));
     }
 
     public List<List<Row<I>>> makeUpper(List<Row<I>> rows) {

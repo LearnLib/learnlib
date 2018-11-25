@@ -44,7 +44,7 @@ public class EDSMScoreTest {
     private List<int[]> negativeSamplesAsIntArray;
 
     @BeforeClass
-    public void setUp() throws Exception {
+    public void setUp() {
         alphabet = Alphabets.fromArray('a', 'b');
 
         final Word<Character> p1 = Word.fromString("a");

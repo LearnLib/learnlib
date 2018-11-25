@@ -61,12 +61,12 @@ public abstract class AbstractBFInclusionOracleTest<A extends DetOutputAutomaton
     }
 
     @Test
-    public void testIsCounterExample() throws Exception {
+    public void testIsCounterExample() {
         Assert.assertTrue(bfio.isCounterExample(automaton, query.getInput(), query.getOutput()));
     }
 
     @Test
-    public void testFindCounterExample() throws Exception {
+    public void testFindCounterExample() {
         final DefaultQuery<Character, D> cex = bfio.findCounterExample(automaton, ALPHABET);
         Assert.assertEquals(cex, query);
     }

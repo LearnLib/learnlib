@@ -229,14 +229,11 @@ public abstract class AbstractTTTLearner<A, I, D>
      *         the transition
      * @param tempDiscriminator
      *         the temporary discriminator
-     *
-     * @return the discrimination tree node separating the old and the new node, labeled by the specified temporary
-     * discriminator
      */
-    private AbstractBaseDTNode<I, D> splitState(TTTTransition<I, D> transition,
-                                                Word<I> tempDiscriminator,
-                                                D oldOut,
-                                                D newOut) {
+    private void splitState(TTTTransition<I, D> transition,
+                            Word<I> tempDiscriminator,
+                            D oldOut,
+                            D newOut) {
         assert !transition.isTree();
 
         notifyPreSplit(transition, tempDiscriminator);
@@ -259,8 +256,6 @@ public abstract class AbstractTTTLearner<A, I, D>
         }
 
         notifyPostSplit(transition, tempDiscriminator);
-
-        return dtNode;
     }
 
     private void splitState(OutputInconsistency<I, D> outIncons) {

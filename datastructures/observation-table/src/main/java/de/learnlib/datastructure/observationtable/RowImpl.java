@@ -136,7 +136,7 @@ final class RowImpl<I> implements Row<I>, Serializable {
     /**
      * See {@link ResizingArrayStorage#ensureCapacity(int)}.
      */
-    boolean ensureInputCapacity(int capacity) {
-        return this.successors.ensureCapacity(capacity);
+    void ensureInputCapacity(int capacity) {
+        this.successors.ensureCapacity(capacity);
     }
 }

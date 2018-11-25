@@ -67,7 +67,7 @@ public class SingleReplacer implements SubtreeReplacer {
                 }));
 
         final List<ADTNode<S, I, O>> sortedCandidates = new ArrayList<>(candidates);
-        Collections.sort(sortedCandidates, Comparator.comparingDouble(candidatesScore::get));
+        sortedCandidates.sort(Comparator.comparingDouble(candidatesScore::get));
 
         for (final ADTNode<S, I, O> node : sortedCandidates) {
             final Set<S> targetStates =

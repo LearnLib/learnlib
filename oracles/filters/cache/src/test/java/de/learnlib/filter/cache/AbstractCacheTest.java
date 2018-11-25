@@ -39,7 +39,7 @@ import org.testng.annotations.Test;
 public abstract class AbstractCacheTest<A extends Output<I, D>, I, D> {
 
     private static final int LENGTH = 5;
-    private Random random = new Random(42);
+    private final Random random = new Random(42);
     private Alphabet<I> alphabet;
     private LearningCacheOracle<A, I, D> oracle;
     private List<Query<I, D>> queries;

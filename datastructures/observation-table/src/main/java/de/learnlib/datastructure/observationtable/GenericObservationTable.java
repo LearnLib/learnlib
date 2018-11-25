@@ -434,9 +434,9 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         return unclosed;
     }
 
-    private boolean makeShort(RowImpl<I> row) {
+    private void makeShort(RowImpl<I> row) {
         if (row.isShortPrefixRow()) {
-            return false;
+            return;
         }
 
         int lastIdx = longPrefixRows.size() - 1;
@@ -457,7 +457,6 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
                 canonicalRows.set(cid, row);
             }
         }
-        return true;
     }
 
     private static <I, D> void buildRowQueries(List<DefaultQuery<I, D>> queryList,
