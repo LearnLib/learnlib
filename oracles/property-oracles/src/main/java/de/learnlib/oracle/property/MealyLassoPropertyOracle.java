@@ -20,7 +20,7 @@ import java.util.Collection;
 import de.learnlib.api.oracle.InclusionOracle;
 import de.learnlib.api.oracle.LassoEmptinessOracle;
 import de.learnlib.api.oracle.PropertyOracle;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelCheckerLasso;
 import net.automatalib.words.Word;

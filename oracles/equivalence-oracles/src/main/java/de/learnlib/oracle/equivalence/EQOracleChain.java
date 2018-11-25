@@ -23,7 +23,7 @@ import java.util.List;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
 public class EQOracleChain<A, I, D> implements EquivalenceOracle<A, I, D> {

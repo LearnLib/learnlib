@@ -26,7 +26,7 @@ import de.learnlib.api.query.AbstractQuery;
 import de.learnlib.api.query.Query;
 import de.learnlib.counterexamples.LocalSuffixFinder;
 import de.learnlib.datastructure.discriminationtree.MultiDTree;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 

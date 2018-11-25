@@ -37,7 +37,7 @@ import de.learnlib.oracle.equivalence.WpMethodEQOracle.MealyWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOracle;
 import de.learnlib.oracle.property.MealyLassoPropertyOracle;
 import de.learnlib.util.Experiment;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLIOBuilder;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;

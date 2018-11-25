@@ -23,7 +23,7 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.statistic.StatisticLearner;
 import de.learnlib.filter.statistic.Counter;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
 /**

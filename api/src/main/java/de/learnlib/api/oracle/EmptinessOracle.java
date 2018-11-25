@@ -25,7 +25,7 @@ import de.learnlib.api.SUL;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
 /**

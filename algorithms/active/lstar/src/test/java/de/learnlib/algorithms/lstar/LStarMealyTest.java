@@ -32,7 +32,7 @@ import de.learnlib.oracle.equivalence.mealy.SymbolEQOracleWrapper;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
 import de.learnlib.util.mealy.MealyUtil;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import org.testng.annotations.Test;

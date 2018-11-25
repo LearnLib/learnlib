@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.PartialTransitionAnalyzer;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 
 /**

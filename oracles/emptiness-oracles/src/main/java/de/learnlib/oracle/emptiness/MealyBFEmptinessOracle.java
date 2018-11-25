@@ -18,7 +18,7 @@ package de.learnlib.oracle.emptiness;
 import de.learnlib.api.oracle.AutomatonOracle;
 import de.learnlib.api.oracle.EmptinessOracle;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
 public class MealyBFEmptinessOracle<I, O> extends AbstractBFEmptinessOracle<MealyMachine<?, I, ?, O>, I, Word<O>>

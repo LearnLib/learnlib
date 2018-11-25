@@ -22,7 +22,7 @@ import de.learnlib.filter.cache.LearningCacheOracle;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.statistic.oracle.CounterOracle.MealyCounterOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;

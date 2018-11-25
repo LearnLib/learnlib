@@ -22,7 +22,7 @@ import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.cache.LearningCacheOracle;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.statistic.sul.ResetCounterSUL;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 

@@ -19,7 +19,7 @@ import de.learnlib.algorithms.ttt.base.AbstractTTTHypothesis;
 import de.learnlib.algorithms.ttt.base.TTTState;
 import de.learnlib.algorithms.ttt.base.TTTTransition;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 

@@ -23,7 +23,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.util.automata.conformance.IncrementalWMethodTestsIterator;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;

@@ -24,7 +24,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.words.Word;

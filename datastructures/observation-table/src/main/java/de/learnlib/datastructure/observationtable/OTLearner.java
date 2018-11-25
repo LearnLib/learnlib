@@ -17,7 +17,7 @@ package de.learnlib.datastructure.observationtable;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
 public interface OTLearner<M, I, D> extends LearningAlgorithm<M, I, D>, ObservationTableFeature<I, D> {

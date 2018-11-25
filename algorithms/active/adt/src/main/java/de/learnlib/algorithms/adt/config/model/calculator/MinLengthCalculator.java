@@ -20,7 +20,7 @@ import java.util.Set;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.util.automata.ads.BacktrackingSearch;
 import net.automatalib.words.Alphabet;

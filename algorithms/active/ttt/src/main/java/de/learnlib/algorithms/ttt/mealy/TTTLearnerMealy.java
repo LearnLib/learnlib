@@ -29,7 +29,7 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexamples.acex.MealyOutInconsPrefixTransformAcex;
 import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
 import de.learnlib.util.mealy.MealyUtil;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;

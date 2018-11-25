@@ -23,7 +23,7 @@ import java.util.Set;
 import de.learnlib.algorithms.adt.adt.ADTLeafNode;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.adt.ADTSymbolNode;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.words.Word;

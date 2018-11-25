@@ -24,7 +24,7 @@ import de.learnlib.examples.DefaultPassiveLearningExample;
 import de.learnlib.examples.LearningExample;
 import de.learnlib.examples.LearningExamples;
 import de.learnlib.examples.PassiveLearningExample;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import org.testng.annotations.Factory;

@@ -16,8 +16,8 @@
 package de.learnlib.examples.mealy;
 
 import de.learnlib.examples.DefaultLearningExample.DefaultMealyLearningExample;
-import net.automatalib.automata.transout.MutableMealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.MutableMealyMachine;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;

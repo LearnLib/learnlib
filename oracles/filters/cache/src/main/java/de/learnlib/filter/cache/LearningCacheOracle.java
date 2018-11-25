@@ -17,7 +17,7 @@ package de.learnlib.filter.cache;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
 /**

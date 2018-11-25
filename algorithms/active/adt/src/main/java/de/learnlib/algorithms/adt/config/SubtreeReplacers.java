@@ -27,7 +27,7 @@ import de.learnlib.algorithms.adt.config.model.replacer.ExhaustiveReplacer;
 import de.learnlib.algorithms.adt.config.model.replacer.LevelOrderReplacer;
 import de.learnlib.algorithms.adt.config.model.replacer.SingleReplacer;
 import de.learnlib.algorithms.adt.model.ReplacementResult;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 
 /**

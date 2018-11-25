@@ -31,7 +31,7 @@ import de.learnlib.algorithms.adt.api.SubtreeReplacer;
 import de.learnlib.algorithms.adt.config.model.ADSCalculator;
 import de.learnlib.algorithms.adt.model.ReplacementResult;
 import de.learnlib.algorithms.adt.util.ADTUtil;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 
 /**

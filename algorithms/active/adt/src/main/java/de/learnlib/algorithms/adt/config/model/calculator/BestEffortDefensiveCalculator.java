@@ -24,7 +24,7 @@ import de.learnlib.algorithms.adt.ads.DefensiveADS;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.PartialTransitionAnalyzer;
 import de.learnlib.algorithms.adt.config.model.DefensiveADSCalculator;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 
 /**

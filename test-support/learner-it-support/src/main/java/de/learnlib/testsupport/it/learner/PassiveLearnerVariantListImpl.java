@@ -20,7 +20,7 @@ import java.util.List;
 
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
 public class PassiveLearnerVariantListImpl<M, I, D> implements PassiveLearnerVariantList<M, I, D> {

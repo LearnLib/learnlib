@@ -17,7 +17,7 @@ package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Word;
 

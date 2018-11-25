@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.config.model.ADSCalculator;
 import de.learnlib.algorithms.adt.util.ADTUtil;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.words.Alphabet;
 

@@ -31,7 +31,7 @@ import de.learnlib.oracle.membership.SULOracle;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
-import net.automatalib.ts.transout.MealyTransitionSystem;
+import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;

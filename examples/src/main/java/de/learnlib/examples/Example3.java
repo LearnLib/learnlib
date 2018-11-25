@@ -28,7 +28,7 @@ import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseOracle;
 import de.learnlib.filter.reuse.ReuseOracle.ReuseOracleBuilder;
 import de.learnlib.filter.reuse.tree.SystemStateHandler;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;

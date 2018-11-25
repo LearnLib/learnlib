@@ -18,7 +18,7 @@ package de.learnlib.algorithms.rpni.it;
 import de.learnlib.algorithms.rpni.BlueFringeRPNIMealy;
 import de.learnlib.testsupport.it.learner.AbstractMealyPassiveLearnerIT;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantList;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 

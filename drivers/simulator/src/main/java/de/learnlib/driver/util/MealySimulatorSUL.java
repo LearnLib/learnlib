@@ -17,7 +17,7 @@ package de.learnlib.driver.util;
 
 import de.learnlib.api.SUL;
 import de.learnlib.api.exception.SULException;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 
 /**
  * A {@link SUL} that implements steps by stepping through a {@link MealyMachine}.

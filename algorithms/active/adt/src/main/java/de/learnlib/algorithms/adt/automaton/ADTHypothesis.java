@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.automata.base.fast.AbstractFastMutableDet;
-import net.automatalib.automata.transout.MutableMealyMachine;
+import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 

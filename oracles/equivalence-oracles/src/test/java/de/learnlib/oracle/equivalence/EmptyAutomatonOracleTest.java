@@ -27,7 +27,7 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.exception.UndefinedPropertyAccessException;
 import net.automatalib.words.Alphabet;
 import org.testng.Assert;

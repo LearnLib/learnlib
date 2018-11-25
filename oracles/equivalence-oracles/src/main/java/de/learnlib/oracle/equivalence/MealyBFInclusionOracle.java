@@ -18,7 +18,7 @@ package de.learnlib.oracle.equivalence;
 import de.learnlib.api.oracle.AutomatonOracle;
 import de.learnlib.api.oracle.InclusionOracle;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
 public class MealyBFInclusionOracle<I, O> extends AbstractBFInclusionOracle<MealyMachine<?, I, ?, O>, I, Word<O>>

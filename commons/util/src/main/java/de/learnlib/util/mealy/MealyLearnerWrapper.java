@@ -20,7 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
 @ParametersAreNonnullByDefault

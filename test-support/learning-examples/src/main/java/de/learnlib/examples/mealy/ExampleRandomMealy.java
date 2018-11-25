@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 import de.learnlib.examples.DefaultLearningExample.DefaultMealyLearningExample;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 

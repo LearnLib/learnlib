@@ -20,7 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Word;
 
