@@ -34,20 +34,19 @@ public class ReturnValue extends MethodOutput {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 19 * hash + Objects.hashCode(this.id);
-        return hash;
+    public final int hashCode() {
+        return Objects.hashCode(this.id);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
+    public final boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof ReturnValue)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
+
         final ReturnValue other = (ReturnValue) obj;
         return Objects.equals(this.id, other.id);
     }

@@ -46,7 +46,7 @@ import net.automatalib.words.WordBuilder;
  * @see ObservableSUL#getState()
  */
 @ParametersAreNonnullByDefault
-public final class OmegaQuery<I, D> {
+public class OmegaQuery<I, D> {
 
     private final Word<I> prefix;
     private final Word<I> loop;
@@ -105,21 +105,27 @@ public final class OmegaQuery<I, D> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
         if (!(o instanceof OmegaQuery)) {
             return false;
         }
-        OmegaQuery<?, ?> that = (OmegaQuery<?, ?>) o;
+
+        final OmegaQuery<?, ?> that = (OmegaQuery<?, ?>) o;
         return periodicity == that.periodicity && Objects.equals(prefix, that.prefix) &&
                Objects.equals(loop, that.loop) && Objects.equals(output, that.output);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(prefix, loop, output, periodicity);
+    public final int hashCode() {
+        int result = 1;
+        result = 31 * result + Objects.hashCode(prefix);
+        result = 31 * result + Objects.hashCode(loop);
+        result = 31 * result + Objects.hashCode(output);
+        result = 31 * result + Integer.hashCode(periodicity);
+        return result;
     }
 }
 

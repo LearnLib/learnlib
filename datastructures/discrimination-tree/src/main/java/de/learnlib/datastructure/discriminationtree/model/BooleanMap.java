@@ -177,7 +177,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
 
     }
 
-    private class Entry implements Map.Entry<Boolean, V> {
+    private final class Entry implements Map.Entry<Boolean, V> {
 
         private final boolean key;
 
@@ -202,7 +202,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
 
         @Override
         public int hashCode() {
-            return (key) ? 1 : 0;
+            return Boolean.hashCode(key);
         }
 
         @Override
@@ -210,14 +210,13 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
             if (this == o) {
                 return true;
             }
-            if (o == null || getClass() != o.getClass()) {
+            if (!(o instanceof de.learnlib.datastructure.discriminationtree.model.BooleanMap.Entry)) {
                 return false;
             }
 
-            @SuppressWarnings("unchecked")
-            Entry entry = (Entry) o;
-
-            return getKey().equals(entry.getKey());
+            final de.learnlib.datastructure.discriminationtree.model.BooleanMap.Entry that =
+                    (de.learnlib.datastructure.discriminationtree.model.BooleanMap.Entry) o;
+            return Objects.equals(key, that.key);
         }
     }
 

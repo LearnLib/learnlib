@@ -15,6 +15,8 @@
  */
 package de.learnlib.api.query;
 
+import java.util.Objects;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -114,37 +116,23 @@ public abstract class Query<I, D> {
             return hashCode;
         }
 
-        Word<I> prefix = getPrefix(), suffix = getSuffix();
-        hashCode = 5;
-        hashCode = 89 * hashCode + prefix.hashCode();
-        hashCode = 89 * hashCode + suffix.hashCode();
+        hashCode = 1;
+        hashCode = 31 * hashCode + Objects.hashCode(getPrefix());
+        hashCode = 31 * hashCode + Objects.hashCode(getSuffix());
         return hashCode;
     }
 
     @Override
     public final boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        }
         if (this == o) {
             return true;
         }
         if (!(o instanceof Query)) {
             return false;
         }
-        Query<?, ?> other = (Query<?, ?>) o;
 
-        Word<I> thisPref = getPrefix();
-        Word<?> otherPref = other.getPrefix();
-
-        if (thisPref != otherPref && !thisPref.equals(otherPref)) {
-            return false;
-        }
-
-        Word<I> thisSuff = getSuffix();
-        Word<?> otherSuff = other.getSuffix();
-
-        return thisSuff == otherSuff || thisSuff.equals(otherSuff);
+        final Query<?, ?> that = (Query<?, ?>) o;
+        return Objects.equals(getPrefix(), that.getPrefix()) && Objects.equals(getSuffix(), that.getSuffix());
     }
 
     /**
