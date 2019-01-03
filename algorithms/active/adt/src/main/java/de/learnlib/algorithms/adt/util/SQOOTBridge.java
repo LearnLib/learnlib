@@ -58,7 +58,7 @@ public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
         this.observationTree = observationTree.getObservationTree();
         this.delegate = delegate;
         this.enableCache = enableCache;
-        this.currentTrace = new ArrayList<>();
+        this.currentTrace = enableCache ? new ArrayList<>() : null;
     }
 
     public void initialize() {
@@ -94,8 +94,11 @@ public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
 
         if (succ == null) {
             final FastMealyState<O> newState = this.observationTree.addState();
-            this.observationTree.addTransition(this.currentState, i, newState, output);
             nextState = newState;
+
+            if (this.enableCache) {
+                this.observationTree.addTransition(this.currentState, i, newState, output);
+            }
         } else {
             assert this.observationTree.getOutput(this.currentState, i).equals(output) : "Inconsistent observations";
             nextState = succ;

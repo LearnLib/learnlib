@@ -95,16 +95,25 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     private ADTHypothesis<I, O> hypothesis;
     private ADT<ADTState<I, O>, I, O> adt;
 
-    @GenerateBuilder(defaults = BuilderDefaults.class)
     public ADTLearner(final Alphabet<I> alphabet,
                       final SymbolQueryOracle<I, O> oracle,
                       final LeafSplitter leafSplitter,
                       final ADTExtender adtExtender,
                       final SubtreeReplacer subtreeReplacer) {
+        this(alphabet, oracle, leafSplitter, adtExtender, subtreeReplacer, true);
+    }
+
+    @GenerateBuilder(defaults = BuilderDefaults.class)
+    public ADTLearner(final Alphabet<I> alphabet,
+                      final SymbolQueryOracle<I, O> oracle,
+                      final LeafSplitter leafSplitter,
+                      final ADTExtender adtExtender,
+                      final SubtreeReplacer subtreeReplacer,
+                      final boolean useObservationTree) {
 
         this.alphabet = SymbolHidingAlphabet.wrapIfMutable(alphabet);
         this.observationTree = new ObservationTree<>(this.alphabet);
-        this.oracle = new SQOOTBridge<>(this.observationTree, oracle, true);
+        this.oracle = new SQOOTBridge<>(this.observationTree, oracle, useObservationTree);
 
         this.leafSplitter = leafSplitter;
         this.adtExtender = adtExtender;
@@ -212,6 +221,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
         final ADTNode<ADTState<I, O>, I, O> newNode;
 
+        // directly insert into observation tree, because we use it for finding a splitter
         this.observationTree.addState(newState, newState.getAccessSequence(), oldTrans.getOutput());
         this.observationTree.addTrace(newState, nodeToSplit);
 
@@ -225,6 +235,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
             newNode = this.adt.extendLeaf(nodeToSplit, completeSplitter, oldOutput, newOutput);
         } else {
+            // directly insert into observation tree, because we use it for finding a splitter
             this.observationTree.addTrace(uaState, v, this.oracle.answerQuery(uaAccessSequence, v));
             this.observationTree.addTrace(newState, v, this.oracle.answerQuery(uAccessSequenceWithA, v));
 
@@ -825,6 +836,10 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
         public static SubtreeReplacer subtreeReplacer() {
             return SubtreeReplacers.LEVELED_BEST_EFFORT;
+        }
+
+        public static boolean useObservationTree() {
+            return true;
         }
     }
 }
