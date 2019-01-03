@@ -169,7 +169,7 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
     }
 
     default int numberOfLongPrefixRows() {
-        return getShortPrefixRows().size();
+        return getLongPrefixRows().size();
     }
 
     /**
