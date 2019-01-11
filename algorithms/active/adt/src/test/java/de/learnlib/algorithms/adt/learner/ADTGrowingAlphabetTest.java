@@ -64,7 +64,7 @@ public class ADTGrowingAlphabetTest
                                 oracle,
                                 LeafSplitters.DEFAULT_SPLITTER,
                                 ADTExtenders.NOP,
-                                SubtreeReplacers.NEVER_REPLACE, true);
+                                SubtreeReplacers.NEVER_REPLACE);
     }
 
 }

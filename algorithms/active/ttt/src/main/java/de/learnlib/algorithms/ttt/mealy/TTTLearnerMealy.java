@@ -55,7 +55,7 @@ public class TTTLearnerMealy<I, O> extends AbstractTTTLearner<MealyMachine<?, I,
     @Override
     protected TTTTransition<I, Word<O>> createTransition(TTTState<I, Word<O>> state, I sym) {
         TTTTransitionMealy<I, O> trans = new TTTTransitionMealy<>(state, sym);
-        trans.output = query(state, Word.fromLetter(sym)).lastSymbol();
+        trans.output = query(state, Word.fromLetter(sym)).firstSymbol();
         return trans;
     }
 

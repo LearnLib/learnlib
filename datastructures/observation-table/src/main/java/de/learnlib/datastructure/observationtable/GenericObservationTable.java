@@ -497,6 +497,16 @@ public class GenericObservationTable<I, D> implements MutableObservationTable<I,
         return alphabet;
     }
 
+    /**
+     * This is an internal method used for de-serializing. Do not deliberately set input alphabets.
+     *
+     * @param alphabet
+     *         the input alphabet corresponding to the previously serialized one.
+     */
+    public void setInputAlphabet(Alphabet<I> alphabet) {
+        this.alphabet = alphabet;
+    }
+
     @Override
     public Word<I> transformAccessSequence(Word<I> word) {
         Row<I> current = shortPrefixRows.get(0);

@@ -199,7 +199,7 @@ public class BoundedDeque<E> extends AbstractCollection<E> implements Serializab
      */
     public enum EvictPolicy {
         /**
-         * Evict the oldest element, i.e., the one at the head of the queue/undefined of the stack.
+         * Evict the oldest element, i.e., the one at the head of the queue/bottom of the stack.
          */
         EVICT_OLDEST,
         /**

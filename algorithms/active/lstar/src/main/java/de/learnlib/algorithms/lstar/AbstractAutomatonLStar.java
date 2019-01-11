@@ -211,11 +211,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     @Override
     public void resume(final AutomatonLStarState<I, D, AI, S> state) {
         this.table = state.getObservationTable();
-        if (!(this.table instanceof ResumeSupportingObservationTable<?, ?>)) {
-            throw new UnsupportedOperationException("the observation table does not support resuming");
-        }
-        ResumeSupportingObservationTable<I, D> table = (ResumeSupportingObservationTable<I, D>)this.table;
-        table.setInputAlphabet(alphabet);
+        this.table.setInputAlphabet(alphabet);
         this.internalHyp = state.getHypothesis();
         this.stateInfos = state.getStateInfos();
     }

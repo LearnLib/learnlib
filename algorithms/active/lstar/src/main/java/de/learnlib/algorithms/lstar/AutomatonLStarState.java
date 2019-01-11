@@ -41,7 +41,7 @@ public class AutomatonLStarState<I, D, AI, S> extends AbstractLStarState<I, D> {
     private final AI hypothesis;
     private final List<StateInfo<S, I>> stateInfos;
 
-    AutomatonLStarState(final MutableObservationTable<I, D> observationTable,
+    AutomatonLStarState(final GenericObservationTable<I, D> observationTable,
                         final AI hypothesis,
                         final List<StateInfo<S, I>> stateInfos) {
         super(observationTable);
