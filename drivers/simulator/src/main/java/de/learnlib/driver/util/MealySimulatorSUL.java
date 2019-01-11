@@ -64,7 +64,7 @@ public class MealySimulatorSUL<I, O> implements SUL<I, O> {
         this(new MealySimulatorSULImpl<>(mealy, noTransOut));
     }
 
-    private MealySimulatorSUL(MealySimulatorSULImpl<?, I, ?, O> impl) {
+    protected MealySimulatorSUL(MealySimulatorSULImpl<?, I, ?, O> impl) {
         this.impl = impl;
     }
 
@@ -107,7 +107,7 @@ public class MealySimulatorSUL<I, O> implements SUL<I, O> {
      *
      * @author Malte Isberner
      */
-    private static final class MealySimulatorSULImpl<S, I, T, O> implements SUL<I, O> {
+    static class MealySimulatorSULImpl<S, I, T, O> implements SUL<I, O> {
 
         private final MealyMachine<S, I, T, O> mealy;
         private final O noTransOut;
@@ -151,6 +151,10 @@ public class MealySimulatorSUL<I, O> implements SUL<I, O> {
         @Override
         public MealySimulatorSULImpl<S, I, T, O> fork() {
             return new MealySimulatorSULImpl<>(mealy, noTransOut);
+        }
+
+        S getCurr() {
+            return curr;
         }
     }
 

@@ -92,7 +92,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     private final Queue<DefaultQuery<I, Word<O>>> openCounterExamples;
     private final Set<DefaultQuery<I, Word<O>>> allCounterExamples;
     private final ObservationTree<ADTState<I, O>, I, O> observationTree;
-    private final boolean useCache;
     private ADTHypothesis<I, O> hypothesis;
     private ADT<ADTState<I, O>, I, O> adt;
 
@@ -825,10 +824,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
         private BuilderDefaults() {
             // prevent instantiation
-        }
-
-        public static boolean useCache() {
-            return true;
         }
 
         public static LeafSplitter leafSplitter() {

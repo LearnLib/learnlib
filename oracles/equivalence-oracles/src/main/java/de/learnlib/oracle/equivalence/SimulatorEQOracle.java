@@ -23,8 +23,12 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
+import de.learnlib.api.oracle.OutputAndLocalInputs;
+import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.util.automata.Automata;
+import de.learnlib.api.oracle.SLIMMUtil;
 import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 
 public class SimulatorEQOracle<I, D>
         implements EquivalenceOracle<UniversalDeterministicAutomaton<?, I, ?, ?, ?>, I, D> {
@@ -75,6 +79,41 @@ public class SimulatorEQOracle<I, D>
         public DefaultQuery<I, Word<O>> findCounterExample(MealyMachine<?, I, ?, O> hypothesis,
                                                            Collection<? extends I> inputs) {
             return delegate.findCounterExample(hypothesis, inputs);
+        }
+
+    }
+
+    public static class SLIMealySimulatorEQOracle<I, O>
+            implements EquivalenceOracle<StateLocalInputMealyMachine<?, I, ?, O>, I, Word<OutputAndLocalInputs<I, O>>> {
+
+        private final SimulatorEQOracle<I, Word<O>> delegate;
+        private final StateLocalInputMealyMachine<?, I, ?, OutputAndLocalInputs<I, O>> slimm;
+        private final OutputAndLocalInputs<I, O> initialObservation;
+
+        public <S> SLIMealySimulatorEQOracle(StateLocalInputMealyMachine<S, I, ?, O> mealy) {
+            this.delegate = new SimulatorEQOracle<>(mealy);
+
+            // we can use 'null' as a sink, because we will never traverse this state
+            this.slimm = SLIMMUtil.partial2StateLocal(mealy, null);
+            this.initialObservation = new OutputAndLocalInputs<>(null, mealy.getLocalInputs(mealy.getInitialState()));
+        }
+
+        @Override
+        public DefaultQuery<I, Word<OutputAndLocalInputs<I, O>>> findCounterExample(StateLocalInputMealyMachine<?, I, ?, O> hypothesis,
+                                                                                    Collection<? extends I> inputs) {
+            final DefaultQuery<I, Word<O>> cex = delegate.findCounterExample(hypothesis, inputs);
+
+            if (cex != null) {
+                final Word<I> input = cex.getInput();
+                final WordBuilder<OutputAndLocalInputs<I, O>> wb = new WordBuilder<>(input.size() + 1);
+
+                wb.add(this.initialObservation);
+                this.slimm.trace(input, wb);
+
+                return new DefaultQuery<>(input, wb.toWord());
+            }
+
+            return null;
         }
 
     }

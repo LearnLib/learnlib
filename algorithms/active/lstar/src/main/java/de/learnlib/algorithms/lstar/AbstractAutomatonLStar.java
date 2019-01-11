@@ -127,11 +127,14 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
                 I input = alphabet.getSymbol(i);
 
                 Row<I> succ = sp.getSuccessor(i);
-                int succId = succ.getRowContentId();
 
-                S succState = stateInfos.get(succId).getState();
+                if(succ != null) {
+                    int succId = succ.getRowContentId();
 
-                setTransition(state, input, succState, sp, i);
+                    S succState = stateInfos.get(succId).getState();
+
+                    setTransition(state, input, succState, sp, i);
+                }
             }
         }
     }

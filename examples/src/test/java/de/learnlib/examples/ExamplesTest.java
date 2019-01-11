@@ -77,6 +77,11 @@ public class ExamplesTest {
     }
 
     @Test
+    public void testSLAExample1() {
+        de.learnlib.examples.sla.Example1.main(new String[0]);
+    }
+
+    @Test
     public void testExample1() throws Exception {
         checkJVMCompatibility();
 

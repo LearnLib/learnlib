@@ -62,23 +62,23 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author Malte Isberner
  */
-public final class GenericObservationTable<I, D> implements ResumeSupportingObservationTable<I, D>, Serializable {
+public class GenericObservationTable<I, D> implements MutableObservationTable<I, D>, Serializable {
 
     private static final Integer NO_ENTRY = null; // TODO: replace with primitive specialization
-    private final List<RowImpl<I>> shortPrefixRows = new ArrayList<>();
+    protected final List<RowImpl<I>> shortPrefixRows = new ArrayList<>();
     // private static final int NO_ENTRY = -1;
     private final List<RowImpl<I>> longPrefixRows = new ArrayList<>();
-    private final List<RowImpl<I>> allRows = new ArrayList<>();
+    protected final List<RowImpl<I>> allRows = new ArrayList<>();
     private final List<List<D>> allRowContents = new ArrayList<>();
     private final List<RowImpl<I>> canonicalRows = new ArrayList<>();
     // private final TObjectIntMap<List<D>> rowContentIds = new TObjectIntHashMap<>(10, 0.75f, NO_ENTRY);
     private final Map<List<D>, Integer> rowContentIds = new HashMap<>(); // TODO: replace with primitive specialization
-    private final Map<Word<I>, RowImpl<I>> rowMap = new HashMap<>();
-    private final List<Word<I>> suffixes = new ArrayList<>();
-    private final Set<Word<I>> suffixSet = new HashSet<>();
+    protected final Map<Word<I>, RowImpl<I>> rowMap = new HashMap<>();
+    protected final List<Word<I>> suffixes = new ArrayList<>();
+    protected final Set<Word<I>> suffixSet = new HashSet<>();
     private transient Alphabet<I> alphabet;
     private int numRows;
-    private boolean initialConsistencyCheckRequired;
+    protected boolean initialConsistencyCheckRequired;
 
     /**
      * Constructor.
@@ -90,7 +90,7 @@ public final class GenericObservationTable<I, D> implements ResumeSupportingObse
         this.alphabet = alphabet;
     }
 
-    private static <I, D> void buildQueries(List<DefaultQuery<I, D>> queryList,
+    protected static <I, D> void buildQueries(List<DefaultQuery<I, D>> queryList,
                                             Word<I> prefix,
                                             List<? extends Word<I>> suffixes) {
         for (Word<I> suffix : suffixes) {
@@ -185,7 +185,7 @@ public final class GenericObservationTable<I, D> implements ResumeSupportingObse
         return unclosed;
     }
 
-    private static <I> boolean checkPrefixClosed(Collection<? extends Word<I>> initialShortPrefixes) {
+    protected static <I> boolean checkPrefixClosed(Collection<? extends Word<I>> initialShortPrefixes) {
         Set<Word<I>> prefixes = new HashSet<>(initialShortPrefixes);
 
         for (Word<I> pref : initialShortPrefixes) {
@@ -199,7 +199,7 @@ public final class GenericObservationTable<I, D> implements ResumeSupportingObse
         return true;
     }
 
-    private RowImpl<I> createSpRow(Word<I> prefix) {
+    protected RowImpl<I> createSpRow(Word<I> prefix) {
         RowImpl<I> newRow = new RowImpl<>(prefix, numRows++, alphabet.size());
         allRows.add(newRow);
         rowMap.put(prefix, newRow);
@@ -207,7 +207,7 @@ public final class GenericObservationTable<I, D> implements ResumeSupportingObse
         return newRow;
     }
 
-    private RowImpl<I> createLpRow(Word<I> prefix) {
+    protected RowImpl<I> createLpRow(Word<I> prefix) {
         RowImpl<I> newRow = new RowImpl<>(prefix, numRows++);
         allRows.add(newRow);
         rowMap.put(prefix, newRow);
@@ -228,14 +228,14 @@ public final class GenericObservationTable<I, D> implements ResumeSupportingObse
      * @param numSuffixes
      *         the number of suffixes (queries)
      */
-    private static <I, D> void fetchResults(Iterator<DefaultQuery<I, D>> queryIt, List<D> output, int numSuffixes) {
+    protected static <I, D> void fetchResults(Iterator<DefaultQuery<I, D>> queryIt, List<D> output, int numSuffixes) {
         for (int j = 0; j < numSuffixes; j++) {
             DefaultQuery<I, D> qry = queryIt.next();
             output.add(qry.getOutput());
         }
     }
 
-    private boolean processContents(RowImpl<I> row, List<D> rowContents, boolean makeCanonical) {
+    protected boolean processContents(RowImpl<I> row, List<D> rowContents, boolean makeCanonical) {
         Integer contentId; // TODO: replace with primitive specialization
         // int contentId;
         boolean added = false;
@@ -434,7 +434,7 @@ public final class GenericObservationTable<I, D> implements ResumeSupportingObse
         return unclosed;
     }
 
-    private void makeShort(RowImpl<I> row) {
+    protected void makeShort(RowImpl<I> row) {
         if (row.isShortPrefixRow()) {
             return;
         }
@@ -459,7 +459,7 @@ public final class GenericObservationTable<I, D> implements ResumeSupportingObse
         }
     }
 
-    private static <I, D> void buildRowQueries(List<DefaultQuery<I, D>> queryList,
+    protected static <I, D> void buildRowQueries(List<DefaultQuery<I, D>> queryList,
                                                List<? extends Row<I>> rows,
                                                List<? extends Word<I>> suffixes) {
         for (Row<I> row : rows) {
@@ -495,11 +495,6 @@ public final class GenericObservationTable<I, D> implements ResumeSupportingObse
     @Override
     public Alphabet<I> getInputAlphabet() {
         return alphabet;
-    }
-
-    @Override
-    public void setInputAlphabet(Alphabet<I> alphabet) {
-        this.alphabet = alphabet;
     }
 
     @Override

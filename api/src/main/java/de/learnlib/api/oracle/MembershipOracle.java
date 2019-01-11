@@ -84,4 +84,6 @@ public interface MembershipOracle<I, D> extends QueryAnswerer<I, D> {
     interface DFAMembershipOracle<I> extends MembershipOracle<I, Boolean> {}
 
     interface MealyMembershipOracle<I, O> extends MembershipOracle<I, Word<O>> {}
+
+    interface PartialMealyMembershipOracle<I, O> extends MembershipOracle<I, Word<OutputAndLocalInputs<I, O>>> {}
 }
