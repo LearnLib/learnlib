@@ -55,10 +55,13 @@ jobs:
       env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=11 -Dmaven.compiler.target=11"
       install: true # Make sure we can build without LTSmin
     - os: osx
-      jdk: openjdk8
-      osx_image: xcode9.3 # Force old xcode version so JDK8 isn't overridden from newer xcode version
+      # Don't explicitly set the jdk version (because the install script doesn't like some (EOL'd) versions) but use the
+      # default installation of the osx_image (xcode9.3 -> oraclejdk8)
+      osx_image: xcode9.3
     - os: osx
-      jdk: openjdk11
+      # Don't explicitly set the jdk version (because the install script doesn't like some (EOL'd) versions) but use the
+      # default installation of the osx_image (xcode10.1 -> oraclejdk11)
+      osx_image: xcode10.1
 #    - os: windows
 #      jdk: oraclejdk8
 #      language: shell
