@@ -21,6 +21,7 @@ import java.util.List;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.examples.LearningExample.DFALearningExample;
 import de.learnlib.examples.LearningExamples;
+import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.DFALearnerVariantListImpl;
@@ -58,7 +59,9 @@ public abstract class AbstractDFALearnerIT {
         final DFALearnerVariantListImpl<I> variants = new DFALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, example.getReferenceAutomaton().size(), mqOracle, variants);
 
-        return LearnerITUtil.createExampleITCases(example, variants);
+        return LearnerITUtil.createExampleITCases(example,
+                                                  variants,
+                                                  new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 
     /**

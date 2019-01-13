@@ -37,7 +37,7 @@ import net.automatalib.words.Word;
  * @author Malte Isberner
  */
 public class DefaultLearningExample<I, D, A extends UniversalAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>>
-        implements LearningExample<I, D, A> {
+        implements LearningExample<I, A> {
 
     private final Alphabet<I> alphabet;
     private final A referenceAutomaton;

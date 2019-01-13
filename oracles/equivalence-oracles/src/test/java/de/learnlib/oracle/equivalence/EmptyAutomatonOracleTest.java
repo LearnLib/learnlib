@@ -47,7 +47,7 @@ public class EmptyAutomatonOracleTest {
     }
 
     private <I, D, A extends DetSuffixOutputAutomaton<?, I, ?, D> & UniversalDeterministicAutomaton<?, I, ?, ?, ?>> void testEmptyAutomaton(
-            LearningExample<I, D, A> example,
+            LearningExample<I, A> example,
             AutomatonCreator<? extends A, I> emptyCreator) {
 
         final A automaton = example.getReferenceAutomaton();

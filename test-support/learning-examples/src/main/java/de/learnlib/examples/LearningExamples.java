@@ -16,11 +16,13 @@
 package de.learnlib.examples;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import de.learnlib.examples.LearningExample.DFALearningExample;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
+import de.learnlib.examples.LearningExample.StateLocalInputMealyLearningExample;
 import de.learnlib.examples.dfa.ExampleAngluin;
 import de.learnlib.examples.dfa.ExampleKeylock;
 import de.learnlib.examples.dfa.ExamplePaulAndMary;
@@ -28,6 +30,7 @@ import de.learnlib.examples.dfa.ExampleTinyDFA;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine;
 import de.learnlib.examples.mealy.ExampleGrid;
 import de.learnlib.examples.mealy.ExampleRandomMealy;
+import de.learnlib.examples.mealy.ExampleRandomStateLocalInputMealy;
 import de.learnlib.examples.mealy.ExampleShahbazGroz;
 import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.examples.mealy.ExampleTinyMealy;
@@ -66,6 +69,13 @@ public final class LearningExamples {
                                                               RANDOM_SIZE,
                                                               RANDOM_MEALY_OUTPUTS),
                              ExampleTinyMealy.createExample());
+    }
+
+    public static List<StateLocalInputMealyLearningExample<?, ?>> createSLIMealyExamples() {
+        return Collections.singletonList(ExampleRandomStateLocalInputMealy.createExample(new Random(RANDOM_SEED),
+                                                                                         RANDOM_ALPHABET,
+                                                                                         RANDOM_SIZE,
+                                                                                         RANDOM_MEALY_OUTPUTS));
     }
 
 }

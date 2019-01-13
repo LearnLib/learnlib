@@ -68,7 +68,7 @@ public class GenericObservationTable<I, D> implements MutableObservationTable<I,
     protected final List<RowImpl<I>> shortPrefixRows = new ArrayList<>();
     // private static final int NO_ENTRY = -1;
     private final List<RowImpl<I>> longPrefixRows = new ArrayList<>();
-    protected final List<RowImpl<I>> allRows = new ArrayList<>();
+    private final List<RowImpl<I>> allRows = new ArrayList<>();
     private final List<List<D>> allRowContents = new ArrayList<>();
     private final List<RowImpl<I>> canonicalRows = new ArrayList<>();
     // private final TObjectIntMap<List<D>> rowContentIds = new TObjectIntHashMap<>(10, 0.75f, NO_ENTRY);
@@ -91,8 +91,8 @@ public class GenericObservationTable<I, D> implements MutableObservationTable<I,
     }
 
     protected static <I, D> void buildQueries(List<DefaultQuery<I, D>> queryList,
-                                            Word<I> prefix,
-                                            List<? extends Word<I>> suffixes) {
+                                              Word<I> prefix,
+                                              List<? extends Word<I>> suffixes) {
         for (Word<I> suffix : suffixes) {
             queryList.add(new DefaultQuery<>(prefix, suffix));
         }
@@ -102,19 +102,9 @@ public class GenericObservationTable<I, D> implements MutableObservationTable<I,
     public List<List<Row<I>>> initialize(List<Word<I>> initialShortPrefixes,
                                          List<Word<I>> initialSuffixes,
                                          MembershipOracle<I, D> oracle) {
-        if (!allRows.isEmpty()) {
-            throw new IllegalStateException("Called initialize, but there are already rows present");
-        }
 
-        if (!checkPrefixClosed(initialShortPrefixes)) {
-            throw new IllegalArgumentException("Initial short prefixes are not prefix-closed");
-        }
+        checkInitialization(initialShortPrefixes, initialSuffixes);
 
-        if (!initialShortPrefixes.get(0).isEmpty()) {
-            throw new IllegalArgumentException("First initial short prefix MUST be the empty word!");
-        }
-
-        int numSuffixes = initialSuffixes.size();
         for (Word<I> suffix : initialSuffixes) {
             if (suffixSet.add(suffix)) {
                 suffixes.add(suffix);
@@ -122,6 +112,7 @@ public class GenericObservationTable<I, D> implements MutableObservationTable<I,
         }
 
         int numPrefixes = alphabet.size() * initialShortPrefixes.size() + 1;
+        int numSuffixes = suffixes.size();
 
         List<DefaultQuery<I, D>> queries = new ArrayList<>(numPrefixes * numSuffixes);
 
@@ -185,7 +176,21 @@ public class GenericObservationTable<I, D> implements MutableObservationTable<I,
         return unclosed;
     }
 
-    protected static <I> boolean checkPrefixClosed(Collection<? extends Word<I>> initialShortPrefixes) {
+    protected void checkInitialization(List<Word<I>> initialShortPrefixes, List<Word<I>> initialSuffixes) {
+        if (!allRows.isEmpty()) {
+            throw new IllegalStateException("Called initialize, but there are already rows present");
+        }
+
+        if (!checkPrefixClosed(initialShortPrefixes)) {
+            throw new IllegalArgumentException("Initial short prefixes are not prefix-closed");
+        }
+
+        if (!initialShortPrefixes.get(0).isEmpty()) {
+            throw new IllegalArgumentException("First initial short prefix MUST be the empty word!");
+        }
+    }
+
+    private static <I> boolean checkPrefixClosed(Collection<? extends Word<I>> initialShortPrefixes) {
         Set<Word<I>> prefixes = new HashSet<>(initialShortPrefixes);
 
         for (Word<I> pref : initialShortPrefixes) {
@@ -460,8 +465,8 @@ public class GenericObservationTable<I, D> implements MutableObservationTable<I,
     }
 
     protected static <I, D> void buildRowQueries(List<DefaultQuery<I, D>> queryList,
-                                               List<? extends Row<I>> rows,
-                                               List<? extends Word<I>> suffixes) {
+                                                 List<? extends Row<I>> rows,
+                                                 List<? extends Word<I>> suffixes) {
         for (Row<I> row : rows) {
             buildQueries(queryList, row.getLabel(), suffixes);
         }

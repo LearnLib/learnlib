@@ -24,7 +24,6 @@ import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.ObservationTable;
-import de.learnlib.datastructure.observationtable.ResumeSupportingObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
@@ -78,7 +77,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     protected abstract A exposeInternalHypothesis();
 
     @Override
-    public final void startLearning() {
+    public void startLearning() {
         super.startLearning();
         updateInternalHypothesis();
     }
@@ -128,7 +127,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
 
                 Row<I> succ = sp.getSuccessor(i);
 
-                if(succ != null) {
+                if (succ != null) {
                     int succId = succ.getRowContentId();
 
                     S succState = stateInfos.get(succId).getState();

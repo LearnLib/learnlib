@@ -77,8 +77,13 @@ public class ExamplesTest {
     }
 
     @Test
-    public void testSLAExample1() {
-        de.learnlib.examples.sla.Example1.main(new String[0]);
+    public void testSLIExample1() {
+        de.learnlib.examples.sli.Example1.main(new String[0]);
+    }
+
+    @Test
+    public void testSLIExample2() {
+        de.learnlib.examples.sli.Example2.main(new String[0]);
     }
 
     @Test

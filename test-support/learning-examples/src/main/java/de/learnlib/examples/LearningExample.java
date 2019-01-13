@@ -16,20 +16,22 @@
 package de.learnlib.examples;
 
 import net.automatalib.automata.UniversalAutomaton;
-import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 
-public interface LearningExample<I, D, A extends UniversalAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>> {
+public interface LearningExample<I, A extends UniversalAutomaton<?, I, ?, ?, ?>> {
 
     A getReferenceAutomaton();
 
     Alphabet<I> getAlphabet();
 
-    interface DFALearningExample<I> extends LearningExample<I, Boolean, DFA<?, I>> {}
+    interface DFALearningExample<I> extends LearningExample<I, DFA<?, I>> {}
 
-    interface MealyLearningExample<I, O> extends LearningExample<I, Word<O>, MealyMachine<?, I, ?, O>> {}
+    interface MealyLearningExample<I, O> extends LearningExample<I, MealyMachine<?, I, ?, O>> {}
+
+    interface StateLocalInputMealyLearningExample<I, O>
+            extends LearningExample<I, StateLocalInputMealyMachine<?, I, ?, O>> {}
 
 }

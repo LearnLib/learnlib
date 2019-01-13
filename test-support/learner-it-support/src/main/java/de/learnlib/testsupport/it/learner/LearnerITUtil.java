@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.examples.LearningExample;
 import de.learnlib.examples.PassiveLearningExample;
@@ -29,7 +30,6 @@ import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-
 
 /**
  * Utility class for integration tests for a learning algorithm (or "learner").
@@ -53,15 +53,16 @@ public final class LearnerITUtil {
      *
      * @return the list of test cases, one for each example
      */
-    public static <I, D, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>> List<LearnerVariantITCase<I, D, A>> createExampleITCases(
-            LearningExample<I, D, A> example,
-            LearnerVariantListImpl<A, I, D> variants) {
+    public static <I, D, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> List<LearnerVariantITCase<I, D, A>> createExampleITCases(
+            LearningExample<I, A> example,
+            LearnerVariantListImpl<A, I, D> variants,
+            EquivalenceOracle<? super A, I, D> eqOracle) {
 
         final List<LearnerVariant<A, I, D>> variantList = variants.getLearnerVariants();
         final List<LearnerVariantITCase<I, D, A>> result = new ArrayList<>(variantList.size());
 
         for (LearnerVariant<A, I, D> variant : variantList) {
-            result.add(new LearnerVariantITCase<>(variant, example));
+            result.add(new LearnerVariantITCase<>(variant, example, eqOracle));
         }
 
         return result;
