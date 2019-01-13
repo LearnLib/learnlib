@@ -62,10 +62,10 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author Malte Isberner
  */
-public final class GenericObservationTable<I, D> implements MutableObservationTable<I, D>, Serializable {
+public class GenericObservationTable<I, D> implements MutableObservationTable<I, D>, Serializable {
 
     private static final Integer NO_ENTRY = null; // TODO: replace with primitive specialization
-    private final List<RowImpl<I>> shortPrefixRows = new ArrayList<>();
+    protected final List<RowImpl<I>> shortPrefixRows = new ArrayList<>();
     // private static final int NO_ENTRY = -1;
     private final List<RowImpl<I>> longPrefixRows = new ArrayList<>();
     private final List<RowImpl<I>> allRows = new ArrayList<>();
@@ -73,12 +73,12 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
     private final List<RowImpl<I>> canonicalRows = new ArrayList<>();
     // private final TObjectIntMap<List<D>> rowContentIds = new TObjectIntHashMap<>(10, 0.75f, NO_ENTRY);
     private final Map<List<D>, Integer> rowContentIds = new HashMap<>(); // TODO: replace with primitive specialization
-    private final Map<Word<I>, RowImpl<I>> rowMap = new HashMap<>();
-    private final List<Word<I>> suffixes = new ArrayList<>();
-    private final Set<Word<I>> suffixSet = new HashSet<>();
+    protected final Map<Word<I>, RowImpl<I>> rowMap = new HashMap<>();
+    protected final List<Word<I>> suffixes = new ArrayList<>();
+    protected final Set<Word<I>> suffixSet = new HashSet<>();
     private transient Alphabet<I> alphabet;
     private int numRows;
-    private boolean initialConsistencyCheckRequired;
+    protected boolean initialConsistencyCheckRequired;
 
     /**
      * Constructor.
@@ -90,9 +90,9 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         this.alphabet = alphabet;
     }
 
-    private static <I, D> void buildQueries(List<DefaultQuery<I, D>> queryList,
-                                            Word<I> prefix,
-                                            List<? extends Word<I>> suffixes) {
+    protected static <I, D> void buildQueries(List<DefaultQuery<I, D>> queryList,
+                                              Word<I> prefix,
+                                              List<? extends Word<I>> suffixes) {
         for (Word<I> suffix : suffixes) {
             queryList.add(new DefaultQuery<>(prefix, suffix));
         }
@@ -102,19 +102,9 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
     public List<List<Row<I>>> initialize(List<Word<I>> initialShortPrefixes,
                                          List<Word<I>> initialSuffixes,
                                          MembershipOracle<I, D> oracle) {
-        if (!allRows.isEmpty()) {
-            throw new IllegalStateException("Called initialize, but there are already rows present");
-        }
 
-        if (!checkPrefixClosed(initialShortPrefixes)) {
-            throw new IllegalArgumentException("Initial short prefixes are not prefix-closed");
-        }
+        checkInitialization(initialShortPrefixes, initialSuffixes);
 
-        if (!initialShortPrefixes.get(0).isEmpty()) {
-            throw new IllegalArgumentException("First initial short prefix MUST be the empty word!");
-        }
-
-        int numSuffixes = initialSuffixes.size();
         for (Word<I> suffix : initialSuffixes) {
             if (suffixSet.add(suffix)) {
                 suffixes.add(suffix);
@@ -122,6 +112,7 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         }
 
         int numPrefixes = alphabet.size() * initialShortPrefixes.size() + 1;
+        int numSuffixes = suffixes.size();
 
         List<DefaultQuery<I, D>> queries = new ArrayList<>(numPrefixes * numSuffixes);
 
@@ -185,6 +176,20 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         return unclosed;
     }
 
+    protected void checkInitialization(List<Word<I>> initialShortPrefixes, List<Word<I>> initialSuffixes) {
+        if (!allRows.isEmpty()) {
+            throw new IllegalStateException("Called initialize, but there are already rows present");
+        }
+
+        if (!checkPrefixClosed(initialShortPrefixes)) {
+            throw new IllegalArgumentException("Initial short prefixes are not prefix-closed");
+        }
+
+        if (!initialShortPrefixes.get(0).isEmpty()) {
+            throw new IllegalArgumentException("First initial short prefix MUST be the empty word!");
+        }
+    }
+
     private static <I> boolean checkPrefixClosed(Collection<? extends Word<I>> initialShortPrefixes) {
         Set<Word<I>> prefixes = new HashSet<>(initialShortPrefixes);
 
@@ -199,7 +204,7 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         return true;
     }
 
-    private RowImpl<I> createSpRow(Word<I> prefix) {
+    protected RowImpl<I> createSpRow(Word<I> prefix) {
         RowImpl<I> newRow = new RowImpl<>(prefix, numRows++, alphabet.size());
         allRows.add(newRow);
         rowMap.put(prefix, newRow);
@@ -207,7 +212,7 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         return newRow;
     }
 
-    private RowImpl<I> createLpRow(Word<I> prefix) {
+    protected RowImpl<I> createLpRow(Word<I> prefix) {
         RowImpl<I> newRow = new RowImpl<>(prefix, numRows++);
         allRows.add(newRow);
         rowMap.put(prefix, newRow);
@@ -228,14 +233,14 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
      * @param numSuffixes
      *         the number of suffixes (queries)
      */
-    private static <I, D> void fetchResults(Iterator<DefaultQuery<I, D>> queryIt, List<D> output, int numSuffixes) {
+    protected static <I, D> void fetchResults(Iterator<DefaultQuery<I, D>> queryIt, List<D> output, int numSuffixes) {
         for (int j = 0; j < numSuffixes; j++) {
             DefaultQuery<I, D> qry = queryIt.next();
             output.add(qry.getOutput());
         }
     }
 
-    private boolean processContents(RowImpl<I> row, List<D> rowContents, boolean makeCanonical) {
+    protected boolean processContents(RowImpl<I> row, List<D> rowContents, boolean makeCanonical) {
         Integer contentId; // TODO: replace with primitive specialization
         // int contentId;
         boolean added = false;
@@ -434,7 +439,7 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         return unclosed;
     }
 
-    private void makeShort(RowImpl<I> row) {
+    protected void makeShort(RowImpl<I> row) {
         if (row.isShortPrefixRow()) {
             return;
         }
@@ -459,9 +464,9 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         }
     }
 
-    private static <I, D> void buildRowQueries(List<DefaultQuery<I, D>> queryList,
-                                               List<? extends Row<I>> rows,
-                                               List<? extends Word<I>> suffixes) {
+    protected static <I, D> void buildRowQueries(List<DefaultQuery<I, D>> queryList,
+                                                 List<? extends Row<I>> rows,
+                                                 List<? extends Word<I>> suffixes) {
         for (Row<I> row : rows) {
             buildQueries(queryList, row.getLabel(), suffixes);
         }

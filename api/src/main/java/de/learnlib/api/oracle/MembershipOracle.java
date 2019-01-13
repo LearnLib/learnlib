@@ -83,5 +83,16 @@ public interface MembershipOracle<I, D> extends QueryAnswerer<I, D> {
 
     interface DFAMembershipOracle<I> extends MembershipOracle<I, Boolean> {}
 
+    /**
+     * A specialization of the {@link MembershipOracle} that binds the output domain to {@link Word}s of the specified
+     * output type. Queries should be answered according to the Mealy output semantics (transition-based). This means an
+     * input sequence of length {@code n} results in an output word of length {@code n}.
+     *
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     */
     interface MealyMembershipOracle<I, O> extends MembershipOracle<I, Word<O>> {}
+
 }

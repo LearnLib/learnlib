@@ -313,10 +313,17 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
             }
 
             for (int i = 0; i < alphabet.size(); i++) {
-                int spSuccContent = spRow.getSuccessor(i).getRowContentId();
-                int canSuccContent = canRow.getSuccessor(i).getRowContentId();
-                if (spSuccContent != canSuccContent) {
-                    return new Inconsistency<>(canRow, spRow, alphabet.getSymbol(i));
+                final Row<I> spRowSucc = spRow.getSuccessor(i);
+
+                if (spRowSucc != null) {
+                    final Row<I> canRowSucc = canRow.getSuccessor(i);
+                    assert canRowSucc != null;
+
+                    int spSuccContent = spRowSucc.getRowContentId();
+                    int canSuccContent = canRowSucc.getRowContentId();
+                    if (spSuccContent != canSuccContent) {
+                        return new Inconsistency<>(canRow, spRow, alphabet.getSymbol(i));
+                    }
                 }
             }
         }

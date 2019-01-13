@@ -19,9 +19,7 @@ import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.examples.LearningExample;
-import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 import org.slf4j.Logger;
@@ -30,8 +28,7 @@ import org.testng.Assert;
 import org.testng.ITest;
 import org.testng.annotations.Test;
 
-final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>>
-        implements ITest {
+final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> implements ITest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LearnerVariantITCase.class);
 
@@ -39,11 +36,15 @@ final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton
     private static final long MILLIS_PER_SECOND = 1000;
 
     private final LearnerVariant<? extends M, I, D> variant;
-    private final LearningExample<I, D, ? extends M> example;
+    private final LearningExample<I, ? extends M> example;
+    private final EquivalenceOracle<? super M, I, D> eqOracle;
 
-    LearnerVariantITCase(LearnerVariant<? extends M, I, D> variant, LearningExample<I, D, ? extends M> example) {
+    LearnerVariantITCase(LearnerVariant<? extends M, I, D> variant,
+                         LearningExample<I, ? extends M> example,
+                         EquivalenceOracle<? super M, I, D> eqOracle) {
         this.variant = variant;
         this.example = example;
+        this.eqOracle = eqOracle;
     }
 
     @Test
@@ -56,8 +57,6 @@ final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton
         if (maxRounds < 0) {
             maxRounds = example.getReferenceAutomaton().size();
         }
-
-        EquivalenceOracle<? super M, I, D> eqOracle = new SimulatorEQOracle<>(example.getReferenceAutomaton());
 
         long start = System.nanoTime();
 

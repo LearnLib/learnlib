@@ -20,9 +20,12 @@ import java.util.Random;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.feature.ResumableLearner;
+import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.QueryAnswerer;
+import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -52,5 +55,16 @@ public abstract class AbstractResumableLearnerMealyTest<L extends ResumableLearn
     @Override
     protected MembershipOracle<Character, Word<Character>> getOracle(MealyMachine<?, Character, ?, Character> target) {
         return ((QueryAnswerer<Character, Word<Character>>) target::computeSuffixOutput).asOracle();
+    }
+
+    @Override
+    protected MealyEquivalenceOracle<Character, Character> getEquivalenceOracle(MealyMachine<?, Character, ?, Character> target) {
+        return (mealy, inputs) -> {
+            final Word<Character> separatingWord = Automata.findSeparatingWord(target, mealy, inputs);
+            if (separatingWord == null) {
+                return null;
+            }
+            return new DefaultQuery<>(Word.epsilon(), separatingWord, target.computeOutput(separatingWord));
+        };
     }
 }

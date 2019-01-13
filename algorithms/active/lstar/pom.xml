@@ -37,6 +37,10 @@ limitations under the License.
         <!--
         Compile-time dependencies
         -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
 
         <!-- LearnLib dependencies -->
         <dependency>
@@ -111,6 +115,11 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-membership-oracles</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-drivers-simulator</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

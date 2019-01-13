@@ -22,6 +22,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
 import de.learnlib.examples.LearningExamples;
+import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealySymLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MealySymLearnerVariantListImpl;
@@ -62,7 +63,9 @@ public abstract class AbstractMealySymLearnerIT {
         final MealySymLearnerVariantListImpl<I, O> variants = new MealySymLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, MealyUtil.wrapWordOracle(mqOracle), variants);
 
-        return LearnerITUtil.createExampleITCases(example, variants.getMealyLearnerVariants());
+        return LearnerITUtil.createExampleITCases(example,
+                                                  variants.getMealyLearnerVariants(),
+                                                  new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 
     /**

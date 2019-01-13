@@ -51,6 +51,7 @@ limitations under the License.
                             <exclude>**/KearnsVazirani*Builder.class</exclude>
                             <exclude>**/ClassicLStar*Builder.class</exclude>
                             <exclude>**/ExtensibleLStar*Builder.class</exclude>
+                            <exclude>**/PartialLStarMealyBuilder.class</exclude>
                             <exclude>**/MalerPnueli*Builder.class</exclude>
                             <exclude>**/RivestSchapire*Builder.class</exclude>
                             <exclude>**/NLStarLearnerBuilder.class</exclude>
