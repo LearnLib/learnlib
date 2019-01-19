@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
 import de.learnlib.api.query.DefaultQuery;
+import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;

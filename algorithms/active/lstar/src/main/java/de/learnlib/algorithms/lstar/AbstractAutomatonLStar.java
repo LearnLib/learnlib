@@ -25,7 +25,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
-import net.automatalib.automata.GrowableAlphabetAutomaton;
+import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
@@ -49,7 +49,7 @@ import net.automatalib.words.Alphabet;
  *
  * @author Malte Isberner
  */
-public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends MutableDeterministic<S, I, T, SP, TP> & GrowableAlphabetAutomaton<I>>
+public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends MutableDeterministic<S, I, T, SP, TP> & SupportsGrowingAlphabet<I>>
         extends AbstractLStar<A, I, D> implements ResumableLearner<AutomatonLStarState<I, D, AI, S>> {
 
     protected AI internalHyp;

@@ -35,11 +35,11 @@ import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.algorithm.feature.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
 import de.learnlib.api.algorithm.feature.ResumableLearner;
-import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexamples.GlobalSuffixFinder;
 import de.learnlib.counterexamples.GlobalSuffixFinders;
+import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.mappings.MapMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
@@ -258,7 +258,8 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
         if (!this.splitters.contains(Word.fromLetter(symbol))) {
             final Iterator<Word<I>> splitterIterator = this.splitters.iterator();
-            final LinkedHashSet<Word<I>> newSplitters = Sets.newLinkedHashSetWithExpectedSize(this.splitters.size() + 1);
+            final LinkedHashSet<Word<I>> newSplitters =
+                    Sets.newLinkedHashSetWithExpectedSize(this.splitters.size() + 1);
 
             // see initial initialization of the splitters
             for (int i = 0; i < this.alphabet.size() - 1; i++) {

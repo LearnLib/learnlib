@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.learnlib.api.AccessSequenceTransformer;
-import net.automatalib.automata.GrowableAlphabetAutomaton;
+import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.graphs.Graph;
@@ -52,7 +52,7 @@ public class DTLearnerHypothesis<I, O, SP, TP>
         implements UniversalDeterministicAutomaton<HState<I, O, SP, TP>, I, HTransition<I, O, SP, TP>, SP, TP>,
                    AccessSequenceTransformer<I>,
                    StateIDs<HState<I, O, SP, TP>>,
-                   GrowableAlphabetAutomaton<I>,
+                   SupportsGrowingAlphabet<I>,
                    Serializable {
 
     private final Alphabet<I> alphabet;

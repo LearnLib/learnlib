@@ -21,11 +21,11 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.QueryAnswerer;
 import de.learnlib.filter.cache.dfa.DFACacheOracle;
 import de.learnlib.filter.cache.dfa.DFACaches;
+import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;

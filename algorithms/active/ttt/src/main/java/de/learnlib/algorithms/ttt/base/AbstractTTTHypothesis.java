@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.automata.FiniteAlphabetAutomaton;
-import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.graphs.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -44,7 +44,7 @@ import net.automatalib.words.impl.Alphabets;
 public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAutomaton<TTTState<I, D>, I, T>,
                                                                 FiniteAlphabetAutomaton<TTTState<I, D>, I, T>,
                                                                 DeterministicAutomaton.FullIntAbstraction<T>,
-                                                                GrowableAlphabetAutomaton<I>,
+                                                                SupportsGrowingAlphabet<I>,
                                                                 Serializable {
 
     protected final List<TTTState<I, D>> states = new ArrayList<>();
