@@ -96,11 +96,6 @@ limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-test-support</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-drivers-simulator</artifactId>
             <scope>test</scope>

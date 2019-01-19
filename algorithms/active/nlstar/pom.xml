@@ -60,10 +60,6 @@ limitations under the License.
             <artifactId>learnlib-learner-it-support</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-test-support</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
         </dependency>

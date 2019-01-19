@@ -70,10 +70,6 @@ limitations under the License.
             <artifactId>learnlib-learner-it-support</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-test-support</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.github.misberner.buildergen</groupId>
             <artifactId>buildergen</artifactId>
         </dependency>

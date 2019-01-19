@@ -103,10 +103,6 @@ limitations under the License.
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learner-it-support</artifactId>
         </dependency>
-        <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-test-support</artifactId>
-        </dependency>
 
         <!-- Buildergen -->
         <dependency>

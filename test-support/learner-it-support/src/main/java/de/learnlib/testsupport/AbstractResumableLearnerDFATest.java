@@ -23,12 +23,10 @@ import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.QueryAnswerer;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.equivalence.SimulatorEQOracle.DFASimulatorEQOracle;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
 /**
@@ -56,13 +54,7 @@ public abstract class AbstractResumableLearnerDFATest<L extends ResumableLearner
 
     @Override
     protected DFAEquivalenceOracle<Character> getEquivalenceOracle(DFA<?, Character> target) {
-        return (dfa, inputs) -> {
-            final Word<Character> separatingWord = Automata.findSeparatingWord(target, dfa, inputs);
-            if (separatingWord == null) {
-                return null;
-            }
-            return new DefaultQuery<>(separatingWord, target.computeOutput(separatingWord));
-        };
+        return new DFASimulatorEQOracle<>(target);
     }
 
 }
