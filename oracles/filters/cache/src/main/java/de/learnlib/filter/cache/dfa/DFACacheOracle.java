@@ -23,9 +23,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;
@@ -46,7 +48,7 @@ import net.automatalib.words.Alphabet;
  * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
+public class DFACacheOracle<I> implements DFALearningCacheOracle<I>, SupportsGrowingAlphabet<I> {
 
     private final IncrementalDFABuilder<I> incDfa;
     private final Lock incDfaLock;
@@ -180,4 +182,8 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I> {
         }
     }
 
+    @Override
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+        incDfa.addAlphabetSymbol(symbol);
+    }
 }

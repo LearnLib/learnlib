@@ -16,7 +16,9 @@
 package de.learnlib.algorithms.adt.learner;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 
 import de.learnlib.algorithms.adt.config.ADTExtenders;
 import de.learnlib.algorithms.adt.config.LeafSplitters;
@@ -65,6 +67,14 @@ public class ADTGrowingAlphabetTest
                                 LeafSplitters.DEFAULT_SPLITTER,
                                 ADTExtenders.NOP,
                                 SubtreeReplacers.NEVER_REPLACE);
+    }
+
+    @Override
+    protected SymbolQueryOracle<Integer, Character> getCachedOracle(Alphabet<Integer> alphabet,
+                                                                    SymbolQueryOracle<Integer, Character> original,
+                                                                    List<Consumer<Integer>> symbolListener) {
+        // ADT learner already uses a cache internally.
+        return original;
     }
 
 }

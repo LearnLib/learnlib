@@ -61,11 +61,11 @@ import de.learnlib.counterexamples.LocalSuffixFinders;
 import de.learnlib.util.MQUtil;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.SymbolHidingAlphabet;
 
 /**
  * The main learning algorithm.
@@ -83,7 +83,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                                          SupportsGrowingAlphabet<I>,
                                          ResumableLearner<ADTLearnerState<ADTState<I, O>, I, O>> {
 
-    private Alphabet<I> alphabet;
+    private final Alphabet<I> alphabet;
     private final SQOOTBridge<I, O> oracle;
     private final LeafSplitter leafSplitter;
     private final ADTExtender adtExtender;
@@ -111,7 +111,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                       final SubtreeReplacer subtreeReplacer,
                       final boolean useObservationTree) {
 
-        this.alphabet = SymbolHidingAlphabet.wrapIfMutable(alphabet);
+        this.alphabet = alphabet;
         this.observationTree = new ObservationTree<>(this.alphabet);
         this.oracle = new SQOOTBridge<>(this.observationTree, oracle, useObservationTree);
 
@@ -376,29 +376,25 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) {
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
 
-        if (this.alphabet.containsSymbol(symbol)) {
-            return;
+        if (!this.alphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
         }
 
         this.hypothesis.addAlphabetSymbol(symbol);
+        this.observationTree.getObservationTree().addAlphabetSymbol(symbol);
 
-        SymbolHidingAlphabet.runWhileHiding(alphabet,
-                                            symbol,
-                                            () -> this.observationTree.getObservationTree().addAlphabetSymbol(symbol));
+        // check if we already have information about the symbol (then the transition is defined) so we don't post
+        // redundant queries
+        if (this.hypothesis.getInitialState() != null &&
+            this.hypothesis.getSuccessor(this.hypothesis.getInitialState(), symbol) == null) {
+            for (final ADTState<I, O> s : this.hypothesis.getStates()) {
+                this.openTransitions.add(this.hypothesis.createOpenTransition(s, symbol, this.adt.getRoot()));
+            }
 
-        // since we share the alphabet instance with our hypothesis, our alphabet might have already been updated (if it
-        // was already a GrowableAlphabet)
-        if (!this.alphabet.containsSymbol(symbol)) {
-            this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
+            this.closeTransitions();
         }
-
-        for (final ADTState<I, O> s : this.hypothesis.getStates()) {
-            this.openTransitions.add(this.hypothesis.createOpenTransition(s, symbol, this.adt.getRoot()));
-        }
-
-        this.closeTransitions();
     }
 
     @Override

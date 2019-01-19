@@ -35,6 +35,7 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNod
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
 import de.learnlib.util.MQUtil;
 import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -44,7 +45,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
                    SupportsGrowingAlphabet<I>,
                    ResumableLearner<DTLearnerState<I, D, SP, TP>> {
 
-    protected Alphabet<I> alphabet;
+    protected final Alphabet<I> alphabet;
     private final MembershipOracle<I, D> oracle;
     private final LocalSuffixFinder<? super I, ? super D> suffixFinder;
     private final boolean repeatedCounterexampleEvaluation;
@@ -69,7 +70,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
 
     @Override
     public void startLearning() {
-        HState<I, D, SP, TP> init = hypothesis.getInitialState();
+        HState<I, D, SP, TP> init = hypothesis.createInitialState();
         AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>> initDt = dtree.sift(init.getAccessSequence());
         if (initDt.getData() != null) {
             throw new IllegalStateException("Decision tree already contains data");
@@ -228,30 +229,29 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) {
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
 
-        if (this.alphabet.containsSymbol(symbol)) {
-            return;
+        if (!this.alphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
         }
-
-        final int newSymbolIdx = this.alphabet.size();
 
         this.hypothesis.addAlphabetSymbol(symbol);
 
-        // since we share the alphabet instance with our hypothesis, our alphabet might have already been updated (if it
-        // was already a GrowableAlphabet)
-        if (!this.alphabet.containsSymbol(symbol)) {
-            this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
-        }
+        // check if we already have information about the symbol (then the transition is defined) so we don't post
+        // redundant queries
+        if (this.hypothesis.getInitialState() != null &&
+            this.hypothesis.getSuccessor(this.hypothesis.getInitialState(), symbol) == null) {
+            final int newSymbolIdx = this.alphabet.getSymbolIndex(symbol);
 
-        for (final HState<I, D, SP, TP> s : this.hypothesis.getStates()) {
-            final HTransition<I, D, SP, TP> newTrans = new HTransition<>(s, symbol, dtree.getRoot());
-            s.setTransition(newSymbolIdx, newTrans);
-            newTransitions.add(newTrans);
-            openTransitions.add(newTrans);
-        }
+            for (final HState<I, D, SP, TP> s : this.hypothesis.getStates()) {
+                final HTransition<I, D, SP, TP> newTrans = new HTransition<>(s, symbol, dtree.getRoot());
+                s.setTransition(newSymbolIdx, newTrans);
+                newTransitions.add(newTrans);
+                openTransitions.add(newTrans);
+            }
 
-        this.updateHypothesis();
+            this.updateHypothesis();
+        }
     }
 
     @Override

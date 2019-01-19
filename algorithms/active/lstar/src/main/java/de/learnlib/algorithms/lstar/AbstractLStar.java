@@ -33,6 +33,7 @@ import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import de.learnlib.util.MQUtil;
 import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -56,7 +57,7 @@ import net.automatalib.words.impl.Alphabets;
 public abstract class AbstractLStar<A, I, D>
         implements OTLearner<A, I, D>, GlobalSuffixLearner<A, I, D>, SupportsGrowingAlphabet<I> {
 
-    protected Alphabet<I> alphabet;
+    protected final Alphabet<I> alphabet;
     protected final MembershipOracle<I, D> oracle;
     protected GenericObservationTable<I, D> table;
 
@@ -226,20 +227,13 @@ public abstract class AbstractLStar<A, I, D>
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) {
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
 
-        if (this.alphabet.containsSymbol(symbol)) {
-            return;
+        if (!this.alphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
         }
 
         final List<List<Row<I>>> unclosed = this.table.addAlphabetSymbol(symbol, oracle);
-
-        // since we share the alphabet instance with our observation table, our alphabet might have already been updated
-        // (if it was already a GrowableAlphabet)
-        if (!this.alphabet.containsSymbol(symbol)) {
-            this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
-        }
-
         completeConsistentTable(unclosed, true);
     }
 }

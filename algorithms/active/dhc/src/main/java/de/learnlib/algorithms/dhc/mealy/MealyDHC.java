@@ -43,6 +43,7 @@ import de.learnlib.counterexamples.GlobalSuffixFinders;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.mappings.MapMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -60,7 +61,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
     private static final Logger LOG = LoggerFactory.getLogger(MealyDHC.class);
     private final MembershipOracle<I, Word<O>> oracle;
-    private Alphabet<I> alphabet;
+    private final Alphabet<I> alphabet;
     private LinkedHashSet<Word<I>> splitters = new LinkedHashSet<>();
     private CompactMealy<I, O> hypothesis;
     private MutableMapping<Integer, QueueElement<I, O>> accessSequences;
@@ -249,30 +250,31 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) {
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
 
-        if (this.alphabet.containsSymbol(symbol)) {
-            return;
+        if (!this.alphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
         }
 
-        final Iterator<Word<I>> splitterIterator = this.splitters.iterator();
-        final LinkedHashSet<Word<I>> newSplitters = Sets.newLinkedHashSetWithExpectedSize(this.splitters.size() + 1);
+        if (!this.splitters.contains(Word.fromLetter(symbol))) {
+            final Iterator<Word<I>> splitterIterator = this.splitters.iterator();
+            final LinkedHashSet<Word<I>> newSplitters = Sets.newLinkedHashSetWithExpectedSize(this.splitters.size() + 1);
 
-        // see initial initialization of the splitters
-        for (int i = 0; i < this.alphabet.size(); i++) {
-            newSplitters.add(splitterIterator.next());
+            // see initial initialization of the splitters
+            for (int i = 0; i < this.alphabet.size() - 1; i++) {
+                newSplitters.add(splitterIterator.next());
+            }
+
+            newSplitters.add(Word.fromLetter(symbol));
+
+            while (splitterIterator.hasNext()) {
+                newSplitters.add(splitterIterator.next());
+            }
+
+            this.splitters = newSplitters;
+
+            this.startLearning();
         }
-
-        newSplitters.add(Word.fromLetter(symbol));
-
-        while (splitterIterator.hasNext()) {
-            newSplitters.add(splitterIterator.next());
-        }
-
-        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
-        this.splitters = newSplitters;
-
-        this.startLearning();
     }
 
     @Override

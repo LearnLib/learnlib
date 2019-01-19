@@ -38,6 +38,7 @@ import net.automatalib.automata.transducers.OutputAndLocalInputs;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.util.automata.transducers.StateLocalInputMealyUtil;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
@@ -187,7 +188,7 @@ public class PartialLStarMealy<I, O>
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) {
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
         LOGGER.info("Adding new symbols to a system, which already exposes its available actions has no effect");
         LOGGER.info("Skipping ...");
     }

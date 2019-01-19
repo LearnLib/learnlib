@@ -15,11 +15,13 @@
  */
 package de.learnlib.api.algorithm.feature;
 
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
+
 /**
  * @author Maik Merten
  */
 public interface SupportsGrowingAlphabet<I> {
 
-    void addAlphabetSymbol(I symbol);
+    void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException;
 
 }

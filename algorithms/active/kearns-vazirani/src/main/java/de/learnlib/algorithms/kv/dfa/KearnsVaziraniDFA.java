@@ -38,6 +38,7 @@ import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.smartcollections.ArrayStorage;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -54,7 +55,7 @@ import net.automatalib.words.impl.Alphabets;
 public class KearnsVaziraniDFA<I>
         implements DFALearner<I>, SupportsGrowingAlphabet<I>, ResumableLearner<KearnsVaziraniDFAState<I>> {
 
-    private Alphabet<I> alphabet;
+    private final Alphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;
     private final boolean repeatedCounterexampleEvaluation;
     private final AcexAnalyzer ceAnalyzer;
@@ -293,38 +294,37 @@ public class KearnsVaziraniDFA<I>
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) {
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
 
-        if (this.alphabet.containsSymbol(symbol)) {
-            return;
+        if (!this.alphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
         }
 
-        final int inputIdx = this.alphabet.size();
         this.hypothesis.addAlphabetSymbol(symbol);
 
-        // since we share the alphabet instance with our hypothesis, our alphabet might have already been updated (if it
-        // was already a GrowableAlphabet)
-        if (!this.alphabet.containsSymbol(symbol)) {
-            this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
+        // check if we already have information about the symbol (then the transition is defined) so we don't post
+        // redundant queries
+        if (this.hypothesis.getInitialState() != null &&
+            this.hypothesis.getSuccessor(this.hypothesis.getInitialState(), symbol) == null) {
+            // use new list to prevent concurrent modification exception
+            final List<Word<I>> transAs = new ArrayList<>(this.stateInfos.size());
+            for (final StateInfo<I, Boolean> si : this.stateInfos) {
+                transAs.add(si.accessSequence.append(symbol));
+            }
+
+            final List<StateInfo<I, Boolean>> succs = sift(transAs);
+
+            final Iterator<StateInfo<I, Boolean>> stateIter = this.stateInfos.iterator();
+            final Iterator<StateInfo<I, Boolean>> leafsIter = succs.iterator();
+            final int inputIdx = this.alphabet.getSymbolIndex(symbol);
+
+            while (stateIter.hasNext() && leafsIter.hasNext()) {
+                setTransition(stateIter.next().id, inputIdx, leafsIter.next());
+            }
+
+            assert !stateIter.hasNext();
+            assert !leafsIter.hasNext();
         }
-
-        // use new list to prevent concurrent modification exception
-        final List<Word<I>> transAs = new ArrayList<>(this.stateInfos.size());
-        for (final StateInfo<I, Boolean> si : this.stateInfos) {
-            transAs.add(si.accessSequence.append(symbol));
-        }
-
-        final List<StateInfo<I, Boolean>> succs = sift(transAs);
-
-        final Iterator<StateInfo<I, Boolean>> stateIter = this.stateInfos.iterator();
-        final Iterator<StateInfo<I, Boolean>> leafsIter = succs.iterator();
-
-        while (stateIter.hasNext() && leafsIter.hasNext()) {
-            setTransition(stateIter.next().id, inputIdx, leafsIter.next());
-        }
-
-        assert !stateIter.hasNext();
-        assert !leafsIter.hasNext();
     }
 
     @Override

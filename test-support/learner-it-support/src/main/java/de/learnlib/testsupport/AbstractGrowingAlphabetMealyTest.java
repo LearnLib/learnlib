@@ -16,12 +16,16 @@
 package de.learnlib.testsupport;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.QueryAnswerer;
+import de.learnlib.filter.cache.mealy.MealyCacheOracle;
+import de.learnlib.filter.cache.mealy.MealyCaches;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
@@ -57,4 +61,12 @@ public abstract class AbstractGrowingAlphabetMealyTest<L extends SupportsGrowing
         return ((QueryAnswerer<Character, Word<Character>>) target::computeSuffixOutput).asOracle();
     }
 
+    @Override
+    protected MembershipOracle<Character, Word<Character>> getCachedOracle(Alphabet<Character> alphabet,
+                                                                           MembershipOracle<Character, Word<Character>> source,
+                                                                           List<Consumer<Character>> symbolListener) {
+        final MealyCacheOracle<Character, Character> cache = MealyCaches.createDAGCache(alphabet, source);
+        symbolListener.add(cache::addAlphabetSymbol);
+        return cache;
+    }
 }

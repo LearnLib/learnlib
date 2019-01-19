@@ -16,12 +16,16 @@
 package de.learnlib.testsupport;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.QueryAnswerer;
+import de.learnlib.filter.cache.dfa.DFACacheOracle;
+import de.learnlib.filter.cache.dfa.DFACaches;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
@@ -51,6 +55,15 @@ public abstract class AbstractGrowingAlphabetDFATest<L extends SupportsGrowingAl
     @Override
     protected MembershipOracle<Character, Boolean> getOracle(DFA<?, Character> target) {
         return ((QueryAnswerer<Character, Boolean>) target::computeSuffixOutput).asOracle();
+    }
+
+    @Override
+    protected MembershipOracle<Character, Boolean> getCachedOracle(Alphabet<Character> alphabet,
+                                                                   MembershipOracle<Character, Boolean> original,
+                                                                   List<Consumer<Character>> symbolListener) {
+        final DFACacheOracle<Character> cache = DFACaches.createDAGCache(alphabet, original);
+        symbolListener.add(cache::addAlphabetSymbol);
+        return cache;
     }
 
 }

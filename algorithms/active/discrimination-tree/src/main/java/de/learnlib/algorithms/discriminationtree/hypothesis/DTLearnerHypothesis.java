@@ -55,18 +55,24 @@ public class DTLearnerHypothesis<I, O, SP, TP>
                    GrowableAlphabetAutomaton<I>,
                    Serializable {
 
-    private Alphabet<I> alphabet;
-    private final HState<I, O, SP, TP> root;
+    private final Alphabet<I> alphabet;
+    private int alphabetSize;
+    private HState<I, O, SP, TP> root;
     private final List<HState<I, O, SP, TP>> nodes = new ArrayList<>();
 
     public DTLearnerHypothesis(Alphabet<I> alphabet) {
         this.alphabet = alphabet;
-        this.root = new HState<>(alphabet.size());
+        this.alphabetSize = this.alphabet.size();
+    }
+
+    public HState<I, O, SP, TP> createInitialState() {
+        this.root = new HState<>(alphabetSize);
         this.nodes.add(root);
+        return this.root;
     }
 
     public HState<I, O, SP, TP> createState(HTransition<I, O, SP, TP> treeIncoming) {
-        HState<I, O, SP, TP> state = new HState<>(alphabet.size(), nodes.size(), treeIncoming);
+        HState<I, O, SP, TP> state = new HState<>(alphabetSize, nodes.size(), treeIncoming);
         nodes.add(state);
         treeIncoming.makeTree(state);
         return state;
@@ -131,15 +137,18 @@ public class DTLearnerHypothesis<I, O, SP, TP>
     @Override
     public void addAlphabetSymbol(I symbol) {
 
-        if (this.alphabet.containsSymbol(symbol)) {
-            return;
+        if (!this.alphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
         }
 
-        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
-        final int alphabetSize = this.alphabet.size();
+        final int newAlphabetSize = this.alphabet.size();
 
-        for (final HState<I, O, SP, TP> s : this.getStates()) {
-            s.ensureInputCapacity(alphabetSize);
+        if (alphabetSize < newAlphabetSize) {
+            for (final HState<I, O, SP, TP> s : this.getStates()) {
+                s.ensureInputCapacity(newAlphabetSize);
+            }
+
+            this.alphabetSize = newAlphabetSize;
         }
     }
 

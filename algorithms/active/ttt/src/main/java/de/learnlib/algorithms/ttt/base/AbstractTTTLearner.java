@@ -44,6 +44,7 @@ import de.learnlib.datastructure.discriminationtree.SplitData;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.smartcollections.ElementReference;
 import net.automatalib.commons.smartcollections.UnorderedCollection;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -59,7 +60,7 @@ import net.automatalib.words.impl.Alphabets;
 public abstract class AbstractTTTLearner<A, I, D>
         implements LearningAlgorithm<A, I, D>, SupportsGrowingAlphabet<I>, ResumableLearner<TTTLearnerState<I, D>> {
 
-    protected Alphabet<I> alphabet;
+    protected final Alphabet<I> alphabet;
     protected final MembershipOracle<I, D> oracle;
     protected final AcexAnalyzer analyzer;
     /**
@@ -230,10 +231,7 @@ public abstract class AbstractTTTLearner<A, I, D>
      * @param tempDiscriminator
      *         the temporary discriminator
      */
-    private void splitState(TTTTransition<I, D> transition,
-                            Word<I> tempDiscriminator,
-                            D oldOut,
-                            D newOut) {
+    private void splitState(TTTTransition<I, D> transition, Word<I> tempDiscriminator, D oldOut, D newOut) {
         assert !transition.isTree();
 
         notifyPreSplit(transition, tempDiscriminator);
@@ -987,30 +985,30 @@ public abstract class AbstractTTTLearner<A, I, D>
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) {
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
 
-        if (this.alphabet.containsSymbol(symbol)) {
-            return;
+        if (!this.alphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
         }
-
-        final int newSymbolIdx = this.alphabet.size();
 
         this.hypothesis.addAlphabetSymbol(symbol);
 
-        // since we share the alphabet instance with our hypothesis, our alphabet might have already been updated (if it
-        // was already a GrowableAlphabet)
-        if (!this.alphabet.containsSymbol(symbol)) {
-            this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
-        }
+        // check if we already have information about the symbol (then the transition is defined) so we don't post
+        // redundant queries
+        if (this.hypothesis.getInitialState() != null &&
+            this.hypothesis.getSuccessor(this.hypothesis.getInitialState(), symbol) == null) {
 
-        for (final TTTState<I, D> s : this.hypothesis.getStates()) {
-            final TTTTransition<I, D> trans = createTransition(s, symbol);
-            trans.setNonTreeTarget(dtree.getRoot());
-            s.setTransition(newSymbolIdx, trans);
-            openTransitions.insertIncoming(trans);
-        }
+            final int newSymbolIdx = this.alphabet.getSymbolIndex(symbol);
 
-        this.closeTransitions();
+            for (final TTTState<I, D> s : this.hypothesis.getStates()) {
+                final TTTTransition<I, D> trans = createTransition(s, symbol);
+                trans.setNonTreeTarget(dtree.getRoot());
+                s.setTransition(newSymbolIdx, trans);
+                openTransitions.insertIncoming(trans);
+            }
+
+            this.closeTransitions();
+        }
     }
 
     protected abstract AbstractBaseDTNode<I, D> createNewNode(AbstractBaseDTNode<I, D> parent, D parentOutput);

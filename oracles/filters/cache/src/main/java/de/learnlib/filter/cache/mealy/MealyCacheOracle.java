@@ -24,11 +24,13 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
@@ -56,7 +58,7 @@ import net.automatalib.words.WordBuilder;
  *
  * @author Malte Isberner
  */
-public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O> {
+public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, SupportsGrowingAlphabet<I> {
 
     private final MembershipOracle<I, Word<O>> delegate;
     private final IncrementalMealyBuilder<I, O> incMealy;
@@ -216,6 +218,11 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O> {
         } else {
             incMealy.insert(word.prefix(i), answer.prefix(i));
         }
+    }
+
+    @Override
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+        incMealy.addAlphabetSymbol(symbol);
     }
 
     private static final class ReverseLexCmp<I> implements Comparator<Query<I, ?>>, Serializable {

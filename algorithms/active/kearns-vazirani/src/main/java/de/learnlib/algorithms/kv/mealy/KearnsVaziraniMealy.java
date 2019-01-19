@@ -39,6 +39,7 @@ import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -56,7 +57,7 @@ import net.automatalib.words.impl.Alphabets;
 public class KearnsVaziraniMealy<I, O>
         implements MealyLearner<I, O>, SupportsGrowingAlphabet<I>, ResumableLearner<KearnsVaziraniMealyState<I, O>> {
 
-    private Alphabet<I> alphabet;
+    private final Alphabet<I> alphabet;
     private final MembershipOracle<I, Word<O>> oracle;
     private final boolean repeatedCounterexampleEvaluation;
     private final AcexAnalyzer ceAnalyzer;
@@ -308,42 +309,41 @@ public class KearnsVaziraniMealy<I, O>
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) {
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
 
-        if (this.alphabet.containsSymbol(symbol)) {
-            return;
+        if (!this.alphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
         }
 
-        final int inputIdx = this.alphabet.size();
         this.hypothesis.addAlphabetSymbol(symbol);
 
-        // since we share the alphabet instance with our hypothesis, our alphabet might have already been updated (if it
-        // was already a GrowableAlphabet)
-        if (!this.alphabet.containsSymbol(symbol)) {
-            this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
-        }
+        // check if we already have information about the symbol (then the transition is defined) so we don't post
+        // redundant queries
+        if (this.hypothesis.getInitialState() != null &&
+            this.hypothesis.getSuccessor(this.hypothesis.getInitialState(), symbol) == null) {
+            // use new list to prevent concurrent modification exception
+            final List<Word<I>> transAs = new ArrayList<>(this.stateInfos.size());
+            final List<DefaultQuery<I, Word<O>>> outputQueries = new ArrayList<>(this.stateInfos.size());
 
-        // use new list to prevent concurrent modification exception
-        final List<Word<I>> transAs = new ArrayList<>(this.stateInfos.size());
-        final List<DefaultQuery<I, Word<O>>> outputQueries = new ArrayList<>(this.stateInfos.size());
+            for (final StateInfo<I, Word<O>> si : this.stateInfos) {
+                transAs.add(si.accessSequence.append(symbol));
+                outputQueries.add(new DefaultQuery<>(si.accessSequence, Word.fromLetter(symbol)));
+            }
 
-        for (final StateInfo<I, Word<O>> si : this.stateInfos) {
-            transAs.add(si.accessSequence.append(symbol));
-            outputQueries.add(new DefaultQuery<>(si.accessSequence, Word.fromLetter(symbol)));
-        }
+            final List<StateInfo<I, Word<O>>> succs = sift(transAs);
+            this.oracle.processQueries(outputQueries);
 
-        final List<StateInfo<I, Word<O>>> succs = sift(transAs);
-        this.oracle.processQueries(outputQueries);
+            final Iterator<StateInfo<I, Word<O>>> stateIter = this.stateInfos.iterator();
+            final Iterator<StateInfo<I, Word<O>>> leafsIter = succs.iterator();
+            final Iterator<DefaultQuery<I, Word<O>>> outputsIter = outputQueries.iterator();
+            final int inputIdx = this.alphabet.getSymbolIndex(symbol);
 
-        final Iterator<StateInfo<I, Word<O>>> stateIter = this.stateInfos.iterator();
-        final Iterator<StateInfo<I, Word<O>>> leafsIter = succs.iterator();
-        final Iterator<DefaultQuery<I, Word<O>>> outputsIter = outputQueries.iterator();
-
-        while (stateIter.hasNext() && leafsIter.hasNext()) {
-            setTransition(stateIter.next().id,
-                          inputIdx,
-                          leafsIter.next(),
-                          outputsIter.next().getOutput().firstSymbol());
+            while (stateIter.hasNext() && leafsIter.hasNext()) {
+                setTransition(stateIter.next().id,
+                              inputIdx,
+                              leafsIter.next(),
+                              outputsIter.next().getOutput().firstSymbol());
+            }
         }
     }
 

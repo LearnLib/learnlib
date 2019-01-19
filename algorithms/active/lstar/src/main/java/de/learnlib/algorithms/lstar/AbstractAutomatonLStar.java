@@ -27,8 +27,8 @@ import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.SymbolHidingAlphabet;
 
 /**
  * Abstract base class for algorithms that produce (subclasses of) {@link MutableDeterministic} automata.
@@ -64,7 +64,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
      *         the learning oracle
      */
     protected AbstractAutomatonLStar(Alphabet<I> alphabet, MembershipOracle<I, D> oracle, AI internalHyp) {
-        super(SymbolHidingAlphabet.wrapIfMutable(alphabet), oracle);
+        super(alphabet, oracle);
         this.internalHyp = internalHyp;
         internalHyp.clear();
     }
@@ -189,17 +189,14 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) {
-
-        if (alphabet.containsSymbol(symbol)) {
-            return;
-        }
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+        super.addAlphabetSymbol(symbol);
 
         this.internalHyp.addAlphabetSymbol(symbol);
 
-        SymbolHidingAlphabet.runWhileHiding(alphabet, symbol, () -> super.addAlphabetSymbol(symbol));
-
-        this.updateInternalHypothesis();
+        if (this.table.isInitialized()) {
+            this.updateInternalHypothesis();
+        }
     }
 
     @Override

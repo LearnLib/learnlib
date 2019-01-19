@@ -17,15 +17,19 @@ package de.learnlib.testsupport;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.SimpleAlphabet;
@@ -50,12 +54,14 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
 
     private Alphabet<I> initialAlphabet;
 
-    private Collection<I> alphabetExtensions;
+    private List<I> alphabetExtensions;
 
     @BeforeClass
     public void setup() {
         initialAlphabet = getInitialAlphabet();
-        alphabetExtensions = getAlphabetExtensions();
+        alphabetExtensions = new ArrayList<>(getAlphabetExtensions());
+
+        assert alphabetExtensions.size() > 2 : "At least 3 symbols need to be added for proper coverage";
 
         final List<I> compoundAlphabet = new ArrayList<>(initialAlphabet.size() + alphabetExtensions.size());
         compoundAlphabet.addAll(initialAlphabet);
@@ -73,25 +79,45 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
 
     protected abstract OR getOracle(M target);
 
+    protected abstract OR getCachedOracle(Alphabet<I> alphabet, OR source, List<Consumer<I>> symbolListener);
+
     protected abstract L getLearner(OR oracle, Alphabet<I> alphabet);
 
-    @Test
+    @Test(expectedExceptions = GrowingAlphabetNotSupportedException.class)
     public void testInitialAlphabet() {
-        testAlphabet(initialAlphabet);
+        final L leaner = getLearner(oracle, initialAlphabet);
+
+        testAlphabet(initialAlphabet, leaner, Collections.singletonList(leaner::addAlphabetSymbol));
     }
 
     /**
-     * In case of passing a growing alphabet, the learners may use the existing
-     * {@link net.automatalib.words.GrowingAlphabet#addSymbol(Object)} functionality. Due to references, this may alter
-     * their behavior. Check it!
+     * In case of passing a growing alphabet, the learners may use the existing {@link
+     * net.automatalib.words.GrowingAlphabet#addSymbol(Object)} functionality. Due to references, this may alter their
+     * behavior. Check it!
      */
     @Test
-    public void testGrowingAlphabetAlphabet() {
-        testAlphabet(new SimpleAlphabet<>(initialAlphabet));
+    public void testGrowingAlphabet() {
+        final GrowingAlphabet<I> alphabet = new SimpleAlphabet<>(initialAlphabet);
+        final L leaner = getLearner(oracle, alphabet);
+
+        testAlphabet(alphabet, leaner, Collections.singletonList(leaner::addAlphabetSymbol));
     }
 
-    private void testAlphabet(Alphabet<I> alphabet) {
-        final L learner = getLearner(oracle, alphabet);
+    @Test
+    public void testGrowingAlphabetWithCache() {
+        final GrowingAlphabet<I> alphabet = new SimpleAlphabet<>(initialAlphabet);
+        final List<Consumer<I>> symbolListener = new ArrayList<>();
+        final OR cachedOracle = getCachedOracle(alphabet, oracle, symbolListener);
+        final L learner = getLearner(cachedOracle, alphabet);
+        symbolListener.add(learner::addAlphabetSymbol);
+
+        testAlphabet(alphabet, learner, symbolListener);
+    }
+
+    private void testAlphabet(Alphabet<I> alphabet, L learner, List<Consumer<I>> symbolListener) {
+
+        // add the first symbol before actually starting the learning process
+        symbolListener.forEach(c -> c.accept(alphabetExtensions.get(0)));
 
         learner.startLearning();
         this.performLearnLoopAndCheck(learner, alphabet);
@@ -99,9 +125,17 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
         final List<I> currentAlphabet = new ArrayList<>(alphabet.size() + alphabetExtensions.size());
         currentAlphabet.addAll(alphabet);
 
+        boolean duplicateAdd = false;
+
         for (final I i : alphabetExtensions) {
             currentAlphabet.add(i);
-            learner.addAlphabetSymbol(i);
+            symbolListener.forEach(c -> c.accept(i));
+
+            if (duplicateAdd) {
+                learner.addAlphabetSymbol(i);
+            }
+            // add every second symbol twice
+            duplicateAdd = !duplicateAdd;
 
             final UniversalDeterministicAutomaton<?, I, ?, ?, ?> hyp = learner.getHypothesisModel();
 
@@ -129,7 +163,8 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
         Assert.assertTrue(Automata.testEquivalence(target, hyp, effectiveAlphabet));
     }
 
-    private <S, T> void checkCompletenessOfHypothesis(final UniversalDeterministicAutomaton<S, I, T, ?, ?> hypothesis, final Collection<? extends I> alphabet) {
+    private <S, T> void checkCompletenessOfHypothesis(final UniversalDeterministicAutomaton<S, I, T, ?, ?> hypothesis,
+                                                      final Collection<? extends I> alphabet) {
         for (final S s : hypothesis.getStates()) {
             for (final I i : alphabet) {
                 final T trans = hypothesis.getTransition(s, i);

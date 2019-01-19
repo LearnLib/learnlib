@@ -46,6 +46,10 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-equivalence-oracles</artifactId>
         </dependency>
         <dependency>

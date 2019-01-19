@@ -51,7 +51,8 @@ import net.automatalib.words.impl.Alphabets;
  * In order to derive a well-defined hypothesis from an observation table, it must satisfy two properties: closedness
  * and consistency. <ul> <li>An observation table is <b>closed</b> iff for each long prefix <code>u</code> there exists
  * a short prefix <code>u'</code> such that the row contents for both prefixes are equal. <li>An observation table is
- * <b>consistent</b> iff for every two short prefixes <code>u</code> and <code>u'</code> with identical row contents, it
+ * <b>consistent</b> iff for every two short prefixes <code>u</code> and <code>u'</code> with identical row contents,
+ * it
  * holds that for every input symbol <code>a</code> the rows indexed by <code>ua</code> and <code>u'a</code> also have
  * identical contents. </ul>
  *
@@ -77,6 +78,7 @@ public class GenericObservationTable<I, D> implements MutableObservationTable<I,
     protected final List<Word<I>> suffixes = new ArrayList<>();
     protected final Set<Word<I>> suffixSet = new HashSet<>();
     private transient Alphabet<I> alphabet;
+    private transient int alphabetSize;
     private int numRows;
     protected boolean initialConsistencyCheckRequired;
 
@@ -88,6 +90,7 @@ public class GenericObservationTable<I, D> implements MutableObservationTable<I,
      */
     public GenericObservationTable(Alphabet<I> alphabet) {
         this.alphabet = alphabet;
+        this.alphabetSize = alphabet.size();
     }
 
     protected static <I, D> void buildQueries(List<DefaultQuery<I, D>> queryList,
@@ -549,48 +552,53 @@ public class GenericObservationTable<I, D> implements MutableObservationTable<I,
     @Override
     public List<List<Row<I>>> addAlphabetSymbol(I symbol, final MembershipOracle<I, D> oracle) {
 
-        if (this.alphabet.containsSymbol(symbol)) {
+        if (!this.alphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+        }
+
+        final int newAlphabetSize = this.alphabet.size();
+
+        if (this.isInitialized() && this.alphabetSize < newAlphabetSize) {
+            this.alphabetSize = newAlphabetSize;
+            final int newSymbolIdx = this.alphabet.getSymbolIndex(symbol);
+
+            final List<RowImpl<I>> shortPrefixes = shortPrefixRows;
+            final List<RowImpl<I>> newLongPrefixes = new ArrayList<>(shortPrefixes.size());
+
+            for (RowImpl<I> prefix : shortPrefixes) {
+                prefix.ensureInputCapacity(newAlphabetSize);
+
+                final Word<I> newLongPrefix = prefix.getLabel().append(symbol);
+                final RowImpl<I> longPrefixRow = createLpRow(newLongPrefix);
+
+                newLongPrefixes.add(longPrefixRow);
+                prefix.setSuccessor(newSymbolIdx, longPrefixRow);
+            }
+
+            final int numLongPrefixes = newLongPrefixes.size();
+            final int numSuffixes = this.numberOfSuffixes();
+            final List<DefaultQuery<I, D>> queries = new ArrayList<>(numLongPrefixes * numSuffixes);
+
+            buildRowQueries(queries, newLongPrefixes, suffixes);
+            oracle.processQueries(queries);
+
+            final Iterator<DefaultQuery<I, D>> queryIterator = queries.iterator();
+            final List<List<Row<I>>> result = new ArrayList<>(numLongPrefixes);
+
+            for (RowImpl<I> row : newLongPrefixes) {
+                final List<D> contents = new ArrayList<>(numSuffixes);
+
+                fetchResults(queryIterator, contents, numSuffixes);
+
+                if (processContents(row, contents, false)) {
+                    result.add(Collections.singletonList(row));
+                }
+            }
+
+            return result;
+        } else {
             return Collections.emptyList();
         }
-
-        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
-        final int newAlphabetSize = this.alphabet.size();
-        final int newSymbolIdx = this.alphabet.getSymbolIndex(symbol);
-
-        final List<RowImpl<I>> shortPrefixes = shortPrefixRows;
-        final List<RowImpl<I>> newLongPrefixes = new ArrayList<>(shortPrefixes.size());
-
-        for (RowImpl<I> prefix : shortPrefixes) {
-            prefix.ensureInputCapacity(newAlphabetSize);
-
-            final Word<I> newLongPrefix = prefix.getLabel().append(symbol);
-            final RowImpl<I> longPrefixRow = createLpRow(newLongPrefix);
-
-            newLongPrefixes.add(longPrefixRow);
-            prefix.setSuccessor(newSymbolIdx, longPrefixRow);
-        }
-
-        final int numLongPrefixes = newLongPrefixes.size();
-        final int numSuffixes = this.numberOfSuffixes();
-        final List<DefaultQuery<I, D>> queries = new ArrayList<>(numLongPrefixes * numSuffixes);
-
-        buildRowQueries(queries, newLongPrefixes, suffixes);
-        oracle.processQueries(queries);
-
-        final Iterator<DefaultQuery<I, D>> queryIterator = queries.iterator();
-        final List<List<Row<I>>> result = new ArrayList<>(numLongPrefixes);
-
-        for (RowImpl<I> row : newLongPrefixes) {
-            final List<D> contents = new ArrayList<>(numSuffixes);
-
-            fetchResults(queryIterator, contents, numSuffixes);
-
-            if (processContents(row, contents, false)) {
-                result.add(Collections.singletonList(row));
-            }
-        }
-
-        return result;
     }
 
     @Nonnull
