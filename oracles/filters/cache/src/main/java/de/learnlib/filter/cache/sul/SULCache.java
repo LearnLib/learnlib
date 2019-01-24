@@ -28,6 +28,8 @@ import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.cache.mealy.MealyCacheConsistencyTest;
 import de.learnlib.oracle.membership.SULOracle;
+import net.automatalib.SupportsGrowingAlphabet;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
@@ -54,7 +56,7 @@ import net.automatalib.words.WordBuilder;
  * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O> {
+public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O>, SupportsGrowingAlphabet<I> {
 
     private final SULCacheImpl<?, I, ?, O> impl;
 
@@ -99,6 +101,11 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O>
         SULOracle.processQueries(impl, queries);
     }
 
+    @Override
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+        impl.addAlphabetSymbol(symbol);
+    }
+
     /**
      * Implementation class; we need this to bind the {@code T} and {@code S} type parameters of the transition system
      * returned by {@link IncrementalMealyBuilder#asTransitionSystem()}.
@@ -115,7 +122,8 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O>
      * @author Malte Isberner
      */
     @ParametersAreNonnullByDefault
-    private static final class SULCacheImpl<S, I, T, O> implements SUL<I, O>, MealyLearningCache<I, O> {
+    private static final class SULCacheImpl<S, I, T, O>
+            implements SUL<I, O>, MealyLearningCache<I, O>, SupportsGrowingAlphabet<I> {
 
         private final IncrementalMealyBuilder<I, O> incMealy;
         private final MealyTransitionSystem<S, I, T, O> mealyTs;
@@ -207,6 +215,11 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O>
         @Override
         public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
             return new MealyCacheConsistencyTest<>(incMealy, incMealyLock);
+        }
+
+        @Override
+        public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+            incMealy.addAlphabetSymbol(symbol);
         }
     }
 
