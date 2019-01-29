@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * @author Maren Geske
  * @author frohme
  */
-public class PartialObservationTable<I, O> extends GenericObservationTable<I, Word<OutputAndLocalInputs<I, O>>> {
+public final class PartialObservationTable<I, O> extends AbstractObservationTable<I, Word<OutputAndLocalInputs<I, O>>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PartialObservationTable.class);
 
@@ -79,16 +79,12 @@ public class PartialObservationTable<I, O> extends GenericObservationTable<I, Wo
                                          List<Word<I>> initialSuffixes,
                                          MembershipOracle<I, Word<OutputAndLocalInputs<I, O>>> oracle) {
 
-        checkInitialization(initialShortPrefixes, initialSuffixes);
+        checkInitialShortPrefixes(initialShortPrefixes);
 
-        suffixes.add(Word.epsilon());
-        suffixSet.add(Word.epsilon());
-
-        for (Word<I> suffix : initialSuffixes) {
-            if (suffixSet.add(suffix)) {
-                suffixes.add(suffix);
-            }
-        }
+        final List<Word<I>> initialSuffixesWithEpsilon = new ArrayList<>(initialSuffixes.size() + 1);
+        initialSuffixesWithEpsilon.add(Word.epsilon());
+        initialSuffixesWithEpsilon.addAll(initialSuffixes);
+        final List<Word<I>> suffixes = initializeSuffixes(initialSuffixesWithEpsilon);
 
         int numPrefixes = alphabet.size() * initialShortPrefixes.size() + 1;
         int numNonEmptySuffixes = suffixes.size() - 1;
@@ -127,7 +123,7 @@ public class PartialObservationTable<I, O> extends GenericObservationTable<I, Wo
                 checkForNewAlphabetSymbol(sym);
 
                 Word<I> lp = sp.append(sym);
-                RowImpl<I> succRow = rowMap.get(lp);
+                RowImpl<I> succRow = getRow(lp);
                 if (succRow == null) {
                     succRow = createLpRow(lp);
                     buildQueries(queries, lp, suffixes.subList(1, suffixes.size()));
@@ -177,6 +173,7 @@ public class PartialObservationTable<I, O> extends GenericObservationTable<I, Wo
         RowImpl<I> freshSpRow = null;
         List<RowImpl<I>> freshLpRows = new ArrayList<>();
 
+        final List<Word<I>> suffixes = getSuffixes();
         final int numNonEmptySuffixes = suffixes.size() - 1;
 
         for (Row<I> r : lpRows) {
@@ -217,7 +214,7 @@ public class PartialObservationTable<I, O> extends GenericObservationTable<I, Wo
                 checkForNewAlphabetSymbol(sym);
 
                 Word<I> lp = prefix.append(sym);
-                RowImpl<I> lpRow = rowMap.get(lp);
+                RowImpl<I> lpRow = getRow(lp);
                 if (lpRow == null) {
                     lpRow = createLpRow(lp);
                     freshLpRows.add(lpRow);
