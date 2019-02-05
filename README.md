@@ -31,6 +31,7 @@ TTT                 | `DFA` `Mealy` `VPDA`
 
 Additionally, LearnLib offers a variety of tools to ease the practical application of automata learning on real-world systems.
 This includes drivers and mappers for interfacing software systems with the LearnLib API as well as caches and parallelization for improving the overall performance of the learning setup.
+Also, more nuanced setups such as Black-Box-Checking (via [LTSMin][ltsmin]) or inferring partial machines are possible.
 
 While we strive to deliver code at a high quality, please note, that there exist parts of the library that still need thorough testing.
 Contributions -- whether it is in the form of new features, better documentation or tests -- are welcome.
@@ -114,3 +115,4 @@ For developing the code base of LearnLib, it is suggested to use one of the majo
 [maven-central-distr]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib.distribution%22
 [intellij]: https://www.jetbrains.com/idea/
 [eclipse]: https://www.eclipse.org/
+[ltsmin]: https://ltsmin.utwente.nl/
