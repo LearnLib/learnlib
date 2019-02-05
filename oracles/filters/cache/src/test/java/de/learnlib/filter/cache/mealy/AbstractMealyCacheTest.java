@@ -18,8 +18,6 @@ package de.learnlib.filter.cache.mealy;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
-import de.learnlib.filter.cache.LearningCacheOracle;
-import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.statistic.oracle.CounterOracle.MealyCounterOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -31,7 +29,7 @@ import net.automatalib.words.Word;
  * @author frohme
  */
 public abstract class AbstractMealyCacheTest
-        extends AbstractCacheTest<MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
+        extends AbstractCacheTest<MealyCacheOracle<Character, Integer>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 
     private final MealyCounterOracle<Character, Integer> counter;
     protected final Mapping<Integer, Integer> errorMapper;
@@ -60,8 +58,15 @@ public abstract class AbstractMealyCacheTest
     }
 
     @Override
-    protected LearningCacheOracle<MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> getCachedOracle() {
+    protected MealyCacheOracle<Character, Integer> getCachedOracle() {
         return getCache(counter);
+    }
+
+    @Override
+    protected MealyCacheOracle<Character, Integer> getResumedOracle(MealyCacheOracle<Character, Integer> original) {
+        final MealyCacheOracle<Character, Integer> fresh = getCache(counter);
+        serializeResumable(original, fresh);
+        return fresh;
     }
 
     @Override
@@ -79,5 +84,5 @@ public abstract class AbstractMealyCacheTest
         return CacheTestUtils.INPUT_ALPHABET;
     }
 
-    protected abstract MealyLearningCacheOracle<Character, Integer> getCache(MealyMembershipOracle<Character, Integer> delegate);
+    protected abstract MealyCacheOracle<Character, Integer> getCache(MealyMembershipOracle<Character, Integer> delegate);
 }

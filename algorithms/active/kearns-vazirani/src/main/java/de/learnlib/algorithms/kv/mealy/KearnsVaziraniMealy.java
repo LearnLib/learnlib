@@ -28,8 +28,8 @@ import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.acex.impl.AbstractBaseCounterexample;
 import de.learnlib.algorithms.kv.StateInfo;
+import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.MultiDTree;
@@ -55,7 +55,7 @@ import net.automatalib.words.impl.Alphabets;
  * @author Malte Isberner
  */
 public class KearnsVaziraniMealy<I, O>
-        implements MealyLearner<I, O>, SupportsGrowingAlphabet<I>, ResumableLearner<KearnsVaziraniMealyState<I, O>> {
+        implements MealyLearner<I, O>, SupportsGrowingAlphabet<I>, Resumable<KearnsVaziraniMealyState<I, O>> {
 
     private final Alphabet<I> alphabet;
     private final MembershipOracle<I, Word<O>> oracle;

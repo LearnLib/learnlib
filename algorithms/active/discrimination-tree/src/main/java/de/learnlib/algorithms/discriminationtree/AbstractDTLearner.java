@@ -23,8 +23,8 @@ import java.util.List;
 import de.learnlib.algorithms.discriminationtree.hypothesis.DTLearnerHypothesis;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HTransition;
+import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.Query;
@@ -41,9 +41,7 @@ import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
 public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, TP>
-        implements LearningAlgorithm<M, I, D>,
-                   SupportsGrowingAlphabet<I>,
-                   ResumableLearner<DTLearnerState<I, D, SP, TP>> {
+        implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, Resumable<DTLearnerState<I, D, SP, TP>> {
 
     protected final Alphabet<I> alphabet;
     private final MembershipOracle<I, D> oracle;

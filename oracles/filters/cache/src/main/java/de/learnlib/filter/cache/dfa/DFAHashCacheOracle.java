@@ -15,6 +15,7 @@
  */
 package de.learnlib.filter.cache.dfa;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,17 +24,19 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
+import de.learnlib.filter.cache.dfa.DFAHashCacheOracle.DFAHashCacheOracleState;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Word;
 
-public class DFAHashCacheOracle<I> implements DFALearningCacheOracle<I> {
+public class DFAHashCacheOracle<I> implements DFALearningCacheOracle<I>, Resumable<DFAHashCacheOracleState<I>> {
 
     private final MembershipOracle<I, Boolean> delegate;
-    private final Map<Word<I>, Boolean> cache;
+    private Map<Word<I>, Boolean> cache;
     private final Lock cacheLock;
 
     public DFAHashCacheOracle(MembershipOracle<I, Boolean> delegate) {
@@ -75,6 +78,29 @@ public class DFAHashCacheOracle<I> implements DFALearningCacheOracle<I> {
             }
         } finally {
             cacheLock.unlock();
+        }
+    }
+
+    @Override
+    public DFAHashCacheOracleState<I> suspend() {
+        return new DFAHashCacheOracleState<>(cache);
+    }
+
+    @Override
+    public void resume(DFAHashCacheOracleState<I> state) {
+        this.cache = state.getCache();
+    }
+
+    public static class DFAHashCacheOracleState<I> implements Serializable {
+
+        private final Map<Word<I>, Boolean> cache;
+
+        public DFAHashCacheOracleState(Map<Word<I>, Boolean> cache) {
+            this.cache = cache;
+        }
+
+        public Map<Word<I>, Boolean> getCache() {
+            return cache;
         }
     }
 

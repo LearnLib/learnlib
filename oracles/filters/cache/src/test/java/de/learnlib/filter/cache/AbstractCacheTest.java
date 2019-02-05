@@ -15,10 +15,17 @@
  */
 package de.learnlib.filter.cache;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.Query;
@@ -36,12 +43,12 @@ import org.testng.annotations.Test;
  * @author Oliver Bauer
  * @author frohme
  */
-public abstract class AbstractCacheTest<A extends Output<I, D>, I, D> {
+public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>, A extends Output<I, D>, I, D> {
 
     private static final int LENGTH = 5;
     private final Random random = new Random(42);
     private Alphabet<I> alphabet;
-    private LearningCacheOracle<A, I, D> oracle;
+    private OR oracle;
     private List<Query<I, D>> queries;
 
     @BeforeClass
@@ -126,6 +133,27 @@ public abstract class AbstractCacheTest<A extends Output<I, D>, I, D> {
                                target.computeOutput(invalidTargetCE.getInput()));
     }
 
+    @Test(dependsOnMethods = {"testCacheConsistency"})
+    public void testResuming() {
+
+        final OR resumedOracle = getResumedOracle(oracle);
+        final long oldCount = getNumberOfPosedQueries();
+
+        resumedOracle.processQueries(queries);
+
+        // resumed oracle should retain cache information
+        Assert.assertEquals(getNumberOfPosedQueries(), oldCount);
+
+        resumedOracle.answerQuery(generateWord());
+
+        // but also be able to answer new queries
+        // note, however, if we use mapping, it may happen, that a query is not posed, even though the cache does not
+        // have sufficient data on the word. so this check may not be applicable
+        if (!usesMapping()) {
+            Assert.assertEquals(getNumberOfPosedQueries(), oldCount + 1);
+        }
+    }
+
     private Word<I> generateWord() {
         final WordBuilder<I> result = new WordBuilder<>(LENGTH);
 
@@ -138,13 +166,41 @@ public abstract class AbstractCacheTest<A extends Output<I, D>, I, D> {
         return result.toWord();
     }
 
+    protected static <T extends Serializable> void serializeResumable(Resumable<T> source, Resumable<T> target) {
+
+        try {
+            final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+
+            try (ObjectOutputStream objectOut = new ObjectOutputStream(byteOut)) {
+                final T state = source.suspend();
+                objectOut.writeObject(state);
+            }
+
+            try (ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
+                 ObjectInputStream objectIn = new ObjectInputStream(byteIn)) {
+
+                @SuppressWarnings("unchecked")
+                final T serializedState = (T) objectIn.readObject();
+                target.resume(serializedState);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected boolean usesMapping() {
+        return false;
+    }
+
     protected abstract Alphabet<I> getAlphabet();
 
     protected abstract A getTargetModel();
 
     protected abstract A getInvalidTargetModel();
 
-    protected abstract LearningCacheOracle<A, I, D> getCachedOracle();
+    protected abstract OR getCachedOracle();
+
+    protected abstract OR getResumedOracle(OR original);
 
     protected abstract long getNumberOfPosedQueries();
 

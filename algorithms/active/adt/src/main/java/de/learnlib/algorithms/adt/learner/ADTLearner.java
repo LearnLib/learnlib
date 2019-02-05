@@ -52,8 +52,8 @@ import de.learnlib.algorithms.adt.model.ObservationTree;
 import de.learnlib.algorithms.adt.model.ReplacementResult;
 import de.learnlib.algorithms.adt.util.ADTUtil;
 import de.learnlib.algorithms.adt.util.SQOOTBridge;
+import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.SymbolQueryOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexamples.LocalSuffixFinders;
@@ -81,7 +81,7 @@ import net.automatalib.words.impl.Alphabets;
 public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                                          PartialTransitionAnalyzer<ADTState<I, O>, I>,
                                          SupportsGrowingAlphabet<I>,
-                                         ResumableLearner<ADTLearnerState<ADTState<I, O>, I, O>> {
+                                         Resumable<ADTLearnerState<ADTState<I, O>, I, O>> {
 
     private final Alphabet<I> alphabet;
     private final SQOOTBridge<I, O> oracle;

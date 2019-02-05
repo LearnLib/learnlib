@@ -24,9 +24,11 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
+import de.learnlib.filter.cache.mealy.MealyCacheOracle.MealyCacheOracleState;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.commons.util.mappings.Mapping;
@@ -37,6 +39,8 @@ import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Mealy cache. This cache is implemented as a membership oracle: upon construction, it is provided with a delegate
@@ -58,10 +62,13 @@ import net.automatalib.words.WordBuilder;
  *
  * @author Malte Isberner
  */
-public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, SupportsGrowingAlphabet<I> {
+public class MealyCacheOracle<I, O>
+        implements MealyLearningCacheOracle<I, O>, SupportsGrowingAlphabet<I>, Resumable<MealyCacheOracleState<I, O>> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MealyCacheOracle.class);
 
     private final MembershipOracle<I, Word<O>> delegate;
-    private final IncrementalMealyBuilder<I, O> incMealy;
+    private IncrementalMealyBuilder<I, O> incMealy;
     private final Lock incMealyLock;
     private final Comparator<? super Query<I, ?>> queryCmp;
     private final Mapping<? super O, ? extends O> errorSyms;
@@ -225,6 +232,26 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, S
         incMealy.addAlphabetSymbol(symbol);
     }
 
+    @Override
+    public MealyCacheOracleState<I, O> suspend() {
+        return new MealyCacheOracleState<>(incMealy);
+    }
+
+    @Override
+    public void resume(MealyCacheOracleState<I, O> state) {
+        final Class<?> thisClass = this.incMealy.getClass();
+        final Class<?> stateClass = state.getBuilder().getClass();
+
+        if (!thisClass.equals(stateClass)) {
+            LOGGER.warn(
+                    "You currently plan to use a '{}', but the state contained a '{}'. This may yield unexpected behavior.",
+                    thisClass,
+                    stateClass);
+        }
+
+        this.incMealy = state.getBuilder();
+    }
+
     private static final class ReverseLexCmp<I> implements Comparator<Query<I, ?>>, Serializable {
 
         private final Alphabet<I> alphabet;
@@ -236,6 +263,19 @@ public class MealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, S
         @Override
         public int compare(Query<I, ?> o1, Query<I, ?> o2) {
             return -CmpUtil.lexCompare(o1.getInput(), o2.getInput(), alphabet);
+        }
+    }
+
+    public static class MealyCacheOracleState<I, O> implements Serializable {
+
+        private final IncrementalMealyBuilder<I, O> builder;
+
+        MealyCacheOracleState(IncrementalMealyBuilder<I, O> builder) {
+            this.builder = builder;
+        }
+
+        IncrementalMealyBuilder<I, O> getBuilder() {
+            return builder;
         }
     }
 

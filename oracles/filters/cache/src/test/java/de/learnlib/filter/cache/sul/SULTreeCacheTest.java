@@ -16,7 +16,6 @@
 package de.learnlib.filter.cache.sul;
 
 import de.learnlib.api.SUL;
-import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 
 /**
  * @author frohme
@@ -24,7 +23,7 @@ import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 public class SULTreeCacheTest extends AbstractSULCacheTest {
 
     @Override
-    protected MealyLearningCacheOracle<Character, Integer> getCache(SUL<Character, Integer> delegate) {
+    protected SULCache<Character, Integer> getCache(SUL<Character, Integer> delegate) {
         return SULCaches.createTreeCache(getAlphabet(), delegate);
     }
 }

@@ -73,6 +73,11 @@ limitations under the License.
             <artifactId>jsr305</artifactId>
         </dependency>
 
+        <!-- SLF4J -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
 
         <!--
         Test dependencies

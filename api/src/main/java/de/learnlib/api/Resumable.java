@@ -13,34 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.api.algorithm.feature;
+package de.learnlib.api;
 
 import java.io.Serializable;
 
 /**
- * Learning algorithms that implement this interface can be "suspended" by means of exposing a serializable state object
- * that contains all data that is necessary to resume learning process from a previous state.
+ * Data structures that implement this interface can be "suspended" by means of exposing a serializable state object
+ * that contains all data that is necessary to resume from this state at a later point in time.
  *
  * @param <T>
  *         The type of the serializable learner state.
  *
  * @author bainczyk
  */
-public interface ResumableLearner<T extends Serializable> {
+public interface Resumable<T extends Serializable> {
 
     /**
-     * Expose the serializable learner state object.
-     * <p>
-     * Does not stop a running learning process. Since most data structures that are used during learning are mutable,
-     * use this method inside of a learning loop with care.
+     * Expose the serializable state object.
      *
-     * @return The learner state.
+     * @return The state.
      */
     T suspend();
 
     /**
-     * Does not get the learner to continue learning. Instead, the learner updates its internal state according to the
-     * given state object.
+     * Resume the datastructure from a previously serialized point in time.
      *
      * @param state
      *         The learner state.

@@ -18,7 +18,6 @@ package de.learnlib.filter.cache.mealy;
 import de.learnlib.driver.util.MealySimulatorSUL;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
-import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.statistic.oracle.CounterSymbolQueryOracle;
 import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -29,7 +28,7 @@ import net.automatalib.words.Word;
  * @author frohme
  */
 public class SymbolQueryCacheTest
-        extends AbstractCacheTest<MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
+        extends AbstractCacheTest<SymbolQueryCache<Character, Integer>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 
     private final CounterSymbolQueryOracle<Character, Integer> counter;
 
@@ -54,8 +53,15 @@ public class SymbolQueryCacheTest
     }
 
     @Override
-    protected MealyLearningCacheOracle<Character, Integer> getCachedOracle() {
+    protected SymbolQueryCache<Character, Integer> getCachedOracle() {
         return new SymbolQueryCache<>(counter, getAlphabet());
+    }
+
+    @Override
+    protected SymbolQueryCache<Character, Integer> getResumedOracle(SymbolQueryCache<Character, Integer> original) {
+        final SymbolQueryCache<Character, Integer> fresh = new SymbolQueryCache<>(counter, getAlphabet());
+        serializeResumable(original, fresh);
+        return fresh;
     }
 
     @Override

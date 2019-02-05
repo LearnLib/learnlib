@@ -18,8 +18,6 @@ package de.learnlib.filter.cache.dfa;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
-import de.learnlib.filter.cache.LearningCacheOracle;
-import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
 import de.learnlib.filter.statistic.oracle.CounterOracle.DFACounterOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import net.automatalib.automata.fsa.DFA;
@@ -28,7 +26,8 @@ import net.automatalib.words.Alphabet;
 /**
  * @author frohme
  */
-public abstract class AbstractDFACacheTest extends AbstractCacheTest<DFA<?, Character>, Character, Boolean> {
+public abstract class AbstractDFACacheTest
+        extends AbstractCacheTest<DFACacheOracle<Character>, DFA<?, Character>, Character, Boolean> {
 
     private final DFACounterOracle<Character> counter;
 
@@ -47,8 +46,15 @@ public abstract class AbstractDFACacheTest extends AbstractCacheTest<DFA<?, Char
     }
 
     @Override
-    protected LearningCacheOracle<DFA<?, Character>, Character, Boolean> getCachedOracle() {
+    protected DFACacheOracle<Character> getCachedOracle() {
         return getCache(counter);
+    }
+
+    @Override
+    protected DFACacheOracle<Character> getResumedOracle(DFACacheOracle<Character> original) {
+        final DFACacheOracle<Character> fresh = getCache(counter);
+        serializeResumable(original, fresh);
+        return fresh;
     }
 
     @Override
@@ -66,6 +72,6 @@ public abstract class AbstractDFACacheTest extends AbstractCacheTest<DFA<?, Char
         return CacheTestUtils.INPUT_ALPHABET;
     }
 
-    protected abstract DFALearningCacheOracle<Character> getCache(DFAMembershipOracle<Character> delegate);
+    protected abstract DFACacheOracle<Character> getCache(DFAMembershipOracle<Character> delegate);
 
 }

@@ -15,17 +15,19 @@
  */
 package de.learnlib.filter.cache.mealy;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.SymbolQueryOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
+import de.learnlib.filter.cache.mealy.SymbolQueryCache.SymbolQueryCacheState;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.FastMealy;
-import net.automatalib.automata.transducers.impl.FastMealyState;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -44,20 +46,20 @@ import net.automatalib.words.Word;
  *
  * @author frohme
  */
-public class SymbolQueryCache<I, O> implements SymbolQueryOracle<I, O>, MealyLearningCacheOracle<I, O> {
+public class SymbolQueryCache<I, O>
+        implements SymbolQueryOracle<I, O>, MealyLearningCacheOracle<I, O>, Resumable<SymbolQueryCacheState<I, O>> {
 
-    private final FastMealy<I, O> cache;
+    private CompactMealy<I, O> cache;
     private final SymbolQueryOracle<I, O> delegate;
 
     private final List<I> currentTrace;
-    private FastMealyState<O> currentState;
+    private Integer currentState;
     private boolean currentTraceValid;
 
     public SymbolQueryCache(final SymbolQueryOracle<I, O> delegate, final Alphabet<I> alphabet) {
         this.delegate = delegate;
-        this.cache = new FastMealy<>(alphabet);
-        this.cache.addInitialState();
-        this.currentState = this.cache.getInitialState();
+        this.cache = new CompactMealy<>(alphabet);
+        this.currentState = this.cache.addInitialState();
 
         this.currentTrace = new ArrayList<>();
         this.currentTraceValid = false;
@@ -67,7 +69,7 @@ public class SymbolQueryCache<I, O> implements SymbolQueryOracle<I, O>, MealyLea
     public O query(I i) {
 
         if (this.currentTraceValid) {
-            final FastMealyState<O> succ = this.cache.getSuccessor(this.currentState, i);
+            final Integer succ = this.cache.getSuccessor(this.currentState, i);
 
             if (succ != null) {
                 final O output = this.cache.getOutput(this.currentState, i);
@@ -84,11 +86,11 @@ public class SymbolQueryCache<I, O> implements SymbolQueryOracle<I, O>, MealyLea
 
         final O output = this.delegate.query(i);
 
-        final FastMealyState<O> nextState;
-        final FastMealyState<O> succ = this.cache.getSuccessor(this.currentState, i);
+        final Integer nextState;
+        final Integer succ = this.cache.getSuccessor(this.currentState, i);
 
         if (succ == null) {
-            final FastMealyState<O> newState = this.cache.addState();
+            final Integer newState = this.cache.addState();
             this.cache.addTransition(this.currentState, i, newState, output);
             nextState = newState;
         } else {
@@ -126,5 +128,28 @@ public class SymbolQueryCache<I, O> implements SymbolQueryOracle<I, O>, MealyLea
         }
 
         return null;
+    }
+
+    @Override
+    public SymbolQueryCacheState<I, O> suspend() {
+        return new SymbolQueryCacheState<>(cache);
+    }
+
+    @Override
+    public void resume(SymbolQueryCacheState<I, O> state) {
+        this.cache = state.getCache();
+    }
+
+    public static class SymbolQueryCacheState<I, O> implements Serializable {
+
+        private final CompactMealy<I, O> cache;
+
+        SymbolQueryCacheState(CompactMealy<I, O> cache) {
+            this.cache = cache;
+        }
+
+        CompactMealy<I, O> getCache() {
+            return cache;
+        }
     }
 }

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.learnlib.api.algorithm.feature.ResumableLearner;
+import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.ObservationTable;
@@ -50,7 +50,7 @@ import net.automatalib.words.Alphabet;
  * @author Malte Isberner
  */
 public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends MutableDeterministic<S, I, T, SP, TP> & SupportsGrowingAlphabet<I>>
-        extends AbstractLStar<A, I, D> implements ResumableLearner<AutomatonLStarState<I, D, AI, S>> {
+        extends AbstractLStar<A, I, D> implements Resumable<AutomatonLStarState<I, D, AI, S>> {
 
     protected AI internalHyp;
     protected List<StateInfo<S, I>> stateInfos = new ArrayList<>();

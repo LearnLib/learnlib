@@ -27,8 +27,8 @@ import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.acex.impl.AbstractBaseCounterexample;
 import de.learnlib.algorithms.kv.StateInfo;
+import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.BinaryDTree;
@@ -53,7 +53,7 @@ import net.automatalib.words.impl.Alphabets;
  * @author Malte Isberner
  */
 public class KearnsVaziraniDFA<I>
-        implements DFALearner<I>, SupportsGrowingAlphabet<I>, ResumableLearner<KearnsVaziraniDFAState<I>> {
+        implements DFALearner<I>, SupportsGrowingAlphabet<I>, Resumable<KearnsVaziraniDFAState<I>> {
 
     private final Alphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;

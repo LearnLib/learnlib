@@ -15,16 +15,59 @@
  */
 package de.learnlib.filter.cache.dfa;
 
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
+import de.learnlib.filter.cache.AbstractCacheTest;
+import de.learnlib.filter.cache.CacheTestUtils;
+import de.learnlib.filter.statistic.oracle.CounterOracle.DFACounterOracle;
+import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.words.Alphabet;
 
 /**
  * @author frohme
  */
-public class DFAHashCacheTest extends AbstractDFACacheTest {
+public class DFAHashCacheTest
+        extends AbstractCacheTest<DFAHashCacheOracle<Character>, DFA<?, Character>, Character, Boolean> {
+
+    private final DFACounterOracle<Character> counter;
+
+    public DFAHashCacheTest() {
+        counter = new DFACounterOracle<>(new DFASimulatorOracle<>(CacheTestUtils.DFA), "counterOracle");
+    }
 
     @Override
-    protected DFALearningCacheOracle<Character> getCache(DFAMembershipOracle<Character> delegate) {
-        return DFACaches.createHashCache(delegate);
+    protected DFA<?, Character> getTargetModel() {
+        return CacheTestUtils.DFA;
+    }
+
+    @Override
+    protected DFA<?, Character> getInvalidTargetModel() {
+        return CacheTestUtils.DFA_INVALID;
+    }
+
+    @Override
+    protected DFAHashCacheOracle<Character> getCachedOracle() {
+        return DFACaches.createHashCache(counter);
+    }
+
+    @Override
+    protected DFAHashCacheOracle<Character> getResumedOracle(DFAHashCacheOracle<Character> original) {
+        final DFAHashCacheOracle<Character> fresh = DFACaches.createHashCache(counter);
+        serializeResumable(original, fresh);
+        return fresh;
+    }
+
+    @Override
+    protected long getNumberOfPosedQueries() {
+        return counter.getCount();
+    }
+
+    @Override
+    protected boolean supportsPrefixes() {
+        return false;
+    }
+
+    @Override
+    protected Alphabet<Character> getAlphabet() {
+        return CacheTestUtils.INPUT_ALPHABET;
     }
 }

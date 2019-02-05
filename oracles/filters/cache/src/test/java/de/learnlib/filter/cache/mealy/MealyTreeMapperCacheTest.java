@@ -26,4 +26,9 @@ public class MealyTreeMapperCacheTest extends AbstractMealyCacheTest {
     protected MealyCacheOracle<Character, Integer> getCache(MealyMembershipOracle<Character, Integer> delegate) {
         return MealyCaches.createTreeCache(getAlphabet(), super.errorMapper, delegate);
     }
+
+    @Override
+    protected boolean usesMapping() {
+        return true;
+    }
 }

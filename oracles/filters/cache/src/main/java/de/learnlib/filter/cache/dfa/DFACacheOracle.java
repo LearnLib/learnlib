@@ -15,6 +15,7 @@
  */
 package de.learnlib.filter.cache.dfa;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,9 +24,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
+import de.learnlib.filter.cache.dfa.DFACacheOracle.DFACacheOracleState;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.dfa.Acceptance;
@@ -35,6 +38,8 @@ import net.automatalib.incremental.dfa.dag.IncrementalPCDFADAGBuilder;
 import net.automatalib.incremental.dfa.tree.IncrementalDFATreeBuilder;
 import net.automatalib.incremental.dfa.tree.IncrementalPCDFATreeBuilder;
 import net.automatalib.words.Alphabet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * DFA cache. This cache is implemented as a membership oracle: upon construction, it is provided with a delegate
@@ -48,9 +53,12 @@ import net.automatalib.words.Alphabet;
  * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public class DFACacheOracle<I> implements DFALearningCacheOracle<I>, SupportsGrowingAlphabet<I> {
+public class DFACacheOracle<I>
+        implements DFALearningCacheOracle<I>, SupportsGrowingAlphabet<I>, Resumable<DFACacheOracleState<I>> {
 
-    private final IncrementalDFABuilder<I> incDfa;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DFACacheOracle.class);
+
+    private IncrementalDFABuilder<I> incDfa;
     private final Lock incDfaLock;
     private final MembershipOracle<I, Boolean> delegate;
 
@@ -185,5 +193,38 @@ public class DFACacheOracle<I> implements DFALearningCacheOracle<I>, SupportsGro
     @Override
     public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
         incDfa.addAlphabetSymbol(symbol);
+    }
+
+    @Override
+    public DFACacheOracleState<I> suspend() {
+        return new DFACacheOracleState<>(incDfa);
+    }
+
+    @Override
+    public void resume(DFACacheOracleState<I> state) {
+        final Class<?> thisClass = this.incDfa.getClass();
+        final Class<?> stateClass = state.getBuilder().getClass();
+
+        if (!thisClass.equals(stateClass)) {
+            LOGGER.warn(
+                    "You currently plan to use a '{}', but the state contained a '{}'. This may yield unexpected behavior.",
+                    thisClass,
+                    stateClass);
+        }
+
+        this.incDfa = state.getBuilder();
+    }
+
+    public static class DFACacheOracleState<I> implements Serializable {
+
+        private final IncrementalDFABuilder<I> builder;
+
+        DFACacheOracleState(IncrementalDFABuilder<I> builder) {
+            this.builder = builder;
+        }
+
+        IncrementalDFABuilder<I> getBuilder() {
+            return builder;
+        }
     }
 }

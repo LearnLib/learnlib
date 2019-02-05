@@ -32,9 +32,9 @@ import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import com.google.common.collect.Sets;
 import de.learnlib.api.AccessSequenceTransformer;
+import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.algorithm.feature.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
-import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexamples.GlobalSuffixFinder;
@@ -57,7 +57,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
                                        AccessSequenceTransformer<I>,
                                        GlobalSuffixLearnerMealy<I, O>,
                                        SupportsGrowingAlphabet<I>,
-                                       ResumableLearner<MealyDHCState<I, O>> {
+                                       Resumable<MealyDHCState<I, O>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MealyDHC.class);
     private final MembershipOracle<I, Word<O>> oracle;

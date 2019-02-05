@@ -34,8 +34,8 @@ import com.google.common.collect.Iterators;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.api.AccessSequenceProvider;
+import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
@@ -58,7 +58,7 @@ import net.automatalib.words.impl.Alphabets;
  * @author Malte Isberner
  */
 public abstract class AbstractTTTLearner<A, I, D>
-        implements LearningAlgorithm<A, I, D>, SupportsGrowingAlphabet<I>, ResumableLearner<TTTLearnerState<I, D>> {
+        implements LearningAlgorithm<A, I, D>, SupportsGrowingAlphabet<I>, Resumable<TTTLearnerState<I, D>> {
 
     protected final Alphabet<I> alphabet;
     protected final MembershipOracle<I, D> oracle;

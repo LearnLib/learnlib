@@ -18,7 +18,6 @@ package de.learnlib.filter.cache.dfa;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalPCDFADAGBuilder;
@@ -87,7 +86,7 @@ public final class DFACaches {
         return DFACacheOracle.createTreePCCacheOracle(alphabet, mqOracle);
     }
 
-    public static <I> DFALearningCacheOracle<I> createHashCache(MembershipOracle<I, Boolean> mqOracle) {
+    public static <I> DFAHashCacheOracle<I> createHashCache(MembershipOracle<I, Boolean> mqOracle) {
         return new DFAHashCacheOracle<>(mqOracle);
     }
 

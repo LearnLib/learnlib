@@ -15,6 +15,7 @@
  */
 package de.learnlib.filter.cache.sul;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -23,10 +24,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import de.learnlib.api.Resumable;
 import de.learnlib.api.SUL;
 import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.cache.mealy.MealyCacheConsistencyTest;
+import de.learnlib.filter.cache.sul.SULCache.SULCacheState;
 import de.learnlib.oracle.membership.SULOracle;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
@@ -37,6 +40,8 @@ import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A cache to be used with a {@link SUL}.
@@ -56,7 +61,12 @@ import net.automatalib.words.WordBuilder;
  * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O>, SupportsGrowingAlphabet<I> {
+public class SULCache<I, O> implements SUL<I, O>,
+                                       MealyLearningCacheOracle<I, O>,
+                                       SupportsGrowingAlphabet<I>,
+                                       Resumable<SULCacheState<I, O>> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SULCache.class);
 
     private final SULCacheImpl<?, I, ?, O> impl;
 
@@ -106,6 +116,16 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O>
         impl.addAlphabetSymbol(symbol);
     }
 
+    @Override
+    public SULCacheState<I, O> suspend() {
+        return impl.suspend();
+    }
+
+    @Override
+    public void resume(SULCacheState<I, O> state) {
+        this.impl.resume(state);
+    }
+
     /**
      * Implementation class; we need this to bind the {@code T} and {@code S} type parameters of the transition system
      * returned by {@link IncrementalMealyBuilder#asTransitionSystem()}.
@@ -123,10 +143,10 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O>
      */
     @ParametersAreNonnullByDefault
     private static final class SULCacheImpl<S, I, T, O>
-            implements SUL<I, O>, MealyLearningCache<I, O>, SupportsGrowingAlphabet<I> {
+            implements SUL<I, O>, MealyLearningCache<I, O>, SupportsGrowingAlphabet<I>, Resumable<SULCacheState<I, O>> {
 
-        private final IncrementalMealyBuilder<I, O> incMealy;
-        private final MealyTransitionSystem<S, I, T, O> mealyTs;
+        private IncrementalMealyBuilder<I, O> incMealy;
+        private MealyTransitionSystem<S, I, T, O> mealyTs;
         private final SUL<I, O> delegate;
         private final WordBuilder<I> inputWord = new WordBuilder<>();
         private final Lock incMealyLock;
@@ -221,6 +241,42 @@ public class SULCache<I, O> implements SUL<I, O>, MealyLearningCacheOracle<I, O>
         public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
             incMealy.addAlphabetSymbol(symbol);
         }
+
+        @Override
+        public SULCacheState<I, O> suspend() {
+            return new SULCacheState<>(incMealy);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void resume(SULCacheState<I, O> state) {
+            final Class<?> thisClass = this.incMealy.getClass();
+            final Class<?> stateClass = state.getBuilder().getClass();
+
+            if (!thisClass.equals(stateClass)) {
+                LOGGER.warn(
+                        "You currently plan to use a '{}', but the state contained a '{}'. This may yield unexpected behavior.",
+                        thisClass,
+                        stateClass);
+            }
+
+            this.incMealy = state.getBuilder();
+            this.mealyTs = (MealyTransitionSystem<S, I, T, O>) this.incMealy.asTransitionSystem();
+        }
+    }
+
+    public static class SULCacheState<I, O> implements Serializable {
+
+        private final IncrementalMealyBuilder<I, O> builder;
+
+        SULCacheState(IncrementalMealyBuilder<I, O> builder) {
+            this.builder = builder;
+        }
+
+        IncrementalMealyBuilder<I, O> getBuilder() {
+            return builder;
+        }
+
     }
 
 }

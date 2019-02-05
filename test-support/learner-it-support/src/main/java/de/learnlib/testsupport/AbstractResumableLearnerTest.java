@@ -21,8 +21,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
@@ -33,7 +33,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
- * Test class that checks the workflow of a learning algorithm that implements {@link ResumableLearner}.
+ * Test class that checks the workflow of a learning algorithm that implements {@link Resumable}.
  *
  * @param <L>
  *         learner type
@@ -50,7 +50,7 @@ import org.testng.annotations.Test;
  *
  * @author bainczyk
  */
-public abstract class AbstractResumableLearnerTest<L extends ResumableLearner<T> & LearningAlgorithm<M, I, D>, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>, OR, I, D, T extends Serializable> {
+public abstract class AbstractResumableLearnerTest<L extends Resumable<T> & LearningAlgorithm<M, I, D>, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>, OR, I, D, T extends Serializable> {
 
     protected static final int RANDOM_SEED = 42;
 
