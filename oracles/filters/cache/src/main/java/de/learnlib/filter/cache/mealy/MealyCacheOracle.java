@@ -70,7 +70,7 @@ public class MealyCacheOracle<I, O>
     private final MembershipOracle<I, Word<O>> delegate;
     private IncrementalMealyBuilder<I, O> incMealy;
     private final Lock incMealyLock;
-    private final Comparator<? super Query<I, ?>> queryCmp;
+    private Comparator<? super Query<I, ?>> queryCmp;
     private final Mapping<? super O, ? extends O> errorSyms;
 
     MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder,
@@ -250,6 +250,8 @@ public class MealyCacheOracle<I, O>
         }
 
         this.incMealy = state.getBuilder();
+        // use correct input alphabet
+        this.queryCmp = new ReverseLexCmp<>(this.incMealy.getInputAlphabet());
     }
 
     private static final class ReverseLexCmp<I> implements Comparator<Query<I, ?>>, Serializable {
