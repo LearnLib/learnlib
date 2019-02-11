@@ -48,7 +48,7 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
     private static final int LENGTH = 5;
     private final Random random = new Random(42);
     private Alphabet<I> alphabet;
-    private OR oracle;
+    protected OR oracle;
     private List<Query<I, D>> queries;
 
     @BeforeClass
@@ -190,6 +190,10 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
 
     protected boolean usesMapping() {
         return false;
+    }
+
+    protected Query<I, D> getQuery(int i) {
+        return queries.get(i);
     }
 
     protected abstract Alphabet<I> getAlphabet();
