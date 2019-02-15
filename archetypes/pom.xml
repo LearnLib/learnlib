@@ -37,14 +37,14 @@ limitations under the License.
         <module>complete</module>
     </modules>
 
-    <build>
+    <build><!-- Custom resource rules: We use the ${project.version} property in
+        - src/main/resources/META-INF/maven/archetype-metadata.xml
+        - src/test/resources/projects/*/archetype.properties
+
+        This is why the actual files are stored in 'src/{main,test}/resources-template' for which we enable
+        resource-filtering
+        -->
         <resources>
-            <!-- Custom resource rules:
-            We use the ${project.version} property in
-            - src/main/resources-template/META-INF/maven/archetype-metadata.xml
-            - src/test/resources-template/projects/*/archetype.properties
-            These must hence be filtered!
-            -->
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
@@ -69,6 +69,19 @@ limitations under the License.
                 <plugin>
                     <artifactId>maven-archetype-plugin</artifactId>
                     <version>${archetype-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <executions>
+                        <!-- don't check generated archetypes for redundant dependency definitions -->
+                        <execution>
+                            <id>analyze</id>
+                            <configuration>
+                                <skip>true</skip>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
