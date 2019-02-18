@@ -23,7 +23,7 @@ limitations under the License.
     -->
     <groupId>de.learnlib</groupId>
     <artifactId>learnlib-parent</artifactId>
-    <version>0.14.0</version>
+    <version>0.15.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>LearnLib</name>
@@ -152,7 +152,7 @@ limitations under the License.
         <connection>scm:git:git@github.com:LearnLib/learnlib.git</connection>
         <developerConnection>scm:git:git@github.com:LearnLib/learnlib.git</developerConnection>
         <url>https://github.com/LearnLib/learnlib/tree/develop</url>
-        <tag>learnlib-0.14.0</tag>
+        <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <url>https://github.com/LearnLib/learnlib/issues</url>
