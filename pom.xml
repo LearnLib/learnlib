@@ -872,12 +872,12 @@ limitations under the License.
                     <reportSet>
                         <reports>
                             <report>index</report>
-                            <report>license</report>
-                            <report>project-team</report>
-                            <report>mailing-list</report>
+                            <report>licenses</report>
+                            <report>team</report>
+                            <report>mailing-lists</report>
                             <report>scm</report>
-                            <report>issue-tracking</report>
-                            <report>cim</report>
+                            <report>issue-management</report>
+                            <report>ci-management</report>
                             <report>dependencies</report>
                             <report>dependency-info</report>
                             <report>modules</report>
