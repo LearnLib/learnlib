@@ -20,12 +20,12 @@ import java.util.Map;
 
 import de.learnlib.mapper.api.SULMapper;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 
 public class StringMapper<CI> implements SULMapper<String, String, CI, Object> {
 
     private final Map<String, CI> inputs = new HashMap<>();
-    private final Alphabet<String> mappedInputs = new SimpleAlphabet<>();
+    private final Alphabet<String> mappedInputs = new GrowingMapAlphabet<>();
 
     public StringMapper(Alphabet<CI> alphabet) {
         for (CI input : alphabet) {

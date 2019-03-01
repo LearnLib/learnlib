@@ -28,7 +28,7 @@ import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.OutputAndLocalInputs;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,7 @@ public final class PartialObservationTable<I, O> extends AbstractObservationTabl
 
     public PartialObservationTable(Consumer<I> newAlphabetNotifier,
                                    Function<Word<I>, Collection<I>> enabledInputsProvider) {
-        this(new SimpleAlphabet<>(), newAlphabetNotifier, enabledInputsProvider);
+        this(new GrowingMapAlphabet<>(), newAlphabetNotifier, enabledInputsProvider);
     }
 
     private PartialObservationTable(GrowingAlphabet<I> alphabet,

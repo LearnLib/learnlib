@@ -19,8 +19,8 @@ import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.ObservationTableSource;
 import de.learnlib.datastructure.observationtable.reader.SuffixASCIIReader;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -47,7 +47,7 @@ public class SuffixASCIIWriterTest {
         ObservationTable<String, String> ot = ObservationTableSource.otWithFourSuffixes();
         String str = OTUtils.toString(ot, new SuffixASCIIWriter<>());
 
-        Alphabet<String> alphabet = new SimpleAlphabet<>();
+        final GrowingAlphabet<String> alphabet = new GrowingMapAlphabet<>();
         alphabet.add("A");
         alphabet.add("B");
 

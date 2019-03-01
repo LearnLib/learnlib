@@ -43,7 +43,7 @@ import net.automatalib.util.automata.transducers.StateLocalInputMealyUtil;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,9 +84,9 @@ public class PartialLStarMealy<I, O>
                              List<Word<I>> initialSuffixes,
                              ObservationTableCEXHandler<? super I, ? super Word<OutputAndLocalInputs<I, O>>> cexHandler,
                              ClosingStrategy<? super I, ? super Word<OutputAndLocalInputs<I, O>>> closingStrategy) {
-        this(new SimpleAlphabet<>(),
+        this(new GrowingMapAlphabet<>(),
              oracle,
-             new CompactMealy<>(new SimpleAlphabet<>()),
+             new CompactMealy<>(new GrowingMapAlphabet<>()),
              initialPrefixes,
              initialSuffixes,
              cexHandler,
@@ -204,7 +204,7 @@ public class PartialLStarMealy<I, O>
             inputSymbols.addAll(observationTable.cellContents(r, 0).getSymbol(0).getLocalInputs());
         }
 
-        observationTable.setInputAlphabet(new SimpleAlphabet<>(inputSymbols));
+        observationTable.setInputAlphabet(new GrowingMapAlphabet<>(inputSymbols));
         observationTable.setNewAlphabetNotifier(this::propagateNewAlphabetSymbol);
     }
 }

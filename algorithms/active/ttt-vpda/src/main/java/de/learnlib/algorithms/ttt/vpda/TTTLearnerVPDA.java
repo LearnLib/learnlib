@@ -335,7 +335,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 
         for (HypLoc<I> loc : blockRoot.subtreeLocations()) {
             int i = 0;
-            for (I intSym : alphabet.getInternalSymbols()) {
+            for (I intSym : alphabet.getInternalAlphabet()) {
                 DTNode<I> currLca = lcas[i];
                 AbstractHypTrans<I> trans = hypothesis.getInternalTransition(loc, intSym);
                 assert trans.getTargetNode() != null;
@@ -346,8 +346,8 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
                 }
                 i++;
             }
-            for (I retSym : alphabet.getReturnSymbols()) {
-                for (I callSym : alphabet.getCallSymbols()) {
+            for (I retSym : alphabet.getReturnAlphabet()) {
+                for (I callSym : alphabet.getCallAlphabet()) {
                     for (HypLoc<I> stackLoc : hypothesis.getLocations()) {
                         AbstractHypTrans<I> trans = hypothesis.getReturnTransition(loc, retSym, stackLoc, callSym);
                         DTNode<I> currLca = lcas[i];
@@ -376,7 +376,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
         Splitter<I> shortestSplitter = null;
 
         int i = 0;
-        for (I intSym : alphabet.getInternalSymbols()) {
+        for (I intSym : alphabet.getInternalAlphabet()) {
             DTNode<I> currLca = lcas[i];
             if (!currLca.isLeaf() && !currLca.isTemp()) {
                 Splitter<I> splitter = new Splitter<>(intSym, currLca);
@@ -388,8 +388,8 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
             }
             i++;
         }
-        for (I retSym : alphabet.getReturnSymbols()) {
-            for (I callSym : alphabet.getCallSymbols()) {
+        for (I retSym : alphabet.getReturnAlphabet()) {
+            for (I callSym : alphabet.getCallAlphabet()) {
                 for (HypLoc<I> stackLoc : hypothesis.getLocations()) {
                     DTNode<I> currLca = lcas[i];
                     assert currLca != null;

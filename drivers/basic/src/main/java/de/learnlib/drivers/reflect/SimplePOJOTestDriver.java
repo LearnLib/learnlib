@@ -23,7 +23,7 @@ import de.learnlib.drivers.api.TestDriver;
 import net.automatalib.commons.util.ReflectUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 
 /**
  * Simple test driver for plain java objects. Uses a very simple data mapper without state or storage. Inputs cannot
@@ -34,7 +34,7 @@ import net.automatalib.words.impl.SimpleAlphabet;
 public final class SimplePOJOTestDriver
         extends TestDriver<MethodInput, MethodOutput, ConcreteMethodInput, Object> {
 
-    private final GrowingAlphabet<MethodInput> inputs = new SimpleAlphabet<>();
+    private final GrowingAlphabet<MethodInput> inputs = new GrowingMapAlphabet<>();
 
     private final Class<?> instanceClass;
 

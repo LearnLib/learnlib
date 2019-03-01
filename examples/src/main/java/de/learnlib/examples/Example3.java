@@ -33,7 +33,7 @@ import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 
 /**
  * This example shows how to use the reuse filter on the {@link BoundedStringQueue} of {@link
@@ -53,7 +53,7 @@ public class Example3 {
     private final List<Word<String>> initialSuffixes;
 
     public Example3() {
-        sigma = new SimpleAlphabet<>();
+        sigma = new GrowingMapAlphabet<>();
         sigma.add(OFFER_1);
         sigma.add(OFFER_2);
         sigma.add(POLL);

@@ -34,7 +34,7 @@ import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 
 /**
  * Mealy cache. This cache is implemented as a membership oracle: upon construction, it is provided with a delegate
@@ -215,10 +215,10 @@ class InternalMealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, 
 
     private static final class DynamicSymbolComparator<I> implements Comparator<I>, Serializable {
 
-        private final SimpleAlphabet<I> alphabet;
+        private final GrowingMapAlphabet<I> alphabet;
 
         DynamicSymbolComparator() {
-            this.alphabet = new SimpleAlphabet<>();
+            this.alphabet = new GrowingMapAlphabet<>();
         }
 
         @Override

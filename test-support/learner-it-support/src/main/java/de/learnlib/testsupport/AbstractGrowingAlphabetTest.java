@@ -32,7 +32,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -97,7 +97,7 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
      */
     @Test
     public void testGrowingAlphabet() {
-        final GrowingAlphabet<I> alphabet = new SimpleAlphabet<>(initialAlphabet);
+        final GrowingAlphabet<I> alphabet = new GrowingMapAlphabet<>(initialAlphabet);
         final L leaner = getLearner(oracle, alphabet);
 
         testAlphabet(alphabet, leaner, Collections.singletonList(leaner::addAlphabetSymbol));
@@ -105,7 +105,7 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
 
     @Test
     public void testGrowingAlphabetWithCache() {
-        final GrowingAlphabet<I> alphabet = new SimpleAlphabet<>(initialAlphabet);
+        final GrowingAlphabet<I> alphabet = new GrowingMapAlphabet<>(initialAlphabet);
         final List<Consumer<I>> symbolListener = new ArrayList<>();
         final OR cachedOracle = getCachedOracle(alphabet, oracle, symbolListener);
         final L learner = getLearner(cachedOracle, alphabet);
