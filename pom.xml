@@ -218,7 +218,7 @@ limitations under the License.
         <tidy-pom.version>1.1.0</tidy-pom.version>
 
         <!-- dependency versions -->
-        <automatalib.version>0.8.0</automatalib.version>
+        <automatalib.version>0.9.0-SNAPSHOT</automatalib.version>
         <buildergen.version>0.1</buildergen.version>
         <cacio.version>1.9</cacio.version>
         <checkstyle.version>8.14</checkstyle.version>
