@@ -27,9 +27,4 @@ public class HypRetTrans<I> extends AbstractHypTrans<I> {
         super(stackLoc.getAccessSequence().append(callSym).concat(src.getAccessSequence().append(retSym)));
     }
 
-    @Override
-    public boolean isInternal() {
-        return false;
-    }
-
 }

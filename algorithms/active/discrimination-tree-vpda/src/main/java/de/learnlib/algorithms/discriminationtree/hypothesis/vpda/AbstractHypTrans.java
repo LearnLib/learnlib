@@ -77,8 +77,6 @@ public abstract class AbstractHypTrans<I> extends IntrusiveListElemImpl<Abstract
         return aseq;
     }
 
-    public abstract boolean isInternal();
-
     public void makeTree(HypLoc<I> tgtLoc) {
         assert !isTree();
         this.treeTarget = tgtLoc;

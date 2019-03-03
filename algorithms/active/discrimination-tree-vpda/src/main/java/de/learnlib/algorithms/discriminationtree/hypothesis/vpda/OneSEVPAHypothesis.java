@@ -95,7 +95,7 @@ public class OneSEVPAHypothesis<I> extends AbstractOneSEVPA<HypLoc<I>, I> {
 
     @Override
     public int getLocationId(HypLoc<I> loc) {
-        return loc.index;
+        return loc.getIndex();
     }
 
     @Override

@@ -23,20 +23,8 @@ package de.learnlib.algorithms.discriminationtree.hypothesis.vpda;
  */
 public class HypIntTrans<I> extends AbstractHypTrans<I> {
 
-    private final I intSymbol;
-
     public HypIntTrans(HypLoc<I> src, I intSym) {
         super(src.getAccessSequence().append(intSym));
-        this.intSymbol = intSym;
-    }
-
-    public I getIntSymbol() {
-        return intSymbol;
-    }
-
-    @Override
-    public boolean isInternal() {
-        return true;
     }
 
 }

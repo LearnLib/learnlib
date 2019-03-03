@@ -36,7 +36,7 @@ public class HypLoc<I> implements AccessSequenceProvider<I> {
     private final Word<I> aseq;
     private final ArrayStorage<HypIntTrans<I>> intSuccessors;
     private final ArrayStorage<List<HypRetTrans<I>>> returnSuccessors;
-    final int index;
+    private final int index;
     private boolean accepting;
     private DTNode<I> leaf;
 
