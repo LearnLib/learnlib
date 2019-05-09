@@ -39,68 +39,125 @@ import net.automatalib.words.Word;
  *         output domain type
  *
  * @author Malte Isberner
+ * @author frohme
  */
 public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 
-    private int maxDepth;
+    private final int lookahead;
+    private final int expectedSize;
 
     /**
-     * Constructor.
+     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int)} that sets {@code
+     * expectedSize} to 0.
      *
      * @param sulOracle
      *         interface to the system under learning
-     * @param maxDepth
- *         the maximum length of the "middle" part of the test cases
+     * @param lookahead
+     *         the maximum length of the "middle" part of the test cases
      */
-    public WMethodEQOracle(MembershipOracle<I, D> sulOracle, int maxDepth) {
-        this(sulOracle, maxDepth, 1);
+    public WMethodEQOracle(MembershipOracle<I, D> sulOracle, int lookahead) {
+        this(sulOracle, lookahead, 0);
     }
 
     /**
-     * Constructor.
-     *  @param sulOracle
+     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int, int)} that sets {@code
+     * batchSize} to 1.
+     *
+     * @param sulOracle
      *         interface to the system under learning
-     * @param maxDepth
-     *         the maximum length of the "middle" part of the test cases
-     * @param batchSize
-     *         size of the batches sent to the membership oracle
+     * @param lookahead
+     *         the (minimal) maximum length of the "middle" part of the test cases
+     * @param expectedSize
+     *         the expected size of the system under learning
      */
-    public WMethodEQOracle(MembershipOracle<I, D> sulOracle, int maxDepth, int batchSize) {
-        super(sulOracle, batchSize);
-           this.maxDepth = maxDepth;
+    public WMethodEQOracle(MembershipOracle<I, D> sulOracle, int lookahead, int expectedSize) {
+        this(sulOracle, lookahead, expectedSize, 1);
     }
 
-    public void setMaxDepth(int maxDepth) {
-        this.maxDepth = maxDepth;
+    /**
+     * Constructor. Uses {@link Math#max(int, int) Math.max}{@code (lookahead, expectedSize - }{@link
+     * UniversalDeterministicAutomaton#size() hypothesis.size()}{@code )} to determine the maximum length of sequences,
+     * that should be appended to the transition-cover part of the test sequence to account for the fact that the system
+     * under learning may have more states than the current hypothesis.
+     *
+     * @param sulOracle
+     *         interface to the system under learning
+     * @param lookahead
+     *         the (minimal) maximum length of the "middle" part of the test cases
+     * @param expectedSize
+     *         the expected size of the system under learning
+     * @param batchSize
+     *         size of the batches sent to the membership oracle
+     *
+     * @see WMethodTestsIterator
+     */
+    public WMethodEQOracle(MembershipOracle<I, D> sulOracle, int lookahead, int expectedSize, int batchSize) {
+        super(sulOracle, batchSize);
+        this.lookahead = lookahead;
+        this.expectedSize = expectedSize;
     }
 
     @Override
     protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
-        return Streams.stream(new WMethodTestsIterator<>(hypothesis, inputs, maxDepth));
+        return Streams.stream(new WMethodTestsIterator<>(hypothesis,
+                                                         inputs,
+                                                         Math.max(lookahead, expectedSize - hypothesis.size())));
     }
 
     public static class DFAWMethodEQOracle<I> extends WMethodEQOracle<DFA<?, I>, I, Boolean>
             implements DFAEquivalenceOracle<I> {
 
-        public DFAWMethodEQOracle(MembershipOracle<I, Boolean> sulOracle, int maxDepth) {
-            super(sulOracle, maxDepth);
+        /**
+         * See {@link WMethodEQOracle#WMethodEQOracle(MembershipOracle, int)}.
+         */
+        public DFAWMethodEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead) {
+            super(sulOracle, lookahead);
         }
 
-        public DFAWMethodEQOracle(MembershipOracle<I, Boolean> sulOracle, int maxDepth, int batchSize) {
-            super(sulOracle, maxDepth, batchSize);
+        /**
+         * See {@link WMethodEQOracle#WMethodEQOracle(MembershipOracle, int, int)}.
+         */
+        public DFAWMethodEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead, int expectedSize) {
+            super(sulOracle, lookahead, expectedSize);
+        }
+
+        /**
+         * See {@link WMethodEQOracle#WMethodEQOracle(MembershipOracle, int, int, int)}.
+         */
+        public DFAWMethodEQOracle(MembershipOracle<I, Boolean> sulOracle,
+                                  int lookahead,
+                                  int expectedSize,
+                                  int batchSize) {
+            super(sulOracle, lookahead, expectedSize, batchSize);
         }
     }
 
     public static class MealyWMethodEQOracle<I, O> extends WMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
             implements MealyEquivalenceOracle<I, O> {
 
-        public MealyWMethodEQOracle(MembershipOracle<I, Word<O>> sulOracle, int maxDepth) {
-            super(sulOracle, maxDepth);
+        /**
+         * See {@link WMethodEQOracle#WMethodEQOracle(MembershipOracle, int)}.
+         */
+        public MealyWMethodEQOracle(MembershipOracle<I, Word<O>> sulOracle, int lookahead) {
+            super(sulOracle, lookahead);
         }
 
-        public MealyWMethodEQOracle(MembershipOracle<I, Word<O>> sulOracle, int maxDepth, int batchSize) {
-            super(sulOracle, maxDepth, batchSize);
+        /**
+         * See {@link WMethodEQOracle#WMethodEQOracle(MembershipOracle, int, int)}.
+         */
+        public MealyWMethodEQOracle(MembershipOracle<I, Word<O>> sulOracle, int lookahead, int expectedSize) {
+            super(sulOracle, lookahead, expectedSize);
+        }
+
+        /**
+         * See {@link WMethodEQOracle#WMethodEQOracle(MembershipOracle, int, int, int)}.
+         */
+        public MealyWMethodEQOracle(MembershipOracle<I, Word<O>> sulOracle,
+                                    int lookahead,
+                                    int expectedSize,
+                                    int batchSize) {
+            super(sulOracle, lookahead, expectedSize, batchSize);
         }
     }
 
