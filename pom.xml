@@ -193,19 +193,17 @@ limitations under the License.
         <antrun-plugin.version>1.8</antrun-plugin.version>
         <archetype-plugin.version>3.0.1</archetype-plugin.version>
         <assembly-plugin.version>3.1.0</assembly-plugin.version>
-        <buildhelper-plugin.version>3.0.0</buildhelper-plugin.version>
         <checkstyle-plugin.version>3.0.0</checkstyle-plugin.version>
         <compiler-plugin.version>3.8.0</compiler-plugin.version>
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
         <dependency-plugin.version>3.1.1</dependency-plugin.version>
         <deploy-plugin.version>3.0.0-M1</deploy-plugin.version>
         <enforcer-plugin.version>3.0.0-M2</enforcer-plugin.version>
-        <exec-plugin.version>1.6.0</exec-plugin.version>
         <failsafe-plugin.version>2.22.1</failsafe-plugin.version>
         <gpg-plugin.version>1.6</gpg-plugin.version>
         <info-reports-plugin.version>3.0.0</info-reports-plugin.version>
         <jacoco-plugin.version>0.8.2</jacoco-plugin.version>
-        <javadoc-plugin.version>3.0.1</javadoc-plugin.version>
+        <javadoc-plugin.version>3.1.0</javadoc-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <pmd-plugin.version>3.10.0</pmd-plugin.version>
         <release-plugin.version>2.5.3</release-plugin.version>
@@ -680,11 +678,6 @@ limitations under the License.
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <version>${exec-plugin.version}</version>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${surefire-plugin.version}</version>
@@ -740,11 +733,6 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>${assembly-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>${buildhelper-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
