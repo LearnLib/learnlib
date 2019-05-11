@@ -45,9 +45,9 @@ jobs:
   include:
     # Run code analysis and documentation generation only in our core environments (since it's an expensive task)
     - jdk: openjdk8
-      script: mvn install -B -Pintegration-tests,code-analysis,bundles
+      script: mvn install site -B -Pintegration-tests,code-analysis,bundles
     - jdk: openjdk11
-      script: mvn install -B -Pintegration-tests,code-analysis,bundles
+      script: mvn install site -B -Pintegration-tests,code-analysis,bundles
     # Run "integration" tests in other environments
     - stage: "Integration Tests"
       jdk: openjdk11
