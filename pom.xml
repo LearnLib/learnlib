@@ -189,6 +189,9 @@ limitations under the License.
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
+        <!-- custom properties -->
+        <javadoc-plugin.conf.release>8</javadoc-plugin.conf.release>
+
         <!-- plugin versions -->
         <antrun-plugin.version>1.8</antrun-plugin.version>
         <archetype-plugin.version>3.0.1</archetype-plugin.version>
@@ -876,17 +879,6 @@ limitations under the License.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <quiet>true</quiet>
-                    <source>${maven.compiler.source}</source>
-                    <detectLinks>true</detectLinks>
-                    <linksource>false</linksource>
-                    <links>
-                        <link>${java.apidocs}</link>
-                        <link>${guava.apidocs}</link>
-                        <link>${automatalib.apidocs}</link>
-                    </links>
-                </configuration>
                 <reportSets>
                     <reportSet>
                         <id>non-aggregate</id>
@@ -1185,6 +1177,26 @@ limitations under the License.
                         </configuration>
                     </plugin>
                 </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jdk9+-compat</id>
+            <activation>
+                <jdk>[9,)</jdk>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <version>${javadoc-plugin.version}</version>
+                            <configuration>
+                                <release>${javadoc-plugin.conf.release}</release>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
             </build>
         </profile>
     </profiles>
