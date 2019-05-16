@@ -77,6 +77,12 @@ public class ExamplesTest {
     }
 
     @Test
+    public void testPassiveExample1() {
+        checkJVMCompatibility();
+        de.learnlib.examples.passive.Example1.main(new String[0]);
+    }
+
+    @Test
     public void testSLIExample1() {
         de.learnlib.examples.sli.Example1.main(new String[0]);
     }
