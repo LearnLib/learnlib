@@ -68,7 +68,7 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
     /**
      * Default constructor.
      */
-    private ReuseOracle(ReuseOracleBuilder<S, I, O> builder) {
+    ReuseOracle(ReuseOracleBuilder<S, I, O> builder) {
         this.executableOracles = ThreadLocal.withInitial(builder.oracleSupplier::get);
         this.tree = new ReuseTreeBuilder<S, I, O>(builder.alphabet).withSystemStateHandler(builder.systemStateHandler)
                                                                    .withFailureOutputs(builder.failureOutputSymbols)

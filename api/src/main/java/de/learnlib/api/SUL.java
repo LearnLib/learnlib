@@ -50,9 +50,12 @@ public interface SUL<I, O> {
      *         input to the SUL
      *
      * @return output of SUL
+     *
+     * @throws SULException
+     *         if the input symbol cannot be executed on the SUL
      */
     @Nullable
-    O step(@Nullable I in) throws SULException;
+    O step(@Nullable I in);
 
     /**
      * Returns whether this SUL is capable of {@link #fork() forking}.
@@ -84,7 +87,7 @@ public interface SUL<I, O> {
      *         if this SUL can't be forked.
      */
     @Nonnull
-    default SUL<I, O> fork() throws UnsupportedOperationException {
+    default SUL<I, O> fork() {
         throw new UnsupportedOperationException();
     }
 

@@ -16,7 +16,6 @@
 package de.learnlib.mapper;
 
 import de.learnlib.api.SUL;
-import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.api.ExecutableInput;
 
 /**
@@ -40,7 +39,7 @@ public class ExecutableInputSUL<I extends ExecutableInput<? extends O>, O> imple
     }
 
     @Override
-    public O step(I in) throws SULException {
+    public O step(I in) {
         return in.execute();
     }
 

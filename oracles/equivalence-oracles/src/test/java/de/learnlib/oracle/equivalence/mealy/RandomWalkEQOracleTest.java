@@ -20,7 +20,6 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import de.learnlib.api.SUL;
-import de.learnlib.api.exception.SULException;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
@@ -92,7 +91,7 @@ public class RandomWalkEQOracleTest {
 
         @Nullable
         @Override
-        public Character step(@Nullable Character in) throws SULException {
+        public Character step(@Nullable Character in) {
             Assert.assertTrue(this.calledPre);
             inputLength++;
 

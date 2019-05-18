@@ -36,7 +36,7 @@ public interface PartialTransitionAnalyzer<S, I> {
     /**
      * Global exception instance to avoid (unnecessary) re-instantiation.
      */
-    RuntimeException HYPOTHESIS_MODIFICATION_EXCEPTION = new HypothesisModificationException();
+    HypothesisModificationException HYPOTHESIS_MODIFICATION_EXCEPTION = new HypothesisModificationException();
 
     /**
      * Check whether the transition in question is defined or not.
@@ -63,7 +63,7 @@ public interface PartialTransitionAnalyzer<S, I> {
      *         if closing the transition (sifting in the ADT) discovered a new hypothesis state and thus potentially
      *         invalidates previously observed behavior
      */
-    void closeTransition(S state, I input) throws HypothesisModificationException;
+    void closeTransition(S state, I input);
 
     /**
      * A helper exception to interrupt computations on an invalid hypothesis. Does not record the stacktrace when thrown
@@ -71,12 +71,12 @@ public interface PartialTransitionAnalyzer<S, I> {
      */
     class HypothesisModificationException extends RuntimeException {
 
-        public HypothesisModificationException() {
+        HypothesisModificationException() {
             super(null, null, false, false);
         }
 
         @Override
-        public synchronized Throwable fillInStackTrace() {
+        public Throwable fillInStackTrace() {
             return this;
         }
 

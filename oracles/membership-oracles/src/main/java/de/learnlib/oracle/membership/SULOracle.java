@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.SUL;
-import de.learnlib.api.exception.SULException;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
@@ -73,7 +72,7 @@ public class SULOracle<I, O> implements MealyMembershipOracle<I, O> {
     }
 
     @Nonnull
-    public static <I, O> Word<O> answerQuery(SUL<I, O> sul, Word<I> prefix, Word<I> suffix) throws SULException {
+    public static <I, O> Word<O> answerQuery(SUL<I, O> sul, Word<I> prefix, Word<I> suffix) {
         sul.pre();
         try {
             // Prefix: Execute symbols, don't record output

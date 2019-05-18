@@ -205,16 +205,16 @@ limitations under the License.
         <failsafe-plugin.version>2.22.1</failsafe-plugin.version>
         <gpg-plugin.version>1.6</gpg-plugin.version>
         <info-reports-plugin.version>3.0.0</info-reports-plugin.version>
-        <jacoco-plugin.version>0.8.2</jacoco-plugin.version>
+        <jacoco-plugin.version>0.8.4</jacoco-plugin.version>
         <javadoc-plugin.version>3.1.0</javadoc-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
-        <pmd-plugin.version>3.10.0</pmd-plugin.version>
+        <pmd-plugin.version>3.12.0</pmd-plugin.version>
         <release-plugin.version>2.5.3</release-plugin.version>
         <resources-plugin.version>3.0.2</resources-plugin.version>
         <scm-publish-plugin.version>3.0.0</scm-publish-plugin.version>
         <site-plugin.version>3.7.1</site-plugin.version>
         <source-plugin.version>3.0.1</source-plugin.version>
-        <spotbugs-plugin.version>3.1.7</spotbugs-plugin.version>
+        <spotbugs-plugin.version>3.1.11</spotbugs-plugin.version>
         <surefire-plugin.version>2.22.1</surefire-plugin.version>
         <tidy-pom.version>1.1.0</tidy-pom.version>
 
@@ -222,7 +222,7 @@ limitations under the License.
         <automatalib.version>0.9.0-SNAPSHOT</automatalib.version>
         <buildergen.version>0.1</buildergen.version>
         <cacio.version>1.9</cacio.version>
-        <checkstyle.version>8.18</checkstyle.version>
+        <checkstyle.version>8.19</checkstyle.version>
         <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
         <guava.version>27.0-jre</guava.version>
         <jmockit.version>1.43</jmockit.version>

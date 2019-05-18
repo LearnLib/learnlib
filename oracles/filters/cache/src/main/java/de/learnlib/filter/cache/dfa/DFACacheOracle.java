@@ -30,7 +30,6 @@ import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
 import de.learnlib.filter.cache.dfa.DFACacheOracle.DFACacheOracleState;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;
@@ -191,7 +190,7 @@ public class DFACacheOracle<I>
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
         incDfa.addAlphabetSymbol(symbol);
     }
 

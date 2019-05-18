@@ -138,9 +138,11 @@ public class DynamicParallelOracleBuilder<I, D> {
         }
 
         @Override
-        public synchronized MembershipOracle<I, D> get() {
-            if (idx < oracles.size()) {
-                return oracles.get(idx++);
+        public MembershipOracle<I, D> get() {
+            synchronized (this) {
+                if (idx < oracles.size()) {
+                    return oracles.get(idx++);
+                }
             }
 
             throw new IllegalStateException(

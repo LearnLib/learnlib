@@ -84,8 +84,11 @@ public final class OTUtils {
         }
     }
 
-    public static <I, D> void displayHTMLInBrowser(ObservationTable<I, D> table)
-            throws IOException, UnsupportedOperationException {
+    /**
+     * Convenience method for {@link #displayHTMLInBrowser(ObservationTable, Function, Function)} that uses {@link
+     * Object#toString()} to render words and outputs of the observation table.
+     */
+    public static <I, D> void displayHTMLInBrowser(ObservationTable<I, D> table) throws IOException {
         displayHTMLInBrowser(table, Object::toString, Object::toString);
     }
 
@@ -118,7 +121,7 @@ public final class OTUtils {
     public static <I, D> void displayHTMLInBrowser(ObservationTable<I, D> table,
                                                    Function<? super Word<? extends I>, ? extends String> wordToString,
                                                    Function<? super D, ? extends String> outputToString)
-            throws IOException, UnsupportedOperationException {
+            throws IOException {
         File tempFile = File.createTempFile("learnlib-ot", ".html");
 
         // Doing this might cause problems if the startup delay of the browser

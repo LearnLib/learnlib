@@ -32,7 +32,7 @@ public interface ObservableSUL<S, I, O> extends SUL<I, O> {
 
     @Nonnull
     @Override
-    default ObservableSUL<S, I, O> fork() throws UnsupportedOperationException {
+    default ObservableSUL<S, I, O> fork() {
         throw new UnsupportedOperationException();
     }
 

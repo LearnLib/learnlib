@@ -43,7 +43,6 @@ import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.mappings.MapMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -223,7 +222,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     private void scheduleSuccessors(QueueElement<I, O> elem,
                                     Integer state,
                                     Queue<QueueElement<I, O>> queue,
-                                    List<Word<O>> sig) throws IllegalArgumentException {
+                                    List<Word<O>> sig) {
         for (int i = 0; i < alphabet.size(); ++i) {
             // retrieve I/O for transition
             I input = alphabet.getSymbol(i);
@@ -250,7 +249,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
             Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
@@ -327,7 +326,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
         private final O transOut;
         private final int depth;
 
-        private QueueElement(Integer parentState, QueueElement<I, O> parentElement, I transIn, O transOut) {
+        QueueElement(Integer parentState, QueueElement<I, O> parentElement, I transIn, O transOut) {
             this.parentState = parentState;
             this.parentElement = parentElement;
             this.transIn = transIn;

@@ -24,7 +24,6 @@ import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.words.Word;
 
 /**
@@ -86,7 +85,7 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
      */
     @Nullable
     @Override
-    public DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs) throws ModelCheckingException {
+    public DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs) {
         final DefaultQuery<I, D> result = propertyOracle.disprove(hypothesis, inputs);
         if (result != null) {
             LOGGER.logEvent("Property violated: '" + toString() + "'");
@@ -99,12 +98,11 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
     /**
      * Try to find a counterexample to the given hypothesis, and log whenever such a spurious counterexample is found.
      *
-     * @see PropertyOracle#findCounterExample(Object, Collection)
+     * @see PropertyOracle#findCounterExample(Output, Collection)
      */
     @Nullable
     @Override
-    public DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) throws
-                                                                                               ModelCheckingException {
+    public DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {
         final DefaultQuery<I, D> result = propertyOracle.findCounterExample(hypothesis, inputs);
         if (result != null) {
             LOGGER.logEvent("Spurious counterexample found for property: '" + toString() + "'");

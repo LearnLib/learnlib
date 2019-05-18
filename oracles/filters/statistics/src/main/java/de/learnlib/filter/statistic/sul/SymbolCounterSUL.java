@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.SUL;
-import de.learnlib.api.exception.SULException;
 import de.learnlib.api.statistic.StatisticSUL;
 import de.learnlib.filter.statistic.Counter;
 
@@ -51,7 +50,7 @@ public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
 
     @Override
     @Nullable
-    public O step(@Nullable I in) throws SULException {
+    public O step(@Nullable I in) {
         counter.increment();
         return sul.step(in);
     }

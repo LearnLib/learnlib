@@ -52,7 +52,7 @@ public class ADTResetNode<S, I, O> implements ADTNode<S, I, O>, Serializable {
     }
 
     @Override
-    public void setSymbol(I symbol) throws UnsupportedOperationException {
+    public void setSymbol(I symbol) {
         throw new UnsupportedOperationException("Reset nodes do not have a symbol");
     }
 

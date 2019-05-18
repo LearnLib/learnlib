@@ -63,12 +63,12 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
     private final int maxSystemStates;
     private final AccessPolicy accessPolicy;
     private final EvictPolicy evictPolicy;
-    /** Maybe reset to zero, see {@link ReuseTree#clearTree()}. */
+    /** May be reset to zero, see {@link ReuseTree#clearTree()}. */
     private int nodeCount;
-    /** Maybe reinitialized , see {@link ReuseTree#clearTree()}. */
+    /** May be reinitialized, see {@link ReuseTree#clearTree()}. */
     private ReuseNode<S, I, O> root;
 
-    private ReuseTree(ReuseTreeBuilder<S, I, O> builder) {
+    ReuseTree(ReuseTreeBuilder<S, I, O> builder) {
         this.alphabet = builder.alphabet;
         this.invalidateSystemstates = builder.invalidateSystemstates;
         SystemStateHandler<S> handler = builder.systemStateHandler;
@@ -104,7 +104,7 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
      *
      * @return The output for {@code query} if already known from the {@link ReuseTree} or {@code null} if unknown.
      */
-    public synchronized Word<O> getOutput(final Word<I> query) {
+    public Word<O> getOutput(final Word<I> query) {
         if (query == null) {
             String msg = "Query is not allowed to be null.";
             throw new IllegalArgumentException(msg);
@@ -112,14 +112,16 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
 
         final WordBuilder<O> output = new WordBuilder<>();
 
-        ReuseNode<S, I, O> sink = getRoot();
-        for (final I symbol : query) {
-            final ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(alphabet.getSymbolIndex(symbol));
-            if (edge == null) {
-                return null;
+        synchronized (this) {
+            ReuseNode<S, I, O> sink = getRoot();
+            for (final I symbol : query) {
+                final ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(alphabet.getSymbolIndex(symbol));
+                if (edge == null) {
+                    return null;
+                }
+                output.add(edge.getOutput());
+                sink = edge.getTarget();
             }
-            output.add(edge.getOutput());
-            sink = edge.getTarget();
         }
 
         return output.toWord();
@@ -144,7 +146,7 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
      * @return The partial output for {@code query} from the {@link ReuseTree} with outputs for "reflexive" edges filled
      * with {@code null} for "non-reflexive" and not-known parts of the input word.
      */
-    public synchronized Word<O> getPartialOutput(Word<I> query) {
+    public Word<O> getPartialOutput(Word<I> query) {
         if (query == null) {
             String msg = "Query is not allowed to be null.";
             throw new IllegalArgumentException(msg);
@@ -152,21 +154,24 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
 
         final WordBuilder<O> output = new WordBuilder<>();
 
-        ReuseNode<S, I, O> sink = getRoot();
-        for (final I symbol : query) {
-            final ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(alphabet.getSymbolIndex(symbol));
-            // add null-pointers if no more outputs are available
-            if (edge == null) {
-                break;
+        synchronized (this) {
+            ReuseNode<S, I, O> sink = getRoot();
+            for (final I symbol : query) {
+                final ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(alphabet.getSymbolIndex(symbol));
+                // add null-pointers if no more outputs are available
+                if (edge == null) {
+                    break;
+                }
+                // add output for "reflexive" edges
+                if (sink.equals(edge.getTarget())) {
+                    output.add(edge.getOutput());
+                } else { // for "non-reflexive" edges add a null-pointer.
+                    output.add(null);
+                }
+                sink = edge.getTarget();
             }
-            // add output for "reflexive" edges
-            if (sink.equals(edge.getTarget())) {
-                output.add(edge.getOutput());
-            } else { // for "non-reflexive" edges add a null-pointer.
-                output.add(null);
-            }
-            sink = edge.getTarget();
         }
+
         // fill the output with null-pointers to the size of the query.
         output.repeatAppend(query.size() - output.size(), (O) null);
         return output.toWord();
@@ -178,8 +183,10 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
      * <p>
      * The {@link SystemStateHandler} will be informed about all disposings.
      */
-    public synchronized void disposeSystemstates() {
-        disposeSystemstates(getRoot());
+    public void disposeSystemstates() {
+        synchronized (this) {
+            disposeSystemstates(getRoot());
+        }
     }
 
     private void disposeSystemstates(ReuseNode<S, I, O> node) {
@@ -206,10 +213,12 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
      * <p>
      * The {@link SystemStateHandler} will <b>not</b> be informed about any disposings.
      */
-    public synchronized void clearTree() {
-        this.nodeCount = 0;
-        disposeSystemstates(root);
-        this.root = createNode();
+    public void clearTree() {
+        synchronized (this) {
+            this.nodeCount = 0;
+            disposeSystemstates(root);
+            this.root = createNode();
+        }
     }
 
     /**
@@ -220,7 +229,7 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
      * @param query
      *         Not allowed to be {@code null}.
      */
-    public synchronized ReuseNode.NodeResult<S, I, O> fetchSystemState(Word<I> query) {
+    public ReuseNode.NodeResult<S, I, O> fetchSystemState(Word<I> query) {
         if (query == null) {
             String msg = "Query is not allowed to be null.";
             throw new IllegalArgumentException(msg);
@@ -228,35 +237,37 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
 
         int length = 0;
 
-        ReuseNode<S, I, O> sink = getRoot();
-        ReuseNode<S, I, O> lastState = null;
-        if (sink.hasSystemStates()) {
-            lastState = sink;
-        }
-
-        ReuseNode<S, I, O> node;
-        for (int i = 0; i < query.size(); i++) {
-            node = sink.getTargetNodeForInput(alphabet.getSymbolIndex(query.getSymbol(i)));
-
-            if (node == null) {
-                // we have reached longest known prefix
-                break;
-            }
-
-            sink = node;
+        synchronized (this) {
+            ReuseNode<S, I, O> sink = getRoot();
+            ReuseNode<S, I, O> lastState = null;
             if (sink.hasSystemStates()) {
                 lastState = sink;
-                length = i + 1;
             }
+
+            ReuseNode<S, I, O> node;
+            for (int i = 0; i < query.size(); i++) {
+                node = sink.getTargetNodeForInput(alphabet.getSymbolIndex(query.getSymbol(i)));
+
+                if (node == null) {
+                    // we have reached longest known prefix
+                    break;
+                }
+
+                sink = node;
+                if (sink.hasSystemStates()) {
+                    lastState = sink;
+                    length = i + 1;
+                }
+            }
+
+            if (lastState == null) {
+                return null;
+            }
+
+            S systemState = lastState.fetchSystemState(invalidateSystemstates);
+
+            return new ReuseNode.NodeResult<>(lastState, systemState, length);
         }
-
-        if (lastState == null) {
-            return null;
-        }
-
-        S systemState = lastState.fetchSystemState(invalidateSystemstates);
-
-        return new ReuseNode.NodeResult<>(lastState, systemState, length);
     }
 
     /**
@@ -274,8 +285,10 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
      * @throws ReuseException
      *         if non deterministic behavior is detected
      */
-    public synchronized void insert(Word<I> query, ReuseCapableOracle.QueryResult<S, O> queryResult) {
-        insert(query, getRoot(), queryResult);
+    public void insert(Word<I> query, ReuseCapableOracle.QueryResult<S, O> queryResult) {
+        synchronized (this) {
+            insert(query, getRoot(), queryResult);
+        }
     }
 
     /**
@@ -294,9 +307,7 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
      * @throws ReuseException
      *         if non deterministic behavior is detected
      */
-    public synchronized void insert(Word<I> query,
-                                    ReuseNode<S, I, O> sink,
-                                    ReuseCapableOracle.QueryResult<S, O> queryResult) {
+    public void insert(Word<I> query, ReuseNode<S, I, O> sink, ReuseCapableOracle.QueryResult<S, O> queryResult) {
         if (queryResult == null) {
             String msg = "The queryResult is not allowed to be null.";
             throw new IllegalArgumentException(msg);
@@ -312,40 +323,42 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
 
         ReuseNode<S, I, O> effectiveSink = sink;
 
-        for (int i = 0; i < query.size(); i++) {
-            I in = query.getSymbol(i);
-            O out = queryResult.output.getSymbol(i);
+        synchronized (this) {
+            for (int i = 0; i < query.size(); i++) {
+                I in = query.getSymbol(i);
+                O out = queryResult.output.getSymbol(i);
 
-            ReuseEdge<S, I, O> edge = effectiveSink.getEdgeWithInput(alphabet.getSymbolIndex(in));
-            if (edge != null) {
-                if (Objects.equals(edge.getOutput(), out)) {
-                    effectiveSink = edge.getTarget();
-                    continue;
+                ReuseEdge<S, I, O> edge = effectiveSink.getEdgeWithInput(alphabet.getSymbolIndex(in));
+                if (edge != null) {
+                    if (Objects.equals(edge.getOutput(), out)) {
+                        effectiveSink = edge.getTarget();
+                        continue;
+                    }
+
+                    throw new ReuseException(
+                            "Conflict: input '" + query + "', output '" + queryResult.output + "', i=" + i +
+                            ", cached output '" + edge.getOutput() + "'");
                 }
 
-                throw new ReuseException(
-                        "Conflict: input '" + query + "', output '" + queryResult.output + "', i=" + i +
-                        ", cached output '" + edge.getOutput() + "'");
+                ReuseNode<S, I, O> rn;
+
+                if (failureOutputSymbols.contains(out)) {
+                    rn = effectiveSink;
+                } else if (invariantInputSymbols.contains(in)) {
+                    rn = effectiveSink;
+                } else {
+                    rn = createNode();
+                }
+
+                int index = alphabet.getSymbolIndex(in);
+                effectiveSink.addEdge(index, new ReuseEdge<>(effectiveSink, rn, in, out));
+                effectiveSink = rn;
             }
 
-            ReuseNode<S, I, O> rn;
-
-            if (failureOutputSymbols.contains(out)) {
-                rn = effectiveSink;
-            } else if (invariantInputSymbols.contains(in)) {
-                rn = effectiveSink;
-            } else {
-                rn = createNode();
+            S evictedState = effectiveSink.addSystemState(queryResult.newState);
+            if (evictedState != null) {
+                systemStateHandler.dispose(evictedState);
             }
-
-            int index = alphabet.getSymbolIndex(in);
-            effectiveSink.addEdge(index, new ReuseEdge<>(effectiveSink, rn, in, out));
-            effectiveSink = rn;
-        }
-
-        S evictedState = effectiveSink.addSystemState(queryResult.newState);
-        if (evictedState != null) {
-            systemStateHandler.dispose(evictedState);
         }
     }
 
@@ -370,12 +383,12 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
     }
 
     @Override
-    public synchronized Collection<ReuseEdge<S, I, O>> getOutgoingEdges(ReuseNode<S, I, O> node) {
+    public Collection<ReuseEdge<S, I, O>> getOutgoingEdges(ReuseNode<S, I, O> node) {
         return node.getEdges();
     }
 
     @Override
-    public synchronized ReuseNode<S, I, O> getTarget(ReuseEdge<S, I, O> edge) {
+    public ReuseNode<S, I, O> getTarget(ReuseEdge<S, I, O> edge) {
         if (edge != null) {
             return edge.getTarget();
         }
@@ -383,7 +396,7 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
     }
 
     @Override
-    public synchronized VisualizationHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> getVisualizationHelper() {
+    public VisualizationHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> getVisualizationHelper() {
         return new ReuseTreeDotHelper<>();
     }
 

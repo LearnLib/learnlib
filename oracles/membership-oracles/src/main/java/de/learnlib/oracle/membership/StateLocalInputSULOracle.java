@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.learnlib.api.StateLocalInputSUL;
-import de.learnlib.api.exception.SULException;
 import de.learnlib.api.oracle.StateLocalInputOracle.StateLocalInputMealyOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.automata.transducers.OutputAndLocalInputs;
@@ -61,8 +60,7 @@ public class StateLocalInputSULOracle<I, O> implements StateLocalInputMealyOracl
         }
     }
 
-    private Word<OutputAndLocalInputs<I, O>> answerQuery(StateLocalInputSUL<I, O> sul, Word<I> prefix, Word<I> suffix)
-            throws SULException {
+    private Word<OutputAndLocalInputs<I, O>> answerQuery(StateLocalInputSUL<I, O> sul, Word<I> prefix, Word<I> suffix) {
         try {
             sul.pre();
             Collection<I> enabledInputs = sul.currentlyEnabledInputs();

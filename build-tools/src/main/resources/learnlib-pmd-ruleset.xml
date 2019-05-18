@@ -23,7 +23,6 @@ limitations under the License.
     <description>LearnLib PMD ruleset</description>
 
     <rule ref="category/java/bestpractices.xml">
-        <exclude name="AccessorClassGeneration"/>
         <exclude name="AccessorMethodGeneration"/>
         <exclude name="ArrayIsStoredDirectly"/>
         <exclude name="GuardLogStatement"/>
@@ -73,18 +72,15 @@ limitations under the License.
         <exclude name="BeanMembersShouldSerialize"/>
         <exclude name="CompareObjectsWithEquals"/>
         <exclude name="ConstructorCallsOverridableMethod"/>
+        <exclude name="DataflowAnomalyAnalysis"/>
         <exclude name="EmptyWhileStmt"/>
         <exclude name="MissingSerialVersionUID"/>
-        <exclude name="NonStaticInitializer"/>
         <exclude name="NullAssignment"/>
-        <exclude name="UseLocaleWithCaseConversions"/>
 
-        <exclude name="DataflowAnomalyAnalysis"/>
+        <exclude name="JUnitSpelling"/>
     </rule>
 
     <rule ref="category/java/multithreading.xml">
-        <exclude name="AvoidSynchronizedAtMethodLevel"/>
-        <exclude name="AvoidUsingVolatile"/>
         <exclude name="DoNotUseThreads"/>
         <exclude name="UseConcurrentHashMap"/>
     </rule>

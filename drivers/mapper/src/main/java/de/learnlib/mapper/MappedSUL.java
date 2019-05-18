@@ -51,7 +51,7 @@ public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
     }
 
     @Override
-    public AO step(AI in) throws SULException {
+    public AO step(AI in) {
         if (inError) {
             return repeatedErrorOutput;
         }

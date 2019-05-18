@@ -34,10 +34,18 @@ import de.learnlib.api.exception.SULException;
  */
 public interface StateLocalInputSUL<I, O> extends SUL<I, O> {
 
+    /**
+     * Returns the enabled symbols for the current state of the {@link SUL}.
+     *
+     * @return the currently enabled inputs
+     *
+     * @throws SULException
+     *         if the {@link SUL} cannot provide information about the currently enabled inputs
+     */
     Collection<I> currentlyEnabledInputs();
 
     @Override
-    default StateLocalInputSUL<I, O> fork() throws UnsupportedOperationException {
+    default StateLocalInputSUL<I, O> fork() {
         throw new UnsupportedOperationException();
     }
 }

@@ -15,6 +15,7 @@
  */
 package de.learnlib.setting;
 
+import java.util.Locale;
 import java.util.Properties;
 import java.util.function.Function;
 
@@ -57,7 +58,7 @@ public final class LearnLibSettings {
 
     public <E extends Enum<E>> E getEnumValue(LearnLibProperty property, Class<E> enumClazz) {
         // TODO: the assumption that enum constants are all-uppercase does not *always* hold!
-        return getTypedValue(property, p -> Enum.valueOf(enumClazz, p.toUpperCase()));
+        return getTypedValue(property, p -> Enum.valueOf(enumClazz, p.toUpperCase(Locale.ROOT)));
     }
 
     public boolean getBool(LearnLibProperty property, boolean defaultValue) {

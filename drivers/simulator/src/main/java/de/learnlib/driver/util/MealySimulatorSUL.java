@@ -16,7 +16,6 @@
 package de.learnlib.driver.util;
 
 import de.learnlib.api.SUL;
-import de.learnlib.api.exception.SULException;
 import net.automatalib.automata.transducers.MealyMachine;
 
 /**
@@ -79,7 +78,7 @@ public class MealySimulatorSUL<I, O> implements SUL<I, O> {
     }
 
     @Override
-    public O step(I in) throws SULException {
+    public O step(I in) {
         return impl.step(in);
     }
 
@@ -129,7 +128,7 @@ public class MealySimulatorSUL<I, O> implements SUL<I, O> {
         }
 
         @Override
-        public O step(I in) throws SULException {
+        public O step(I in) {
             O out = noTransOut;
             if (curr != null) {
                 T trans = mealy.getTransition(curr, in);

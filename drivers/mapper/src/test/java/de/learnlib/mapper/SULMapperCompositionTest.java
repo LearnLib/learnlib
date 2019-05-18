@@ -131,7 +131,7 @@ public class SULMapperCompositionTest {
 
         @Nullable
         @Override
-        public Character step(@Nullable Character in) throws SULException {
+        public Character step(@Nullable Character in) {
             switch (in) {
                 case OUTER_EXCEPTION_TRIGGER_CHAR:
                     throw new OuterWrappedException(new IllegalArgumentException());
@@ -214,7 +214,7 @@ public class SULMapperCompositionTest {
         }
 
         @Override
-        public MappedException<? extends Character> mapWrappedException(SULException exception) throws SULException {
+        public MappedException<? extends Character> mapWrappedException(SULException exception) {
             if (exception instanceof OuterWrappedException) {
                 return MappedException.ignoreAndContinue(OUTER_EXCEPTION_RESULT);
             }

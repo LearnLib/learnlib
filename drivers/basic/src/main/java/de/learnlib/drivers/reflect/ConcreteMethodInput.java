@@ -60,7 +60,7 @@ public class ConcreteMethodInput implements ExecutableInput<Object> {
     }
 
     @Override
-    public Object execute() throws SULException {
+    public Object execute() {
         Object out;
         try {
             Object ret = this.input.getMethod().invoke(this.target, getParameterValues());

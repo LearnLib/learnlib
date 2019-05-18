@@ -32,7 +32,6 @@ import de.learnlib.filter.cache.mealy.MealyCacheConsistencyTest;
 import de.learnlib.filter.cache.sul.SULCache.SULCacheState;
 import de.learnlib.oracle.membership.SULOracle;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
@@ -112,7 +111,7 @@ public class SULCache<I, O> implements SUL<I, O>,
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
         impl.addAlphabetSymbol(symbol);
     }
 
@@ -238,7 +237,7 @@ public class SULCache<I, O> implements SUL<I, O>,
         }
 
         @Override
-        public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+        public void addAlphabetSymbol(I symbol) {
             incMealy.addAlphabetSymbol(symbol);
         }
 

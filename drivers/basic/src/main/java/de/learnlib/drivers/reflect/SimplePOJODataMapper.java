@@ -57,8 +57,7 @@ public class SimplePOJODataMapper implements SULMapper<MethodInput, MethodOutput
     }
 
     @Override
-    public MappedException<? extends MethodOutput> mapUnwrappedException(RuntimeException exception)
-            throws RuntimeException {
+    public MappedException<? extends MethodOutput> mapUnwrappedException(RuntimeException exception) {
         return MappedException.repeatOutput(new Error(exception.getCause()), Unobserved.INSTANCE);
     }
 

@@ -16,7 +16,6 @@
 package de.learnlib.mapper;
 
 import de.learnlib.api.SUL;
-import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.api.ContextExecutableInput;
 
 /**
@@ -54,7 +53,7 @@ public abstract class AbstractContextExecutableInputSUL<I extends ContextExecuta
     protected abstract void disposeContext(C context);
 
     @Override
-    public O step(I in) throws SULException {
+    public O step(I in) {
         return in.execute(currentContext);
     }
 }

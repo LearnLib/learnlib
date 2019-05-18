@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 
 import de.learnlib.api.ObservableSUL;
 import de.learnlib.api.SUL;
-import de.learnlib.api.exception.SULException;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
@@ -97,8 +96,7 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
     protected abstract Q getQueryState(ObservableSUL<S, I, O> sul);
 
     @Nonnull
-    private Pair<Word<O>, Integer> answerQuery(ObservableSUL<S, I, O> sul, Word<I> prefix, Word<I> loop, int repeat)
-            throws SULException {
+    private Pair<Word<O>, Integer> answerQuery(ObservableSUL<S, I, O> sul, Word<I> prefix, Word<I> loop, int repeat) {
         assert repeat > 0;
         sul.pre();
         try {
@@ -214,7 +212,7 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
          *
          * @param sul the SUL
          */
-        private ShallowCopySULOmegaOracle(ObservableSUL<S, I, O> sul) {
+        ShallowCopySULOmegaOracle(ObservableSUL<S, I, O> sul) {
             super(sul);
             assert sul.canFork();
             forkedSUL = sul.fork();
@@ -292,7 +290,7 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
          *
          * @param sul the {@link ObservableSUL}.
          */
-        private DeepCopySULOmegaOracle(ObservableSUL<S, I, O> sul) {
+        DeepCopySULOmegaOracle(ObservableSUL<S, I, O> sul) {
             super(sul);
         }
 

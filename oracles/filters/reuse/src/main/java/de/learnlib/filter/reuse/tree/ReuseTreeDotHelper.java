@@ -58,10 +58,10 @@ class ReuseTreeDotHelper<S, I, O> extends DefaultVisualizationHelper<ReuseNode<S
         super.getEdgeProperties(src, edge, tgt, properties);
 
         final StringBuilder labelBuilder = new StringBuilder();
-        labelBuilder.append(String.valueOf(edge.getInput())).append(" / ");
+        labelBuilder.append(edge.getInput()).append(" / ");
         O output = edge.getOutput();
         if (output != null) {
-            labelBuilder.append(String.valueOf(output));
+            labelBuilder.append(output);
         }
         properties.put(EdgeAttrs.LABEL, labelBuilder.toString());
         return true;

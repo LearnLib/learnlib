@@ -44,7 +44,7 @@ final class SULMapperComposition<AI, AO, ACI, CAO, CI, CO>
     }
 
     @Override
-    public MappedException<? extends AO> mapUnwrappedException(RuntimeException exception) throws RuntimeException {
+    public MappedException<? extends AO> mapUnwrappedException(RuntimeException exception) {
         MappedException<? extends CAO> mappedEx;
         try {
             mappedEx = mapper2.mapUnwrappedException(exception);

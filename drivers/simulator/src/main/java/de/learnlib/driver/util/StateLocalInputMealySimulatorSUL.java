@@ -18,7 +18,6 @@ package de.learnlib.driver.util;
 import java.util.Collection;
 
 import de.learnlib.api.StateLocalInputSUL;
-import de.learnlib.api.exception.SULException;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 
 public class StateLocalInputMealySimulatorSUL<I, O> extends MealySimulatorSUL<I, O>
@@ -41,7 +40,7 @@ public class StateLocalInputMealySimulatorSUL<I, O> extends MealySimulatorSUL<I,
     }
 
     @Override
-    public Collection<I> currentlyEnabledInputs() throws SULException {
+    public Collection<I> currentlyEnabledInputs() {
         return this.impl.currentlyEnabledInputs();
     }
 
@@ -56,7 +55,7 @@ public class StateLocalInputMealySimulatorSUL<I, O> extends MealySimulatorSUL<I,
         }
 
         @Override
-        public Collection<I> currentlyEnabledInputs() throws SULException {
+        public Collection<I> currentlyEnabledInputs() {
             return this.mealy.getLocalInputs(super.getCurr());
         }
 

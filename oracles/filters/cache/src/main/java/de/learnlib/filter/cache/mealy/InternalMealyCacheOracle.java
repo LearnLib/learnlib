@@ -30,7 +30,6 @@ import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -195,7 +194,7 @@ class InternalMealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, 
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
         incMealy.addAlphabetSymbol(symbol);
     }
 
