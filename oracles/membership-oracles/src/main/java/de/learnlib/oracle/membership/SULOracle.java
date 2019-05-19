@@ -64,7 +64,7 @@ public class SULOracle<I, O> implements MealyMembershipOracle<I, O> {
         }
     }
 
-    public static <I, O> void processQueries(SUL<I, O> sul, Collection<? extends Query<I, Word<O>>> queries) {
+    private static <I, O> void processQueries(SUL<I, O> sul, Collection<? extends Query<I, Word<O>>> queries) {
         for (Query<I, Word<O>> q : queries) {
             Word<O> output = answerQuery(sul, q.getPrefix(), q.getSuffix());
             q.answer(output);

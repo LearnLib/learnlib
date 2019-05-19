@@ -92,6 +92,16 @@ limitations under the License.
         <!-- LearnLib dependencies -->
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-parallelism</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-util</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-statistics</artifactId>
             <scope>test</scope>
         </dependency>

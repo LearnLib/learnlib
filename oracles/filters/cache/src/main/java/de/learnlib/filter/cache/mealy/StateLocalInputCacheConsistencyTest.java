@@ -16,7 +16,7 @@
 package de.learnlib.filter.cache.mealy;
 
 import java.util.Collection;
-import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
@@ -31,10 +31,18 @@ public class StateLocalInputCacheConsistencyTest<I, O>
         implements EquivalenceOracle<StateLocalInputMealyMachine<?, I, ?, O>, I, Word<OutputAndLocalInputs<I, O>>> {
 
     private final IncrementalMealyBuilder<I, OutputAndLocalInputs<I, O>> incMealy;
-    private final Lock incMealyLock;
+    private final ReadWriteLock incMealyLock;
 
-    public StateLocalInputCacheConsistencyTest(IncrementalMealyBuilder<I, OutputAndLocalInputs<I, O>> incMealy,
-                                               Lock lock) {
+    /**
+     * Constructor.
+     *
+     * @param incMealy
+     *         the {@link IncrementalMealyBuilder} data structure underlying the cache
+     * @param lock
+     *         the read-write lock for accessing the cache concurrently
+     */
+    StateLocalInputCacheConsistencyTest(IncrementalMealyBuilder<I, OutputAndLocalInputs<I, O>> incMealy,
+                                        ReadWriteLock lock) {
         this.incMealy = incMealy;
         this.incMealyLock = lock;
     }
@@ -50,7 +58,7 @@ public class StateLocalInputCacheConsistencyTest<I, O>
         final StateLocalInputMealyMachine<?, I, ?, OutputAndLocalInputs<I, O>> wrapped =
                 StateLocalInputMealyUtil.partialToObservableOutput(hypothesis, null);
 
-        incMealyLock.lock();
+        incMealyLock.readLock().lock();
         try {
             w = incMealy.findSeparatingWord(wrapped, inputs, false);
             if (w == null) {
@@ -59,7 +67,7 @@ public class StateLocalInputCacheConsistencyTest<I, O>
             wb = new WordBuilder<>(w.length());
             incMealy.lookup(w, wb);
         } finally {
-            incMealyLock.unlock();
+            incMealyLock.readLock().unlock();
         }
 
         DefaultQuery<I, Word<OutputAndLocalInputs<I, O>>> result = new DefaultQuery<>(w);

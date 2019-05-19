@@ -16,7 +16,7 @@
 package de.learnlib.filter.cache.mealy;
 
 import java.util.Collection;
-import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
@@ -40,15 +40,17 @@ import net.automatalib.words.WordBuilder;
 public class MealyCacheConsistencyTest<I, O> implements MealyEquivalenceOracle<I, O> {
 
     private final IncrementalMealyBuilder<I, O> incMealy;
-    private final Lock incMealyLock;
+    private final ReadWriteLock incMealyLock;
 
     /**
      * Constructor.
      *
      * @param incMealy
-     *         the {@link IncrementalMealyBuilder} data structure underlying the cache.
+     *         the {@link IncrementalMealyBuilder} data structure underlying the cache
+     * @param lock
+     *         the read-write lock for accessing the cache concurrently
      */
-    public MealyCacheConsistencyTest(IncrementalMealyBuilder<I, O> incMealy, Lock lock) {
+    public MealyCacheConsistencyTest(IncrementalMealyBuilder<I, O> incMealy, ReadWriteLock lock) {
         this.incMealy = incMealy;
         this.incMealyLock = lock;
     }
@@ -59,7 +61,7 @@ public class MealyCacheConsistencyTest<I, O> implements MealyEquivalenceOracle<I
         WordBuilder<O> wb;
         Word<I> w;
 
-        incMealyLock.lock();
+        incMealyLock.readLock().lock();
         try {
             w = incMealy.findSeparatingWord(hypothesis, inputs, false);
             if (w == null) {
@@ -68,7 +70,7 @@ public class MealyCacheConsistencyTest<I, O> implements MealyEquivalenceOracle<I
             wb = new WordBuilder<>(w.length());
             incMealy.lookup(w, wb);
         } finally {
-            incMealyLock.unlock();
+            incMealyLock.readLock().unlock();
         }
 
         DefaultQuery<I, Word<O>> result = new DefaultQuery<>(w);

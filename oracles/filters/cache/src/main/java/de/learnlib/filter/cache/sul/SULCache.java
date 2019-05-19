@@ -16,9 +16,8 @@
 package de.learnlib.filter.cache.sul;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +25,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.Resumable;
 import de.learnlib.api.SUL;
-import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.cache.mealy.MealyCacheConsistencyTest;
 import de.learnlib.filter.cache.sul.SULCache.SULCacheState;
@@ -37,7 +35,6 @@ import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,21 +57,22 @@ import org.slf4j.LoggerFactory;
  * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public class SULCache<I, O> implements SUL<I, O>,
-                                       MealyLearningCacheOracle<I, O>,
-                                       SupportsGrowingAlphabet<I>,
-                                       Resumable<SULCacheState<I, O>> {
+public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
+                                                               MealyLearningCacheOracle<I, O>,
+                                                               SupportsGrowingAlphabet<I>,
+                                                               Resumable<SULCacheState<I, O>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SULCache.class);
 
     private final SULCacheImpl<?, I, ?, O> impl;
 
     SULCache(IncrementalMealyBuilder<I, O> incMealy, SUL<I, O> sul) {
-        this(incMealy, new ReentrantLock(), sul);
+        this(new SULCacheImpl<>(incMealy, new ReentrantReadWriteLock(), incMealy.asTransitionSystem(), sul));
     }
 
-    SULCache(IncrementalMealyBuilder<I, O> incMealy, Lock lock, SUL<I, O> sul) {
-        this.impl = new SULCacheImpl<>(incMealy, lock, incMealy.asTransitionSystem(), sul);
+    private <S, T> SULCache(SULCacheImpl<S, I, T, O> cacheImpl) {
+        super(cacheImpl);
+        this.impl = cacheImpl;
     }
 
     public static <I, O> SULCache<I, O> createTreeCache(Alphabet<I> alphabet, SUL<I, O> sul) {
@@ -101,13 +99,19 @@ public class SULCache<I, O> implements SUL<I, O>,
     }
 
     @Override
-    public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
-        return impl.createCacheConsistencyTest();
+    public boolean canFork() {
+        return impl.canFork();
+    }
+
+    @Nonnull
+    @Override
+    public SUL<I, O> fork() {
+        return impl.fork();
     }
 
     @Override
-    public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-        SULOracle.processQueries(impl, queries);
+    public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
+        return impl.createCacheConsistencyTest();
     }
 
     @Override
@@ -147,14 +151,16 @@ public class SULCache<I, O> implements SUL<I, O>,
         private IncrementalMealyBuilder<I, O> incMealy;
         private MealyTransitionSystem<S, I, T, O> mealyTs;
         private final SUL<I, O> delegate;
+        private final ReadWriteLock incMealyLock;
+
         private final WordBuilder<I> inputWord = new WordBuilder<>();
-        private final Lock incMealyLock;
+        private final WordBuilder<O> outputWord = new WordBuilder<>();
+
         private boolean delegatePreCalled;
         private S current;
-        private WordBuilder<O> outputWord;
 
         SULCacheImpl(IncrementalMealyBuilder<I, O> incMealy,
-                     Lock lock,
+                     ReadWriteLock lock,
                      MealyTransitionSystem<S, I, T, O> mealyTs,
                      SUL<I, O> sul) {
             this.incMealy = incMealy;
@@ -165,7 +171,7 @@ public class SULCache<I, O> implements SUL<I, O>,
 
         @Override
         public void pre() {
-            incMealyLock.lock();
+            incMealyLock.readLock().lock();
             this.current = mealyTs.getInitialState();
         }
 
@@ -182,10 +188,8 @@ public class SULCache<I, O> implements SUL<I, O>,
                     current = mealyTs.getSuccessor(trans);
                     assert current != null;
                 } else {
-                    // whenever current is not null, we are holding the lock
-                    incMealyLock.unlock();
+                    incMealyLock.readLock().unlock();
                     current = null;
-                    outputWord = new WordBuilder<>();
                     delegate.pre();
                     delegatePreCalled = true;
                     for (I prevSym : inputWord) {
@@ -209,16 +213,17 @@ public class SULCache<I, O> implements SUL<I, O>,
         // errors!
         @Override
         public void post() {
-            try {
-                if (outputWord != null) {
-                    // If outputWord is not null we DO NOT hold the lock!
-                    incMealyLock.lock();
+            if (outputWord.isEmpty()) {
+                // if outputWord is empty we still hold the read-lock!
+                incMealyLock.readLock().unlock();
+            } else {
+                // otherwise acquire write-lock to update cache!
+                incMealyLock.writeLock().lock();
+                try {
                     incMealy.insert(inputWord.toWord(), outputWord.toWord());
+                } finally {
+                    incMealyLock.writeLock().unlock();
                 }
-                // otherwise we do, so the following call to unlock() is legal
-                // in any case
-            } finally {
-                incMealyLock.unlock();
             }
 
             if (delegatePreCalled) {
@@ -226,8 +231,19 @@ public class SULCache<I, O> implements SUL<I, O>,
                 delegatePreCalled = false;
             }
             inputWord.clear();
-            outputWord = null;
+            outputWord.clear();
             current = null;
+        }
+
+        @Override
+        public boolean canFork() {
+            return delegate.canFork();
+        }
+
+        @Nonnull
+        @Override
+        public SUL<I, O> fork() {
+            return new SULCacheImpl<>(incMealy, incMealyLock, mealyTs, delegate.fork());
         }
 
         @Nonnull

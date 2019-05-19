@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
@@ -59,7 +59,7 @@ class InternalMealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, 
 
     private final MembershipOracle<I, Word<O>> delegate;
     protected IncrementalMealyBuilder<I, O> incMealy;
-    protected final Lock incMealyLock;
+    protected final ReadWriteLock incMealyLock;
     private final Comparator<? super Query<I, ?>> queryCmp;
     private final Mapping<? super O, ? extends O> errorSyms;
 
@@ -74,7 +74,7 @@ class InternalMealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, 
                              MembershipOracle<I, Word<O>> delegate,
                              Comparator<I> comparator) {
         this.incMealy = incrementalBuilder;
-        this.incMealyLock = new ReentrantLock();
+        this.incMealyLock = new ReentrantReadWriteLock();
         this.queryCmp = new ReverseLexCmp<>(comparator);
         this.errorSyms = errorSyms;
         this.delegate = delegate;
@@ -104,7 +104,7 @@ class InternalMealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, 
         Query<I, Word<O>> q = it.next();
         Word<I> ref = q.getInput();
 
-        incMealyLock.lock();
+        incMealyLock.readLock().lock();
         try {
             MasterQuery<I, O> master = createMasterQuery(ref);
             if (!master.isAnswered()) {
@@ -128,18 +128,18 @@ class InternalMealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, 
                 ref = curr;
             }
         } finally {
-            incMealyLock.unlock();
+            incMealyLock.readLock().unlock();
         }
 
         delegate.processQueries(masterQueries);
 
-        incMealyLock.lock();
+        incMealyLock.writeLock().lock();
         try {
             for (MasterQuery<I, O> m : masterQueries) {
                 postProcess(m);
             }
         } finally {
-            incMealyLock.unlock();
+            incMealyLock.writeLock().unlock();
         }
     }
 

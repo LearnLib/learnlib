@@ -16,7 +16,7 @@
 package de.learnlib.filter.cache.dfa;
 
 import java.util.Collection;
-import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
@@ -37,15 +37,17 @@ import net.automatalib.words.Word;
 public final class DFACacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {
 
     private final IncrementalDFABuilder<I> incDfa;
-    private final Lock incDfaLock;
+    private final ReadWriteLock incDfaLock;
 
     /**
      * Constructor.
      *
      * @param incDfa
      *         the {@link IncrementalDFABuilder} data structure of the cache
+     * @param lock
+     *         the read-write lock for accessing the cache concurrently
      */
-    public DFACacheConsistencyTest(IncrementalDFABuilder<I> incDfa, Lock lock) {
+    DFACacheConsistencyTest(IncrementalDFABuilder<I> incDfa, ReadWriteLock lock) {
         this.incDfa = incDfa;
         this.incDfaLock = lock;
     }
@@ -54,7 +56,7 @@ public final class DFACacheConsistencyTest<I> implements DFAEquivalenceOracle<I>
     public DefaultQuery<I, Boolean> findCounterExample(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
         Word<I> w;
         Acceptance acc;
-        incDfaLock.lock();
+        incDfaLock.readLock().lock();
         try {
             w = incDfa.findSeparatingWord(hypothesis, inputs, false);
             if (w == null) {
@@ -62,7 +64,7 @@ public final class DFACacheConsistencyTest<I> implements DFAEquivalenceOracle<I>
             }
             acc = incDfa.lookup(w);
         } finally {
-            incDfaLock.unlock();
+            incDfaLock.readLock().unlock();
         }
         assert (acc != Acceptance.DONT_KNOW);
 

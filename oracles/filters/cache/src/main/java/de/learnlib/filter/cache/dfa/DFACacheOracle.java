@@ -19,8 +19,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -58,16 +58,12 @@ public class DFACacheOracle<I>
     private static final Logger LOGGER = LoggerFactory.getLogger(DFACacheOracle.class);
 
     private IncrementalDFABuilder<I> incDfa;
-    private final Lock incDfaLock;
+    private final ReadWriteLock incDfaLock;
     private final MembershipOracle<I, Boolean> delegate;
 
     DFACacheOracle(IncrementalDFABuilder<I> incDfa, MembershipOracle<I, Boolean> delegate) {
-        this(incDfa, new ReentrantLock(), delegate);
-    }
-
-    DFACacheOracle(IncrementalDFABuilder<I> incDfa, Lock lock, MembershipOracle<I, Boolean> delegate) {
         this.incDfa = incDfa;
-        this.incDfaLock = lock;
+        this.incDfaLock = new ReentrantReadWriteLock();
         this.delegate = delegate;
     }
 
@@ -163,7 +159,7 @@ public class DFACacheOracle<I>
     public void processQueries(Collection<? extends Query<I, Boolean>> queries) {
         List<ProxyQuery<I>> unanswered = new ArrayList<>();
 
-        incDfaLock.lock();
+        incDfaLock.readLock().lock();
         try {
             for (Query<I, Boolean> q : queries) {
                 Acceptance acc = incDfa.lookup(q.getInput());
@@ -174,18 +170,18 @@ public class DFACacheOracle<I>
                 }
             }
         } finally {
-            incDfaLock.unlock();
+            incDfaLock.readLock().unlock();
         }
 
         delegate.processQueries(unanswered);
 
-        incDfaLock.lock();
+        incDfaLock.writeLock().lock();
         try {
             for (ProxyQuery<I> q : unanswered) {
                 incDfa.insert(q.getInput(), q.getAnswer());
             }
         } finally {
-            incDfaLock.unlock();
+            incDfaLock.writeLock().unlock();
         }
     }
 
