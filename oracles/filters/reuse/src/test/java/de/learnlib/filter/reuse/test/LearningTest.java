@@ -16,9 +16,9 @@
 package de.learnlib.filter.reuse.test;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.function.Supplier;
 
-import com.google.common.base.Supplier;
-import com.google.common.collect.Sets;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.filter.reuse.ReuseCapableOracle;
@@ -50,9 +50,9 @@ public class LearningTest {
     protected void setUp() {
         sigma = Alphabets.integers(0, 3);
 
-        reuseOracle =
-                new ReuseOracle.ReuseOracleBuilder<>(sigma, new TestOracleFactory()).withFailureOutputs(Sets.newHashSet(
-                        "error")).withInvariantInputs(Sets.newHashSet(0)).build();
+        reuseOracle = new ReuseOracle.ReuseOracleBuilder<>(sigma,
+                                                           new TestOracleFactory()).withFailureOutputs(Collections.singleton(
+                "error")).withInvariantInputs(Collections.singleton(0)).build();
     }
 
     @Test

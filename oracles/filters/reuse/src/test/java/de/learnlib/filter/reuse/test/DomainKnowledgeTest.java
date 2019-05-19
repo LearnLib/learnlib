@@ -15,8 +15,9 @@
  */
 package de.learnlib.filter.reuse.test;
 
-import com.google.common.base.Supplier;
-import com.google.common.collect.Sets;
+import java.util.Collections;
+import java.util.function.Supplier;
+
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filter.reuse.ReuseOracle;
@@ -45,9 +46,8 @@ public class DomainKnowledgeTest {
         // We don't use this oracle, we directly test against the reuse tree!
         Alphabet<Integer> alphabet = Alphabets.integers(0, 10);
 
-        reuseOracle = new ReuseOracle.ReuseOracleBuilder<>(alphabet,
-                                                           new NullReuseCapableFactory()).withInvariantInputs(Sets.newHashSet(
-                0)).build();
+        reuseOracle = new ReuseOracle.ReuseOracleBuilder<>(alphabet, new NullReuseCapableFactory()).withInvariantInputs(
+                Collections.singleton(0)).build();
     }
 
     @Test
