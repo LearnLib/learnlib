@@ -160,7 +160,7 @@ limitations under the License.
     </issueManagement>
     <ciManagement>
         <system>Travis</system>
-        <url>https://travis-ci.org/LearnLib/automatalib</url>
+        <url>https://travis-ci.org/LearnLib/learnlib</url>
     </ciManagement>
     <distributionManagement>
         <repository>
