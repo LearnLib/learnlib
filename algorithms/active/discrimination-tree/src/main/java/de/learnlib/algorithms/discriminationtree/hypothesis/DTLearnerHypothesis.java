@@ -106,7 +106,7 @@ public class DTLearnerHypothesis<I, O, SP, TP>
 
     @Override
     public HState<I, O, SP, TP> getState(int id) {
-        return nodes.get(id);
+        return (id < 0 || id >= nodes.size()) ? null : nodes.get(id);
     }
 
     @Override
@@ -191,12 +191,12 @@ public class DTLearnerHypothesis<I, O, SP, TP>
 
         @Override
         public int getNodeId(HState<I, O, SP, TP> node) {
-            return node.getId();
+            return getStateId(node);
         }
 
         @Override
         public HState<I, O, SP, TP> getNode(int id) {
-            return nodes.get(id);
+            return getState(id);
         }
 
         @Override
