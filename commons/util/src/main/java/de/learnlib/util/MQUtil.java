@@ -48,18 +48,6 @@ public final class MQUtil {
         // prevent instantiation
     }
 
-    @Deprecated
-    @Nullable
-    public static <I, D> D output(MembershipOracle<I, D> oracle, Word<I> queryWord) {
-        return oracle.answerQuery(queryWord);
-    }
-
-    @Deprecated
-    @Nullable
-    public static <I, D> D output(MembershipOracle<I, D> oracle, Word<I> prefix, Word<I> suffix) {
-        return oracle.answerQuery(prefix, suffix);
-    }
-
     public static <I, D> DefaultQuery<I, D> normalize(MembershipOracle<I, D> oracle, DefaultQuery<I, D> query) {
         if (query.isNormalized()) {
             return query;
