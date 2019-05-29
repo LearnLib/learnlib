@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.oracle.MembershipOracle;
