@@ -90,8 +90,7 @@ public class StateLocalInputMealyTreeCacheTest
         return CacheTestUtils.INPUT_ALPHABET;
     }
 
-    // dependsOnMethods doesn't seem to work well with Intellij IDEA plugin.
-    @Test(priority = 1)
+    @Test(dependsOnMethods = "testResuming")
     public void testQueryWithNoContainedAlphabetSymbol() {
         final long oldCount = getNumberOfPosedQueries();
 
