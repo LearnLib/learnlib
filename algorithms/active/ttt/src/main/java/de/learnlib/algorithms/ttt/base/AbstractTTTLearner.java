@@ -276,8 +276,7 @@ public abstract class AbstractTTTLearner<A, I, D>
             D newOut = succEffect(acex.effect(breakpoint));
 
             splitState(trans, splitSuffix, oldOut, newOut);
-        } catch (HypothesisChangedException ignored) {
-        }
+        } catch (HypothesisChangedException ignored) {}
     }
 
     protected OutInconsPrefixTransformAcex<I, D> deriveAcex(OutputInconsistency<I, D> outIncons) {

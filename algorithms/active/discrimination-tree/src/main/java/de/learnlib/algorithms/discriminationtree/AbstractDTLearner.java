@@ -85,8 +85,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
             return false;
         }
         if (repeatedCounterexampleEvaluation) {
-            while (refineHypothesisSingle(ceQuery)) {
-            }
+            while (refineHypothesisSingle(ceQuery)) {}
         }
         return true;
     }

@@ -40,8 +40,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
     private V falseValue;
     private V trueValue;
 
-    public BooleanMap() {
-    }
+    public BooleanMap() {}
 
     public BooleanMap(V falseValue, V trueValue) {
         this.falseValue = falseValue;

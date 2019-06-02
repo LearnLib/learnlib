@@ -36,8 +36,6 @@ import net.automatalib.words.Word;
  */
 public final class StateInfo<I, D> implements Serializable {
 
-    public static final short INTEGER_WORD_WIDTH = 32;
-
     public final int id;
     public final Word<I> accessSequence;
     public AbstractWordBasedDTNode<I, D, StateInfo<I, D>> dtNode;
@@ -50,7 +48,7 @@ public final class StateInfo<I, D> implements Serializable {
     }
 
     public void addIncoming(int sourceState, int transIdx) {
-        long encodedTrans = ((long) sourceState << INTEGER_WORD_WIDTH) | transIdx;
+        long encodedTrans = ((long) sourceState << Integer.SIZE) | transIdx;
         if (incoming == null) {
             //incoming = new TLongArrayList();
             incoming = new ArrayList<>(); // TODO: replace with primitive specialization

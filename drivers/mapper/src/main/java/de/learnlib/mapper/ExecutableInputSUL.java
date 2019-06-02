@@ -31,12 +31,10 @@ import de.learnlib.mapper.api.ExecutableInput;
 public class ExecutableInputSUL<I extends ExecutableInput<? extends O>, O> implements SUL<I, O> {
 
     @Override
-    public void pre() {
-    }
+    public void pre() {}
 
     @Override
-    public void post() {
-    }
+    public void post() {}
 
     @Override
     public O step(I in) {

@@ -153,8 +153,7 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
         while (sepWord != null) {
             final DefaultQuery<I, D> ce = new DefaultQuery<>(sepWord, target.computeOutput(sepWord));
 
-            while (learner.refineHypothesis(ce)) {
-            }
+            while (learner.refineHypothesis(ce)) {}
 
             hyp = learner.getHypothesisModel();
             sepWord = Automata.findSeparatingWord(target, hyp, effectiveAlphabet);

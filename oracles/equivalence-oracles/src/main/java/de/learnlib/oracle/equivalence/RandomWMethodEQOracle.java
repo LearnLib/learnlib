@@ -17,6 +17,7 @@ package de.learnlib.oracle.equivalence;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -155,14 +156,14 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
                                                     Collection<? extends I> inputs) {
         // Note that we want to use ArrayLists because we want constant time random access
         // We will sample from this for a prefix
-        ArrayList<Word<I>> transitionCover = new ArrayList<>(hypothesis.size());
+        List<Word<I>> transitionCover = new ArrayList<>(hypothesis.size());
         Covers.transitionCover(hypothesis, inputs, transitionCover);
 
         // Then repeatedly from this for a random word
-        ArrayList<I> arrayAlphabet = new ArrayList<>(inputs);
+        List<I> arrayAlphabet = new ArrayList<>(inputs);
 
         // Finally we test the state with a suffix
-        ArrayList<Word<I>> globalSuffixes = new ArrayList<>();
+        List<Word<I>> globalSuffixes = new ArrayList<>();
         Automata.characterizingSet(hypothesis, inputs, globalSuffixes);
 
         final Stream<Word<I>> result =
@@ -171,9 +172,9 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
         return bound > 0 ? result.limit(bound) : result;
     }
 
-    private Word<I> generateSingleTestWord(ArrayList<Word<I>> stateCover,
-                                           ArrayList<I> arrayAlphabet,
-                                           ArrayList<Word<I>> globalSuffixes) {
+    private Word<I> generateSingleTestWord(List<Word<I>> stateCover,
+                                           List<I> arrayAlphabet,
+                                           List<Word<I>> globalSuffixes) {
         final WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
 
         // pick a random state

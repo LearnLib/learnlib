@@ -81,8 +81,8 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
             return false;
         }
 
-        while (refineHypothesisSingle(ceQuery)) {
-        }
+        while (refineHypothesisSingle(ceQuery)) {}
+
         return true;
     }
 

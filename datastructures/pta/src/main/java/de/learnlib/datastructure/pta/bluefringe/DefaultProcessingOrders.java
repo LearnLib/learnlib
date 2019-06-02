@@ -17,8 +17,10 @@ package de.learnlib.datastructure.pta.bluefringe;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.function.Function;
 
 import de.learnlib.datastructure.pta.pta.AbstractBlueFringePTAState;
 import de.learnlib.datastructure.pta.pta.PTATransition;
@@ -39,13 +41,8 @@ public enum DefaultProcessingOrders implements ProcessingOrder {
     CANONICAL_ORDER {
         @Override
         public <S extends AbstractBlueFringePTAState<?, ?, S>> Queue<PTATransition<S>> createWorklist() {
-            return new PriorityQueue<>((t1, t2) -> {
-                int cmp = t1.getSource().compareTo(t2.getSource());
-                if (cmp == 0) {
-                    cmp = t1.getIndex() - t2.getIndex();
-                }
-                return cmp;
-            });
+            return new PriorityQueue<>(Comparator.comparing((Function<PTATransition<S>, S>) PTATransition::getSource)
+                                                 .thenComparingInt(PTATransition::getIndex));
         }
     },
     /**
@@ -57,13 +54,9 @@ public enum DefaultProcessingOrders implements ProcessingOrder {
     LEX_ORDER {
         @Override
         public <S extends AbstractBlueFringePTAState<?, ?, S>> Queue<PTATransition<S>> createWorklist() {
-            return new PriorityQueue<>((t1, t2) -> {
-                int cmp = t1.getSource().lexCompareTo(t2.getSource());
-                if (cmp == 0) {
-                    cmp = t1.getIndex() - t2.getIndex();
-                }
-                return cmp;
-            });
+            return new PriorityQueue<>(Comparator.comparing((Function<PTATransition<S>, S>) PTATransition::getSource,
+                                                            AbstractBlueFringePTAState::lexCompareTo)
+                                                 .thenComparingInt(PTATransition::getIndex));
         }
     },
     /**

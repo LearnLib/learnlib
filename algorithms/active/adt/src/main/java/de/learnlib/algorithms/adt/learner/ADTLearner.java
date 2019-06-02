@@ -160,8 +160,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                 final DefaultQuery<I, Word<O>> currentCE = this.openCounterExamples.poll();
                 this.allCounterExamples.add(currentCE);
 
-                while (this.refineHypothesisInternal(currentCE)) {
-                }
+                while (this.refineHypothesisInternal(currentCE)) {}
             }
 
             // subtree replacements may reactivate old CEs

@@ -34,8 +34,7 @@ public class NoopQuery<I, D> extends AbstractQuery<I, D> {
     }
 
     @Override
-    public void answer(D output) {
-    }
+    public void answer(D output) {}
 
     /**
      * @see AbstractQuery#toStringWithAnswer(Object)

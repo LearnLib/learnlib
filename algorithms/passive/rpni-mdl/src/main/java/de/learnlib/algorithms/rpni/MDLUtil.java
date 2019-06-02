@@ -24,8 +24,7 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
  */
 final class MDLUtil {
 
-    private MDLUtil() {
-    }
+    private MDLUtil() {}
 
     static <S> double score(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> pta,
                             int alphabetSize,

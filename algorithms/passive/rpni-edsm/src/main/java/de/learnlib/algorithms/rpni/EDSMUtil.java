@@ -26,8 +26,7 @@ import net.automatalib.automata.concepts.StateIDs;
  */
 final class EDSMUtil {
 
-    private EDSMUtil() {
-    }
+    private EDSMUtil() {}
 
     static <S> long score(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> pta,
                           List<int[]> positiveSamples,

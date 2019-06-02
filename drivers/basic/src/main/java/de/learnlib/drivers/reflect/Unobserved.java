@@ -25,8 +25,7 @@ public final class Unobserved extends MethodOutput {
 
     public static final Unobserved INSTANCE = new Unobserved();
 
-    private Unobserved() {
-    }
+    private Unobserved() {}
 
     @Override
     public String toString() {

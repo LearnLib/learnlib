@@ -133,7 +133,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
         for (Word<I> suf : newSuffixes) {
             if (!splitters.contains(suf)) {
                 splitters.add(suf);
-                LOG.debug("added suffix: {0}", suf);
+                LOG.debug("added suffix: {}", suf);
             }
         }
 

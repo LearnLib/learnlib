@@ -26,8 +26,7 @@ import net.automatalib.words.Word;
  */
 public final class ObservationTableSource {
 
-    private ObservationTableSource() {
-    }
+    private ObservationTableSource() {}
 
     public static ObservationTable<String, String> otWithFourSuffixes() {
         List<Word<String>> suffixes = new ArrayList<>();

@@ -74,8 +74,7 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
         SystemStateHandler<S> handler = builder.systemStateHandler;
         // If the specified handler is null, no action is required
         if (handler == null) {
-            handler = state -> {
-            };
+            handler = state -> {};
         }
         this.systemStateHandler = handler;
         this.invariantInputSymbols =

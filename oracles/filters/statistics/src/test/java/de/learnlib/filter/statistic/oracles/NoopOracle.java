@@ -23,7 +23,6 @@ import de.learnlib.api.query.Query;
 public class NoopOracle<I, D> implements MembershipOracle<I, D> {
 
     @Override
-    public void processQueries(Collection<? extends Query<I, D>> queries) {
-    }
+    public void processQueries(Collection<? extends Query<I, D>> queries) {}
 
 }

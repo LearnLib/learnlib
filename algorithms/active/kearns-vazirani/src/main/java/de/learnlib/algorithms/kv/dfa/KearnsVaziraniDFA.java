@@ -99,8 +99,7 @@ public class KearnsVaziraniDFA<I>
             return false;
         }
         if (repeatedCounterexampleEvaluation) {
-            while (refineHypothesisSingle(input, output)) {
-            }
+            while (refineHypothesisSingle(input, output)) {}
         }
         return true;
     }
@@ -181,7 +180,7 @@ public class KearnsVaziraniDFA<I>
         for (int i = 0; i < numTrans; i++) {
             long encodedTrans = transList.get(i);
 
-            int sourceState = (int) (encodedTrans >> StateInfo.INTEGER_WORD_WIDTH);
+            int sourceState = (int) (encodedTrans >> Integer.SIZE);
             int transIdx = (int) (encodedTrans);
 
             StateInfo<I, Boolean> sourceInfo = stateInfos.get(sourceState);
@@ -195,7 +194,7 @@ public class KearnsVaziraniDFA<I>
         for (int i = 0; i < numTrans; i++) {
             long encodedTrans = transList.get(i);
 
-            int sourceState = (int) (encodedTrans >> StateInfo.INTEGER_WORD_WIDTH);
+            int sourceState = (int) (encodedTrans >> Integer.SIZE);
             int transIdx = (int) (encodedTrans);
 
             setTransition(sourceState, transIdx, succs.get(i));

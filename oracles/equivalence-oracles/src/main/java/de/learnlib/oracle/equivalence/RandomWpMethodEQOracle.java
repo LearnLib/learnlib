@@ -17,6 +17,7 @@ package de.learnlib.oracle.equivalence;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -153,23 +154,23 @@ public class RandomWpMethodEQOracle<A extends UniversalDeterministicAutomaton<?,
         return doGenerateTestWords(aut, inputs);
     }
 
-    protected <S> Stream<Word<I>> doGenerateTestWords(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
-                                                      Collection<? extends I> inputs) {
+    private <S> Stream<Word<I>> doGenerateTestWords(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
+                                                    Collection<? extends I> inputs) {
         // Note that we want to use ArrayLists because we want constant time random access
         // We will sample from this for a prefix
-        ArrayList<Word<I>> stateCover = new ArrayList<>(hypothesis.size());
+        List<Word<I>> stateCover = new ArrayList<>(hypothesis.size());
         Covers.stateCover(hypothesis, inputs, stateCover);
 
         // Then repeatedly from this for a random word
-        ArrayList<I> arrayAlphabet = new ArrayList<>(inputs);
+        List<I> arrayAlphabet = new ArrayList<>(inputs);
 
         // Finally we test the state with a suffix, sometimes a global one, sometimes local
-        ArrayList<Word<I>> globalSuffixes = new ArrayList<>();
+        List<Word<I>> globalSuffixes = new ArrayList<>();
         Automata.characterizingSet(hypothesis, inputs, globalSuffixes);
 
-        MutableMapping<S, ArrayList<Word<I>>> localSuffixSets = hypothesis.createStaticStateMapping();
+        MutableMapping<S, List<Word<I>>> localSuffixSets = hypothesis.createStaticStateMapping();
         for (S state : hypothesis.getStates()) {
-            ArrayList<Word<I>> suffixSet = new ArrayList<>();
+            List<Word<I>> suffixSet = new ArrayList<>();
             Automata.stateCharacterizingSet(hypothesis, inputs, state, suffixSet);
             localSuffixSets.put(state, suffixSet);
         }
@@ -184,10 +185,10 @@ public class RandomWpMethodEQOracle<A extends UniversalDeterministicAutomaton<?,
     }
 
     private <S> Word<I> generateSingleTestWord(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
-                                               ArrayList<Word<I>> stateCover,
-                                               ArrayList<I> arrayAlphabet,
-                                               ArrayList<Word<I>> globalSuffixes,
-                                               MutableMapping<S, ArrayList<Word<I>>> localSuffixSets) {
+                                               List<Word<I>> stateCover,
+                                               List<I> arrayAlphabet,
+                                               List<Word<I>> globalSuffixes,
+                                               MutableMapping<S, List<Word<I>>> localSuffixSets) {
 
         WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
 
@@ -213,7 +214,7 @@ public class RandomWpMethodEQOracle<A extends UniversalDeterministicAutomaton<?,
         } else {
             // local
             S state2 = hypothesis.getState(wb);
-            ArrayList<Word<I>> localSuffixes = localSuffixSets.get(state2);
+            List<Word<I>> localSuffixes = localSuffixSets.get(state2);
             if (!localSuffixes.isEmpty()) {
                 wb.append(localSuffixes.get(rand.nextInt(localSuffixes.size())));
             }

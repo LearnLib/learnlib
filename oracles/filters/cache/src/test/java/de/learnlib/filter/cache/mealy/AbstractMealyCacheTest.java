@@ -36,15 +36,7 @@ public abstract class AbstractMealyCacheTest
 
     public AbstractMealyCacheTest() {
         counter = new MealyCounterOracle<>(new MealySimulatorOracle<>(CacheTestUtils.MEALY), "counterOracle");
-        errorMapper = o -> {
-            switch (o) {
-                case 1: {
-                    return 10;
-                }
-                default:
-                    return null;
-            }
-        };
+        errorMapper = o -> o == 1 ? 10 : null;
     }
 
     @Override

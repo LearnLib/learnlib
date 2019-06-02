@@ -124,8 +124,7 @@ public final class GlobalSuffixFinders {
             fromLocalFinder(LocalSuffixFinders.RIVEST_SCHAPIRE, true);
 
     // prevent instantiation
-    private GlobalSuffixFinders() {
-    }
+    private GlobalSuffixFinders() {}
 
     /**
      * Transforms a {@link LocalSuffixFinder} into a global one. This is a convenience method, behaving like

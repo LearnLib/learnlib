@@ -46,8 +46,7 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             return false;
         }
 
-        while (refineHypothesisSingle(ceQuery)) {
-        }
+        while (refineHypothesisSingle(ceQuery)) {}
 
         return true;
     }
