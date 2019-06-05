@@ -148,7 +148,7 @@ public class SimulatorOmegaOracle<S, I, D>
 
     public static class DFASimulatorOmegaOracle<S, I>
             extends SimulatorOmegaOracle<S, I, Boolean>
-            implements DFAOmegaMembershipOracle<S, I> {
+            implements SingleQueryOmegaOracleDFA<S, I> {
 
         private final DFA<S, I> automaton;
 
@@ -165,7 +165,7 @@ public class SimulatorOmegaOracle<S, I, D>
 
     public static class MealySimulatorOmegaOracle<S, I, O>
             extends SimulatorOmegaOracle<S, I, Word<O>>
-            implements MealyOmegaMembershipOracle<S, I, O> {
+            implements SingleQueryOmegaOracleMealy<S, I, O> {
 
         private final MealyMachine<?, I, ?, O> automaton;
 
