@@ -45,5 +45,11 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
+
+        <!-- JSR-305 -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
     </dependencies>
 </project>
