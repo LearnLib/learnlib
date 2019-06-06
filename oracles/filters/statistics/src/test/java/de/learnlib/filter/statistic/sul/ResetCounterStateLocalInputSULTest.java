@@ -13,35 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.filter.statistic.queries;
+package de.learnlib.filter.statistic.sul;
 
-import de.learnlib.api.query.AbstractQuery;
-import de.learnlib.api.query.Query;
-import net.automatalib.words.Word;
+import de.learnlib.api.statistic.StatisticSUL;
+import de.learnlib.driver.util.StateLocalInputMealySimulatorSUL;
+import de.learnlib.filter.statistic.TestQueries;
 
-public class NoopQuery<I, D> extends AbstractQuery<I, D> {
-
-    public NoopQuery(Query<I, ?> query) {
-        super(query);
-    }
-
-    public NoopQuery(Word<I> prefix, Word<I> suffix) {
-        super(prefix, suffix);
-    }
-
-    public NoopQuery(Word<I> queryWord) {
-        super(queryWord);
-    }
+public class ResetCounterStateLocalInputSULTest extends AbstractResetCounterSULTest {
 
     @Override
-    public void answer(D output) {}
-
-    /**
-     * @see AbstractQuery#toStringWithAnswer(Object)
-     */
-    @Override
-    public String toString() {
-        return toStringWithAnswer(null);
+    protected StatisticSUL<Integer, Character> getStatisticSUL() {
+        return new ResetCounterStateLocalInputSUL<>(TestQueries.COUNTER_NAME,
+                                                    new StateLocalInputMealySimulatorSUL<>(TestQueries.DELEGATE));
     }
-
 }

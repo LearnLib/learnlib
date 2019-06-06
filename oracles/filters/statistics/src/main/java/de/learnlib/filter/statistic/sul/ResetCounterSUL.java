@@ -70,19 +70,4 @@ public class ResetCounterSUL<I, O> implements StatisticSUL<I, O> {
     public Counter getStatisticalData() {
         return counter;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        return sul.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return sul.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return sul.toString();
-    }
 }

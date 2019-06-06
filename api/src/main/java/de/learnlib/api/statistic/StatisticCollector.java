@@ -15,26 +15,22 @@
  */
 package de.learnlib.api.statistic;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
+import javax.annotation.Nonnull;
 
 /**
- * Common interface for learners keeping statistics.
+ * A utility interface to indicate that the implementing class collects statistical information that may be obtained via
+ * its {@link #getStatisticalData()} method.
  *
- * @param <M>
- *         the automaton type
- * @param <I>
- *         input symbol class
- * @param <D>
- *         output symbol class
- *
- * @author Jeroen Meijer
+ * @author frohme
  */
-public interface StatisticLearner<M, I, D> extends LearningAlgorithm<M, I, D>, StatisticCollector {
+public interface StatisticCollector {
 
-    interface DFAStatisticLearner<I> extends StatisticLearner<DFA<?, I>, I, Boolean> {}
+    /**
+     * Returns this statistical data gathered by this collector.
+     *
+     * @return the statistical data gathered by this collector
+     */
+    @Nonnull
+    StatisticData getStatisticalData();
 
-    interface MealyStatisticLearner<I, O> extends StatisticLearner<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 }

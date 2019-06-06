@@ -13,30 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.filter.statistic.queries;
+package de.learnlib.filter.statistic.sul;
 
-import de.learnlib.api.query.AbstractQuery;
-import de.learnlib.api.query.Query;
-import net.automatalib.words.Word;
-import org.testng.Assert;
+import de.learnlib.api.statistic.StatisticSUL;
+import de.learnlib.driver.util.MealySimulatorSUL;
+import de.learnlib.filter.statistic.TestQueries;
 
-public class UnanswerableQuery<I, D> extends AbstractQuery<I, D> {
-
-    public UnanswerableQuery(Query<I, ?> query) {
-        super(query);
-    }
-
-    public UnanswerableQuery(Word<I> queryWord) {
-        super(queryWord);
-    }
-
-    public UnanswerableQuery(Word<I> prefix, Word<I> suffix) {
-        super(prefix, suffix);
-    }
+public class SymbolCounterSULTest extends AbstractSymbolCounterSULTest {
 
     @Override
-    public void answer(D output) {
-        Assert.fail("Query should not be answered");
+    protected StatisticSUL<Integer, Character> getStatisticSUL() {
+        return new SymbolCounterSUL<>(TestQueries.COUNTER_NAME, new MealySimulatorSUL<>(TestQueries.DELEGATE));
     }
-
 }
+

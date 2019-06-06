@@ -77,7 +77,7 @@ public class HistogramDataSet extends AbstractStatisticData {
             int count = e.getValue();
             idx += count;
             if (idx >= size / 2) {
-                return e.getValue();
+                return e.getKey();
             }
         }
         return 0.0;
@@ -94,11 +94,13 @@ public class HistogramDataSet extends AbstractStatisticData {
     @Nonnull
     public String getDetails() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getSummary()).append(System.getProperty("line.separator"));
+        sb.append(getSummary()).append(System.lineSeparator());
         for (Entry<Long, Integer> e : histogram.entrySet()) {
-            sb.append("    ").append(e.getKey()).
-                    append(", ").append(e.getValue()).
-                      append(System.getProperty("line.separator"));
+            sb.append('\t')
+              .append(e.getKey())
+              .append(", ")
+              .append(e.getValue())
+              .append(System.lineSeparator());
         }
         return sb.toString();
     }

@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.filter.statistic.oracles;
+package de.learnlib.filter.statistic.sul;
 
-import java.util.Collection;
+import de.learnlib.api.statistic.StatisticSUL;
+import de.learnlib.driver.util.StateLocalInputMealySimulatorSUL;
+import de.learnlib.filter.statistic.TestQueries;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
-
-public class ConstantOutputOracle<I, D> implements MembershipOracle<I, D> {
-
-    private final D output;
-
-    public ConstantOutputOracle(D answer) {
-        this.output = answer;
-    }
+public class SymbolCounterStateLocalInputSULTest extends AbstractSymbolCounterSULTest {
 
     @Override
-    public void processQueries(Collection<? extends Query<I, D>> queries) {
-        for (Query<I, D> qry : queries) {
-            qry.answer(output);
-        }
+    protected StatisticSUL<Integer, Character> getStatisticSUL() {
+        return new SymbolCounterStateLocalInputSUL<>(TestQueries.COUNTER_NAME,
+                                                     new StateLocalInputMealySimulatorSUL<>(TestQueries.DELEGATE));
     }
-
 }

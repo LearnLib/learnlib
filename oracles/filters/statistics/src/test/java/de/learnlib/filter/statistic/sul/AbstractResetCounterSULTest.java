@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package de.learnlib.filter.statistic.sul;
 
-package de.learnlib.api.statistic;
+import java.util.Collection;
 
-import de.learnlib.api.oracle.Filter;
+import de.learnlib.api.query.Query;
+import de.learnlib.filter.statistic.TestQueries;
+import net.automatalib.words.Word;
 
-/**
- * Common interface for oracles keeping statistics.
- *
- * @param <I>
- *         input symbol class
- * @param <D>
- *         output domain class
- *
- * @author falkhowar
- */
-public interface StatisticOracle<I, D> extends Filter<I, D>, StatisticCollector {}
+public abstract class AbstractResetCounterSULTest extends AbstractCounterSULTest {
+
+    @Override
+    protected int getCountIncreasePerQuery() {
+        return 1;
+    }
+
+    @Override
+    protected Collection<Query<Integer, Word<Character>>> createQueries(int num) {
+        return TestQueries.createNoopQueries(num);
+    }
+}

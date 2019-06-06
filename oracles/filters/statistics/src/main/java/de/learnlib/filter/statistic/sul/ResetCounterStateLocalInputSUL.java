@@ -43,19 +43,4 @@ public class ResetCounterStateLocalInputSUL<I, O> extends ResetCounterSUL<I, O> 
     public StateLocalInputSUL<I, O> fork() {
         return new ResetCounterStateLocalInputSUL<>(getStatisticalData(), sul.fork());
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        return sul.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return sul.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return sul.toString();
-    }
 }

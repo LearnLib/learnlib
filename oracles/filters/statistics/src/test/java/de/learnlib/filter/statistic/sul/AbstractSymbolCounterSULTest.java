@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.filter.statistic.oracles;
+package de.learnlib.filter.statistic.sul;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
+import de.learnlib.filter.statistic.TestQueries;
+import net.automatalib.words.Word;
 
-public class NoopOracle<I, D> implements MembershipOracle<I, D> {
+public abstract class AbstractSymbolCounterSULTest extends AbstractCounterSULTest {
+
+    private static final int QUERY_LENGTH = 5;
 
     @Override
-    public void processQueries(Collection<? extends Query<I, D>> queries) {}
+    protected int getCountIncreasePerQuery() {
+        return QUERY_LENGTH;
+    }
 
+    @Override
+    protected Collection<Query<Integer, Word<Character>>> createQueries(int num) {
+        return TestQueries.createNoopQueries(num, QUERY_LENGTH, TestQueries.INPUTS);
+    }
 }

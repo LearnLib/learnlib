@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package de.learnlib.filter.statistic.sul;
 
-package de.learnlib.api.statistic;
+import de.learnlib.api.statistic.StatisticSUL;
+import de.learnlib.driver.util.MealySimulatorSUL;
+import de.learnlib.filter.statistic.TestQueries;
 
-import de.learnlib.api.oracle.Filter;
+public class ResetCounterSULTest extends AbstractResetCounterSULTest {
 
-/**
- * Common interface for oracles keeping statistics.
- *
- * @param <I>
- *         input symbol class
- * @param <D>
- *         output domain class
- *
- * @author falkhowar
- */
-public interface StatisticOracle<I, D> extends Filter<I, D>, StatisticCollector {}
+    @Override
+    protected StatisticSUL<Integer, Character> getStatisticSUL() {
+        return new ResetCounterSUL<>(TestQueries.COUNTER_NAME, new MealySimulatorSUL<>(TestQueries.DELEGATE));
+    }
+}

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.filter.statistic;
+package de.learnlib.filter.statistic.oracle;
 
 import java.util.Collection;
 import java.util.Collections;
 
+import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
-import de.learnlib.filter.statistic.oracle.CounterOracle;
-import de.learnlib.filter.statistic.oracles.NoopOracle;
-import de.learnlib.filter.statistic.queries.AbstractTestQueries;
+import de.learnlib.filter.statistic.TestQueries;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
@@ -33,8 +33,9 @@ public class CounterOracleTest {
 
     private final CounterOracle<Object, Object> oracle;
 
+    @SuppressWarnings("unchecked")
     public CounterOracleTest() {
-        this.oracle = new CounterOracle<>(new NoopOracle<>(), COUNTER_NAME);
+        this.oracle = new CounterOracle<>(Mockito.mock(MembershipOracle.class), COUNTER_NAME);
     }
 
     @Test
@@ -44,7 +45,7 @@ public class CounterOracleTest {
 
     @Test(dependsOnMethods = "testInitialState")
     public void testFirstQueryBatch() {
-        Collection<Query<Object, Object>> queries = AbstractTestQueries.createNoopQueries(2);
+        Collection<Query<Object, Object>> queries = TestQueries.createNoopQueries(2);
         long oldCount = oracle.getCount();
         oracle.processQueries(queries);
         Assert.assertEquals(oracle.getCount(), oldCount + 2L);
@@ -60,7 +61,7 @@ public class CounterOracleTest {
 
     @Test(dependsOnMethods = "testEmptyQueryBatch")
     public void testSecondQueryBatch() {
-        Collection<Query<Object, Object>> queries = AbstractTestQueries.createNoopQueries(1);
+        Collection<Query<Object, Object>> queries = TestQueries.createNoopQueries(1);
         long oldCount = oracle.getCount();
         oracle.processQueries(queries);
         Assert.assertEquals(oracle.getCount(), oldCount + 1L);

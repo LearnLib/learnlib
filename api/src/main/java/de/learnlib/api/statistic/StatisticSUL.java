@@ -15,13 +15,6 @@
  */
 package de.learnlib.api.statistic;
 
-import javax.annotation.Nonnull;
-
 import de.learnlib.api.SUL;
 
-public interface StatisticSUL<I, O> extends SUL<I, O> {
-
-    @Nonnull
-    StatisticData getStatisticalData();
-
-}
+public interface StatisticSUL<I, O> extends SUL<I, O>, StatisticCollector {}

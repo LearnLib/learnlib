@@ -51,19 +51,4 @@ public class ResetCounterObservableSUL<S, I, O> extends ResetCounterSUL<I, O> im
     public boolean deepCopies() {
         return sul.deepCopies();
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        return sul.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return sul.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return sul.toString();
-    }
 }

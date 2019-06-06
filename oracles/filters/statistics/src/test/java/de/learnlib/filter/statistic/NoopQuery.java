@@ -13,27 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.filter.statistic.queries;
+package de.learnlib.filter.statistic;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import de.learnlib.api.query.Query;
+import de.learnlib.api.query.AbstractQuery;
 import net.automatalib.words.Word;
 
-public abstract class AbstractTestQueries {
+public class NoopQuery<I, D> extends AbstractQuery<I, D> {
 
-    private AbstractTestQueries() {
-        throw new AssertionError("Constructor should not be invoked");
+    NoopQuery(Word<I> queryWord) {
+        super(queryWord);
     }
 
-    public static <I, D> Collection<Query<I, D>> createNoopQueries(int numQueries) {
-        List<Query<I, D>> result = new ArrayList<>(numQueries);
-        for (int i = 0; i < numQueries; i++) {
-            result.add(new NoopQuery<>(Word.epsilon()));
-        }
-        return result;
-    }
+    @Override
+    public void answer(D output) {}
 
 }

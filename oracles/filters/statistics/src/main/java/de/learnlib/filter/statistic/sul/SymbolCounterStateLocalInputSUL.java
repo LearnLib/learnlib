@@ -43,20 +43,5 @@ public class SymbolCounterStateLocalInputSUL<I, O> extends SymbolCounterSUL<I, O
     public StateLocalInputSUL<I, O> fork() {
         return new SymbolCounterStateLocalInputSUL<>(getStatisticalData(), sul.fork());
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        return sul.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return sul.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return sul.toString();
-    }
 }
 
