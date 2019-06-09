@@ -71,7 +71,6 @@ public abstract class AbstractTTTLearner<A, I, D>
      * discriminators at its root.
      */
     protected final BlockList<I, D> blockList = new BlockList<>();
-    private final Collection<TTTEventListener<I, D>> eventListeners = new UnorderedCollection<>();
     protected AbstractTTTHypothesis<I, D, ?> hypothesis;
     protected BaseTTTDiscriminationTree<I, D> dtree;
 
@@ -233,8 +232,6 @@ public abstract class AbstractTTTLearner<A, I, D>
     private void splitState(TTTTransition<I, D> transition, Word<I> tempDiscriminator, D oldOut, D newOut) {
         assert !transition.isTree();
 
-        notifyPreSplit(transition, tempDiscriminator);
-
         AbstractBaseDTNode<I, D> dtNode = transition.getNonTreeTarget();
         assert dtNode.isLeaf();
         TTTState<I, D> oldState = dtNode.getData();
@@ -251,8 +248,6 @@ public abstract class AbstractTTTLearner<A, I, D>
         if (dtNode.getParent() == null || !dtNode.getParent().isTemp()) {
             blockList.insertBlock(dtNode);
         }
-
-        notifyPostSplit(transition, tempDiscriminator);
     }
 
     private void splitState(OutputInconsistency<I, D> outIncons) {
@@ -553,8 +548,6 @@ public abstract class AbstractTTTLearner<A, I, D>
     private void finalizeDiscriminator(AbstractBaseDTNode<I, D> blockRoot, Splitter<I, D> splitter) {
         assert blockRoot.isBlockRoot();
 
-        notifyPreFinalizeDiscriminator(blockRoot, splitter);
-
         Word<I> succDiscr = splitter.getDiscriminator().prepend(alphabet.getSymbol(splitter.symbolIdx));
 
         if (!blockRoot.getDiscriminator().equals(succDiscr)) {
@@ -569,8 +562,6 @@ public abstract class AbstractTTTLearner<A, I, D>
         }
 
         declareFinal(blockRoot);
-
-        notifyPostFinalizeDiscriminator(blockRoot, splitter);
     }
 
     protected boolean allNodesFinal() {
@@ -944,42 +935,6 @@ public abstract class AbstractTTTLearner<A, I, D>
                                                                D oldOutput,
                                                                D newOutput) {
         return node.split(discriminator, oldOutput, newOutput);
-    }
-
-    private void notifyPreFinalizeDiscriminator(AbstractBaseDTNode<I, D> blockRoot, Splitter<I, D> splitter) {
-        for (TTTEventListener<I, D> listener : eventListeners()) {
-            listener.preFinalizeDiscriminator(blockRoot, splitter);
-        }
-    }
-
-    private void notifyPostFinalizeDiscriminator(AbstractBaseDTNode<I, D> blockRoot, Splitter<I, D> splitter) {
-        for (TTTEventListener<I, D> listener : eventListeners()) {
-            listener.postFinalizeDiscriminator(blockRoot, splitter);
-        }
-    }
-
-    private void notifyPreSplit(TTTTransition<I, D> transition, Word<I> tempDiscriminator) {
-        for (TTTEventListener<I, D> listener : eventListeners()) {
-            listener.preSplit(transition, tempDiscriminator);
-        }
-    }
-
-    private void notifyPostSplit(TTTTransition<I, D> transition, Word<I> tempDiscriminator) {
-        for (TTTEventListener<I, D> listener : eventListeners()) {
-            listener.postSplit(transition, tempDiscriminator);
-        }
-    }
-
-    private Iterable<TTTEventListener<I, D>> eventListeners() {
-        return eventListeners;
-    }
-
-    public void addEventListener(TTTEventListener<I, D> listener) {
-        eventListeners.add(listener);
-    }
-
-    public void removeEventListener(TTTEventListener<I, D> listener) {
-        eventListeners.remove(listener);
     }
 
     @Override

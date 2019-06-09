@@ -49,15 +49,6 @@ public class HypLoc<I> implements AccessSequenceProvider<I> {
         this.aseq = (treeIncoming != null) ? treeIncoming.getAccessSequence() : Word.epsilon();
     }
 
-    public HypLoc(VPDAlphabet<I> alphabet, int index, boolean accepting, Word<I> aseq) {
-        this.index = index;
-        this.accepting = accepting;
-        this.intSuccessors = new ArrayStorage<>(alphabet.getNumInternals());
-        this.returnSuccessors = new ArrayStorage<>(alphabet.getNumReturns(), ArrayList::new);
-        this.treeIncoming = null;
-        this.aseq = aseq;
-    }
-
     public void updateStackAlphabetSize(int newStackAlphaSize) {
         for (int i = 0; i < returnSuccessors.size(); i++) {
             List<HypRetTrans<I>> transList = returnSuccessors.get(i);

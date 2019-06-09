@@ -21,7 +21,6 @@ import java.util.List;
 import net.automatalib.automata.vpda.AbstractOneSEVPA;
 import net.automatalib.automata.vpda.State;
 import net.automatalib.words.VPDAlphabet;
-import net.automatalib.words.Word;
 
 /**
  * @param <I>
@@ -64,12 +63,6 @@ public class OneSEVPAHypothesis<I> extends AbstractOneSEVPA<HypLoc<I>, I> {
         return loc.getReturnTransition(alphabet.getReturnSymbolIndex(retSym), stackSym);
     }
 
-    public HypLoc<I> createLocation(boolean accepting, Word<I> aseq) {
-        HypLoc<I> loc = new HypLoc<>(alphabet, locations.size(), accepting, aseq);
-        locations.add(loc);
-        return loc;
-    }
-
     public HypLoc<I> createLocation(boolean accepting, AbstractHypTrans<I> treeIncoming) {
         HypLoc<I> loc = new HypLoc<>(alphabet, locations.size(), accepting, treeIncoming);
         locations.add(loc);
@@ -77,7 +70,7 @@ public class OneSEVPAHypothesis<I> extends AbstractOneSEVPA<HypLoc<I>, I> {
     }
 
     public HypLoc<I> initialize() {
-        HypLoc<I> loc = createLocation(false, (AbstractHypTrans<I>) null);
+        HypLoc<I> loc = createLocation(false, null);
         this.initLoc = loc;
 
         return loc;

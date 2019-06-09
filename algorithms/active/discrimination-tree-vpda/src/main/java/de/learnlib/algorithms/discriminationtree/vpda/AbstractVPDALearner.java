@@ -260,10 +260,6 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
         return hypothesis.createLocation(false, trans);
     }
 
-    protected HypLoc<I> createLocation(Word<I> as) {
-        return hypothesis.createLocation(false, as);
-    }
-
     protected Boolean query(AccessSequenceProvider<I> asp, ContextPair<I> context) {
         return oracle.answerQuery(context.getPrefix().concat(asp.getAccessSequence()), context.getSuffix());
     }
