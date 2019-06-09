@@ -139,4 +139,8 @@ public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAStat
         }
         return successors.stream().filter(Objects::nonNull);
     }
+
+    public SP getProperty() {
+        return property;
+    }
 }

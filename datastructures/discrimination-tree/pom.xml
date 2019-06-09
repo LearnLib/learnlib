@@ -46,10 +46,6 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-util</artifactId>
         </dependency>
         <dependency>
@@ -71,29 +67,13 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.java.openjdk.cacio</groupId>
-            <artifactId>cacio-tta</artifactId>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-test-support</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-jung-visualizer</artifactId>
+            <artifactId>automata-serialization-dot</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <systemPropertyVariables>
-                        <awt.toolkit>net.java.openjdk.cacio.ctc.CTCToolkit</awt.toolkit>
-                        <java.awt.graphicsenv>net.java.openjdk.cacio.ctc.CTCGraphicsEnvironment</java.awt.graphicsenv>
-                        <java.awt.headless>false</java.awt.headless>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

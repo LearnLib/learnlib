@@ -1,0 +1,13 @@
+digraph g {
+
+	s0 [shape="oval" label="1"];
+	s1 [shape="box" label="a"];
+	s2 [shape="oval" label="2"];
+	s3 [shape="box" label="b"];
+	s4 [shape="box" label="c"];
+	s0 -> s1 [label="false"];
+	s0 -> s2 [label="true"];
+	s2 -> s3 [label="false"];
+	s2 -> s4 [label="true"];
+
+}

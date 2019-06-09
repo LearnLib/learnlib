@@ -27,6 +27,7 @@ import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.concepts.GraphViewable;
 import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
@@ -53,6 +54,7 @@ public class DTLearnerHypothesis<I, O, SP, TP>
                    AccessSequenceTransformer<I>,
                    StateIDs<HState<I, O, SP, TP>>,
                    SupportsGrowingAlphabet<I>,
+                   GraphViewable,
                    Serializable {
 
     private final Alphabet<I> alphabet;
@@ -162,6 +164,7 @@ public class DTLearnerHypothesis<I, O, SP, TP>
         return this;
     }
 
+    @Override
     public GraphView graphView() {
         return new GraphView();
     }
@@ -206,15 +209,6 @@ public class DTLearnerHypothesis<I, O, SP, TP>
                 @Override
                 protected Collection<HState<I, O, SP, TP>> initialNodes() {
                     return Collections.singleton(root);
-                }
-
-                @Override
-                public boolean getNodeProperties(HState<I, O, SP, TP> node, Map<String, String> properties) {
-                    if (!super.getNodeProperties(node, properties)) {
-                        return false;
-                    }
-                    properties.put(NodeAttrs.LABEL, node.toString());
-                    return true;
                 }
 
                 @Override

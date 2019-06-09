@@ -101,6 +101,20 @@ limitations under the License.
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learner-it-support</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-learning-examples</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-membership-oracles</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-dot</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Buildergen -->
         <dependency>

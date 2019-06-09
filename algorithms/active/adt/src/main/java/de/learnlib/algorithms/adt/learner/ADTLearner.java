@@ -813,6 +813,10 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         }
     }
 
+    public ADT<ADTState<I, O>, I, O> getADT() {
+        return adt;
+    }
+
     public static final class BuilderDefaults {
 
         private BuilderDefaults() {

@@ -15,18 +15,13 @@
  */
 package de.learnlib.datastructure.discriminationtree;
 
-import java.awt.AWTEvent;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.WindowEvent;
-import java.lang.reflect.InvocationTargetException;
+import java.io.IOException;
+import java.io.StringWriter;
 
-import javax.swing.SwingUtilities;
-
-import net.automatalib.commons.util.system.JVMUtil;
-import net.automatalib.visualization.Visualization;
-import org.testng.SkipException;
-import org.testng.annotations.BeforeClass;
+import com.google.common.io.CharStreams;
+import net.automatalib.commons.util.IOUtil;
+import net.automatalib.serialization.dot.GraphDOT;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -34,22 +29,14 @@ import org.testng.annotations.Test;
  */
 public class VisualizationTest {
 
-    @BeforeClass
-    public void setupAutoClose() {
-        // As soon as we observe an event that indicates a new window, close it to prevent blocking the tests.
-        Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
-            final WindowEvent windowEvent = (WindowEvent) event;
-            final Window w = windowEvent.getWindow();
-            w.dispatchEvent(new WindowEvent(w, WindowEvent.WINDOW_CLOSING));
-        }, AWTEvent.WINDOW_FOCUS_EVENT_MASK);
-    }
-
     @Test
-    public void testVisualization() throws InvocationTargetException, InterruptedException {
-        if (JVMUtil.getCanonicalSpecVersion() > 8) {
-            throw new SkipException("The headless AWT environment currently only works with Java 8 and below");
-        }
+    public void testVisualization() throws IOException {
+        final StringWriter actualDT = new StringWriter();
+        GraphDOT.write(DummyDT.DT, actualDT);
 
-        SwingUtilities.invokeAndWait(() -> Visualization.visualize(DummyDT.DT));
+        final String expectedDT =
+                CharStreams.toString(IOUtil.asBufferedUTF8Reader(VisualizationTest.class.getResourceAsStream("/dt.dot")));
+
+        Assert.assertEquals(actualDT.toString(), expectedDT);
     }
 }

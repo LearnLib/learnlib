@@ -73,8 +73,17 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
         <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-dot</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learner-it-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-learning-examples</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>

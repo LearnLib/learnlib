@@ -1,0 +1,25 @@
+digraph g {
+
+	s0 [shape="oval" label="WATER"];
+	s1 [shape="oval" label="CLEAN"];
+	s2 [shape="oval" label="BUTTON"];
+	s3 [shape="box" label="s1"];
+	s4 [shape="box" label="s5"];
+	s5 [shape="oval" label="POD BUTTON"];
+	s6 [shape="box" label="s3"];
+	s7 [shape="oval" label="WATER BUTTON"];
+	s8 [shape="box" label="s2"];
+	s9 [shape="box" label="s0"];
+	s10 [shape="box" label="s4"];
+	s0 -> s1 [label="error"];
+	s0 -> s2 [label="ok"];
+	s1 -> s3 [label="error"];
+	s1 -> s4 [label="ok"];
+	s2 -> s5 [label="error"];
+	s2 -> s6 [label="coffee!"];
+	s5 -> s7 [label="ok error"];
+	s5 -> s8 [label="ok coffee!"];
+	s7 -> s9 [label="ok error"];
+	s7 -> s10 [label="ok coffee!"];
+
+}

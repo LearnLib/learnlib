@@ -105,5 +105,10 @@ limitations under the License.
             <artifactId>learnlib-membership-oracles</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-dot</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

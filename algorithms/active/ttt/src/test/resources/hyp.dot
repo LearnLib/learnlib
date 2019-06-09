@@ -1,0 +1,34 @@
+digraph g {
+
+	s0 [shape="circle" label="s0"];
+	s1 [shape="circle" label="s1"];
+	s2 [shape="circle" label="s2"];
+	s3 [shape="circle" label="s3"];
+	s4 [shape="circle" label="s4"];
+	s5 [shape="circle" label="s5"];
+	s0 -> s2 [style="bold" label="WATER"];
+	s0 -> s4 [style="bold" label="POD"];
+	s0 -> s1 [style="bold" label="BUTTON"];
+	s0 -> s0 [label="CLEAN"];
+	s1 -> s1 [label="WATER"];
+	s1 -> s1 [label="POD"];
+	s1 -> s1 [label="BUTTON"];
+	s1 -> s1 [label="CLEAN"];
+	s2 -> s2 [label="WATER"];
+	s2 -> s3 [style="bold" label="POD"];
+	s2 -> s1 [label="BUTTON"];
+	s2 -> s0 [label="CLEAN"];
+	s3 -> s3 [label="WATER"];
+	s3 -> s3 [label="POD"];
+	s3 -> s5 [style="bold" label="BUTTON"];
+	s3 -> s0 [label="CLEAN"];
+	s4 -> s3 [label="WATER"];
+	s4 -> s4 [label="POD"];
+	s4 -> s1 [label="BUTTON"];
+	s4 -> s0 [label="CLEAN"];
+	s5 -> s1 [label="WATER"];
+	s5 -> s1 [label="POD"];
+	s5 -> s1 [label="BUTTON"];
+	s5 -> s0 [label="CLEAN"];
+
+}

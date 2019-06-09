@@ -249,9 +249,9 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
 
             @Override
             public Collection<PTATransition<S>> getOutgoingEdges(S node) {
-                return IntStream.range(0, alphabetSize)
-                                .filter(i -> node.getSuccessor(i) != null)
-                                .mapToObj(i -> new PTATransition<>(node, i))
+                return IntStream.range(0, Math.min(alphabet.size(), alphabetSize))
+                                .mapToObj(i -> getTransition(node, i))
+                                .filter(Objects::nonNull)
                                 .collect(Collectors.toList());
             }
 
@@ -275,15 +275,19 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
                 return new DefaultVisualizationHelper<S, PTATransition<S>>() {
 
                     @Override
+                    public boolean getNodeProperties(S node, Map<String, String> properties) {
+                        properties.put(NodeAttrs.LABEL,
+                                       node.getProperty() == null ? "" : node.getProperty().toString());
+                        return super.getNodeProperties(node, properties);
+                    }
+
+                    @Override
                     public boolean getEdgeProperties(S src,
                                                      PTATransition<S> edge,
                                                      S tgt,
                                                      Map<String, String> properties) {
-                        if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-                            return false;
-                        }
                         properties.put(EdgeAttrs.LABEL, String.valueOf(alphabet.getSymbol(edge.getIndex())));
-                        return true;
+                        return super.getEdgeProperties(src, edge, tgt, properties);
                     }
                 };
             }
@@ -394,6 +398,10 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
 
     @Override
     public PTATransition<S> getTransition(S state, Integer input) {
+        if (input == null || state.getSuccessor(input) == null) {
+            return null;
+        }
+
         return new PTATransition<>(state, input);
     }
 
