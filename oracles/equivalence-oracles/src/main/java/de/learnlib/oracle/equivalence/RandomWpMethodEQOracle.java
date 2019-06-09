@@ -112,11 +112,7 @@ public class RandomWpMethodEQOracle<A extends UniversalDeterministicAutomaton<?,
                                   int rndLength,
                                   int bound,
                                   int batchSize) {
-        super(sulOracle, batchSize);
-        this.minimalSize = minimalSize;
-        this.rndLength = rndLength;
-        this.bound = bound;
-        this.rand = new Random();
+        this(sulOracle, minimalSize, rndLength, bound, new Random(), batchSize);
     }
 
     /**

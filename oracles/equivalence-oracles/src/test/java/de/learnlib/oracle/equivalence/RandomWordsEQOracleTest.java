@@ -69,7 +69,7 @@ public class RandomWordsEQOracleTest
 
     @Override
     protected EquivalenceOracle<SuffixOutput<Character, Boolean>, Character, Boolean> getOracle(MembershipOracle<Character, Boolean> mOracle) {
-        return new RandomWordsEQOracle<>(mOracle, MIN_LENGTH, MAX_TESTS, MAX_LENGTH, new Random(RANDOM_SEED));
+        return new RandomWordsEQOracle<>(mOracle, MIN_LENGTH, MAX_LENGTH, MAX_TESTS, new Random(RANDOM_SEED));
     }
 
     @Override

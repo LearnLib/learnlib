@@ -32,7 +32,6 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
         extends AbstractTestWordEQOracle<A, I, D> {
 
     private final IncrementalWMethodTestsIterator<I> incrementalWMethodIt;
-    private int maxDepth;
 
     public IncrementalWMethodEQOracle(MembershipOracle<I, D> oracle, Alphabet<I> alphabet) {
         this(oracle, alphabet, 1);
@@ -42,24 +41,22 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
         this(oracle, alphabet, maxDepth, 1);
     }
 
-    public IncrementalWMethodEQOracle(MembershipOracle<I, D> oracle, Alphabet<I> alphabet,
+    public IncrementalWMethodEQOracle(MembershipOracle<I, D> oracle,
+                                      Alphabet<I> alphabet,
                                       int maxDepth,
                                       int batchSize) {
         super(oracle, batchSize);
 
         this.incrementalWMethodIt = new IncrementalWMethodTestsIterator<>(alphabet);
         this.incrementalWMethodIt.setMaxDepth(maxDepth);
-
-        this.maxDepth = maxDepth;
     }
 
     public int getMaxDepth() {
-        return maxDepth;
+        return this.incrementalWMethodIt.getMaxDepth();
     }
 
     public void setMaxDepth(int maxDepth) {
         this.incrementalWMethodIt.setMaxDepth(maxDepth);
-        this.maxDepth = maxDepth;
     }
 
     @Override
@@ -81,7 +78,8 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
             super(oracle, alphabet, maxDepth);
         }
 
-        public DFAIncrementalWMethodEQOracle(MembershipOracle<I, Boolean> oracle, Alphabet<I> alphabet,
+        public DFAIncrementalWMethodEQOracle(MembershipOracle<I, Boolean> oracle,
+                                             Alphabet<I> alphabet,
                                              int maxDepth,
                                              int batchSize) {
             super(oracle, alphabet, maxDepth, batchSize);
@@ -96,12 +94,14 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
             super(oracle, alphabet);
         }
 
-        public MealyIncrementalWMethodEQOracle(MembershipOracle<I, Word<O>> oracle, Alphabet<I> alphabet,
+        public MealyIncrementalWMethodEQOracle(MembershipOracle<I, Word<O>> oracle,
+                                               Alphabet<I> alphabet,
                                                int maxDepth) {
             super(oracle, alphabet, maxDepth);
         }
 
-        public MealyIncrementalWMethodEQOracle(MembershipOracle<I, Word<O>> oracle, Alphabet<I> alphabet,
+        public MealyIncrementalWMethodEQOracle(MembershipOracle<I, Word<O>> oracle,
+                                               Alphabet<I> alphabet,
                                                int maxDepth,
                                                int batchSize) {
             super(oracle, alphabet, maxDepth, batchSize);

@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Lists;
 import de.learnlib.api.oracle.BlackBoxOracle;
 import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.api.query.DefaultQuery;
@@ -54,7 +53,7 @@ public class DisproveFirstOracle<A extends Output<I, D>, I, D> implements BlackB
     }
 
     public DisproveFirstOracle(PropertyOracle<I, ? super A, ?, D> propertyOracle) {
-        this(Lists.newArrayList(propertyOracle));
+        this(Collections.singleton(propertyOracle));
     }
 
     public DisproveFirstOracle(Collection<? extends PropertyOracle<I, ? super A, ?, D>> propertyOracles) {

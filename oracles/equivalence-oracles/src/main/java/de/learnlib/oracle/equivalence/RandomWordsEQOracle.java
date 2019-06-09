@@ -42,7 +42,7 @@ public class RandomWordsEQOracle<A extends Output<I, D>, I, D> extends AbstractT
                                int minLength,
                                int maxLength,
                                int maxTests) {
-        this(mqOracle, minLength, maxLength, maxTests, new Random(), 1);
+        this(mqOracle, minLength, maxLength, maxTests, new Random());
     }
 
     public RandomWordsEQOracle(MembershipOracle<I, D> mqOracle,

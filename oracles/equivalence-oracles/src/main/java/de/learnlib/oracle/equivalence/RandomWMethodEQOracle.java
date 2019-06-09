@@ -89,7 +89,7 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
      *         specifies the bound (set to 0 for unbounded).
      */
     public RandomWMethodEQOracle(MembershipOracle<I, D> sulOracle, int minimalSize, int rndLength, int bound) {
-        this(sulOracle, minimalSize, rndLength, bound, new Random(), 1);
+        this(sulOracle, minimalSize, rndLength, bound, 1);
     }
 
     /**
