@@ -48,6 +48,11 @@ public class ExamplesTest {
         Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
             final WindowEvent windowEvent = (WindowEvent) event;
             final Window w = windowEvent.getWindow();
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                throw new IllegalStateException(e);
+            }
             w.dispatchEvent(new WindowEvent(w, WindowEvent.WINDOW_CLOSING));
         }, AWTEvent.WINDOW_FOCUS_EVENT_MASK);
     }

@@ -77,17 +77,17 @@ public abstract class AbstractParallelCacheTest<A extends SuffixOutput<I, D>, I,
         this.cache = getCache(this.alphabet, this.counterOracle);
     }
 
-    @Test(timeOut = 10000)
+    @Test(timeOut = 20000)
     public void testConcurrentMembershipQueriesImplicit() {
         testConcurrentMembershipQueries(queries -> MQUtil.answerQueriesParallel(cache, queries));
     }
 
-    @Test(dependsOnMethods = "testConcurrentMembershipQueriesImplicit", timeOut = 10000)
+    @Test(dependsOnMethods = "testConcurrentMembershipQueriesImplicit", timeOut = 20000)
     public void testConcurrentEquivalenceQueriesImplicit() {
         testConcurrentEquivalenceQueries(queries -> MQUtil.answerQueriesParallel(cache, queries));
     }
 
-    @Test(dependsOnMethods = "testConcurrentEquivalenceQueriesImplicit", timeOut = 10000)
+    @Test(dependsOnMethods = "testConcurrentEquivalenceQueriesImplicit", timeOut = 20000)
     public void testConcurrentMembershipQueriesExplicit() {
         setUp();
         this.parallelOracle = ParallelOracleBuilders.newDynamicParallelOracle(() -> cache)
@@ -98,7 +98,7 @@ public abstract class AbstractParallelCacheTest<A extends SuffixOutput<I, D>, I,
         testConcurrentMembershipQueries(parallelOracle::processQueries);
     }
 
-    @Test(dependsOnMethods = "testConcurrentMembershipQueriesExplicit", timeOut = 10000)
+    @Test(dependsOnMethods = "testConcurrentMembershipQueriesExplicit", timeOut = 20000)
     public void testConcurrentEquivalenceQueriesExplicit() {
         testConcurrentEquivalenceQueries(parallelOracle::processQueries);
         parallelOracle.shutdownNow();
