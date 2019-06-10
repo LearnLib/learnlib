@@ -564,6 +564,11 @@ limitations under the License.
                                     <version>${buildergen.version}</version>
                                 </additionalDependency>
                                 <additionalDependency>
+                                    <groupId>de.learnlib</groupId>
+                                    <artifactId>learnlib-annotation-processor</artifactId>
+                                    <version>${project.version}</version>
+                                </additionalDependency>
+                                <additionalDependency>
                                     <groupId>org.kohsuke.metainf-services</groupId>
                                     <artifactId>metainf-services</artifactId>
                                     <version>${metainf-services.version}</version>
