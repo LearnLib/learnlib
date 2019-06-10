@@ -21,7 +21,6 @@ import java.util.Set;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.examples.dfa.ExamplePaulAndMary;
-import de.learnlib.oracle.equivalence.RandomWMethodEQOracle.DFARandomWMethodEQOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
@@ -75,7 +74,7 @@ public class RandomWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, Symbo
 
     @Override
     protected EquivalenceOracle<DFA<?, Symbol>, Symbol, Boolean> getOracle(MembershipOracle<Symbol, Boolean> mOracle) {
-        return new DFARandomWMethodEQOracle<>(mOracle, MIN_LENGTH, MAX_LENGTH, MAX_TESTS);
+        return new RandomWMethodEQOracle<>(mOracle, MIN_LENGTH, MAX_LENGTH, MAX_TESTS);
     }
 
     @Override

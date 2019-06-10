@@ -30,10 +30,10 @@ import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
 import de.learnlib.examples.mealy.ExampleTinyMealy;
 import de.learnlib.oracle.emptiness.MealyLassoEmptinessOracleImpl;
-import de.learnlib.oracle.equivalence.CExFirstOracle;
 import de.learnlib.oracle.equivalence.EQOracleChain;
 import de.learnlib.oracle.equivalence.MealyBFInclusionOracle;
-import de.learnlib.oracle.equivalence.WpMethodEQOracle.MealyWpMethodEQOracle;
+import de.learnlib.oracle.equivalence.MealyCExFirstOracle;
+import de.learnlib.oracle.equivalence.MealyWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOracle;
 import de.learnlib.oracle.property.MealyLassoPropertyOracle;
 import de.learnlib.util.Experiment;
@@ -97,7 +97,7 @@ public final class Example3 {
         // with the W-method.
         @SuppressWarnings("unchecked")
         MealyEquivalenceOracle<Character, Character> eqOracle = new EQOracleChain.MealyEQOracleChain<>(
-                new CExFirstOracle.MealyCExFirstOracle<>(ltl),
+                new MealyCExFirstOracle<>(ltl),
                 new MealyWpMethodEQOracle<>(mqOracle, 3));
 
         // create an experiment

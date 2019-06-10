@@ -19,7 +19,15 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Streams;
+import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
+import de.learnlib.buildtool.refinement.annotation.Generic;
+import de.learnlib.buildtool.refinement.annotation.Interface;
+import de.learnlib.buildtool.refinement.annotation.Map;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -37,6 +45,24 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
+@GenerateRefinement(name = "DFACompleteExplorationEQOracle",
+                    generics = "I",
+                    parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Boolean.class)},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = DFAMembershipOracle.class,
+                                            withGenerics = "I"),
+                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = "I"))
+@GenerateRefinement(name = "MealyCompleteExplorationEQOracle",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = MealyMembershipOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
 public class CompleteExplorationEQOracle<A extends Output<I, D>, I, D> extends AbstractTestWordEQOracle<A, I, D> {
 
     private final int minDepth;
@@ -89,44 +115,5 @@ public class CompleteExplorationEQOracle<A extends Output<I, D>, I, D> extends A
     @Override
     protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
         return Streams.stream(CollectionsUtil.allTuples(inputs, minDepth, maxDepth)).map(Word::fromList);
-    }
-
-    public static class DFACompleteExplorationEQOracle<I> extends CompleteExplorationEQOracle<DFA<?, I>, I, Boolean>
-            implements DFAEquivalenceOracle<I> {
-
-        public DFACompleteExplorationEQOracle(MembershipOracle<I, Boolean> mqOracle, int maxDepth) {
-            super(mqOracle, maxDepth);
-        }
-
-        public DFACompleteExplorationEQOracle(MembershipOracle<I, Boolean> mqOracle, int minDepth, int maxDepth) {
-            super(mqOracle, minDepth, maxDepth);
-        }
-
-        public DFACompleteExplorationEQOracle(MembershipOracle<I, Boolean> mqOracle,
-                                              int minDepth,
-                                              int maxDepth,
-                                              int batchSize) {
-            super(mqOracle, minDepth, maxDepth, batchSize);
-        }
-    }
-
-    public static class MealyCompleteExplorationEQOracle<I, O>
-            extends CompleteExplorationEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
-            implements MealyEquivalenceOracle<I, O> {
-
-        public MealyCompleteExplorationEQOracle(MembershipOracle<I, Word<O>> mqOracle, int maxDepth) {
-            super(mqOracle, maxDepth);
-        }
-
-        public MealyCompleteExplorationEQOracle(MembershipOracle<I, Word<O>> mqOracle, int minDepth, int maxDepth) {
-            super(mqOracle, minDepth, maxDepth);
-        }
-
-        public MealyCompleteExplorationEQOracle(MembershipOracle<I, Word<O>> mqOracle,
-                                                int minDepth,
-                                                int maxDepth,
-                                                int batchSize) {
-            super(mqOracle, minDepth, maxDepth, batchSize);
-        }
     }
 }

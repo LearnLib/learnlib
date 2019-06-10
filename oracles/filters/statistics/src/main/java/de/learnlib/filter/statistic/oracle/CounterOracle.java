@@ -22,8 +22,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.api.statistic.StatisticOracle;
+import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
+import de.learnlib.buildtool.refinement.annotation.Generic;
+import de.learnlib.buildtool.refinement.annotation.Interface;
+import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.filter.statistic.Counter;
 import net.automatalib.words.Word;
 
@@ -32,6 +38,20 @@ import net.automatalib.words.Word;
  *
  * @author falkhowar
  */
+@GenerateRefinement(name = "DFACounterOracle",
+                    generics = "I",
+                    parentGenerics = {@Generic("I"), @Generic(clazz = Boolean.class)},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = DFAMembershipOracle.class,
+                                            withGenerics = "I"),
+                    interfaces = @Interface(clazz = DFAMembershipOracle.class, generics = "I"))
+@GenerateRefinement(name = "MealyCounterOracle",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = MealyMembershipOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MealyMembershipOracle.class, generics = {"I", "O"}))
 @ParametersAreNonnullByDefault
 public class CounterOracle<I, D> implements StatisticOracle<I, D> {
 
@@ -68,20 +88,4 @@ public class CounterOracle<I, D> implements StatisticOracle<I, D> {
     public void setNext(MembershipOracle<I, D> next) {
         this.nextOracle = next;
     }
-
-    public static class DFACounterOracle<I> extends CounterOracle<I, Boolean> implements DFAMembershipOracle<I> {
-
-        public DFACounterOracle(MembershipOracle<I, Boolean> nextOracle, String name) {
-            super(nextOracle, name);
-        }
-    }
-
-    public static class MealyCounterOracle<I, O> extends CounterOracle<I, Word<O>>
-            implements MealyMembershipOracle<I, O> {
-
-        public MealyCounterOracle(MembershipOracle<I, Word<O>> nextOracle, String name) {
-            super(nextOracle, name);
-        }
-    }
-
 }

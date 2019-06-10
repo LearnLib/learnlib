@@ -19,7 +19,15 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Streams;
+import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
+import de.learnlib.buildtool.refinement.annotation.Generic;
+import de.learnlib.buildtool.refinement.annotation.Interface;
+import de.learnlib.buildtool.refinement.annotation.Map;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
@@ -28,6 +36,24 @@ import net.automatalib.util.automata.conformance.IncrementalWMethodTestsIterator
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
+@GenerateRefinement(name = "DFAIncrementalWMethodEQOracle",
+                    generics = "I",
+                    parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Boolean.class)},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = DFAMembershipOracle.class,
+                                            withGenerics = "I"),
+                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = "I"))
+@GenerateRefinement(name = "MealyIncrementalWMethodEQOracle",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = MealyMembershipOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
 public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 
@@ -66,46 +92,4 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
 
         return Streams.stream(incrementalWMethodIt);
     }
-
-    public static class DFAIncrementalWMethodEQOracle<I> extends IncrementalWMethodEQOracle<DFA<?, I>, I, Boolean>
-            implements DFAEquivalenceOracle<I> {
-
-        public DFAIncrementalWMethodEQOracle(MembershipOracle<I, Boolean> oracle, Alphabet<I> alphabet) {
-            super(oracle, alphabet);
-        }
-
-        public DFAIncrementalWMethodEQOracle(MembershipOracle<I, Boolean> oracle, Alphabet<I> alphabet, int maxDepth) {
-            super(oracle, alphabet, maxDepth);
-        }
-
-        public DFAIncrementalWMethodEQOracle(MembershipOracle<I, Boolean> oracle,
-                                             Alphabet<I> alphabet,
-                                             int maxDepth,
-                                             int batchSize) {
-            super(oracle, alphabet, maxDepth, batchSize);
-        }
-    }
-
-    public static class MealyIncrementalWMethodEQOracle<I, O>
-            extends IncrementalWMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
-            implements MealyEquivalenceOracle<I, O> {
-
-        public MealyIncrementalWMethodEQOracle(MembershipOracle<I, Word<O>> oracle, Alphabet<I> alphabet) {
-            super(oracle, alphabet);
-        }
-
-        public MealyIncrementalWMethodEQOracle(MembershipOracle<I, Word<O>> oracle,
-                                               Alphabet<I> alphabet,
-                                               int maxDepth) {
-            super(oracle, alphabet, maxDepth);
-        }
-
-        public MealyIncrementalWMethodEQOracle(MembershipOracle<I, Word<O>> oracle,
-                                               Alphabet<I> alphabet,
-                                               int maxDepth,
-                                               int batchSize) {
-            super(oracle, alphabet, maxDepth, batchSize);
-        }
-    }
-
 }

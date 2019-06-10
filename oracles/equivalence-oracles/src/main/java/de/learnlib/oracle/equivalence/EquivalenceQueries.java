@@ -49,7 +49,7 @@ public final class EquivalenceQueries {
         return new WpMethodEQOracle<>(sulOracle, maxDepth);
     }
 
-    public static <A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D> SimulatorEQOracle<I, D> simulator(
+    public static <A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D> SimulatorEQOracle<A, I, D> simulator(
             A target) {
         return new SimulatorEQOracle<>(target);
     }

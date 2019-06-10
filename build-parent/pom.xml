@@ -57,6 +57,14 @@ limitations under the License.
                             <exclude>**/NLStarLearnerBuilder.class</exclude>
                             <exclude>**/TTTLearner*Builder.class</exclude>
                             <exclude>**/TTTLearnerVPDABuilder.class</exclude>
+
+                            <!-- generated refinements for oracles -->
+                            <exclude>de/learnlib/filter/statistic/**/DFA*.class</exclude>
+                            <exclude>de/learnlib/filter/statistic/**/Mealy*.class</exclude>
+                            <exclude>de/learnlib/oracle/emptiness/DFA*.class</exclude>
+                            <exclude>de/learnlib/oracle/emptiness/Mealy*.class</exclude>
+                            <exclude>de/learnlib/oracle/equivalence/DFA*Oracle.class</exclude>
+                            <exclude>de/learnlib/oracle/equivalence/Mealy*Oracle.class</exclude>
                         </excludes>
                     </configuration>
                 </plugin>

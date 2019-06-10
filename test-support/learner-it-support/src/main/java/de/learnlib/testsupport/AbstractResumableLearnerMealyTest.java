@@ -23,7 +23,7 @@ import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.QueryAnswerer;
-import de.learnlib.oracle.equivalence.SimulatorEQOracle.MealySimulatorEQOracle;
+import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;

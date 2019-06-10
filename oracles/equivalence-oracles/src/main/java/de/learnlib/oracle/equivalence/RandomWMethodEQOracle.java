@@ -21,7 +21,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
+import de.learnlib.buildtool.refinement.annotation.Generic;
+import de.learnlib.buildtool.refinement.annotation.Interface;
+import de.learnlib.buildtool.refinement.annotation.Map;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
@@ -54,6 +62,24 @@ import net.automatalib.words.WordBuilder;
  *
  * @author Joshua Moerman
  */
+@GenerateRefinement(name = "DFARandomWMethodEQOracle",
+                    generics = "I",
+                    parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Boolean.class)},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = DFAMembershipOracle.class,
+                                            withGenerics = "I"),
+                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = "I"))
+@GenerateRefinement(name = "MealyRandomWMethodEQOracle",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = MealyMembershipOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
 public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 
@@ -195,72 +221,5 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
         }
 
         return wb.toWord();
-    }
-
-    public static class DFARandomWMethodEQOracle<I> extends RandomWMethodEQOracle<DFA<?, I>, I, Boolean>
-            implements DFAEquivalenceOracle<I> {
-
-        public DFARandomWMethodEQOracle(MembershipOracle<I, Boolean> mqOracle, int minimalSize, int rndLength) {
-            super(mqOracle, minimalSize, rndLength);
-        }
-
-        public DFARandomWMethodEQOracle(MembershipOracle<I, Boolean> mqOracle,
-                                        int minimalSize,
-                                        int rndLength,
-                                        int bound) {
-            super(mqOracle, minimalSize, rndLength, bound);
-        }
-
-        public DFARandomWMethodEQOracle(MembershipOracle<I, Boolean> mqOracle,
-                                        int minimalSize,
-                                        int rndLength,
-                                        int bound,
-                                        int batchSize) {
-            super(mqOracle, minimalSize, rndLength, bound, batchSize);
-        }
-
-        public DFARandomWMethodEQOracle(MembershipOracle<I, Boolean> mqOracle,
-                                        int minimalSize,
-                                        int rndLength,
-                                        int bound,
-                                        Random random,
-                                        int batchSize) {
-            super(mqOracle, minimalSize, rndLength, bound, random, batchSize);
-        }
-
-    }
-
-    public static class MealyRandomWMethodEQOracle<I, O>
-            extends RandomWMethodEQOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
-            implements MealyEquivalenceOracle<I, O> {
-
-        public MealyRandomWMethodEQOracle(MembershipOracle<I, Word<O>> mqOracle, int minimalSize, int rndLength) {
-            super(mqOracle, minimalSize, rndLength);
-        }
-
-        public MealyRandomWMethodEQOracle(MembershipOracle<I, Word<O>> mqOracle,
-                                          int minimalSize,
-                                          int rndLength,
-                                          int bound) {
-            super(mqOracle, minimalSize, rndLength, bound);
-        }
-
-        public MealyRandomWMethodEQOracle(MembershipOracle<I, Word<O>> mqOracle,
-                                          int minimalSize,
-                                          int rndLength,
-                                          int bound,
-                                          int batchSize) {
-            super(mqOracle, minimalSize, rndLength, bound, batchSize);
-        }
-
-        public MealyRandomWMethodEQOracle(MembershipOracle<I, Word<O>> mqOracle,
-                                          int minimalSize,
-                                          int rndLength,
-                                          int bound,
-                                          Random random,
-                                          int batchSize) {
-            super(mqOracle, minimalSize, rndLength, bound, random, batchSize);
-        }
-
     }
 }

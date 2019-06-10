@@ -32,10 +32,10 @@ import de.learnlib.examples.LearningExample.DFALearningExample;
 import de.learnlib.examples.dfa.ExampleTinyDFA;
 import de.learnlib.oracle.emptiness.DFABFEmptinessOracle;
 import de.learnlib.oracle.emptiness.DFALassoEmptinessOracleImpl;
-import de.learnlib.oracle.equivalence.CExFirstOracle;
 import de.learnlib.oracle.equivalence.DFABFInclusionOracle;
+import de.learnlib.oracle.equivalence.DFACExFirstOracle;
+import de.learnlib.oracle.equivalence.DFAWpMethodEQOracle;
 import de.learnlib.oracle.equivalence.EQOracleChain;
-import de.learnlib.oracle.equivalence.WpMethodEQOracle.DFAWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.DFASimulatorOmegaOracle;
 import de.learnlib.oracle.property.DFAFinitePropertyOracle;
 import de.learnlib.oracle.property.DFALassoPropertyOracle;
@@ -123,7 +123,7 @@ public final class Example4 {
         // with the W-method.
         @SuppressWarnings("unchecked")
         DFAEquivalenceOracle<Character> eqOracle = new EQOracleChain.DFAEQOracleChain<>(
-                new CExFirstOracle.DFACExFirstOracle<>(ltl),
+                new DFACExFirstOracle<>(ltl),
                 new DFAWpMethodEQOracle<>(mqOracle, 3));
 
         // create an experiment

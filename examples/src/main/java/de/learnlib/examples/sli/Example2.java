@@ -38,7 +38,7 @@ import de.learnlib.filter.statistic.sul.ResetCounterStateLocalInputSUL;
 import de.learnlib.filter.statistic.sul.SymbolCounterStateLocalInputSUL;
 import de.learnlib.oracle.equivalence.EQOracleChain;
 import de.learnlib.oracle.equivalence.EQOracleChain.MealyEQOracleChain;
-import de.learnlib.oracle.equivalence.SimulatorEQOracle.MealySimulatorEQOracle;
+import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import de.learnlib.oracle.equivalence.mealy.StateLocalInputMealySimulatorEQOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
 import de.learnlib.util.Experiment;

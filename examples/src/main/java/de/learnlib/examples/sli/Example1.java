@@ -26,7 +26,7 @@ import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.oracle.StateLocalInputOracle.StateLocalInputMealyOracle;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.driver.util.StateLocalInputMealySimulatorSUL;
-import de.learnlib.oracle.equivalence.SimulatorEQOracle.MealySimulatorEQOracle;
+import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import de.learnlib.oracle.equivalence.mealy.StateLocalInputMealySimulatorEQOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
 import de.learnlib.util.Experiment;

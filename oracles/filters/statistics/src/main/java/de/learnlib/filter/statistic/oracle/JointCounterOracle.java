@@ -19,7 +19,13 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicLong;
 
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
+import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
+import de.learnlib.buildtool.refinement.annotation.Generic;
+import de.learnlib.buildtool.refinement.annotation.Interface;
+import de.learnlib.buildtool.refinement.annotation.Map;
 import net.automatalib.words.Word;
 
 /**
@@ -33,6 +39,20 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
+@GenerateRefinement(name = "DFAJointCounterOracle",
+                    generics = "I",
+                    parentGenerics = {@Generic("I"), @Generic(clazz = Boolean.class)},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = DFAMembershipOracle.class,
+                                            withGenerics = "I"),
+                    interfaces = @Interface(clazz = DFAMembershipOracle.class, generics = "I"))
+@GenerateRefinement(name = "MealyJointCounterOracle",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = MealyMembershipOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MealyMembershipOracle.class, generics = {"I", "O"}))
 public class JointCounterOracle<I, D> implements MembershipOracle<I, D> {
 
     private final MembershipOracle<I, D> delegate;
@@ -69,21 +89,4 @@ public class JointCounterOracle<I, D> implements MembershipOracle<I, D> {
     public long getSymbolCount() {
         return symbolCounter.get();
     }
-
-    public static class DFAJointCounterOracle<I> extends JointCounterOracle<I, Boolean>
-            implements DFAMembershipOracle<I> {
-
-        public DFAJointCounterOracle(MembershipOracle<I, Boolean> delegate) {
-            super(delegate);
-        }
-    }
-
-    public static class MealyJointCounterOracle<I, O> extends JointCounterOracle<I, Word<O>>
-            implements MealyMembershipOracle<I, O> {
-
-        public MealyJointCounterOracle(MembershipOracle<I, Word<O>> delegate) {
-            super(delegate);
-        }
-    }
-
 }

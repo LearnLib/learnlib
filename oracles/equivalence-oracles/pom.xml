@@ -36,6 +36,11 @@ limitations under the License.
         -->
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-annotation-processor</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
         </dependency>
 

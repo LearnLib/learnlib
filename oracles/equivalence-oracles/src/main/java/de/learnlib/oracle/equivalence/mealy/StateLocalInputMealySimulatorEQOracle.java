@@ -19,7 +19,7 @@ import java.util.Collection;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.oracle.equivalence.SimulatorEQOracle;
+import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.transducers.OutputAndLocalInputs;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
@@ -29,11 +29,11 @@ import net.automatalib.words.Word;
 public class StateLocalInputMealySimulatorEQOracle<I, O>
         implements EquivalenceOracle<StateLocalInputMealyMachine<?, I, ?, O>, I, Word<OutputAndLocalInputs<I, O>>> {
 
-    private final SimulatorEQOracle<I, Word<O>> delegate;
+    private final MealySimulatorEQOracle<I, O> delegate;
     private final SuffixOutput<I, Word<OutputAndLocalInputs<I, O>>> mealyAsSLIMealy;
 
     public <S> StateLocalInputMealySimulatorEQOracle(StateLocalInputMealyMachine<S, I, ?, O> mealy) {
-        this.delegate = new SimulatorEQOracle<>(mealy);
+        this.delegate = new MealySimulatorEQOracle<>(mealy);
 
         // we can use 'null' as a sink, because we will never traverse this state
         this.mealyAsSLIMealy = StateLocalInputMealyUtil.partialToObservableOutput(mealy, null);

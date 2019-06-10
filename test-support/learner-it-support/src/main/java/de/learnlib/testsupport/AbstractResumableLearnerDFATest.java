@@ -23,7 +23,7 @@ import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.QueryAnswerer;
-import de.learnlib.oracle.equivalence.SimulatorEQOracle.DFASimulatorEQOracle;
+import de.learnlib.oracle.equivalence.DFASimulatorEQOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;

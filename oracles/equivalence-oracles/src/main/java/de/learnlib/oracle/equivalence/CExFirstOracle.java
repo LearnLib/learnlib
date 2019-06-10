@@ -23,8 +23,16 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import de.learnlib.api.oracle.BlackBoxOracle;
+import de.learnlib.api.oracle.BlackBoxOracle.DFABlackBoxOracle;
+import de.learnlib.api.oracle.BlackBoxOracle.MealyBlackBoxOracle;
 import de.learnlib.api.oracle.PropertyOracle;
+import de.learnlib.api.oracle.PropertyOracle.DFAPropertyOracle;
+import de.learnlib.api.oracle.PropertyOracle.MealyPropertyOracle;
 import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
+import de.learnlib.buildtool.refinement.annotation.Generic;
+import de.learnlib.buildtool.refinement.annotation.Interface;
+import de.learnlib.buildtool.refinement.annotation.Map;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -37,14 +45,42 @@ import net.automatalib.words.Word;
  * <p>
  * This implementation may be used when refining a hypothesis is inexpensive compared to disproving propertyOracles.
  *
+ * @param <A>
+ *         the automaton type
+ * @param <I>
+ *         the input type
+ * @param <D>
+ *         the output type
+ *
  * @author Jeroen Meijer
- *
  * @see DisproveFirstOracle
- *
- * @param <A> the automaton type
- * @param <I> the input type
- * @param <D> the output type
  */
+@GenerateRefinement(name = "DFACExFirstOracle",
+                    generics = "I",
+                    parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Boolean.class)},
+                    parameterMapping = {@Map(from = PropertyOracle.class,
+                                             to = DFAPropertyOracle.class,
+                                             withGenerics = {"I", "?"}),
+                                        @Map(from = Collection.class,
+                                       to = Collection.class,
+                                       withComplexGenerics = @Generic(clazz = DFAPropertyOracle.class,
+                                                                      generics = {"I", "?"}))},
+                    interfaces = @Interface(clazz = DFABlackBoxOracle.class, generics = "I"))
+@GenerateRefinement(name = "MealyCExFirstOracle",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = {@Map(from = PropertyOracle.class,
+                                             to = MealyPropertyOracle.class,
+                                             withGenerics = {"I", "O", "?"}),
+                                        @Map(from = Collection.class,
+                                       to = Collection.class,
+                                       withComplexGenerics = @Generic(clazz = MealyPropertyOracle.class,
+                                                                      generics = {"I", "O", "?"}))},
+                    interfaces = @Interface(clazz = MealyBlackBoxOracle.class, generics = {"I", "O"}))
 public class CExFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOracle<A, I, D> {
 
     private final List<PropertyOracle<I, ? super A, ?, D>> propertyOracles;
@@ -78,37 +114,5 @@ public class CExFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOra
         }
 
         return null;
-    }
-
-    public static class DFACExFirstOracle<I> extends CExFirstOracle<DFA<?, I>, I, Boolean>
-            implements DFABlackBoxOracle<I> {
-
-        public DFACExFirstOracle() {
-            super();
-        }
-
-        public DFACExFirstOracle(PropertyOracle<I, DFA<?, I>, ?, Boolean> propertyOracle) {
-            super(propertyOracle);
-        }
-
-        public DFACExFirstOracle(Collection<? extends PropertyOracle<I, DFA<?, I>, ?, Boolean>> propertyOracles) {
-            super(propertyOracles);
-        }
-    }
-
-    public static class MealyCExFirstOracle<I, O> extends CExFirstOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
-            implements MealyBlackBoxOracle<I, O> {
-
-        public MealyCExFirstOracle() {
-            super();
-        }
-
-        public MealyCExFirstOracle(PropertyOracle<I, MealyMachine<?, I, ?, O>, ?, Word<O>> propertyOracle) {
-            super(propertyOracle);
-        }
-
-        public MealyCExFirstOracle(Collection<? extends PropertyOracle<I, MealyMachine<?, I, ?, O>, ?, Word<O>>> propertyOracles) {
-            super(propertyOracles);
-        }
     }
 }

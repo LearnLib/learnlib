@@ -18,7 +18,7 @@ package de.learnlib.filter.cache.dfa;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
-import de.learnlib.filter.statistic.oracle.CounterOracle.DFACounterOracle;
+import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
