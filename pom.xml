@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
+<?xml version="1.0" encoding="UTF-8"?>
 Copyright (C) 2013-2019 TU Dortmund
 This file is part of LearnLib, http://www.learnlib.de/.
 
@@ -219,12 +220,14 @@ limitations under the License.
         <tidy-pom.version>1.1.0</tidy-pom.version>
 
         <!-- dependency versions -->
+        <ap-commons.version>0.0.2</ap-commons.version>
         <automatalib.version>0.9.0-SNAPSHOT</automatalib.version>
         <buildergen.version>0.1</buildergen.version>
         <cacio.version>1.9</cacio.version>
         <checkstyle.version>8.19</checkstyle.version>
         <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
         <guava.version>27.0-jre</guava.version>
+        <javapoet.version>1.11.1</javapoet.version>
         <jmockit.version>1.43</jmockit.version>
         <logback.version>1.2.3</logback.version>
         <metainf-services.version>1.8</metainf-services.version>
@@ -362,8 +365,21 @@ limitations under the License.
             <!-- build-tools -->
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-build-tools</artifactId>
+                <artifactId>learnlib-build-tools-parent</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-build-config</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-annotation-processor</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
             </dependency>
 
             <!-- commons -->
@@ -588,6 +604,13 @@ limitations under the License.
                 <version>${guava.version}</version>
             </dependency>
 
+            <!-- Java Poet -->
+            <dependency>
+                <groupId>com.squareup</groupId>
+                <artifactId>javapoet</artifactId>
+                <version>${javapoet.version}</version>
+            </dependency>
+
             <!-- FindBugs - JSR 305 Annotations (@Nullable, @Nonnull, ...) -->
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
@@ -602,6 +625,12 @@ limitations under the License.
                 <version>${buildergen.version}</version>
                 <!-- Compile-time only -->
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.misberner.ap-commons</groupId>
+                <artifactId>ap-commons</artifactId>
+                <version>${ap-commons.version}</version>
             </dependency>
 
             <dependency>

@@ -86,7 +86,7 @@ limitations under the License.
                             <dependencies>
                                 <dependency>
                                     <groupId>de.learnlib</groupId>
-                                    <artifactId>learnlib-build-tools</artifactId>
+                                    <artifactId>learnlib-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
                             </dependencies>
@@ -102,7 +102,7 @@ limitations under the License.
                             <dependencies>
                                 <dependency>
                                     <groupId>de.learnlib</groupId>
-                                    <artifactId>learnlib-build-tools</artifactId>
+                                    <artifactId>learnlib-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
                             </dependencies>
@@ -125,7 +125,7 @@ limitations under the License.
                                 </dependency>
                                 <dependency>
                                     <groupId>de.learnlib</groupId>
-                                    <artifactId>learnlib-build-tools</artifactId>
+                                    <artifactId>learnlib-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
                             </dependencies>
@@ -169,7 +169,7 @@ limitations under the License.
                                     <goal>unpack</goal>
                                 </goals>
                                 <configuration>
-                                    <artifact>de.learnlib:learnlib-build-tools:${project.version}</artifact>
+                                    <artifact>de.learnlib:learnlib-build-config:${project.version}</artifact>
                                     <includes>learnlib-pmd-exclusions.properties</includes>
                                     <outputDirectory>${project.build.directory}/pmd/</outputDirectory>
                                 </configuration>

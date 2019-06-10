@@ -1,6 +1,0 @@
-file_pattern="\.java$"
-firstline_prefix="/* "
-line_prefix=" * "
-postamble=" */
-"
-

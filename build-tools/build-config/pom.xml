@@ -20,19 +20,13 @@ limitations under the License.
 
     <parent>
         <groupId>de.learnlib</groupId>
-        <artifactId>learnlib-parent</artifactId>
+        <artifactId>learnlib-build-tools-parent</artifactId>
         <version>0.15.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>learnlib-build-tools-parent</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>learnlib-build-config</artifactId>
 
-    <name>LearnLib :: Build Tool Parent</name>
-    <description>Tools and resources required for building LearnLib</description>
-
-    <modules>
-        <module>annotation-processor</module>
-        <module>build-config</module>
-    </modules>
+    <name>LearnLib :: Build Configs</name>
+    <description>Configs and other resources required for building LearnLib</description>
 </project>
