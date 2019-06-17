@@ -17,7 +17,6 @@ package de.learnlib.filter.statistic.sul;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 import de.learnlib.api.SUL;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
@@ -114,7 +113,7 @@ public abstract class AbstractCounterSULTest {
             sul.pre();
             try {
                 prefix.forEach(sul::step);
-                return Word.fromList(suffix.stream().map(sul::step).collect(Collectors.toList()));
+                return suffix.stream().map(sul::step).collect(Word.collector());
             } finally {
                 sul.post();
             }
