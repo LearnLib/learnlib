@@ -30,9 +30,9 @@ import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
 import de.learnlib.examples.mealy.ExampleTinyMealy;
 import de.learnlib.oracle.emptiness.MealyLassoEmptinessOracleImpl;
-import de.learnlib.oracle.equivalence.EQOracleChain;
 import de.learnlib.oracle.equivalence.MealyBFInclusionOracle;
 import de.learnlib.oracle.equivalence.MealyCExFirstOracle;
+import de.learnlib.oracle.equivalence.MealyEQOracleChain;
 import de.learnlib.oracle.equivalence.MealyWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOracle;
 import de.learnlib.oracle.property.MealyLassoPropertyOracle;
@@ -96,7 +96,7 @@ public final class Example3 {
         // create an equivalence oracle, that first searches for a counter example using the ltl properties, and next
         // with the W-method.
         @SuppressWarnings("unchecked")
-        MealyEquivalenceOracle<Character, Character> eqOracle = new EQOracleChain.MealyEQOracleChain<>(
+        MealyEquivalenceOracle<Character, Character> eqOracle = new MealyEQOracleChain<>(
                 new MealyCExFirstOracle<>(ltl),
                 new MealyWpMethodEQOracle<>(mqOracle, 3));
 

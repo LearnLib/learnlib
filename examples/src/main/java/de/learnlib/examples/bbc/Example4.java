@@ -34,12 +34,12 @@ import de.learnlib.oracle.emptiness.DFABFEmptinessOracle;
 import de.learnlib.oracle.emptiness.DFALassoEmptinessOracleImpl;
 import de.learnlib.oracle.equivalence.DFABFInclusionOracle;
 import de.learnlib.oracle.equivalence.DFACExFirstOracle;
+import de.learnlib.oracle.equivalence.DFAEQOracleChain;
 import de.learnlib.oracle.equivalence.DFAWpMethodEQOracle;
-import de.learnlib.oracle.equivalence.EQOracleChain;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.DFASimulatorOmegaOracle;
 import de.learnlib.oracle.property.DFAFinitePropertyOracle;
 import de.learnlib.oracle.property.DFALassoPropertyOracle;
-import de.learnlib.oracle.property.PropertyOracleChain;
+import de.learnlib.oracle.property.DFAPropertyOracleChain;
 import de.learnlib.util.Experiment;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
@@ -115,14 +115,14 @@ public final class Example4 {
         // also it chains the property oracle that uses monitors and Buchi automata
         @SuppressWarnings("unchecked")
         PropertyOracle.DFAPropertyOracle<Character, String> ltl = new LoggingPropertyOracle.DFALoggingPropertyOracle<>(
-                new PropertyOracleChain.DFAPropertyOracleChain<>(
+                new DFAPropertyOracleChain<>(
                         new DFAFinitePropertyOracle<>("letter==\"b\"", inclusionOracle, emptinessOracle, modelCheckerMonitor),
                         new DFALassoPropertyOracle<>("letter==\"b\"", inclusionOracle, lassoEmptinessOracle, modelCheckerBuchi)));
 
         // create an equivalence oracle, that first searches for a counter example using the ltl properties, and next
         // with the W-method.
         @SuppressWarnings("unchecked")
-        DFAEquivalenceOracle<Character> eqOracle = new EQOracleChain.DFAEQOracleChain<>(
+        DFAEquivalenceOracle<Character> eqOracle = new DFAEQOracleChain<>(
                 new DFACExFirstOracle<>(ltl),
                 new DFAWpMethodEQOracle<>(mqOracle, 3));
 

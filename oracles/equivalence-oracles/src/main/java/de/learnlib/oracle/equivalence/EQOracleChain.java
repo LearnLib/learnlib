@@ -21,11 +21,35 @@ import java.util.Collection;
 import java.util.List;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
+import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
+import de.learnlib.buildtool.refinement.annotation.Generic;
+import de.learnlib.buildtool.refinement.annotation.Interface;
+import de.learnlib.buildtool.refinement.annotation.Map;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
+@GenerateRefinement(name = "DFAEQOracleChain",
+                    generics = "I",
+                    parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Boolean.class)},
+                    parameterMapping = @Map(from = EquivalenceOracle.class,
+                                            to = DFAEquivalenceOracle.class,
+                                            withGenerics = "I"),
+                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = "I"))
+@GenerateRefinement(name = "MealyEQOracleChain",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = EquivalenceOracle.class,
+                                            to = MealyEquivalenceOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
 public class EQOracleChain<A, I, D> implements EquivalenceOracle<A, I, D> {
 
     private final List<EquivalenceOracle<? super A, I, D>> oracles;
@@ -52,32 +76,6 @@ public class EQOracleChain<A, I, D> implements EquivalenceOracle<A, I, D> {
             }
         }
         return null;
-    }
-
-    public static class DFAEQOracleChain<I> extends EQOracleChain<DFA<?, I>, I, Boolean>
-            implements DFAEquivalenceOracle<I> {
-
-        @SafeVarargs
-        public DFAEQOracleChain(EquivalenceOracle<? super DFA<?, I>, I, Boolean>... oracles) {
-            super(oracles);
-        }
-
-        public DFAEQOracleChain(List<? extends EquivalenceOracle<? super DFA<?, I>, I, Boolean>> oracles) {
-            super(oracles);
-        }
-    }
-
-    public static class MealyEQOracleChain<I, O> extends EQOracleChain<MealyMachine<?, I, ?, O>, I, Word<O>>
-            implements MealyEquivalenceOracle<I, O> {
-
-        @SafeVarargs
-        public MealyEQOracleChain(EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>>... oracles) {
-            super(oracles);
-        }
-
-        public MealyEQOracleChain(List<? extends EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>>> oracles) {
-            super(oracles);
-        }
     }
 
 }

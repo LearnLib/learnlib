@@ -24,7 +24,13 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import de.learnlib.api.oracle.PropertyOracle;
+import de.learnlib.api.oracle.PropertyOracle.DFAPropertyOracle;
+import de.learnlib.api.oracle.PropertyOracle.MealyPropertyOracle;
 import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
+import de.learnlib.buildtool.refinement.annotation.Generic;
+import de.learnlib.buildtool.refinement.annotation.Interface;
+import de.learnlib.buildtool.refinement.annotation.Map;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -45,6 +51,26 @@ import net.automatalib.words.Word;
  *
  * @author Jeroen Meijer
  */
+@GenerateRefinement(name = "DFAPropertyOracleChain",
+                    generics = {"I", "P"},
+                    parentGenerics = {@Generic("I"),
+                                      @Generic(clazz = DFA.class, generics = {"?", "I"}),
+                                      @Generic("P"),
+                                      @Generic(clazz = Boolean.class)},
+                    parameterMapping = @Map(from = PropertyOracle.class,
+                                            to = DFAPropertyOracle.class,
+                                            withGenerics = {"I", "P"}),
+                    interfaces = @Interface(clazz = DFAPropertyOracle.class, generics = {"I", "P"}))
+@GenerateRefinement(name = "MealyPropertyOracleChain",
+                    generics = {"I", "O", "P"},
+                    parentGenerics = {@Generic("I"),
+                                      @Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("P"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = PropertyOracle.class,
+                                            to = MealyPropertyOracle.class,
+                                            withGenerics = {"I", "O", "P"}),
+                    interfaces = @Interface(clazz = MealyPropertyOracle.class, generics = {"I", "O", "P"}))
 @ParametersAreNonnullByDefault
 public class PropertyOracleChain<I, A extends Output<I, D>, P, D> implements PropertyOracle<I, A, P, D> {
 
@@ -115,33 +141,5 @@ public class PropertyOracleChain<I, A extends Output<I, D>, P, D> implements Pro
     @Override
     public DefaultQuery<I, D> getCounterExample() {
         return counterExample;
-    }
-
-    public static class DFAPropertyOracleChain<I, P> extends PropertyOracleChain<I, DFA<?, I>, P, Boolean>
-            implements DFAPropertyOracle<I, P> {
-
-        @SafeVarargs
-        public DFAPropertyOracleChain(PropertyOracle<I, ? super DFA<?, I>, P, Boolean>... oracles) {
-            super(oracles);
-        }
-
-        public DFAPropertyOracleChain(Collection<? extends PropertyOracle<I, ? super DFA<?, I>, P, Boolean>> oracles) {
-            super(oracles);
-        }
-    }
-
-    public static class MealyPropertyOracleChain<I, O, P>
-            extends PropertyOracleChain<I, MealyMachine<?, I, ?, O>, P, Word<O>>
-            implements MealyPropertyOracle<I, O, P> {
-
-        @SafeVarargs
-        public MealyPropertyOracleChain(PropertyOracle<I, ? super MealyMachine<?, I, ?, O>, P, Word<O>>... oracles) {
-            super(oracles);
-        }
-
-        public MealyPropertyOracleChain(
-                Collection<? extends PropertyOracle<I, ? super MealyMachine<?, I, ?, O>, P, Word<O>>> oracles) {
-            super(oracles);
-        }
     }
 }

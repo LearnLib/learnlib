@@ -25,6 +25,8 @@ import javax.annotation.Nullable;
 import de.learnlib.api.oracle.BlackBoxOracle;
 import de.learnlib.api.oracle.BlackBoxOracle.DFABlackBoxOracle;
 import de.learnlib.api.oracle.BlackBoxOracle.MealyBlackBoxOracle;
+import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.api.oracle.PropertyOracle.DFAPropertyOracle;
 import de.learnlib.api.oracle.PropertyOracle.MealyPropertyOracle;
@@ -60,27 +62,21 @@ import net.automatalib.words.Word;
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    parameterMapping = {@Map(from = PropertyOracle.class,
-                                             to = DFAPropertyOracle.class,
-                                             withGenerics = {"I", "?"}),
-                                        @Map(from = Collection.class,
-                                       to = Collection.class,
-                                       withComplexGenerics = @Generic(clazz = DFAPropertyOracle.class,
-                                                                      generics = {"I", "?"}))},
-                    interfaces = @Interface(clazz = DFABlackBoxOracle.class, generics = "I"))
+                    parameterMapping = @Map(from = PropertyOracle.class,
+                                            to = DFAPropertyOracle.class,
+                                            withGenerics = {"I", "?"}),
+                    interfaces = {@Interface(clazz = DFABlackBoxOracle.class, generics = "I"),
+                                  @Interface(clazz = DFAEquivalenceOracle.class, generics = "I")})
 @GenerateRefinement(name = "MealyCExFirstOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = {@Map(from = PropertyOracle.class,
-                                             to = MealyPropertyOracle.class,
-                                             withGenerics = {"I", "O", "?"}),
-                                        @Map(from = Collection.class,
-                                       to = Collection.class,
-                                       withComplexGenerics = @Generic(clazz = MealyPropertyOracle.class,
-                                                                      generics = {"I", "O", "?"}))},
-                    interfaces = @Interface(clazz = MealyBlackBoxOracle.class, generics = {"I", "O"}))
+                    parameterMapping = @Map(from = PropertyOracle.class,
+                                            to = MealyPropertyOracle.class,
+                                            withGenerics = {"I", "O", "?"}),
+                    interfaces = {@Interface(clazz = MealyBlackBoxOracle.class, generics = {"I", "O"}),
+                                  @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"})})
 public class CExFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOracle<A, I, D> {
 
     private final List<PropertyOracle<I, ? super A, ?, D>> propertyOracles;

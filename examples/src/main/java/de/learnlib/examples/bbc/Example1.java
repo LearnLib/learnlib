@@ -32,8 +32,8 @@ import de.learnlib.examples.dfa.ExampleTinyDFA;
 import de.learnlib.oracle.emptiness.DFALassoEmptinessOracleImpl;
 import de.learnlib.oracle.equivalence.DFABFInclusionOracle;
 import de.learnlib.oracle.equivalence.DFACExFirstOracle;
+import de.learnlib.oracle.equivalence.DFAEQOracleChain;
 import de.learnlib.oracle.equivalence.DFAWpMethodEQOracle;
-import de.learnlib.oracle.equivalence.EQOracleChain;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.DFASimulatorOmegaOracle;
 import de.learnlib.oracle.property.DFALassoPropertyOracle;
 import de.learnlib.util.Experiment;
@@ -94,7 +94,7 @@ public final class Example1 {
         // create an equivalence oracle, that first searches for a counter example using the ltl properties, and next
         // with the W-method.
         @SuppressWarnings("unchecked")
-        DFAEquivalenceOracle<Character> eqOracle = new EQOracleChain.DFAEQOracleChain<>(
+        DFAEquivalenceOracle<Character> eqOracle = new DFAEQOracleChain<>(
                 new DFACExFirstOracle<>(ltl),
                 new DFAWpMethodEQOracle<>(mqOracle, 3));
 
