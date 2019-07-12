@@ -1,0 +1,137 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [0.15.0-SNAPSHOT] - Unreleased
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.14.0...HEAD)
+
+### Added
+
+### Changed
+
+* The `{DFA,Mealy,}W{p,}MethodEQOracle(MembershipOracle, int, int)` constructor no longer interprets its second `int` parameter as the batch size, but as an estimate for the expected SUL size. In order to explicitly set the batch size of the oracle, use the `{DFA,Mealy,}W{p,}MethodEQOracle(MembershipOracle, int, int, int)` constructor. Now, the two parameters `lookahead` and `expectedSize` will determine the length of the *middle part* via `Math.max(lookahead, expectedSize - hypothesis.size())`. This allows to dynamically adjust the length of the *middle part* throughout the learning process. See [LearnLib/automatalib#32](https://github.com/LearnLib/automatalib/issues/32).
+* Several DFA/Mealy specific (oracle) subclasses are now automatically generated. As a result they are no longer an inner class, but an indepentend top-level class. This requires to update the import statements.
+
+### Removed
+
+* As a remainder of its initial implementation, the `TTTEventListener` (and the corresponding event feature in the TTT algorithm) has been removed due to the lack of usage.
+
+
+## [0.14.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.14.0) - 2018-02-18
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.13.1...learnlib-0.14.0)
+
+### Added
+
+* Added support for black-box-checking (thanks to [Jeroen Meijer](https://github.com/Meijuh)).
+* Added support for learning partial Mealy Machines with state-local inputs via L* (thanks to [Maren Geske](https://github.com/mgeske)).
+* Added support for resumable caches.
+* `DynamicParallelOracle`s can now be constructed from a collection of independent oracles.
+* Support for Java 11. **Note:** LearnLib/AutomataLib still targets Java 8, and thus needs classes provided by this environment (specifically: annotations from `javax.annotation`). If you plan to use LearnLib/AutomataLib in a Java 11+ environment, make sure to provide these classes. They are not shipped with LearnLib/AutomataLib.
+
+### Changed
+
+* Refactored the following packages/classes:
+  * `de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet` -> `net.automatalib.SupportsGrowingAlphabet`
+  * `de.learnlib.api.algorithm.feature.ResumableLearner` -> `de.learnlib.api.Resumable`
+* Some runtime properties for dynamically configuring LearnLib have been renamed. There now exists the `LearnLibProperty` enum as a single reference point for all available properties.
+* The node iterators for discrimination trees are now hidden behind the `DiscriminationTreeIterators` factory.
+* Parallel Oracles: 
+  * The `withDefault*` methods have been removed from the `{Dynamic,Static}PrallelOracleBuilders`. If needed, use the regular `with*` methods and supply the public default values from `{Dynamic,Static}PrallelOracle`.
+  * The `new*ParallelOracle` methods from the `ParallelOracleBuilders` factory no longer interpret a single membership oracle parameter as a supplier to a shared oracle, but rather as a single oracle (and thus return a builder for a parallel oracle with fixed pool size).
+* Adding new symbols to learning algorithms (via the `SupportsGrowingAlphabet` interface) now requires the learner to be initialized with a `GrowingAlphabet` instance. This is to make sure that the user has full control over which alphabet instance should be used instead of LearnLib making decisions on behalf of the user.
+* Discrimination-Tree based Learners (DT, KV, TTT) now batch queries whenever possible, thus allowing to fully utilize parallel oracles.
+* Also, see the [changes in AutomataLib](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.8.0)
+
+### Fixed
+
+* Several bugs detected by our ongoing efforts to write tests.
+
+
+## [0.13.1](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.13.1) - 2018-05-11
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.13.0...learnlib-0.13.1)
+
+### Fixed
+
+* Fixed an out-of-bounds error in a cache implementation
+* Fixed visibility issues with exportable classes used for the `ResumableLearner` interface
+* Fixed an issue when adding a new symbol to a learner and the initial alphabet was already an instance of `GrowableAlphabet`
+* General consolidations (typos, wrong documentation, etc.)
+
+
+## [0.13.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.13.0) - 2018-02-08
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.12.0...learnlib-0.13.0)
+
+### Added
+
+* Added randomized version of W(p)-Method based equivalence oracles (see #40)
+* Added the ADT (adaptive distinguishing tree) active learning algorithm
+* Added two active learning algorithms for visibly pushdown languages.
+* Added the RPNI (regular positive-negative inference) passive learning algorithm, including EDSM (evidence-driven state merging) and MDL (minimum description length) variants.
+* Many active learning algorithms now support adding additional alphabet symbols after initial instantiation/starting of the learning process.
+* Added support for suspending the learning process to a savable / serializable state. The learning process may be resumed from this state at a later point in time.
+* Added the `AbstractTestWordEQOracle` class, which allows to implement custom equivalence oracles solely based on lazy (stream-based) test-word generation. Existing equivalence oracles (as far as possible) have been reworked to extend this class and thus profit from its built-in laziness and batch (parallelization) support.
+
+### Changed
+
+* Refactored the Maven artifact and Java package structure. Have a look at the [List of LearnLib Artifacts](https://github.com/LearnLib/learnlib/wiki/List-of-LearnLib-Artifacts) for an updated overview of available artifacts. In general, no functionality should have been removed (except of code marked with `@Deprecated`). The easiest way to migrate your code to the new version is probably by using the Auto-Import feature of your IDE of choice.
+
+  The non-trivial refactorings include:
+  * API methods no longer use wildcards in generic return parameters. This allows your code to not having to deal with them.
+  * [Changes to AutomataLib](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.7.0).
+
+* Replaced `System.out` and JUL logging, with calls to a SLF4j facade.
+* Code improvements due to employment of several static code-analysis plugins (findbugs, checkstyle, PMD, etc.) as well as setting up continuous integration at [Travis CI](https://travis-ci.org/LearnLib/learnlib).
+
+### Fixed
+
+* Several bugs detected either by our newly employed static code-analysis toolchain or by our ongoing efforts to write tests.
+
+
+## [0.12.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.12.0) - 2015-06-04
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.11.2...learnlib-0.12.0)
+
+
+## [0.11.2](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.11.2) - 2015-04-26
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.11.1...learnlib-0.11.2)
+
+
+## [0.11.1](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.11.1) - 2015-01-16
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.11.0...learnlib-0.11.1)
+
+
+## [0.11.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.11.0) - 2015-01-13
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.10.1...learnlib-0.11.0)
+
+
+## [0.10.1](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.10.1) - 2014-06-08
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.10.0...learnlib-0.10.1)
+
+
+## [0.10.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.10.0) - 2014-04-16
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.9.1...learnlib-0.10.0)
+
+
+## [0.9.1-ase2013-tutorial-r1](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.9.1-ase2013-tutorial-r1) - 2013-12-13
+
+
+## [0.9.1](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.9.1) - 2013-11-07
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.9.0...learnlib-0.9.1)
+
+
+## [0.9.1-ase2013-tutorial](https://github.com/LearnLib/learnlib/releases/tag/0.9.1-ase2013-tutorial) - 2013-11-06
+
+
+## [0.9.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.9.0) - 2013-06-25
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/86fce036ed7c659aaf649ad4a772af1341f80c61...learnlib-0.9.0)
