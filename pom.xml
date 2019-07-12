@@ -67,32 +67,29 @@ limitations under the License.
                 <role>Developer (inactive)</role>
             </roles>
         </developer>
-        <developer>
-            <id>stovocor</id>
+    </developers>
+    <contributors>
+        <contributor>
             <name>Stephan Windmüller</name>
             <email>stephan.windmueller@tu-dortmund.de</email>
             <roles>
-                <role>Developer (inactive)</role>
+                <role>Developer</role>
             </roles>
-        </developer>
-        <developer>
-            <id>merten</id>
+        </contributor>
+        <contributor>
             <name>Maik Merten</name>
             <email>maikmerten@googlemail.com</email>
             <roles>
-                <role>Developer (inactive)</role>
+                <role>Developer</role>
             </roles>
-        </developer>
-        <developer>
-            <id>oliverbauer8</id>
+        </contributor>
+        <contributor>
             <name>Oliver Bauer</name>
             <email>oliver.bauer@tu-dortmund.de</email>
             <roles>
-                <role>Developer (inactive)</role>
+                <role>Developer</role>
             </roles>
-        </developer>
-    </developers>
-    <contributors>
+        </contributor>
         <contributor>
             <name>Jeroen Meijer</name>
             <email>j.j.g.meijer@utwente.nl</email>
