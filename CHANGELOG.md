@@ -18,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * As a remainder of its initial implementation, the `TTTEventListener` (and the corresponding event feature in the TTT algorithm) has been removed due to the lack of usage.
 
 
-## [0.14.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.14.0) - 2018-02-18
+## [0.14.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.14.0) - 2019-02-18
 
 [Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.13.1...learnlib-0.14.0)
 
@@ -67,7 +67,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-* Added randomized version of W(p)-Method based equivalence oracles (see #40)
+* Added randomized version of W(p)-Method based equivalence oracles (see [#40](https://github.com/LearnLib/learnlib/pull/40))
 * Added the ADT (adaptive distinguishing tree) active learning algorithm
 * Added two active learning algorithms for visibly pushdown languages.
 * Added the RPNI (regular positive-negative inference) passive learning algorithm, including EDSM (evidence-driven state merging) and MDL (minimum description length) variants.
