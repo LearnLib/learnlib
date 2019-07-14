@@ -77,12 +77,6 @@ limitations under the License.
     <profiles>
         <profile>
             <id>code-analysis</id>
-            <activation>
-                <property>
-                    <name>learnlib.release</name>
-                    <value>true</value>
-                </property>
-            </activation>
             <build>
                 <pluginManagement>
                     <plugins>
