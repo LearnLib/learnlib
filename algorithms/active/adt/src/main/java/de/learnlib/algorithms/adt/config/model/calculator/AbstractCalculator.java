@@ -18,8 +18,6 @@ package de.learnlib.algorithms.adt.config.model.calculator;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.config.model.ADSCalculator;
 import de.learnlib.algorithms.adt.util.ADTUtil;
@@ -30,7 +28,6 @@ import net.automatalib.words.Alphabet;
 /**
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractCalculator implements ADSCalculator {
 
     @Override

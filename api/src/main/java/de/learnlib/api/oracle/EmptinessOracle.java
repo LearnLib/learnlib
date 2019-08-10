@@ -18,15 +18,13 @@ package de.learnlib.api.oracle;
 import java.util.Collection;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.SUL;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Decides whether the intersection of the language of a given hypothesis and some other language (e.g. from a {@link
@@ -42,7 +40,6 @@ import net.automatalib.words.Word;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public interface EmptinessOracle<A extends Output<I, D>, I, D> {
 
     default boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> input, @Nullable D output) {

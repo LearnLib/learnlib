@@ -15,15 +15,12 @@
  */
 package de.learnlib.util.mealy;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-@ParametersAreNonnullByDefault
 final class MealyLearnerWrapper<M extends MealyMachine<?, I, ?, O>, I, O>
         implements LearningAlgorithm.MealyLearner<I, O> {
 
@@ -57,7 +54,7 @@ final class MealyLearnerWrapper<M extends MealyMachine<?, I, ?, O>, I, O>
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public M getHypothesisModel() {
         hypothesis = learner.getHypothesisModel();
         return hypothesis;

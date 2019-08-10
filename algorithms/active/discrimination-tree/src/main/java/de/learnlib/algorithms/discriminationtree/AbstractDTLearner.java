@@ -38,6 +38,7 @@ import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, TP>
         implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, Resumable<DTLearnerState<I, D, SP, TP>> {
@@ -204,9 +205,9 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
         }
     }
 
-    protected abstract Query<I, D> spQuery(HState<I, D, SP, TP> state);
+    protected abstract @Nullable Query<I, D> spQuery(HState<I, D, SP, TP> state);
 
-    protected abstract Query<I, D> tpQuery(HTransition<I, D, SP, TP> transition);
+    protected abstract @Nullable Query<I, D> tpQuery(HTransition<I, D, SP, TP> transition);
 
     protected HState<I, D, SP, TP> createState(HTransition<I, D, SP, TP> trans) {
         HState<I, D, SP, TP> newState = hypothesis.createState(trans);

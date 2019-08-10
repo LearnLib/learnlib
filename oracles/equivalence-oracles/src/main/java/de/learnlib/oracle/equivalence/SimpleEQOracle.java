@@ -17,11 +17,10 @@ package de.learnlib.oracle.equivalence;
 
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

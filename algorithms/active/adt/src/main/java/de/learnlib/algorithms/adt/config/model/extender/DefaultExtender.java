@@ -22,8 +22,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.ADTExtender;
 import de.learnlib.algorithms.adt.api.PartialTransitionAnalyzer;
@@ -39,7 +37,6 @@ import net.automatalib.words.Word;
 /**
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class DefaultExtender implements ADTExtender {
 
     private final DefensiveADSCalculator adsCalculator;

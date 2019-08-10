@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.util.ADTUtil;
 import net.automatalib.automata.transducers.impl.FastMealy;
@@ -48,7 +46,6 @@ import net.automatalib.words.Word;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class ObservationTree<S, I, O> {
 
     private final Alphabet<I> alphabet;

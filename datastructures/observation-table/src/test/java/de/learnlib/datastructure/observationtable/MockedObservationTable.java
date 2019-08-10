@@ -22,12 +22,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.base.Preconditions;
 import de.learnlib.datastructure.observationtable.reader.SimpleObservationTable;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Mock-up observation table for testing writers.
@@ -82,13 +81,13 @@ public class MockedObservationTable<I, D> extends SimpleObservationTable<I, D> {
         return row;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Collection<Row<I>> getShortPrefixRows() {
         return Collections.unmodifiableList(shortPrefixes);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Collection<Row<I>> getLongPrefixRows() {
         return Collections.unmodifiableList(longPrefixes);

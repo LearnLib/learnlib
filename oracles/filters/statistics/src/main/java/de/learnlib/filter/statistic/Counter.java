@@ -18,15 +18,13 @@ package de.learnlib.filter.statistic;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * simple counter.
  *
  * @author falkhowar
  */
-@ParametersAreNonnullByDefault
 public class Counter extends AbstractStatisticData {
 
     private final AtomicLong count = new AtomicLong(0L);
@@ -48,19 +46,19 @@ public class Counter extends AbstractStatisticData {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String toString() {
         return getDetails();
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String getSummary() {
         return getName() + " [" + getUnit() + "]: " + count;
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String getDetails() {
         return getSummary();
     }

@@ -17,16 +17,16 @@ package de.learnlib.datastructure.pta.pta;
 
 import java.util.Objects;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class PTATransition<S extends AbstractBasePTAState<?, ?, S>> {
 
     private final S source;
     private final int index;
 
-    public PTATransition(@Nonnull S source, @Nonnegative int index) {
+    public PTATransition(@NonNull S source, @NonNegative int index) {
         this.source = Objects.requireNonNull(source);
         if (index < 0) {
             throw new IllegalArgumentException();
@@ -34,12 +34,12 @@ public class PTATransition<S extends AbstractBasePTAState<?, ?, S>> {
         this.index = index;
     }
 
-    @Nonnull
+    @NonNull
     public S getSource() {
         return source;
     }
 
-    @Nonnegative
+    @NonNegative
     public int getIndex() {
         return index;
     }

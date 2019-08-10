@@ -15,12 +15,9 @@
  */
 package de.learnlib.api.query;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-@ParametersAreNonnullByDefault
 public abstract class AbstractQuery<I, D> extends Query<I, D> {
 
     protected final Word<I> prefix;
@@ -40,13 +37,13 @@ public abstract class AbstractQuery<I, D> extends Query<I, D> {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public Word<I> getPrefix() {
         return prefix;
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public Word<I> getSuffix() {
         return suffix;
     }

@@ -17,13 +17,11 @@ package de.learnlib.filter.statistic.oracle;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.api.statistic.StatisticOracle;
 import de.learnlib.filter.statistic.HistogramDataSet;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Collects a histogram of passed query lengths.
@@ -35,7 +33,6 @@ import de.learnlib.filter.statistic.HistogramDataSet;
  *
  * @author falkhowar
  */
-@ParametersAreNonnullByDefault
 public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
 
     /**
@@ -71,7 +68,7 @@ public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
      * @return the data set collected by this oracle.
      */
     @Override
-    @Nonnull
+    @NonNull
     public final HistogramDataSet getStatisticalData() {
         return this.dataSet;
     }

@@ -19,15 +19,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This class represents the data structure of an {@link ObservationTable} without providing any meaningful
@@ -47,13 +46,13 @@ public class SimpleObservationTable<I, D> implements ObservationTable<I, D> {
         this.suffixes = suffixes;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Collection<Row<I>> getShortPrefixRows() {
         return Collections.emptyList();
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Collection<Row<I>> getLongPrefixRows() {
         return Collections.emptyList();
@@ -65,7 +64,7 @@ public class SimpleObservationTable<I, D> implements ObservationTable<I, D> {
         return null;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Row<I> getRow(Word<I> prefix) {
         throw new UnsupportedOperationException();
@@ -76,7 +75,7 @@ public class SimpleObservationTable<I, D> implements ObservationTable<I, D> {
         return 0;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public List<Word<I>> getSuffixes() {
         return Collections.unmodifiableList(suffixes);

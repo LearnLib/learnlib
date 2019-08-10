@@ -23,15 +23,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.base.Throwables;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A parallel membership oracle that dynamically distributes queries to worker threads.
@@ -43,7 +41,6 @@ import de.learnlib.setting.LearnLibSettings;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class DynamicParallelOracle<I, D> implements ParallelOracle<I, D> {
 
     public static final int BATCH_SIZE;
@@ -60,15 +57,15 @@ public class DynamicParallelOracle<I, D> implements ParallelOracle<I, D> {
         POOL_POLICY = settings.getEnumValue(LearnLibProperty.PARALLEL_POOL_POLICY, PoolPolicy.class, PoolPolicy.CACHED);
     }
 
-    @Nonnull
+    @NonNull
     private final ThreadLocal<MembershipOracle<I, D>> threadLocalOracle;
-    @Nonnull
+    @NonNull
     private final ExecutorService executor;
-    @Nonnegative
+    @NonNegative
     private final int batchSize;
 
     public DynamicParallelOracle(final Supplier<? extends MembershipOracle<I, D>> oracleSupplier,
-                                 @Nonnegative int batchSize,
+                                 @NonNegative int batchSize,
                                  ExecutorService executor) {
         this.threadLocalOracle = ThreadLocal.withInitial(oracleSupplier);
         this.executor = executor;

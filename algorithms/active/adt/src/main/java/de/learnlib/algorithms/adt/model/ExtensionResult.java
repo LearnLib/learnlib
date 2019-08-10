@@ -15,8 +15,6 @@
  */
 package de.learnlib.algorithms.adt.model;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.ADTExtender;
 import de.learnlib.api.query.DefaultQuery;
@@ -37,7 +35,6 @@ import net.automatalib.words.Word;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class ExtensionResult<S, I, O> {
 
     private static final ExtensionResult<?, ?, ?> EMPTY = new ExtensionResult();

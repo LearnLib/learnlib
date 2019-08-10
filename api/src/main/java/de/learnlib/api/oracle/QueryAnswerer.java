@@ -15,11 +15,9 @@
  */
 package de.learnlib.api.oracle;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @param <I>
@@ -29,7 +27,6 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface QueryAnswerer<I, D> {
 
     @Nullable
@@ -40,7 +37,7 @@ public interface QueryAnswerer<I, D> {
     @Nullable
     D answerQuery(Word<I> prefix, Word<I> suffix);
 
-    @Nonnull
+    @NonNull
     default MembershipOracle<I, D> asOracle() {
         return queries -> queries.forEach(q -> q.answer(answerQuery(q.getPrefix(), q.getSuffix())));
     }

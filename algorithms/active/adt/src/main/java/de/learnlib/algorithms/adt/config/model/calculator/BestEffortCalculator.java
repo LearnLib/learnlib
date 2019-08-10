@@ -18,8 +18,6 @@ package de.learnlib.algorithms.adt.config.model.calculator;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.util.automata.ads.ADS;
@@ -28,7 +26,6 @@ import net.automatalib.words.Alphabet;
 /**
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class BestEffortCalculator extends AbstractCalculator {
 
     @Override

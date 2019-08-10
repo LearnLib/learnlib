@@ -17,14 +17,12 @@ package de.learnlib.api.oracle;
 
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link PropertyOracle} can disprove a property, and used to find a counter example to an hypothesis.
@@ -41,7 +39,6 @@ import net.automatalib.words.Word;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public interface PropertyOracle<I, A extends Output<I, D>, P, D> extends InclusionOracle<A, I, D> {
 
     /**

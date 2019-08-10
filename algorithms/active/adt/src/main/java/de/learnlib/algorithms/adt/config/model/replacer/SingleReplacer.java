@@ -26,9 +26,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.adt.ADT;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.SubtreeReplacer;
@@ -38,11 +35,11 @@ import de.learnlib.algorithms.adt.util.ADTUtil;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class SingleReplacer implements SubtreeReplacer {
 
     private final ADSCalculator adsCalculator;

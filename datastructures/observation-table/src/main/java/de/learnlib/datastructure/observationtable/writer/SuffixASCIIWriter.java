@@ -19,11 +19,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-import javax.annotation.WillNotClose;
-
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A de.learnlib.datastructures.writer which stores the suffixes of an {@link ObservationTable} in plaintext. The
@@ -83,7 +81,7 @@ public class SuffixASCIIWriter<I, D> extends AbstractObservationTableWriter<I, D
     }
 
     @Override
-    public void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose Appendable out)
+    public void write(ObservationTable<? extends I, ? extends D> table, Appendable out)
             throws IOException {
         List<? extends Word<? extends I>> suffixes = table.getSuffixes();
 

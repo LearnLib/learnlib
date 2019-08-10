@@ -19,13 +19,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
-
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

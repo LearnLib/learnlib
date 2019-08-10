@@ -18,8 +18,6 @@ package de.learnlib.algorithms.adt.config.model;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.PartialTransitionAnalyzer;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -28,7 +26,6 @@ import net.automatalib.words.Alphabet;
 /**
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public interface DefensiveADSCalculator {
 
     <S, I, O> Optional<ADTNode<S, I, O>> compute(MealyMachine<S, I, ?, O> automaton,

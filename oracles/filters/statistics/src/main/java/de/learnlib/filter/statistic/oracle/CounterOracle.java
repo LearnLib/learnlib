@@ -18,9 +18,6 @@ package de.learnlib.filter.statistic.oracle;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
@@ -32,6 +29,7 @@ import de.learnlib.buildtool.refinement.annotation.Interface;
 import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.filter.statistic.Counter;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Counts queries.
@@ -52,7 +50,6 @@ import net.automatalib.words.Word;
                                             to = MealyMembershipOracle.class,
                                             withGenerics = {"I", "O"}),
                     interfaces = @Interface(clazz = MealyMembershipOracle.class, generics = {"I", "O"}))
-@ParametersAreNonnullByDefault
 public class CounterOracle<I, D> implements StatisticOracle<I, D> {
 
     private final Counter counter;
@@ -70,12 +67,12 @@ public class CounterOracle<I, D> implements StatisticOracle<I, D> {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public Counter getStatisticalData() {
         return this.counter;
     }
 
-    @Nonnull
+    @NonNull
     public Counter getCounter() {
         return this.counter;
     }

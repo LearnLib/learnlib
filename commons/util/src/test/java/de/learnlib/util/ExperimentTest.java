@@ -18,9 +18,6 @@ package de.learnlib.util;
 import java.util.Collection;
 import java.util.Random;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
@@ -32,6 +29,8 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -92,11 +91,11 @@ public class ExperimentTest {
         }
 
         @Override
-        public boolean refineHypothesis(@Nonnull DefaultQuery<I, Boolean> ceQuery) {
+        public boolean refineHypothesis(@NonNull DefaultQuery<I, Boolean> ceQuery) {
             return refinementSteps++ < REFINEMENT_STEPS;
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public DFA<?, I> getHypothesisModel() {
             if (refinementSteps < REFINEMENT_STEPS) {

@@ -17,11 +17,9 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A queries job that maintains a thread-local reference to a membership oracle, and dynamically selects that oracle
@@ -37,10 +35,9 @@ import de.learnlib.api.query.Query;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 final class DynamicQueriesJob<I, D> extends AbstractQueriesJob<I, D> {
 
-    @Nonnull
+    @NonNull
     private final ThreadLocal<? extends MembershipOracle<I, D>> threadLocalOracle;
 
     DynamicQueriesJob(Collection<? extends Query<I, D>> queries,

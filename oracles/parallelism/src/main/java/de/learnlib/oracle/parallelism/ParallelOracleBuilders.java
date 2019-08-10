@@ -18,12 +18,10 @@ package de.learnlib.oracle.parallelism;
 import java.util.Collection;
 import java.util.function.Supplier;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.Lists;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.parallelism.ParallelOracle.PoolPolicy;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Builders for (static and dynamic) parallel oracles.
@@ -60,7 +58,6 @@ import de.learnlib.oracle.parallelism.ParallelOracle.PoolPolicy;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public final class ParallelOracleBuilders {
 
     private ParallelOracleBuilders() {
@@ -81,7 +78,7 @@ public final class ParallelOracleBuilders {
      *
      * @return a preconfigured oracle builder
      */
-    @Nonnull
+    @NonNull
     public static <I, D> DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(Supplier<? extends MembershipOracle<I, D>> oracleSupplier) {
         return new DynamicParallelOracleBuilder<>(oracleSupplier);
     }
@@ -100,7 +97,7 @@ public final class ParallelOracleBuilders {
      *
      * @return a preconfigured oracle builder
      */
-    @Nonnull
+    @NonNull
     @SafeVarargs
     public static <I, D> DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(MembershipOracle<I, D> firstOracle,
                                                                                      MembershipOracle<I, D>... otherOracles) {
@@ -121,7 +118,7 @@ public final class ParallelOracleBuilders {
      *
      * @return the preconfigured oracle builder
      */
-    @Nonnull
+    @NonNull
     public static <I, D> DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(Collection<? extends MembershipOracle<I, D>> oracles) {
         return new DynamicParallelOracleBuilder<>(oracles);
     }
@@ -140,7 +137,7 @@ public final class ParallelOracleBuilders {
      *
      * @return a preconfigured oracle builder
      */
-    @Nonnull
+    @NonNull
     public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(Supplier<? extends MembershipOracle<I, D>> oracleSupplier) {
         return new StaticParallelOracleBuilder<>(oracleSupplier);
     }
@@ -159,7 +156,7 @@ public final class ParallelOracleBuilders {
      *
      * @return a preconfigured oracle builder
      */
-    @Nonnull
+    @NonNull
     @SafeVarargs
     public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(MembershipOracle<I, D> firstOracle,
                                                                                    MembershipOracle<I, D>... otherOracles) {
@@ -180,7 +177,7 @@ public final class ParallelOracleBuilders {
      *
      * @return the preconfigured oracle builder
      */
-    @Nonnull
+    @NonNull
     public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(Collection<? extends MembershipOracle<I, D>> oracles) {
         return new StaticParallelOracleBuilder<>(oracles);
     }

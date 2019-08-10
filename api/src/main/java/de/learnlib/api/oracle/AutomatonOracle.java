@@ -19,14 +19,12 @@ import java.util.Collection;
 import java.util.Queue;
 import java.util.Stack;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Finds counterexamples (to particular claims) to an hypothesis, while generating words that are in the given
@@ -38,7 +36,6 @@ import net.automatalib.words.Word;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D> {
 
     /**

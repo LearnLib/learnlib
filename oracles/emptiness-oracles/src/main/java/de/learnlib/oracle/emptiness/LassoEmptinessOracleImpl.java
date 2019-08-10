@@ -17,9 +17,6 @@ package de.learnlib.oracle.emptiness;
 
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.LassoEmptinessOracle;
 import de.learnlib.api.oracle.LassoEmptinessOracle.DFALassoEmptinessOracle;
 import de.learnlib.api.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
@@ -40,6 +37,7 @@ import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 @GenerateRefinement(name = "DFALassoEmptinessOracleImpl",
                     generics = {"S", "I"},
@@ -63,7 +61,6 @@ import net.automatalib.words.Word;
                                             withGenerics = {"S", "I", "O"}),
                     interfaces = {@Interface(clazz = MealyLassoEmptinessOracle.class, generics = {"I", "O"}),
                                   @Interface(clazz = MealyLassoOracle.class, generics = {"I", "O"})})
-@ParametersAreNonnullByDefault
 public class LassoEmptinessOracleImpl<L extends Lasso<I, D>, S, I, D>
         implements LassoEmptinessOracle<L, I, D>, LassoOracle<L, I, D> {
 

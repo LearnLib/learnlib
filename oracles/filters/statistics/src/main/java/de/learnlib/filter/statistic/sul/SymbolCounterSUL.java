@@ -15,15 +15,12 @@
  */
 package de.learnlib.filter.statistic.sul;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.SUL;
 import de.learnlib.api.statistic.StatisticSUL;
 import de.learnlib.filter.statistic.Counter;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
 
     private final SUL<I, O> sul;
@@ -66,7 +63,7 @@ public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public Counter getStatisticalData() {
         return counter;
     }

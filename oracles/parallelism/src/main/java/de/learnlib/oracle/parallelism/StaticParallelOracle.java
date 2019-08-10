@@ -24,15 +24,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.base.Throwables;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A membership oracle that statically distributes a set of queries among several threads.
@@ -48,7 +46,6 @@ import de.learnlib.setting.LearnLibSettings;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class StaticParallelOracle<I, D> implements ParallelOracle<I, D> {
 
     private static final int DEFAULT_MIN_BATCH_SIZE = 10;
@@ -66,16 +63,16 @@ public class StaticParallelOracle<I, D> implements ParallelOracle<I, D> {
         POOL_POLICY = settings.getEnumValue(LearnLibProperty.PARALLEL_POOL_SIZE, PoolPolicy.class, PoolPolicy.CACHED);
     }
 
-    @Nonnegative
+    @NonNegative
     private final int minBatchSize;
-    @Nonnull
+    @NonNull
     private final MembershipOracle<I, D>[] oracles;
-    @Nonnull
+    @NonNull
     private final ExecutorService executor;
 
     @SuppressWarnings("unchecked")
     public StaticParallelOracle(Collection<? extends MembershipOracle<I, D>> oracles,
-                                @Nonnegative int minBatchSize,
+                                @NonNegative int minBatchSize,
                                 PoolPolicy policy) {
 
         this.oracles = oracles.toArray(new MembershipOracle[0]);

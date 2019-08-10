@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import de.learnlib.api.ObservableSUL;
 import de.learnlib.api.SUL;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
@@ -30,6 +28,7 @@ import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * An omega membership oracle for an {@link ObservableSUL}.
@@ -95,7 +94,7 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
 
     protected abstract Q getQueryState(ObservableSUL<S, I, O> sul);
 
-    @Nonnull
+    @NonNull
     private Pair<Word<O>, Integer> answerQuery(ObservableSUL<S, I, O> sul, Word<I> prefix, Word<I> loop, int repeat) {
         assert repeat > 0;
         sul.pre();

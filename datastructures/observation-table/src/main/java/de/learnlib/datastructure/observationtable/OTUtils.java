@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.function.Function;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.datastructure.observationtable.reader.ObservationTableReader;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableHTMLWriter;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableWriter;
@@ -31,7 +29,6 @@ import net.automatalib.commons.util.IOUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-@ParametersAreNonnullByDefault
 public final class OTUtils {
 
     private static final String HTML_FILE_HEADER =

@@ -15,9 +15,6 @@
  */
 package de.learnlib.util;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.logging.LearnLogger;
 import de.learnlib.api.oracle.EquivalenceOracle;
@@ -28,6 +25,7 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * runs a learning experiment.
@@ -36,7 +34,6 @@ import net.automatalib.words.Word;
  *
  * @author falkhowar
  */
-@ParametersAreNonnullByDefault
 public class Experiment<A> {
 
     public static final String LEARNING_PROFILE_KEY = "Learning";
@@ -55,7 +52,7 @@ public class Experiment<A> {
         this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs);
     }
 
-    @Nonnull
+    @NonNull
     public A run() {
         if (this.finalHypothesis != null) {
             throw new IllegalStateException("Experiment has already been run");
@@ -65,7 +62,7 @@ public class Experiment<A> {
         return finalHypothesis;
     }
 
-    @Nonnull
+    @NonNull
     public A getFinalHypothesis() {
         if (finalHypothesis == null) {
             throw new IllegalStateException("Experiment has not yet been run");
@@ -105,7 +102,7 @@ public class Experiment<A> {
     /**
      * @return the rounds
      */
-    @Nonnull
+    @NonNull
     public Counter getRounds() {
         return rounds;
     }

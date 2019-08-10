@@ -17,12 +17,10 @@ package de.learnlib.api.query;
 
 import java.util.Objects;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.ObservableSUL;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A query that represents information about infinite words in an ultimately periodic pattern. That is, for two finite
@@ -45,7 +43,6 @@ import net.automatalib.words.WordBuilder;
  * @see Query
  * @see ObservableSUL#getState()
  */
-@ParametersAreNonnullByDefault
 public class OmegaQuery<I, D> {
 
     private final Word<I> prefix;

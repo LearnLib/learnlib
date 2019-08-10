@@ -20,18 +20,14 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Writer;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.WillNotClose;
-
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import net.automatalib.commons.util.IOUtil;
 
-@ParametersAreNonnullByDefault
 public interface ObservationTableWriter<I, D> {
 
-    void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose Appendable out) throws IOException;
+    void write(ObservationTable<? extends I, ? extends D> table, Appendable out) throws IOException;
 
-    default void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose PrintStream out) {
+    default void write(ObservationTable<? extends I, ? extends D> table, PrintStream out) {
         try {
             write(table, (Appendable) out);
         } catch (IOException ex) {
@@ -39,7 +35,7 @@ public interface ObservationTableWriter<I, D> {
         }
     }
 
-    default void write(ObservationTable<? extends I, ? extends D> table, @WillNotClose StringBuilder out) {
+    default void write(ObservationTable<? extends I, ? extends D> table, StringBuilder out) {
         try {
             write(table, (Appendable) out);
         } catch (IOException ex) {

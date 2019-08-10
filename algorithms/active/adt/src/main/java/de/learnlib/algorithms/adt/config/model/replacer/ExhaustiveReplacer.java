@@ -26,8 +26,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.adt.ADT;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.SubtreeReplacer;
@@ -40,7 +38,6 @@ import net.automatalib.words.Alphabet;
 /**
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class ExhaustiveReplacer implements SubtreeReplacer {
 
     private final ADSCalculator adsCalculator;

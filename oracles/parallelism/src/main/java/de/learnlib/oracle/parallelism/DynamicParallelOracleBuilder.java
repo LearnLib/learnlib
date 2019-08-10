@@ -21,15 +21,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.base.Preconditions;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.parallelism.ParallelOracle.PoolPolicy;
 import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.commons.util.concurrent.ScalingThreadPoolExecutor;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Builder class for a {@link DynamicParallelOracle}.
@@ -41,7 +39,6 @@ import net.automatalib.commons.util.concurrent.ScalingThreadPoolExecutor;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class DynamicParallelOracleBuilder<I, D> {
 
     private static final int DEFAULT_KEEP_ALIVE_TIME = 60;
@@ -49,11 +46,11 @@ public class DynamicParallelOracleBuilder<I, D> {
     private final Supplier<? extends MembershipOracle<I, D>> oracleSupplier;
     private final Collection<? extends MembershipOracle<I, D>> oracles;
     private ExecutorService customExecutor;
-    @Nonnegative
+    @NonNegative
     private int batchSize = DynamicParallelOracle.BATCH_SIZE;
-    @Nonnegative
+    @NonNegative
     private int poolSize = DynamicParallelOracle.POOL_SIZE;
-    @Nonnull
+    @NonNull
     private PoolPolicy poolPolicy = DynamicParallelOracle.POOL_POLICY;
 
     public DynamicParallelOracleBuilder(Supplier<? extends MembershipOracle<I, D>> oracleSupplier) {
@@ -67,31 +64,31 @@ public class DynamicParallelOracleBuilder<I, D> {
         this.oracleSupplier = null;
     }
 
-    @Nonnull
+    @NonNull
     public DynamicParallelOracleBuilder<I, D> withCustomExecutor(ExecutorService executor) {
         this.customExecutor = executor;
         return this;
     }
 
-    @Nonnull
+    @NonNull
     public DynamicParallelOracleBuilder<I, D> withBatchSize(int batchSize) {
         this.batchSize = batchSize;
         return this;
     }
 
-    @Nonnull
-    public DynamicParallelOracleBuilder<I, D> withPoolSize(@Nonnegative int poolSize) {
+    @NonNull
+    public DynamicParallelOracleBuilder<I, D> withPoolSize(@NonNegative int poolSize) {
         this.poolSize = poolSize;
         return this;
     }
 
-    @Nonnull
+    @NonNull
     public DynamicParallelOracleBuilder<I, D> withPoolPolicy(PoolPolicy policy) {
         this.poolPolicy = policy;
         return this;
     }
 
-    @Nonnull
+    @NonNull
     public DynamicParallelOracle<I, D> create() {
 
         final Supplier<? extends MembershipOracle<I, D>> supplier;

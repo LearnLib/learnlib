@@ -20,9 +20,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.api.oracle.PropertyOracle.DFAPropertyOracle;
 import de.learnlib.api.oracle.PropertyOracle.MealyPropertyOracle;
@@ -35,6 +32,7 @@ import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A chain of property oracles. Useful when combining multiple model checking strategies to disprove a property, or when
@@ -71,7 +69,6 @@ import net.automatalib.words.Word;
                                             to = MealyPropertyOracle.class,
                                             withGenerics = {"I", "O", "P"}),
                     interfaces = @Interface(clazz = MealyPropertyOracle.class, generics = {"I", "O", "P"}))
-@ParametersAreNonnullByDefault
 public class PropertyOracleChain<I, A extends Output<I, D>, P, D> implements PropertyOracle<I, A, P, D> {
 
     private P property;

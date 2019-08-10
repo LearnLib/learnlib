@@ -17,14 +17,12 @@ package de.learnlib.oracle.membership;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.SUL;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A wrapper around a system under learning (SUL).
@@ -38,7 +36,6 @@ import net.automatalib.words.WordBuilder;
  * @author Falk Howar
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class SULOracle<I, O> implements MealyMembershipOracle<I, O> {
 
     private final SUL<I, O> sul;
@@ -71,7 +68,7 @@ public class SULOracle<I, O> implements MealyMembershipOracle<I, O> {
         }
     }
 
-    @Nonnull
+    @NonNull
     public static <I, O> Word<O> answerQuery(SUL<I, O> sul, Word<I> prefix, Word<I> suffix) {
         sul.pre();
         try {

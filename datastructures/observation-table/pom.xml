@@ -43,8 +43,8 @@ limitations under the License.
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
         </dependency>
 
         <!-- LearnLib dependencies -->

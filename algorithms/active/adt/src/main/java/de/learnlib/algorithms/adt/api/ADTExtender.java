@@ -15,8 +15,6 @@
  */
 package de.learnlib.algorithms.adt.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.automaton.ADTHypothesis;
 import de.learnlib.algorithms.adt.automaton.ADTState;
@@ -28,7 +26,6 @@ import de.learnlib.algorithms.adt.model.ExtensionResult;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public interface ADTExtender {
 
     /**

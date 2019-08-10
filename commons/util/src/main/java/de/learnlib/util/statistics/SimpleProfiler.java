@@ -19,16 +19,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.logging.LearnLogger;
 import de.learnlib.filter.statistic.Counter;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Very rudimentary profiler.
  */
-@ParametersAreNonnullByDefault
 public final class SimpleProfiler {
 
     private static final Map<String, Counter> CUMULATED = new ConcurrentHashMap<>();
@@ -90,7 +87,7 @@ public final class SimpleProfiler {
     /**
      * Get profiling results as string.
      */
-    @Nonnull
+    @NonNull
     public static String getResults() {
         StringBuilder sb = new StringBuilder();
         for (Entry<String, Counter> e : CUMULATED.entrySet()) {

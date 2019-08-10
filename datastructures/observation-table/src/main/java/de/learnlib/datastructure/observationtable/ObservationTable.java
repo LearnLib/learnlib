@@ -21,14 +21,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.Signed;
-
 import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.signedness.qual.Signed;
 
 /**
  * An observation table is a common method for learning algorithms to store organize their observations. This interface
@@ -64,7 +62,6 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
 
     /**
@@ -85,7 +82,7 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
      *
      * @return all prefixes in the table
      */
-    @Nonnull
+    @NonNull
     default Collection<Word<I>> getAllPrefixes() {
         Collection<Word<I>> shortPrefixes = getShortPrefixes();
         Collection<Word<I>> longPrefixes = getLongPrefixes();
@@ -102,7 +99,7 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
      *
      * @return the short prefixes in the table
      */
-    @Nonnull
+    @NonNull
     default Collection<Word<I>> getShortPrefixes() {
         Collection<Row<I>> spRows = getShortPrefixRows();
         return spRows.stream().map(Row::getLabel).collect(Collectors.toList());
@@ -114,16 +111,16 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
      *
      * @return the long prefixes in the table
      */
-    @Nonnull
+    @NonNull
     default Collection<Word<I>> getLongPrefixes() {
         Collection<Row<I>> lpRows = getLongPrefixRows();
         return lpRows.stream().map(Row::getLabel).collect(Collectors.toList());
     }
 
-    @Nonnull
+    @NonNull
     Collection<Row<I>> getShortPrefixRows();
 
-    @Nonnull
+    @NonNull
     Collection<Row<I>> getLongPrefixRows();
 
     @Nullable
@@ -140,7 +137,7 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
         return null;
     }
 
-    @Nonnull
+    @NonNull
     default Collection<Row<I>> getAllRows() {
         Collection<Row<I>> spRows = getShortPrefixRows();
         Collection<Row<I>> lpRows = getLongPrefixRows();
@@ -276,7 +273,7 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
      *
      * @return the suffix
      */
-    @Nonnull
+    @NonNull
     default Word<I> getSuffix(int index) {
         return getSuffixes().get(index);
     }
@@ -286,7 +283,7 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
      *
      * @return all suffixes in the table
      */
-    @Nonnull
+    @NonNull
     List<Word<I>> getSuffixes();
 
     default int numberOfSuffixes() {

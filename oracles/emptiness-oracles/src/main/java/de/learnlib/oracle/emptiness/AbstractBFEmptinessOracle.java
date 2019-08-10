@@ -17,9 +17,6 @@ package de.learnlib.oracle.emptiness;
 
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.AutomatonOracle.DFAOracle;
 import de.learnlib.api.oracle.AutomatonOracle.MealyOracle;
 import de.learnlib.api.oracle.EmptinessOracle;
@@ -38,6 +35,7 @@ import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An {@link EmptinessOracle} that tries words in a breadth-first manner.
@@ -71,7 +69,6 @@ import net.automatalib.words.Word;
                                             withGenerics = {"I", "O"}),
                     interfaces = {@Interface(clazz = MealyEmptinessOracle.class, generics = {"I", "O"}),
                                   @Interface(clazz = MealyOracle.class, generics = {"I", "O"})})
-@ParametersAreNonnullByDefault
 abstract class AbstractBFEmptinessOracle<A extends DetOutputAutomaton<?, I, ?, D>, I, D>
         extends AbstractBFOracle<A, I, D> implements EmptinessOracle<A, I, D> {
 

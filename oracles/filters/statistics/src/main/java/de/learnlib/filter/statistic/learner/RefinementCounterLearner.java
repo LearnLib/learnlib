@@ -15,9 +15,6 @@
  */
 package de.learnlib.filter.statistic.learner;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
@@ -33,6 +30,7 @@ import de.learnlib.filter.statistic.Counter;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Counts the number of hypothesis refinements.
@@ -63,7 +61,6 @@ import net.automatalib.words.Word;
                                             to = MealyLearner.class,
                                             withGenerics = {"I", "O"}),
                     interfaces = @Interface(clazz = MealyStatisticLearner.class, generics = {"I", "O"}))
-@ParametersAreNonnullByDefault
 public class RefinementCounterLearner<M, I, D> implements StatisticLearner<M, I, D> {
 
     private final LearningAlgorithm<M, I, D> learningAlgorithm;
@@ -81,7 +78,7 @@ public class RefinementCounterLearner<M, I, D> implements StatisticLearner<M, I,
     }
 
     @Override
-    public boolean refineHypothesis(@Nonnull DefaultQuery<I, D> ceQuery) {
+    public boolean refineHypothesis(@NonNull DefaultQuery<I, D> ceQuery) {
         final boolean refined = learningAlgorithm.refineHypothesis(ceQuery);
         if (refined) {
             counter.increment();
@@ -89,13 +86,13 @@ public class RefinementCounterLearner<M, I, D> implements StatisticLearner<M, I,
         return refined;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public M getHypothesisModel() {
         return learningAlgorithm.getHypothesisModel();
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Counter getStatisticalData() {
         return counter;

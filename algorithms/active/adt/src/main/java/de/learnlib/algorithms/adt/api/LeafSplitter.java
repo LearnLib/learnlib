@@ -15,8 +15,6 @@
  */
 package de.learnlib.algorithms.adt.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import net.automatalib.words.Word;
 
@@ -26,7 +24,6 @@ import net.automatalib.words.Word;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public interface LeafSplitter {
 
     /**

@@ -15,7 +15,7 @@
  */
 package de.learnlib.api.statistic;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A utility interface to indicate that the implementing class collects statistical information that may be obtained via
@@ -30,7 +30,7 @@ public interface StatisticCollector {
      *
      * @return the statistical data gathered by this collector
      */
-    @Nonnull
+    @NonNull
     StatisticData getStatisticalData();
 
 }

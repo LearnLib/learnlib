@@ -17,13 +17,11 @@ package de.learnlib.api.oracle;
 
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An equivalence oracle, which checks hypothesis automata against the (possibly unknown) system under learning (SUL).
@@ -46,7 +44,6 @@ import net.automatalib.words.Word;
  * @author Maik Merten
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface EquivalenceOracle<A, I, D> {
 
     /**

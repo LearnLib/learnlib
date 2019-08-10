@@ -15,12 +15,11 @@
  */
 package de.learnlib.mapper;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import de.learnlib.api.SUL;
 import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.api.SULMapper;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -246,7 +245,7 @@ public class SULMapperCompositionTest {
 
     private static final class OuterWrappedException extends SULException {
 
-        OuterWrappedException(@Nonnull Throwable cause) {
+        OuterWrappedException(@NonNull Throwable cause) {
             super(cause);
         }
     }

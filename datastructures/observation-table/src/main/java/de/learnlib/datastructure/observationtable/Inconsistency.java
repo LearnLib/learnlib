@@ -15,8 +15,8 @@
  */
 package de.learnlib.datastructure.observationtable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A description of an inconsistency in an {@link AbstractObservationTable}. An inconsistency consists of two short
@@ -45,7 +45,7 @@ public class Inconsistency<I> {
      *
      * @return the first row
      */
-    @Nonnull
+    @NonNull
     public Row<I> getFirstRow() {
         return firstRow;
     }
@@ -55,7 +55,7 @@ public class Inconsistency<I> {
      *
      * @return the second row
      */
-    @Nonnull
+    @NonNull
     public Row<I> getSecondRow() {
         return secondRow;
     }

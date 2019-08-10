@@ -18,8 +18,6 @@ package de.learnlib.algorithms.adt.model;
 import java.util.Collections;
 import java.util.Set;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.adt.ADT;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.SubtreeReplacer;
@@ -38,7 +36,6 @@ import de.learnlib.algorithms.adt.api.SubtreeReplacer;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class ReplacementResult<S, I, O> {
 
     private final ADTNode<S, I, O> nodeToReplace, replacement;

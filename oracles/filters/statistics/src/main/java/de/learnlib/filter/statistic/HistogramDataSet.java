@@ -20,15 +20,13 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A simple histogram data set.
  *
  * @author falkhowar
  */
-@ParametersAreNonnullByDefault
 public class HistogramDataSet extends AbstractStatisticData {
 
     private final SortedMap<Long, Integer> histogram = new TreeMap<>();
@@ -54,7 +52,7 @@ public class HistogramDataSet extends AbstractStatisticData {
         mean = mean + ((((double) value) - mean) / size);
     }
 
-    @Nonnull
+    @NonNull
     public SortedMap<Long, Integer> getHistogram() {
         return histogram;
     }
@@ -84,14 +82,14 @@ public class HistogramDataSet extends AbstractStatisticData {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String getSummary() {
         return getName() + " [" + getUnit() + "]: " + size + " (count), " + sum + " (sum), " + mean + " (mean), " +
                getMedian() + " (median)";
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String getDetails() {
         StringBuilder sb = new StringBuilder();
         sb.append(getSummary()).append(System.lineSeparator());

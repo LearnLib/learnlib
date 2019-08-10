@@ -17,8 +17,6 @@ package de.learnlib.api.oracle;
 
 import java.util.Collection;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
 
@@ -36,7 +34,6 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface SingleQueryOracle<I, D> extends MembershipOracle<I, D> {
 
     @Override

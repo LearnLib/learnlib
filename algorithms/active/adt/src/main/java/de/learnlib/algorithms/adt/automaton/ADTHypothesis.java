@@ -15,15 +15,14 @@
  */
 package de.learnlib.algorithms.adt.automaton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.automata.base.fast.AbstractFastMutableDet;
 import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Hypothesis model.
@@ -42,13 +41,13 @@ public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, 
         super(alphabet);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public ADTState<I, O> getSuccessor(final ADTTransition<I, O> transition) {
         return transition.getTarget();
     }
 
-    @Nonnull
+    @NonNull
     public ADTTransition<I, O> createOpenTransition(final ADTState<I, O> source,
                                                     final I input,
                                                     final ADTNode<ADTState<I, O>, I, O> siftTarget) {
@@ -83,7 +82,7 @@ public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, 
         return new ADTState<>(inputAlphabet.size());
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public ADTTransition<I, O> createTransition(final ADTState<I, O> successor, @Nullable final O properties) {
         ADTTransition<I, O> result = new ADTTransition<>();

@@ -31,11 +31,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.MutableDeterministic;
@@ -47,6 +42,9 @@ import net.automatalib.util.automata.Automata;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Base class for prefix tree acceptors.
@@ -60,13 +58,12 @@ import net.automatalib.words.Alphabet;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
         implements UniversalDeterministicAutomaton<S, Integer, PTATransition<S>, SP, TP> {
 
-    @Nonnegative
+    @NonNegative
     protected final int alphabetSize;
-    @Nonnull
+    @NonNull
     protected final S root;
 
     /**
@@ -77,7 +74,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      * @param root
      *         the root state
      */
-    public BasePTA(@Nonnegative int alphabetSize, S root) {
+    public BasePTA(@NonNegative int alphabetSize, S root) {
         this.alphabetSize = alphabetSize;
         this.root = Objects.requireNonNull(root);
     }
@@ -126,7 +123,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      * @return the state reached by this word, which might have been newly created (along with all required predecessor
      * states)
      */
-    @Nonnull
+    @NonNull
     public S getOrCreateState(int[] word) {
         S curr = root;
         for (int sym : word) {
@@ -170,7 +167,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      *
      * @return the root state
      */
-    @Nonnull
+    @NonNull
     public S getRoot() {
         return root;
     }
@@ -300,7 +297,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      *
      * @return a breadth-first ordered list of all states in this PTA
      */
-    @Nonnull
+    @NonNull
     public List<S> bfsStates() {
         List<S> stateList = new ArrayList<>();
         Set<S> visited = new HashSet<>();
@@ -330,7 +327,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      *
      * @return an iterator for iterating over all states in this PTA
      */
-    @Nonnull
+    @NonNull
     public Iterator<S> bfsIterator() {
         Set<S> visited = new HashSet<>();
         final Deque<S> bfsQueue = new ArrayDeque<>();
@@ -386,7 +383,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      *
      * @return the number of states in the PTA reachable from the root state
      */
-    @Nonnegative
+    @NonNegative
     public int countStates() {
         return Iterators.size(bfsIterator());
     }

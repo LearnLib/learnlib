@@ -18,14 +18,12 @@ package de.learnlib.util;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.AutomatonOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An {@link AutomatonOracle} that processes words in a breadth-first manner.
@@ -36,7 +34,6 @@ import net.automatalib.words.Word;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractBFOracle<A extends DeterministicAutomaton<?, I, ?>, I, D>
         implements AutomatonOracle<A, I, D> {
 

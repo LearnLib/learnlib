@@ -17,14 +17,12 @@ package de.learnlib.api.query;
 
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A query is the basic form of interaction between a {@link LearningAlgorithm learner} and a {@link MembershipOracle
@@ -79,7 +77,7 @@ public abstract class Query<I, D> {
      * @param output
      *         the output, i.e., the response to the query
      */
-    public abstract void answer(@Nullable D output);
+    public abstract void answer(D output);
 
     /**
      * Retrieves the input word of this query. The input word corresponding to a query is the concatenation of its
@@ -87,7 +85,7 @@ public abstract class Query<I, D> {
      *
      * @return the input word of this query
      */
-    @Nonnull
+    @NonNull
     public Word<I> getInput() {
         return getPrefix().concat(getSuffix());
     }
@@ -98,7 +96,7 @@ public abstract class Query<I, D> {
      *
      * @return the prefix of this query
      */
-    @Nonnull
+    @NonNull
     public abstract Word<I> getPrefix();
 
     /**
@@ -107,7 +105,7 @@ public abstract class Query<I, D> {
      *
      * @return the suffix of this query
      */
-    @Nonnull
+    @NonNull
     public abstract Word<I> getSuffix();
 
     @Override

@@ -28,9 +28,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithms.adt.adt.ADT;
 import de.learnlib.algorithms.adt.adt.ADT.LCAInfo;
@@ -65,6 +62,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * The main learning algorithm.
@@ -76,7 +74,6 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                                          PartialTransitionAnalyzer<ADTState<I, O>, I>,
                                          SupportsGrowingAlphabet<I>,
@@ -283,7 +280,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         return true;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
         return this.hypothesis;

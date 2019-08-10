@@ -15,11 +15,10 @@
  */
 package de.learnlib.api.oracle;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Answers {@link de.learnlib.api.query.OmegaQuery}s.
@@ -33,6 +32,6 @@ public interface OmegaQueryAnswerer<S, I, D> {
     @Nullable
     Pair<D, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat);
 
-    @Nonnull
+    @NonNull
     OmegaMembershipOracle<S, I, D> asOracle();
 }

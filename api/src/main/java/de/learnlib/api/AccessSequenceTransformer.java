@@ -15,11 +15,8 @@
  */
 package de.learnlib.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.Word;
 
-@ParametersAreNonnullByDefault
 public interface AccessSequenceTransformer<I> {
 
     Word<I> transformAccessSequence(Word<I> word);

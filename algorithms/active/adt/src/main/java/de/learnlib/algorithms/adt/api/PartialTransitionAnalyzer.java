@@ -15,8 +15,6 @@
  */
 package de.learnlib.algorithms.adt.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * During the refinement process of the hypothesis, ADS/Ts may be computed on partially defined automata. These
  * computations may want to skip undefined transitions (as closing them results in resets, which we want to omit) and
@@ -30,7 +28,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public interface PartialTransitionAnalyzer<S, I> {
 
     /**

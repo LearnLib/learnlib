@@ -18,9 +18,6 @@ package de.learnlib.util;
 import java.util.Collection;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.OmegaQueryAnswerer;
 import de.learnlib.api.oracle.QueryAnswerer;
@@ -32,8 +29,8 @@ import de.learnlib.setting.LearnLibSettings;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-@ParametersAreNonnullByDefault
 public final class MQUtil {
 
     public static final int PARALLEL_THRESHOLD;
@@ -54,14 +51,14 @@ public final class MQUtil {
         return query(oracle, Word.epsilon(), query.getInput());
     }
 
-    @Nonnull
+    @NonNull
     public static <I, D> DefaultQuery<I, D> query(MembershipOracle<I, D> oracle, Word<I> prefix, Word<I> suffix) {
         DefaultQuery<I, D> qry = new DefaultQuery<>(prefix, suffix);
         oracle.processQuery(qry);
         return qry;
     }
 
-    @Nonnull
+    @NonNull
     public static <I, D> DefaultQuery<I, D> query(MembershipOracle<I, D> oracle, Word<I> queryWord) {
         return query(oracle, Word.epsilon(), queryWord);
     }

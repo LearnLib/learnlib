@@ -15,8 +15,6 @@
  */
 package de.learnlib.filter.cache.dfa;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;
@@ -25,7 +23,6 @@ import net.automatalib.incremental.dfa.tree.IncrementalDFATreeBuilder;
 import net.automatalib.incremental.dfa.tree.IncrementalPCDFATreeBuilder;
 import net.automatalib.words.Alphabet;
 
-@ParametersAreNonnullByDefault
 public final class DFACaches {
 
     private DFACaches() {

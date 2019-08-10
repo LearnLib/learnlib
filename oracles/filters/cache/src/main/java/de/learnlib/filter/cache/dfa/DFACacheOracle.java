@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
@@ -51,7 +49,6 @@ import org.slf4j.LoggerFactory;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class DFACacheOracle<I>
         implements DFALearningCacheOracle<I>, SupportsGrowingAlphabet<I>, Resumable<DFACacheOracleState<I>> {
 

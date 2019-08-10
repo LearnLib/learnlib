@@ -26,8 +26,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.adt.ADTLeafNode;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.PartialTransitionAnalyzer;
@@ -53,7 +51,6 @@ import net.automatalib.words.Word;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public final class DefensiveADS<S, I, O> {
 
     private final MealyMachine<S, I, ?, O> automaton;

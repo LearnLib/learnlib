@@ -17,11 +17,9 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Abstract base class for jobs (i.e., {@link Runnable}s) that process queries.
@@ -35,7 +33,6 @@ import de.learnlib.api.query.Query;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 abstract class AbstractQueriesJob<I, D> implements Runnable {
 
     private final Collection<? extends Query<I, D>> queries;
@@ -51,6 +48,6 @@ abstract class AbstractQueriesJob<I, D> implements Runnable {
         oracle.processQueries(queries);
     }
 
-    @Nonnull
+    @NonNull
     protected abstract MembershipOracle<I, D> getOracle();
 }

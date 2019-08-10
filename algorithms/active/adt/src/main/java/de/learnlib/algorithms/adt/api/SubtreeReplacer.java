@@ -17,8 +17,6 @@ package de.learnlib.algorithms.adt.api;
 
 import java.util.Set;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.adt.ADT;
 import de.learnlib.algorithms.adt.model.ReplacementResult;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -29,7 +27,6 @@ import net.automatalib.words.Alphabet;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public interface SubtreeReplacer {
 
     /**

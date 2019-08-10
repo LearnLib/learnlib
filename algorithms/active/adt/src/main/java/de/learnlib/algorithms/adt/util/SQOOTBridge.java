@@ -18,8 +18,6 @@ package de.learnlib.algorithms.adt.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.model.ObservationTree;
 import de.learnlib.api.oracle.SymbolQueryOracle;
 import net.automatalib.automata.transducers.impl.FastMealy;
@@ -37,7 +35,6 @@ import net.automatalib.automata.transducers.impl.FastMealyState;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
 
     private final FastMealy<I, O> observationTree;

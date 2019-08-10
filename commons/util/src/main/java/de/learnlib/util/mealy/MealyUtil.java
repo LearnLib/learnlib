@@ -18,22 +18,19 @@ package de.learnlib.util.mealy;
 import java.util.Iterator;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility class helping to unify various approaches to actively learning Mealy machines.
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public final class MealyUtil {
 
     public static final int NO_MISMATCH = -1;
@@ -116,13 +113,12 @@ public final class MealyUtil {
         return new DefaultQuery<>(cePrefix, ceSuffix.prefix(mismatchIdx + 1), ceOut.getSymbol(mismatchIdx));
     }
 
-    @Nonnull
     public static <M extends MealyMachine<?, I, ?, O>, I, O> LearningAlgorithm.MealyLearner<I, O> wrapSymbolLearner(
             LearningAlgorithm<M, I, O> learner) {
         return new MealyLearnerWrapper<>(learner);
     }
 
-    @Nonnull
+    @NonNull
     public static <I, O> MembershipOracle<I, O> wrapWordOracle(MembershipOracle<I, Word<O>> oracle) {
         return new SymbolOracleWrapper<>(oracle);
     }

@@ -28,8 +28,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.Iterators;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
@@ -47,6 +45,7 @@ import net.automatalib.commons.smartcollections.UnorderedCollection;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * The TTT learning algorithm for {@link DFA}.
@@ -484,7 +483,7 @@ public abstract class AbstractTTTLearner<A, I, D>
      *
      * @return the newly created state
      */
-    private TTTState<I, D> createState(@Nonnull TTTTransition<I, D> transition) {
+    private TTTState<I, D> createState(@NonNull TTTTransition<I, D> transition) {
         return hypothesis.createState(transition);
     }
 

@@ -18,8 +18,6 @@ package de.learnlib.api.oracle;
 import java.util.Collection;
 import java.util.Collections;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.ObservableSUL;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
@@ -37,7 +35,6 @@ import net.automatalib.words.Word;
  * @param <I> the input type
  * @param <D> the output type
  */
-@ParametersAreNonnullByDefault
 public interface OmegaMembershipOracle<S, I, D> extends OmegaQueryAnswerer<S, I, D> {
 
     @Override

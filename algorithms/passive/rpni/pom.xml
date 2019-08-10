@@ -80,10 +80,6 @@ limitations under the License.
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.github.misberner.buildergen</groupId>
             <artifactId>buildergen</artifactId>
         </dependency>

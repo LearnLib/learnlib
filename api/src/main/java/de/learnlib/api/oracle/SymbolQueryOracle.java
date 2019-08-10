@@ -17,8 +17,6 @@ package de.learnlib.api.oracle;
 
 import java.util.Collection;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -34,7 +32,6 @@ import net.automatalib.words.WordBuilder;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public interface SymbolQueryOracle<I, O> extends MembershipOracle.MealyMembershipOracle<I, O> {
 
     /**

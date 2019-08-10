@@ -17,11 +17,9 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A queries job that maintains a fixed reference to a membership oracle, executes queries using this oracle regardless
@@ -34,10 +32,9 @@ import de.learnlib.api.query.Query;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 final class StaticQueriesJob<I, D> extends AbstractQueriesJob<I, D> {
 
-    @Nonnull
+    @NonNull
     private final MembershipOracle<I, D> oracle;
 
     StaticQueriesJob(Collection<? extends Query<I, D>> queries, MembershipOracle<I, D> oracle) {

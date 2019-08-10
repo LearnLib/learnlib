@@ -17,14 +17,12 @@ package de.learnlib.oracle.property;
 
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.EmptinessOracle;
 import de.learnlib.api.oracle.InclusionOracle;
 import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.concepts.Output;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link PropertyOracle} that uses {@link InclusionOracle}s and {@link EmptinessOracle}s to find counter examples
@@ -38,7 +36,6 @@ import net.automatalib.automata.concepts.Output;
  * @param <D> the output type
  * @param <R> the result type of a model checker
  */
-@ParametersAreNonnullByDefault
 abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends A>
         implements PropertyOracle<I, A, P, D> {
 

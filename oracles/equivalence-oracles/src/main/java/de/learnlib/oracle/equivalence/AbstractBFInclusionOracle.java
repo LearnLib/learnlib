@@ -17,8 +17,6 @@ package de.learnlib.oracle.equivalence;
 
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-
 import de.learnlib.api.oracle.AutomatonOracle.DFAOracle;
 import de.learnlib.api.oracle.AutomatonOracle.MealyOracle;
 import de.learnlib.api.oracle.InclusionOracle;
@@ -37,6 +35,7 @@ import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An {@link InclusionOracle} that generates words in a breadth-first manner.

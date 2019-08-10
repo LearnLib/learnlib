@@ -19,10 +19,6 @@ import java.io.Serializable;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.Resumable;
 import de.learnlib.api.SUL;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
@@ -36,6 +32,8 @@ import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +54,6 @@ import org.slf4j.LoggerFactory;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
                                                                MealyLearningCacheOracle<I, O>,
                                                                SupportsGrowingAlphabet<I>,
@@ -103,7 +100,7 @@ public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
         return impl.canFork();
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public SUL<I, O> fork() {
         return impl.fork();
@@ -144,7 +141,6 @@ public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
      *
      * @author Malte Isberner
      */
-    @ParametersAreNonnullByDefault
     private static final class SULCacheImpl<S, I, T, O>
             implements SUL<I, O>, MealyLearningCache<I, O>, SupportsGrowingAlphabet<I>, Resumable<SULCacheState<I, O>> {
 
@@ -240,13 +236,13 @@ public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
             return delegate.canFork();
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public SUL<I, O> fork() {
             return new SULCacheImpl<>(incMealy, incMealyLock, mealyTs, delegate.fork());
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
             return new MealyCacheConsistencyTest<>(incMealy, incMealyLock);

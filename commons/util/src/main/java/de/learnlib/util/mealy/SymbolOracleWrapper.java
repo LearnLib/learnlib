@@ -19,12 +19,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Word-to-Symbol-Oracle adapter.
@@ -39,7 +37,6 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 
     private final MembershipOracle<I, Word<O>> wordOracle;
@@ -64,7 +61,6 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
         wordOracle.processQueries(lsQueries);
     }
 
-    @ParametersAreNonnullByDefault
     private static final class LastSymbolQuery<I, O> extends Query<I, Word<O>> {
 
         private final Query<I, O> originalQuery;
@@ -82,13 +78,13 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public Word<I> getPrefix() {
             return originalQuery.getPrefix();
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public Word<I> getSuffix() {
             return originalQuery.getSuffix();
         }

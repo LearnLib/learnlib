@@ -18,8 +18,6 @@ package de.learnlib.api.oracle;
 import java.util.Collection;
 import java.util.Collections;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
@@ -34,7 +32,6 @@ import net.automatalib.words.Word;
  * @author Maik Merten
  * @see DefaultQuery
  */
-@ParametersAreNonnullByDefault
 public interface MembershipOracle<I, D> extends QueryAnswerer<I, D> {
 
     @Override

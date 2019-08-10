@@ -15,8 +15,6 @@
  */
 package de.learnlib.oracle.membership;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.SUL;
 import de.learnlib.api.oracle.SymbolQueryOracle;
 
@@ -30,7 +28,6 @@ import de.learnlib.api.oracle.SymbolQueryOracle;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class SULSymbolQueryOracle<I, O> implements SymbolQueryOracle<I, O> {
 
     private final SUL<I, O> sul;

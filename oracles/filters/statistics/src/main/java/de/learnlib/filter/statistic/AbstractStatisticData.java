@@ -16,17 +16,14 @@
 
 package de.learnlib.filter.statistic;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.statistic.StatisticData;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Common interface for statistical data.
  *
  * @author falkhowar
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractStatisticData implements StatisticData {
 
     private final String name;
@@ -37,23 +34,23 @@ public abstract class AbstractStatisticData implements StatisticData {
         this.unit = unit;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getName() {
         return name;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getUnit() {
         return unit;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public abstract String getSummary();
 
-    @Nonnull
+    @NonNull
     @Override
     public abstract String getDetails();
 }

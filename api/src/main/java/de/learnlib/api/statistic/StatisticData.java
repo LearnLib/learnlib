@@ -15,27 +15,25 @@
  */
 package de.learnlib.api.statistic;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Common interface for statistical data.
  *
  * @author falkhowar
  */
-@ParametersAreNonnullByDefault
 public interface StatisticData {
 
-    @Nonnull
+    @NonNull
     String getName();
 
-    @Nonnull
+    @NonNull
     String getUnit();
 
-    @Nonnull
+    @NonNull
     String getSummary();
 
-    @Nonnull
+    @NonNull
     String getDetails();
 }
 

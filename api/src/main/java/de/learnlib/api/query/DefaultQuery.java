@@ -15,10 +15,8 @@
  */
 package de.learnlib.api.query;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A query is a container for tests a learning algorithms performs, containing the actual test and the corresponding
@@ -31,7 +29,6 @@ import net.automatalib.words.Word;
  *
  * @author Maik Merten
  */
-@ParametersAreNonnullByDefault
 public class DefaultQuery<I, D> extends AbstractQuery<I, D> {
 
     private D output;

@@ -15,14 +15,11 @@
  */
 package de.learnlib.driver.util;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.ObservableSUL;
 import net.automatalib.automata.transducers.MealyMachine;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public class ObservableMealySimulatorSUL<S, I, O> extends MealySimulatorSUL<I, O> implements ObservableSUL<S, I, O> {
 
     protected final ObservableMealySimulatorSULImpl<S, I, ?, O> impl;
@@ -40,7 +37,7 @@ public class ObservableMealySimulatorSUL<S, I, O> extends MealySimulatorSUL<I, O
         this.impl = impl;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public S getState() {
         return impl.getState();
@@ -63,7 +60,7 @@ public class ObservableMealySimulatorSUL<S, I, O> extends MealySimulatorSUL<I, O
             this.noTransOut = noTransOut;
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public S getState() {
             return getCurr();

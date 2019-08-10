@@ -57,10 +57,9 @@ limitations under the License.
             <artifactId>automata-core</artifactId>
         </dependency>
 
-        <!-- JSR-305 -->
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
         </dependency>
 
 

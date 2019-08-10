@@ -15,9 +15,8 @@
  */
 package de.learnlib.datastructure.observationtable;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A row in an observation table. Minimally, a row consists of a prefix (the row label) and a unique identifier in its
@@ -58,7 +57,7 @@ public interface Row<I> {
      *
      * @return the label of this row
      */
-    @Nonnull
+    @NonNull
     Word<I> getLabel();
 
     /**

@@ -17,8 +17,6 @@ package de.learnlib.api.oracle;
 
 import java.util.List;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -35,7 +33,6 @@ import net.automatalib.words.Word;
  * @param <I> the input type
  * @param <D> the output type
  */
-@ParametersAreNonnullByDefault
 public interface BlackBoxOracle<A extends Output<I, D>, I, D> extends InclusionOracle<A, I, D> {
 
     /**

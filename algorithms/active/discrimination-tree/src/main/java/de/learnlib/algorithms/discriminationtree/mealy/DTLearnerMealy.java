@@ -29,6 +29,7 @@ import de.learnlib.datastructure.discriminationtree.MultiDTree;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @param <I>
@@ -68,7 +69,7 @@ public class DTLearnerMealy<I, O> extends AbstractDTLearner<MealyMachine<?, I, ?
     }
 
     @Override
-    protected Query<I, Word<O>> spQuery(HState<I, Word<O>, Void, O> state) {
+    protected @Nullable Query<I, Word<O>> spQuery(HState<I, Word<O>, Void, O> state) {
         return null;
     }
 

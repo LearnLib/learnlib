@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.algorithms.adt.api.LeafSplitter;
 import de.learnlib.algorithms.adt.config.LeafSplitters;
 import de.learnlib.algorithms.adt.util.ADTUtil;
@@ -41,7 +39,6 @@ import net.automatalib.words.Word;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class ADT<S, I, O> implements Serializable {
 
     private ADTNode<S, I, O> root;

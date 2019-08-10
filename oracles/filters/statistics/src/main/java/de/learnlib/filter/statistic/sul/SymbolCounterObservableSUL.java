@@ -15,13 +15,10 @@
  */
 package de.learnlib.filter.statistic.sul;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.learnlib.api.ObservableSUL;
 import de.learnlib.filter.statistic.Counter;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-@ParametersAreNonnullByDefault
 public class SymbolCounterObservableSUL<S, I, O> extends SymbolCounterSUL<I, O> implements ObservableSUL<S, I, O> {
 
     private final ObservableSUL<S, I, O> sul;
@@ -41,7 +38,7 @@ public class SymbolCounterObservableSUL<S, I, O> extends SymbolCounterSUL<I, O> 
         return new SymbolCounterObservableSUL<>(getStatisticalData(), sul.fork());
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public S getState() {
         return sul.getState();
