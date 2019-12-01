@@ -16,6 +16,7 @@
 package de.learnlib.algorithms.dhc.mealy;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -163,7 +164,7 @@ public class MealyDHCTest {
         CompactMealy<Character, String> fm = RandomAutomata.randomDeterministic(new Random(1337),
                                                                                 100,
                                                                                 inputs,
-                                                                                null,
+                                                                                Collections.emptyList(),
                                                                                 outputs,
                                                                                 new CompactMealy<>(inputs));
 

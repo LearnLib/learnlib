@@ -16,6 +16,7 @@
 package de.learnlib.examples.mealy;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 import de.learnlib.examples.LearningExample.StateLocalInputMealyLearningExample;
@@ -38,7 +39,7 @@ public class ExampleRandomStateLocalInputMealy<I, O> implements StateLocalInputM
         this.automaton = RandomAutomata.randomDeterministic(random,
                                                             size,
                                                             alphabet,
-                                                            null,
+                                                            Collections.emptyList(),
                                                             Arrays.asList(outputs),
                                                             new CompactMealy<>(alphabet));
 
