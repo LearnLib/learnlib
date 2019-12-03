@@ -228,7 +228,7 @@ limitations under the License.
         <jmockit.version>1.43</jmockit.version>
         <logback.version>1.2.3</logback.version>
         <metainf-services.version>1.8</metainf-services.version>
-        <mockito.version>2.23.0</mockito.version>
+        <mockito.version>3.2.0</mockito.version>
         <slf4j.version>1.7.25</slf4j.version>
         <testng.version>7.0.0-beta3</testng.version>
 
