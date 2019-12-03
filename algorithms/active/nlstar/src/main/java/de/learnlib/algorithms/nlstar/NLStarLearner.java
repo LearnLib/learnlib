@@ -231,4 +231,8 @@ public class NLStarLearner<I> implements NFALearner<I> {
         return hypothesis;
     }
 
+    public ObservationTable<I> getObservationTable() {
+        return table;
+    }
+
 }
