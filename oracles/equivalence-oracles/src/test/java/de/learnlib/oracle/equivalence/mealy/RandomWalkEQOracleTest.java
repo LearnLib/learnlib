@@ -88,9 +88,8 @@ public class RandomWalkEQOracleTest {
             return this.calledPost;
         }
 
-        @Nullable
         @Override
-        public Character step(@Nullable Character in) {
+        public @Nullable Character step(@Nullable Character in) {
             Assert.assertTrue(this.calledPre);
             inputLength++;
 

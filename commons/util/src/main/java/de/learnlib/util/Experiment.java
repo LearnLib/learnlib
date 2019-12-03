@@ -25,7 +25,7 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * runs a learning experiment.
@@ -34,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @author falkhowar
  */
-public class Experiment<A> {
+public class Experiment<A extends Object> {
 
     public static final String LEARNING_PROFILE_KEY = "Learning";
     public static final String COUNTEREXAMPLE_PROFILE_KEY = "Searching for counterexample";
@@ -44,7 +44,7 @@ public class Experiment<A> {
     private boolean logModels;
     private boolean profile;
     private final Counter rounds = new Counter("learning rounds", "#");
-    private A finalHypothesis;
+    private @Nullable A finalHypothesis;
 
     public <I, D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
                              EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
@@ -52,7 +52,6 @@ public class Experiment<A> {
         this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs);
     }
 
-    @NonNull
     public A run() {
         if (this.finalHypothesis != null) {
             throw new IllegalStateException("Experiment has already been run");
@@ -62,7 +61,6 @@ public class Experiment<A> {
         return finalHypothesis;
     }
 
-    @NonNull
     public A getFinalHypothesis() {
         if (finalHypothesis == null) {
             throw new IllegalStateException("Experiment has not yet been run");
@@ -102,7 +100,6 @@ public class Experiment<A> {
     /**
      * @return the rounds
      */
-    @NonNull
     public Counter getRounds() {
         return rounds;
     }

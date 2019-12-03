@@ -17,6 +17,8 @@ package de.learnlib.drivers.reflect;
 
 import java.util.LinkedList;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * A stack implementation with limited size, that ignores operations/returns null when pushing/pop beyond its
  * capacity/size.
@@ -39,7 +41,7 @@ public class StackWithNull {
         }
     }
 
-    public Object pop() {
+    public @Nullable Object pop() {
         return back.isEmpty() ? null : back.pop();
     }
 }

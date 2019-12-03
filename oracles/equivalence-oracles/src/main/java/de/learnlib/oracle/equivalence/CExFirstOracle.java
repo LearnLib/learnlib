@@ -97,9 +97,8 @@ public class CExFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOra
         return propertyOracles;
     }
 
-    @Nullable
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
         for (PropertyOracle<I, ? super A, ?, D> propertyOracle : propertyOracles) {
             final DefaultQuery<I, D> result = propertyOracle.findCounterExample(hypothesis, inputs);
             if (result != null) {

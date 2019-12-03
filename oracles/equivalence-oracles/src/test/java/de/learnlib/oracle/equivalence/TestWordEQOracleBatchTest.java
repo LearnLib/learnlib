@@ -61,9 +61,8 @@ public class TestWordEQOracleBatchTest {
             return queryCounter;
         }
 
-        @Nullable
         @Override
-        public Boolean computeOutput(Iterable<? extends I> input) {
+        public @Nullable Boolean computeOutput(Iterable<? extends I> input) {
             queryCounter++;
 
             return queryCounter >= THRESHOLD ? Boolean.TRUE : null;

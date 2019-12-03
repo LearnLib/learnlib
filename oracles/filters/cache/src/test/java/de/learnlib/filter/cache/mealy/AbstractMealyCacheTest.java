@@ -24,6 +24,7 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author frohme
@@ -32,7 +33,7 @@ public abstract class AbstractMealyCacheTest
         extends AbstractCacheTest<MealyCacheOracle<Character, Integer>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 
     private final MealyCounterOracle<Character, Integer> counter;
-    protected final Mapping<Integer, Integer> errorMapper;
+    protected final Mapping<Integer, @Nullable Integer> errorMapper;
 
     public AbstractMealyCacheTest() {
         counter = new MealyCounterOracle<>(new MealySimulatorOracle<>(CacheTestUtils.MEALY), "counterOracle");

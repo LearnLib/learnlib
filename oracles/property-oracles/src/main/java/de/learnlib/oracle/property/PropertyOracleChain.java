@@ -69,11 +69,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                             to = MealyPropertyOracle.class,
                                             withGenerics = {"I", "O", "P"}),
                     interfaces = @Interface(clazz = MealyPropertyOracle.class, generics = {"I", "O", "P"}))
-public class PropertyOracleChain<I, A extends Output<I, D>, P, D> implements PropertyOracle<I, A, P, D> {
+public class PropertyOracleChain<I, A extends Output<I, D>, @Nullable P, D> implements PropertyOracle<I, A, P, D> {
 
     private P property;
 
-    private DefaultQuery<I, D> counterExample;
+    private @Nullable DefaultQuery<I, D> counterExample;
 
     private final List<PropertyOracle<I, ? super A, P, D>> oracles;
 
@@ -85,7 +85,7 @@ public class PropertyOracleChain<I, A extends Output<I, D>, P, D> implements Pro
     public PropertyOracleChain(Collection<? extends PropertyOracle<I, ? super A, P, D>> oracles) {
         this.oracles = new ArrayList<>(oracles);
         if (!this.oracles.isEmpty()) {
-            property = this.oracles.iterator().next().getProperty();
+            property = this.oracles.get(0).getProperty();
         } else {
             property = null;
         }
@@ -98,7 +98,7 @@ public class PropertyOracleChain<I, A extends Output<I, D>, P, D> implements Pro
     }
 
     @Override
-    public DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {
         for (PropertyOracle<I, ? super A, P, D> oracle : oracles) {
             DefaultQuery<I, D> ceQry = oracle.findCounterExample(hypothesis, inputs);
             if (ceQry != null) {
@@ -109,9 +109,8 @@ public class PropertyOracleChain<I, A extends Output<I, D>, P, D> implements Pro
         return null;
     }
 
-    @Nullable
     @Override
-    public DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs) {
         for (PropertyOracle<I, ? super A, P, D> oracle : oracles) {
             DefaultQuery<I, D> ceQry = oracle.disprove(hypothesis, inputs);
             if (ceQry != null) {
@@ -134,9 +133,8 @@ public class PropertyOracleChain<I, A extends Output<I, D>, P, D> implements Pro
         return property;
     }
 
-    @Nullable
     @Override
-    public DefaultQuery<I, D> getCounterExample() {
+    public @Nullable DefaultQuery<I, D> getCounterExample() {
         return counterExample;
     }
 }

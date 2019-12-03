@@ -31,18 +31,14 @@ limitations under the License.
     <description>The TTT Algorithm</description>
 
     <dependencies>
-        <!--
-        Compile-time dependencies
-        -->
-
-        <!-- LearnLib dependencies -->
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-api</artifactId>
-        </dependency>
+        <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-acex</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-api</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
@@ -61,42 +57,32 @@ limitations under the License.
             <artifactId>learnlib-util</artifactId>
         </dependency>
 
-        <!-- AutomataLib dependencies -->
+        <!-- external -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-core</artifactId>
+            <artifactId>automata-commons-smartcollections</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-smartcollections</artifactId>
+            <artifactId>automata-core</artifactId>
         </dependency>
 
-        <!-- Guava -->
+        <!-- build -->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
+            <groupId>com.github.misberner.buildergen</groupId>
+            <artifactId>buildergen</artifactId>
         </dependency>
 
-
-        <!--
-        Test dependencies
-        -->
-
-        <!-- TestNG -->
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-        </dependency>
-
-        <!-- LearnLib dependencies -->
+        <!-- test -->
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learner-it-support</artifactId>
@@ -116,10 +102,10 @@ limitations under the License.
             <scope>test</scope>
         </dependency>
 
-        <!-- Buildergen -->
         <dependency>
-            <groupId>com.github.misberner.buildergen</groupId>
-            <artifactId>buildergen</artifactId>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
+
     </dependencies>
 </project>

@@ -25,7 +25,6 @@ import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -46,25 +45,22 @@ public class SimpleObservationTable<I, D> implements ObservationTable<I, D> {
         this.suffixes = suffixes;
     }
 
-    @NonNull
     @Override
     public Collection<Row<I>> getShortPrefixRows() {
         return Collections.emptyList();
     }
 
-    @NonNull
     @Override
     public Collection<Row<I>> getLongPrefixRows() {
         return Collections.emptyList();
     }
 
-    @Nullable
+
     @Override
-    public Row<I> getRow(int idx) {
+    public @Nullable Row<I> getRow(int idx) {
         return null;
     }
 
-    @NonNull
     @Override
     public Row<I> getRow(Word<I> prefix) {
         throw new UnsupportedOperationException();
@@ -75,7 +71,6 @@ public class SimpleObservationTable<I, D> implements ObservationTable<I, D> {
         return 0;
     }
 
-    @NonNull
     @Override
     public List<Word<I>> getSuffixes() {
         return Collections.unmodifiableList(suffixes);
@@ -93,7 +88,7 @@ public class SimpleObservationTable<I, D> implements ObservationTable<I, D> {
 
     @Override
     public List<D> rowContents(Row<I> row) {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

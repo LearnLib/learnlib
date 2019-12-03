@@ -21,13 +21,10 @@ import net.automatalib.automata.fsa.NFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.util.automata.fsa.NFAs;
 import net.automatalib.words.Alphabet;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class NFALearnerWrapper<I> implements LearningAlgorithm.DFALearner<I> {
 
-    @NonNull
     private final Alphabet<I> alphabet;
-    @NonNull
     private final LearningAlgorithm<? extends NFA<?, I>, I, Boolean> nfaLearner;
 
     public NFALearnerWrapper(Alphabet<I> alphabet, LearningAlgorithm<? extends NFA<?, I>, I, Boolean> nfaLearner) {

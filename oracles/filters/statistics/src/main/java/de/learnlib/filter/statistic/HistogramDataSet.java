@@ -20,8 +20,6 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 /**
  * A simple histogram data set.
  *
@@ -52,7 +50,6 @@ public class HistogramDataSet extends AbstractStatisticData {
         mean = mean + ((((double) value) - mean) / size);
     }
 
-    @NonNull
     public SortedMap<Long, Integer> getHistogram() {
         return histogram;
     }
@@ -82,14 +79,12 @@ public class HistogramDataSet extends AbstractStatisticData {
     }
 
     @Override
-    @NonNull
     public String getSummary() {
         return getName() + " [" + getUnit() + "]: " + size + " (count), " + sum + " (sum), " + mean + " (mean), " +
                getMedian() + " (median)";
     }
 
     @Override
-    @NonNull
     public String getDetails() {
         StringBuilder sb = new StringBuilder();
         sb.append(getSummary()).append(System.lineSeparator());

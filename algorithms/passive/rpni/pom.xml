@@ -31,11 +31,7 @@ limitations under the License.
     <description>The RPNI passive learning algorithm</description>
 
     <dependencies>
-        <!--
-        Compile-time dependencies
-        -->
-
-        <!-- LearnLib dependencies -->
+        <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
@@ -45,31 +41,27 @@ limitations under the License.
             <artifactId>learnlib-datastructure-pta</artifactId>
         </dependency>
 
-        <!-- AutomataLib dependencies -->
+        <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-core</artifactId>
+            <artifactId>automata-commons-util</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-util</artifactId>
+            <artifactId>automata-core</artifactId>
         </dependency>
 
-        <!--
-        Test dependencies
-        -->
-
-        <!-- TestNG -->
+        <!-- build -->
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+            <groupId>com.github.misberner.buildergen</groupId>
+            <artifactId>buildergen</artifactId>
         </dependency>
 
-        <!-- LearnLib dependencies -->
+        <!-- test -->
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learner-it-support</artifactId>
@@ -79,9 +71,10 @@ limitations under the License.
             <artifactId>learnlib-membership-oracles</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>com.github.misberner.buildergen</groupId>
-            <artifactId>buildergen</artifactId>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

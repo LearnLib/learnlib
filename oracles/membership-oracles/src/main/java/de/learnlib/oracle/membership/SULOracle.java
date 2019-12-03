@@ -22,7 +22,7 @@ import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A wrapper around a system under learning (SUL).
@@ -39,7 +39,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public class SULOracle<I, O> implements MealyMembershipOracle<I, O> {
 
     private final SUL<I, O> sul;
-    private final ThreadLocal<SUL<I, O>> localSul;
+    private final @Nullable ThreadLocal<SUL<I, O>> localSul;
 
     public SULOracle(SUL<I, O> sul) {
         this.sul = sul;
@@ -68,7 +68,6 @@ public class SULOracle<I, O> implements MealyMembershipOracle<I, O> {
         }
     }
 
-    @NonNull
     public static <I, O> Word<O> answerQuery(SUL<I, O> sul, Word<I> prefix, Word<I> suffix) {
         sul.pre();
         try {

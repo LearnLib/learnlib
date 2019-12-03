@@ -21,8 +21,6 @@ import net.automatalib.automata.base.fast.AbstractFastMutableDet;
 import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Hypothesis model.
@@ -41,13 +39,11 @@ public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, 
         super(alphabet);
     }
 
-    @NonNull
     @Override
     public ADTState<I, O> getSuccessor(final ADTTransition<I, O> transition) {
         return transition.getTarget();
     }
 
-    @NonNull
     public ADTTransition<I, O> createOpenTransition(final ADTState<I, O> source,
                                                     final I input,
                                                     final ADTNode<ADTState<I, O>, I, O> siftTarget) {
@@ -82,9 +78,8 @@ public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, 
         return new ADTState<>(inputAlphabet.size());
     }
 
-    @NonNull
     @Override
-    public ADTTransition<I, O> createTransition(final ADTState<I, O> successor, @Nullable final O properties) {
+    public ADTTransition<I, O> createTransition(final ADTState<I, O> successor, final O properties) {
         ADTTransition<I, O> result = new ADTTransition<>();
         result.setTarget(successor);
         result.setOutput(properties);
@@ -92,21 +87,22 @@ public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, 
     }
 
     @Override
-    public void setTransitionOutput(final ADTTransition<I, O> transition, @Nullable final O output) {
+    public void setTransitionOutput(final ADTTransition<I, O> transition, final O output) {
         transition.setOutput(output);
     }
 
-    @Nullable
     @Override
     public O getTransitionOutput(final ADTTransition<I, O> transition) {
         return transition.getOutput();
     }
 
+    @SuppressWarnings("nullness") // hypothesis is always complete
     @Override
     public Word<I> transformAccessSequence(final Word<I> word) {
         return this.getState(word).getAccessSequence();
     }
 
+    @SuppressWarnings("nullness") // hypothesis is always complete
     @Override
     public boolean isAccessSequence(final Word<I> word) {
         return this.getState(word).getAccessSequence().equals(word);

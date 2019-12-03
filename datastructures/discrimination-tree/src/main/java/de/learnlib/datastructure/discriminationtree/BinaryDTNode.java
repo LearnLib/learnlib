@@ -20,6 +20,7 @@ import java.util.Map;
 
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
 import de.learnlib.datastructure.discriminationtree.model.BooleanMap;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Binary discrimination tree node specialization.
@@ -37,7 +38,7 @@ public class BinaryDTNode<I, D> extends AbstractWordBasedDTNode<I, Boolean, D> i
         super(data);
     }
 
-    public BinaryDTNode(BinaryDTNode<I, D> parent, Boolean parentOutcome, D data) {
+    public BinaryDTNode(BinaryDTNode<I, D> parent, Boolean parentOutcome, @Nullable D data) {
         super(parent, parentOutcome, data);
     }
 
@@ -47,7 +48,7 @@ public class BinaryDTNode<I, D> extends AbstractWordBasedDTNode<I, Boolean, D> i
     }
 
     @Override
-    protected BinaryDTNode<I, D> createChild(Boolean outcome, D data) {
+    protected BinaryDTNode<I, D> createChild(Boolean outcome, @Nullable D data) {
         return new BinaryDTNode<>(this, outcome, data);
     }
 }

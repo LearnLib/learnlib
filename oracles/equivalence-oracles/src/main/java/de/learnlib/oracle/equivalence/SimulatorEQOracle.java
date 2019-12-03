@@ -31,6 +31,7 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 @GenerateRefinement(name = "DFASimulatorEQOracle",
                     generics = "I",
@@ -62,7 +63,7 @@ public class SimulatorEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?
     }
 
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
         final Word<I> sep = Automata.findSeparatingWord(reference, hypothesis, inputs);
 
         if (sep == null) {

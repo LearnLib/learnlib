@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.EquivalenceOracle;
@@ -31,6 +32,7 @@ import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A cache for a {@link SymbolQueryOracle}. Upon construction, it is provided with a delegate oracle. Queries that can
@@ -94,7 +96,7 @@ public class SymbolQueryCache<I, O>
             this.cache.addTransition(this.currentState, i, newState, output);
             nextState = newState;
         } else {
-            assert this.cache.getOutput(this.currentState, i).equals(output);
+            assert Objects.equals(this.cache.getOutput(this.currentState, i), output);
             nextState = succ;
         }
 
@@ -111,12 +113,12 @@ public class SymbolQueryCache<I, O>
     }
 
     @Override
-    public EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createCacheConsistencyTest() {
+    public @Nullable EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createCacheConsistencyTest() {
         return this::findCounterexample;
     }
 
-    private DefaultQuery<I, Word<O>> findCounterexample(MealyMachine<?, I, ?, O> hypothesis,
-                                                        Collection<? extends I> alphabet) {
+    private @Nullable DefaultQuery<I, Word<O>> findCounterexample(MealyMachine<?, I, ?, O> hypothesis,
+                                                                  Collection<? extends I> alphabet) {
         /*
         TODO: potential optimization: If the hypothesis has undefined transitions, but the cache doesn't, it is a clear
         counterexample!

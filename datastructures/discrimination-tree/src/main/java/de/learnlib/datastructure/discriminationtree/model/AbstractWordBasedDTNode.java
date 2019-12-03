@@ -16,6 +16,7 @@
 package de.learnlib.datastructure.discriminationtree.model;
 
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Convenient class for word-based discrimination tree nodes that already binds certain generics.
@@ -36,7 +37,7 @@ public abstract class AbstractWordBasedDTNode<I, O, D>
         super(data);
     }
 
-    public AbstractWordBasedDTNode(AbstractWordBasedDTNode<I, O, D> parent, O parentOutcome, D data) {
+    public AbstractWordBasedDTNode(AbstractWordBasedDTNode<I, O, D> parent, O parentOutcome, @Nullable D data) {
         super(parent, parentOutcome, data);
     }
 }

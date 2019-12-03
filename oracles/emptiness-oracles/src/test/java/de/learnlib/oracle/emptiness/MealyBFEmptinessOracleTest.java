@@ -15,6 +15,8 @@
  */
 package de.learnlib.oracle.emptiness;
 
+import java.util.Objects;
+
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -56,7 +58,7 @@ public class MealyBFEmptinessOracleTest
     public void setUp() {
         super.setUp();
         Mockito.doAnswer(invocation -> {
-            final DefaultQuery<Character, Word<Character>> q = invocation.getArgument(0);
+            final DefaultQuery<Character, Word<Character>> q = Objects.requireNonNull(invocation.getArgument(0));
             if (q.getInput().equals(Word.fromSymbols('a'))) {
                 q.answer(Word.fromSymbols('1'));
             } else {

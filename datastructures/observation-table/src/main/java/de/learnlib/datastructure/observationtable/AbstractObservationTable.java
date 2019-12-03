@@ -30,7 +30,6 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Observation table class.
@@ -417,13 +416,11 @@ public abstract class AbstractObservationTable<I, D> implements MutableObservati
         return (canonicalRows.get(contentId) == row);
     }
 
-    @NonNull
     @Override
     public List<Row<I>> getShortPrefixRows() {
         return Collections.unmodifiableList(shortPrefixRows);
     }
 
-    @NonNull
     @Override
     public Collection<Row<I>> getLongPrefixRows() {
         return Collections.unmodifiableList(longPrefixRows);

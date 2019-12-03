@@ -72,13 +72,12 @@ public abstract class AbstractBFInclusionOracle<A extends DetOutputAutomaton<?, 
     }
 
     @Override
-    public boolean isCounterExample(A hypothesis, Iterable<? extends I> inputs, @Nullable D output) {
+    public boolean isCounterExample(A hypothesis, Iterable<? extends I> inputs, D output) {
         return InclusionOracle.super.isCounterExample(hypothesis, inputs, output);
     }
 
-    @Nullable
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
         return super.findCounterExample(hypothesis, inputs);
     }
 }

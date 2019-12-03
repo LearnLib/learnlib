@@ -17,6 +17,7 @@ package de.learnlib.algorithms.adt.config;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 import de.learnlib.algorithms.adt.adt.ADTLeafNode;
 import de.learnlib.algorithms.adt.adt.ADTNode;
@@ -118,7 +119,7 @@ public final class LeafSplitters {
         O oldOut = oldIter.next();
         O newOut = newIter.next();
 
-        while (oldOut.equals(newOut)) {
+        while (Objects.equals(oldOut, newOut)) {
             final ADTNode<S, I, O> next = new ADTSymbolNode<>(previous, suffixIter.next());
 
             previous.getChildren().put(oldOut, next);

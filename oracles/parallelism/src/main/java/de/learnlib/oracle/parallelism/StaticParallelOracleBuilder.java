@@ -24,7 +24,7 @@ import com.google.common.base.Preconditions;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.parallelism.ParallelOracle.PoolPolicy;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A builder for a {@link StaticParallelOracle}.
@@ -38,13 +38,10 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public class StaticParallelOracleBuilder<I, D> {
 
-    private final Collection<? extends MembershipOracle<I, D>> oracles;
-    private final Supplier<? extends MembershipOracle<I, D>> oracleSupplier;
-    @NonNegative
-    private int minBatchSize = StaticParallelOracle.MIN_BATCH_SIZE;
-    @NonNegative
-    private int numInstances = StaticParallelOracle.NUM_INSTANCES;
-    @NonNull
+    private final @Nullable Collection<? extends MembershipOracle<I, D>> oracles;
+    private final @Nullable Supplier<? extends MembershipOracle<I, D>> oracleSupplier;
+    private @NonNegative int minBatchSize = StaticParallelOracle.MIN_BATCH_SIZE;
+    private @NonNegative int numInstances = StaticParallelOracle.NUM_INSTANCES;
     private PoolPolicy poolPolicy = StaticParallelOracle.POOL_POLICY;
 
     public StaticParallelOracleBuilder(Collection<? extends MembershipOracle<I, D>> oracles) {
@@ -58,25 +55,22 @@ public class StaticParallelOracleBuilder<I, D> {
         this.oracleSupplier = oracleSupplier;
     }
 
-    @NonNull
     public StaticParallelOracleBuilder<I, D> withMinBatchSize(@NonNegative int minBatchSize) {
         this.minBatchSize = minBatchSize;
         return this;
     }
 
-    @NonNull
     public StaticParallelOracleBuilder<I, D> withPoolPolicy(PoolPolicy policy) {
         this.poolPolicy = policy;
         return this;
     }
 
-    @NonNull
     public StaticParallelOracleBuilder<I, D> withNumInstances(@NonNegative int numInstances) {
         this.numInstances = numInstances;
         return this;
     }
 
-    @NonNull
+    @SuppressWarnings("nullness") // the constructors guarantee that oracles and oracleSupplier are null exclusively
     public StaticParallelOracle<I, D> create() {
         Collection<? extends MembershipOracle<I, D>> oracleInstances;
         if (oracles != null) {

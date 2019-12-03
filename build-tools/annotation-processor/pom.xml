@@ -31,10 +31,12 @@ limitations under the License.
     <description>Annotations and processors for the LearnLib build process</description>
 
     <dependencies>
+        <!-- external -->
         <dependency>
             <groupId>com.github.misberner.ap-commons</groupId>
             <artifactId>ap-commons</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.squareup</groupId>
             <artifactId>javapoet</artifactId>

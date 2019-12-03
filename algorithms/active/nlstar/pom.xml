@@ -30,6 +30,7 @@ limitations under the License.
     <description>A variant of the L* algorithm for inferring non-deterministic hypothesis automata.</description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
@@ -38,6 +39,8 @@ limitations under the License.
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-util</artifactId>
         </dependency>
+
+        <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -50,23 +53,32 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+        </dependency>
+
+        <!-- build -->
         <dependency>
             <groupId>com.github.misberner.buildergen</groupId>
             <artifactId>buildergen</artifactId>
-            <scope>provided</scope>
         </dependency>
+
+        <!-- test -->
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learner-it-support</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-        </dependency>
-        <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-membership-oracles</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

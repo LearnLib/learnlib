@@ -61,7 +61,7 @@ public class ADTSymbolNode<S, I, O> extends AbstractRecursiveADSSymbolNode<S, I,
 
     @Override
     public String toString() {
-        return super.getSymbol().toString();
+        return String.valueOf(super.getSymbol());
     }
 
 }

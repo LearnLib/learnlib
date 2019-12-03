@@ -29,7 +29,6 @@ import de.learnlib.buildtool.refinement.annotation.Interface;
 import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.filter.statistic.Counter;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Counts queries.
@@ -67,12 +66,10 @@ public class CounterOracle<I, D> implements StatisticOracle<I, D> {
     }
 
     @Override
-    @NonNull
     public Counter getStatisticalData() {
         return this.counter;
     }
 
-    @NonNull
     public Counter getCounter() {
         return this.counter;
     }

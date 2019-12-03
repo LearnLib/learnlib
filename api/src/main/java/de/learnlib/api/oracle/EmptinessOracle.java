@@ -42,12 +42,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public interface EmptinessOracle<A extends Output<I, D>, I, D> {
 
-    default boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> input, @Nullable D output) {
+    default boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> input, D output) {
         return Objects.equals(hypothesis.computeOutput(input), output);
     }
 
-    @Nullable
-    DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs);
+    @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs);
 
     interface DFAEmptinessOracle<I> extends EmptinessOracle<DFA<?, I>, I, Boolean> {}
 

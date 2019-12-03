@@ -25,6 +25,7 @@ import org.slf4j.helpers.SubstituteLogger;
  */
 public class Slf4jDelegator extends SubstituteLogger implements LearnLogger {
 
+    @SuppressWarnings("nullness") // we don't need to provide a queue instance, because the delegate will always be used
     public Slf4jDelegator(final Logger delegate) {
         super(delegate.getName(), null, false);
         super.setDelegate(delegate);

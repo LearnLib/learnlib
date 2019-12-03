@@ -15,6 +15,8 @@
  */
 package de.learnlib.oracle.equivalence;
 
+import java.util.Objects;
+
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.fsa.DFA;
@@ -36,7 +38,7 @@ public class DFABFInclusionOracleTest extends AbstractBFInclusionOracleTest<DFA<
         super.setUp();
 
         Mockito.doAnswer(invocation -> {
-            final DefaultQuery<Character, Boolean> q = invocation.getArgument(0);
+            final DefaultQuery<Character, Boolean> q = Objects.requireNonNull(invocation.getArgument(0));
             if (q.getInput().equals(Word.fromSymbols('a'))) {
                 q.answer(false);
             } else {

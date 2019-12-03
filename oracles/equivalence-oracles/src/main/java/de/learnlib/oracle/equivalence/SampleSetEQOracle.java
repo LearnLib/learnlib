@@ -29,6 +29,7 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.Query;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An equivalence oracle that tests a hypothesis against a fixed set of sample queries.
@@ -155,7 +156,8 @@ public class SampleSetEQOracle<I, D> implements EquivalenceOracle<SuffixOutput<I
     }
 
     @Override
-    public DefaultQuery<I, D> findCounterExample(SuffixOutput<I, D> hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> findCounterExample(SuffixOutput<I, D> hypothesis,
+                                                           Collection<? extends I> inputs) {
         Iterator<DefaultQuery<I, D>> queryIt = testQueries.iterator();
 
         while (queryIt.hasNext()) {

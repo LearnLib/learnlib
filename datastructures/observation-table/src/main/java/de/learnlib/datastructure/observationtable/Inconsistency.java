@@ -15,7 +15,6 @@
  */
 package de.learnlib.datastructure.observationtable;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -45,7 +44,6 @@ public class Inconsistency<I> {
      *
      * @return the first row
      */
-    @NonNull
     public Row<I> getFirstRow() {
         return firstRow;
     }
@@ -55,7 +53,6 @@ public class Inconsistency<I> {
      *
      * @return the second row
      */
-    @NonNull
     public Row<I> getSecondRow() {
         return secondRow;
     }
@@ -65,8 +62,7 @@ public class Inconsistency<I> {
      *
      * @return the symbol
      */
-    @Nullable
-    public I getSymbol() {
+    public @Nullable I getSymbol() {
         return symbol;
     }
 }

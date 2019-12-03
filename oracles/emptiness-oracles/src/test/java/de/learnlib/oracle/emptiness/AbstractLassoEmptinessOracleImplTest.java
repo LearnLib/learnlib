@@ -15,6 +15,8 @@
  */
 package de.learnlib.oracle.emptiness;
 
+import java.util.Objects;
+
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.modelchecking.Lasso;
@@ -72,7 +74,7 @@ public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Chara
     @Test
     public void testProcessInput() {
         Mockito.doAnswer(invocation -> {
-            final OmegaQuery<Character, D> q = invocation.getArgument(0);
+            final OmegaQuery<Character, D> q = Objects.requireNonNull(invocation.getArgument(0));
             if (q.getLoop().equals(Word.fromSymbols('a'))) {
                 q.answer(output, 1);
             } else {

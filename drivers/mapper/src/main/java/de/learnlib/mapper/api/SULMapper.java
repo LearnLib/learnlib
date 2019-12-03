@@ -22,7 +22,6 @@ import de.learnlib.api.Mapper.SynchronousMapper;
 import de.learnlib.api.SUL;
 import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.SULMappers;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * An extension of the {@link Mapper} interface specifically for {@link SUL}s.
@@ -72,7 +71,6 @@ public interface SULMapper<AI, AO, CI, CO> extends SynchronousMapper<AI, AO, CI,
      * @throws UnsupportedOperationException
      *         if this mapper is not forkable
      */
-    @NonNull
     default SULMapper<AI, AO, CI, CO> fork() {
         throw new UnsupportedOperationException();
     }

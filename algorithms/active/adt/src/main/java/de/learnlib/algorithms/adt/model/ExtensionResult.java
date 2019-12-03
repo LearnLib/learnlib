@@ -19,6 +19,7 @@ import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.ADTExtender;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A class that describes the possible result a {@link ADTExtender} can return. Extending a parent trace can either <ul>
@@ -39,9 +40,8 @@ public class ExtensionResult<S, I, O> {
 
     private static final ExtensionResult<?, ?, ?> EMPTY = new ExtensionResult();
 
-    private final DefaultQuery<I, Word<O>> counterExample;
-
-    private final ADTNode<S, I, O> replacement;
+    private final @Nullable DefaultQuery<I, Word<O>> counterExample;
+    private final @Nullable ADTNode<S, I, O> replacement;
 
     private ExtensionResult() {
         this.replacement = null;
@@ -89,7 +89,7 @@ public class ExtensionResult<S, I, O> {
      *
      * @return the counterexample
      */
-    public DefaultQuery<I, Word<O>> getCounterExample() {
+    public @Nullable DefaultQuery<I, Word<O>> getCounterExample() {
         return counterExample;
     }
 
@@ -107,7 +107,7 @@ public class ExtensionResult<S, I, O> {
      *
      * @return the replacement
      */
-    public ADTNode<S, I, O> getReplacement() {
+    public @Nullable ADTNode<S, I, O> getReplacement() {
         return replacement;
     }
 }

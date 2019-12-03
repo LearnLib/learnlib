@@ -31,11 +31,13 @@ limitations under the License.
     <description>Translation utilities for mapping abstract hypothesis symbols to concrete SUL symbols</description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
         </dependency>
 
+        <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -45,11 +47,7 @@ limitations under the License.
             <artifactId>automata-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-        </dependency>
-
+        <!-- test -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

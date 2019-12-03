@@ -15,6 +15,8 @@
  */
 package de.learnlib.oracle.emptiness;
 
+import java.util.Objects;
+
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.fsa.DFA;
@@ -54,7 +56,7 @@ public class DFABFEmptinessOracleTest extends AbstractBFEmptinessOracleTest<DFA<
     public void setUp() {
         super.setUp();
         Mockito.doAnswer(invocation -> {
-            final DefaultQuery<Character, Boolean> q = invocation.getArgument(0);
+            final DefaultQuery<Character, Boolean> q = Objects.requireNonNull(invocation.getArgument(0));
             if (q.getInput().equals(Word.fromSymbols('a'))) {
                 q.answer(true);
             } else {

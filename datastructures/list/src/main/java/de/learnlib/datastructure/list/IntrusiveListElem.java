@@ -15,6 +15,8 @@
  */
 package de.learnlib.datastructure.list;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Interface for objects that may occur in a {@link IntrusiveList}, either as a value element or the head of the list
  * (which represents the list itself, but does not carry any value).
@@ -28,8 +30,8 @@ package de.learnlib.datastructure.list;
  */
 public interface IntrusiveListElem<T> {
 
-    T getNextElement();
+    @Nullable T getNextElement();
 
-    void setNextElement(T nextBlock);
+    void setNextElement(@Nullable T nextBlock);
 
 }

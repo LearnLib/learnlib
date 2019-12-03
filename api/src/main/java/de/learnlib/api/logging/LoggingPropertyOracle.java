@@ -71,9 +71,8 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
         return propertyOracle.getProperty();
     }
 
-    @Nullable
     @Override
-    public DefaultQuery<I, D> getCounterExample() {
+    public @Nullable DefaultQuery<I, D> getCounterExample() {
         return propertyOracle.getCounterExample();
     }
 
@@ -82,9 +81,8 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
      *
      * @see PropertyOracle#disprove(Output, Collection)
      */
-    @Nullable
     @Override
-    public DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs) {
         final DefaultQuery<I, D> result = propertyOracle.disprove(hypothesis, inputs);
         if (result != null) {
             LOGGER.logEvent("Property violated: '" + toString() + "'");
@@ -99,9 +97,8 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
      *
      * @see PropertyOracle#findCounterExample(Output, Collection)
      */
-    @Nullable
     @Override
-    public DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {
         final DefaultQuery<I, D> result = propertyOracle.findCounterExample(hypothesis, inputs);
         if (result != null) {
             LOGGER.logEvent("Spurious counterexample found for property: '" + toString() + "'");
@@ -112,7 +109,7 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
 
     @Override
     public String toString() {
-        return propertyOracle.getProperty().toString();
+        return String.valueOf(propertyOracle.getProperty());
     }
 
     public static class DFALoggingPropertyOracle<I, P> extends LoggingPropertyOracle<I, DFA<?, I>, P, Boolean>

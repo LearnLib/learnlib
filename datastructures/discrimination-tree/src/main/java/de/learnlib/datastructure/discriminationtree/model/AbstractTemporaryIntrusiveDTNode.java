@@ -20,6 +20,8 @@ import java.util.Objects;
 import de.learnlib.datastructure.discriminationtree.SplitData;
 import de.learnlib.datastructure.list.IntrusiveList;
 import de.learnlib.datastructure.list.IntrusiveListElem;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 /**
  * An extension of the {@link AbstractDTNode} that adds the concept of temporary splitters as well as linking
@@ -44,16 +46,17 @@ public abstract class AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T extends Int
 
     protected SplitData<O, T> splitData;
 
-    protected IntrusiveListElem<N> prevElement;
-    protected N nextElement;
+    protected @Nullable IntrusiveListElem<N> prevElement;
+    protected @Nullable N nextElement;
 
     // LEAF NODE DATA
-    protected boolean temp;
+    private boolean temp;
 
     public AbstractTemporaryIntrusiveDTNode(N parent, O parentOutcome, D data) {
         super(parent, parentOutcome, data);
     }
 
+    @RequiresNonNull("children")
     public void setChild(O label, N newChild) {
         assert newChild.parent == this;
         assert Objects.equals(newChild.getParentOutcome(), label);
@@ -77,6 +80,7 @@ public abstract class AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T extends Int
         this.splitData = splitData;
     }
 
+    @RequiresNonNull("children")
     public N anyChild() {
         assert isInner();
         return children.values().iterator().next();
@@ -94,7 +98,7 @@ public abstract class AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T extends Int
         if (prevElement != null) {
             prevElement.setNextElement(nextElement);
             if (nextElement != null) {
-                getNextElement().prevElement = prevElement;
+                nextElement.prevElement = prevElement;
             }
             nextElement = null;
             prevElement = null;
@@ -102,20 +106,20 @@ public abstract class AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T extends Int
     }
 
     @Override
-    public N getNextElement() {
+    public @Nullable N getNextElement() {
         return nextElement;
     }
 
     @Override
-    public void setNextElement(N nextBlock) {
+    public void setNextElement(@Nullable N nextBlock) {
         this.nextElement = nextBlock;
     }
 
-    public IntrusiveListElem<N> getPrevElement() {
+    public @Nullable IntrusiveListElem<N> getPrevElement() {
         return prevElement;
     }
 
-    public void setPrevElement(IntrusiveListElem<N> prevElement) {
+    public void setPrevElement(@Nullable IntrusiveListElem<N> prevElement) {
         this.prevElement = prevElement;
     }
 }

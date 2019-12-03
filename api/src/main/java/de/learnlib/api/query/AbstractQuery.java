@@ -16,7 +16,6 @@
 package de.learnlib.api.query;
 
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 public abstract class AbstractQuery<I, D> extends Query<I, D> {
 
@@ -37,13 +36,11 @@ public abstract class AbstractQuery<I, D> extends Query<I, D> {
     }
 
     @Override
-    @NonNull
     public Word<I> getPrefix() {
         return prefix;
     }
 
     @Override
-    @NonNull
     public Word<I> getSuffix() {
         return suffix;
     }

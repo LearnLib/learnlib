@@ -31,15 +31,13 @@ limitations under the License.
     <description>An abstract counterexample analysis framework</description>
 
     <dependencies>
+        <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-smartcollections</artifactId>
         </dependency>
-        <!--
-        Test dependencies
-        -->
 
-        <!-- TestNG -->
+        <!-- test -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

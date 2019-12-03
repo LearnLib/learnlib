@@ -31,11 +31,13 @@ limitations under the License.
     <description>Reuse Tree for (intelligently) caching membership queries</description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-api</artifactId>
         </dependency>
 
+        <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -46,19 +48,26 @@ limitations under the License.
         </dependency>
 
         <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+        </dependency>
+
+        <!-- test -->
+        <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-lstar</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-dot</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

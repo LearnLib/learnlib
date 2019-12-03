@@ -43,7 +43,6 @@ import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -61,9 +60,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
         implements UniversalDeterministicAutomaton<S, Integer, PTATransition<S>, SP, TP> {
 
-    @NonNegative
-    protected final int alphabetSize;
-    @NonNull
+
+    protected final @NonNegative int alphabetSize;
     protected final S root;
 
     /**
@@ -88,8 +86,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      *
      * @return the state reached by this word, or {@code null} if there is no path for the given word in the PTA
      */
-    @Nullable
-    public S getState(int[] word) {
+    public @Nullable S getState(int[] word) {
         S curr = root;
         int len = word.length;
         for (int i = 0; i < len && curr != null; i++) {
@@ -123,7 +120,6 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      * @return the state reached by this word, which might have been newly created (along with all required predecessor
      * states)
      */
-    @NonNull
     public S getOrCreateState(int[] word) {
         S curr = root;
         for (int sym : word) {
@@ -167,7 +163,6 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      *
      * @return the root state
      */
-    @NonNull
     public S getRoot() {
         return root;
     }
@@ -297,7 +292,6 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      *
      * @return a breadth-first ordered list of all states in this PTA
      */
-    @NonNull
     public List<S> bfsStates() {
         List<S> stateList = new ArrayList<>();
         Set<S> visited = new HashSet<>();
@@ -327,7 +321,6 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      *
      * @return an iterator for iterating over all states in this PTA
      */
-    @NonNull
     public Iterator<S> bfsIterator() {
         Set<S> visited = new HashSet<>();
         final Deque<S> bfsQueue = new ArrayDeque<>();
@@ -383,8 +376,8 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      *
      * @return the number of states in the PTA reachable from the root state
      */
-    @NonNegative
-    public int countStates() {
+
+    public @NonNegative int countStates() {
         return Iterators.size(bfsIterator());
     }
 
@@ -394,7 +387,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
     }
 
     @Override
-    public PTATransition<S> getTransition(S state, Integer input) {
+    public @Nullable PTATransition<S> getTransition(S state, Integer input) {
         if (input == null || state.getSuccessor(input) == null) {
             return null;
         }

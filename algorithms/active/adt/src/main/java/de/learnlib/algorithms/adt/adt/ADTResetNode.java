@@ -21,6 +21,7 @@ import java.util.Map;
 
 import de.learnlib.api.oracle.SymbolQueryOracle;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Reset node implementation.
@@ -36,15 +37,15 @@ import net.automatalib.words.Word;
  */
 public class ADTResetNode<S, I, O> implements ADTNode<S, I, O>, Serializable {
 
-    final ADTNode<S, I, O> successor;
-    ADTNode<S, I, O> parent;
+    private final ADTNode<S, I, O> successor;
+    private ADTNode<S, I, O> parent;
 
     public ADTResetNode(final ADTNode<S, I, O> successor) {
         this.successor = successor;
     }
 
     @Override
-    public I getSymbol() {
+    public @Nullable I getSymbol() {
         return null;
     }
 
@@ -69,7 +70,7 @@ public class ADTResetNode<S, I, O> implements ADTNode<S, I, O>, Serializable {
     }
 
     @Override
-    public S getHypothesisState() {
+    public @Nullable S getHypothesisState() {
         return null;
     }
 

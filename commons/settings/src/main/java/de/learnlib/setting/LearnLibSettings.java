@@ -22,6 +22,7 @@ import java.util.function.Function;
 import de.learnlib.api.setting.LearnLibSettingsSource;
 import net.automatalib.commons.util.WrapperUtil;
 import net.automatalib.commons.util.settings.SettingsSource;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,7 @@ public final class LearnLibSettings {
         return properties.getProperty(property.getPropertyKey(), defaultValue);
     }
 
-    public String getProperty(LearnLibProperty property) {
+    public @Nullable String getProperty(LearnLibProperty property) {
         return properties.getProperty(property.getPropertyKey());
     }
 
@@ -56,7 +57,7 @@ public final class LearnLibSettings {
         return defaultValue;
     }
 
-    public <E extends Enum<E>> E getEnumValue(LearnLibProperty property, Class<E> enumClazz) {
+    public <E extends Enum<E>> @Nullable E getEnumValue(LearnLibProperty property, Class<E> enumClazz) {
         // TODO: the assumption that enum constants are all-uppercase does not *always* hold!
         return getTypedValue(property, p -> Enum.valueOf(enumClazz, p.toUpperCase(Locale.ROOT)));
     }
@@ -65,7 +66,7 @@ public final class LearnLibSettings {
         return WrapperUtil.booleanValue(getBoolean(property), defaultValue);
     }
 
-    public Boolean getBoolean(LearnLibProperty property) {
+    public @Nullable Boolean getBoolean(LearnLibProperty property) {
         return getTypedValue(property, Boolean::parseBoolean);
     }
 
@@ -73,11 +74,11 @@ public final class LearnLibSettings {
         return WrapperUtil.intValue(getInteger(property), defaultValue);
     }
 
-    public Integer getInteger(LearnLibProperty property) {
+    public @Nullable Integer getInteger(LearnLibProperty property) {
         return getTypedValue(property, Integer::parseInt);
     }
 
-    private <T> T getTypedValue(LearnLibProperty property, Function<String, T> valueExtractor) {
+    private <T> @Nullable T getTypedValue(LearnLibProperty property, Function<String, T> valueExtractor) {
         String prop = getProperty(property);
 
         if (prop == null) {

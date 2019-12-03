@@ -314,7 +314,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
         }
 
         public static <I> Collection<Word<I>> initialSplitters() {
-            return null;
+            return Collections.emptyList();
         }
     }
 

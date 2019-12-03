@@ -29,7 +29,6 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -91,11 +90,10 @@ public class ExperimentTest {
         }
 
         @Override
-        public boolean refineHypothesis(@NonNull DefaultQuery<I, Boolean> ceQuery) {
+        public boolean refineHypothesis(DefaultQuery<I, Boolean> ceQuery) {
             return refinementSteps++ < REFINEMENT_STEPS;
         }
 
-        @NonNull
         @Override
         public DFA<?, I> getHypothesisModel() {
             if (refinementSteps < REFINEMENT_STEPS) {
@@ -115,9 +113,9 @@ public class ExperimentTest {
             this.intermediateTarget = intermediateTarget;
         }
 
-        @Nullable
         @Override
-        public DefaultQuery<I, Boolean> findCounterExample(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
+        public @Nullable DefaultQuery<I, Boolean> findCounterExample(DFA<?, I> hypothesis,
+                                                                     Collection<? extends I> inputs) {
             if (counterexamples < REFINEMENT_STEPS) {
                 Assert.assertSame(hypothesis, intermediateTarget);
 

@@ -60,8 +60,7 @@ public interface EquivalenceOracle<A, I, D> {
      * non-{@code null} value is returned, the output field in the {@link DefaultQuery} contains the SUL output for the
      * respective query.
      */
-    @Nullable
-    DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs);
+    @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs);
 
     /**
      * A specialization of the {@link EquivalenceOracle} interface for a DFA learning scenario.

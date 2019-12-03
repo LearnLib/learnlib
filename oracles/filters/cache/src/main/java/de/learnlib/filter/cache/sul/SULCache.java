@@ -32,7 +32,6 @@ import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.WordBuilder;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,7 +99,6 @@ public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
         return impl.canFork();
     }
 
-    @NonNull
     @Override
     public SUL<I, O> fork() {
         return impl.fork();
@@ -153,7 +151,7 @@ public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
         private final WordBuilder<O> outputWord = new WordBuilder<>();
 
         private boolean delegatePreCalled;
-        private S current;
+        private @Nullable S current;
 
         SULCacheImpl(IncrementalMealyBuilder<I, O> incMealy,
                      ReadWriteLock lock,
@@ -171,9 +169,8 @@ public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
             this.current = mealyTs.getInitialState();
         }
 
-        @Nullable
         @Override
-        public O step(@Nullable I in) {
+        public O step(I in) {
             O out = null;
 
             if (current != null) {
@@ -236,13 +233,11 @@ public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
             return delegate.canFork();
         }
 
-        @NonNull
         @Override
         public SUL<I, O> fork() {
             return new SULCacheImpl<>(incMealy, incMealyLock, mealyTs, delegate.fork());
         }
 
-        @NonNull
         @Override
         public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
             return new MealyCacheConsistencyTest<>(incMealy, incMealyLock);

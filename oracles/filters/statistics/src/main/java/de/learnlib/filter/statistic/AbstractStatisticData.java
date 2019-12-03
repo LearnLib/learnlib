@@ -17,7 +17,6 @@
 package de.learnlib.filter.statistic;
 
 import de.learnlib.api.statistic.StatisticData;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Common interface for statistical data.
@@ -34,23 +33,19 @@ public abstract class AbstractStatisticData implements StatisticData {
         this.unit = unit;
     }
 
-    @NonNull
     @Override
     public String getName() {
         return name;
     }
 
-    @NonNull
     @Override
     public String getUnit() {
         return unit;
     }
 
-    @NonNull
     @Override
     public abstract String getSummary();
 
-    @NonNull
     @Override
     public abstract String getDetails();
 }

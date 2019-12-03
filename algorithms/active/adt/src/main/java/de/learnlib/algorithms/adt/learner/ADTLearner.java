@@ -62,7 +62,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * The main learning algorithm.
@@ -280,7 +279,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         return true;
     }
 
-    @NonNull
     @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
         return this.hypothesis;

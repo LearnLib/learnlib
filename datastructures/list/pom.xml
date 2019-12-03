@@ -31,13 +31,15 @@ limitations under the License.
     <description>Data- and utility classes for Lists</description>
 
     <dependencies>
-        <!--
-        Compile-time dependencies
-        -->
-
+        <!-- external -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
         </dependency>
     </dependencies>
 </project>

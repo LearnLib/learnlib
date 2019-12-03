@@ -22,7 +22,6 @@ import java.util.List;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Word-to-Symbol-Oracle adapter.
@@ -78,13 +77,11 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
         }
 
         @Override
-        @NonNull
         public Word<I> getPrefix() {
             return originalQuery.getPrefix();
         }
 
         @Override
-        @NonNull
         public Word<I> getSuffix() {
             return originalQuery.getSuffix();
         }

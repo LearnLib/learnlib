@@ -17,6 +17,7 @@ package de.learnlib.algorithms.adt.config.model.extender;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -88,7 +89,7 @@ public class DefaultExtender implements ADTExtender {
                             partialTransitionAnalyzer.closeTransition(s, input);
                         }
 
-                        if (!hypothesis.getOutput(s, input).equals(output)) {
+                        if (!Objects.equals(hypothesis.getOutput(s, input), output)) {
                             final ADTState<I, O> initial = entry.getValue();
                             final Word<I> as = initial.getAccessSequence();
                             final Word<O> asOut = hypothesis.computeOutput(as);

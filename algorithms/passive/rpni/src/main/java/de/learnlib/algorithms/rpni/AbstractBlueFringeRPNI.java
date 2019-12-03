@@ -28,7 +28,6 @@ import de.learnlib.datastructure.pta.pta.BlueFringePTAState;
 import de.learnlib.datastructure.pta.pta.PTATransition;
 import de.learnlib.datastructure.pta.pta.RedBlueMerge;
 import net.automatalib.words.Alphabet;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Abstract base class for Blue-Fringe-RPNI algorithms.
@@ -59,7 +58,6 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M> implements Passive
     protected final Alphabet<I> alphabet;
     protected final int alphabetSize;
 
-    @NonNull
     protected final ProcessingOrder order = DefaultProcessingOrders.CANONICAL_ORDER;
     protected boolean parallel = true;
     protected boolean deterministic;

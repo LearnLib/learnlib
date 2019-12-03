@@ -23,6 +23,7 @@ import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class DFAHashCacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {
 
@@ -35,7 +36,7 @@ final class DFAHashCacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {
     }
 
     @Override
-    public DefaultQuery<I, Boolean> findCounterExample(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, Boolean> findCounterExample(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
         cacheLock.lock();
         try {
             for (Map.Entry<Word<I>, Boolean> cacheEntry : cache.entrySet()) {

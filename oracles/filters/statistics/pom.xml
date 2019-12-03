@@ -31,16 +31,17 @@ limitations under the License.
     <description>Filters for collecting statistical data</description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-annotation-processor</artifactId>
         </dependency>
-
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-api</artifactId>
         </dependency>
 
+        <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -50,19 +51,19 @@ limitations under the License.
             <artifactId>automata-commons-util</artifactId>
         </dependency>
 
+        <!-- test -->
         <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-drivers-simulator</artifactId>
+            <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
@@ -73,15 +74,15 @@ limitations under the License.
             <artifactId>automata-util</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-drivers-simulator</artifactId>
-            <scope>test</scope>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <scope>test</scope>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

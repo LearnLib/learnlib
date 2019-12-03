@@ -29,7 +29,6 @@ import de.learnlib.setting.LearnLibSettings;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 public final class MQUtil {
 
@@ -51,14 +50,12 @@ public final class MQUtil {
         return query(oracle, Word.epsilon(), query.getInput());
     }
 
-    @NonNull
     public static <I, D> DefaultQuery<I, D> query(MembershipOracle<I, D> oracle, Word<I> prefix, Word<I> suffix) {
         DefaultQuery<I, D> qry = new DefaultQuery<>(prefix, suffix);
         oracle.processQuery(qry);
         return qry;
     }
 
-    @NonNull
     public static <I, D> DefaultQuery<I, D> query(MembershipOracle<I, D> oracle, Word<I> queryWord) {
         return query(oracle, Word.epsilon(), queryWord);
     }

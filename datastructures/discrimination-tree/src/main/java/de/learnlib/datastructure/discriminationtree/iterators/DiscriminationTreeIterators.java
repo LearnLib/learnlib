@@ -52,6 +52,7 @@ public final class DiscriminationTreeIterators {
      * @param <N>
      *         node type
      */
+    @SuppressWarnings("nullness") // lambda is only called with our non-null nodes as argument
     public static <N extends AbstractDTNode<?, ?, ?, N>> Iterator<N> innerNodeIterator(N root) {
         return Iterators.filter(nodeIterator(root), n -> !n.isLeaf());
     }

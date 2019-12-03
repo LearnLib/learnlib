@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Generic n-ary discrimination tree node specialization.
@@ -38,7 +39,7 @@ public class MultiDTNode<I, O, D> extends AbstractWordBasedDTNode<I, O, D> {
         super(data);
     }
 
-    public MultiDTNode(MultiDTNode<I, O, D> parent, O parentOutcome, D data) {
+    public MultiDTNode(MultiDTNode<I, O, D> parent, O parentOutcome, @Nullable D data) {
         super(parent, parentOutcome, data);
     }
 
@@ -48,7 +49,7 @@ public class MultiDTNode<I, O, D> extends AbstractWordBasedDTNode<I, O, D> {
     }
 
     @Override
-    protected MultiDTNode<I, O, D> createChild(O outcome, D data) {
+    protected MultiDTNode<I, O, D> createChild(O outcome, @Nullable D data) {
         return new MultiDTNode<>(this, outcome, data);
     }
 }

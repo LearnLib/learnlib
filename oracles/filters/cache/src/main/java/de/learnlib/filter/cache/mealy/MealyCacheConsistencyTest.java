@@ -25,6 +25,7 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An {@link EquivalenceOracle} that tests an hypothesis for consistency with the contents of a {@link
@@ -56,8 +57,8 @@ public class MealyCacheConsistencyTest<I, O> implements MealyEquivalenceOracle<I
     }
 
     @Override
-    public DefaultQuery<I, Word<O>> findCounterExample(MealyMachine<?, I, ?, O> hypothesis,
-                                                       Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, Word<O>> findCounterExample(MealyMachine<?, I, ?, O> hypothesis,
+                                                                 Collection<? extends I> inputs) {
         WordBuilder<O> wb;
         Word<I> w;
 

@@ -20,6 +20,10 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+
 /**
  * An abstract super class (DAO) for aggregating several information stored in a node of an discrimination tree.
  *
@@ -36,18 +40,18 @@ import java.util.Objects;
  */
 public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, O, D, N>> implements Serializable {
 
-    protected final N parent;
-    protected final O parentOutcome;
+    protected final @Nullable N parent;
+    protected final @Nullable O parentOutcome;
     protected final int depth;
-    protected Map<O, N> children;
+    protected @Nullable Map<O, N> children;
     protected DSCR discriminator;
-    protected D data;
+    protected @Nullable D data;
 
     public AbstractDTNode(D data) {
         this(null, null, data);
     }
 
-    protected AbstractDTNode(N parent, O parentOutcome, D data) {
+    protected AbstractDTNode(N parent, O parentOutcome, @Nullable D data) {
         this.parent = parent;
         this.parentOutcome = parentOutcome;
         this.depth = (parent != null) ? parent.depth + 1 : 0;
@@ -74,7 +78,8 @@ public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, 
         return this.split(discriminator, oldOut, newOut, null);
     }
 
-    public SplitResult split(DSCR discriminator, O oldOut, O newOut, D newData) {
+    @EnsuresNonNull("children")
+    public SplitResult split(DSCR discriminator, O oldOut, O newOut, @Nullable D newData) {
         assert this.isLeaf();
         assert !Objects.equals(oldOut, newOut);
 
@@ -95,19 +100,20 @@ public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, 
 
     protected abstract Map<O, N> createChildMap();
 
-    protected N addChild(O outcome, D data) {
+    @RequiresNonNull("children")
+    protected N addChild(O outcome, @Nullable D data) {
         final N child = createChild(outcome, data);
         children.put(outcome, child);
         return child;
     }
 
-    protected abstract N createChild(O outcome, D data);
+    protected abstract N createChild(O outcome, @Nullable D data);
 
     public N child(O out) {
         return child(out, null);
     }
 
-    public N child(O out, D defaultData) {
+    public N child(O out, @Nullable D defaultData) {
         assert !isLeaf();
 
         N result = getChild(out);
@@ -117,14 +123,17 @@ public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, 
         return result;
     }
 
+    @RequiresNonNull("children")
     public N getChild(O out) {
         return children.get(out);
     }
 
+    @RequiresNonNull("children")
     public Collection<N> getChildren() {
         return children.values();
     }
 
+    @RequiresNonNull("children")
     public Collection<Map.Entry<O, N>> getChildEntries() {
         return children.entrySet();
     }
@@ -147,7 +156,7 @@ public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, 
         this.data = data;
     }
 
-    public O subtreeLabel(N descendant) {
+    public @Nullable O subtreeLabel(N descendant) {
         N curr = descendant;
 
         while (curr.depth > this.depth + 1) {
@@ -161,7 +170,7 @@ public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, 
         return curr.getParentOutcome();
     }
 
-    public O getParentOutcome() {
+    public @Nullable O getParentOutcome() {
         return parentOutcome;
     }
 

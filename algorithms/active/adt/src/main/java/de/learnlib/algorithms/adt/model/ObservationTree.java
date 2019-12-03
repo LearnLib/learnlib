@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -130,7 +131,7 @@ public class ObservationTree<S, I, O> {
                 nextState = this.observationTree.addState();
                 this.observationTree.addTransition(iter, nextInput, nextState, nextOuput);
             } else {
-                assert this.observationTree.getOutput(iter, nextInput).equals(nextOuput) : "Inconsistent observations";
+                assert Objects.equals(nextOuput, this.observationTree.getOutput(iter, nextInput)) : "Inconsistent observations";
                 nextState = this.observationTree.getSuccessor(iter, nextInput);
             }
 

@@ -18,8 +18,6 @@ package de.learnlib.mapper;
 import de.learnlib.api.SUL;
 import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.api.SULMapper;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -128,9 +126,8 @@ public class SULMapperCompositionTest {
         @Override
         public void post() {}
 
-        @Nullable
         @Override
-        public Character step(@Nullable Character in) {
+        public Character step(Character in) {
             switch (in) {
                 case OUTER_EXCEPTION_TRIGGER_CHAR:
                     throw new OuterWrappedException(new IllegalArgumentException());
@@ -245,7 +242,7 @@ public class SULMapperCompositionTest {
 
     private static final class OuterWrappedException extends SULException {
 
-        OuterWrappedException(@NonNull Throwable cause) {
+        OuterWrappedException(Throwable cause) {
             super(cause);
         }
     }

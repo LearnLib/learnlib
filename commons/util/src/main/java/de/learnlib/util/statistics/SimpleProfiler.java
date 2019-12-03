@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.learnlib.api.logging.LearnLogger;
 import de.learnlib.filter.statistic.Counter;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Very rudimentary profiler.
@@ -80,14 +80,13 @@ public final class SimpleProfiler {
      *
      * @return The counter for tracking the passed milliseconds of the timer
      */
-    public static Counter cumulated(String name) {
+    public static @Nullable Counter cumulated(String name) {
         return CUMULATED.get(name);
     }
 
     /**
      * Get profiling results as string.
      */
-    @NonNull
     public static String getResults() {
         StringBuilder sb = new StringBuilder();
         for (Entry<String, Counter> e : CUMULATED.entrySet()) {

@@ -29,7 +29,7 @@ public class StringMapper<CI> implements SULMapper<String, String, CI, Object> {
 
     public StringMapper(Alphabet<CI> alphabet) {
         for (CI input : alphabet) {
-            String str = input.toString();
+            String str = String.valueOf(input);
             inputs.put(str, input);
             mappedInputs.add(str);
         }

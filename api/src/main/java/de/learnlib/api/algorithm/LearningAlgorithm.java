@@ -20,7 +20,6 @@ import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Basic interface for a model inference algorithm.
@@ -57,7 +56,7 @@ public interface LearningAlgorithm<M, I, D> {
      * @return {@code true} if the counterexample triggered a refinement of the hypothesis, {@code false} otherwise
      * (i.e., it was no counterexample).
      */
-    boolean refineHypothesis(@NonNull DefaultQuery<I, D> ceQuery);
+    boolean refineHypothesis(DefaultQuery<I, D> ceQuery);
 
     /**
      * Returns the current hypothesis model.
@@ -72,7 +71,6 @@ public interface LearningAlgorithm<M, I, D> {
      *
      * @return the current hypothesis model.
      */
-    @NonNull
     M getHypothesisModel();
 
     interface DFALearner<I> extends LearningAlgorithm<DFA<?, I>, I, Boolean> {}

@@ -31,11 +31,7 @@ limitations under the License.
     <description>The MDL passive learning algorithm</description>
 
     <dependencies>
-        <!--
-        Compile-time dependencies
-        -->
-
-        <!-- LearnLib dependencies -->
+        <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
@@ -48,12 +44,8 @@ limitations under the License.
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-rpni</artifactId>
         </dependency>
-        <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-learner-it-support</artifactId>
-        </dependency>
 
-        <!-- AutomataLib dependencies -->
+        <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -63,24 +55,26 @@ limitations under the License.
             <artifactId>automata-core</artifactId>
         </dependency>
 
+        <!-- build -->
         <dependency>
             <groupId>com.github.misberner.buildergen</groupId>
             <artifactId>buildergen</artifactId>
         </dependency>
 
-        <!--
-        Test dependencies
-        -->
-
-        <!-- TestNG -->
+        <!-- test -->
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-learner-it-support</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-membership-oracles</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

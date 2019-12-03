@@ -18,8 +18,6 @@ package de.learnlib.filter.statistic.sul;
 import de.learnlib.api.SUL;
 import de.learnlib.api.statistic.StatisticSUL;
 import de.learnlib.filter.statistic.Counter;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
 
@@ -46,8 +44,7 @@ public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
     }
 
     @Override
-    @Nullable
-    public O step(@Nullable I in) {
+    public O step(I in) {
         counter.increment();
         return sul.step(in);
     }
@@ -63,7 +60,6 @@ public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
     }
 
     @Override
-    @NonNull
     public Counter getStatisticalData() {
         return counter;
     }

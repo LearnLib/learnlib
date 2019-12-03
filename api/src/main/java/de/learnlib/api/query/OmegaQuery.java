@@ -75,7 +75,6 @@ public class OmegaQuery<I, D> {
         return repeat;
     }
 
-    @Nullable
     public D getOutput() {
         return output;
     }
@@ -102,7 +101,7 @@ public class OmegaQuery<I, D> {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

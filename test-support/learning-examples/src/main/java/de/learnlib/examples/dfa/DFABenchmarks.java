@@ -22,6 +22,7 @@ import de.learnlib.examples.DefaultLearningExample.DefaultDFALearningExample;
 import de.learnlib.examples.LearningExample.DFALearningExample;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.serialization.learnlibv2.LearnLibV2Serialization;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,17 +34,21 @@ public final class DFABenchmarks {
         // prevent instantiation
     }
 
-    public static DFALearningExample<Integer> loadPots2() {
+    public static @Nullable DFALearningExample<Integer> loadPots2() {
         return loadLearnLibV2Benchmark("pots2");
     }
 
-    public static DFALearningExample<Integer> loadLearnLibV2Benchmark(String name) {
+    public static @Nullable DFALearningExample<Integer> loadLearnLibV2Benchmark(String name) {
         String resourceName = "/automata/learnlibv2/" + name + ".dfa.gz";
         if (DFABenchmarks.class.getResource(resourceName) == null) {
             return null;
         }
 
         try (InputStream is = DFABenchmarks.class.getResourceAsStream(resourceName)) {
+            if (is == null) {
+                LOGGER.warn("Couldn't load resource '{}'", resourceName);
+                return null;
+            }
             CompactDFA<Integer> dfa = LearnLibV2Serialization.getInstance().readGenericDFA(is);
             return new DefaultDFALearningExample<>(dfa);
         } catch (IOException ex) {
@@ -52,15 +57,15 @@ public final class DFABenchmarks {
         }
     }
 
-    public static DFALearningExample<Integer> loadPots3() {
+    public static @Nullable DFALearningExample<Integer> loadPots3() {
         return loadLearnLibV2Benchmark("pots3");
     }
 
-    public static DFALearningExample<Integer> loadPeterson2() {
+    public static @Nullable DFALearningExample<Integer> loadPeterson2() {
         return loadLearnLibV2Benchmark("peterson2");
     }
 
-    public static DFALearningExample<Integer> loadPeterson3() {
+    public static @Nullable DFALearningExample<Integer> loadPeterson3() {
         return loadLearnLibV2Benchmark("peterson3");
     }
 }

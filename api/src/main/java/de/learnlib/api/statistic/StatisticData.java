@@ -15,8 +15,6 @@
  */
 package de.learnlib.api.statistic;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 /**
  * Common interface for statistical data.
  *
@@ -24,16 +22,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public interface StatisticData {
 
-    @NonNull
     String getName();
 
-    @NonNull
     String getUnit();
 
-    @NonNull
     String getSummary();
 
-    @NonNull
     String getDetails();
 }
 

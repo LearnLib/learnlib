@@ -25,6 +25,7 @@ import net.automatalib.automata.transducers.OutputAndLocalInputs;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.util.automata.transducers.StateLocalInputMealyUtil;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class StateLocalInputMealySimulatorEQOracle<I, O>
         implements EquivalenceOracle<StateLocalInputMealyMachine<?, I, ?, O>, I, Word<OutputAndLocalInputs<I, O>>> {
@@ -40,8 +41,8 @@ public class StateLocalInputMealySimulatorEQOracle<I, O>
     }
 
     @Override
-    public DefaultQuery<I, Word<OutputAndLocalInputs<I, O>>> findCounterExample(StateLocalInputMealyMachine<?, I, ?, O> hypothesis,
-                                                                                Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, Word<OutputAndLocalInputs<I, O>>> findCounterExample(StateLocalInputMealyMachine<?, I, ?, O> hypothesis,
+                                                                                          Collection<? extends I> inputs) {
         final DefaultQuery<I, Word<O>> cex = delegate.findCounterExample(hypothesis, inputs);
 
         if (cex != null) {

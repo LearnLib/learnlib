@@ -90,9 +90,8 @@ public class LassoEmptinessOracleImpl<L extends Lasso<I, D>, S, I, D>
         return LassoEmptinessOracle.super.isCounterExample(hypothesis, input, output);
     }
 
-    @Nullable
     @Override
-    public DefaultQuery<I, D> findCounterExample(L hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> findCounterExample(L hypothesis, Collection<? extends I> inputs) {
         return LassoOracle.super.findCounterExample(hypothesis, inputs);
     }
 

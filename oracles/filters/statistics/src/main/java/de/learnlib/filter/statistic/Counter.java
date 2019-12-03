@@ -18,8 +18,6 @@ package de.learnlib.filter.statistic;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 /**
  * simple counter.
  *
@@ -46,19 +44,16 @@ public class Counter extends AbstractStatisticData {
     }
 
     @Override
-    @NonNull
     public String toString() {
         return getDetails();
     }
 
     @Override
-    @NonNull
     public String getSummary() {
         return getName() + " [" + getUnit() + "]: " + count;
     }
 
     @Override
-    @NonNull
     public String getDetails() {
         return getSummary();
     }

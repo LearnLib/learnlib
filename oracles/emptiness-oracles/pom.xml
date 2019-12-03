@@ -15,10 +15,7 @@
     <description>A collection of emptiness oracles</description>
 
     <dependencies>
-        <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-        </dependency>
+        <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-annotation-processor</artifactId>
@@ -31,6 +28,17 @@
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-util</artifactId>
         </dependency>
+
+        <!-- external -->
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
@@ -39,11 +47,8 @@
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-api</artifactId>
-        </dependency>
 
+        <!-- test -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

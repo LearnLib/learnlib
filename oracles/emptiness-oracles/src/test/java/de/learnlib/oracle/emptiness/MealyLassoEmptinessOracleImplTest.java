@@ -15,6 +15,8 @@
  */
 package de.learnlib.oracle.emptiness;
 
+import java.util.Objects;
+
 import de.learnlib.api.oracle.OmegaMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
@@ -43,7 +45,7 @@ public class MealyLassoEmptinessOracleImplTest
         super.setUp();
 
         Mockito.doAnswer(invocation -> {
-            final OmegaQuery<Character, Word<Character>> q = invocation.getArgument(0);
+            final OmegaQuery<Character, Word<Character>> q = Objects.requireNonNull(invocation.getArgument(0));
             if (q.getLoop().equals(Word.fromSymbols('a'))) {
                 q.answer(Word.fromSymbols('1'), 1);
             } else {

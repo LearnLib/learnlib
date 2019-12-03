@@ -37,6 +37,7 @@ import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Answers {@link OmegaQuery}s by simulating an automaton.
@@ -49,8 +50,7 @@ import net.automatalib.words.WordBuilder;
  * @param <I> the input type.
  * @param <D> the output type.
  */
-public class SimulatorOmegaOracle<S, I, D>
-        implements SingleQueryOmegaOracle<S, I, D> {
+public class SimulatorOmegaOracle<S extends Object, I, @Nullable D> implements SingleQueryOmegaOracle<S, I, D> {
 
     /**
      * The automaton to simulate.

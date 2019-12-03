@@ -19,7 +19,6 @@ import java.util.Collection;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A queries job that maintains a thread-local reference to a membership oracle, and dynamically selects that oracle
@@ -37,7 +36,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 final class DynamicQueriesJob<I, D> extends AbstractQueriesJob<I, D> {
 
-    @NonNull
     private final ThreadLocal<? extends MembershipOracle<I, D>> threadLocalOracle;
 
     DynamicQueriesJob(Collection<? extends Query<I, D>> queries,

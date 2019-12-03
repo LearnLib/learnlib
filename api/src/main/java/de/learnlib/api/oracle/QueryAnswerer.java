@@ -16,8 +16,6 @@
 package de.learnlib.api.oracle;
 
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @param <I>
@@ -29,15 +27,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public interface QueryAnswerer<I, D> {
 
-    @Nullable
     default D answerQuery(Word<I> input) {
         return answerQuery(Word.epsilon(), input);
     }
 
-    @Nullable
     D answerQuery(Word<I> prefix, Word<I> suffix);
 
-    @NonNull
     default MembershipOracle<I, D> asOracle() {
         return queries -> queries.forEach(q -> q.answer(answerQuery(q.getPrefix(), q.getSuffix())));
     }

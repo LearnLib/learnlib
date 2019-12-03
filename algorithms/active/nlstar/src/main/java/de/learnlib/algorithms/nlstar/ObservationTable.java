@@ -29,6 +29,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The observation table implementation for the {@link NLStarLearner NL* algorithm}.
@@ -243,7 +244,7 @@ public class ObservationTable<I> {
         return upperRows.size();
     }
 
-    public Inconsistency<I> findInconsistency() {
+    public @Nullable Inconsistency<I> findInconsistency() {
         for (Row<I> row1 : upperRows) {
             for (Row<I> row2 : row1.getCoveredRows()) {
                 assert row2.isShortPrefixRow();

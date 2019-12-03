@@ -22,7 +22,6 @@ import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Decides whether the language of a given hypothesis is included in some other language (e.g. from a {@link SUL}. If
@@ -43,7 +42,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public interface InclusionOracle<A extends Output<I, D>, I, D> extends EquivalenceOracle<A, I, D> {
 
-    default boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> input, @Nullable D output) {
+    default boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> input, D output) {
         return !Objects.equals(hypothesis.computeOutput(input), output);
     }
 

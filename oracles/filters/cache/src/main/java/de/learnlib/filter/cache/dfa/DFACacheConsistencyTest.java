@@ -25,6 +25,7 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An {@link EquivalenceOracle} that tests an hypothesis for consistency with the contents of a {@link DFACacheOracle}.
@@ -53,7 +54,7 @@ public final class DFACacheConsistencyTest<I> implements DFAEquivalenceOracle<I>
     }
 
     @Override
-    public DefaultQuery<I, Boolean> findCounterExample(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, Boolean> findCounterExample(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
         Word<I> w;
         Acceptance acc;
         incDfaLock.readLock().lock();

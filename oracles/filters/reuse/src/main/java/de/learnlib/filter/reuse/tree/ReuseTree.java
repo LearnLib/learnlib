@@ -32,6 +32,7 @@ import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The {@link ReuseTree} is a tree like structure consisting of nodes (see {@link ReuseNode}) and edges (see {@link
@@ -52,7 +53,7 @@ import net.automatalib.words.WordBuilder;
  *
  * @author Oliver Bauer
  */
-public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
+public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I, O>, @Nullable ReuseEdge<S, I, O>> {
 
     private final Alphabet<I> alphabet;
     private final int alphabetSize;
@@ -103,7 +104,7 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
      *
      * @return The output for {@code query} if already known from the {@link ReuseTree} or {@code null} if unknown.
      */
-    public Word<O> getOutput(final Word<I> query) {
+    public @Nullable Word<O> getOutput(final Word<I> query) {
         if (query == null) {
             String msg = "Query is not allowed to be null.";
             throw new IllegalArgumentException(msg);
@@ -228,7 +229,7 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
      * @param query
      *         Not allowed to be {@code null}.
      */
-    public ReuseNode.NodeResult<S, I, O> fetchSystemState(Word<I> query) {
+    public ReuseNode.@Nullable NodeResult<S, I, O> fetchSystemState(Word<I> query) {
         if (query == null) {
             String msg = "Query is not allowed to be null.";
             throw new IllegalArgumentException(msg);
@@ -382,20 +383,17 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
     }
 
     @Override
-    public Collection<ReuseEdge<S, I, O>> getOutgoingEdges(ReuseNode<S, I, O> node) {
-        return node.getEdges();
+    public Collection<@Nullable ReuseEdge<S, I, O>> getOutgoingEdges(@Nullable ReuseNode<S, I, O> node) {
+        return node == null ? Collections.emptyList() : node.getEdges();
     }
 
     @Override
-    public ReuseNode<S, I, O> getTarget(ReuseEdge<S, I, O> edge) {
-        if (edge != null) {
-            return edge.getTarget();
-        }
-        return null;
+    public @Nullable ReuseNode<S, I, O> getTarget(@Nullable ReuseEdge<S, I, O> edge) {
+        return edge == null ? null : edge.getTarget();
     }
 
     @Override
-    public VisualizationHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> getVisualizationHelper() {
+    public VisualizationHelper<@Nullable ReuseNode<S, I, O>, @Nullable ReuseEdge<S, I, O>> getVisualizationHelper() {
         return new ReuseTreeDotHelper<>();
     }
 
@@ -406,7 +404,7 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
 
         // optional
         private boolean invalidateSystemstates = true;
-        private SystemStateHandler<S> systemStateHandler;
+        private @Nullable SystemStateHandler<S> systemStateHandler;
         private Set<I> invariantInputSymbols;
         private Set<O> failureOutputSymbols;
         private int maxSystemStates = -1;

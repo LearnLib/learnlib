@@ -23,12 +23,10 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 public abstract class AbstractBlueFringePTA<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S>>
         extends BasePTA<SP, TP, S> {
 
-    @NonNull
     protected final List<S> redStates = new ArrayList<>();
 
     public AbstractBlueFringePTA(@NonNegative int alphabetSize, S root) {

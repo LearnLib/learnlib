@@ -31,9 +31,7 @@ limitations under the License.
     <description>A collection of membership oracles</description>
 
     <dependencies>
-        <!--
-        Compile-time dependencies
-        -->
+        <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
@@ -43,7 +41,7 @@ limitations under the License.
             <artifactId>learnlib-util</artifactId>
         </dependency>
 
-        <!-- AutomataLib dependencies -->
+        <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -57,34 +55,25 @@ limitations under the License.
             <artifactId>automata-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-        </dependency>
-
-
-        <!--
-        Test dependencies
-        -->
+        <!-- test -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-drivers-simulator</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- TestNG -->
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-learning-examples</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-learning-examples</artifactId>
-            <scope>test</scope>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

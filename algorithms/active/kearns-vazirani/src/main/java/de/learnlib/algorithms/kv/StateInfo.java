@@ -22,6 +22,7 @@ import java.util.List;
 
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The information associated with a state: it's access sequence (or access string), and the list of incoming
@@ -40,7 +41,7 @@ public final class StateInfo<I, D> implements Serializable {
     public final Word<I> accessSequence;
     public AbstractWordBasedDTNode<I, D, StateInfo<I, D>> dtNode;
     //private TLongList incoming;
-    private List<Long> incoming; // TODO: replace with primitive specialization
+    private @Nullable List<Long> incoming; // TODO: replace with primitive specialization
 
     public StateInfo(int id, Word<I> accessSequence) {
         this.accessSequence = accessSequence.trimmed();

@@ -220,8 +220,9 @@ limitations under the License.
         <automatalib.version>0.9.0-SNAPSHOT</automatalib.version>
         <buildergen.version>0.1</buildergen.version>
         <cacio.version>1.9</cacio.version>
-        <checker.version>2.10.0</checker.version>
+        <checkerframework.version>3.0.1</checkerframework.version>
         <checkstyle.version>8.19</checkstyle.version>
+        <error-prone.version>9+181-r4173-1</error-prone.version> <!-- required by checkerframework, keep in sync -->
         <guava.version>27.0-jre</guava.version>
         <javapoet.version>1.11.1</javapoet.version>
         <jmockit.version>1.43</jmockit.version>
@@ -234,6 +235,7 @@ limitations under the License.
         <!-- Javadoc links -->
         <java.apidocs>http://docs.oracle.com/javase/8/docs/api/</java.apidocs>
         <automatalib.apidocs>http://learnlib.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
+        <checkerframework.apidocs>https://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
         <guava.apidocs>http://google.github.io/guava/releases/${guava.version}/api/docs/</guava.apidocs>
     </properties>
 
@@ -617,7 +619,7 @@ limitations under the License.
             <dependency>
                 <groupId>org.checkerframework</groupId>
                 <artifactId>checker-qual</artifactId>
-                <version>${checker.version}</version>
+                <version>${checkerframework.version}</version>
             </dependency>
 
             <!-- BuilderGen -->
@@ -1203,6 +1205,9 @@ limitations under the License.
             <activation>
                 <jdk>[9,)</jdk>
             </activation>
+            <properties>
+                <learnlib.java9OrNewer>true</learnlib.java9OrNewer>
+            </properties>
             <build>
                 <pluginManagement>
                     <plugins>

@@ -38,9 +38,8 @@ public class SimpleEQOracle<A extends InputAlphabetHolder<I>, I, D> implements E
         return new SimpleEQOracle<>(eqOracle);
     }
 
-    @Nullable
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
         LOGGER.debug("Ignoring the set of inputs '{}', because I always use the complete hypothesis' input alphabet",
                      inputs);
         return eqOracle.findCounterExample(hypothesis, hypothesis.getInputAlphabet());

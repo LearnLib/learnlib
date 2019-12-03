@@ -27,6 +27,7 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,13 +90,13 @@ public class RandomWalkEQOracle<I, O> implements MealyEquivalenceOracle<I, O> {
     }
 
     @Override
-    public DefaultQuery<I, Word<O>> findCounterExample(MealyMachine<?, I, ?, O> hypothesis,
-                                                       Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, Word<O>> findCounterExample(MealyMachine<?, I, ?, O> hypothesis,
+                                                                 Collection<? extends I> inputs) {
         return doFindCounterExample(hypothesis, inputs);
     }
 
-    private <S, T> DefaultQuery<I, Word<O>> doFindCounterExample(MealyMachine<S, I, T, O> hypothesis,
-                                                                 Collection<? extends I> inputs) {
+    private <S, T> @Nullable DefaultQuery<I, Word<O>> doFindCounterExample(MealyMachine<S, I, T, O> hypothesis,
+                                                                           Collection<? extends I> inputs) {
         // reset termination counter?
         if (resetStepCount) {
             steps = 0;

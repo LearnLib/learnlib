@@ -22,6 +22,7 @@ import de.learnlib.algorithms.adt.model.ObservationTree;
 import de.learnlib.api.oracle.SymbolQueryOracle;
 import net.automatalib.automata.transducers.impl.FastMealy;
 import net.automatalib.automata.transducers.impl.FastMealyState;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A utility class that links an observation tree with a symbol query oracle, meaning that all queries to the symbol
@@ -43,7 +44,7 @@ public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
 
     private final boolean enableCache;
 
-    private final List<I> currentTrace;
+    private final @Nullable List<I> currentTrace;
 
     private FastMealyState<O> currentState;
 
@@ -97,7 +98,7 @@ public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
                 this.observationTree.addTransition(this.currentState, i, newState, output);
             }
         } else {
-            assert this.observationTree.getOutput(this.currentState, i).equals(output) : "Inconsistent observations";
+            assert output.equals(this.observationTree.getOutput(this.currentState, i)) : "Inconsistent observations";
             nextState = succ;
         }
 

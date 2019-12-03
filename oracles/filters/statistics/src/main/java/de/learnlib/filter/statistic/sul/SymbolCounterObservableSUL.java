@@ -17,7 +17,6 @@ package de.learnlib.filter.statistic.sul;
 
 import de.learnlib.api.ObservableSUL;
 import de.learnlib.filter.statistic.Counter;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class SymbolCounterObservableSUL<S, I, O> extends SymbolCounterSUL<I, O> implements ObservableSUL<S, I, O> {
 
@@ -38,7 +37,6 @@ public class SymbolCounterObservableSUL<S, I, O> extends SymbolCounterSUL<I, O> 
         return new SymbolCounterObservableSUL<>(getStatisticalData(), sul.fork());
     }
 
-    @NonNull
     @Override
     public S getState() {
         return sul.getState();

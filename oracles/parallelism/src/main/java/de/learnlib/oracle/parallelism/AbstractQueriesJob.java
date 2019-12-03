@@ -19,7 +19,6 @@ import java.util.Collection;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Abstract base class for jobs (i.e., {@link Runnable}s) that process queries.
@@ -48,6 +47,5 @@ abstract class AbstractQueriesJob<I, D> implements Runnable {
         oracle.processQueries(queries);
     }
 
-    @NonNull
     protected abstract MembershipOracle<I, D> getOracle();
 }

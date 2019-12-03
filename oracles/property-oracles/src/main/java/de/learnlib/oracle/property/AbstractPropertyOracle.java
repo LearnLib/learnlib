@@ -42,7 +42,7 @@ abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends
     private final InclusionOracle<A, I, D> inclusionOracle;
     private final EmptinessOracle<R, I, D> emptinessOracle;
     private P property;
-    private DefaultQuery<I, D> counterExample;
+    private @Nullable DefaultQuery<I, D> counterExample;
 
     protected AbstractPropertyOracle(P property,
                                      InclusionOracle<A, I, D> inclusionOracle,
@@ -52,11 +52,9 @@ abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends
         this.emptinessOracle = emptinessOracle;
     }
 
-    @Nullable
-    protected DefaultQuery<I, D> setCounterExample(@Nullable DefaultQuery<I, D> counterExample) {
+    protected @Nullable DefaultQuery<I, D> setCounterExample(@Nullable DefaultQuery<I, D> counterExample) {
         this.counterExample = counterExample;
-        assert this.counterExample == null || counterExample != null;
-        return this.counterExample;
+        return counterExample;
     }
 
     @Override
@@ -69,24 +67,21 @@ abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends
         return property;
     }
 
-    @Nullable
     @Override
-    public DefaultQuery<I, D> getCounterExample() {
+    public @Nullable DefaultQuery<I, D> getCounterExample() {
         return counterExample;
     }
 
     protected abstract R modelCheck(A hypothesis, Collection<? extends I> inputs);
 
-    @Nullable
     @Override
-    public DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {
         final A result = modelCheck(hypothesis, inputs);
         return result != null ? inclusionOracle.findCounterExample(result, inputs) : null;
     }
 
-    @Nullable
     @Override
-    public DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs) {
         final R ce = modelCheck(hypothesis, inputs);
 
         return ce != null ? setCounterExample(emptinessOracle.findCounterExample(ce, inputs)) : null;

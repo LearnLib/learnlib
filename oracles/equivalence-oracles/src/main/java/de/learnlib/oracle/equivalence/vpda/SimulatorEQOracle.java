@@ -23,6 +23,7 @@ import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An equivalence oracle based on the computation of a separating word for a given hypothesis and a previously known
@@ -41,8 +42,8 @@ public class SimulatorEQOracle<I> implements EquivalenceOracle<OneSEVPA<?, I>, I
     }
 
     @Override
-    public DefaultQuery<I, Boolean> findCounterExample(final OneSEVPA<?, I> hypothesis,
-                                                       final Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, Boolean> findCounterExample(final OneSEVPA<?, I> hypothesis,
+                                                                 final Collection<? extends I> inputs) {
 
         final Word<I> sep = Automata.findSeparatingWord(reference, hypothesis, alphabet);
 

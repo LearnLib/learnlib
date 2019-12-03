@@ -17,6 +17,7 @@ package de.learnlib.driver.util;
 
 import de.learnlib.api.SUL;
 import net.automatalib.automata.transducers.MealyMachine;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link SUL} that implements steps by stepping through a {@link MealyMachine}.
@@ -110,7 +111,7 @@ public class MealySimulatorSUL<I, O> implements SUL<I, O> {
 
         private final MealyMachine<S, I, T, O> mealy;
         private final O noTransOut;
-        private S curr;
+        private @Nullable S curr;
 
         MealySimulatorSULImpl(MealyMachine<S, I, T, O> mealy, O noTransOut) {
             this.mealy = mealy;
@@ -153,6 +154,9 @@ public class MealySimulatorSUL<I, O> implements SUL<I, O> {
         }
 
         S getCurr() {
+            if (curr == null) {
+                throw new IllegalStateException("SUL was not properly initialized");
+            }
             return curr;
         }
     }

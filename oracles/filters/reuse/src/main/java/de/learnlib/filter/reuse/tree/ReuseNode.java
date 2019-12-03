@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import de.learnlib.filter.reuse.tree.BoundedDeque.AccessPolicy;
 import de.learnlib.filter.reuse.tree.BoundedDeque.EvictPolicy;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link ReuseNode} is a vertex in the {@link ReuseTree} that contains (a possible empty) set of outgoing {@link
@@ -39,7 +40,7 @@ import de.learnlib.filter.reuse.tree.BoundedDeque.EvictPolicy;
  */
 public class ReuseNode<S, I, O> {
 
-    private final ReuseEdge<S, I, O>[] edges;
+    private final @Nullable ReuseEdge<S, I, O>[] edges;
     private final BoundedDeque<S> systemStates;
     // private S systemstate;
     private final int id;
@@ -85,7 +86,7 @@ public class ReuseNode<S, I, O> {
      * Returns all outgoing {@link ReuseEdge}s from this {@link ReuseNode}. If there are none the returned {@link
      * java.util.Collection} will be empty (but never {@code null}).
      */
-    public Collection<ReuseEdge<S, I, O>> getEdges() {
+    public Collection<@Nullable ReuseEdge<S, I, O>> getEdges() {
         return Arrays.asList(edges);
     }
 
@@ -96,7 +97,7 @@ public class ReuseNode<S, I, O> {
         this.edges[index] = edge;
     }
 
-    public ReuseNode<S, I, O> getTargetNodeForInput(int index) {
+    public @Nullable ReuseNode<S, I, O> getTargetNodeForInput(int index) {
         ReuseEdge<S, I, O> edge = this.getEdgeWithInput(index);
         if (edge == null) {
             return null;
@@ -107,7 +108,7 @@ public class ReuseNode<S, I, O> {
     /**
      * May be {@code null}.
      */
-    public ReuseEdge<S, I, O> getEdgeWithInput(int index) {
+    public @Nullable ReuseEdge<S, I, O> getEdgeWithInput(int index) {
         return this.edges[index];
     }
 

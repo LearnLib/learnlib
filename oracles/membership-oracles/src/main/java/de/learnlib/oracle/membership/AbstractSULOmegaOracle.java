@@ -28,7 +28,7 @@ import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An omega membership oracle for an {@link ObservableSUL}.
@@ -47,10 +47,10 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @param <O> the output type
  * @param <Q> the state information type that is used to answer {@link OmegaQuery}s
  */
-public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMembershipOracle<Q, I, O> {
+public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implements MealyOmegaMembershipOracle<Q, I, O> {
 
     private final ObservableSUL<S, I, O> sul;
-    private final ThreadLocal<ObservableSUL<S, I, O>> localSul;
+    private final @Nullable ThreadLocal<ObservableSUL<S, I, O>> localSul;
 
     protected AbstractSULOmegaOracle(ObservableSUL<S, I, O> sul) {
         this.sul = sul;
@@ -67,7 +67,7 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
      * @return the {@link ObservableSUL}.
      */
     public ObservableSUL<S, I, O> getSul() {
-        if (sul.canFork()) {
+        if (localSul != null) {
             return localSul.get();
         } else {
             return sul;
@@ -94,7 +94,6 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
 
     protected abstract Q getQueryState(ObservableSUL<S, I, O> sul);
 
-    @NonNull
     private Pair<Word<O>, Integer> answerQuery(ObservableSUL<S, I, O> sul, Word<I> prefix, Word<I> loop, int repeat) {
         assert repeat > 0;
         sul.pre();
@@ -150,8 +149,8 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
      *
      * @return the {@link AbstractSULOmegaOracle}.
      */
-    public static <S, I, O> AbstractSULOmegaOracle<S, I, O, ?> newOracle(ObservableSUL<S, I, O> sul,
-                                                                         boolean deepCopies) {
+    public static <S extends Object, I, O> AbstractSULOmegaOracle<S, I, O, ?> newOracle(ObservableSUL<S, I, O> sul,
+                                                                                        boolean deepCopies) {
         final AbstractSULOmegaOracle<S, I, O, ?> abstractSulOmegaOracle;
         if (deepCopies) {
             if (!sul.deepCopies()) {
@@ -179,7 +178,7 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
      * @param <I> the input type
      * @param <O> the output type
      */
-    public static <S, I, O> AbstractSULOmegaOracle<S, I, O, ?> newOracle(ObservableSUL<S, I, O> sul) {
+    public static <S extends Object, I, O> AbstractSULOmegaOracle<S, I, O, ?> newOracle(ObservableSUL<S, I, O> sul) {
         return newOracle(sul, !sul.canFork());
     }
 
@@ -197,7 +196,8 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
      * @param <I> the input type
      * @param <O> the output type
      */
-    private static final class ShallowCopySULOmegaOracle<S, I, O> extends AbstractSULOmegaOracle<S, I, O, Integer> {
+    private static final class ShallowCopySULOmegaOracle<S extends Object, I, O>
+            extends AbstractSULOmegaOracle<S, I, O, Integer> {
 
         /**
          * A forked {@link SUL} is necessary when we need to step to two particular states at the same time.
@@ -281,7 +281,8 @@ public abstract class AbstractSULOmegaOracle<S, I, O, Q> implements MealyOmegaMe
      * @param <I> the input type
      * @param <O> the output type
      */
-    private static final class DeepCopySULOmegaOracle<S, I, O> extends AbstractSULOmegaOracle<S, I, O, S> {
+    private static final class DeepCopySULOmegaOracle<S extends Object, I, O>
+            extends AbstractSULOmegaOracle<S, I, O, S> {
 
         /**
          * Constructs a {@link DeepCopySULOmegaOracle}, use {@link #newOracle(ObservableSUL, boolean)} to create an

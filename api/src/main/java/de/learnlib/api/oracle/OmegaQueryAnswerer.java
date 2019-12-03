@@ -17,8 +17,6 @@ package de.learnlib.api.oracle;
 
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Answers {@link de.learnlib.api.query.OmegaQuery}s.
@@ -29,9 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public interface OmegaQueryAnswerer<S, I, D> {
 
-    @Nullable
     Pair<D, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat);
 
-    @NonNull
     OmegaMembershipOracle<S, I, D> asOracle();
 }

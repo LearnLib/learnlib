@@ -26,11 +26,12 @@ import de.learnlib.api.query.Query;
 import net.automatalib.automata.transducers.OutputAndLocalInputs;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class StateLocalInputSULOracle<I, O> implements StateLocalInputMealyOracle<I, OutputAndLocalInputs<I, O>> {
 
     private final StateLocalInputSUL<I, O> sul;
-    private final ThreadLocal<StateLocalInputSUL<I, O>> localSul;
+    private final @Nullable ThreadLocal<StateLocalInputSUL<I, O>> localSul;
 
     public StateLocalInputSULOracle(StateLocalInputSUL<I, O> sul) {
         this.sul = sul;

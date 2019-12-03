@@ -31,6 +31,7 @@ limitations under the License.
     <description>Support for parallelizing membership queries</description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-api</artifactId>
@@ -38,6 +39,12 @@ limitations under the License.
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-settings</artifactId>
+        </dependency>
+
+        <!-- external -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
 
         <dependency>
@@ -54,14 +61,11 @@ limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
         </dependency>
 
+        <!-- test -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

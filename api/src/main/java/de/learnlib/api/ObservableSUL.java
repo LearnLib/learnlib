@@ -15,8 +15,6 @@
  */
 package de.learnlib.api;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 /**
  * A System Under Learning (SUL) where at any point in time the internal state can be observed.
  *
@@ -30,7 +28,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public interface ObservableSUL<S, I, O> extends SUL<I, O> {
 
-    @NonNull
     @Override
     default ObservableSUL<S, I, O> fork() {
         throw new UnsupportedOperationException();
@@ -44,7 +41,6 @@ public interface ObservableSUL<S, I, O> extends SUL<I, O> {
      *
      * @return the current state of the system.
      */
-    @NonNull
     S getState();
 
     /**

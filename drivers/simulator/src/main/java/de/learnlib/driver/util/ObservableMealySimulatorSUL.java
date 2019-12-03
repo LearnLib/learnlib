@@ -17,8 +17,6 @@ package de.learnlib.driver.util;
 
 import de.learnlib.api.ObservableSUL;
 import net.automatalib.automata.transducers.MealyMachine;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ObservableMealySimulatorSUL<S, I, O> extends MealySimulatorSUL<I, O> implements ObservableSUL<S, I, O> {
 
@@ -28,7 +26,7 @@ public class ObservableMealySimulatorSUL<S, I, O> extends MealySimulatorSUL<I, O
         this(mealy, null);
     }
 
-    public ObservableMealySimulatorSUL(MealyMachine<S, I, ?, O> mealy, @Nullable O noTransOut) {
+    public ObservableMealySimulatorSUL(MealyMachine<S, I, ?, O> mealy, O noTransOut) {
         this(new ObservableMealySimulatorSULImpl<>(mealy, noTransOut));
     }
 
@@ -37,7 +35,6 @@ public class ObservableMealySimulatorSUL<S, I, O> extends MealySimulatorSUL<I, O
         this.impl = impl;
     }
 
-    @NonNull
     @Override
     public S getState() {
         return impl.getState();
@@ -54,13 +51,12 @@ public class ObservableMealySimulatorSUL<S, I, O> extends MealySimulatorSUL<I, O
         private final MealyMachine<S, I, T, O> mealy;
         private final O noTransOut;
 
-        ObservableMealySimulatorSULImpl(MealyMachine<S, I, T, O> mealy, @Nullable O noTransOut) {
+        ObservableMealySimulatorSULImpl(MealyMachine<S, I, T, O> mealy, O noTransOut) {
             super(mealy, noTransOut);
             this.mealy = mealy;
             this.noTransOut = noTransOut;
         }
 
-        @NonNull
         @Override
         public S getState() {
             return getCurr();

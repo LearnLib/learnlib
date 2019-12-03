@@ -90,6 +90,7 @@ public class DomainKnowledgeTest {
         Word<Integer> input = getInput(1, 0, 1, 1);
         NodeResult<Integer, Integer, String> node = reuseOracle.getReuseTree().fetchSystemState(input);
 
+        Assert.assertNotNull(node);
         Assert.assertEquals(node.prefixLength, 3); // ''1 0 1''
         // reuse the prefix
         qr = new QueryResult<>(getOutput("ok"), 3);

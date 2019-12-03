@@ -59,8 +59,7 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
      *
      * @return the next input word, or {@code null} if t here is no next input.
      */
-    @Nullable
-    Word<I> nextInput();
+    @Nullable Word<I> nextInput();
 
     /**
      * Add a new input word.
@@ -152,8 +151,9 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
      *
      * @return the counterexample, or {@code null} if a counter example does not exist.
      */
-    @Nullable
-    default DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs, int maxQueries) {
+    default @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis,
+                                                            Collection<? extends I> inputs,
+                                                            int maxQueries) {
         pre();
         DefaultQuery<I, D> ce = null;
 
@@ -162,9 +162,7 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
             addWords(hypothesis, inputs, input);
             if (accepts(hypothesis, input, input.length())) {
                 final DefaultQuery<I, D> query = processInput(hypothesis, input);
-                if (query != null) {
-                    ce = isCounterExample(hypothesis, query.getInput(), query.getOutput()) ? query : null;
-                }
+                ce = isCounterExample(hypothesis, query.getInput(), query.getOutput()) ? query : null;
                 queries++;
             }
         }
@@ -183,8 +181,7 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
      *
      * @return the counter example, or {@code null} if a counter example does not exist
      */
-    @Nullable
-    default DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    default @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
         return findCounterExample(hypothesis, inputs, (int) (hypothesis.size() * getMultiplier()));
     }
 

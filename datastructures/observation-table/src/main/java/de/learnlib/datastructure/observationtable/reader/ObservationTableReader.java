@@ -17,7 +17,6 @@ package de.learnlib.datastructure.observationtable.reader;
 
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import net.automatalib.words.Alphabet;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Reads an {@link ObservationTable} from a string source.
@@ -42,7 +41,6 @@ public interface ObservationTableReader<I, D> {
      * ObservationTable#getSuffixes()}, {@link ObservationTable#getShortPrefixes()}, and {@link
      * ObservationTable#getLongPrefixes()}. Will never be {@code null}.
      */
-    @NonNull
-    ObservationTable<I, D> read(@NonNull String source, @NonNull Alphabet<I> alphabet);
+    ObservationTable<I, D> read(String source, Alphabet<I> alphabet);
 
 }

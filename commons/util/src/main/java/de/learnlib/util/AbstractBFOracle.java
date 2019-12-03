@@ -81,9 +81,8 @@ public abstract class AbstractBFOracle<A extends DeterministicAutomaton<?, I, ?>
      *
      * @see AutomatonOracle#nextInput()
      */
-    @Nullable
     @Override
-    public Word<I> nextInput() {
+    public @Nullable Word<I> nextInput() {
         return queue.poll();
     }
 

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.api.SULMapper;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Basic stateless data mapper for objects.
@@ -33,7 +34,7 @@ public class SimplePOJODataMapper implements SULMapper<MethodInput, MethodOutput
     private final Constructor<?> initMethod;
     private final Object[] initParams;
 
-    protected Object delegate;
+    protected @Nullable Object delegate;
 
     protected SimplePOJODataMapper(Constructor<?> initMethod, Object... initParams) {
         this.initMethod = initMethod;

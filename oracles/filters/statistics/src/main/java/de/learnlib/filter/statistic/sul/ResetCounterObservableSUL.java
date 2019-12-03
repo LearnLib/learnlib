@@ -17,7 +17,6 @@ package de.learnlib.filter.statistic.sul;
 
 import de.learnlib.api.ObservableSUL;
 import de.learnlib.filter.statistic.Counter;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class ResetCounterObservableSUL<S, I, O> extends ResetCounterSUL<I, O> implements ObservableSUL<S, I, O> {
 
@@ -38,7 +37,6 @@ public class ResetCounterObservableSUL<S, I, O> extends ResetCounterSUL<I, O> im
         return new ResetCounterObservableSUL<>(getStatisticalData(), sul.fork());
     }
 
-    @NonNull
     @Override
     public S getState() {
         return sul.getState();

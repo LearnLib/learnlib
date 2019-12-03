@@ -22,7 +22,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A query is the basic form of interaction between a {@link LearningAlgorithm learner} and a {@link MembershipOracle
@@ -85,7 +85,6 @@ public abstract class Query<I, D> {
      *
      * @return the input word of this query
      */
-    @NonNull
     public Word<I> getInput() {
         return getPrefix().concat(getSuffix());
     }
@@ -96,7 +95,6 @@ public abstract class Query<I, D> {
      *
      * @return the prefix of this query
      */
-    @NonNull
     public abstract Word<I> getPrefix();
 
     /**
@@ -105,7 +103,6 @@ public abstract class Query<I, D> {
      *
      * @return the suffix of this query
      */
-    @NonNull
     public abstract Word<I> getSuffix();
 
     @Override
@@ -121,7 +118,7 @@ public abstract class Query<I, D> {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

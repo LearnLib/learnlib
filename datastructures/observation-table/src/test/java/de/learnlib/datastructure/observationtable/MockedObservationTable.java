@@ -25,7 +25,6 @@ import java.util.Map;
 import com.google.common.base.Preconditions;
 import de.learnlib.datastructure.observationtable.reader.SimpleObservationTable;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -81,21 +80,18 @@ public class MockedObservationTable<I, D> extends SimpleObservationTable<I, D> {
         return row;
     }
 
-    @NonNull
     @Override
     public Collection<Row<I>> getShortPrefixRows() {
         return Collections.unmodifiableList(shortPrefixes);
     }
 
-    @NonNull
     @Override
     public Collection<Row<I>> getLongPrefixRows() {
         return Collections.unmodifiableList(longPrefixes);
     }
 
-    @Nullable
     @Override
-    public RowImpl<I> getRow(int idx) {
+    public @Nullable RowImpl<I> getRow(int idx) {
         Preconditions.checkPositionIndex(0, rows.size());
         return rows.get(idx);
     }

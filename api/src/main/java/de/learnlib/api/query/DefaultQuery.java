@@ -16,7 +16,6 @@
 package de.learnlib.api.query;
 
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A query is a container for tests a learning algorithms performs, containing the actual test and the corresponding
@@ -33,7 +32,7 @@ public class DefaultQuery<I, D> extends AbstractQuery<I, D> {
 
     private D output;
 
-    public DefaultQuery(Word<I> prefix, Word<I> suffix, @Nullable D output) {
+    public DefaultQuery(Word<I> prefix, Word<I> suffix, D output) {
         this(prefix, suffix);
         this.output = output;
     }
@@ -46,7 +45,7 @@ public class DefaultQuery<I, D> extends AbstractQuery<I, D> {
         super(input);
     }
 
-    public DefaultQuery(Word<I> input, @Nullable D output) {
+    public DefaultQuery(Word<I> input, D output) {
         super(input);
         this.output = output;
     }
@@ -55,7 +54,6 @@ public class DefaultQuery<I, D> extends AbstractQuery<I, D> {
         super(query);
     }
 
-    @Nullable
     public D getOutput() {
         return output;
     }
@@ -71,7 +69,7 @@ public class DefaultQuery<I, D> extends AbstractQuery<I, D> {
     }
 
     @Override
-    public void answer(@Nullable D output) {
+    public void answer(D output) {
         this.output = output;
     }
 

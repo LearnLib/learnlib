@@ -26,6 +26,7 @@ import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.util.automata.transducers.StateLocalInputMealyUtil;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class StateLocalInputCacheConsistencyTest<I, O>
         implements EquivalenceOracle<StateLocalInputMealyMachine<?, I, ?, O>, I, Word<OutputAndLocalInputs<I, O>>> {
@@ -48,8 +49,8 @@ public class StateLocalInputCacheConsistencyTest<I, O>
     }
 
     @Override
-    public DefaultQuery<I, Word<OutputAndLocalInputs<I, O>>> findCounterExample(StateLocalInputMealyMachine<?, I, ?, O> hypothesis,
-                                                                                Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, Word<OutputAndLocalInputs<I, O>>> findCounterExample(StateLocalInputMealyMachine<?, I, ?, O> hypothesis,
+                                                                                          Collection<? extends I> inputs) {
         final WordBuilder<OutputAndLocalInputs<I, O>> wb;
         Word<I> w;
 

@@ -31,6 +31,7 @@ import de.learnlib.buildtool.refinement.annotation.Map;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 @GenerateRefinement(name = "DFAEQOracleChain",
                     generics = "I",
@@ -68,7 +69,7 @@ public class EQOracleChain<A, I, D> implements EquivalenceOracle<A, I, D> {
     }
 
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
         for (EquivalenceOracle<? super A, I, D> eqOracle : oracles) {
             DefaultQuery<I, D> ceQry = eqOracle.findCounterExample(hypothesis, inputs);
             if (ceQry != null) {

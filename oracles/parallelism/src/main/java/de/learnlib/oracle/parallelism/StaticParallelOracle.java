@@ -30,7 +30,6 @@ import de.learnlib.api.query.Query;
 import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A membership oracle that statically distributes a set of queries among several threads.
@@ -63,11 +62,9 @@ public class StaticParallelOracle<I, D> implements ParallelOracle<I, D> {
         POOL_POLICY = settings.getEnumValue(LearnLibProperty.PARALLEL_POOL_SIZE, PoolPolicy.class, PoolPolicy.CACHED);
     }
 
-    @NonNegative
-    private final int minBatchSize;
-    @NonNull
+
+    private final @NonNegative int minBatchSize;
     private final MembershipOracle<I, D>[] oracles;
-    @NonNull
     private final ExecutorService executor;
 
     @SuppressWarnings("unchecked")

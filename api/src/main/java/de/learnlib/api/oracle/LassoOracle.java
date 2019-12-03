@@ -65,7 +65,7 @@ public interface LassoOracle<L extends Lasso<I, D>, I, D> {
      *
      * @return whether the given input and output is a counter example.
      */
-    boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> inputs, @Nullable D output);
+    boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> inputs, D output);
 
     /**
      * Returns whether a lasso that is ultimately periodic could serve as a counter example.
@@ -77,8 +77,7 @@ public interface LassoOracle<L extends Lasso<I, D>, I, D> {
      */
     boolean isOmegaCounterExample(boolean isUltimatelyPeriodic);
 
-    @Nullable
-    default DefaultQuery<I, D> findCounterExample(L hypothesis, Collection<? extends I> inputs) {
+    default @Nullable DefaultQuery<I, D> findCounterExample(L hypothesis, Collection<? extends I> inputs) {
         final Word<I> prefix = hypothesis.getPrefix();
         final Word<I> loop = hypothesis.getLoop();
         final int repeat = hypothesis.getUnfolds();

@@ -36,6 +36,8 @@ import net.automatalib.commons.util.Pair;
 import net.automatalib.util.automata.ads.ADSUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A variant of the backtracking ADS search (see {@link net.automatalib.util.automata.ads.ADS}, {@link
@@ -60,11 +62,11 @@ public final class DefensiveADS<S, I, O> {
     /**
      * The states, whose outgoing {@link #refinementInput}-transitions need to be closed.
      */
-    private Set<S> refinementStates;
+    private @Nullable Set<S> refinementStates;
     /**
      * The output for which the outgoing transitions of {@link #refinementStates} are undefined.
      */
-    private I refinementInput;
+    private @Nullable I refinementInput;
 
     private DefensiveADS(final MealyMachine<S, I, ?, O> automaton,
                          final Alphabet<I> alphabet,
@@ -145,7 +147,8 @@ public final class DefensiveADS<S, I, O> {
         candidateLoop:
         while (!splittingWordCandidates.isEmpty()) {
 
-            final Word<I> prefix = splittingWordCandidates.poll();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            final @NonNull Word<I> prefix = splittingWordCandidates.poll();
             final Map<S, S> currentToInitialMapping = mapping.keySet()
                                                              .stream()
                                                              .collect(Collectors.toMap(x -> automaton.getSuccessor(x,

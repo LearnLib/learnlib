@@ -31,11 +31,7 @@ limitations under the License.
     <description>Caches to avoid posing duplicate membership queries</description>
 
     <dependencies>
-        <!--
-        Compile-time dependencies
-        -->
-
-        <!-- LearnLib dependencies -->
+        <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
@@ -45,18 +41,18 @@ limitations under the License.
             <artifactId>learnlib-membership-oracles</artifactId>
         </dependency>
 
-        <!-- AutomataLib dependencies -->
+        <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-core</artifactId>
+            <artifactId>automata-commons-util</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-util</artifactId>
+            <artifactId>automata-core</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -72,31 +68,20 @@ limitations under the License.
             <artifactId>checker-qual</artifactId>
         </dependency>
 
-        <!-- SLF4J -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <!--
-        Test dependencies
-        -->
-
-        <!-- TestNG -->
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-        </dependency>
-
-        <!-- LearnLib dependencies -->
+        <!-- test -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-parallelism</artifactId>
+            <artifactId>learnlib-drivers-simulator</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-util</artifactId>
+            <artifactId>learnlib-parallelism</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -106,8 +91,13 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-drivers-simulator</artifactId>
+            <artifactId>learnlib-util</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

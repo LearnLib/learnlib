@@ -92,9 +92,8 @@ public class DisproveFirstOracle<A extends Output<I, D>, I, D> implements BlackB
         return propertyOracles;
     }
 
-    @Nullable
     @Override
-    public DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
         for (PropertyOracle<I, ? super A, ?, D> po : propertyOracles) {
             if (!po.isDisproved()) {
                 po.disprove(hypothesis, inputs);

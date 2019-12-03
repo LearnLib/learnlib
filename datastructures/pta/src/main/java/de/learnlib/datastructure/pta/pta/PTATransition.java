@@ -18,7 +18,6 @@ package de.learnlib.datastructure.pta.pta;
 import java.util.Objects;
 
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class PTATransition<S extends AbstractBasePTAState<?, ?, S>> {
@@ -26,7 +25,7 @@ public class PTATransition<S extends AbstractBasePTAState<?, ?, S>> {
     private final S source;
     private final int index;
 
-    public PTATransition(@NonNull S source, @NonNegative int index) {
+    public PTATransition(S source, @NonNegative int index) {
         this.source = Objects.requireNonNull(source);
         if (index < 0) {
             throw new IllegalArgumentException();
@@ -34,18 +33,16 @@ public class PTATransition<S extends AbstractBasePTAState<?, ?, S>> {
         this.index = index;
     }
 
-    @NonNull
     public S getSource() {
         return source;
     }
 
-    @NonNegative
-    public int getIndex() {
+
+    public @NonNegative int getIndex() {
         return index;
     }
 
-    @Nullable
-    public S getTarget() {
+    public @Nullable S getTarget() {
         return source.getSuccessor(index);
     }
 

@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Primitive implementation for boolean maps.
  *
@@ -68,7 +70,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
     }
 
     @Override
-    public V get(Object key) {
+    public @Nullable V get(Object key) {
         if (key == null || key.getClass() != Boolean.class) {
             return null;
         }
@@ -105,7 +107,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
     }
 
     @Override
-    public V remove(Object key) {
+    public @Nullable V remove(Object key) {
         if (key == null || key.getClass() != Boolean.class) {
             return null;
         }

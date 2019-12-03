@@ -29,7 +29,6 @@ import de.learnlib.api.query.Query;
 import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A parallel membership oracle that dynamically distributes queries to worker threads.
@@ -57,12 +56,9 @@ public class DynamicParallelOracle<I, D> implements ParallelOracle<I, D> {
         POOL_POLICY = settings.getEnumValue(LearnLibProperty.PARALLEL_POOL_POLICY, PoolPolicy.class, PoolPolicy.CACHED);
     }
 
-    @NonNull
     private final ThreadLocal<MembershipOracle<I, D>> threadLocalOracle;
-    @NonNull
     private final ExecutorService executor;
-    @NonNegative
-    private final int batchSize;
+    private final @NonNegative int batchSize;
 
     public DynamicParallelOracle(final Supplier<? extends MembershipOracle<I, D>> oracleSupplier,
                                  @NonNegative int batchSize,

@@ -16,7 +16,6 @@
 package de.learnlib.api;
 
 import de.learnlib.api.exception.SULException;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Interface for a system under learning (SUL) that can make single steps.
@@ -83,7 +82,6 @@ public interface SUL<I, O> {
      * @throws UnsupportedOperationException
      *         if this SUL can't be forked.
      */
-    @NonNull
     default SUL<I, O> fork() {
         throw new UnsupportedOperationException();
     }

@@ -18,22 +18,17 @@ package de.learnlib.datastructure.pta.pta;
 import java.awt.Color;
 
 import net.automatalib.commons.util.comparison.CmpUtil;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractBlueFringePTAState<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S>>
         extends AbstractBasePTAState<SP, TP, S> implements Comparable<S> {
 
     protected boolean isCopy;
-    @NonNull
     protected Color color = Color.WHITE;
-    @Nullable
-    protected S parent;
+    protected @Nullable S parent;
     protected int parentInput = -1;
-    @Nullable
-    protected int[] access;
+    protected int @Nullable [] access;
 
-    @NonNull
     public Color getColor() {
         return color;
     }
@@ -62,7 +57,6 @@ public abstract class AbstractBlueFringePTAState<SP, TP, S extends AbstractBlueF
         return state;
     }
 
-    @NonNull
     public PTATransition<S> makeBlue() {
         if (!isWhite()) {
             throw new IllegalStateException();

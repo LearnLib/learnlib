@@ -16,6 +16,7 @@
 package de.learnlib.setting;
 
 import java.io.File;
+import java.net.URL;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeSuite;
@@ -28,7 +29,9 @@ public class LearnLibSettingsTest {
 
     @BeforeSuite
     public void setUp() {
-        final File properties = new File(LearnLibSettingsTest.class.getResource("/learnlib.properties").getFile());
+        final URL resource = LearnLibSettingsTest.class.getResource("/learnlib.properties");
+        assert resource != null;
+        final File properties = new File(resource.getFile());
         System.setProperty("learnlib.properties", properties.getAbsolutePath());
     }
 
