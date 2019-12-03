@@ -65,10 +65,15 @@ limitations under the License.
             <artifactId>checker-qual</artifactId>
         </dependency>
 
-        <!-- test -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

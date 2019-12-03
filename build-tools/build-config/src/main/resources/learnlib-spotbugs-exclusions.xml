@@ -42,4 +42,11 @@ limitations under the License.
             <Class name="de.learnlib.datastructure.observationtable.writer.ObservationTableWriter"/>
         </Or>
     </Match>
+    <Match>
+        <!-- False-positive on Java 11. See https://github.com/spotbugs/spotbugs/issues/259 -->
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+        <Or>
+            <Class name="de.learnlib.examples.dfa.DFABenchmarks"/>
+        </Or>
+    </Match>
 </FindBugsFilter>
