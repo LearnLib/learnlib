@@ -12,6 +12,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * The `{DFA,Mealy,}W{p,}MethodEQOracle(MembershipOracle, int, int)` constructor no longer interprets its second `int` parameter as the batch size, but as an estimate for the expected SUL size. In order to explicitly set the batch size of the oracle, use the `{DFA,Mealy,}W{p,}MethodEQOracle(MembershipOracle, int, int, int)` constructor. Now, the two parameters `lookahead` and `expectedSize` will determine the length of the *middle part* via `Math.max(lookahead, expectedSize - hypothesis.size())`. This allows to dynamically adjust the length of the *middle part* throughout the learning process. See [LearnLib/automatalib#32](https://github.com/LearnLib/automatalib/issues/32).
 * Several DFA/Mealy specific (oracle) subclasses are now automatically generated. As a result they are no longer an inner class, but an indepentend top-level class. This requires to update the import statements.
+* JSR305 annotations have been replaced with checker-framework annotations.
+  * LearnLib (incl. AutomataLib) now follows checker-framework's convention that (non-annotated) types are usually considered non-null unless explicitly annotated with `@Nullable`.
+  * LearnLib (incl. AutomataLib) no longer has a (runtime-) dependency on JSR305 (and other `javax.*`) annotations or includes them in the distribution artifact. This now makes LearnLib (incl. AutomataLib) compliant with [Oracle's binary code license](https://www.oracle.com/downloads/licenses/binary-code-license.html) and allows LearnLib (incl. AutomataLib) artifacts as-is to be bundled in binary distributions with Oracle's JDKs/JREs.
 
 ### Removed
 
