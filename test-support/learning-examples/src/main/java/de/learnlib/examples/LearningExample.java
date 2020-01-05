@@ -31,7 +31,19 @@ public interface LearningExample<I, A extends UniversalAutomaton<?, I, ?, ?, ?>>
 
     interface MealyLearningExample<I, O> extends LearningExample<I, MealyMachine<?, I, ?, O>> {}
 
+    /**
+     * A {@link LearningExample} refinement for {@link StateLocalInputMealyMachine}.
+     * <p>
+     * Note that while {@link StateLocalInputMealyMachine}s can return information about their {@link
+     * StateLocalInputMealyMachine#getLocalInputs local inputs} and are therefore in general partially defined, the
+     * examples are total {@link MealyMachine}s in order to be usable with the existing integration-test infrastructure
+     * of (total) {@link MealyMachine}s. The 'undefined' transitions are answered with {@link #getUndefinedOutput()}.
+     */
     interface StateLocalInputMealyLearningExample<I, O>
-            extends LearningExample<I, StateLocalInputMealyMachine<?, I, ?, O>> {}
+            extends LearningExample<I, StateLocalInputMealyMachine<?, I, ?, O>> {
+
+        O getUndefinedOutput();
+
+    }
 
 }

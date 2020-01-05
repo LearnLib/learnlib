@@ -18,8 +18,6 @@ package de.learnlib.testsupport.it.learner;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.OutputAndLocalInputs;
-import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Word;
 
@@ -74,9 +72,6 @@ public interface LearnerVariantList<M, I, D> {
     interface MealyLearnerVariantList<I, O> extends LearnerVariantList<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 
     interface MealySymLearnerVariantList<I, O> extends LearnerVariantList<MealyMachine<?, I, ?, O>, I, O> {}
-
-    interface SLIMealyLearnerVariantList<I, O>
-            extends LearnerVariantList<StateLocalInputMealyMachine<?, I, ?, O>, I, Word<OutputAndLocalInputs<I, O>>> {}
 
     interface OneSEVPALearnerVariantList<I> extends LearnerVariantList<OneSEVPA<?, I>, I, Boolean> {}
 

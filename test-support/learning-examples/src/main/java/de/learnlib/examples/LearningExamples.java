@@ -44,6 +44,7 @@ public final class LearningExamples {
     private static final int GRID_XSIZE = 5;
     private static final int GRID_YSIZE = 5;
     private static final String[] RANDOM_MEALY_OUTPUTS = {"o1", "o2", "o3"};
+    private static final String UNDEFINED_MEALY_OUTPUT = "undefined";
     private static final int KEYLOCK_SIZE = 100;
     private static final long RANDOM_SEED = 1337L;
 
@@ -75,6 +76,7 @@ public final class LearningExamples {
         return Collections.singletonList(ExampleRandomStateLocalInputMealy.createExample(new Random(RANDOM_SEED),
                                                                                          RANDOM_ALPHABET,
                                                                                          RANDOM_SIZE,
+                                                                                         UNDEFINED_MEALY_OUTPUT,
                                                                                          RANDOM_MEALY_OUTPUTS));
     }
 

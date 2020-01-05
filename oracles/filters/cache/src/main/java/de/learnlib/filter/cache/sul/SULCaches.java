@@ -16,6 +16,7 @@
 package de.learnlib.filter.cache.sul;
 
 import de.learnlib.api.SUL;
+import de.learnlib.api.StateLocalInputSUL;
 import net.automatalib.words.Alphabet;
 
 public final class SULCaches {
@@ -34,5 +35,15 @@ public final class SULCaches {
 
     public static <I, O> SULCache<I, O> createDAGCache(Alphabet<I> alphabet, SUL<I, O> sul) {
         return SULCache.createDAGCache(alphabet, sul);
+    }
+
+    public static <I, O> StateLocalInputSULCache<I, O> createStateLocalInputTreeCache(Alphabet<I> alphabet,
+                                                                                      StateLocalInputSUL<I, O> sul) {
+        return StateLocalInputSULCache.createTreeCache(alphabet, sul);
+    }
+
+    public static <I, O> StateLocalInputSULCache<I, O> createStateLocalInputCache(Alphabet<I> alphabet,
+                                                                                  StateLocalInputSUL<I, O> sul) {
+        return createStateLocalInputTreeCache(alphabet, sul);
     }
 }

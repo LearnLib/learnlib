@@ -21,18 +21,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import de.learnlib.api.Resumable;
 import de.learnlib.api.SUL;
-import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
-import de.learnlib.filter.cache.mealy.MealyCacheConsistencyTest;
 import de.learnlib.filter.cache.sul.SULCache.SULCacheState;
-import de.learnlib.oracle.membership.SULOracle;
-import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.WordBuilder;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,10 +47,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Malte Isberner
  */
-public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
-                                                               MealyLearningCacheOracle<I, O>,
-                                                               SupportsGrowingAlphabet<I>,
-                                                               Resumable<SULCacheState<I, O>> {
+public class SULCache<I, O> extends AbstractSULCache<I, O> implements Resumable<SULCacheState<I, O>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SULCache.class);
 
@@ -77,41 +68,6 @@ public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
 
     public static <I, O> SULCache<I, O> createDAGCache(Alphabet<I> alphabet, SUL<I, O> sul) {
         return new SULCache<>(new IncrementalMealyDAGBuilder<>(alphabet), sul);
-    }
-
-    @Override
-    public void pre() {
-        impl.pre();
-    }
-
-    @Override
-    public void post() {
-        impl.post();
-    }
-
-    @Override
-    public O step(I in) {
-        return impl.step(in);
-    }
-
-    @Override
-    public boolean canFork() {
-        return impl.canFork();
-    }
-
-    @Override
-    public SUL<I, O> fork() {
-        return impl.fork();
-    }
-
-    @Override
-    public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
-        return impl.createCacheConsistencyTest();
-    }
-
-    @Override
-    public void addAlphabetSymbol(I symbol) {
-        impl.addAlphabetSymbol(symbol);
     }
 
     @Override
@@ -139,113 +95,19 @@ public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
      *
      * @author Malte Isberner
      */
-    private static final class SULCacheImpl<S, I, T, O>
-            implements SUL<I, O>, MealyLearningCache<I, O>, SupportsGrowingAlphabet<I>, Resumable<SULCacheState<I, O>> {
-
-        private IncrementalMealyBuilder<I, O> incMealy;
-        private MealyTransitionSystem<S, I, T, O> mealyTs;
-        private final SUL<I, O> delegate;
-        private final ReadWriteLock incMealyLock;
-
-        private final WordBuilder<I> inputWord = new WordBuilder<>();
-        private final WordBuilder<O> outputWord = new WordBuilder<>();
-
-        private boolean delegatePreCalled;
-        private @Nullable S current;
+    private static final class SULCacheImpl<S, I, T, O> extends AbstractSULCacheImpl<S, I, T, O>
+            implements Resumable<SULCacheState<I, O>> {
 
         SULCacheImpl(IncrementalMealyBuilder<I, O> incMealy,
                      ReadWriteLock lock,
                      MealyTransitionSystem<S, I, T, O> mealyTs,
                      SUL<I, O> sul) {
-            this.incMealy = incMealy;
-            this.mealyTs = mealyTs;
-            this.delegate = sul;
-            this.incMealyLock = lock;
-        }
-
-        @Override
-        public void pre() {
-            incMealyLock.readLock().lock();
-            this.current = mealyTs.getInitialState();
-        }
-
-        @Override
-        public O step(I in) {
-            O out = null;
-
-            if (current != null) {
-                T trans = mealyTs.getTransition(current, in);
-
-                if (trans != null) {
-                    out = mealyTs.getTransitionOutput(trans);
-                    current = mealyTs.getSuccessor(trans);
-                    assert current != null;
-                } else {
-                    incMealyLock.readLock().unlock();
-                    current = null;
-                    delegate.pre();
-                    delegatePreCalled = true;
-                    for (I prevSym : inputWord) {
-                        outputWord.append(delegate.step(prevSym));
-                    }
-                }
-            }
-
-            inputWord.append(in);
-
-            if (current == null) {
-                out = delegate.step(in);
-                outputWord.add(out);
-            }
-
-            return out;
-        }
-
-        // TODO: The SUL interface might need a cleanup() method which, by contract,
-        // is to be called regardless of whether preceding step()s threw unrecoverable
-        // errors!
-        @Override
-        public void post() {
-            if (outputWord.isEmpty()) {
-                // if outputWord is empty we still hold the read-lock!
-                incMealyLock.readLock().unlock();
-            } else {
-                // otherwise acquire write-lock to update cache!
-                incMealyLock.writeLock().lock();
-                try {
-                    incMealy.insert(inputWord.toWord(), outputWord.toWord());
-                } finally {
-                    incMealyLock.writeLock().unlock();
-                }
-            }
-
-            if (delegatePreCalled) {
-                delegate.post();
-                delegatePreCalled = false;
-            }
-            inputWord.clear();
-            outputWord.clear();
-            current = null;
-        }
-
-        @Override
-        public boolean canFork() {
-            return delegate.canFork();
+            super(incMealy, lock, mealyTs, sul);
         }
 
         @Override
         public SUL<I, O> fork() {
             return new SULCacheImpl<>(incMealy, incMealyLock, mealyTs, delegate.fork());
-        }
-
-        @Override
-        public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
-            return new MealyCacheConsistencyTest<>(incMealy, incMealyLock);
-        }
-
-        @Override
-        public void addAlphabetSymbol(I symbol) {
-            incMealy.addAlphabetSymbol(symbol);
         }
 
         @Override
@@ -257,7 +119,7 @@ public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
         @SuppressWarnings("unchecked")
         public void resume(SULCacheState<I, O> state) {
             final Class<?> thisClass = this.incMealy.getClass();
-            final Class<?> stateClass = state.getBuilder().getClass();
+            final Class<?> stateClass = state.builder.getClass();
 
             if (!thisClass.equals(stateClass)) {
                 LOGGER.warn(
@@ -266,23 +128,18 @@ public class SULCache<I, O> extends SULOracle<I, O> implements SUL<I, O>,
                         stateClass);
             }
 
-            this.incMealy = state.getBuilder();
-            this.mealyTs = (MealyTransitionSystem<S, I, T, O>) this.incMealy.asTransitionSystem();
+            super.incMealy = state.builder;
+            super.mealyTs = (MealyTransitionSystem<S, I, T, O>) this.incMealy.asTransitionSystem();
         }
     }
 
     public static class SULCacheState<I, O> implements Serializable {
 
-        private final IncrementalMealyBuilder<I, O> builder;
+        final IncrementalMealyBuilder<I, O> builder;
 
         SULCacheState(IncrementalMealyBuilder<I, O> builder) {
             this.builder = builder;
         }
-
-        IncrementalMealyBuilder<I, O> getBuilder() {
-            return builder;
-        }
-
     }
 
 }

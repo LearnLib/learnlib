@@ -17,6 +17,7 @@ package de.learnlib.filter.cache.parallelism;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
+import de.learnlib.filter.cache.SULLearningCacheOracle;
 import de.learnlib.filter.cache.sul.SULCache;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -29,6 +30,9 @@ public class SULNoForkParallelCacheTest extends SULParallelCacheTest {
     @Override
     protected MealyLearningCacheOracle<Character, Character> getCache(Alphabet<Character> alphabet,
                                                                       MembershipOracle<Character, Word<Character>> oracle) {
-        return SULCache.createTreeCache(alphabet, new TestSUL<>(getTargetModel(), oracle, false));
+        return SULLearningCacheOracle.fromSULCache(SULCache.createTreeCache(alphabet,
+                                                                            new TestSUL<>(getTargetModel(),
+                                                                                          oracle,
+                                                                                          false)));
     }
 }

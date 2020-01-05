@@ -16,19 +16,16 @@
 package de.learnlib.filter.cache.mealy;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Comparator;
 
 import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.filter.cache.mealy.MealyCacheOracle.MealyCacheOracleState;
-import net.automatalib.automata.transducers.OutputAndLocalInputs;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.incremental.mealy.tree.dynamic.DynamicIncrementalMealyTreeBuilder;
-import net.automatalib.incremental.mealy.tree.dynamic.StateLocalInputIncrementalMealyTreeBuilder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import org.slf4j.Logger;
@@ -83,19 +80,6 @@ public class MealyCacheOracle<I, O> extends InternalMealyCacheOracle<I, O>
     public static <I, O> MealyCacheOracle<I, O> createDynamicTreeCacheOracle(Mapping<? super O, ? extends O> errorSyms,
                                                                              MembershipOracle<I, Word<O>> delegate) {
         IncrementalMealyBuilder<I, O> incrementalBuilder = new DynamicIncrementalMealyTreeBuilder<>();
-        return new MealyCacheOracle<>(incrementalBuilder, errorSyms, delegate);
-    }
-
-    public static <I, O> MealyCacheOracle<I, OutputAndLocalInputs<I, O>> createStateLocalInputTreeCacheOracle(Collection<I> initialLocalInputs,
-                                                                                                              MembershipOracle<I, Word<OutputAndLocalInputs<I, O>>> delegate) {
-        return createStateLocalInputTreeCacheOracle(initialLocalInputs, null, delegate);
-    }
-
-    public static <I, O> MealyCacheOracle<I, OutputAndLocalInputs<I, O>> createStateLocalInputTreeCacheOracle(Collection<I> initialLocalInputs,
-                                                                                                              Mapping<? super OutputAndLocalInputs<I, O>, ? extends OutputAndLocalInputs<I, O>> errorSyms,
-                                                                                                              MembershipOracle<I, Word<OutputAndLocalInputs<I, O>>> delegate) {
-        IncrementalMealyBuilder<I, OutputAndLocalInputs<I, O>> incrementalBuilder =
-                new StateLocalInputIncrementalMealyTreeBuilder<>(initialLocalInputs);
         return new MealyCacheOracle<>(incrementalBuilder, errorSyms, delegate);
     }
 

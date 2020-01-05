@@ -25,7 +25,7 @@ public class ResetCounterSUL<I, O> implements StatisticSUL<I, O> {
     private final Counter counter;
 
     public ResetCounterSUL(String name, SUL<I, O> sul) {
-        this(new Counter(name, "resets"), sul);
+        this(new Counter(name, "Resets"), sul);
     }
 
     protected ResetCounterSUL(Counter counter, SUL<I, O> sul) {

@@ -18,7 +18,7 @@ package de.learnlib.algorithms.lstar;
 import java.util.List;
 
 import de.learnlib.algorithms.lstar.AbstractAutomatonLStar.StateInfo;
-import de.learnlib.datastructure.observationtable.AbstractObservationTable;
+import de.learnlib.datastructure.observationtable.GenericObservationTable;
 
 /**
  * Class that contains all data that represent the internal state of the {@link AbstractAutomatonLStar} learner and its
@@ -40,7 +40,7 @@ public class AutomatonLStarState<I, D, AI, S> extends AbstractLStarState<I, D> {
     private final AI hypothesis;
     private final List<StateInfo<S, I>> stateInfos;
 
-    AutomatonLStarState(final AbstractObservationTable<I, D> observationTable,
+    AutomatonLStarState(final GenericObservationTable<I, D> observationTable,
                         final AI hypothesis,
                         final List<StateInfo<S, I>> stateInfos) {
         super(observationTable);

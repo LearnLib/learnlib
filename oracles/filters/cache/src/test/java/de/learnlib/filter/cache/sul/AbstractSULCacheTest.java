@@ -19,6 +19,7 @@ import de.learnlib.api.SUL;
 import de.learnlib.driver.util.MealySimulatorSUL;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
+import de.learnlib.filter.cache.SULLearningCacheOracle;
 import de.learnlib.filter.statistic.sul.ResetCounterSUL;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
@@ -28,7 +29,7 @@ import net.automatalib.words.Word;
  * @author frohme
  */
 public abstract class AbstractSULCacheTest
-        extends AbstractCacheTest<SULCache<Character, Integer>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
+        extends AbstractCacheTest<SULLearningCacheOracle<Character, Integer, SULCache<Character, Integer>>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 
     private final ResetCounterSUL<Character, Integer> counter;
 
@@ -47,15 +48,16 @@ public abstract class AbstractSULCacheTest
     }
 
     @Override
-    protected SULCache<Character, Integer> getCachedOracle() {
-        return getCache(counter);
+    protected SULLearningCacheOracle<Character, Integer, SULCache<Character, Integer>> getCachedOracle() {
+        return SULLearningCacheOracle.fromSULCache(getCache(counter));
     }
 
     @Override
-    protected SULCache<Character, Integer> getResumedOracle(SULCache<Character, Integer> original) {
+    protected SULLearningCacheOracle<Character, Integer, SULCache<Character, Integer>> getResumedOracle(
+            SULLearningCacheOracle<Character, Integer, SULCache<Character, Integer>> original) {
         final SULCache<Character, Integer> fresh = getCache(counter);
-        serializeResumable(original, fresh);
-        return fresh;
+        serializeResumable(original.getCache(), fresh);
+        return SULLearningCacheOracle.fromSULCache(fresh);
     }
 
     @Override

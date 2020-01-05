@@ -18,7 +18,7 @@ package de.learnlib.datastructure.observationtable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A description of an inconsistency in an {@link AbstractObservationTable}. An inconsistency consists of two short
+ * A description of an inconsistency in an {@link GenericObservationTable}. An inconsistency consists of two short
  * prefixes <code>u</code>, <code>u'</code> with identical contents, and an input symbol <code>a</code>, such that the
  * rows for <code>ua</code> and <code>u'a</code> have different contents.
  *

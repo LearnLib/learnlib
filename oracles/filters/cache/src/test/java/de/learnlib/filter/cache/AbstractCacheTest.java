@@ -45,7 +45,7 @@ import org.testng.annotations.Test;
  */
 public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>, A extends Output<I, D>, I, D> {
 
-    private static final int LENGTH = 5;
+    protected static final int LENGTH = 5;
     private final Random random = new Random(42);
     private Alphabet<I> alphabet;
     protected OR oracle;

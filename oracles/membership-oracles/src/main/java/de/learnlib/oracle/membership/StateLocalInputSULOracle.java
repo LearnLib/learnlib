@@ -17,24 +17,23 @@ package de.learnlib.oracle.membership;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import de.learnlib.api.StateLocalInputSUL;
-import de.learnlib.api.oracle.StateLocalInputOracle.StateLocalInputMealyOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
-import net.automatalib.automata.transducers.OutputAndLocalInputs;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class StateLocalInputSULOracle<I, O> implements StateLocalInputMealyOracle<I, OutputAndLocalInputs<I, O>> {
+public class StateLocalInputSULOracle<I, O> implements MealyMembershipOracle<I, O> {
 
     private final StateLocalInputSUL<I, O> sul;
+    private final O undefinedOutput;
     private final @Nullable ThreadLocal<StateLocalInputSUL<I, O>> localSul;
 
-    public StateLocalInputSULOracle(StateLocalInputSUL<I, O> sul) {
+    public StateLocalInputSULOracle(StateLocalInputSUL<I, O> sul, O undefinedOutput) {
         this.sul = sul;
+        this.undefinedOutput = undefinedOutput;
         if (sul.canFork()) {
             this.localSul = ThreadLocal.withInitial(sul::fork);
         } else {
@@ -43,7 +42,7 @@ public class StateLocalInputSULOracle<I, O> implements StateLocalInputMealyOracl
     }
 
     @Override
-    public void processQueries(Collection<? extends Query<I, Word<OutputAndLocalInputs<I, O>>>> queries) {
+    public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
         if (localSul != null) {
             processQueries(localSul.get(), queries);
         } else {
@@ -53,15 +52,14 @@ public class StateLocalInputSULOracle<I, O> implements StateLocalInputMealyOracl
         }
     }
 
-    private void processQueries(StateLocalInputSUL<I, O> sul,
-                                Collection<? extends Query<I, Word<OutputAndLocalInputs<I, O>>>> queries) {
-        for (Query<I, Word<OutputAndLocalInputs<I, O>>> q : queries) {
-            Word<OutputAndLocalInputs<I, O>> output = answerQuery(sul, q.getPrefix(), q.getSuffix());
+    private void processQueries(StateLocalInputSUL<I, O> sul, Collection<? extends Query<I, Word<O>>> queries) {
+        for (Query<I, Word<O>> q : queries) {
+            Word<O> output = answerQuery(sul, q.getPrefix(), q.getSuffix());
             q.answer(output);
         }
     }
 
-    private Word<OutputAndLocalInputs<I, O>> answerQuery(StateLocalInputSUL<I, O> sul, Word<I> prefix, Word<I> suffix) {
+    private Word<O> answerQuery(StateLocalInputSUL<I, O> sul, Word<I> prefix, Word<I> suffix) {
         try {
             sul.pre();
             Collection<I> enabledInputs = sul.currentlyEnabledInputs();
@@ -75,41 +73,20 @@ public class StateLocalInputSULOracle<I, O> implements StateLocalInputMealyOracl
                 }
             }
 
-            final WordBuilder<OutputAndLocalInputs<I, O>> wb = new WordBuilder<>(suffix.length());
+            final WordBuilder<O> wb = new WordBuilder<>(suffix.length());
 
             for (I sym : suffix) {
                 if (enabledInputs.contains(sym)) {
                     final O out = sul.step(sym);
                     enabledInputs = sul.currentlyEnabledInputs();
-                    wb.add(new OutputAndLocalInputs<>(out, enabledInputs));
+                    wb.add(out);
                 } else {
                     enabledInputs = Collections.emptySet();
-                    wb.add(OutputAndLocalInputs.undefined());
+                    wb.add(this.undefinedOutput);
                 }
             }
 
             return wb.toWord();
-        } finally {
-            sul.post();
-        }
-    }
-
-    @Override
-    public Set<I> definedInputs(Word<? extends I> input) {
-        try {
-            sul.pre();
-            Collection<I> enabledInputs = sul.currentlyEnabledInputs();
-
-            for (I sym : input) {
-                if (enabledInputs.contains(sym)) {
-                    sul.step(sym);
-                    enabledInputs = sul.currentlyEnabledInputs();
-                } else {
-                    return Collections.emptySet();
-                }
-            }
-
-            return new HashSet<>(enabledInputs);
         } finally {
             sul.post();
         }

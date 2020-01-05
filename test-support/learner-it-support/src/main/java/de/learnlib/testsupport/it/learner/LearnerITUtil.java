@@ -54,7 +54,7 @@ public final class LearnerITUtil {
      * @return the list of test cases, one for each example
      */
     public static <I, D, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> List<LearnerVariantITCase<I, D, A>> createExampleITCases(
-            LearningExample<I, A> example,
+            LearningExample<I, ? extends A> example,
             LearnerVariantListImpl<A, I, D> variants,
             EquivalenceOracle<? super A, I, D> eqOracle) {
 

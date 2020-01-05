@@ -25,7 +25,6 @@ import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.api.algorithm.feature.GlobalSuffixLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.datastructure.observationtable.AbstractObservationTable;
 import de.learnlib.datastructure.observationtable.GenericObservationTable;
 import de.learnlib.datastructure.observationtable.Inconsistency;
 import de.learnlib.datastructure.observationtable.OTLearner;
@@ -59,7 +58,7 @@ public abstract class AbstractLStar<A, I, D>
 
     protected final Alphabet<I> alphabet;
     protected final MembershipOracle<I, D> oracle;
-    protected AbstractObservationTable<I, D> table;
+    protected GenericObservationTable<I, D> table;
 
     /**
      * Constructor.

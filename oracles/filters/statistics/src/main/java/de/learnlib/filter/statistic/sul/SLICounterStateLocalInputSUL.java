@@ -15,20 +15,22 @@
  */
 package de.learnlib.filter.statistic.sul;
 
-import de.learnlib.api.SUL;
+import java.util.Collection;
+
+import de.learnlib.api.StateLocalInputSUL;
 import de.learnlib.api.statistic.StatisticSUL;
 import de.learnlib.filter.statistic.Counter;
 
-public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
+public class SLICounterStateLocalInputSUL<I, O> implements StateLocalInputSUL<I, O>, StatisticSUL<I, O> {
 
-    private final SUL<I, O> sul;
+    private final StateLocalInputSUL<I, O> sul;
     private final Counter counter;
 
-    public SymbolCounterSUL(String name, SUL<I, O> sul) {
-        this(new Counter(name, "Symbols"), sul);
+    public SLICounterStateLocalInputSUL(String name, StateLocalInputSUL<I, O> sul) {
+        this(new Counter(name, "State Local Inputs"), sul);
     }
 
-    protected SymbolCounterSUL(Counter counter, SUL<I, O> sul) {
+    private SLICounterStateLocalInputSUL(Counter counter, StateLocalInputSUL<I, O> sul) {
         this.counter = counter;
         this.sul = sul;
     }
@@ -45,7 +47,6 @@ public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
 
     @Override
     public O step(I in) {
-        counter.increment();
         return sul.step(in);
     }
 
@@ -55,8 +56,14 @@ public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
     }
 
     @Override
-    public SUL<I, O> fork() {
-        return new SymbolCounterSUL<>(counter, sul.fork());
+    public Collection<I> currentlyEnabledInputs() {
+        counter.increment();
+        return sul.currentlyEnabledInputs();
+    }
+
+    @Override
+    public StateLocalInputSUL<I, O> fork() {
+        return new SLICounterStateLocalInputSUL<>(counter, sul.fork());
     }
 
     @Override

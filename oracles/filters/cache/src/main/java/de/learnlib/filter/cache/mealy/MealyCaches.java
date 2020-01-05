@@ -15,11 +15,7 @@
  */
 package de.learnlib.filter.cache.mealy;
 
-import java.util.Collection;
-
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.StateLocalInputOracle;
-import net.automatalib.automata.transducers.OutputAndLocalInputs;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.words.Alphabet;
@@ -132,78 +128,6 @@ public final class MealyCaches {
     public static <I, O> MealyCacheOracle<I, O> createDynamicTreeCache(Mapping<? super O, ? extends O> errorSyms,
                                                                        MembershipOracle<I, Word<O>> mqOracle) {
         return MealyCacheOracle.createDynamicTreeCacheOracle(errorSyms, mqOracle);
-    }
-
-    /**
-     * Creates a cache oracle for a Mealy machine learning setup with observable state local inputs for every state of
-     * the system under learning.
-     *
-     * @param initialLocalInputs
-     *         a collection of input symbols that can be executed in the initial state of the system under learning
-     * @param mqOracle
-     *         the membership oracle
-     *
-     * @return a Mealy learning cache with a tree-based implementation
-     */
-    public static <I, O> MealyCacheOracle<I, OutputAndLocalInputs<I, O>> createStateLocalInputTreeCache(Collection<I> initialLocalInputs,
-                                                                                                        MembershipOracle<I, Word<OutputAndLocalInputs<I, O>>> mqOracle) {
-        return MealyCacheOracle.createStateLocalInputTreeCacheOracle(initialLocalInputs, mqOracle);
-    }
-
-    /**
-     * Creates a cache oracle for a Mealy machine learning setup with observable state local inputs for every state of
-     * the system under learning.
-     *
-     * @param initialLocalInputs
-     *         a collection of input symbols that can be executed in the initial state of the system under learning
-     * @param errorSyms
-     *         a mapping for the prefix-closure filter
-     * @param mqOracle
-     *         the membership oracle
-     *
-     * @return a Mealy learning cache with a tree-based implementation
-     */
-    public static <I, O> MealyCacheOracle<I, OutputAndLocalInputs<I, O>> createStateLocalInputTreeCache(Collection<I> initialLocalInputs,
-                                                                                                        Mapping<? super OutputAndLocalInputs<I, O>, ? extends OutputAndLocalInputs<I, O>> errorSyms,
-                                                                                                        MembershipOracle<I, Word<OutputAndLocalInputs<I, O>>> mqOracle) {
-        return MealyCacheOracle.createStateLocalInputTreeCacheOracle(initialLocalInputs, errorSyms, mqOracle);
-    }
-
-    /**
-     * A variation of {@link #createStateLocalInputTreeCache(Collection, MembershipOracle)} that returns a {@link
-     * StateLocalInputMealyCacheOracle}.
-     *
-     * @param initialLocalInputs
-     *         a collection of input symbols that can be executed in the initial state of the system under learning
-     * @param mqOracle
-     *         the membership oracle
-     *
-     * @return a Mealy learning cache with a tree-based implementation
-     */
-    public static <I, O> StateLocalInputMealyCacheOracle<I, O> createStateLocalInputTreeCache(Collection<I> initialLocalInputs,
-                                                                                              StateLocalInputOracle<I, Word<OutputAndLocalInputs<I, O>>> mqOracle) {
-        return StateLocalInputMealyCacheOracle.createStateLocalInputTreeCacheOracle(initialLocalInputs, mqOracle);
-    }
-
-    /**
-     * A variation of {@link #createStateLocalInputTreeCache(Collection, MembershipOracle)} that returns a {@link
-     * StateLocalInputMealyCacheOracle}.
-     *
-     * @param initialLocalInputs
-     *         a collection of input symbols that can be executed in the initial state of the system under learning
-     * @param errorSyms
-     *         a mapping for the prefix-closure filter
-     * @param mqOracle
-     *         the membership oracle
-     *
-     * @return a Mealy learning cache with a tree-based implementation
-     */
-    public static <I, O> StateLocalInputMealyCacheOracle<I, O> createStateLocalInputTreeCache(Collection<I> initialLocalInputs,
-                                                                                              Mapping<? super OutputAndLocalInputs<I, O>, ? extends OutputAndLocalInputs<I, O>> errorSyms,
-                                                                                              StateLocalInputOracle<I, Word<OutputAndLocalInputs<I, O>>> mqOracle) {
-        return StateLocalInputMealyCacheOracle.createStateLocalInputTreeCacheOracle(initialLocalInputs,
-                                                                                    errorSyms,
-                                                                                    mqOracle);
     }
 
     /**

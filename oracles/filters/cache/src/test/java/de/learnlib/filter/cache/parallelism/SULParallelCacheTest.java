@@ -21,6 +21,7 @@ import de.learnlib.api.SUL;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.driver.util.MealySimulatorSUL;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
+import de.learnlib.filter.cache.SULLearningCacheOracle;
 import de.learnlib.filter.cache.sul.SULCache;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.util.automata.random.RandomAutomata;
@@ -48,7 +49,8 @@ public class SULParallelCacheTest
     @Override
     protected MealyLearningCacheOracle<Character, Character> getCache(Alphabet<Character> alphabet,
                                                                       MembershipOracle<Character, Word<Character>> oracle) {
-        return SULCache.createTreeCache(alphabet, new TestSUL<>(getTargetModel(), oracle));
+        return SULLearningCacheOracle.fromSULCache(SULCache.createTreeCache(alphabet,
+                                                                            new TestSUL<>(getTargetModel(), oracle)));
     }
 
     protected static class TestSUL<I, O> extends MealySimulatorSUL<I, O> {

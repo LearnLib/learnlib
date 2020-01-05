@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * JSR305 annotations have been replaced with checker-framework annotations.
   * LearnLib (incl. AutomataLib) now follows checker-framework's convention that (non-annotated) types are usually considered non-null unless explicitly annotated with `@Nullable`.
   * LearnLib (incl. AutomataLib) no longer has a (runtime-) dependency on JSR305 (and other `javax.*`) annotations or includes them in the distribution artifact. This now makes LearnLib (incl. AutomataLib) compliant with [Oracle's binary code license](https://www.oracle.com/downloads/licenses/binary-code-license.html) and allows LearnLib (incl. AutomataLib) artifacts as-is to be bundled in binary distributions with Oracle's JDKs/JREs.
+* A lot of code for inferring partial Mealy machines (esp. `PartialLStarMealy` and `PartialObservationTable`) has been removed/refactored. The concept of state local inputs is now implemented as a SUL filter and introduces a special `StateLocalInputSULOracle` which early-answers queries that would traverse unavailable inputs with a previously specified symbol. This way, queries that would traverse undefined input symbols still won't be executed on the SUL but the SUL appears as a 'total' Mealy system to the learner, allowing one to use every currently existing Mealy learner as-is. See the in-tree examples for more information.
 
 ### Removed
 
