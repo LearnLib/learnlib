@@ -89,6 +89,7 @@ public class ExamplesTest {
 
     @Test
     public void testSLIExample1() {
+        checkJVMCompatibility();
         de.learnlib.examples.sli.Example1.main(new String[0]);
     }
 
