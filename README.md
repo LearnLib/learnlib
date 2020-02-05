@@ -33,14 +33,14 @@ Additionally, LearnLib offers a variety of tools to ease the practical applicati
 This includes drivers and mappers for interfacing software systems with the LearnLib API as well as caches and parallelization for improving the overall performance of the learning setup.
 Also, more nuanced setups such as Black-Box-Checking (via [LTSMin][ltsmin]) or inferring partial machines are possible.
 
-While we strive to deliver code at a high quality, please note, that there exist parts of the library that still need thorough testing.
+While we strive to deliver code at a high quality, please note that there exist parts of the library that still need thorough testing.
 Contributions -- whether it is in the form of new features, better documentation or tests -- are welcome.
 
 ## Build Instructions
 
-For simply using LearnLib, you may use the Maven artifacts which are available in the [Maven Central repository][maven-central].
-It is also possible to download a bundled [distribution artifact][maven-central-distr], if you want to use LearnLib without Maven support.
-Note, that LearnLib requires Java 8.
+For simply using LearnLib you may use the Maven artifacts which are available in the [Maven Central repository][maven-central].
+It is also possible to download a bundled [distribution artifact][maven-central-distr] if you want to use LearnLib without Maven support.
+Note that LearnLib requires Java 8 or newer.
 
 #### Building development versions
 
@@ -52,7 +52,7 @@ git clone -b develop --single-branch https://github.com/LearnLib/learnlib.git
 ```
 
 and run a single `mvn clean install`.
-This will build all the required maven artifacts and will install them in your local Maven repository, so that you can reference them in other projects.
+This will build all the required maven artifacts and will install them in your local Maven repository so that you can reference them in other projects.
 
 If you plan to use a development version of LearnLib in an environment where no Maven support is available, simply run `mvn clean package -Pbundles`.
 The respective JARs are then available under `distribution/target/bundles`.
@@ -62,12 +62,12 @@ For building development versions of AutomataLib, see the corresponding document
 
 #### Developing LearnLib
 
-For developing the code base of LearnLib, it is suggested to use one of the major Java IDEs, which come with out-of-the-box Maven support.
+For developing the code base of LearnLib it is suggested to use one of the major Java IDEs which come with out-of-the-box Maven support.
 
 * For [IntelliJ IDEA][intellij]:
   1. Select `File` -> `New` -> `Project from existing sources` and select the folder containing the development checkout.
   1. Choose "Import Project from external model", select "Maven" and click `Next`.
-  1. Configure the project to your liking, but make sure to check "Import Maven projects automatically" and have "Generated sources folders" set to "Detect automatically".
+  1. Configure the project to your liking but make sure to check "Import Maven projects automatically" and have "Generated sources folders" set to "Detect automatically".
   1. Click `Next` until the project is imported (no Maven profile needs to be selected).
   1. In order to have both development versions of AutomataLib and LearnLib available at once, continue to import AutomataLib as documented in the project's README, but choose `File` -> `New` -> `Module from existing sources` as the first step.
 
