@@ -15,9 +15,13 @@
  */
 package de.learnlib.filter.cache.sul;
 
+import java.io.Serializable;
+import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 
+import de.learnlib.api.Resumable;
 import de.learnlib.api.SUL;
+import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.filter.cache.LearningCache.MealyLearningCache;
 import de.learnlib.filter.cache.mealy.MealyCacheConsistencyTest;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -25,12 +29,16 @@ import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I, O>, SupportsGrowingAlphabet<I> {
 
-    private final AbstractSULCacheImpl<?, I, ?, O> impl;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSULCache.class);
 
-    protected <S, T> AbstractSULCache(AbstractSULCacheImpl<S, I, T, O> cacheImpl) {
+    private final AbstractSULCacheImpl<?, I, ?, O, ? extends AbstractSULCacheState<I, O>> impl;
+
+    protected <S, T> AbstractSULCache(AbstractSULCacheImpl<S, I, T, O, ? extends AbstractSULCacheState<I, O>> cacheImpl) {
         this.impl = cacheImpl;
     }
 
@@ -60,7 +68,7 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
     }
 
     @Override
-    public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
+    public MealyEquivalenceOracle<I, O> createCacheConsistencyTest() {
         return impl.createCacheConsistencyTest();
     }
 
@@ -85,18 +93,20 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
      *         transition system transition type
      * @param <O>
      *         output symbol type
+     * @param <C>
+     *         cache type
      *
      * @author Malte Isberner
      */
-    abstract static class AbstractSULCacheImpl<S, I, T, O>
-            implements SUL<I, O>, MealyLearningCache<I, O>, SupportsGrowingAlphabet<I> {
+    abstract static class AbstractSULCacheImpl<S, I, T, O, C extends AbstractSULCacheState<I, O>>
+            implements SUL<I, O>, MealyLearningCache<I, O>, SupportsGrowingAlphabet<I>, Resumable<C> {
 
         protected IncrementalMealyBuilder<I, O> incMealy;
         protected MealyTransitionSystem<S, I, T, O> mealyTs;
         protected final SUL<I, O> delegate;
         protected final ReadWriteLock incMealyLock;
 
-        protected final WordBuilder<I> inputWord = new WordBuilder<>();
+        private final WordBuilder<I> inputWord = new WordBuilder<>();
         private final WordBuilder<O> outputWord = new WordBuilder<>();
 
         private boolean delegatePreCalled;
@@ -143,6 +153,7 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
 
             if (current == null) {
                 out = delegate.step(in);
+                postNewStepHook();
                 outputWord.add(out);
             }
 
@@ -161,7 +172,8 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
                 // otherwise acquire write-lock to update cache!
                 incMealyLock.writeLock().lock();
                 try {
-                    writeCache();
+                    incMealy.insert(inputWord.toWord(), outputWord.toWord());
+                    postCacheWriteHook(inputWord);
                 } finally {
                     incMealyLock.writeLock().unlock();
                 }
@@ -182,13 +194,30 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
         }
 
         @Override
-        public MealyCacheConsistencyTest<I, O> createCacheConsistencyTest() {
+        public MealyEquivalenceOracle<I, O> createCacheConsistencyTest() {
             return new MealyCacheConsistencyTest<>(incMealy, incMealyLock);
         }
 
         @Override
         public void addAlphabetSymbol(I symbol) {
             incMealy.addAlphabetSymbol(symbol);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void resume(C state) {
+            final Class<?> thisClass = this.incMealy.getClass();
+            final Class<?> stateClass = state.builder.getClass();
+
+            if (!thisClass.equals(stateClass)) {
+                LOGGER.warn(
+                        "You currently plan to use a '{}', but the state contained a '{}'. This may yield unexpected behavior.",
+                        thisClass,
+                        stateClass);
+            }
+
+            this.incMealy = state.builder;
+            this.mealyTs = (MealyTransitionSystem<S, I, T, O>) this.incMealy.asTransitionSystem();
         }
 
         protected void requiredInitializedDelegate() {
@@ -198,8 +227,17 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
             delegatePreCalled = true;
         }
 
-        protected void writeCache() {
-            incMealy.insert(inputWord.toWord(), outputWord.toWord());
+        protected void postNewStepHook() {}
+
+        protected void postCacheWriteHook(List<I> input) {}
+    }
+
+    abstract static class AbstractSULCacheState<I, O> implements Serializable {
+
+        final IncrementalMealyBuilder<I, O> builder;
+
+        protected AbstractSULCacheState(IncrementalMealyBuilder<I, O> builder) {
+            this.builder = builder;
         }
     }
 }

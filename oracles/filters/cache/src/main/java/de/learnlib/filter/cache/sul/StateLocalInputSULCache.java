@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.cache.sul;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,13 +30,9 @@ import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Alphabet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O>
         implements StateLocalInputSUL<I, O>, Resumable<StateLocalInputSULCacheState<I, O>> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(StateLocalInputSULCache.class);
 
     private final StateLocalInputSULCacheImpl<?, I, ?, O> impl;
 
@@ -45,7 +40,6 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O>
         this(new StateLocalInputSULCacheImpl<>(incMealy,
                                                new ReentrantReadWriteLock(),
                                                incMealy.asTransitionSystem(),
-                                               new HashMap<>(),
                                                sul));
     }
 
@@ -79,59 +73,71 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O>
         this.impl.resume(state);
     }
 
-    private static final class StateLocalInputSULCacheImpl<S, I, T, O> extends AbstractSULCacheImpl<S, I, T, O>
-            implements StateLocalInputSUL<I, O>, Resumable<StateLocalInputSULCacheState<I, O>> {
+    private static final class StateLocalInputSULCacheImpl<S, I, T, O>
+            extends AbstractSULCacheImpl<S, I, T, O, StateLocalInputSULCacheState<I, O>>
+            implements StateLocalInputSUL<I, O> {
 
         private final StateLocalInputSUL<I, O> delegate;
-        private Map<S, Collection<I>> enabledInputCache;
 
-        private final List<Collection<I>> currentlyEnabledInputs;
-        private int cacheMissIdx;
+        private S initialState;
+        private Map<S, Collection<I>> enabledInputCache;
+        private final List<Collection<I>> inputsTrace;
 
         StateLocalInputSULCacheImpl(IncrementalMealyBuilder<I, O> incMealy,
                                     ReadWriteLock lock,
                                     MealyTransitionSystem<S, I, T, O> mealyTs,
-                                    Map<S, Collection<I>> enabledInputCache,
                                     StateLocalInputSUL<I, O> sul) {
+            this(incMealy, lock, mealyTs, new HashMap<>(), sul);
+        }
+
+        private StateLocalInputSULCacheImpl(IncrementalMealyBuilder<I, O> incMealy,
+                                            ReadWriteLock lock,
+                                            MealyTransitionSystem<S, I, T, O> mealyTs,
+                                            Map<S, Collection<I>> enabledInputCache,
+                                            StateLocalInputSUL<I, O> sul) {
             super(incMealy, lock, mealyTs, sul);
             this.delegate = sul;
             this.enabledInputCache = enabledInputCache;
-            this.currentlyEnabledInputs = new ArrayList<>();
-            this.cacheMissIdx = -1;
+            this.initialState = mealyTs.getInitialState();
+            this.inputsTrace = new ArrayList<>();
         }
 
         @Override
-        public void pre() {
-            super.pre();
+        protected void postNewStepHook() {
+            inputsTrace.add(delegate.currentlyEnabledInputs());
+        }
 
-            // if this is our first initialization, query for the initially enabled inputs
-            if (!this.enabledInputCache.containsKey(super.current)) {
-                requiredInitializedDelegate();
-                this.enabledInputCache.put(super.current, this.delegate.currentlyEnabledInputs());
+        @Override
+        protected void postCacheWriteHook(List<I> input) {
+            final int prefixLength = input.size() - this.inputsTrace.size();
+            S iter = mealyTs.getSuccessor(initialState, input.subList(0, prefixLength));
+
+            for (int i = 0; i < this.inputsTrace.size(); i++) {
+                iter = mealyTs.getSuccessor(iter, input.get(i + prefixLength));
+                this.enabledInputCache.put(iter, this.inputsTrace.get(i));
             }
+
+            inputsTrace.clear();
         }
 
         @Override
-        public O step(I in) {
-            final O result = super.step(in);
-
-            // we had to delegate, so also query current available inputs
-            if (super.current == null) {
-                // only update pointer once
-                if (this.cacheMissIdx < 0) {
-                    this.cacheMissIdx = super.inputWord.size() - 1;
+        public Collection<I> currentlyEnabledInputs() {
+            if (super.current == initialState) {
+                Collection<I> initialInputs = this.enabledInputCache.get(initialState);
+                if (initialInputs == null) {
+                    super.requiredInitializedDelegate();
+                    initialInputs = this.delegate.currentlyEnabledInputs();
+                    this.enabledInputCache.put(initialState, initialInputs);
                 }
-                this.currentlyEnabledInputs.add(this.delegate.currentlyEnabledInputs());
+                return initialInputs;
             }
 
-            return result;
-        }
-
-        @Override
-        public void post() {
-            super.post();
-            this.currentlyEnabledInputs.clear();
-            this.cacheMissIdx = -1;
+            final Collection<I> inputs = this.enabledInputCache.get(super.current);
+            if (inputs != null) {
+                return inputs;
+            } else {
+                return this.inputsTrace.get(this.inputsTrace.size() - 1);
+            }
         }
 
         @Override
@@ -144,16 +150,6 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O>
         }
 
         @Override
-        public Collection<I> currentlyEnabledInputs() {
-            // we had to delegate so the currently enabled inputs are in our local cache
-            if (super.current == null) {
-                return this.currentlyEnabledInputs.get(this.currentlyEnabledInputs.size() - 1);
-            }
-
-            return this.enabledInputCache.get(super.current);
-        }
-
-        @Override
         public StateLocalInputSULCacheState<I, O> suspend() {
             return new StateLocalInputSULCacheState<>(incMealy, enabledInputCache);
         }
@@ -161,45 +157,18 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O>
         @Override
         @SuppressWarnings("unchecked")
         public void resume(StateLocalInputSULCacheState<I, O> state) {
-            final Class<?> thisClass = this.incMealy.getClass();
-            final Class<?> stateClass = state.builder.getClass();
-
-            if (!thisClass.equals(stateClass)) {
-                LOGGER.warn(
-                        "You currently plan to use a '{}', but the state contained a '{}'. This may yield unexpected behavior.",
-                        thisClass,
-                        stateClass);
-            }
-
-            this.incMealy = state.builder;
-            this.mealyTs = (MealyTransitionSystem<S, I, T, O>) this.incMealy.asTransitionSystem();
+            super.resume(state);
+            this.initialState = super.mealyTs.getInitialState();
             this.enabledInputCache = (Map<S, Collection<I>>) state.enabledInputCache;
-        }
-
-        @Override
-        protected void writeCache() {
-            // update TS
-            super.writeCache();
-
-            S iter = super.mealyTs.getInitialState();
-
-            for (int i = 0; i < super.inputWord.size(); i++) {
-                iter = mealyTs.getSuccessor(iter, super.inputWord.get(i));
-                if (i >= this.cacheMissIdx) {
-                    this.enabledInputCache.put(iter, this.currentlyEnabledInputs.get(i - this.cacheMissIdx));
-                }
-            }
         }
     }
 
-    public static class StateLocalInputSULCacheState<I, O> implements Serializable {
+    public static final class StateLocalInputSULCacheState<I, O> extends AbstractSULCacheState<I, O> {
 
-        final IncrementalMealyBuilder<I, O> builder;
         final Map<?, Collection<I>> enabledInputCache;
 
-        public StateLocalInputSULCacheState(IncrementalMealyBuilder<I, O> builder,
-                                            Map<?, Collection<I>> enabledInputCache) {
-            this.builder = builder;
+        StateLocalInputSULCacheState(IncrementalMealyBuilder<I, O> builder, Map<?, Collection<I>> enabledInputCache) {
+            super(builder);
             this.enabledInputCache = enabledInputCache;
         }
     }

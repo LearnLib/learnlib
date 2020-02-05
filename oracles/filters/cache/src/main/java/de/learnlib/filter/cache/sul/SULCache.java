@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.cache.sul;
 
-import java.io.Serializable;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -27,8 +26,6 @@ import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Alphabet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A cache to be used with a {@link SUL}.
@@ -48,8 +45,6 @@ import org.slf4j.LoggerFactory;
  * @author Malte Isberner
  */
 public class SULCache<I, O> extends AbstractSULCache<I, O> implements Resumable<SULCacheState<I, O>> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SULCache.class);
 
     private final SULCacheImpl<?, I, ?, O> impl;
 
@@ -95,8 +90,7 @@ public class SULCache<I, O> extends AbstractSULCache<I, O> implements Resumable<
      *
      * @author Malte Isberner
      */
-    private static final class SULCacheImpl<S, I, T, O> extends AbstractSULCacheImpl<S, I, T, O>
-            implements Resumable<SULCacheState<I, O>> {
+    private static final class SULCacheImpl<S, I, T, O> extends AbstractSULCacheImpl<S, I, T, O, SULCacheState<I, O>> {
 
         SULCacheImpl(IncrementalMealyBuilder<I, O> incMealy,
                      ReadWriteLock lock,
@@ -114,31 +108,12 @@ public class SULCache<I, O> extends AbstractSULCache<I, O> implements Resumable<
         public SULCacheState<I, O> suspend() {
             return new SULCacheState<>(incMealy);
         }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public void resume(SULCacheState<I, O> state) {
-            final Class<?> thisClass = this.incMealy.getClass();
-            final Class<?> stateClass = state.builder.getClass();
-
-            if (!thisClass.equals(stateClass)) {
-                LOGGER.warn(
-                        "You currently plan to use a '{}', but the state contained a '{}'. This may yield unexpected behavior.",
-                        thisClass,
-                        stateClass);
-            }
-
-            super.incMealy = state.builder;
-            super.mealyTs = (MealyTransitionSystem<S, I, T, O>) this.incMealy.asTransitionSystem();
-        }
     }
 
-    public static class SULCacheState<I, O> implements Serializable {
-
-        final IncrementalMealyBuilder<I, O> builder;
+    public static final class SULCacheState<I, O> extends AbstractSULCacheState<I, O> {
 
         SULCacheState(IncrementalMealyBuilder<I, O> builder) {
-            this.builder = builder;
+            super(builder);
         }
     }
 
