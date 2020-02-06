@@ -2,11 +2,12 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.15.0-SNAPSHOT] - Unreleased
+## [0.16.0-SNAPSHOT] - Unreleased
 
-[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.14.0...HEAD)
 
-### Added
+## [0.15.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.15.0) - 2020-02-06
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.14.0...learnlib-0.15.0)
 
 ### Changed
 
@@ -17,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * LearnLib (incl. AutomataLib) no longer has a (runtime-) dependency on JSR305 (and other `javax.*`) annotations or includes them in the distribution artifact. This now makes LearnLib (incl. AutomataLib) compliant with [Oracle's binary code license](https://www.oracle.com/downloads/licenses/binary-code-license.html) and allows LearnLib (incl. AutomataLib) artifacts as-is to be bundled in binary distributions with Oracle's JDKs/JREs.
 * A lot of code for inferring partial Mealy machines (esp. `PartialLStarMealy` and `PartialObservationTable`) has been removed/refactored. The concept of state local inputs is now implemented as a SUL filter and introduces a special `StateLocalInputSULOracle` which early-answers queries that would traverse unavailable inputs with a previously specified symbol. This way, queries that would traverse undefined input symbols still won't be executed on the SUL but the SUL appears as a 'total' Mealy system to the learner, allowing one to use every currently existing Mealy learner as-is. See the in-tree examples for more information.
 * `SULCache` no longer implements `MembershipOracle`.
-* Switched to [AutomataLib 0.9.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.9.0)
+* Updated to [AutomataLib 0.9.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.9.0)
 
 ### Removed
 
