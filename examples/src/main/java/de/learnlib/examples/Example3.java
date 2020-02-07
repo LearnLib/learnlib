@@ -44,6 +44,7 @@ import net.automatalib.words.impl.GrowingMapAlphabet;
  *
  * @author Oliver Bauer
  */
+@SuppressWarnings("PMD.SystemPrintln")
 public class Example3 {
 
     private static final String OFFER_1 = "offer_1";

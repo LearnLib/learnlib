@@ -133,7 +133,7 @@ public class DefaultExtender implements ADTExtender {
                 }
 
                 return new ExtensionResult<>(extension);
-            } catch (PartialTransitionAnalyzer.HypothesisModificationException hme) {
+            } catch (PartialTransitionAnalyzer.HypothesisModificationException ignored) {
                 //do nothing, repeat
             }
         }

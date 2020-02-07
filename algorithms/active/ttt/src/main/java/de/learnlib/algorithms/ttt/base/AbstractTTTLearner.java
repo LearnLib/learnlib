@@ -54,6 +54,7 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author Malte Isberner
  */
+@SuppressWarnings("PMD.ExcessiveClassLength")
 public abstract class AbstractTTTLearner<A, I, D>
         implements LearningAlgorithm<A, I, D>, SupportsGrowingAlphabet<I>, Resumable<TTTLearnerState<I, D>> {
 

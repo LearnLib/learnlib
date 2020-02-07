@@ -41,6 +41,8 @@ public class SimplePOJODataMapper implements SULMapper<MethodInput, MethodOutput
         this.initParams = initParams;
     }
 
+    // RuntimeExceptions are the type of exceptions we allow to handle, therefore we should throw them
+    @SuppressWarnings({"PMD.AvoidThrowingRawExceptionTypes", "PMD.PreserveStackTrace"})
     @Override
     public void pre() {
         try {

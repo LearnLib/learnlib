@@ -16,8 +16,8 @@
 package de.learnlib.algorithms.dhc.mealy;
 
 import java.io.Serializable;
-import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.collect.Maps;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
@@ -36,11 +36,11 @@ import net.automatalib.words.Word;
  */
 public class MealyDHCState<I, O> implements Serializable {
 
-    private final LinkedHashSet<Word<I>> splitters;
+    private final Set<Word<I>> splitters;
     private final CompactMealy<I, O> hypothesis;
     private final Map<Integer, MealyDHC.QueueElement<I, O>> accessSequences;
 
-    MealyDHCState(final LinkedHashSet<Word<I>> splitters,
+    MealyDHCState(final Set<Word<I>> splitters,
                   final CompactMealy<I, O> hypothesis,
                   final MutableMapping<Integer, MealyDHC.QueueElement<I, O>> accessSequences) {
         this.splitters = splitters;
@@ -55,7 +55,7 @@ public class MealyDHCState<I, O> implements Serializable {
         }
     }
 
-    LinkedHashSet<Word<I>> getSplitters() {
+    Set<Word<I>> getSplitters() {
         return splitters;
     }
 

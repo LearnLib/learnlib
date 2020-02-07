@@ -41,6 +41,7 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author falkhowar
  */
+@SuppressWarnings("PMD.SystemPrintln")
 public final class Example1 {
 
     private static final int EXPLORATION_DEPTH = 4;

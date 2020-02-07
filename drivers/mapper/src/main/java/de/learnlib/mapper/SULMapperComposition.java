@@ -29,6 +29,7 @@ final class SULMapperComposition<AI, AO, ACI, CAO, CI, CO>
         super(outerMapper, innerMapper);
     }
 
+    @SuppressWarnings("PMD.AvoidCatchingGenericException") //  we want to allow mapping generic RuntimeExceptions
     @Override
     public MappedException<? extends AO> mapWrappedException(SULException exception) {
         MappedException<? extends CAO> mappedEx;
@@ -43,6 +44,7 @@ final class SULMapperComposition<AI, AO, ACI, CAO, CI, CO>
         return mapMappedException(mappedEx);
     }
 
+    @SuppressWarnings("PMD.AvoidCatchingGenericException") //  we want to allow mapping generic RuntimeExceptions
     @Override
     public MappedException<? extends AO> mapUnwrappedException(RuntimeException exception) {
         MappedException<? extends CAO> mappedEx;

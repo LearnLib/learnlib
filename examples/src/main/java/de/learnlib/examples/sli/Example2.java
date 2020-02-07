@@ -51,6 +51,7 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author frohme
  */
+@SuppressWarnings("PMD.SystemPrintln")
 public final class Example2 {
 
     private static final Alphabet<Integer> INPUTS;

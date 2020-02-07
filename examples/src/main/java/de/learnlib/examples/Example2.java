@@ -48,6 +48,7 @@ import net.automatalib.words.Word;
  *
  * @author falkhowar
  */
+@SuppressWarnings("PMD.SystemPrintln")
 public final class Example2 {
 
     private static final double RESET_PROBABILITY = 0.05;

@@ -51,6 +51,7 @@ public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
         mapper.post();
     }
 
+    @SuppressWarnings("PMD.AvoidCatchingGenericException") //  we want to allow mapping generic RuntimeExceptions
     @Override
     public AO step(AI in) {
         if (inError) {

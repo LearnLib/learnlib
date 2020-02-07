@@ -26,6 +26,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import com.google.common.collect.Interner;
@@ -61,7 +62,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     private static final Logger LOG = LoggerFactory.getLogger(MealyDHC.class);
     private final MembershipOracle<I, Word<O>> oracle;
     private final Alphabet<I> alphabet;
-    private LinkedHashSet<Word<I>> splitters = new LinkedHashSet<>();
+    private Set<Word<I>> splitters = new LinkedHashSet<>();
     private CompactMealy<I, O> hypothesis;
     private MutableMapping<Integer, QueueElement<I, O>> accessSequences;
     private final GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder;
