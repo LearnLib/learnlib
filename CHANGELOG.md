@@ -4,6 +4,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.16.0-SNAPSHOT] - Unreleased
 
+### Changed
+
+* The `SULSymbolQueryOracle` now better handles the `pre` and `post` cycles of a `SUL` (e.g. calls to the `reset` method now allow to close the embedded `SUL` from outside).
+
+### Added
+
+A `StateLocalInputSULSymbolQueryOracle` to wrap a `StateLocalInputSUL`in a `SymbolQueryOracle` (e.g. to learn partial systems with the ADT learner).
+
 
 ## [0.15.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.15.0) - 2020-02-06
 

@@ -16,40 +16,56 @@
 
 package de.learnlib.oracle.membership;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import de.learnlib.api.StateLocalInputSUL;
 import de.learnlib.api.oracle.SymbolQueryOracle;
 
-import java.util.Collection;
-
 /**
- * Not thread safe.
+ * A {@link SymbolQueryOracle} wrapper for {@link StateLocalInputSUL}s. See {@link SULSymbolQueryOracle}.
+ * <p>
+ * This oracle is <b>not</b> thread-safe.
  *
  * @param <I>
+ *         input symbol type
  * @param <O>
+ *         output symbol type
+ *
+ * @author bainczyk
+ * @author frohme
+ * @see SULSymbolQueryOracle
  */
-public class StateLocalInputSULSymbolQueryOracle<I, O> implements SymbolQueryOracle<I, O> {
+public class StateLocalInputSULSymbolQueryOracle<I, O> extends SULSymbolQueryOracle<I, O>
+        implements SymbolQueryOracle<I, O> {
 
     private final StateLocalInputSUL<I, O> sul;
     private final O undefinedOutput;
 
+    private boolean fetchRequired;
+
     public StateLocalInputSULSymbolQueryOracle(StateLocalInputSUL<I, O> sul, O undefinedOutput) {
+        super(sul);
         this.sul = sul;
         this.undefinedOutput = undefinedOutput;
-    }
-
-    @Override
-    public O query(I i) {
-        final Collection<I> enabledInputs = sul.currentlyEnabledInputs();
-        if (enabledInputs.contains(i)) {
-            return sul.step(i);
-        } else {
-            return undefinedOutput;
-        }
+        this.fetchRequired = true;
     }
 
     @Override
     public void reset() {
-        this.sul.post();
-        this.sul.pre();
+        super.reset();
+        this.fetchRequired = true;
+    }
+
+    @Override
+    protected O queryInternal(I i) {
+        final Collection<I> enabledInputs = this.fetchRequired ? sul.currentlyEnabledInputs() : Collections.emptyList();
+
+        if (enabledInputs.contains(i)) {
+            return sul.step(i);
+        } else {
+            this.fetchRequired = false;
+            return undefinedOutput;
+        }
     }
 }

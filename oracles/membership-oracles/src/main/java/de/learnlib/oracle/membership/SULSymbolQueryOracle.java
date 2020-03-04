@@ -20,6 +20,14 @@ import de.learnlib.api.oracle.SymbolQueryOracle;
 
 /**
  * A wrapper that allows to use a {@link SUL} where a {@link SymbolQueryOracle} is expected.
+ * <p>
+ * <b>Implementation note</b>: The contract of {@link SymbolQueryOracle} does not make any assumptions about when its
+ * {@link SymbolQueryOracle#reset() reset} method is called. However, from a {@link SUL} perspective it is desirable to
+ * call its {@link SUL#post() post} method once querying is done. Therefore, multiple calls to {@code this.}{@link
+ * SULSymbolQueryOracle#reset()} will {@link SUL#post() close} the underlying {@link SUL} only once, so that the {@link
+ * SUL} can be shutdown by {@code this} oracle from outside, after the learning process has finished.
+ * <p>
+ * This oracle is <b>not</b> thread-safe.
  *
  * @param <I>
  *         input alphabet type
@@ -32,19 +40,35 @@ public class SULSymbolQueryOracle<I, O> implements SymbolQueryOracle<I, O> {
 
     private final SUL<I, O> sul;
 
+    private boolean preRequired;
+    private boolean postRequired;
+
     public SULSymbolQueryOracle(final SUL<I, O> sul) {
         this.sul = sul;
-        this.sul.pre();
+        this.preRequired = true;
     }
 
     @Override
     public O query(I i) {
-        return this.sul.step(i);
+        if (preRequired) {
+            this.sul.pre();
+            this.preRequired = false;
+            this.postRequired = true;
+        }
+
+        return queryInternal(i);
     }
 
     @Override
     public void reset() {
-        this.sul.post();
-        this.sul.pre();
+        if (postRequired) {
+            this.sul.post();
+            this.postRequired = false;
+        }
+        this.preRequired = true;
+    }
+
+    protected O queryInternal(I i) {
+        return this.sul.step(i);
     }
 }
