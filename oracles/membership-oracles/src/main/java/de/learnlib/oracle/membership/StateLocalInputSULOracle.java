@@ -23,43 +23,34 @@ import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * A wrapper around a system under learning (SUL) with state local inputs.
+ * <p>
+ * This membership oracle is <b>not</b> thread-safe.
+ *
+ * @author frohme
+ */
 public class StateLocalInputSULOracle<I, O> implements MealyMembershipOracle<I, O> {
 
     private final StateLocalInputSUL<I, O> sul;
     private final O undefinedOutput;
-    private final @Nullable ThreadLocal<StateLocalInputSUL<I, O>> localSul;
 
     public StateLocalInputSULOracle(StateLocalInputSUL<I, O> sul, O undefinedOutput) {
         this.sul = sul;
         this.undefinedOutput = undefinedOutput;
-        if (sul.canFork()) {
-            this.localSul = ThreadLocal.withInitial(sul::fork);
-        } else {
-            this.localSul = null;
-        }
     }
 
     @Override
     public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-        if (localSul != null) {
-            processQueries(localSul.get(), queries);
-        } else {
-            synchronized (sul) {
-                processQueries(sul, queries);
-            }
-        }
-    }
-
-    private void processQueries(StateLocalInputSUL<I, O> sul, Collection<? extends Query<I, Word<O>>> queries) {
         for (Query<I, Word<O>> q : queries) {
-            Word<O> output = answerQuery(sul, q.getPrefix(), q.getSuffix());
+            Word<O> output = answerQuery(q.getPrefix(), q.getSuffix());
             q.answer(output);
         }
     }
 
-    private Word<O> answerQuery(StateLocalInputSUL<I, O> sul, Word<I> prefix, Word<I> suffix) {
+    @Override
+    public Word<O> answerQuery(Word<I> prefix, Word<I> suffix) {
         try {
             sul.pre();
             Collection<I> enabledInputs = sul.currentlyEnabledInputs();

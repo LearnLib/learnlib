@@ -15,21 +15,26 @@
  */
 package de.learnlib.oracle.parallelism;
 
-import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import de.learnlib.oracle.parallelism.AbstractStaticParallelOracleTest.TestOutput;
+import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
+import net.automatalib.words.Word;
 
-public class StaticParallelOracleTest extends AbstractStaticParallelOracleTest<TestOutput> {
+public class StaticParallelSULTest extends AbstractStaticParallelOracleTest<Word<TestSULOutput>> {
 
     @Override
-    protected StaticParallelOracleBuilder<Integer, TestOutput> getBuilder() {
-        TestMembershipOracle[] oracles = getOracles();
-        return ParallelOracleBuilders.newStaticParallelOracle(oracles[0],
-                                                              Arrays.copyOfRange(oracles, 1, oracles.length));
+    protected StaticParallelOracleBuilder<Integer, Word<TestSULOutput>> getBuilder() {
+        // since we fork our initial SUL, start at -1
+        return ParallelOracleBuilders.newStaticParallelOracle(new TestSUL(new AtomicInteger(-1)));
     }
 
     @Override
-    protected TestOutput extractTestOutput(TestOutput output) {
-        return output;
+    protected TestOutput extractTestOutput(Word<TestSULOutput> output) {
+        return Utils.extractSULOutput(output);
+    }
+
+    @Override
+    protected int getMinQueryLength() {
+        return 1;
     }
 }

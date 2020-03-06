@@ -17,15 +17,14 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Arrays;
 
+import de.learnlib.oracle.parallelism.AbstractDynamicBatchProcessorBuilder.StaticOracleProvider;
 import de.learnlib.oracle.parallelism.AbstractStaticParallelOracleTest.TestOutput;
 
-public class StaticParallelOracleTest extends AbstractStaticParallelOracleTest<TestOutput> {
+public class StaticParallelSupplierTest extends AbstractStaticParallelOracleTest<TestOutput> {
 
     @Override
     protected StaticParallelOracleBuilder<Integer, TestOutput> getBuilder() {
-        TestMembershipOracle[] oracles = getOracles();
-        return ParallelOracleBuilders.newStaticParallelOracle(oracles[0],
-                                                              Arrays.copyOfRange(oracles, 1, oracles.length));
+        return ParallelOracleBuilders.newStaticParallelOracle(new StaticOracleProvider<>(Arrays.asList(getOracles())));
     }
 
     @Override

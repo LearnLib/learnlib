@@ -17,35 +17,32 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
+import de.learnlib.api.oracle.parallelism.BatchProcessor;
 
 /**
  * Abstract base class for jobs (i.e., {@link Runnable}s) that process queries.
  * <p>
- * Subclasses specify how the delegate oracle is obtained.
+ * Subclasses specify how the delegate batch processor is obtained.
  *
- * @param <I>
- *         input symbol type
- * @param <D>
- *         output domain type
+ * @param <Q>
+ *         query type
  *
  * @author Malte Isberner
  */
-abstract class AbstractQueriesJob<I, D> implements Runnable {
+abstract class AbstractQueriesJob<Q> implements Runnable {
 
-    private final Collection<? extends Query<I, D>> queries;
+    private final Collection<? extends Q> queries;
 
-    AbstractQueriesJob(Collection<? extends Query<I, D>> queries) {
+    AbstractQueriesJob(Collection<? extends Q> queries) {
         this.queries = queries;
     }
 
     @Override
     public void run() {
-        MembershipOracle<I, D> oracle = getOracle();
+        BatchProcessor<Q> oracle = getOracle();
 
-        oracle.processQueries(queries);
+        oracle.processBatch(queries);
     }
 
-    protected abstract MembershipOracle<I, D> getOracle();
+    protected abstract BatchProcessor<Q> getOracle();
 }

@@ -18,6 +18,7 @@ package de.learnlib.api.oracle;
 import java.util.Collection;
 import java.util.Collections;
 
+import de.learnlib.api.oracle.parallelism.BatchProcessor;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
@@ -32,7 +33,7 @@ import net.automatalib.words.Word;
  * @author Maik Merten
  * @see DefaultQuery
  */
-public interface MembershipOracle<I, D> extends QueryAnswerer<I, D> {
+public interface MembershipOracle<I, D> extends QueryAnswerer<I, D>, BatchProcessor<Query<I, D>> {
 
     @Override
     default D answerQuery(Word<I> input) {
@@ -76,6 +77,11 @@ public interface MembershipOracle<I, D> extends QueryAnswerer<I, D> {
     @Override
     default MembershipOracle<I, D> asOracle() {
         return this;
+    }
+
+    @Override
+    default void processBatch(Collection<? extends Query<I, D>> batch) {
+        processQueries(batch);
     }
 
     interface DFAMembershipOracle<I> extends MembershipOracle<I, Boolean> {}

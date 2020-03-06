@@ -13,28 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.oracle.parallelism;
+package de.learnlib.api.oracle.parallelism;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import de.learnlib.api.oracle.MembershipOracle;
-
 /**
- * Basic interface for {@link MembershipOracle}s that can process queries in parallel.
- * <p>
- * Parallel oracles usually use one or more dedicated worker threads in which the processing of queries is performed.
- * Since these do not have a defined life span, they must be terminated explicitly using {@link #shutdown()} or {@link
- * #shutdownNow()}.
- *
- * @param <I>
- *         input symbol type
- * @param <D>
- *         output domain type
+ * A markup interface for a component that manages a pool of threads that may want to be shut down after usage.
  *
  * @author Malte Isberner
+ * @author frohme
+ * @see ExecutorService
  */
-public interface ParallelOracle<I, D> extends MembershipOracle<I, D> {
+public interface ThreadPool {
 
     /**
      * Shuts down all worker threads, but waits for any queued queries to be processed.
@@ -58,7 +49,7 @@ public interface ParallelOracle<I, D> extends MembershipOracle<I, D> {
     enum PoolPolicy {
         /**
          * Maintain a fixed thread pool. The threads will be started immediately, and will terminate only if {@link
-         * ParallelOracle#shutdown()} or {@link ParallelOracle#shutdownNow()} are called.
+         * ThreadPool#shutdown()} or {@link ThreadPool#shutdownNow()} are called.
          *
          * @see Executors#newFixedThreadPool(int)
          */

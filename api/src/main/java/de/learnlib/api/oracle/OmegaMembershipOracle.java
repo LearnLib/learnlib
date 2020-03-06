@@ -21,6 +21,7 @@ import java.util.Collections;
 import de.learnlib.api.ObservableSUL;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.api.oracle.parallelism.BatchProcessor;
 import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
@@ -35,13 +36,18 @@ import net.automatalib.words.Word;
  * @param <I> the input type
  * @param <D> the output type
  */
-public interface OmegaMembershipOracle<S, I, D> extends OmegaQueryAnswerer<S, I, D> {
+public interface OmegaMembershipOracle<S, I, D> extends OmegaQueryAnswerer<S, I, D>, BatchProcessor<OmegaQuery<I, D>> {
 
     @Override
     default Pair<D, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
         final OmegaQuery<I, D> query = new OmegaQuery<>(prefix, loop, repeat);
         processQuery(query);
         return Pair.of(query.getOutput(), query.getPeriodicity());
+    }
+
+    @Override
+    default void processBatch(Collection<? extends OmegaQuery<I, D>> batch) {
+        this.processQueries(batch);
     }
 
     default void processQuery(OmegaQuery<I, D> query) {

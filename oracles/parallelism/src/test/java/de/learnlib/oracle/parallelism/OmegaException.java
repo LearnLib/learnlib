@@ -15,21 +15,4 @@
  */
 package de.learnlib.oracle.parallelism;
 
-import java.util.Arrays;
-
-import de.learnlib.oracle.parallelism.AbstractStaticParallelOracleTest.TestOutput;
-
-public class StaticParallelOracleTest extends AbstractStaticParallelOracleTest<TestOutput> {
-
-    @Override
-    protected StaticParallelOracleBuilder<Integer, TestOutput> getBuilder() {
-        TestMembershipOracle[] oracles = getOracles();
-        return ParallelOracleBuilders.newStaticParallelOracle(oracles[0],
-                                                              Arrays.copyOfRange(oracles, 1, oracles.length));
-    }
-
-    @Override
-    protected TestOutput extractTestOutput(TestOutput output) {
-        return output;
-    }
-}
+class OmegaException extends RuntimeException {}

@@ -13,33 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.oracle.parallelism;
+package de.learnlib.api.oracle.parallelism;
 
-import java.util.Collection;
-
-import de.learnlib.api.oracle.parallelism.BatchProcessor;
+import de.learnlib.api.oracle.MembershipOracle;
 
 /**
- * A queries job that maintains a fixed reference to a {@link BatchProcessor}, executes queries using this oracle
- * regardless of the executing thread.
+ * Basic interface for {@link MembershipOracle}s that can process queries in parallel.
+ * <p>
+ * Parallel oracles usually use one or more dedicated worker threads in which the processing of queries is performed.
+ * Since these do not have a defined life span, they must be terminated explicitly using {@link #shutdown()} or {@link
+ * #shutdownNow()}.
  *
- * @param <Q>
- *         query type
+ * @param <I>
+ *         input symbol type
+ * @param <D>
+ *         output domain type
  *
  * @author Malte Isberner
  */
-final class StaticQueriesJob<Q> extends AbstractQueriesJob<Q> {
-
-    private final BatchProcessor<Q> oracle;
-
-    StaticQueriesJob(Collection<? extends Q> queries, BatchProcessor<Q> oracle) {
-        super(queries);
-        this.oracle = oracle;
-    }
-
-    @Override
-    protected BatchProcessor<Q> getOracle() {
-        return oracle;
-    }
-
-}
+public interface ParallelOracle<I, D> extends ThreadPool, MembershipOracle<I, D> {}

@@ -58,17 +58,11 @@ public class SULParallelCacheTest
         private final WordBuilder<I> wb;
         private final MembershipOracle<I, Word<O>> oracle;
         private final MealyMachine<?, I, ?, O> mealyMachine;
-        private final boolean fork;
 
         TestSUL(MealyMachine<?, I, ?, O> mealy, MembershipOracle<I, Word<O>> oracle) {
-            this(mealy, oracle, true);
-        }
-
-        TestSUL(MealyMachine<?, I, ?, O> mealy, MembershipOracle<I, Word<O>> oracle, boolean fork) {
             super(mealy);
             this.mealyMachine = mealy;
             this.oracle = oracle;
-            this.fork = fork;
             this.wb = new WordBuilder<>();
         }
 
@@ -94,12 +88,12 @@ public class SULParallelCacheTest
 
         @Override
         public boolean canFork() {
-            return fork;
+            return true;
         }
 
         @Override
         public SUL<I, O> fork() {
-            return new TestSUL<>(mealyMachine, oracle, fork);
+            return new TestSUL<>(mealyMachine, oracle);
         }
     }
 }

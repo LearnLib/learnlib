@@ -15,21 +15,12 @@
  */
 package de.learnlib.oracle.parallelism;
 
-import java.util.Arrays;
+import net.automatalib.words.Word;
 
-import de.learnlib.oracle.parallelism.AbstractStaticParallelOracleTest.TestOutput;
-
-public class StaticParallelOracleTest extends AbstractStaticParallelOracleTest<TestOutput> {
+public class DynamicParallelObservableSULTest extends AbstractDynamicParallelOmegaOracleTest<Word<Void>> {
 
     @Override
-    protected StaticParallelOracleBuilder<Integer, TestOutput> getBuilder() {
-        TestMembershipOracle[] oracles = getOracles();
-        return ParallelOracleBuilders.newStaticParallelOracle(oracles[0],
-                                                              Arrays.copyOfRange(oracles, 1, oracles.length));
-    }
-
-    @Override
-    protected TestOutput extractTestOutput(TestOutput output) {
-        return output;
+    protected DynamicParallelOmegaOracleBuilder<?, Void, Word<Void>> getBuilder() {
+        return ParallelOracleBuilders.newDynamicParallelOmegaOracle(new NullSUL());
     }
 }

@@ -50,15 +50,7 @@ public enum LearnLibProperty {
      * <p>
      * Size of thread pools for parallel oracles.
      */
-    PARALLEL_POOL_SIZE("parallel.pool_size"),
-
-    /**
-     * {@code learnlib.queries.parallel.threshold}.
-     * <p>
-     * If batch sizes exceed the specified threshold, they will be processed in parallel.
-     * (Note: This only covers processing of batches. They are still answered sequentially.)
-     */
-    PARALLEL_QUERIES_THRESHOLD("queries.parallel.threshold");
+    PARALLEL_POOL_SIZE("parallel.pool_size");
 
     private final String key;
 

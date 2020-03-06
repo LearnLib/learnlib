@@ -53,9 +53,6 @@ public class LearnLibSettingsTest {
                 case PARALLEL_POOL_SIZE:
                     Assert.assertEquals(3, settings.getInt(LearnLibProperty.PARALLEL_POOL_SIZE, 0));
                     break;
-                case PARALLEL_QUERIES_THRESHOLD:
-                    Assert.assertEquals(100, settings.getInt(LearnLibProperty.PARALLEL_QUERIES_THRESHOLD, 0));
-                    break;
                 default:
                     throw new IllegalStateException("Unhandled property " + p);
             }

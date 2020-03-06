@@ -17,126 +17,34 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import com.google.common.base.Preconditions;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.oracle.parallelism.ParallelOracle.PoolPolicy;
-import net.automatalib.commons.smartcollections.ArrayStorage;
-import net.automatalib.commons.util.concurrent.ScalingThreadPoolExecutor;
-import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import de.learnlib.api.query.Query;
 
 /**
- * Builder class for a {@link DynamicParallelOracle}.
+ * A specialized {@link AbstractDynamicBatchProcessorBuilder} for {@link MembershipOracle}s.
  *
  * @param <I>
  *         input symbol type
  * @param <D>
- *         output type
- *
- * @author Malte Isberner
+ *         output domain type
  */
-public class DynamicParallelOracleBuilder<I, D> {
-
-    private static final int DEFAULT_KEEP_ALIVE_TIME = 60;
-
-    private final @Nullable Supplier<? extends MembershipOracle<I, D>> oracleSupplier;
-    private final @Nullable Collection<? extends MembershipOracle<I, D>> oracles;
-    private ExecutorService customExecutor;
-    private @NonNegative int batchSize = DynamicParallelOracle.BATCH_SIZE;
-    private @NonNegative int poolSize = DynamicParallelOracle.POOL_SIZE;
-    private PoolPolicy poolPolicy = DynamicParallelOracle.POOL_POLICY;
+public class DynamicParallelOracleBuilder<I, D>
+        extends AbstractDynamicBatchProcessorBuilder<Query<I, D>, MembershipOracle<I, D>, DynamicParallelOracle<I, D>> {
 
     public DynamicParallelOracleBuilder(Supplier<? extends MembershipOracle<I, D>> oracleSupplier) {
-        this.oracleSupplier = oracleSupplier;
-        this.oracles = null;
+        super(oracleSupplier);
     }
 
     public DynamicParallelOracleBuilder(Collection<? extends MembershipOracle<I, D>> oracles) {
-        Preconditions.checkArgument(!oracles.isEmpty(), "No oracles specified");
-        this.oracles = oracles;
-        this.oracleSupplier = null;
+        super(oracles);
     }
 
-    public DynamicParallelOracleBuilder<I, D> withCustomExecutor(ExecutorService executor) {
-        this.customExecutor = executor;
-        return this;
+    @Override
+    protected DynamicParallelOracle<I, D> buildOracle(Supplier<? extends MembershipOracle<I, D>> supplier,
+                                                      int batchSize,
+                                                      ExecutorService executorService) {
+        return new DynamicParallelOracle<>(supplier, batchSize, executorService);
     }
-
-    public DynamicParallelOracleBuilder<I, D> withBatchSize(int batchSize) {
-        this.batchSize = batchSize;
-        return this;
-    }
-
-    public DynamicParallelOracleBuilder<I, D> withPoolSize(@NonNegative int poolSize) {
-        this.poolSize = poolSize;
-        return this;
-    }
-
-    public DynamicParallelOracleBuilder<I, D> withPoolPolicy(PoolPolicy policy) {
-        this.poolPolicy = policy;
-        return this;
-    }
-
-    public DynamicParallelOracle<I, D> create() {
-
-        final Supplier<? extends MembershipOracle<I, D>> supplier;
-        final ExecutorService executor;
-
-        if (oracles != null) {
-            executor = Executors.newFixedThreadPool(oracles.size());
-            supplier = new StaticOracleProvider<>(new ArrayStorage<>(oracles));
-        } else if (customExecutor != null) {
-            executor = customExecutor;
-            supplier = oracleSupplier;
-        } else {
-            switch (poolPolicy) {
-                case FIXED:
-                    executor = Executors.newFixedThreadPool(poolSize);
-                    break;
-                case CACHED:
-                    executor = new ScalingThreadPoolExecutor(0, poolSize, DEFAULT_KEEP_ALIVE_TIME, TimeUnit.SECONDS);
-                    break;
-                default:
-                    throw new IllegalStateException("Unknown pool policy: " + poolPolicy);
-            }
-            supplier = oracleSupplier;
-        }
-
-        return new DynamicParallelOracle<>(supplier, batchSize, executor);
-    }
-
-    static class StaticOracleProvider<I, D> implements Supplier<MembershipOracle<I, D>> {
-
-        private final ArrayStorage<MembershipOracle<I, D>> oracles;
-        private int idx;
-
-        StaticOracleProvider(ArrayStorage<MembershipOracle<I, D>> oracles) {
-            this.oracles = oracles;
-        }
-
-        StaticOracleProvider(Collection<? extends MembershipOracle<I, D>> oracles) {
-            this.oracles = new ArrayStorage<>(oracles.size());
-            int idx = 0;
-            for (final MembershipOracle<I, D> oracle : oracles) {
-                this.oracles.set(idx++, oracle);
-            }
-        }
-
-        @Override
-        public MembershipOracle<I, D> get() {
-            synchronized (this) {
-                if (idx < oracles.size()) {
-                    return oracles.get(idx++);
-                }
-            }
-
-            throw new IllegalStateException(
-                    "The supplier should not have been called more than " + oracles.size() + " times");
-        }
-    }
-
 }

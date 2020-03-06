@@ -20,18 +20,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import de.learnlib.api.oracle.parallelism.ParallelOracle;
+import de.learnlib.api.oracle.parallelism.ParallelOmegaOracle;
 import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
-import de.learnlib.api.query.Query;
+import de.learnlib.api.query.OmegaQuery;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class DynamicParallelOracleTest extends AbstractDynamicParallelOracleTest<Void> {
+public class DynamicParallelOmegaOracleTest extends AbstractDynamicParallelOmegaOracleTest<Void> {
 
     @Override
-    protected DynamicParallelOracleBuilder<Void, Void> getBuilder() {
-        return ParallelOracleBuilders.newDynamicParallelOracle(Arrays.asList(new NullOracle(),
-                                                                             new NullOracle(),
-                                                                             new NullOracle()));
+    protected DynamicParallelOmegaOracleBuilder<?, Void, Void> getBuilder() {
+        return ParallelOracleBuilders.newDynamicParallelOmegaOracle(Arrays.asList(new NullOracle(),
+                                                                                  new NullOracle(),
+                                                                                  new NullOracle()));
     }
 
     @Test(dataProvider = "policies", dataProviderClass = Utils.class, timeOut = 2000)
@@ -47,7 +48,7 @@ public class DynamicParallelOracleTest extends AbstractDynamicParallelOracleTest
             oracles[i] = new NullOracle() {
 
                 @Override
-                public void processQueries(Collection<? extends Query<Void, Void>> queries) {
+                public void processQueries(Collection<? extends OmegaQuery<Void, Void>> queries) {
                     try {
                         latch.countDown();
                         latch.await();
@@ -59,15 +60,13 @@ public class DynamicParallelOracleTest extends AbstractDynamicParallelOracleTest
             };
         }
 
-        final ParallelOracle<Void, Void> oracle = ParallelOracleBuilders.newDynamicParallelOracle(oracles[0],
-                                                                                                  Arrays.copyOfRange(
-                                                                                                          oracles,
-                                                                                                          1,
-                                                                                                          oracles.length))
-                                                                        .withBatchSize(1)
-                                                                        .withPoolSize(oracles.length)
-                                                                        .withPoolPolicy(poolPolicy)
-                                                                        .create();
+        final ParallelOmegaOracle<?, Void, Void> oracle =
+                ParallelOracleBuilders.newDynamicParallelOmegaOracle(oracles[0],
+                                                                     Arrays.copyOfRange(oracles, 1, oracles.length))
+                                      .withBatchSize(1)
+                                      .withPoolSize(oracles.length)
+                                      .withPoolPolicy(poolPolicy)
+                                      .create();
 
         try {
             // this method only returns, if 'expectedThreads' threads are spawned, which all decrease the shared latch
@@ -86,7 +85,7 @@ public class DynamicParallelOracleTest extends AbstractDynamicParallelOracleTest
         final NullOracle awaitingOracle = new NullOracle() {
 
             @Override
-            public void processQueries(Collection<? extends Query<Void, Void>> queries) {
+            public void processQueries(Collection<? extends OmegaQuery<Void, Void>> queries) {
                 try {
                     latch.await();
                 } catch (InterruptedException e) {
@@ -99,14 +98,14 @@ public class DynamicParallelOracleTest extends AbstractDynamicParallelOracleTest
         final NullOracle countDownOracle = new NullOracle() {
 
             @Override
-            public void processQueries(Collection<? extends Query<Void, Void>> queries) {
+            public void processQueries(Collection<? extends OmegaQuery<Void, Void>> queries) {
                 latch.countDown();
                 super.processQueries(queries);
             }
         };
 
-        final ParallelOracle<Void, Void> oracle =
-                ParallelOracleBuilders.newDynamicParallelOracle(awaitingOracle, countDownOracle)
+        final ParallelOmegaOracle<?, Void, Void> oracle =
+                ParallelOracleBuilders.newDynamicParallelOmegaOracle(awaitingOracle, countDownOracle)
                                       .withPoolSize(2)
                                       .withPoolPolicy(poolPolicy)
                                       .create();
@@ -117,5 +116,13 @@ public class DynamicParallelOracleTest extends AbstractDynamicParallelOracleTest
         } finally {
             oracle.shutdown();
         }
+    }
+
+    @Test
+    public void testSingleMethods() {
+        final ParallelOmegaOracle<?, Void, Void> oracle = getBuilder().create();
+
+        Assert.assertThrows(OmegaException.class, oracle::getMembershipOracle);
+        Assert.assertThrows(OmegaException.class, () -> oracle.isSameState(null, null, null, null));
     }
 }

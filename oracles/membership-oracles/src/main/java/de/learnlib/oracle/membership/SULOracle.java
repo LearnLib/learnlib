@@ -22,16 +22,11 @@ import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A wrapper around a system under learning (SUL).
  * <p>
- * This membership oracle is thread-safe. Thread-safety is obtained in either of the following ways: <ul> <li>if the
- * {@link SUL} can be {@link SUL#fork() forked}, each thread from which {@link #processQueries(Collection)} will
- * maintain a {@link ThreadLocal thread-local} fork of the SUL, which is used for processing queries.</li>
- * <li>otherwise, if the SUL is not forkable, accesses to the SUL in {@link #processQueries(Collection)} will be
- * synchronized explicitly.</li> </ul>
+ * This membership oracle is <b>not</b> thread-safe.
  *
  * @author Falk Howar
  * @author Malte Isberner
@@ -39,36 +34,21 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class SULOracle<I, O> implements MealyMembershipOracle<I, O> {
 
     private final SUL<I, O> sul;
-    private final @Nullable ThreadLocal<SUL<I, O>> localSul;
 
     public SULOracle(SUL<I, O> sul) {
         this.sul = sul;
-        if (sul.canFork()) {
-            this.localSul = ThreadLocal.withInitial(sul::fork);
-        } else {
-            this.localSul = null;
-        }
     }
 
     @Override
     public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-        if (localSul != null) {
-            processQueries(localSul.get(), queries);
-        } else {
-            synchronized (sul) {
-                processQueries(sul, queries);
-            }
-        }
-    }
-
-    private static <I, O> void processQueries(SUL<I, O> sul, Collection<? extends Query<I, Word<O>>> queries) {
         for (Query<I, Word<O>> q : queries) {
-            Word<O> output = answerQuery(sul, q.getPrefix(), q.getSuffix());
+            Word<O> output = answerQuery(q.getPrefix(), q.getSuffix());
             q.answer(output);
         }
     }
 
-    public static <I, O> Word<O> answerQuery(SUL<I, O> sul, Word<I> prefix, Word<I> suffix) {
+    @Override
+    public Word<O> answerQuery(Word<I> prefix, Word<I> suffix) {
         sul.pre();
         try {
             // Prefix: Execute symbols, don't record output

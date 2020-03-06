@@ -41,6 +41,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Answers {@link OmegaQuery}s by simulating an automaton.
+ * <p>
+ * <b>Implementation note</b>: Under the assumption that read-operations do not alter the internal state of the
+ * automaton, this oracle is thread-safe.
  *
  * @author Jeroen Meijer
  *
@@ -96,7 +99,7 @@ public class SimulatorOmegaOracle<S extends Object, I, @Nullable D> implements S
 
     @Override
     public void processQueries(Collection<? extends OmegaQuery<I, D>> queries) {
-        MQUtil.answerOmegaQueriesAuto(this, queries);
+        MQUtil.answerOmegaQueries(this, queries);
     }
 
     /**

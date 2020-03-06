@@ -22,14 +22,13 @@ import java.util.function.Consumer;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.parallelism.ParallelOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle;
 import de.learnlib.filter.statistic.oracle.CounterOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
-import de.learnlib.oracle.parallelism.ParallelOracle;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
-import de.learnlib.util.MQUtil;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
@@ -78,16 +77,6 @@ public abstract class AbstractParallelCacheTest<A extends SuffixOutput<I, D>, I,
     }
 
     @Test(timeOut = 20000)
-    public void testConcurrentMembershipQueriesImplicit() {
-        testConcurrentMembershipQueries(queries -> MQUtil.answerQueriesParallel(cache, queries));
-    }
-
-    @Test(dependsOnMethods = "testConcurrentMembershipQueriesImplicit", timeOut = 20000)
-    public void testConcurrentEquivalenceQueriesImplicit() {
-        testConcurrentEquivalenceQueries(queries -> MQUtil.answerQueriesParallel(cache, queries));
-    }
-
-    @Test(dependsOnMethods = "testConcurrentEquivalenceQueriesImplicit", timeOut = 20000)
     public void testConcurrentMembershipQueriesExplicit() {
         setUp();
         this.parallelOracle = ParallelOracleBuilders.newDynamicParallelOracle(() -> cache)

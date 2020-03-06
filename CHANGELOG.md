@@ -4,13 +4,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.16.0-SNAPSHOT] - Unreleased
 
+### Added
+
+* A `StateLocalInputSULSymbolQueryOracle` to wrap a `StateLocalInputSUL`in a `SymbolQueryOracle` (e.g. to learn partial systems with the ADT learner).
+* Added an example for parallel setups (`ParallelismExample1`).
+
 ### Changed
 
 * The `SULSymbolQueryOracle` now better handles the `pre` and `post` cycles of a `SUL` (e.g. calls to the `reset` method now allow to close the embedded `SUL` from outside).
+* Reworked parallel oracles
+  * Several `SULOracle` variants are no longer thread-safe. This reduces overhead for scenarios where no parallelism is required.
+  * The `ParallelOracleBuilders` factory now offers builder methods for `SUL`s, `ObservableSUL`s, `StateLocalInputSUL`s, `MembershipOracles`s and `OmegaMembershipOracle`s to allow an easy (and correct) construction of parallel setups given one of the mentioned implementations.
+* Refactored the following packages/classes:
+  * `de.learnlib.oracle.parallelism.ParallelOracleInterruptedException` -> `de.learnlib.api.oracle.parallelism.BatchInterruptedException`
 
-### Added
+### Removed
 
-A `StateLocalInputSULSymbolQueryOracle` to wrap a `StateLocalInputSUL`in a `SymbolQueryOracle` (e.g. to learn partial systems with the ADT learner).
+* Removed the `learnlib.queries.parallel.threshold` property. Learning setup that want to use parallelism now need the explicitly setup parallel oracles.
+* Removed `MQUtil#answerQueries{Auto,Parallel}` and `MQUtil#answerOmegaQueries{Auto,Parallel}`)
 
 
 ## [0.15.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.15.0) - 2020-02-06

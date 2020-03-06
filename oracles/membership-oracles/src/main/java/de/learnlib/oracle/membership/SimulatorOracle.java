@@ -28,6 +28,9 @@ import net.automatalib.words.Word;
 /**
  * A membership oracle backed by an automaton. The automaton must implement the {@link SuffixOutput} concept, allowing
  * to identify a suffix part in the output (relative to a prefix/suffix subdivision in the input).
+ * <p>
+ * <b>Implementation note</b>: Under the assumption that read-operations do not alter the internal state of the
+ * automaton, this oracle is thread-safe.
  *
  * @param <I>
  *         input symbol type
@@ -57,7 +60,7 @@ public class SimulatorOracle<I, D> implements SingleQueryOracle<I, D> {
 
     @Override
     public void processQueries(Collection<? extends Query<I, D>> queries) {
-        MQUtil.answerQueriesAuto(this, queries);
+        MQUtil.answerQueries(this, queries);
     }
 
     public static class DFASimulatorOracle<I> extends SimulatorOracle<I, Boolean> implements SingleQueryOracleDFA<I> {

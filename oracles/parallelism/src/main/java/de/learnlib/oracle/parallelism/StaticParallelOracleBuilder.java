@@ -15,75 +15,36 @@
  */
 package de.learnlib.oracle.parallelism;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Supplier;
 
-import com.google.common.base.Preconditions;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.oracle.parallelism.ParallelOracle.PoolPolicy;
-import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
+import de.learnlib.api.query.Query;
 
 /**
- * A builder for a {@link StaticParallelOracle}.
+ * A specialized {@link AbstractStaticBatchProcessorBuilder} for {@link MembershipOracle}s.
  *
  * @param <I>
  *         input symbol type
  * @param <D>
- *         output type
- *
- * @author Malte Isberner
+ *         output domain type
  */
-public class StaticParallelOracleBuilder<I, D> {
-
-    private final @Nullable Collection<? extends MembershipOracle<I, D>> oracles;
-    private final @Nullable Supplier<? extends MembershipOracle<I, D>> oracleSupplier;
-    private @NonNegative int minBatchSize = StaticParallelOracle.MIN_BATCH_SIZE;
-    private @NonNegative int numInstances = StaticParallelOracle.NUM_INSTANCES;
-    private PoolPolicy poolPolicy = StaticParallelOracle.POOL_POLICY;
+public class StaticParallelOracleBuilder<I, D>
+        extends AbstractStaticBatchProcessorBuilder<Query<I, D>, MembershipOracle<I, D>, StaticParallelOracle<I, D>> {
 
     public StaticParallelOracleBuilder(Collection<? extends MembershipOracle<I, D>> oracles) {
-        Preconditions.checkArgument(!oracles.isEmpty(), "No oracles specified");
-        this.oracles = oracles;
-        this.oracleSupplier = null;
+        super(oracles);
     }
 
     public StaticParallelOracleBuilder(Supplier<? extends MembershipOracle<I, D>> oracleSupplier) {
-        this.oracles = null;
-        this.oracleSupplier = oracleSupplier;
+        super(oracleSupplier);
     }
 
-    public StaticParallelOracleBuilder<I, D> withMinBatchSize(@NonNegative int minBatchSize) {
-        this.minBatchSize = minBatchSize;
-        return this;
-    }
-
-    public StaticParallelOracleBuilder<I, D> withPoolPolicy(PoolPolicy policy) {
-        this.poolPolicy = policy;
-        return this;
-    }
-
-    public StaticParallelOracleBuilder<I, D> withNumInstances(@NonNegative int numInstances) {
-        this.numInstances = numInstances;
-        return this;
-    }
-
-    @SuppressWarnings("nullness") // the constructors guarantee that oracles and oracleSupplier are null exclusively
-    public StaticParallelOracle<I, D> create() {
-        Collection<? extends MembershipOracle<I, D>> oracleInstances;
-        if (oracles != null) {
-            oracleInstances = oracles;
-        } else {
-            List<MembershipOracle<I, D>> oracleList = new ArrayList<>(numInstances);
-            for (int i = 0; i < numInstances; i++) {
-                oracleList.add(oracleSupplier.get());
-            }
-            oracleInstances = oracleList;
-        }
-
+    @Override
+    protected StaticParallelOracle<I, D> buildOracle(Collection<? extends MembershipOracle<I, D>> oracleInstances,
+                                                     int minBatchSize,
+                                                     PoolPolicy poolPolicy) {
         return new StaticParallelOracle<>(oracleInstances, minBatchSize, poolPolicy);
     }
-
 }

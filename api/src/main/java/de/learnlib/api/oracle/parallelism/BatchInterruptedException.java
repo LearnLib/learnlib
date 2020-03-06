@@ -13,33 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.oracle.parallelism;
+package de.learnlib.api.oracle.parallelism;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.parallelism.BatchProcessor;
-
 /**
- * A queries job that maintains a fixed reference to a {@link BatchProcessor}, executes queries using this oracle
- * regardless of the executing thread.
- *
- * @param <Q>
- *         query type
+ * Exception that is thrown if a parallel batch is interrupted during processing. Note that we cannot rethrow the {@link
+ * InterruptedException} since the {@code throws} specification of {@link BatchProcessor#processBatch(Collection)} does
+ * not allow doing so.
  *
  * @author Malte Isberner
  */
-final class StaticQueriesJob<Q> extends AbstractQueriesJob<Q> {
+public class BatchInterruptedException extends RuntimeException {
 
-    private final BatchProcessor<Q> oracle;
+    private static final long serialVersionUID = 1L;
 
-    StaticQueriesJob(Collection<? extends Q> queries, BatchProcessor<Q> oracle) {
-        super(queries);
-        this.oracle = oracle;
-    }
-
-    @Override
-    protected BatchProcessor<Q> getOracle() {
-        return oracle;
+    public BatchInterruptedException(Throwable cause) {
+        super(cause);
     }
 
 }

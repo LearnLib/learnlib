@@ -13,33 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.oracle.parallelism;
+package de.learnlib.api.oracle.parallelism;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.parallelism.BatchProcessor;
+import de.learnlib.api.oracle.MembershipOracle;
 
 /**
- * A queries job that maintains a fixed reference to a {@link BatchProcessor}, executes queries using this oracle
- * regardless of the executing thread.
+ * A markup interface for classes that can process a batch of work in a parallel environment (e.g. a {@link
+ * MembershipOracle} when used by {@link ParallelOracle}).
  *
- * @param <Q>
- *         query type
+ * @param <T>
+ *         batch type
  *
- * @author Malte Isberner
+ * @author frohme
  */
-final class StaticQueriesJob<Q> extends AbstractQueriesJob<Q> {
+public interface BatchProcessor<T> {
 
-    private final BatchProcessor<Q> oracle;
-
-    StaticQueriesJob(Collection<? extends Q> queries, BatchProcessor<Q> oracle) {
-        super(queries);
-        this.oracle = oracle;
-    }
-
-    @Override
-    protected BatchProcessor<Q> getOracle() {
-        return oracle;
-    }
+    /**
+     * Process the batch.
+     *
+     * @param batch
+     *         the batch to process
+     *
+     * @throws BatchInterruptedException
+     *         if the processing thread was interrupted by an exception.
+     */
+    void processBatch(Collection<? extends T> batch);
 
 }

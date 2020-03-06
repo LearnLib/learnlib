@@ -17,35 +17,31 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
+import de.learnlib.api.oracle.parallelism.BatchProcessor;
 
 /**
- * A queries job that maintains a thread-local reference to a membership oracle, and dynamically selects that oracle
- * depending on the executing thread.
+ * A queries job that maintains a thread-local reference to a {@link BatchProcessor}, and dynamically selects that
+ * oracle depending on the executing thread.
  * <p>
  * Note: This class assumes that the respective {@link ThreadLocal#get()} methods never returns a {@code null}
  * reference.
  *
- * @param <I>
- *         input symbol type
- * @param <D>
- *         output domain type
+ * @param <Q>
+ *         query type
  *
  * @author Malte Isberner
  */
-final class DynamicQueriesJob<I, D> extends AbstractQueriesJob<I, D> {
+final class DynamicQueriesJob<Q> extends AbstractQueriesJob<Q> {
 
-    private final ThreadLocal<? extends MembershipOracle<I, D>> threadLocalOracle;
+    private final ThreadLocal<? extends BatchProcessor<Q>> threadLocalOracle;
 
-    DynamicQueriesJob(Collection<? extends Query<I, D>> queries,
-                      ThreadLocal<? extends MembershipOracle<I, D>> threadLocalOracle) {
+    DynamicQueriesJob(Collection<? extends Q> queries, ThreadLocal<? extends BatchProcessor<Q>> threadLocalOracle) {
         super(queries);
         this.threadLocalOracle = threadLocalOracle;
     }
 
     @Override
-    protected MembershipOracle<I, D> getOracle() {
+    protected BatchProcessor<Q> getOracle() {
         return threadLocalOracle.get();
     }
 

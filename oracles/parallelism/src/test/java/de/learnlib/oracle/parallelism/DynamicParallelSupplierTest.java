@@ -15,21 +15,10 @@
  */
 package de.learnlib.oracle.parallelism;
 
-import de.learnlib.api.oracle.MembershipOracle;
+public class DynamicParallelSupplierTest extends AbstractDynamicParallelOracleTest<Void> {
 
-/**
- * Exception that is thrown if a parallel oracle is interrupted during execution. Note that we cannot rethrow the {@link
- * InterruptedException} since the {@code throws} specification of {@link MembershipOracle#processQueries(java.util.Collection)}
- * does not allow doing so.
- *
- * @author Malte Isberner
- */
-public class ParallelOracleInterruptedException extends RuntimeException {
-
-    private static final long serialVersionUID = 1L;
-
-    public ParallelOracleInterruptedException(Throwable cause) {
-        super(cause);
+    @Override
+    protected DynamicParallelOracleBuilder<Void, Void> getBuilder() {
+        return ParallelOracleBuilders.newDynamicParallelOracle(NullOracle::new);
     }
-
 }

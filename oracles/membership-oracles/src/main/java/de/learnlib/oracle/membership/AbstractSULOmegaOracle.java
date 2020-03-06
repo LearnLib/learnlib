@@ -28,7 +28,6 @@ import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An omega membership oracle for an {@link ObservableSUL}.
@@ -38,7 +37,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * After some symbols (i.e. after {@link OmegaQuery#getPrefix()}, and after each {@link OmegaQuery#getLoop()}) the state
  * of the {@link ObservableSUL} is retrieved, and used to answer the query.
  *
- * Like {@link SULOracle} this class is thread-safe.
+ * This class is <b>not</b> thread-safe.
  *
  * @author Jeroen Meijer
  *
@@ -50,15 +49,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implements MealyOmegaMembershipOracle<Q, I, O> {
 
     private final ObservableSUL<S, I, O> sul;
-    private final @Nullable ThreadLocal<ObservableSUL<S, I, O>> localSul;
 
     protected AbstractSULOmegaOracle(ObservableSUL<S, I, O> sul) {
         this.sul = sul;
-        if (sul.canFork()) {
-            this.localSul = ThreadLocal.withInitial(sul::fork);
-        } else {
-            this.localSul = null;
-        }
     }
 
     /**
@@ -67,34 +60,21 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
      * @return the {@link ObservableSUL}.
      */
     public ObservableSUL<S, I, O> getSul() {
-        if (localSul != null) {
-            return localSul.get();
-        } else {
-            return sul;
-        }
+        return sul;
     }
 
     @Override
     public void processQueries(Collection<? extends OmegaQuery<I, Word<O>>> queries) {
-        if (localSul != null) {
-            processQueries(localSul.get(), queries);
-        } else {
-            synchronized (sul) {
-                processQueries(sul, queries);
-            }
-        }
-    }
-
-    private void processQueries(ObservableSUL<S, I, O> sul, Collection<? extends OmegaQuery<I, Word<O>>> queries) {
         for (OmegaQuery<I, Word<O>> q : queries) {
-            final Pair<Word<O>, Integer> output = answerQuery(sul, q.getPrefix(), q.getLoop(), q.getRepeat());
+            final Pair<Word<O>, Integer> output = answerQuery(q.getPrefix(), q.getLoop(), q.getRepeat());
             q.answer(output.getFirst(), output.getSecond());
         }
     }
 
     protected abstract Q getQueryState(ObservableSUL<S, I, O> sul);
 
-    private Pair<Word<O>, Integer> answerQuery(ObservableSUL<S, I, O> sul, Word<I> prefix, Word<I> loop, int repeat) {
+    @Override
+    public Pair<Word<O>, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
         assert repeat > 0;
         sul.pre();
         try {

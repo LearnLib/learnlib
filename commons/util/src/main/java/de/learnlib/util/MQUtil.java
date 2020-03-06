@@ -24,20 +24,11 @@ import de.learnlib.api.oracle.QueryAnswerer;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
 import de.learnlib.api.query.Query;
-import de.learnlib.setting.LearnLibProperty;
-import de.learnlib.setting.LearnLibSettings;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 
 public final class MQUtil {
-
-    public static final int PARALLEL_THRESHOLD;
-
-    static {
-        LearnLibSettings settings = LearnLibSettings.getInstance();
-        PARALLEL_THRESHOLD = settings.getInt(LearnLibProperty.PARALLEL_QUERIES_THRESHOLD, -1);
-    }
 
     private MQUtil() {
         // prevent instantiation
@@ -60,24 +51,6 @@ public final class MQUtil {
         return query(oracle, Word.epsilon(), queryWord);
     }
 
-    public static <I, D> void answerQueriesAuto(QueryAnswerer<I, D> answerer,
-                                                Collection<? extends Query<I, D>> queries) {
-        if (PARALLEL_THRESHOLD < 0 || queries.size() < PARALLEL_THRESHOLD) {
-            answerQueries(answerer, queries);
-        } else {
-            answerQueriesParallel(answerer, queries);
-        }
-    }
-
-    public static <S, I, D> void answerOmegaQueriesAuto(OmegaQueryAnswerer<S, I, D> answerer,
-                                                        Collection<? extends OmegaQuery<I, D>> queries) {
-        if (PARALLEL_THRESHOLD < 0 || queries.size() < PARALLEL_THRESHOLD) {
-            answerOmegaQueries(answerer, queries);
-        } else {
-            answerOmegaQueriesParallel(answerer, queries);
-        }
-    }
-
     public static <I, D> void answerQueries(QueryAnswerer<I, D> answerer, Collection<? extends Query<I, D>> queries) {
         for (Query<I, D> query : queries) {
             Word<I> prefix = query.getPrefix();
@@ -96,27 +69,6 @@ public final class MQUtil {
             Pair<D, Integer> answer = answerer.answerQuery(prefix, loop, repeat);
             query.answer(answer.getFirst(), answer.getSecond());
         }
-    }
-
-    public static <I, D> void answerQueriesParallel(QueryAnswerer<I, D> answerer,
-                                                    Collection<? extends Query<I, D>> queries) {
-        queries.parallelStream().forEach(q -> {
-            Word<I> prefix = q.getPrefix();
-            Word<I> suffix = q.getSuffix();
-            D answer = answerer.answerQuery(prefix, suffix);
-            q.answer(answer);
-        });
-    }
-
-    public static <S, I, D> void answerOmegaQueriesParallel(OmegaQueryAnswerer<S, I, D> answerer,
-                                                            Collection<? extends OmegaQuery<I, D>> queries) {
-        queries.parallelStream().forEach(q -> {
-            final Word<I> prefix = q.getPrefix();
-            final Word<I> loop = q.getLoop();
-            final int repeat = q.getRepeat();
-            Pair<D, Integer> answer = answerer.answerQuery(prefix, loop, repeat);
-            q.answer(answer.getFirst(), answer.getSecond());
-        });
     }
 
     public static <I, D> boolean isCounterexample(DefaultQuery<I, D> query, SuffixOutput<I, D> hyp) {
