@@ -21,7 +21,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 
 /**
  * A markup interface for classes that can process a batch of work in a parallel environment (e.g. a {@link
- * MembershipOracle} when used by {@link ParallelOracle}).
+ * MembershipOracle} when used by a {@link ParallelOracle}).
  *
  * @param <T>
  *         batch type

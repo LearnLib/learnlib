@@ -20,7 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Removed
 
-* Removed the `learnlib.queries.parallel.threshold` property. Learning setup that want to use parallelism now need the explicitly setup parallel oracles.
+* Removed the `learnlib.queries.parallel.threshold` property. Learning setups that want to use parallelism now need to explicitly setup parallel oracles.
 * Removed `MQUtil#answerQueries{Auto,Parallel}` and `MQUtil#answerOmegaQueries{Auto,Parallel}`)
 
 
