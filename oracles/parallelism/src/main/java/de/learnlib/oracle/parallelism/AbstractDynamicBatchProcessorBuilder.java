@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 import com.google.common.base.Preconditions;
 import de.learnlib.api.oracle.parallelism.BatchProcessor;
 import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
-import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.commons.util.concurrent.ScalingThreadPoolExecutor;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -90,7 +89,7 @@ public abstract class AbstractDynamicBatchProcessorBuilder<Q, P extends BatchPro
 
         if (oracles != null) {
             executor = Executors.newFixedThreadPool(oracles.size());
-            supplier = new StaticOracleProvider<>(new ArrayStorage<>(oracles));
+            supplier = new StaticOracleProvider<>(oracles);
         } else if (customExecutor != null) {
             executor = customExecutor;
             supplier = oracleSupplier;
@@ -115,32 +114,28 @@ public abstract class AbstractDynamicBatchProcessorBuilder<Q, P extends BatchPro
 
     static class StaticOracleProvider<P extends BatchProcessor<?>> implements Supplier<P> {
 
-        private final ArrayStorage<P> oracles;
+        private final P[] oracles;
         private int idx;
 
-        StaticOracleProvider(ArrayStorage<P> oracles) {
+        StaticOracleProvider(P[] oracles) {
             this.oracles = oracles;
         }
 
+        @SuppressWarnings("unchecked")
         StaticOracleProvider(Collection<? extends P> oracles) {
-            this.oracles = new ArrayStorage<>(oracles.size());
-            int idx = 0;
-            for (final P oracle : oracles) {
-                this.oracles.set(idx++, oracle);
-            }
+            this.oracles = oracles.toArray((P[]) new BatchProcessor[oracles.size()]);
         }
 
         @Override
         public P get() {
             synchronized (this) {
-                if (idx < oracles.size()) {
-                    return oracles.get(idx++);
+                if (idx < oracles.length) {
+                    return oracles[idx++];
                 }
             }
 
             throw new IllegalStateException(
-                    "The supplier should not have been called more than " + oracles.size() + " times");
+                    "The supplier should not have been called more than " + oracles.length + " times");
         }
     }
-
 }

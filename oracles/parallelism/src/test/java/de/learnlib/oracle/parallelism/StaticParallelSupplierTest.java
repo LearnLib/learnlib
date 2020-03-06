@@ -15,8 +15,6 @@
  */
 package de.learnlib.oracle.parallelism;
 
-import java.util.Arrays;
-
 import de.learnlib.oracle.parallelism.AbstractDynamicBatchProcessorBuilder.StaticOracleProvider;
 import de.learnlib.oracle.parallelism.AbstractStaticParallelOracleTest.TestOutput;
 
@@ -24,7 +22,7 @@ public class StaticParallelSupplierTest extends AbstractStaticParallelOracleTest
 
     @Override
     protected StaticParallelOracleBuilder<Integer, TestOutput> getBuilder() {
-        return ParallelOracleBuilders.newStaticParallelOracle(new StaticOracleProvider<>(Arrays.asList(getOracles())));
+        return ParallelOracleBuilders.newStaticParallelOracle(new StaticOracleProvider<>(getOracles()));
     }
 
     @Override
