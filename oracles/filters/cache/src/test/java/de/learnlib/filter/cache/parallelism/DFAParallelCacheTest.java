@@ -17,9 +17,12 @@ package de.learnlib.filter.cache.parallelism;
 
 import java.util.Random;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.parallelism.ParallelOracle;
 import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
 import de.learnlib.filter.cache.dfa.DFACaches;
+import de.learnlib.filter.statistic.oracle.DFACounterOracle;
+import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
+import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
@@ -28,7 +31,8 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * @author frohme
  */
-public class DFAParallelCacheTest extends AbstractParallelCacheTest<DFA<?, Character>, Character, Boolean> {
+public class DFAParallelCacheTest
+        extends AbstractParallelCacheTest<DFACounterOracle<Character>, DFALearningCacheOracle<Character>, DFA<?, Character>, Character, Boolean> {
 
     @Override
     protected Alphabet<Character> getAlphabet() {
@@ -36,13 +40,28 @@ public class DFAParallelCacheTest extends AbstractParallelCacheTest<DFA<?, Chara
     }
 
     @Override
-    protected DFA<?, Character> getTargetModel() {
+    protected DFA<?, Character> getTargetModel(Alphabet<Character> alphabet) {
         return RandomAutomata.randomDFA(new Random(42), MODEL_SIZE, getAlphabet());
     }
 
     @Override
+    protected DFACounterOracle<Character> getSUL(DFA<?, Character> targetModel) {
+        return new DFACounterOracle<>(new DFASimulatorOracle<>(targetModel), "Queries");
+    }
+
+    @Override
     protected DFALearningCacheOracle<Character> getCache(Alphabet<Character> alphabet,
-                                                         MembershipOracle<Character, Boolean> oracle) {
-        return DFACaches.createCache(alphabet, oracle);
+                                                         DFACounterOracle<Character> sul) {
+        return DFACaches.createCache(alphabet, sul);
+    }
+
+    @Override
+    protected ParallelOracle<Character, Boolean> getParallelOracle(DFALearningCacheOracle<Character> cache) {
+        return ParallelOracleBuilders.newDynamicParallelOracle(() -> cache).create();
+    }
+
+    @Override
+    protected int getNumberOfQueries(DFACounterOracle<Character> model) {
+        return (int) model.getCount();
     }
 }

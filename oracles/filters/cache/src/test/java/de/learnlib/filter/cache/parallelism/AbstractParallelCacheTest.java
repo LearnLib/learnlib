@@ -16,24 +16,17 @@
 package de.learnlib.filter.cache.parallelism;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.parallelism.ParallelOracle;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.api.query.Query;
-import de.learnlib.filter.cache.LearningCacheOracle;
-import de.learnlib.filter.statistic.oracle.CounterOracle;
-import de.learnlib.oracle.membership.SimulatorOracle;
-import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
-import net.automatalib.automata.concepts.SuffixOutput;
+import de.learnlib.filter.cache.LearningCache;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -48,53 +41,45 @@ import org.testng.annotations.Test;
  *
  * @author frohme
  */
-public abstract class AbstractParallelCacheTest<A extends SuffixOutput<I, D>, I, D> {
+public abstract class AbstractParallelCacheTest<S, C extends LearningCache<A, I, D>, A, I, D> {
 
     protected static final int MODEL_SIZE = 10;
-    private static final int NUMBER_OF_THREADS = 10;
-    private static final int BATCH_SIZE = 10;
     private static final int MAXIMUM_LENGTH_OF_QUERIES = 5;
 
-    private CounterOracle<I, D> counterOracle;
     private Alphabet<I> alphabet;
-    private ParallelOracle<I, D> parallelOracle;
-    private LearningCacheOracle<A, I, D> cache;
     private A targetModel;
+    private S sul;
+    private C cache;
+    private ParallelOracle<I, D> parallelOracle;
 
     protected abstract Alphabet<I> getAlphabet();
 
-    protected abstract A getTargetModel();
+    protected abstract A getTargetModel(Alphabet<I> alphabet);
 
-    protected abstract LearningCacheOracle<A, I, D> getCache(Alphabet<I> alphabet, MembershipOracle<I, D> oracle);
+    protected abstract S getSUL(A targetModel);
+
+    protected abstract C getCache(Alphabet<I> alphabet, S sul);
+
+    protected abstract ParallelOracle<I, D> getParallelOracle(C cache);
+
+    protected abstract int getNumberOfQueries(S sul);
 
     @BeforeClass
     public void setUp() {
         this.alphabet = getAlphabet();
-        this.targetModel = getTargetModel();
+        this.targetModel = getTargetModel(this.alphabet);
+        this.sul = getSUL(this.targetModel);
+        this.cache = getCache(this.alphabet, this.sul);
+        this.parallelOracle = getParallelOracle(this.cache);
+    }
 
-        this.counterOracle = new CounterOracle<>(new SimulatorOracle<>(targetModel), "Queries");
-        this.cache = getCache(this.alphabet, this.counterOracle);
+    @AfterClass
+    public void teardown() {
+        this.parallelOracle.shutdownNow();
     }
 
     @Test(timeOut = 20000)
-    public void testConcurrentMembershipQueriesExplicit() {
-        setUp();
-        this.parallelOracle = ParallelOracleBuilders.newDynamicParallelOracle(() -> cache)
-                                                    .withPoolSize(NUMBER_OF_THREADS)
-                                                    .withBatchSize(BATCH_SIZE)
-                                                    .create();
-
-        testConcurrentMembershipQueries(parallelOracle::processQueries);
-    }
-
-    @Test(dependsOnMethods = "testConcurrentMembershipQueriesExplicit", timeOut = 20000)
-    public void testConcurrentEquivalenceQueriesExplicit() {
-        testConcurrentEquivalenceQueries(parallelOracle::processQueries);
-        parallelOracle.shutdownNow();
-    }
-
-    private void testConcurrentMembershipQueries(Consumer<? super Collection<? extends Query<I, D>>> mqConsumer) {
-
+    public void testConcurrentMembershipQueries() {
         final List<DefaultQuery<I, D>> queries =
                 new ArrayList<>(((int) Math.pow(alphabet.size(), MAXIMUM_LENGTH_OF_QUERIES)) + 1);
 
@@ -102,21 +87,21 @@ public abstract class AbstractParallelCacheTest<A extends SuffixOutput<I, D>, I,
             queries.add(new DefaultQuery<>(Word.fromList(word)));
         }
 
-        mqConsumer.accept(queries);
-        final long numOfQueriesBefore = counterOracle.getCount();
+        this.parallelOracle.processQueries(queries);
+        final long numOfQueriesBefore = getNumberOfQueries(this.sul);
 
         queries.forEach(q -> q.answer(null));
 
-        mqConsumer.accept(queries);
-        final long numOfQueriesAfter = counterOracle.getCount();
+        this.parallelOracle.processQueries(queries);
+        final long numOfQueriesAfter = getNumberOfQueries(this.sul);
 
         Assert.assertEquals(numOfQueriesAfter, numOfQueriesBefore);
     }
 
-    private void testConcurrentEquivalenceQueries(Consumer<? super Collection<? extends Query<I, D>>> mqConsumer) {
-
-        final long previousCount = counterOracle.getCount();
-        final EquivalenceOracle<A, I, D> eqOracle = cache.createCacheConsistencyTest();
+    @Test(dependsOnMethods = "testConcurrentMembershipQueries", timeOut = 20000)
+    public void testConcurrentEquivalenceQueries() {
+        final long previousCount = getNumberOfQueries(this.sul);
+        final EquivalenceOracle<? super A, I, D> eqOracle = cache.createCacheConsistencyTest();
 
         final List<DefaultQuery<I, D>> queries = new ArrayList<>(
                 (int) Math.pow(alphabet.size(), MAXIMUM_LENGTH_OF_QUERIES + 1) -
@@ -145,10 +130,10 @@ public abstract class AbstractParallelCacheTest<A extends SuffixOutput<I, D>, I,
         });
 
         task.start();
-        mqConsumer.accept(queries);
+        this.parallelOracle.processQueries(queries);
         task.interrupt();
 
-        final long numOfQueries = counterOracle.getCount();
+        final long numOfQueries = getNumberOfQueries(this.sul);
         Assert.assertEquals(numOfQueries, queries.size() + previousCount);
     }
 }

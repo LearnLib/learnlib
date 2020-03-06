@@ -17,9 +17,12 @@ package de.learnlib.filter.cache.parallelism;
 
 import java.util.Random;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.parallelism.ParallelOracle;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.cache.mealy.MealyCaches;
+import de.learnlib.filter.statistic.oracle.MealyCounterOracle;
+import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
+import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
@@ -30,7 +33,7 @@ import net.automatalib.words.impl.Alphabets;
  * @author frohme
  */
 public class MealyParallelCacheTest
-        extends AbstractParallelCacheTest<MealyMachine<?, Character, ?, Character>, Character, Word<Character>> {
+        extends AbstractParallelCacheTest<MealyCounterOracle<Character, Character>, MealyLearningCacheOracle<Character, Character>, MealyMachine<?, Character, ?, Character>, Character, Word<Character>> {
 
     @Override
     protected Alphabet<Character> getAlphabet() {
@@ -38,13 +41,28 @@ public class MealyParallelCacheTest
     }
 
     @Override
-    protected MealyMachine<?, Character, ?, Character> getTargetModel() {
+    protected MealyMachine<?, Character, ?, Character> getTargetModel(Alphabet<Character> alphabet) {
         return RandomAutomata.randomMealy(new Random(42), MODEL_SIZE, getAlphabet(), getAlphabet());
     }
 
     @Override
+    protected MealyCounterOracle<Character, Character> getSUL(MealyMachine<?, Character, ?, Character> targetModel) {
+        return new MealyCounterOracle<>(new MealySimulatorOracle<>(targetModel), "Queries");
+    }
+
+    @Override
     protected MealyLearningCacheOracle<Character, Character> getCache(Alphabet<Character> alphabet,
-                                                                      MembershipOracle<Character, Word<Character>> oracle) {
-        return MealyCaches.createCache(alphabet, oracle);
+                                                                      MealyCounterOracle<Character, Character> sul) {
+        return MealyCaches.createCache(alphabet, sul);
+    }
+
+    @Override
+    protected ParallelOracle<Character, Word<Character>> getParallelOracle(MealyLearningCacheOracle<Character, Character> cache) {
+        return ParallelOracleBuilders.newDynamicParallelOracle(() -> cache).create();
+    }
+
+    @Override
+    protected int getNumberOfQueries(MealyCounterOracle<Character, Character> model) {
+        return (int) model.getStatisticalData().getCount();
     }
 }

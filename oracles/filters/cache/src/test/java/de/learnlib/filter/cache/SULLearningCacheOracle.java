@@ -16,7 +16,6 @@
 package de.learnlib.filter.cache;
 
 import java.util.Collection;
-import java.util.function.Supplier;
 
 import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.EquivalenceOracle;
@@ -34,16 +33,16 @@ public class SULLearningCacheOracle<I, O, C extends MealyLearningCache<I, O> & R
         implements MealyLearningCacheOracle<I, O> {
 
     private final C cache;
-    private final ThreadLocal<MealyMembershipOracle<I, O>> oracle;
+    private final MealyMembershipOracle<I, O> oracle;
 
-    public SULLearningCacheOracle(C cache, Supplier<MealyMembershipOracle<I, O>> supplier) {
+    public SULLearningCacheOracle(C cache, MealyMembershipOracle<I, O> oracle) {
         this.cache = cache;
-        this.oracle = ThreadLocal.withInitial(supplier);
+        this.oracle = oracle;
     }
 
     @Override
     public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-        oracle.get().processQueries(queries);
+        oracle.processQueries(queries);
     }
 
     @Override
@@ -56,18 +55,16 @@ public class SULLearningCacheOracle<I, O, C extends MealyLearningCache<I, O> & R
     }
 
     public MealyMembershipOracle<I, O> getOracle() {
-        return oracle.get();
+        return oracle;
     }
 
     public static <I, O> SULLearningCacheOracle<I, O, SULCache<I, O>> fromSULCache(SULCache<I, O> cache) {
-        assert cache.canFork();
-        return new SULLearningCacheOracle<>(cache, () -> new SULOracle<>(cache.fork()));
+        return new SULLearningCacheOracle<>(cache, new SULOracle<>(cache));
     }
 
     public static <I, O> SULLearningCacheOracle<I, O, StateLocalInputSULCache<I, O>> fromSLISULCache(
             StateLocalInputSULCache<I, O> cache,
             O undefinedInput) {
-        assert cache.canFork();
-        return new SULLearningCacheOracle<>(cache, () -> new StateLocalInputSULOracle<>(cache.fork(), undefinedInput));
+        return new SULLearningCacheOracle<>(cache, new StateLocalInputSULOracle<>(cache.fork(), undefinedInput));
     }
 }
