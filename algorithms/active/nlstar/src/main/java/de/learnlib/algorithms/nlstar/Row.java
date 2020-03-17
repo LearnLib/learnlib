@@ -129,7 +129,9 @@ public class Row<I> {
     }
 
     boolean checkPrime() {
-        if (coveredRows.isEmpty()) {
+        if (contents.isEmpty()) {
+            prime = false;
+        } else if (coveredRows.isEmpty()) {
             prime = true;
         } else {
             BitSet aggContents = new BitSet();
