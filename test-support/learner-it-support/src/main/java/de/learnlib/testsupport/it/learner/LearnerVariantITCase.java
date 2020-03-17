@@ -52,10 +52,11 @@ final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton
         LearningAlgorithm<? extends M, I, D> learner = variant.getLearner();
 
         Alphabet<I> alphabet = example.getAlphabet();
+        M reference = example.getReferenceAutomaton();
 
         int maxRounds = variant.getMaxRounds();
         if (maxRounds < 0) {
-            maxRounds = example.getReferenceAutomaton().size();
+            maxRounds = reference.size();
         }
 
         long start = System.nanoTime();
@@ -75,9 +76,10 @@ final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton
             Assert.assertTrue(refined, "Real counterexample " + ceQuery.getInput() + " did not refine hypothesis");
         }
 
-        Assert.assertNull(Automata.findSeparatingWord(example.getReferenceAutomaton(),
-                                                      learner.getHypothesisModel(),
-                                                      alphabet), "Final hypothesis does not match reference automaton");
+        M hypothesis = learner.getHypothesisModel();
+        Assert.assertEquals(hypothesis.size(), reference.size());
+        Assert.assertNull(Automata.findSeparatingWord(reference, hypothesis, alphabet),
+                          "Final hypothesis does not match reference automaton");
 
         long duration = (System.nanoTime() - start) / NANOS_PER_MILLISECOND;
         LOGGER.info("Passed learner integration test {} ... took [{}]",

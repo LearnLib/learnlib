@@ -17,10 +17,9 @@ package de.learnlib.examples.mealy;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Random;
-import java.util.Set;
 
 import de.learnlib.examples.LearningExample.StateLocalInputMealyLearningExample;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -29,6 +28,7 @@ import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.random.RandomUtil;
+import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -56,38 +56,40 @@ public class ExampleRandomStateLocalInputMealy<I, O> implements StateLocalInputM
 
         this.alphabet = alphabet;
         this.undefinedOutput = undefinedOutput;
-        CompactMealy<I, O> source = RandomAutomata.randomDeterministic(random,
-                                                                       size,
-                                                                       alphabet,
-                                                                       Collections.emptyList(),
-                                                                       Arrays.asList(outputs),
-                                                                       new CompactMealy<>(alphabet));
+        CompactMealy<I, O> source = RandomAutomata.randomMealy(random, size, alphabet, Arrays.asList(outputs));
 
         final int alphabetSize = alphabet.size();
 
         final Collection<Integer> oldStates = source.getStates();
         final Integer sink = source.addState();
-        final MutableMapping<Integer, Collection<I>> enabledInputs = source.createDynamicStateMapping();
 
         for (final Integer s : oldStates) {
-
-            final Set<I> stateInputs = new HashSet<>(alphabet);
             // randomly remove (redirect to sink) transitions
             for (int idx : RandomUtil.distinctIntegers(random.nextInt(alphabetSize), alphabetSize, random)) {
-                final I sym = alphabet.getSymbol(idx);
-                stateInputs.remove(sym);
-                source.setTransition(s, sym, sink, undefinedOutput);
+                source.setTransition(s, idx, sink, undefinedOutput);
             }
-            enabledInputs.put(s, stateInputs);
         }
-
         // configure sink
         for (final I i : alphabet) {
             source.addTransition(sink, i, sink, undefinedOutput);
         }
-        enabledInputs.put(sink, Collections.emptyList());
 
-        this.referenceAutomaton = new MockedSLIMealy<>(source, enabledInputs);
+        final CompactMealy<I, O> minimized = Automata.invasiveMinimize(source, alphabet);
+        final MutableMapping<Integer, Collection<I>> enabledInputs = source.createStaticStateMapping();
+
+        for (Integer s : minimized) {
+            final Collection<I> stateInputs = new HashSet<>(alphabet);
+
+            for (I i : alphabet) {
+                if (Objects.equals(undefinedOutput, minimized.getOutput(s, i))) {
+                    stateInputs.remove(i);
+                }
+            }
+
+            enabledInputs.put(s, stateInputs);
+        }
+
+        this.referenceAutomaton = new MockedSLIMealy<>(minimized, enabledInputs);
     }
 
     @SafeVarargs

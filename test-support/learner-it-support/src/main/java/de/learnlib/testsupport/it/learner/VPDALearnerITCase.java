@@ -62,7 +62,9 @@ public class VPDALearnerITCase<I> implements ITest {
             Assert.assertTrue(refined, "Real counterexample " + ceQuery.getInput() + " did not refine hypothesis");
         }
 
-        Assert.assertTrue(Automata.testEquivalence(reference, learner.getHypothesisModel(), alphabet),
+        OneSEVPA<?, I> hypothesis = learner.getHypothesisModel();
+        Assert.assertEquals(hypothesis.size(), reference.size());
+        Assert.assertTrue(Automata.testEquivalence(reference, hypothesis, alphabet),
                           "Final hypothesis does not match reference automaton");
 
         long duration = (System.nanoTime() - start) / NANOS_PER_MILLISECOND;
