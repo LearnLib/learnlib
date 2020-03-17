@@ -23,6 +23,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Removed the `learnlib.queries.parallel.threshold` property. Learning setups that want to use parallelism now need to explicitly setup parallel oracles.
 * Removed `MQUtil#answerQueries{Auto,Parallel}` and `MQUtil#answerOmegaQueries{Auto,Parallel}`)
 
+### Fixed
+
+* Fixed a bug where NL* would create non-canonical hypotheses ([#70](https://github.com/LearnLib/learnlib/issues/70), thanks to [Joshua Moerman](https://github.com/Jaxan))
+
 
 ## [0.15.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.15.0) - 2020-02-06
 
