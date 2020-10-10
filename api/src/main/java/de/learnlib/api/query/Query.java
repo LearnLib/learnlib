@@ -75,7 +75,8 @@ public abstract class Query<I, D> {
      * throwing an exception.
      *
      * @param output
-     *         the output, i.e., the response to the query
+     *         the output, i.e., the directly observable response to the query's suffix (cf. {@link Query main
+     *         documentation})
      */
     public abstract void answer(D output);
 
