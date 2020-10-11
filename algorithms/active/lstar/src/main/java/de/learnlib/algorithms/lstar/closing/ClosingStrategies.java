@@ -23,6 +23,7 @@ import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Collection of predefined observation table closing strategies.
@@ -35,101 +36,106 @@ public final class ClosingStrategies {
     /**
      * Closing strategy that randomly selects one representative row to close from each equivalence class.
      */
-    public static final ClosingStrategy<Object, Object> CLOSE_RANDOM = new CloseRandomStrategy();
+    public static final ClosingStrategy<@Nullable Object, @Nullable Object> CLOSE_RANDOM = new CloseRandomStrategy();
 
     /**
      * Closing strategy that selects the first row from each equivalence class as representative.
      */
-    public static final ClosingStrategy<Object, Object> CLOSE_FIRST = new ClosingStrategy<Object, Object>() {
+    public static final ClosingStrategy<@Nullable Object, @Nullable Object> CLOSE_FIRST =
+            new ClosingStrategy<@Nullable Object, @Nullable Object>() {
 
-        @Override
-        public <RI, RD> List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses,
-                                                        ObservationTable<RI, RD> table,
-                                                        MembershipOracle<RI, RD> oracle) {
-            List<Row<RI>> result = new ArrayList<>(unclosedClasses.size());
-            for (List<Row<RI>> clazz : unclosedClasses) {
-                result.add(clazz.get(0));
-            }
-            return result;
-        }
+                @Override
+                public <RI, RD> List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses,
+                                                                ObservationTable<RI, RD> table,
+                                                                MembershipOracle<RI, RD> oracle) {
+                    List<Row<RI>> result = new ArrayList<>(unclosedClasses.size());
+                    for (List<Row<RI>> clazz : unclosedClasses) {
+                        result.add(clazz.get(0));
+                    }
+                    return result;
+                }
 
-        @Override
-        public String toString() {
-            return "CloseFirst";
-        }
-    };
+                @Override
+                public String toString() {
+                    return "CloseFirst";
+                }
+            };
 
     /**
      * Closing strategy that selects the shortest row of each equivalence class (more precisely: a row which's prefix
      * has minimal length in the respective class) as representative.
      */
-    public static final ClosingStrategy<Object, Object> CLOSE_SHORTEST = new ClosingStrategy<Object, Object>() {
+    public static final ClosingStrategy<@Nullable Object, @Nullable Object> CLOSE_SHORTEST =
+            new ClosingStrategy<@Nullable Object, @Nullable Object>() {
 
-        @Override
-        public <RI, RD> List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses,
-                                                        ObservationTable<RI, RD> table,
-                                                        MembershipOracle<RI, RD> oracle) {
+                @Override
+                public <RI, RD> List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses,
+                                                                ObservationTable<RI, RD> table,
+                                                                MembershipOracle<RI, RD> oracle) {
 
-            List<Row<RI>> result = new ArrayList<>();
-            for (List<Row<RI>> clazz : unclosedClasses) {
-                Row<RI> shortest = null;
-                int shortestLen = Integer.MAX_VALUE;
-                for (Row<RI> row : clazz) {
-                    int prefixLen = row.getLabel().length();
-                    if (shortest == null || prefixLen < shortestLen) {
-                        shortest = row;
-                        shortestLen = prefixLen;
+                    List<Row<RI>> result = new ArrayList<>();
+                    for (List<Row<RI>> clazz : unclosedClasses) {
+                        Row<RI> shortest = null;
+                        int shortestLen = Integer.MAX_VALUE;
+                        for (Row<RI> row : clazz) {
+                            int prefixLen = row.getLabel().length();
+                            if (shortest == null || prefixLen < shortestLen) {
+                                shortest = row;
+                                shortestLen = prefixLen;
+                            }
+                        }
+                        assert shortest != null;
+                        result.add(shortest);
                     }
+                    return result;
                 }
-                result.add(shortest);
-            }
-            return result;
-        }
 
-        @Override
-        public String toString() {
-            return "CloseShortest";
-        }
-    };
+                @Override
+                public String toString() {
+                    return "CloseShortest";
+                }
+            };
 
     /**
      * Closing strategy that selects the lexicographically minimal row (wrt. its prefix) of each equivalence class as
      * representative.
      */
-    public static final ClosingStrategy<Object, Object> CLOSE_LEX_MIN = new ClosingStrategy<Object, Object>() {
+    public static final ClosingStrategy<@Nullable Object, @Nullable Object> CLOSE_LEX_MIN =
+            new ClosingStrategy<@Nullable Object, @Nullable Object>() {
 
-        @Override
-        public <RI, RD> List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses,
-                                                        ObservationTable<RI, RD> table,
-                                                        MembershipOracle<RI, RD> oracle) {
-            List<Row<RI>> result = new ArrayList<>(unclosedClasses.size());
-            Alphabet<RI> alphabet = table.getInputAlphabet();
-            for (List<Row<RI>> clazz : unclosedClasses) {
-                Row<RI> lexMin = null;
-                for (Row<RI> row : clazz) {
-                    if (lexMin == null) {
-                        lexMin = row;
-                    } else if (CmpUtil.lexCompare(row.getLabel(), lexMin.getLabel(), alphabet) < 0) {
-                        lexMin = row;
+                @Override
+                public <RI, RD> List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses,
+                                                                ObservationTable<RI, RD> table,
+                                                                MembershipOracle<RI, RD> oracle) {
+                    List<Row<RI>> result = new ArrayList<>(unclosedClasses.size());
+                    Alphabet<RI> alphabet = table.getInputAlphabet();
+                    for (List<Row<RI>> clazz : unclosedClasses) {
+                        Row<RI> lexMin = null;
+                        for (Row<RI> row : clazz) {
+                            if (lexMin == null) {
+                                lexMin = row;
+                            } else if (CmpUtil.lexCompare(row.getLabel(), lexMin.getLabel(), alphabet) < 0) {
+                                lexMin = row;
+                            }
+                        }
+                        assert lexMin != null;
+                        result.add(lexMin);
                     }
+                    return result;
                 }
-                result.add(lexMin);
-            }
-            return result;
-        }
 
-        @Override
-        public String toString() {
-            return "CloseLexMin";
-        }
-    };
+                @Override
+                public String toString() {
+                    return "CloseLexMin";
+                }
+            };
 
     private ClosingStrategies() {
         // prevent instantiation
     }
 
     @SuppressWarnings("unchecked")
-    public static ClosingStrategy<Object, Object>[] values() {
+    public static ClosingStrategy<@Nullable Object, @Nullable Object>[] values() {
         return new ClosingStrategy[] {CLOSE_RANDOM, CLOSE_FIRST, CLOSE_SHORTEST, CLOSE_LEX_MIN};
     }
 

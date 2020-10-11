@@ -28,6 +28,7 @@ import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.incremental.mealy.tree.dynamic.DynamicIncrementalMealyTreeBuilder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,13 +38,13 @@ public class MealyCacheOracle<I, O> extends InternalMealyCacheOracle<I, O>
     private static final Logger LOGGER = LoggerFactory.getLogger(MealyCacheOracle.class);
 
     MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder,
-                     Mapping<? super O, ? extends O> errorSyms,
+                     @Nullable Mapping<? super O, ? extends O> errorSyms,
                      MembershipOracle<I, Word<O>> delegate) {
         super(incrementalBuilder, errorSyms, delegate);
     }
 
     MealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder,
-                     Mapping<? super O, ? extends O> errorSyms,
+                     @Nullable Mapping<? super O, ? extends O> errorSyms,
                      MembershipOracle<I, Word<O>> delegate,
                      Comparator<I> comparator) {
         super(incrementalBuilder, errorSyms, delegate, comparator);
@@ -55,7 +56,7 @@ public class MealyCacheOracle<I, O> extends InternalMealyCacheOracle<I, O>
     }
 
     public static <I, O> MealyCacheOracle<I, O> createDAGCacheOracle(Alphabet<I> inputAlphabet,
-                                                                     Mapping<? super O, ? extends O> errorSyms,
+                                                                     @Nullable Mapping<? super O, ? extends O> errorSyms,
                                                                      MembershipOracle<I, Word<O>> delegate) {
         IncrementalMealyBuilder<I, O> incrementalBuilder = new IncrementalMealyDAGBuilder<>(inputAlphabet);
         return new MealyCacheOracle<>(incrementalBuilder, errorSyms, delegate, inputAlphabet);
@@ -67,7 +68,7 @@ public class MealyCacheOracle<I, O> extends InternalMealyCacheOracle<I, O>
     }
 
     public static <I, O> MealyCacheOracle<I, O> createTreeCacheOracle(Alphabet<I> inputAlphabet,
-                                                                      Mapping<? super O, ? extends O> errorSyms,
+                                                                      @Nullable Mapping<? super O, ? extends O> errorSyms,
                                                                       MembershipOracle<I, Word<O>> delegate) {
         IncrementalMealyBuilder<I, O> incrementalBuilder = new IncrementalMealyTreeBuilder<>(inputAlphabet);
         return new MealyCacheOracle<>(incrementalBuilder, errorSyms, delegate, inputAlphabet);
@@ -77,7 +78,7 @@ public class MealyCacheOracle<I, O> extends InternalMealyCacheOracle<I, O>
         return createDynamicTreeCacheOracle(null, delegate);
     }
 
-    public static <I, O> MealyCacheOracle<I, O> createDynamicTreeCacheOracle(Mapping<? super O, ? extends O> errorSyms,
+    public static <I, O> MealyCacheOracle<I, O> createDynamicTreeCacheOracle(@Nullable Mapping<? super O, ? extends O> errorSyms,
                                                                              MembershipOracle<I, Word<O>> delegate) {
         IncrementalMealyBuilder<I, O> incrementalBuilder = new DynamicIncrementalMealyTreeBuilder<>();
         return new MealyCacheOracle<>(incrementalBuilder, errorSyms, delegate);

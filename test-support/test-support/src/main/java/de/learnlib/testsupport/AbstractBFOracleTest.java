@@ -22,6 +22,7 @@ import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -33,18 +34,24 @@ import org.testng.annotations.Test;
 public abstract class AbstractBFOracleTest<D> {
 
     public static final Alphabet<Character> ALPHABET = Alphabets.singleton('a');
-
     public static final double MULTIPLIER = 2.0;
+
+    private AutoCloseable mock;
 
     private AbstractBFOracle<? extends SimpleDTS<?, Character>, Character, D> bfo;
 
-    protected abstract AbstractBFOracle<? extends SimpleDTS<?, Character>, Character, D> createBreadthFirstOracle(
-            double multiplier);
+    protected abstract AbstractBFOracle<? extends SimpleDTS<?, Character>, Character, D> createBreadthFirstOracle(double multiplier);
 
     @BeforeMethod
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        mock = MockitoAnnotations.openMocks(this);
         bfo = createBreadthFirstOracle(MULTIPLIER);
+    }
+
+    @AfterMethod
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void tearDown() throws Exception {
+        this.mock.close();
     }
 
     @Test

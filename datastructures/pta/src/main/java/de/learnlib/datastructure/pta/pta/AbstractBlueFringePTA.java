@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractBlueFringePTA<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S>>
         extends BasePTA<SP, TP, S> {
@@ -37,8 +38,7 @@ public abstract class AbstractBlueFringePTA<SP, TP, S extends AbstractBlueFringe
         return redStates.get(id);
     }
 
-    @NonNegative
-    public int getNumRedStates() {
+    public @NonNegative int getNumRedStates() {
         return redStates.size();
     }
 
@@ -68,7 +68,7 @@ public abstract class AbstractBlueFringePTA<SP, TP, S extends AbstractBlueFringe
         redStates.add(qb);
     }
 
-    public RedBlueMerge<SP, TP, S> tryMerge(S qr, S qb) {
+    public @Nullable RedBlueMerge<SP, TP, S> tryMerge(S qr, S qb) {
         RedBlueMerge<SP, TP, S> merge = new RedBlueMerge<>(this, qr, qb);
         if (!merge.merge()) {
             return null;

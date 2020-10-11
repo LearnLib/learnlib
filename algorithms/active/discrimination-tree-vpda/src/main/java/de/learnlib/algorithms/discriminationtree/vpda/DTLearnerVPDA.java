@@ -33,6 +33,7 @@ import net.automatalib.automata.vpda.State;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @param <I>
@@ -58,11 +59,11 @@ public class DTLearnerVPDA<I> extends AbstractVPDALearner<I> {
         return transformAccessSequence(state.getStackContents(), state.getLocation());
     }
 
-    protected Word<I> transformAccessSequence(StackContents contents) {
+    protected Word<I> transformAccessSequence(@Nullable StackContents contents) {
         return transformAccessSequence(contents, hypothesis.getInitialLocation());
     }
 
-    protected Word<I> transformAccessSequence(StackContents contents, HypLoc<I> loc) {
+    protected Word<I> transformAccessSequence(@Nullable StackContents contents, HypLoc<I> loc) {
         List<Integer> stackElems = new ArrayList<>();
         if (contents != null) {
             StackContents iter = contents;
@@ -101,11 +102,14 @@ public class DTLearnerVPDA<I> extends AbstractVPDALearner<I> {
         Word<I> suffix = ceWord.subWord(breakpoint + 1);
 
         State<HypLoc<I>> state = hypothesis.getState(prefix);
+        assert state != null;
         State<HypLoc<I>> succState = hypothesis.getSuccessor(state, act);
+        assert succState != null;
 
         ContextPair<I> context = new ContextPair<>(transformAccessSequence(succState.getStackContents()), suffix);
 
         AbstractHypTrans<I> trans = hypothesis.getInternalTransition(state, act);
+        assert trans != null;
 
         HypLoc<I> newLoc = makeTree(trans);
         DTNode<I> oldDtNode = succState.getLocation().getLeaf();

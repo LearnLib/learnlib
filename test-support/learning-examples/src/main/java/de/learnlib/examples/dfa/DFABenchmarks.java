@@ -17,7 +17,6 @@ package de.learnlib.examples.dfa;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Objects;
 
 import de.learnlib.examples.DefaultLearningExample.DefaultDFALearningExample;
 import de.learnlib.examples.LearningExample.DFALearningExample;
@@ -54,22 +53,28 @@ public final class DFABenchmarks {
     }
 
     public static DFALearningExample<Integer> loadPots2() {
-        return Objects.requireNonNull(loadLearnLibV2Benchmark("pots2"),
-                                      "Couldn't find 'pots2'. Are the correct JARs loaded?");
+        return load("pots2");
     }
 
     public static DFALearningExample<Integer> loadPots3() {
-        return Objects.requireNonNull(loadLearnLibV2Benchmark("pots3"),
-                                      "Couldn't find 'pots3'. Are the correct JARs loaded?");
+        return load("pots3");
     }
 
     public static DFALearningExample<Integer> loadPeterson2() {
-        return Objects.requireNonNull(loadLearnLibV2Benchmark("peterson2"),
-                                      "Couldn't find 'peterson2'. Are the correct JARs loaded?");
+        return load("peterson2");
     }
 
     public static DFALearningExample<Integer> loadPeterson3() {
-        return Objects.requireNonNull(loadLearnLibV2Benchmark("peterson3"),
-                                      "Couldn't find 'peterson3'. Are the correct JARs loaded?");
+        return load("peterson3");
+    }
+
+    private static DFALearningExample<Integer> load(String id) {
+        final DFALearningExample<Integer> benchmark = loadLearnLibV2Benchmark(id);
+
+        if (benchmark == null) {
+            throw new IllegalStateException("Couldn't find '" + id + "'. Are the correct JARs loaded?");
+        }
+
+        return benchmark;
     }
 }

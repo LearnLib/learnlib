@@ -118,7 +118,9 @@ public class TTTLearnerMealy<I, O> extends AbstractTTTLearner<MealyMachine<?, I,
         if (succSeparator == null) {
             return Word.fromLetter(mtrans.output);
         }
-        return succSeparator.subtreeLabel(trans.getDTTarget()).prepend(mtrans.output);
+        Word<O> subtreeLabel = succSeparator.subtreeLabel(trans.getDTTarget());
+        assert subtreeLabel != null;
+        return subtreeLabel.prepend(mtrans.output);
     }
 
     @Override

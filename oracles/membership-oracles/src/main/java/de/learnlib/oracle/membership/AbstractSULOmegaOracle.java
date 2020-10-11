@@ -28,6 +28,7 @@ import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An omega membership oracle for an {@link ObservableSUL}.
@@ -66,7 +67,7 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
     @Override
     public void processQueries(Collection<? extends OmegaQuery<I, Word<O>>> queries) {
         for (OmegaQuery<I, Word<O>> q : queries) {
-            final Pair<Word<O>, Integer> output = answerQuery(q.getPrefix(), q.getLoop(), q.getRepeat());
+            final Pair<@Nullable Word<O>, Integer> output = answerQuery(q.getPrefix(), q.getLoop(), q.getRepeat());
             q.answer(output.getFirst(), output.getSecond());
         }
     }
@@ -74,7 +75,7 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
     protected abstract Q getQueryState(ObservableSUL<S, I, O> sul);
 
     @Override
-    public Pair<Word<O>, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
+    public Pair<@Nullable Word<O>, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
         assert repeat > 0;
         sul.pre();
         try {

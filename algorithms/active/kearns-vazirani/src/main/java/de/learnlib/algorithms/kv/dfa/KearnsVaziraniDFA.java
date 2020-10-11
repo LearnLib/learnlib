@@ -400,7 +400,9 @@ public class KearnsVaziraniDFA<I>
             AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>> node = info.dtNode;
             Deque<Boolean> expect = new ArrayDeque<>();
             while (!node.isRoot()) {
-                expect.push(node.getParentOutcome());
+                Boolean parentOutcome = node.getParentOutcome();
+                assert parentOutcome != null;
+                expect.push(parentOutcome);
                 node = node.getParent();
             }
 

@@ -24,6 +24,7 @@ import net.automatalib.commons.util.ReflectUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Simple test driver for plain java objects. Uses a very simple data mapper without state or storage. Inputs cannot
@@ -32,7 +33,7 @@ import net.automatalib.words.impl.GrowingMapAlphabet;
  * @author falkhowar
  */
 public final class SimplePOJOTestDriver
-        extends TestDriver<MethodInput, MethodOutput, ConcreteMethodInput, Object> {
+        extends TestDriver<MethodInput, MethodOutput, ConcreteMethodInput, @Nullable Object> {
 
     private final GrowingAlphabet<MethodInput> inputs = new GrowingMapAlphabet<>();
 

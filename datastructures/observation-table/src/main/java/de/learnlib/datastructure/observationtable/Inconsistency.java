@@ -15,8 +15,6 @@
  */
 package de.learnlib.datastructure.observationtable;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 /**
  * A description of an inconsistency in an {@link GenericObservationTable}. An inconsistency consists of two short
  * prefixes <code>u</code>, <code>u'</code> with identical contents, and an input symbol <code>a</code>, such that the
@@ -62,7 +60,7 @@ public class Inconsistency<I> {
      *
      * @return the symbol
      */
-    public @Nullable I getSymbol() {
+    public I getSymbol() {
         return symbol;
     }
 }

@@ -140,6 +140,7 @@ public class RandomWalkEQOracle<I, O> implements MealyEquivalenceOracle<I, O> {
 
                 outSul = sul.step(in);
 
+                assert cur != null;
                 O outHyp = hypothesis.getTransitionProperty(cur, in);
                 wbIn.add(in);
                 wbOut.add(outSul);

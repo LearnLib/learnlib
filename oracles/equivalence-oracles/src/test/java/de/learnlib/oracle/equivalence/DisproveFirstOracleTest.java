@@ -27,10 +27,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class DisproveFirstOracleTest {
+
+    private AutoCloseable mock;
 
     @Mock
     private PropertyOracle<Boolean, Output<Boolean, Boolean>, Boolean, Boolean> po1;
@@ -51,7 +54,7 @@ public class DisproveFirstOracleTest {
 
     @BeforeMethod
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        mock = MockitoAnnotations.openMocks(this);
 
         // make sure the assertion check for InclusionOracle.isCounterExample passes
         Mockito.when(query.getInput()).thenReturn(null);
@@ -63,6 +66,12 @@ public class DisproveFirstOracleTest {
         Mockito.when(po1.doFindCounterExample(automaton, inputs)).thenReturn(query);
         Mockito.when(po2.findCounterExample(automaton, inputs)).thenCallRealMethod();
         Mockito.when(po2.doFindCounterExample(automaton, inputs)).thenReturn(query);
+    }
+
+    @AfterMethod
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void tearDown() throws Exception {
+        this.mock.close();
     }
 
     @Test

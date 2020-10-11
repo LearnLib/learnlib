@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Removed the `learnlib.queries.parallel.threshold` property. Learning setups that want to use parallelism now need to explicitly setup parallel oracles.
 * Removed `MQUtil#answerQueries{Auto,Parallel}` and `MQUtil#answerOmegaQueries{Auto,Parallel}`)
+* Updated to [AutomataLib 0.10.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0)
 
 ### Fixed
 

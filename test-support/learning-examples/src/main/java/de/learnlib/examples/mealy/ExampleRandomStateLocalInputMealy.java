@@ -17,6 +17,7 @@ package de.learnlib.examples.mealy;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
@@ -75,7 +76,7 @@ public class ExampleRandomStateLocalInputMealy<I, O> implements StateLocalInputM
         }
 
         final CompactMealy<I, O> minimized = Automata.invasiveMinimize(source, alphabet);
-        final MutableMapping<Integer, Collection<I>> enabledInputs = source.createStaticStateMapping();
+        final MutableMapping<Integer, @Nullable Collection<I>> enabledInputs = source.createStaticStateMapping();
 
         for (Integer s : minimized) {
             final Collection<I> stateInputs = new HashSet<>(alphabet);
@@ -119,16 +120,17 @@ public class ExampleRandomStateLocalInputMealy<I, O> implements StateLocalInputM
     private static class MockedSLIMealy<S, I, T, O> implements StateLocalInputMealyMachine<S, I, T, O> {
 
         private final MealyMachine<S, I, T, O> delegate;
-        private final Mapping<S, Collection<I>> localInputs;
+        private final Mapping<S, @Nullable Collection<I>> localInputs;
 
-        MockedSLIMealy(MealyMachine<S, I, T, O> delegate, Mapping<S, Collection<I>> localInputs) {
+        MockedSLIMealy(MealyMachine<S, I, T, O> delegate, Mapping<S, @Nullable Collection<I>> localInputs) {
             this.delegate = delegate;
             this.localInputs = localInputs;
         }
 
         @Override
         public Collection<I> getLocalInputs(S state) {
-            return this.localInputs.get(state);
+            final Collection<I> collection = this.localInputs.get(state);
+            return collection == null ? Collections.emptyList() : collection;
         }
 
         @Override
@@ -141,9 +143,8 @@ public class ExampleRandomStateLocalInputMealy<I, O> implements StateLocalInputM
             return this.delegate.getTransitionOutput(transition);
         }
 
-        @Nullable
         @Override
-        public T getTransition(S state, I input) {
+        public @Nullable T getTransition(S state, I input) {
             return this.delegate.getTransition(state, input);
         }
 
@@ -152,9 +153,8 @@ public class ExampleRandomStateLocalInputMealy<I, O> implements StateLocalInputM
             return this.delegate.getSuccessor(transition);
         }
 
-        @Nullable
         @Override
-        public S getInitialState() {
+        public @Nullable S getInitialState() {
             return this.delegate.getInitialState();
         }
     }

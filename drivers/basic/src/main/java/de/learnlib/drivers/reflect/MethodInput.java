@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.checkerframework.checker.nullness.qual.KeyFor;
+
 /**
  * abstract method input, may have abstract parameters.
  *
@@ -61,7 +63,7 @@ public class MethodInput {
         return this.method.getName() + Arrays.toString(getParameters(names));
     }
 
-    public Collection<String> getParameterNames() {
+    public Collection<@KeyFor("parameters") String> getParameterNames() {
         return this.parameters.keySet();
     }
 
@@ -75,7 +77,7 @@ public class MethodInput {
         return ret;
     }
 
-    public Class<?> getParameterType(String name) {
+    public Class<?> getParameterType(@KeyFor("parameters") String name) {
         int id = parameters.get(name);
         return this.method.getParameterTypes()[id];
     }

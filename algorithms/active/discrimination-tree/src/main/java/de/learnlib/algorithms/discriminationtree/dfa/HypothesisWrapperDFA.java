@@ -20,6 +20,7 @@ import java.util.Collection;
 import de.learnlib.algorithms.discriminationtree.hypothesis.DTLearnerHypothesis;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import net.automatalib.automata.fsa.DFA;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class HypothesisWrapperDFA<I> implements DFA<HState<I, Boolean, Boolean, Void>, I> {
 
@@ -40,7 +41,7 @@ final class HypothesisWrapperDFA<I> implements DFA<HState<I, Boolean, Boolean, V
     }
 
     @Override
-    public HState<I, Boolean, Boolean, Void> getTransition(HState<I, Boolean, Boolean, Void> state, I input) {
+    public @Nullable HState<I, Boolean, Boolean, Void> getTransition(HState<I, Boolean, Boolean, Void> state, I input) {
         return dtHypothesis.getSuccessor(state, input);
     }
 

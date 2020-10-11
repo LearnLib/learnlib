@@ -26,10 +26,11 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNod
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class HState<I, O, SP, TP> implements Serializable {
 
-    private final HTransition<I, O, SP, TP> treeIncoming;
+    private final @Nullable HTransition<I, O, SP, TP> treeIncoming;
     private final int id;
     private final int depth;
     private final ResizingArrayStorage<HTransition<I, O, SP, TP>> transitions;
@@ -41,7 +42,7 @@ public class HState<I, O, SP, TP> implements Serializable {
         this(alphabetSize, 0, null);
     }
 
-    public HState(int initialAlphabetSize, int id, HTransition<I, O, SP, TP> treeIncoming) {
+    public HState(int initialAlphabetSize, int id, @Nullable HTransition<I, O, SP, TP> treeIncoming) {
         this.id = id;
         this.treeIncoming = treeIncoming;
         this.depth = (treeIncoming == null) ? 0 : treeIncoming.getSource().depth + 1;
@@ -56,7 +57,7 @@ public class HState<I, O, SP, TP> implements Serializable {
         this.dtLeaf = dtLeaf;
     }
 
-    public HTransition<I, O, SP, TP> getTreeIncoming() {
+    public @Nullable HTransition<I, O, SP, TP> getTreeIncoming() {
         return treeIncoming;
     }
 

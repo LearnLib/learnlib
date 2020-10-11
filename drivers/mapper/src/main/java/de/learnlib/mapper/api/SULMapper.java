@@ -22,6 +22,7 @@ import de.learnlib.api.Mapper.SynchronousMapper;
 import de.learnlib.api.SUL;
 import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.SULMappers;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An extension of the {@link Mapper} interface specifically for {@link SUL}s.
@@ -113,14 +114,13 @@ public interface SULMapper<AI, AO, CI, CO> extends SynchronousMapper<AI, AO, CI,
         private final AO thisStepOutput;
         private final Optional<AO> subsequentStepsOutput;
 
-        private MappedException(AO thisStepOutput, AO subsequentStepsOutput) {
-            this.thisStepOutput = thisStepOutput;
-            this.subsequentStepsOutput = Optional.of(subsequentStepsOutput);
+        private MappedException(AO output) {
+            this(output, null);
         }
 
-        private MappedException(AO output) {
-            this.thisStepOutput = output;
-            this.subsequentStepsOutput = Optional.empty();
+        private MappedException(AO thisStepOutput, @Nullable AO subsequentStepsOutput) {
+            this.thisStepOutput = thisStepOutput;
+            this.subsequentStepsOutput = Optional.ofNullable(subsequentStepsOutput);
         }
 
         public static <AO> MappedException<AO> ignoreAndContinue(AO output) {

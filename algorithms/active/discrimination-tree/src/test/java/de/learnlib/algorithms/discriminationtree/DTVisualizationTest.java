@@ -26,6 +26,7 @@ import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.testsupport.AbstractVisualizationTest;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.initialization.qual.UnderInitialization;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -35,7 +36,9 @@ import org.testng.annotations.Test;
 public class DTVisualizationTest extends AbstractVisualizationTest<DTLearnerMealy<Input, String>> {
 
     @Override
-    protected DTLearnerMealy<Input, String> getLearnerBuilder(Alphabet<Input> alphabet, SUL<Input, String> sul) {
+    protected DTLearnerMealy<Input, String> getLearnerBuilder(@UnderInitialization DTVisualizationTest this,
+                                                              Alphabet<Input> alphabet,
+                                                              SUL<Input, String> sul) {
         return new DTLearnerMealyBuilder<Input, String>().withAlphabet(alphabet)
                                                          .withOracle(new SULOracle<>(sul))
                                                          .create();

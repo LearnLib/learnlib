@@ -17,8 +17,8 @@ package de.learnlib.datastructure.observationtable.writer;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -59,8 +59,10 @@ public class ObservationTableWriterTest {
         final StringWriter writerResult = new StringWriter();
         writer.write(ot, writerResult);
 
-        final URI testResource = ObservationTableWriterTest.class.getResource(urlOfExpectedResult).toURI();
-        final String expectedResult = new String(Files.readAllBytes(Paths.get(testResource)), StandardCharsets.UTF_8);
+        final URL resource = ObservationTableWriterTest.class.getResource(urlOfExpectedResult);
+        Assert.assertNotNull(resource);
+        final String expectedResult =
+                new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8);
 
         Assert.assertEquals(writerResult.toString(), expectedResult);
     }

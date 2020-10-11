@@ -27,8 +27,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 /**
  * Primitive implementation for boolean maps.
  *
@@ -70,7 +68,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
     }
 
     @Override
-    public @Nullable V get(Object key) {
+    public V get(Object key) {
         if (key == null || key.getClass() != Boolean.class) {
             return null;
         }
@@ -107,7 +105,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
     }
 
     @Override
-    public @Nullable V remove(Object key) {
+    public V remove(Object key) {
         if (key == null || key.getClass() != Boolean.class) {
             return null;
         }
@@ -211,12 +209,11 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
             if (this == o) {
                 return true;
             }
-            if (!(o instanceof de.learnlib.datastructure.discriminationtree.model.BooleanMap.Entry)) {
+            if (!(o instanceof BooleanMap.Entry)) {
                 return false;
             }
 
-            final de.learnlib.datastructure.discriminationtree.model.BooleanMap.Entry that =
-                    (de.learnlib.datastructure.discriminationtree.model.BooleanMap.Entry) o;
+            final BooleanMap.Entry that = (BooleanMap.Entry) o;
             return Objects.equals(key, that.key);
         }
     }

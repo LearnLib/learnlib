@@ -97,8 +97,10 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O>
                                             StateLocalInputSUL<I, O> sul) {
             super(incMealy, lock, mealyTs, sul);
             this.delegate = sul;
+            S init = mealyTs.getInitialState();
+            assert init != null;
+            this.initialState = init;
             this.enabledInputCache = enabledInputCache;
-            this.initialState = mealyTs.getInitialState();
             this.inputsTrace = new ArrayList<>();
         }
 
@@ -111,9 +113,11 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O>
         protected void postCacheWriteHook(List<I> input) {
             final int prefixLength = input.size() - this.inputsTrace.size();
             S iter = mealyTs.getSuccessor(initialState, input.subList(0, prefixLength));
+            assert iter != null;
 
             for (int i = 0; i < this.inputsTrace.size(); i++) {
                 iter = mealyTs.getSuccessor(iter, input.get(i + prefixLength));
+                assert iter != null;
                 this.enabledInputCache.put(iter, this.inputsTrace.get(i));
             }
 
@@ -158,7 +162,9 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O>
         @SuppressWarnings("unchecked")
         public void resume(StateLocalInputSULCacheState<I, O> state) {
             super.resume(state);
-            this.initialState = super.mealyTs.getInitialState();
+            S init = super.mealyTs.getInitialState();
+            assert init != null;
+            this.initialState = init;
             this.enabledInputCache = (Map<S, Collection<I>>) state.enabledInputCache;
         }
     }

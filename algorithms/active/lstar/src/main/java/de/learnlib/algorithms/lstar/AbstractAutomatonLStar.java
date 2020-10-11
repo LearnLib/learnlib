@@ -86,6 +86,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
      * #stateProperty(ObservationTable, Row)} and {@link #transitionProperty(ObservationTable, Row, int)} methods are
      * used to derive the respective properties.
      */
+    @SuppressWarnings("argument.type.incompatible") // all added nulls to stateInfos will be correctly set to non-null values
     protected void updateInternalHypothesis() {
         if (!table.isInitialized()) {
             throw new IllegalStateException("Cannot update internal hypothesis: not initialized");

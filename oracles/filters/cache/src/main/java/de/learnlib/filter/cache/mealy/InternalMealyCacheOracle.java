@@ -34,6 +34,7 @@ import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.GrowingMapAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Mealy cache. This cache is implemented as a membership oracle: upon construction, it is provided with a delegate
@@ -61,16 +62,16 @@ class InternalMealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, 
     protected IncrementalMealyBuilder<I, O> incMealy;
     protected final ReadWriteLock incMealyLock;
     private final Comparator<? super Query<I, ?>> queryCmp;
-    private final Mapping<? super O, ? extends O> errorSyms;
+    private final @Nullable Mapping<? super O, ? extends O> errorSyms;
 
     InternalMealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder,
-                             Mapping<? super O, ? extends O> errorSyms,
+                             @Nullable Mapping<? super O, ? extends O> errorSyms,
                              MembershipOracle<I, Word<O>> delegate) {
         this(incrementalBuilder, errorSyms, delegate, new DynamicSymbolComparator<>());
     }
 
     InternalMealyCacheOracle(IncrementalMealyBuilder<I, O> incrementalBuilder,
-                             Mapping<? super O, ? extends O> errorSyms,
+                             @Nullable Mapping<? super O, ? extends O> errorSyms,
                              MembershipOracle<I, Word<O>> delegate,
                              Comparator<I> comparator) {
         this.incMealy = incrementalBuilder;

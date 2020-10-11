@@ -108,12 +108,17 @@ public class DTLearnerHypothesis<I, O, SP, TP>
 
     @Override
     public HState<I, O, SP, TP> getState(int id) {
-        return (id < 0 || id >= nodes.size()) ? null : nodes.get(id);
+        if (id < 0 || id >= nodes.size()) {
+            throw new IndexOutOfBoundsException("No valid id");
+        }
+
+        return nodes.get(id);
     }
 
     @Override
     public Word<I> transformAccessSequence(Word<I> word) {
         HState<I, O, SP, TP> state = getState(word);
+        assert state != null;
         return state.getAccessSequence();
     }
 

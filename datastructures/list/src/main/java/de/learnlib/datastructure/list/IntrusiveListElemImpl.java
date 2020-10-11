@@ -17,6 +17,8 @@ package de.learnlib.datastructure.list;
 
 import java.io.Serializable;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * An element in an {@link IntrusiveList}.
  *
@@ -27,15 +29,15 @@ import java.io.Serializable;
  */
 public class IntrusiveListElemImpl<T> implements IntrusiveListElem<T>, Serializable {
 
-    protected T next;
+    protected @Nullable T next;
 
     @Override
-    public T getNextElement() {
+    public @Nullable T getNextElement() {
         return next;
     }
 
     @Override
-    public void setNextElement(T next) {
+    public void setNextElement(@Nullable T next) {
         this.next = next;
     }
 }

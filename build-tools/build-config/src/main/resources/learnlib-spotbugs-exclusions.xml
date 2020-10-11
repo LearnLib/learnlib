@@ -35,15 +35,78 @@ limitations under the License.
         <Bug pattern="SE_NO_SERIALVERSIONID,SE_TRANSIENT_FIELD_NOT_RESTORED"/>
     </Match>
     <Match>
-        <!-- False-positive on Java 11. See https://github.com/spotbugs/spotbugs/issues/756 -->
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+        <!-- TODO: SpotBugs seem to incorrectly infer type annotations, https://github.com/spotbugs/spotbugs/issues/643
+                   We have CheckerFramework for this anyway -->
+        <Bug pattern="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE"/>
+    </Match>
+    <Match>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
         <Or>
-            <Class name="de.learnlib.datastructure.observationtable.OTUtils"/>
-            <Class name="de.learnlib.datastructure.observationtable.writer.ObservationTableWriter"/>
+            <!-- SpotBugs doesn't detect that only the inner type is nullable -->
+            <And>
+                <Class name="de.learnlib.api.oracle.LassoOracle"/>
+                <Method name="findCounterExample"/>
+            </And>
+            <And>
+                <Class name="de.learnlib.api.oracle.SingleQueryOmegaOracle"/>
+                <Method name="processQuery"/>
+            </And>
+            <And>
+                <Class name="de.learnlib.oracle.membership.AbstractSULOmegaOracle"/>
+                <Method name="processQueries"/>
+            </And>
+            <And>
+                <Class name="de.learnlib.util.MQUtil"/>
+                <Method name="answerOmegaQueries"/>
+            </And>
+            <And>
+                <Class name="de.learnlib.filter.reuse.tree.ReuseTree"/>
+                <Method name="disposeSystemstates"/>
+            </And>
+            <And>
+                <Class name="de.learnlib.examples.Example3"/>
+                <Method name="main"/>
+            </And>
+            <!-- SpotBugs doesn't understand pure functions -->
+            <And>
+                <Class name="de.learnlib.algorithms.adt.adt.ADT"/>
+                <Or>
+                    <Method name="findLCA"/>
+                    <Method name="replaceNode"/>
+                </Or>
+            </And>
+            <And>
+                <Class name="de.learnlib.algorithms.discriminationtree.hypothesis.vpda.TransList"/>
+                <Or>
+                    <Method name="poll"/>
+                    <Method name="addAll"/>
+                </Or>
+            </And>
+            <And>
+                <Class name="de.learnlib.algorithms.ttt.base.IncomingList"/>
+                <Method name="insertAllIncoming"/>
+            </And>
+            <And>
+                <Class name="de.learnlib.algorithms.adt.util.ADTUtil"/>
+                <Method name="getStartOfADS"/>
+            </And>
+            <And>
+                <!-- SpotBugs doesn't understand conditional non-nulls -->
+                <Class name="de.learnlib.algorithms.adt.config.LeafSplitters"/>
+                <Method name="splitParent"/>
+            </And>
+            <And>
+                <!-- The node(s) was(were) selected such that getHypothesisState is NOT null -->
+                <Class name="de.learnlib.algorithms.adt.learner.ADTLearner"/>
+                <Or>
+                    <Method name="refineHypothesisInternal"/>
+                    <Method name="resiftAffectedTransitions"/>
+                </Or>
+            </And>
         </Or>
     </Match>
     <Match>
-        <!-- False-positive on Java 11. See https://github.com/spotbugs/spotbugs/issues/259 -->
+        <!-- Still a false-positive on Java 11. See https://github.com/spotbugs/spotbugs/issues/259 -->
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
         <Or>
             <Class name="de.learnlib.examples.dfa.DFABenchmarks"/>

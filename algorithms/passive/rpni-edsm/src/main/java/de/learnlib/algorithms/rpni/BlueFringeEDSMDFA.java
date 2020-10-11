@@ -79,12 +79,14 @@ public class BlueFringeEDSMDFA<I> extends BlueFringeRPNIDFA<I> {
             while (blueIter.hasNext()) {
                 final PTATransition<BlueFringePTAState<Boolean, Void>> qbRef = blueIter.next();
                 final BlueFringePTAState<Boolean, Void> qb = qbRef.getTarget();
+                assert qb != null;
 
                 Stream<BlueFringePTAState<Boolean, Void>> stream = pta.redStatesStream();
                 if (super.parallel) {
                     stream = stream.parallel();
                 }
 
+                @SuppressWarnings("nullness") // we filter the null merges
                 final Optional<Pair<RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>>, Long>> result =
                         stream.map(qr -> tryMerge(pta, qr, qb))
                               .filter(Objects::nonNull)
@@ -110,6 +112,7 @@ public class BlueFringeEDSMDFA<I> extends BlueFringeRPNIDFA<I> {
                 }
             }
             if (!promotion) {
+                assert bestMerge != null;
                 blue.remove(bestTransition);
                 bestMerge.apply(pta, blue::add);
             }

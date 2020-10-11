@@ -27,6 +27,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -41,6 +42,8 @@ import org.testng.annotations.Test;
 public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Character, D>, D> {
 
     public static final Alphabet<Character> ALPHABET = Alphabets.singleton('a');
+
+    private AutoCloseable mock;
 
     private LassoEmptinessOracleImpl<L, Integer, Character, D> leo;
 
@@ -64,11 +67,17 @@ public abstract class AbstractLassoEmptinessOracleImplTest<L extends Lasso<Chara
 
     @BeforeMethod
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        mock = MockitoAnnotations.openMocks(this);
         leo = createLassoEmptinessOracleImpl();
         automaton = createAutomaton();
         query = createQuery();
         output = createOutput();
+    }
+
+    @AfterMethod
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void tearDown() throws Exception {
+        this.mock.close();
     }
 
     @Test

@@ -28,6 +28,7 @@ import de.learnlib.api.oracle.parallelism.ParallelOmegaOracle;
 import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
 import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -147,7 +148,7 @@ public abstract class AbstractDynamicParallelOmegaOracleTest<D> {
         }
 
         @Override
-        public void answer(D output, int periodicity) {
+        public void answer(@Nullable D output, int periodicity) {
             boolean wasAnswered = answered.getAndSet(true);
             if (wasAnswered) {
                 throw new IllegalStateException("Query was already answered");

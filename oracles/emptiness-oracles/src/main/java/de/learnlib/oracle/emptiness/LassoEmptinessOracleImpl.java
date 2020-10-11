@@ -86,7 +86,7 @@ public class LassoEmptinessOracleImpl<L extends Lasso<I, D>, S, I, D>
     }
 
     @Override
-    public boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> input, @Nullable D output) {
+    public boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> input, D output) {
         return LassoEmptinessOracle.super.isCounterExample(hypothesis, input, output);
     }
 

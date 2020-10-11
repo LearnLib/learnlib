@@ -18,6 +18,7 @@ package de.learnlib.datastructure.observationtable.reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.common.collect.Maps;
 import de.learnlib.datastructure.observationtable.ObservationTable;
@@ -54,7 +55,7 @@ public class SuffixASCIIReader<I, D> implements ObservationTableReader<I, D> {
         Map<String, I> nameToSymbol = Maps.newHashMapWithExpectedSize(alphabet.size());
 
         for (I symbol : alphabet) {
-            String symbolName = symbol.toString();
+            String symbolName = Objects.toString(symbol);
             if (nameToSymbol.containsKey(symbolName)) {
                 throw new IllegalArgumentException(
                         "Symbol name '" + symbolName + "' is used more than once in alphabet");

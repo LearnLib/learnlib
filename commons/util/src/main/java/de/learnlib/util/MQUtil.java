@@ -27,6 +27,7 @@ import de.learnlib.api.query.Query;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class MQUtil {
 
@@ -66,7 +67,7 @@ public final class MQUtil {
             final Word<I> prefix = query.getPrefix();
             final Word<I> loop = query.getLoop();
             final int repeat = query.getRepeat();
-            Pair<D, Integer> answer = answerer.answerQuery(prefix, loop, repeat);
+            Pair<@Nullable D, Integer> answer = answerer.answerQuery(prefix, loop, repeat);
             query.answer(answer.getFirst(), answer.getSecond());
         }
     }

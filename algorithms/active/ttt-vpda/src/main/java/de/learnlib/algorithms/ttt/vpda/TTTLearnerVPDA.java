@@ -43,6 +43,7 @@ import net.automatalib.automata.vpda.StackContents;
 import net.automatalib.automata.vpda.State;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -162,11 +163,14 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
         Word<I> suffix = acexSuffix.subWord(breakpoint + 1);
 
         State<HypLoc<I>> state = hypothesis.getSuccessor(acex.getBaseState(), prefix);
+        assert state != null;
         State<HypLoc<I>> succState = hypothesis.getSuccessor(state, act);
+        assert succState != null;
 
         ContextPair<I> context = new ContextPair<>(transformAccessSequence(succState.getStackContents()), suffix);
 
         AbstractHypTrans<I> trans = hypothesis.getInternalTransition(state, act);
+        assert trans != null;
 
         HypLoc<I> newLoc = makeTree(trans);
         DTNode<I> oldDtNode = succState.getLocation().getLeaf();
@@ -192,7 +196,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
         return false;
     }
 
-    private OutputInconsistency<I> findOutputInconsistency() {
+    private @Nullable OutputInconsistency<I> findOutputInconsistency() {
         OutputInconsistency<I> best = null;
 
         for (HypLoc<I> loc : hypothesis.getLocations()) {
@@ -216,6 +220,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
 
     protected State<HypLoc<I>> getAnySuccessor(State<HypLoc<I>> state, I sym) {
         final VPDAlphabet.SymbolType type = alphabet.getSymbolType(sym);
+        final StackContents stackContents = state.getStackContents();
 
         switch (type) {
             case INTERNAL: {
@@ -226,23 +231,23 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
                 } else {
                     succLoc = trans.getNonTreeTarget().subtreeLocsIterator().next();
                 }
-                return new State<>(succLoc, state.getStackContents());
+                return new State<>(succLoc, stackContents);
             }
             case CALL: {
                 int stackSym = hypothesis.encodeStackSym(state.getLocation(), sym);
-                return new State<>(hypothesis.getInitialLocation(),
-                                   StackContents.push(stackSym, state.getStackContents()));
+                return new State<>(hypothesis.getInitialLocation(), StackContents.push(stackSym, stackContents));
             }
             case RETURN: {
+                assert stackContents != null;
                 AbstractHypTrans<I> trans =
-                        hypothesis.getReturnTransition(state.getLocation(), sym, state.getStackContents().peek());
+                        hypothesis.getReturnTransition(state.getLocation(), sym, stackContents.peek());
                 HypLoc<I> succLoc;
                 if (trans.isTree()) {
                     succLoc = trans.getTreeTarget();
                 } else {
                     succLoc = trans.getNonTreeTarget().subtreeLocsIterator().next();
                 }
-                return new State<>(succLoc, state.getStackContents().pop());
+                return new State<>(succLoc, stackContents.pop());
             }
             default:
                 throw new IllegalStateException("Unhandled type " + type);
@@ -264,7 +269,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
      *
      * @return a splitter for any of the blocks
      */
-    private GlobalSplitter<I> findSplitterGlobal() {
+    private @Nullable GlobalSplitter<I> findSplitterGlobal() {
         DTNode<I> bestBlockRoot = null;
         Splitter<I> bestSplitter = null;
 
@@ -326,7 +331,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
      *
      * @return a splitter for this block, or {@code null} if no such splitter could be found.
      */
-    private Splitter<I> findSplitter(DTNode<I> blockRoot) {
+    private @Nullable Splitter<I> findSplitter(DTNode<I> blockRoot) {
         int alphabetSize =
                 alphabet.getNumInternals() + alphabet.getNumCalls() * alphabet.getNumReturns() * hypothesis.size() * 2;
 
@@ -623,6 +628,7 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
         for (I sym : suffix) {
             if (!alphabet.isCallSymbol(sym)) {
                 AbstractHypTrans<I> trans = hypothesis.getInternalTransition(curr, sym);
+                assert trans != null;
                 if (!trans.isTree() && !trans.getNonTreeTarget().isLeaf()) {
                     updateDTTargets(Collections.singletonList(trans), true);
                 }

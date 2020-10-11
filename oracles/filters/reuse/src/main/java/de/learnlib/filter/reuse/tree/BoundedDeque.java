@@ -21,6 +21,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * A generic deque-derived container which transparently acts <i>either</i> as a stack <i>or</i> a queue, and optionally
  * a capacity restriction with a configurable policy which element is evicted (or reject) if the maximum capacity is
@@ -82,7 +84,7 @@ public class BoundedDeque<E> extends AbstractCollection<E> implements Serializab
      *
      * @return the evicted element, {@code null} if the maximum capacity has not been reached
      */
-    public E insert(E element) {
+    public @Nullable E insert(E element) {
         E evicted = null;
         if (size() >= capacity) {
             if (evictPolicy == EvictPolicy.REJECT_NEW) {
@@ -110,7 +112,6 @@ public class BoundedDeque<E> extends AbstractCollection<E> implements Serializab
             default:
                 throw new IllegalStateException("Illegal evict policy: " + evictPolicy);
         }
-
     }
 
     /**

@@ -51,7 +51,8 @@ public class DefaultExtender implements ADTExtender {
                                                                          final PartialTransitionAnalyzer<ADTState<I, O>, I> partialTransitionAnalyzer,
                                                                          final ADTNode<ADTState<I, O>, I, O> ads) {
         // cannot compute extension for root node
-        if (ads.getParent() == null) {
+        final ADTNode<ADTState<I, O>, I, O> parent = ads.getParent();
+        if (parent == null) {
             return ExtensionResult.empty();
         }
 
@@ -62,7 +63,7 @@ public class DefaultExtender implements ADTExtender {
             return ExtensionResult.empty();
         }
 
-        final Pair<Word<I>, Word<O>> parentTrace = ADTUtil.buildTraceForNode(ads.getParent());
+        final Pair<Word<I>, Word<O>> parentTrace = ADTUtil.buildTraceForNode(parent);
 
         // as long as we encounter exceptions, repeat
         while (true) {

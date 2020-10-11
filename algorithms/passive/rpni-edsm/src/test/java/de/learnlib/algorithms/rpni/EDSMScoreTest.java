@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.pta.BlueFringePTAState;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
+import de.learnlib.datastructure.pta.pta.RedBlueMerge;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -70,14 +70,20 @@ public class EDSMScoreTest {
         final BlueFringePTAState<Boolean, Void> qA = pta.getState(Word.fromSymbols(0));
         final BlueFringePTAState<Boolean, Void> qB = pta.getState(Word.fromSymbols(1));
 
-        final UniversalDeterministicAutomaton<BlueFringePTAState<Boolean, Void>, Integer, ?, Boolean, Void> firstMerge =
-                pta.tryMerge(qEpsilon, qB).toMergedAutomaton();
-        final UniversalDeterministicAutomaton<BlueFringePTAState<Boolean, Void>, Integer, ?, Boolean, Void>
-                secondMerged = pta.tryMerge(qA, qB).toMergedAutomaton();
+        final RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>> merge1 = pta.tryMerge(qEpsilon, qB);
+        Assert.assertNotNull(merge1);
+        Assert.assertEquals(2L,
+                            EDSMUtil.score(merge1.toMergedAutomaton(),
+                                           positiveSamplesAsIntArray,
+                                           negativeSamplesAsIntArray));
 
-        Assert.assertEquals(2L, EDSMUtil.score(firstMerge, positiveSamplesAsIntArray, negativeSamplesAsIntArray));
+        final RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>> merge2 = pta.tryMerge(qA, qB);
+        Assert.assertNotNull(merge2);
         // book is wrong, should be 2
-        Assert.assertEquals(2L, EDSMUtil.score(secondMerged, positiveSamplesAsIntArray, negativeSamplesAsIntArray));
+        Assert.assertEquals(2L,
+                            EDSMUtil.score(merge2.toMergedAutomaton(),
+                                           positiveSamplesAsIntArray,
+                                           negativeSamplesAsIntArray));
     }
 
     /*
@@ -105,7 +111,10 @@ public class EDSMScoreTest {
 
         pta.init((q) -> {});
         pta.promote(qA, (q) -> {});
-        pta.tryMerge(qEpsilon, qAA).apply(pta, (q) -> {});
+        final RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>> merge = pta.tryMerge(qEpsilon, qAA);
+        Assert.assertNotNull(merge);
+
+        merge.apply(pta, (q) -> {});
 
         return pta;
     }

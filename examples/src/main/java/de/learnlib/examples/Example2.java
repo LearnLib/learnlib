@@ -41,6 +41,7 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This example shows how a model of a Java class can be learned using the SUL (system under learning) interfaces and
@@ -177,7 +178,7 @@ public final class Example2 {
         }
 
         // get next element from queue (null for empty queue)
-        public String poll() {
+        public @Nullable String poll() {
             return data.poll();
         }
     }

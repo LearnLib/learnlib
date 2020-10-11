@@ -18,7 +18,6 @@ package de.learnlib.drivers.reflect;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.Map;
 
 import de.learnlib.api.exception.SULException;
 import de.learnlib.mapper.api.SULMapper;
@@ -29,7 +28,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author falkhowar
  */
-public class SimplePOJODataMapper implements SULMapper<MethodInput, MethodOutput, ConcreteMethodInput, Object> {
+public class SimplePOJODataMapper
+        implements SULMapper<MethodInput, MethodOutput, ConcreteMethodInput, @Nullable Object> {
 
     private final Constructor<?> initMethod;
     private final Object[] initParams;
@@ -61,18 +61,18 @@ public class SimplePOJODataMapper implements SULMapper<MethodInput, MethodOutput
 
     @Override
     public MappedException<? extends MethodOutput> mapUnwrappedException(RuntimeException exception) {
-        return MappedException.repeatOutput(new Error(exception.getCause()), Unobserved.INSTANCE);
+        final Throwable cause = exception.getCause();
+        return MappedException.repeatOutput(new Error(cause != null ? cause : exception), Unobserved.INSTANCE);
     }
 
     @Override
     public ConcreteMethodInput mapInput(MethodInput abstractInput) {
-        Map<String, Object> params = new HashMap<>();
-
-        return new ConcreteMethodInput(abstractInput, params, delegate);
+        assert delegate != null;
+        return new ConcreteMethodInput(abstractInput, new HashMap<>(), delegate);
     }
 
     @Override
-    public MethodOutput mapOutput(Object concreteOutput) {
+    public MethodOutput mapOutput(@Nullable Object concreteOutput) {
         return new ReturnValue(concreteOutput);
     }
 
@@ -82,7 +82,7 @@ public class SimplePOJODataMapper implements SULMapper<MethodInput, MethodOutput
     }
 
     @Override
-    public SULMapper<MethodInput, MethodOutput, ConcreteMethodInput, Object> fork() {
+    public SULMapper<MethodInput, MethodOutput, ConcreteMethodInput, @Nullable Object> fork() {
         return new SimplePOJODataMapper(initMethod, initParams);
     }
 

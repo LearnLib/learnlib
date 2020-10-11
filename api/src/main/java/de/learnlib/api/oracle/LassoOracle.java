@@ -84,15 +84,16 @@ public interface LassoOracle<L extends Lasso<I, D>, I, D> {
 
         final OmegaQuery<I, D> omegaQuery = processInput(prefix, loop, repeat);
 
-        final DefaultQuery<I, D> query;
         if (isOmegaCounterExample(omegaQuery.isUltimatelyPeriodic())) {
+            @SuppressWarnings("assignment.type.incompatible") // when we are a counterexample, the output is valid
             final DefaultQuery<I, D> ce = omegaQuery.asDefaultQuery();
-            query = isCounterExample(hypothesis.getAutomaton(), ce.getInput(), ce.getOutput()) ? ce : null;
-        } else {
-            query = null;
+
+            if (isCounterExample(hypothesis.getAutomaton(), ce.getInput(), ce.getOutput())) {
+                return ce;
+            }
         }
 
-        return query;
+        return null;
     }
 
     interface DFALassoOracle<I> extends LassoOracle<DFALasso<I>, I, Boolean> {}

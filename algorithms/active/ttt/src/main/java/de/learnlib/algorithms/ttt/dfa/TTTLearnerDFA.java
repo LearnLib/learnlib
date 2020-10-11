@@ -63,7 +63,9 @@ public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> 
         super.initializeState(state);
 
         TTTStateDFA<I> dfaState = (TTTStateDFA<I>) state;
-        dfaState.accepting = dtree.getRoot().subtreeLabel(dfaState.getDTLeaf());
+        Boolean aBoolean = dtree.getRoot().subtreeLabel(dfaState.getDTLeaf());
+        assert aBoolean != null;
+        dfaState.accepting = aBoolean;
     }
 
     @Override

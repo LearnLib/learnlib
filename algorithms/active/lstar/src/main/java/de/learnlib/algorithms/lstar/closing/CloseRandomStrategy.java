@@ -22,8 +22,9 @@ import java.util.Random;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class CloseRandomStrategy implements ClosingStrategy<Object, Object> {
+public class CloseRandomStrategy implements ClosingStrategy<@Nullable Object, @Nullable Object> {
 
     private final Random random;
 

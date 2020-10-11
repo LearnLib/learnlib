@@ -64,11 +64,6 @@ limitations under the License.
             <artifactId>automata-util</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-        </dependency>
-
         <!-- test -->
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>

@@ -25,6 +25,7 @@ import de.learnlib.api.oracle.parallelism.BatchProcessor;
 import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Answers {@link OmegaQuery}s, similar to a {@link MembershipOracle}. Additionally, one can ask whether two states
@@ -39,7 +40,7 @@ import net.automatalib.words.Word;
 public interface OmegaMembershipOracle<S, I, D> extends OmegaQueryAnswerer<S, I, D>, BatchProcessor<OmegaQuery<I, D>> {
 
     @Override
-    default Pair<D, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
+    default Pair<@Nullable D, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
         final OmegaQuery<I, D> query = new OmegaQuery<>(prefix, loop, repeat);
         processQuery(query);
         return Pair.of(query.getOutput(), query.getPeriodicity());

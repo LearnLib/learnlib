@@ -20,19 +20,21 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import net.automatalib.commons.smartcollections.ArrayStorage;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAState<SP, TP, S>> implements Cloneable {
 
     protected SP property;
-    protected ArrayStorage<TP> transProperties;
-    protected ArrayStorage<S> successors;
+    protected @MonotonicNonNull ArrayStorage<TP> transProperties;
+    protected @MonotonicNonNull ArrayStorage<S> successors;
     protected int id = -1;
 
     public SP getStateProperty() {
         return property;
     }
 
-    public TP getTransProperty(int index) {
+    public @Nullable TP getTransProperty(int index) {
         if (transProperties == null) {
             return null;
         }
@@ -43,7 +45,7 @@ public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAStat
         return copy((transProperties != null) ? transProperties.clone() : null);
     }
 
-    public S copy(ArrayStorage<TP> newTPs) {
+    public S copy(@Nullable ArrayStorage<TP> newTPs) {
         try {
             @SuppressWarnings("unchecked")
             S copy = (S) clone();
@@ -57,7 +59,7 @@ public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAStat
         }
     }
 
-    public S getSuccessor(int index) {
+    public @Nullable S getSuccessor(int index) {
         if (successors == null) {
             return null;
         }

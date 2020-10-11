@@ -50,7 +50,7 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
      *
      * @return whether the given input and output is a counter example.
      */
-    boolean isCounterExample(A hypothesis, Iterable<? extends I> inputs, @Nullable D output);
+    boolean isCounterExample(A hypothesis, Iterable<? extends I> inputs, D output);
 
     /**
      * Returns the next input word, or {@code null} if there is no next input.

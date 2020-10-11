@@ -20,6 +20,8 @@ import java.io.Serializable;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class HTransition<I, O, SP, TP> implements Serializable {
 
@@ -29,10 +31,10 @@ public class HTransition<I, O, SP, TP> implements Serializable {
     private TP property;
 
     // TREE EDGE FIELDS
-    private HState<I, O, SP, TP> treeTgt;
+    private @Nullable HState<I, O, SP, TP> treeTgt;
 
     // NON-TREE EDGE FIELDS
-    private AbstractWordBasedDTNode<I, O, HState<I, O, SP, TP>> dt;
+    private @Nullable AbstractWordBasedDTNode<I, O, HState<I, O, SP, TP>> dt;
 
     public HTransition(HState<I, O, SP, TP> source,
                        I symbol,
@@ -64,12 +66,18 @@ public class HTransition<I, O, SP, TP> implements Serializable {
         return treeTgt;
     }
 
+    @EnsuresNonNullIf(expression = "treeTgt", result = true)
     public boolean isTree() {
         return (treeTgt != null);
     }
 
+    @EnsuresNonNullIf(expression = "dt", result = true)
+    public boolean isNonTree() {
+        return (dt != null);
+    }
+
     public AbstractWordBasedDTNode<I, O, HState<I, O, SP, TP>> getDT() {
-        assert !isTree();
+        assert isNonTree();
         return dt;
     }
 
@@ -96,15 +104,18 @@ public class HTransition<I, O, SP, TP> implements Serializable {
     }
 
     public HState<I, O, SP, TP> nonTreeTarget() {
-        assert !isTree();
+        assert isNonTree();
         return dt.getData();
     }
 
     public HState<I, O, SP, TP> currentTarget() {
         if (treeTgt != null) {
             return treeTgt;
+        } else if (dt != null) {
+            return dt.getData();
+        } else {
+            throw new IllegalStateException("Neither tree target not DT node provided");
         }
-        return dt.getData();
     }
 
 }

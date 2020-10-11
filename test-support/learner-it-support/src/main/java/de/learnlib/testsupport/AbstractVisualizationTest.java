@@ -16,6 +16,7 @@
 package de.learnlib.testsupport;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import com.google.common.io.CharStreams;
 import de.learnlib.api.SUL;
@@ -30,6 +31,7 @@ import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.initialization.qual.UnderInitialization;
 
 /**
  * Abstract class for tests that check the visualization of hypotheses or other internal data structure. This class'
@@ -58,8 +60,13 @@ public abstract class AbstractVisualizationTest<L extends LearningAlgorithm<? ex
     }
 
     protected String resourceAsString(String resourceName) throws IOException {
-        return CharStreams.toString(IOUtil.asBufferedUTF8Reader(getClass().getResourceAsStream(resourceName)));
+        try (InputStream is = getClass().getResourceAsStream(resourceName)) {
+            assert is != null;
+            return CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
+        }
     }
 
-    protected abstract L getLearnerBuilder(Alphabet<Input> alphabet, SUL<Input, String> sul);
+    protected abstract L getLearnerBuilder(@UnderInitialization AbstractVisualizationTest<L> this,
+                                           Alphabet<Input> alphabet,
+                                           SUL<Input, String> sul);
 }

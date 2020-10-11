@@ -29,6 +29,7 @@ import com.google.common.collect.Sets;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.commons.util.Pair;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S>> {
 
@@ -152,12 +153,14 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         return true;
     }
 
-    private S cloneTopSucc(S succ, int i, Deque<FoldRecord<S>> stack, ArrayStorage<TP> newTPs) {
+    private S cloneTopSucc(S succ, int i, Deque<FoldRecord<S>> stack, @Nullable ArrayStorage<TP> newTPs) {
         S succClone = (newTPs != null) ? succ.copy(newTPs) : succ.copy();
         if (succClone == succ) {
             return succ;
         }
-        S top = stack.peek().q;
+        FoldRecord<S> peek = stack.peek();
+        assert peek != null;
+        S top = peek.q;
         if (top.isRed()) {
             updateRedTransition(top, i, succClone);
         } else {
@@ -187,6 +190,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
 
         while (!currSrc.isRed()) {
             S currSrcClone = currSrc.copy();
+            assert currSrcClone.successors != null;
             currSrcClone.successors.set(currRec.i, currTgt);
             if (currSrcClone == currSrc) {
                 return topClone; // we're done
@@ -205,7 +209,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         return topClone;
     }
 
-    private ArrayStorage<TP> getTransProperties(S q) {
+    private @Nullable ArrayStorage<TP> getTransProperties(S q) {
         if (q.isRed()) {
             int qId = q.id;
             ArrayStorage<TP> props = transPropMod.get(qId);
@@ -227,7 +231,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         return q.property;
     }
 
-    private S getSucc(S q, int i) {
+    private @Nullable S getSucc(S q, int i) {
         if (q.isRed()) {
             int qId = q.id;
             ArrayStorage<S> modSuccs = succMod.get(qId);
@@ -242,7 +246,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         updateRedTransition(redSrc, input, tgt, null);
     }
 
-    private void updateRedTransition(S redSrc, int input, S tgt, TP transProp) {
+    private void updateRedTransition(S redSrc, int input, S tgt, @Nullable TP transProp) {
         assert redSrc.isRed();
 
         int id = redSrc.id;
@@ -316,7 +320,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
      * can be merged, a new {@link ArrayStorage} containing the result of the merge is returned. <li>otherwise
      * (i.e., if no merge is possible), {@code null} is returned. </ul>
      */
-    private ArrayStorage<TP> mergeTransProperties(ArrayStorage<TP> tps1, ArrayStorage<TP> tps2) {
+    private @Nullable ArrayStorage<TP> mergeTransProperties(ArrayStorage<TP> tps1, ArrayStorage<TP> tps2) {
         int len = tps1.size();
         int i;
 
@@ -431,7 +435,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
             private Set<S> states;
 
             @Override
-            public S getSuccessor(Pair<S, Integer> transition) {
+            public @Nullable S getSuccessor(Pair<S, Integer> transition) {
                 final S source = transition.getFirst();
                 final Integer input = transition.getSecond();
 
@@ -460,6 +464,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
                     return transPropMod.get(source.id).get(input);
                 }
 
+                assert source.transProperties != null;
                 return source.transProperties.get(input);
             }
 
@@ -478,7 +483,9 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
                 states = Sets.newHashSetWithExpectedSize(pta.size());
                 final Queue<S> discoverQueue = new ArrayDeque<>();
 
-                discoverQueue.add(getInitialState());
+                S initialState = getInitialState();
+                assert initialState != null;
+                discoverQueue.add(initialState);
 
                 S iter;
 

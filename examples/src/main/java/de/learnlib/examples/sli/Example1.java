@@ -48,7 +48,7 @@ public final class Example1 {
     static {
         INPUTS = Alphabets.integers(0, 1);
         TARGET = constructTarget();
-        UNDEFINED = null;
+        UNDEFINED = '-';
     }
 
     private Example1() {

@@ -39,9 +39,11 @@ import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An adaption of the Kearns/Vazirani algorithm for Mealy machines.
@@ -132,7 +134,8 @@ public class KearnsVaziraniMealy<I, O>
         Word<I> prefix = effInput.prefix(idx);
         StateInfo<I, Word<O>> srcStateInfo = acex.getStateInfo(idx);
         I sym = effInput.getSymbol(idx);
-        LCAInfo<Word<O>, AbstractWordBasedDTNode<I, Word<O>, StateInfo<I, Word<O>>>> lca = acex.getLCA(idx + 1);
+        LCAInfo<Word<O>, @Nullable AbstractWordBasedDTNode<I, Word<O>, StateInfo<I, Word<O>>>> lca =
+                acex.getLCA(idx + 1);
         assert lca != null;
 
         splitState(srcStateInfo, prefix, sym, lca);
@@ -143,7 +146,7 @@ public class KearnsVaziraniMealy<I, O>
     private void splitState(StateInfo<I, Word<O>> stateInfo,
                             Word<I> newPrefix,
                             I sym,
-                            LCAInfo<Word<O>, AbstractWordBasedDTNode<I, Word<O>, StateInfo<I, Word<O>>>> separatorInfo) {
+                            LCAInfo<Word<O>, @Nullable AbstractWordBasedDTNode<I, Word<O>, StateInfo<I, Word<O>>>> separatorInfo) {
         int state = stateInfo.id;
 
         // TLongList oldIncoming = stateInfo.fetchIncoming();
@@ -162,7 +165,9 @@ public class KearnsVaziraniMealy<I, O>
             newOut = separatorInfo.subtree2Label;
         } else {
             newDiscriminator = newDiscriminator(sym, separator.getDiscriminator());
-            O transOut = hypothesis.getOutput(state, sym);
+            CompactMealyTransition<O> transition = hypothesis.getTransition(state, sym);
+            assert transition != null;
+            O transOut = hypothesis.getTransitionOutput(transition);
             oldOut = newOutcome(transOut, separatorInfo.subtree1Label);
             newOut = newOutcome(transOut, separatorInfo.subtree2Label);
         }
@@ -209,10 +214,9 @@ public class KearnsVaziraniMealy<I, O>
             int sourceState = (int) (encodedTrans >> Integer.SIZE);
             int transIdx = (int) (encodedTrans);
 
-            setTransition(sourceState,
-                          transIdx,
-                          succs.get(i),
-                          hypothesis.getTransition(sourceState, transIdx).getOutput());
+            CompactMealyTransition<O> trans = hypothesis.getTransition(sourceState, transIdx);
+            assert trans != null;
+            setTransition(sourceState, transIdx, succs.get(i), trans.getOutput());
         }
     }
 
@@ -378,7 +382,7 @@ public class KearnsVaziraniMealy<I, O>
         private final Word<I> ceWord;
         private final MembershipOracle<I, Word<O>> oracle;
         private final StateInfo<I, Word<O>>[] states;
-        private final LCAInfo<Word<O>, AbstractWordBasedDTNode<I, Word<O>, StateInfo<I, Word<O>>>>[] lcas;
+        private final LCAInfo<Word<O>, @Nullable AbstractWordBasedDTNode<I, Word<O>, StateInfo<I, Word<O>>>>[] lcas;
 
         @SuppressWarnings("unchecked")
         public KVAbstractCounterexample(Word<I> ceWord, Word<O> output, MembershipOracle<I, Word<O>> oracle) {
@@ -408,7 +412,7 @@ public class KearnsVaziraniMealy<I, O>
             return states[idx];
         }
 
-        public LCAInfo<Word<O>, AbstractWordBasedDTNode<I, Word<O>, StateInfo<I, Word<O>>>> getLCA(int idx) {
+        public LCAInfo<Word<O>, @Nullable AbstractWordBasedDTNode<I, Word<O>, StateInfo<I, Word<O>>>> getLCA(int idx) {
             return lcas[idx];
         }
 
@@ -422,7 +426,9 @@ public class KearnsVaziraniMealy<I, O>
             AbstractWordBasedDTNode<I, Word<O>, StateInfo<I, Word<O>>> node = info.dtNode;
             Deque<Word<O>> expect = new ArrayDeque<>();
             while (!node.isRoot()) {
-                expect.push(node.getParentOutcome());
+                Word<O> parentOutcome = node.getParentOutcome();
+                assert parentOutcome != null;
+                expect.push(parentOutcome);
                 node = node.getParent();
             }
 

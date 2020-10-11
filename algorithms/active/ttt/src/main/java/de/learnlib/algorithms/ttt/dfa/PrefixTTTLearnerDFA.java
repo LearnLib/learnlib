@@ -71,7 +71,8 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             I sym = ceWord.getSymbol(breakpoint);
             Word<I> newDiscr = lca.getDiscriminator().prepend(sym);
             ExtDTNode<I> succHyp = acex.getHypNode(breakpoint + 1);
-            boolean hypOut = lca.subtreeLabel(succHyp);
+            Boolean hypOut = lca.subtreeLabel(succHyp);
+            assert hypOut != null;
             openTransitions.insertAllIncoming(toSplit.getIncoming());
             ExtDTNode<I>.SplitResult splitResult = toSplit.split(newDiscr, hypOut, !hypOut);
             link(splitResult.nodeOld, splitState);
@@ -187,6 +188,7 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
 
         public void update(int len) {
             TTTStateDFA<I> curr = (TTTStateDFA<I>) hypothesis.getInitialState();
+            assert curr != null;
             hypNodes.set(0, (ExtDTNode<I>) curr.getDTLeaf());
             siftNodes.set(0, (ExtDTNode<I>) curr.getDTLeaf());
 

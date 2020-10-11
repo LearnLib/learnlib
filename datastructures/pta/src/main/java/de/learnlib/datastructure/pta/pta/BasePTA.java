@@ -36,7 +36,6 @@ import com.google.common.collect.Iterators;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.functions.FunctionsUtil;
 import net.automatalib.graphs.Graph;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -59,7 +58,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
         implements UniversalDeterministicAutomaton<S, Integer, PTATransition<S>, SP, TP> {
-
 
     protected final @NonNegative int alphabetSize;
     protected final S root;
@@ -200,14 +198,10 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
                                               Function<? super SP, ? extends SP2> spExtractor,
                                               Function<? super TP, ? extends TP2> tpExtractor) {
 
-        final Function<? super SP, ? extends SP2> safeSPExtractor = FunctionsUtil.safeDefault(spExtractor);
-        final Function<? super TP, ? extends TP2> safeTPExtractor = FunctionsUtil.safeDefault(tpExtractor);
-
         Map<S, S2> resultStates = new HashMap<>();
-
         Queue<Pair<S, S2>> queue = new ArrayDeque<>();
 
-        SP2 initProp = safeSPExtractor.apply(root.getStateProperty());
+        SP2 initProp = spExtractor.apply(root.getStateProperty());
         S2 resultInit = automaton.addInitialState(initProp);
         queue.add(Pair.of(root, resultInit));
 
@@ -221,13 +215,13 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
                 if (ptaSucc != null) {
                     S2 resultSucc = resultStates.get(ptaSucc);
                     if (resultSucc == null) {
-                        SP2 prop = safeSPExtractor.apply(ptaSucc.getStateProperty());
+                        SP2 prop = spExtractor.apply(ptaSucc.getStateProperty());
                         resultSucc = automaton.addState(prop);
                         resultStates.put(ptaSucc, resultSucc);
                         queue.offer(Pair.of(ptaSucc, resultSucc));
                     }
                     I sym = alphabet.getSymbol(i);
-                    TP2 transProp = safeTPExtractor.apply(ptaState.getTransProperty(i));
+                    TP2 transProp = tpExtractor.apply(ptaState.getTransProperty(i));
                     automaton.setTransition(resultState, sym, resultSucc, transProp);
                 }
             }
@@ -268,8 +262,8 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
 
                     @Override
                     public boolean getNodeProperties(S node, Map<String, String> properties) {
-                        properties.put(NodeAttrs.LABEL,
-                                       node.getProperty() == null ? "" : node.getProperty().toString());
+                        final SP property = node.getProperty();
+                        properties.put(NodeAttrs.LABEL, property == null ? "" : property.toString());
                         return super.getNodeProperties(node, properties);
                     }
 
@@ -352,7 +346,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
     }
 
     @Override
-    public S getSuccessor(S state, Integer input) {
+    public @Nullable S getSuccessor(S state, Integer input) {
         return state.getSuccessor(input);
     }
 

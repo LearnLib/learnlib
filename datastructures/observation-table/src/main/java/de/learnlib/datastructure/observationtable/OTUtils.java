@@ -20,6 +20,7 @@ import java.awt.HeadlessException;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Objects;
 import java.util.function.Function;
 
 import de.learnlib.datastructure.observationtable.reader.ObservationTableReader;
@@ -65,7 +66,7 @@ public final class OTUtils {
     }
 
     public static <I, D> void writeHTMLToFile(ObservationTable<I, D> table, File file) throws IOException {
-        writeHTMLToFile(table, file, Object::toString, Object::toString);
+        writeHTMLToFile(table, file, Objects::toString, Objects::toString);
     }
 
     public static <I, D> void writeHTMLToFile(ObservationTable<I, D> table,
@@ -86,7 +87,7 @@ public final class OTUtils {
      * Object#toString()} to render words and outputs of the observation table.
      */
     public static <I, D> void displayHTMLInBrowser(ObservationTable<I, D> table) throws IOException {
-        displayHTMLInBrowser(table, Object::toString, Object::toString);
+        displayHTMLInBrowser(table, Objects::toString, Objects::toString);
     }
 
     /**

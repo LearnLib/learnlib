@@ -17,6 +17,7 @@ package de.learnlib.acex.impl;
 
 import de.learnlib.acex.AbstractCounterexample;
 import net.automatalib.commons.smartcollections.ArrayStorage;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 public abstract class AbstractBaseCounterexample<E> implements AbstractCounterexample<E> {
 
@@ -54,7 +55,9 @@ public abstract class AbstractBaseCounterexample<E> implements AbstractCounterex
 
     protected abstract E computeEffect(int index);
 
-    public void setEffect(int index, E effect) {
+    public void setEffect(@UnknownInitialization(AbstractBaseCounterexample.class) AbstractBaseCounterexample<E> this,
+                          int index,
+                          E effect) {
         values.set(index, effect);
     }
 

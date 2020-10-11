@@ -17,6 +17,8 @@ package de.learnlib.drivers.reflect;
 
 import java.util.Objects;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Error output.
  *
@@ -39,7 +41,7 @@ public class Error extends MethodOutput {
     }
 
     @Override
-    public final boolean equals(Object obj) {
+    public final boolean equals(@Nullable Object obj) {
         if (this == obj) {
             return true;
         }

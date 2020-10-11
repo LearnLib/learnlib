@@ -24,7 +24,6 @@ import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 /**
  * A "master" query. This query corresponds to a maximal input word in the batch, and all queries that constitute
@@ -69,9 +68,9 @@ final class MasterQuery<I, O> extends AbstractQuery<I, Word<O>> {
         return (answer != null);
     }
 
-    @RequiresNonNull("slaves")
     @Override
     public void answer(Word<O> output) {
+        assert slaves != null;
         this.answer = truncateOutput(output);
         for (Query<I, Word<O>> slave : slaves) {
             answerSlave(slave);

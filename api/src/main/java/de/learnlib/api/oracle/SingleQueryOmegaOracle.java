@@ -20,6 +20,7 @@ import java.util.Collection;
 import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An {@link OmegaMembershipOracle} that answers single queries.
@@ -33,7 +34,7 @@ public interface SingleQueryOmegaOracle<S, I, D> extends OmegaMembershipOracle<S
 
     @Override
     default void processQuery(OmegaQuery<I, D> query) {
-        Pair<D, Integer> output = answerQuery(query.getPrefix(), query.getLoop(), query.getRepeat());
+        Pair<@Nullable D, Integer> output = answerQuery(query.getPrefix(), query.getLoop(), query.getRepeat());
         query.answer(output.getFirst(), output.getSecond());
     }
 

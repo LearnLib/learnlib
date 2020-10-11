@@ -72,4 +72,16 @@ limitations under the License.
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>cf</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.checkerframework</groupId>
+                    <artifactId>checker-qual</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>

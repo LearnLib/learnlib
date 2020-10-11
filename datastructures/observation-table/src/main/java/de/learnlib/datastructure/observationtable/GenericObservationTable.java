@@ -31,6 +31,7 @@ import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Observation table class.
@@ -63,13 +64,13 @@ import net.automatalib.words.impl.Alphabets;
  */
 public final class GenericObservationTable<I, D> implements MutableObservationTable<I, D>, Serializable {
 
-    private static final Integer NO_ENTRY = null; // TODO: replace with primitive specialization
+    private static final int NO_ENTRY = -1;
     private final List<RowImpl<I>> shortPrefixRows = new ArrayList<>();
     // private static final int NO_ENTRY = -1;
     private final List<RowImpl<I>> longPrefixRows = new ArrayList<>();
     private final List<RowImpl<I>> allRows = new ArrayList<>();
     private final List<List<D>> allRowContents = new ArrayList<>();
-    private final List<RowImpl<I>> canonicalRows = new ArrayList<>();
+    private final List<@Nullable RowImpl<I>> canonicalRows = new ArrayList<>();
     // private final TObjectIntMap<List<D>> rowContentIds = new TObjectIntHashMap<>(10, 0.75f, NO_ENTRY);
     private final Map<List<D>, Integer> rowContentIds = new HashMap<>(); // TODO: replace with primitive specialization
     private final Map<Word<I>, RowImpl<I>> rowMap = new HashMap<>();
@@ -237,10 +238,9 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
     }
 
     private boolean processContents(RowImpl<I> row, List<D> rowContents, boolean makeCanonical) {
-        Integer contentId; // TODO: replace with primitive specialization
-        // int contentId;
+        int contentId;
         boolean added = false;
-        contentId = rowContentIds.get(rowContents);
+        contentId = rowContentIds.getOrDefault(rowContents, NO_ENTRY);
         if (contentId == NO_ENTRY) {
             contentId = numberOfDistinctRows();
             rowContentIds.put(rowContents, contentId);
@@ -511,10 +511,12 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
     @Override
     public Word<I> transformAccessSequence(Word<I> word) {
         Row<I> current = shortPrefixRows.get(0);
+        assert current != null;
 
         for (I sym : word) {
             current = getRowSuccessor(current, sym);
             current = canonicalRows.get(current.getRowContentId());
+            assert current != null;
         }
 
         return current.getLabel();

@@ -42,11 +42,13 @@ final class MDLUtil {
                                                int alphabetSize,
                                                int[] word) {
         S currentState = pta.getInitialState();
+        assert currentState != null;
         double result = Math.log(countStateChoices(pta, alphabetSize, currentState)) /
                         Math.log(2); // log_2 x = log_e x / log_e 2
 
         for (final int i : word) {
             currentState = pta.getSuccessor(currentState, i);
+            assert currentState != null;
             result += Math.log(countStateChoices(pta, alphabetSize, currentState)) / Math.log(2);
         }
 

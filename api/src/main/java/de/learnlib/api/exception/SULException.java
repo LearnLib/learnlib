@@ -17,6 +17,7 @@ package de.learnlib.api.exception;
 
 import de.learnlib.api.SUL;
 import de.learnlib.api.oracle.MembershipOracle;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Unchecked exception class that can be used by implementors of a {@link SUL} to wrap any exceptions that occur during
@@ -45,7 +46,7 @@ public class SULException extends RuntimeException {
      * @param cause
      *         the exception cause, should <b>never</b> be a subclass of {@link Error}.
      */
-    public SULException(Throwable cause) {
+    public SULException(@Nullable Throwable cause) {
         super(cause);
     }
 

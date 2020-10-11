@@ -100,8 +100,9 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
     }
 
     protected void initializeLocation(HypLoc<I> loc) {
-        assert loc.getLeaf() != null;
-        loc.setAccepting(dtree.getRoot().subtreeLabel(loc.getLeaf()));
+        final Boolean subtreeLabel = dtree.getRoot().subtreeLabel(loc.getLeaf());
+        assert subtreeLabel != null;
+        loc.setAccepting(subtreeLabel);
 
         for (int i = 0; i < alphabet.getNumInternals(); i++) {
             I intSym = alphabet.getInternalSymbol(i);

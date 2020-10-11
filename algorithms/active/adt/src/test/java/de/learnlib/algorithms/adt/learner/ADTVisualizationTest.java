@@ -24,6 +24,7 @@ import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import de.learnlib.testsupport.AbstractVisualizationTest;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.initialization.qual.UnderInitialization;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -33,7 +34,9 @@ import org.testng.annotations.Test;
 public class ADTVisualizationTest extends AbstractVisualizationTest<ADTLearner<Input, String>> {
 
     @Override
-    protected ADTLearner<Input, String> getLearnerBuilder(Alphabet<Input> alphabet, SUL<Input, String> sul) {
+    protected ADTLearner<Input, String> getLearnerBuilder(@UnderInitialization ADTVisualizationTest this,
+                                                          Alphabet<Input> alphabet,
+                                                          SUL<Input, String> sul) {
         return new ADTLearnerBuilder<Input, String>().withAlphabet(alphabet)
                                                      .withOracle(new SULSymbolQueryOracle<>(sul))
                                                      .create();

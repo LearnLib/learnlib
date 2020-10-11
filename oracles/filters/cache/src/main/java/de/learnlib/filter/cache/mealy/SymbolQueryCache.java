@@ -75,6 +75,7 @@ public class SymbolQueryCache<I, O>
 
             if (succ != null) {
                 final O output = this.cache.getOutput(this.currentState, i);
+                assert output != null;
                 this.currentTrace.add(i);
                 this.currentState = succ;
                 return output;
@@ -107,13 +108,15 @@ public class SymbolQueryCache<I, O>
 
     @Override
     public void reset() {
-        this.currentState = this.cache.getInitialState();
+        Integer init = this.cache.getInitialState();
+        assert init != null;
+        this.currentState = init;
         this.currentTrace.clear();
         this.currentTraceValid = true;
     }
 
     @Override
-    public @Nullable EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createCacheConsistencyTest() {
+    public EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createCacheConsistencyTest() {
         return this::findCounterexample;
     }
 

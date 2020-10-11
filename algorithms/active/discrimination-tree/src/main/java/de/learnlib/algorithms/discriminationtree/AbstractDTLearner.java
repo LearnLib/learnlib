@@ -105,10 +105,12 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
         Word<I> input = ceQuery.getInput();
         Word<I> oldStateAs = input.prefix(suffixIdx);
         HState<I, D, SP, TP> oldState = hypothesis.getState(oldStateAs);
+        assert oldState != null;
         AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>> oldDt = oldState.getDTLeaf();
 
         Word<I> newPredAs = input.prefix(suffixIdx - 1);
         HState<I, D, SP, TP> newPred = hypothesis.getState(newPredAs);
+        assert newPred != null;
         I transSym = input.getSymbol(suffixIdx - 1);
         int transIdx = alphabet.getSymbolIndex(transSym);
         HTransition<I, D, SP, TP> trans = newPred.getTransition(transIdx);

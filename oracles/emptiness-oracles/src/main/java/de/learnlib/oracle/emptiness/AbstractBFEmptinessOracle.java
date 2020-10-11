@@ -77,7 +77,7 @@ abstract class AbstractBFEmptinessOracle<A extends DetOutputAutomaton<?, I, ?, D
     }
 
     @Override
-    public boolean isCounterExample(A hypothesis, Iterable<? extends I> inputs, @Nullable D output) {
+    public boolean isCounterExample(A hypothesis, Iterable<? extends I> inputs, D output) {
         return EmptinessOracle.super.isCounterExample(hypothesis, inputs, output);
     }
 

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.automatalib.automata.vpda.AbstractOneSEVPA;
+import net.automatalib.automata.vpda.StackContents;
 import net.automatalib.automata.vpda.State;
 import net.automatalib.words.VPDAlphabet;
 
@@ -43,8 +44,10 @@ public class OneSEVPAHypothesis<I> extends AbstractOneSEVPA<HypLoc<I>, I> {
             case INTERNAL:
                 return state.getLocation().getInternalTransition(alphabet.getInternalSymbolIndex(sym));
             case RETURN:
+                StackContents stackContents = state.getStackContents();
+                assert stackContents != null;
                 return state.getLocation()
-                            .getReturnTransition(alphabet.getReturnSymbolIndex(sym), state.getStackContents().peek());
+                            .getReturnTransition(alphabet.getReturnSymbolIndex(sym), stackContents.peek());
             default:
                 return null;
         }

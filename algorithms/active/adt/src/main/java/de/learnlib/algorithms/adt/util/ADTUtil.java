@@ -18,6 +18,7 @@ package de.learnlib.algorithms.adt.util;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import de.learnlib.algorithms.adt.adt.ADTLeafNode;
@@ -153,7 +154,7 @@ public final class ADTUtil {
 
     public static <S, I, O> O getOutputForSuccessor(final ADTNode<S, I, O> node, final ADTNode<S, I, O> successor) {
 
-        if (!successor.getParent().equals(node)) {
+        if (!node.equals(successor.getParent())) {
             throw new IllegalArgumentException("No parent relationship");
         }
 
@@ -325,7 +326,7 @@ public final class ADTUtil {
 
         while (!(ADTUtil.isLeafNode(parentIter) || ADTUtil.isResetNode(parentIter)) && !ADTUtil.isLeafNode(childIter)) {
 
-            if (!parentIter.getSymbol().equals(childIter.getSymbol())) {
+            if (!Objects.equals(parentIter.getSymbol(), childIter.getSymbol())) {
                 return false;
             }
 

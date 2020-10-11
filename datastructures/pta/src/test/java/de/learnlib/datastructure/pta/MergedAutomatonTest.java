@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.pta.BlueFringePTAState;
+import de.learnlib.datastructure.pta.pta.RedBlueMerge;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -79,8 +80,11 @@ public class MergedAutomatonTest {
         pta.promote(q2, (q) -> {});
         pta.promote(q3, (q) -> {});
 
+        final RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>> merge = pta.tryMerge(q3, q4);
+        Assert.assertNotNull(merge);
+
         final UniversalDeterministicAutomaton<BlueFringePTAState<Boolean, Void>, Integer, ?, Boolean, Void>
-                mergedAutomaton = pta.tryMerge(q3, q4).toMergedAutomaton();
+                mergedAutomaton = merge.toMergedAutomaton();
 
         // subtree of 3 states has been subsumed
         Assert.assertEquals(pta.size() - 3, mergedAutomaton.size());

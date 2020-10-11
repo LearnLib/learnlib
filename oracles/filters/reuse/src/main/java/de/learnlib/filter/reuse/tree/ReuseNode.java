@@ -66,7 +66,7 @@ public class ReuseNode<S, I, O> {
         return systemStates.peek();
     }
 
-    public S addSystemState(S state) {
+    public @Nullable S addSystemState(S state) {
         return systemStates.insert(state);
     }
 

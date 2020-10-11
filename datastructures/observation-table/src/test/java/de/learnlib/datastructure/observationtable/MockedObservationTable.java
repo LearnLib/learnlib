@@ -25,7 +25,6 @@ import java.util.Map;
 import com.google.common.base.Preconditions;
 import de.learnlib.datastructure.observationtable.reader.SimpleObservationTable;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Mock-up observation table for testing writers.
@@ -91,8 +90,7 @@ public class MockedObservationTable<I, D> extends SimpleObservationTable<I, D> {
     }
 
     @Override
-    public @Nullable RowImpl<I> getRow(int idx) {
-        Preconditions.checkPositionIndex(0, rows.size());
+    public RowImpl<I> getRow(int idx) {
         return rows.get(idx);
     }
 

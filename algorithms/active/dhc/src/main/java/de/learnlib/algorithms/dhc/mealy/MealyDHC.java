@@ -47,6 +47,8 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +78,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
      *         the learning membership oracle
      */
     public MealyDHC(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
-        this(alphabet, oracle, GlobalSuffixFinders.RIVEST_SCHAPIRE, null);
+        this(alphabet, oracle, GlobalSuffixFinders.RIVEST_SCHAPIRE, Collections.emptyList());
     }
 
     /**
@@ -164,7 +166,8 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
         while (!queue.isEmpty()) {
             // get element to be explored from queue
-            QueueElement<I, O> elem = queue.poll();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            @NonNull QueueElement<I, O> elem = queue.poll();
 
             // determine access sequence for state
             Word<I> access = assembleAccessSequence(elem);
@@ -321,13 +324,16 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
     static final class QueueElement<I, O> implements Serializable {
 
-        private final Integer parentState;
-        private final QueueElement<I, O> parentElement;
-        private final I transIn;
-        private final O transOut;
+        private final @Nullable Integer parentState;
+        private final @Nullable QueueElement<I, O> parentElement;
+        private final @Nullable I transIn;
+        private final @Nullable O transOut;
         private final int depth;
 
-        QueueElement(Integer parentState, QueueElement<I, O> parentElement, I transIn, O transOut) {
+        QueueElement(@Nullable Integer parentState,
+                     @Nullable QueueElement<I, O> parentElement,
+                     @Nullable I transIn,
+                     @Nullable O transOut) {
             this.parentState = parentState;
             this.parentElement = parentElement;
             this.transIn = transIn;

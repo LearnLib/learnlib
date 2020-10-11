@@ -117,7 +117,18 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
 
     Collection<Row<I>> getLongPrefixRows();
 
-    @Nullable Row<I> getRow(int idx);
+    /**
+     * Returns the specified row of the observation table.
+     *
+     * @param idx
+     *         the index of the row
+     *
+     * @return the row
+     *
+     * @throws IndexOutOfBoundsException
+     *         if {@code idx} is less than 0 or greater than {@code number of rows - 1}.
+     */
+    Row<I> getRow(int idx);
 
     default @Nullable Row<I> getRow(Word<I> prefix) {
         for (Row<I> row : getAllRows()) {
@@ -278,7 +289,6 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
     default boolean isConsistent() {
         return (findInconsistency() == null);
     }
-
 
     default @Nullable Inconsistency<I> findInconsistency() {
         @SuppressWarnings("unchecked")

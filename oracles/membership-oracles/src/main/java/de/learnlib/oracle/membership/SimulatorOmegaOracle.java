@@ -53,7 +53,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I> the input type.
  * @param <D> the output type.
  */
-public class SimulatorOmegaOracle<S extends Object, I, @Nullable D> implements SingleQueryOmegaOracle<S, I, D> {
+public class SimulatorOmegaOracle<S extends Object, I, D> implements SingleQueryOmegaOracle<S, I, D> {
 
     /**
      * The automaton to simulate.
@@ -111,7 +111,7 @@ public class SimulatorOmegaOracle<S extends Object, I, @Nullable D> implements S
      * @see OmegaQueryAnswerer#answerQuery(Word, Word, int)
      */
     @Override
-    public Pair<D, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
+    public Pair<@Nullable D, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
         assert repeat > 0;
 
         final List<S> states = new ArrayList<>(repeat + 1);
@@ -149,7 +149,7 @@ public class SimulatorOmegaOracle<S extends Object, I, @Nullable D> implements S
         return Pair.of(null, -1);
     }
 
-    public static class DFASimulatorOmegaOracle<S, I>
+    public static class DFASimulatorOmegaOracle<S extends Object, I>
             extends SimulatorOmegaOracle<S, I, Boolean>
             implements SingleQueryOmegaOracleDFA<S, I> {
 
@@ -166,7 +166,7 @@ public class SimulatorOmegaOracle<S extends Object, I, @Nullable D> implements S
         }
     }
 
-    public static class MealySimulatorOmegaOracle<S, I, O>
+    public static class MealySimulatorOmegaOracle<S extends Object, I, O>
             extends SimulatorOmegaOracle<S, I, Word<O>>
             implements SingleQueryOmegaOracleMealy<S, I, O> {
 

@@ -96,16 +96,18 @@ public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, 
         return transition.getOutput();
     }
 
-    @SuppressWarnings("nullness") // hypothesis is always complete
     @Override
     public Word<I> transformAccessSequence(final Word<I> word) {
-        return this.getState(word).getAccessSequence();
+        final ADTState<I, O> state = this.getState(word);
+        assert state != null;
+        return state.getAccessSequence();
     }
 
-    @SuppressWarnings("nullness") // hypothesis is always complete
     @Override
     public boolean isAccessSequence(final Word<I> word) {
-        return this.getState(word).getAccessSequence().equals(word);
+        final ADTState<I, O> state = this.getState(word);
+        assert state != null;
+        return state.getAccessSequence().equals(word);
     }
 
 }
