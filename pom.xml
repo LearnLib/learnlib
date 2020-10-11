@@ -199,7 +199,7 @@ limitations under the License.
         <dependency-plugin.version>3.1.2</dependency-plugin.version>
         <deploy-plugin.version>3.0.0-M1</deploy-plugin.version>
         <enforcer-plugin.version>3.0.0-M3</enforcer-plugin.version>
-        <failsafe-plugin.version>3.0.0-M5</failsafe-plugin.version>
+        <failsafe-plugin.version>3.0.0-M4</failsafe-plugin.version>
         <gpg-plugin.version>1.6</gpg-plugin.version>
         <info-reports-plugin.version>3.1.1</info-reports-plugin.version>
         <jacoco-plugin.version>0.8.6</jacoco-plugin.version>
