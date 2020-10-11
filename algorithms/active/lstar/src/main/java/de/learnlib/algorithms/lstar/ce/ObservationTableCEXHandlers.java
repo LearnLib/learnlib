@@ -45,13 +45,13 @@ public final class ObservationTableCEXHandlers {
                 }
 
                 @Override
-                public String toString() {
-                    return "ClassicLStar";
+                public boolean needsConsistencyCheck() {
+                    return true;
                 }
 
                 @Override
-                public boolean needsConsistencyCheck() {
-                    return true;
+                public String toString() {
+                    return "ClassicLStar";
                 }
 
             };

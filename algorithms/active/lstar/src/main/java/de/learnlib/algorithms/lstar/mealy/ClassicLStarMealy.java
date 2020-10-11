@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.lstar.mealy;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -100,16 +99,6 @@ public class ClassicLStarMealy<I, O>
     }
 
     @Override
-    protected List<Word<I>> initialSuffixes() {
-        List<Word<I>> suffixes = new ArrayList<>(alphabet.size());
-        for (int i = 0; i < alphabet.size(); i++) {
-            I sym = alphabet.getSymbol(i);
-            suffixes.add(Word.fromLetter(sym));
-        }
-        return suffixes;
-    }
-
-    @Override
     protected MealyMachine<?, I, ?, O> exposeInternalHypothesis() {
         return internalHyp;
     }
@@ -141,8 +130,6 @@ public class ClassicLStarMealy<I, O>
                 }
                 return wordOut.lastSymbol();
             }
-
         };
     }
-
 }

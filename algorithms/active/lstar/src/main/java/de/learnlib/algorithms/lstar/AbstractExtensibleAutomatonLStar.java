@@ -59,12 +59,12 @@ public abstract class AbstractExtensibleAutomatonLStar<A, I, D, S, T, SP, TP, AI
     }
 
     @Override
-    protected List<Word<I>> initialPrefixes() {
+    protected final List<Word<I>> initialPrefixes() {
         return initialPrefixes;
     }
 
     @Override
-    protected List<Word<I>> initialSuffixes() {
+    protected final List<Word<I>> initialSuffixes() {
         return initialSuffixes;
     }
 

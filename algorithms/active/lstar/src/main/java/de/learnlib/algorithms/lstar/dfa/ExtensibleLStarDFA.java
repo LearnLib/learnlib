@@ -78,11 +78,6 @@ public class ExtensibleLStarDFA<I>
     }
 
     @Override
-    protected List<Word<I>> initialSuffixes() {
-        return Collections.singletonList(Word.epsilon());
-    }
-
-    @Override
     protected DFA<?, I> exposeInternalHypothesis() {
         return internalHyp;
     }

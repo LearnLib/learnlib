@@ -66,11 +66,6 @@ public class ExtensibleLStarMealy<I, O>
     }
 
     @Override
-    protected List<Word<I>> initialSuffixes() {
-        return initialSuffixes;
-    }
-
-    @Override
     public CompactMealy<I, O> getHypothesisModel() {
         return internalHyp;
     }

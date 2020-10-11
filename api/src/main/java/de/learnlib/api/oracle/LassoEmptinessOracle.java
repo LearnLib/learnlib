@@ -33,18 +33,6 @@ import net.automatalib.words.Word;
  */
 public interface LassoEmptinessOracle<L extends Lasso<I, D>, I, D> extends EmptinessOracle<L, I, D> {
 
-    /**
-     * Return that when a lasso is ultimately periodic, it could serve as a counter example.
-     *
-     * @param isUltimatelyPeriodic
-     *          whether the lasso is ultimately periodic
-     *
-     * @return true when a lasso is ultimately periodic, false otherwise.
-     */
-    default boolean isOmegaCounterExample(boolean isUltimatelyPeriodic) {
-        return isUltimatelyPeriodic;
-    }
-
     interface DFALassoEmptinessOracle<I> extends LassoEmptinessOracle<DFALasso<I>, I, Boolean> {}
 
     interface MealyLassoEmptinessOracle<I, O> extends LassoEmptinessOracle<MealyLasso<I, O>, I, Word<O>> {}
