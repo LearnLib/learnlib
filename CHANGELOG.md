@@ -2,7 +2,14 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.16.0-SNAPSHOT] - Unreleased
+## [0.17.0-SNAPSHOT] - Unreleased
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.16.0...HEAD)
+
+
+## [0.16.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.16.0) - 2020-10-12
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.15.0...learnlib-0.16.0)
 
 ### Added
 
@@ -18,13 +25,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Refactored the following packages/classes:
   * `de.learnlib.oracle.parallelism.ParallelOracleInterruptedException` -> `de.learnlib.api.oracle.parallelism.BatchInterruptedException`
 * The `initialPrefixes` and `initialSuffixes` methods of `AbstractExtensibleAutomatonLStar` are now `final` since these values can be provided via the constructor of the class. This allows one to simplify sub-classes.
+* Updated to [AutomataLib 0.10.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0)
 
 ### Removed
 
 * Removed the `learnlib.queries.parallel.threshold` property. Learning setups that want to use parallelism now need to explicitly setup parallel oracles.
 * Removed `MQUtil#answerQueries{Auto,Parallel}` and `MQUtil#answerOmegaQueries{Auto,Parallel}`)
 * `LassoOracle#isOmegaCounterExample(boolean)` has been removed. This decision can be directly integrated into the `#findCounterExample` method which has more information available.
-* Updated to [AutomataLib 0.10.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0)
 
 ### Fixed
 
