@@ -1,0 +1,10 @@
+de.learnlib.api
+de.learnlib.api.algorithm
+de.learnlib.api.algorithm.feature
+de.learnlib.api.exception
+de.learnlib.api.logging
+de.learnlib.api.oracle
+de.learnlib.api.oracle.parallelism
+de.learnlib.api.query
+de.learnlib.api.setting
+de.learnlib.api.statistic
