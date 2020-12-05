@@ -314,6 +314,11 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-ostia</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-rpni</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -19,22 +19,27 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
+        <artifactId>learnlib-algorithms-passive-parent</artifactId>
         <groupId>de.learnlib</groupId>
-        <artifactId>learnlib-algorithms-parent</artifactId>
         <version>0.17.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>learnlib-algorithms-passive-parent</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>learnlib-ostia</artifactId>
 
-    <name>LearnLib :: Algorithms :: Passive</name>
-    <description>Parent module for (passive) automata learning algorithms shipped with LearnLib</description>
+    <name>LearnLib :: Algorithms :: OSTIA</name>
+    <description>The OSTIA passive learning algorithm</description>
 
-    <modules>
-        <module>ostia</module>
-        <module>rpni</module>
-        <module>rpni-edsm</module>
-        <module>rpni-mdl</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-api</artifactId>
+        </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-learner-it-support</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
