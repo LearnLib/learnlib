@@ -16,15 +16,56 @@
 package de.learnlib.algorithms.ostia;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
+import de.learnlib.api.query.DefaultQuery;
+import net.automatalib.automata.transducers.impl.compact.SequentialTransducer;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 
-public class OSTIA {
+public class OSTIA<I, O> implements PassiveLearningAlgorithm<SequentialTransducer<?, I, ?, O>, I, Word<O>> {
+
+    private final Alphabet<I> inputAlphabet;
+    private final Alphabet<O> outputAlphabet;
+    private final int alphabetSize;
+
+    private final List<DefaultQuery<I, Word<O>>> samples;
+
+    public OSTIA(Alphabet<I> inputAlphabet, Alphabet<O> outputAlphabet) {
+        this.inputAlphabet = inputAlphabet;
+        this.outputAlphabet = outputAlphabet;
+        this.alphabetSize = inputAlphabet.size();
+        this.samples = new ArrayList<>();
+    }
+
+    @Override
+    public void addSamples(Collection<? extends DefaultQuery<I, Word<O>>> samples) {
+        this.samples.addAll(samples);
+    }
+
+    @Override
+    public SequentialTransducer<?, I, ?, O> computeModel() {
+        final List<Pair<IntSeq, IntSeq>> informant = new ArrayList<>(this.samples.size());
+
+        for (DefaultQuery<I, Word<O>> sample : this.samples) {
+            final IntSeq inSeq = IntSeq.seq(sample.getInput().stream().mapToInt(inputAlphabet).toArray());
+            final IntSeq outSeq = IntSeq.seq(sample.getOutput().stream().mapToInt(outputAlphabet).toArray());
+            informant.add(Pair.of(inSeq, outSeq));
+        }
+
+        final State root = buildPtt(this.alphabetSize, informant.iterator());
+        ostia(root);
+        return new OSTWrapper<>(root, inputAlphabet, outputAlphabet);
+
+    }
 
     public static boolean hasCycle(IntQueue q) {
         final HashSet<IntQueue> elements = new HashSet<>();
@@ -39,7 +80,9 @@ public class OSTIA {
 
     static IntQueue concat(IntQueue q, IntQueue tail) {
         assert !hasCycle(q) && !hasCycle(tail);
-        if (q == null) { return tail; }
+        if (q == null) {
+            return tail;
+        }
         final IntQueue first = q;
         while (q.next != null) {
             q = q.next;
@@ -51,7 +94,9 @@ public class OSTIA {
 
     static IntQueue copyAndConcat(IntQueue q, IntQueue tail) {
         assert !hasCycle(q) && !hasCycle(tail);
-        if (q == null) { return tail; }
+        if (q == null) {
+            return tail;
+        }
         final IntQueue root = new IntQueue();
         root.value = q.value;
         IntQueue curr = root;
@@ -107,13 +152,17 @@ public class OSTIA {
                 ptt = edge.target;
             }
         }
-        if (ptt.out != null && !eq(ptt.out.str, output)) { throw new IllegalArgumentException(); }
+        if (ptt.out != null && !eq(ptt.out.str, output)) {
+            throw new IllegalArgumentException();
+        }
         ptt.out = new Out(output);
     }
 
     private static boolean eq(IntQueue a, IntQueue b) {
         while (a != null && b != null) {
-            if (a.value != b.value) { return false; }
+            if (a.value != b.value) {
+                return false;
+            }
             a = a.next;
             b = b.next;
         }
@@ -256,7 +305,9 @@ public class OSTIA {
         ArrayList<Integer> output = new ArrayList<>();
         while (input.hasNext()) {
             final Edge edge = init.transitions[input.next()];
-            if (edge == null) { return null; }
+            if (edge == null) {
+                return null;
+            }
             init = edge.target;
             IntQueue q = edge.out;
             while (q != null) {
@@ -264,7 +315,9 @@ public class OSTIA {
                 q = q.next;
             }
         }
-        if (init.out == null) { return null; }
+        if (init.out == null) {
+            return null;
+        }
         IntQueue q = init.out.str;
         while (q != null) {
             output.add(q.value);

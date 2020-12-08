@@ -8,8 +8,6 @@ interface IntSeq {
 
     int get(int index);
 
-    public static final IntSeq Epsilon = seq();
-
     static IntSeq seq(int... ints) {
         return new IntSeq() {
 
