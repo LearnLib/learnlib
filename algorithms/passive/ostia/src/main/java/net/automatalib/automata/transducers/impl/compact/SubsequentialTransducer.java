@@ -8,7 +8,7 @@ import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-public interface SequentialTransducer<S, I, T, O>
+public interface SubsequentialTransducer<S, I, T, O>
         extends DetSuffixOutputAutomaton<S, I, T, Word<O>>, UniversalDeterministicAutomaton<S, I, T, Word<O>, Word<O>> {
 
     @Override

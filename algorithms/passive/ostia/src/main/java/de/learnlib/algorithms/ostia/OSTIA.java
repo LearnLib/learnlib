@@ -26,12 +26,12 @@ import java.util.Map;
 
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.transducers.impl.compact.SequentialTransducer;
+import net.automatalib.automata.transducers.impl.compact.SubsequentialTransducer;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-public class OSTIA<I, O> implements PassiveLearningAlgorithm<SequentialTransducer<?, I, ?, O>, I, Word<O>> {
+public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransducer<?, I, ?, O>, I, Word<O>> {
 
     private final Alphabet<I> inputAlphabet;
     private final Alphabet<O> outputAlphabet;
@@ -52,7 +52,7 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SequentialTransduce
     }
 
     @Override
-    public SequentialTransducer<?, I, ?, O> computeModel() {
+    public SubsequentialTransducer<?, I, ?, O> computeModel() {
         final List<Pair<IntSeq, IntSeq>> informant = new ArrayList<>(this.samples.size());
 
         for (DefaultQuery<I, Word<O>> sample : this.samples) {
@@ -63,7 +63,7 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SequentialTransduce
 
         final State root = buildPtt(this.alphabetSize, informant.iterator());
         ostia(root);
-        return new OSTWrapper<>(root, inputAlphabet, outputAlphabet);
+        return new OSSTWrapper<>(root, inputAlphabet, outputAlphabet);
 
     }
 

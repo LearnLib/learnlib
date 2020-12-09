@@ -25,13 +25,14 @@ import java.util.Random;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactOST;
-import net.automatalib.automata.transducers.impl.compact.SequentialTransducer;
+import net.automatalib.automata.transducers.impl.compact.CompactSST;
+import net.automatalib.automata.transducers.impl.compact.SubsequentialTransducer;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.conformance.WMethodTestsIterator;
 import net.automatalib.util.automata.conformance.WpMethodTestsIterator;
 import net.automatalib.util.automata.random.RandomAutomata;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -61,7 +62,7 @@ public class OSTIATest {
             learner.addSample(input, automaton.computeOutput(input));
         }
 
-        final SequentialTransducer<?, Character, ?, String> model = learner.computeModel();
+        final SubsequentialTransducer<?, Character, ?, String> model = learner.computeModel();
 
         for (Word<Character> input : trainingWords) {
             final Word<String> output = model.computeOutput(input);
@@ -75,7 +76,7 @@ public class OSTIATest {
     public void testEquivalence() {
 
         final Random random = new Random(SEED);
-        final CompactOST<Character, String> automaton = new CompactOST<>(INPUTS);
+        final CompactSST<Character, String> automaton = new CompactSST<>(INPUTS);
 
         final List<Word<String>> words = new ArrayList<>();
         for (List<String> t : CollectionsUtil.allTuples(OUTPUTS, 1, 3)) {
@@ -84,8 +85,8 @@ public class OSTIATest {
 
         Collections.shuffle(words, random);
         final int midpoint = words.size() / 2;
-        Collection<Word<String>> stateProps = words.subList(0, midpoint);
-        Collection<Word<String>> transProps = words.subList(midpoint, words.size());
+        final Collection<Word<String>> stateProps = words.subList(0, midpoint);
+        final Collection<Word<String>> transProps = words.subList(midpoint, words.size());
 
         RandomAutomata.randomDeterministic(random, SIZE, INPUTS, stateProps, transProps, automaton);
 
@@ -98,7 +99,7 @@ public class OSTIATest {
             learner.addSample(input, automaton.computeOutput(input));
         }
 
-        final SequentialTransducer<?, Character, ?, String> model = learner.computeModel();
+        final SubsequentialTransducer<?, Character, ?, String> model = learner.computeModel();
 
 //        Word<Character> sepWord = Automata.findSeparatingWord(automaton, model, INPUTS);
 //        Word<String> autOut = automaton.computeOutput(sepWord);

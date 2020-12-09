@@ -9,19 +9,19 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.StreamSupport;
 
-import net.automatalib.automata.transducers.impl.compact.SequentialTransducer;
+import net.automatalib.automata.transducers.impl.compact.SubsequentialTransducer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class OSTWrapper<I, O> implements SequentialTransducer<State, I, Edge, O> {
+class OSSTWrapper<I, O> implements SubsequentialTransducer<State, I, Edge, O> {
 
     private final State root;
     private final Alphabet<I> inputAlphabet;
     private final Alphabet<O> outputAlphabet;
 
-    public OSTWrapper(State root, Alphabet<I> inputAlphabet, Alphabet<O> outputAlphabet) {
+    public OSSTWrapper(State root, Alphabet<I> inputAlphabet, Alphabet<O> outputAlphabet) {
         this.root = root;
         this.inputAlphabet = inputAlphabet;
         this.outputAlphabet = outputAlphabet;
