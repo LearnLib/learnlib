@@ -19,14 +19,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.Iterators;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactOST;
 import net.automatalib.automata.transducers.impl.compact.SequentialTransducer;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.conformance.WMethodTestsIterator;
+import net.automatalib.util.automata.conformance.WpMethodTestsIterator;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -49,15 +53,17 @@ public class OSTIATest {
 
         final OSTIA<Character, String> learner = new OSTIA<>(INPUTS, Alphabets.fromCollection(OUTPUTS));
 
-        final List<Word<Character>> characterizingSet = Automata.characterizingSet(automaton, INPUTS);
+        final List<Word<Character>> trainingWords = new ArrayList<>();
+        final Iterator<Word<Character>> testIterator = new WMethodTestsIterator<>(automaton, INPUTS, 0);
+        Iterators.addAll(trainingWords, testIterator);
 
-        for (Word<Character> input : characterizingSet) {
+        for (Word<Character> input : trainingWords) {
             learner.addSample(input, automaton.computeOutput(input));
         }
 
         final SequentialTransducer<?, Character, ?, String> model = learner.computeModel();
 
-        for (Word<Character> input : characterizingSet) {
+        for (Word<Character> input : trainingWords) {
             final Word<String> output = model.computeOutput(input);
             final Word<String> expectedOutput = automaton.computeOutput(input);
 
@@ -81,30 +87,26 @@ public class OSTIATest {
         Collection<Word<String>> stateProps = words.subList(0, midpoint);
         Collection<Word<String>> transProps = words.subList(midpoint, words.size());
 
-        RandomAutomata.randomDeterministic(random,
-                                           SIZE,
-                                           INPUTS,
-                                           stateProps,
-                                           transProps,
-                                           automaton);
+        RandomAutomata.randomDeterministic(random, SIZE, INPUTS, stateProps, transProps, automaton);
 
         final OSTIA<Character, String> learner = new OSTIA<>(INPUTS, Alphabets.fromCollection(OUTPUTS));
 
-        final List<Word<Character>> characterizingSet = Automata.characterizingSet(automaton, INPUTS);
+        final WpMethodTestsIterator<Character> wpIterator = new WpMethodTestsIterator<>(automaton, INPUTS, 0);
 
-        for (Word<Character> input : characterizingSet) {
+        while (wpIterator.hasNext()) {
+            final Word<Character> input = wpIterator.next();
             learner.addSample(input, automaton.computeOutput(input));
         }
 
         final SequentialTransducer<?, Character, ?, String> model = learner.computeModel();
 
-        Word<Character> sepWord = Automata.findSeparatingWord(automaton, model, INPUTS);
-        Word<String> autOut = automaton.computeOutput(sepWord);
-        Word<String> modelOut = model.computeOutput(sepWord);
-
-        System.err.println("sepWord: " + sepWord);
-        System.err.println("automaton: " + autOut);
-        System.err.println("model: " + modelOut);
+//        Word<Character> sepWord = Automata.findSeparatingWord(automaton, model, INPUTS);
+//        Word<String> autOut = automaton.computeOutput(sepWord);
+//        Word<String> modelOut = model.computeOutput(sepWord);
+//
+//        System.err.println("sepWord: " + sepWord);
+//        System.err.println("automaton: " + autOut);
+//        System.err.println("model: " + modelOut);
 
         Assert.assertTrue(Automata.testEquivalence(automaton, model, INPUTS));
     }
