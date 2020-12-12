@@ -96,8 +96,11 @@ public class OSTIATest {
 
         while (wpIterator.hasNext()) {
             final Word<Character> input = wpIterator.next();
-            learner.addSample(input, automaton.computeOutput(input));
+            final Word<String> out = automaton.computeOutput(input);
+            System.out.println(input+" "+out);
+            learner.addSample(input, out);
         }
+        // For input [2, 2] the state output is [0, 1, 0, 0, 0, 1, 2, 0, 1, 0, 0] but training sample has remaining suffix [2, 0, 2]
 
         final SubsequentialTransducer<?, Character, ?, String> model = learner.computeModel();
 
@@ -108,7 +111,7 @@ public class OSTIATest {
 //        System.err.println("sepWord: " + sepWord);
 //        System.err.println("automaton: " + autOut);
 //        System.err.println("model: " + modelOut);
-
+        OSTIA.onwardForm(automaton);
         Assert.assertTrue(Automata.testEquivalence(automaton, model, INPUTS));
     }
 

@@ -15,21 +15,18 @@
  */
 package de.learnlib.algorithms.ostia;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.api.query.DefaultQuery;
+import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
+import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.automata.transducers.impl.compact.SubsequentialTransducer;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransducer<?, I, ?, O>, I, Word<O>> {
 
@@ -46,6 +43,7 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
         this.samples = new ArrayList<>();
     }
 
+
     @Override
     public void addSamples(Collection<? extends DefaultQuery<I, Word<O>>> samples) {
         this.samples.addAll(samples);
@@ -53,19 +51,19 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
 
     @Override
     public SubsequentialTransducer<?, I, ?, O> computeModel() {
-        final List<Pair<IntSeq, IntSeq>> informant = new ArrayList<>(this.samples.size());
-
+        final State root = new State(alphabetSize);
+        this.samples.sort(Comparator.comparingInt(a -> a.getInput().length()));//these samples must be sorted
+        //with respect to length or otherwise building prefix-tree-transducer won't work
         for (DefaultQuery<I, Word<O>> sample : this.samples) {
             final IntSeq inSeq = IntSeq.seq(sample.getInput().stream().mapToInt(inputAlphabet).toArray());
             final IntSeq outSeq = IntSeq.seq(sample.getOutput().stream().mapToInt(outputAlphabet).toArray());
-            informant.add(Pair.of(inSeq, outSeq));
+            buildPttOnward(root, inSeq, asQueue(outSeq, 0));
         }
-
-        final State root = buildPtt(this.alphabetSize, informant.iterator());
         ostia(root);
         return new OSSTWrapper<>(root, inputAlphabet, outputAlphabet);
 
     }
+
 
     public static boolean hasCycle(IntQueue q) {
         final HashSet<IntQueue> elements = new HashSet<>();
@@ -78,39 +76,6 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
         return false;
     }
 
-    static IntQueue concat(IntQueue q, IntQueue tail) {
-        assert !hasCycle(q) && !hasCycle(tail);
-        if (q == null) {
-            return tail;
-        }
-        final IntQueue first = q;
-        while (q.next != null) {
-            q = q.next;
-        }
-        q.next = tail;
-        assert !hasCycle(first);
-        return first;
-    }
-
-    static IntQueue copyAndConcat(IntQueue q, IntQueue tail) {
-        assert !hasCycle(q) && !hasCycle(tail);
-        if (q == null) {
-            return tail;
-        }
-        final IntQueue root = new IntQueue();
-        root.value = q.value;
-        IntQueue curr = root;
-        q = q.next;
-        while (q != null) {
-            curr.next = new IntQueue();
-            curr = curr.next;
-            curr.value = q.value;
-            q = q.next;
-        }
-        curr.next = tail;
-        assert !hasCycle(root);
-        return root;
-    }
 
     /**
      * builds onward prefix tree transducer
@@ -153,7 +118,7 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
             }
         }
         if (ptt.out != null && !eq(ptt.out.str, output)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("For input "+input.toString()+" the state output is "+IntQueue.str(ptt.out.str)+" but training sample has remaining suffix "+IntQueue.str(output));
         }
         ptt.out = new Out(output);
     }
@@ -204,6 +169,128 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
         return copy;
     }
 
+    public static Word<String> dequeueLongestCommonPrefix(CompactSST<Character, String> automaton,int stateIdx) {
+        Word<String> lcp = automaton.getStateProperty(stateIdx);
+        for (int symbol=0;symbol<automaton.numInputs();symbol++) {
+            @Nullable CompactMealyTransition<Word<String>> outgoing = automaton.getTransition(stateIdx,symbol);
+            if(outgoing==null)continue;
+            if (lcp == null){
+                lcp = outgoing.getOutput();
+            }else{
+                lcp = outgoing.getOutput().longestCommonPrefix(lcp);
+            }
+        }
+        if(lcp==null||lcp.length()==0)return null;
+        final Word<String> stateOut = automaton.getStateProperty(stateIdx);
+        if(stateOut!=null){
+            automaton.setStateProperty(stateIdx,stateOut.subWord(lcp.length()));
+        }
+        for (int symbol=0;symbol<automaton.numInputs();symbol++) {
+            @Nullable CompactMealyTransition<Word<String>> outgoing = automaton.getTransition(stateIdx, symbol);
+            if (outgoing != null) {
+                automaton.setStateProperty(stateIdx,outgoing.getOutput().subWord(lcp.length()));
+            }
+        }
+        return lcp;
+    }
+
+
+    public static void onwardForm(CompactSST<Character, String> automaton) {
+        final HashMap<Integer,ArrayList<Pair<Integer,Integer>>> allStates = new HashMap<>();
+        for(int source:automaton.getStates()){
+            allStates.put(source,new ArrayList<>());
+        }
+        for(int source:automaton.getStates()){
+            for(int symbol=0;symbol<automaton.numInputs();symbol++){
+                final @Nullable CompactMealyTransition<Word<String>> outgoing = automaton.getTransition(source,symbol);
+                if(outgoing!=null){
+                    allStates.get(outgoing.getSuccId()).add(Pair.of(symbol,source));
+                }
+            }
+        }
+        final Queue<Integer> modified = new LinkedList<>();
+        final HashSet<Integer> modifiedLookup = new HashSet<>();
+        for(Map.Entry<Integer, ArrayList<Pair<Integer, Integer>>> stateAndReversedTransitions:allStates.entrySet()){
+            final int target = stateAndReversedTransitions.getKey();
+            final Word<String> dequeued = dequeueLongestCommonPrefix(automaton,target);
+            if(dequeued!=null){
+                for(Pair<Integer, Integer> symbolAndSource: stateAndReversedTransitions.getValue()){
+                    final int symbol = symbolAndSource.getFirst();
+                    final int source = symbolAndSource.getSecond();
+                    final @Nullable CompactMealyTransition<Word<String>> incoming = automaton.getTransition(source,symbol);
+                    assert incoming!=null;
+                    automaton.setTransitionProperty(incoming,incoming.getOutput().concat(dequeued));
+                    if(modifiedLookup.add(source))modified.add(source);
+                }
+            }
+        }
+        while(!modified.isEmpty()){
+            final int target = modified.poll();
+            modifiedLookup.remove(target);
+            final Word<String> dequeued = dequeueLongestCommonPrefix(automaton,target);
+            if(dequeued!=null){
+                for(Pair<Integer, Integer> symbolAndSource: allStates.get(target)){
+                    final int symbol = symbolAndSource.getFirst();
+                    final int source = symbolAndSource.getSecond();
+                    final @Nullable CompactMealyTransition<Word<String>> incoming = automaton.getTransition(source,symbol);
+                    assert incoming!=null;
+                    automaton.setTransitionProperty(incoming,incoming.getOutput().concat(dequeued));
+                    if(modifiedLookup.add(source))modified.add(source);
+                }
+            }
+        }
+    }
+
+    public static void onwardForm(State transducer) {
+        final HashMap<State,ArrayList<Pair<Integer,State>>> allStates = new HashMap<>();
+        final Stack<State> toVisit = new Stack<>();
+        toVisit.push(transducer);
+        allStates.put(transducer,new ArrayList<>());
+        while(!toVisit.isEmpty()){
+            final State s = toVisit.pop();
+            for(Edge outgoing:s.transitions){
+                if(outgoing!=null && !allStates.containsKey(outgoing.target)){
+                    allStates.put(outgoing.target,new ArrayList<>());
+                    toVisit.push(outgoing.target);
+                }
+            }
+        }
+        for(State source:allStates.keySet()){
+            for(int symbol=0;symbol<source.transitions.length;symbol++){
+                final Edge outgoing = source.transitions[symbol];
+                if(outgoing!=null){
+                    allStates.get(outgoing.target).add(Pair.of(symbol,source));
+                }
+            }
+        }
+        final Queue<State> modified = new LinkedList<>();
+        final HashSet<State> modifiedLookup = new HashSet<>();
+        for(Map.Entry<State, ArrayList<Pair<Integer, State>>> stateAndReversedTransitions:allStates.entrySet()){
+            final State target = stateAndReversedTransitions.getKey();
+            final IntQueue dequeued = target.dequeueLongestCommonPrefix();
+            if(dequeued!=null){
+                for(Pair<Integer, State> symbolAndSource: stateAndReversedTransitions.getValue()){
+                    final int symbol = symbolAndSource.getFirst();
+                    final State source = symbolAndSource.getSecond();
+                    source.transitions[symbol].out = IntQueue.concatAndCopy(source.transitions[symbol].out,dequeued);
+                    if(modifiedLookup.add(source))modified.add(source);
+                }
+            }
+        }
+        while(!modified.isEmpty()){
+            final State target = modified.poll();
+            modifiedLookup.remove(target);
+            final IntQueue dequeued = target.dequeueLongestCommonPrefix();
+            if(dequeued!=null) {
+                for (Pair<Integer, State> symbolAndSource : allStates.get(target)) {
+                    final int symbol = symbolAndSource.getFirst();
+                    final State source = symbolAndSource.getSecond();
+                    source.transitions[symbol].out = IntQueue.concatAndCopy(source.transitions[symbol].out, dequeued);
+                    if (modifiedLookup.add(source)) modified.add(source);
+                }
+            }
+        }
+    }
     public static void ostia(State transducer) {
         final java.util.Queue<Blue> blue = new LinkedList<>();
         final ArrayList<State> red = new ArrayList<>();

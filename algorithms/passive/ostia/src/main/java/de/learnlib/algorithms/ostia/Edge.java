@@ -10,7 +10,7 @@ class Edge {
     }
 
     public Edge(Edge edge) {
-        out = OSTIA.copyAndConcat(edge.out, null);
+        out = IntQueue.copyAndConcat(edge.out, null);
         target = edge.target;
     }
 
