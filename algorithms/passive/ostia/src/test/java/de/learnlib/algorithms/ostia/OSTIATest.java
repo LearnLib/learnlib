@@ -25,14 +25,15 @@ import java.util.Random;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.impl.compact.CompactOSST;
 import net.automatalib.automata.transducers.impl.compact.CompactSST;
+import net.automatalib.automata.transducers.impl.compact.OnwardSubsequentialTransducer;
 import net.automatalib.automata.transducers.impl.compact.SubsequentialTransducer;
+import net.automatalib.automata.transducers.impl.compact.SubsequentialTransducers;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.conformance.WMethodTestsIterator;
-import net.automatalib.util.automata.conformance.WpMethodTestsIterator;
 import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -43,7 +44,7 @@ public class OSTIATest {
 
     private static final Alphabet<Character> INPUTS = Alphabets.characters('a', 'c');
     private static final Collection<String> OUTPUTS = Arrays.asList("o1", "o2", "o3");
-    private static final int SIZE = 100;
+    private static final int SIZE = 10;
     private static final long SEED = 1337L;
 
     @Test
@@ -76,7 +77,7 @@ public class OSTIATest {
     public void testEquivalence() {
 
         final Random random = new Random(SEED);
-        final CompactSST<Character, String> automaton = new CompactSST<>(INPUTS);
+        final CompactSST<Character, String> sst = new CompactSST<>(INPUTS);
 
         final List<Word<String>> words = new ArrayList<>();
         for (List<String> t : CollectionsUtil.allTuples(OUTPUTS, 1, 3)) {
@@ -88,31 +89,46 @@ public class OSTIATest {
         final Collection<Word<String>> stateProps = words.subList(0, midpoint);
         final Collection<Word<String>> transProps = words.subList(midpoint, words.size());
 
-        RandomAutomata.randomDeterministic(random, SIZE, INPUTS, stateProps, transProps, automaton);
+        RandomAutomata.randomDeterministic(random, SIZE, INPUTS, stateProps, transProps, sst);
 
         final OSTIA<Character, String> learner = new OSTIA<>(INPUTS, Alphabets.fromCollection(OUTPUTS));
 
-        final WpMethodTestsIterator<Character> wpIterator = new WpMethodTestsIterator<>(automaton, INPUTS, 0);
+        final Iterator<Word<Character>> testIterator = new WMethodTestsIterator<>(sst, INPUTS, 0);
 
-        while (wpIterator.hasNext()) {
-            final Word<Character> input = wpIterator.next();
-            final Word<String> out = automaton.computeOutput(input);
-            System.out.println(input+" "+out);
+        while (testIterator.hasNext()) {
+            final Word<Character> input = testIterator.next();
+            final Word<String> out = sst.computeOutput(input);
+            System.out.println(input + "|" + out);
             learner.addSample(input, out);
         }
-        // For input [2, 2] the state output is [0, 1, 0, 0, 0, 1, 2, 0, 1, 0, 0] but training sample has remaining suffix [2, 0, 2]
 
         final SubsequentialTransducer<?, Character, ?, String> model = learner.computeModel();
+        final OnwardSubsequentialTransducer<?, Character, ?, String> osst =
+                SubsequentialTransducers.toOSST(sst, INPUTS, new CompactOSST<>(INPUTS));
 
-//        Word<Character> sepWord = Automata.findSeparatingWord(automaton, model, INPUTS);
-//        Word<String> autOut = automaton.computeOutput(sepWord);
-//        Word<String> modelOut = model.computeOutput(sepWord);
-//
-//        System.err.println("sepWord: " + sepWord);
-//        System.err.println("automaton: " + autOut);
-//        System.err.println("model: " + modelOut);
-        OSTIA.onwardForm(automaton);
-        Assert.assertTrue(Automata.testEquivalence(automaton, model, INPUTS));
+        System.err.println(osst.size());
+        printStateProperties(osst);
+        System.err.println("---");
+        System.err.println(model.size());
+        printStateProperties(model);
+
+        Word<Character> sepWord = Automata.findSeparatingWord(osst, model, INPUTS);
+        Word<String> autOut = osst.computeOutput(sepWord);
+        Word<String> modelOut = model.computeOutput(sepWord);
+
+        System.err.println("sepWord: " + sepWord);
+        System.err.println("osst:  " + autOut);
+        System.err.println("model: " + modelOut);
+
+        // Visualization.visualize(sst);
+
+        Assert.assertTrue(Automata.testEquivalence(osst, model, INPUTS));
+    }
+
+    private static <S, I, T, O> void printStateProperties(SubsequentialTransducer<S, I, T, O> sst) {
+        for (S s : sst) {
+            System.err.println(sst.getStateProperty(s));
+        }
     }
 
 }
