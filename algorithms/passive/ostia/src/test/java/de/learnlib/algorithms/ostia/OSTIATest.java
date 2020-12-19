@@ -34,6 +34,7 @@ import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.conformance.WMethodTestsIterator;
 import net.automatalib.util.automata.random.RandomAutomata;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -73,7 +74,7 @@ public class OSTIATest {
         }
     }
 
-    @Test(enabled = false)
+    @Test()
     public void testEquivalence() {
 
         final Random random = new Random(SEED);
@@ -120,8 +121,9 @@ public class OSTIATest {
         System.err.println("osst:  " + autOut);
         System.err.println("model: " + modelOut);
 
-        // Visualization.visualize(sst);
-
+//         Visualization.visualize(sst);
+//        Visualization.visualize(osst.transitionGraphView(INPUTS));
+//        Visualization.visualize(model.transitionGraphView(INPUTS));
         Assert.assertTrue(Automata.testEquivalence(osst, model, INPUTS));
     }
 

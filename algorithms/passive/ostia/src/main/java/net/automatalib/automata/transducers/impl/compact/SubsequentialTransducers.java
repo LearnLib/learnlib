@@ -58,7 +58,8 @@ public final class SubsequentialTransducers {
                     final Word<O> newTransitionProperty = oldTransitionProperty.concat(lcp);
 
                     out.setTransitionProperty(t, newTransitionProperty);
-                    queue.add(incoming.getFirst());
+                    if(!queue.contains(incoming.getFirst()))//this if can improve performance a little
+                        queue.add(incoming.getFirst());
                 }
             }
         }
