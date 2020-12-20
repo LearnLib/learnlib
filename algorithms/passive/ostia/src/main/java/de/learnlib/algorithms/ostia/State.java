@@ -28,11 +28,19 @@ class State {
     }
 
     State(State copy) {
-        transitions = OSTIA.copyTransitions(copy.transitions);
+        transitions = copyTransitions(copy.transitions);
         out = copy.out == null ? null : new Out(IntQueue.copyAndConcat(copy.out.str, null));
     }
 
-    public void assign(State other) {
+    private Edge[] copyTransitions(Edge[] transitions) {
+        final Edge[] copy = new Edge[transitions.length];
+        for (int i = 0; i < copy.length; i++) {
+            copy[i] = transitions[i] == null ? null : new Edge(transitions[i]);
+        }
+        return copy;
+    }
+
+    void assign(State other) {
         out = other.out;
         transitions = other.transitions;
     }

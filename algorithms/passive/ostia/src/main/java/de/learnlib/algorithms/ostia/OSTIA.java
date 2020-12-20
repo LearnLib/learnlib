@@ -122,20 +122,12 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
         pttIter.out = new Out(outputIter);
     }
 
-    private static void addBlueStates(State parent, java.util.Queue<Blue> blue) {
+    private static void addBlueStates(State parent, Queue<Blue> blue) {
         for (int i = 0; i < parent.transitions.length; i++) {
             if (parent.transitions[i] != null) {
                 blue.add(new Blue(parent, i));
             }
         }
-    }
-
-    static Edge[] copyTransitions(Edge[] transitions) {
-        final Edge[] copy = new Edge[transitions.length];
-        for (int i = 0; i < copy.length; i++) {
-            copy[i] = transitions[i] == null ? null : new Edge(transitions[i]);
-        }
-        return copy;
     }
 
     public static void ostia(State transducer) {
