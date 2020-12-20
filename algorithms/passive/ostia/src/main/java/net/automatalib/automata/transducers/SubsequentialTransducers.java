@@ -46,6 +46,7 @@ public final class SubsequentialTransducers {
 
         while (!queue.isEmpty()) {
             final S2 s = queue.pop();
+            if(out.getInitialStates().contains(s))continue;
             final Word<O> lcp = computeLCP(out, inputs, s);
 
             if (!lcp.isEmpty()) {
