@@ -49,8 +49,9 @@ public class SubsequentialTransducersTest {
         sst.setTransition(s3, (Character) 'c', s3, Word.fromCharSequence("z"));
 
         final CompactSST<Character, Character> osst =
-                SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS));
+                SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS), false);
 
+        Assert.assertTrue(SubsequentialTransducers.isOnwardSST(osst, INPUTS));
         Assert.assertTrue(Automata.testEquivalence(sst, osst, INPUTS));
     }
 
@@ -72,7 +73,9 @@ public class SubsequentialTransducersTest {
         sst.setTransition(s2, (Character) 'c', s3, Word.fromCharSequence("z"));
 
         final CompactSST<Character, Character> osst =
-                SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS));
+                SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS), false);
+
+        Assert.assertTrue(SubsequentialTransducers.isOnwardSST(osst, INPUTS));
 
         final CompactSST<Character, Character> expected = new CompactSST<>(INPUTS);
 
@@ -113,7 +116,9 @@ public class SubsequentialTransducersTest {
         sst.setTransition(s3, (Character) 'c', s3, Word.fromCharSequence("xz"));
 
         final CompactSST<Character, Character> osst =
-                SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS));
+                SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS), false);
+
+        Assert.assertTrue(SubsequentialTransducers.isOnwardSST(osst, INPUTS));
 
         final CompactSST<Character, Character> expected = new CompactSST<>(INPUTS);
 
@@ -132,6 +137,58 @@ public class SubsequentialTransducersTest {
         expected.setTransition(e3, (Character) 'a', e3, Word.fromCharSequence("xx"));
         expected.setTransition(e3, (Character) 'b', e3, Word.fromCharSequence("yx"));
         expected.setTransition(e3, (Character) 'c', e3, Word.fromCharSequence("zx"));
+
+        Assert.assertTrue(Automata.testEquivalence(expected, osst, INPUTS));
+    }
+
+    @Test
+    public void testLoopOnInitial() {
+
+        final CompactSST<Character, Character> sst = new CompactSST<>(INPUTS);
+
+        final int s1 = sst.addInitialState(Word.fromCharSequence("x"));
+        final int s2 = sst.addState(Word.fromCharSequence("x"));
+        final int s3 = sst.addState(Word.fromCharSequence("x"));
+
+        sst.setTransition(s1, (Character) 'a', s2, Word.epsilon());
+        sst.setTransition(s1, (Character) 'b', s2, Word.epsilon());
+        sst.setTransition(s1, (Character) 'c', s2, Word.epsilon());
+
+        sst.setTransition(s2, (Character) 'a', s3, Word.fromCharSequence("xx"));
+        sst.setTransition(s2, (Character) 'b', s3, Word.fromCharSequence("xy"));
+        sst.setTransition(s2, (Character) 'c', s3, Word.fromCharSequence("xz"));
+
+        sst.setTransition(s3, (Character) 'a', s1, Word.fromCharSequence("xx"));
+        sst.setTransition(s3, (Character) 'b', s1, Word.fromCharSequence("xy"));
+        sst.setTransition(s3, (Character) 'c', s1, Word.fromCharSequence("xz"));
+
+        final CompactSST<Character, Character> osst =
+                SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS), false);
+
+        Assert.assertTrue(SubsequentialTransducers.isOnwardSST(osst, INPUTS));
+
+        final CompactSST<Character, Character> expected = new CompactSST<>(INPUTS);
+
+        final int e1 = expected.addInitialState(Word.fromCharSequence("x"));
+        final int e2 = expected.addState(Word.epsilon());
+        final int e3 = expected.addState(Word.epsilon());
+        final int e4 = expected.addState(Word.epsilon());
+
+        expected.setTransition(e1, (Character) 'a', e2, Word.fromCharSequence("x"));
+        expected.setTransition(e1, (Character) 'b', e2, Word.fromCharSequence("x"));
+        expected.setTransition(e1, (Character) 'c', e2, Word.fromCharSequence("x"));
+
+        expected.setTransition(e2, (Character) 'a', e3, Word.fromCharSequence("xx"));
+        expected.setTransition(e2, (Character) 'b', e3, Word.fromCharSequence("yx"));
+        expected.setTransition(e2, (Character) 'c', e3, Word.fromCharSequence("zx"));
+
+        expected.setTransition(e3, (Character) 'a', e4, Word.fromCharSequence("xx"));
+        expected.setTransition(e3, (Character) 'b', e4, Word.fromCharSequence("yx"));
+        expected.setTransition(e3, (Character) 'c', e4, Word.fromCharSequence("zx"));
+
+        expected.setTransition(e4, (Character) 'a', e2, Word.epsilon());
+        expected.setTransition(e4, (Character) 'b', e2, Word.epsilon());
+        expected.setTransition(e4, (Character) 'c', e2, Word.epsilon());
 
         Assert.assertTrue(Automata.testEquivalence(expected, osst, INPUTS));
     }

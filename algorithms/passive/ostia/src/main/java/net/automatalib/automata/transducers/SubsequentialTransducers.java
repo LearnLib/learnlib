@@ -25,6 +25,7 @@ import java.util.Set;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
+import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.words.Word;
@@ -42,8 +43,9 @@ public final class SubsequentialTransducers {
 
     /**
      * Constructs a new <i>onward</i> subsequential transducer for a given {@link SubsequentialTransducer SST}. In an
-     * onward SST, for each state, the longest common prefix over the state output and the outputs of all outgoing
-     * transitions of a state has been pushed forward to the transition outputs of the incoming transitions.
+     * onward SST, for each state except the initial state, the longest common prefix over the state output and the
+     * outputs of all outgoing transitions of a state is {@link Word#epsilon() epsilon}. This can be achieved by pushing
+     * back the longest common prefix to the transition outputs of the incoming transitions of each state.
      *
      * @param sst
      *         the original SST
@@ -58,6 +60,31 @@ public final class SubsequentialTransducers {
             SubsequentialTransducer<S1, I, T1, O> sst,
             Collection<? extends I> inputs,
             A out) {
+        return toOnwardSST(sst, inputs, out, true);
+    }
+
+    /**
+     * Constructs a new <i>onward</i> subsequential transducer for a given {@link SubsequentialTransducer SST}. In an
+     * onward SST, for each state except the initial state, the longest common prefix over the state output and the
+     * outputs of all outgoing transitions of a state is {@link Word#epsilon() epsilon}. This can be achieved by pushing
+     * back the longest common prefix to the transition outputs of the incoming transitions of each state.
+     *
+     * @param sst
+     *         the original SST
+     * @param inputs
+     *         the alphabet symbols to consider for this transformation
+     * @param out
+     *         the target automaton to write the onward form to
+     * @param minimize
+     *         a flag indicating whether the final result should be minimized
+     *
+     * @return {@code out}, for convenience
+     */
+    public static <S1, S2, I, T1, T2, O, A extends MutableSubsequentialTransducer<S2, I, T2, O>> A toOnwardSST(
+            SubsequentialTransducer<S1, I, T1, O> sst,
+            Collection<? extends I> inputs,
+            A out,
+            boolean minimize) {
 
         assert out.size() == 0;
         AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE, sst, inputs, out);
@@ -65,8 +92,28 @@ public final class SubsequentialTransducers {
         final Mapping<S2, Set<Pair<S2, I>>> incomingTransitions = getIncomingTransitions(out, inputs);
         final Deque<S2> queue = new ArrayDeque<>(out.getStates());
 
+        final S2 oldInit = out.getInitialState();
+
+        if (!incomingTransitions.get(oldInit).isEmpty()) {
+            // copy initial state to prevent push-back of prefixes for the initial state.
+            out.setInitial(oldInit, false);
+            final S2 newInit = out.addInitialState(out.getStateProperty(oldInit));
+
+            for (I i : inputs) {
+                T2 oldT = out.getTransition(oldInit, i);
+                if (oldT != null) {
+                    final S2 succ = out.getSuccessor(oldT);
+                    out.addTransition(newInit, i, succ, out.getTransitionProperty(oldT));
+                    incomingTransitions.get(succ).add(Pair.of(newInit, i));
+                }
+            }
+        }
+
         while (!queue.isEmpty()) {
             final S2 s = queue.pop();
+            if (Objects.equals(s, out.getInitialState())) {
+                continue;
+            }
             final Word<O> lcp = computeLCP(out, inputs, s);
 
             if (!lcp.isEmpty()) {
@@ -85,36 +132,50 @@ public final class SubsequentialTransducers {
                     }
                 }
 
-                final Set<Pair<S2, I>> incoming = incomingTransitions.get(s);
+                for (Pair<S2, I> trans : incomingTransitions.get(s)) {
+                    final T2 t = out.getTransition(trans.getFirst(), trans.getSecond());
 
-                if (incoming.isEmpty()) {
-                    // we want to push-back an lcp but have no incoming transitions -> create new state.
-                    final S2 newState = out.addState(Word.epsilon());
-                    for (I i : inputs) {
-                        out.setTransition(newState, i, s, lcp);
-                    }
+                    final Word<O> oldTransitionProperty = out.getTransitionProperty(t);
+                    final Word<O> newTransitionProperty = oldTransitionProperty.concat(lcp);
 
-                    if (Objects.equals(s, out.getInitialState())) {
-                        out.setInitial(s, false);
-                        out.setInitial(newState, true);
-                    }
-                } else {
-                    for (Pair<S2, I> trans : incoming) {
-                        final T2 t = out.getTransition(trans.getFirst(), trans.getSecond());
-
-                        final Word<O> oldTransitionProperty = out.getTransitionProperty(t);
-                        final Word<O> newTransitionProperty = oldTransitionProperty.concat(lcp);
-
-                        out.setTransitionProperty(t, newTransitionProperty);
-                        if (!queue.contains(trans.getFirst())) { //this if can improve performance a little
-                            queue.add(trans.getFirst());
-                        }
+                    out.setTransitionProperty(t, newTransitionProperty);
+                    if (!queue.contains(trans.getFirst())) {
+                        queue.add(trans.getFirst());
                     }
                 }
             }
         }
 
-        return out;
+        return minimize ? Automata.invasiveMinimize(out, inputs) : out;
+    }
+
+    /**
+     * Checks whether a given {@link SubsequentialTransducer} is <i>onward</i>, i.e. if for each state (sans initial
+     * state) the longest common prefix over its state property and the transition properties of its outgoing edges
+     * equals {@link Word#epsilon() epsilon}.
+     *
+     * @param sst
+     *         the SST to check
+     * @param inputs
+     *         the input symbols to consider for this check
+     *
+     * @return {@code true} if {@code sst} is onward, {@code false} otherwise
+     */
+    public static <S, I, T, O> boolean isOnwardSST(SubsequentialTransducer<S, I, T, O> sst,
+                                                   Collection<? extends I> inputs) {
+
+        for (S s : sst) {
+            if (Objects.equals(s, sst.getInitialState())) {
+                continue;
+            }
+
+            final Word<O> lcp = computeLCP(sst, inputs, s);
+            if (!lcp.isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static <S, I, T> Mapping<S, Set<Pair<S, I>>> getIncomingTransitions(SubsequentialTransducer<S, I, T, ?> sst,
