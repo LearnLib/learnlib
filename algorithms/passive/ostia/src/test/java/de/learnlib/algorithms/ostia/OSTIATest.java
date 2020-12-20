@@ -106,7 +106,7 @@ public class OSTIATest {
 
         final Random random = new Random(SEED);
         for (int size = 10; size < 20; size++) {
-            System.out.println(size);
+            System.err.println(size);
             final CompactSST<Character, String> sst = new CompactSST<>(INPUTS);
 
             final List<Word<String>> words = new ArrayList<>();
@@ -129,7 +129,7 @@ public class OSTIATest {
             while (testIterator.hasNext()) {
                 final Word<Character> input = testIterator.next();
                 final Word<String> out = sst.computeOutput(input);
-                System.out.println(input + "|" + out);
+                System.err.println(input + "|" + out);
                 learner.addSample(input, out);
                 for (char lookahead1 : INPUTS) {
                     final Word<Character> inputLookahead1 = input.append(lookahead1);
@@ -155,6 +155,7 @@ public class OSTIATest {
 
             final boolean areEquivalent = Automata.testEquivalence(osst, model, INPUTS);
             if (!areEquivalent) {
+                System.err.println("####");
                 System.err.println(osst.size());
                 printStateProperties(osst);
                 System.err.println("---");

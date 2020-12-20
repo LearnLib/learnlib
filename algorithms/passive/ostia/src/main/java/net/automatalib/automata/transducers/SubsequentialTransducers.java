@@ -19,6 +19,7 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import net.automatalib.commons.util.Pair;
@@ -66,7 +67,6 @@ public final class SubsequentialTransducers {
 
         while (!queue.isEmpty()) {
             final S2 s = queue.pop();
-            if(out.getInitialStates().contains(s))continue;
             final Word<O> lcp = computeLCP(out, inputs, s);
 
             if (!lcp.isEmpty()) {
@@ -85,15 +85,30 @@ public final class SubsequentialTransducers {
                     }
                 }
 
-                for (Pair<S2, I> incoming : incomingTransitions.get(s)) {
-                    final T2 t = out.getTransition(incoming.getFirst(), incoming.getSecond());
+                final Set<Pair<S2, I>> incoming = incomingTransitions.get(s);
 
-                    final Word<O> oldTransitionProperty = out.getTransitionProperty(t);
-                    final Word<O> newTransitionProperty = oldTransitionProperty.concat(lcp);
+                if (incoming.isEmpty()) {
+                    // we want to push-back an lcp but have no incoming transitions -> create new state.
+                    final S2 newState = out.addState(Word.epsilon());
+                    for (I i : inputs) {
+                        out.setTransition(newState, i, s, lcp);
+                    }
 
-                    out.setTransitionProperty(t, newTransitionProperty);
-                    if (!queue.contains(incoming.getFirst())) { //this if can improve performance a little
-                        queue.add(incoming.getFirst());
+                    if (Objects.equals(s, out.getInitialState())) {
+                        out.setInitial(s, false);
+                        out.setInitial(newState, true);
+                    }
+                } else {
+                    for (Pair<S2, I> trans : incoming) {
+                        final T2 t = out.getTransition(trans.getFirst(), trans.getSecond());
+
+                        final Word<O> oldTransitionProperty = out.getTransitionProperty(t);
+                        final Word<O> newTransitionProperty = oldTransitionProperty.concat(lcp);
+
+                        out.setTransitionProperty(t, newTransitionProperty);
+                        if (!queue.contains(trans.getFirst())) { //this if can improve performance a little
+                            queue.add(trans.getFirst());
+                        }
                     }
                 }
             }
