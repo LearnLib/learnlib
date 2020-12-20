@@ -15,15 +15,19 @@
  */
 package de.learnlib.algorithms.ostia;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
-import net.automatalib.automata.transducers.impl.compact.CompactSST;
-import net.automatalib.automata.transducers.impl.compact.SubsequentialTransducer;
+import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -32,68 +36,56 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
 
     private final Alphabet<I> inputAlphabet;
     private final Alphabet<O> outputAlphabet;
-    private final int alphabetSize;
-
-    private final List<DefaultQuery<I, Word<O>>> samples;
+    private final State root;
 
     public OSTIA(Alphabet<I> inputAlphabet, Alphabet<O> outputAlphabet) {
         this.inputAlphabet = inputAlphabet;
         this.outputAlphabet = outputAlphabet;
-        this.alphabetSize = inputAlphabet.size();
-        this.samples = new ArrayList<>();
+        this.root = new State(inputAlphabet.size());
     }
-
 
     @Override
     public void addSamples(Collection<? extends DefaultQuery<I, Word<O>>> samples) {
-        this.samples.addAll(samples);
+        for (DefaultQuery<I, Word<O>> sample : samples) {
+            buildPttOnward(root,
+                           IntSeq.of(sample.getInput(), inputAlphabet),
+                           IntQueue.asQueue(IntSeq.of(sample.getOutput(), outputAlphabet)));
+        }
     }
 
     @Override
     public SubsequentialTransducer<?, I, ?, O> computeModel() {
-        final State root = new State(alphabetSize);
-        for (DefaultQuery<I, Word<O>> sample : this.samples) {
-            //The beauty of duck-typing is that we don't have to do this:
-//            final IntSeq inSeq = IntSeq.seq(sample.getInput().stream().mapToInt(inputAlphabet).toArray());
-//            final IntSeq outSeq = IntSeq.seq(sample.getOutput().stream().mapToInt(outputAlphabet).toArray());
-//            buildPttOnward(root, inSeq, asQueue(outSeq, 0));
-            //Instead we can do it like this:
-            buildPttOnward(root, IntSeq.of(sample.getInput(),inputAlphabet), asQueue(IntSeq.of(sample.getOutput(),outputAlphabet), 0));
-        }
         ostia(root);
         return new OSSTWrapper<>(root, inputAlphabet, outputAlphabet);
-
     }
 
-
-    public static boolean hasCycle(IntQueue q) {
-        final HashSet<IntQueue> elements = new HashSet<>();
-        while (q != null) {
-            if (!elements.add(q)) {
-                return true;
-            }
-            q = q.next;
+    public static State buildPtt(int alphabetSize, Iterator<Pair<IntSeq, IntSeq>> informant) {
+        final State root = new State(alphabetSize);
+        while (informant.hasNext()) {
+            Pair<IntSeq, IntSeq> inout = informant.next();
+            buildPttOnward(root, inout.getFirst(), IntQueue.asQueue(inout.getSecond()));
         }
-        return false;
+        return root;
     }
 
-
-    /**
-     * builds onward prefix tree transducer
-     */
     private static void buildPttOnward(State ptt, IntSeq input, IntQueue output) {
+        State pttIter = ptt;
+        IntQueue outputIter = output;
+
         for (int i = 0; i < input.size(); i++) {//input index
             final int symbol = input.get(i);
-            if (ptt.transitions[symbol] == null) {
-                final Edge edge = ptt.transitions[symbol] = new Edge();
-                edge.out = output;
-                output = null;
-                ptt = edge.target = new State(ptt.transitions.length);
+            final Edge edge;
+            if (pttIter.transitions[symbol] == null) {
+                edge = new Edge();
+                edge.out = outputIter;
+                edge.target = new State(pttIter.transitions.length);
+                pttIter.transitions[symbol] = edge;
+                outputIter = null;
             } else {
-                final Edge edge = ptt.transitions[symbol];
+                edge = pttIter.transitions[symbol];
                 IntQueue commonPrefixEdge = edge.out;
                 IntQueue commonPrefixEdgePrev = null;
-                IntQueue commonPrefixInformant = output;
+                IntQueue commonPrefixInformant = outputIter;
                 while (commonPrefixEdge != null && commonPrefixInformant != null &&
                        commonPrefixEdge.value == commonPrefixInformant.value) {
                     commonPrefixInformant = commonPrefixInformant.next;
@@ -114,51 +106,22 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
                     commonPrefixEdgePrev.next = null;
                 }
                 edge.target.prependButIgnoreMissingStateOutput(commonPrefixEdge);
-                output = commonPrefixInformant;
-                ptt = edge.target;
+                outputIter = commonPrefixInformant;
             }
+            pttIter = edge.target;
         }
-        if (ptt.out != null && !eq(ptt.out.str, output)) {
-            throw new IllegalArgumentException("For input "+input.toString()+" the state output is "+IntQueue.str(ptt.out.str)+" but training sample has remaining suffix "+IntQueue.str(output));
+        if (pttIter.out != null && !IntQueue.eq(pttIter.out.str, outputIter)) {
+            throw new IllegalArgumentException("For input '" + input + "' the state output is '" + pttIter.out.str +
+                                               "' but training sample has remaining suffix '" + outputIter + '\'');
         }
-        ptt.out = new Out(output);
+        pttIter.out = new Out(outputIter);
     }
 
-    private static boolean eq(IntQueue a, IntQueue b) {
-        while (a != null && b != null) {
-            if (a.value != b.value) {
-                return false;
-            }
-            a = a.next;
-            b = b.next;
-        }
-        return a == null && b == null;
-    }
-
-    private static IntQueue asQueue(IntSeq str, int offset) {
-        IntQueue q = null;
-        for (int i = str.size() - 1; i >= offset; i--) {
-            IntQueue next = new IntQueue();
-            next.value = str.get(i);
-            next.next = q;
-            q = next;
-        }
-        assert !hasCycle(q);
-        return q;
-    }
-
-    public static State buildPtt(int alphabetSize, Iterator<Pair<IntSeq, IntSeq>> informant) {
-        final State root = new State(alphabetSize);
-        while (informant.hasNext()) {
-            Pair<IntSeq, IntSeq> inout = informant.next();
-            buildPttOnward(root, inout.getFirst(), asQueue(inout.getSecond(), 0));
-        }
-        return root;
-    }
-
-    static void addBlueStates(State parent, java.util.Queue<Blue> blue) {
+    private static void addBlueStates(State parent, java.util.Queue<Blue> blue) {
         for (int i = 0; i < parent.transitions.length; i++) {
-            if (parent.transitions[i] != null) { blue.add(new Blue(parent, i)); }
+            if (parent.transitions[i] != null) {
+                blue.add(new Blue(parent, i));
+            }
         }
     }
 
@@ -170,81 +133,9 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
         return copy;
     }
 
-    public static Word<String> dequeueLongestCommonPrefix(CompactSST<Character, String> automaton,int stateIdx) {
-        Word<String> lcp = automaton.getStateProperty(stateIdx);
-        for (int symbol=0;symbol<automaton.numInputs();symbol++) {
-            @Nullable CompactMealyTransition<Word<String>> outgoing = automaton.getTransition(stateIdx,symbol);
-            if(outgoing==null)continue;
-            if (lcp == null){
-                lcp = outgoing.getOutput();
-            }else{
-                lcp = outgoing.getOutput().longestCommonPrefix(lcp);
-            }
-        }
-        if(lcp==null||lcp.length()==0)return null;
-        final Word<String> stateOut = automaton.getStateProperty(stateIdx);
-        if(stateOut!=null){
-            automaton.setStateProperty(stateIdx,stateOut.subWord(lcp.length()));
-        }
-        for (int symbol=0;symbol<automaton.numInputs();symbol++) {
-            @Nullable CompactMealyTransition<Word<String>> outgoing = automaton.getTransition(stateIdx, symbol);
-            if (outgoing != null) {
-                automaton.setStateProperty(stateIdx,outgoing.getOutput().subWord(lcp.length()));
-            }
-        }
-        return lcp;
-    }
-
-/*
-    public static void onwardForm(CompactSST<Character, String> automaton) {
-        final HashMap<Integer,ArrayList<Pair<Integer,Integer>>> allStates = new HashMap<>();
-        for(int source:automaton.getStates()){
-            allStates.put(source,new ArrayList<>());
-        }
-        for(int source:automaton.getStates()){
-            for(int symbol=0;symbol<automaton.numInputs();symbol++){
-                final @Nullable CompactMealyTransition<Word<String>> outgoing = automaton.getTransition(source,symbol);
-                if(outgoing!=null){
-                    allStates.get(outgoing.getSuccId()).add(Pair.of(symbol,source));
-                }
-            }
-        }
-        final Queue<Integer> modified = new LinkedList<>();
-        final HashSet<Integer> modifiedLookup = new HashSet<>();
-        for(Map.Entry<Integer, ArrayList<Pair<Integer, Integer>>> stateAndReversedTransitions:allStates.entrySet()){
-            final int target = stateAndReversedTransitions.getKey();
-            final Word<String> dequeued = dequeueLongestCommonPrefix(automaton,target);
-            if(dequeued!=null){
-                for(Pair<Integer, Integer> symbolAndSource: stateAndReversedTransitions.getValue()){
-                    final int symbol = symbolAndSource.getFirst();
-                    final int source = symbolAndSource.getSecond();
-                    final @Nullable CompactMealyTransition<Word<String>> incoming = automaton.getTransition(source,symbol);
-                    assert incoming!=null;
-                    automaton.setTransitionProperty(incoming,incoming.getOutput().concat(dequeued));
-                    if(modifiedLookup.add(source))modified.add(source);
-                }
-            }
-        }
-        while(!modified.isEmpty()){
-            final int target = modified.poll();
-            modifiedLookup.remove(target);
-            final Word<String> dequeued = dequeueLongestCommonPrefix(automaton,target);
-            if(dequeued!=null){
-                for(Pair<Integer, Integer> symbolAndSource: allStates.get(target)){
-                    final int symbol = symbolAndSource.getFirst();
-                    final int source = symbolAndSource.getSecond();
-                    final @Nullable CompactMealyTransition<Word<String>> incoming = automaton.getTransition(source,symbol);
-                    assert incoming!=null;
-                    automaton.setTransitionProperty(incoming,incoming.getOutput().concat(dequeued));
-                    if(modifiedLookup.add(source))modified.add(source);
-                }
-            }
-        }
-    }
-*/
     public static void ostia(State transducer) {
-        final java.util.Queue<Blue> blue = new LinkedList<>();
-        final ArrayList<State> red = new ArrayList<>();
+        final Queue<Blue> blue = new LinkedList<>();
+        final List<State> red = new ArrayList<>();
         red.add(transducer);
         addBlueStates(transducer, blue);
         blue:
@@ -262,8 +153,8 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
     }
 
     private static boolean ostiaMerge(Blue blue, State redState, java.util.Queue<Blue> blueToVisit) {
-        final HashMap<State, State> merged = new HashMap<>();
-        final ArrayList<Blue> reachedBlueStates = new ArrayList<>();
+        final Map<State, State> merged = new HashMap<>();
+        final List<Blue> reachedBlueStates = new ArrayList<>();
         if (ostiaFold(redState, null, blue.parent, blue.symbol, merged, reachedBlueStates)) {
             for (Map.Entry<State, State> mergedRedState : merged.entrySet()) {
                 mergedRedState.getKey().assign(mergedRedState.getValue());
@@ -278,8 +169,8 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
                                      IntQueue pushedBack,
                                      State blueParent,
                                      int symbolIncomingToBlue,
-                                     HashMap<State, State> mergedStates,
-                                     ArrayList<Blue> reachedBlueStates) {
+                                     Map<State, State> mergedStates,
+                                     List<Blue> reachedBlueStates) {
         final State mergedRedState = mergedStates.computeIfAbsent(red, State::new);
         final State blueState = blueParent.transitions[symbolIncomingToBlue].target;
         final State mergedBlueState = new State(blueState);
@@ -291,7 +182,7 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
         if (mergedBlueState.out != null) {
             if (mergedRedState.out == null) {
                 mergedRedState.out = mergedBlueState.out;
-            } else if (!eq(mergedRedState.out.str, mergedBlueState.out.str)) {
+            } else if (!IntQueue.eq(mergedRedState.out.str, mergedBlueState.out.str)) {
                 return false;
             }
         }
@@ -312,9 +203,7 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
                         commonPrefixBlue = commonPrefixBlue.next;
                         commonPrefixRed = commonPrefixRed.next;
                     }
-                    assert commonPrefixBluePrev == null ?
-                            commonPrefixBlue == transitionBlue.out :
-                            commonPrefixBluePrev.next == commonPrefixBlue;
+                    assert commonPrefixBluePrev == null || commonPrefixBluePrev.next == commonPrefixBlue;
                     if (commonPrefixRed == null) {
                         if (commonPrefixBluePrev == null) {
                             transitionBlue.out = null;
@@ -329,7 +218,6 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
                                        reachedBlueStates)) {
                             return false;
                         }
-
                     } else {
                         return false;
                     }
@@ -339,24 +227,25 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
         return true;
     }
 
-    static ArrayList<Integer> run(State init, Iterator<Integer> input) {
-        ArrayList<Integer> output = new ArrayList<>();
+    public static @Nullable List<Integer> run(State init, Iterator<Integer> input) {
+        final List<Integer> output = new ArrayList<>();
+        State iter = init;
         while (input.hasNext()) {
-            final Edge edge = init.transitions[input.next()];
+            final Edge edge = iter.transitions[input.next()];
             if (edge == null) {
                 return null;
             }
-            init = edge.target;
+            iter = edge.target;
             IntQueue q = edge.out;
             while (q != null) {
                 output.add(q.value);
                 q = q.next;
             }
         }
-        if (init.out == null) {
+        if (iter.out == null) {
             return null;
         }
-        IntQueue q = init.out.str;
+        IntQueue q = iter.out.str;
         while (q != null) {
             output.add(q.value);
             q = q.next;

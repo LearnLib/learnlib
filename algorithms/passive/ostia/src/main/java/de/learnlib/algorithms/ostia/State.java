@@ -1,16 +1,24 @@
+/* Copyright (C) 2013-2020 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithms.ostia;
-
-import net.automatalib.commons.util.Pair;
 
 class State {
 
-    public void assign(State other) {
-        out = other.out;
-        transitions = other.transitions;
-    }
-
-    public Out out;
-    public Edge[] transitions;
+    Out out;
+    Edge[] transitions;
 
     State(int alphabetSize) {
         transitions = new Edge[alphabetSize];
@@ -21,8 +29,13 @@ class State {
         out = copy.out == null ? null : new Out(IntQueue.copyAndConcat(copy.out.str, null));
     }
 
+    public void assign(State other) {
+        out = other.out;
+        transitions = other.transitions;
+    }
+
     /**
-     * The IntQueue is consumed and should not be reused after calling this method
+     * The IntQueue is consumed and should not be reused after calling this method.
      */
     void prepend(IntQueue prefix) {
         for (Edge edge : transitions) {
@@ -38,7 +51,7 @@ class State {
     }
 
     /**
-     * The IntQueue is consumed and should not be reused after calling this method
+     * The IntQueue is consumed and should not be reused after calling this method.
      */
     void prependButIgnoreMissingStateOutput(IntQueue prefix) {
         for (Edge edge : transitions) {
@@ -49,34 +62,6 @@ class State {
         if (out != null) {
             out.str = IntQueue.copyAndConcat(prefix, out.str);
         }
-    }
-
-
-    IntQueue dequeueLongestCommonPrefix() {
-        Out lcp = out;
-        int len = out==null?-1:IntQueue.len(out.str);
-        for (Edge outgoing : transitions) {
-            if(outgoing==null)continue;
-            if (lcp == null){
-                lcp = new Out(outgoing.out);
-                len = IntQueue.len(outgoing.out);
-            }else{
-                len = Math.min(len,IntQueue.lcpLen(lcp.str,outgoing.out));
-            }
-        }
-        if(lcp==null||len==0)return null;
-        assert len>0;
-        IntQueue dequeuedLcp = lcp.str;
-        if(out!=null){
-            out.str = IntQueue.offset(out.str,len);
-        }
-        for (Edge outgoing : transitions) {
-            if (outgoing != null){
-                outgoing.out = IntQueue.offset(outgoing.out,len);
-            }
-        }
-        IntQueue.offset(dequeuedLcp,len-1).next = null;
-        return dequeuedLcp;
     }
 
 }

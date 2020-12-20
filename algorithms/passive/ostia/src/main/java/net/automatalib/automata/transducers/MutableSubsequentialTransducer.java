@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.ostia;
+package net.automatalib.automata.transducers;
 
-class Edge {
+import net.automatalib.automata.MutableDeterministic;
+import net.automatalib.words.Word;
 
-    IntQueue out;
-    State target;
-
-    Edge() {}
-
-    Edge(Edge edge) {
-        out = IntQueue.copyAndConcat(edge.out, null);
-        target = edge.target;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(target);
-    }
-}
+/**
+ * A {@link MutableDeterministic mutable} extension of a {@link SubsequentialTransducer}.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <O>
+ *         output symbol type
+ *
+ * @author frohme
+ */
+public interface MutableSubsequentialTransducer<S, I, T, O>
+        extends SubsequentialTransducer<S, I, T, O>, MutableDeterministic<S, I, T, Word<O>, Word<O>> {}

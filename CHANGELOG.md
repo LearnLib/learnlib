@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.16.0...HEAD)
 
+### Added
+
+* Added the OSTIA passive learning algorithm, thanks to [Aleksander Mendoza-Drosik](https://github.com/aleksander-mendoza).
 
 ## [0.16.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.16.0) - 2020-10-12
 

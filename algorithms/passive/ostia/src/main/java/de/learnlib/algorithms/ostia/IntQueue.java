@@ -1,84 +1,85 @@
+/* Copyright (C) 2013-2020 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithms.ostia;
 
 import java.util.HashSet;
+import java.util.Set;
+import java.util.StringJoiner;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 class IntQueue {
 
     int value;
     IntQueue next;
 
-    public static String str(IntQueue q) {
-        if(q==null)return "[]";
-        StringBuilder sb = new StringBuilder("[").append(q.value);
-        while(q.next!=null){
-            q = q.next;
-            sb.append(", ").append(q.value);
-        }
-        return sb.append("]").toString();
-    }
-
-    public static int lcpLen(IntQueue a, IntQueue b) {
-        int len = 0;
-        while (a != null && b != null && a.value==b.value) {
-            len++;
-            a = a.next;
-            b = b.next;
-        }
-        return len;
-    }
-
-    /**offset(q,0) returns q, offset(q,1) returns q.next and so on*/
-    public static IntQueue offset(IntQueue queue,int len) {
-        while(len-->0){//it looks sort of like, "len approaches 0" which is neat
-            queue = queue.next;
-        }
-        return queue;
-    }
-
-
     @Override
     public String toString() {
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(value);
-        IntQueue next = this.next;
-        while (next != null) {
-            sb.append(" ").append(next.value);
-            next = next.next;
-        }
-        return sb.toString();
+        return str(this);
     }
 
-    public static int len(IntQueue q) {
-        int len = 0;
-        while (q != null) {
-            len++;
-            q = q.next;
+    static @Nullable IntQueue asQueue(IntSeq str) {
+        IntQueue q = null;
+        for (int i = str.size() - 1; i >= 0; i--) {
+            IntQueue next = new IntQueue();
+            next.value = str.get(i);
+            next.next = q;
+            q = next;
         }
-        return len;
+        assert !IntQueue.hasCycle(q);
+        return q;
     }
 
-    public static int[] arr(IntQueue q) {
-        final int[] arr = new int[len(q)];
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = q.value;
-            q = q.next;
+    static String str(@Nullable IntQueue q) {
+        final StringJoiner sj = new StringJoiner(", ", "[", "]");
+
+        IntQueue iter = q;
+        while (iter != null) {
+            sj.add(Integer.toString(iter.value));
+            iter = iter.next;
         }
-        return arr;
+        return sj.toString();
     }
 
-    static boolean hasCycle(IntQueue q) {
-        final HashSet<IntQueue> elements = new HashSet<>();
-        while (q != null) {
-            if (!elements.add(q)) {
+    static boolean eq(@Nullable IntQueue a, @Nullable IntQueue b) {
+        IntQueue aIter = a;
+        IntQueue bIter = b;
+        while (aIter != null && bIter != null) {
+            if (aIter.value != bIter.value) {
+                return false;
+            }
+            aIter = aIter.next;
+            bIter = bIter.next;
+        }
+        return aIter == null && bIter == null;
+    }
+
+    static boolean hasCycle(@Nullable IntQueue q) {
+        final Set<IntQueue> elements = new HashSet<>();
+        IntQueue iter = q;
+        while (iter != null) {
+            if (!elements.add(iter)) {
                 return true;
             }
-            q = q.next;
+            iter = iter.next;
         }
         return false;
     }
 
-    static IntQueue copyAndConcat(IntQueue q, IntQueue tail) {
+    static IntQueue copyAndConcat(@Nullable IntQueue q, @Nullable IntQueue tail) {
         assert !hasCycle(q) && !hasCycle(tail);
         if (q == null) {
             return tail;
@@ -86,33 +87,15 @@ class IntQueue {
         final IntQueue root = new IntQueue();
         root.value = q.value;
         IntQueue curr = root;
-        q = q.next;
-        while (q != null) {
+        IntQueue iter = q.next;
+        while (iter != null) {
             curr.next = new IntQueue();
             curr = curr.next;
-            curr.value = q.value;
-            q = q.next;
+            curr.value = iter.value;
+            iter = iter.next;
         }
         curr.next = tail;
         assert !hasCycle(root);
         return root;
-    }
-
-    static IntQueue concat(IntQueue q, IntQueue tail) {
-        assert !hasCycle(q) && !hasCycle(tail);
-        if (q == null) {
-            return tail;
-        }
-        final IntQueue first = q;
-        while (q.next != null) {
-            q = q.next;
-        }
-        q.next = tail;
-        assert !hasCycle(first);
-        return first;
-    }
-
-    static IntQueue concatAndCopy(IntQueue q, IntQueue tail) {
-        return concat(q,copyAndConcat(tail,null));
     }
 }

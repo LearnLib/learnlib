@@ -22,19 +22,18 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactOSST;
+import net.automatalib.automata.transducers.SubsequentialTransducer;
+import net.automatalib.automata.transducers.SubsequentialTransducers;
 import net.automatalib.automata.transducers.impl.compact.CompactSST;
-import net.automatalib.automata.transducers.impl.compact.OnwardSubsequentialTransducer;
-import net.automatalib.automata.transducers.impl.compact.SubsequentialTransducer;
-import net.automatalib.automata.transducers.impl.compact.SubsequentialTransducers;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.conformance.WMethodTestsIterator;
 import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -47,6 +46,34 @@ public class OSTIATest {
     private static final Collection<String> OUTPUTS = Arrays.asList("o1", "o2", "o3");
     private static final int SIZE = 10;
     private static final long SEED = 1337L;
+
+    /**
+     * Tests the example from Section 18.3.4 of Colin de la Higuera's book "Grammatical Inference".
+     */
+    @Test
+    public void testStaticInvocation() {
+        // a = 0, b = 1
+        List<Pair<IntSeq, IntSeq>> samples = Arrays.asList(Pair.of(IntSeq.seq(0), IntSeq.seq(1)),
+                                                           Pair.of(IntSeq.seq(1), IntSeq.seq(1)),
+                                                           Pair.of(IntSeq.seq(0, 0), IntSeq.seq(0, 1)),
+                                                           Pair.of(IntSeq.seq(0, 0, 0), IntSeq.seq(0, 0, 1)),
+                                                           Pair.of(IntSeq.seq(0, 1, 0, 1), IntSeq.seq(0, 1, 0, 1)));
+
+        State root = OSTIA.buildPtt(2, samples.iterator());
+        OSTIA.ostia(root);
+
+        Assert.assertEquals(OSTIA.run(root, IntStream.of(1).iterator()), Collections.singletonList(1));
+        Assert.assertEquals(OSTIA.run(root, IntStream.of(1, 0).iterator()), Arrays.asList(1, 1));
+        Assert.assertEquals(OSTIA.run(root, IntStream.of(1, 0, 0).iterator()), Arrays.asList(1, 0, 1));
+        Assert.assertEquals(OSTIA.run(root, IntStream.of(1, 0, 0, 1).iterator()), Arrays.asList(1, 0, 0, 1, 0, 1));
+        Assert.assertEquals(OSTIA.run(root, IntStream.of(1, 0, 0, 1, 0).iterator()), Arrays.asList(1, 0, 0, 1, 0, 1));
+        Assert.assertEquals(OSTIA.run(root, IntStream.of(1, 0, 0, 1, 0, 1).iterator()), Arrays.asList(1, 0, 0, 1, 0, 1));
+
+        Assert.assertNull(OSTIA.run(root, IntStream.of(0, 1, 1).iterator()));
+        Assert.assertNull(OSTIA.run(root, IntStream.of(0, 1, 0, 0).iterator()));
+        Assert.assertNull(OSTIA.run(root, IntStream.of(0, 1, 0, 1, 0).iterator()));
+        Assert.assertNull(OSTIA.run(root, IntStream.of(0, 1, 0, 1, 1).iterator()));
+    }
 
     @Test
     public void testMealySamples() {
@@ -74,7 +101,7 @@ public class OSTIATest {
         }
     }
 
-    @Test()
+    @Test
     public void testEquivalence() {
 
         final Random random = new Random(SEED);
@@ -104,8 +131,8 @@ public class OSTIATest {
         }
 
         final SubsequentialTransducer<?, Character, ?, String> model = learner.computeModel();
-        final OnwardSubsequentialTransducer<?, Character, ?, String> osst =
-                SubsequentialTransducers.toOSST(sst, INPUTS, new CompactOSST<>(INPUTS));
+        final SubsequentialTransducer<?, Character, ?, String> osst =
+                SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS));
 
         System.err.println(osst.size());
         printStateProperties(osst);
@@ -121,9 +148,9 @@ public class OSTIATest {
         System.err.println("osst:  " + autOut);
         System.err.println("model: " + modelOut);
 
-//         Visualization.visualize(sst);
-//        Visualization.visualize(osst.transitionGraphView(INPUTS));
-//        Visualization.visualize(model.transitionGraphView(INPUTS));
+        // Visualization.visualize(sst);
+        // Visualization.visualize(osst.transitionGraphView(INPUTS));
+        // Visualization.visualize(model.transitionGraphView(INPUTS));
         Assert.assertTrue(Automata.testEquivalence(osst, model, INPUTS));
     }
 

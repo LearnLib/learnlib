@@ -1,4 +1,19 @@
-package net.automatalib.automata.transducers.impl.compact;
+/* Copyright (C) 2013-2020 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package net.automatalib.automata.transducers;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -19,7 +34,7 @@ public final class SubsequentialTransducers {
         // prevent initialization
     }
 
-    public static <S1, S2, I, T1, T2, O, A extends MutableOnwardSubsequentialTransducer<S2, I, T2, O>> A toOSST(
+    public static <S1, S2, I, T1, T2, O, A extends MutableSubsequentialTransducer<S2, I, T2, O>> A toOnwardSST(
             SubsequentialTransducer<S1, I, T1, O> sst,
             Collection<? extends I> inputs,
             A out) {
@@ -32,8 +47,6 @@ public final class SubsequentialTransducers {
         while (!queue.isEmpty()) {
             final S2 s = queue.pop();
             final Word<O> lcp = computeLCP(out, inputs, s);
-
-            System.err.println("lcp: " + lcp);
 
             if (!lcp.isEmpty()) {
                 final Word<O> oldStateProperty = out.getStateProperty(s);
@@ -58,8 +71,9 @@ public final class SubsequentialTransducers {
                     final Word<O> newTransitionProperty = oldTransitionProperty.concat(lcp);
 
                     out.setTransitionProperty(t, newTransitionProperty);
-                    if(!queue.contains(incoming.getFirst()))//this if can improve performance a little
+                    if (!queue.contains(incoming.getFirst())) { //this if can improve performance a little
                         queue.add(incoming.getFirst());
+                    }
                 }
             }
         }
@@ -90,14 +104,17 @@ public final class SubsequentialTransducers {
         return result;
     }
 
-    private static <S, I, O> Word<O> computeLCP(SubsequentialTransducer<S, I, ?, O> sst,
+    private static <S, I, T, O> Word<O> computeLCP(SubsequentialTransducer<S, I, T, O> sst,
                                                 Collection<? extends I> inputs,
                                                 S s) {
 
         Word<O> lcp = sst.getStateProperty(s);
 
         for (I i : inputs) {
-            lcp = lcp.longestCommonPrefix(sst.getTransitionProperty(s, i));
+            T t = sst.getTransition(s, i);
+            if (t != null) {
+                lcp = lcp.longestCommonPrefix(sst.getTransitionProperty(s, i));
+            }
         }
 
         return lcp;
