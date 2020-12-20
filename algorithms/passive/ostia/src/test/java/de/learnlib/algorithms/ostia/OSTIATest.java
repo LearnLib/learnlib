@@ -22,13 +22,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.automata.transducers.SubsequentialTransducers;
 import net.automatalib.automata.transducers.impl.compact.CompactSST;
+import net.automatalib.commons.smartcollections.IntSeq;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.util.automata.Automata;
@@ -52,26 +52,26 @@ public class OSTIATest {
     @Test
     public void testStaticInvocation() {
         // a = 0, b = 1
-        List<Pair<IntSeq, IntSeq>> samples = Arrays.asList(Pair.of(IntSeq.seq(0), IntSeq.seq(1)),
-                                                           Pair.of(IntSeq.seq(1), IntSeq.seq(1)),
-                                                           Pair.of(IntSeq.seq(0, 0), IntSeq.seq(0, 1)),
-                                                           Pair.of(IntSeq.seq(0, 0, 0), IntSeq.seq(0, 0, 1)),
-                                                           Pair.of(IntSeq.seq(0, 1, 0, 1), IntSeq.seq(0, 1, 0, 1)));
+        List<Pair<IntSeq, IntSeq>> samples = Arrays.asList(Pair.of(IntSeq.of(0), IntSeq.of(1)),
+                                                           Pair.of(IntSeq.of(1), IntSeq.of(1)),
+                                                           Pair.of(IntSeq.of(0, 0), IntSeq.of(0, 1)),
+                                                           Pair.of(IntSeq.of(0, 0, 0), IntSeq.of(0, 0, 1)),
+                                                           Pair.of(IntSeq.of(0, 1, 0, 1), IntSeq.of(0, 1, 0, 1)));
 
         State root = OSTIA.buildPtt(2, samples.iterator());
         OSTIA.ostia(root);
 
-        Assert.assertEquals(OSTIA.run(root, IntStream.of(1).iterator()), Collections.singletonList(1));
-        Assert.assertEquals(OSTIA.run(root, IntStream.of(1, 0).iterator()), Arrays.asList(1, 1));
-        Assert.assertEquals(OSTIA.run(root, IntStream.of(1, 0, 0).iterator()), Arrays.asList(1, 0, 1));
-        Assert.assertEquals(OSTIA.run(root, IntStream.of(1, 0, 0, 1).iterator()), Arrays.asList(1, 0, 0, 1, 0, 1));
-        Assert.assertEquals(OSTIA.run(root, IntStream.of(1, 0, 0, 1, 0).iterator()), Arrays.asList(1, 0, 0, 1, 0, 1));
-        Assert.assertEquals(OSTIA.run(root, IntStream.of(1, 0, 0, 1, 0, 1).iterator()), Arrays.asList(1, 0, 0, 1, 0, 1));
+        Assert.assertEquals(OSTIA.run(root, IntSeq.of(1)), IntSeq.of(1));
+        Assert.assertEquals(OSTIA.run(root, IntSeq.of(1, 0)), IntSeq.of(1, 1));
+        Assert.assertEquals(OSTIA.run(root, IntSeq.of(1, 0, 0)), IntSeq.of(1, 0, 1));
+        Assert.assertEquals(OSTIA.run(root, IntSeq.of(1, 0, 0, 1)), IntSeq.of(1, 0, 0, 1, 0, 1));
+        Assert.assertEquals(OSTIA.run(root, IntSeq.of(1, 0, 0, 1, 0)), IntSeq.of(1, 0, 0, 1, 0, 1));
+        Assert.assertEquals(OSTIA.run(root, IntSeq.of(1, 0, 0, 1, 0, 1)), IntSeq.of(1, 0, 0, 1, 0, 1));
 
-        Assert.assertNull(OSTIA.run(root, IntStream.of(0, 1, 1).iterator()));
-        Assert.assertNull(OSTIA.run(root, IntStream.of(0, 1, 0, 0).iterator()));
-        Assert.assertNull(OSTIA.run(root, IntStream.of(0, 1, 0, 1, 0).iterator()));
-        Assert.assertNull(OSTIA.run(root, IntStream.of(0, 1, 0, 1, 1).iterator()));
+        Assert.assertNull(OSTIA.run(root, IntSeq.of(0, 1, 1)));
+        Assert.assertNull(OSTIA.run(root, IntSeq.of(0, 1, 0, 0)));
+        Assert.assertNull(OSTIA.run(root, IntSeq.of(0, 1, 0, 1, 0)));
+        Assert.assertNull(OSTIA.run(root, IntSeq.of(0, 1, 0, 1, 1)));
     }
 
     @Test

@@ -15,6 +15,9 @@
  */
 package de.learnlib.algorithms.ostia;
 
+/**
+ * @author Aleksander Mendoza-Drosik
+ */
 class Blue {
 
     final State parent;

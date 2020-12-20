@@ -28,17 +28,37 @@ import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.words.Word;
 
+/**
+ * Utility methods of {@link SubsequentialTransducer}s.
+ *
+ * @author frohme
+ */
 public final class SubsequentialTransducers {
 
     private SubsequentialTransducers() {
         // prevent initialization
     }
 
+    /**
+     * Constructs a new <i>onward</i> subsequential transducer for a given {@link SubsequentialTransducer SST}. In an
+     * onward SST, for each state, the longest common prefix over the state output and the outputs of all outgoing
+     * transitions of a state has been pushed forward to the transition outputs of the incoming transitions.
+     *
+     * @param sst
+     *         the original SST
+     * @param inputs
+     *         the alphabet symbols to consider for this transformation
+     * @param out
+     *         the target automaton to write the onward form to
+     *
+     * @return {@code out}, for convenience
+     */
     public static <S1, S2, I, T1, T2, O, A extends MutableSubsequentialTransducer<S2, I, T2, O>> A toOnwardSST(
             SubsequentialTransducer<S1, I, T1, O> sst,
             Collection<? extends I> inputs,
             A out) {
 
+        assert out.size() == 0;
         AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE, sst, inputs, out);
 
         final Mapping<S2, Set<Pair<S2, I>>> incomingTransitions = getIncomingTransitions(out, inputs);
@@ -106,8 +126,8 @@ public final class SubsequentialTransducers {
     }
 
     private static <S, I, T, O> Word<O> computeLCP(SubsequentialTransducer<S, I, T, O> sst,
-                                                Collection<? extends I> inputs,
-                                                S s) {
+                                                   Collection<? extends I> inputs,
+                                                   S s) {
 
         Word<O> lcp = sst.getStateProperty(s);
 

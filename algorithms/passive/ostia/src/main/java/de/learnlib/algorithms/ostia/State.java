@@ -15,6 +15,9 @@
  */
 package de.learnlib.algorithms.ostia;
 
+/**
+ * @author Aleksander Mendoza-Drosik
+ */
 class State {
 
     Out out;

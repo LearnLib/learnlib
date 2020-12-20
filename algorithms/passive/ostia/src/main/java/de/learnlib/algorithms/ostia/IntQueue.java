@@ -19,8 +19,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringJoiner;
 
+import net.automatalib.commons.smartcollections.IntSeq;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * @author Aleksander Mendoza-Drosik
+ */
 class IntQueue {
 
     int value;

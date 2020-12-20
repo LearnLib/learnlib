@@ -22,6 +22,19 @@ import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * A default implementation for {@link AbstractCompactDeterministic} that uses {@link CompactMealyTransition} as
+ * transition type and supports various types of state and transition properites.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <SP>
+ *         state property type
+ * @param <TP>
+ *         transition property type
+ *
+ * @author frohme
+ */
 public class UniversalCompactDet<I, SP, TP>
         extends AbstractCompactDeterministic<I, CompactMealyTransition<TP>, SP, TP> {
 

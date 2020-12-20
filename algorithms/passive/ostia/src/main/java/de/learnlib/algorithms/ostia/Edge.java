@@ -15,6 +15,9 @@
  */
 package de.learnlib.algorithms.ostia;
 
+/**
+ * @author Aleksander Mendoza-Drosik
+ */
 class Edge {
 
     IntQueue out;

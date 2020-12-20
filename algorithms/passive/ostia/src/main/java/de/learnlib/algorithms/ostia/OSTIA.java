@@ -27,11 +27,16 @@ import java.util.Queue;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.SubsequentialTransducer;
+import net.automatalib.commons.smartcollections.IntSeq;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * @author Aleksander Mendoza-Drosik
+ * @author frohme
+ */
 public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransducer<?, I, ?, O>, I, Word<O>> {
 
     private final Alphabet<I> inputAlphabet;
@@ -227,11 +232,11 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
         return true;
     }
 
-    public static @Nullable List<Integer> run(State init, Iterator<Integer> input) {
+    public static @Nullable IntSeq run(State init, IntSeq input) {
         final List<Integer> output = new ArrayList<>();
         State iter = init;
-        while (input.hasNext()) {
-            final Edge edge = iter.transitions[input.next()];
+        for (int i = 0; i < input.size(); i++) {
+            final Edge edge = iter.transitions[input.get(i)];
             if (edge == null) {
                 return null;
             }
@@ -250,7 +255,7 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
             output.add(q.value);
             q = q.next;
         }
-        return output;
+        return IntSeq.of(output);
     }
 
 }

@@ -18,11 +18,8 @@ package de.learnlib.algorithms.ostia;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.StreamSupport;
 
 import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.words.Alphabet;
@@ -30,6 +27,9 @@ import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * @author frohme
+ */
 class OSSTWrapper<I, O> implements SubsequentialTransducer<State, I, Edge, O> {
 
     private final State root;
@@ -40,17 +40,6 @@ class OSSTWrapper<I, O> implements SubsequentialTransducer<State, I, Edge, O> {
         this.root = root;
         this.inputAlphabet = inputAlphabet;
         this.outputAlphabet = outputAlphabet;
-    }
-
-    @Override
-    public Word<O> computeOutput(Iterable<? extends I> input) {
-        final Iterator<Integer> transformedInput =
-                StreamSupport.stream(input.spliterator(), false).mapToInt(inputAlphabet).iterator();
-        final List<Integer> output = OSTIA.run(root, transformedInput);
-
-        return output != null ?
-                output.stream().map(outputAlphabet::getSymbol).collect(Word.collector()) :
-                Word.epsilon();
     }
 
     @Override

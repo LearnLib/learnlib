@@ -13,18 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.ostia;
+package net.automatalib.commons.smartcollections;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.PrimitiveIterator.OfInt;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-interface IntSeq {
+/**
+ * An {@link IntSeq} is an abstract view on a finite, random-access data-structure for primitive integer values. It
+ * allows for a unified view on integer arrays, {@link List lists} of integers, {@link Word words} with an accompanying
+ * {@link Alphabet#getSymbolIndex(Object) alphabet index function}, etc.
+ *
+ * @author Aleksander Mendoza-Drosik
+ * @author frohme
+ */
+public interface IntSeq extends Iterable<Integer> {
 
     int size();
 
     int get(int index);
+
+    @Override
+    default OfInt iterator() {
+        return new OfInt() {
+
+            int curr;
+
+            {
+                this.curr = 0;
+            }
+
+            @Override
+            public int nextInt() {
+                return get(curr++);
+            }
+
+            @Override
+            public boolean hasNext() {
+                return curr < size();
+            }
+        };
+    }
 
     static <I> IntSeq of(Word<I> word, Alphabet<I> alphabet) {
         return new IntSeq() {
@@ -36,7 +68,7 @@ interface IntSeq {
 
             @Override
             public int get(int index) {
-                return alphabet.applyAsInt(word.getSymbol(index));
+                return alphabet.getSymbolIndex(word.getSymbol(index));
             }
 
             @Override
@@ -46,7 +78,7 @@ interface IntSeq {
         };
     }
 
-    static IntSeq seq(int... ints) {
+    static IntSeq of(int... ints) {
         return new IntSeq() {
 
             @Override
@@ -62,6 +94,26 @@ interface IntSeq {
             @Override
             public String toString() {
                 return Arrays.toString(ints);
+            }
+        };
+    }
+
+    static IntSeq of(List<Integer> ints) {
+        return new IntSeq() {
+
+            @Override
+            public int size() {
+                return ints.size();
+            }
+
+            @Override
+            public int get(int index) {
+                return ints.get(index);
+            }
+
+            @Override
+            public String toString() {
+                return ints.toString();
             }
         };
     }

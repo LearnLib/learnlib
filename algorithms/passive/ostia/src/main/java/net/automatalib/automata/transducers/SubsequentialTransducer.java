@@ -33,7 +33,7 @@ import net.automatalib.words.WordBuilder;
 /**
  * A subsequential transducer (or SST) is an {@link DeterministicOutputTS} whose state and transition properties are
  * output-{@link Word words}. Upon parsing a sequence of input symbols, each transition emits a {@link Word sequence} of
- * output symbols.
+ * output symbols. After all inputs have been parsed, the output of the reached state will be emitted as well.
  * <p>
  * <b>Implementation detail:</b>
  * There exist definitions of SSTs that associate each state with an additional notion of 'acceptance' in order to
