@@ -37,9 +37,9 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNod
 import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.SupportsGrowingAlphabet;
+import net.automatalib.automata.base.compact.CompactTransition;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -165,7 +165,7 @@ public class KearnsVaziraniMealy<I, O>
             newOut = separatorInfo.subtree2Label;
         } else {
             newDiscriminator = newDiscriminator(sym, separator.getDiscriminator());
-            CompactMealyTransition<O> transition = hypothesis.getTransition(state, sym);
+            CompactTransition<O> transition = hypothesis.getTransition(state, sym);
             assert transition != null;
             O transOut = hypothesis.getTransitionOutput(transition);
             oldOut = newOutcome(transOut, separatorInfo.subtree1Label);
@@ -214,9 +214,9 @@ public class KearnsVaziraniMealy<I, O>
             int sourceState = (int) (encodedTrans >> Integer.SIZE);
             int transIdx = (int) (encodedTrans);
 
-            CompactMealyTransition<O> trans = hypothesis.getTransition(sourceState, transIdx);
+            CompactTransition<O> trans = hypothesis.getTransition(sourceState, transIdx);
             assert trans != null;
-            setTransition(sourceState, transIdx, succs.get(i), trans.getOutput());
+            setTransition(sourceState, transIdx, succs.get(i), trans.getProperty());
         }
     }
 

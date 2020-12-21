@@ -218,7 +218,7 @@ limitations under the License.
 
         <!-- dependency versions -->
         <ap-commons.version>0.0.2</ap-commons.version>
-        <automatalib.version>0.10.0</automatalib.version>
+        <automatalib.version>0.11.0-SNAPSHOT</automatalib.version>
         <buildergen.version>0.1</buildergen.version>
         <cacio.version>1.9</cacio.version>
         <checkerframework.version>3.7.0</checkerframework.version>

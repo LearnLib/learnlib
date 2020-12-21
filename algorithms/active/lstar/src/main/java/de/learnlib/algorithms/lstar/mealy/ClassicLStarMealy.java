@@ -26,10 +26,10 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import de.learnlib.util.mealy.MealyUtil;
+import net.automatalib.automata.base.compact.CompactTransition;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -46,7 +46,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author Malte Isberner
  */
 public class ClassicLStarMealy<I, O>
-        extends AbstractExtensibleAutomatonLStar<MealyMachine<?, I, ?, O>, I, @Nullable O, Integer, CompactMealyTransition<O>, Void, O, CompactMealy<I, O>> {
+        extends AbstractExtensibleAutomatonLStar<MealyMachine<?, I, ?, O>, I, @Nullable O, Integer, CompactTransition<O>, Void, O, CompactMealy<I, O>> {
 
     /**
      * Constructor.
