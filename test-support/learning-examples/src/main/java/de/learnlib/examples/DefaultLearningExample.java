@@ -20,6 +20,7 @@ import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -77,6 +78,19 @@ public class DefaultLearningExample<I, D, A extends UniversalAutomaton<?, I, ?, 
         }
 
         public DefaultMealyLearningExample(Alphabet<I> alphabet, MealyMachine<?, I, ?, D> referenceAutomaton) {
+            super(alphabet, referenceAutomaton);
+        }
+    }
+
+    public static class DefaultSSTLearningExample<I, D>
+            extends DefaultLearningExample<I, Word<D>, SubsequentialTransducer<?, I, ?, D>>
+            implements SSTLearningExample<I, D> {
+
+        public <A extends SubsequentialTransducer<?, I, ?, D> & InputAlphabetHolder<I>> DefaultSSTLearningExample(A automaton) {
+            this(automaton.getInputAlphabet(), automaton);
+        }
+
+        public DefaultSSTLearningExample(Alphabet<I> alphabet, SubsequentialTransducer<?, I, ?, D> referenceAutomaton) {
             super(alphabet, referenceAutomaton);
         }
     }

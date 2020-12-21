@@ -28,15 +28,15 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerMealy;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
+import net.automatalib.automata.base.compact.CompactTransition;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 public class ExtensibleLStarMealy<I, O>
-        extends AbstractExtensibleAutomatonLStar<MealyMachine<?, I, ?, O>, I, Word<O>, Integer, CompactMealyTransition<O>, Void, O, CompactMealy<I, O>>
+        extends AbstractExtensibleAutomatonLStar<MealyMachine<?, I, ?, O>, I, Word<O>, Integer, CompactTransition<O>, Void, O, CompactMealy<I, O>>
         implements OTLearnerMealy<I, O> {
 
     private final List<O> outputTable = new ArrayList<>();

@@ -30,7 +30,9 @@ import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.commons.smartcollections.IntSeq;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -40,21 +42,23 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransducer<?, I, ?, O>, I, Word<O>> {
 
     private final Alphabet<I> inputAlphabet;
-    private final Alphabet<O> outputAlphabet;
+    private final GrowingAlphabet<O> outputAlphabet;
     private final State root;
 
-    public OSTIA(Alphabet<I> inputAlphabet, Alphabet<O> outputAlphabet) {
+    public OSTIA(Alphabet<I> inputAlphabet) {
         this.inputAlphabet = inputAlphabet;
-        this.outputAlphabet = outputAlphabet;
+        this.outputAlphabet = new GrowingMapAlphabet<>();
         this.root = new State(inputAlphabet.size());
     }
 
     @Override
     public void addSamples(Collection<? extends DefaultQuery<I, Word<O>>> samples) {
         for (DefaultQuery<I, Word<O>> sample : samples) {
+            final Word<O> output = sample.getOutput();
+            this.outputAlphabet.addAll(output.asList());
             buildPttOnward(root,
-                           IntSeq.of(sample.getInput(), inputAlphabet),
-                           IntQueue.asQueue(IntSeq.of(sample.getOutput(), outputAlphabet)));
+                           sample.getInput().asIntSeq(inputAlphabet),
+                           IntQueue.asQueue(output.asIntSeq(outputAlphabet)));
         }
     }
 

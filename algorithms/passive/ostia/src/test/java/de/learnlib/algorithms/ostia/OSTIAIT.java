@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.transducers;
+package de.learnlib.algorithms.ostia;
 
-import net.automatalib.automata.MutableDeterministic;
+import de.learnlib.testsupport.it.learner.AbstractSSTPassiveLearnerIT;
+import de.learnlib.testsupport.it.learner.PassiveLearnerVariantList;
+import net.automatalib.automata.transducers.SubsequentialTransducer;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * A {@link MutableDeterministic mutable} extension of a {@link SubsequentialTransducer}.
- *
- * @param <S>
- *         state type
- * @param <I>
- *         input symbol type
- * @param <T>
- *         transition type
- * @param <O>
- *         output symbol type
- *
- * @author frohme
- */
-public interface MutableSubsequentialTransducer<S, I, T, O>
-        extends SubsequentialTransducer<S, I, T, O>, MutableDeterministic<S, I, T, Word<O>, Word<O>> {}
+public class OSTIAIT extends AbstractSSTPassiveLearnerIT {
+
+    @Override
+    protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,
+                                             PassiveLearnerVariantList<SubsequentialTransducer<?, I, ?, O>, I, Word<O>> variants) {
+        variants.addLearnerVariant("OSTIA", new OSTIA<>(alphabet));
+    }
+}

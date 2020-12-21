@@ -26,7 +26,6 @@ import java.util.Random;
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.SubsequentialTransducer;
-import net.automatalib.automata.transducers.SubsequentialTransducers;
 import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.commons.smartcollections.IntSeq;
 import net.automatalib.commons.util.Pair;
@@ -34,6 +33,7 @@ import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.conformance.WMethodTestsIterator;
 import net.automatalib.util.automata.random.RandomAutomata;
+import net.automatalib.util.automata.transducers.SubsequentialTransducers;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -78,13 +78,13 @@ public class OSTIATest {
         Assert.assertNull(OSTIA.run(root, IntSeq.of(0, 1, 0, 1, 1)));
     }
 
-    @Test(dataProvider = "sizes")
+    @Test(enabled = false, dataProvider = "sizes")
     public void testMealySamples(int size) {
 
         final MealyMachine<?, Character, ?, String> automaton =
                 RandomAutomata.randomMealy(new Random(SEED), size, INPUTS, OUTPUTS);
 
-        final OSTIA<Character, String> learner = new OSTIA<>(INPUTS, Alphabets.fromCollection(OUTPUTS));
+        final OSTIA<Character, String> learner = new OSTIA<>(INPUTS);
 
         final List<Word<Character>> trainingWords = new ArrayList<>();
         final Iterator<Word<Character>> testIterator = new WMethodTestsIterator<>(automaton, INPUTS, 0);
@@ -125,7 +125,7 @@ public class OSTIATest {
                 SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS));
         Assert.assertTrue(SubsequentialTransducers.isOnwardSST(osst, INPUTS));
 
-        final OSTIA<Character, String> learner = new OSTIA<>(INPUTS, Alphabets.fromCollection(OUTPUTS));
+        final OSTIA<Character, String> learner = new OSTIA<>(INPUTS);
 
         final int lookAhead = 2;
         final Iterator<Word<Character>> testIterator = new WMethodTestsIterator<>(sst, INPUTS, lookAhead);

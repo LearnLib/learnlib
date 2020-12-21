@@ -19,6 +19,7 @@ import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
+import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.words.Alphabet;
 
 public interface LearningExample<I, A extends UniversalAutomaton<?, I, ?, ?, ?>> {
@@ -30,6 +31,8 @@ public interface LearningExample<I, A extends UniversalAutomaton<?, I, ?, ?, ?>>
     interface DFALearningExample<I> extends LearningExample<I, DFA<?, I>> {}
 
     interface MealyLearningExample<I, O> extends LearningExample<I, MealyMachine<?, I, ?, O>> {}
+
+    interface SSTLearningExample<I, O> extends LearningExample<I, SubsequentialTransducer<?, I, ?, O>> {}
 
     /**
      * A {@link LearningExample} refinement for {@link StateLocalInputMealyMachine}.
