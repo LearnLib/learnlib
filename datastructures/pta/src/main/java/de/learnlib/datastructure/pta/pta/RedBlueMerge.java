@@ -19,13 +19,13 @@ import java.awt.Color;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import com.google.common.collect.Sets;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.commons.util.Pair;
@@ -480,7 +480,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
                     return states;
                 }
 
-                states = Sets.newHashSetWithExpectedSize(pta.size());
+                states = new HashSet<>();
                 final Queue<S> discoverQueue = new ArrayDeque<>();
 
                 S initialState = getInitialState();

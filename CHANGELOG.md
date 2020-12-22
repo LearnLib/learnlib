@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.16.0...HEAD)
 
+### Changed
+
+* `PassiveLearningAlgorithm#comuteModel` did not specify whether repeated calls to the method should yield identical models. It is now explicitly left open to the respective implementation to support this behavior. `BlueFringeRPNI{DFA,Mealy}` explicitly does not support this behavior, as the internal prefix-tree acceptors is now constructed on-the-fly as samples are added via the `addSample` methods. This allows to drop the previously redundant caching of samples and reduce memory pressure. `BlueFringeEDSMDFA` and `BlueFringeMDLDFA` still have to cache the samples internally and therefore still support repeated model construction.  
+* `PTA`s now read their sample input as `IntSeq`s
 
 ## [0.16.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.16.0) - 2020-10-12
 

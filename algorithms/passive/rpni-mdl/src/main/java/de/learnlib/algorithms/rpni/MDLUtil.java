@@ -18,6 +18,7 @@ package de.learnlib.algorithms.rpni;
 import java.util.List;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.commons.smartcollections.IntSeq;
 
 /**
  * @author frohme
@@ -26,30 +27,30 @@ final class MDLUtil {
 
     private MDLUtil() {}
 
-    static <S> double score(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> pta,
+    static <S> double score(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> merged,
                             int alphabetSize,
-                            List<int[]> positiveSamples) {
+                            List<IntSeq> positiveSamples) {
         double sampleScore = 0;
 
-        for (final int[] w : positiveSamples) {
-            sampleScore += countWordChoices(pta, alphabetSize, w);
+        for (final IntSeq w : positiveSamples) {
+            sampleScore += countWordChoices(merged, alphabetSize, w);
         }
 
-        return (pta.size() * alphabetSize) + sampleScore;
+        return (merged.size() * alphabetSize) + sampleScore;
     }
 
-    private static <S> double countWordChoices(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> pta,
+    private static <S> double countWordChoices(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> merged,
                                                int alphabetSize,
-                                               int[] word) {
-        S currentState = pta.getInitialState();
+                                               IntSeq word) {
+        S currentState = merged.getInitialState();
         assert currentState != null;
-        double result = Math.log(countStateChoices(pta, alphabetSize, currentState)) /
+        double result = Math.log(countStateChoices(merged, alphabetSize, currentState)) /
                         Math.log(2); // log_2 x = log_e x / log_e 2
 
         for (final int i : word) {
-            currentState = pta.getSuccessor(currentState, i);
+            currentState = merged.getSuccessor(currentState, i);
             assert currentState != null;
-            result += Math.log(countStateChoices(pta, alphabetSize, currentState)) / Math.log(2);
+            result += Math.log(countStateChoices(merged, alphabetSize, currentState)) / Math.log(2);
         }
 
         return result;

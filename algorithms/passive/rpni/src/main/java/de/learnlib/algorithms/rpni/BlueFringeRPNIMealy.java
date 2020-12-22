@@ -15,21 +15,22 @@
  */
 package de.learnlib.algorithms.rpni;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
+import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveMealyLearner;
 import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.datastructure.pta.PTAUtil;
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 /**
  * Blue-fringe version of RPNI for inferring Mealy machines.
+ * <p>
+ * <b>Implementation note:</b> This implementation does not support repeated calls to {@link
+ * PassiveLearningAlgorithm#computeModel()}.
  *
  * @param <I>
  *         input symbol type
@@ -39,33 +40,38 @@ import net.automatalib.words.Word;
  * @author Malte Isberner
  */
 public class BlueFringeRPNIMealy<I, O> extends AbstractBlueFringeRPNI<I, Word<O>, Void, O, MealyMachine<?, I, ?, O>>
-        implements PassiveLearningAlgorithm.PassiveMealyLearner<I, O> {
+        implements PassiveMealyLearner<I, O> {
 
-    private final List<Pair<int[], Word<O>>> samples = new ArrayList<>();
+    private final BlueFringePTA<Void, O> pta;
+    private boolean merged;
 
     public BlueFringeRPNIMealy(Alphabet<I> alphabet) {
         super(alphabet);
+        this.pta = new BlueFringePTA<>(alphabetSize);
+        this.merged = false;
     }
 
     @Override
     public void addSamples(Collection<? extends DefaultQuery<I, Word<O>>> samples) {
         for (DefaultQuery<I, Word<O>> qry : samples) {
-            this.samples.add(Pair.of(qry.getInput().toIntArray(alphabet), qry.getOutput()));
+            pta.addSampleWithTransitionProperties(qry.getInput().asIntSeq(alphabet), qry.getOutput().asList());
         }
     }
 
     @Override
-    protected void initializePTA(BlueFringePTA<Void, O> pta) {
-        for (Pair<int[], Word<O>> sample : samples) {
-            pta.addSampleWithTransitionProperties(sample.getFirst(), sample.getSecond().asList());
+    protected BlueFringePTA<Void, O> fetchPTA() {
+        if (merged) {
+            throw new IllegalStateException(
+                    "A model has already been computed once. This learner does not support repeated model constructions");
         }
+        merged = true;
+
+        return this.pta;
     }
 
     @Override
     protected MealyMachine<?, I, ?, O> ptaToModel(BlueFringePTA<Void, O> pta) {
-        CompactMealy<I, O> mealy = new CompactMealy<>(alphabet, pta.getNumRedStates());
-        pta.toAutomaton(mealy, alphabet);
-        return mealy;
+        return PTAUtil.toMealy(pta, alphabet);
     }
 
 }

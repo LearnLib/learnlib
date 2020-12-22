@@ -15,23 +15,26 @@
  */
 package de.learnlib.algorithms.rpni;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
+import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
+import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
+import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.datastructure.pta.PTAUtil;
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.pta.BlueFringePTAState;
-import de.learnlib.datastructure.pta.pta.PTATransition;
 import de.learnlib.datastructure.pta.pta.RedBlueMerge;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.smartcollections.IntSeq;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 
 /**
  * A state-merging learning algorithm based on the evidence principle. On an operational level this algorithm is very
@@ -41,13 +44,20 @@ import net.automatalib.words.Alphabet;
  * situation occurs, the algorithm merges the two states whose merge would yield the biggest score (see {@link
  * EDSMUtil#score(UniversalDeterministicAutomaton, List, List)}). Thus the behavior of this algorithm is more passive,
  * or as the name suggest evidence-driven.
+ * <p>
+ * <b>Implementation note:</b> This implementation does support repeated calls to {@link
+ * PassiveLearningAlgorithm#computeModel()}.
  *
  * @param <I>
  *         input symbol type
  *
  * @author frohme
  */
-public class BlueFringeEDSMDFA<I> extends BlueFringeRPNIDFA<I> {
+public class BlueFringeEDSMDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>>
+        implements PassiveDFALearner<I> {
+
+    private final List<IntSeq> positive = new ArrayList<>();
+    private final List<IntSeq> negative = new ArrayList<>();
 
     /**
      * Constructor.
@@ -60,64 +70,41 @@ public class BlueFringeEDSMDFA<I> extends BlueFringeRPNIDFA<I> {
     }
 
     @Override
-    public DFA<?, I> computeModel() {
-        BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(super.alphabetSize);
-        initializePTA(pta);
-
-        Set<PTATransition<BlueFringePTAState<Boolean, Void>>> blue = new HashSet<>();
-
-        pta.init(blue::add);
-
-        while (!blue.isEmpty()) {
-            boolean promotion = false;
-            RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>> bestMerge = null;
-            PTATransition<BlueFringePTAState<Boolean, Void>> bestTransition = null;
-            long bestScore = Long.MIN_VALUE;
-
-            final Iterator<PTATransition<BlueFringePTAState<Boolean, Void>>> blueIter = blue.iterator();
-
-            while (blueIter.hasNext()) {
-                final PTATransition<BlueFringePTAState<Boolean, Void>> qbRef = blueIter.next();
-                final BlueFringePTAState<Boolean, Void> qb = qbRef.getTarget();
-                assert qb != null;
-
-                Stream<BlueFringePTAState<Boolean, Void>> stream = pta.redStatesStream();
-                if (super.parallel) {
-                    stream = stream.parallel();
-                }
-
-                @SuppressWarnings("nullness") // we filter the null merges
-                final Optional<Pair<RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>>, Long>> result =
-                        stream.map(qr -> tryMerge(pta, qr, qb))
-                              .filter(Objects::nonNull)
-                              .map(merge -> Pair.of(merge,
-                                                    EDSMUtil.score(merge.toMergedAutomaton(),
-                                                                   super.positive,
-                                                                   super.negative)))
-                              .max(Comparator.comparingLong(Pair::getSecond));
-
-                if (result.isPresent()) {
-                    final Pair<RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>>, Long> mergeResult =
-                            result.get();
-
-                    if (mergeResult.getSecond() > bestScore) {
-                        bestMerge = mergeResult.getFirst();
-                        bestTransition = qbRef;
-                    }
-                } else {
-                    promotion = true;
-                    blueIter.remove();
-                    pta.promote(qb, blue::add);
-                    break;
-                }
-            }
-            if (!promotion) {
-                assert bestMerge != null;
-                blue.remove(bestTransition);
-                bestMerge.apply(pta, blue::add);
+    public void addSamples(Collection<? extends DefaultQuery<I, Boolean>> samples) {
+        for (DefaultQuery<I, Boolean> query : samples) {
+            final Word<I> input = query.getInput();
+            if (query.getOutput()) {
+                positive.add(input.asIntSeq(alphabet));
+            } else {
+                negative.add(input.asIntSeq(alphabet));
             }
         }
+    }
 
-        return ptaToModel(pta);
+    @Override
+    protected BlueFringePTA<Boolean, Void> fetchPTA() {
+        final BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(alphabetSize);
+
+        for (IntSeq pos : positive) {
+            pta.addSample(pos, true);
+        }
+
+        for (IntSeq neg : negative) {
+            pta.addSample(neg, false);
+        }
+
+        return pta;
+    }
+
+    @Override
+    protected Stream<RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>>> selectMerges(Stream<RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>>> merges) {
+        return merges.map(merge -> Pair.of(merge, EDSMUtil.score(merge.toMergedAutomaton(), positive, negative)))
+                     .sorted(Comparator.comparingLong(Pair::getSecond))
+                     .map(Pair::getFirst);
+    }
+
+    @Override
+    protected CompactDFA<I> ptaToModel(BlueFringePTA<Boolean, Void> pta) {
+        return PTAUtil.toDFA(pta, alphabet);
     }
 }

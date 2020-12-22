@@ -17,6 +17,7 @@ package de.learnlib.examples.passive;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import de.learnlib.algorithms.rpni.BlueFringeRPNIDFA;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
@@ -42,30 +43,21 @@ public final class Example1 {
         // define the alphabet
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'b');
 
-        // instantiate learner
-        // alternatively one can also use the EDSM variant (BlueFringeEDSMDFA from the learnlib-rpni-edsm artifact)
-        // or the MDL variant (BlueFringeMDLDFA from the learnlib-rpni-mdl artifact)
-        final PassiveDFALearner<Character> learner = new BlueFringeRPNIDFA<>(alphabet);
-
         // if no training samples have been provided, only the empty automaton can be constructed
-        final DFA<?, Character> emptyModel = learner.computeModel();
+        final DFA<?, Character> emptyModel = computeModel(alphabet, Collections.emptyList(), Collections.emptyList());
         Visualization.visualize(emptyModel, alphabet);
-
-        // add the positive training samples
-        learner.addPositiveSamples(getPositiveTrainingSamples());
 
         // since RPNI is a greedy state-merging algorithm, providing only positive examples results in the trivial
         // one-state acceptor, because there exist no negative "counterexamples" that prevent state merges when
         // generalizing the initial prefix tree acceptor
-        final DFA<?, Character> firstModel = learner.computeModel();
+        final DFA<?, Character> firstModel =
+                computeModel(alphabet, getPositiveTrainingSamples(), Collections.emptyList());
         Visualization.visualize(firstModel, alphabet);
 
-        // add negative training samples
-        learner.addNegativeSamples(getNegativeTrainingSamples());
-
-        // after adding negative samples (i.e. words that must not be accepted by the model) we get a more "realistic"
+        // with negative samples (i.e. words that must not be accepted by the model) we get a more "realistic"
         // generalization of the given training set
-        final DFA<?, Character> secondModel = learner.computeModel();
+        final DFA<?, Character> secondModel =
+                computeModel(alphabet, getPositiveTrainingSamples(), getNegativeTrainingSamples());
         Visualization.visualize(secondModel, alphabet);
     }
 
@@ -93,6 +85,35 @@ public final class Example1 {
                              Word.fromCharSequence("bb"),
                              Word.fromCharSequence("aab"),
                              Word.fromCharSequence("aba"));
+    }
+
+    /**
+     * Creates the learner instance, computes and return the inferred model.
+     *
+     * @param alphabet
+     *         domain from which the learning data are sampled
+     * @param positiveSamples
+     *         positive samples
+     * @param negativeSamples
+     *         negative samples
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the learned model
+     */
+    private static <I> DFA<?, I> computeModel(Alphabet<I> alphabet,
+                                              Collection<Word<I>> positiveSamples,
+                                              Collection<Word<I>> negativeSamples) {
+
+        // instantiate learner
+        // alternatively one can also use the EDSM variant (BlueFringeEDSMDFA from the learnlib-rpni-edsm artifact)
+        // or the MDL variant (BlueFringeMDLDFA from the learnlib-rpni-mdl artifact)
+        final PassiveDFALearner<I> learner = new BlueFringeRPNIDFA<>(alphabet);
+
+        learner.addPositiveSamples(positiveSamples);
+        learner.addNegativeSamples(negativeSamples);
+
+        return learner.computeModel();
     }
 
 }

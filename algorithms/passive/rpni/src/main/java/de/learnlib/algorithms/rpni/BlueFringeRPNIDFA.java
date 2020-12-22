@@ -15,12 +15,12 @@
  */
 package de.learnlib.algorithms.rpni;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
+import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
 import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.datastructure.pta.PTAUtil;
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -28,6 +28,9 @@ import net.automatalib.words.Alphabet;
 
 /**
  * A Blue Fringe version of RPNI for learning DFAs.
+ * <p>
+ * <b>Implementation note:</b> This implementation does not support repeated calls to {@link
+ * PassiveLearningAlgorithm#computeModel()}.
  *
  * @param <I>
  *         input symbol type
@@ -35,10 +38,10 @@ import net.automatalib.words.Alphabet;
  * @author Malte Isberner
  */
 public class BlueFringeRPNIDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>>
-        implements PassiveLearningAlgorithm.PassiveDFALearner<I> {
+        implements PassiveDFALearner<I> {
 
-    protected final List<int[]> positive = new ArrayList<>();
-    protected final List<int[]> negative = new ArrayList<>();
+    private final BlueFringePTA<Boolean, Void> pta;
+    private boolean merged;
 
     /**
      * Constructor.
@@ -48,36 +51,31 @@ public class BlueFringeRPNIDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boo
      */
     public BlueFringeRPNIDFA(Alphabet<I> alphabet) {
         super(alphabet);
+        this.pta = new BlueFringePTA<>(alphabetSize);
+        this.merged = false;
     }
 
     @Override
     public void addSamples(Collection<? extends DefaultQuery<I, Boolean>> samples) {
         for (DefaultQuery<I, Boolean> query : samples) {
-            int[] arr = query.getInput().toIntArray(alphabet);
-            if (query.getOutput()) {
-                positive.add(arr);
-            } else {
-                negative.add(arr);
-            }
+            pta.addSample(query.getInput().asIntSeq(alphabet), query.getOutput());
         }
     }
 
     @Override
-    protected void initializePTA(BlueFringePTA<Boolean, Void> pta) {
-        for (int[] sample : positive) {
-            pta.addSample(sample, true);
+    protected BlueFringePTA<Boolean, Void> fetchPTA() {
+        if (merged) {
+            throw new IllegalStateException(
+                    "A model has already been computed once. This learner does not support repeated model constructions");
         }
-        for (int[] sample : negative) {
-            pta.addSample(sample, false);
-        }
+        merged = true;
+
+        return this.pta;
     }
 
     @Override
     protected CompactDFA<I> ptaToModel(BlueFringePTA<Boolean, Void> pta) {
-        CompactDFA<I> dfa = new CompactDFA<>(alphabet, pta.getNumRedStates());
-        pta.toAutomaton(dfa, alphabet, b -> b, x -> x);
-
-        return dfa;
+        return PTAUtil.toDFA(pta, alphabet);
     }
 
 }
