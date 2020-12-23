@@ -17,6 +17,7 @@ package de.learnlib.algorithms.rpni;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -99,7 +100,7 @@ public class BlueFringeEDSMDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boo
     @Override
     protected Stream<RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>>> selectMerges(Stream<RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>>> merges) {
         return merges.map(merge -> Pair.of(merge, EDSMUtil.score(merge.toMergedAutomaton(), positive, negative)))
-                     .sorted(Comparator.comparingLong(Pair::getSecond))
+                     .sorted(Collections.reverseOrder(Comparator.comparingLong(Pair::getSecond)))
                      .map(Pair::getFirst);
     }
 

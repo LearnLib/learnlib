@@ -51,9 +51,8 @@ public class EDSMScoreTest {
     private final Word<Character> p3 = Word.fromString("bba");
     private final Word<Character> p4 = Word.fromString("abab");
 
-    private final Word<Character> p5 = Word.fromString("aaaa");
-    private final Word<Character> p6 = Word.fromString("aaaba");
-    private final Word<Character> p7 = Word.fromString("aaabab");
+    private final Word<Character> p5 = Word.fromString("aaaba");
+    private final Word<Character> p6 = Word.fromString("aaabab");
 
     private final Word<Character> n1 = Word.fromString("ab");
     private final Word<Character> n2 = Word.fromString("bb");
@@ -93,8 +92,12 @@ public class EDSMScoreTest {
 
         final BlueFringeEDSMDFA<Character> learner = new BlueFringeEDSMDFA<>(alphabet);
         // add p5 to make the first merge deterministic
-        learner.addPositiveSamples(p1, p2, p3, p4, p5);
+        learner.addPositiveSamples(p1, p2, p3, p4);
         learner.addNegativeSamples(n1, n2);
+
+        // use reproducible runs
+        learner.setParallel(false);
+        learner.setDeterministic(true);
 
         final DFA<?, Character> model = learner.computeModel();
 
@@ -106,7 +109,7 @@ public class EDSMScoreTest {
                                                                 .from("s0").on('b').to("s1")
                                                                 .from("s1").on('a').to("s2")
                                                                 .from("s1").on('b').loop()
-                                                                .from("s2").on('b').loop()
+                                                                .from("s2").on('b').to("s0")
                                                                 .create();
         // @formatter:on
 
@@ -120,7 +123,7 @@ public class EDSMScoreTest {
         final BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(alphabet.size());
 
         // We need use an alternate sample set to construct the back-edge,
-        Arrays.asList(p1, p6, p7, p4).forEach(s -> pta.addSample(s.asIntSeq(alphabet), true));
+        Arrays.asList(p1, p5, p6, p4).forEach(s -> pta.addSample(s.asIntSeq(alphabet), true));
         Arrays.asList(n1, n2).forEach(s -> pta.addSample(s.asIntSeq(alphabet), false));
 
         // the PTA works on an Integer alphabet abstraction, hence a -> 0, b -> 1
