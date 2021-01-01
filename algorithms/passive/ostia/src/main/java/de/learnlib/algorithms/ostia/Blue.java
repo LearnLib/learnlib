@@ -20,15 +20,15 @@ package de.learnlib.algorithms.ostia;
  */
 class Blue {
 
-    final State parent;
+    final State.Original parent;
     final int symbol;
 
-    Blue(State parent, int symbol) {
+    Blue(State.Original parent, int symbol) {
         this.symbol = symbol;
         this.parent = parent;
     }
 
-    State state() {
+    State.Original state() {
         return parent.transitions[symbol].target;
     }
 

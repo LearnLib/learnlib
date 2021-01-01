@@ -64,7 +64,7 @@ public class OSTIATest {
                                                                  Pair.of(IntSeq.of(0, 0, 0), IntSeq.of(0, 0, 1)),
                                                                  Pair.of(IntSeq.of(0, 1, 0, 1), IntSeq.of(0, 1, 0, 1)));
 
-        final State root = OSTIA.buildPtt(2, samples.iterator());
+        final State.Original root = OSTIA.buildPtt(2, samples.iterator());
         OSTIA.ostia(root);
 
         Assert.assertEquals(OSTIA.run(root, IntSeq.of(1)), IntSeq.of(1));
@@ -74,8 +74,8 @@ public class OSTIATest {
         Assert.assertEquals(OSTIA.run(root, IntSeq.of(1, 0, 0, 1, 0)), IntSeq.of(1, 0, 0, 1, 0, 1));
         Assert.assertEquals(OSTIA.run(root, IntSeq.of(1, 0, 0, 1, 0, 1)), IntSeq.of(1, 0, 0, 1, 0, 1));
 
-        Assert.assertNull(OSTIA.run(root, IntSeq.of(0, 1, 0, 1, 0)));
-        Assert.assertNull(OSTIA.run(root, IntSeq.of(0, 1, 0, 1, 1)));
+        Assert.assertEquals(OSTIA.run(root, IntSeq.of(0, 1, 0, 1, 0)),IntSeq.of(0, 1, 0, 1, 1));
+        Assert.assertEquals(OSTIA.run(root, IntSeq.of(0, 1, 0, 1, 1)),IntSeq.of(0, 1, 0, 1, 1));
     }
 
     @Test(enabled = false, dataProvider = "sizes")

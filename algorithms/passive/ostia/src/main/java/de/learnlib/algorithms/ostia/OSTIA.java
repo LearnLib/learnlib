@@ -15,14 +15,7 @@
  */
 package de.learnlib.algorithms.ostia;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.api.query.DefaultQuery;
@@ -43,12 +36,12 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
 
     private final Alphabet<I> inputAlphabet;
     private final GrowingAlphabet<O> outputAlphabet;
-    private final State root;
+    private final State.Original root;
 
     public OSTIA(Alphabet<I> inputAlphabet) {
         this.inputAlphabet = inputAlphabet;
         this.outputAlphabet = new GrowingMapAlphabet<>();
-        this.root = new State(inputAlphabet.size());
+        this.root = new State.Original(inputAlphabet.size());
     }
 
     @Override
@@ -62,14 +55,18 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
         }
     }
 
+    private boolean hasBeenComputed = false;
     @Override
     public SubsequentialTransducer<?, I, ?, O> computeModel() {
-        ostia(root);
+        if(!hasBeenComputed) {
+            hasBeenComputed = true;
+            ostia(root);
+        }
         return new OSSTWrapper<>(root, inputAlphabet, outputAlphabet);
     }
 
-    public static State buildPtt(int alphabetSize, Iterator<Pair<IntSeq, IntSeq>> informant) {
-        final State root = new State(alphabetSize);
+    public static State.Original buildPtt(int alphabetSize, Iterator<Pair<IntSeq, IntSeq>> informant) {
+        final State.Original root = new State.Original(alphabetSize);
         while (informant.hasNext()) {
             Pair<IntSeq, IntSeq> inout = informant.next();
             buildPttOnward(root, inout.getFirst(), IntQueue.asQueue(inout.getSecond()));
@@ -77,8 +74,8 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
         return root;
     }
 
-    private static void buildPttOnward(State ptt, IntSeq input, IntQueue output) {
-        State pttIter = ptt;
+    private static void buildPttOnward(State.Original ptt, IntSeq input, IntQueue output) {
+        State.Original pttIter = ptt;
         IntQueue outputIter = output;
 
         for (int i = 0; i < input.size(); i++) {//input index
@@ -87,7 +84,7 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
             if (pttIter.transitions[symbol] == null) {
                 edge = new Edge();
                 edge.out = outputIter;
-                edge.target = new State(pttIter.transitions.length);
+                edge.target = new State.Original(pttIter.transitions.length);
                 pttIter.transitions[symbol] = edge;
                 outputIter = null;
             } else {
@@ -126,57 +123,137 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
         pttIter.out = new Out(outputIter);
     }
 
-    private static void addBlueStates(State parent, Queue<Blue> blue) {
+    private static void addBlueStates(State.Original parent, Queue<Blue> blue) {
         for (int i = 0; i < parent.transitions.length; i++) {
             if (parent.transitions[i] != null) {
+                assert !contains(blue,parent.transitions[i].target);
+                assert parent.transitions[i].target!=parent;
                 blue.add(new Blue(parent, i));
             }
         }
     }
 
-    public static void ostia(State transducer) {
+    private static boolean disjoint(Queue<Blue> blue,LinkedHashSet<State.Original> red){
+        for(Blue b:blue){
+            if(red.contains(b.state()))return false;
+        }
+        return true;
+    }
+    private static boolean contains(Queue<Blue> blue,State.Original state){
+        for(Blue b:blue){
+            if(state.equals(b.state()))return true;
+        }
+        return false;
+    }
+    private static boolean hasDuplicates(Queue<Blue> blue){
+        final HashSet<State> unique = new HashSet<>();
+        for(Blue b:blue){
+            if(!unique.add(b.state()))return true;
+        }
+        return false;
+    }
+    private static boolean validateBlueAndRed(State.Original root, LinkedHashSet<State.Original> red,Queue<Blue> blue){
+        final HashSet<State.Original> reachable = new HashSet<>();
+        isTree(root,reachable);
+        for(State.Original r:red){
+            for(Edge edge:r.transitions){
+                assert edge == null || contains(blue, edge.target) ^ red.contains(edge.target);
+            }
+            assert reachable.contains(r);
+        }
+        for(Blue b:blue){
+            assert red.contains(b.parent);
+            assert reachable.contains(b.state());
+        }
+        return true;
+    }
+    private static boolean isTree(State.Original root, HashSet<State.Original> nodes){
+        final Queue<State.Original> toVisit = new LinkedList<>();
+        toVisit.add(root);
+        boolean isTree = true;
+        while(!toVisit.isEmpty()){
+            final State.Original s = toVisit.poll();
+            if(nodes.add(s)) {
+                for (Edge edge : s.transitions) {
+                    if (edge != null) {
+                        toVisit.add(edge.target);
+                    }
+                }
+            }else{
+                isTree = false;
+            }
+
+        }
+        return isTree;
+    }
+    public static void ostia(State.Original transducer) {
         final Queue<Blue> blue = new LinkedList<>();
-        final List<State> red = new ArrayList<>();
+        final LinkedHashSet<State.Original> red = new LinkedHashSet<>();
+        assert isTree(transducer,new HashSet<>());
         red.add(transducer);
         addBlueStates(transducer, blue);
+        assert !hasDuplicates(blue);
+        assert disjoint(blue,red);
+        assert validateBlueAndRed(transducer,red,blue);
         blue:
         while (!blue.isEmpty()) {
             final Blue next = blue.poll();
-            final State blueState = next.state();
-            for (State redState : red) {
-                if (ostiaMerge(next, redState, blue)) {
+            final State.Original blueState = next.state();
+            assert isTree(blueState, new HashSet<>());
+            assert !hasDuplicates(blue);
+            assert !contains(blue,blueState);
+            assert disjoint(blue,red);
+            for (State.Original redState : red) {
+                if (ostiaMerge(next, redState, blue, red)) {
+                    assert disjoint(blue,red);
+                    assert !hasDuplicates(blue);
                     continue blue;
                 }
             }
+            assert isTree(blueState, new HashSet<>());
+            assert !hasDuplicates(blue);
             addBlueStates(blueState, blue);
+            assert !hasDuplicates(blue);
+            assert !contains(blue,blueState);
+            assert disjoint(blue,red);
             red.add(blueState);
+            assert disjoint(blue,red);
+            assert validateBlueAndRed(transducer,red,blue);
         }
     }
 
-    private static boolean ostiaMerge(Blue blue, State redState, java.util.Queue<Blue> blueToVisit) {
-        final Map<State, State> merged = new HashMap<>();
+    private static boolean ostiaMerge(Blue blue, State.Original redState,
+                                      Queue<Blue> blueToVisit, LinkedHashSet<State.Original> red) {
+        final Map<State.Original, State.Copy> merged = new HashMap<>();
         final List<Blue> reachedBlueStates = new ArrayList<>();
         if (ostiaFold(redState, null, blue.parent, blue.symbol, merged, reachedBlueStates)) {
-            for (Map.Entry<State, State> mergedRedState : merged.entrySet()) {
-                mergedRedState.getKey().assign(mergedRedState.getValue());
+            for (Map.Entry<State.Original, State.Copy> mergedRedState : merged.entrySet()) {
+                assert mergedRedState.getKey()==mergedRedState.getValue().original;
+                mergedRedState.getValue().assign();
             }
-            blueToVisit.addAll(reachedBlueStates);
+            for(Blue reachedBlueCandidate:reachedBlueStates){
+                if(red.contains(reachedBlueCandidate.parent)){
+                    assert !contains(blueToVisit,reachedBlueCandidate.state());
+                    blueToVisit.add(reachedBlueCandidate);
+                }
+            }
             return true;
         }
         return false;
     }
 
-    private static boolean ostiaFold(State red,
+    private static boolean ostiaFold(State.Original red,
                                      IntQueue pushedBack,
-                                     State blueParent,
+                                     State.Original blueParent,
                                      int symbolIncomingToBlue,
-                                     Map<State, State> mergedStates,
+                                     Map<State.Original, State.Copy> mergedStates,
                                      List<Blue> reachedBlueStates) {
-        final State mergedRedState = mergedStates.computeIfAbsent(red, State::new);
-        final State blueState = blueParent.transitions[symbolIncomingToBlue].target;
-        final State mergedBlueState = new State(blueState);
+        final State.Original blueState = blueParent.transitions[symbolIncomingToBlue].target;
+        assert red!=blueState;
         assert !mergedStates.containsKey(blueState);
-        mergedStates.computeIfAbsent(blueParent, State::new).transitions[symbolIncomingToBlue].target = red;
+        final State.Copy mergedRedState = mergedStates.computeIfAbsent(red, State.Copy::new);
+        final State.Copy mergedBlueState = new State.Copy(blueState);
+        mergedStates.computeIfAbsent(blueParent, State.Copy::new).transitions[symbolIncomingToBlue].target = red;
         final State prevBlue = mergedStates.put(blueState, mergedBlueState);
         assert prevBlue == null;
         mergedBlueState.prepend(pushedBack);
@@ -193,7 +270,7 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
                 final Edge transitionRed = mergedRedState.transitions[i];
                 if (transitionRed == null) {
                     mergedRedState.transitions[i] = new Edge(transitionBlue);
-                    reachedBlueStates.add(new Blue(blueState, i));
+                    reachedBlueStates.add(new Blue(red, i));
                 } else {
                     IntQueue commonPrefixRed = transitionRed.out;
                     IntQueue commonPrefixBlue = transitionBlue.out;
@@ -211,9 +288,11 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
                         } else {
                             commonPrefixBluePrev.next = null;
                         }
+                        assert mergedBlueState.transitions[i]!=null;
+                        assert mergedBlueState.transitions[i].target==blueState.transitions[i].target;
                         if (!ostiaFold(transitionRed.target,
                                        commonPrefixBlue,
-                                       mergedBlueState,
+                                       blueState,
                                        i,
                                        mergedStates,
                                        reachedBlueStates)) {

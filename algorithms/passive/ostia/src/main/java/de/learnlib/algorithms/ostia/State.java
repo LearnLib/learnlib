@@ -20,30 +20,42 @@ package de.learnlib.algorithms.ostia;
  */
 class State {
 
+    private State(){
+
+    }
+    static class Original extends State {
+        public Original(int alphabetSize) {
+            transitions = new Edge[alphabetSize];
+        }
+
+
+    }
+    static class  Copy extends State {
+        public final Original original;
+
+        public Copy(Original original) {
+            this.original = original;
+            transitions = copyTransitions(original.transitions);
+            out = original.out == null ? null : new Out(IntQueue.copyAndConcat(original.out.str, null));
+        }
+
+        private Edge[] copyTransitions(Edge[] transitions) {
+            final Edge[] copy = new Edge[transitions.length];
+            for (int i = 0; i < copy.length; i++) {
+                copy[i] = transitions[i] == null ? null : new Edge(transitions[i]);
+            }
+            return copy;
+        }
+
+        public void assign() {
+            original.out = out;
+            original.transitions = transitions;
+        }
+    }
+
     Out out;
     Edge[] transitions;
 
-    State(int alphabetSize) {
-        transitions = new Edge[alphabetSize];
-    }
-
-    State(State copy) {
-        transitions = copyTransitions(copy.transitions);
-        out = copy.out == null ? null : new Out(IntQueue.copyAndConcat(copy.out.str, null));
-    }
-
-    private Edge[] copyTransitions(Edge[] transitions) {
-        final Edge[] copy = new Edge[transitions.length];
-        for (int i = 0; i < copy.length; i++) {
-            copy[i] = transitions[i] == null ? null : new Edge(transitions[i]);
-        }
-        return copy;
-    }
-
-    void assign(State other) {
-        out = other.out;
-        transitions = other.transitions;
-    }
 
     /**
      * The IntQueue is consumed and should not be reused after calling this method.

@@ -21,7 +21,7 @@ package de.learnlib.algorithms.ostia;
 class Edge {
 
     IntQueue out;
-    State target;
+    State.Original target;
 
     Edge() {}
 
