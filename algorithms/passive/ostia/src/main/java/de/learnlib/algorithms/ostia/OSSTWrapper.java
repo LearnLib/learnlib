@@ -17,7 +17,7 @@ package de.learnlib.algorithms.ostia;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Queue;
 import java.util.Set;
 
@@ -44,7 +44,7 @@ class OSSTWrapper<I, O> implements SubsequentialTransducer<State, I, Edge, O> {
 
     @Override
     public Collection<State> getStates() {
-        final Set<State> cache = new HashSet<>();
+        final Set<State> cache = new LinkedHashSet<>();
         final Queue<State> queue = new ArrayDeque<>();
 
         queue.add(root);

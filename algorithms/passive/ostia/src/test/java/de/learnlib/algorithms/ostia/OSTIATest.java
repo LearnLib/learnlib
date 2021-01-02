@@ -15,6 +15,9 @@
  */
 package de.learnlib.algorithms.ostia;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,19 +26,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import com.google.common.collect.Iterators;
-import net.automatalib.automata.transducers.MealyMachine;
+import com.google.common.collect.Iterables;
+import com.google.common.io.CharStreams;
 import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.commons.smartcollections.IntSeq;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.collections.CollectionsUtil;
+import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.conformance.WMethodTestsIterator;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.util.automata.transducers.SubsequentialTransducers;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -53,16 +59,20 @@ public class OSTIATest {
     }
 
     /**
-     * Tests the example from Section 18.3.4 of Colin de la Higuera's book "Grammatical Inference".
+     * Returns the examples from Section 18.3.4 of Colin de la Higuera's book "Grammatical Inference" with a's encoded
+     * as 0 and b's encoded as 1.
      */
+    public List<Pair<IntSeq, IntSeq>> getExampleSamples() {
+        return Arrays.asList(Pair.of(IntSeq.of(0), IntSeq.of(1)),
+                             Pair.of(IntSeq.of(1), IntSeq.of(1)),
+                             Pair.of(IntSeq.of(0, 0), IntSeq.of(0, 1)),
+                             Pair.of(IntSeq.of(0, 0, 0), IntSeq.of(0, 0, 1)),
+                             Pair.of(IntSeq.of(0, 1, 0, 1), IntSeq.of(0, 1, 0, 1)));
+    }
+
     @Test
     public void testStaticInvocation() {
-        // a = 0, b = 1
-        final List<Pair<IntSeq, IntSeq>> samples = Arrays.asList(Pair.of(IntSeq.of(0), IntSeq.of(1)),
-                                                                 Pair.of(IntSeq.of(1), IntSeq.of(1)),
-                                                                 Pair.of(IntSeq.of(0, 0), IntSeq.of(0, 1)),
-                                                                 Pair.of(IntSeq.of(0, 0, 0), IntSeq.of(0, 0, 1)),
-                                                                 Pair.of(IntSeq.of(0, 1, 0, 1), IntSeq.of(0, 1, 0, 1)));
+        final List<Pair<IntSeq, IntSeq>> samples = getExampleSamples();
 
         final State root = OSTIA.buildPtt(2, samples.iterator());
         OSTIA.ostia(root);
@@ -78,30 +88,45 @@ public class OSTIATest {
         Assert.assertEquals(OSTIA.run(root, IntSeq.of(0, 1, 0, 1, 1)), IntSeq.of(0, 1, 0, 1, 1));
     }
 
-    @Test(enabled = false, dataProvider = "sizes")
-    public void testMealySamples(int size) {
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testInconsistentSamples() {
+        final List<Pair<IntSeq, IntSeq>> samples = new ArrayList<>(getExampleSamples());
 
-        final MealyMachine<?, Character, ?, String> automaton =
-                RandomAutomata.randomMealy(new Random(SEED), size, INPUTS, OUTPUTS);
+        samples.add(Pair.of(IntSeq.of(0, 1, 0, 1), IntSeq.of(0, 1, 0, 0)));
 
-        final OSTIA<Character, String> learner = new OSTIA<>(INPUTS);
+        OSTIA.buildPtt(2, samples.iterator());
+    }
 
-        final List<Word<Character>> trainingWords = new ArrayList<>();
-        final Iterator<Word<Character>> testIterator = new WMethodTestsIterator<>(automaton, INPUTS, 0);
-        Iterators.addAll(trainingWords, testIterator);
+    @Test
+    public void testVisualization() throws IOException {
+        final Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
+        final OSTIA<Integer, Integer> learner = new OSTIA<>(alphabet);
 
-        for (Word<Character> input : trainingWords) {
-            learner.addSample(input, automaton.computeOutput(input));
+        final WordBuilder<Integer> wb = new WordBuilder<>();
+        for (Pair<IntSeq, IntSeq> p : getExampleSamples()) {
+            Iterables.addAll(wb, p.getFirst());
+            final Word<Integer> input = wb.toWord();
+            wb.clear();
+
+            Iterables.addAll(wb, p.getSecond());
+            final Word<Integer> output = wb.toWord();
+            wb.clear();
+
+            learner.addSample(input, output);
         }
 
-        final SubsequentialTransducer<?, Character, ?, String> model = learner.computeModel();
+        final SubsequentialTransducer<?, Integer, ?, Integer> model = learner.computeModel();
+        final String expectedHyp;
 
-        for (Word<Character> input : trainingWords) {
-            final Word<String> output = model.computeOutput(input);
-            final Word<String> expectedOutput = automaton.computeOutput(input);
-
-            Assert.assertEquals(output, expectedOutput);
+        try (InputStream is = getClass().getResourceAsStream("/hyp.dot")) {
+            assert is != null;
+            expectedHyp = CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
         }
+
+        final StringWriter actualHyp = new StringWriter();
+        GraphDOT.write(model, alphabet, actualHyp);
+
+        Assert.assertEquals(actualHyp.toString(), expectedHyp);
     }
 
     @Test(dataProvider = "sizes")

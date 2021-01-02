@@ -1,0 +1,16 @@
+digraph g {
+
+	s0 [shape="circle" label="null / ε"];
+	s1 [shape="circle" label="[0] / 1"];
+	s2 [shape="circle" label="null / ε"];
+	s0 -> s1 [label="0 / ε"];
+	s0 -> s0 [label="1 / 1"];
+	s1 -> s1 [label="0 / 0"];
+	s1 -> s2 [label="1 / 0 1 0 1"];
+	s2 -> s2 [label="0 / ε"];
+	s2 -> s0 [label="1 / ε"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s0;
+
+}
