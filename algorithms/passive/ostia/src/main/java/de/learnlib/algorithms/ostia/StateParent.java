@@ -18,24 +18,13 @@ package de.learnlib.algorithms.ostia;
 /**
  * @author Aleksander Mendoza-Drosik
  */
-public class State extends StateParent {
+class StateParent {
 
-    State(int alphabetSize) {
-        super.out = null;
-        super.transitions = new Edge[alphabetSize];
-    }
+    Out out;
+    Edge[] transitions;
 
-    /**
-     * The IntQueue is consumed and should not be reused after calling this method.
-     */
-    void prependButIgnoreMissingStateOutput(IntQueue prefix) {
-        for (Edge edge : transitions) {
-            if (edge != null) {
-                edge.out = IntQueue.copyAndConcat(prefix, edge.out);
-            }
-        }
-        if (out != null) {
-            out.str = IntQueue.copyAndConcat(prefix, out.str);
-        }
+    @Override
+    public String toString() {
+        return String.valueOf(out);
     }
 }

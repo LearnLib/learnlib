@@ -185,10 +185,10 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
     }
 
     private static boolean ostiaMerge(Blue blue, State redState, Queue<Blue> blueToVisit, Set<State> red) {
-        final Map<State, State.Copy> merged = new HashMap<>();
+        final Map<State, StateCopy> merged = new HashMap<>();
         final List<Blue> reachedBlueStates = new ArrayList<>();
         if (ostiaFold(redState, null, blue.parent, blue.symbol, merged, reachedBlueStates)) {
-            for (Map.Entry<State, State.Copy> mergedRedState : merged.entrySet()) {
+            for (Map.Entry<State, StateCopy> mergedRedState : merged.entrySet()) {
                 assert mergedRedState.getKey() == mergedRedState.getValue().original;
                 mergedRedState.getValue().assign();
             }
@@ -207,15 +207,15 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
                                      IntQueue pushedBack,
                                      State blueParent,
                                      int symbolIncomingToBlue,
-                                     Map<State, State.Copy> mergedStates,
+                                     Map<State, StateCopy> mergedStates,
                                      List<Blue> reachedBlueStates) {
         final State blueState = blueParent.transitions[symbolIncomingToBlue].target;
         assert red != blueState;
         assert !mergedStates.containsKey(blueState);
-        final State.Copy mergedRedState = mergedStates.computeIfAbsent(red, State.Copy::new);
-        final State.Copy mergedBlueState = new State.Copy(blueState);
-        mergedStates.computeIfAbsent(blueParent, State.Copy::new).transitions[symbolIncomingToBlue].target = red;
-        final State.Copy prevBlue = mergedStates.put(blueState, mergedBlueState);
+        final StateCopy mergedRedState = mergedStates.computeIfAbsent(red, StateCopy::new);
+        final StateCopy mergedBlueState = new StateCopy(blueState);
+        mergedStates.computeIfAbsent(blueParent, StateCopy::new).transitions[symbolIncomingToBlue].target = red;
+        final StateCopy prevBlue = mergedStates.put(blueState, mergedBlueState);
         assert prevBlue == null;
         mergedBlueState.prepend(pushedBack);
         if (mergedBlueState.out != null) {

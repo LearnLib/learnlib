@@ -18,23 +18,41 @@ package de.learnlib.algorithms.ostia;
 /**
  * @author Aleksander Mendoza-Drosik
  */
-public class State extends StateParent {
+class StateCopy extends StateParent {
 
-    State(int alphabetSize) {
-        super.out = null;
-        super.transitions = new Edge[alphabetSize];
+    final State original;
+
+    StateCopy(State original) {
+        super.out = original.out == null ? null : new Out(IntQueue.copyAndConcat(original.out.str, null));
+        super.transitions = copyTransitions(original.transitions);
+        this.original = original;
+    }
+
+    private Edge[] copyTransitions(Edge[] transitions) {
+        final Edge[] copy = new Edge[transitions.length];
+        for (int i = 0; i < copy.length; i++) {
+            copy[i] = transitions[i] == null ? null : new Edge(transitions[i]);
+        }
+        return copy;
+    }
+
+    void assign() {
+        original.out = out;
+        original.transitions = transitions;
     }
 
     /**
      * The IntQueue is consumed and should not be reused after calling this method.
      */
-    void prependButIgnoreMissingStateOutput(IntQueue prefix) {
+    void prepend(IntQueue prefix) {
         for (Edge edge : transitions) {
             if (edge != null) {
                 edge.out = IntQueue.copyAndConcat(prefix, edge.out);
             }
         }
-        if (out != null) {
+        if (out == null) {
+            out = new Out(prefix);
+        } else {
             out.str = IntQueue.copyAndConcat(prefix, out.str);
         }
     }
