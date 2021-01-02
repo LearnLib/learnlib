@@ -99,6 +99,13 @@ limitations under the License.
                 <role>Developer</role>
             </roles>
         </contributor>
+        <contributor>
+            <name>Aleksander Mendoza-Drosik</name>
+            <email>aleksander.mendoza.drosik@gmail.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
     </contributors>
 
     <mailingLists>
@@ -311,6 +318,11 @@ limitations under the License.
                 <artifactId>learnlib-algorithms-passive-parent</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-ostia</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>

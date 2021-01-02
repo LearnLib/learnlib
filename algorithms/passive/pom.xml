@@ -32,6 +32,7 @@ limitations under the License.
     <description>Parent module for (passive) automata learning algorithms shipped with LearnLib</description>
 
     <modules>
+        <module>ostia</module>
         <module>rpni</module>
         <module>rpni-edsm</module>
         <module>rpni-mdl</module>
