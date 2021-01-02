@@ -15,6 +15,8 @@
  */
 package de.learnlib.algorithms.ostia;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * @author Aleksander Mendoza-Drosik
  */
@@ -28,8 +30,10 @@ class Blue {
         this.parent = parent;
     }
 
-    State state() {
-        return parent.transitions[symbol].target;
+    @Nullable State state() {
+        final @Nullable Edge edge = parent.transitions[symbol];
+        assert edge != null;
+        return edge.target;
     }
 
     @Override

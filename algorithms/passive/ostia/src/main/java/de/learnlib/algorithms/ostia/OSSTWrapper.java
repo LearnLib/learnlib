@@ -25,6 +25,7 @@ import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -50,7 +51,8 @@ class OSSTWrapper<I, O> implements SubsequentialTransducer<State, I, Edge, O> {
         queue.add(root);
 
         while (!queue.isEmpty()) {
-            State s = queue.poll();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            @NonNull State s = queue.poll();
             cache.add(s);
 
             for (Edge transition : s.transitions) {

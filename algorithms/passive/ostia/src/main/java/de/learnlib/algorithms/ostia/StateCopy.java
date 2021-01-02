@@ -15,6 +15,8 @@
  */
 package de.learnlib.algorithms.ostia;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * @author Aleksander Mendoza-Drosik
  */
@@ -28,10 +30,11 @@ class StateCopy extends StateParent {
         this.original = original;
     }
 
-    private Edge[] copyTransitions(Edge[] transitions) {
-        final Edge[] copy = new Edge[transitions.length];
+    private static @Nullable Edge[] copyTransitions(@Nullable Edge[] transitions) {
+        final @Nullable Edge[] copy = new Edge[transitions.length];
         for (int i = 0; i < copy.length; i++) {
-            copy[i] = transitions[i] == null ? null : new Edge(transitions[i]);
+            @Nullable Edge edge = transitions[i];
+            copy[i] = edge == null ? null : new Edge(edge);
         }
         return copy;
     }
@@ -44,8 +47,8 @@ class StateCopy extends StateParent {
     /**
      * The IntQueue is consumed and should not be reused after calling this method.
      */
-    void prepend(IntQueue prefix) {
-        for (Edge edge : transitions) {
+    void prepend(@Nullable IntQueue prefix) {
+        for (@Nullable Edge edge : transitions) {
             if (edge != null) {
                 edge.out = IntQueue.copyAndConcat(prefix, edge.out);
             }

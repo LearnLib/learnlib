@@ -15,12 +15,14 @@
  */
 package de.learnlib.algorithms.ostia;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * @author Aleksander Mendoza-Drosik
  */
 class Edge {
 
-    IntQueue out;
+    @Nullable IntQueue out;
     State target;
 
     Edge() {}

@@ -15,14 +15,16 @@
  */
 package de.learnlib.algorithms.ostia;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * @author Aleksander Mendoza-Drosik
  */
 class Out {
 
-    IntQueue str;
+    @Nullable IntQueue str;
 
-    Out(IntQueue str) {
+    Out(@Nullable IntQueue str) {
         this.str = str;
     }
 

@@ -15,13 +15,15 @@
  */
 package de.learnlib.algorithms.ostia;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * @author Aleksander Mendoza-Drosik
  */
 class StateParent {
 
-    Out out;
-    Edge[] transitions;
+    @Nullable Out out;
+    @Nullable Edge[] transitions;
 
     @Override
     public String toString() {

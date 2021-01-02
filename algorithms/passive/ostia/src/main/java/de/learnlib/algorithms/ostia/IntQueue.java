@@ -21,6 +21,7 @@ import java.util.StringJoiner;
 
 import net.automatalib.commons.smartcollections.IntSeq;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * @author Aleksander Mendoza-Drosik
@@ -28,7 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 class IntQueue {
 
     int value;
-    IntQueue next;
+    @Nullable IntQueue next;
 
     @Override
     public String toString() {
@@ -79,7 +80,7 @@ class IntQueue {
         return false;
     }
 
-    static IntQueue copyAndConcat(@Nullable IntQueue q, @Nullable IntQueue tail) {
+    static @PolyNull IntQueue copyAndConcat(@Nullable IntQueue q, @PolyNull IntQueue tail) {
         assert !hasCycle(q) && !hasCycle(tail);
         if (q == null) {
             return tail;

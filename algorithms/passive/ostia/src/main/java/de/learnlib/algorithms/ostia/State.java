@@ -15,6 +15,8 @@
  */
 package de.learnlib.algorithms.ostia;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * @author Aleksander Mendoza-Drosik
  */
@@ -28,8 +30,8 @@ public class State extends StateParent {
     /**
      * The IntQueue is consumed and should not be reused after calling this method.
      */
-    void prependButIgnoreMissingStateOutput(IntQueue prefix) {
-        for (Edge edge : transitions) {
+    void prependButIgnoreMissingStateOutput(@Nullable IntQueue prefix) {
+        for (@Nullable Edge edge : transitions) {
             if (edge != null) {
                 edge.out = IntQueue.copyAndConcat(prefix, edge.out);
             }
