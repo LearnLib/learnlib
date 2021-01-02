@@ -32,7 +32,14 @@ class IntQueue {
 
     @Override
     public String toString() {
-        return str(this);
+        final StringJoiner sj = new StringJoiner(", ", "[", "]");
+
+        IntQueue iter = this;
+        while (iter != null) {
+            sj.add(Integer.toString(iter.value));
+            iter = iter.next;
+        }
+        return sj.toString();
     }
 
     static @Nullable IntQueue asQueue(IntSeq str) {
@@ -45,17 +52,6 @@ class IntQueue {
         }
         assert !IntQueue.hasCycle(q);
         return q;
-    }
-
-    static String str(@Nullable IntQueue q) {
-        final StringJoiner sj = new StringJoiner(", ", "[", "]");
-
-        IntQueue iter = q;
-        while (iter != null) {
-            sj.add(Integer.toString(iter.value));
-            iter = iter.next;
-        }
-        return sj.toString();
     }
 
     static boolean eq(@Nullable IntQueue a, @Nullable IntQueue b) {

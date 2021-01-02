@@ -18,44 +18,16 @@ package de.learnlib.algorithms.ostia;
 /**
  * @author Aleksander Mendoza-Drosik
  */
-class State {
-
-    private State(){
-
-    }
-    static class Original extends State {
-        public Original(int alphabetSize) {
-            transitions = new Edge[alphabetSize];
-        }
-
-
-    }
-    static class  Copy extends State {
-        public final Original original;
-
-        public Copy(Original original) {
-            this.original = original;
-            transitions = copyTransitions(original.transitions);
-            out = original.out == null ? null : new Out(IntQueue.copyAndConcat(original.out.str, null));
-        }
-
-        private Edge[] copyTransitions(Edge[] transitions) {
-            final Edge[] copy = new Edge[transitions.length];
-            for (int i = 0; i < copy.length; i++) {
-                copy[i] = transitions[i] == null ? null : new Edge(transitions[i]);
-            }
-            return copy;
-        }
-
-        public void assign() {
-            original.out = out;
-            original.transitions = transitions;
-        }
-    }
+public class State {
 
     Out out;
     Edge[] transitions;
 
+    private State() {}
+
+    State(int alphabetSize) {
+        transitions = new Edge[alphabetSize];
+    }
 
     /**
      * The IntQueue is consumed and should not be reused after calling this method.
@@ -90,5 +62,29 @@ class State {
     @Override
     public String toString() {
         return String.valueOf(out);
+    }
+
+    static class Copy extends State {
+
+        final State original;
+
+        Copy(State original) {
+            this.original = original;
+            super.transitions = copyTransitions(original.transitions);
+            super.out = original.out == null ? null : new Out(IntQueue.copyAndConcat(original.out.str, null));
+        }
+
+        private Edge[] copyTransitions(Edge[] transitions) {
+            final Edge[] copy = new Edge[transitions.length];
+            for (int i = 0; i < copy.length; i++) {
+                copy[i] = transitions[i] == null ? null : new Edge(transitions[i]);
+            }
+            return copy;
+        }
+
+        void assign() {
+            original.out = out;
+            original.transitions = transitions;
+        }
     }
 }
