@@ -15,9 +15,8 @@
  */
 package de.learnlib.datastructure.pta;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.pta.BlueFringePTAState;
@@ -55,18 +54,16 @@ public class MergedAutomatonTest {
         final Word<Character> n3 = Word.fromString("aab");
         final Word<Character> n4 = Word.fromString("aba");
 
-        final List<int[]> positiveSamples =
-                Stream.of(p1, p2, p3, p4).map(w -> w.toIntArray(alphabet)).collect(Collectors.toList());
-        final List<int[]> negativeSamples =
-                Stream.of(n1, n2, n3, n4).map(w -> w.toIntArray(alphabet)).collect(Collectors.toList());
+        final List<Word<Character>> positiveSamples = Arrays.asList(p1, p2, p3, p4);
+        final List<Word<Character>> negativeSamples = Arrays.asList(n1, n2, n3, n4);
 
         final BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(alphabet.size());
 
-        for (final int[] w : positiveSamples) {
-            pta.addSample(w, true);
+        for (final Word<Character> w : positiveSamples) {
+            pta.addSample(w.asIntSeq(alphabet), true);
         }
-        for (final int[] w : negativeSamples) {
-            pta.addSample(w, false);
+        for (final Word<Character> w : negativeSamples) {
+            pta.addSample(w.asIntSeq(alphabet), false);
         }
 
         // the PTA works on an Integer alphabet abstraction, hence a -> 0, b -> 1

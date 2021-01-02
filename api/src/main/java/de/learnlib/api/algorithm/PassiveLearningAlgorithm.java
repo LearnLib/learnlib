@@ -59,6 +59,15 @@ public interface PassiveLearningAlgorithm<M, I, D> {
         addSamples(Collections.singleton(sample));
     }
 
+    /**
+     * Computes the model given the previously added samples.
+     * <p>
+     * <b>Implementation note:</b> It is up to implementation if this operation is repeatable or not, It is valid that
+     * after computing the model it may not be possible to add additional samples anymore and one would have to
+     * construct a new learner instance.
+     *
+     * @return the computed model
+     */
     M computeModel();
 
     /**

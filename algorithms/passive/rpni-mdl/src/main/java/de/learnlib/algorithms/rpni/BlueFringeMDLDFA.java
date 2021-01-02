@@ -15,11 +15,20 @@
  */
 package de.learnlib.algorithms.rpni;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Stream;
 
+import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
+import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
 import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.datastructure.pta.PTAUtil;
+import de.learnlib.datastructure.pta.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.pta.BlueFringePTAState;
 import de.learnlib.datastructure.pta.pta.RedBlueMerge;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.commons.smartcollections.IntSeq;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -30,13 +39,19 @@ import net.automatalib.words.Alphabet;
  * <p>
  * This passive approach to state-merging works better in scenarios where only positive training data is available.
  * Hence, this algorithm only expect positive training data.
+ * <p>
+ * <b>Implementation note:</b> This implementation does support repeated calls to {@link
+ * PassiveLearningAlgorithm#computeModel()}.
  *
  * @param <I>
  *         input symbol type
  *
  * @author frohme
  */
-public class BlueFringeMDLDFA<I> extends BlueFringeRPNIDFA<I> {
+public class BlueFringeMDLDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>>
+        implements PassiveDFALearner<I> {
+
+    private final List<IntSeq> positive = new ArrayList<>();
 
     private double currentScore = Double.POSITIVE_INFINITY;
 
@@ -52,20 +67,50 @@ public class BlueFringeMDLDFA<I> extends BlueFringeRPNIDFA<I> {
 
     @Override
     public void addSamples(Collection<? extends DefaultQuery<I, Boolean>> samples) {
-        if (samples.stream().anyMatch(q -> !q.getOutput())) {
-            throw new IllegalArgumentException("Only positive examples are allowed");
+        for (DefaultQuery<I, Boolean> query : samples) {
+            if (!query.getOutput()) {
+                throw new IllegalArgumentException("Only positive examples are allowed");
+            }
+            positive.add(query.getInput().asIntSeq(alphabet));
         }
-        super.addSamples(samples);
     }
 
     @Override
-    protected boolean decideOnValidMerge(RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>> merge) {
-        final double score = MDLUtil.score(merge.toMergedAutomaton(), super.alphabetSize, super.positive);
+    public DFA<?, I> computeModel() {
+        // disable parallelism because our track-keeping of the current score is not thread-safe
+        super.setDeterministic(true);
+        super.setParallel(false);
+        return super.computeModel();
+    }
+
+    @Override
+    protected BlueFringePTA<Boolean, Void> fetchPTA() {
+        final BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(alphabetSize);
+
+        for (IntSeq pos : positive) {
+            pta.addSample(pos, true);
+        }
+
+        return pta;
+    }
+
+    @Override
+    protected Stream<RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>>> selectMerges(Stream<RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>>> merges) {
+        return merges.filter(this::decideOnValidMerge);
+    }
+
+    private boolean decideOnValidMerge(RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>> merge) {
+        final double score = MDLUtil.score(merge.toMergedAutomaton(), super.alphabetSize, positive);
         if (score < currentScore) {
             currentScore = score;
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    protected DFA<?, I> ptaToModel(BlueFringePTA<Boolean, Void> pta) {
+        return PTAUtil.toDFA(pta, alphabet);
     }
 }

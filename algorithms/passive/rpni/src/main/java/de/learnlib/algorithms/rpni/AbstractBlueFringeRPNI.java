@@ -105,10 +105,8 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M> implements Passive
 
     @Override
     public M computeModel() {
-        BlueFringePTA<SP, TP> pta = new BlueFringePTA<>(alphabetSize);
-        initializePTA(pta);
-
-        Queue<PTATransition<BlueFringePTAState<SP, TP>>> blue = order.createWorklist();
+        final BlueFringePTA<SP, TP> pta = fetchPTA();
+        final Queue<PTATransition<BlueFringePTAState<SP, TP>>> blue = order.createWorklist();
 
         pta.init(blue::offer);
 
@@ -123,11 +121,12 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M> implements Passive
             }
 
             @SuppressWarnings("nullness") // we filter the null merges
-            Stream<RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>>> filtered =
-                    stream.map(qr -> tryMerge(pta, qr, qb)).filter(Objects::nonNull).filter(this::decideOnValidMerge);
-
-            Optional<RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>>> result =
-                    (deterministic) ? filtered.findFirst() : filtered.findAny();
+            final Stream<RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>>> possibleMerges =
+                    stream.map(qr -> tryMerge(pta, qr, qb)).filter(Objects::nonNull);
+            final Stream<RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>>> filteredMerges =
+                    selectMerges(possibleMerges);
+            final Optional<RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>>> result =
+                    (deterministic) ? filteredMerges.findFirst() : filteredMerges.findAny();
 
             if (result.isPresent()) {
                 RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>> mod = result.get();
@@ -141,12 +140,13 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M> implements Passive
     }
 
     /**
-     * Initializes an empty PTA with sample data.
+     * Fetches the initial {@link BlueFringePTA PTA} for model construction. If subclasses need to cache the training
+     * data this may be a fresh instance. If subclasses directly insert training data to a local PTA, they should make
+     * sure that repeated invocations of this method are not possible.
      *
-     * @param pta
-     *         the PTA to initialize
+     * @return the {@link BlueFringePTA PTA} for model construction.
      */
-    protected abstract void initializePTA(BlueFringePTA<SP, TP> pta);
+    protected abstract BlueFringePTA<SP, TP> fetchPTA();
 
     /**
      * Attempts to merge a blue state into a red state.
@@ -178,16 +178,16 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M> implements Passive
     protected abstract M ptaToModel(BlueFringePTA<SP, TP> pta);
 
     /**
-     * Implementing the method allows subclasses to decide (and possible reject) valid merges.
+     * Implementing the method allows subclasses to decide on (and possibly reject) valid merges.
      *
-     * @param merge
-     *         the prosed (valid) merge
+     * @param merges
+     *         the prosed (valid) merges
      *
-     * @return {@code true} if the suggested merge should be performed, {@code false} otherwise
+     * @return the merges that should be considered for selecting a merge.
      */
-    protected boolean decideOnValidMerge(RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>> merge) {
-        // by default we are greedy and try to merge the first pair of valid states
-        return true;
+    protected Stream<RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>>> selectMerges(Stream<RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>>> merges) {
+        // by default we are greedy and try to merge the first merge
+        return merges;
     }
 
 }

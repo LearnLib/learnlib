@@ -210,7 +210,7 @@ limitations under the License.
         <gpg-plugin.version>1.6</gpg-plugin.version>
         <info-reports-plugin.version>3.1.1</info-reports-plugin.version>
         <jacoco-plugin.version>0.8.6</jacoco-plugin.version>
-        <javadoc-plugin.version>3.2.0</javadoc-plugin.version>
+        <javadoc-plugin.version>3.1.1</javadoc-plugin.version>
         <jsr305.version>3.0.2</jsr305.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <pmd-plugin.version>3.13.0</pmd-plugin.version>

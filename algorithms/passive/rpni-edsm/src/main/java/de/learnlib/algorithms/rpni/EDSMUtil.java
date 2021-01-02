@@ -15,11 +15,13 @@
  */
 package de.learnlib.algorithms.rpni;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
-import com.google.common.primitives.Ints;
+import com.google.common.collect.Maps;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.StateIDs;
+import net.automatalib.commons.smartcollections.IntSeq;
 
 /**
  * @author frohme
@@ -28,39 +30,41 @@ final class EDSMUtil {
 
     private EDSMUtil() {}
 
-    static <S> long score(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> pta,
-                          List<int[]> positiveSamples,
-                          List<int[]> negativeSamples) {
+    static <S> long score(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> merge,
+                          List<IntSeq> positiveSamples,
+                          List<IntSeq> negativeSamples) {
 
-        final StateIDs<S> stateIDs = pta.stateIDs();
+        final Collection<S> states = merge.getStates();
+        final int numStates = states.size();
+        // we don't use the regular stateIDs because we only want to collect all states once.
+        final Map<S, Integer> stateIDs = Maps.newHashMapWithExpectedSize(numStates);
 
-        final int[] tp = new int[pta.size()];
-        final int[] tn = new int[pta.size()];
+        int counter = 0;
+        for (S s : states) {
+            stateIDs.put(s, counter++);
+        }
 
-        for (final int[] w : positiveSamples) {
-            int index = stateIDs.getStateId(pta.getState(Ints.asList(w)));
+        final int[] tp = new int[numStates];
+        final int[] tn = new int[numStates];
+
+        for (final IntSeq w : positiveSamples) {
+            int index = stateIDs.get(merge.getState(w));
             tp[index]++;
         }
 
-        for (final int[] w : negativeSamples) {
-            int index = stateIDs.getStateId(pta.getState(Ints.asList(w)));
+        for (final IntSeq w : negativeSamples) {
+            int index = stateIDs.get(merge.getState(w));
             tn[index]++;
         }
 
         int score = 0;
 
-        for (final S s : pta.getStates()) {
-            final int indexOfCurrentState = stateIDs.getStateId(s);
-            if (tn[indexOfCurrentState] > 0) {
-                if (tp[indexOfCurrentState] > 0) {
-                    return Long.MIN_VALUE;
-                } else {
-                    score += tn[indexOfCurrentState] - 1;
-                }
-            } else {
-                if (tp[indexOfCurrentState] > 0) {
-                    score += tp[indexOfCurrentState] - 1;
-                }
+        for (int i = 0; i < numStates; i++) {
+            // note that we can't run into conflicts because we don't even consider violating merges
+            if (tn[i] > 0) {
+                score += tn[i] - 1;
+            } else if (tp[i] > 0) {
+                score += tp[i] - 1;
             }
         }
 

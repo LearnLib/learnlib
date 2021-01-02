@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.rpni;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,6 +23,11 @@ import java.util.stream.Stream;
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.pta.BlueFringePTAState;
 import de.learnlib.datastructure.pta.pta.RedBlueMerge;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.smartcollections.IntSeq;
+import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -38,26 +44,26 @@ import org.testng.annotations.Test;
 @Test
 public class EDSMScoreTest {
 
-    private Alphabet<Character> alphabet;
+    private final Alphabet<Character> alphabet = Alphabets.fromArray('a', 'b');
 
-    private List<int[]> positiveSamplesAsIntArray;
-    private List<int[]> negativeSamplesAsIntArray;
+    private final Word<Character> p1 = Word.fromString("a");
+    private final Word<Character> p2 = Word.fromString("aaa");
+    private final Word<Character> p3 = Word.fromString("bba");
+    private final Word<Character> p4 = Word.fromString("abab");
+
+    private final Word<Character> p5 = Word.fromString("aaaba");
+    private final Word<Character> p6 = Word.fromString("aaabab");
+
+    private final Word<Character> n1 = Word.fromString("ab");
+    private final Word<Character> n2 = Word.fromString("bb");
+
+    private List<IntSeq> positiveSamples;
+    private List<IntSeq> negativeSamples;
 
     @BeforeClass
     public void setUp() {
-        alphabet = Alphabets.fromArray('a', 'b');
-
-        final Word<Character> p1 = Word.fromString("a");
-        final Word<Character> p2 = Word.fromString("aaa");
-        final Word<Character> p3 = Word.fromString("bba");
-        final Word<Character> p4 = Word.fromString("abab");
-
-        final Word<Character> n1 = Word.fromString("ab");
-        final Word<Character> n2 = Word.fromString("bb");
-
-        positiveSamplesAsIntArray =
-                Stream.of(p1, p2, p3, p4).map(w -> w.toIntArray(alphabet)).collect(Collectors.toList());
-        negativeSamplesAsIntArray = Stream.of(n1, n2).map(w -> w.toIntArray(alphabet)).collect(Collectors.toList());
+        positiveSamples = Stream.of(p1, p2, p3, p4).map(w -> w.asIntSeq(alphabet)).collect(Collectors.toList());
+        negativeSamples = Stream.of(n1, n2).map(w -> w.asIntSeq(alphabet)).collect(Collectors.toList());
     }
 
     @Test
@@ -72,37 +78,53 @@ public class EDSMScoreTest {
 
         final RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>> merge1 = pta.tryMerge(qEpsilon, qB);
         Assert.assertNotNull(merge1);
-        Assert.assertEquals(2L,
-                            EDSMUtil.score(merge1.toMergedAutomaton(),
-                                           positiveSamplesAsIntArray,
-                                           negativeSamplesAsIntArray));
+        Assert.assertEquals(2L, EDSMUtil.score(merge1.toMergedAutomaton(), positiveSamples, negativeSamples));
 
         final RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>> merge2 = pta.tryMerge(qA, qB);
         Assert.assertNotNull(merge2);
         // book is wrong, should be 2
-        Assert.assertEquals(2L,
-                            EDSMUtil.score(merge2.toMergedAutomaton(),
-                                           positiveSamplesAsIntArray,
-                                           negativeSamplesAsIntArray));
+        Assert.assertEquals(2L, EDSMUtil.score(merge2.toMergedAutomaton(), positiveSamples, negativeSamples));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testFinalHypothesis() {
+
+        final BlueFringeEDSMDFA<Character> learner = new BlueFringeEDSMDFA<>(alphabet);
+        // add p5 to make the first merge deterministic
+        learner.addPositiveSamples(p1, p2, p3, p4);
+        learner.addNegativeSamples(n1, n2);
+
+        // use reproducible runs
+        learner.setParallel(false);
+        learner.setDeterministic(true);
+
+        final DFA<?, Character> model = learner.computeModel();
+
+        // @formatter:off
+        final CompactDFA<Character> expected = AutomatonBuilders.newDFA(alphabet)
+                                                                .withInitial("s0")
+                                                                .withAccepting("s0", "s2")
+                                                                .from("s0").on('a').loop()
+                                                                .from("s0").on('b').to("s1")
+                                                                .from("s1").on('a').to("s2")
+                                                                .from("s1").on('b').loop()
+                                                                .from("s2").on('b').to("s0")
+                                                                .create();
+        // @formatter:on
+
+        Assert.assertTrue(Automata.testEquivalence(model, expected, alphabet));
     }
 
     /*
      * Build PTA from Fig 14.12
      */
     private BlueFringePTA<Boolean, Void> initializePTA() {
-        // We need use an alternate sample set to construct the backloop,
-        final Word<Character> p1 = Word.fromString("a");
-        final Word<Character> p2 = Word.fromString("aaaba");
-        final Word<Character> p3 = Word.fromString("aaabab");
-        final Word<Character> p4 = Word.fromString("bba");
-
-        final Word<Character> n1 = Word.fromString("ab");
-        final Word<Character> n2 = Word.fromString("bb");
-
         final BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(alphabet.size());
 
-        Stream.of(p1, p2, p3, p4).map(w -> w.toIntArray(alphabet)).forEach(s -> pta.addSample(s, true));
-        Stream.of(n1, n2).map(w -> w.toIntArray(alphabet)).forEach(s -> pta.addSample(s, false));
+        // We need use an alternate sample set to construct the back-edge,
+        Arrays.asList(p1, p5, p6, p4).forEach(s -> pta.addSample(s.asIntSeq(alphabet), true));
+        Arrays.asList(n1, n2).forEach(s -> pta.addSample(s.asIntSeq(alphabet), false));
 
         // the PTA works on an Integer alphabet abstraction, hence a -> 0, b -> 1
         final BlueFringePTAState<Boolean, Void> qEpsilon = pta.getState(Word.epsilon());

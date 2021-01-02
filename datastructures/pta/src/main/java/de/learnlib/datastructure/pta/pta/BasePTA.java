@@ -35,6 +35,7 @@ import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.commons.smartcollections.IntSeq;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.Graph;
 import net.automatalib.util.automata.Automata;
@@ -101,7 +102,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      * @param lastProperty
      *         the property of the last state to set
      */
-    public void addSample(int[] sample, SP lastProperty) {
+    public void addSample(IntSeq sample, SP lastProperty) {
         S target = getOrCreateState(sample);
         if (!target.tryMergeStateProperty(lastProperty)) {
             throw new IllegalStateException();
@@ -118,7 +119,7 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
      * @return the state reached by this word, which might have been newly created (along with all required predecessor
      * states)
      */
-    public S getOrCreateState(int[] word) {
+    public S getOrCreateState(IntSeq word) {
         S curr = root;
         for (int sym : word) {
             curr = curr.getOrCreateSuccessor(sym, alphabetSize);
@@ -165,8 +166,8 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
         return root;
     }
 
-    public void addSampleWithTransitionProperties(int[] sample, List<? extends TP> lastTransitionProperties) {
-        int sampleLen = sample.length;
+    public void addSampleWithTransitionProperties(IntSeq sample, List<? extends TP> lastTransitionProperties) {
+        int sampleLen = sample.size();
         int skip = sampleLen - lastTransitionProperties.size();
         if (skip < 0) {
             throw new IllegalArgumentException();
@@ -175,13 +176,13 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
         S curr = getRoot();
         int i = 0;
         while (i < skip) {
-            int sym = sample[i++];
+            int sym = sample.get(i++);
             curr = curr.getOrCreateSuccessor(sym, alphabetSize);
         }
 
         Iterator<? extends TP> tpIt = lastTransitionProperties.iterator();
         while (i < sampleLen) {
-            int sym = sample[i++];
+            int sym = sample.get(i++);
             if (!curr.tryMergeTransitionProperty(sym, alphabetSize, tpIt.next())) {
                 throw new IllegalArgumentException();
             }
