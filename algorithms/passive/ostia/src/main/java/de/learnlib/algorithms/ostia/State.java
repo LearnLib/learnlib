@@ -23,26 +23,8 @@ public class State {
     Out out;
     Edge[] transitions;
 
-    private State() {}
-
     State(int alphabetSize) {
         transitions = new Edge[alphabetSize];
-    }
-
-    /**
-     * The IntQueue is consumed and should not be reused after calling this method.
-     */
-    void prepend(IntQueue prefix) {
-        for (Edge edge : transitions) {
-            if (edge != null) {
-                edge.out = IntQueue.copyAndConcat(prefix, edge.out);
-            }
-        }
-        if (out == null) {
-            out = new Out(prefix);
-        } else {
-            out.str = IntQueue.copyAndConcat(prefix, out.str);
-        }
     }
 
     /**
@@ -64,14 +46,16 @@ public class State {
         return String.valueOf(out);
     }
 
-    static class Copy extends State {
+    static class Copy {
 
+        Out out;
+        Edge[] transitions;
         final State original;
 
         Copy(State original) {
             this.original = original;
-            super.transitions = copyTransitions(original.transitions);
-            super.out = original.out == null ? null : new Out(IntQueue.copyAndConcat(original.out.str, null));
+            this.transitions = copyTransitions(original.transitions);
+            this.out = original.out == null ? null : new Out(IntQueue.copyAndConcat(original.out.str, null));
         }
 
         private Edge[] copyTransitions(Edge[] transitions) {
@@ -85,6 +69,22 @@ public class State {
         void assign() {
             original.out = out;
             original.transitions = transitions;
+        }
+
+        /**
+         * The IntQueue is consumed and should not be reused after calling this method.
+         */
+        void prepend(IntQueue prefix) {
+            for (Edge edge : transitions) {
+                if (edge != null) {
+                    edge.out = IntQueue.copyAndConcat(prefix, edge.out);
+                }
+            }
+            if (out == null) {
+                out = new Out(prefix);
+            } else {
+                out.str = IntQueue.copyAndConcat(prefix, out.str);
+            }
         }
     }
 }

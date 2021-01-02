@@ -215,7 +215,7 @@ public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransd
         final State.Copy mergedRedState = mergedStates.computeIfAbsent(red, State.Copy::new);
         final State.Copy mergedBlueState = new State.Copy(blueState);
         mergedStates.computeIfAbsent(blueParent, State.Copy::new).transitions[symbolIncomingToBlue].target = red;
-        final State prevBlue = mergedStates.put(blueState, mergedBlueState);
+        final State.Copy prevBlue = mergedStates.put(blueState, mergedBlueState);
         assert prevBlue == null;
         mergedBlueState.prepend(pushedBack);
         if (mergedBlueState.out != null) {
