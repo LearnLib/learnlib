@@ -62,9 +62,9 @@ public interface PassiveLearningAlgorithm<M, I, D> {
     /**
      * Computes the model given the previously added samples.
      * <p>
-     * <b>Implementation note:</b> It is up to implementation if this operation is repeatable or not, It is valid that
-     * after computing the model it may not be possible to add additional samples anymore and one would have to
-     * construct a new learner instance.
+     * <b>Implementation note:</b> It is up to the implementation if this operation is repeatable or not, An
+     * implementation may throw an {@link IllegalStateException} if additional samples are added after the first model
+     * construction.
      *
      * @return the computed model
      */
