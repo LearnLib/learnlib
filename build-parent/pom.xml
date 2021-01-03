@@ -184,11 +184,13 @@ limitations under the License.
                     <groupId>com.google.code.findbugs</groupId>
                     <artifactId>jsr305</artifactId>
                     <version>${jsr305.version}</version>
+                    <scope>provided</scope>
                 </dependency>
                 <dependency>
                     <groupId>com.google.errorprone</groupId>
                     <artifactId>javac</artifactId>
                     <version>${error-prone.version}</version>
+                    <scope>provided</scope>
                 </dependency>
             </dependencies>
             <build>
