@@ -21,8 +21,4 @@ package de.learnlib.algorithms.ttt.base;
  *
  * @author Malte Isberner
  */
-public class HypothesisChangedException extends RuntimeException {
-
-    private static final long serialVersionUID = 1L;
-
-}
+public class HypothesisChangedException extends RuntimeException {}

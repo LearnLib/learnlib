@@ -37,8 +37,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class SULException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
-
     /**
      * Creates a SULException wrapped around a {@link Throwable}. Please refer to the class description on how this
      * mechanism is to be used.

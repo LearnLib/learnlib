@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.cache.mealy;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -199,7 +198,7 @@ class InternalMealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, 
         incMealy.addAlphabetSymbol(symbol);
     }
 
-    private static final class ReverseLexCmp<I> implements Comparator<Query<I, ?>>, Serializable {
+    private static final class ReverseLexCmp<I> implements Comparator<Query<I, ?>> {
 
         private final Comparator<I> comparator;
 
@@ -213,7 +212,7 @@ class InternalMealyCacheOracle<I, O> implements MealyLearningCacheOracle<I, O>, 
         }
     }
 
-    private static final class DynamicSymbolComparator<I> implements Comparator<I>, Serializable {
+    private static final class DynamicSymbolComparator<I> implements Comparator<I> {
 
         private final GrowingMapAlphabet<I> alphabet;
 

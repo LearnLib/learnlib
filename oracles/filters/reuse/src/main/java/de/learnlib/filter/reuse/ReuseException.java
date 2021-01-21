@@ -23,8 +23,6 @@ package de.learnlib.filter.reuse;
  */
 public class ReuseException extends IllegalArgumentException {
 
-    private static final long serialVersionUID = 3661716306694750282L;
-
     public ReuseException(String string) {
         super(string);
     }

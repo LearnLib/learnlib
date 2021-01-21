@@ -26,8 +26,6 @@ import java.util.Collection;
  */
 public class BatchInterruptedException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
-
     public BatchInterruptedException(Throwable cause) {
         super(cause);
     }

@@ -29,10 +29,9 @@ limitations under the License.
         </Or>
     </Match>
     <Match>
-        <!-- currently the Serialization interface is just used as a means to end, so implementations are raw and we
-             discourage users to use it.
+        <!-- LearnLib does not (want to) properly support serialization across different class versions. Therefore use the automated serial IDs to fail-fast on any unintended usage of this feature.
         -->
-        <Bug pattern="SE_NO_SERIALVERSIONID,SE_TRANSIENT_FIELD_NOT_RESTORED"/>
+        <Bug pattern="SE_NO_SERIALVERSIONID,SE_TRANSIENT_FIELD_NOT_RESTORED,SE_COMPARATOR_SHOULD_BE_SERIALIZABLE"/>
     </Match>
     <Match>
         <!-- TODO: SpotBugs seem to incorrectly infer type annotations, https://github.com/spotbugs/spotbugs/issues/643

@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.reuse.tree;
 
-import java.io.Serializable;
 import java.util.AbstractCollection;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -36,9 +35,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public class BoundedDeque<E> extends AbstractCollection<E> implements Serializable {
+public class BoundedDeque<E> extends AbstractCollection<E> {
 
-    private static final long serialVersionUID = 1L;
     private final EvictPolicy evictPolicy;
     private final AccessPolicy accessPolicy;
     private final int capacity;
