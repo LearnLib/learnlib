@@ -15,6 +15,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `PassiveLearningAlgorithm#comuteModel` did not specify whether repeated calls to the method should yield identical models. It is now explicitly left open to the respective implementation to support this behavior. `BlueFringeRPNI{DFA,Mealy}` explicitly does not support this behavior, as the internal prefix-tree acceptor is now constructed on-the-fly as samples are added via the `addSample` methods. This allows to drop the previously redundant caching of samples and reduce memory pressure. `BlueFringeEDSMDFA` and `BlueFringeMDLDFA` still have to cache the samples internally and therefore still support repeated model construction.  
 * `PTA`s now read their sample inputs as `IntSeq`s
 
+### Removed
+
+* Removed (unused) `de.learnlib.datastructure.pta.pta.PropertyConflictException`, `de.learnlib.datastructure.observationtable.InvalidRowException`.
+
+
 ## [0.16.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.16.0) - 2020-10-12
 
 [Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.15.0...learnlib-0.16.0)
@@ -38,7 +43,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Removed
 
 * Removed the `learnlib.queries.parallel.threshold` property. Learning setups that want to use parallelism now need to explicitly setup parallel oracles.
-* Removed `MQUtil#answerQueries{Auto,Parallel}` and `MQUtil#answerOmegaQueries{Auto,Parallel}`)
+* Removed `MQUtil#answerQueries{Auto,Parallel}` and `MQUtil#answerOmegaQueries{Auto,Parallel}`.
 * `LassoOracle#isOmegaCounterExample(boolean)` has been removed. This decision can be directly integrated into the `#findCounterExample` method which has more information available.
 
 ### Fixed
@@ -121,7 +126,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Added the RPNI (regular positive-negative inference) passive learning algorithm, including EDSM (evidence-driven state merging) and MDL (minimum description length) variants.
 * Many active learning algorithms now support adding additional alphabet symbols after initial instantiation/starting of the learning process.
 * Added support for suspending the learning process to a savable / serializable state. The learning process may be resumed from this state at a later point in time.
-* Added the `AbstractTestWordEQOracle` class, which allows to implement custom equivalence oracles solely based on lazy (stream-based) test-word generation. Existing equivalence oracles (as far as possible) have been reworked to extend this class and thus profit from its built-in laziness and batch (parallelization) support.
+* Added the `AbstractTestWordEQOracle` class, which allows one to implement custom equivalence oracles solely based on lazy (stream-based) test-word generation. Existing equivalence oracles (as far as possible) have been reworked to extend this class and thus profit from its built-in laziness and batch (parallelization) support.
 
 ### Changed
 

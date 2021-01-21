@@ -15,7 +15,7 @@ Its original purpose is to provide a framework for research on automata learning
 
 The public version is a re-implemented version of the former closed-source version of LearnLib.
 While certain features have been stripped for improved modularity, development has since then extended the features offered.
-Currently the following learning algorithms with respective target models are supported:
+Currently, the following learning algorithms with respective target models are supported:
 
 
 Algorithm (active)  | Target models        || Algorithm (passive) | Models

@@ -38,7 +38,6 @@ public class SuffixASCIIWriterTest {
         SuffixASCIIWriter<String, String> writer = new SuffixASCIIWriter<>();
         ObservationTable<String, String> ot = ObservationTableSource.otWithFourSuffixesUsingDelimiterInNames();
 
-        //noinspection ResultOfMethodCallIgnored
         OTUtils.toString(ot, writer);
     }
 

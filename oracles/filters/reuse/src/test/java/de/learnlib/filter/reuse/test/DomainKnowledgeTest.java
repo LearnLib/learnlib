@@ -115,7 +115,7 @@ public class DomainKnowledgeTest {
         Assert.assertEquals(output.size(), 7);
     }
 
-    private class NullReuseCapableFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
+    private static class NullReuseCapableFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
 
         @Override
         public ReuseCapableOracle<Integer, Integer, String> get() {

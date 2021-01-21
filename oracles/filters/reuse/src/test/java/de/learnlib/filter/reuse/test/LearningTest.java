@@ -70,7 +70,7 @@ public class LearningTest {
         Assert.assertTrue(sb.toString().startsWith("digraph g"));
     }
 
-    private class TestOracleFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
+    private static class TestOracleFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
 
         @Override
         public ReuseCapableOracle<Integer, Integer, String> get() {
@@ -78,7 +78,7 @@ public class LearningTest {
         }
     }
 
-    class TestOracle implements ReuseCapableOracle<Integer, Integer, String> {
+    static class TestOracle implements ReuseCapableOracle<Integer, Integer, String> {
 
         private final int threshold = 3;
 
@@ -105,7 +105,7 @@ public class LearningTest {
 
         @Override
         public QueryResult<Integer, String> processQuery(Word<Integer> trace) {
-            Integer integer = 0;
+            int integer = 0;
             WordBuilder<String> output = new WordBuilder<>();
             for (Integer symbol : trace) {
                 if (integer + symbol <= threshold) {

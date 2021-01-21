@@ -33,15 +33,14 @@ import org.testng.annotations.Test;
 public class StateLocalInputSULTreeCacheTest
         extends AbstractCacheTest<SULLearningCacheOracle<Character, Integer, StateLocalInputSULCache<Character, Integer>>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 
-    private final StateLocalInputMealySimulatorSUL<Character, Integer> sul;
     private final ResetCounterStateLocalInputSUL<Character, Integer> resetCounter;
     private final SLICounterStateLocalInputSUL<Character, Integer> sliCounter;
     private final Integer undefined;
 
     public StateLocalInputSULTreeCacheTest() {
-        sul = new StateLocalInputMealySimulatorSUL<>(CacheTestUtils.MEALY);
         undefined = -1;
-        resetCounter = new ResetCounterStateLocalInputSUL<>("counterOracle", sul);
+        resetCounter = new ResetCounterStateLocalInputSUL<>("counterOracle",
+                                                            new StateLocalInputMealySimulatorSUL<>(CacheTestUtils.MEALY));
         sliCounter = new SLICounterStateLocalInputSUL<>("sliCounter", resetCounter);
     }
 

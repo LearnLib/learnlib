@@ -60,7 +60,7 @@ public class LearnLoggerTest {
         logbackLogger.addAppender(appender);
         learnLogger.logPhase(logStatement);
 
-        final String loggedOutput = new String(outputStream.toByteArray());
+        final String loggedOutput = outputStream.toString();
 
         Assert.assertNotNull(loggedOutput);
         Assert.assertEquals(logStatement, loggedOutput);
@@ -105,7 +105,7 @@ public class LearnLoggerTest {
         logbackLogger.addAppender(appender);
         learnLogger.logQuery(logStatement);
 
-        final String loggedOutput = new String(outputStream.toByteArray());
+        final String loggedOutput = outputStream.toString();
 
         Assert.assertNotNull(loggedOutput);
         Assert.assertTrue(loggedOutput.isEmpty());

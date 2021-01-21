@@ -95,7 +95,7 @@ public abstract class AbstractCounterSULTest {
         mqo2.processQueries(queries);
         mqo3.processQueries(queries);
 
-        Assert.assertEquals(getCount(), oldCount + 2 * 3 * getCountIncreasePerQuery());
+        Assert.assertEquals(getCount(), oldCount + 2L * 3 * getCountIncreasePerQuery());
     }
 
     @Test

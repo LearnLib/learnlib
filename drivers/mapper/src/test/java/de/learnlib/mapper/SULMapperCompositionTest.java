@@ -31,7 +31,7 @@ public class SULMapperCompositionTest {
     private static final char OUTER_EXCEPTION_RESULT = OUTER_EXCEPTION_TRIGGER_CHAR;
 
     private static final char INNER_EXCEPTION_TRIGGER_CHAR = 'Y';
-    private static final int INNER_EXCEPTION_RESULT = (int) INNER_EXCEPTION_TRIGGER_CHAR;
+    private static final int INNER_EXCEPTION_RESULT = INNER_EXCEPTION_TRIGGER_CHAR;
 
     private static final char NESTED_EXCEPTION_TRIGGER_CHAR = 'Z';
 
