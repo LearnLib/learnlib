@@ -179,17 +179,17 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
 
     /**
      * This method removes all system states from the tree. The tree structure remains, but there will be nothing for
-     * reusage.
+     * reuse.
      * <p>
-     * The {@link SystemStateHandler} will be informed about all disposings.
+     * The {@link SystemStateHandler} will be informed about all disposals.
      */
-    public void disposeSystemstates() {
+    public void disposeSystemStates() {
         synchronized (this) {
-            disposeSystemstates(getRoot());
+            disposeSystemStates(getRoot());
         }
     }
 
-    private void disposeSystemstates(ReuseNode<S, I, O> node) {
+    private void disposeSystemStates(ReuseNode<S, I, O> node) {
         Iterator<S> stateIt = node.systemStatesIterator();
         while (stateIt.hasNext()) {
             S state = stateIt.next();
@@ -201,7 +201,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
             if (edge != null) {
                 if (!edge.getTarget().equals(node)) {
                     // only for non reflexive edges, there are no circles in a tree
-                    disposeSystemstates(edge.getTarget());
+                    disposeSystemStates(edge.getTarget());
                 }
             }
         }
@@ -216,7 +216,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
     public void clearTree() {
         synchronized (this) {
             this.nodeCount = 0;
-            disposeSystemstates(root);
+            disposeSystemStates(root);
             this.root = createNode();
         }
     }
@@ -275,7 +275,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * node of the tree. For the longest known prefix of the given {@link Word} there will be no new nodes or edges
      * created.
      * <p>
-     * Will be called from the {@link ReuseOracle} if no system state was available for reusage for the query (otherwise
+     * Will be called from the {@link ReuseOracle} if no system state was available for reuse for the query (otherwise
      * {@link #insert(Word, ReuseNode, ReuseCapableOracle.QueryResult)} would be called). The last node reached by the
      * last symbol of the query will hold the system state from the given {@link ReuseCapableOracle.QueryResult}.
      * <p>

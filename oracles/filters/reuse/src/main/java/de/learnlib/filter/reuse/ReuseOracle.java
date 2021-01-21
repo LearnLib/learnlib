@@ -73,7 +73,7 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
         this.tree = new ReuseTreeBuilder<S, I, O>(builder.alphabet).withSystemStateHandler(builder.systemStateHandler)
                                                                    .withFailureOutputs(builder.failureOutputSymbols)
                                                                    .withInvariantInputs(builder.invariantInputSymbols)
-                                                                   .withEnabledSystemstateInvalidation(builder.invalidateSystemstates)
+                                                                   .withEnabledSystemstateInvalidation(builder.invalidateSystemStates)
                                                                    .withMaxSystemStates(builder.maxSystemStates)
                                                                    .withAccessPolicy(builder.accessPolicy)
                                                                    .withEvictPolicy(builder.evictPolicy)
@@ -94,7 +94,7 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
      * This methods returns the full output to the input query.
      * <p>
      * It is possible that the query is already known (answer provided by {@link ReuseTree#getOutput(Word)}, the query
-     * is new and no system state could be found for reusage ({@link ReuseCapableOracle#processQuery(Word)} will be
+     * is new and no system state could be found for reuse ({@link ReuseCapableOracle#processQuery(Word)} will be
      * invoked) or there exists a prefix that (maybe epsilon) could be reused so save reset invocation ( {@link
      * ReuseCapableOracle#continueQuery(Word, Object)} will be invoked with remaining suffix and the corresponding
      * {@link ReuseNode} of the {@link ReuseTree}).
@@ -208,7 +208,7 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
         private final Alphabet<I> alphabet;
         private final Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier;
 
-        private boolean invalidateSystemstates = true;
+        private boolean invalidateSystemStates = true;
         private SystemStateHandler<S> systemStateHandler;
         private Set<I> invariantInputSymbols;
         private Set<O> failureOutputSymbols;
@@ -227,8 +227,8 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
             return this;
         }
 
-        public ReuseOracleBuilder<S, I, O> withEnabledSystemstateInvalidation(boolean invalidate) {
-            this.invalidateSystemstates = invalidate;
+        public ReuseOracleBuilder<S, I, O> withEnabledSystemStateInvalidation(boolean invalidate) {
+            this.invalidateSystemStates = invalidate;
             return this;
         }
 

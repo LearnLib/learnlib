@@ -151,7 +151,7 @@ public class Example3 {
 
         // now invalidate all system states and count the number of disposed
         // queues (equals number of resets)
-        reuseOracle.getReuseTree().disposeSystemstates();
+        reuseOracle.getReuseTree().disposeSystemStates();
         ReuseCapableImpl reuseCapableOracle = (ReuseCapableImpl) reuseOracle.getReuseCapableOracle();
         System.out.println("Resets:   " + reuseCapableOracle.fullQueries);
         System.out.println("Reused:   " + reuseCapableOracle.reused);

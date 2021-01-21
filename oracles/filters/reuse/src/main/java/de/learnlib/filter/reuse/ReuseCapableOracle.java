@@ -37,7 +37,7 @@ import net.automatalib.words.Word;
 public interface ReuseCapableOracle<S, I, O> {
 
     /**
-     * This method will be invoked whenever a system state s was found for reusage when a new membership query is
+     * This method will be invoked whenever a system state s was found for reuse when a new membership query is
      * processed. Please note that only a saved reset can be ensured.
      *
      * @param trace

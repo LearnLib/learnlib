@@ -60,7 +60,7 @@ limitations under the License.
             </And>
             <And>
                 <Class name="de.learnlib.filter.reuse.tree.ReuseTree"/>
-                <Method name="disposeSystemstates"/>
+                <Method name="disposeSystemStates"/>
             </And>
             <And>
                 <Class name="de.learnlib.examples.Example3"/>

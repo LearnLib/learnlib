@@ -25,7 +25,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link ReuseNode} is a vertex in the {@link ReuseTree} that contains (a possible empty) set of outgoing {@link
- * ReuseEdge}s. Each {@link ReuseNode} may contain a system state holding relevant informations (e.g. database
+ * ReuseEdge}s. Each {@link ReuseNode} may contain a system state holding relevant information (e.g. database
  * identifiers or an object) that belongs to the system state that 'represents' the system state after executing a
  * membership query.
  *
@@ -42,7 +42,6 @@ public class ReuseNode<S, I, O> {
 
     private final @Nullable ReuseEdge<S, I, O>[] edges;
     private final BoundedDeque<S> systemStates;
-    // private S systemstate;
     private final int id;
 
     @SuppressWarnings("unchecked")
