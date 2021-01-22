@@ -216,9 +216,6 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
      *         the second row
      *
      * @return the suffix distinguishing the contents of the two rows
-     *
-     * @throws InvalidRowException
-     *         if the rows do not belong to this observation table
      */
     default @Nullable Word<I> findDistinguishingSuffix(Row<I> row1, Row<I> row2) {
         int suffixIndex = findDistinguishingSuffixIndex(row1, row2);
@@ -248,11 +245,7 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
      *
      * @return the suffix (column) index where the contents of the rows differ, or {@code #NO_DISTINGUISHING_SUFFIX} if
      * the contents of the rows are equal.
-     *
-     * @throws InvalidRowException
-     *         if the rows do not belong to this observation table
      */
-
     default @Signed int findDistinguishingSuffixIndex(Row<I> row1, Row<I> row2) {
         for (int i = 0; i < getSuffixes().size(); i++) {
             if (!Objects.equals(cellContents(row1, i), cellContents(row2, i))) {
