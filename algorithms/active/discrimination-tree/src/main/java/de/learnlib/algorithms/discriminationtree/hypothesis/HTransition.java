@@ -15,15 +15,13 @@
  */
 package de.learnlib.algorithms.discriminationtree.hypothesis;
 
-import java.io.Serializable;
-
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class HTransition<I, O, SP, TP> implements Serializable {
+public class HTransition<I, O, SP, TP> {
 
     // GENERAL PURPOSE FIELDS
     private final HState<I, O, SP, TP> source;

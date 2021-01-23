@@ -15,7 +15,6 @@
  */
 package de.learnlib.datastructure.discriminationtree.model;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -34,7 +33,7 @@ import java.util.Objects;
  *
  * @author frohme
  */
-public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, O, D, N>> implements Serializable {
+public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, O, D, N>> {
 
     protected final N parent;
     protected final O parentOutcome;

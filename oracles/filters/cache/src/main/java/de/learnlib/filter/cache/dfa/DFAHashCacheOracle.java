@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.cache.dfa;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -91,7 +90,7 @@ public class DFAHashCacheOracle<I> implements DFALearningCacheOracle<I>, Resumab
         this.cache = state.getCache();
     }
 
-    public static class DFAHashCacheOracleState<I> implements Serializable {
+    public static class DFAHashCacheOracleState<I> {
 
         private final Map<Word<I>, Boolean> cache;
 

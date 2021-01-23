@@ -62,6 +62,8 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The main learning algorithm.
@@ -77,6 +79,8 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                                          PartialTransitionAnalyzer<ADTState<I, O>, I>,
                                          SupportsGrowingAlphabet<I>,
                                          Resumable<ADTLearnerState<ADTState<I, O>, I, O>> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ADTLearner.class);
 
     private final Alphabet<I> alphabet;
     private final SQOOTBridge<I, O> oracle;
@@ -118,7 +122,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         this.openTransitions = new ArrayDeque<>();
         this.openCounterExamples = new ArrayDeque<>();
         this.allCounterExamples = new LinkedHashSet<>();
-        this.adt = new ADT<>(leafSplitter);
+        this.adt = new ADT<>();
     }
 
     @Override
@@ -233,7 +237,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             final Word<O> oldOutput = this.observationTree.trace(uaState, completeSplitter);
             final Word<O> newOutput = this.observationTree.trace(newState, completeSplitter);
 
-            newNode = this.adt.extendLeaf(nodeToSplit, completeSplitter, oldOutput, newOutput);
+            newNode = this.adt.extendLeaf(nodeToSplit, completeSplitter, oldOutput, newOutput, this.leafSplitter);
         } else {
             // directly insert into observation tree, because we use it for finding a splitter
             this.observationTree.addTrace(uaState, v, this.oracle.answerQuery(uaAccessSequence, v));
@@ -252,7 +256,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             final Word<O> oldOutput = this.observationTree.trace(uaState, splitter);
             final Word<O> newOutput = this.observationTree.trace(newState, splitter);
 
-            newNode = this.adt.splitLeaf(nodeToSplit, splitter, oldOutput, newOutput);
+            newNode = this.adt.splitLeaf(nodeToSplit, splitter, oldOutput, newOutput, this.leafSplitter);
         }
         newNode.setHypothesisState(newState);
 
@@ -407,7 +411,14 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     public void resume(ADTLearnerState<ADTState<I, O>, I, O> state) {
         this.hypothesis = state.getHypothesis();
         this.adt = state.getAdt();
-        this.adt.setLeafSplitter(this.leafSplitter);
+
+        final Alphabet<I> oldAlphabet = this.hypothesis.getInputAlphabet();
+        if (!oldAlphabet.equals(this.alphabet)) {
+            LOGGER.warn(
+                    "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
+                    this.alphabet,
+                    oldAlphabet);
+        }
 
         // startLearning has already been invoked
         if (this.hypothesis.size() > 0) {

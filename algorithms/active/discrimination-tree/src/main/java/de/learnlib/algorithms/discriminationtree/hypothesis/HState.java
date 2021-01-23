@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.discriminationtree.hypothesis;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,7 +27,7 @@ import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class HState<I, O, SP, TP> implements Serializable {
+public class HState<I, O, SP, TP> {
 
     private final @Nullable HTransition<I, O, SP, TP> treeIncoming;
     private final int id;

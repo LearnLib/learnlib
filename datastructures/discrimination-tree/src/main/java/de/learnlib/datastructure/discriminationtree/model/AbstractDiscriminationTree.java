@@ -15,7 +15,6 @@
  */
 package de.learnlib.datastructure.discriminationtree.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
@@ -55,9 +54,9 @@ import net.automatalib.words.Word;
  * @author frohme
  */
 public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends AbstractDTNode<DSCR, O, D, N>>
-        implements Graph<N, Map.Entry<O, N>>, Serializable {
+        implements Graph<N, Map.Entry<O, N>> {
 
-    protected final N root;
+    private final N root;
     protected transient MembershipOracle<I, O> oracle;
 
     public AbstractDiscriminationTree(N root, MembershipOracle<I, O> oracle) {

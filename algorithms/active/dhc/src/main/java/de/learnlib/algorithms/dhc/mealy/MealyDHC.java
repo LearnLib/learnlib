@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.dhc.mealy;
 
-import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -315,7 +314,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
         }
     }
 
-    static final class QueueElement<I, O> implements Serializable {
+    static final class QueueElement<I, O> {
 
         private final @Nullable Integer parentState;
         private final @Nullable QueueElement<I, O> parentElement;

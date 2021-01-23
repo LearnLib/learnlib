@@ -15,8 +15,6 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
-import java.io.Serializable;
-
 import de.learnlib.api.AccessSequenceProvider;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.words.Word;
@@ -29,7 +27,7 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-public class TTTState<I, D> implements AccessSequenceProvider<I>, Serializable {
+public class TTTState<I, D> implements AccessSequenceProvider<I> {
 
     final int id;
 

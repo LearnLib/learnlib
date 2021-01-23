@@ -15,7 +15,6 @@
  */
 package de.learnlib.testsupport;
 
-import java.io.Serializable;
 import java.util.Random;
 
 import de.learnlib.api.Resumable;
@@ -32,7 +31,7 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * @author bainczyk
  */
-public abstract class AbstractResumableLearnerDFATest<L extends Resumable<T> & LearningAlgorithm<DFA<?, Character>, Character, Boolean>, T extends Serializable>
+public abstract class AbstractResumableLearnerDFATest<L extends Resumable<T> & LearningAlgorithm<DFA<?, Character>, Character, Boolean>, T>
         extends AbstractResumableLearnerTest<L, DFA<?, Character>, MembershipOracle<Character, Boolean>, Character, Boolean, T> {
 
     private static final int AUTOMATON_SIZE = 50;

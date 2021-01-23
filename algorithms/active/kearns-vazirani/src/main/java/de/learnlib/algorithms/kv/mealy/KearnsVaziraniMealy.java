@@ -44,6 +44,8 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An adaption of the Kearns/Vazirani algorithm for Mealy machines.
@@ -57,6 +59,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class KearnsVaziraniMealy<I, O>
         implements MealyLearner<I, O>, SupportsGrowingAlphabet<I>, Resumable<KearnsVaziraniMealyState<I, O>> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(KearnsVaziraniMealy.class);
 
     private final Alphabet<I> alphabet;
     private final MembershipOracle<I, Word<O>> oracle;
@@ -360,6 +364,14 @@ public class KearnsVaziraniMealy<I, O>
         this.discriminationTree = state.getDiscriminationTree();
         this.discriminationTree.setOracle(oracle);
         this.stateInfos = state.getStateInfos();
+
+        final Alphabet<I> oldAlphabet = this.hypothesis.getInputAlphabet();
+        if (!oldAlphabet.equals(this.alphabet)) {
+            LOGGER.warn(
+                    "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
+                    this.alphabet,
+                    oldAlphabet);
+        }
     }
 
     public static final class BuilderDefaults {

@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.discriminationtree.hypothesis;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -54,8 +53,7 @@ public class DTLearnerHypothesis<I, O, SP, TP>
                    AccessSequenceTransformer<I>,
                    StateIDs<HState<I, O, SP, TP>>,
                    SupportsGrowingAlphabet<I>,
-                   GraphViewable,
-                   Serializable {
+                   GraphViewable {
 
     private final Alphabet<I> alphabet;
     private int alphabetSize;

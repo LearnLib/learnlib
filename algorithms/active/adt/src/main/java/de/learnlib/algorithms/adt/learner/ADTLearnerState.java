@@ -15,8 +15,6 @@
  */
 package de.learnlib.algorithms.adt.learner;
 
-import java.io.Serializable;
-
 import de.learnlib.algorithms.adt.adt.ADT;
 import de.learnlib.algorithms.adt.automaton.ADTHypothesis;
 
@@ -32,7 +30,7 @@ import de.learnlib.algorithms.adt.automaton.ADTHypothesis;
  *
  * @author frohme
  */
-public class ADTLearnerState<S, I, O> implements Serializable {
+public class ADTLearnerState<S, I, O> {
 
     private final ADTHypothesis<I, O> hypothesis;
     private final ADT<S, I, O> adt;

@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.adt.adt;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -39,15 +38,9 @@ import net.automatalib.words.Word;
  *
  * @author frohme
  */
-public class ADT<S, I, O> implements Serializable {
+public class ADT<S, I, O> {
 
     private ADTNode<S, I, O> root;
-
-    private transient LeafSplitter leafSplitter;
-
-    public ADT(final LeafSplitter leafSplitter) {
-        this.leafSplitter = leafSplitter;
-    }
 
     /**
      * Initializes the ADT with a single leaf node.
@@ -137,13 +130,16 @@ public class ADT<S, I, O> implements Serializable {
      *         the hypothesis output of the node to split given the distinguishing suffix
      * @param newOutput
      *         the hypothesis output of the new leaf given the distinguishing suffix
+     * @param leafSplitter
+     *         the split strategy in case the root node needs to be split
      *
      * @return the new leaf node
      */
     public ADTNode<S, I, O> extendLeaf(final ADTNode<S, I, O> nodeToSplit,
                                        final Word<I> distinguishingSuffix,
                                        final Word<O> oldOutput,
-                                       final Word<O> newOutput) {
+                                       final Word<O> newOutput,
+                                       final LeafSplitter leafSplitter) {
 
         if (!ADTUtil.isLeafNode(nodeToSplit)) {
             throw new IllegalArgumentException("Node to split is not a leaf node");
@@ -157,13 +153,13 @@ public class ADT<S, I, O> implements Serializable {
 
         // initial split
         if (this.root.equals(nodeToSplit)) {
-            return splitLeaf(nodeToSplit, distinguishingSuffix, oldOutput, newOutput);
+            return splitLeaf(nodeToSplit, distinguishingSuffix, oldOutput, newOutput, leafSplitter);
         }
         return LeafSplitters.splitParent(nodeToSplit, distinguishingSuffix, oldOutput, newOutput);
     }
 
     /**
-     * Splits a leaf node using the local {@link LeafSplitter}.
+     * Splits a leaf node using a given {@link LeafSplitter}.
      *
      * @param nodeToSplit
      *         the leaf node to split
@@ -173,13 +169,16 @@ public class ADT<S, I, O> implements Serializable {
      *         the hypothesis output of the node to split given the distinguishing suffix
      * @param newOutput
      *         the hypothesis output of the new leaf given the distinguishing suffix
+     * @param leafSplitter
+     *         the split strategy for leaves
      *
      * @return the new leaf node
      */
     public ADTNode<S, I, O> splitLeaf(final ADTNode<S, I, O> nodeToSplit,
                                       final Word<I> distinguishingSuffix,
                                       final Word<O> oldOutput,
-                                      final Word<O> newOutput) {
+                                      final Word<O> newOutput,
+                                      final LeafSplitter leafSplitter) {
 
         if (!ADTUtil.isLeafNode(nodeToSplit)) {
             throw new IllegalArgumentException("Node to split is not a final node");
@@ -193,8 +192,7 @@ public class ADT<S, I, O> implements Serializable {
 
         final boolean wasRoot = this.root.equals(nodeToSplit);
 
-        final ADTNode<S, I, O> result =
-                this.leafSplitter.split(nodeToSplit, distinguishingSuffix, oldOutput, newOutput);
+        final ADTNode<S, I, O> result = leafSplitter.split(nodeToSplit, distinguishingSuffix, oldOutput, newOutput);
 
         if (wasRoot) {
             this.root = ADTUtil.getStartOfADS(nodeToSplit);
@@ -248,11 +246,8 @@ public class ADT<S, I, O> implements Serializable {
         throw new IllegalStateException("Nodes do not share a parent node");
     }
 
-    public void setLeafSplitter(final LeafSplitter leafSplitter) {
-        this.leafSplitter = leafSplitter;
-    }
-
     public static class LCAInfo<S, I, O> {
+
         public final ADTNode<S, I, O> adtNode;
         public final O firstOutput;
         public final O secondOutput;

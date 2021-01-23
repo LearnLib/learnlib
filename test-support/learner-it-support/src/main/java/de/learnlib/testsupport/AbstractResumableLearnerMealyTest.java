@@ -15,7 +15,6 @@
  */
 package de.learnlib.testsupport;
 
-import java.io.Serializable;
 import java.util.Random;
 
 import de.learnlib.api.Resumable;
@@ -33,7 +32,7 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * @author bainczyk
  */
-public abstract class AbstractResumableLearnerMealyTest<L extends Resumable<T> & LearningAlgorithm<MealyMachine<?, Character, ?, Character>, Character, Word<Character>>, T extends Serializable>
+public abstract class AbstractResumableLearnerMealyTest<L extends Resumable<T> & LearningAlgorithm<MealyMachine<?, Character, ?, Character>, Character, Word<Character>>, T>
         extends AbstractResumableLearnerTest<L, MealyMachine<?, Character, ?, Character>, MembershipOracle<Character, Word<Character>>, Character, Word<Character>, T> {
 
     private static final int AUTOMATON_SIZE = 20;

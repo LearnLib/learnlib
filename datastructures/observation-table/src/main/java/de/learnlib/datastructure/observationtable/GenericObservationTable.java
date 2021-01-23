@@ -15,7 +15,6 @@
  */
 package de.learnlib.datastructure.observationtable;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -61,7 +60,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public final class GenericObservationTable<I, D> implements MutableObservationTable<I, D>, Serializable {
+public final class GenericObservationTable<I, D> implements MutableObservationTable<I, D> {
 
     private static final int NO_ENTRY = -1;
     private final List<RowImpl<I>> shortPrefixRows = new ArrayList<>();
@@ -75,8 +74,8 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
     private final Map<Word<I>, RowImpl<I>> rowMap = new HashMap<>();
     private final List<Word<I>> suffixes = new ArrayList<>();
     private final Set<Word<I>> suffixSet = new HashSet<>();
-    private transient Alphabet<I> alphabet;
-    private transient int alphabetSize;
+    private final Alphabet<I> alphabet;
+    private int alphabetSize;
     private int numRows;
     private boolean initialConsistencyCheckRequired;
 
@@ -493,16 +492,6 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
     @Override
     public Alphabet<I> getInputAlphabet() {
         return alphabet;
-    }
-
-    /**
-     * This is an internal method used for de-serializing. Do not deliberately set input alphabets.
-     *
-     * @param alphabet
-     *         the input alphabet corresponding to the previously serialized one.
-     */
-    public void setInputAlphabet(Alphabet<I> alphabet) {
-        this.alphabet = alphabet;
     }
 
     @Override

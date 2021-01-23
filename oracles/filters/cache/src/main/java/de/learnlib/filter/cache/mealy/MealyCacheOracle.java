@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.cache.mealy;
 
-import java.io.Serializable;
 import java.util.Comparator;
 
 import de.learnlib.api.Resumable;
@@ -104,7 +103,7 @@ public class MealyCacheOracle<I, O> extends InternalMealyCacheOracle<I, O>
         this.incMealy = state.getBuilder();
     }
 
-    public static class MealyCacheOracleState<I, O> implements Serializable {
+    public static class MealyCacheOracleState<I, O> {
 
         private final IncrementalMealyBuilder<I, O> builder;
 

@@ -44,7 +44,7 @@ public class TTTHypothesisMealy<I, O> extends AbstractTTTHypothesis<I, Word<O>, 
     @Override
     public UniversalDeterministicAutomaton.FullIntAbstraction<TTTTransitionMealy<I, O>, Void, O> fullIntAbstraction(
             Alphabet<I> alphabet) {
-        if (alphabet == this.alphabet) {
+        if (alphabet.equals(getInputAlphabet())) {
             return this;
         }
         return MealyMachine.super.fullIntAbstraction(alphabet);

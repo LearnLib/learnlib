@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.kv.dfa;
 
-import java.io.Serializable;
 import java.util.List;
 
 import de.learnlib.algorithms.kv.StateInfo;
@@ -30,7 +29,7 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
  *
  * @author bainczyk
  */
-public class KearnsVaziraniDFAState<I> implements Serializable {
+public class KearnsVaziraniDFAState<I> {
 
     private final CompactDFA<I> hypothesis;
     private final BinaryDTree<I, StateInfo<I, Boolean>> discriminationTree;

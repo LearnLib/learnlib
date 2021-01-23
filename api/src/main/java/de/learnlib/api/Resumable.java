@@ -18,25 +18,29 @@ package de.learnlib.api;
 import java.io.Serializable;
 
 /**
- * Data structures that implement this interface can be "suspended" by means of exposing a serializable state object
- * that contains all data that is necessary to resume from this state at a later point in time.
+ * Data structures that implement this interface can be "suspended" by means of exposing a state object that contains
+ * all data that is necessary to resume from this state at a later point in time.
+ * <p>
+ * <b>Note:</b> Objects returned by this interface are not guaranteed to be binary compatible across versions (like a
+ * {@link Serializable} object). Only use them for short-lived scopes in the same learning setup. For persistent storage
+ * of e.g. hypotheses models, use the model serializers of AutomataLib.
  *
  * @param <T>
- *         The type of the serializable learner state.
+ *         The type of the learner state.
  *
  * @author bainczyk
  */
-public interface Resumable<T extends Serializable> {
+public interface Resumable<T> {
 
     /**
-     * Expose the serializable state object.
+     * Expose the state object.
      *
      * @return The state.
      */
     T suspend();
 
     /**
-     * Resume the datastructure from a previously serialized point in time.
+     * Resume the datastructure from a previously suspended point in time.
      *
      * @param state
      *         The learner state.

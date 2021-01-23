@@ -15,7 +15,6 @@
  */
 package de.learnlib.datastructure.discriminationtree.model;
 
-import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -35,7 +34,7 @@ import java.util.Set;
  *
  * @author Malte Isberner
  */
-public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializable {
+public class BooleanMap<V> extends AbstractMap<Boolean, V> {
 
     private V falseValue;
     private V trueValue;

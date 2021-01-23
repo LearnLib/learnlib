@@ -16,6 +16,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `PassiveLearningAlgorithm#comuteModel` did not specify whether repeated calls to the method should yield identical models. It is now explicitly left open to the respective implementation to support this behavior. `BlueFringeRPNI{DFA,Mealy}` explicitly does not support this behavior, as the internal prefix-tree acceptor is now constructed on-the-fly as samples are added via the `addSample` methods. This allows to drop the previously redundant caching of samples and reduce memory pressure. `BlueFringeEDSMDFA` and `BlueFringeMDLDFA` still have to cache the samples internally and therefore still support repeated model construction.  
 * `PTA`s now read their sample inputs as `IntSeq`s
 * Renamed `PassiveLearnerVariantTICase` to `PassiveLearnerVariantITCase`
+* The `Resumable` semantics have changed: the returned state object no longer implements `Serializable`. We never fully supported the semantics of the interface and never intended to do so. In fact, the old approach failed miserably if any class was involved where we missed an "implements Serializable" statement. In order to prevent confusion by promising false contracts, implementing this markup interface has been removed. Serialization should now be done in user-land via one of the many external (and more optimizable) serialization frameworks such as FST, XStream, etc. See the in-tree `ResumableExample` for reference.
+* The `ADT` class is no longer initialized with a `leafSplitter` but the `extendLeaf` and `splitLeaf` methods take an additional argument. This allows for a more customizable behavior.
+
 
 ### Removed
 

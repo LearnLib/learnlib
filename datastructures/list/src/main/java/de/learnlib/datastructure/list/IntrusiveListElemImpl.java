@@ -15,8 +15,6 @@
  */
 package de.learnlib.datastructure.list;
 
-import java.io.Serializable;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -27,7 +25,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public class IntrusiveListElemImpl<T> implements IntrusiveListElem<T>, Serializable {
+public class IntrusiveListElemImpl<T> implements IntrusiveListElem<T> {
 
     protected @Nullable T next;
 

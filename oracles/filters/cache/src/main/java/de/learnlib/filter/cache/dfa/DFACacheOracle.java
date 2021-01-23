@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.cache.dfa;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -207,7 +206,7 @@ public class DFACacheOracle<I>
         this.incDfa = state.getBuilder();
     }
 
-    public static class DFACacheOracleState<I> implements Serializable {
+    public static class DFACacheOracleState<I> {
 
         private final IncrementalDFABuilder<I> builder;
 

@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.lstar;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +27,8 @@ import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.words.Alphabet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for algorithms that produce (subclasses of) {@link MutableDeterministic} automata.
@@ -50,6 +51,8 @@ import net.automatalib.words.Alphabet;
  */
 public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends MutableDeterministic<S, I, T, SP, TP> & SupportsGrowingAlphabet<I>>
         extends AbstractLStar<A, I, D> implements Resumable<AutomatonLStarState<I, D, AI, S>> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAutomatonLStar.class);
 
     protected AI internalHyp;
     protected List<StateInfo<S, I>> stateInfos = new ArrayList<>();
@@ -86,7 +89,8 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
      * #stateProperty(ObservationTable, Row)} and {@link #transitionProperty(ObservationTable, Row, int)} methods are
      * used to derive the respective properties.
      */
-    @SuppressWarnings("argument.type.incompatible") // all added nulls to stateInfos will be correctly set to non-null values
+    @SuppressWarnings("argument.type.incompatible")
+    // all added nulls to stateInfos will be correctly set to non-null values
     protected void updateInternalHypothesis() {
         if (!table.isInitialized()) {
             throw new IllegalStateException("Cannot update internal hypothesis: not initialized");
@@ -204,12 +208,19 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     @Override
     public void resume(final AutomatonLStarState<I, D, AI, S> state) {
         this.table = state.getObservationTable();
-        this.table.setInputAlphabet(alphabet);
         this.internalHyp = state.getHypothesis();
         this.stateInfos = state.getStateInfos();
+
+        final Alphabet<I> oldAlphabet = this.table.getInputAlphabet();
+        if (!oldAlphabet.equals(this.alphabet)) {
+            LOGGER.warn(
+                    "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
+                    this.alphabet,
+                    oldAlphabet);
+        }
     }
 
-    static final class StateInfo<S, I> implements Serializable {
+    static final class StateInfo<S, I> {
 
         private final Row<I> row;
         private final S state;

@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.cache.sul;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 
@@ -36,9 +35,9 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSULCache.class);
 
-    private final AbstractSULCacheImpl<?, I, ?, O, ? extends AbstractSULCacheState<I, O>> impl;
+    private final AbstractSULCacheImpl<?, I, ?, O, ? extends SULCacheState<I, O>> impl;
 
-    protected <S, T> AbstractSULCache(AbstractSULCacheImpl<S, I, T, O, ? extends AbstractSULCacheState<I, O>> cacheImpl) {
+    protected <S, T> AbstractSULCache(AbstractSULCacheImpl<S, I, T, O, ? extends SULCacheState<I, O>> cacheImpl) {
         this.impl = cacheImpl;
     }
 
@@ -98,7 +97,7 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
      *
      * @author Malte Isberner
      */
-    abstract static class AbstractSULCacheImpl<S, I, T, O, C extends AbstractSULCacheState<I, O>>
+    abstract static class AbstractSULCacheImpl<S, I, T, O, C extends SULCacheState<I, O>>
             implements SUL<I, O>, MealyLearningCache<I, O>, SupportsGrowingAlphabet<I>, Resumable<C> {
 
         protected IncrementalMealyBuilder<I, O> incMealy;
@@ -232,11 +231,11 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
         protected void postCacheWriteHook(List<I> input) {}
     }
 
-    abstract static class AbstractSULCacheState<I, O> implements Serializable {
+    public static class SULCacheState<I, O> {
 
         final IncrementalMealyBuilder<I, O> builder;
 
-        protected AbstractSULCacheState(IncrementalMealyBuilder<I, O> builder) {
+        protected SULCacheState(IncrementalMealyBuilder<I, O> builder) {
             this.builder = builder;
         }
     }

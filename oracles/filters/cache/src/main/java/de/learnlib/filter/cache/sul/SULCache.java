@@ -20,7 +20,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import de.learnlib.api.Resumable;
 import de.learnlib.api.SUL;
-import de.learnlib.filter.cache.sul.SULCache.SULCacheState;
+import de.learnlib.filter.cache.sul.AbstractSULCache.SULCacheState;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
@@ -107,13 +107,6 @@ public class SULCache<I, O> extends AbstractSULCache<I, O> implements Resumable<
         @Override
         public SULCacheState<I, O> suspend() {
             return new SULCacheState<>(incMealy);
-        }
-    }
-
-    public static final class SULCacheState<I, O> extends AbstractSULCacheState<I, O> {
-
-        SULCacheState(IncrementalMealyBuilder<I, O> builder) {
-            super(builder);
         }
     }
 

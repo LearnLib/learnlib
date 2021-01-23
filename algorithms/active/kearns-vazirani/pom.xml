@@ -68,6 +68,11 @@ limitations under the License.
             <artifactId>checker-qual</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
         <!-- build -->
         <dependency>
             <groupId>com.github.misberner.buildergen</groupId>

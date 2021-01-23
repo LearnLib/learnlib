@@ -29,11 +29,6 @@ limitations under the License.
         </Or>
     </Match>
     <Match>
-        <!-- LearnLib does not (want to) properly support serialization across different class versions. Therefore use the automated serial IDs to fail-fast on any unintended usage of this feature.
-        -->
-        <Bug pattern="SE_NO_SERIALVERSIONID,SE_TRANSIENT_FIELD_NOT_RESTORED,SE_COMPARATOR_SHOULD_BE_SERIALIZABLE"/>
-    </Match>
-    <Match>
         <!-- TODO: SpotBugs seem to incorrectly infer type annotations, https://github.com/spotbugs/spotbugs/issues/643
                    We have CheckerFramework for this anyway -->
         <Bug pattern="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE"/>

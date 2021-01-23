@@ -169,7 +169,7 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O>
         }
     }
 
-    public static final class StateLocalInputSULCacheState<I, O> extends AbstractSULCacheState<I, O> {
+    public static final class StateLocalInputSULCacheState<I, O> extends SULCacheState<I, O> {
 
         final Map<?, Collection<I>> enabledInputCache;
 

@@ -15,12 +15,6 @@
  */
 package de.learnlib.filter.cache;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,6 +23,7 @@ import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.Query;
+import de.learnlib.testsupport.ResumeUtils;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -166,26 +161,9 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
         return result.toWord();
     }
 
-    protected static <T extends Serializable> void serializeResumable(Resumable<T> source, Resumable<T> target) {
-
-        try {
-            final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-
-            try (ObjectOutputStream objectOut = new ObjectOutputStream(byteOut)) {
-                final T state = source.suspend();
-                objectOut.writeObject(state);
-            }
-
-            try (ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
-                 ObjectInputStream objectIn = new ObjectInputStream(byteIn)) {
-
-                @SuppressWarnings("unchecked")
-                final T serializedState = (T) objectIn.readObject();
-                target.resume(serializedState);
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    protected static <T> void serializeResumable(Resumable<T> source, Resumable<T> target) {
+        byte[] bytes = ResumeUtils.toBytes(source.suspend());
+        target.resume(ResumeUtils.fromBytes(bytes));
     }
 
     protected boolean usesMapping() {

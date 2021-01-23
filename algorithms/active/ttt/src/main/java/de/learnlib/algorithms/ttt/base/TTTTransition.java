@@ -15,8 +15,6 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
-import java.io.Serializable;
-
 import de.learnlib.api.AccessSequenceProvider;
 import de.learnlib.datastructure.list.IntrusiveListElem;
 import de.learnlib.datastructure.list.IntrusiveListElemImpl;
@@ -32,7 +30,7 @@ import net.automatalib.words.WordBuilder;
  * @author Malte Isberner
  */
 public class TTTTransition<I, D> extends IntrusiveListElemImpl<TTTTransition<I, D>>
-        implements AccessSequenceProvider<I>, Serializable {
+        implements AccessSequenceProvider<I> {
 
     private final TTTState<I, D> source;
     private final I input;

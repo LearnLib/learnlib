@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.kv;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public final class StateInfo<I, D> implements Serializable {
+public final class StateInfo<I, D> {
 
     public final int id;
     public final Word<I> accessSequence;

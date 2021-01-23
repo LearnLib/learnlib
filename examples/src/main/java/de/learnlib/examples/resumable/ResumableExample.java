@@ -15,12 +15,6 @@
  */
 package de.learnlib.examples.resumable;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Random;
 
 import de.learnlib.algorithms.lstar.dfa.ClassicLStarDFA;
@@ -38,6 +32,7 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.GrowingMapAlphabet;
+import org.nustaq.serialization.FSTConfiguration;
 
 /**
  * An example to demonstrate the {@link Resumable} feature of LearnLib to continue learning setups from previously
@@ -50,6 +45,7 @@ public final class ResumableExample {
 
     private static final CompactDFA<Character> TARGET;
     private static final Alphabet<Character> INITIAL_ALPHABET;
+    private static final FSTConfiguration FST_CONFIGURATION;
 
     static {
         final int seed = 42;
@@ -57,13 +53,17 @@ public final class ResumableExample {
 
         TARGET = RandomAutomata.randomDFA(new Random(seed), size, Alphabets.characters('a', 'd'));
         INITIAL_ALPHABET = Alphabets.characters('a', 'b');
+
+        FST_CONFIGURATION = FSTConfiguration.createDefaultConfiguration();
+        FST_CONFIGURATION.setForceSerializable(true);
+        FST_CONFIGURATION.setShareReferences(true);
     }
 
     private ResumableExample() {
         // prevent instantiation
     }
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) {
 
         final Setup setup = new Setup();
 
@@ -88,8 +88,7 @@ public final class ResumableExample {
         continueExploring(learnerData, cacheData, 'd');
     }
 
-    private static void continueExploring(byte[] learnerData, byte[] cacheData, char newSymbol)
-            throws IOException, ClassNotFoundException {
+    private static void continueExploring(byte[] learnerData, byte[] cacheData, char newSymbol) {
 
         // re-initialize setup
         final Setup setup = new Setup();
@@ -111,28 +110,20 @@ public final class ResumableExample {
         printStats(setup);
     }
 
-    private static <I, D> void printStats(Setup setup) {
+    private static void printStats(Setup setup) {
         System.out.println("Hypothesis size: " + setup.learner.getHypothesisModel().size());
         System.out.println("Query performance: " + setup.counter.getQueryCount() + " new queries");
         System.out.println("Symbol performance: " + setup.counter.getSymbolCount() + " new symbols");
         System.out.println();
     }
 
-    private static <T extends Serializable> byte[] toBytes(Resumable<T> resumable) throws IOException {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             ObjectOutputStream outputStream = new ObjectOutputStream(baos)) {
-            outputStream.writeObject(resumable.suspend());
-            return baos.toByteArray();
-        }
+    private static <T> byte[] toBytes(Resumable<T> resumable) {
+        return FST_CONFIGURATION.asByteArray(resumable.suspend());
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Serializable> T fromBytes(byte[] bytes)
-            throws IOException, ClassNotFoundException {
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-             ObjectInputStream inputStream = new ObjectInputStream(bais)) {
-            return (T) inputStream.readObject();
-        }
+    private static <T> T fromBytes(byte[] bytes) {
+        return (T) FST_CONFIGURATION.asObject(bytes);
     }
 
     private static class Setup {

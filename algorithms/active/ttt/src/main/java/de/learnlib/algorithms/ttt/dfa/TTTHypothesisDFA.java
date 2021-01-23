@@ -42,13 +42,13 @@ public class TTTHypothesisDFA<I> extends AbstractTTTHypothesis<I, Boolean, TTTSt
 
     @Override
     protected TTTState<I, Boolean> newState(int alphabetSize, TTTTransition<I, Boolean> parent, int id) {
-        return new TTTStateDFA<>(alphabet.size(), parent, id);
+        return new TTTStateDFA<>(numInputs(), parent, id);
     }
 
     @Override
     public UniversalDeterministicAutomaton.FullIntAbstraction<TTTState<I, Boolean>, Boolean, Void> fullIntAbstraction(
             Alphabet<I> alphabet) {
-        if (alphabet == this.alphabet) {
+        if (alphabet.equals(getInputAlphabet())) {
             return this;
         }
         return DFA.super.fullIntAbstraction(alphabet);

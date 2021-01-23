@@ -35,17 +35,22 @@ import de.learnlib.datastructure.observationtable.GenericObservationTable;
  *
  * @author bainczyk
  */
-public class AutomatonLStarState<I, D, AI, S> extends AbstractLStarState<I, D> {
+public class AutomatonLStarState<I, D, AI, S> {
 
+    private final GenericObservationTable<I, D> observationTable;
     private final AI hypothesis;
     private final List<StateInfo<S, I>> stateInfos;
 
     AutomatonLStarState(final GenericObservationTable<I, D> observationTable,
                         final AI hypothesis,
                         final List<StateInfo<S, I>> stateInfos) {
-        super(observationTable);
+        this.observationTable = observationTable;
         this.hypothesis = hypothesis;
         this.stateInfos = stateInfos;
+    }
+
+    GenericObservationTable<I, D> getObservationTable() {
+        return observationTable;
     }
 
     AI getHypothesis() {

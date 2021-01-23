@@ -45,6 +45,8 @@ import net.automatalib.commons.smartcollections.UnorderedCollection;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The TTT learning algorithm for {@link DFA}.
@@ -57,6 +59,8 @@ import net.automatalib.words.impl.Alphabets;
 @SuppressWarnings("PMD.ExcessiveClassLength")
 public abstract class AbstractTTTLearner<A, I, D>
         implements LearningAlgorithm<A, I, D>, SupportsGrowingAlphabet<I>, Resumable<TTTLearnerState<I, D>> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTTTLearner.class);
 
     protected final Alphabet<I> alphabet;
     protected final MembershipOracle<I, D> oracle;
@@ -973,9 +977,16 @@ public abstract class AbstractTTTLearner<A, I, D>
     @Override
     public void resume(final TTTLearnerState<I, D> state) {
         this.hypothesis = state.getHypothesis();
-        this.hypothesis.setAlphabet(alphabet);
         this.dtree = state.getDiscriminationTree();
         this.dtree.setOracle(oracle);
+
+        final Alphabet<I> oldAlphabet = this.hypothesis.getInputAlphabet();
+        if (!oldAlphabet.equals(this.alphabet)) {
+            LOGGER.warn(
+                    "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
+                    this.alphabet,
+                    oldAlphabet);
+        }
     }
 
     public static final class BuilderDefaults {

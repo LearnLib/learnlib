@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.kv.mealy;
 
-import java.io.Serializable;
 import java.util.List;
 
 import de.learnlib.algorithms.kv.StateInfo;
@@ -33,7 +32,7 @@ import net.automatalib.words.Word;
  *
  * @author bainczyk
  */
-public class KearnsVaziraniMealyState<I, O> implements Serializable {
+public class KearnsVaziraniMealyState<I, O> {
 
     private final CompactMealy<I, O> hypothesis;
     private final MultiDTree<I, Word<O>, StateInfo<I, Word<O>>> discriminationTree;

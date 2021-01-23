@@ -15,8 +15,6 @@
  */
 package de.learnlib.algorithms.discriminationtree;
 
-import java.io.Serializable;
-
 import de.learnlib.algorithms.discriminationtree.hypothesis.DTLearnerHypothesis;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
@@ -36,7 +34,7 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscr
  *
  * @author bainczyk
  */
-public class DTLearnerState<I, D, SP, TP> implements Serializable {
+public class DTLearnerState<I, D, SP, TP> {
 
     private final AbstractWordBasedDiscriminationTree<I, D, HState<I, D, SP, TP>> dtree;
     private final DTLearnerHypothesis<I, D, SP, TP> hypothesis;

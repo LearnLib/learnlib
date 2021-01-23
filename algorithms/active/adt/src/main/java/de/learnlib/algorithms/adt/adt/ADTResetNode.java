@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.adt.adt;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
@@ -35,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author frohme
  */
-public class ADTResetNode<S, I, O> implements ADTNode<S, I, O>, Serializable {
+public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
 
     private final ADTNode<S, I, O> successor;
     private ADTNode<S, I, O> parent;

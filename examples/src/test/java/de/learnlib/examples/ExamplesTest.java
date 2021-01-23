@@ -93,7 +93,7 @@ public class ExamplesTest {
     }
 
     @Test
-    public void testResumableExample() throws IOException, ClassNotFoundException {
+    public void testResumableExample() {
         de.learnlib.examples.resumable.ResumableExample.main(new String[0]);
     }
 

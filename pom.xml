@@ -231,6 +231,7 @@ limitations under the License.
         <checkerframework.version>3.7.0</checkerframework.version>
         <checkstyle.version>8.36.2</checkstyle.version>
         <error-prone.version>9+181-r4173-1</error-prone.version> <!-- required by checkerframework, keep in sync -->
+        <fst.version>2.57</fst.version>
         <guava.version>29.0-jre</guava.version>
         <javapoet.version>1.13.0</javapoet.version>
         <jmockit.version>1.49</jmockit.version>
@@ -653,6 +654,12 @@ limitations under the License.
                 <groupId>com.github.misberner.ap-commons</groupId>
                 <artifactId>ap-commons</artifactId>
                 <version>${ap-commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>de.ruedigermoeller</groupId>
+                <artifactId>fst</artifactId>
+                <version>${fst.version}</version>
             </dependency>
 
             <dependency>

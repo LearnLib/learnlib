@@ -15,11 +15,7 @@
  */
 package de.learnlib.testsupport;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.IOException;
 
 import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm;
@@ -46,11 +42,11 @@ import org.testng.annotations.Test;
  * @param <D>
  *         output domain type
  * @param <T>
- *         serializable state type
+ *         state type
  *
  * @author bainczyk
  */
-public abstract class AbstractResumableLearnerTest<L extends Resumable<T> & LearningAlgorithm<M, I, D>, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>, OR, I, D, T extends Serializable> {
+public abstract class AbstractResumableLearnerTest<L extends Resumable<T> & LearningAlgorithm<M, I, D>, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>, OR, I, D, T> {
 
     protected static final int RANDOM_SEED = 42;
 
@@ -87,13 +83,11 @@ public abstract class AbstractResumableLearnerTest<L extends Resumable<T> & Lear
     protected abstract int getRounds();
 
     @Test
-    public void testSuspendAndResumeLearner() throws Exception {
-        final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-        final ObjectOutputStream objectOut = new ObjectOutputStream(byteOut);
-
+    public void testSuspendAndResumeLearner() throws IOException {
         learner.startLearning();
 
         int roundsPre = 0, roundsPost = 0;
+        byte[] data = null;
 
         EquivalenceOracle<M, I, D> equivalenceOracle = getEquivalenceOracle(target);
 
@@ -108,22 +102,16 @@ public abstract class AbstractResumableLearnerTest<L extends Resumable<T> & Lear
 
             if (roundsPre == rounds) {
                 // serialize the state
-                final T state = learner.suspend();
-                objectOut.writeObject(state);
-                objectOut.close();
+                data = ResumeUtils.toBytes(learner.suspend());
             }
         }
 
         // deserialize the state
-        final ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
-        final ObjectInputStream objectIn = new ObjectInputStream(byteIn);
-        @SuppressWarnings("unchecked")
-        final T serializedState = (T) objectIn.readObject();
-        objectIn.close();
+        assert data != null;
 
         // create the learner from the state
         final L learner2 = getLearner(getOracle(target), inputAlphabet);
-        learner2.resume(serializedState);
+        learner2.resume(ResumeUtils.fromBytes(data));
 
         while (true) {
             final M hyp = learner2.getHypothesisModel();

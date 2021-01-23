@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.dhc.mealy;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,7 +33,7 @@ import net.automatalib.words.Word;
  *
  * @author bainczyk
  */
-public class MealyDHCState<I, O> implements Serializable {
+public class MealyDHCState<I, O> {
 
     private final Set<Word<I>> splitters;
     private final CompactMealy<I, O> hypothesis;

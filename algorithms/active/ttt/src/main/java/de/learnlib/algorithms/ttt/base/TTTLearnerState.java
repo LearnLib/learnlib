@@ -15,8 +15,6 @@
  */
 package de.learnlib.algorithms.ttt.base;
 
-import java.io.Serializable;
-
 /**
  * Class that contains all data that represent the internal state of the {@link AbstractTTTLearner} learner and its DFA
  * and Mealy implementations.
@@ -28,7 +26,7 @@ import java.io.Serializable;
  *
  * @author bainczyk
  */
-public class TTTLearnerState<I, D> implements Serializable {
+public class TTTLearnerState<I, D> {
 
     private final AbstractTTTHypothesis<I, D, ?> hypothesis;
     private final BaseTTTDiscriminationTree<I, D> discriminationTree;

@@ -60,6 +60,12 @@ limitations under the License.
             <artifactId>learnlib-membership-oracles</artifactId>
         </dependency>
         <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-test-support</artifactId>
+            <scope>compile</scope>
+            <!-- Override! -->
+        </dependency>
+        <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-util</artifactId>
         </dependency>

@@ -60,7 +60,7 @@ public class BaseTTTDiscriminationTree<I, D>
      * @return the leaf resulting from the sift operation
      */
     public AbstractBaseDTNode<I, D> sift(Word<I> word, boolean hard) {
-        return sift(root, word, hard);
+        return sift(getRoot(), word, hard);
     }
 
     public AbstractBaseDTNode<I, D> sift(AbstractBaseDTNode<I, D> start, Word<I> prefix, boolean hard) {

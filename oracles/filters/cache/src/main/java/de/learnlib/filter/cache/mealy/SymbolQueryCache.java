@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.cache.mealy;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -145,7 +144,7 @@ public class SymbolQueryCache<I, O>
         this.cache = state.getCache();
     }
 
-    public static class SymbolQueryCacheState<I, O> implements Serializable {
+    public static class SymbolQueryCacheState<I, O> {
 
         private final CompactMealy<I, O> cache;
 
