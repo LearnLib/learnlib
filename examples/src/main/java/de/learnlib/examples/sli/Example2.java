@@ -62,7 +62,7 @@ public final class Example2 {
         final int alphabetSize = 10;
         INPUTS = Alphabets.integers(0, alphabetSize);
 
-        final Character[] outputs = new Character[] {'a', 'b', 'c'};
+        final Character[] outputs = {'a', 'b', 'c'};
         UNDEFINED = 'u';
 
         final ExampleRandomStateLocalInputMealy<Integer, Character> example =

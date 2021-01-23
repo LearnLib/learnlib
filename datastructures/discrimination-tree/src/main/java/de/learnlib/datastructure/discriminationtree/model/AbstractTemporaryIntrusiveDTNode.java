@@ -83,11 +83,11 @@ public abstract class AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T extends Int
     }
 
     public boolean isInner() {
-        return (discriminator != null);
+        return discriminator != null;
     }
 
     public boolean isBlockRoot() {
-        return (prevElement != null);
+        return prevElement != null;
     }
 
     public void removeFromBlockList() {

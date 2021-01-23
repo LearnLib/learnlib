@@ -142,7 +142,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
         startLearning();
 
-        return (hypothesis.size() != oldSize);
+        return hypothesis.size() != oldSize;
     }
 
     @Override

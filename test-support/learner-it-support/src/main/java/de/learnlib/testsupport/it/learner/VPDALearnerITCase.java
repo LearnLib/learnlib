@@ -32,8 +32,8 @@ public class VPDALearnerITCase<I> implements ITest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VPDALearnerITCase.class);
 
-    private static final long NANOS_PER_MILLISECOND = 1000000;
-    private static final long MILLIS_PER_SECOND = 1000;
+    private static final long NANOS_PER_MILLISECOND = 1_000_000;
+    private static final long MILLIS_PER_SECOND = 1_000;
 
     private final LearnerVariant<OneSEVPA<?, I>, I, Boolean> variant;
     private final OneSEVPA<?, I> reference;

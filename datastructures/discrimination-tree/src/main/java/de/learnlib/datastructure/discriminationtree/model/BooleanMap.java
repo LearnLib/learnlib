@@ -171,7 +171,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
 
         @Override
         public boolean contains(Object o) {
-            return (o.getClass() == Boolean.class);
+            return o.getClass() == Boolean.class;
         }
 
     }

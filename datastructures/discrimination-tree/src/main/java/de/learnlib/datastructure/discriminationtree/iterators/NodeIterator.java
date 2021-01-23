@@ -40,7 +40,7 @@ class NodeIterator<N extends AbstractDTNode<?, ?, ?, N>> extends AbstractIterato
 
     @Override
     protected N computeNext() {
-        while (!stack.isEmpty()) {
+        if (!stack.isEmpty()) {
             N curr = stack.pop();
 
             if (!curr.isLeaf()) {

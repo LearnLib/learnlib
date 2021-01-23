@@ -56,7 +56,7 @@ public class ExampleGrid extends DefaultMealyLearningExample<Character, Integer>
         S[][] stategrid = (S[][]) new Object[xsize][ysize];
         for (int x = 0; x < xsize; ++x) {
             for (int y = 0; y < ysize; ++y) {
-                stategrid[x][y] = (x == 0 && y == 0) ? fm.addInitialState() : fm.addState();
+                stategrid[x][y] = x == 0 && y == 0 ? fm.addInitialState() : fm.addState();
             }
         }
 

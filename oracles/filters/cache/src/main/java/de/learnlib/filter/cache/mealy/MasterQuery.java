@@ -65,7 +65,7 @@ final class MasterQuery<I, O> extends AbstractQuery<I, Word<O>> {
     }
 
     public boolean isAnswered() {
-        return (answer != null);
+        return answer != null;
     }
 
     @Override

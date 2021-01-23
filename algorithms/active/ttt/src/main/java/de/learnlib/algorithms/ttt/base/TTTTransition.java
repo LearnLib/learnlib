@@ -54,7 +54,7 @@ public class TTTTransition<I, D> extends IntrusiveListElemImpl<TTTTransition<I, 
     }
 
     public boolean isTree() {
-        return (treeTarget != null);
+        return treeTarget != null;
     }
 
     public AbstractBaseDTNode<I, D> getNonTreeTarget() {

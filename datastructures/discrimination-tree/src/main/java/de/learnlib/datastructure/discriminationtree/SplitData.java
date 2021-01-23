@@ -95,7 +95,7 @@ public class SplitData<O, T extends IntrusiveList<?>> {
      * false} otherwise
      */
     public boolean hasStateLabel() {
-        return (stateLabel != null);
+        return stateLabel != null;
     }
 
     /**

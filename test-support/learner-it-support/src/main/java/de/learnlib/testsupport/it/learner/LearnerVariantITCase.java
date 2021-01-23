@@ -32,8 +32,8 @@ final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LearnerVariantITCase.class);
 
-    private static final long NANOS_PER_MILLISECOND = 1000000;
-    private static final long MILLIS_PER_SECOND = 1000;
+    private static final long NANOS_PER_MILLISECOND = 1_000_000;
+    private static final long MILLIS_PER_SECOND = 1_000;
 
     private final LearnerVariant<? extends M, I, D> variant;
     private final LearningExample<I, ? extends M> example;

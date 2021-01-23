@@ -114,7 +114,6 @@ public class SimulatorOmegaOracle<S extends Object, I, D> implements SingleQuery
     public Pair<@Nullable D, Integer> answerQuery(Word<I> prefix, Word<I> loop, int repeat) {
         assert repeat > 0;
 
-        final List<S> states = new ArrayList<>(repeat + 1);
         final WordBuilder<I> wb = new WordBuilder<>(prefix.length() + loop.length() * repeat, prefix);
 
         S stateIter = simpleDTS.getState(wb);
@@ -123,6 +122,7 @@ public class SimulatorOmegaOracle<S extends Object, I, D> implements SingleQuery
             return Pair.of(null, -1);
         }
 
+        final List<S> states = new ArrayList<>(repeat + 1);
         states.add(stateIter);
 
         for (int i = 0; i < repeat; i++) {

@@ -31,6 +31,7 @@ final class NondetStackContents {
 
     private final boolean isTrueNondet;
 
+    @SuppressWarnings("PMD.UselessParentheses") // to make it explicit which binary operator has higher precedence
     NondetStackContents(Set<Integer> syms, NondetStackContents rest) {
         this.syms = syms;
         this.rest = rest;

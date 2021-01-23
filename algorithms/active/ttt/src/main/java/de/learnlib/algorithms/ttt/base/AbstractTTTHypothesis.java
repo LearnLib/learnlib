@@ -125,7 +125,7 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
      * @return {@code true} if this automaton was initialized, {@code false} otherwise.
      */
     public boolean isInitialized() {
-        return (initialState != null);
+        return initialState != null;
     }
 
     public TTTState<I, D> createState(TTTTransition<I, D> parent) {

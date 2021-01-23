@@ -51,9 +51,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * and consistency. <ul> <li>An observation table is <b>closed</b> iff for each long prefix <code>u</code> there exists
  * a short prefix <code>u'</code> such that the row contents for both prefixes are equal. <li>An observation table is
  * <b>consistent</b> iff for every two short prefixes <code>u</code> and <code>u'</code> with identical row contents,
- * it
- * holds that for every input symbol <code>a</code> the rows indexed by <code>ua</code> and <code>u'a</code> also have
- * identical contents. </ul>
+ * it holds that for every input symbol <code>a</code> the rows indexed by <code>ua</code> and <code>u'a</code> also
+ * have identical contents. </ul>
  *
  * @param <I>
  *         input symbol type
@@ -191,10 +190,8 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         Set<Word<I>> prefixes = new HashSet<>(initialShortPrefixes);
 
         for (Word<I> pref : initialShortPrefixes) {
-            if (!pref.isEmpty()) {
-                if (!prefixes.contains(pref.prefix(-1))) {
-                    return false;
-                }
+            if (!pref.isEmpty() && !prefixes.contains(pref.prefix(-1))) {
+                return false;
             }
         }
 
@@ -268,7 +265,6 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
 
     @Override
     public List<List<Row<I>>> addSuffixes(Collection<? extends Word<I>> newSuffixes, MembershipOracle<I, D> oracle) {
-        int oldSuffixCount = suffixes.size();
         // we need a stable iteration order, and only List guarantees this
         List<Word<I>> newSuffixList = new ArrayList<>();
         for (Word<I> suffix : newSuffixes) {
@@ -299,6 +295,7 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
         oracle.processQueries(queries);
 
         Iterator<DefaultQuery<I, D>> queryIt = queries.iterator();
+        int oldSuffixCount = suffixes.size();
 
         for (RowImpl<I> row : shortPrefixRows) {
             List<D> rowContents = allRowContents.get(row.getRowContentId());
@@ -541,7 +538,7 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
             return false;
         }
         int contentId = row.getRowContentId();
-        return (canonicalRows.get(contentId) == row);
+        return canonicalRows.get(contentId) == row;
     }
 
     @Override

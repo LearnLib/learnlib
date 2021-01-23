@@ -90,7 +90,7 @@ public abstract class AbstractLStar<A, I, D>
         }
         int oldDistinctRows = table.numberOfDistinctRows();
         doRefineHypothesis(ceQuery);
-        assert (table.numberOfDistinctRows() > oldDistinctRows);
+        assert table.numberOfDistinctRows() > oldDistinctRows;
         return true;
     }
 
@@ -150,7 +150,7 @@ public abstract class AbstractLStar<A, I, D>
                         Word<I> newSuffix = analyzeInconsistency(incons);
                         unclosedIter = table.addSuffix(newSuffix, oracle);
                     }
-                } while (unclosedIter.isEmpty() && (incons != null));
+                } while (unclosedIter.isEmpty() && incons != null);
             }
         } while (!unclosedIter.isEmpty());
 

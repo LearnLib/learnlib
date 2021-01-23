@@ -276,12 +276,10 @@ public class TTTLearnerVPDA<I> extends DTLearnerVPDA<I> {
         for (DTNode<I> blockRoot : blockList) {
             Splitter<I> splitter = findSplitter(blockRoot);
 
-            if (splitter != null) {
-                if (bestSplitter == null ||
-                    splitter.getNewDiscriminatorLength() < bestSplitter.getNewDiscriminatorLength()) {
-                    bestSplitter = splitter;
-                    bestBlockRoot = blockRoot;
-                }
+            if (splitter != null && (bestSplitter == null ||
+                                     splitter.getNewDiscriminatorLength() < bestSplitter.getNewDiscriminatorLength())) {
+                bestSplitter = splitter;
+                bestBlockRoot = blockRoot;
             }
         }
 

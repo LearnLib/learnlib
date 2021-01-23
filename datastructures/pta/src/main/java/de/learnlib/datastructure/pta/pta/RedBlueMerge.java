@@ -106,10 +106,8 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
                         SP newSP = null;
                         if (qSuccSP == null && rSuccSP != null) {
                             newSP = rSuccSP;
-                        } else if (rSuccSP != null) { // && qSucc.property != null
-                            if (!Objects.equals(qSuccSP, rSuccSP)) {
-                                return false;
-                            }
+                        } else if (rSuccSP != null && !rSuccSP.equals(qSuccSP)) {
+                            return false;
                         }
 
                         ArrayStorage<TP> newTPs = null;

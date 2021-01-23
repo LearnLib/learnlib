@@ -126,7 +126,7 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M> implements Passive
             final Stream<RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>>> filteredMerges =
                     selectMerges(possibleMerges);
             final Optional<RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>>> result =
-                    (deterministic) ? filteredMerges.findFirst() : filteredMerges.findAny();
+                    deterministic ? filteredMerges.findFirst() : filteredMerges.findAny();
 
             if (result.isPresent()) {
                 RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>> mod = result.get();

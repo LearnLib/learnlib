@@ -43,8 +43,8 @@ public final class PassiveLearnerVariantTICase<I, D, M extends SuffixOutput<I, D
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PassiveLearnerVariantTICase.class);
 
-    private static final long NANOS_PER_MILLISECOND = 1000000;
-    private static final long MILLIS_PER_SECOND = 1000;
+    private static final long NANOS_PER_MILLISECOND = 1_000_000;
+    private static final long MILLIS_PER_SECOND = 1_000;
 
     private final PassiveLearnerVariant<? extends M, I, D> variant;
     private final PassiveLearningExample<I, D> example;

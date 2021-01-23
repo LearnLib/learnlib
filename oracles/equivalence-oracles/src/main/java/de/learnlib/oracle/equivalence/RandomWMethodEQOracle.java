@@ -208,7 +208,7 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
 
         // construct random middle part (of some expected length)
         int size = minimalSize;
-        while ((size > 0) || (rand.nextDouble() > 1 / (rndLength + 1.0))) {
+        while (size > 0 || rand.nextDouble() > 1 / (rndLength + 1.0)) {
             wb.append(arrayAlphabet.get(rand.nextInt(arrayAlphabet.size())));
             if (size > 0) {
                 size--;

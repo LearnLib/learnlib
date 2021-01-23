@@ -112,7 +112,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
                 continue;
             }
 
-            S state = createState((id == 0), sp);
+            S state = createState(id == 0, sp);
 
             stateInfos.set(id, new StateInfo<>(sp, state));
         }

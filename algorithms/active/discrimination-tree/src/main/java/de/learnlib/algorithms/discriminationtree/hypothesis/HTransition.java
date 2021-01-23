@@ -68,12 +68,12 @@ public class HTransition<I, O, SP, TP> implements Serializable {
 
     @EnsuresNonNullIf(expression = "treeTgt", result = true)
     public boolean isTree() {
-        return (treeTgt != null);
+        return treeTgt != null;
     }
 
     @EnsuresNonNullIf(expression = "dt", result = true)
     public boolean isNonTree() {
-        return (dt != null);
+        return dt != null;
     }
 
     public AbstractWordBasedDTNode<I, O, HState<I, O, SP, TP>> getDT() {

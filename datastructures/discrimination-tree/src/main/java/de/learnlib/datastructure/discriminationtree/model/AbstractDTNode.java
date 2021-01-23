@@ -90,7 +90,7 @@ public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, 
     }
 
     public boolean isLeaf() {
-        return (children == null);
+        return children == null;
     }
 
     protected abstract Map<O, N> createChildMap();

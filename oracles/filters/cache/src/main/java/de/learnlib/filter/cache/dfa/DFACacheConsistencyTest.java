@@ -67,7 +67,7 @@ public final class DFACacheConsistencyTest<I> implements DFAEquivalenceOracle<I>
         } finally {
             incDfaLock.readLock().unlock();
         }
-        assert (acc != Acceptance.DONT_KNOW);
+        assert acc != Acceptance.DONT_KNOW;
 
         Boolean out = acc == Acceptance.TRUE;
         DefaultQuery<I, Boolean> result = new DefaultQuery<>(w);

@@ -36,7 +36,7 @@ final class MDLUtil {
             sampleScore += countWordChoices(merged, alphabetSize, w);
         }
 
-        return (merged.size() * alphabetSize) + sampleScore;
+        return merged.size() * alphabetSize + sampleScore;
     }
 
     private static <S> double countWordChoices(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> merged,

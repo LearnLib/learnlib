@@ -115,7 +115,7 @@ public class Row<I> {
     }
 
     public boolean isShortPrefixRow() {
-        return (successorRows != null);
+        return successorRows != null;
     }
 
     boolean covers(Row<I> other) {

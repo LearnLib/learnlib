@@ -70,6 +70,11 @@ public final class Example4 {
 
     public static void main(String[] args) {
 
+        // This code requires v3.1.0
+        if (!LTSminUtil.supports(LTSminVersion.of(3, 1, 0))) {
+            return;
+        }
+
         DFALearningExample<Character> le = ExampleTinyDFA.createExample();
 
         // define the alphabet
@@ -94,11 +99,6 @@ public final class Example4 {
         // create a lasso emptiness oracle, that is used to disprove properties
         LassoEmptinessOracle.DFALassoEmptinessOracle<Character>
                 lassoEmptinessOracle = new DFALassoEmptinessOracleImpl<>(omqOracle);
-
-        // The following code requires v3.1.0
-        if (!LTSminUtil.supports(LTSminVersion.of(3, 1, 0))) {
-            return;
-        }
 
         // create a model checker that uses monitors
         ModelChecker.DFAModelChecker<Character, String, DFA<?, Character>> modelCheckerMonitor =

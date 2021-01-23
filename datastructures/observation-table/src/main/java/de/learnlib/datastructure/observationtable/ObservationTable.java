@@ -182,7 +182,7 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
     int numberOfDistinctRows();
 
     default boolean isClosed() {
-        return (findUnclosedRow() == null);
+        return findUnclosedRow() == null;
     }
 
     default @Nullable Row<I> findUnclosedRow() {
@@ -280,7 +280,7 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
     }
 
     default boolean isConsistent() {
-        return (findInconsistency() == null);
+        return findInconsistency() == null;
     }
 
     default @Nullable Inconsistency<I> findInconsistency() {

@@ -46,6 +46,7 @@ final class NonDetState<L> {
         return new State<>(locations.iterator().next(), NondetStackContents.toDet(stack));
     }
 
+    @SuppressWarnings("PMD.UselessParentheses") // to make it explicit which binary operator has higher precedence
     public boolean isNonDet() {
         return locations.size() > 1 || (stack != null && stack.isTrueNondet());
     }

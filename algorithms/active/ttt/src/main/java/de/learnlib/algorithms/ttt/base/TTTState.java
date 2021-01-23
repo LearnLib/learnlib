@@ -50,7 +50,7 @@ public class TTTState<I, D> implements AccessSequenceProvider<I>, Serializable {
      * @return {@code true} if this state is the initial state, {@code false} otherwise
      */
     public boolean isRoot() {
-        return (getParentTransition() == null);
+        return getParentTransition() == null;
     }
 
     public TTTTransition<I, D> getParentTransition() {

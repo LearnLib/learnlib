@@ -53,8 +53,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class Example2 {
 
     private static final double RESET_PROBABILITY = 0.05;
-    private static final int MAX_STEPS = 10000;
-    private static final int RANDOM_SEED = 46346293;
+    private static final int MAX_STEPS = 10_000;
+    private static final int RANDOM_SEED = 46_346_293;
 
     private Example2() {
         // prevent instantiation

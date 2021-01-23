@@ -60,7 +60,6 @@ public final class MealyUtil {
     }
 
     private static <S, I, T, O> int doFindMismatch(MealyMachine<S, I, T, O> hypothesis, Word<I> input, Word<O> output) {
-        int i = 0;
         S state = hypothesis.getInitialState();
 
         if (state == null) {
@@ -69,6 +68,7 @@ public final class MealyUtil {
 
         Iterator<I> inIt = input.iterator();
         Iterator<O> outIt = output.iterator();
+        int i = 0;
 
         while (inIt.hasNext() && outIt.hasNext()) {
             final T trans = hypothesis.getTransition(state, inIt.next());

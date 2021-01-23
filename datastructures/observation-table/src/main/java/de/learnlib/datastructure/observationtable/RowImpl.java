@@ -118,11 +118,11 @@ final class RowImpl<I> implements Row<I>, Serializable {
 
     @Override
     public boolean isShortPrefixRow() {
-        return (lpIndex == -1);
+        return lpIndex == -1;
     }
 
     boolean hasContents() {
-        return (rowContentId != -1);
+        return rowContentId != -1;
     }
 
     int getLpIndex() {

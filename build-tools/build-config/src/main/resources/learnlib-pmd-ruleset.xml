@@ -41,11 +41,29 @@ limitations under the License.
         <exclude name="JUnitUseExpected"/>
     </rule>
 
-    <!--<rule ref="category/java/codestyle.xml"/>-->
+    <rule ref="category/java/codestyle.xml">
+        <exclude name="AtLeastOneConstructor"/>
+        <exclude name="CallSuperInConstructor"/>
+        <exclude name="ClassNamingConventions"/>
+        <exclude name="CommentDefaultAccessModifier"/>
+        <exclude name="ConfusingTernary"/>
+        <exclude name="DefaultPackage"/>
+        <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
+        <exclude name="FormalParameterNamingConventions"/>
+        <exclude name="GenericsNaming"/>
+        <exclude name="LinguisticNaming"/>
+        <exclude name="LocalVariableCouldBeFinal"/>
+        <exclude name="LocalVariableNamingConventions"/>
+        <exclude name="LongVariable"/>
+        <exclude name="MethodArgumentCouldBeFinal"/>
+        <exclude name="OnlyOneReturn"/>
+        <exclude name="ShortClassName"/>
+        <exclude name="ShortMethodName"/>
+        <exclude name="ShortVariable"/>
+    </rule>
 
     <rule ref="category/java/design.xml">
         <exclude name="AvoidDeeplyNestedIfStmts"/>
-        <exclude name="CollapsibleIfStatements"/>
         <exclude name="CyclomaticComplexity"/>
         <exclude name="DataClass"/>
         <exclude name="ExcessiveImports"/>
@@ -64,14 +82,12 @@ limitations under the License.
 
     <rule ref="category/java/errorprone.xml">
         <exclude name="AssignmentInOperand"/>
-        <exclude name="AvoidBranchingStatementAsLastInLoop"/>
         <exclude name="AvoidDuplicateLiterals"/>
         <exclude name="AvoidFieldNameMatchingMethodName"/>
         <exclude name="AvoidFieldNameMatchingTypeName"/>
         <exclude name="AvoidLiteralsInIfCondition"/>
         <exclude name="BeanMembersShouldSerialize"/>
         <exclude name="CompareObjectsWithEquals"/>
-        <exclude name="ConstructorCallsOverridableMethod"/>
         <exclude name="DataflowAnomalyAnalysis"/>
         <exclude name="EmptyWhileStmt"/>
         <exclude name="MissingSerialVersionUID"/>

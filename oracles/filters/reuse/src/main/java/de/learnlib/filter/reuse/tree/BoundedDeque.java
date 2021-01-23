@@ -152,7 +152,7 @@ public class BoundedDeque<E> extends AbstractCollection<E> {
      * @return {@code true} if the capacity is restricted, {@code false} otherwise
      */
     public boolean isBounded() {
-        return (capacity > 0);
+        return capacity > 0;
     }
 
     @Override
