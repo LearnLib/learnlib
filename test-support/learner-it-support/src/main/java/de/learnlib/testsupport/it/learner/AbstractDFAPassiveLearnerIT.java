@@ -44,7 +44,7 @@ public abstract class AbstractDFAPassiveLearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
-        final List<PassiveLearnerVariantTICase<?, ?, ?>> result = new ArrayList<>();
+        final List<PassiveLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
         final List<LearningExample.DFALearningExample<?>> examples = LearningExamples.createDFAExamples();
 
         for (LearningExample.DFALearningExample<?> example : examples) {
@@ -54,7 +54,7 @@ public abstract class AbstractDFAPassiveLearnerIT {
         return result.toArray();
     }
 
-    private <I> List<PassiveLearnerVariantTICase<I, Boolean, DFA<?, I>>> createAllVariantsITCase(LearningExample.DFALearningExample<I> example) {
+    private <I> List<PassiveLearnerVariantITCase<I, Boolean, DFA<?, I>>> createAllVariantsITCase(LearningExample.DFALearningExample<I> example) {
 
         final Alphabet<I> alphabet = example.getAlphabet();
         final DFA<?, I> reference = example.getReferenceAutomaton();

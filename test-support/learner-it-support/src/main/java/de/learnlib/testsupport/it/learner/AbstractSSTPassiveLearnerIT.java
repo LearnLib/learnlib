@@ -45,7 +45,7 @@ public abstract class AbstractSSTPassiveLearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
-        final List<PassiveLearnerVariantTICase<?, ?, ?>> result = new ArrayList<>();
+        final List<PassiveLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
 
         for (MealyLearningExample<?, ?> example : LearningExamples.createMealyExamples()) {
             result.addAll(createAllVariantsITCase(example));
@@ -58,7 +58,7 @@ public abstract class AbstractSSTPassiveLearnerIT {
         return result.toArray();
     }
 
-    private <I, O, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, Word<O>>> List<PassiveLearnerVariantTICase<I, Word<O>, SubsequentialTransducer<?, I, ?, O>>> createAllVariantsITCase(
+    private <I, O, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, Word<O>>> List<PassiveLearnerVariantITCase<I, Word<O>, SubsequentialTransducer<?, I, ?, O>>> createAllVariantsITCase(
             LearningExample<I, A> example) {
 
         final Alphabet<I> alphabet = example.getAlphabet();

@@ -73,15 +73,15 @@ public final class LearnerITUtil {
      *
      * @return the list of test cases, one for each example
      */
-    public static <I, D, A extends SuffixOutput<I, D>> List<PassiveLearnerVariantTICase<I, D, A>> createPassiveExampleITCases(
+    public static <I, D, A extends SuffixOutput<I, D>> List<PassiveLearnerVariantITCase<I, D, A>> createPassiveExampleITCases(
             PassiveLearningExample<I, D> example,
             PassiveLearnerVariantListImpl<A, I, D> variants) {
 
         final List<PassiveLearnerVariant<A, I, D>> variantList = variants.getLearnerVariants();
-        final List<PassiveLearnerVariantTICase<I, D, A>> result = new ArrayList<>(variantList.size());
+        final List<PassiveLearnerVariantITCase<I, D, A>> result = new ArrayList<>(variantList.size());
 
         for (PassiveLearnerVariant<A, I, D> variant : variantList) {
-            result.add(new PassiveLearnerVariantTICase<>(variant, example));
+            result.add(new PassiveLearnerVariantITCase<>(variant, example));
         }
 
         return result;

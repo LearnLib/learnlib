@@ -39,9 +39,9 @@ import org.testng.annotations.Test;
  *
  * @author frohme
  */
-public final class PassiveLearnerVariantTICase<I, D, M extends SuffixOutput<I, D>> implements ITest {
+public final class PassiveLearnerVariantITCase<I, D, M extends SuffixOutput<I, D>> implements ITest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PassiveLearnerVariantTICase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PassiveLearnerVariantITCase.class);
 
     private static final long NANOS_PER_MILLISECOND = 1_000_000;
     private static final long MILLIS_PER_SECOND = 1_000;
@@ -49,7 +49,7 @@ public final class PassiveLearnerVariantTICase<I, D, M extends SuffixOutput<I, D
     private final PassiveLearnerVariant<? extends M, I, D> variant;
     private final PassiveLearningExample<I, D> example;
 
-    PassiveLearnerVariantTICase(PassiveLearnerVariant<? extends M, I, D> variant,
+    PassiveLearnerVariantITCase(PassiveLearnerVariant<? extends M, I, D> variant,
                                 PassiveLearningExample<I, D> example) {
         this.variant = variant;
         this.example = example;
