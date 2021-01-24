@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Maps;
 import de.learnlib.algorithms.adt.adt.ADT;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.SubtreeReplacer;
@@ -65,15 +65,11 @@ public class ExhaustiveReplacer implements SubtreeReplacer {
         final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot());
         candidates.remove(adt.getRoot());
 
-        final Map<ADTNode<S, I, O>, Set<S>> subtreesToFinalNodes = candidates.stream()
-                                                                             .collect(Collectors.toMap(Function.identity(),
-                                                                                                       node -> ADTUtil.collectLeaves(
-                                                                                                               node)
-                                                                                                                      .stream()
-                                                                                                                      .map(ADTNode::getHypothesisState)
-                                                                                                                      .collect(
-                                                                                                                              Collectors
-                                                                                                                                      .toSet())));
+        final Map<ADTNode<S, I, O>, Set<S>> subtreesToFinalNodes = Maps.toMap(candidates,
+                                                                              node -> ADTUtil.collectLeaves(node)
+                                                                                             .stream()
+                                                                                             .map(ADTNode::getHypothesisState)
+                                                                                             .collect(Collectors.toSet()));
 
         final List<ADTNode<S, I, O>> sortedCandidates = new ArrayList<>(candidates);
         sortedCandidates.sort(Comparator.comparingInt(n -> subtreesToFinalNodes.get(n).size()));

@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.ADTExtender;
@@ -32,6 +30,7 @@ import de.learnlib.algorithms.adt.config.model.DefensiveADSCalculator;
 import de.learnlib.algorithms.adt.model.ExtensionResult;
 import de.learnlib.algorithms.adt.util.ADTUtil;
 import de.learnlib.api.query.DefaultQuery;
+import net.automatalib.commons.smartcollections.ReflexiveMapView;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 
@@ -71,11 +70,8 @@ public class DefaultExtender implements ADTExtender {
             final Word<O> outputTrace = parentTrace.getSecond();
 
             try {
-                Map<ADTState<I, O>, ADTState<I, O>> currentToInitialMapping = ADTUtil.collectLeaves(ads)
-                                                                                     .stream()
-                                                                                     .map(ADTNode::getHypothesisState)
-                                                                                     .collect(Collectors.toMap(Function.identity(),
-                                                                                                               Function.identity()));
+                Map<ADTState<I, O>, ADTState<I, O>> currentToInitialMapping =
+                        new ReflexiveMapView<>(ADTUtil.collectHypothesisStates(ads));
 
                 // apply parent trace
                 for (int idx = 0; idx < inputTrace.length(); idx++) {
@@ -128,7 +124,7 @@ public class DefaultExtender implements ADTExtender {
 
                 final ADTNode<ADTState<I, O>, I, O> extension = potentialExtension.get();
 
-                // set the original intial states
+                // set the original initial states
                 for (ADTNode<ADTState<I, O>, I, O> finalNode : ADTUtil.collectLeaves(extension)) {
                     finalNode.setHypothesisState(currentToInitialMapping.get(finalNode.getHypothesisState()));
                 }

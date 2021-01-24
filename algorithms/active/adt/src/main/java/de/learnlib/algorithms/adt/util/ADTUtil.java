@@ -20,6 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 
 import de.learnlib.algorithms.adt.adt.ADTLeafNode;
 import de.learnlib.algorithms.adt.adt.ADTNode;
@@ -64,19 +65,26 @@ public final class ADTUtil {
         return checkNodeType(node, ADTNode.NodeType.RESET_NODE);
     }
 
-    public static <S, I, O> Set<ADTNode<S, I, O>> collectLeaves(final ADTNode<S, I, O> root) {
-        final Set<ADTNode<S, I, O>> result = new LinkedHashSet<>();
-        collectLeavesRecursively(result, root);
+    public static <S, I, O> Set<S> collectHypothesisStates(final ADTNode<S, I, O> root) {
+        final Set<S> result = new LinkedHashSet<>();
+        collectTransformedLeavesRecursively(result, root, ADTNode::getHypothesisState);
         return result;
     }
 
-    private static <S, I, O> void collectLeavesRecursively(final Set<ADTNode<S, I, O>> nodes,
-                                                           final ADTNode<S, I, O> current) {
+    public static <S, I, O> Set<ADTNode<S, I, O>> collectLeaves(final ADTNode<S, I, O> root) {
+        final Set<ADTNode<S, I, O>> result = new LinkedHashSet<>();
+        collectTransformedLeavesRecursively(result, root, Function.identity());
+        return result;
+    }
+
+    private static <S, I, O, T> void collectTransformedLeavesRecursively(final Set<T> nodes,
+                                                                         final ADTNode<S, I, O> current,
+                                                                         final Function<ADTNode<S, I, O>, T> transformer) {
         if (ADTUtil.isLeafNode(current)) {
-            nodes.add(current);
+            nodes.add(transformer.apply(current));
         } else {
             for (ADTNode<S, I, O> n : current.getChildren().values()) {
-                collectLeavesRecursively(nodes, n);
+                collectTransformedLeavesRecursively(nodes, n, transformer);
             }
         }
     }

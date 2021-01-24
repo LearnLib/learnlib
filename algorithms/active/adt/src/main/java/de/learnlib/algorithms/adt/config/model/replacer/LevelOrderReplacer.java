@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import de.learnlib.algorithms.adt.adt.ADT;
 import de.learnlib.algorithms.adt.adt.ADTNode;
@@ -60,8 +59,7 @@ public class LevelOrderReplacer implements SubtreeReplacer {
 
         while (!queue.isEmpty()) {
             final ADTNode<S, I, O> node = queue.poll();
-            final Set<S> targetStates =
-                    ADTUtil.collectLeaves(node).stream().map(ADTNode::getHypothesisState).collect(Collectors.toSet());
+            final Set<S> targetStates = ADTUtil.collectHypothesisStates(node);
 
             // try to extendLeaf the parent ADS
 

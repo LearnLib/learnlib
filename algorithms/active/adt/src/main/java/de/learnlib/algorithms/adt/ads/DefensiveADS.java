@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.learnlib.algorithms.adt.adt.ADTLeafNode;
@@ -32,6 +31,7 @@ import de.learnlib.algorithms.adt.api.PartialTransitionAnalyzer;
 import de.learnlib.algorithms.adt.util.ADTUtil;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.commons.smartcollections.ReflexiveMapView;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.util.automata.ads.ADSUtil;
 import net.automatalib.words.Alphabet;
@@ -109,9 +109,7 @@ public final class DefensiveADS<S, I, O> {
 
     private Optional<ADTNode<S, I, O>> compute() {
 
-        final Map<S, S> initialMapping =
-                states.stream().collect(Collectors.toMap(Function.identity(), Function.identity()));
-
+        final Map<S, S> initialMapping = new ReflexiveMapView<>(states);
         Optional<ADTNode<S, I, O>> interMediateResult = compute(initialMapping);
 
         while (!interMediateResult.isPresent()) {

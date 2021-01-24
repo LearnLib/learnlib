@@ -578,10 +578,9 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             throw new IllegalArgumentException("Subtree to replace does not exist");
         }
 
-        final Set<ADTNode<ADTState<I, O>, I, O>> oldFinalNodes = ADTUtil.collectLeaves(oldADS);
         final Set<ADTNode<ADTState<I, O>, I, O>> newFinalNodes = ADTUtil.collectLeaves(newADS);
-        final Set<ADTState<I, O>> oldFinalStates =
-                oldFinalNodes.stream().map(ADTNode::getHypothesisState).collect(Collectors.toSet());
+
+        final Set<ADTState<I, O>> oldFinalStates = ADTUtil.collectHypothesisStates(oldADS);
         final Set<ADTState<I, O>> newFinalStates =
                 newFinalNodes.stream().map(ADTNode::getHypothesisState).collect(Collectors.toSet());
         newFinalStates.addAll(cutout);

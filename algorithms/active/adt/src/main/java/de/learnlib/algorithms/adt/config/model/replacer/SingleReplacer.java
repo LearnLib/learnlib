@@ -23,9 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
+import com.google.common.collect.Maps;
 import de.learnlib.algorithms.adt.adt.ADT;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.SubtreeReplacer;
@@ -33,6 +32,7 @@ import de.learnlib.algorithms.adt.config.model.ADSCalculator;
 import de.learnlib.algorithms.adt.model.ReplacementResult;
 import de.learnlib.algorithms.adt.util.ADTUtil;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.commons.smartcollections.ReflexiveMapView;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -55,20 +55,18 @@ public class SingleReplacer implements SubtreeReplacer {
 
         final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot());
         candidates.remove(adt.getRoot());
-        final Map<ADTNode<S, I, O>, Double> candidatesScore =
-                candidates.stream().collect(Collectors.toMap(Function.identity(), node -> {
-                    final int resets = 1 + ADTUtil.collectResetNodes(node).size();
-                    final int finals = ADTUtil.collectLeaves(node).size();
+        final Map<ADTNode<S, I, O>, Double> candidatesScore = Maps.toMap(candidates, node -> {
+            final int resets = 1 + ADTUtil.collectResetNodes(node).size();
+            final int finals = ADTUtil.collectLeaves(node).size();
 
-                    return resets / (double) finals;
-                }));
+            return resets / (double) finals;
+        });
 
         final List<ADTNode<S, I, O>> sortedCandidates = new ArrayList<>(candidates);
         sortedCandidates.sort(Comparator.comparingDouble(candidatesScore::get));
 
         for (final ADTNode<S, I, O> node : sortedCandidates) {
-            final Set<S> targetStates =
-                    ADTUtil.collectLeaves(node).stream().map(ADTNode::getHypothesisState).collect(Collectors.toSet());
+            final Set<S> targetStates = ADTUtil.collectHypothesisStates(node);
 
             // check if we can extendLeaf the parent ADS
             final ReplacementResult<S, I, O> replacementResult =
@@ -117,17 +115,16 @@ public class SingleReplacer implements SubtreeReplacer {
      */
     @Nullable
     static <S, I, O> ReplacementResult<S, I, O> computeParentExtension(final MealyMachine<S, I, ?, O> hypothesis,
-                                                                                 final Alphabet<I> inputs,
-                                                                                 final ADTNode<S, I, O> node,
-                                                                                 final Set<S> targetStates,
-                                                                                 final ADSCalculator adsCalculator) {
+                                                                       final Alphabet<I> inputs,
+                                                                       final ADTNode<S, I, O> node,
+                                                                       final Set<S> targetStates,
+                                                                       final ADSCalculator adsCalculator) {
         final ADTNode<S, I, O> parentReset = node.getParent();
         assert ADTUtil.isResetNode(parentReset) : "should not happen";
 
         final Word<I> incomingTraceInput = ADTUtil.buildTraceForNode(parentReset).getFirst();
 
-        Map<S, S> currentToInitialMapping =
-                targetStates.stream().collect(Collectors.toMap(Function.identity(), Function.identity()));
+        Map<S, S> currentToInitialMapping = new ReflexiveMapView<>(targetStates);
         for (final I i : incomingTraceInput) {
 
             final Map<S, S> nextMapping = new HashMap<>();
