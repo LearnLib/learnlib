@@ -31,7 +31,7 @@ import com.google.common.collect.Iterables;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.commons.smartcollections.ArrayStorage;
-import net.automatalib.commons.util.BitSetIterator;
+import net.automatalib.commons.util.collections.BitSetIterator;
 import net.automatalib.graphs.Graph;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 import net.automatalib.visualization.DefaultVisualizationHelper;
