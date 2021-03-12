@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.acex.AcexAnalyzer;
@@ -320,7 +321,11 @@ public class KearnsVaziraniDFA<I>
                 setTransition(stateIter.next().id, inputIdx, leafsIter.next());
             }
 
-            assert !stateIter.hasNext();
+            // in case the new symbol added a new state (see sift method) we allow at max one additional state
+            assert !stateIter.hasNext() || !((BooleanSupplier) () -> {
+                stateIter.next();
+                return stateIter.hasNext();
+            }).getAsBoolean();
             assert !leafsIter.hasNext();
         }
     }
