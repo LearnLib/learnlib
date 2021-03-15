@@ -84,6 +84,11 @@ limitations under the License.
 
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-spa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-ttt</artifactId>
         </dependency>
 
@@ -316,6 +321,13 @@ limitations under the License.
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-nlstar</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-spa</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

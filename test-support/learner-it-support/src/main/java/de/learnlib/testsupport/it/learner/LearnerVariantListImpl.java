@@ -21,6 +21,7 @@ import java.util.List;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.spa.SPA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Word;
@@ -53,6 +54,9 @@ class LearnerVariantListImpl<M, I, D> implements LearnerVariantList<M, I, D> {
 
     public static class OneSEVPALearnerVariantListImpl<I> extends LearnerVariantListImpl<OneSEVPA<?, I>, I, Boolean>
             implements OneSEVPALearnerVariantList<I> {}
+
+    public static class SPALearnerVariantListImpl<I> extends LearnerVariantListImpl<SPA<?, I>, I, Boolean>
+            implements SPALearnerVariantList<I> {}
 
     public static class MealySymLearnerVariantListImpl<I, O> implements MealySymLearnerVariantList<I, O> {
 

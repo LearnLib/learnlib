@@ -1,0 +1,106 @@
+/* Copyright (C) 2013-2021 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package de.learnlib.oracle.equivalence.spa;
+
+import java.util.Collection;
+import java.util.stream.Stream;
+
+import com.google.common.collect.Streams;
+import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
+import de.learnlib.oracle.equivalence.WpMethodEQOracle;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.spa.SPA;
+import net.automatalib.util.automata.conformance.SPATestsIterator;
+import net.automatalib.util.automata.conformance.WMethodTestsIterator;
+import net.automatalib.util.automata.conformance.WpMethodTestsIterator;
+import net.automatalib.words.Word;
+
+/**
+ * An {@link SPA} version of {@link WpMethodEQOracle} which generates test sequences based on the partial W-method for
+ * each procedure.
+ *
+ * @param <I>
+ *         input symbol type
+ *
+ * @author frohme
+ */
+public class WpMethodSPAEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, I, Boolean> {
+
+    private final int lookahead;
+    private final int expectedSize;
+
+    /**
+     * Constructor. Convenience method for {@link #WpMethodSPAEQOracle(MembershipOracle, int, int)} that sets {@code
+     * expectedSize} to 0.
+     *
+     * @param sulOracle
+     *         interface to the system under learning
+     * @param lookahead
+     *         the maximum length of the "middle" part of the test cases
+     */
+    public WpMethodSPAEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead) {
+        this(sulOracle, lookahead, 0);
+    }
+
+    /**
+     * Constructor. Convenience method for {@link #WpMethodSPAEQOracle(MembershipOracle, int, int, int)} that sets
+     * {@code batchSize} to 1.
+     *
+     * @param sulOracle
+     *         interface to the system under learning
+     * @param lookahead
+     *         the (minimal) maximum length of the "middle" part of the test cases
+     * @param expectedSize
+     *         the expected size of the system under learning
+     */
+    public WpMethodSPAEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead, int expectedSize) {
+        this(sulOracle, lookahead, expectedSize, 1);
+    }
+
+    /**
+     * Constructor. Uses {@link Math#max(int, int) Math.max}{@code (lookahead, expectedSize - }{@link DFA#size()
+     * hypothesis.size()}{@code )} (for each procedural {@code hypothesis}) to determine the maximum length of
+     * sequences, that should be appended to the transition-cover part of the test sequence to account for the fact that
+     * the system under learning may have more states than the current hypothesis.
+     *
+     * @param sulOracle
+     *         interface to the system under learning
+     * @param lookahead
+     *         the (minimal) maximum length of the "middle" part of the test cases
+     * @param expectedSize
+     *         the expected size of the system under learning
+     * @param batchSize
+     *         size of the batches sent to the membership oracle
+     *
+     * @see WMethodTestsIterator
+     */
+    public WpMethodSPAEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead, int expectedSize, int batchSize) {
+        super(sulOracle, batchSize);
+        this.lookahead = lookahead;
+        this.expectedSize = expectedSize;
+    }
+
+    @Override
+    protected Stream<Word<I>> generateTestWords(SPA<?, I> hypothesis, Collection<? extends I> inputs) {
+        return Streams.stream(new SPATestsIterator<>(hypothesis,
+                                                     (dfa, alphabet) -> new WpMethodTestsIterator<>(dfa,
+                                                                                                    alphabet,
+                                                                                                    Math.max(lookahead,
+                                                                                                             expectedSize -
+                                                                                                             dfa.size()))));
+    }
+}

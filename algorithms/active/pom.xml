@@ -39,6 +39,7 @@ limitations under the License.
         <module>kearns-vazirani</module>
         <module>lstar</module>
         <module>nlstar</module>
+        <module>spa</module>
         <module>ttt</module>
         <module>ttt-vpda</module>
     </modules>
