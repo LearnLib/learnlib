@@ -103,11 +103,4 @@ public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, 
         return state.getAccessSequence();
     }
 
-    @Override
-    public boolean isAccessSequence(final Word<I> word) {
-        final ADTState<I, O> state = this.getState(word);
-        assert state != null;
-        return state.getAccessSequence().equals(word);
-    }
-
 }

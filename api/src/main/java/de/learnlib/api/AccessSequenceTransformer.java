@@ -34,5 +34,7 @@ public interface AccessSequenceTransformer<I> {
         return word;
     }
 
-    boolean isAccessSequence(Word<I> word);
+    default boolean isAccessSequence(Word<I> word) {
+        return word.equals(transformAccessSequence(word));
+    }
 }

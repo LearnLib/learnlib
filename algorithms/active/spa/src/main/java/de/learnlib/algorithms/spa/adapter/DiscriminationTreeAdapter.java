@@ -41,9 +41,4 @@ public class DiscriminationTreeAdapter<I> extends DTLearnerDFA<I> implements Acc
         return super.getHypothesisDS().transformAccessSequence(word);
     }
 
-    @Override
-    public boolean isAccessSequence(Word<I> word) {
-        return super.getHypothesisDS().isAccessSequence(word);
-    }
-
 }

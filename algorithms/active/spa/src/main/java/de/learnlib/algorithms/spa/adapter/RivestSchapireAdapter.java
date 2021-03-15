@@ -59,9 +59,4 @@ public class RivestSchapireAdapter<I> extends RivestSchapireDFA<I>
         throw new IllegalStateException("This should not have happened");
     }
 
-    @Override
-    public boolean isAccessSequence(Word<I> word) {
-        return this.transformAccessSequence(word).equals(word);
-    }
-
 }

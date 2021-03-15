@@ -300,13 +300,6 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
         return assembleAccessSequence(accessSequences.get(state));
     }
 
-    @Override
-    public boolean isAccessSequence(Word<I> word) {
-        checkInternalState();
-        Word<I> canonical = transformAccessSequence(word);
-        return canonical.equals(word);
-    }
-
     public static final class BuilderDefaults {
 
         private BuilderDefaults() {

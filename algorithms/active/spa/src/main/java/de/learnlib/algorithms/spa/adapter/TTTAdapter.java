@@ -45,9 +45,4 @@ public class TTTAdapter<I> extends TTTLearnerDFA<I> implements AccessSequenceTra
         return s.getAccessSequence();
     }
 
-    @Override
-    public boolean isAccessSequence(Word<I> word) {
-        return this.transformAccessSequence(word).equals(word);
-    }
-
 }

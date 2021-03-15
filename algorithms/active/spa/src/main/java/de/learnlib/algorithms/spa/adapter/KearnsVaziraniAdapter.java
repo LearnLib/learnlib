@@ -50,9 +50,4 @@ public class KearnsVaziraniAdapter<I> extends KearnsVaziraniDFA<I> implements Ac
         return super.stateInfos.get(reachedState).accessSequence;
     }
 
-    @Override
-    public boolean isAccessSequence(Word<I> word) {
-        return this.transformAccessSequence(word).equals(word);
-    }
-
 }

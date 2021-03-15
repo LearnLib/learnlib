@@ -58,9 +58,4 @@ public class LStarBaseAdapter<I> extends ClassicLStarDFA<I> implements AccessSeq
         throw new IllegalStateException("This should not have happened");
     }
 
-    @Override
-    public boolean isAccessSequence(Word<I> word) {
-        return this.transformAccessSequence(word).equals(word);
-    }
-
 }
