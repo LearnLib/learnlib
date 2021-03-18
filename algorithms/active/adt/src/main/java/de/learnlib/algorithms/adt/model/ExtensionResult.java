@@ -38,7 +38,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class ExtensionResult<S, I, O> {
 
-    private static final ExtensionResult<?, ?, ?> EMPTY = new ExtensionResult();
+    private static final ExtensionResult<?, ?, ?> EMPTY = new ExtensionResult<>();
 
     private final @Nullable DefaultQuery<I, Word<O>> counterExample;
     private final @Nullable ADTNode<S, I, O> replacement;

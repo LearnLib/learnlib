@@ -213,7 +213,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> implements Serializab
                 return false;
             }
 
-            final BooleanMap.Entry that = (BooleanMap.Entry) o;
+            final BooleanMap<?>.Entry that = (BooleanMap<?>.Entry) o;
             return Objects.equals(key, that.key);
         }
     }
