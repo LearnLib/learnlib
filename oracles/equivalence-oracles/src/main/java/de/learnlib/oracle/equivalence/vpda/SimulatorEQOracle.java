@@ -34,16 +34,20 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class SimulatorEQOracle<I> implements EquivalenceOracle<OneSEVPA<?, I>, I, Boolean> {
 
     private final OneSEVPA<?, I> reference;
-    private final VPDAlphabet<I> alphabet;
 
-    public SimulatorEQOracle(final OneSEVPA<?, I> reference, final VPDAlphabet<I> alphabet) {
+    public SimulatorEQOracle(final OneSEVPA<?, I> reference) {
         this.reference = reference;
-        this.alphabet = alphabet;
     }
 
     @Override
     public @Nullable DefaultQuery<I, Boolean> findCounterExample(final OneSEVPA<?, I> hypothesis,
                                                                  final Collection<? extends I> inputs) {
+        if (!(inputs instanceof VPDAlphabet)) {
+            throw new IllegalArgumentException("Inputs are not an VPD alphabet");
+        }
+
+        @SuppressWarnings("unchecked")
+        final VPDAlphabet<I> alphabet = (VPDAlphabet<I>) inputs;
 
         final Word<I> sep = Automata.findSeparatingWord(reference, hypothesis, alphabet);
 

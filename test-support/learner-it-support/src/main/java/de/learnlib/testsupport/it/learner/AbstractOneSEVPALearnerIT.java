@@ -56,8 +56,7 @@ public abstract class AbstractOneSEVPALearnerIT {
 
         return LearnerITUtil.createExampleITCases(example,
                                                   variants,
-                                                  new SimulatorEQOracle<>(example.getReferenceAutomaton(),
-                                                                          example.getAlphabet()));
+                                                  new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 
     /**

@@ -27,6 +27,7 @@ import net.automatalib.automata.spa.SPA;
 import net.automatalib.util.automata.conformance.SPATestsIterator;
 import net.automatalib.util.automata.conformance.WMethodTestsIterator;
 import net.automatalib.util.automata.conformance.WpMethodTestsIterator;
+import net.automatalib.words.SPAAlphabet;
 import net.automatalib.words.Word;
 
 /**
@@ -96,11 +97,19 @@ public class WpMethodSPAEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, 
 
     @Override
     protected Stream<Word<I>> generateTestWords(SPA<?, I> hypothesis, Collection<? extends I> inputs) {
+        if (!(inputs instanceof SPAAlphabet)) {
+            throw new IllegalArgumentException("Inputs are not an SPA alphabet");
+        }
+
+        @SuppressWarnings("unchecked")
+        final SPAAlphabet<I> alphabet = (SPAAlphabet<I>) inputs;
+
         return Streams.stream(new SPATestsIterator<>(hypothesis,
-                                                     (dfa, alphabet) -> new WpMethodTestsIterator<>(dfa,
-                                                                                                    alphabet,
-                                                                                                    Math.max(lookahead,
-                                                                                                             expectedSize -
-                                                                                                             dfa.size()))));
+                                                     alphabet,
+                                                     (dfa, alph) -> new WpMethodTestsIterator<>(dfa,
+                                                                                                alph,
+                                                                                                Math.max(lookahead,
+                                                                                                         expectedSize -
+                                                                                                         dfa.size()))));
     }
 }
