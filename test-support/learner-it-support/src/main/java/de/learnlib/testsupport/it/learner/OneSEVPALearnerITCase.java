@@ -16,24 +16,24 @@
 package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.examples.LearningExample.SPALearningExample;
-import net.automatalib.automata.spa.SPA;
+import de.learnlib.examples.LearningExample.OneSEVPALearningExample;
+import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
 
-public class SPALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Boolean, SPA<?, I>> {
+public class OneSEVPALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Boolean, OneSEVPA<?, I>> {
 
-    private final SPALearningExample<I> example;
+    private final OneSEVPALearningExample<I> example;
 
-    SPALearnerITCase(LearnerVariant<SPA<?, I>, I, Boolean> variant,
-                     SPALearningExample<I> example,
-                     EquivalenceOracle<? super SPA<?, I>, I, Boolean> eqOracle) {
+    OneSEVPALearnerITCase(LearnerVariant<OneSEVPA<?, I>, I, Boolean> variant,
+                          OneSEVPALearningExample<I> example,
+                          EquivalenceOracle<? super OneSEVPA<?, I>, I, Boolean> eqOracle) {
         super(variant, example, eqOracle);
         this.example = example;
     }
 
     @Override
-    protected Word<I> checkEquivalence(SPA<?, I> hypothesis) {
+    protected Word<I> checkEquivalence(OneSEVPA<?, I> hypothesis) {
         return Automata.findSeparatingWord(this.example.getReferenceAutomaton(),
                                            hypothesis,
                                            this.example.getAlphabet());

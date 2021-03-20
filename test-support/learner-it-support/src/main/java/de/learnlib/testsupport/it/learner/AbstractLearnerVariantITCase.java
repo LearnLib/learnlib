@@ -19,18 +19,18 @@ import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.examples.LearningExample;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.util.automata.Automata;
+import net.automatalib.automata.concepts.FiniteRepresentation;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.ITest;
 import org.testng.annotations.Test;
 
-final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> implements ITest {
+abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation> implements ITest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LearnerVariantITCase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLearnerVariantITCase.class);
 
     private static final long NANOS_PER_MILLISECOND = 1_000_000;
     private static final long MILLIS_PER_SECOND = 1_000;
@@ -39,9 +39,9 @@ final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton
     private final LearningExample<I, ? extends M> example;
     private final EquivalenceOracle<? super M, I, D> eqOracle;
 
-    LearnerVariantITCase(LearnerVariant<? extends M, I, D> variant,
-                         LearningExample<I, ? extends M> example,
-                         EquivalenceOracle<? super M, I, D> eqOracle) {
+    AbstractLearnerVariantITCase(LearnerVariant<? extends M, I, D> variant,
+                                 LearningExample<I, ? extends M> example,
+                                 EquivalenceOracle<? super M, I, D> eqOracle) {
         this.variant = variant;
         this.example = example;
         this.eqOracle = eqOracle;
@@ -78,8 +78,7 @@ final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton
 
         M hypothesis = learner.getHypothesisModel();
         Assert.assertEquals(hypothesis.size(), reference.size());
-        Assert.assertNull(Automata.findSeparatingWord(reference, hypothesis, alphabet),
-                          "Final hypothesis does not match reference automaton");
+        Assert.assertNull(checkEquivalence(hypothesis), "Final hypothesis does not match reference automaton");
 
         long duration = (System.nanoTime() - start) / NANOS_PER_MILLISECOND;
         LOGGER.info("Passed learner integration test {} ... took [{}]",
@@ -91,5 +90,7 @@ final class LearnerVariantITCase<I, D, M extends UniversalDeterministicAutomaton
     public String getTestName() {
         return variant.getLearnerName() + "[" + variant.getName() + "]/" + example.getClass().getSimpleName();
     }
+
+    protected abstract Word<I> checkEquivalence(M hypothesis);
 
 }

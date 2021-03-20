@@ -23,6 +23,8 @@ import java.util.Random;
 
 import de.learnlib.examples.LearningExample.DFALearningExample;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
+import de.learnlib.examples.LearningExample.OneSEVPALearningExample;
+import de.learnlib.examples.LearningExample.SPALearningExample;
 import de.learnlib.examples.LearningExample.SSTLearningExample;
 import de.learnlib.examples.LearningExample.StateLocalInputMealyLearningExample;
 import de.learnlib.examples.dfa.ExampleAngluin;
@@ -36,14 +38,28 @@ import de.learnlib.examples.mealy.ExampleRandomStateLocalInputMealy;
 import de.learnlib.examples.mealy.ExampleShahbazGroz;
 import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.examples.mealy.ExampleTinyMealy;
+import de.learnlib.examples.spa.ExampleRandomSPA;
 import de.learnlib.examples.sst.ExampleRandomSST;
+import de.learnlib.examples.vpda.ExampleRandomOneSEVPA;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import net.automatalib.words.impl.DefaultSPAAlphabet;
+import net.automatalib.words.impl.DefaultVPDAlphabet;
 
 public final class LearningExamples {
 
     private static final Alphabet<Character> RANDOM_ALPHABET = Alphabets.characters('a', 'c');
+    private static final SPAAlphabet<Character> SPA_ALPHABET =
+            new DefaultSPAAlphabet<>(Alphabets.characters('A', 'F'), Alphabets.characters('a', 'f'), 'R');
+    private static final VPDAlphabet<Character> VPD_ALPHABET = new DefaultVPDAlphabet<>(Alphabets.characters('a', 'f'),
+                                                                                        Alphabets.characters('1', '3'),
+                                                                                        Alphabets.characters('7', '9'));
+    private static final double ACCEPTANCE_PROB = 0.3;
+    private static final double RETURN_PROB = 0.3;
+
     private static final int RANDOM_SIZE = 100;
     private static final int GRID_XSIZE = 5;
     private static final int GRID_YSIZE = 5;
@@ -52,6 +68,7 @@ public final class LearningExamples {
             Arrays.asList(Word.fromCharSequence("ab"), Word.fromCharSequence("bc"), Word.fromCharSequence("ca"));
     private static final String UNDEFINED_MEALY_OUTPUT = "undefined";
     private static final int KEYLOCK_SIZE = 100;
+    private static final int PROCEDURE_SIZE = 10;
     private static final long RANDOM_SEED = 1337L;
 
     private LearningExamples() {
@@ -92,6 +109,20 @@ public final class LearningExamples {
                                                                         RANDOM_SIZE,
                                                                         RANDOM_SST_PROPS,
                                                                         RANDOM_SST_PROPS));
+    }
+
+    public static List<SPALearningExample<?>> createSPAExamples() {
+        return Collections.singletonList(ExampleRandomSPA.createExample(new Random(RANDOM_SEED),
+                                                                        SPA_ALPHABET,
+                                                                        PROCEDURE_SIZE));
+    }
+
+    public static List<OneSEVPALearningExample<?>> createOneSEVPAExamples() {
+        return Collections.singletonList(ExampleRandomOneSEVPA.createExample(new Random(RANDOM_SEED),
+                                                                             VPD_ALPHABET,
+                                                                             RANDOM_SIZE,
+                                                                             ACCEPTANCE_PROB,
+                                                                             RETURN_PROB));
     }
 
 }

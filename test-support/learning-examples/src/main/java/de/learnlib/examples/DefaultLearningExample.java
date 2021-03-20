@@ -19,9 +19,13 @@ import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.spa.SPA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.SubsequentialTransducer;
+import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 
 /**
@@ -92,6 +96,46 @@ public class DefaultLearningExample<I, D, A extends UniversalAutomaton<?, I, ?, 
 
         public DefaultSSTLearningExample(Alphabet<I> alphabet, SubsequentialTransducer<?, I, ?, D> referenceAutomaton) {
             super(alphabet, referenceAutomaton);
+        }
+    }
+
+    public static class DefaultOneSEVPALearningExample<I> implements OneSEVPALearningExample<I> {
+
+        private final VPDAlphabet<I> alphabet;
+        private final OneSEVPA<?, I> referenceAutomaton;
+
+        public DefaultOneSEVPALearningExample(VPDAlphabet<I> alphabet, OneSEVPA<?, I> referenceAutomaton) {
+            this.alphabet = alphabet;
+            this.referenceAutomaton = referenceAutomaton;
+        }
+
+        @Override
+        public OneSEVPA<?, I> getReferenceAutomaton() {
+            return this.referenceAutomaton;
+        }
+
+        @Override
+        public VPDAlphabet<I> getAlphabet() {
+            return this.alphabet;
+        }
+    }
+
+    public static class DefaultSPALearningExample<I> implements SPALearningExample<I> {
+
+        private final SPA<?, I> referenceAutomaton;
+
+        public DefaultSPALearningExample(SPA<?, I> referenceAutomaton) {
+            this.referenceAutomaton = referenceAutomaton;
+        }
+
+        @Override
+        public SPA<?, I> getReferenceAutomaton() {
+            return this.referenceAutomaton;
+        }
+
+        @Override
+        public SPAAlphabet<I> getAlphabet() {
+            return this.referenceAutomaton.getInputAlphabet();
         }
     }
 

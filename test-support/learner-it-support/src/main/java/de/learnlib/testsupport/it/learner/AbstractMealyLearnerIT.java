@@ -51,8 +51,8 @@ public abstract class AbstractMealyLearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
-        final List<LearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
         final List<MealyLearningExample<?, ?>> examples = LearningExamples.createMealyExamples();
+        final List<UniversalDeterministicLearnerITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
 
         for (MealyLearningExample<?, ?> example : examples) {
             result.addAll(createAllVariantsITCase(example));
@@ -65,7 +65,7 @@ public abstract class AbstractMealyLearnerIT {
         return result.toArray();
     }
 
-    private <I, O> List<LearnerVariantITCase<I, Word<O>, MealyMachine<?, I, ?, O>>> createAllVariantsITCase(
+    private <I, O> List<UniversalDeterministicLearnerITCase<I, Word<O>, MealyMachine<?, I, ?, O>>> createAllVariantsITCase(
             MealyLearningExample<I, O> example) {
 
         final Alphabet<I> alphabet = example.getAlphabet();
@@ -78,7 +78,7 @@ public abstract class AbstractMealyLearnerIT {
                                                   new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 
-    private <I, O> List<LearnerVariantITCase<I, Word<O>, MealyMachine<?, I, ?, O>>> createPartialVariantsITCase(
+    private <I, O> List<UniversalDeterministicLearnerITCase<I, Word<O>, MealyMachine<?, I, ?, O>>> createPartialVariantsITCase(
             StateLocalInputMealyLearningExample<I, O> example) {
 
         final StateLocalInputMealyMachine<?, I, ?, O> reference = example.getReferenceAutomaton();

@@ -23,10 +23,18 @@ import java.util.Random;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.examples.LearningExample;
+import de.learnlib.examples.LearningExample.OneSEVPALearningExample;
+import de.learnlib.examples.LearningExample.SPALearningExample;
+import de.learnlib.examples.LearningExample.UniversalDeterministicLearningExample;
 import de.learnlib.examples.PassiveLearningExample;
+import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.OneSEVPALearnerVariantListImpl;
+import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPALearnerVariantListImpl;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.automata.concepts.FiniteRepresentation;
 import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.automata.spa.SPA;
+import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -53,16 +61,61 @@ public final class LearnerITUtil {
      *
      * @return the list of test cases, one for each example
      */
-    public static <I, D, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> List<LearnerVariantITCase<I, D, A>> createExampleITCases(
-            LearningExample<I, ? extends A> example,
+    public static <I, D, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> List<UniversalDeterministicLearnerITCase<I, D, A>> createExampleITCases(
+            UniversalDeterministicLearningExample<I, ? extends A> example,
             LearnerVariantListImpl<A, I, D> variants,
             EquivalenceOracle<? super A, I, D> eqOracle) {
+        // explicit generics are required for correct type-inference
+        return LearnerITUtil.<I, D, A, UniversalDeterministicLearningExample<I, ? extends A>, UniversalDeterministicLearnerITCase<I, D, A>>createExampleITCasesInternal(
+                example,
+                variants,
+                eqOracle,
+                UniversalDeterministicLearnerITCase::new);
+    }
 
-        final List<LearnerVariant<A, I, D>> variantList = variants.getLearnerVariants();
-        final List<LearnerVariantITCase<I, D, A>> result = new ArrayList<>(variantList.size());
+    /**
+     * Creates a list of per-example test cases for all learner variants.
+     *
+     * @return the list of test cases, one for each example
+     */
+    public static <I> List<SPALearnerITCase<I>> createExampleITCases(SPALearningExample<I> example,
+                                                                     SPALearnerVariantListImpl<I> variants,
+                                                                     EquivalenceOracle<SPA<?, I>, I, Boolean> eqOracle) {
+        // explicit generics are required for correct type-inference
+        return LearnerITUtil.<I, Boolean, SPA<?, I>, SPALearningExample<I>, SPALearnerITCase<I>>createExampleITCasesInternal(
+                example,
+                variants,
+                eqOracle,
+                SPALearnerITCase::new);
+    }
 
-        for (LearnerVariant<A, I, D> variant : variantList) {
-            result.add(new LearnerVariantITCase<>(variant, example, eqOracle));
+    /**
+     * Creates a list of per-example test cases for all learner variants.
+     *
+     * @return the list of test cases, one for each example
+     */
+    public static <I> List<OneSEVPALearnerITCase<I>> createExampleITCases(OneSEVPALearningExample<I> example,
+                                                                          OneSEVPALearnerVariantListImpl<I> variants,
+                                                                          EquivalenceOracle<OneSEVPA<?, I>, I, Boolean> eqOracle) {
+        // explicit generics are required for correct type-inference
+        return LearnerITUtil.<I, Boolean, OneSEVPA<?, I>, OneSEVPALearningExample<I>, OneSEVPALearnerITCase<I>>createExampleITCasesInternal(
+                example,
+                variants,
+                eqOracle,
+                OneSEVPALearnerITCase::new);
+    }
+
+    private static <I, D, M extends FiniteRepresentation, L extends LearningExample<I, ? extends M>, C extends AbstractLearnerVariantITCase<I, D, M>> List<C> createExampleITCasesInternal(
+            L example,
+            LearnerVariantListImpl<M, I, D> variants,
+            EquivalenceOracle<? super M, I, D> eqOracle,
+            ITCaseBuilder<I, D, M, L, C> builder) {
+
+        final List<LearnerVariant<M, I, D>> variantList = variants.getLearnerVariants();
+        final List<C> result = new ArrayList<>(variantList.size());
+
+        for (LearnerVariant<M, I, D> variant : variantList) {
+            result.add(builder.build(variant, example, eqOracle));
         }
 
         return result;
@@ -111,5 +164,11 @@ public final class LearnerITUtil {
         }
         return result;
 
+    }
+
+    @FunctionalInterface
+    private interface ITCaseBuilder<I, D, M extends FiniteRepresentation, L extends LearningExample<I, ? extends M>, C extends AbstractLearnerVariantITCase<I, D, M>> {
+
+        C build(LearnerVariant<M, I, D> variant, L example, EquivalenceOracle<? super M, I, D> eqOracle);
     }
 }

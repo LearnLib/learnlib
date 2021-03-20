@@ -42,8 +42,8 @@ public abstract class AbstractDFALearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
-        final List<LearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
         final List<DFALearningExample<?>> examples = LearningExamples.createDFAExamples();
+        final List<UniversalDeterministicLearnerITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
 
         for (DFALearningExample<?> example : examples) {
             result.addAll(createAllVariantsITCase(example));
@@ -52,7 +52,8 @@ public abstract class AbstractDFALearnerIT {
         return result.toArray();
     }
 
-    private <I> List<LearnerVariantITCase<I, Boolean, DFA<?, I>>> createAllVariantsITCase(DFALearningExample<I> example) {
+    private <I> List<UniversalDeterministicLearnerITCase<I, Boolean, DFA<?, I>>> createAllVariantsITCase(
+            DFALearningExample<I> example) {
 
         final Alphabet<I> alphabet = example.getAlphabet();
         final DFAMembershipOracle<I> mqOracle = new DFASimulatorOracle<>(example.getReferenceAutomaton());

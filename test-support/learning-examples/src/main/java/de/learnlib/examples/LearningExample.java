@@ -17,22 +17,30 @@ package de.learnlib.examples;
 
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.spa.SPA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.automata.transducers.SubsequentialTransducer;
+import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.VPDAlphabet;
 
-public interface LearningExample<I, A extends UniversalAutomaton<?, I, ?, ?, ?>> {
+public interface LearningExample<I, A> {
 
     A getReferenceAutomaton();
 
     Alphabet<I> getAlphabet();
 
-    interface DFALearningExample<I> extends LearningExample<I, DFA<?, I>> {}
+    interface UniversalDeterministicLearningExample<I, A extends UniversalAutomaton<?, I, ?, ?, ?>>
+            extends LearningExample<I, A> {}
 
-    interface MealyLearningExample<I, O> extends LearningExample<I, MealyMachine<?, I, ?, O>> {}
+    interface DFALearningExample<I> extends UniversalDeterministicLearningExample<I, DFA<?, I>> {}
 
-    interface SSTLearningExample<I, O> extends LearningExample<I, SubsequentialTransducer<?, I, ?, O>> {}
+    interface MealyLearningExample<I, O> extends UniversalDeterministicLearningExample<I, MealyMachine<?, I, ?, O>> {}
+
+    interface SSTLearningExample<I, O>
+            extends UniversalDeterministicLearningExample<I, SubsequentialTransducer<?, I, ?, O>> {}
 
     /**
      * A {@link LearningExample} refinement for {@link StateLocalInputMealyMachine}.
@@ -43,10 +51,22 @@ public interface LearningExample<I, A extends UniversalAutomaton<?, I, ?, ?, ?>>
      * of (total) {@link MealyMachine}s. The 'undefined' transitions are answered with {@link #getUndefinedOutput()}.
      */
     interface StateLocalInputMealyLearningExample<I, O>
-            extends LearningExample<I, StateLocalInputMealyMachine<?, I, ?, O>> {
+            extends UniversalDeterministicLearningExample<I, StateLocalInputMealyMachine<?, I, ?, O>> {
 
         O getUndefinedOutput();
 
+    }
+
+    interface SPALearningExample<I> extends LearningExample<I, SPA<?, I>> {
+
+        @Override
+        SPAAlphabet<I> getAlphabet();
+    }
+
+    interface OneSEVPALearningExample<I> extends LearningExample<I, OneSEVPA<?, I>> {
+
+        @Override
+        VPDAlphabet<I> getAlphabet();
     }
 
 }

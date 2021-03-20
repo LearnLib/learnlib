@@ -19,48 +19,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.examples.LearningExample.SPALearningExample;
+import de.learnlib.examples.LearningExample.OneSEVPALearningExample;
 import de.learnlib.examples.LearningExamples;
-import de.learnlib.oracle.equivalence.spa.SimulatorEQOracle;
+import de.learnlib.oracle.equivalence.vpda.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.SPALearnerVariantList;
-import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPALearnerVariantListImpl;
-import net.automatalib.words.SPAAlphabet;
+import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.OneSEVPALearnerVariantListImpl;
+import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.words.VPDAlphabet;
 import org.testng.annotations.Factory;
 
 /**
- * Abstract integration test for VPDA learning algorithms.
+ * Abstract integration test for {@link OneSEVPA} learning algorithms.
  *
  * @author frohme
  */
-public abstract class AbstractSPALearnerIT {
+public abstract class AbstractOneSEVPALearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
-        final List<SPALearningExample<?>> examples = LearningExamples.createSPAExamples();
-        final List<AbstractLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
+        final List<OneSEVPALearningExample<?>> examples = LearningExamples.createOneSEVPAExamples();
+        final List<OneSEVPALearnerITCase<?>> result = new ArrayList<>(examples.size());
 
-        for (SPALearningExample<?> example : examples) {
+        for (OneSEVPALearningExample<?> example : examples) {
             result.addAll(createAllVariantsITCase(example));
         }
 
         return result.toArray();
     }
 
-    private <I> List<SPALearnerITCase<I>> createAllVariantsITCase(SPALearningExample<I> example) {
+    private <I> List<OneSEVPALearnerITCase<I>> createAllVariantsITCase(OneSEVPALearningExample<I> example) {
 
-        final SPAAlphabet<I> alphabet = example.getAlphabet();
+        final VPDAlphabet<I> alphabet = example.getAlphabet();
         final MembershipOracle<I, Boolean> mqOracle = new SimulatorOracle<>(example.getReferenceAutomaton());
-        final SPALearnerVariantListImpl<I> variants = new SPALearnerVariantListImpl<>();
+        final OneSEVPALearnerVariantListImpl<I> variants = new OneSEVPALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, mqOracle, variants);
 
         return LearnerITUtil.createExampleITCases(example,
                                                   variants,
-                                                  new SimulatorEQOracle<>(example.getReferenceAutomaton()));
+                                                  new SimulatorEQOracle<>(example.getReferenceAutomaton(),
+                                                                          example.getAlphabet()));
     }
 
     /**
-     * Adds, for a given setup, all the variants of the DFA learner to be tested to the specified {@link
+     * Adds, for a given setup, all the variants of the OneSEVPA learner to be tested to the specified {@link
      * LearnerVariantList variant list}.
      *
      * @param alphabet
@@ -70,7 +71,7 @@ public abstract class AbstractSPALearnerIT {
      * @param variants
      *         list to add the learner variants to
      */
-    protected abstract <I> void addLearnerVariants(SPAAlphabet<I> alphabet,
+    protected abstract <I> void addLearnerVariants(VPDAlphabet<I> alphabet,
                                                    MembershipOracle<I, Boolean> mqOracle,
-                                                   SPALearnerVariantList<I> variants);
+                                                   LearnerVariantList.OneSEVPALearnerVariantList<I> variants);
 }

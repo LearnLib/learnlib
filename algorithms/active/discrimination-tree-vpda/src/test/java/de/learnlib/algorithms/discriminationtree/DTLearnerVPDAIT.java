@@ -19,7 +19,7 @@ import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.discriminationtree.vpda.DTLearnerVPDABuilder;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractVPDALearnerIT;
+import de.learnlib.testsupport.it.learner.AbstractOneSEVPALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList;
 import net.automatalib.words.VPDAlphabet;
 import org.testng.annotations.Test;
@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * @author frohme
  */
 @Test
-public class DTLearnerVPDAIT extends AbstractVPDALearnerIT {
+public class DTLearnerVPDAIT extends AbstractOneSEVPALearnerIT {
 
     @Override
     protected <I> void addLearnerVariants(final VPDAlphabet<I> alphabet,
