@@ -38,6 +38,7 @@ import de.learnlib.examples.mealy.ExampleRandomStateLocalInputMealy;
 import de.learnlib.examples.mealy.ExampleShahbazGroz;
 import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.examples.mealy.ExampleTinyMealy;
+import de.learnlib.examples.spa.ExamplePalindrome;
 import de.learnlib.examples.spa.ExampleRandomSPA;
 import de.learnlib.examples.sst.ExampleRandomSST;
 import de.learnlib.examples.vpda.ExampleRandomOneSEVPA;
@@ -112,9 +113,8 @@ public final class LearningExamples {
     }
 
     public static List<SPALearningExample<?>> createSPAExamples() {
-        return Collections.singletonList(ExampleRandomSPA.createExample(new Random(RANDOM_SEED),
-                                                                        SPA_ALPHABET,
-                                                                        PROCEDURE_SIZE));
+        return Arrays.asList(ExamplePalindrome.createExample(),
+                             ExampleRandomSPA.createExample(new Random(RANDOM_SEED), SPA_ALPHABET, PROCEDURE_SIZE));
     }
 
     public static List<OneSEVPALearningExample<?>> createOneSEVPAExamples() {
