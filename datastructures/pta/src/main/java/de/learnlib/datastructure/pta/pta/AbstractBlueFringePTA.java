@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -44,10 +43,6 @@ public abstract class AbstractBlueFringePTA<SP, TP, S extends AbstractBlueFringe
 
     public List<S> getRedStates() {
         return Collections.unmodifiableList(redStates);
-    }
-
-    public Stream<S> redStatesStream() {
-        return redStates.stream();
     }
 
     public void init(Consumer<? super PTATransition<S>> newBlue) {

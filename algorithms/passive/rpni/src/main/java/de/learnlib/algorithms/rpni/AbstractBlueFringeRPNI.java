@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.rpni;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
@@ -115,10 +116,9 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M> implements Passive
             BlueFringePTAState<SP, TP> qb = qbRef.getTarget();
             assert qb != null;
 
-            Stream<BlueFringePTAState<SP, TP>> stream = pta.redStatesStream();
-            if (parallel) {
-                stream = stream.parallel();
-            }
+            final List<BlueFringePTAState<SP, TP>> redStates = pta.getRedStates();
+            final Stream<BlueFringePTAState<SP, TP>> stream =
+                    parallel ? redStates.parallelStream() : redStates.stream();
 
             @SuppressWarnings("nullness") // we filter the null merges
             final Stream<RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>>> possibleMerges =
