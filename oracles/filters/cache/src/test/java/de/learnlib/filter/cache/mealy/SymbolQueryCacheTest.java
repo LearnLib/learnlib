@@ -54,12 +54,12 @@ public class SymbolQueryCacheTest
 
     @Override
     protected SymbolQueryCache<Character, Integer> getCachedOracle() {
-        return new SymbolQueryCache<>(counter, getAlphabet());
+        return MealyCaches.createSymbolQueryCache(getAlphabet(), counter);
     }
 
     @Override
     protected SymbolQueryCache<Character, Integer> getResumedOracle(SymbolQueryCache<Character, Integer> original) {
-        final SymbolQueryCache<Character, Integer> fresh = new SymbolQueryCache<>(counter, getAlphabet());
+        final SymbolQueryCache<Character, Integer> fresh = MealyCaches.createSymbolQueryCache(getAlphabet(), counter);
         serializeResumable(original, fresh);
         return fresh;
     }

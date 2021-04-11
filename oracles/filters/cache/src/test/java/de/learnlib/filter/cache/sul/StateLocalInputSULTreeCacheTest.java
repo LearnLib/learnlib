@@ -157,7 +157,7 @@ public class StateLocalInputSULTreeCacheTest
     }
 
     private StateLocalInputSULCache<Character, Integer> getCache() {
-        return SULCaches.createStateLocalInputTreeCache(CacheTestUtils.INPUT_ALPHABET, sliCounter);
+        return SULCaches.createStateLocalInputCache(CacheTestUtils.INPUT_ALPHABET, sliCounter);
     }
 }
 

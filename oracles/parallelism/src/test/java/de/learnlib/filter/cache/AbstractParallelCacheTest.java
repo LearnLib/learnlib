@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.filter.cache.parallelism;
+package de.learnlib.filter.cache;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.parallelism.ParallelOracle;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.filter.cache.LearningCache;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -41,36 +41,31 @@ import org.testng.annotations.Test;
  *
  * @author frohme
  */
-public abstract class AbstractParallelCacheTest<S, C extends LearningCache<A, I, D>, A, I, D> {
+public abstract class AbstractParallelCacheTest<A, I, D> {
 
-    protected static final int MODEL_SIZE = 10;
     private static final int MAXIMUM_LENGTH_OF_QUERIES = 5;
 
     private Alphabet<I> alphabet;
     private A targetModel;
-    private S sul;
-    private C cache;
+    private LearningCache<A, I, D> cache;
     private ParallelOracle<I, D> parallelOracle;
 
     protected abstract Alphabet<I> getAlphabet();
 
-    protected abstract A getTargetModel(Alphabet<I> alphabet);
+    protected abstract A getTargetModel();
 
-    protected abstract S getSUL(A targetModel);
+    protected abstract LearningCache<A, I, D> getCacheRepresentative();
 
-    protected abstract C getCache(Alphabet<I> alphabet, S sul);
+    protected abstract ParallelOracle<I, D> getParallelOracle();
 
-    protected abstract ParallelOracle<I, D> getParallelOracle(C cache);
-
-    protected abstract int getNumberOfQueries(S sul);
+    protected abstract long getNumberOfQueries();
 
     @BeforeClass
     public void setUp() {
         this.alphabet = getAlphabet();
-        this.targetModel = getTargetModel(this.alphabet);
-        this.sul = getSUL(this.targetModel);
-        this.cache = getCache(this.alphabet, this.sul);
-        this.parallelOracle = getParallelOracle(this.cache);
+        this.targetModel = getTargetModel();
+        this.cache = getCacheRepresentative();
+        this.parallelOracle = getParallelOracle();
     }
 
     @AfterClass
@@ -80,32 +75,43 @@ public abstract class AbstractParallelCacheTest<S, C extends LearningCache<A, I,
 
     @Test(timeOut = 20000)
     public void testConcurrentMembershipQueries() {
-        final List<DefaultQuery<I, D>> queries =
-                new ArrayList<>(((int) Math.pow(alphabet.size(), MAXIMUM_LENGTH_OF_QUERIES)) + 1);
+        Assert.assertEquals(getNumberOfQueries(), 0);
+
+        final int numQueries = ((int) IntStream.rangeClosed(0, MAXIMUM_LENGTH_OF_QUERIES)
+                                               .mapToDouble(i -> Math.pow(alphabet.size(), i))
+                                               .sum());
+
+        final List<CountingQuery<I, D>> queries = new ArrayList<>(numQueries);
 
         for (final List<I> word : CollectionsUtil.allTuples(alphabet, 0, MAXIMUM_LENGTH_OF_QUERIES)) {
-            queries.add(new DefaultQuery<>(Word.fromList(word)));
+            queries.add(new CountingQuery<>(Word.fromList(word)));
         }
 
         this.parallelOracle.processQueries(queries);
-        final long numOfQueriesBefore = getNumberOfQueries(this.sul);
+        final long numOfQueriesBefore = getNumberOfQueries();
+        final long numAnsweredBefore = queries.stream().mapToInt(CountingQuery::getNumAnswered).sum();
 
-        queries.forEach(q -> q.answer(null));
+        Assert.assertEquals(numAnsweredBefore, numQueries);
+        // Since e.g. Mealy Machines are prefix closed, a single cache hit can answer all its prefixes.
+        // This we cannot enforce equality here
+        Assert.assertTrue(numOfQueriesBefore <= numAnsweredBefore);
 
         this.parallelOracle.processQueries(queries);
-        final long numOfQueriesAfter = getNumberOfQueries(this.sul);
 
+        final long numOfQueriesAfter = getNumberOfQueries();
+        final long numAnsweredAfter = queries.stream().mapToInt(CountingQuery::getNumAnswered).sum();
+
+        Assert.assertEquals(numAnsweredAfter, 2 * numAnsweredBefore);
         Assert.assertEquals(numOfQueriesAfter, numOfQueriesBefore);
     }
 
     @Test(dependsOnMethods = "testConcurrentMembershipQueries", timeOut = 20000)
     public void testConcurrentEquivalenceQueries() {
-        final long previousCount = getNumberOfQueries(this.sul);
+        final long previousCount = getNumberOfQueries();
         final EquivalenceOracle<? super A, I, D> eqOracle = cache.createCacheConsistencyTest();
 
-        final List<DefaultQuery<I, D>> queries = new ArrayList<>(
-                (int) Math.pow(alphabet.size(), MAXIMUM_LENGTH_OF_QUERIES + 1) -
-                (int) Math.pow(alphabet.size(), MAXIMUM_LENGTH_OF_QUERIES));
+        final List<DefaultQuery<I, D>> queries =
+                new ArrayList<>((int) Math.pow(alphabet.size(), MAXIMUM_LENGTH_OF_QUERIES));
 
         for (final List<I> word : CollectionsUtil.allTuples(alphabet,
                                                             MAXIMUM_LENGTH_OF_QUERIES + 1,
@@ -133,7 +139,26 @@ public abstract class AbstractParallelCacheTest<S, C extends LearningCache<A, I,
         this.parallelOracle.processQueries(queries);
         task.interrupt();
 
-        final long numOfQueries = getNumberOfQueries(this.sul);
+        final long numOfQueries = getNumberOfQueries();
         Assert.assertEquals(numOfQueries, queries.size() + previousCount);
+    }
+
+    private static class CountingQuery<I, D> extends DefaultQuery<I, D> {
+
+        private int numAnswered;
+
+        CountingQuery(Word<I> input) {
+            super(input);
+        }
+
+        @Override
+        public void answer(D output) {
+            numAnswered++;
+            super.answer(output);
+        }
+
+        public int getNumAnswered() {
+            return numAnswered;
+        }
     }
 }

@@ -16,50 +16,41 @@
 package de.learnlib.filter.cache.mealy;
 
 import java.util.Collection;
+import java.util.concurrent.locks.ReadWriteLock;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * An {@link EquivalenceOracle} that tests an hypothesis for consistency with the contents of a {@link
- * MealyCacheOracle}.
+ * A thread-safe variant of {@link MealyEquivalenceOracle}.
  *
  * @param <I>
- *         input symbol class
- * @param <O>
- *         output symbol class
+ *         input symbol type
  *
- * @author Malte Isberner
+ * @author frohme
  */
-public class MealyCacheConsistencyTest<I, O> implements MealyEquivalenceOracle<I, O> {
+public final class ThreadSafeMealyCacheConsistencyTest<I, O> implements MealyEquivalenceOracle<I, O> {
 
-    private final IncrementalMealyBuilder<I, O> incMealy;
+    private final MealyEquivalenceOracle<I, O> delegate;
+    private final ReadWriteLock lock;
 
-    /**
-     * Constructor.
-     *
-     * @param incMealy
-     *         the {@link IncrementalMealyBuilder} data structure underlying the cache
-     */
-    public MealyCacheConsistencyTest(IncrementalMealyBuilder<I, O> incMealy) {
-        this.incMealy = incMealy;
+    public ThreadSafeMealyCacheConsistencyTest(MealyEquivalenceOracle<I, O> delegate, ReadWriteLock lock) {
+        this.delegate = delegate;
+        this.lock = lock;
     }
 
     @Override
     public @Nullable DefaultQuery<I, Word<O>> findCounterExample(MealyMachine<?, I, ?, O> hypothesis,
                                                                  Collection<? extends I> inputs) {
-        final Word<I> w = incMealy.findSeparatingWord(hypothesis, inputs, false);
-
-        if (w == null) {
-            return null;
+        lock.readLock().lock();
+        try {
+            return delegate.findCounterExample(hypothesis, inputs);
+        } finally {
+            lock.readLock().unlock();
         }
-
-        return new DefaultQuery<>(w, incMealy.lookup(w));
     }
 
 }

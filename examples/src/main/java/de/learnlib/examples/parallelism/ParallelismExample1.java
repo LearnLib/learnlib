@@ -75,11 +75,11 @@ public class ParallelismExample1 {
     }
 
     private void runSequentialOracles() {
-        final MealyMembershipOracle<Integer, Character> sequenceSULOracle = new SULOracle<>(automatonAsSUL);
+        final MealyMembershipOracle<Integer, Character> sequentialSULOracle = new SULOracle<>(automatonAsSUL);
         final MealySimulatorOracle<Integer, Character> sequentialMQOracle = new MealySimulatorOracle<>(automaton);
 
         System.out.println("Sequential SUL oracle");
-        answerQueries(sequenceSULOracle);
+        answerQueries(sequentialSULOracle);
 
         System.out.println("Sequential MQ oracle");
         answerQueries(sequentialMQOracle);

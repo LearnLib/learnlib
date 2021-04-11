@@ -65,6 +65,6 @@ public class SULLearningCacheOracle<I, O, C extends MealyLearningCache<I, O> & R
     public static <I, O> SULLearningCacheOracle<I, O, StateLocalInputSULCache<I, O>> fromSLISULCache(
             StateLocalInputSULCache<I, O> cache,
             O undefinedInput) {
-        return new SULLearningCacheOracle<>(cache, new StateLocalInputSULOracle<>(cache.fork(), undefinedInput));
+        return new SULLearningCacheOracle<>(cache, new StateLocalInputSULOracle<>(cache, undefinedInput));
     }
 }

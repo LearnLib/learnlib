@@ -16,7 +16,6 @@
 package de.learnlib.filter.cache.dfa;
 
 import java.util.Collection;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
@@ -35,44 +34,32 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public final class DFACacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {
+final class DFACacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {
 
     private final IncrementalDFABuilder<I> incDfa;
-    private final ReadWriteLock incDfaLock;
 
     /**
      * Constructor.
      *
      * @param incDfa
      *         the {@link IncrementalDFABuilder} data structure of the cache
-     * @param lock
-     *         the read-write lock for accessing the cache concurrently
      */
-    DFACacheConsistencyTest(IncrementalDFABuilder<I> incDfa, ReadWriteLock lock) {
+    DFACacheConsistencyTest(IncrementalDFABuilder<I> incDfa) {
         this.incDfa = incDfa;
-        this.incDfaLock = lock;
     }
 
     @Override
     public @Nullable DefaultQuery<I, Boolean> findCounterExample(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
-        Word<I> w;
-        Acceptance acc;
-        incDfaLock.readLock().lock();
-        try {
-            w = incDfa.findSeparatingWord(hypothesis, inputs, false);
-            if (w == null) {
-                return null;
-            }
-            acc = incDfa.lookup(w);
-        } finally {
-            incDfaLock.readLock().unlock();
+        final Word<I> w = incDfa.findSeparatingWord(hypothesis, inputs, false);
+
+        if (w == null) {
+            return null;
         }
+
+        final Acceptance acc = incDfa.lookup(w);
         assert acc != Acceptance.DONT_KNOW;
 
-        Boolean out = acc == Acceptance.TRUE;
-        DefaultQuery<I, Boolean> result = new DefaultQuery<>(w);
-        result.answer(out);
-        return result;
+        return new DefaultQuery<>(w, acc == Acceptance.TRUE);
     }
 
 }

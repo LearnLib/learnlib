@@ -15,14 +15,12 @@
  */
 package de.learnlib.filter.cache.sul;
 
-import java.util.List;
-import java.util.concurrent.locks.ReadWriteLock;
-
 import de.learnlib.api.Resumable;
 import de.learnlib.api.SUL;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.filter.cache.LearningCache.MealyLearningCache;
 import de.learnlib.filter.cache.mealy.MealyCacheConsistencyTest;
+import de.learnlib.filter.cache.sul.AbstractSULCache.SULCacheState;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
@@ -31,13 +29,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I, O>, SupportsGrowingAlphabet<I> {
+abstract class AbstractSULCache<I, O, C extends SULCacheState<I, O>>
+        implements SUL<I, O>, MealyLearningCache<I, O>, SupportsGrowingAlphabet<I>, Resumable<C> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSULCache.class);
 
-    private final AbstractSULCacheImpl<?, I, ?, O, ? extends SULCacheState<I, O>> impl;
+    private final AbstractSULCacheImpl<?, I, ?, O, C> impl;
 
-    protected <S, T> AbstractSULCache(AbstractSULCacheImpl<S, I, T, O, ? extends SULCacheState<I, O>> cacheImpl) {
+    <S, T> AbstractSULCache(AbstractSULCacheImpl<S, I, T, O, C> cacheImpl) {
         this.impl = cacheImpl;
     }
 
@@ -76,6 +75,16 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
         impl.addAlphabetSymbol(symbol);
     }
 
+    @Override
+    public C suspend() {
+        return impl.suspend();
+    }
+
+    @Override
+    public void resume(C state) {
+        this.impl.resume(state);
+    }
+
     public int size() {
         return impl.incMealy.asGraph().size();
     }
@@ -103,7 +112,6 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
         protected IncrementalMealyBuilder<I, O> incMealy;
         protected MealyTransitionSystem<S, I, T, O> mealyTs;
         protected final SUL<I, O> delegate;
-        protected final ReadWriteLock incMealyLock;
 
         private final WordBuilder<I> inputWord = new WordBuilder<>();
         private final WordBuilder<O> outputWord = new WordBuilder<>();
@@ -112,18 +120,15 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
         protected @Nullable S current;
 
         AbstractSULCacheImpl(IncrementalMealyBuilder<I, O> incMealy,
-                             ReadWriteLock lock,
                              MealyTransitionSystem<S, I, T, O> mealyTs,
                              SUL<I, O> sul) {
             this.incMealy = incMealy;
             this.mealyTs = mealyTs;
             this.delegate = sul;
-            this.incMealyLock = lock;
         }
 
         @Override
         public void pre() {
-            incMealyLock.readLock().lock();
             this.current = mealyTs.getInitialState();
         }
 
@@ -139,9 +144,8 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
                     current = mealyTs.getSuccessor(trans);
                     assert current != null;
                 } else {
-                    incMealyLock.readLock().unlock();
-                    current = null;
                     requiredInitializedDelegate();
+                    current = null;
                     for (I prevSym : inputWord) {
                         outputWord.append(delegate.step(prevSym));
                     }
@@ -164,19 +168,7 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
         // errors!
         @Override
         public void post() {
-            if (outputWord.isEmpty()) {
-                // if outputWord is empty we still hold the read-lock!
-                incMealyLock.readLock().unlock();
-            } else {
-                // otherwise acquire write-lock to update cache!
-                incMealyLock.writeLock().lock();
-                try {
-                    incMealy.insert(inputWord.toWord(), outputWord.toWord());
-                    postCacheWriteHook(inputWord);
-                } finally {
-                    incMealyLock.writeLock().unlock();
-                }
-            }
+            updateCache(inputWord, outputWord);
 
             if (delegatePreCalled) {
                 delegate.post();
@@ -189,12 +181,12 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
 
         @Override
         public boolean canFork() {
-            return delegate.canFork();
+            return false;
         }
 
         @Override
         public MealyEquivalenceOracle<I, O> createCacheConsistencyTest() {
-            return new MealyCacheConsistencyTest<>(incMealy, incMealyLock);
+            return new MealyCacheConsistencyTest<>(incMealy);
         }
 
         @Override
@@ -228,14 +220,18 @@ abstract class AbstractSULCache<I, O> implements SUL<I, O>, MealyLearningCache<I
 
         protected void postNewStepHook() {}
 
-        protected void postCacheWriteHook(List<I> input) {}
+        protected void updateCache(WordBuilder<I> inputBuilder, WordBuilder<O> outputBuilder) {
+            if (!outputBuilder.isEmpty()) {
+                incMealy.insert(inputBuilder.toWord(), outputBuilder.toWord());
+            }
+        }
     }
 
     public static class SULCacheState<I, O> {
 
         final IncrementalMealyBuilder<I, O> builder;
 
-        protected SULCacheState(IncrementalMealyBuilder<I, O> builder) {
+        SULCacheState(IncrementalMealyBuilder<I, O> builder) {
             this.builder = builder;
         }
     }

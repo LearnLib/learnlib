@@ -16,33 +16,40 @@
 package de.learnlib.filter.cache.dfa;
 
 import java.util.Collection;
-import java.util.Map;
+import java.util.concurrent.locks.ReadWriteLock;
 
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class DFAHashCacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {
+/**
+ * A thread-safe variant of {@link DFAEquivalenceOracle}.
+ *
+ * @param <I>
+ *         input symbol type
+ *
+ * @author frohme
+ */
+final class ThreadSafeDFACacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {
 
-    private final Map<Word<I>, Boolean> cache;
+    private final DFAEquivalenceOracle<I> delegate;
+    private final ReadWriteLock lock;
 
-    DFAHashCacheConsistencyTest(Map<Word<I>, Boolean> cache) {
-        this.cache = cache;
+    ThreadSafeDFACacheConsistencyTest(DFAEquivalenceOracle<I> delegate, ReadWriteLock lock) {
+        this.delegate = delegate;
+        this.lock = lock;
     }
 
     @Override
     public @Nullable DefaultQuery<I, Boolean> findCounterExample(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
-        for (Map.Entry<Word<I>, Boolean> cacheEntry : cache.entrySet()) {
-            Word<I> input = cacheEntry.getKey();
-            Boolean answer = cacheEntry.getValue();
-
-            if (!hypothesis.computeOutput(input).equals(answer)) {
-                return new DefaultQuery<>(input, answer);
-            }
+        lock.readLock().lock();
+        try {
+            return delegate.findCounterExample(hypothesis, inputs);
+        } finally {
+            lock.readLock().unlock();
         }
-        return null;
     }
 
 }
+

@@ -87,6 +87,11 @@ public class ExamplesTest {
     }
 
     @Test
+    public void testParallelismExample2() {
+        de.learnlib.examples.parallelism.ParallelismExample2.main(new String[0]);
+    }
+
+    @Test
     public void testPassiveExample1() {
         checkJVMCompatibility();
         de.learnlib.examples.passive.Example1.main(new String[0]);

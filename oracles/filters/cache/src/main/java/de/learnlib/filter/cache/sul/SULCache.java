@@ -15,17 +15,10 @@
  */
 package de.learnlib.filter.cache.sul;
 
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import de.learnlib.api.Resumable;
 import de.learnlib.api.SUL;
 import de.learnlib.filter.cache.sul.AbstractSULCache.SULCacheState;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
-import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
-import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
-import net.automatalib.words.Alphabet;
 
 /**
  * A cache to be used with a {@link SUL}.
@@ -36,6 +29,10 @@ import net.automatalib.words.Alphabet;
  * <p>
  * This class therefore defers any real execution to the point where the cached information is definitely insufficient;
  * if such a point is not reached before a call to {@link #post()} is made, the underlying SUL is not queried.
+ * <p>
+ * <b>Note:</b> this implementation is <b>not</b> thread-safe. If you require a cache that is usable in a parallel
+ * environment. use the {@code ThreadSafeSULCache} (or rather the {@code ThreadSafeSULCaches} factory) from the {@code
+ * learnlib-parallelism} artifact.
  *
  * @param <I>
  *         input symbol type
@@ -44,35 +41,14 @@ import net.automatalib.words.Alphabet;
  *
  * @author Malte Isberner
  */
-public class SULCache<I, O> extends AbstractSULCache<I, O> implements Resumable<SULCacheState<I, O>> {
-
-    private final SULCacheImpl<?, I, ?, O> impl;
+public class SULCache<I, O> extends AbstractSULCache<I, O, SULCacheState<I, O>> {
 
     SULCache(IncrementalMealyBuilder<I, O> incMealy, SUL<I, O> sul) {
-        this(new SULCacheImpl<>(incMealy, new ReentrantReadWriteLock(), incMealy.asTransitionSystem(), sul));
+        this(new SULCacheImpl<>(incMealy, incMealy.asTransitionSystem(), sul));
     }
 
-    private <S, T> SULCache(SULCacheImpl<S, I, T, O> cacheImpl) {
+    <S, T> SULCache(SULCacheImpl<S, I, T, O> cacheImpl) {
         super(cacheImpl);
-        this.impl = cacheImpl;
-    }
-
-    public static <I, O> SULCache<I, O> createTreeCache(Alphabet<I> alphabet, SUL<I, O> sul) {
-        return new SULCache<>(new IncrementalMealyTreeBuilder<>(alphabet), sul);
-    }
-
-    public static <I, O> SULCache<I, O> createDAGCache(Alphabet<I> alphabet, SUL<I, O> sul) {
-        return new SULCache<>(new IncrementalMealyDAGBuilder<>(alphabet), sul);
-    }
-
-    @Override
-    public SULCacheState<I, O> suspend() {
-        return impl.suspend();
-    }
-
-    @Override
-    public void resume(SULCacheState<I, O> state) {
-        this.impl.resume(state);
     }
 
     /**
@@ -90,18 +66,10 @@ public class SULCache<I, O> extends AbstractSULCache<I, O> implements Resumable<
      *
      * @author Malte Isberner
      */
-    private static final class SULCacheImpl<S, I, T, O> extends AbstractSULCacheImpl<S, I, T, O, SULCacheState<I, O>> {
+    static class SULCacheImpl<S, I, T, O> extends AbstractSULCacheImpl<S, I, T, O, SULCacheState<I, O>> {
 
-        SULCacheImpl(IncrementalMealyBuilder<I, O> incMealy,
-                     ReadWriteLock lock,
-                     MealyTransitionSystem<S, I, T, O> mealyTs,
-                     SUL<I, O> sul) {
-            super(incMealy, lock, mealyTs, sul);
-        }
-
-        @Override
-        public SUL<I, O> fork() {
-            return new SULCacheImpl<>(incMealy, incMealyLock, mealyTs, delegate.fork());
+        SULCacheImpl(IncrementalMealyBuilder<I, O> incMealy, MealyTransitionSystem<S, I, T, O> mealyTs, SUL<I, O> sul) {
+            super(incMealy, mealyTs, sul);
         }
 
         @Override

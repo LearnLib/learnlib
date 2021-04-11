@@ -57,7 +57,7 @@ public class SymbolQueryCache<I, O>
     private Integer currentState;
     private boolean currentTraceValid;
 
-    public SymbolQueryCache(final SymbolQueryOracle<I, O> delegate, final Alphabet<I> alphabet) {
+    SymbolQueryCache(final SymbolQueryOracle<I, O> delegate, final Alphabet<I> alphabet) {
         this.delegate = delegate;
         this.cache = new CompactMealy<>(alphabet);
         this.currentState = this.cache.addInitialState();

@@ -28,13 +28,17 @@ limitations under the License.
     <artifactId>learnlib-parallelism</artifactId>
 
     <name>LearnLib :: Oracles :: Parallelism</name>
-    <description>Support for parallelizing membership queries</description>
+    <description>Support for parallel membership queries and thread-safe caches</description>
 
     <dependencies>
         <!-- internal -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>learnlib-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-cache</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -63,6 +67,10 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-smartcollections</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-incremental</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.checkerframework</groupId>
@@ -70,6 +78,28 @@ limitations under the License.
         </dependency>
 
         <!-- test -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-drivers-simulator</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>learnlib-statistics</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
