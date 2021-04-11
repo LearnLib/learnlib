@@ -34,9 +34,8 @@ public final class MealyUtil {
 
     public static final int NO_MISMATCH = -1;
 
-    // Prevent instantiation
     private MealyUtil() {
-        throw new IllegalStateException("Constructor should never be invoked");
+        // prevent instantiation
     }
 
     public static <I, O> int findMismatch(MealyMachine<?, I, ?, O> hypothesis, Word<I> input, Word<O> output) {

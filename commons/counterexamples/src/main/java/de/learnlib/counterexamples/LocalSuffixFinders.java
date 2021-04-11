@@ -57,8 +57,9 @@ public final class LocalSuffixFinders {
     public static final LocalSuffixFinder<@Nullable Object, @Nullable Object> RIVEST_SCHAPIRE =
             new AcexLocalSuffixFinder(AcexAnalyzers.BINARY_SEARCH_BWD, true, "RivestSchapire");
 
-    // prevent instantiation
-    private LocalSuffixFinders() {}
+    private LocalSuffixFinders() {
+        // prevent instantiation
+    }
 
     /**
      * Searches for a distinguishing suffixes by checking for counterexample yielding access sequence transformations in

@@ -73,7 +73,7 @@ public final class LearningExamples {
     private static final long RANDOM_SEED = 1337L;
 
     private LearningExamples() {
-        throw new AssertionError("Constructor should not be invoked");
+        // prevent instantiation
     }
 
     public static List<DFALearningExample<?>> createDFAExamples() {

@@ -27,7 +27,7 @@ import net.automatalib.words.Alphabet;
 public final class SULCaches {
 
     private SULCaches() {
-        throw new IllegalStateException("Constructor should never be invoked");
+        // prevent instantiation
     }
 
     /**

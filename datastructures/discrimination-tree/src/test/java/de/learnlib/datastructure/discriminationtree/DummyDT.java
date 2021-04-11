@@ -58,6 +58,6 @@ final class DummyDT {
     }
 
     private DummyDT() {
-        throw new AssertionError("Should not be instantiated");
+        // prevent instantiation
     }
 }

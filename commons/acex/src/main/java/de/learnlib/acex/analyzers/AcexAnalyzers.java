@@ -92,7 +92,7 @@ public final class AcexAnalyzers {
     public static final Map<String, AbstractNamedAcexAnalyzer> ALL_ANALYZERS = createMap(FWD_ANALYZERS, BWD_ANALYZERS);
 
     private AcexAnalyzers() {
-        throw new AssertionError("Class should not be instantiated");
+        // prevent instantiation
     }
 
     private static Map<String, AbstractNamedAcexAnalyzer> createMap(AbstractNamedAcexAnalyzer... analyzers) {

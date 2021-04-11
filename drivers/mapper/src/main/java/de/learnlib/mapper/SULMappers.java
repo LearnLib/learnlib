@@ -26,7 +26,7 @@ import de.learnlib.mapper.api.SULMapper;
 public final class SULMappers {
 
     private SULMappers() {
-        throw new AssertionError("Constructor should not be invoked");
+        // prevent instantiation
     }
 
     public static <AI, AO, ACI, CAO, CI, CO> SULMapper<AI, AO, CI, CO> compose(SULMapper<? super AI, ? extends AO, ACI, CAO> outerMapper,

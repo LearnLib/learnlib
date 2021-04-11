@@ -45,7 +45,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class ThreadSafeMealyCaches {
 
     private ThreadSafeMealyCaches() {
-        throw new IllegalStateException();
+        // prevent instantiation
     }
 
     /**

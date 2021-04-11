@@ -31,7 +31,7 @@ import net.automatalib.words.Alphabet;
 public final class DFACaches {
 
     private DFACaches() {
-        throw new IllegalStateException("Constructor should never be invoked");
+        // prevent instantiation
     }
 
     /**

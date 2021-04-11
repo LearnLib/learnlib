@@ -44,7 +44,7 @@ public final class TestQueries {
     }
 
     private TestQueries() {
-        throw new AssertionError("Constructor should not be invoked");
+        // prevent instantiation
     }
 
     public static <I, D> Collection<Query<I, D>> createNoopQueries(int numQueries) {

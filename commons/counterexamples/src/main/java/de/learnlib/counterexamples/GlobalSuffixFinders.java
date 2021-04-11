@@ -126,8 +126,9 @@ public final class GlobalSuffixFinders {
     public static final GlobalSuffixFinder<@Nullable Object, @Nullable Object> RIVEST_SCHAPIRE_ALLSUFFIXES =
             fromLocalFinder(LocalSuffixFinders.RIVEST_SCHAPIRE, true);
 
-    // prevent instantiation
-    private GlobalSuffixFinders() {}
+    private GlobalSuffixFinders() {
+        // prevent instantiation
+    }
 
     /**
      * Transforms a {@link LocalSuffixFinder} into a global one. This is a convenience method, behaving like {@link

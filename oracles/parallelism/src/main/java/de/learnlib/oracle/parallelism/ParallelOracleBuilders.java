@@ -72,7 +72,7 @@ public final class ParallelOracleBuilders {
     private static final String FORKABLE_SUL_ERR = "SUL must be forkable for parallel processing";
 
     private ParallelOracleBuilders() {
-        throw new AssertionError("Constructor should not be invoked");
+        // prevent instantiation
     }
 
     /**

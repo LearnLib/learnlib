@@ -30,7 +30,7 @@ import net.automatalib.words.Word;
 public final class MealyCaches {
 
     private MealyCaches() {
-        throw new IllegalStateException();
+        // prevent instantiation
     }
 
     /**

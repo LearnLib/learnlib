@@ -29,7 +29,7 @@ import net.automatalib.words.Alphabet;
 public final class ThreadSafeSULCaches {
 
     private ThreadSafeSULCaches() {
-        throw new IllegalStateException("Constructor should never be invoked");
+        // prevent instantiation
     }
 
     /**
