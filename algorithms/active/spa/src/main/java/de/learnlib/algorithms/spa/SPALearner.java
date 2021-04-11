@@ -27,7 +27,7 @@ import java.util.function.Predicate;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import de.learnlib.algorithms.spa.provider.OptimizingATRManager;
+import de.learnlib.algorithms.spa.manager.OptimizingATRManager;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
