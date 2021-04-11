@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseException;
@@ -68,6 +70,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
     private int nodeCount;
     /** May be reinitialized, see {@link ReuseTree#clearTree()}. */
     private ReuseNode<S, I, O> root;
+    private final ReadWriteLock lock;
 
     ReuseTree(ReuseTreeBuilder<S, I, O> builder) {
         this.alphabet = builder.alphabet;
@@ -90,6 +93,8 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
         // local and not configurable
         this.alphabetSize = alphabet.size();
         this.root = createNode();
+
+        this.lock = new ReentrantReadWriteLock();
     }
 
     private ReuseNode<S, I, O> createNode() {
@@ -112,7 +117,8 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
 
         final WordBuilder<O> output = new WordBuilder<>();
 
-        synchronized (this) {
+        this.lock.readLock().lock();
+        try {
             ReuseNode<S, I, O> sink = getRoot();
             for (final I symbol : query) {
                 final ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(alphabet.getSymbolIndex(symbol));
@@ -122,6 +128,8 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
                 output.add(edge.getOutput());
                 sink = edge.getTarget();
             }
+        } finally {
+            this.lock.readLock().unlock();
         }
 
         return output.toWord();
@@ -154,7 +162,8 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
 
         final WordBuilder<O> output = new WordBuilder<>();
 
-        synchronized (this) {
+        this.lock.readLock().lock();
+        try {
             ReuseNode<S, I, O> sink = getRoot();
             for (final I symbol : query) {
                 final ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(alphabet.getSymbolIndex(symbol));
@@ -170,6 +179,8 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
                 }
                 sink = edge.getTarget();
             }
+        } finally {
+            this.lock.readLock().unlock();
         }
 
         // fill the output with null-pointers to the size of the query.
@@ -184,8 +195,11 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * The {@link SystemStateHandler} will be informed about all disposals.
      */
     public void disposeSystemStates() {
-        synchronized (this) {
+        this.lock.writeLock().lock();
+        try {
             disposeSystemStates(getRoot());
+        } finally {
+            this.lock.writeLock().unlock();
         }
     }
 
@@ -214,10 +228,13 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * The {@link SystemStateHandler} will <b>not</b> be informed about any disposings.
      */
     public void clearTree() {
-        synchronized (this) {
+        this.lock.writeLock().lock();
+        try {
             this.nodeCount = 0;
             disposeSystemStates(root);
             this.root = createNode();
+        } finally {
+            this.lock.writeLock().unlock();
         }
     }
 
@@ -237,7 +254,8 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
 
         int length = 0;
 
-        synchronized (this) {
+        this.lock.readLock().lock();
+        try {
             ReuseNode<S, I, O> sink = getRoot();
             ReuseNode<S, I, O> lastState = null;
             if (sink.hasSystemStates()) {
@@ -267,6 +285,8 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
             S systemState = lastState.fetchSystemState(invalidateSystemstates);
 
             return new ReuseNode.NodeResult<>(lastState, systemState, length);
+        } finally {
+            this.lock.readLock().unlock();
         }
     }
 
@@ -286,9 +306,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      *         if non deterministic behavior is detected
      */
     public void insert(Word<I> query, ReuseCapableOracle.QueryResult<S, O> queryResult) {
-        synchronized (this) {
-            insert(query, getRoot(), queryResult);
-        }
+        insert(query, getRoot(), queryResult);
     }
 
     /**
@@ -323,7 +341,8 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
 
         ReuseNode<S, I, O> effectiveSink = sink;
 
-        synchronized (this) {
+        this.lock.writeLock().lock();
+        try {
             for (int i = 0; i < query.size(); i++) {
                 I in = query.getSymbol(i);
                 O out = queryResult.output.getSymbol(i);
@@ -359,6 +378,8 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
             if (evictedState != null) {
                 systemStateHandler.dispose(evictedState);
             }
+        } finally {
+            this.lock.writeLock().unlock();
         }
     }
 
