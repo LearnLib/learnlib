@@ -175,19 +175,23 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
                                                                                                           oracle,
                                                                                                           sym,
                                                                                                           atrManager));
-            this.subLearners.put(sym, newLearner);
-
-            newLearner.startLearning();
+            // add existing procedures (without itself) to new learner
             for (final I call : this.subLearners.keySet()) {
                 newLearner.addAlphabetSymbol(call);
             }
 
-            // try to find a shorter terminating sequence for 'sym' before procedure is invoked in other hypotheses
+            newLearner.startLearning();
+
+            // add new learner here, so that we have an AccessSequenceTransformer available when scanning for shorter ts
+            this.subLearners.put(sym, newLearner);
+
+            // try to find a shorter terminating sequence for 'sym' before procedure is added to other hypotheses
             this.atrManager.scanRefinedProcedures(Collections.singletonMap(sym, newLearner.getHypothesisModel()),
                                                   subLearners,
                                                   activeAlphabet);
             this.activeAlphabet.add(sym);
 
+            // add the new procedure (with a possibly shorter ts) to all learners (including the new one)
             for (final L learner : this.subLearners.values()) {
                 learner.addAlphabetSymbol(sym);
             }
