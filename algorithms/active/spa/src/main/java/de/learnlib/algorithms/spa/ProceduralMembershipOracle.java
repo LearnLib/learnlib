@@ -70,7 +70,7 @@ final class ProceduralMembershipOracle<I> implements MembershipOracle<I, Boolean
                 builder.append(atrManager.getTerminatingSequence(i));
                 builder.append(alphabet.getReturnSymbol());
             } else { // return symbol
-                throw new IllegalStateException("Systems should not query reset symbol");
+                throw new IllegalStateException("Systems should not query return symbol");
             }
         }
 
