@@ -60,7 +60,7 @@ public class DTLearnerMealy<I, O> extends AbstractDTLearner<MealyMachine<?, I, ?
                           LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
                           boolean repeatedCounterexampleEvaluation) {
         super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new MultiDTree<>(oracle));
-        this.hypWrapper = new HypothesisWrapperMealy<>(hypothesis);
+        this.hypWrapper = new HypothesisWrapperMealy<>(getHypothesisDS());
     }
 
     @Override
@@ -88,7 +88,7 @@ public class DTLearnerMealy<I, O> extends AbstractDTLearner<MealyMachine<?, I, ?
     @Override
     public void resume(final DTLearnerState<I, Word<O>, Void, O> state) {
         super.resume(state);
-        this.hypWrapper = new HypothesisWrapperMealy<>(hypothesis);
+        this.hypWrapper = new HypothesisWrapperMealy<>(getHypothesisDS());
     }
 
 }

@@ -50,8 +50,8 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
     private final List<HState<I, D, SP, TP>> newStates = new ArrayList<>();
     private final List<HTransition<I, D, SP, TP>> newTransitions = new ArrayList<>();
     private final Deque<HTransition<I, D, SP, TP>> openTransitions = new ArrayDeque<>();
-    protected AbstractWordBasedDiscriminationTree<I, D, HState<I, D, SP, TP>> dtree;
-    protected DTLearnerHypothesis<I, D, SP, TP> hypothesis;
+    private AbstractWordBasedDiscriminationTree<I, D, HState<I, D, SP, TP>> dtree;
+    private DTLearnerHypothesis<I, D, SP, TP> hypothesis;
 
     protected AbstractDTLearner(Alphabet<I> alphabet,
                                 MembershipOracle<I, D> oracle,

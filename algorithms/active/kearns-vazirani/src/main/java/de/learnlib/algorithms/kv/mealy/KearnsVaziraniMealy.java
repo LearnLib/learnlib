@@ -66,7 +66,7 @@ public class KearnsVaziraniMealy<I, O>
     private final MembershipOracle<I, Word<O>> oracle;
     private final boolean repeatedCounterexampleEvaluation;
     private final AcexAnalyzer ceAnalyzer;
-    protected MultiDTree<I, Word<O>, StateInfo<I, Word<O>>> discriminationTree;
+    private MultiDTree<I, Word<O>, StateInfo<I, Word<O>>> discriminationTree;
     protected List<StateInfo<I, Word<O>>> stateInfos = new ArrayList<>();
     private CompactMealy<I, O> hypothesis;
 

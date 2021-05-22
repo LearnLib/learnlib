@@ -63,7 +63,7 @@ public class KearnsVaziraniDFA<I>
     private final MembershipOracle<I, Boolean> oracle;
     private final boolean repeatedCounterexampleEvaluation;
     private final AcexAnalyzer ceAnalyzer;
-    protected BinaryDTree<I, StateInfo<I, Boolean>> discriminationTree;
+    private BinaryDTree<I, StateInfo<I, Boolean>> discriminationTree;
     protected List<StateInfo<I, Boolean>> stateInfos = new ArrayList<>();
     private CompactDFA<I> hypothesis;
 

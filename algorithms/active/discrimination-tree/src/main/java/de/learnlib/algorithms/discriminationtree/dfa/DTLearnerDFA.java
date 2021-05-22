@@ -63,9 +63,9 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?, I>, I, Boolean, Bo
                         boolean repeatedCounterexampleEvaluation,
                         boolean epsilonRoot) {
         super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new BinaryDTree<>(oracle));
-        this.hypWrapper = new HypothesisWrapperDFA<>(hypothesis);
+        this.hypWrapper = new HypothesisWrapperDFA<>(getHypothesisDS());
         if (epsilonRoot) {
-            dtree.getRoot().split(Word.epsilon(), false, true);
+            getDiscriminationTree().getRoot().split(Word.epsilon(), false, true);
         }
     }
 
@@ -93,7 +93,7 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?, I>, I, Boolean, Bo
     @Override
     public void resume(DTLearnerState<I, Boolean, Boolean, Void> state) {
         super.resume(state);
-        this.hypWrapper = new HypothesisWrapperDFA<>(this.hypothesis);
+        this.hypWrapper = new HypothesisWrapperDFA<>(this.getHypothesisDS());
     }
 
     public static final class BuilderDefaults {
