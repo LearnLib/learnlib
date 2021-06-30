@@ -5,7 +5,6 @@ on: [ push, pull_request ]
 env:
   LTSMIN_VERSION: v3.1.0
   LTSMIN_REPO: Meijuh
-  AUTOMATALIB_BRANCH: develop
 
 jobs:
   tests-and-analysis:
