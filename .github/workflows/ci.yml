@@ -1,0 +1,162 @@
+name: CI
+
+on: [ push, pull_request ]
+
+env:
+  LTSMIN_VERSION: v3.1.0
+  LTSMIN_REPO: Meijuh
+
+jobs:
+  tests-and-analysis:
+    name: "Tests and Analysis (JDK: ${{ matrix.jdk }})"
+    strategy:
+      matrix:
+        jdk: [ 1.8, 11 ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.jdk }}
+      - name: Set up cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/ltsmin
+            ~/.m2
+            !~/.m2/repository/net/automatalib
+            !~/.m2/repository/de/learnlib
+          key: cache-tests-and-analysis-${{ matrix.jdk }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: cache-tests-and-analysis-${{ matrix.jdk }}-
+      - name: Set up GraphViz
+        run: sudo apt-get install graphviz
+      - name: Set up LTSmin
+        shell: bash
+        run: |
+          $GITHUB_WORKSPACE/.github/install-ltsmin.sh
+          echo "$HOME/ltsmin/${{ env.LTSMIN_VERSION }}/bin" >> $GITHUB_PATH
+      - name: Set up AutomataLib
+        shell: bash
+        # Set environment variables "AUTOMATALIB_FORK" and "AUTOMATALIB_BRANCH" to build custom AutomataLib versions.
+        # Defaults are "LearnLib" and the current/targeted LearnLib branch ($GITHUB_REF, relies on the same naming
+        # conventions between AutomataLib and LearnLib branches).
+        run: |
+          git clone -b ${AUTOMATALIB_BRANCH:-${GITHUB_REF#refs/*/}} --single-branch https://github.com/${AUTOMATALIB_FORK:-LearnLib}/automatalib.git ${HOME}/automatalib-git
+          cd ${HOME}/automatalib-git
+          mvn -B install -DskipTests
+          cd $GITHUB_WORKSPACE
+      - name: Run Maven
+        run: mvn -B install site -Pintegration-tests,code-analysis,bundles
+  platform-integration:
+    name: "Platform Integration (JDK: ${{ matrix.jdk }}, OS: ${{ matrix.os }})"
+    needs: [ tests-and-analysis ]
+    strategy:
+      matrix:
+        jdk: [ 1.8, 11 ]
+        os: [ ubuntu-latest, windows-latest, macOS-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.jdk }}
+      - name: Set up cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2
+            !~/.m2/repository/net/automatalib
+            !~/.m2/repository/de/learnlib
+          key: cache-platform-integration-${{ matrix.jdk }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: cache-platform-integration-${{ matrix.jdk }}-
+      - name: Set up AutomataLib
+        shell: bash
+        # Set environment variables "AUTOMATALIB_FORK" and "AUTOMATALIB_BRANCH" to build custom AutomataLib versions.
+        # Defaults are "LearnLib" and the current/targeted LearnLib branch ($GITHUB_REF, relies on the same naming
+        # conventions between AutomataLib and LearnLib branches).
+        run: |
+          git clone -b ${AUTOMATALIB_BRANCH:-${GITHUB_REF#refs/*/}} --single-branch https://github.com/${AUTOMATALIB_FORK:-LearnLib}/automatalib.git ${HOME}/automatalib-git
+          cd ${HOME}/automatalib-git
+          mvn -B install -DskipTests
+          cd $GITHUB_WORKSPACE
+      - name: Run Maven
+        run: mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' install
+  coverage:
+    name: "Coverage"
+    needs: [ platform-integration ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Set up cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/ltsmin
+            ~/.m2
+            !~/.m2/repository/net/automatalib
+            !~/.m2/repository/de/learnlib
+          key: cache-coverage-${{ hashFiles('**/pom.xml') }}
+          restore-keys: cache-coverage-
+      - name: Set up GraphViz
+        run: sudo apt-get install graphviz
+      - name: Set up LTSmin
+        shell: bash
+        run: |
+          $GITHUB_WORKSPACE/.github/install-ltsmin.sh
+          echo "$HOME/ltsmin/${{ env.LTSMIN_VERSION }}/bin" >> $GITHUB_PATH
+      - name: Set up AutomataLib
+        shell: bash
+        # Set environment variables "AUTOMATALIB_FORK" and "AUTOMATALIB_BRANCH" to build custom AutomataLib versions.
+        # Defaults are "LearnLib" and the current/targeted LearnLib branch ($GITHUB_REF, relies on the same naming
+        # conventions between AutomataLib and LearnLib branches).
+        run: |
+          git clone -b ${AUTOMATALIB_BRANCH:-${GITHUB_REF#refs/*/}} --single-branch https://github.com/${AUTOMATALIB_FORK:-LearnLib}/automatalib.git ${HOME}/automatalib-git
+          cd ${HOME}/automatalib-git
+          mvn -B install -DskipTests
+          cd $GITHUB_WORKSPACE
+      - name: Run Coverage # see https://github.com/trautonen/coveralls-maven-plugin/issues/136
+        env:
+          CI_NAME: github
+          CI_BUILD_NUMBER: ${{ github.run_id }}
+          CI_BUILD_URL: https://github.com/${{ github.repository }}/commit/${{ github.event.after }}/checks
+          BRANCH_NAME_OR_REF: ${{ github.head_ref || github.ref }}
+        run: |
+          export CI_BRANCH=${BRANCH_NAME_OR_REF#refs/heads/}
+          export CI_PULL_REQUEST=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          mvn -B install -Pcode-coverage
+          mvn -B coveralls:report -DrepoToken=${{ secrets.GITHUB_TOKEN }} -DpullRequest=${{ github.event.number }}
+  deploy:
+    name: "Deploy"
+    if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/develop' }}
+    needs: [ platform-integration ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Set up cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2
+            !~/.m2/repository/net/automatalib
+            !~/.m2/repository/de/learnlib
+          key: cache-deploy-${{ hashFiles('**/pom.xml') }}
+          restore-keys: cache-deploy-
+      - name: Run Maven
+        env: # make secrets available as environment variables
+          OSSRH_TOKEN_USERNAME: ${{ secrets.OSSRH_TOKEN_USERNAME }}
+          OSSRH_TOKEN_PASSWORD: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
+        run: mvn -B -s $GITHUB_WORKSPACE/.github/settings.xml -DskipTests deploy
