@@ -4,29 +4,6 @@
 
     <interactiveMode>false</interactiveMode>
 
-    <profiles>
-        <profile>
-            <id>sonatype-snapshot</id>
-            <repositories>
-                <repository>
-                    <id>sonatype-snapshots</id>
-                    <name>Sonatype Snapshots</name>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-        </profile>
-    </profiles>
-
-    <activeProfiles>
-        <activeProfile>sonatype-snapshot</activeProfile>
-    </activeProfiles>
-
     <servers>
         <server>
             <id>ossrh</id>
