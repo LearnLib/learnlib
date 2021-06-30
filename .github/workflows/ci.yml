@@ -46,7 +46,7 @@ jobs:
         run: |
           git clone -b ${AUTOMATALIB_BRANCH:-${GITHUB_REF#refs/*/}} --single-branch https://github.com/${AUTOMATALIB_FORK:-LearnLib}/automatalib.git ${HOME}/automatalib-git
           cd ${HOME}/automatalib-git
-          mvn install -DskipTests
+          mvn -B install -DskipTests
           cd $GITHUB_WORKSPACE
       - name: Run Maven
         run: mvn -B install site -Pintegration-tests,code-analysis,bundles
@@ -82,7 +82,7 @@ jobs:
         run: |
           git clone -b ${AUTOMATALIB_BRANCH:-${GITHUB_REF#refs/*/}} --single-branch https://github.com/${AUTOMATALIB_FORK:-LearnLib}/automatalib.git ${HOME}/automatalib-git
           cd ${HOME}/automatalib-git
-          mvn install -DskipTests
+          mvn -B install -DskipTests
           cd $GITHUB_WORKSPACE
       - name: Run Maven
         run: mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' install
@@ -122,7 +122,7 @@ jobs:
         run: |
           git clone -b ${AUTOMATALIB_BRANCH:-${GITHUB_REF#refs/*/}} --single-branch https://github.com/${AUTOMATALIB_FORK:-LearnLib}/automatalib.git ${HOME}/automatalib-git
           cd ${HOME}/automatalib-git
-          mvn install -DskipTests
+          mvn -B install -DskipTests
           cd $GITHUB_WORKSPACE
       - name: Run Coverage # see https://github.com/trautonen/coveralls-maven-plugin/issues/136
         env:
