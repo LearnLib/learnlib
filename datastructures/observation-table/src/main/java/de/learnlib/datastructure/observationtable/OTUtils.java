@@ -49,7 +49,7 @@ public final class OTUtils {
     private static final String HTML_FILE_FOOTER = "</body></html>" + System.lineSeparator();
 
     private OTUtils() {
-        throw new AssertionError("Constructor should never be invoked");
+        // prevent instantiation
     }
 
     public static <I, D> String toString(ObservationTable<I, D> table, ObservationTableWriter<I, D> writer) {
