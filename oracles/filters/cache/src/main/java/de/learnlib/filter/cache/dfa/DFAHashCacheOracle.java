@@ -18,8 +18,10 @@ package de.learnlib.filter.cache.dfa;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.EquivalenceOracle;
@@ -61,15 +63,21 @@ public class DFAHashCacheOracle<I> implements DFALearningCacheOracle<I>, Resumab
 
     @Override
     public void processQueries(Collection<? extends Query<I, Boolean>> queries) {
-        List<ProxyQuery<I>> misses = new ArrayList<>();
+        final List<ProxyQuery<I>> misses = new ArrayList<>();
+        final List<Query<I, Boolean>> duplicates = new ArrayList<>();
+        final Set<Word<I>> batchCache = new HashSet<>();
 
         for (Query<I, Boolean> qry : queries) {
-            Word<I> input = qry.getInput();
-            Boolean answer = cache.get(input);
+            final Word<I> input = qry.getInput();
+            final Boolean answer = cache.get(input);
             if (answer != null) {
                 qry.answer(answer);
             } else {
-                misses.add(new ProxyQuery<>(qry));
+                if (batchCache.add(input)) { // never seen before
+                    misses.add(new ProxyQuery<>(qry));
+                } else {
+                    duplicates.add(qry);
+                }
             }
         }
 
@@ -77,6 +85,12 @@ public class DFAHashCacheOracle<I> implements DFALearningCacheOracle<I>, Resumab
 
         for (ProxyQuery<I> miss : misses) {
             cache.put(miss.getInput(), miss.getAnswer());
+        }
+
+        if (!duplicates.isEmpty()) {
+            for (Query<I, Boolean> d : duplicates) {
+                d.answer(cache.get(d.getInput()));
+            }
         }
     }
 

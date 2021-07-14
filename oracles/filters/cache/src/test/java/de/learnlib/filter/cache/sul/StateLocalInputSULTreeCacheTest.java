@@ -99,6 +99,12 @@ public class StateLocalInputSULTreeCacheTest
     }
 
     @Test(dependsOnMethods = "testResuming")
+    @Override
+    public void testDuplicatesInBatch() {
+        super.testDuplicatesInBatch();
+    }
+
+    @Test(dependsOnMethods = "testDuplicatesInBatch")
     public void testQueryWithNoContainedAlphabetSymbol() {
         final long oldCount = getNumberOfPosedQueries();
 

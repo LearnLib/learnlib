@@ -16,6 +16,7 @@
 package de.learnlib.filter.cache;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -147,6 +148,30 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
         if (!usesMapping()) {
             Assert.assertEquals(getNumberOfPosedQueries(), oldCount + 1);
         }
+    }
+
+    @Test(dependsOnMethods = "testResuming")
+    public void testDuplicatesInBatch() {
+
+        final long oldCount = getNumberOfPosedQueries();
+        final Word<I> word = generateWord();
+        final int halfLength = LENGTH / 2;
+
+        // Generate a query which essentially queries the same information but is split across prefix and suffix and
+        // a simple duplicate
+        final DefaultQuery<I, D> q1 = new DefaultQuery<>(word);
+        final DefaultQuery<I, D> q2 = new DefaultQuery<>(word.prefix(halfLength), word.suffix(-halfLength));
+        final DefaultQuery<I, D> q3 = new DefaultQuery<>(word);
+
+        this.oracle.processQueries(Arrays.asList(q1, q2, q3));
+
+        // assert queries are answered
+        Assert.assertNotNull(q1.getOutput());
+        Assert.assertNotNull(q2.getOutput());
+        Assert.assertNotNull(q3.getOutput());
+
+        // assert that the three queries only asked the system once
+        Assert.assertEquals(getNumberOfPosedQueries(), oldCount + 1);
     }
 
     private Word<I> generateWord() {

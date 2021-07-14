@@ -17,7 +17,9 @@ package de.learnlib.filter.cache.dfa;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
@@ -26,8 +28,10 @@ import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
 import de.learnlib.filter.cache.dfa.DFACacheOracle.DFACacheOracleState;
 import net.automatalib.SupportsGrowingAlphabet;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
+import net.automatalib.words.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,9 +74,16 @@ public class DFACacheOracle<I>
             return;
         }
 
-        final Collection<ProxyQuery<I>> unanswered = queryCache(queries);
+        final Pair<Collection<ProxyQuery<I>>, Collection<Query<I, Boolean>>> cacheResult = queryCache(queries);
+        final Collection<ProxyQuery<I>> unanswered = cacheResult.getFirst();
+        final Collection<Query<I, Boolean>> duplicates = cacheResult.getSecond();
+
         delegate.processQueries(unanswered);
         updateCache(unanswered);
+
+        if (!duplicates.isEmpty()) {
+            queryCache(duplicates);
+        }
     }
 
     @Override
@@ -100,19 +111,26 @@ public class DFACacheOracle<I>
         this.incDfa = state.getBuilder();
     }
 
-    protected Collection<ProxyQuery<I>> queryCache(Collection<? extends Query<I, Boolean>> queries) {
+    protected Pair<Collection<ProxyQuery<I>>, Collection<Query<I, Boolean>>> queryCache(Collection<? extends Query<I, Boolean>> queries) {
         final List<ProxyQuery<I>> unanswered = new ArrayList<>();
+        final List<Query<I, Boolean>> duplicates = new ArrayList<>();
+        final Set<Word<I>> cache = new HashSet<>();
 
         for (Query<I, Boolean> q : queries) {
-            Acceptance acc = incDfa.lookup(q.getInput());
+            final Word<I> input = q.getInput();
+            final Acceptance acc = incDfa.lookup(input);
             if (acc != Acceptance.DONT_KNOW) {
                 q.answer(acc.toBoolean());
             } else {
-                unanswered.add(new ProxyQuery<>(q));
+                if (cache.add(input)) { // never seen before
+                    unanswered.add(new ProxyQuery<>(q));
+                } else {
+                    duplicates.add(q);
+                }
             }
         }
 
-        return unanswered;
+        return Pair.of(unanswered, duplicates);
     }
 
     protected void updateCache(Collection<? extends ProxyQuery<I>> queries) {

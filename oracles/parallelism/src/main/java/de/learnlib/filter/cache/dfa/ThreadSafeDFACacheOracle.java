@@ -21,6 +21,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 
 /**
@@ -48,7 +49,7 @@ public class ThreadSafeDFACacheOracle<I> extends DFACacheOracle<I> {
     }
 
     @Override
-    protected Collection<ProxyQuery<I>> queryCache(Collection<? extends Query<I, Boolean>> queries) {
+    protected Pair<Collection<ProxyQuery<I>>, Collection<Query<I, Boolean>>> queryCache(Collection<? extends Query<I, Boolean>> queries) {
         lock.readLock().lock();
         try {
             return super.queryCache(queries);
