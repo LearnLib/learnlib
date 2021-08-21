@@ -20,13 +20,13 @@ import java.util.function.Function;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.ttt.mealy.TTTLearnerMealy;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.api.logging.LoggingPropertyOracle;
+import de.learnlib.api.logging.LoggingPropertyOracle.MealyLoggingPropertyOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.InclusionOracle.MealyInclusionOracle;
-import de.learnlib.api.oracle.LassoEmptinessOracle;
+import de.learnlib.api.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
-import de.learnlib.api.oracle.PropertyOracle;
+import de.learnlib.api.oracle.PropertyOracle.MealyPropertyOracle;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
 import de.learnlib.examples.mealy.ExampleTinyMealy;
 import de.learnlib.oracle.emptiness.MealyLassoEmptinessOracleImpl;
@@ -36,7 +36,7 @@ import de.learnlib.oracle.equivalence.MealyEQOracleChain;
 import de.learnlib.oracle.equivalence.MealyWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOracle;
 import de.learnlib.oracle.property.MealyLassoPropertyOracle;
-import de.learnlib.util.Experiment;
+import de.learnlib.util.Experiment.MealyExperiment;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLIOBuilder;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
@@ -45,12 +45,11 @@ import net.automatalib.words.Alphabet;
 
 /**
  * Run a black-box checking experiment with Mealy machines and straightforward edge semantics.
- *
+ * <p>
  * The main difference with {@link Example3} is how the LTL formula is written.
  *
- * @see Example3
- *
  * @author Jeroen Meijer
+ * @see Example3
  */
 public final class Example2 {
 
@@ -82,29 +81,32 @@ public final class Example2 {
 
         // create a model checker
         MealyModelCheckerLasso<Character, Character, String> modelChecker =
-                new LTSminLTLIOBuilder<Character, Character>().withString2Input(EDGE_PARSER).
-                        withString2Output(EDGE_PARSER).create();
+                new LTSminLTLIOBuilder<Character, Character>().withString2Input(EDGE_PARSER)
+                                                              .withString2Output(EDGE_PARSER)
+                                                              .create();
 
         // create an emptiness oracle, that is used to disprove properties
-        LassoEmptinessOracle.MealyLassoEmptinessOracle<Character, Character>
-                emptinessOracle = new MealyLassoEmptinessOracleImpl<>(omqOracle);
+        MealyLassoEmptinessOracle<Character, Character> emptinessOracle =
+                new MealyLassoEmptinessOracleImpl<>(omqOracle);
 
         // create an inclusion oracle, that is used to find counterexamples to hypotheses
         MealyInclusionOracle<Character, Character> inclusionOracle = new MealyBFInclusionOracle<>(mqOracle, 1.0);
 
         // create an LTL property oracle, that also logs stuff
-        PropertyOracle.MealyPropertyOracle<Character, Character, String> ltl = new LoggingPropertyOracle.MealyLoggingPropertyOracle<>(
-                new MealyLassoPropertyOracle<>("X output==\"2\"", inclusionOracle, emptinessOracle, modelChecker));
+        MealyPropertyOracle<Character, Character, String> ltl =
+                new MealyLoggingPropertyOracle<>(new MealyLassoPropertyOracle<>("X output==\"2\"",
+                                                                                inclusionOracle,
+                                                                                emptinessOracle,
+                                                                                modelChecker));
 
         // create an equivalence oracle, that first searches for a counter example using the ltl properties, and next
         // with the W-method.
         @SuppressWarnings("unchecked")
-        MealyEquivalenceOracle<Character, Character> eqOracle = new MealyEQOracleChain<>(
-                new MealyCExFirstOracle<>(ltl),
-                new MealyWpMethodEQOracle<>(mqOracle, 3));
+        MealyEquivalenceOracle<Character, Character> eqOracle =
+                new MealyEQOracleChain<>(new MealyCExFirstOracle<>(ltl), new MealyWpMethodEQOracle<>(mqOracle, 3));
 
         // create an experiment
-        Experiment.MealyExperiment<Character, Character> experiment = new Experiment.MealyExperiment<>(learner, eqOracle, sigma);
+        MealyExperiment<Character, Character> experiment = new MealyExperiment<>(learner, eqOracle, sigma);
 
         // run the experiment
         experiment.run();

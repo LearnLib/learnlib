@@ -17,40 +17,41 @@ package de.learnlib.oracle.property;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.InclusionOracle;
-import de.learnlib.api.oracle.LassoEmptinessOracle;
-import de.learnlib.api.oracle.PropertyOracle;
+import de.learnlib.api.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
+import de.learnlib.api.oracle.PropertyOracle.MealyPropertyOracle;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.modelchecking.Lasso;
-import net.automatalib.modelchecking.ModelCheckerLasso;
+import net.automatalib.modelchecking.Lasso.MealyLasso;
+import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.words.Word;
 
 /**
  * A property oracle for Mealy machines that can check lassos from the model checker.
  *
- * @author Jeroen Meijer
+ * @param <I>
+ *         the input type
+ * @param <O>
+ *         the output type
+ * @param <P>
+ *         the property type
  *
- * @param <I> the input type
- * @param <O> the output type
- * @param <P> the property type
+ * @author Jeroen Meijer
  */
 public class MealyLassoPropertyOracle<I, O, P>
-        extends AbstractPropertyOracle<I, MealyMachine<?, I, ?, O>, P, Word<O>, Lasso.MealyLasso<I, O>>
-        implements PropertyOracle.MealyPropertyOracle<I, O, P> {
+        extends AbstractPropertyOracle<I, MealyMachine<?, I, ?, O>, P, Word<O>, MealyLasso<I, O>>
+        implements MealyPropertyOracle<I, O, P> {
 
-    private final ModelCheckerLasso.MealyModelCheckerLasso<I, O, P> modelChecker;
+    private final MealyModelCheckerLasso<I, O, P> modelChecker;
 
     public MealyLassoPropertyOracle(P property,
-                                    InclusionOracle.MealyInclusionOracle<I, O> inclusionOracle,
-                                    LassoEmptinessOracle.MealyLassoEmptinessOracle<I, O> emptinessOracle,
-                                    ModelCheckerLasso.MealyModelCheckerLasso<I, O, P> modelChecker) {
+                                    MealyInclusionOracle<I, O> inclusionOracle,
+                                    MealyLassoEmptinessOracle<I, O> emptinessOracle,
+                                    MealyModelCheckerLasso<I, O, P> modelChecker) {
         super(property, inclusionOracle, emptinessOracle);
         this.modelChecker = modelChecker;
     }
 
     @Override
-    protected Lasso.MealyLasso<I, O> modelCheck(MealyMachine<?, I, ?, O> hypothesis,
-                                                          Collection<? extends I> inputs) {
+    protected MealyLasso<I, O> modelCheck(MealyMachine<?, I, ?, O> hypothesis, Collection<? extends I> inputs) {
         return modelChecker.findCounterExample(hypothesis, inputs, getProperty());
     }
 }

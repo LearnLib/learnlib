@@ -20,13 +20,13 @@ import java.util.function.Function;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.logging.LoggingPropertyOracle;
+import de.learnlib.api.logging.LoggingPropertyOracle.DFALoggingPropertyOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.InclusionOracle.DFAInclusionOracle;
-import de.learnlib.api.oracle.LassoEmptinessOracle;
+import de.learnlib.api.oracle.LassoEmptinessOracle.DFALassoEmptinessOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle.DFAOmegaMembershipOracle;
-import de.learnlib.api.oracle.PropertyOracle;
+import de.learnlib.api.oracle.PropertyOracle.DFAPropertyOracle;
 import de.learnlib.examples.LearningExample.DFALearningExample;
 import de.learnlib.examples.dfa.ExampleTinyDFA;
 import de.learnlib.oracle.emptiness.DFALassoEmptinessOracleImpl;
@@ -36,7 +36,7 @@ import de.learnlib.oracle.equivalence.DFAEQOracleChain;
 import de.learnlib.oracle.equivalence.DFAWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.DFASimulatorOmegaOracle;
 import de.learnlib.oracle.property.DFALassoPropertyOracle;
-import de.learnlib.util.Experiment;
+import de.learnlib.util.Experiment.DFAExperiment;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLDFABuilder;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
@@ -81,25 +81,26 @@ public final class Example1 {
                 new LTSminLTLDFABuilder<Character>().withString2Input(EDGE_PARSER).create();
 
         // create an emptiness oracle, that is used to disprove properties
-        LassoEmptinessOracle.DFALassoEmptinessOracle<Character>
-                emptinessOracle = new DFALassoEmptinessOracleImpl<>(omqOracle);
+        DFALassoEmptinessOracle<Character> emptinessOracle = new DFALassoEmptinessOracleImpl<>(omqOracle);
 
         // create an inclusion oracle, that is used to find counterexamples to hypotheses
         DFAInclusionOracle<Character> inclusionOracle = new DFABFInclusionOracle<>(mqOracle, 1.0);
 
         // create an LTL property oracle, that also logs stuff
-        PropertyOracle.DFAPropertyOracle<Character, String> ltl = new LoggingPropertyOracle.DFALoggingPropertyOracle<>(
-            new DFALassoPropertyOracle<>("letter==\"b\"", inclusionOracle, emptinessOracle, modelChecker));
+        DFAPropertyOracle<Character, String> ltl = new DFALoggingPropertyOracle<>(new DFALassoPropertyOracle<>(
+                "letter==\"b\"",
+                inclusionOracle,
+                emptinessOracle,
+                modelChecker));
 
         // create an equivalence oracle, that first searches for a counter example using the ltl properties, and next
         // with the W-method.
         @SuppressWarnings("unchecked")
-        DFAEquivalenceOracle<Character> eqOracle = new DFAEQOracleChain<>(
-                new DFACExFirstOracle<>(ltl),
-                new DFAWpMethodEQOracle<>(mqOracle, 3));
+        DFAEquivalenceOracle<Character> eqOracle =
+                new DFAEQOracleChain<>(new DFACExFirstOracle<>(ltl), new DFAWpMethodEQOracle<>(mqOracle, 3));
 
         // create an experiment
-        Experiment.DFAExperiment<Character> experiment = new Experiment.DFAExperiment<>(learner, eqOracle, sigma);
+        DFAExperiment<Character> experiment = new DFAExperiment<>(learner, eqOracle, sigma);
 
         // run the experiment
         experiment.run();

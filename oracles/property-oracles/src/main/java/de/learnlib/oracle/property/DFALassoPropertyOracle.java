@@ -17,36 +17,37 @@ package de.learnlib.oracle.property;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.InclusionOracle;
-import de.learnlib.api.oracle.LassoEmptinessOracle;
-import de.learnlib.api.oracle.PropertyOracle;
+import de.learnlib.api.oracle.LassoEmptinessOracle.DFALassoEmptinessOracle;
+import de.learnlib.api.oracle.PropertyOracle.DFAPropertyOracle;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.modelchecking.Lasso;
-import net.automatalib.modelchecking.ModelCheckerLasso;
+import net.automatalib.modelchecking.Lasso.DFALasso;
+import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
 
 /**
  * A property oracle for DFAs that can check lassos from the model checker.
  *
- * @author Jeroen Meijer
+ * @param <I>
+ *         the input type
+ * @param <P>
+ *         the property type
  *
- * @param <I> the input type
- * @param <P> the property type
+ * @author Jeroen Meijer
  */
-public class DFALassoPropertyOracle<I, P> extends AbstractPropertyOracle<I, DFA<?, I>, P, Boolean, Lasso.DFALasso<I>>
-        implements PropertyOracle.DFAPropertyOracle<I, P> {
+public class DFALassoPropertyOracle<I, P> extends AbstractPropertyOracle<I, DFA<?, I>, P, Boolean, DFALasso<I>>
+        implements DFAPropertyOracle<I, P> {
 
-    private final ModelCheckerLasso.DFAModelCheckerLasso<I, P> modelChecker;
+    private final DFAModelCheckerLasso<I, P> modelChecker;
 
     public DFALassoPropertyOracle(P property,
-                                  InclusionOracle.DFAInclusionOracle<I> inclusionOracle,
-                                  LassoEmptinessOracle.DFALassoEmptinessOracle<I> emptinessOracle,
-                                  ModelCheckerLasso.DFAModelCheckerLasso<I, P> modelChecker) {
+                                  DFAInclusionOracle<I> inclusionOracle,
+                                  DFALassoEmptinessOracle<I> emptinessOracle,
+                                  DFAModelCheckerLasso<I, P> modelChecker) {
         super(property, inclusionOracle, emptinessOracle);
         this.modelChecker = modelChecker;
     }
 
     @Override
-    protected Lasso.DFALasso<I> modelCheck(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
+    protected DFALasso<I> modelCheck(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
         return modelChecker.findCounterExample(hypothesis, inputs, getProperty());
     }
 }

@@ -20,14 +20,14 @@ import java.util.function.Function;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.logging.LoggingPropertyOracle;
-import de.learnlib.api.oracle.EmptinessOracle;
+import de.learnlib.api.logging.LoggingPropertyOracle.DFALoggingPropertyOracle;
+import de.learnlib.api.oracle.EmptinessOracle.DFAEmptinessOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.InclusionOracle.DFAInclusionOracle;
-import de.learnlib.api.oracle.LassoEmptinessOracle;
+import de.learnlib.api.oracle.LassoEmptinessOracle.DFALassoEmptinessOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle.DFAOmegaMembershipOracle;
-import de.learnlib.api.oracle.PropertyOracle;
+import de.learnlib.api.oracle.PropertyOracle.DFAPropertyOracle;
 import de.learnlib.examples.LearningExample.DFALearningExample;
 import de.learnlib.examples.dfa.ExampleTinyDFA;
 import de.learnlib.oracle.emptiness.DFABFEmptinessOracle;
@@ -40,13 +40,13 @@ import de.learnlib.oracle.membership.SimulatorOmegaOracle.DFASimulatorOmegaOracl
 import de.learnlib.oracle.property.DFAFinitePropertyOracle;
 import de.learnlib.oracle.property.DFALassoPropertyOracle;
 import de.learnlib.oracle.property.DFAPropertyOracleChain;
-import de.learnlib.util.Experiment;
+import de.learnlib.util.Experiment.DFAExperiment;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLDFABuilder;
 import net.automatalib.modelcheckers.ltsmin.monitor.LTSminMonitorDFABuilder;
-import net.automatalib.modelchecking.ModelChecker;
+import net.automatalib.modelchecking.ModelChecker.DFAModelChecker;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.words.Alphabet;
@@ -54,8 +54,8 @@ import net.automatalib.words.Alphabet;
 /**
  * Runs a black-box checking experiment for a DFA.
  * <p>
- * This example is similar to {@link Example1}, except that is also uses a monitor
- * to disprove properties for the learned DFA.
+ * This example is similar to {@link Example1}, except that is also uses a monitor to disprove properties for the
+ * learned DFA.
  *
  * @author Jeroen Meijer
  */
@@ -97,16 +97,14 @@ public final class Example4 {
                 new LTSminLTLDFABuilder<Character>().withString2Input(EDGE_PARSER).create();
 
         // create a lasso emptiness oracle, that is used to disprove properties
-        LassoEmptinessOracle.DFALassoEmptinessOracle<Character>
-                lassoEmptinessOracle = new DFALassoEmptinessOracleImpl<>(omqOracle);
+        DFALassoEmptinessOracle<Character> lassoEmptinessOracle = new DFALassoEmptinessOracleImpl<>(omqOracle);
 
         // create a model checker that uses monitors
-        ModelChecker.DFAModelChecker<Character, String, DFA<?, Character>> modelCheckerMonitor =
+        DFAModelChecker<Character, String, DFA<?, Character>> modelCheckerMonitor =
                 new LTSminMonitorDFABuilder<Character>().withString2Input(EDGE_PARSER).create();
 
         // create an emptiness oracle, that is used to disprove properties.
-        EmptinessOracle.DFAEmptinessOracle<Character>
-                emptinessOracle = new DFABFEmptinessOracle<>(mqOracle, 1.0);
+        DFAEmptinessOracle<Character> emptinessOracle = new DFABFEmptinessOracle<>(mqOracle, 1.0);
 
         // create an inclusion oracle, that is used to find counterexamples to hypotheses
         DFAInclusionOracle<Character> inclusionOracle = new DFABFInclusionOracle<>(mqOracle, 1.0);
@@ -114,7 +112,7 @@ public final class Example4 {
         // create an LTL property oracle, that also logs stuff
         // also it chains the property oracle that uses monitors and Buchi automata
         @SuppressWarnings("unchecked")
-        PropertyOracle.DFAPropertyOracle<Character, String> ltl = new LoggingPropertyOracle.DFALoggingPropertyOracle<>(
+        DFAPropertyOracle<Character, String> ltl = new DFALoggingPropertyOracle<>(
                 new DFAPropertyOracleChain<>(
                         new DFAFinitePropertyOracle<>("letter==\"b\"", inclusionOracle, emptinessOracle, modelCheckerMonitor),
                         new DFALassoPropertyOracle<>("letter==\"b\"", inclusionOracle, lassoEmptinessOracle, modelCheckerBuchi)));
@@ -122,12 +120,11 @@ public final class Example4 {
         // create an equivalence oracle, that first searches for a counter example using the ltl properties, and next
         // with the W-method.
         @SuppressWarnings("unchecked")
-        DFAEquivalenceOracle<Character> eqOracle = new DFAEQOracleChain<>(
-                new DFACExFirstOracle<>(ltl),
-                new DFAWpMethodEQOracle<>(mqOracle, 3));
+        DFAEquivalenceOracle<Character> eqOracle =
+                new DFAEQOracleChain<>(new DFACExFirstOracle<>(ltl), new DFAWpMethodEQOracle<>(mqOracle, 3));
 
         // create an experiment
-        Experiment.DFAExperiment<Character> experiment = new Experiment.DFAExperiment<>(learner, eqOracle, sigma);
+        DFAExperiment<Character> experiment = new DFAExperiment<>(learner, eqOracle, sigma);
 
         // run the experiment
         experiment.run();

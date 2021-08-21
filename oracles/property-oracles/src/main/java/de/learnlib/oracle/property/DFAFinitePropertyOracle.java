@@ -17,29 +17,30 @@ package de.learnlib.oracle.property;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.EmptinessOracle;
-import de.learnlib.api.oracle.InclusionOracle;
-import de.learnlib.api.oracle.PropertyOracle;
+import de.learnlib.api.oracle.EmptinessOracle.DFAEmptinessOracle;
+import de.learnlib.api.oracle.PropertyOracle.DFAPropertyOracle;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.modelchecking.ModelChecker;
+import net.automatalib.modelchecking.ModelChecker.DFAModelChecker;
 
 /**
  * A property oracle for DFAs where it is fine to only check finite words from the model checker.
  *
- * @author Jeroen Meijer
+ * @param <I>
+ *         the input type
+ * @param <P>
+ *         the property type
  *
- * @param <I> the input type
- * @param <P> the property type
+ * @author Jeroen Meijer
  */
 public class DFAFinitePropertyOracle<I, P> extends AbstractPropertyOracle<I, DFA<?, I>, P, Boolean, DFA<?, I>>
-        implements PropertyOracle.DFAPropertyOracle<I, P> {
+        implements DFAPropertyOracle<I, P> {
 
-    private final ModelChecker.DFAModelChecker<I, P, DFA<?, I>> modelChecker;
+    private final DFAModelChecker<I, P, DFA<?, I>> modelChecker;
 
     public DFAFinitePropertyOracle(P property,
-                                   InclusionOracle.DFAInclusionOracle<I> inclusionOracle,
-                                   EmptinessOracle.DFAEmptinessOracle<I> emptinessOracle,
-                                   ModelChecker.DFAModelChecker<I, P, DFA<?, I>> modelChecker) {
+                                   DFAInclusionOracle<I> inclusionOracle,
+                                   DFAEmptinessOracle<I> emptinessOracle,
+                                   DFAModelChecker<I, P, DFA<?, I>> modelChecker) {
         super(property, inclusionOracle, emptinessOracle);
         this.modelChecker = modelChecker;
     }

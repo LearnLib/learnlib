@@ -17,39 +17,40 @@ package de.learnlib.oracle.property;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.EmptinessOracle;
-import de.learnlib.api.oracle.InclusionOracle;
-import de.learnlib.api.oracle.PropertyOracle;
+import de.learnlib.api.oracle.EmptinessOracle.MealyEmptinessOracle;
+import de.learnlib.api.oracle.PropertyOracle.MealyPropertyOracle;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.modelchecking.ModelChecker;
+import net.automatalib.modelchecking.ModelChecker.MealyModelChecker;
 import net.automatalib.words.Word;
 
 /**
  * A property oracle for Mealy Machines where it is fine to only check finite words from the model checker.
  *
- * @author Jeroen Meijer
+ * @param <I>
+ *         the input type
+ * @param <O>
+ *         the output type
+ * @param <P>
+ *         the property type
  *
- * @param <I> the input type
- * @param <O> the output type
- * @param <P> the property type
+ * @author Jeroen Meijer
  */
 public class MealyFinitePropertyOracle<I, O, P>
         extends AbstractPropertyOracle<I, MealyMachine<?, I, ?, O>, P, Word<O>, MealyMachine<?, I, ?, O>>
-        implements PropertyOracle.MealyPropertyOracle<I, O, P> {
+        implements MealyPropertyOracle<I, O, P> {
 
-    private final ModelChecker.MealyModelChecker<I, O, P, MealyMachine<?, I, ?, O>> modelChecker;
+    private final MealyModelChecker<I, O, P, MealyMachine<?, I, ?, O>> modelChecker;
 
     public MealyFinitePropertyOracle(P property,
-                                     InclusionOracle.MealyInclusionOracle<I, O> inclusionOracle,
-                                     EmptinessOracle.MealyEmptinessOracle<I, O> emptinessOracle,
-                                     ModelChecker.MealyModelChecker<I, O, P, MealyMachine<?, I, ?, O>> modelChecker) {
+                                     MealyInclusionOracle<I, O> inclusionOracle,
+                                     MealyEmptinessOracle<I, O> emptinessOracle,
+                                     MealyModelChecker<I, O, P, MealyMachine<?, I, ?, O>> modelChecker) {
         super(property, inclusionOracle, emptinessOracle);
         this.modelChecker = modelChecker;
     }
 
     @Override
-    protected MealyMachine<?, I, ?, O> modelCheck(MealyMachine<?, I, ?, O> hypothesis,
-                                                            Collection<? extends I> inputs) {
+    protected MealyMachine<?, I, ?, O> modelCheck(MealyMachine<?, I, ?, O> hypothesis, Collection<? extends I> inputs) {
 
         return modelChecker.findCounterExample(hypothesis, inputs, getProperty());
     }
