@@ -163,8 +163,8 @@ limitations under the License.
         <system>GitHub Issues</system>
     </issueManagement>
     <ciManagement>
-        <system>Travis</system>
-        <url>https://travis-ci.org/LearnLib/learnlib</url>
+        <system>GitHub Actions</system>
+        <url>https://github.com/LearnLib/learnlib/actions</url>
     </ciManagement>
     <distributionManagement>
         <repository>
