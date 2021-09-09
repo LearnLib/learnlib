@@ -232,7 +232,7 @@ limitations under the License.
         <checkstyle.version>8.36.2</checkstyle.version>
         <error-prone.version>9+181-r4173-1</error-prone.version> <!-- required by checkerframework, keep in sync -->
         <fst.version>2.57</fst.version>
-        <guava.version>29.0-jre</guava.version>
+        <guava.version>30.1.1-jre</guava.version>
         <javapoet.version>1.13.0</javapoet.version>
         <jmockit.version>1.49</jmockit.version>
         <logback.version>1.2.3</logback.version>
