@@ -15,8 +15,10 @@
  */
 package de.learnlib.testsupport;
 
+import java.nio.charset.StandardCharsets;
+
+import com.thoughtworks.xstream.XStream;
 import de.learnlib.api.Resumable;
-import org.nustaq.serialization.FSTConfiguration;
 
 /**
  * Utility functions for {@link Resumable} features.
@@ -25,12 +27,11 @@ import org.nustaq.serialization.FSTConfiguration;
  */
 public final class ResumeUtils {
 
-    private static final FSTConfiguration FST_CONFIGURATION;
+    private static final XStream X_STREAM;
 
     static {
-        FST_CONFIGURATION = FSTConfiguration.createDefaultConfiguration();
-        FST_CONFIGURATION.setForceSerializable(true);
-        FST_CONFIGURATION.setShareReferences(true);
+        X_STREAM = new XStream();
+        X_STREAM.allowTypesByRegExp(new String[] {"net.automatalib.*", "de.learnlib.*"});
     }
 
     private ResumeUtils() {
@@ -38,16 +39,12 @@ public final class ResumeUtils {
     }
 
     public static <T> byte[] toBytes(T state) {
-        try {
-            return FST_CONFIGURATION.asByteArray(state);
-        } finally {
-            FST_CONFIGURATION.clearCaches();
-        }
+        return X_STREAM.toXML(state).getBytes(StandardCharsets.UTF_8);
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T fromBytes(byte[] bytes) {
-        return (T) FST_CONFIGURATION.asObject(bytes);
+        return (T) X_STREAM.fromXML(new String(bytes, StandardCharsets.UTF_8));
     }
 
 }

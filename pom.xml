@@ -192,6 +192,7 @@ limitations under the License.
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <argLine/> <!-- compatibility for property expansion in surefire-plugin -->
 
         <!-- custom properties -->
         <javadoc-plugin.conf.release>8</javadoc-plugin.conf.release>
@@ -209,7 +210,7 @@ limitations under the License.
         <failsafe-plugin.version>3.0.0-M4</failsafe-plugin.version>
         <gpg-plugin.version>1.6</gpg-plugin.version>
         <info-reports-plugin.version>3.1.1</info-reports-plugin.version>
-        <jacoco-plugin.version>0.8.6</jacoco-plugin.version>
+        <jacoco-plugin.version>0.8.7</jacoco-plugin.version>
         <javadoc-plugin.version>3.1.1</javadoc-plugin.version>
         <jsr305.version>3.0.2</jsr305.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
@@ -219,7 +220,7 @@ limitations under the License.
         <scm-publish-plugin.version>3.0.0</scm-publish-plugin.version>
         <site-plugin.version>3.9.1</site-plugin.version>
         <source-plugin.version>3.2.1</source-plugin.version>
-        <spotbugs-plugin.version>4.2.0</spotbugs-plugin.version>
+        <spotbugs-plugin.version>4.2.2</spotbugs-plugin.version>
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
         <tidy-pom.version>1.1.0</tidy-pom.version>
 
@@ -231,15 +232,15 @@ limitations under the License.
         <checkerframework.version>3.7.0</checkerframework.version>
         <checkstyle.version>8.36.2</checkstyle.version>
         <error-prone.version>9+181-r4173-1</error-prone.version> <!-- required by checkerframework, keep in sync -->
-        <fst.version>2.57</fst.version>
         <guava.version>30.1.1-jre</guava.version>
         <javapoet.version>1.13.0</javapoet.version>
         <jmockit.version>1.49</jmockit.version>
         <logback.version>1.2.3</logback.version>
         <metainf-services.version>1.8</metainf-services.version>
-        <mockito.version>3.5.13</mockito.version>
+        <mockito.version>3.12.4</mockito.version>
         <slf4j.version>1.7.30</slf4j.version>
         <testng.version>7.1.0</testng.version>
+        <xstream.version>1.4.18</xstream.version>
 
         <!-- Javadoc links -->
         <java.apidocs>http://docs.oracle.com/javase/8/docs/api/</java.apidocs>
@@ -657,9 +658,9 @@ limitations under the License.
             </dependency>
 
             <dependency>
-                <groupId>de.ruedigermoeller</groupId>
-                <artifactId>fst</artifactId>
-                <version>${fst.version}</version>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>${xstream.version}</version>
             </dependency>
 
             <dependency>

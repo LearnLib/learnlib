@@ -15,8 +15,10 @@
  */
 package de.learnlib.examples.resumable;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
+import com.thoughtworks.xstream.XStream;
 import de.learnlib.algorithms.lstar.dfa.ClassicLStarDFA;
 import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
@@ -32,7 +34,6 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.GrowingMapAlphabet;
-import org.nustaq.serialization.FSTConfiguration;
 
 /**
  * An example to demonstrate the {@link Resumable} feature of LearnLib to continue learning setups from previously
@@ -45,7 +46,7 @@ public final class ResumableExample {
 
     private static final CompactDFA<Character> TARGET;
     private static final Alphabet<Character> INITIAL_ALPHABET;
-    private static final FSTConfiguration FST_CONFIGURATION;
+    private static final XStream X_STREAM;
 
     static {
         final int seed = 42;
@@ -54,9 +55,8 @@ public final class ResumableExample {
         TARGET = RandomAutomata.randomDFA(new Random(seed), size, Alphabets.characters('a', 'd'));
         INITIAL_ALPHABET = Alphabets.characters('a', 'b');
 
-        FST_CONFIGURATION = FSTConfiguration.createDefaultConfiguration();
-        FST_CONFIGURATION.setForceSerializable(true);
-        FST_CONFIGURATION.setShareReferences(true);
+        X_STREAM = new XStream();
+        X_STREAM.allowTypesByRegExp(new String[] {"net.automatalib.*", "de.learnlib.*"});
     }
 
     private ResumableExample() {
@@ -118,12 +118,12 @@ public final class ResumableExample {
     }
 
     private static <T> byte[] toBytes(Resumable<T> resumable) {
-        return FST_CONFIGURATION.asByteArray(resumable.suspend());
+        return X_STREAM.toXML(resumable.suspend()).getBytes(StandardCharsets.UTF_8);
     }
 
     @SuppressWarnings("unchecked")
     private static <T> T fromBytes(byte[] bytes) {
-        return (T) FST_CONFIGURATION.asObject(bytes);
+        return (T) X_STREAM.fromXML(new String(bytes, StandardCharsets.UTF_8));
     }
 
     private static class Setup {
