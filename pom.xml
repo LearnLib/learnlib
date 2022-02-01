@@ -240,7 +240,7 @@ limitations under the License.
         <mockito.version>3.12.4</mockito.version>
         <slf4j.version>1.7.30</slf4j.version>
         <testng.version>7.1.0</testng.version>
-        <xstream.version>1.4.18</xstream.version>
+        <xstream.version>1.4.19</xstream.version>
 
         <!-- Javadoc links -->
         <java.apidocs>http://docs.oracle.com/javase/8/docs/api/</java.apidocs>
