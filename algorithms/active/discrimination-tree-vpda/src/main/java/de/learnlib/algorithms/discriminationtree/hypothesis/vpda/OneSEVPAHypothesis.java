@@ -18,7 +18,8 @@ package de.learnlib.algorithms.discriminationtree.hypothesis.vpda;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.automata.vpda.AbstractOneSEVPA;
+import net.automatalib.automata.vpda.AbstractSEVPA;
+import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.automata.vpda.StackContents;
 import net.automatalib.automata.vpda.State;
 import net.automatalib.words.VPDAlphabet;
@@ -29,7 +30,7 @@ import net.automatalib.words.VPDAlphabet;
  *
  * @author Malte Isberner
  */
-public class OneSEVPAHypothesis<I> extends AbstractOneSEVPA<HypLoc<I>, I> {
+public class OneSEVPAHypothesis<I> extends AbstractSEVPA<HypLoc<I>, I> implements OneSEVPA<HypLoc<I>, I> {
 
     private final List<HypLoc<I>> locations = new ArrayList<>();
 
