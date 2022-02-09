@@ -25,7 +25,6 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -33,16 +32,16 @@ import org.testng.annotations.Test;
 /**
  * @author frohme
  */
-public class RandomWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, Symbol>, Symbol, Boolean> {
+public class RandomWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, String>, String, Boolean> {
 
     private static final int MAX_TESTS;
     private static final int MIN_LENGTH;
     private static final int MAX_LENGTH;
 
     private int numberOfGeneratedQueries;
-    private DFA<?, Symbol> dfa;
-    private Set<Word<Symbol>> transitionCover;
-    private Set<Word<Symbol>> characterizingSet;
+    private DFA<?, String> dfa;
+    private Set<Word<String>> transitionCover;
+    private Set<Word<String>> characterizingSet;
 
     static {
         MAX_TESTS = 1000;
@@ -65,7 +64,7 @@ public class RandomWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, Symbo
     }
 
     @Override
-    protected void checkGeneratedQuery(Word<Symbol> query) {
+    protected void checkGeneratedQuery(Word<String> query) {
         numberOfGeneratedQueries++;
 
         transitionCover.stream().filter(w -> w.isPrefixOf(query)).findAny().orElseThrow(AssertionError::new);
@@ -73,17 +72,17 @@ public class RandomWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, Symbo
     }
 
     @Override
-    protected EquivalenceOracle<DFA<?, Symbol>, Symbol, Boolean> getOracle(MembershipOracle<Symbol, Boolean> mOracle) {
+    protected EquivalenceOracle<DFA<?, String>, String, Boolean> getOracle(MembershipOracle<String, Boolean> mOracle) {
         return new RandomWMethodEQOracle<>(mOracle, MIN_LENGTH, MAX_LENGTH, MAX_TESTS);
     }
 
     @Override
-    protected DFA<?, Symbol> getHypothesis() {
+    protected DFA<?, String> getHypothesis() {
         return dfa;
     }
 
     @Override
-    protected Alphabet<Symbol> getAlphabet() {
+    protected Alphabet<String> getAlphabet() {
         return ExamplePaulAndMary.createInputAlphabet();
     }
 }

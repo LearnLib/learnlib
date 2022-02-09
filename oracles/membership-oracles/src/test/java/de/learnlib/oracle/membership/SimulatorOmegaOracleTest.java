@@ -23,7 +23,6 @@ import de.learnlib.examples.dfa.ExamplePaulAndMary;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.DFASimulatorOmegaOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -38,18 +37,18 @@ public class SimulatorOmegaOracleTest {
     @Test
     public void testDFASimulatorOmegaOracle() {
 
-        DFA<Integer, Symbol> dfa = ExamplePaulAndMary.constructMachine();
+        DFA<Integer, String> dfa = ExamplePaulAndMary.constructMachine();
 
-        DFASimulatorOmegaOracle<Integer, Symbol> oracle = new DFASimulatorOmegaOracle<>(dfa);
+        DFASimulatorOmegaOracle<Integer, String> oracle = new DFASimulatorOmegaOracle<>(dfa);
 
-        List<OmegaQuery<Symbol, Boolean>> queries = new ArrayList<>();
+        List<OmegaQuery<String, Boolean>> queries = new ArrayList<>();
 
-        OmegaQuery<Symbol, Boolean> q1 = new OmegaQuery<>(Word.epsilon(),
+        OmegaQuery<String, Boolean> q1 = new OmegaQuery<>(Word.epsilon(),
                                                           Word.fromSymbols(ExamplePaulAndMary.IN_PAUL,
                                                                            ExamplePaulAndMary.IN_LOVES,
                                                                            ExamplePaulAndMary.IN_MARY),
                                                           1);
-        OmegaQuery<Symbol, Boolean> q2 = new OmegaQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_MARY),
+        OmegaQuery<String, Boolean> q2 = new OmegaQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_MARY),
                                                           Word.fromSymbols(ExamplePaulAndMary.IN_MARY,
                                                                            ExamplePaulAndMary.IN_LOVES,
                                                                            ExamplePaulAndMary.IN_PAUL),

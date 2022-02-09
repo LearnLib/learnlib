@@ -23,7 +23,6 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.examples.dfa.ExamplePaulAndMary;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -35,16 +34,16 @@ public class SimulatorOracleTest {
     @Test
     public void testDFASimulatorOracle() {
 
-        DFA<?, Symbol> dfa = ExamplePaulAndMary.constructMachine();
+        DFA<?, String> dfa = ExamplePaulAndMary.constructMachine();
 
-        SimulatorOracle<Symbol, Boolean> oracle = new SimulatorOracle<>(dfa);
+        SimulatorOracle<String, Boolean> oracle = new SimulatorOracle<>(dfa);
 
-        List<DefaultQuery<Symbol, Boolean>> queries = new ArrayList<>();
+        List<DefaultQuery<String, Boolean>> queries = new ArrayList<>();
 
-        DefaultQuery<Symbol, Boolean> q1 = new DefaultQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_PAUL,
+        DefaultQuery<String, Boolean> q1 = new DefaultQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_PAUL,
                                                                                ExamplePaulAndMary.IN_LOVES,
                                                                                ExamplePaulAndMary.IN_MARY));
-        DefaultQuery<Symbol, Boolean> q2 = new DefaultQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_MARY,
+        DefaultQuery<String, Boolean> q2 = new DefaultQuery<>(Word.fromSymbols(ExamplePaulAndMary.IN_MARY,
                                                                                ExamplePaulAndMary.IN_LOVES,
                                                                                ExamplePaulAndMary.IN_PAUL));
         queries.add(q1);

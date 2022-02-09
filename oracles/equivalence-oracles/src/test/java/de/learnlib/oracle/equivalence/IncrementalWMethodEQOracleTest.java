@@ -25,18 +25,17 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
  * @author frohme
  */
-public class IncrementalWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, Symbol>, Symbol, Boolean> {
+public class IncrementalWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, String>, String, Boolean> {
 
-    private DFA<?, Symbol> dfa;
-    private Set<Word<Symbol>> transitionCover;
-    private Set<Word<Symbol>> characterizingSet;
+    private DFA<?, String> dfa;
+    private Set<Word<String>> transitionCover;
+    private Set<Word<String>> characterizingSet;
 
     @BeforeClass
     public void setUp() {
@@ -52,23 +51,23 @@ public class IncrementalWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, 
     public void testNGFix() {}
 
     @Override
-    protected void checkGeneratedQuery(Word<Symbol> query) {
+    protected void checkGeneratedQuery(Word<String> query) {
         transitionCover.stream().filter(w -> w.isPrefixOf(query)).findAny().orElseThrow(AssertionError::new);
         characterizingSet.stream().filter(w -> w.isSuffixOf(query)).findAny().orElseThrow(AssertionError::new);
     }
 
     @Override
-    protected EquivalenceOracle<DFA<?, Symbol>, Symbol, Boolean> getOracle(MembershipOracle<Symbol, Boolean> mOracle) {
+    protected EquivalenceOracle<DFA<?, String>, String, Boolean> getOracle(MembershipOracle<String, Boolean> mOracle) {
         return new IncrementalWMethodEQOracle<>(mOracle, getAlphabet());
     }
 
     @Override
-    protected DFA<?, Symbol> getHypothesis() {
+    protected DFA<?, String> getHypothesis() {
         return dfa;
     }
 
     @Override
-    protected Alphabet<Symbol> getAlphabet() {
+    protected Alphabet<String> getAlphabet() {
         return ExamplePaulAndMary.createInputAlphabet();
     }
 }

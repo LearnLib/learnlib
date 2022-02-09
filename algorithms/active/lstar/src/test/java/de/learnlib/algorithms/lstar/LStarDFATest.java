@@ -33,7 +33,6 @@ import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Symbol;
 import org.testng.annotations.Test;
 
 @Test
@@ -42,25 +41,25 @@ public class LStarDFATest extends LearningTest {
     @Test
     public void testLStar() {
         ExamplePaulAndMary pmExample = ExamplePaulAndMary.createExample();
-        DFA<?, Symbol> targetDFA = pmExample.getReferenceAutomaton();
-        Alphabet<Symbol> alphabet = pmExample.getAlphabet();
+        DFA<?, String> targetDFA = pmExample.getReferenceAutomaton();
+        Alphabet<String> alphabet = pmExample.getAlphabet();
 
-        DFAMembershipOracle<Symbol> dfaOracle = new DFASimulatorOracle<>(targetDFA);
+        DFAMembershipOracle<String> dfaOracle = new DFASimulatorOracle<>(targetDFA);
 
         // Empty set of suffixes => minimum compliant set
-        List<Word<Symbol>> suffixes = Collections.emptyList();
+        List<Word<String>> suffixes = Collections.emptyList();
 
-        List<EquivalenceOracle<? super DFA<?, Symbol>, Symbol, Boolean>> eqOracles = new ArrayList<>();
+        List<EquivalenceOracle<? super DFA<?, String>, String, Boolean>> eqOracles = new ArrayList<>();
 
         eqOracles.add(new SimulatorEQOracle<>(targetDFA));
         eqOracles.add(new WMethodEQOracle<>(dfaOracle, 3));
         eqOracles.add(new WpMethodEQOracle<>(dfaOracle, 3));
 
-        for (ObservationTableCEXHandler<? super Symbol, ? super Boolean> handler : LearningTest.CEX_HANDLERS) {
-            for (ClosingStrategy<? super Symbol, ? super Boolean> strategy : LearningTest.CLOSING_STRATEGIES) {
+        for (ObservationTableCEXHandler<? super String, ? super Boolean> handler : LearningTest.CEX_HANDLERS) {
+            for (ClosingStrategy<? super String, ? super Boolean> strategy : LearningTest.CLOSING_STRATEGIES) {
 
-                for (EquivalenceOracle<? super DFA<?, Symbol>, Symbol, Boolean> eqOracle : eqOracles) {
-                    LearningAlgorithm<? extends DFA<?, Symbol>, Symbol, Boolean> learner =
+                for (EquivalenceOracle<? super DFA<?, String>, String, Boolean> eqOracle : eqOracles) {
+                    LearningAlgorithm<? extends DFA<?, String>, String, Boolean> learner =
                             new ExtensibleLStarDFA<>(alphabet, dfaOracle, suffixes, handler, strategy);
 
                     testLearnModel(targetDFA, alphabet, learner, dfaOracle, eqOracle);

@@ -20,19 +20,18 @@ import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.FastAlphabet;
-import net.automatalib.words.impl.Symbol;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * This class implements a sad love story - DFA style.
  *
  * @author Maik Merten
  */
-public class ExamplePaulAndMary extends DefaultDFALearningExample<Symbol> {
+public class ExamplePaulAndMary extends DefaultDFALearningExample<String> {
 
-    public static final Symbol IN_PAUL = new Symbol("Paul");
-    public static final Symbol IN_LOVES = new Symbol("loves");
-    public static final Symbol IN_MARY = new Symbol("Mary");
+    public static final String IN_PAUL = "Paul";
+    public static final String IN_LOVES = "loves";
+    public static final String IN_MARY = "Mary";
 
     public ExamplePaulAndMary() {
         super(constructMachine());
@@ -43,11 +42,11 @@ public class ExamplePaulAndMary extends DefaultDFALearningExample<Symbol> {
      *
      * @return machine instance of the example
      */
-    public static CompactDFA<Symbol> constructMachine() {
+    public static CompactDFA<String> constructMachine() {
         return constructMachine(new CompactDFA<>(createInputAlphabet()));
     }
 
-    public static <A extends MutableDFA<S, ? super Symbol>, S> A constructMachine(A dfa) {
+    public static <A extends MutableDFA<S, ? super String>, S> A constructMachine(A dfa) {
 
         // @formatter:off
         return AutomatonBuilders.forDFA(dfa)
@@ -70,8 +69,8 @@ public class ExamplePaulAndMary extends DefaultDFALearningExample<Symbol> {
         // @formatter:on
     }
 
-    public static Alphabet<Symbol> createInputAlphabet() {
-        return new FastAlphabet<>(IN_PAUL, IN_LOVES, IN_MARY);
+    public static Alphabet<String> createInputAlphabet() {
+        return Alphabets.fromArray(IN_PAUL, IN_LOVES, IN_MARY);
     }
 
     public static ExamplePaulAndMary createExample() {
