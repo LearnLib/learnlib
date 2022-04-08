@@ -49,7 +49,9 @@ public class DTInnerNode<I, D> extends DTNode<I, D> {
     @Override
     void leaves(List<DTLeaf<I, D>> list) {
         for (DTNode<I, D> n : children.all()) {
-            n.leaves(list);
+            if (n != null) {
+                n.leaves(list);
+            }
         }
     }
 

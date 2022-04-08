@@ -27,7 +27,7 @@ limitations under the License.
 
     <artifactId>learnlib-oml</artifactId>
 
-    <name>LearnLib :: Algorithms :: OML</name>
+    <name>LearnLib :: Algorithms :: GML</name>
     <description>The Optimal MAT Learner</description>
 
     <dependencies>
