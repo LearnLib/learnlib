@@ -30,7 +30,7 @@ public class OptimalLStarMealyIT extends AbstractMealyLearnerIT {
                                              MealyMembershipOracle<I, O> mqOracle,
                                              MealyLearnerVariantList<I, O> variants) {
 
-        variants.addLearnerVariant("OptimalLStarMealy", new OptimalLStarMealy<>(alphabet, mqOracle, mqOracle));
+        variants.addLearnerVariant("OptimalLStarMealy", new OptimalLStarMealy<>(alphabet, mqOracle));
     }
 
 }

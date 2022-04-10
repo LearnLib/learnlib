@@ -30,7 +30,7 @@ public class OptimalTTTDFAIT extends AbstractDFALearnerIT {
                                           int targetSize,
                                           DFAMembershipOracle<I> mqOracle,
                                           DFALearnerVariantList<I> variants) {
-        variants.addLearnerVariant("OptimalTTTDFA", new OptimalTTTDFA<>(mqOracle, mqOracle, alphabet));
+        variants.addLearnerVariant("OptimalTTTDFA", new OptimalTTTDFA<>(alphabet, mqOracle));
     }
 
 }

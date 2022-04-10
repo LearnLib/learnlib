@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2022 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithms.oml.ttt.pt;
 
 import java.util.HashMap;
@@ -6,41 +21,43 @@ import java.util.Map;
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
 import net.automatalib.words.Word;
 
-public class PTNodeImpl<I> implements PTNode<I> {
+/**
+ * @author fhowar
+ */
+public class PTNodeImpl<I, D> implements PTNode<I, D> {
 
-    private final PTNodeImpl<I> parent;
-
+    private final PTNodeImpl<I, D> parent;
     private final I symbol;
+    private final Map<I, PTNodeImpl<I, D>> children;
 
-    private DTLeaf<I, ?> state;
+    private DTLeaf<I, D> state;
 
-    private final Map<I, PTNodeImpl<I>> children = new HashMap<>();
-
-    public PTNodeImpl(PTNodeImpl<I> parent, I symbol) {
+    public PTNodeImpl(PTNodeImpl<I, D> parent, I symbol) {
         this.parent = parent;
         this.symbol = symbol;
+        this.children = new HashMap<>();
     }
 
     @Override
     public Word<I> word() {
-        return toWord( Word.<I>epsilon() );
+        return toWord(Word.epsilon());
     }
 
     @Override
-    public PTNode<I> append(I a) {
+    public PTNode<I, D> append(I a) {
         assert !children.containsKey(a);
-        PTNodeImpl<I> n = new PTNodeImpl<>(this, a);
+        PTNodeImpl<I, D> n = new PTNodeImpl<>(this, a);
         children.put(a, n);
         return n;
     }
 
     @Override
-    public void setState(DTLeaf node) {
+    public void setState(DTLeaf<I, D> node) {
         this.state = node;
     }
 
     @Override
-    public DTLeaf state() {
+    public DTLeaf<I, D> state() {
         return state;
     }
 
@@ -52,7 +69,7 @@ public class PTNodeImpl<I> implements PTNode<I> {
     }
 
     @Override
-    public PTNode<I> succ(I a) {
+    public PTNode<I, D> succ(I a) {
         return children.get(a);
     }
 

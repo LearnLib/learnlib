@@ -1,40 +1,57 @@
+/* Copyright (C) 2013-2022 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithms.oml.ttt.mealy;
 
-
-import de.learnlib.algorithms.oml.ttt.OptimalTTT;
+import de.learnlib.algorithms.oml.ttt.AbstractOptimalTTT;
+import de.learnlib.algorithms.oml.ttt.dt.AbstractDecisionTree;
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
-import de.learnlib.algorithms.oml.ttt.dt.DecisionTree;
-import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-public class OptimalTTTMealy<I, O> extends OptimalTTT<MealyMachine<?, I, ?, O>, I, Word<O>>
-        implements LearningAlgorithm.MealyLearner<I, O> {
+/**
+ * @author fhowar
+ */
+public class OptimalTTTMealy<I, O> extends AbstractOptimalTTT<MealyMachine<?, I, ?, O>, I, Word<O>>
+        implements MealyLearner<I, O> {
 
     private final HypothesisMealy<I, O> hypothesis;
-
     private final DecisionTreeMealy<I, O> dtree;
 
-    Alphabet<I> sigma;
+    public OptimalTTTMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> mqo) {
+        this(alphabet, mqo, mqo);
+    }
 
-    public OptimalTTTMealy(MembershipOracle<I, Word<O>> mqs, MembershipOracle<I, Word<O>> ceqs, Alphabet<I> sigma) {
+    public OptimalTTTMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> mqs, MembershipOracle<I, Word<O>> ceqs) {
         super(ceqs);
-        dtree = new DecisionTreeMealy<>(mqs, sigma, strie.root());
+        dtree = new DecisionTreeMealy<>(mqs, alphabet, strie.root());
         DTLeaf<I, Word<O>> dtRoot = new DTLeaf<>(null, dtree, ptree.root());
         dtree.setRoot(dtRoot);
         ptree.root().setState(dtRoot);
-        for (I a : sigma) {
+        for (I a : alphabet) {
             dtree.sift(ptree.root().append(a));
         }
         hypothesis = new HypothesisMealy<>(ptree, dtree);
-
-        this.sigma = sigma;
     }
+
     @Override
     protected int maxSearchIndex(int ceLength) {
-        return ceLength-1;
+        return ceLength - 1;
     }
 
     @Override
@@ -49,20 +66,11 @@ public class OptimalTTTMealy<I, O> extends OptimalTTT<MealyMachine<?, I, ?, O>, 
 
     @Override
     protected MealyMachine<?, I, ?, O> hypothesis() {
-//        System.out.println("Init: " + hypothesis.getInitialState());
-//        for (DTLeaf<I, Word<O>> s : hypothesis.getStates()) {
-//            for (I a : sigma) {
-//                MealyTransition<I, O> t = hypothesis.getTransition(s, a);
-//                System.out.println(s + " - " + a + " / " +
-//                        hypothesis.getTransitionOutput(t) + " -> " +
-//                        hypothesis.getSuccessor(t));
-//            }
-//        }
         return hypothesis;
     }
 
     @Override
-    protected DecisionTree<I, Word<O>> dtree() {
+    protected AbstractDecisionTree<I, Word<O>> dtree() {
         return dtree;
     }
 

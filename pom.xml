@@ -307,6 +307,11 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-oml</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-spa</artifactId>
                 <version>${project.version}</version>
             </dependency>

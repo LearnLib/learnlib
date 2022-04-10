@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2022 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithms.oml.ttt.mealy;
 
 import java.util.LinkedHashMap;
@@ -5,21 +20,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import de.learnlib.algorithms.oml.ttt.dt.AbstractDecisionTree;
 import de.learnlib.algorithms.oml.ttt.dt.Children;
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
-import de.learnlib.algorithms.oml.ttt.dt.DecisionTree;
 import de.learnlib.algorithms.oml.ttt.pt.PTNode;
 import de.learnlib.algorithms.oml.ttt.st.STNode;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-public class DecisionTreeMealy<I, O> extends DecisionTree<I, Word<O>> {
+/**
+ * @author fhowar
+ */
+class DecisionTreeMealy<I, O> extends AbstractDecisionTree<I, Word<O>> {
 
-    private final Map<Word<I>, Word<O>> outputs = new LinkedHashMap<>();
+    private final Map<Word<I>, Word<O>> outputs;
 
     DecisionTreeMealy(MembershipOracle<I, Word<O>> mqOracle, Alphabet<I> sigma, STNode<I> stRoot) {
-        super(mqOracle, sigma, stRoot);
+        super(sigma, mqOracle, stRoot);
+        this.outputs = new LinkedHashMap<>();
     }
 
     @Override
@@ -28,12 +47,12 @@ public class DecisionTreeMealy<I, O> extends DecisionTree<I, Word<O>> {
     }
 
     @Override
-    protected Word<O> query(PTNode<I> prefix, STNode<I> suffix) {
+    protected Word<O> query(PTNode<I, Word<O>> prefix, STNode<I> suffix) {
         return mqOracle.answerQuery(prefix.word(), suffix.word()).suffix(suffix.word().length());
     }
 
     Word<O> getOutput(DTLeaf<I, Word<O>> leaf, I a) {
-        return lookupOrQuery(leaf.getShortPrefixes().get(0).word(), Word.<I>fromLetter(a));
+        return lookupOrQuery(leaf.getShortPrefixes().get(0).word(), Word.fromLetter(a));
     }
 
     @Override
@@ -42,11 +61,11 @@ public class DecisionTreeMealy<I, O> extends DecisionTree<I, Word<O>> {
             if (n.getShortPrefixes().size() < 2) {
                 continue;
             }
-            for (I a : sigma) {
+            for (I a : alphabet) {
                 Word<O> refOut = null;
-                List<PTNode<I>> sp = new LinkedList<>(n.getShortPrefixes());
-                for (PTNode<I> u : sp) {
-                    Word<O> out = lookupOrQuery(u.word(), Word.<I>fromLetter(a));
+                List<PTNode<I, Word<O>>> sp = new LinkedList<>(n.getShortPrefixes());
+                for (PTNode<I, Word<O>> u : sp) {
+                    Word<O> out = lookupOrQuery(u.word(), Word.fromLetter(a));
                     if (refOut == null) {
                         refOut = out;
                     } else if (!refOut.equals(out)) {

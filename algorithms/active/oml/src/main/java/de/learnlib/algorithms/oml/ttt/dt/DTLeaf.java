@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2022 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithms.oml.ttt.dt;
 
 import java.util.Iterator;
@@ -10,30 +25,30 @@ import de.learnlib.algorithms.oml.ttt.pt.PTNode;
 import de.learnlib.algorithms.oml.ttt.st.STNode;
 
 /**
- *
- * @param <I>
+ * @author fhowar
  */
-public class DTLeaf<I, D> extends DTNode<I, D> {
+public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
 
-    private final List<PTNode<I>> shortPrefixes = new LinkedList<>();
-    private final List<PTNode<I>> longPrefixes  = new LinkedList<>();
+    private final List<PTNode<I, D>> shortPrefixes;
+    private final List<PTNode<I, D>> longPrefixes;
 
-
-    public DTLeaf(DTInnerNode<I, D> parent, DecisionTree<I, D> tree, PTNode<I> u) {
+    public DTLeaf(DTInnerNode<I, D> parent, AbstractDecisionTree<I, D> tree, PTNode<I, D> u) {
         super(parent, tree);
+        this.shortPrefixes = new LinkedList<>();
+        this.longPrefixes = new LinkedList<>();
         shortPrefixes.add(u);
     }
 
-    public List<PTNode<I>> getShortPrefixes() {
+    public List<PTNode<I, D>> getShortPrefixes() {
         return shortPrefixes;
     }
 
-    public void addShortPrefix(PTNode<I> u) {
+    public void addShortPrefix(PTNode<I, D> u) {
         shortPrefixes.add(u);
     }
 
     @Override
-    void sift(PTNode<I> prefix) {
+    void sift(PTNode<I, D> prefix) {
         prefix.setState(this);
         this.longPrefixes.add(prefix);
     }
@@ -44,8 +59,8 @@ public class DTLeaf<I, D> extends DTNode<I, D> {
     }
 
     public boolean refineIfPossible() {
-        PTNode<I> ref = shortPrefixes.get(0);
-        for (int i=1; i<shortPrefixes.size(); i++) {
+        PTNode<I, D> ref = shortPrefixes.get(0);
+        for (int i = 1; i < shortPrefixes.size(); i++) {
             if (refineIfPossible(ref, shortPrefixes.get(i))) {
                 return true;
             }
@@ -53,9 +68,8 @@ public class DTLeaf<I, D> extends DTNode<I, D> {
         return false;
     }
 
-    private boolean refineIfPossible(PTNode<I> u1, PTNode<I> u2) {
-        for (I a : tree.sigma()) {
-            //System.out.println(u1.word() + " : " + u2.word());
+    private boolean refineIfPossible(PTNode<I, D> u1, PTNode<I, D> u2) {
+        for (I a : tree.getAlphabet()) {
             DTLeaf<I, D> ua1 = u1.succ(a).state();
             DTLeaf<I, D> ua2 = u2.succ(a).state();
 
@@ -67,24 +81,22 @@ public class DTLeaf<I, D> extends DTNode<I, D> {
         return false;
     }
 
-    public void makeShortPrefix(PTNode<I> uNew) {
+    public void makeShortPrefix(PTNode<I, D> uNew) {
         assert !shortPrefixes.contains(uNew);
         assert longPrefixes.contains(uNew);
         longPrefixes.remove(uNew);
         shortPrefixes.add(uNew);
 
-        for (I a : tree.sigma()) {
-            PTNode<I> ua = uNew.append(a);
-            //System.out.println("Adding prefix: " + ua.word());
+        for (I a : tree.getAlphabet()) {
+            PTNode<I, D> ua = uNew.append(a);
             tree.root().sift(ua);
         }
     }
 
-    public void split(PTNode<I> u1, PTNode<I> u2, I a) {
-        //System.out.println("Splitting " + u1.word() + " and " + u2.word());
+    public void split(PTNode<I, D> u1, PTNode<I, D> u2, I a) {
         DTLeaf<I, D> ua1 = u1.succ(a).state();
         DTLeaf<I, D> ua2 = u2.succ(a).state();
-        DTNode<I, D> n = lca(ua1, ua2);
+        AbstractDTNode<I, D> n = lca(ua1, ua2);
         STNode<I> av;
         if (n instanceof DTInnerNode) {
             av = ((DTInnerNode<I, D>) n).suffix().prepend(a);
@@ -96,10 +108,10 @@ public class DTLeaf<I, D> extends DTNode<I, D> {
         DTInnerNode<I, D> newInner = new DTInnerNode<>(parent, tree, newChildren, av);
         LinkedHashMap<D, DTLeaf<I, D>> newLeaves = new LinkedHashMap<>();
 
-        for (PTNode<I> uOther : shortPrefixes) {
+        for (PTNode<I, D> uOther : shortPrefixes) {
             // FIXME: We could safe some queries here in the dfa case ...
             D out = tree.query(uOther, av);
-            DTLeaf<I,D> leaf = newLeaves.get(out);
+            DTLeaf<I, D> leaf = newLeaves.get(out);
             if (leaf == null) {
                 leaf = new DTLeaf<>(newInner, tree, uOther);
                 newLeaves.put(out, leaf);
@@ -115,24 +127,23 @@ public class DTLeaf<I, D> extends DTNode<I, D> {
 
         if (this != tree.root()) {
             parent.replace(this, newInner);
-        }
-        else {
+        } else {
             tree.setRoot(newInner);
         }
 
-        for (PTNode<I> ua : longPrefixes) {
+        for (PTNode<I, D> ua : longPrefixes) {
             newInner.sift(ua);
         }
 
     }
 
-    private DTNode<I, D> lca(DTLeaf<I, D> n1, DTLeaf<I, D> n2) {
-        Iterator<DTNode<I, D>> p1 = n1.path().iterator();
-        Iterator<DTNode<I, D>> p2 = n2.path().iterator();
-        DTNode<I, D> lca = tree.root();
+    private AbstractDTNode<I, D> lca(DTLeaf<I, D> n1, DTLeaf<I, D> n2) {
+        Iterator<AbstractDTNode<I, D>> p1 = n1.path().iterator();
+        Iterator<AbstractDTNode<I, D>> p2 = n2.path().iterator();
+        AbstractDTNode<I, D> lca = tree.root();
         while (p1.hasNext() && p2.hasNext()) {
-            DTNode<I, D> t1 = p1.next();
-            DTNode<I, D> t2 = p2.next();
+            AbstractDTNode<I, D> t1 = p1.next();
+            AbstractDTNode<I, D> t2 = p2.next();
             if (t1 != t2) {
                 break;
             }

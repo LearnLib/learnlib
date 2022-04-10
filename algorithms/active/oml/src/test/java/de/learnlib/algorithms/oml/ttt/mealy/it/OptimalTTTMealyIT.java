@@ -30,7 +30,7 @@ public class OptimalTTTMealyIT extends AbstractMealyLearnerIT {
                                              MealyMembershipOracle<I, O> mqOracle,
                                              MealyLearnerVariantList<I, O> variants) {
 
-        variants.addLearnerVariant("OptimalTTTMealy", new OptimalTTTMealy<>(mqOracle, mqOracle, alphabet));
+        variants.addLearnerVariant("OptimalTTTMealy", new OptimalTTTMealy<>(alphabet, mqOracle));
     }
 
 }

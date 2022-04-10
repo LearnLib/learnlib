@@ -27,58 +27,24 @@ limitations under the License.
 
     <artifactId>learnlib-oml</artifactId>
 
-    <name>LearnLib :: Algorithms :: GML</name>
+    <name>LearnLib :: Algorithms :: OML</name>
     <description>The Optimal MAT Learner</description>
 
     <dependencies>
         <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-acex</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-counterexamples</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-dt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-list</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-util</artifactId>
         </dependency>
 
         <!-- external -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-smartcollections</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <!-- build -->
@@ -95,10 +61,6 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learning-examples</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-membership-oracles</artifactId>
         </dependency>
 
         <dependency>

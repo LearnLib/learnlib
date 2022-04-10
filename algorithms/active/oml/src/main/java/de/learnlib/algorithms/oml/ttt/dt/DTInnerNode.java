@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2022 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithms.oml.ttt.dt;
 
 import java.util.List;
@@ -6,41 +21,39 @@ import de.learnlib.algorithms.oml.ttt.pt.PTNode;
 import de.learnlib.algorithms.oml.ttt.st.STNode;
 
 /**
- *
- * @param <I>
+ * @author fhowar
  */
-public class DTInnerNode<I, D> extends DTNode<I, D> {
+public class DTInnerNode<I, D> extends AbstractDTNode<I, D> {
 
     private final STNode<I> suffix;
-
     private final Children<I, D> children;
 
-    public DTInnerNode(DTInnerNode<I, D> parent, DecisionTree<I, D> tree, Children<I, D> children, STNode<I> suffix) {
+    public DTInnerNode(DTInnerNode<I, D> parent,
+                       AbstractDecisionTree<I, D> tree,
+                       Children<I, D> children,
+                       STNode<I> suffix) {
         super(parent, tree);
         this.children = children;
         this.suffix = suffix;
-
     }
 
     public Children<I, D> getChildren() {
         return children;
     }
 
-    void sift(PTNode<I> prefix) {
+    @Override
+    void sift(PTNode<I, D> prefix) {
         D out = tree.query(prefix, suffix);
-        DTNode<I, D> succ = children.child(out);
+        AbstractDTNode<I, D> succ = children.child(out);
         if (succ != null) {
             succ.sift(prefix);
-        }
-        else {
-            //System.out.println("New short prefix (sifting): " + prefix.word());
+        } else {
             DTLeaf<I, D> newLeaf = new DTLeaf<>(this, tree, prefix);
             children.addChild(out, newLeaf);
-            prefix.setState( newLeaf );
+            prefix.setState(newLeaf);
 
-            for (I a : tree.sigma()) {
-                PTNode<I> ua = prefix.append(a);
-                //System.out.println("Adding prefix: " + ua.word());
+            for (I a : tree.getAlphabet()) {
+                PTNode<I, D> ua = prefix.append(a);
                 tree.root().sift(ua);
             }
         }
@@ -48,7 +61,7 @@ public class DTInnerNode<I, D> extends DTNode<I, D> {
 
     @Override
     void leaves(List<DTLeaf<I, D>> list) {
-        for (DTNode<I, D> n : children.all()) {
+        for (AbstractDTNode<I, D> n : children.all()) {
             if (n != null) {
                 n.leaves(list);
             }

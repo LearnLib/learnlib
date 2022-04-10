@@ -1,7 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* Copyright (C) 2013-2022 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.learnlib.algorithms.oml.ttt.dfa;
 
@@ -13,25 +23,23 @@ import de.learnlib.algorithms.oml.ttt.pt.PrefixTree;
 import net.automatalib.automata.fsa.DFA;
 
 /**
- *
- * @author falk
+ * @author fhowar
  */
-final class HypothesisDFA<I> implements DFA<DTLeaf<I, Boolean>, I> {
-    
-    private final PrefixTree<I> ptree;
-    
+class HypothesisDFA<I> implements DFA<DTLeaf<I, Boolean>, I> {
+
+    private final PrefixTree<I, Boolean> ptree;
     private final DecisionTreeDFA<I> dtree;
 
-    public HypothesisDFA(PrefixTree<I> ptree, DecisionTreeDFA<I> dtree) {
+    HypothesisDFA(PrefixTree<I, Boolean> ptree, DecisionTreeDFA<I> dtree) {
         this.ptree = ptree;
         this.dtree = dtree;
     }
-    
+
     @Override
     public DTLeaf<I, Boolean> getTransition(DTLeaf<I, Boolean> s, I a) {
-        PTNode<I> u = s.getShortPrefixes().get(0);
+        PTNode<I, Boolean> u = s.getShortPrefixes().get(0);
         assert u != null;
-        PTNode<I> ua = u.succ(a);
+        PTNode<I, Boolean> ua = u.succ(a);
         assert ua != null;
         DTLeaf<I, Boolean> dst = ua.state();
         assert dst != null;
@@ -54,5 +62,4 @@ final class HypothesisDFA<I> implements DFA<DTLeaf<I, Boolean>, I> {
         return dtree.leaves();
     }
 
-    
 }

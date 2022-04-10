@@ -1,35 +1,53 @@
+/* Copyright (C) 2013-2022 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithms.oml.ttt.mealy;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import de.learnlib.algorithms.oml.ttt.dt.AbstractDTNode;
 import de.learnlib.algorithms.oml.ttt.dt.Children;
 import de.learnlib.algorithms.oml.ttt.dt.DTInnerNode;
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
-import de.learnlib.algorithms.oml.ttt.dt.DTNode;
 
+/**
+ * @author fhowar
+ */
 class ChildrenMealy<I, D> implements Children<I, D> {
 
-    Map<D, DTNode<I, D>> children = new LinkedHashMap<>();
+    private final Map<D, AbstractDTNode<I, D>> children = new LinkedHashMap<>();
 
     @Override
-    public DTNode<I, D> child(D out) {
+    public AbstractDTNode<I, D> child(D out) {
         return children.get(out);
     }
 
     @Override
-    public D key(DTNode<I, D> child) {
-        for (Map.Entry<D, DTNode<I, D>> e : children.entrySet()) {
+    public D key(AbstractDTNode<I, D> child) {
+        for (Map.Entry<D, AbstractDTNode<I, D>> e : children.entrySet()) {
             if (e.getValue() == child) {
                 return e.getKey();
             }
         }
-        return null;
+        throw new IllegalArgumentException("No valid child specified");
     }
 
     @Override
-    public void addChild(D out, DTNode<I, D> child) {
+    public void addChild(D out, AbstractDTNode<I, D> child) {
         children.put(out, child);
     }
 
@@ -39,7 +57,7 @@ class ChildrenMealy<I, D> implements Children<I, D> {
     }
 
     @Override
-    public Collection<DTNode<I, D>> all() {
+    public Collection<AbstractDTNode<I, D>> all() {
         return children.values();
     }
 }

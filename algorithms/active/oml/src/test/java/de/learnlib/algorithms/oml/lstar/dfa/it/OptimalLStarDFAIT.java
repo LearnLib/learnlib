@@ -30,7 +30,7 @@ public class OptimalLStarDFAIT extends AbstractDFALearnerIT {
                                           int targetSize,
                                           DFAMembershipOracle<I> mqOracle,
                                           DFALearnerVariantList<I> variants) {
-        variants.addLearnerVariant("OptimalLStarDFA", new OptimalLStarDFA<>(alphabet, mqOracle, mqOracle));
+        variants.addLearnerVariant("OptimalLStarDFA", new OptimalLStarDFA<>(alphabet, mqOracle));
     }
 
 }

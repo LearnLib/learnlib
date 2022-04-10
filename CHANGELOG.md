@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 * Added the OSTIA passive learning algorithm, thanks to [Aleksander Mendoza-Drosik](https://github.com/aleksander-mendoza).
+* Added the OML (optimal-MAT-learner) active learning algorithm, thanks to [Falk Howar](https://github.com/fhowar).
 * Added a new learning algorithm for systems of procedural automata (SPAs).
 
 ### Changed

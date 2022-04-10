@@ -1,42 +1,58 @@
+/* Copyright (C) 2013-2022 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithms.oml.ttt.dfa;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedList;
 
+import de.learnlib.algorithms.oml.ttt.dt.AbstractDTNode;
 import de.learnlib.algorithms.oml.ttt.dt.Children;
 import de.learnlib.algorithms.oml.ttt.dt.DTInnerNode;
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
-import de.learnlib.algorithms.oml.ttt.dt.DTNode;
 
+/**
+ * @author fhowar
+ */
 class ChildrenDFA<I> implements Children<I, Boolean> {
 
-    private DTNode<I, Boolean> trueChild;
-    private DTNode<I, Boolean> falseChild;
+    private AbstractDTNode<I, Boolean> trueChild;
+    private AbstractDTNode<I, Boolean> falseChild;
 
     @Override
-    public DTNode<I, Boolean> child(Boolean out) {
+    public AbstractDTNode<I, Boolean> child(Boolean out) {
         return out ? trueChild : falseChild;
     }
 
     @Override
-    public Boolean key(DTNode<I, Boolean> child) {
+    public Boolean key(AbstractDTNode<I, Boolean> child) {
         if (child == trueChild) {
             return true;
-        }
-        else if (child == falseChild) {
+        } else if (child == falseChild) {
             return false;
+        } else {
+            throw new AssertionError("this should not be possible");
         }
-        assert false;
-        throw new RuntimeException("this should not be possible");
     }
 
     @Override
-    public void addChild(Boolean out, DTNode<I, Boolean> child) {
+    public void addChild(Boolean out, AbstractDTNode<I, Boolean> child) {
         assert child(out) == null;
         if (out) {
             trueChild = child;
-        }
-        else {
+        } else {
             falseChild = child;
         }
     }
@@ -45,21 +61,16 @@ class ChildrenDFA<I> implements Children<I, Boolean> {
     public void replace(DTLeaf<I, Boolean> oldNode, DTInnerNode<I, Boolean> newNode) {
         if (oldNode == trueChild) {
             trueChild = newNode;
-        }
-        else if (oldNode == falseChild) {
+        } else if (oldNode == falseChild) {
             falseChild = newNode;
-        }
-        else {
-            assert false;
+        } else {
+            throw new AssertionError("this should not be possible");
         }
     }
 
     @Override
-    public Collection<DTNode<I, Boolean>> all() {
-        LinkedList<DTNode<I, Boolean>> ret = new LinkedList<>();
-        ret.add(trueChild);
-        ret.add(falseChild);
-        return ret;
+    public Collection<AbstractDTNode<I, Boolean>> all() {
+        return Arrays.asList(trueChild, falseChild);
     }
 
 }

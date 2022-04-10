@@ -1,15 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* Copyright (C) 2013-2022 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.learnlib.algorithms.oml.ttt;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import de.learnlib.algorithms.oml.ttt.dt.AbstractDecisionTree;
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
-import de.learnlib.algorithms.oml.ttt.dt.DecisionTree;
 import de.learnlib.algorithms.oml.ttt.pt.PTNode;
 import de.learnlib.algorithms.oml.ttt.pt.PrefixTree;
 import de.learnlib.algorithms.oml.ttt.st.SuffixTrie;
@@ -19,32 +29,32 @@ import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.words.Word;
 
 /**
- *
- * @author falk
+ * @author fhowar
  */
-public abstract class OptimalTTT<M, I, D> implements LearningAlgorithm<M, I, D> {
-    
+public abstract class AbstractOptimalTTT<M, I, D> implements LearningAlgorithm<M, I, D> {
+
     private final MembershipOracle<I, D> ceqs;
+    protected final SuffixTrie<I> strie;
+    protected final PrefixTree<I, D> ptree;
 
-    protected final SuffixTrie<I> strie = new SuffixTrie<>();
-
-    protected final PrefixTree<I> ptree = new PrefixTree<>();
-    
-    protected OptimalTTT(MembershipOracle<I, D> ceqs) {
+    protected AbstractOptimalTTT(MembershipOracle<I, D> ceqs) {
         this.ceqs = ceqs;
+
+        this.strie = new SuffixTrie<>();
+        this.ptree = new PrefixTree<>();
     }
 
     protected abstract int maxSearchIndex(int ceLength);
 
-    abstract protected D hypOutput(Word<I> word, int length);
+    protected abstract D hypOutput(Word<I> word, int length);
 
-    abstract protected DTLeaf<I, D> getState(Word<I> prefix);
+    protected abstract DTLeaf<I, D> getState(Word<I> prefix);
 
-    abstract protected M hypothesis();
+    protected abstract M hypothesis();
 
-    abstract protected DecisionTree<I, D> dtree();
+    protected abstract AbstractDecisionTree<I, D> dtree();
 
-    abstract protected D suffix(D output, int length);
+    protected abstract D suffix(D output, int length);
 
     @Override
     public void startLearning() {
@@ -75,13 +85,11 @@ public abstract class OptimalTTT<M, I, D> implements LearningAlgorithm<M, I, D> 
 
     private boolean refineWithWitness(DefaultQuery<I, D> counterexample, Set<DefaultQuery<I, D>> witnesses) {
         D hypOut = hypOutput(counterexample.getInput(), counterexample.getSuffix().length());
-        // System.out.println("refineWithWitness: " + counterexample.getPrefix() + " : " + counterexample.getSuffix());
-        // System.out.println(counterexample.getOutput() + " <-> " + hypOut);
         if (hypOut.equals(counterexample.getOutput())) {
             return false;
         }
         do {
-            analyzeCounterexample(counterexample.getInput(), counterexample.getOutput(), witnesses);
+            analyzeCounterexample(counterexample.getInput(), witnesses);
             makeConsistent();
             hypOut = hypOutput(counterexample.getInput(), counterexample.getSuffix().length());
         } while (!hypOut.equals(counterexample.getOutput()));
@@ -93,39 +101,29 @@ public abstract class OptimalTTT<M, I, D> implements LearningAlgorithm<M, I, D> 
         return hypothesis();
     }
 
-
     private void makeConsistent() {
         while (dtree().makeConsistent()) {
             // do nothing ...
-        };
+        }
     }
-    
-    private void analyzeCounterexample(Word<I> ce, D refOut, Set<DefaultQuery<I, D>> witnesses) {
-        PTNode ua = null;
+
+    private void analyzeCounterexample(Word<I> ce, Set<DefaultQuery<I, D>> witnesses) {
+        PTNode<I, D> ua = null;
         int upper = maxSearchIndex(ce.length());
         int lower = 0;
-        //System.out.println("Hyp: " + hypOutput(ce));
         D hypOut = hypOutput(ce, ce.length());
         while (upper - lower > 1) {
             int mid = (upper + lower) / 2;
-            //System.out.println("Index: " + mid);
             Word<I> prefix = ce.prefix(mid);
             Word<I> suffix = ce.suffix(ce.length() - mid);
-            //System.out.println(prefix + " . " + suffix);
-
 
             DTLeaf<I, D> q = getState(prefix);
             assert q != null;
-            int asCount = q.getShortPrefixes().size();
-            //System.out.println("===================================================================== AS COUNT: " + asCount);
 
             boolean stillCe = false;
-            for (PTNode<I> u : q.getShortPrefixes()) {
-                D sysOut = suffix(ceqs.answerQuery(u.word(), suffix), suffix.size());  // Fix Suffix Length ...
-                //System.out.println("  Short prefix: " + u.word() + " : " + sysOut + " : [ref] " + suffix(refOut, suffix.size()) +
-                //        " : [hyp] " + suffix(hypOutput(prefix.concat(suffix)), suffix.size()));
+            for (PTNode<I, D> u : q.getShortPrefixes()) {
+                D sysOut = suffix(ceqs.answerQuery(u.word(), suffix), suffix.size());
                 if (!sysOut.equals(suffix(hypOut, suffix.size()))) {
-                    //System.out.println("Still counterexample - moving right");
                     ua = u.succ(suffix.firstSymbol());
                     lower = mid;
                     stillCe = true;
@@ -135,25 +133,23 @@ public abstract class OptimalTTT<M, I, D> implements LearningAlgorithm<M, I, D> 
             if (stillCe) {
                 continue;
             }
-            //System.out.println("No counterexample - moving left");
-            upper = mid;   
-        } 
-        
+            upper = mid;
+        }
+
         if (ua == null) {
             assert upper == 1;
             ua = ptree.root().succ(ce.firstSymbol());
         }
-        
+
         // add witnesses
         int mid = (upper + lower) / 2;
-        Word<I> sprime = ce.suffix(ce.length() - (mid+1) );
+        Word<I> sprime = ce.suffix(ce.length() - (mid + 1));
         DTLeaf<I, D> qnext = getState(ua.word());
-        for (PTNode<I> uprime : qnext.getShortPrefixes()) {
-            witnesses.add(new DefaultQuery<>(uprime.word(), sprime, ceqs.answerQuery(uprime.word(), sprime) ));
+        for (PTNode<I, D> uprime : qnext.getShortPrefixes()) {
+            witnesses.add(new DefaultQuery<>(uprime.word(), sprime, ceqs.answerQuery(uprime.word(), sprime)));
         }
-        witnesses.add(new DefaultQuery<>(ua.word(), sprime, ceqs.answerQuery(ua.word(), sprime) ));
+        witnesses.add(new DefaultQuery<>(ua.word(), sprime, ceqs.answerQuery(ua.word(), sprime)));
 
-        //System.out.println("New short prefix (ce): " + ua.word());
-        ua.makeShortPrefix();        
+        ua.makeShortPrefix();
     }
 }
