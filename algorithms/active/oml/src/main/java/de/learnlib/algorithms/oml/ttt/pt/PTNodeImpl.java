@@ -20,19 +20,20 @@ import java.util.Map;
 
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author fhowar
  */
 public class PTNodeImpl<I, D> implements PTNode<I, D> {
 
-    private final PTNodeImpl<I, D> parent;
-    private final I symbol;
+    private final @Nullable PTNodeImpl<I, D> parent;
+    private final @Nullable I symbol;
     private final Map<I, PTNodeImpl<I, D>> children;
 
     private DTLeaf<I, D> state;
 
-    public PTNodeImpl(PTNodeImpl<I, D> parent, I symbol) {
+    public PTNodeImpl(@Nullable PTNodeImpl<I, D> parent, @Nullable I symbol) {
         this.parent = parent;
         this.symbol = symbol;
         this.children = new HashMap<>();
@@ -44,10 +45,10 @@ public class PTNodeImpl<I, D> implements PTNode<I, D> {
     }
 
     @Override
-    public PTNode<I, D> append(I a) {
-        assert !children.containsKey(a);
-        PTNodeImpl<I, D> n = new PTNodeImpl<>(this, a);
-        children.put(a, n);
+    public PTNode<I, D> append(I i) {
+        assert !children.containsKey(i);
+        PTNodeImpl<I, D> n = new PTNodeImpl<>(this, i);
+        children.put(i, n);
         return n;
     }
 
@@ -62,7 +63,7 @@ public class PTNodeImpl<I, D> implements PTNode<I, D> {
     }
 
     private Word<I> toWord(Word<I> suffix) {
-        if (symbol == null) {
+        if (symbol == null || parent == null) {
             return suffix;
         }
         return parent.toWord(suffix.prepend(symbol));

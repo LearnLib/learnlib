@@ -17,22 +17,24 @@ package de.learnlib.algorithms.oml.ttt.dfa;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import de.learnlib.algorithms.oml.ttt.dt.AbstractDTNode;
 import de.learnlib.algorithms.oml.ttt.dt.Children;
 import de.learnlib.algorithms.oml.ttt.dt.DTInnerNode;
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author fhowar
  */
 class ChildrenDFA<I> implements Children<I, Boolean> {
 
-    private AbstractDTNode<I, Boolean> trueChild;
-    private AbstractDTNode<I, Boolean> falseChild;
+    private @Nullable AbstractDTNode<I, Boolean> trueChild;
+    private @Nullable AbstractDTNode<I, Boolean> falseChild;
 
     @Override
-    public AbstractDTNode<I, Boolean> child(Boolean out) {
+    public @Nullable AbstractDTNode<I, Boolean> child(Boolean out) {
         return out ? trueChild : falseChild;
     }
 
@@ -70,7 +72,15 @@ class ChildrenDFA<I> implements Children<I, Boolean> {
 
     @Override
     public Collection<AbstractDTNode<I, Boolean>> all() {
-        return Arrays.asList(trueChild, falseChild);
+        if (trueChild != null && falseChild != null) {
+            return Arrays.asList(trueChild, falseChild);
+        } else if (trueChild != null) {
+            return Collections.singletonList(trueChild);
+        } else if (falseChild != null) {
+            return Collections.singletonList(falseChild);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
 }

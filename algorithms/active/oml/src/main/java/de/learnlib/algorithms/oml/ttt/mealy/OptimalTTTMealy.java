@@ -38,7 +38,7 @@ public class OptimalTTTMealy<I, O> extends AbstractOptimalTTT<MealyMachine<?, I,
     }
 
     public OptimalTTTMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> mqs, MembershipOracle<I, Word<O>> ceqs) {
-        super(ceqs);
+        super(alphabet, ceqs);
         dtree = new DecisionTreeMealy<>(mqs, alphabet, strie.root());
         DTLeaf<I, Word<O>> dtRoot = new DTLeaf<>(null, dtree, ptree.root());
         dtree.setRoot(dtRoot);
@@ -65,7 +65,7 @@ public class OptimalTTTMealy<I, O> extends AbstractOptimalTTT<MealyMachine<?, I,
     }
 
     @Override
-    protected MealyMachine<?, I, ?, O> hypothesis() {
+    public MealyMachine<?, I, ?, O> getHypothesisModel() {
         return hypothesis;
     }
 

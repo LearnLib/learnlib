@@ -16,6 +16,8 @@
 package de.learnlib.algorithms.oml.ttt;
 
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import de.learnlib.algorithms.oml.ttt.dt.AbstractDecisionTree;
@@ -26,18 +28,25 @@ import de.learnlib.algorithms.oml.ttt.st.SuffixTrie;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
+import net.automatalib.SupportsGrowingAlphabet;
+import net.automatalib.automata.concepts.InputAlphabetHolder;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * @author fhowar
  */
-public abstract class AbstractOptimalTTT<M, I, D> implements LearningAlgorithm<M, I, D> {
+public abstract class AbstractOptimalTTT<M, I, D>
+        implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, InputAlphabetHolder<I> {
 
     private final MembershipOracle<I, D> ceqs;
+    private final Alphabet<I> alphabet;
     protected final SuffixTrie<I> strie;
     protected final PrefixTree<I, D> ptree;
 
-    protected AbstractOptimalTTT(MembershipOracle<I, D> ceqs) {
+    protected AbstractOptimalTTT(Alphabet<I> alphabet, MembershipOracle<I, D> ceqs) {
+        this.alphabet = alphabet;
         this.ceqs = ceqs;
 
         this.strie = new SuffixTrie<>();
@@ -50,15 +59,13 @@ public abstract class AbstractOptimalTTT<M, I, D> implements LearningAlgorithm<M
 
     protected abstract DTLeaf<I, D> getState(Word<I> prefix);
 
-    protected abstract M hypothesis();
-
     protected abstract AbstractDecisionTree<I, D> dtree();
 
     protected abstract D suffix(D output, int length);
 
     @Override
     public void startLearning() {
-        assert dtree() != null && hypothesis() != null;
+        assert dtree() != null && getHypothesisModel() != null;
         dtree().sift(ptree.root());
         makeConsistent();
     }
@@ -83,22 +90,45 @@ public abstract class AbstractOptimalTTT<M, I, D> implements LearningAlgorithm<M
         return true;
     }
 
+    @Override
+    public void addAlphabetSymbol(I symbol) {
+        if (!this.alphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+        }
+
+        // check if symbol is already part of ptree/hypothesis
+        if (ptree.root().succ(symbol) == null) {
+
+            List<DTLeaf<I, D>> leaves = dtree().leaves();
+
+            for (DTLeaf<I, D> leaf : leaves) {
+                PTNode<I, D> u = leaf.getShortPrefixes().get(0);
+                assert u != null;
+                PTNode<I, D> ua = u.append(symbol);
+                assert ua != null;
+                dtree().sift(ua);
+            }
+
+            makeConsistent();
+        }
+    }
+
+    @Override
+    public Alphabet<I> getInputAlphabet() {
+        return this.alphabet;
+    }
+
     private boolean refineWithWitness(DefaultQuery<I, D> counterexample, Set<DefaultQuery<I, D>> witnesses) {
         D hypOut = hypOutput(counterexample.getInput(), counterexample.getSuffix().length());
-        if (hypOut.equals(counterexample.getOutput())) {
+        if (Objects.equals(hypOut, counterexample.getOutput())) {
             return false;
         }
         do {
             analyzeCounterexample(counterexample.getInput(), witnesses);
             makeConsistent();
             hypOut = hypOutput(counterexample.getInput(), counterexample.getSuffix().length());
-        } while (!hypOut.equals(counterexample.getOutput()));
+        } while (!Objects.equals(hypOut, counterexample.getOutput()));
         return true;
-    }
-
-    @Override
-    public M getHypothesisModel() {
-        return hypothesis();
     }
 
     private void makeConsistent() {
@@ -123,7 +153,7 @@ public abstract class AbstractOptimalTTT<M, I, D> implements LearningAlgorithm<M
             boolean stillCe = false;
             for (PTNode<I, D> u : q.getShortPrefixes()) {
                 D sysOut = suffix(ceqs.answerQuery(u.word(), suffix), suffix.size());
-                if (!sysOut.equals(suffix(hypOut, suffix.size()))) {
+                if (!Objects.equals(sysOut, suffix(hypOut, suffix.size()))) {
                     ua = u.succ(suffix.firstSymbol());
                     lower = mid;
                     stillCe = true;

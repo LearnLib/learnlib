@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithms.oml.ttt.mealy;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +38,7 @@ class DecisionTreeMealy<I, O> extends AbstractDecisionTree<I, Word<O>> {
 
     DecisionTreeMealy(MembershipOracle<I, Word<O>> mqOracle, Alphabet<I> sigma, STNode<I> stRoot) {
         super(sigma, mqOracle, stRoot);
-        this.outputs = new LinkedHashMap<>();
+        this.outputs = new HashMap<>();
     }
 
     @Override

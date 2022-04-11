@@ -34,7 +34,7 @@ public class OptimalTTTDFA<I> extends AbstractOptimalTTT<DFA<?, I>, I, Boolean> 
     }
 
     public OptimalTTTDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> mqs, MembershipOracle<I, Boolean> ceqs) {
-        super(ceqs);
+        super(alphabet, ceqs);
         dtree = new DecisionTreeDFA<>(mqs, alphabet, strie.root());
         DTInnerNode<I, Boolean> dtRoot = new DTInnerNode<>(null, dtree, new ChildrenDFA<>(), strie.root());
         dtree.setRoot(dtRoot);
@@ -52,7 +52,7 @@ public class OptimalTTTDFA<I> extends AbstractOptimalTTT<DFA<?, I>, I, Boolean> 
     }
 
     @Override
-    protected DFA<?, I> hypothesis() {
+    public DFA<?, I> getHypothesisModel() {
         return hypothesis;
     }
 

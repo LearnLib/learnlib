@@ -44,7 +44,16 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
         </dependency>
 
         <!-- build -->

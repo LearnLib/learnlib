@@ -19,16 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.learnlib.algorithms.oml.ttt.pt.PTNode;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author fhowar
  */
 public abstract class AbstractDTNode<I, D> {
 
-    final DTInnerNode<I, D> parent;
+    final @Nullable DTInnerNode<I, D> parent;
     final AbstractDecisionTree<I, D> tree;
 
-    public AbstractDTNode(DTInnerNode<I, D> parent, AbstractDecisionTree<I, D> tree) {
+    public AbstractDTNode(@Nullable DTInnerNode<I, D> parent, AbstractDecisionTree<I, D> tree) {
         this.parent = parent;
         this.tree = tree;
     }
@@ -41,7 +42,7 @@ public abstract class AbstractDTNode<I, D> {
 
     void path(List<AbstractDTNode<I, D>> path) {
         path.add(0, this);
-        if (this != tree.root()) {
+        if (parent != null) {
             parent.path(path);
         }
     }

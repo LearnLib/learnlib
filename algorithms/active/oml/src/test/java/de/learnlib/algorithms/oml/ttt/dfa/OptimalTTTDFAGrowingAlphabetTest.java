@@ -13,25 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.oml.ttt.dt;
+package de.learnlib.algorithms.oml.ttt.dfa;
 
-import java.util.Collection;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
+import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
+import net.automatalib.words.Alphabet;
 
 /**
- * @author fhowar
+ * @author frohme
  */
-public interface Children<I, D> {
+public class OptimalTTTDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<OptimalTTTDFA<Character>> {
 
-    @Nullable AbstractDTNode<I, D> child(D out);
-
-    D key(AbstractDTNode<I, D> child);
-
-    void addChild(D out, AbstractDTNode<I, D> child);
-
-    void replace(DTLeaf<I, D> oldNode, DTInnerNode<I, D> newNode);
-
-    Collection<AbstractDTNode<I, D>> all();
+    @Override
+    protected OptimalTTTDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+                                                  Alphabet<Character> alphabet) {
+        return new OptimalTTTDFA<>(alphabet, oracle);
+    }
 
 }

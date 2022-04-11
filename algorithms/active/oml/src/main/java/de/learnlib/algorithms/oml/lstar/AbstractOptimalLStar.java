@@ -17,7 +17,8 @@ package de.learnlib.algorithms.oml.lstar;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,13 +29,15 @@ import java.util.Set;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
+import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 /**
  * @author fhowar
  */
-abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, D>, Hypothesis<I, D> {
+abstract class AbstractOptimalLStar<M, I, D>
+        implements LearningAlgorithm<M, I, D>, Hypothesis<I, D>, InputAlphabetHolder<I> {
 
     private final Alphabet<I> alphabet;
     private final MembershipOracle<I, D> mqs;
@@ -44,17 +47,18 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
     private final Set<Word<I>> shortPrefixes;
     private final Map<Word<I>, List<D>> rows;
 
-    AbstractOptimalLStar(Alphabet<I> alphabet, MembershipOracle<I, D> mqs, MembershipOracle<I, D> ceqs) {
+    AbstractOptimalLStar(Alphabet<I> alphabet,
+                         MembershipOracle<I, D> mqs,
+                         MembershipOracle<I, D> ceqs,
+                         List<Word<I>> initialSuffixes) {
         this.alphabet = alphabet;
         this.mqs = mqs;
         this.ceqs = ceqs;
 
-        this.suffixes = initSuffixes();
-        this.shortPrefixes = new LinkedHashSet<>();
-        this.rows = new LinkedHashMap<>();
+        this.suffixes = new ArrayList<>(initialSuffixes);
+        this.shortPrefixes = new HashSet<>();
+        this.rows = new HashMap<>();
     }
-
-    abstract List<Word<I>> initSuffixes();
 
     abstract int maxSearchIndex(int ceLength);
 
@@ -89,6 +93,11 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
         return true;
     }
 
+    @Override
+    public Alphabet<I> getInputAlphabet() {
+        return alphabet;
+    }
+
     private boolean refineWithWitness(DefaultQuery<I, D> counterexample, Set<DefaultQuery<I, D>> witnesses) {
         boolean valid = false;
         while (counterExampleValid(counterexample)) {
@@ -98,10 +107,6 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
         }
 
         return valid;
-    }
-
-    public Alphabet<I> getAlphabet() {
-        return alphabet;
     }
 
     private void initTable() {
@@ -126,7 +131,7 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
             boolean stillCe = false;
             for (Word<I> u : getShortPrefixes(rowData)) {
                 D sysOut = suffix(ceqs.answerQuery(u, suffix), suffix.length());
-                if (!sysOut.equals(suffix(hypOut, suffix.size()))) {
+                if (!Objects.equals(sysOut, suffix(hypOut, suffix.size()))) {
                     ua = u.append(suffix.firstSymbol());
                     lower = mid;
                     stillCe = true;
@@ -159,11 +164,11 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
     private boolean counterExampleValid(DefaultQuery<I, D> counterexample) {
         assert !counterexample.getSuffix().isEmpty();
         D hypOut = getOutput(counterexample.getInput(), counterexample.getSuffix().length());
-        return !hypOut.equals(counterexample.getOutput());
+        return !Objects.equals(hypOut, counterexample.getOutput());
     }
 
     private void learnLoop() {
-        while (findInconsistency() || findUncloesedness()) {
+        while (findInconsistency() || findUnclosedness()) {
             completeObservations();
         }
         automatonFromTable();
@@ -226,7 +231,7 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
         return rows.get(key);
     }
 
-    private boolean findUncloesedness() {
+    private boolean findUnclosedness() {
         for (Word<I> prefix : rows.keySet()) {
             List<Word<I>> shortReps = getShortPrefixes(prefix);
             if (shortReps.isEmpty()) {
@@ -267,8 +272,8 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
     }
 
     private void addShortPrefix(Word<I> shortPrefix) {
-        assert !shortPrefixes.contains(shortPrefix);
-        assert rows.containsKey(shortPrefix);
+        assert !shortPrefixes.contains(shortPrefix) && rows.containsKey(shortPrefix);
+
         shortPrefixes.add(shortPrefix);
         for (I a : alphabet) {
             Word<I> newPrefix = shortPrefix.append(a);

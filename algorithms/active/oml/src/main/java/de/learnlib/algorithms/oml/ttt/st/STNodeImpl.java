@@ -15,24 +15,25 @@
  */
 package de.learnlib.algorithms.oml.ttt.st;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author fhowar
  */
 class STNodeImpl<I> implements STNode<I> {
 
-    private final STNodeImpl<I> parent;
-    private final I symbol;
+    private final @Nullable STNodeImpl<I> parent;
+    private final @Nullable I symbol;
     private final Map<I, STNodeImpl<I>> children;
 
-    STNodeImpl(STNodeImpl<I> parent, I symbol) {
+    STNodeImpl(@Nullable STNodeImpl<I> parent, @Nullable I symbol) {
         this.parent = parent;
         this.symbol = symbol;
-        this.children = new LinkedHashMap<>();
+        this.children = new HashMap<>();
     }
 
     @Override
@@ -41,7 +42,7 @@ class STNodeImpl<I> implements STNode<I> {
     }
 
     private Word<I> toWord(Word<I> prefix) {
-        if (symbol == null) {
+        if (symbol == null || parent == null) {
             return prefix;
         }
         return parent.toWord(prefix.append(symbol));

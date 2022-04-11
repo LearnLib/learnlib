@@ -19,6 +19,7 @@ import java.util.List;
 
 import de.learnlib.algorithms.oml.ttt.pt.PTNode;
 import de.learnlib.algorithms.oml.ttt.st.STNode;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author fhowar
@@ -28,7 +29,7 @@ public class DTInnerNode<I, D> extends AbstractDTNode<I, D> {
     private final STNode<I> suffix;
     private final Children<I, D> children;
 
-    public DTInnerNode(DTInnerNode<I, D> parent,
+    public DTInnerNode(@Nullable DTInnerNode<I, D> parent,
                        AbstractDecisionTree<I, D> tree,
                        Children<I, D> children,
                        STNode<I> suffix) {
@@ -62,9 +63,7 @@ public class DTInnerNode<I, D> extends AbstractDTNode<I, D> {
     @Override
     void leaves(List<DTLeaf<I, D>> list) {
         for (AbstractDTNode<I, D> n : children.all()) {
-            if (n != null) {
-                n.leaves(list);
-            }
+            n.leaves(list);
         }
     }
 

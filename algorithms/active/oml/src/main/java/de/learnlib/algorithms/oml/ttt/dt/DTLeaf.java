@@ -15,14 +15,15 @@
  */
 package de.learnlib.algorithms.oml.ttt.dt;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import de.learnlib.algorithms.oml.ttt.pt.PTNode;
 import de.learnlib.algorithms.oml.ttt.st.STNode;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author fhowar
@@ -32,10 +33,10 @@ public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
     private final List<PTNode<I, D>> shortPrefixes;
     private final List<PTNode<I, D>> longPrefixes;
 
-    public DTLeaf(DTInnerNode<I, D> parent, AbstractDecisionTree<I, D> tree, PTNode<I, D> u) {
+    public DTLeaf(@Nullable DTInnerNode<I, D> parent, AbstractDecisionTree<I, D> tree, PTNode<I, D> u) {
         super(parent, tree);
-        this.shortPrefixes = new LinkedList<>();
-        this.longPrefixes = new LinkedList<>();
+        this.shortPrefixes = new ArrayList<>();
+        this.longPrefixes = new ArrayList<>();
         shortPrefixes.add(u);
     }
 
@@ -106,7 +107,7 @@ public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
 
         Children<I, D> newChildren = tree.newChildren();
         DTInnerNode<I, D> newInner = new DTInnerNode<>(parent, tree, newChildren, av);
-        LinkedHashMap<D, DTLeaf<I, D>> newLeaves = new LinkedHashMap<>();
+        Map<D, DTLeaf<I, D>> newLeaves = new HashMap<>();
 
         for (PTNode<I, D> uOther : shortPrefixes) {
             // FIXME: We could safe some queries here in the dfa case ...
@@ -125,7 +126,7 @@ public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
             newChildren.addChild(e.getKey(), e.getValue());
         }
 
-        if (this != tree.root()) {
+        if (parent != null) {
             parent.replace(this, newInner);
         } else {
             tree.setRoot(newInner);

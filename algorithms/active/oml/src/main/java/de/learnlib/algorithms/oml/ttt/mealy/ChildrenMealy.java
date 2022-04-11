@@ -16,23 +16,24 @@
 package de.learnlib.algorithms.oml.ttt.mealy;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import de.learnlib.algorithms.oml.ttt.dt.AbstractDTNode;
 import de.learnlib.algorithms.oml.ttt.dt.Children;
 import de.learnlib.algorithms.oml.ttt.dt.DTInnerNode;
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author fhowar
  */
 class ChildrenMealy<I, D> implements Children<I, D> {
 
-    private final Map<D, AbstractDTNode<I, D>> children = new LinkedHashMap<>();
+    private final Map<D, AbstractDTNode<I, D>> children = new HashMap<>();
 
     @Override
-    public AbstractDTNode<I, D> child(D out) {
+    public @Nullable AbstractDTNode<I, D> child(D out) {
         return children.get(out);
     }
 

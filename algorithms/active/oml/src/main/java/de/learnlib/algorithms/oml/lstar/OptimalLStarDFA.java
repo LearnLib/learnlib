@@ -15,17 +15,16 @@
  */
 package de.learnlib.algorithms.oml.lstar;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.FastDFA;
-import net.automatalib.automata.fsa.impl.FastDFAState;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -34,23 +33,15 @@ import net.automatalib.words.Word;
  */
 public class OptimalLStarDFA<I> extends AbstractOptimalLStar<DFA<?, I>, I, Boolean> implements DFALearner<I> {
 
-    private FastDFA<I> hypothesis;
-    private final Map<FastDFAState, List<Boolean>> hypStateMap;
+    private CompactDFA<I> hypothesis;
+    private MutableMapping<Integer, List<Boolean>> hypStateMap;
 
     public OptimalLStarDFA(Alphabet<I> sigma, MembershipOracle<I, Boolean> mqo) {
         this(sigma, mqo, mqo);
     }
 
     public OptimalLStarDFA(Alphabet<I> sigma, MembershipOracle<I, Boolean> mqs, MembershipOracle<I, Boolean> ceqs) {
-        super(sigma, mqs, ceqs);
-        this.hypStateMap = new LinkedHashMap<>();
-    }
-
-    @Override
-    List<Word<I>> initSuffixes() {
-        final List<Word<I>> result = new ArrayList<>();
-        result.add(Word.epsilon());
-        return result;
+        super(sigma, mqs, ceqs, Collections.singletonList(Word.epsilon()));
     }
 
     @Override
@@ -60,34 +51,38 @@ public class OptimalLStarDFA<I> extends AbstractOptimalLStar<DFA<?, I>, I, Boole
 
     @Override
     void automatonFromTable() {
-        hypStateMap.clear();
-        FastDFA<I> hyp = new FastDFA<>(getAlphabet());
-        Map<List<Boolean>, FastDFAState> stateMap = new HashMap<>();
+        Alphabet<I> alphabet = getInputAlphabet();
+
+        this.hypothesis = new CompactDFA<>(alphabet);
+        Map<List<Boolean>, Integer> stateMap = new HashMap<>();
         List<Boolean> rowData = getRow(Word.epsilon());
-        FastDFAState q = hyp.addInitialState(rowData.get(0));
+        Integer q = this.hypothesis.addInitialState(rowData.get(0));
         stateMap.put(rowData, q);
-        hypStateMap.put(q, rowData);
 
         for (Word<I> u : getShortPrefixes()) {
             rowData = getRow(u);
             if (stateMap.containsKey(rowData)) {
                 continue;
             }
-            q = hyp.addState(rowData.get(0));
+            q = this.hypothesis.addState(rowData.get(0));
             stateMap.put(rowData, q);
-            hypStateMap.put(q, rowData);
         }
 
-        for (Map.Entry<FastDFAState, List<Boolean>> e : hypStateMap.entrySet()) {
-            Word<I> u = getShortPrefixes(e.getValue()).get(0);
-            for (I a : getAlphabet()) {
-                List<Boolean> destData = getRow(u.append(a));
-                assert destData != null;
-                FastDFAState dst = stateMap.get(destData);
-                hyp.setTransition(e.getKey(), a, dst);
+        hypStateMap = this.hypothesis.createStaticStateMapping();
+
+        for (Map.Entry<List<Boolean>, Integer> e : stateMap.entrySet()) {
+            List<Boolean> sig = e.getKey();
+            Integer state = e.getValue();
+
+            hypStateMap.put(state, sig);
+            Word<I> u = getShortPrefixes(sig).get(0);
+            for (I a : alphabet) {
+                List<Boolean> dstData = getRow(u.append(a));
+                assert dstData != null;
+                Integer dst = stateMap.get(dstData);
+                this.hypothesis.setTransition(state, a, dst);
             }
         }
-        this.hypothesis = hyp;
     }
 
     @Override

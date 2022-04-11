@@ -17,15 +17,14 @@ package de.learnlib.algorithms.oml.lstar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.FastMealy;
-import net.automatalib.automata.transducers.impl.FastMealyState;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -35,16 +34,17 @@ import net.automatalib.words.Word;
 public class OptimalLStarMealy<I, O> extends AbstractOptimalLStar<MealyMachine<?, I, ?, O>, I, Word<O>>
         implements MealyLearner<I, O> {
 
-    private FastMealy<I, O> hypothesis;
-    private final Map<FastMealyState<O>, List<Word<O>>> hypStateMap;
+    private CompactMealy<I, O> hypothesis;
+    private MutableMapping<Integer, List<Word<O>>> hypStateMap;
 
-    public OptimalLStarMealy(Alphabet<I> sigma, MembershipOracle<I, Word<O>> mqo) {
-        this(sigma, mqo, mqo);
+    public OptimalLStarMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> mqo) {
+        this(alphabet, mqo, mqo);
     }
 
-    public OptimalLStarMealy(Alphabet<I> sigma, MembershipOracle<I, Word<O>> mqs, MembershipOracle<I, Word<O>> ceqs) {
-        super(sigma, mqs, ceqs);
-        this.hypStateMap = new LinkedHashMap<>();
+    public OptimalLStarMealy(Alphabet<I> alphabet,
+                             MembershipOracle<I, Word<O>> mqs,
+                             MembershipOracle<I, Word<O>> ceqs) {
+        super(alphabet, mqs, ceqs, initialSuffixes(alphabet));
     }
 
     @Override
@@ -69,56 +69,59 @@ public class OptimalLStarMealy<I, O> extends AbstractOptimalLStar<MealyMachine<?
     }
 
     @Override
-    List<Word<I>> initSuffixes() {
-        List<Word<I>> suffixes = new ArrayList<>(getAlphabet().size());
-        for (I a : getAlphabet()) {
-            suffixes.add(Word.fromLetter(a));
-        }
-        return suffixes;
-    }
-
-    @Override
     int maxSearchIndex(int ceLength) {
         return ceLength - 1;
     }
 
     @Override
     void automatonFromTable() {
-        hypStateMap.clear();
-        FastMealy<I, O> hyp = new FastMealy<>(getAlphabet());
-        Map<List<Word<O>>, FastMealyState<O>> stateMap = new HashMap<>();
+        Alphabet<I> alphabet = getInputAlphabet();
+
+        this.hypothesis = new CompactMealy<>(alphabet);
+        Map<List<Word<O>>, Integer> stateMap = new HashMap<>();
         List<Word<O>> rowData = getRow(Word.epsilon());
-        FastMealyState<O> q = hyp.addInitialState();
+        Integer q = this.hypothesis.addInitialState();
         stateMap.put(rowData, q);
-        hypStateMap.put(q, rowData);
 
         for (Word<I> u : getShortPrefixes()) {
             rowData = getRow(u);
             if (stateMap.containsKey(rowData)) {
                 continue;
             }
-            q = hyp.addState();
+            q = this.hypothesis.addState();
             stateMap.put(rowData, q);
-            hypStateMap.put(q, rowData);
         }
 
-        for (Map.Entry<FastMealyState<O>, List<Word<O>>> e : hypStateMap.entrySet()) {
-            Word<I> u = getShortPrefixes(e.getValue()).get(0);
+        hypStateMap = this.hypothesis.createStaticStateMapping();
+
+        for (Map.Entry<List<Word<O>>, Integer> e : stateMap.entrySet()) {
+            List<Word<O>> sig = e.getKey();
+            Integer state = e.getValue();
+
+            hypStateMap.put(state, sig);
+            Word<I> u = getShortPrefixes(sig).get(0);
             List<Word<O>> srcData = getRow(u);
-            for (I a : getAlphabet()) {
+            for (I a : alphabet) {
                 List<Word<O>> destData = getRow(u.append(a));
                 assert destData != null;
-                FastMealyState<O> dst = stateMap.get(destData);
-                O o = srcData.get(getAlphabet().getSymbolIndex(a)).lastSymbol();
-                hyp.setTransition(e.getKey(), a, dst, o);
+                Integer dst = stateMap.get(destData);
+                O o = srcData.get(alphabet.getSymbolIndex(a)).lastSymbol();
+                this.hypothesis.setTransition(state, a, dst, o);
             }
         }
-        this.hypothesis = hyp;
     }
 
     @Override
     Word<O> suffix(Word<O> output, int length) {
         return output.suffix(length);
+    }
+
+    private static <I> List<Word<I>> initialSuffixes(Alphabet<I> alphabet) {
+        List<Word<I>> suffixes = new ArrayList<>(alphabet.size());
+        for (I a : alphabet) {
+            suffixes.add(Word.fromLetter(a));
+        }
+        return suffixes;
     }
 
 }
