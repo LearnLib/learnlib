@@ -63,6 +63,8 @@ public abstract class AbstractOptimalTTT<M, I, D>
 
     protected abstract D suffix(D output, int length);
 
+    protected abstract boolean isCanonical();
+
     @Override
     public void startLearning() {
         assert dtree() != null && getHypothesisModel() != null;
@@ -78,6 +80,11 @@ public abstract class AbstractOptimalTTT<M, I, D>
         if (!refined) {
             return false;
         }
+
+        if (isCanonical()) {
+            return true;
+        }
+
         do {
             for (DefaultQuery<I, D> w : witnesses) {
                 refined = refineWithWitness(w, witnesses);
@@ -86,7 +93,7 @@ public abstract class AbstractOptimalTTT<M, I, D>
                 }
             }
 
-        } while (refined);
+        } while (refined && isCanonical());
         return true;
     }
 
@@ -119,6 +126,9 @@ public abstract class AbstractOptimalTTT<M, I, D>
     }
 
     private boolean refineWithWitness(DefaultQuery<I, D> counterexample, Set<DefaultQuery<I, D>> witnesses) {
+        if (counterexample.getOutput() == null) {
+            counterexample.answer(ceqs.answerQuery(counterexample.getInput()));
+        }
         D hypOut = hypOutput(counterexample.getInput(), counterexample.getSuffix().length());
         if (Objects.equals(hypOut, counterexample.getOutput())) {
             return false;
@@ -137,10 +147,22 @@ public abstract class AbstractOptimalTTT<M, I, D>
         }
     }
 
+    private PTNode<I, D> longestShortPrefixOf(Word<I> ce) {
+        PTNode<I, D> cur = ptree.root();
+        int i = 0;
+        do {
+            cur = cur.succ(ce.getSymbol(i++));
+        } while (cur.state().getShortPrefixes().contains(cur) && i < ce.length());
+
+        assert !cur.state().getShortPrefixes().contains(cur);
+        return cur;
+    }
+
     private void analyzeCounterexample(Word<I> ce, Set<DefaultQuery<I, D>> witnesses) {
         PTNode<I, D> ua = null;
+        PTNode<I, D> lsp = longestShortPrefixOf(ce);
         int upper = maxSearchIndex(ce.length());
-        int lower = 0;
+        int lower = lsp.word().length() -1;
         D hypOut = hypOutput(ce, ce.length());
         while (upper - lower > 1) {
             int mid = (upper + lower) / 2;
@@ -167,8 +189,8 @@ public abstract class AbstractOptimalTTT<M, I, D>
         }
 
         if (ua == null) {
-            assert upper == 1;
-            ua = ptree.root().succ(ce.firstSymbol());
+            assert lower == lsp.word().length()-1;
+            ua = lsp;
         }
 
         // add witnesses
@@ -176,9 +198,9 @@ public abstract class AbstractOptimalTTT<M, I, D>
         Word<I> sprime = ce.suffix(ce.length() - (mid + 1));
         DTLeaf<I, D> qnext = getState(ua.word());
         for (PTNode<I, D> uprime : qnext.getShortPrefixes()) {
-            witnesses.add(new DefaultQuery<>(uprime.word(), sprime, ceqs.answerQuery(uprime.word(), sprime)));
+            witnesses.add(new DefaultQuery<>(uprime.word(), sprime));
         }
-        witnesses.add(new DefaultQuery<>(ua.word(), sprime, ceqs.answerQuery(ua.word(), sprime)));
+        witnesses.add(new DefaultQuery<>(ua.word(), sprime));
 
         ua.makeShortPrefix();
     }

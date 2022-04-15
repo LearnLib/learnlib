@@ -67,6 +67,11 @@ public class OptimalTTTDFA<I> extends AbstractOptimalTTT<DFA<?, I>, I, Boolean> 
     }
 
     @Override
+    protected boolean isCanonical() {
+        return hypothesis.getStates().stream().noneMatch(it -> it.getShortPrefixes().size() > 1);
+    }
+
+    @Override
     protected Boolean hypOutput(Word<I> word, int length) {
         return hypOutput(word);
     }

@@ -50,6 +50,11 @@ public class OptimalLStarDFA<I> extends AbstractOptimalLStar<DFA<?, I>, I, Boole
     }
 
     @Override
+    boolean symbolInconsistency(Word<I> u1, Word<I> u2, I a) {
+        return false;
+    }
+
+    @Override
     void automatonFromTable() {
         Alphabet<I> alphabet = getInputAlphabet();
 

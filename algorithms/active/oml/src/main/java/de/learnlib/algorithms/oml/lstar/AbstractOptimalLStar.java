@@ -40,12 +40,12 @@ abstract class AbstractOptimalLStar<M, I, D>
         implements LearningAlgorithm<M, I, D>, Hypothesis<I, D>, InputAlphabetHolder<I> {
 
     private final Alphabet<I> alphabet;
-    private final MembershipOracle<I, D> mqs;
-    private final MembershipOracle<I, D> ceqs;
+    final MembershipOracle<I, D> mqs;
+    final MembershipOracle<I, D> ceqs;
 
-    private final List<Word<I>> suffixes;
     private final Set<Word<I>> shortPrefixes;
     private final Map<Word<I>, List<D>> rows;
+    final List<Word<I>> suffixes;
 
     AbstractOptimalLStar(Alphabet<I> alphabet,
                          MembershipOracle<I, D> mqs,
@@ -65,6 +65,8 @@ abstract class AbstractOptimalLStar<M, I, D>
     abstract void automatonFromTable();
 
     abstract D suffix(D output, int length);
+
+    abstract boolean symbolInconsistency(Word<I> u1, Word<I> u2, I a);
 
     @Override
     public void startLearning() {
@@ -203,6 +205,9 @@ abstract class AbstractOptimalLStar<M, I, D>
                         return true;
                     }
                 }
+            }
+            if (symbolInconsistency(u1, u2, a)) {
+                return true;
             }
         }
         return false;
