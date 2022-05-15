@@ -32,6 +32,7 @@ limitations under the License.
     <description>Parent module for (active) automata learning algorithms shipped with LearnLib</description>
 
     <modules>
+        <module>aaar</module>
         <module>adt</module>
         <module>dhc</module>
         <module>discrimination-tree</module>

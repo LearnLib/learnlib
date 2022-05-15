@@ -49,6 +49,11 @@ limitations under the License.
         <!-- algorithms -->
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-aaar</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-adt</artifactId>
         </dependency>
 
@@ -281,6 +286,13 @@ limitations under the License.
             -->
             <dependencies>
                 <!-- algorithms -->
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-aaar</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-adt</artifactId>
