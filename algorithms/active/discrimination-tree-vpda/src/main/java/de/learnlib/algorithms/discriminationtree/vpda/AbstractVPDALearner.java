@@ -93,6 +93,10 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
         return hypothesis;
     }
 
+    public DTree<I> getDiscriminationTree() {
+        return dtree;
+    }
+
     protected static <I> void link(DTNode<I> leaf, HypLoc<I> loc) {
         assert leaf.isLeaf();
         leaf.setData(loc);
