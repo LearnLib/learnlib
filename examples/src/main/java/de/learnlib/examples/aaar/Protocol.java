@@ -1,6 +1,5 @@
 package de.learnlib.examples.aaar;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import de.learnlib.examples.aaar.Event.Msg;
 import de.learnlib.examples.aaar.Event.Recv;
@@ -14,8 +13,6 @@ class Protocol implements SuffixOutput<Event, Word<String>> {
 
     @Override
     public Word<String> computeSuffixOutput(Iterable<? extends Event> prefix, Iterable<? extends Event> suffix) {
-
-        System.err.println(Iterables.toString(prefix) + "|" + Iterables.toString(suffix));
         reset();
         prefix.forEach(this::handleEvent);
         return Streams.stream(suffix).map(this::handleEvent).collect(Word.collector());
@@ -30,7 +27,7 @@ class Protocol implements SuffixOutput<Event, Word<String>> {
         if (event instanceof Msg<?>) {
             Msg<?> msg = (Msg<?>) event;
 
-            if (buffer == null && msg.seq % 2 == 0 && seq_exp % 2 == 0) {
+            if (buffer == null && (msg.seq % 2 == seq_exp % 2)) {
                 buffer = msg.data;
                 seq_exp++;
                 return "ind";

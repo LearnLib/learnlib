@@ -8,9 +8,9 @@ package de.learnlib.algorithms.aaar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 
 import de.learnlib.algorithms.aaar.abstraction.AbstractionTree;
-import de.learnlib.algorithms.aaar.abstraction.InitialAbstraction;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
@@ -20,7 +20,7 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 
 /**
@@ -31,25 +31,25 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
         implements LearningAlgorithm<AM, CI, D> {
 
     private final L learner;
-    private final InitialAbstraction<AI, CI> initial;
     private final MembershipOracle<CI, D> oracle;
 
-    private final Map<AI, AbstractionTree<AI, CI, D>> evolving = new HashMap<>();
+    private final AbstractionTree<AI, CI, D> tree;
 
-    private final GrowingAlphabet<CI> rep = new GrowingMapAlphabet<>();
-    protected final GrowingAlphabet<AI> abs = new GrowingMapAlphabet<>();
+    private final GrowingAlphabet<CI> rep;
+    protected final GrowingAlphabet<AI> abs;
 
     public AbstractAAARLearner(LearnerProvider<L, CM, CI, D> learnerProvider,
-                               InitialAbstraction<AI, CI> initial,
-                               MembershipOracle<CI, D> o) {
-        this.initial = initial;
+                               MembershipOracle<CI, D> o,
+                               CI initialConcrete,
+                               Function<CI, AI> abstractor) {
         this.oracle = o;
+        this.rep = new GrowingMapAlphabet<>();
+        this.abs = new GrowingMapAlphabet<>();
 
-        for (AI a : initial.getSigmaA()) {
-            rep.addSymbol(initial.getRepresentative(a));
-            abs.addSymbol(a);
-            evolving.put(a, new AbstractionTree<>(a, initial.getRepresentative(a), o));
-        }
+        final AI initialAbstract = abstractor.apply(initialConcrete);
+        this.tree = new AbstractionTree<>(initialAbstract, initialConcrete, o, abstractor);
+        this.rep.addSymbol(initialConcrete);
+        this.abs.addSymbol(initialAbstract);
 
         this.learner = learnerProvider.createLearner(rep, oracle);
     }
@@ -66,11 +66,14 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
         Word<CI> prefix = Word.epsilon();
         Word<CI> suffix;
 
+        WordBuilder<CI> wb = new WordBuilder<>(input.size());
+
         for (int i = 0; i < input.size(); i++) {
             CI cur = input.getSymbol(i);
-            AbstractionTree<AI, CI, D> tree = evolving.get(initial.getAbstractSymbol(cur));
+            //            AbstractionTree<AI, CI, D> tree = evolving.get(initial.getAbstractSymbol(cur));
             // lift & lower
-            CI r = tree.getRepresentative(tree.getAbstractSymbol(cur));
+            AI a = tree.getAbstractSymbol(cur);
+            CI r = tree.getRepresentative(a);
 
             suffix = input.suffix(input.size() - i - 1);
 
@@ -82,21 +85,22 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
 
             if (out1.equals(out2)) {
                 prefix = prefix.append(r);
+                wb.append(r);
                 continue;
             }
 
             // add new abstraction
-            AI a = tree.splitLeaf(r, cur, prefix, suffix, out2, out1);
-            abs.addSymbol(a);
+            AI newA = tree.splitLeaf(r, cur, prefix, suffix, out2, out1);
+            abs.addSymbol(newA);
             rep.addSymbol(cur);
-            evolving.put(a, tree);
             learner.addAlphabetSymbol(cur);
             return true;
-
         }
 
-        // TODO: pass representatives to local learner
-        return learner.refineHypothesis(query);
+        final DefaultQuery<CI, D> concreteCE = new DefaultQuery<>(wb.toWord(0, query.getPrefix().length()),
+                                                                  wb.toWord(query.getPrefix().length(), wb.size()),
+                                                                  query.getOutput());
+        return learner.refineHypothesis(concreteCE);
     }
 
     public CM getConcreteHypothesisModel() {
@@ -121,7 +125,7 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
         // transitions
         for (S2 s : states.keySet()) {
             for (CI r : rep) {
-                AI a = evolving.get(initial.getAbstractSymbol(r)).getAbstractSymbol(r);
+                AI a = tree.getAbstractSymbol(r);
                 tgt.setTransition(s,
                                   a,
                                   statesRev.get(src.getSuccessor(states.get(s), r)),
@@ -138,13 +142,7 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
         return this.abs;
     }
 
-    public int getAlphabetSize() {
-        int sum = 0;
-        for (AbstractionTree<AI, CI, D> at : evolving.values()) {
-            sum += at.countLeaves();
-            return sum;
-        }
-        return sum;
+    public AbstractionTree<AI, CI, D> getAbstractionTree() {
+        return tree;
     }
-
 }

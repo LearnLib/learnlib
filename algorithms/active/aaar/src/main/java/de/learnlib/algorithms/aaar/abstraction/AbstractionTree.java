@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.function.Function;
 
 import de.learnlib.algorithms.aaar.abstraction.Node.InnerNode;
 import de.learnlib.algorithms.aaar.abstraction.Node.Leaf;
@@ -27,20 +26,17 @@ import net.automatalib.words.Word;
  */
 public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI> {
 
-
     private final Map<AI, CI> gamma = new HashMap<>();
 
     private final MembershipOracle<CI, D> oracle;
 
     private Node root;
 
-    private int nextFree = 1;
+    private final Function<CI, AI> abstractor;
 
-    private final AI rootA;
-
-    public AbstractionTree(AI rootA, CI rootC, MembershipOracle<CI, D> o) {
-        this.rootA = rootA;
+    public AbstractionTree(AI rootA, CI rootC, MembershipOracle<CI, D> o, Function<CI, AI> abstractor) {
         this.oracle = o;
+        this.abstractor = abstractor;
         Leaf<AI, CI> l = new Leaf<>();
         l.abs = rootA;
         l.rep = rootC;
@@ -62,16 +58,7 @@ public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI> {
 
         Leaf<AI, CI> l = new Leaf<>();
         // TODO: Use Wrapper Objects?
-        l.abs = (AI) new Object() {
-
-            private final String toString = rootA.toString() + "_" + nextFree++;
-
-            @Override
-            public String toString() {
-                return toString;
-            }
-        };
-
+        l.abs = this.abstractor.apply(repNew);
         l.rep = repNew;
         gamma.put(l.abs, repNew);
 
@@ -79,36 +66,31 @@ public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI> {
         Node inner = null;
 
         while (!(cur instanceof Leaf)) {
-            try {
-                @SuppressWarnings("unchecked")
-                InnerNode<CI, D> n = (InnerNode<CI, D>) cur;
-                Word<CI> test1 = n.prefix.append(repOld).concat(n.suffix);
-                D out1 = oracle.answerQuery(test1);
-                //                Word test2 = WordUtil.concat(WordUtil.concat(n.prefix, repNew), n.suffix);
-                //                Word out2 = oracle.processQuery(test2);
+            @SuppressWarnings("unchecked")
+            InnerNode<CI, D> n = (InnerNode<CI, D>) cur;
+            Word<CI> test1 = n.prefix.append(repOld).concat(n.suffix);
+            D out1 = oracle.answerQuery(test1);
+            //                Word test2 = WordUtil.concat(WordUtil.concat(n.prefix, repNew), n.suffix);
+            //                Word out2 = oracle.processQuery(test2);
 
-                //                // new leaf without additional information
-                //                if (!n.next.containsKey(out2))
-                //                {
-                //                    n.next.put(out2, l);
-                //                    return l.abs;
-                //                }
-                //
-                //                key = out1;
-                //                inner = cur;
-                //                cur = n.next.get(out1);
+            //                // new leaf without additional information
+            //                if (!n.next.containsKey(out2))
+            //                {
+            //                    n.next.put(out2, l);
+            //                    return l.abs;
+            //                }
+            //
+            //                key = out1;
+            //                inner = cur;
+            //                cur = n.next.get(out1);
 
-                inner = cur;
-                if (Objects.equals(n.out, out1)) {
-                    cur = n.equalsNext;
-                } else {
-                    cur = n.otherNext;
-                }
-
-            } catch (Exception ex) {
-                Logger.getLogger(AbstractionTree.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
+            inner = cur;
+            if (Objects.equals(n.out, out1)) {
+                cur = n.equalsNext;
+            } else {
+                cur = n.otherNext;
             }
+
         }
 
         InnerNode<CI, D> nn = new InnerNode<>();
@@ -144,24 +126,18 @@ public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI> {
     public AI getAbstractSymbol(CI c, MembershipOracle<CI, D> oracle) {
         Node cur = root;
         while (!(cur instanceof Leaf)) {
-            try {
-                @SuppressWarnings("unchecked")
-                InnerNode<CI, D> n = (InnerNode<CI, D>) cur;
-                Word<CI> test = n.prefix.append(c).concat(n.suffix);
-                D out = oracle.answerQuery(test);
+            @SuppressWarnings("unchecked")
+            InnerNode<CI, D> n = (InnerNode<CI, D>) cur;
+            Word<CI> test = n.prefix.append(c).concat(n.suffix);
+            D out = oracle.answerQuery(test);
 
-                if (Objects.equals(n.out, out)) {
-                    cur = n.equalsNext;
-                } else {
-                    cur = n.otherNext;
-                }
+            if (Objects.equals(n.out, out)) {
+                cur = n.equalsNext;
+            } else {
+                cur = n.otherNext;
+            }
 
-                //                cur = n.next.get(out);
-                if (cur == null) {
-                    return null;
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(AbstractionTree.class.getName()).log(Level.SEVERE, null, ex);
+            if (cur == null) {
                 return null;
             }
         }

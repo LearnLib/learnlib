@@ -1,6 +1,7 @@
 package de.learnlib.algorithms.aaar;
 
-import de.learnlib.algorithms.aaar.abstraction.InitialAbstraction;
+import java.util.function.Function;
+
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -12,15 +13,16 @@ public class AAARLearnerMealy<L extends MealyLearner<CI, O> & SupportsGrowingAlp
         extends AbstractAAARLearner<L, MealyMachine<?, AI, ?, O>, MealyMachine<?, CI, ?, O>, AI, CI, Word<O>> {
 
     public AAARLearnerMealy(LearnerProvider<L, MealyMachine<?, CI, ?, O>, CI, Word<O>> learnerProvider,
-                            InitialAbstraction<AI, CI> initial,
-                            MembershipOracle<CI, Word<O>> o) {
-        super(learnerProvider, initial, o);
+                            MembershipOracle<CI, Word<O>> o,
+                            CI initialConcrete,
+                            Function<CI, AI> abstractor) {
+        super(learnerProvider, o, initialConcrete, abstractor);
     }
 
     @Override
     public MealyMachine<?, AI, ?, O> getHypothesisModel() {
-        MealyMachine<?, CI, ?, O> concrete = super.getConcreteHypothesisModel();
-        CompactMealy<AI, O> result = new CompactMealy<>(super.abs);
+        final MealyMachine<?, CI, ?, O> concrete = super.getConcreteHypothesisModel();
+        final CompactMealy<AI, O> result = new CompactMealy<>(super.abs);
 
         super.copyAbstract(concrete, result);
 

@@ -58,6 +58,12 @@ public class ExamplesTest {
     }
 
     @Test
+    public void testAAARAlternatingBitExample() {
+        checkJVMCompatibility();
+        de.learnlib.examples.aaar.AlternatingBitExample.main(new String[0]);
+    }
+
+    @Test
     public void testBBCExample1() {
         checkLTSminAvailability(3, 0, 0);
         de.learnlib.examples.bbc.Example1.main(new String[0]);
