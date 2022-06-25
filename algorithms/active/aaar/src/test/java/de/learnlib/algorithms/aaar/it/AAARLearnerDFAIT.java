@@ -1,21 +1,35 @@
 package de.learnlib.algorithms.aaar.it;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.aaar.AAARLearnerDFA;
 import de.learnlib.algorithms.aaar.LearnerProvider;
+import de.learnlib.algorithms.aaar.abstraction.AbstractionTree;
 import de.learnlib.algorithms.discriminationtree.dfa.DTLearnerDFA;
 import de.learnlib.algorithms.ttt.dfa.TTTLearnerDFA;
+import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
+import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexamples.LocalSuffixFinders;
+import de.learnlib.examples.LearningExample.DFALearningExample;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
+import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.conformance.WpMethodTestsIterator;
 import net.automatalib.words.Alphabet;
-import org.testng.annotations.Test;
+import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.testng.Assert;
 
-@Test(enabled = false) // TODO: abstract automata are only defined over (discovered) abstract symbols
 public class AAARLearnerDFAIT extends AbstractDFALearnerIT {
 
     @Override
@@ -25,13 +39,99 @@ public class AAARLearnerDFAIT extends AbstractDFALearnerIT {
                                           DFALearnerVariantList<I> variants) {
 
         LearnerProvider<DTLearnerDFA<I>, DFA<?, I>, I, Boolean> dt =
-                (mqo, alph) -> new DTLearnerDFA<>(alphabet, mqOracle, LocalSuffixFinders.RIVEST_SCHAPIRE, true, true);
+                (alph, mqo) -> new DTLearnerDFA<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true, true);
         LearnerProvider<TTTLearnerDFA<I>, DFA<?, I>, I, Boolean> ttt =
-                (mqo, alph) -> new TTTLearnerDFA<>(alphabet, mqOracle, AcexAnalyzers.BINARY_SEARCH_FWD);
+                (alph, mqo) -> new TTTLearnerDFA<>(alph, mqo, AcexAnalyzers.BINARY_SEARCH_FWD);
 
         variants.addLearnerVariant("DT",
-                                   new AAARLearnerDFA<>(dt, mqOracle, alphabet.getSymbol(0), Function.identity()));
+                                   new LearnerWrapper<>(dt, mqOracle, alphabet.getSymbol(0), Function.identity()));
         variants.addLearnerVariant("TTT",
-                                   new AAARLearnerDFA<>(ttt, mqOracle, alphabet.getSymbol(0), Function.identity()));
+                                   new LearnerWrapper<>(ttt, mqOracle, alphabet.getSymbol(0), Function.identity()));
+    }
+
+    @Override
+    protected <I> DFAEquivalenceOracle<I> getEquivalenceOracle(DFALearningExample<I> example) {
+        return new EQWrapper<>(example);
+    }
+
+    /*
+     * In order to generate counterexamples for the abstract hypothesis given a concrete source model, we need the
+     * abstraction tree. The following wrappers make sure that we can access it. Note that in general one would have to
+     * separate between abstract and concrete input symbols but in this specific situation we exploit the fact that both
+     *  domains coincide.
+     */
+    private static class LearnerWrapper<L extends DFALearner<I> & SupportsGrowingAlphabet<I>, I>
+            extends AAARLearnerDFA<L, I, I> {
+
+        public LearnerWrapper(LearnerProvider<L, DFA<?, I>, I, Boolean> learnerProvider,
+                              MembershipOracle<I, Boolean> o,
+                              I initialConcrete,
+                              Function<I, I> abstractor) {
+            super(learnerProvider, o, initialConcrete, abstractor);
+        }
+
+        @Override
+        public DFA<?, I> getHypothesisModel() {
+            @SuppressWarnings("unchecked")
+            final CompactDFA<I> hyp = (CompactDFA<I>) super.getHypothesisModel();
+            return new HypothesisWrapper<>(hyp, super.getAbstractionTree());
+        }
+    }
+
+    private static class HypothesisWrapper<I> extends CompactDFA<I> {
+
+        private final AbstractionTree<I, I, Boolean> tree;
+
+        public HypothesisWrapper(CompactDFA<I> other, AbstractionTree<I, I, Boolean> tree) {
+            super(other);
+            this.tree = tree;
+        }
+
+        public AbstractionTree<I, I, Boolean> getTree() {
+            return tree;
+        }
+    }
+
+    private static class EQWrapper<I> implements DFAEquivalenceOracle<I> {
+
+        private final DFALearningExample<I> example;
+        private final List<DefaultQuery<I, Boolean>> tests;
+
+        public EQWrapper(DFALearningExample<I> example) {
+            this.example = example;
+            final Alphabet<I> alphabet = example.getAlphabet();
+            final DFA<?, I> dfa = example.getReferenceAutomaton();
+
+            this.tests = new ArrayList<>();
+            final WpMethodTestsIterator<I> iter = new WpMethodTestsIterator<>(dfa, alphabet);
+
+            while (iter.hasNext()) {
+                final Word<I> test = iter.next();
+                this.tests.add(new DefaultQuery<>(Word.epsilon(), test, dfa.accepts(test)));
+            }
+        }
+
+        @Override
+        public @Nullable DefaultQuery<I, Boolean> findCounterExample(DFA<?, I> hypothesis,
+                                                                     Collection<? extends I> inputs) {
+            @SuppressWarnings("unchecked")
+            final HypothesisWrapper<I> wrapper = (HypothesisWrapper<I>) hypothesis;
+            final AbstractionTree<I, I, Boolean> tree = wrapper.getTree();
+
+            for (DefaultQuery<I, Boolean> t : tests) {
+                final Word<I> input = t.getInput();
+                final Word<I> abstractTest = input.transform(tree::getAbstractSymbol);
+
+                final boolean output = hypothesis.accepts(abstractTest);
+                if (output != t.getOutput()) {
+                    return t;
+                }
+            }
+
+            Assert.assertTrue(Automata.testEquivalence(example.getReferenceAutomaton(),
+                                                       hypothesis,
+                                                       example.getAlphabet()));
+            return null;
+        }
     }
 }

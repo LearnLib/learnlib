@@ -24,6 +24,7 @@ import de.learnlib.driver.util.StateLocalInputMealySimulatorSUL;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
 import de.learnlib.examples.LearningExample.StateLocalInputMealyLearningExample;
 import de.learnlib.examples.LearningExamples;
+import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.equivalence.mealy.StateLocalInputMealySimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
@@ -70,12 +71,11 @@ public abstract class AbstractMealyLearnerIT {
 
         final Alphabet<I> alphabet = example.getAlphabet();
         final MealyMembershipOracle<I, O> mqOracle = new MealySimulatorOracle<>(example.getReferenceAutomaton());
+        final MealyEquivalenceOracle<I, O> eqOracle = getEquivalenceOracle(example);
         final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, mqOracle, variants);
 
-        return LearnerITUtil.createExampleITCases(example,
-                                                  variants,
-                                                  new SimulatorEQOracle<>(example.getReferenceAutomaton()));
+        return LearnerITUtil.createExampleITCases(example, variants, eqOracle);
     }
 
     private <I, O> List<UniversalDeterministicLearnerITCase<I, Word<O>, MealyMachine<?, I, ?, O>>> createPartialVariantsITCase(
@@ -94,15 +94,25 @@ public abstract class AbstractMealyLearnerIT {
         final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, mqOracle, variants);
 
-        final MealyEquivalenceOracle<I, O> eqOracle =
-                new StateLocalInputMealySimulatorEQOracle<>(partialRef, alphabet, undefinedOutput);
+        final MealyEquivalenceOracle<I, O> eqOracle = getEquivalenceOracle(example);
 
         return LearnerITUtil.createExampleITCases(example, variants, eqOracle);
     }
 
+    protected <I, O> MealyEquivalenceOracle<I, O> getEquivalenceOracle(MealyLearningExample<I, O> example) {
+        return new MealySimulatorEQOracle<>(example.getReferenceAutomaton());
+    }
+
+    protected <I, O> MealyEquivalenceOracle<I, O> getEquivalenceOracle(StateLocalInputMealyLearningExample<I, O> example) {
+        final StateLocalInputMealyMachine<?, I, ?, O> reference = example.getReferenceAutomaton();
+        final Alphabet<I> alphabet = example.getAlphabet();
+        final O undefinedOutput = example.getUndefinedOutput();
+        return new StateLocalInputMealySimulatorEQOracle<>(reference, alphabet, undefinedOutput);
+    }
+
     /**
-     * Adds, for a given setup, all the variants of the Mealy machine learner to be tested to the specified {@link
-     * LearnerVariantList variant list}.
+     * Adds, for a given setup, all the variants of the Mealy machine learner to be tested to the specified
+     * {@link LearnerVariantList variant list}.
      *
      * @param alphabet
      *         the input alphabet
