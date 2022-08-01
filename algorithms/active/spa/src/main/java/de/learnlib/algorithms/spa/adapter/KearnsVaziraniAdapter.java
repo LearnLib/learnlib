@@ -34,7 +34,7 @@ import net.automatalib.words.Word;
 public class KearnsVaziraniAdapter<I> extends KearnsVaziraniDFA<I> implements AccessSequenceTransformer<I> {
 
     public KearnsVaziraniAdapter(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
-        super(alphabet, oracle, false, AcexAnalyzers.LINEAR_FWD);
+        super(alphabet, oracle, true, AcexAnalyzers.BINARY_SEARCH_FWD);
     }
 
     @Override
