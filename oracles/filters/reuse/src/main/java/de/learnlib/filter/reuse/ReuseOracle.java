@@ -43,7 +43,7 @@ import net.automatalib.words.WordBuilder;
  * mechanism exists for the invoked symbol) the oracle could ''pump'' those symbols inside a query once seen.</li>
  * <li>Reuse system states: There are a lot of situations where a prefix of a query is already known and a system state
  * is available. In this situation the oracle is able to reuse the available system state and only process the remaining
- * suffix. Whether or not a system state will be removed after it is used is decided upon construction (see {@link
+ * suffix. Whether a system state will be removed after it is used is decided upon construction (see {@link
  * ReuseOracleBuilder#ReuseOracleBuilder(Alphabet, Supplier)}.</li> </ul> through an internal {@link ReuseTree}.
  * <p>
  * The usage of model invariant input symbols and failure output symbols is disabled by default and can be enabled upon

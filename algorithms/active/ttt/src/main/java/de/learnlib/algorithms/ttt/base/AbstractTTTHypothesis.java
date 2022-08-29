@@ -112,8 +112,8 @@ public abstract class AbstractTTTHypothesis<S extends TTTState<I, D>, I, D, T>
     protected abstract T mapTransition(TTTTransition<I, D> internalTransition);
 
     /**
-     * Initializes the automaton, adding an initial state. Whether or not the initial state is accepting needs to be
-     * known at this point.
+     * Initializes the automaton, adding an initial state. Whether the initial state is accepting needs to be known at
+     * this point.
      *
      * @return the initial state of this newly initialized automaton
      */

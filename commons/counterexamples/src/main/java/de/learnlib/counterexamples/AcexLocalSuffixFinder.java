@@ -44,7 +44,7 @@ public class AcexLocalSuffixFinder implements LocalSuffixFinder<@Nullable Object
      * @param analyzer
      *         the analyzer to be wrapped
      * @param reduce
-     *         whether or not to reduce counterexamples
+     *         whether to reduce counterexamples
      */
     public AcexLocalSuffixFinder(AcexAnalyzer analyzer, boolean reduce, String name) {
         this.analyzer = analyzer;

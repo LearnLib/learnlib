@@ -145,15 +145,15 @@ public final class GlobalSuffixFinders {
      * suffix-closedness of the set of distinguishing suffixes might not be preserved. Note that for correctly
      * implemented local suffix finders, this does not impair correctness of the learning algorithm. However, without
      * suffix closedness, intermediate hypothesis models might be non-canonical, if no additional precautions are taken.
-     * For that reasons, the {@code allSuffixes} parameter can be specified to control whether or not the list returned
-     * by {@link GlobalSuffixFinder#findSuffixes(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)} of
-     * the returned global suffix finder should not only contain the single suffix, but also all of its suffixes,
-     * ensuring suffix-closedness.
+     * For that reasons, the {@code allSuffixes} parameter can be specified to control whether the list returned by
+     * {@link GlobalSuffixFinder#findSuffixes(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)} of the
+     * returned global suffix finder should not only contain the single suffix, but also all of its suffixes, ensuring
+     * suffix-closedness.
      *
      * @param localFinder
      *         the local suffix finder
      * @param allSuffixes
-     *         whether or not all suffixes of the found local suffix should be added
+     *         whether all suffixes of the found local suffix should be added
      *
      * @return a global suffix finder using the analysis method from the specified local suffix finder
      */
@@ -192,10 +192,10 @@ public final class GlobalSuffixFinders {
      * suffix-closedness of the set of distinguishing suffixes might not be preserved. Note that for correctly
      * implemented local suffix finders, this does not impair correctness of the learning algorithm. However, without
      * suffix closedness, intermediate hypothesis models might be non-canonical, if no additional precautions are taken.
-     * For that reasons, the {@code allSuffixes} parameter can be specified to control whether or not the list returned
-     * by {@link GlobalSuffixFinder#findSuffixes(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)} of
-     * the returned global suffix finder should not only contain the single suffix, but also all of its suffixes,
-     * ensuring suffix-closedness.
+     * For that reasons, the {@code allSuffixes} parameter can be specified to control whether the list returned by
+     * {@link GlobalSuffixFinder#findSuffixes(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)} of the
+     * returned global suffix finder should not only contain the single suffix, but also all of its suffixes, ensuring
+     * suffix-closedness.
      */
     public static <I, D> List<Word<I>> suffixesForLocalOutput(Query<I, D> ceQuery,
                                                               int localSuffixIdx,
@@ -270,7 +270,7 @@ public final class GlobalSuffixFinders {
      * @param oracle
      *         interface to the SUL output
      * @param allSuffixes
-     *         whether or not to include all suffixes of the found suffix
+     *         whether to include all suffixes of the found suffix
      *
      * @return the distinguishing suffixes
      *
@@ -298,7 +298,7 @@ public final class GlobalSuffixFinders {
      * @param oracle
      *         interface to the SUL output
      * @param allSuffixes
-     *         whether or not to include all suffixes of the found suffix
+     *         whether to include all suffixes of the found suffix
      *
      * @return the distinguishing suffixes
      *
@@ -326,7 +326,7 @@ public final class GlobalSuffixFinders {
      * @param oracle
      *         interface to the SUL output
      * @param allSuffixes
-     *         whether or not to include all suffixes of the found suffix
+     *         whether to include all suffixes of the found suffix
      *
      * @return the distinguishing suffixes
      *

@@ -51,7 +51,7 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?, I>, I, Boolean, Bo
      * @param suffixFinder
      *         method to use for analyzing counterexamples
      * @param epsilonRoot
-     *         whether or not to ensure the root of the discrimination tree is always labeled using the empty word.
+     *         whether to ensure the root of the discrimination tree is always labeled using the empty word.
      */
     @GenerateBuilder
     public DTLearnerDFA(Alphabet<I> alphabet,
