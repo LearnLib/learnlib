@@ -98,4 +98,6 @@ public interface MembershipOracle<I, D> extends QueryAnswerer<I, D>, BatchProces
      */
     interface MealyMembershipOracle<I, O> extends MembershipOracle<I, Word<O>> {}
 
+    interface MooreMembershipOracle<I, O> extends MembershipOracle<I, Word<O>> {}
+
 }

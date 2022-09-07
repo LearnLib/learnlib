@@ -88,6 +88,19 @@ public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, 
         return new SplitResult(nodeOld, nodeNew);
     }
 
+    public N split(DSCR discriminator,O Out) {
+        assert this.isLeaf();
+
+        this.children = createChildMap();
+
+        final N nodeOld = addChild(Out, this.data);
+
+        this.data = null;
+        this.discriminator = discriminator;
+
+        return nodeOld;
+    }
+
     public boolean isLeaf() {
         return children == null;
     }

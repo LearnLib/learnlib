@@ -23,6 +23,7 @@ import de.learnlib.filter.statistic.Counter;
 import de.learnlib.util.statistics.SimpleProfiler;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -178,4 +179,15 @@ public class Experiment<A extends Object> {
         }
 
     }
+
+    public static class MooreExperiment<I, O> extends Experiment<MooreMachine<?, I, ?, O>> {
+
+        public MooreExperiment(LearningAlgorithm<? extends MooreMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
+                               EquivalenceOracle<? super MooreMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
+                               Alphabet<I> inputs) {
+            super(learningAlgorithm, equivalenceAlgorithm, inputs);
+        }
+
+    }
+
 }

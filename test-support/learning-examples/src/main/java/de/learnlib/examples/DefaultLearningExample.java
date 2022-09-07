@@ -21,6 +21,7 @@ import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Alphabet;
@@ -82,6 +83,18 @@ public class DefaultLearningExample<I, D, A extends UniversalAutomaton<?, I, ?, 
         }
 
         public DefaultMealyLearningExample(Alphabet<I> alphabet, MealyMachine<?, I, ?, D> referenceAutomaton) {
+            super(alphabet, referenceAutomaton);
+        }
+    }
+
+    public static class DefaultMooreLearningExample<I, D>
+            extends DefaultLearningExample<I, Word<D>, MooreMachine<?, I, ?, D>> implements MooreLearningExample<I, D> {
+
+        public <A extends MooreMachine<?, I, ?, D> & InputAlphabetHolder<I>> DefaultMooreLearningExample(A automaton) {
+            this(automaton.getInputAlphabet(), automaton);
+        }
+
+        public DefaultMooreLearningExample(Alphabet<I> alphabet, MooreMachine<?, I, ?, D> referenceAutomaton) {
             super(alphabet, referenceAutomaton);
         }
     }

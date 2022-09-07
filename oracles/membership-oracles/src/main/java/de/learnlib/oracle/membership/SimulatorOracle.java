@@ -23,6 +23,7 @@ import de.learnlib.util.MQUtil;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.words.Word;
 
 /**
@@ -75,6 +76,14 @@ public class SimulatorOracle<I, D> implements SingleQueryOracle<I, D> {
 
         public MealySimulatorOracle(MealyMachine<?, I, ?, O> mealy) {
             super(mealy);
+        }
+    }
+
+    public static class MooreSimulatorOracle<I, O> extends SimulatorOracle<I, Word<O>>
+            implements SingleQueryOracleMoore<I, O> {
+
+        public MooreSimulatorOracle(MooreMachine<?, I, ?, O> moore) {
+            super(moore);
         }
     }
 
