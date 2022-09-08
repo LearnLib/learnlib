@@ -1,41 +1,60 @@
+/* Copyright (C) 2013-2022 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithms.ttt.moore;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.algorithms.ttt.base.*;
-import de.learnlib.algorithms.ttt.dfa.TTTStateDFA;
-import de.learnlib.algorithms.ttt.mealy.TTTDTNodeMealy;
-import de.learnlib.algorithms.ttt.mealy.TTTHypothesisMealy;
-import de.learnlib.algorithms.ttt.mealy.TTTTransitionMealy;
+import de.learnlib.algorithms.ttt.base.AbstractBaseDTNode;
+import de.learnlib.algorithms.ttt.base.AbstractTTTLearner;
+import de.learnlib.algorithms.ttt.base.BaseTTTDiscriminationTree;
+import de.learnlib.algorithms.ttt.base.OutputInconsistency;
+import de.learnlib.algorithms.ttt.base.TTTState;
+import de.learnlib.algorithms.ttt.base.TTTTransition;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.counterexamples.acex.MealyOutInconsPrefixTransformAcex;
 import de.learnlib.counterexamples.acex.MooreOutInconsPrefixTransformAcex;
 import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
-import de.learnlib.util.mealy.MealyUtil;
-import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.Objects;
-
+/**
+ * A {@link MooreMachine}-based specialization of the TTT learner.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbols type
+ *
+ * @author bayram
+ * @author frohme
+ */
 public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I, ?, O>, I, Word<O>>
         implements MooreLearner<I, O> {
 
     @GenerateBuilder(defaults = AbstractTTTLearner.BuilderDefaults.class)
     protected TTTLearnerMoore(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle, AcexAnalyzer analyzer) {
         super(alphabet,
-                oracle,
-                new TTTHypothesisMoore<>(alphabet),
-                new BaseTTTDiscriminationTree<>(oracle, TTTDTNodeMoore::new),
-                analyzer);
+              oracle,
+              new TTTHypothesisMoore<>(alphabet),
+              new BaseTTTDiscriminationTree<>(oracle, TTTDTNodeMoore::new),
+              analyzer);
 
-        dtree.getRoot().split(Word.epsilon() ,(oracle.answerQuery(Word.epsilon())));
-
+        dtree.getRoot().split(Word.epsilon(), oracle.answerQuery(Word.epsilon()));
     }
 
     @Override
@@ -44,11 +63,11 @@ public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I,
     }
 
     @Override
-    protected Word<O> predictSuccOutcome(TTTTransition<I, Word<O>> trans, AbstractBaseDTNode<I, Word<O>> succSeparator) {
+    protected Word<O> predictSuccOutcome(TTTTransition<I, Word<O>> trans,
+                                         AbstractBaseDTNode<I, Word<O>> succSeparator) {
         TTTStateMoore<I, O> curr = (TTTStateMoore<I, O>) trans.getSource();
         return succSeparator.subtreeLabel(trans.getDTTarget()).prepend(curr.getOutput());
     }
-
 
     @Override
     protected void initializeState(TTTState<I, Word<O>> state) {
@@ -66,10 +85,10 @@ public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I,
         Word<I> suffix = outIncons.suffix;
 
         OutInconsPrefixTransformAcex<I, Word<O>> acex = new MooreOutInconsPrefixTransformAcex<>(suffix,
-                oracle,
-                w -> getDeterministicState(
-                        source,
-                        w).getAccessSequence());
+                                                                                                oracle,
+                                                                                                w -> getDeterministicState(
+                                                                                                        source,
+                                                                                                        w).getAccessSequence());
 
         acex.setEffect(0, outIncons.targetOut);
         Word<O> lastHypOut = computeHypothesisOutput(getAnySuccessor(source, suffix), Word.epsilon());
@@ -77,16 +96,6 @@ public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I,
 
         return acex;
     }
-
-
-    @Override
-    @SuppressWarnings("unchecked")
-    protected boolean refineHypothesisSingle(DefaultQuery<I, Word<O>> ceQuery) {
-        DefaultQuery<I, Word<O>> shortenedCeQuery = shortenCounterExample((TTTHypothesisMoore<I, O>) hypothesis, ceQuery);
-        return shortenedCeQuery != null && super.refineHypothesisSingle(shortenedCeQuery);
-    }
-
-
 
     @Override
     protected Word<O> computeHypothesisOutput(TTTState<I, Word<O>> state, Word<I> suffix) {
@@ -96,7 +105,7 @@ public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I,
         WordBuilder<O> wb = new WordBuilder<>(suffix.length());
 
         wb.append(curr.output);
-        if(suffix.length()==0){
+        if (suffix.length() == 0) {
 
             return wb.toWord();
         }
@@ -110,34 +119,15 @@ public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I,
     }
 
     @Override
-    protected AbstractBaseDTNode<I, Word<O>> createNewNode(AbstractBaseDTNode<I, Word<O>> parent, Word<O> parentOutput) {
+    protected AbstractBaseDTNode<I, Word<O>> createNewNode(AbstractBaseDTNode<I, Word<O>> parent,
+                                                           Word<O> parentOutput) {
         return new TTTDTNodeMoore<>(parent, parentOutput);
     }
 
     @Override
-    public MooreMachine<?, I, ?, O> getHypothesisModel() {
+    @SuppressWarnings("unchecked") // parent class uses the same instance that we pass in the constructor
+    public TTTHypothesisMoore<I, O> getHypothesisModel() {
         return (TTTHypothesisMoore<I, O>) hypothesis;
     }
-
-
-    /*
-    help Methods
-     */
-
-    private static <I, O> @Nullable DefaultQuery<I, Word<O>> shortenCounterExample(MooreMachine<?, I, ?, O> hypothesis,
-                                                                                   DefaultQuery<I, Word<O>> ceQuery) {
-        Word<I> cePrefix = ceQuery.getPrefix(), ceSuffix = ceQuery.getSuffix();
-        Word<O> hypOut = hypothesis.computeSuffixOutput(cePrefix, ceSuffix);
-        Word<O> ceOut = ceQuery.getOutput();
-        assert ceOut.length() == hypOut.length();
-
-
-        int mismatchIdx = MealyUtil.findMismatch(hypOut, ceOut);
-        if (mismatchIdx == -1) {
-            return null;
-        }
-        return new DefaultQuery<>(cePrefix, ceSuffix.prefix(mismatchIdx), ceOut.prefix(mismatchIdx + 1));
-    }
-
 
 }

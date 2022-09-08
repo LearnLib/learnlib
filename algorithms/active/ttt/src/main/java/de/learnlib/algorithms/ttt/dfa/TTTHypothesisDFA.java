@@ -16,38 +16,36 @@
 package de.learnlib.algorithms.ttt.dfa;
 
 import de.learnlib.algorithms.ttt.base.AbstractTTTHypothesis;
-import de.learnlib.algorithms.ttt.base.TTTState;
 import de.learnlib.algorithms.ttt.base.TTTTransition;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.automata.UniversalDeterministicAutomaton.FullIntAbstraction;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 
-public class TTTHypothesisDFA<I> extends AbstractTTTHypothesis<I, Boolean, TTTState<I, Boolean>>
-        implements DFA<TTTState<I, Boolean>, I>,
-                   UniversalDeterministicAutomaton.FullIntAbstraction<TTTState<I, Boolean>, Boolean, Void> {
+public class TTTHypothesisDFA<I> extends AbstractTTTHypothesis<TTTStateDFA<I>, I, Boolean, TTTStateDFA<I>>
+        implements DFA<TTTStateDFA<I>, I>, FullIntAbstraction<TTTStateDFA<I>, Boolean, Void> {
 
     public TTTHypothesisDFA(Alphabet<I> alphabet) {
         super(alphabet);
     }
 
     @Override
-    public TTTState<I, Boolean> getSuccessor(TTTState<I, Boolean> transition) {
+    public TTTStateDFA<I> getSuccessor(TTTStateDFA<I> transition) {
         return transition;
     }
 
     @Override
-    protected TTTState<I, Boolean> mapTransition(TTTTransition<I, Boolean> internalTransition) {
-        return internalTransition.getTarget();
+    protected TTTStateDFA<I> mapTransition(TTTTransition<I, Boolean> internalTransition) {
+        return (TTTStateDFA<I>) internalTransition.getTarget();
     }
 
     @Override
-    protected TTTState<I, Boolean> newState(int alphabetSize, TTTTransition<I, Boolean> parent, int id) {
+    protected TTTStateDFA<I> newState(int alphabetSize, TTTTransition<I, Boolean> parent, int id) {
         return new TTTStateDFA<>(numInputs(), parent, id);
     }
 
     @Override
-    public UniversalDeterministicAutomaton.FullIntAbstraction<TTTState<I, Boolean>, Boolean, Void> fullIntAbstraction(
-            Alphabet<I> alphabet) {
+    public UniversalDeterministicAutomaton.FullIntAbstraction<TTTStateDFA<I>, Boolean, Void> fullIntAbstraction(Alphabet<I> alphabet) {
         if (alphabet.equals(getInputAlphabet())) {
             return this;
         }
@@ -60,15 +58,12 @@ public class TTTHypothesisDFA<I> extends AbstractTTTHypothesis<I, Boolean, TTTSt
     }
 
     @Override
-    public boolean isAccepting(TTTState<I, Boolean> state) {
-        if (!(state instanceof TTTStateDFA)) {
-            throw new IllegalArgumentException("State is not an expected DFA state, but " + state);
-        }
-        return ((TTTStateDFA<I>) state).accepting;
+    public boolean isAccepting(TTTStateDFA<I> state) {
+        return state.accepting;
     }
 
     @Override
-    public Void getTransitionProperty(TTTState<I, Boolean> transition) {
+    public Void getTransitionProperty(TTTStateDFA<I> transition) {
         return null;
     }
 }

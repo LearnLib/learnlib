@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Streams;
-import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.MooreEquivalenceOracle;
@@ -72,14 +71,14 @@ import net.automatalib.words.Word;
                                             withGenerics = {"I", "O"}),
                     interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
 @GenerateRefinement(name = "MooreWMethodEQOracle",
-        generics = {"I", "O"},
-        parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
-                @Generic("I"),
-                @Generic(clazz = Word.class, generics = "O")},
-        parameterMapping = @Map(from = MembershipOracle.class,
-                to = MooreMembershipOracle.class,
-                withGenerics = {"I", "O"}),
-        interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = MooreMembershipOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
 public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 

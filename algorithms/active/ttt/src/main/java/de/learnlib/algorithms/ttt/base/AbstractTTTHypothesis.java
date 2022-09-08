@@ -35,22 +35,29 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * Hypothesis DFA for the {@link AbstractTTTLearner TTT algorithm}.
  *
+ * @param <S>
+ *         state class type
  * @param <I>
  *         input symbol type
+ * @param <D>
+ *         output domain type
+ * @param <T>
+ *         transition type
  *
  * @author Malte Isberner
  */
-public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAutomaton<TTTState<I, D>, I, T>,
-                                                                FiniteAlphabetAutomaton<TTTState<I, D>, I, T>,
-                                                                DeterministicAutomaton.FullIntAbstraction<T>,
-                                                                SupportsGrowingAlphabet<I> {
+public abstract class AbstractTTTHypothesis<S extends TTTState<I, D>, I, D, T>
+        implements DeterministicAutomaton<S, I, T>,
+                   FiniteAlphabetAutomaton<S, I, T>,
+                   DeterministicAutomaton.FullIntAbstraction<T>,
+                   SupportsGrowingAlphabet<I> {
 
-    protected final List<TTTState<I, D>> states = new ArrayList<>();
+    protected final List<S> states = new ArrayList<>();
 
     private final Alphabet<I> alphabet;
     private int alphabetSize;
 
-    private TTTState<I, D> initialState;
+    private S initialState;
 
     /**
      * Constructor.
@@ -64,27 +71,27 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
     }
 
     @Override
-    public TTTState<I, D> getInitialState() {
+    public S getInitialState() {
         return initialState;
     }
 
     @Override
     public T getTransition(int stateId, int symIdx) {
-        TTTState<I, D> state = states.get(stateId);
+        S state = states.get(stateId);
         TTTTransition<I, D> trans = getInternalTransition(state, symIdx);
         return mapTransition(trans);
     }
 
     @Override
-    public T getTransition(TTTState<I, D> state, I input) {
+    public T getTransition(S state, I input) {
         TTTTransition<I, D> trans = getInternalTransition(state, input);
         return trans == null ? null : mapTransition(trans);
     }
 
     /**
      * Retrieves the <i>internal</i> transition (i.e., the {@link TTTTransition} object) for a given state and input.
-     * This method is required since the {@link DFA} interface requires the return value of {@link
-     * #getTransition(TTTState, Object)} to refer to the successor state directly.
+     * This method is required since the {@link DFA} interface requires the return value of
+     * {@link #getTransition(TTTState, Object)} to refer to the successor state directly.
      *
      * @param state
      *         the source state
@@ -110,7 +117,7 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
      *
      * @return the initial state of this newly initialized automaton
      */
-    public TTTState<I, D> initialize() {
+    public S initialize() {
         assert !isInitialized();
 
         initialState = createState(null);
@@ -126,8 +133,8 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
         return initialState != null;
     }
 
-    public TTTState<I, D> createState(TTTTransition<I, D> parent) {
-        TTTState<I, D> state = newState(alphabet.size(), parent, states.size());
+    public S createState(TTTTransition<I, D> parent) {
+        S state = newState(alphabet.size(), parent, states.size());
         states.add(state);
         if (parent != null) {
             parent.makeTree(state);
@@ -135,9 +142,7 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
         return state;
     }
 
-    protected TTTState<I, D> newState(int alphabetSize, TTTTransition<I, D> parent, int id) {
-        return new TTTState<>(alphabetSize, parent, id);
-    }
+    protected abstract S newState(int alphabetSize, TTTTransition<I, D> parent, int id);
 
     @Override
     public Alphabet<I> getInputAlphabet() {
@@ -192,7 +197,7 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
     }
 
     @Override
-    public Collection<TTTState<I, D>> getStates() {
+    public Collection<S> getStates() {
         return Collections.unmodifiableList(states);
     }
 
@@ -216,7 +221,7 @@ public abstract class AbstractTTTHypothesis<I, D, T> implements DeterministicAut
 
         @Override
         public Collection<TTTState<I, D>> getNodes() {
-            return states;
+            return Collections.unmodifiableList(states);
         }
 
         @Override

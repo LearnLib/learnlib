@@ -74,12 +74,12 @@ public abstract class AbstractTTTLearner<A, I, D>
      * discriminators at its root.
      */
     protected final BlockList<I, D> blockList = new BlockList<>();
-    protected AbstractTTTHypothesis<I, D, ?> hypothesis;
+    protected AbstractTTTHypothesis<?, I, D, ?> hypothesis;
     protected BaseTTTDiscriminationTree<I, D> dtree;
 
     protected AbstractTTTLearner(Alphabet<I> alphabet,
                                  MembershipOracle<I, D> oracle,
-                                 AbstractTTTHypothesis<I, D, ?> hypothesis,
+                                 AbstractTTTHypothesis<?, I, D, ?> hypothesis,
                                  BaseTTTDiscriminationTree<I, D> dtree,
                                  AcexAnalyzer analyzer) {
         this.alphabet = alphabet;
@@ -745,7 +745,7 @@ public abstract class AbstractTTTLearner<A, I, D>
 
     protected abstract D computeHypothesisOutput(TTTState<I, D> state, Word<I> suffix);
 
-    public AbstractTTTHypothesis<I, D, ?> getHypothesisDS() {
+    public AbstractTTTHypothesis<?, I, D, ?> getHypothesisDS() {
         return hypothesis;
     }
 
@@ -951,8 +951,7 @@ public abstract class AbstractTTTLearner<A, I, D>
 
         // check if we already have information about the symbol (then the transition is defined) so we don't post
         // redundant queries
-        if (this.hypothesis.getInitialState() != null &&
-            this.hypothesis.getSuccessor(this.hypothesis.getInitialState(), symbol) == null) {
+        if (this.hypothesis.getInitialState() != null && this.hypothesis.getState(Word.fromLetter(symbol)) == null) {
 
             final int newSymbolIdx = this.alphabet.getSymbolIndex(symbol);
 

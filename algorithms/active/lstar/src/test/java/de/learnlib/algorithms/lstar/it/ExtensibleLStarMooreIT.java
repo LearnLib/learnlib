@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2021 TU Dortmund
+/* Copyright (C) 2013-2022 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,13 +21,9 @@ import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstar.closing.ClosingStrategy;
-import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.algorithms.lstar.moore.ExtensibleLStarMooreBuilder;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.AbstractMooreLearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreLearnerVariantList;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;

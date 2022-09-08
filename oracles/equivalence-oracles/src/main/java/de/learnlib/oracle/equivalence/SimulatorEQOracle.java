@@ -54,14 +54,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                             withGenerics = {"?", "I", "?", "O"}),
                     interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
 @GenerateRefinement(name = "MooreSimulatorEQOracle",
-        generics = {"I", "O"},
-        parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
-                @Generic("I"),
-                @Generic(clazz = Word.class, generics = "O")},
-        parameterMapping = @Map(from = UniversalDeterministicAutomaton.class,
-                to = MooreMachine.class,
-                withGenerics = {"?", "I", "?", "O"}),
-        interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = UniversalDeterministicAutomaton.class,
+                                            to = MooreMachine.class,
+                                            withGenerics = {"?", "I", "?", "O"}),
+                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
 public class SimulatorEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>, I, D>
         implements EquivalenceOracle<A, I, D> {
 

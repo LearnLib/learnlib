@@ -19,13 +19,15 @@ import de.learnlib.algorithms.ttt.base.AbstractTTTHypothesis;
 import de.learnlib.algorithms.ttt.base.TTTState;
 import de.learnlib.algorithms.ttt.base.TTTTransition;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.automata.UniversalDeterministicAutomaton.FullIntAbstraction;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-public class TTTHypothesisMealy<I, O> extends AbstractTTTHypothesis<I, Word<O>, TTTTransitionMealy<I, O>> implements
-                                                                                                          MealyMachine<TTTState<I, Word<O>>, I, TTTTransitionMealy<I, O>, O>,
-                                                                                                          UniversalDeterministicAutomaton.FullIntAbstraction<TTTTransitionMealy<I, O>, Void, O> {
+public class TTTHypothesisMealy<I, O>
+        extends AbstractTTTHypothesis<TTTState<I, Word<O>>, I, Word<O>, TTTTransitionMealy<I, O>> implements
+                                                                                                  MealyMachine<TTTState<I, Word<O>>, I, TTTTransitionMealy<I, O>, O>,
+                                                                                                  FullIntAbstraction<TTTTransitionMealy<I, O>, Void, O> {
 
     public TTTHypothesisMealy(Alphabet<I> alphabet) {
         super(alphabet);
@@ -39,6 +41,11 @@ public class TTTHypothesisMealy<I, O> extends AbstractTTTHypothesis<I, Word<O>, 
     @Override
     protected TTTTransitionMealy<I, O> mapTransition(TTTTransition<I, Word<O>> internalTransition) {
         return (TTTTransitionMealy<I, O>) internalTransition;
+    }
+
+    @Override
+    protected TTTState<I, Word<O>> newState(int alphabetSize, TTTTransition<I, Word<O>> parent, int id) {
+        return new TTTState<>(alphabetSize, parent, id);
     }
 
     @Override

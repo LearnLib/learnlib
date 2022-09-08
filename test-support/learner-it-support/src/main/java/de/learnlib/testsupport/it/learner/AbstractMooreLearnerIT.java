@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2021 TU Dortmund
+/* Copyright (C) 2013-2022 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,13 +31,12 @@ import net.automatalib.words.Word;
 import org.testng.annotations.Factory;
 
 /**
- * Abstract integration test for Mealy machine learning algorithms.
+ * Abstract integration test for Moore machine learning algorithms.
  * <p>
- * Mealy machine learning algorithms tested by this integration test are expected to assume membership queries yield the
- * full output word corresponding to the suffix part of the query. If the learning algorithm only expects the last
- * symbol as output, use {@link AbstractMealySymLearnerIT}.
+ * Moore machine learning algorithms tested by this integration test are expected to assume membership queries yield the
+ * full output word corresponding to the suffix part of the query.
  *
- * @author Malte Isberner
+ * @author frohme
  */
 public abstract class AbstractMooreLearnerIT {
 
@@ -62,13 +61,13 @@ public abstract class AbstractMooreLearnerIT {
         addLearnerVariants(alphabet, mqOracle, variants);
 
         return LearnerITUtil.createExampleITCases(example,
-                variants,
-                new SimulatorEQOracle<>(example.getReferenceAutomaton()));
+                                                  variants,
+                                                  new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 
     /**
-     * Adds, for a given setup, all the variants of the Mealy machine learner to be tested to the specified {@link
-     * LearnerVariantList variant list}.
+     * Adds, for a given setup, all the variants of the Mealy machine learner to be tested to the specified
+     * {@link LearnerVariantList variant list}.
      *
      * @param alphabet
      *         the input alphabet

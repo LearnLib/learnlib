@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2021 TU Dortmund
+/* Copyright (C) 2013-2022 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,11 +34,11 @@ public class ExampleRandomMoore<I, O> extends DefaultMooreLearningExample<I, O> 
     @SafeVarargs
     public ExampleRandomMoore(Random random, Alphabet<I> alphabet, int size, O... outputs) {
         super(RandomAutomata.randomDeterministic(random,
-                size,
-                alphabet,
-                Arrays.asList(outputs),
-                Collections.emptyList(),
-                new CompactMoore<>(alphabet)));
+                                                 size,
+                                                 alphabet,
+                                                 Arrays.asList(outputs),
+                                                 Collections.emptyList(),
+                                                 new CompactMoore<>(alphabet)));
     }
 
     @SafeVarargs

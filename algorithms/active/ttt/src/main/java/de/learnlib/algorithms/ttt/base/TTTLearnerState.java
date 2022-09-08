@@ -28,17 +28,17 @@ package de.learnlib.algorithms.ttt.base;
  */
 public class TTTLearnerState<I, D> {
 
-    private final AbstractTTTHypothesis<I, D, ?> hypothesis;
+    private final AbstractTTTHypothesis<?, I, D, ?> hypothesis;
     private final BaseTTTDiscriminationTree<I, D> discriminationTree;
 
-    TTTLearnerState(final AbstractTTTHypothesis<I, D, ?> hypothesis,
+    TTTLearnerState(final AbstractTTTHypothesis<?, I, D, ?> hypothesis,
                     final BaseTTTDiscriminationTree<I, D> discriminationTree) {
 
         this.hypothesis = hypothesis;
         this.discriminationTree = discriminationTree;
     }
 
-    AbstractTTTHypothesis<I, D, ?> getHypothesis() {
+    AbstractTTTHypothesis<?, I, D, ?> getHypothesis() {
         return hypothesis;
     }
 

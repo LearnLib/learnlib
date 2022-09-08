@@ -61,14 +61,14 @@ import net.automatalib.words.WordBuilder;
                                             withGenerics = {"I", "O"}),
                     interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
 @GenerateRefinement(name = "MooreRandomWordsEQOracle",
-        generics = {"I", "O"},
-        parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
-                @Generic("I"),
-                @Generic(clazz = Word.class, generics = "O")},
-        parameterMapping = @Map(from = MembershipOracle.class,
-                to = MooreMembershipOracle.class,
-                withGenerics = {"I", "O"}),
-        interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = MooreMembershipOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
 public class RandomWordsEQOracle<A extends Output<I, D>, I, D> extends AbstractTestWordEQOracle<A, I, D> {
 
     private final Random random;

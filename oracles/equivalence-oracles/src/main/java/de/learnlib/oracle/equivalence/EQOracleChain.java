@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.List;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.EquivalenceOracle.MooreEquivalenceOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.api.oracle.EquivalenceOracle.MooreEquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
 import de.learnlib.buildtool.refinement.annotation.Generic;
@@ -54,14 +54,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                             withGenerics = {"I", "O"}),
                     interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
 @GenerateRefinement(name = "MooreEQOracleChain",
-        generics = {"I", "O"},
-        parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
-                @Generic("I"),
-                @Generic(clazz = Word.class, generics = "O")},
-        parameterMapping = @Map(from = EquivalenceOracle.class,
-                to = MooreEquivalenceOracle.class,
-                withGenerics = {"I", "O"}),
-        interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = EquivalenceOracle.class,
+                                            to = MooreEquivalenceOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
 public class EQOracleChain<A, I, D> implements EquivalenceOracle<A, I, D> {
 
     private final List<EquivalenceOracle<? super A, I, D>> oracles;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2021 TU Dortmund
+/* Copyright (C) 2013-2022 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,9 @@ package de.learnlib.algorithms.ttt.moore.it;
 
 import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
-import de.learnlib.algorithms.ttt.mealy.TTTLearnerMealyBuilder;
 import de.learnlib.algorithms.ttt.moore.TTTLearnerMooreBuilder;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.AbstractMooreLearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreLearnerVariantList;
 import net.automatalib.words.Alphabet;
 import org.testng.annotations.Test;

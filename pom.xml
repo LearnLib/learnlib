@@ -91,6 +91,14 @@ limitations under the License.
             </roles>
         </contributor>
         <contributor>
+            <name>Mohamad Bayram</name>
+            <organization>TU Dortmund, Chair for Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer (Graduate)</role>
+            </roles>
+        </contributor>
+        <contributor>
             <name>Jeroen Meijer</name>
             <email>j.j.g.meijer@utwente.nl</email>
             <organization>University of Twente, Formal Methods and Tools</organization>
