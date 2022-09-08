@@ -20,6 +20,7 @@ import java.util.List;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.util.mealy.MealyUtil;
+import de.learnlib.util.moore.MooreUtil;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -83,7 +84,28 @@ class LearnerVariantListImpl<M, I, D> implements LearnerVariantList<M, I, D> {
                                       int maxRounds) {
             mealyLearnerVariants.addLearnerVariant(name, MealyUtil.wrapSymbolLearner(learner), maxRounds);
         }
+    }
 
+    public static class MooreSymLearnerVariantListImpl<I, O> implements MooreSymLearnerVariantList<I, O> {
+
+        private final MooreLearnerVariantListImpl<I, O> mooreLearnerVariants = new MooreLearnerVariantListImpl<>();
+
+        public MooreLearnerVariantListImpl<I, O> getMooreLearnerVariants() {
+            return mooreLearnerVariants;
+        }
+
+        @Override
+        public void addLearnerVariant(String name,
+                                      LearningAlgorithm<? extends MooreMachine<?, I, ?, O>, I, O> learner) {
+            addLearnerVariant(name, learner, -1);
+        }
+
+        @Override
+        public void addLearnerVariant(String name,
+                                      LearningAlgorithm<? extends MooreMachine<?, I, ?, O>, I, O> learner,
+                                      int maxRounds) {
+            mooreLearnerVariants.addLearnerVariant(name, MooreUtil.wrapSymbolLearner(learner), maxRounds);
+        }
     }
 
 }

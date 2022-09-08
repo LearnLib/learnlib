@@ -48,10 +48,10 @@ public class DTLearnerMoore<I, O> extends AbstractDTLearner<MooreMachine<?, I, ?
     private HypothesisWrapperMoore<I, O> hypWrapper;
 
     @GenerateBuilder(defaults = AbstractDTLearner.BuilderDefaults.class)
-    protected DTLearnerMoore(Alphabet<I> alphabet,
-                             MembershipOracle<I, Word<O>> oracle,
-                             LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
-                             boolean repeatedCounterexampleEvaluation) {
+    public DTLearnerMoore(Alphabet<I> alphabet,
+                          MembershipOracle<I, Word<O>> oracle,
+                          LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
+                          boolean repeatedCounterexampleEvaluation) {
 
         super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new MultiDTree<>(oracle));
         this.hypWrapper = new HypothesisWrapperMoore<>(getHypothesisDS());
@@ -84,5 +84,4 @@ public class DTLearnerMoore<I, O> extends AbstractDTLearner<MooreMachine<?, I, ?
         super.resume(state);
         this.hypWrapper = new HypothesisWrapperMoore<>(getHypothesisDS());
     }
-
 }

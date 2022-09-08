@@ -47,7 +47,7 @@ public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I,
         implements MooreLearner<I, O> {
 
     @GenerateBuilder(defaults = AbstractTTTLearner.BuilderDefaults.class)
-    protected TTTLearnerMoore(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle, AcexAnalyzer analyzer) {
+    public TTTLearnerMoore(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle, AcexAnalyzer analyzer) {
         super(alphabet,
               oracle,
               new TTTHypothesisMoore<>(alphabet),

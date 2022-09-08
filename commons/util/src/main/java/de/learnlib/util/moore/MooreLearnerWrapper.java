@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.util.mealy;
+package de.learnlib.util.moore;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
+import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.words.Word;
 
-final class MealyLearnerWrapper<M extends MealyMachine<?, I, ?, O>, I, O> implements MealyLearner<I, O> {
+final class MooreLearnerWrapper<M extends MooreMachine<?, I, ?, O>, I, O> implements MooreLearner<I, O> {
 
     private final LearningAlgorithm<M, I, O> learner;
 
-    MealyLearnerWrapper(LearningAlgorithm<M, I, O> learner) {
+    MooreLearnerWrapper(LearningAlgorithm<M, I, O> learner) {
         this.learner = learner;
     }
 
@@ -37,7 +37,7 @@ final class MealyLearnerWrapper<M extends MealyMachine<?, I, ?, O>, I, O> implem
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
         M hyp = learner.getHypothesisModel();
-        DefaultQuery<I, O> reducedQry = MealyUtil.reduceCounterExample(hyp, ceQuery);
+        DefaultQuery<I, O> reducedQry = MooreUtil.reduceCounterExample(hyp, ceQuery);
 
         return reducedQry != null && learner.refineHypothesis(reducedQry);
     }

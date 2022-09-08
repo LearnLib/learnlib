@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithms.lstar.moore;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
@@ -46,13 +47,21 @@ public class ExtensibleLStarMoore<I, O>
         extends AbstractExtensibleAutomatonLStar<MooreMachine<?, I, ?, O>, I, Word<O>, Integer, Integer, O, Void, CompactMoore<I, O>>
         implements OTLearnerMoore<I, O> {
 
+    public ExtensibleLStarMoore(Alphabet<I> alphabet,
+                                MembershipOracle<I, Word<O>> oracle,
+                                List<Word<I>> initialSuffixes,
+                                ObservationTableCEXHandler<? super I, ? super Word<O>> cexHandler,
+                                ClosingStrategy<? super I, ? super Word<O>> closingStrategy) {
+        this(alphabet, oracle, Collections.singletonList(Word.epsilon()), initialSuffixes, cexHandler, closingStrategy);
+    }
+
     @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
-    protected ExtensibleLStarMoore(Alphabet<I> alphabet,
-                                   MembershipOracle<I, Word<O>> oracle,
-                                   List<Word<I>> initialPrefixes,
-                                   List<Word<I>> initialSuffixes,
-                                   ObservationTableCEXHandler<? super I, ? super Word<O>> cexHandler,
-                                   ClosingStrategy<? super I, ? super Word<O>> closingStrategy) {
+    public ExtensibleLStarMoore(Alphabet<I> alphabet,
+                                MembershipOracle<I, Word<O>> oracle,
+                                List<Word<I>> initialPrefixes,
+                                List<Word<I>> initialSuffixes,
+                                ObservationTableCEXHandler<? super I, ? super Word<O>> cexHandler,
+                                ClosingStrategy<? super I, ? super Word<O>> closingStrategy) {
         super(alphabet,
               oracle,
               new CompactMoore<>(alphabet),
@@ -60,11 +69,6 @@ public class ExtensibleLStarMoore<I, O>
               LStarMooreUtil.ensureSuffixCompliancy(initialSuffixes),
               cexHandler,
               closingStrategy);
-    }
-
-    @Override
-    public CompactMoore<I, O> getHypothesisModel() {
-        return internalHyp;
     }
 
     @Override

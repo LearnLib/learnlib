@@ -46,7 +46,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class ClassicLStarMoore<I, O>
         extends AbstractExtensibleAutomatonLStar<MooreMachine<?, I, ?, O>, I, @Nullable O, Integer, Integer, O, Void, CompactMoore<I, O>> {
 
-    @GenerateBuilder
+    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
     public ClassicLStarMoore(Alphabet<I> alphabet,
                              MembershipOracle<I, @Nullable O> oracle,
                              List<Word<I>> initialPrefixes,
@@ -57,7 +57,7 @@ public class ClassicLStarMoore<I, O>
               oracle,
               new CompactMoore<>(alphabet),
               initialPrefixes,
-              initialSuffixes,
+              LStarMooreUtil.ensureSuffixCompliancy(initialSuffixes),
               cexHandler,
               closingStrategy);
     }
@@ -69,7 +69,6 @@ public class ClassicLStarMoore<I, O>
 
     @Override
     protected O stateProperty(ObservationTable<I, @Nullable O> table, Row<I> stateRow) {
-
         return table.cellContents(stateRow, 0);
     }
 

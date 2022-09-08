@@ -77,6 +77,8 @@ public interface LearnerVariantList<M, I, D> {
 
     interface MooreLearnerVariantList<I, O> extends LearnerVariantList<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 
+    interface MooreSymLearnerVariantList<I, O> extends LearnerVariantList<MooreMachine<?, I, ?, O>, I, O> {}
+
     interface OneSEVPALearnerVariantList<I> extends LearnerVariantList<OneSEVPA<?, I>, I, Boolean> {}
 
     interface SPALearnerVariantList<I> extends LearnerVariantList<SPA<?, I>, I, Boolean> {}

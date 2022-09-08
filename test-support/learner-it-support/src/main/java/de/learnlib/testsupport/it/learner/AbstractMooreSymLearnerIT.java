@@ -19,58 +19,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.examples.LearningExample.MealyLearningExample;
+import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.examples.LearningExample.MooreLearningExample;
 import de.learnlib.examples.LearningExamples;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
-import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.MealySymLearnerVariantList;
-import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MealySymLearnerVariantListImpl;
-import de.learnlib.util.mealy.MealyUtil;
-import net.automatalib.automata.transducers.MealyMachine;
+import de.learnlib.oracle.membership.SimulatorOracle.MooreSimulatorOracle;
+import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreSymLearnerVariantList;
+import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MooreSymLearnerVariantListImpl;
+import de.learnlib.util.moore.MooreUtil;
+import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import org.testng.annotations.Factory;
 
 /**
- * Abstract integration test for Mealy machine learning algorithms.
+ * Abstract integration test for Moore machine learning algorithms.
  * <p>
  * Mealy machine learning algorithms tested by this integration test are expected to assume membership queries yield
  * only the last symbol of the output word. If the learning algorithm expects the full output word for the suffix part
- * of the query, use {@link AbstractMealyLearnerIT}.
+ * of the query, use {@link AbstractMooreLearnerIT}.
  *
- * @author Malte Isberner
+ * @author frohme
  */
-public abstract class AbstractMealySymLearnerIT {
+public abstract class AbstractMooreSymLearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
-        final List<MealyLearningExample<?, ?>> examples = LearningExamples.createMealyExamples();
+        final List<MooreLearningExample<?, ?>> examples = LearningExamples.createMooreExamples();
         final List<UniversalDeterministicLearnerITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
 
-        for (MealyLearningExample<?, ?> example : examples) {
+        for (MooreLearningExample<?, ?> example : examples) {
             result.addAll(createAllVariantsITCase(example));
         }
 
         return result.toArray();
     }
 
-    private <I, O> List<UniversalDeterministicLearnerITCase<I, Word<O>, MealyMachine<?, I, ?, O>>> createAllVariantsITCase(
-            MealyLearningExample<I, O> example) {
+    private <I, O> List<UniversalDeterministicLearnerITCase<I, Word<O>, MooreMachine<?, I, ?, O>>> createAllVariantsITCase(
+            MooreLearningExample<I, O> example) {
 
         final Alphabet<I> alphabet = example.getAlphabet();
-        final MealyMembershipOracle<I, O> mqOracle = new MealySimulatorOracle<>(example.getReferenceAutomaton());
-        final MealySymLearnerVariantListImpl<I, O> variants = new MealySymLearnerVariantListImpl<>();
-        addLearnerVariants(alphabet, MealyUtil.wrapWordOracle(mqOracle), variants);
+        final MooreMembershipOracle<I, O> mqOracle = new MooreSimulatorOracle<>(example.getReferenceAutomaton());
+        final MooreSymLearnerVariantListImpl<I, O> variants = new MooreSymLearnerVariantListImpl<>();
+        addLearnerVariants(alphabet, MooreUtil.wrapWordOracle(mqOracle), variants);
 
         return LearnerITUtil.createExampleITCases(example,
-                                                  variants.getMealyLearnerVariants(),
+                                                  variants.getMooreLearnerVariants(),
                                                   new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 
     /**
-     * Adds, for a given setup, all the variants of the Mealy machine learner to be tested to the specified {@link
-     * LearnerVariantList variant list}.
+     * Adds, for a given setup, all the variants of the Mealy machine learner to be tested to the specified
+     * {@link LearnerVariantList variant list}.
      *
      * @param alphabet
      *         the input alphabet
@@ -81,5 +81,5 @@ public abstract class AbstractMealySymLearnerIT {
      */
     protected abstract <I, O> void addLearnerVariants(Alphabet<I> alphabet,
                                                       MembershipOracle<I, O> mqOracle,
-                                                      MealySymLearnerVariantList<I, O> variants);
+                                                      MooreSymLearnerVariantList<I, O> variants);
 }
