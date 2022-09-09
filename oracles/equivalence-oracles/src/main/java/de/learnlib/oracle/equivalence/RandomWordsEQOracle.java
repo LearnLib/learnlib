@@ -22,9 +22,11 @@ import java.util.stream.Stream;
 
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.api.oracle.EquivalenceOracle.MooreEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
 import de.learnlib.buildtool.refinement.annotation.Generic;
 import de.learnlib.buildtool.refinement.annotation.Interface;
@@ -32,6 +34,7 @@ import de.learnlib.buildtool.refinement.annotation.Map;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -57,6 +60,15 @@ import net.automatalib.words.WordBuilder;
                                             to = MealyMembershipOracle.class,
                                             withGenerics = {"I", "O"}),
                     interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
+@GenerateRefinement(name = "MooreRandomWordsEQOracle",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = MooreMembershipOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
 public class RandomWordsEQOracle<A extends Output<I, D>, I, D> extends AbstractTestWordEQOracle<A, I, D> {
 
     private final Random random;

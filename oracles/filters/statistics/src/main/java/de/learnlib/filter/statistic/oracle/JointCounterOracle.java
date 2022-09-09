@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
 import de.learnlib.buildtool.refinement.annotation.Generic;
@@ -53,6 +54,13 @@ import net.automatalib.words.Word;
                                             to = MealyMembershipOracle.class,
                                             withGenerics = {"I", "O"}),
                     interfaces = @Interface(clazz = MealyMembershipOracle.class, generics = {"I", "O"}))
+@GenerateRefinement(name = "MooreJointCounterOracle",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = MooreMembershipOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MooreMembershipOracle.class, generics = {"I", "O"}))
 public class JointCounterOracle<I, D> implements MembershipOracle<I, D> {
 
     private final MembershipOracle<I, D> delegate;

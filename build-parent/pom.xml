@@ -60,10 +60,12 @@ limitations under the License.
                             <!-- generated refinements for oracles -->
                             <exclude>de/learnlib/filter/statistic/**/DFA*.class</exclude>
                             <exclude>de/learnlib/filter/statistic/**/Mealy*.class</exclude>
+                            <exclude>de/learnlib/filter/statistic/**/Moore*.class</exclude>
                             <exclude>de/learnlib/oracle/emptiness/DFA*.class</exclude>
                             <exclude>de/learnlib/oracle/emptiness/Mealy*.class</exclude>
                             <exclude>de/learnlib/oracle/equivalence/DFA*.class</exclude>
                             <exclude>de/learnlib/oracle/equivalence/Mealy*.class</exclude>
+                            <exclude>de/learnlib/oracle/equivalence/Moore*.class</exclude>
                             <exclude>de/learnlib/oracle/property/DFA*Chain.class</exclude>
                             <exclude>de/learnlib/oracle/property/Mealy*Chain.class</exclude>
                         </excludes>

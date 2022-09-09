@@ -20,6 +20,7 @@ import java.util.Collection;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.api.oracle.EquivalenceOracle.MooreEquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
 import de.learnlib.buildtool.refinement.annotation.Generic;
@@ -29,6 +30,7 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -51,6 +53,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                             to = MealyMachine.class,
                                             withGenerics = {"?", "I", "?", "O"}),
                     interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
+@GenerateRefinement(name = "MooreSimulatorEQOracle",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = UniversalDeterministicAutomaton.class,
+                                            to = MooreMachine.class,
+                                            withGenerics = {"?", "I", "?", "O"}),
+                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
 public class SimulatorEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>, I, D>
         implements EquivalenceOracle<A, I, D> {
 

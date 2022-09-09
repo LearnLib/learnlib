@@ -17,17 +17,17 @@ While certain features have been stripped for improved modularity, development h
 Currently, the following learning algorithms with respective target models are supported:
 
 
-Algorithm (active)  | Target models        || Algorithm (passive) | Models
+Algorithm (active)  | Target models                || Algorithm (passive) | Models
 --- | --- | --- | --- | ---
-ADT                 | `Mealy`              || OSTIA               | `SST`
-DHC                 | `Mealy`              || RPNI                | `DFA` `Mealy`
-Discrimination Tree | `DFA` `Mealy` `VPDA` || RPNI (EDSM)         | `DFA`
-Kearns & Vazirani   | `DFA` `Mealy`        || RPNI (MDL)          | `DFA`
-L* (incl. variants) | `DFA` `Mealy`
+ADT                 | `Mealy`                      || OSTIA               | `SST`
+DHC                 | `Mealy`                      || RPNI                | `DFA` `Mealy`
+Discrimination Tree | `DFA` `Mealy` `Moore` `VPDA` || RPNI (EDSM)         | `DFA`
+Kearns & Vazirani   | `DFA` `Mealy`                || RPNI (MDL)          | `DFA`
+L* (incl. variants) | `DFA` `Mealy` `Moore`
 NL*                 | `NFA`
 OML                 | `DFA` `Mealy`
 SPA                 | `SPA`
-TTT                 | `DFA` `Mealy` `VPDA`
+TTT                 | `DFA` `Mealy` `Moore` `VPDA`
 
 
 Additionally, LearnLib offers a variety of tools to ease the practical application of automata learning on real-world systems.

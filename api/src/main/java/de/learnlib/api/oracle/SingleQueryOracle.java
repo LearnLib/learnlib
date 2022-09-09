@@ -54,4 +54,6 @@ public interface SingleQueryOracle<I, D> extends MembershipOracle<I, D> {
 
     interface SingleQueryOracleMealy<I, O> extends SingleQueryOracle<I, Word<O>>, MealyMembershipOracle<I, O> {}
 
+    interface SingleQueryOracleMoore<I, O> extends SingleQueryOracle<I, Word<O>>, MooreMembershipOracle<I, O> {}
+
 }
