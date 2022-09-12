@@ -152,6 +152,7 @@ public abstract class AbstractOptimalTTT<M, I, D>
         int i = 0;
         do {
             cur = cur.succ(ce.getSymbol(i++));
+            assert cur != null;
         } while (cur.state().getShortPrefixes().contains(cur) && i < ce.length());
 
         assert !cur.state().getShortPrefixes().contains(cur);

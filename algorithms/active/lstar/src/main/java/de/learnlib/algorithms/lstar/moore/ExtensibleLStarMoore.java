@@ -72,7 +72,7 @@ public class ExtensibleLStarMoore<I, O>
     }
 
     @Override
-    protected MooreMachine<?, I, ?, O> exposeInternalHypothesis() {
+    public MooreMachine<?, I, ?, O> getHypothesisModel() {
         return internalHyp;
     }
 

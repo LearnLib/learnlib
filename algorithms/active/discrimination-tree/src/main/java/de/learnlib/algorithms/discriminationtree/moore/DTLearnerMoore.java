@@ -17,7 +17,6 @@ package de.learnlib.algorithms.discriminationtree.moore;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithms.discriminationtree.AbstractDTLearner;
-import de.learnlib.algorithms.discriminationtree.DTLearnerState;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HTransition;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
@@ -45,17 +44,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class DTLearnerMoore<I, O> extends AbstractDTLearner<MooreMachine<?, I, ?, O>, I, Word<O>, O, Void>
         implements MooreLearner<I, O> {
 
-    private HypothesisWrapperMoore<I, O> hypWrapper;
-
     @GenerateBuilder(defaults = AbstractDTLearner.BuilderDefaults.class)
     public DTLearnerMoore(Alphabet<I> alphabet,
                           MembershipOracle<I, Word<O>> oracle,
                           LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
                           boolean repeatedCounterexampleEvaluation) {
-
         super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new MultiDTree<>(oracle));
-        this.hypWrapper = new HypothesisWrapperMoore<>(getHypothesisDS());
-
     }
 
     @Override
@@ -76,12 +70,6 @@ public class DTLearnerMoore<I, O> extends AbstractDTLearner<MooreMachine<?, I, ?
 
     @Override
     public MooreMachine<?, I, ?, O> getHypothesisModel() {
-        return hypWrapper;
-    }
-
-    @Override
-    public void resume(DTLearnerState<I, Word<O>, O, Void> state) {
-        super.resume(state);
-        this.hypWrapper = new HypothesisWrapperMoore<>(getHypothesisDS());
+        return new HypothesisWrapperMoore<>(getHypothesisDS());
     }
 }

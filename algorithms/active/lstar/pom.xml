@@ -89,12 +89,12 @@ limitations under the License.
         <!-- test -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-equivalence-oracles</artifactId>
+            <artifactId>learnlib-drivers-simulator</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-drivers-simulator</artifactId>
+            <artifactId>learnlib-equivalence-oracles</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

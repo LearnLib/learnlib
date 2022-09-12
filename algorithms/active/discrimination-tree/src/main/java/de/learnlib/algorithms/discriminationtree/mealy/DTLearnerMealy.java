@@ -17,7 +17,6 @@ package de.learnlib.algorithms.discriminationtree.mealy;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithms.discriminationtree.AbstractDTLearner;
-import de.learnlib.algorithms.discriminationtree.DTLearnerState;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HTransition;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
@@ -42,8 +41,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class DTLearnerMealy<I, O> extends AbstractDTLearner<MealyMachine<?, I, ?, O>, I, Word<O>, Void, O>
         implements MealyLearner<I, O> {
 
-    private HypothesisWrapperMealy<I, O> hypWrapper;
-
     /**
      * Constructor.
      *
@@ -60,12 +57,11 @@ public class DTLearnerMealy<I, O> extends AbstractDTLearner<MealyMachine<?, I, ?
                           LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
                           boolean repeatedCounterexampleEvaluation) {
         super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new MultiDTree<>(oracle));
-        this.hypWrapper = new HypothesisWrapperMealy<>(getHypothesisDS());
     }
 
     @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
-        return hypWrapper;
+        return new HypothesisWrapperMealy<>(getHypothesisDS());
     }
 
     @Override
@@ -83,12 +79,6 @@ public class DTLearnerMealy<I, O> extends AbstractDTLearner<MealyMachine<?, I, ?
                 transition.setProperty(output.firstSymbol());
             }
         };
-    }
-
-    @Override
-    public void resume(final DTLearnerState<I, Word<O>, Void, O> state) {
-        super.resume(state);
-        this.hypWrapper = new HypothesisWrapperMealy<>(getHypothesisDS());
     }
 
 }

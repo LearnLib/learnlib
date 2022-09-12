@@ -62,7 +62,7 @@ public class LStarDFATest extends LearningTest {
                     LearningAlgorithm<? extends DFA<?, String>, String, Boolean> learner =
                             new ExtensibleLStarDFA<>(alphabet, dfaOracle, suffixes, handler, strategy);
 
-                    testLearnModel(targetDFA, alphabet, learner, dfaOracle, eqOracle);
+                    testLearnModel(targetDFA, alphabet, learner, eqOracle);
                 }
             }
         }

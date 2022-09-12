@@ -66,12 +66,7 @@ public class ExtensibleLStarMealy<I, O>
     }
 
     @Override
-    public CompactMealy<I, O> getHypothesisModel() {
-        return internalHyp;
-    }
-
-    @Override
-    protected MealyMachine<?, I, ?, O> exposeInternalHypothesis() {
+    public MealyMachine<?, I, ?, O> getHypothesisModel() {
         return internalHyp;
     }
 

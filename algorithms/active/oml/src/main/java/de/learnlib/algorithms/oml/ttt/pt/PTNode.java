@@ -17,6 +17,7 @@ package de.learnlib.algorithms.oml.ttt.pt;
 
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author fhowar
@@ -31,7 +32,7 @@ public interface PTNode<I, D> {
 
     DTLeaf<I, D> state();
 
-    PTNode<I, D> succ(I a);
+    @Nullable PTNode<I, D> succ(I a);
 
     void makeShortPrefix();
 }

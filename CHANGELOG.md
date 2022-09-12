@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The `{DFA,Mealy}CacheOracle`s and the `SULCache` are no longer thread-safe because the intended pipeline of a parallel setup (as suggested by the LearnLib factory methods) consists of a single-threaded cache that delegates to parallel (non-cached) oracles. Here, the synchronization logic only adds unnecessary overhead. In case you want a shared, thread-safe cache (which was currently not conveniently possible to setup) the `learnlib-parallelism` module now contains the `ThreadSafe{DFA,Mealy,SUL}Caches` factories which allow one to construct parallel oracles (whose parameters and return types are tailored towards using our `ParallelOracleBuilders` factory) with a shared cache. See the in-tree `ParallelismExample2` for reference.
 * `SymbolQueryCache` now needs to be created via the `MealyCaches` factory.
 * `AbstractTTTHypothesis` has received an additional type parameter for its state type.
+* Removed the (protected) `exposeInternalHypothesis` method on `AbstractAutomatonLStar`. Sub-classes should directly implement the `getHypothesisModel` method.
 
 
 ### Removed

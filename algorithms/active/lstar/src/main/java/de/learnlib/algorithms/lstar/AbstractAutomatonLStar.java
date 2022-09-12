@@ -72,13 +72,6 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     }
 
     @Override
-    public A getHypothesisModel() {
-        return exposeInternalHypothesis();
-    }
-
-    protected abstract A exposeInternalHypothesis();
-
-    @Override
     public final void startLearning() {
         super.startLearning();
         updateInternalHypothesis();

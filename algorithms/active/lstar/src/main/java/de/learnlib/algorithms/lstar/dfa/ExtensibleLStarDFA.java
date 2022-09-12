@@ -78,7 +78,7 @@ public class ExtensibleLStarDFA<I>
     }
 
     @Override
-    protected DFA<?, I> exposeInternalHypothesis() {
+    public DFA<?, I> getHypothesisModel() {
         return internalHyp;
     }
 

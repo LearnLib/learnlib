@@ -17,7 +17,6 @@ package de.learnlib.algorithms.discriminationtree.dfa;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithms.discriminationtree.AbstractDTLearner;
-import de.learnlib.algorithms.discriminationtree.DTLearnerState;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import de.learnlib.algorithms.discriminationtree.hypothesis.HTransition;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
@@ -42,8 +41,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?, I>, I, Boolean, Boolean, Void> implements DFALearner<I> {
 
-    private HypothesisWrapperDFA<I> hypWrapper;
-
     /**
      * Constructor.
      *
@@ -62,16 +59,12 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?, I>, I, Boolean, Bo
                         LocalSuffixFinder<? super I, ? super Boolean> suffixFinder,
                         boolean repeatedCounterexampleEvaluation,
                         boolean epsilonRoot) {
-        super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new BinaryDTree<>(oracle));
-        this.hypWrapper = new HypothesisWrapperDFA<>(getHypothesisDS());
-        if (epsilonRoot) {
-            getDiscriminationTree().getRoot().split(Word.epsilon(), false, true);
-        }
+        super(alphabet, oracle, suffixFinder, repeatedCounterexampleEvaluation, new BinaryDTree<>(oracle, epsilonRoot));
     }
 
     @Override
     public DFA<?, I> getHypothesisModel() {
-        return hypWrapper;
+        return new HypothesisWrapperDFA<>(getHypothesisDS());
     }
 
     @Override
@@ -88,12 +81,6 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?, I>, I, Boolean, Bo
     @Override
     protected @Nullable Query<I, Boolean> tpQuery(HTransition<I, Boolean, Boolean, Void> transition) {
         return null;
-    }
-
-    @Override
-    public void resume(DTLearnerState<I, Boolean, Boolean, Void> state) {
-        super.resume(state);
-        this.hypWrapper = new HypothesisWrapperDFA<>(this.getHypothesisDS());
     }
 
     public static final class BuilderDefaults {

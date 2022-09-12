@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithms.lstar.moore;
 
-import java.util.Collections;
 import java.util.List;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
@@ -30,7 +29,6 @@ import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link MooreMachine}-based specialization of the classic L* learner.
@@ -44,15 +42,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author frohme
  */
 public class ClassicLStarMoore<I, O>
-        extends AbstractExtensibleAutomatonLStar<MooreMachine<?, I, ?, O>, I, @Nullable O, Integer, Integer, O, Void, CompactMoore<I, O>> {
+        extends AbstractExtensibleAutomatonLStar<MooreMachine<?, I, ?, O>, I, O, Integer, Integer, O, Void, CompactMoore<I, O>> {
 
     @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
     public ClassicLStarMoore(Alphabet<I> alphabet,
-                             MembershipOracle<I, @Nullable O> oracle,
+                             MembershipOracle<I, O> oracle,
                              List<Word<I>> initialPrefixes,
                              List<Word<I>> initialSuffixes,
-                             ObservationTableCEXHandler<? super I, ? super @Nullable O> cexHandler,
-                             ClosingStrategy<? super I, ? super @Nullable O> closingStrategy) {
+                             ObservationTableCEXHandler<? super I, ? super O> cexHandler,
+                             ClosingStrategy<? super I, ? super O> closingStrategy) {
         super(alphabet,
               oracle,
               new CompactMoore<>(alphabet),
@@ -63,38 +61,25 @@ public class ClassicLStarMoore<I, O>
     }
 
     @Override
-    protected MooreMachine<?, I, Integer, O> exposeInternalHypothesis() {
+    public MooreMachine<?, I, Integer, O> getHypothesisModel() {
         return internalHyp;
     }
 
     @Override
-    protected O stateProperty(ObservationTable<I, @Nullable O> table, Row<I> stateRow) {
+    protected O stateProperty(ObservationTable<I, O> table, Row<I> stateRow) {
         return table.cellContents(stateRow, 0);
     }
 
     @Override
-    protected Void transitionProperty(ObservationTable<I, @Nullable O> table, Row<I> stateRow, int inputIdx) {
+    protected Void transitionProperty(ObservationTable<I, O> table, Row<I> stateRow, int inputIdx) {
         return null;
     }
 
     @Override
-    protected SuffixOutput<I, @Nullable O> hypothesisOutput() {
-
-        return new SuffixOutput<I, @Nullable O>() {
-
-            @Override
-            public @Nullable O computeOutput(Iterable<? extends I> input) {
-                return computeSuffixOutput(Collections.emptyList(), input);
-            }
-
-            @Override
-            public @Nullable O computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-                Word<O> wordOut = internalHyp.computeSuffixOutput(prefix, suffix);
-                if (wordOut.isEmpty()) {
-                    return null;
-                }
-                return wordOut.lastSymbol();
-            }
+    protected SuffixOutput<I, O> hypothesisOutput() {
+        return (prefix, suffix) -> {
+            final Word<O> wordOut = internalHyp.computeSuffixOutput(prefix, suffix);
+            return wordOut.lastSymbol();
         };
     }
 }

@@ -70,7 +70,7 @@ public class PTNodeImpl<I, D> implements PTNode<I, D> {
     }
 
     @Override
-    public PTNode<I, D> succ(I a) {
+    public @Nullable PTNode<I, D> succ(I a) {
         return children.get(a);
     }
 

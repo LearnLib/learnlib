@@ -17,6 +17,7 @@ package de.learnlib.datastructure.discriminationtree;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
+import net.automatalib.words.Word;
 
 /**
  * Binary discrimination tree specialization.
@@ -31,7 +32,14 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscr
 public class BinaryDTree<I, D> extends AbstractWordBasedDiscriminationTree<I, Boolean, D> {
 
     public BinaryDTree(MembershipOracle<I, Boolean> oracle) {
+        this(oracle, false);
+    }
+
+    public BinaryDTree(MembershipOracle<I, Boolean> oracle, boolean epsilonRoot) {
         this(null, oracle);
+        if (epsilonRoot) {
+            getRoot().split(Word.epsilon(), false, true);
+        }
     }
 
     public BinaryDTree(D rootData, MembershipOracle<I, Boolean> oracle) {

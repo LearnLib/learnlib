@@ -35,7 +35,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author bayram
  * @author frohme
  */
-public class HypothesisWrapperMoore<I, O>
+class HypothesisWrapperMoore<I, O>
         implements MooreMachine<HState<I, Word<O>, O, Void>, I, HTransition<I, Word<O>, O, Void>, O> {
 
     private final DTLearnerHypothesis<I, Word<O>, O, Void> dtHypothesis;

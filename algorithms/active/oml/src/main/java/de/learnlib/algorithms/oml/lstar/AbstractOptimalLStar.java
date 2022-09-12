@@ -191,12 +191,13 @@ abstract class AbstractOptimalLStar<M, I, D>
     private boolean findInconsistency(Word<I> u1, Word<I> u2) {
         List<D> rowData1 = rows.get(u1);
         List<D> rowData2 = rows.get(u2);
-        if (!rowData1.equals(rowData2)) {
+        if (!Objects.equals(rowData1, rowData2)) {
             return false;
         }
         for (I a : alphabet) {
             rowData1 = rows.get(u1.append(a));
             rowData2 = rows.get(u2.append(a));
+            assert rowData1 != null && rowData2 != null;
             if (!rowData1.equals(rowData2)) {
                 for (int i = 0; i < rowData1.size(); i++) {
                     if (!Objects.equals(rowData1.get(i), rowData2.get(i))) {
@@ -215,6 +216,7 @@ abstract class AbstractOptimalLStar<M, I, D>
 
     private List<Word<I>> getShortPrefixes(Word<I> prefix) {
         List<D> rowData = rows.get(prefix);
+        assert rowData != null;
         return getShortPrefixes(rowData);
     }
 
@@ -233,7 +235,9 @@ abstract class AbstractOptimalLStar<M, I, D>
     }
 
     List<D> getRow(Word<I> key) {
-        return rows.get(key);
+        List<D> row = rows.get(key);
+        assert row != null;
+        return row;
     }
 
     private boolean findUnclosedness() {
