@@ -247,7 +247,7 @@ limitations under the License.
         <metainf-services.version>1.8</metainf-services.version>
         <mockito.version>3.12.4</mockito.version>
         <slf4j.version>1.7.30</slf4j.version>
-        <testng.version>7.1.0</testng.version>
+        <testng.version>7.7.0</testng.version>
         <xstream.version>1.4.19</xstream.version>
 
         <!-- Javadoc links -->
