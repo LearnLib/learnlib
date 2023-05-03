@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,7 +34,7 @@ import net.automatalib.words.Word;
 public class KearnsVaziraniAdapter<I> extends KearnsVaziraniDFA<I> implements AccessSequenceTransformer<I> {
 
     public KearnsVaziraniAdapter(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
-        super(alphabet, oracle, false, AcexAnalyzers.LINEAR_FWD);
+        super(alphabet, oracle, true, AcexAnalyzers.BINARY_SEARCH_FWD);
     }
 
     @Override

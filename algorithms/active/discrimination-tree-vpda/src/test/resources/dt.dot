@@ -1,0 +1,41 @@
+digraph g {
+
+	s0 [shape="oval" label="<ε, ε>"];
+	s1 [shape="oval" label="<ε, a>"];
+	s2 [shape="oval" label="<ε, b>"];
+	s3 [shape="box" label="4"];
+	s4 [shape="oval" label="<ε, b>"];
+	s5 [shape="oval" label="<ε, 1 a x>"];
+	s6 [shape="oval" label="<ε, c>"];
+	s7 [shape="oval" label="<ε, 1 x>"];
+	s8 [shape="box" label="0"];
+	s9 [shape="box" label="5"];
+	s10 [shape="oval" label="<ε, c>"];
+	s11 [shape="box" label="1"];
+	s12 [shape="oval" label="<ε, 1 x>"];
+	s13 [shape="box" label="6"];
+	s14 [shape="box" label="7"];
+	s15 [shape="box" label="9"];
+	s16 [shape="box" label="2"];
+	s17 [shape="box" label="8"];
+	s18 [shape="box" label="3"];
+	s0 -> s1 [label="false"];
+	s0 -> s2 [label="true"];
+	s1 -> s3 [label="false"];
+	s1 -> s4 [label="true"];
+	s2 -> s5 [label="false"];
+	s2 -> s6 [label="true"];
+	s4 -> s7 [label="false"];
+	s4 -> s8 [label="true"];
+	s5 -> s9 [label="false"];
+	s5 -> s10 [label="true"];
+	s6 -> s11 [label="false"];
+	s6 -> s12 [label="true"];
+	s7 -> s13 [label="false"];
+	s7 -> s14 [label="true"];
+	s10 -> s15 [label="false"];
+	s10 -> s16 [label="true"];
+	s12 -> s17 [label="false"];
+	s12 -> s18 [label="true"];
+
+}

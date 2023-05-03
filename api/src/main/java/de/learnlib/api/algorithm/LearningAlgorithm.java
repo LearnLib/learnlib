@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.words.Word;
 
 /**
@@ -76,4 +77,6 @@ public interface LearningAlgorithm<M, I, D> {
     interface DFALearner<I> extends LearningAlgorithm<DFA<?, I>, I, Boolean> {}
 
     interface MealyLearner<I, O> extends LearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>> {}
+
+    interface MooreLearner<I, O> extends LearningAlgorithm<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@ package de.learnlib.algorithms.oml.ttt.pt;
 
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author fhowar
@@ -31,7 +32,7 @@ public interface PTNode<I, D> {
 
     DTLeaf<I, D> state();
 
-    PTNode<I, D> succ(I a);
+    @Nullable PTNode<I, D> succ(I a);
 
     void makeShortPrefix();
 }

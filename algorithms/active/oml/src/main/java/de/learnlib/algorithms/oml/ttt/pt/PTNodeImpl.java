@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -70,7 +70,7 @@ public class PTNodeImpl<I, D> implements PTNode<I, D> {
     }
 
     @Override
-    public PTNode<I, D> succ(I a) {
+    public @Nullable PTNode<I, D> succ(I a) {
         return children.get(a);
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -91,6 +91,10 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
     @Override
     public OneSEVPA<?, I> getHypothesisModel() {
         return hypothesis;
+    }
+
+    public DTree<I> getDiscriminationTree() {
+        return dtree;
     }
 
     protected static <I> void link(DTNode<I> leaf, HypLoc<I> loc) {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,7 +62,7 @@ public class LStarDFATest extends LearningTest {
                     LearningAlgorithm<? extends DFA<?, String>, String, Boolean> learner =
                             new ExtensibleLStarDFA<>(alphabet, dfaOracle, suffixes, handler, strategy);
 
-                    testLearnModel(targetDFA, alphabet, learner, dfaOracle, eqOracle);
+                    testLearnModel(targetDFA, alphabet, learner, eqOracle);
                 }
             }
         }

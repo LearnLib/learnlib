@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ import de.learnlib.api.algorithm.LearningAlgorithm;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Word;
 
@@ -73,6 +74,10 @@ public interface LearnerVariantList<M, I, D> {
     interface MealyLearnerVariantList<I, O> extends LearnerVariantList<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 
     interface MealySymLearnerVariantList<I, O> extends LearnerVariantList<MealyMachine<?, I, ?, O>, I, O> {}
+
+    interface MooreLearnerVariantList<I, O> extends LearnerVariantList<MooreMachine<?, I, ?, O>, I, Word<O>> {}
+
+    interface MooreSymLearnerVariantList<I, O> extends LearnerVariantList<MooreMachine<?, I, ?, O>, I, O> {}
 
     interface OneSEVPALearnerVariantList<I> extends LearnerVariantList<OneSEVPA<?, I>, I, Boolean> {}
 

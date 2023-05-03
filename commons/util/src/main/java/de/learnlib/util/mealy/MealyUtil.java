@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Objects;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -71,7 +72,7 @@ public final class MealyUtil {
 
         while (inIt.hasNext() && outIt.hasNext()) {
             final T trans = hypothesis.getTransition(state, inIt.next());
-            if (trans== null) {
+            if (trans == null) {
                 return NO_MISMATCH;
             }
             final O ceOut = outIt.next();
@@ -116,8 +117,7 @@ public final class MealyUtil {
         return new DefaultQuery<>(cePrefix, ceSuffix.prefix(mismatchIdx + 1), ceOut.getSymbol(mismatchIdx));
     }
 
-    public static <M extends MealyMachine<?, I, ?, O>, I, O> LearningAlgorithm.MealyLearner<I, O> wrapSymbolLearner(
-            LearningAlgorithm<M, I, O> learner) {
+    public static <M extends MealyMachine<?, I, ?, O>, I, O> MealyLearner<I, O> wrapSymbolLearner(LearningAlgorithm<M, I, O> learner) {
         return new MealyLearnerWrapper<>(learner);
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -152,6 +152,7 @@ public abstract class AbstractOptimalTTT<M, I, D>
         int i = 0;
         do {
             cur = cur.succ(ce.getSymbol(i++));
+            assert cur != null;
         } while (cur.state().getShortPrefixes().contains(cur) && i < ce.length());
 
         assert !cur.state().getShortPrefixes().contains(cur);

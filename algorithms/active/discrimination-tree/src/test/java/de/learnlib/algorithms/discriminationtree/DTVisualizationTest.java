@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,10 +46,20 @@ public class DTVisualizationTest extends AbstractVisualizationTest<DTLearnerMeal
 
     @Test
     public void testVisualizeHyp() throws IOException {
-        final String expectedDT = resourceAsString("/hyp.dot");
+        final String expectedHyp = resourceAsString("/hyp.dot");
+
+        final StringWriter actualHyp = new StringWriter();
+        GraphDOT.write(super.learner.getHypothesisDS(), actualHyp);
+
+        Assert.assertEquals(actualHyp.toString(), expectedHyp);
+    }
+
+    @Test
+    public void testVisualizeDT() throws IOException {
+        final String expectedDT = resourceAsString("/dt.dot");
 
         final StringWriter actualDT = new StringWriter();
-        GraphDOT.write(super.learner.getHypothesisDS(), actualDT);
+        GraphDOT.write(super.learner.getDiscriminationTree(), actualDT);
 
         Assert.assertEquals(actualDT.toString(), expectedDT);
     }

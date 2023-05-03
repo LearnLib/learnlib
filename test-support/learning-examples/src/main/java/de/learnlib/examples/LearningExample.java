@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.automata.vpda.OneSEVPA;
@@ -38,6 +39,8 @@ public interface LearningExample<I, A> {
     interface DFALearningExample<I> extends UniversalDeterministicLearningExample<I, DFA<?, I>> {}
 
     interface MealyLearningExample<I, O> extends UniversalDeterministicLearningExample<I, MealyMachine<?, I, ?, O>> {}
+
+    interface MooreLearningExample<I, O> extends UniversalDeterministicLearningExample<I, MooreMachine<?, I, ?, O>> {}
 
     interface SSTLearningExample<I, O>
             extends UniversalDeterministicLearningExample<I, SubsequentialTransducer<?, I, ?, O>> {}

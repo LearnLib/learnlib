@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +43,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, TP>
         implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, Resumable<DTLearnerState<I, D, SP, TP>> {
 
-    protected final Alphabet<I> alphabet;
+    private final Alphabet<I> alphabet;
     private final MembershipOracle<I, D> oracle;
     private final LocalSuffixFinder<? super I, ? super D> suffixFinder;
     private final boolean repeatedCounterexampleEvaluation;

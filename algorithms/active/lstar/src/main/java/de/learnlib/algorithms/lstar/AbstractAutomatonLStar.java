@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -70,13 +70,6 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
         this.internalHyp = internalHyp;
         internalHyp.clear();
     }
-
-    @Override
-    public A getHypothesisModel() {
-        return exposeInternalHypothesis();
-    }
-
-    protected abstract A exposeInternalHypothesis();
 
     @Override
     public final void startLearning() {

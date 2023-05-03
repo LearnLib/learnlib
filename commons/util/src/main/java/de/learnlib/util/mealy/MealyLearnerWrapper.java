@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,12 +16,12 @@
 package de.learnlib.util.mealy;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
-final class MealyLearnerWrapper<M extends MealyMachine<?, I, ?, O>, I, O>
-        implements LearningAlgorithm.MealyLearner<I, O> {
+final class MealyLearnerWrapper<M extends MealyMachine<?, I, ?, O>, I, O> implements MealyLearner<I, O> {
 
     private final LearningAlgorithm<M, I, O> learner;
 

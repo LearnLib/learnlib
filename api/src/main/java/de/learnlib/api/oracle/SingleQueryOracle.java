@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,5 +53,7 @@ public interface SingleQueryOracle<I, D> extends MembershipOracle<I, D> {
     interface SingleQueryOracleDFA<I> extends SingleQueryOracle<I, Boolean>, DFAMembershipOracle<I> {}
 
     interface SingleQueryOracleMealy<I, O> extends SingleQueryOracle<I, Word<O>>, MealyMembershipOracle<I, O> {}
+
+    interface SingleQueryOracleMoore<I, O> extends SingleQueryOracle<I, Word<O>>, MooreMembershipOracle<I, O> {}
 
 }

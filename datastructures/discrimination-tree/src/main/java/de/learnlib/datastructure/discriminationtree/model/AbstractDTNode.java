@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -86,6 +86,19 @@ public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, 
         this.discriminator = discriminator;
 
         return new SplitResult(nodeOld, nodeNew);
+    }
+
+    public N split(DSCR discriminator, O out) {
+        assert this.isLeaf();
+
+        this.children = createChildMap();
+
+        final N nodeOld = addChild(out, this.data);
+
+        this.data = null;
+        this.discriminator = discriminator;
+
+        return nodeOld;
     }
 
     public boolean isLeaf() {

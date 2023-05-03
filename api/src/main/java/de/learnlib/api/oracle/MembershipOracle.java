@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -97,5 +97,7 @@ public interface MembershipOracle<I, D> extends QueryAnswerer<I, D>, BatchProces
      *         output symbol type
      */
     interface MealyMembershipOracle<I, O> extends MembershipOracle<I, Word<O>> {}
+
+    interface MooreMembershipOracle<I, O> extends MembershipOracle<I, Word<O>> {}
 
 }

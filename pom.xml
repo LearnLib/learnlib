@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 <?xml version="1.0" encoding="UTF-8"?>
-Copyright (C) 2013-2022 TU Dortmund
+Copyright (C) 2013-2023 TU Dortmund
 This file is part of LearnLib, http://www.learnlib.de/.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -88,6 +88,14 @@ limitations under the License.
             <email>oliver.bauer@tu-dortmund.de</email>
             <roles>
                 <role>Developer</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>Mohamad Bayram</name>
+            <organization>TU Dortmund, Chair for Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer (Graduate)</role>
             </roles>
         </contributor>
         <contributor>
@@ -210,7 +218,7 @@ limitations under the License.
         <failsafe-plugin.version>3.0.0-M4</failsafe-plugin.version>
         <gpg-plugin.version>1.6</gpg-plugin.version>
         <info-reports-plugin.version>3.1.1</info-reports-plugin.version>
-        <jacoco-plugin.version>0.8.7</jacoco-plugin.version>
+        <jacoco-plugin.version>0.8.8</jacoco-plugin.version>
         <javadoc-plugin.version>3.1.1</javadoc-plugin.version>
         <jsr305.version>3.0.2</jsr305.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
@@ -220,7 +228,7 @@ limitations under the License.
         <scm-publish-plugin.version>3.0.0</scm-publish-plugin.version>
         <site-plugin.version>3.9.1</site-plugin.version>
         <source-plugin.version>3.2.1</source-plugin.version>
-        <spotbugs-plugin.version>4.2.2</spotbugs-plugin.version>
+        <spotbugs-plugin.version>4.7.3.4</spotbugs-plugin.version>
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
         <tidy-pom.version>1.1.0</tidy-pom.version>
 
@@ -237,7 +245,7 @@ limitations under the License.
         <jmockit.version>1.49</jmockit.version>
         <logback.version>1.2.9</logback.version>
         <metainf-services.version>1.8</metainf-services.version>
-        <mockito.version>3.12.4</mockito.version>
+        <mockito.version>4.11.0</mockito.version>
         <slf4j.version>1.7.30</slf4j.version>
         <testng.version>7.1.0</testng.version>
         <xstream.version>1.4.19</xstream.version>
@@ -1266,6 +1274,15 @@ limitations under the License.
             </activation>
             <properties>
                 <cacio.version>1.11</cacio.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>jdk17-compat</id>
+            <activation>
+                <jdk>17</jdk>
+            </activation>
+            <properties>
+                <cacio.version>1.17</cacio.version>
             </properties>
         </profile>
         <profile>

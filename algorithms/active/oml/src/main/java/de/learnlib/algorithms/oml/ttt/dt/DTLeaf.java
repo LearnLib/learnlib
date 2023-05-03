@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -73,8 +73,11 @@ public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
         I bestA = null;
         int vLength = 0;
         for (I a : tree.getAlphabet()) {
-            DTLeaf<I, D> ua1 = u1.succ(a).state();
-            DTLeaf<I, D> ua2 = u2.succ(a).state();
+            PTNode<I, D> s1 = u1.succ(a);
+            PTNode<I, D> s2 = u2.succ(a);
+            assert s1 != null && s2 != null;
+            DTLeaf<I, D> ua1 = s1.state();
+            DTLeaf<I, D> ua2 = s2.state();
 
             if (ua1 != ua2) {
                 int l = ((DTInnerNode<I, ?>) lca(ua1, ua2)).suffix().word().length();
@@ -104,8 +107,11 @@ public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
     }
 
     public void split(PTNode<I, D> u1, PTNode<I, D> u2, I a) {
-        DTLeaf<I, D> ua1 = u1.succ(a).state();
-        DTLeaf<I, D> ua2 = u2.succ(a).state();
+        PTNode<I, D> s1 = u1.succ(a);
+        PTNode<I, D> s2 = u2.succ(a);
+        assert s1 != null && s2 != null;
+        DTLeaf<I, D> ua1 = s1.state();
+        DTLeaf<I, D> ua2 = s2.state();
         AbstractDTNode<I, D> n = lca(ua1, ua2);
         STNode<I> av;
         if (n instanceof DTInnerNode) {

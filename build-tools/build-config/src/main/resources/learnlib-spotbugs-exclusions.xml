@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (C) 2013-2022 TU Dortmund
+Copyright (C) 2013-2023 TU Dortmund
 This file is part of LearnLib, http://www.learnlib.de/.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,11 +22,10 @@ limitations under the License.
         <Class name="de.learnlib.mapper.api.SULMapper$MappedException"/>
     </Match>
     <Match>
-        <!-- TODO: mostly due to performance. However, usage should be checked again -->
-        <Bug pattern="EI_EXPOSE_REP2"/>
-        <Or>
-            <Class name="de.learnlib.drivers.reflect.MethodInput"/>
-        </Or>
+        <!-- Passing references is mostly fine for performance reasons. Since we do not deal with security-related code,
+             we can leave to the developer's choice
+        -->
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
     </Match>
     <Match>
         <!-- TODO: SpotBugs seem to incorrectly infer type annotations, https://github.com/spotbugs/spotbugs/issues/643
@@ -97,13 +96,6 @@ limitations under the License.
                     <Method name="resiftAffectedTransitions"/>
                 </Or>
             </And>
-        </Or>
-    </Match>
-    <Match>
-        <!-- Still a false-positive on Java 11. See https://github.com/spotbugs/spotbugs/issues/259 -->
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
-        <Or>
-            <Class name="de.learnlib.examples.dfa.DFABenchmarks"/>
         </Or>
     </Match>
 </FindBugsFilter>

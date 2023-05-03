@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -66,12 +66,7 @@ public class ExtensibleLStarMealy<I, O>
     }
 
     @Override
-    public CompactMealy<I, O> getHypothesisModel() {
-        return internalHyp;
-    }
-
-    @Override
-    protected MealyMachine<?, I, ?, O> exposeInternalHypothesis() {
+    public MealyMachine<?, I, ?, O> getHypothesisModel() {
         return internalHyp;
     }
 

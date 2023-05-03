@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,6 @@ import de.learnlib.algorithms.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstar.closing.ClosingStrategy;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.words.Alphabet;
@@ -57,7 +56,6 @@ public class LearningTest {
             UniversalDeterministicAutomaton<?, I, ?, ?, ?> target,
             Alphabet<I> alphabet,
             LearningAlgorithm<M, I, D> learner,
-            MembershipOracle<I, D> oracle,
             EquivalenceOracle<? super M, I, D> eqOracle) {
         int maxRounds = target.size();
 

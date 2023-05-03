@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2022 TU Dortmund
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of LearnLib, http://www.learnlib.de/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,7 +37,7 @@ import org.testng.annotations.Factory;
  * <p>
  * Mealy machine learning algorithms tested by this integration test are expected to assume membership queries yield
  * only the last symbol of the output word. If the learning algorithm expects the full output word for the suffix part
- * of the query, use {@link AbstractMealySymLearnerIT}.
+ * of the query, use {@link AbstractMealyLearnerIT}.
  *
  * @author Malte Isberner
  */
