@@ -29,6 +29,7 @@ public class TTTLearnerMealyIT extends AbstractMealyLearnerIT {
 
     @Override
     protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,
+                                             int targetSize,
                                              MealyMembershipOracle<I, O> mqOracle,
                                              MealyLearnerVariantList<I, O> variants) {
 

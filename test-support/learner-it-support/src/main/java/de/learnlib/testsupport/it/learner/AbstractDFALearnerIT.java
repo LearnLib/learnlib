@@ -19,14 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
-import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.examples.LearningExample.DFALearningExample;
-import de.learnlib.examples.LearningExample.MealyLearningExample;
 import de.learnlib.examples.LearningExamples;
 import de.learnlib.oracle.equivalence.DFASimulatorEQOracle;
-import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
-import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.DFALearnerVariantListImpl;
@@ -79,6 +75,8 @@ public abstract class AbstractDFALearnerIT {
      *
      * @param alphabet
      *         the input alphabet
+     * @param targetSize
+     *         the size of the target automaton
      * @param mqOracle
      *         the membership oracle
      * @param variants

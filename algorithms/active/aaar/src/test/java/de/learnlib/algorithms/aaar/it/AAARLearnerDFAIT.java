@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2023 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithms.aaar.it;
 
 import java.util.ArrayList;
@@ -10,6 +25,10 @@ import de.learnlib.algorithms.aaar.AAARLearnerDFA;
 import de.learnlib.algorithms.aaar.LearnerProvider;
 import de.learnlib.algorithms.aaar.abstraction.AbstractionTree;
 import de.learnlib.algorithms.discriminationtree.dfa.DTLearnerDFA;
+import de.learnlib.algorithms.kv.dfa.KearnsVaziraniDFA;
+import de.learnlib.algorithms.lstar.dfa.ClassicLStarDFA;
+import de.learnlib.algorithms.oml.ttt.dfa.OptimalTTTDFA;
+import de.learnlib.algorithms.rivestschapire.RivestSchapireDFA;
 import de.learnlib.algorithms.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
@@ -38,15 +57,26 @@ public class AAARLearnerDFAIT extends AbstractDFALearnerIT {
                                           DFAMembershipOracle<I> mqOracle,
                                           DFALearnerVariantList<I> variants) {
 
+        final int maxRounds = alphabet.size() + targetSize;
+        final I firstSym = alphabet.getSymbol(0);
+
+        LearnerProvider<ClassicLStarDFA<I>, DFA<?, I>, I, Boolean> lstar = ClassicLStarDFA::new;
+        LearnerProvider<RivestSchapireDFA<I>, DFA<?, I>, I, Boolean> rs = RivestSchapireDFA::new;
+        LearnerProvider<KearnsVaziraniDFA<I>, DFA<?, I>, I, Boolean> kv =
+                (alph, mqo) -> new KearnsVaziraniDFA<>(alph, mqo, true, AcexAnalyzers.BINARY_SEARCH_FWD);
         LearnerProvider<DTLearnerDFA<I>, DFA<?, I>, I, Boolean> dt =
                 (alph, mqo) -> new DTLearnerDFA<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true, true);
         LearnerProvider<TTTLearnerDFA<I>, DFA<?, I>, I, Boolean> ttt =
                 (alph, mqo) -> new TTTLearnerDFA<>(alph, mqo, AcexAnalyzers.BINARY_SEARCH_FWD);
+        LearnerProvider<OptimalTTTDFA<I>, DFA<?, I>, I, Boolean> oml =
+                (alph, mqo) -> new OptimalTTTDFA<>(alph, mqo, mqo);
 
-        variants.addLearnerVariant("DT",
-                                   new LearnerWrapper<>(dt, mqOracle, alphabet.getSymbol(0), Function.identity()));
-        variants.addLearnerVariant("TTT",
-                                   new LearnerWrapper<>(ttt, mqOracle, alphabet.getSymbol(0), Function.identity()));
+        variants.addLearnerVariant("L*", new LearnerWrapper<>(lstar, mqOracle, firstSym), maxRounds);
+        variants.addLearnerVariant("RS", new LearnerWrapper<>(rs, mqOracle, firstSym), maxRounds);
+        variants.addLearnerVariant("KV", new LearnerWrapper<>(kv, mqOracle, firstSym), maxRounds);
+        variants.addLearnerVariant("DT", new LearnerWrapper<>(dt, mqOracle, firstSym), maxRounds);
+        variants.addLearnerVariant("TTT", new LearnerWrapper<>(ttt, mqOracle, firstSym), maxRounds);
+        variants.addLearnerVariant("OML", new LearnerWrapper<>(oml, mqOracle, firstSym), maxRounds);
     }
 
     @Override
@@ -58,16 +88,15 @@ public class AAARLearnerDFAIT extends AbstractDFALearnerIT {
      * In order to generate counterexamples for the abstract hypothesis given a concrete source model, we need the
      * abstraction tree. The following wrappers make sure that we can access it. Note that in general one would have to
      * separate between abstract and concrete input symbols but in this specific situation we exploit the fact that both
-     *  domains coincide.
+     * domains coincide.
      */
     private static class LearnerWrapper<L extends DFALearner<I> & SupportsGrowingAlphabet<I>, I>
             extends AAARLearnerDFA<L, I, I> {
 
-        public LearnerWrapper(LearnerProvider<L, DFA<?, I>, I, Boolean> learnerProvider,
-                              MembershipOracle<I, Boolean> o,
-                              I initialConcrete,
-                              Function<I, I> abstractor) {
-            super(learnerProvider, o, initialConcrete, abstractor);
+        LearnerWrapper(LearnerProvider<L, DFA<?, I>, I, Boolean> learnerProvider,
+                       MembershipOracle<I, Boolean> mqo,
+                       I initialConcrete) {
+            super(learnerProvider, mqo, initialConcrete, Function.identity());
         }
 
         @Override
@@ -82,12 +111,12 @@ public class AAARLearnerDFAIT extends AbstractDFALearnerIT {
 
         private final AbstractionTree<I, I, Boolean> tree;
 
-        public HypothesisWrapper(CompactDFA<I> other, AbstractionTree<I, I, Boolean> tree) {
+        HypothesisWrapper(CompactDFA<I> other, AbstractionTree<I, I, Boolean> tree) {
             super(other);
             this.tree = tree;
         }
 
-        public AbstractionTree<I, I, Boolean> getTree() {
+        AbstractionTree<I, I, Boolean> getTree() {
             return tree;
         }
     }
@@ -97,7 +126,7 @@ public class AAARLearnerDFAIT extends AbstractDFALearnerIT {
         private final DFALearningExample<I> example;
         private final List<DefaultQuery<I, Boolean>> tests;
 
-        public EQWrapper(DFALearningExample<I> example) {
+        EQWrapper(DFALearningExample<I> example) {
             this.example = example;
             final Alphabet<I> alphabet = example.getAlphabet();
             final DFA<?, I> dfa = example.getReferenceAutomaton();

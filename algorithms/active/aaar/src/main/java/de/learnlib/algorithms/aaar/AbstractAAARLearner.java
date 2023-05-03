@@ -1,12 +1,23 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* Copyright (C) 2013-2023 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 package de.learnlib.algorithms.aaar;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -70,7 +81,6 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
 
         for (int i = 0; i < input.size(); i++) {
             CI cur = input.getSymbol(i);
-            //            AbstractionTree<AI, CI, D> tree = evolving.get(initial.getAbstractSymbol(cur));
             // lift & lower
             AI a = tree.getAbstractSymbol(cur);
             CI r = tree.getRepresentative(a);
@@ -80,21 +90,20 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
             Word<CI> test1 = prefix.append(cur).concat(suffix);
             Word<CI> test2 = prefix.append(r).concat(suffix);
 
+            // TODO pref/suff split?
             D out1 = oracle.answerQuery(test1);
             D out2 = oracle.answerQuery(test2);
 
-            if (out1.equals(out2)) {
+            if (!Objects.equals(out1, out2)) { // add new abstraction
+                AI newA = tree.splitLeaf(r, cur, prefix, suffix, out2, out1);
+                abs.addSymbol(newA);
+                rep.addSymbol(cur);
+                learner.addAlphabetSymbol(cur);
+                return true;
+            } else {
                 prefix = prefix.append(r);
                 wb.append(r);
-                continue;
             }
-
-            // add new abstraction
-            AI newA = tree.splitLeaf(r, cur, prefix, suffix, out2, out1);
-            abs.addSymbol(newA);
-            rep.addSymbol(cur);
-            learner.addAlphabetSymbol(cur);
-            return true;
         }
 
         final DefaultQuery<CI, D> concreteCE = new DefaultQuery<>(wb.toWord(0, query.getPrefix().length()),
@@ -123,13 +132,13 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
         }
 
         // transitions
-        for (S2 s : states.keySet()) {
+        for (Entry<S2, S1> e : states.entrySet()) {
             for (CI r : rep) {
                 AI a = tree.getAbstractSymbol(r);
-                tgt.setTransition(s,
+                tgt.setTransition(e.getKey(),
                                   a,
-                                  statesRev.get(src.getSuccessor(states.get(s), r)),
-                                  src.getTransitionProperty(states.get(s), r));
+                                  statesRev.get(src.getSuccessor(e.getValue(), r)),
+                                  src.getTransitionProperty(e.getValue(), r));
             }
         }
     }

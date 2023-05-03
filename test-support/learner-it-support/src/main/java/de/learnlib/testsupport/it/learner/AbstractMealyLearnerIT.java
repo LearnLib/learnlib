@@ -25,7 +25,6 @@ import de.learnlib.examples.LearningExample.MealyLearningExample;
 import de.learnlib.examples.LearningExample.StateLocalInputMealyLearningExample;
 import de.learnlib.examples.LearningExamples;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
-import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.equivalence.mealy.StateLocalInputMealySimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
@@ -70,10 +69,11 @@ public abstract class AbstractMealyLearnerIT {
             MealyLearningExample<I, O> example) {
 
         final Alphabet<I> alphabet = example.getAlphabet();
-        final MealyMembershipOracle<I, O> mqOracle = new MealySimulatorOracle<>(example.getReferenceAutomaton());
+        final MealyMachine<?, I, ?, O> reference = example.getReferenceAutomaton();
+        final MealyMembershipOracle<I, O> mqOracle = new MealySimulatorOracle<>(reference);
         final MealyEquivalenceOracle<I, O> eqOracle = getEquivalenceOracle(example);
         final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
-        addLearnerVariants(alphabet, mqOracle, variants);
+        addLearnerVariants(alphabet, reference.size(), mqOracle, variants);
 
         return LearnerITUtil.createExampleITCases(example, variants, eqOracle);
     }
@@ -92,7 +92,7 @@ public abstract class AbstractMealyLearnerIT {
         final MealyMembershipOracle<I, O> mqOracle =
                 new StateLocalInputSULOracle<>(new StateLocalInputMealySimulatorSUL<>(partialRef), undefinedOutput);
         final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
-        addLearnerVariants(alphabet, mqOracle, variants);
+        addLearnerVariants(alphabet, reference.size(), mqOracle, variants);
 
         final MealyEquivalenceOracle<I, O> eqOracle = getEquivalenceOracle(example);
 
@@ -116,12 +116,15 @@ public abstract class AbstractMealyLearnerIT {
      *
      * @param alphabet
      *         the input alphabet
+     * @param targetSize
+     *         the size of the target automaton
      * @param mqOracle
      *         the membership oracle
      * @param variants
      *         list to add the learner variants to
      */
     protected abstract <I, O> void addLearnerVariants(Alphabet<I> alphabet,
+                                                      int targetSize,
                                                       MealyMembershipOracle<I, O> mqOracle,
                                                       MealyLearnerVariantList<I, O> variants);
 }

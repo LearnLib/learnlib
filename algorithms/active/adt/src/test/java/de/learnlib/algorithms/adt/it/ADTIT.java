@@ -38,6 +38,7 @@ public class ADTIT extends AbstractMealyLearnerIT {
 
     @Override
     protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,
+                                             int targetSize,
                                              MembershipOracle.MealyMembershipOracle<I, O> mqOracle,
                                              LearnerVariantList.MealyLearnerVariantList<I, O> variants) {
 
