@@ -11,7 +11,7 @@ jobs:
     name: "Tests and Analysis (JDK: ${{ matrix.jdk }})"
     strategy:
       matrix:
-        jdk: [ 1.8, 11 ]
+        jdk: [ 1.8, 11, 17 ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -54,7 +54,7 @@ jobs:
     needs: [ tests-and-analysis ]
     strategy:
       matrix:
-        jdk: [ 1.8, 11 ]
+        jdk: [ 1.8, 11, 17 ]
         os: [ ubuntu-latest, windows-latest, macOS-latest ]
     runs-on: ${{ matrix.os }}
     steps:
