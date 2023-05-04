@@ -19,12 +19,15 @@ import java.util.Collections;
 
 import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithms.lstar.closing.ClosingStrategies;
+import de.learnlib.algorithms.lstar.mealy.ClassicLStarMealy;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealy;
+import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine;
 import de.learnlib.examples.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
+import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.GrowingMapAlphabet;
@@ -73,5 +76,35 @@ public class ClassicLStarMealyGrowingAlphabetTest {
 
         hyp = learner.getHypothesisModel();
         Assert.assertEquals(ce.getOutput(), hyp.computeOutput(ce.getInput()));
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    public void testClassicLStar() {
+        final ExampleCoffeeMachine example = ExampleCoffeeMachine.createExample();
+        final MealyMachine<?, Input, ?, String> automaton = example.getReferenceAutomaton();
+
+        final GrowingMapAlphabet<Input> alphabet = new GrowingMapAlphabet<>();
+        alphabet.add(Input.WATER);
+        final MealyMembershipOracle<Input, String> mqo = new MealySimulatorOracle<>(automaton);
+        final MembershipOracle<Input, String> smqo = MealyUtil.wrapWordOracle(mqo);
+
+        final ClassicLStarMealy<Input, String> learner = new ClassicLStarMealy<>(alphabet, smqo);
+
+        learner.startLearning();
+        learner.addAlphabetSymbol(Input.BUTTON);
+        learner.addAlphabetSymbol(Input.POD);
+
+        MealyMachine<?, Input, ?, String> hyp = learner.getHypothesisModel();
+
+        final DefaultQuery<Input, String> ce =
+                new DefaultQuery<>(Word.fromSymbols(Input.WATER, Input.POD, Input.POD, Input.BUTTON), "coffee!");
+
+        Assert.assertNotEquals(ce.getOutput(), hyp.computeOutput(ce.getInput()).lastSymbol());
+
+        boolean refined = learner.refineHypothesis(ce);
+        Assert.assertTrue(refined);
+
+        hyp = learner.getHypothesisModel();
+        Assert.assertEquals(ce.getOutput(), hyp.computeOutput(ce.getInput()).lastSymbol());
     }
 }
