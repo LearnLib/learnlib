@@ -98,9 +98,9 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
     @Test
     public void testGrowingAlphabet() {
         final GrowingAlphabet<I> alphabet = new GrowingMapAlphabet<>(initialAlphabet);
-        final L leaner = getLearner(oracle, alphabet);
+        final L learner = getLearner(oracle, alphabet);
 
-        testAlphabet(alphabet, leaner, Collections.singletonList(leaner::addAlphabetSymbol));
+        testAlphabet(alphabet, learner, Collections.singletonList(learner::addAlphabetSymbol));
     }
 
     @Test
