@@ -21,6 +21,8 @@ import java.util.List;
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithms.lstar.AbstractExtensibleAutomatonLStar;
 import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandler;
+import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandlers;
+import de.learnlib.algorithms.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstar.closing.ClosingStrategy;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.observationtable.ObservationTable;
@@ -55,6 +57,22 @@ public class ClassicLStarMealy<I, O>
      *         the learning alphabet
      * @param oracle
      *         the (Mealy) oracle
+     */
+    public ClassicLStarMealy(Alphabet<I> alphabet, MembershipOracle<I, O> oracle) {
+        this(alphabet, oracle, ObservationTableCEXHandlers.CLASSIC_LSTAR, ClosingStrategies.CLOSE_FIRST);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet
+     * @param oracle
+     *         the (Mealy) oracle
+     * @param cexHandler
+     *         the counterexample handler
+     * @param closingStrategy
+     *         the closing strategy
      */
     public ClassicLStarMealy(Alphabet<I> alphabet,
                              MembershipOracle<I, O> oracle,
@@ -98,6 +116,22 @@ public class ClassicLStarMealy<I, O>
     @Override
     protected O transitionProperty(ObservationTable<I, O> table, Row<I> stateRow, int inputIdx) {
         return table.cellContents(stateRow, inputIdx);
+    }
+
+    @Override
+    public void addAlphabetSymbol(I symbol) {
+        /*
+         * This implementation extracts the transition outputs from the observation table. Therefore, it assumes that
+         * the i-th input symbol is the i-th suffix of the observation table. When adding new input symbols (and
+         * therefore new suffixes) this mapping may be broken because of other suffixes that have been added in previous
+         * refinement steps.
+         *
+         * Until this mapping is fixed, the code cannot reliably add new input symbols. Instead of running into issues
+         * way into the learning process, fail-fast here.
+         */
+        throw new UnsupportedOperationException(
+                "This implementation does not correct support adding new alphabet symbols. " +
+                "Use the ExtensibleLStarMealy implementation with the classic counterexample handler instead.");
     }
 
     @Override

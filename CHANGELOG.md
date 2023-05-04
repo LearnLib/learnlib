@@ -32,6 +32,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Removed (unused) `de.learnlib.datastructure.pta.pta.PropertyConflictException`, `de.learnlib.datastructure.observationtable.InvalidRowException`.
 
 
+### Fixed
+
+* Fixed a bug when adding new alphabet symbols to LStar-based learners which use a counterexample handler that requires consistency checks.
+
+
 ## [0.16.0](https://github.com/LearnLib/learnlib/releases/tag/learnlib-0.16.0) - 2020-10-12
 
 [Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.15.0...learnlib-0.16.0)
