@@ -87,6 +87,15 @@ public class ExtensibleLStarMealy<I, O>
         return outputTable.get(transRow.getRowId() - 1);
     }
 
+    @Override
+    public void addAlphabetSymbol(I symbol) {
+        if (this.cexHandler.needsConsistencyCheck()) {
+            super.addGlobalSuffixes(Collections.singleton(Word.fromLetter(symbol)));
+        }
+
+        super.addAlphabetSymbol(symbol);
+    }
+
     protected void updateOutputs() {
         int numOutputs = outputTable.size();
         int numTransRows = table.numberOfRows() - 1;
