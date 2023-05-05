@@ -21,17 +21,30 @@ class Node {
 
     static class InnerNode<CI, D> extends Node {
 
-        Word<CI> prefix;
-        Word<CI> suffix;
-        D out;
+        final Word<CI> prefix;
+        final Word<CI> suffix;
+        final D out;
 
         Node equalsNext;
         Node otherNext;
+
+        InnerNode(Word<CI> prefix, Word<CI> suffix, D out, Node equalsNext, Node otherNext) {
+            this.prefix = prefix;
+            this.suffix = suffix;
+            this.out = out;
+            this.equalsNext = equalsNext;
+            this.otherNext = otherNext;
+        }
     }
 
     static class Leaf<AI, CI> extends Node {
 
-        AI abs;
-        CI rep;
+        final AI abs;
+        final CI rep;
+
+        Leaf(AI abs, CI rep) {
+            this.abs = abs;
+            this.rep = rep;
+        }
     }
 }

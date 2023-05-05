@@ -47,7 +47,7 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
     private final AbstractionTree<AI, CI, D> tree;
 
     private final GrowingAlphabet<CI> rep;
-    protected final GrowingAlphabet<AI> abs;
+    private final GrowingAlphabet<AI> abs;
 
     public AbstractAAARLearner(LearnerProvider<L, CM, CI, D> learnerProvider,
                                MembershipOracle<CI, D> o,
@@ -73,29 +73,27 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
     @Override
     public boolean refineHypothesis(DefaultQuery<CI, D> query) {
 
-        Word<CI> input = query.getInput();
-        Word<CI> prefix = Word.epsilon();
-        Word<CI> suffix;
+        final Word<CI> input = query.getInput();
+        final WordBuilder<CI> wb = new WordBuilder<>(input.size());
 
-        WordBuilder<CI> wb = new WordBuilder<>(input.size());
+        Word<CI> prefix = Word.epsilon();
 
         for (int i = 0; i < input.size(); i++) {
-            CI cur = input.getSymbol(i);
+            final CI cur = input.getSymbol(i);
             // lift & lower
-            AI a = tree.getAbstractSymbol(cur);
-            CI r = tree.getRepresentative(a);
+            final AI a = tree.getAbstractSymbol(cur);
+            final CI r = tree.getRepresentative(a);
 
-            suffix = input.suffix(input.size() - i - 1);
+            final Word<CI> suffix = input.suffix(input.size() - i - 1);
 
-            Word<CI> test1 = prefix.append(cur).concat(suffix);
-            Word<CI> test2 = prefix.append(r).concat(suffix);
+            final Word<CI> testOld = prefix.append(r).concat(suffix);
+            final Word<CI> testNew = prefix.append(cur).concat(suffix);
 
-            // TODO pref/suff split?
-            D out1 = oracle.answerQuery(test1);
-            D out2 = oracle.answerQuery(test2);
+            final D outOld = oracle.answerQuery(testOld);
+            final D outNew = oracle.answerQuery(testNew);
 
-            if (!Objects.equals(out1, out2)) { // add new abstraction
-                AI newA = tree.splitLeaf(r, cur, prefix, suffix, out2, out1);
+            if (!Objects.equals(outOld, outNew)) { // add new abstraction
+                final AI newA = tree.splitLeaf(r, cur, prefix, suffix, outOld);
                 abs.addSymbol(newA);
                 rep.addSymbol(cur);
                 learner.addAlphabetSymbol(cur);
@@ -106,9 +104,10 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
             }
         }
 
-        final DefaultQuery<CI, D> concreteCE = new DefaultQuery<>(wb.toWord(0, query.getPrefix().length()),
-                                                                  wb.toWord(query.getPrefix().length(), wb.size()),
-                                                                  query.getOutput());
+        final int prefixLen = query.getPrefix().length();
+        final DefaultQuery<CI, D> concreteCE =
+                new DefaultQuery<>(wb.toWord(0, prefixLen), wb.toWord(prefixLen, wb.size()), query.getOutput());
+
         return learner.refineHypothesis(concreteCE);
     }
 
@@ -119,8 +118,8 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
     protected <S1, S2, SP, TP> void copyAbstract(UniversalDeterministicAutomaton<S1, CI, ?, SP, TP> src,
                                                  MutableDeterministic<S2, AI, ?, SP, TP> tgt) {
         // states
-        Map<S2, S1> states = new HashMap<>();
-        Map<S1, S2> statesRev = new HashMap<>();
+        final Map<S2, S1> states = new HashMap<>();
+        final Map<S1, S2> statesRev = new HashMap<>();
 
         for (S1 s : src.getStates()) {
             final SP sp = src.getStateProperty(s);

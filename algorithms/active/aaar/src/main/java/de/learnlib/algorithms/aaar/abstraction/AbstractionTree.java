@@ -17,7 +17,9 @@ package de.learnlib.algorithms.aaar.abstraction;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,74 +30,51 @@ import java.util.function.Function;
 import de.learnlib.algorithms.aaar.abstraction.Node.InnerNode;
 import de.learnlib.algorithms.aaar.abstraction.Node.Leaf;
 import de.learnlib.api.oracle.MembershipOracle;
+import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.concepts.GraphViewable;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Word;
 
 /**
  * @author fhowar
  * @author frohme
  */
-public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI> {
-
-    private final Map<AI, CI> gamma = new HashMap<>();
-
-    private final MembershipOracle<CI, D> oracle;
+public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI>, GraphViewable, Graph<Node, Node> {
 
     private Node root;
 
+    private final MembershipOracle<CI, D> oracle;
+
     private final Function<CI, AI> abstractor;
 
+    private final Map<AI, CI> gamma;
+
     public AbstractionTree(AI rootA, CI rootC, MembershipOracle<CI, D> o, Function<CI, AI> abstractor) {
+        this.root = new Leaf<>(rootA, rootC);
         this.oracle = o;
         this.abstractor = abstractor;
-        Leaf<AI, CI> l = new Leaf<>();
-        l.abs = rootA;
-        l.rep = rootC;
-        root = l;
 
-        gamma.put(rootA, rootC);
+        this.gamma = new HashMap<>();
+        this.gamma.put(rootA, rootC);
     }
 
-    public AI splitLeaf(CI repOld, CI repNew, Word<CI> prefix, Word<CI> suffix, D outOld, D outNew) {
+    public AI splitLeaf(CI repOld, CI repNew, Word<CI> prefix, Word<CI> suffix, D outOld) {
 
-        //        logger.logMultiline("Splitting Leaf in Abstraction Tree ("+ rootA + ")",
-        //                "old rep: " + repOld+ "\n" +
-        //                "new rep: " + repNew+ "\n" +
-        //                "prefix: " + prefix+ "\n" +
-        //                "suffix: " + suffix+ "\n" +
-        //                "old out: " + outOld+ "\n" +
-        //                "new out: " + outNew+ "\n",
-        //                            LogLevel.INFO);
-
-        Leaf<AI, CI> l = new Leaf<>();
-        // TODO: Use Wrapper Objects?
-        l.abs = this.abstractor.apply(repNew);
-        l.rep = repNew;
+        final Leaf<AI, CI> l = new Leaf<>(this.abstractor.apply(repNew), repNew);
         gamma.put(l.abs, repNew);
 
         Node cur = root;
-        Node inner = null;
+        Node parent = null;
 
-        while (!(cur instanceof Leaf)) {
+        while (cur instanceof InnerNode) {
             @SuppressWarnings("unchecked")
-            InnerNode<CI, D> n = (InnerNode<CI, D>) cur;
-            Word<CI> test1 = n.prefix.append(repOld).concat(n.suffix);
-            D out1 = oracle.answerQuery(test1);
-            //                Word test2 = WordUtil.concat(WordUtil.concat(n.prefix, repNew), n.suffix);
-            //                Word out2 = oracle.processQuery(test2);
+            final InnerNode<CI, D> n = (InnerNode<CI, D>) cur;
+            final Word<CI> test = n.prefix.append(repOld).concat(n.suffix);
+            final D out = oracle.answerQuery(test);
 
-            //                // new leaf without additional information
-            //                if (!n.next.containsKey(out2))
-            //                {
-            //                    n.next.put(out2, l);
-            //                    return l.abs;
-            //                }
-            //
-            //                key = out1;
-            //                inner = cur;
-            //                cur = n.next.get(out1);
-
-            inner = cur;
-            if (Objects.equals(n.out, out1)) {
+            parent = cur;
+            if (Objects.equals(n.out, out)) {
                 cur = n.equalsNext;
             } else {
                 cur = n.otherNext;
@@ -103,26 +82,17 @@ public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI> {
 
         }
 
-        InnerNode<CI, D> nn = new InnerNode<>();
-        nn.prefix = prefix;
-        nn.suffix = suffix;
-        //        nn.next.put(outOld, cur);
-        //        nn.next.put(outNew, l);
-        nn.out = outOld;
-        nn.equalsNext = cur;
-        nn.otherNext = l;
+        final InnerNode<CI, D> newNode = new InnerNode<>(prefix, suffix, outOld, cur, l);
 
-        if (inner == null) {
-            root = nn;
-            return l.abs;
-        }
-
-        //        ((InnerNode)inner).next.remove(key);
-        //        ((InnerNode)inner).next.put(key,nn);
-        if (((InnerNode<?, ?>) inner).equalsNext == cur) {
-            ((InnerNode<?, ?>) inner).equalsNext = nn;
+        if (parent == null) {
+            root = newNode;
         } else {
-            ((InnerNode<?, ?>) inner).otherNext = nn;
+            final InnerNode<?, ?> parentAsInner = (InnerNode<?, ?>) parent;
+            if (parentAsInner.equalsNext == cur) {
+                parentAsInner.equalsNext = newNode;
+            } else {
+                parentAsInner.otherNext = newNode;
+            }
         }
 
         return l.abs;
@@ -130,28 +100,24 @@ public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI> {
 
     @Override
     public AI getAbstractSymbol(CI c) {
-        return getAbstractSymbol(c, this.oracle);
-    }
-
-    public AI getAbstractSymbol(CI c, MembershipOracle<CI, D> oracle) {
         Node cur = root;
-        while (!(cur instanceof Leaf)) {
+
+        while (cur instanceof InnerNode) {
             @SuppressWarnings("unchecked")
-            InnerNode<CI, D> n = (InnerNode<CI, D>) cur;
-            Word<CI> test = n.prefix.append(c).concat(n.suffix);
-            D out = oracle.answerQuery(test);
+            final InnerNode<CI, D> n = (InnerNode<CI, D>) cur;
+            final Word<CI> test = n.prefix.append(c).concat(n.suffix);
+            final D out = oracle.answerQuery(test);
 
             if (Objects.equals(n.out, out)) {
                 cur = n.equalsNext;
             } else {
                 cur = n.otherNext;
             }
-
-            if (cur == null) {
-                return null;
-            }
         }
-        return ((Leaf<AI, CI>) cur).abs;
+
+        @SuppressWarnings("unchecked")
+        final Leaf<AI, CI> leaf = (Leaf<AI, CI>) cur;
+        return leaf.abs;
     }
 
     @Override
@@ -160,32 +126,96 @@ public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI> {
     }
 
     public Collection<CI> getRepresentativeSymbols() {
-        List<CI> ret = new ArrayList<>();
-
-        Queue<Node> nodes = new ArrayDeque<>();
-        nodes.add(root);
-
-        while (!nodes.isEmpty()) {
-            Node n = nodes.poll();
-            if (n instanceof InnerNode) {
-                @SuppressWarnings("unchecked")
-                InnerNode<CI, D> in = (InnerNode<CI, D>) n;
-                //                for (Node next : in.next.values())
-                //                    nodes.add(next);
-                nodes.add(in.equalsNext);
-                nodes.add(in.otherNext);
-            } else {
-                @SuppressWarnings("unchecked")
-                Leaf<AI, CI> l = (Leaf<AI, CI>) n;
-                ret.add(l.rep);
-            }
-        }
-
-        return ret;
+        return Collections.unmodifiableCollection(this.gamma.values());
     }
 
     public int countLeaves() {
         return gamma.size();
     }
 
+    @Override
+    public Graph<?, ?> graphView() {
+        return this;
+    }
+
+    @Override
+    public Collection<Node> getOutgoingEdges(Node node) {
+        if (node instanceof InnerNode) {
+            final InnerNode<?, ?> n = (InnerNode<?, ?>) node;
+            return Arrays.asList(n.equalsNext, n.otherNext);
+        }
+
+        return Collections.emptySet();
+    }
+
+    @Override
+    public Node getTarget(Node edge) {
+        return edge;
+    }
+
+    @Override
+    public Collection<Node> getNodes() {
+
+        final List<Node> result = new ArrayList<>(this.gamma.size());
+
+        final Queue<Node> nodes = new ArrayDeque<>();
+        nodes.add(root);
+
+        while (!nodes.isEmpty()) {
+            final Node n = nodes.poll();
+            if (n instanceof InnerNode) {
+                final InnerNode<?, ?> in = (InnerNode<?, ?>) n;
+                result.add(in);
+                nodes.add(in.equalsNext);
+                nodes.add(in.otherNext);
+            } else {
+                assert n != null;
+                result.add(n);
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public VisualizationHelper<Node, Node> getVisualizationHelper() {
+        return new DefaultVisualizationHelper<Node, Node>() {
+
+            @Override
+            public boolean getNodeProperties(Node node, Map<String, String> properties) {
+                if (!super.getNodeProperties(node, properties)) {
+                    return false;
+                }
+
+                if (node instanceof InnerNode) {
+                    final InnerNode<?, ?> n = (InnerNode<?, ?>) node;
+                    properties.put(NodeAttrs.LABEL, n.prefix + ", " + n.suffix);
+                } else if (node instanceof Leaf){
+                    final Leaf<?, ?> l = (Leaf<?, ?>) node;
+                    properties.put(NodeAttrs.LABEL, String.format("Abs.: '%s'%nRep.: '%s'", l.abs, l.rep));
+                }
+
+                return true;
+            }
+
+            @Override
+            public boolean getEdgeProperties(Node src, Node edge, Node tgt, Map<String, String> properties) {
+                if (!super.getEdgeProperties(src, edge, tgt, properties)) {
+                    return false;
+                }
+
+                if (src instanceof InnerNode) {
+                    final InnerNode<?, ?> n = (InnerNode<?, ?>) src;
+                    if (n.equalsNext == tgt) {
+                        properties.put(EdgeAttrs.LABEL, "==" + n.out);
+                    } else {
+                        properties.put(EdgeAttrs.LABEL, "!=" + n.out);
+                        properties.put(EdgeAttrs.STYLE, EdgeStyles.DASHED);
+                    }
+                }
+
+                return true;
+            }
+        };
+    }
 }

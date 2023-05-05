@@ -37,7 +37,7 @@ public class AAARLearnerMealy<L extends MealyLearner<CI, O> & SupportsGrowingAlp
     @Override
     public MealyMachine<?, AI, ?, O> getHypothesisModel() {
         final MealyMachine<?, CI, ?, O> concrete = super.getConcreteHypothesisModel();
-        final CompactMealy<AI, O> result = new CompactMealy<>(super.abs);
+        final CompactMealy<AI, O> result = new CompactMealy<>(getAbstractAlphabet());
 
         super.copyAbstract(concrete, result);
 

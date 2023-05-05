@@ -36,7 +36,7 @@ public class AAARLearnerDFA<L extends DFALearner<CI> & SupportsGrowingAlphabet<C
     @Override
     public DFA<?, AI> getHypothesisModel() {
         final DFA<?, CI> concrete = super.getConcreteHypothesisModel();
-        final CompactDFA<AI> result = new CompactDFA<>(super.abs);
+        final CompactDFA<AI> result = new CompactDFA<>(getAbstractAlphabet());
 
         super.copyAbstract(concrete, result);
 
