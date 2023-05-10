@@ -21,11 +21,12 @@ import de.learnlib.examples.aaar.Event.Msg;
 import de.learnlib.examples.aaar.Event.Recv;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 class Protocol implements SuffixOutput<Event, Word<String>> {
 
     private int seqExp;
-    private Object buffer;
+    private @Nullable Object buffer;
 
     @Override
     public Word<String> computeSuffixOutput(Iterable<? extends Event> prefix, Iterable<? extends Event> suffix) {
