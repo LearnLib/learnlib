@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.aaar;
+package de.learnlib.algorithms.aaar.explicit;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.words.Alphabet;
+import java.util.function.Function;
 
 /**
  * @author frohme
  */
-public interface LearnerProvider<L extends LearningAlgorithm<M, I, D> & SupportsGrowingAlphabet<I>, M, I, D> {
+public class Incrementor implements Function<String, String> {
 
-    L createLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle);
+    private int cnt;
 
+    @Override
+    public String apply(String s) {
+        return s + ++cnt;
+    }
 }

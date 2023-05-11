@@ -15,9 +15,11 @@
  */
 package de.learnlib.examples.aaar;
 
+import java.util.Objects;
+
 class Event {
 
-    static class Msg<D> extends Event {
+    static final class Msg<D> extends Event {
 
         final int seq;
         final D data;
@@ -31,13 +33,38 @@ class Event {
         public String toString() {
             return "msg(" + seq + ',' + data + ')';
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof Msg)) {
+                return false;
+            }
+            final Msg<?> that = (Msg<?>) o;
+
+            return this.seq == that.seq && Objects.equals(this.data, that.data);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(this.seq, this.data);
+        }
     }
 
-    static class Recv extends Event {
+    static final class Recv extends Event {
 
         @Override
         public String toString() {
             return "recv";
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof Recv;
         }
     }
 }

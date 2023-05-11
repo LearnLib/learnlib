@@ -13,18 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.aaar;
+package de.learnlib.algorithms.aaar.abstraction;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
+import java.util.function.Function;
+
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.words.Alphabet;
 
 /**
+ * @author fhowar
  * @author frohme
  */
-public interface LearnerProvider<L extends LearningAlgorithm<M, I, D> & SupportsGrowingAlphabet<I>, M, I, D> {
+public class ExplicitAbstractionTree<AI, CI, D> extends AbstractAbstractionTree<AI, CI, D> {
 
-    L createLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle);
+    private final AI rootA;
+    private final Function<AI, AI> incrementor;
 
+    public ExplicitAbstractionTree(AI rootA, CI rootC, MembershipOracle<CI, D> o, Function<AI, AI> incrementor) {
+        super(rootA, rootC, o);
+
+        this.rootA = rootA;
+        this.incrementor = incrementor;
+    }
+
+    @Override
+    protected AI createAbstractionForRepresentative(CI ci) {
+        return this.incrementor.apply(this.rootA);
+    }
 }

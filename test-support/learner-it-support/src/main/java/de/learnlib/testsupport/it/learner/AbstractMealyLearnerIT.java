@@ -71,11 +71,12 @@ public abstract class AbstractMealyLearnerIT {
         final Alphabet<I> alphabet = example.getAlphabet();
         final MealyMachine<?, I, ?, O> reference = example.getReferenceAutomaton();
         final MealyMembershipOracle<I, O> mqOracle = new MealySimulatorOracle<>(reference);
-        final MealyEquivalenceOracle<I, O> eqOracle = getEquivalenceOracle(example);
         final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, reference.size(), mqOracle, variants);
 
-        return LearnerITUtil.createExampleITCases(example, variants, eqOracle);
+        return LearnerITUtil.createExampleITCases(example,
+                                                  variants,
+                                                  new MealySimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 
     private <I, O> List<UniversalDeterministicLearnerITCase<I, Word<O>, MealyMachine<?, I, ?, O>>> createPartialVariantsITCase(
@@ -94,20 +95,10 @@ public abstract class AbstractMealyLearnerIT {
         final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, reference.size(), mqOracle, variants);
 
-        final MealyEquivalenceOracle<I, O> eqOracle = getEquivalenceOracle(example);
+        final MealyEquivalenceOracle<I, O> eqOracle =
+                new StateLocalInputMealySimulatorEQOracle<>(partialRef, alphabet, undefinedOutput);
 
         return LearnerITUtil.createExampleITCases(example, variants, eqOracle);
-    }
-
-    protected <I, O> MealyEquivalenceOracle<I, O> getEquivalenceOracle(MealyLearningExample<I, O> example) {
-        return new MealySimulatorEQOracle<>(example.getReferenceAutomaton());
-    }
-
-    protected <I, O> MealyEquivalenceOracle<I, O> getEquivalenceOracle(StateLocalInputMealyLearningExample<I, O> example) {
-        final StateLocalInputMealyMachine<?, I, ?, O> reference = example.getReferenceAutomaton();
-        final Alphabet<I> alphabet = example.getAlphabet();
-        final O undefinedOutput = example.getUndefinedOutput();
-        return new StateLocalInputMealySimulatorEQOracle<>(reference, alphabet, undefinedOutput);
     }
 
     /**

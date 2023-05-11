@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.aaar;
+package de.learnlib.algorithms.aaar.explicit;
 
 import java.util.function.Function;
 
+import de.learnlib.algorithms.aaar.ExplicitInitialAbstraction;
+import de.learnlib.algorithms.aaar.LearnerProvider;
+import de.learnlib.algorithms.aaar.TranslatingMealyMachine;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -24,24 +27,29 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.words.Word;
 
-public class AAARLearnerMealy<L extends MealyLearner<CI, O> & SupportsGrowingAlphabet<CI>, AI, CI, O>
-        extends AbstractAAARLearner<L, MealyMachine<?, AI, ?, O>, MealyMachine<?, CI, ?, O>, AI, CI, Word<O>> {
+public class ExplicitAAARLearnerMealy<L extends MealyLearner<CI, O> & SupportsGrowingAlphabet<CI>, AI, CI, O>
+        extends AbstractExplicitAAARLearner<L, MealyMachine<?, AI, ?, O>, MealyMachine<?, CI, ?, O>, AI, CI, Word<O>> {
 
-    public AAARLearnerMealy(LearnerProvider<L, MealyMachine<?, CI, ?, O>, CI, Word<O>> learnerProvider,
-                            MembershipOracle<CI, Word<O>> o,
-                            CI initialConcrete,
-                            Function<CI, AI> abstractor) {
-        super(learnerProvider, o, initialConcrete, abstractor);
+    public ExplicitAAARLearnerMealy(LearnerProvider<L, MealyMachine<?, CI, ?, O>, CI, Word<O>> learnerProvider,
+                                    MembershipOracle<CI, Word<O>> o,
+                                    ExplicitInitialAbstraction<AI, CI> explicitInitialAbstraction,
+                                    Function<AI, AI> incrementor) {
+        super(learnerProvider, o, explicitInitialAbstraction, incrementor);
     }
 
     @Override
     public MealyMachine<?, AI, ?, O> getHypothesisModel() {
-        final MealyMachine<?, CI, ?, O> concrete = super.getConcreteHypothesisModel();
+        final MealyMachine<?, CI, ?, O> concrete = super.getLearnerHypothesisModel();
         final CompactMealy<AI, O> result = new CompactMealy<>(getAbstractAlphabet());
 
         super.copyAbstract(concrete, result);
 
         return result;
+    }
+
+    @Override
+    public MealyMachine<?, CI, ?, O> getTranslatingHypothesisModel() {
+        return new TranslatingMealyMachine<>(super.getLearnerHypothesisModel(), this::getTreeForRepresentative);
     }
 }
 

@@ -15,16 +15,14 @@
  */
 package de.learnlib.algorithms.aaar;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.words.Alphabet;
-
 /**
+ * @author fhowar
  * @author frohme
  */
-public interface LearnerProvider<L extends LearningAlgorithm<M, I, D> & SupportsGrowingAlphabet<I>, M, I, D> {
+public interface Abstraction<AI, CI> {
 
-    L createLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle);
+    AI getAbstractSymbol(CI c);
+
+    CI getRepresentative(AI a);
 
 }

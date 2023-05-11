@@ -1,0 +1,16 @@
+digraph g {
+
+	s0 [shape="circle" label="a a, a"];
+	s1 [shape="circle" label="Abs.: 'a'
+Rep.: 'a'"];
+	s2 [shape="circle" label="a a b a, ε"];
+	s3 [shape="circle" label="Abs.: 'b'
+Rep.: 'b'"];
+	s4 [shape="circle" label="Abs.: 'c'
+Rep.: 'c'"];
+	s0 -> s1 [label="==o1 o2 o1 o1 o1"];
+	s0 -> s2 [style="dashed" label="!=o1 o2 o1 o1 o1"];
+	s2 -> s3 [label="==o1 o2 o1 o3 o3 o1"];
+	s2 -> s4 [style="dashed" label="!=o1 o2 o1 o3 o3 o1"];
+
+}

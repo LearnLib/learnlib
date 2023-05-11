@@ -18,11 +18,10 @@ package de.learnlib.examples.aaar;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
 
-import de.learnlib.algorithms.aaar.AAARLearnerMealy;
 import de.learnlib.algorithms.aaar.LearnerProvider;
+import de.learnlib.algorithms.aaar.generic.GenericAAARLearnerMealy;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.oracle.MembershipOracle;
@@ -34,7 +33,7 @@ import de.learnlib.examples.aaar.Event.Recv;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.concepts.GraphViewable;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.visualization.dot.DOT;
 import net.automatalib.words.Word;
@@ -43,12 +42,12 @@ import net.automatalib.words.Word;
  * Example from the paper "Automata Learning with Automated Alphabet Abstraction Refinement" by Howar et al.
  */
 @SuppressWarnings("PMD.SystemPrintln")
-public final class AlternatingBitExample {
+public final class AlternatingBitExampleGeneric {
 
     private static final int ID1 = 72;
     private static final int ID2 = 73;
 
-    private AlternatingBitExample() {
+    private AlternatingBitExampleGeneric() {
         // prevent instantiation
     }
 
@@ -57,13 +56,13 @@ public final class AlternatingBitExample {
         final Protocol sul = new Protocol();
         final MembershipOracle<Event, Word<String>> mqo = new SimulatorOracle<>(sul);
 
-        LearnerProvider<ExtensibleLStarMealy<Event, String>, MealyMachine<?, Event, ?, String>, Event, Word<String>>
-                lstar = (alph, orcl) -> new ExtensibleLStarMealyBuilder<Event, String>().withAlphabet(alph)
-                                                                                        .withOracle(orcl)
-                                                                                        .create();
+        final LearnerProvider<ExtensibleLStarMealy<Event, String>, MealyMachine<?, Event, ?, String>, Event, Word<String>>
+                lstar = (alph, mq) -> new ExtensibleLStarMealyBuilder<Event, String>().withAlphabet(alph)
+                                                                                      .withOracle(mq)
+                                                                                      .create();
 
-        final AAARLearnerMealy<ExtensibleLStarMealy<Event, String>, String, Event, String> learner =
-                new AAARLearnerMealy<>(lstar, mqo, new Recv(), new EventAbstractor());
+        final GenericAAARLearnerMealy<ExtensibleLStarMealy<Event, String>, String, Event, String> learner =
+                new GenericAAARLearnerMealy<>(lstar, mqo, new Recv(), new EventAbstractor());
 
         learner.startLearning();
         printInfo(learner);
@@ -81,28 +80,25 @@ public final class AlternatingBitExample {
         printInfo(learner);
     }
 
-    private static <AI, CI, O> void printInfo(AAARLearnerMealy<? extends OTLearnerMealy<CI, O>, AI, CI, O> learner)
+    private static <AI, CI, O> void printInfo(GenericAAARLearnerMealy<? extends OTLearnerMealy<CI, O>, AI, CI, O> learner)
             throws IOException {
 
         System.out.println("-------------------------------------------------------");
         new ObservationTableASCIIWriter<>().write(learner.getLearner().getObservationTable(), System.out);
 
-        final MealyMachine<?, AI, ?, O> hyp = learner.getHypothesisModel();
+        if (DOT.checkUsable()) {
+            final MealyMachine<?, AI, ?, O> hyp = learner.getHypothesisModel();
 
-        final List<Pair<String, String>> graphs =
-                Arrays.asList(Pair.of("Hypothesis", graph2Dot(hyp.transitionGraphView(learner.getAbstractAlphabet()))),
-                              Pair.of("Abstraction Tree", graph2Dot(learner.getAbstractionTree())));
+            try (StringWriter hypWriter = new StringWriter();
+                 StringWriter treeWriter = new StringWriter()) {
 
-        DOT.renderDOTStrings(graphs, true);
-    }
+                GraphDOT.write(hyp.transitionGraphView(learner.getAbstractAlphabet()), hypWriter);
+                GraphDOT.write((GraphViewable) learner.getAbstractionTree(), treeWriter);
 
-    private static String graph2Dot(Graph<?, ?> g) throws IOException {
-
-        final StringWriter writer = new StringWriter();
-
-        GraphDOT.write(g, writer);
-
-        return writer.toString();
+                DOT.renderDOTStrings(Arrays.asList(Pair.of("Hypothesis", hypWriter.toString()),
+                                                   Pair.of("Abstraction Tree", treeWriter.toString())), true);
+            }
+        }
     }
 
     private static class EventAbstractor implements Function<Event, String> {
@@ -116,7 +112,7 @@ public final class AlternatingBitExample {
             } else if (event instanceof Msg) {
                 return "msg" + cnt++;
             } else {
-                throw new IllegalArgumentException("unknown event" + event);
+                throw new IllegalArgumentException("Unknown event: " + event);
             }
         }
     }

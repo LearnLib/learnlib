@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.aaar.abstraction;
+package de.learnlib.algorithms.aaar.explicit;
 
+import java.util.Collection;
+
+import de.learnlib.algorithms.aaar.ExplicitInitialAbstraction;
 import net.automatalib.words.Alphabet;
 
-public class IdentityAbstraction<I> implements InitialAbstraction<I, I> {
+/**
+ * @author frohme
+ */
+public class IdentityInitialAbstraction<I> implements ExplicitInitialAbstraction<I, I> {
 
     private final Alphabet<I> alphabet;
 
-    public IdentityAbstraction(Alphabet<I> alphabet) {
+    public IdentityInitialAbstraction(Alphabet<I> alphabet) {
         this.alphabet = alphabet;
-    }
-
-    @Override
-    public Alphabet<I> getSigmaC() {
-        return alphabet;
-    }
-
-    @Override
-    public Alphabet<I> getSigmaA() {
-        return alphabet;
     }
 
     @Override
@@ -43,5 +39,10 @@ public class IdentityAbstraction<I> implements InitialAbstraction<I, I> {
     @Override
     public I getRepresentative(I a) {
         return a;
+    }
+
+    @Override
+    public Collection<I> getSigmaA() {
+        return this.alphabet;
     }
 }

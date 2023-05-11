@@ -59,7 +59,7 @@ class Protocol implements SuffixOutput<Event, Word<String>> {
             buffer = null;
             return "ack(" + ack + ')';
         } else {
-            throw new IllegalStateException();
+            throw new IllegalArgumentException("Unknown event: " + event);
         }
     }
 }

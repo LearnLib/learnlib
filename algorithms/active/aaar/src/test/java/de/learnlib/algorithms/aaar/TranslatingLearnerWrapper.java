@@ -16,15 +16,33 @@
 package de.learnlib.algorithms.aaar;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.words.Alphabet;
 
 /**
  * @author frohme
  */
-public interface LearnerProvider<L extends LearningAlgorithm<M, I, D> & SupportsGrowingAlphabet<I>, M, I, D> {
+public class TranslatingLearnerWrapper<L extends LearningAlgorithm<CM, CI, D> & SupportsGrowingAlphabet<CI>, CM, CI, D>
+        implements LearningAlgorithm<CM, CI, D> {
 
-    L createLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle);
+    private final AbstractAAARLearner<L, ?, CM, ?, CI, D> delegate;
 
+    public TranslatingLearnerWrapper(AbstractAAARLearner<L, ?, CM, ?, CI, D> delegate) {
+        this.delegate = delegate;
+    }
+
+    @Override
+    public void startLearning() {
+        this.delegate.startLearning();
+    }
+
+    @Override
+    public boolean refineHypothesis(DefaultQuery<CI, D> ceQuery) {
+        return this.delegate.refineHypothesis(ceQuery);
+    }
+
+    @Override
+    public CM getHypothesisModel() {
+        return this.delegate.getTranslatingHypothesisModel();
+    }
 }

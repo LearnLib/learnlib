@@ -15,21 +15,25 @@
  */
 package de.learnlib.algorithms.aaar.abstraction;
 
-import net.automatalib.words.Alphabet;
+import java.util.function.Function;
+
+import de.learnlib.api.oracle.MembershipOracle;
 
 /**
  * @author fhowar
  * @author frohme
  */
-public interface InitialAbstraction<AI, CI> extends Abstraction<AI, CI> {
+public class GenericAbstractionTree<AI, CI, D> extends AbstractAbstractionTree<AI, CI, D> {
 
-    /**
-     * @return the sigmaC
-     */
-    Alphabet<CI> getSigmaC();
+    private final Function<CI, AI> abstractor;
 
-    /**
-     * @return the sigmaA
-     */
-    Alphabet<AI> getSigmaA();
+    public GenericAbstractionTree(AI rootA, CI rootC, MembershipOracle<CI, D> o, Function<CI, AI> abstractor) {
+        super(rootA, rootC, o);
+        this.abstractor = abstractor;
+    }
+
+    @Override
+    protected AI createAbstractionForRepresentative(CI ci) {
+        return this.abstractor.apply(ci);
+    }
 }

@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.function.Function;
 
+import de.learnlib.algorithms.aaar.Abstraction;
 import de.learnlib.algorithms.aaar.abstraction.Node.InnerNode;
 import de.learnlib.algorithms.aaar.abstraction.Node.Leaf;
 import de.learnlib.api.oracle.MembershipOracle;
@@ -40,20 +40,18 @@ import net.automatalib.words.Word;
  * @author fhowar
  * @author frohme
  */
-public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI>, GraphViewable, Graph<Node, Node> {
+public abstract class AbstractAbstractionTree<AI, CI, D>
+        implements Abstraction<AI, CI>, GraphViewable, Graph<Node, Node> {
 
     private Node root;
 
     private final MembershipOracle<CI, D> oracle;
 
-    private final Function<CI, AI> abstractor;
-
     private final Map<AI, CI> gamma;
 
-    public AbstractionTree(AI rootA, CI rootC, MembershipOracle<CI, D> o, Function<CI, AI> abstractor) {
+    public AbstractAbstractionTree(AI rootA, CI rootC, MembershipOracle<CI, D> o) {
         this.root = new Leaf<>(rootA, rootC);
         this.oracle = o;
-        this.abstractor = abstractor;
 
         this.gamma = new HashMap<>();
         this.gamma.put(rootA, rootC);
@@ -61,7 +59,7 @@ public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI>, GraphVie
 
     public AI splitLeaf(CI repOld, CI repNew, Word<CI> prefix, Word<CI> suffix, D outOld) {
 
-        final Leaf<AI, CI> l = new Leaf<>(this.abstractor.apply(repNew), repNew);
+        final Leaf<AI, CI> l = new Leaf<>(createAbstractionForRepresentative(repNew), repNew);
         gamma.put(l.abs, repNew);
 
         Node cur = root;
@@ -122,15 +120,13 @@ public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI>, GraphVie
 
     @Override
     public CI getRepresentative(AI a) {
-        return gamma.get(a);
+        final CI ci = gamma.get(a);
+        assert ci != null;
+        return ci;
     }
 
     public Collection<CI> getRepresentativeSymbols() {
         return Collections.unmodifiableCollection(this.gamma.values());
-    }
-
-    public int countLeaves() {
-        return gamma.size();
     }
 
     @Override
@@ -190,7 +186,7 @@ public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI>, GraphVie
                 if (node instanceof InnerNode) {
                     final InnerNode<?, ?> n = (InnerNode<?, ?>) node;
                     properties.put(NodeAttrs.LABEL, n.prefix + ", " + n.suffix);
-                } else if (node instanceof Leaf){
+                } else if (node instanceof Leaf) {
                     final Leaf<?, ?> l = (Leaf<?, ?>) node;
                     properties.put(NodeAttrs.LABEL, String.format("Abs.: '%s'%nRep.: '%s'", l.abs, l.rep));
                 }
@@ -218,4 +214,6 @@ public class AbstractionTree<AI, CI, D> implements Abstraction<AI, CI>, GraphVie
             }
         };
     }
+
+    protected abstract AI createAbstractionForRepresentative(CI ci);
 }

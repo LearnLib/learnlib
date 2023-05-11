@@ -15,13 +15,13 @@
  */
 package de.learnlib.algorithms.aaar;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.Function;
 
-import de.learnlib.algorithms.aaar.abstraction.AbstractionTree;
+import de.learnlib.algorithms.aaar.abstraction.AbstractAbstractionTree;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
@@ -44,29 +44,22 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
     private final L learner;
     private final MembershipOracle<CI, D> oracle;
 
-    private final AbstractionTree<AI, CI, D> tree;
-
     private final GrowingAlphabet<CI> rep;
     private final GrowingAlphabet<AI> abs;
 
-    public AbstractAAARLearner(LearnerProvider<L, CM, CI, D> learnerProvider,
-                               MembershipOracle<CI, D> o,
-                               CI initialConcrete,
-                               Function<CI, AI> abstractor) {
+    public AbstractAAARLearner(LearnerProvider<L, CM, CI, D> learnerProvider, MembershipOracle<CI, D> o) {
         this.oracle = o;
         this.rep = new GrowingMapAlphabet<>();
         this.abs = new GrowingMapAlphabet<>();
-
-        final AI initialAbstract = abstractor.apply(initialConcrete);
-        this.tree = new AbstractionTree<>(initialAbstract, initialConcrete, o, abstractor);
-        this.rep.addSymbol(initialConcrete);
-        this.abs.addSymbol(initialAbstract);
 
         this.learner = learnerProvider.createLearner(rep, oracle);
     }
 
     @Override
     public void startLearning() {
+        getInitialAbstracts().forEach(this.abs::addSymbol);
+        getInitialConcretes().forEach(this.rep::addSymbol);
+        getInitialConcretes().forEach(((SupportsGrowingAlphabet<CI>) this.learner)::addAlphabetSymbol);
         learner.startLearning();
     }
 
@@ -81,6 +74,7 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
         for (int i = 0; i < input.size(); i++) {
             final CI cur = input.getSymbol(i);
             // lift & lower
+            final AbstractAbstractionTree<AI, CI, D> tree = getTreeForRepresentative(cur);
             final AI a = tree.getAbstractSymbol(cur);
             final CI r = tree.getRepresentative(a);
 
@@ -111,10 +105,6 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
         return learner.refineHypothesis(concreteCE);
     }
 
-    public CM getConcreteHypothesisModel() {
-        return learner.getHypothesisModel();
-    }
-
     protected <S1, S2, SP, TP> void copyAbstract(UniversalDeterministicAutomaton<S1, CI, ?, SP, TP> src,
                                                  MutableDeterministic<S2, AI, ?, SP, TP> tgt) {
         // states
@@ -133,7 +123,8 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
         // transitions
         for (Entry<S2, S1> e : states.entrySet()) {
             for (CI r : rep) {
-                AI a = tree.getAbstractSymbol(r);
+                final AbstractAbstractionTree<AI, CI, D> tree = getTreeForRepresentative(r);
+                final AI a = tree.getAbstractSymbol(r);
                 tgt.setTransition(e.getKey(),
                                   a,
                                   statesRev.get(src.getSuccessor(e.getValue(), r)),
@@ -142,15 +133,25 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
         }
     }
 
-    public L getLearner() {
-        return this.learner;
-    }
-
     public Alphabet<AI> getAbstractAlphabet() {
         return this.abs;
     }
 
-    public AbstractionTree<AI, CI, D> getAbstractionTree() {
-        return tree;
+    public L getLearner() {
+        return this.learner;
     }
+
+    public CM getLearnerHypothesisModel() {
+        return learner.getHypothesisModel();
+    }
+
+    public abstract Alphabet<CI> getLearnerAlphabet();
+
+    public abstract CM getTranslatingHypothesisModel();
+
+    protected abstract AbstractAbstractionTree<AI, CI, D> getTreeForRepresentative(CI ci);
+
+    protected abstract Collection<AI> getInitialAbstracts();
+
+    protected abstract Collection<CI> getInitialConcretes();
 }

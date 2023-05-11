@@ -18,11 +18,10 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.examples.LearningExample.DFALearningExample;
 import de.learnlib.examples.LearningExamples;
-import de.learnlib.oracle.equivalence.DFASimulatorEQOracle;
+import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.DFALearnerVariantListImpl;
@@ -58,15 +57,12 @@ public abstract class AbstractDFALearnerIT {
 
         final Alphabet<I> alphabet = example.getAlphabet();
         final DFAMembershipOracle<I> mqOracle = new DFASimulatorOracle<>(example.getReferenceAutomaton());
-        final DFAEquivalenceOracle<I> eqOracle = getEquivalenceOracle(example);
         final DFALearnerVariantListImpl<I> variants = new DFALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, example.getReferenceAutomaton().size(), mqOracle, variants);
 
-        return LearnerITUtil.createExampleITCases(example, variants, eqOracle);
-    }
-
-    protected <I> DFAEquivalenceOracle<I> getEquivalenceOracle(DFALearningExample<I> example) {
-        return new DFASimulatorEQOracle<>(example.getReferenceAutomaton());
+        return LearnerITUtil.createExampleITCases(example,
+                                                  variants,
+                                                  new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 
     /**

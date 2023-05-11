@@ -18,10 +18,11 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.learnlib.api.oracle.EquivalenceOracle.MooreEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.examples.LearningExample.MooreLearningExample;
 import de.learnlib.examples.LearningExamples;
-import de.learnlib.oracle.equivalence.SimulatorEQOracle;
+import de.learnlib.oracle.equivalence.MooreSimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MooreSimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MooreLearnerVariantListImpl;
@@ -56,27 +57,34 @@ public abstract class AbstractMooreLearnerIT {
             MooreLearningExample<I, O> example) {
 
         final Alphabet<I> alphabet = example.getAlphabet();
-        final MooreMembershipOracle<I, O> mqOracle = new MooreSimulatorOracle<>(example.getReferenceAutomaton());
+        final MooreMachine<?, I, ?, O> reference = example.getReferenceAutomaton();
+        final MooreMembershipOracle<I, O> mqOracle = new MooreSimulatorOracle<>(reference);
+        final MooreEquivalenceOracle<I, O> eqOracle = getEquivalenceOracle(example);
         final MooreLearnerVariantListImpl<I, O> variants = new MooreLearnerVariantListImpl<>();
-        addLearnerVariants(alphabet, mqOracle, variants);
+        addLearnerVariants(alphabet, reference.size(), mqOracle, variants);
 
-        return LearnerITUtil.createExampleITCases(example,
-                                                  variants,
-                                                  new SimulatorEQOracle<>(example.getReferenceAutomaton()));
+        return LearnerITUtil.createExampleITCases(example, variants, eqOracle);
+    }
+
+    protected <I, O> MooreEquivalenceOracle<I, O> getEquivalenceOracle(MooreLearningExample<I, O> example) {
+        return new MooreSimulatorEQOracle<>(example.getReferenceAutomaton());
     }
 
     /**
-     * Adds, for a given setup, all the variants of the Mealy machine learner to be tested to the specified
+     * Adds, for a given setup, all the variants of the Moore machine learner to be tested to the specified
      * {@link LearnerVariantList variant list}.
      *
      * @param alphabet
      *         the input alphabet
+     * @param targetSize
+     *         the size of the target automaton
      * @param mqOracle
      *         the membership oracle
      * @param variants
      *         list to add the learner variants to
      */
     protected abstract <I, O> void addLearnerVariants(Alphabet<I> alphabet,
+                                                      int targetSize,
                                                       MooreMembershipOracle<I, O> mqOracle,
                                                       MooreLearnerVariantList<I, O> variants);
 }

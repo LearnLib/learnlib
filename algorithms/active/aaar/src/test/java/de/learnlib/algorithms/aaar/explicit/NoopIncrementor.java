@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.aaar.abstraction;
+package de.learnlib.algorithms.aaar.explicit;
+
+import java.util.function.Function;
 
 /**
- * @author fhowar
  * @author frohme
  */
-public interface Abstraction<AI, CI> {
+public class NoopIncrementor<I> implements Function<I, I> {
 
-    AI getAbstractSymbol(CI c);
-
-    CI getRepresentative(AI a);
-
+    @Override
+    public I apply(I s) {
+        throw new UnsupportedOperationException();
+    }
 }
