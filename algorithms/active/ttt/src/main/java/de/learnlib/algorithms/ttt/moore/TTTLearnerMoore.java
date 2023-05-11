@@ -25,8 +25,10 @@ import de.learnlib.algorithms.ttt.base.TTTState;
 import de.learnlib.algorithms.ttt.base.TTTTransition;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexamples.acex.MooreOutInconsPrefixTransformAcex;
 import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
+import de.learnlib.util.moore.MooreUtil;
 import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -77,6 +79,14 @@ public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I,
         O output = dtree.getRoot().subtreeLabel(mooreState.getDTLeaf()).firstSymbol();
         assert output != null;
         mooreState.setOutput(output);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected boolean refineHypothesisSingle(DefaultQuery<I, Word<O>> ceQuery) {
+        DefaultQuery<I, Word<O>> shortenedCeQuery =
+                MooreUtil.shortenCounterExample((TTTHypothesisMoore<I, O>) hypothesis, ceQuery);
+        return shortenedCeQuery != null && super.refineHypothesisSingle(shortenedCeQuery);
     }
 
     @Override

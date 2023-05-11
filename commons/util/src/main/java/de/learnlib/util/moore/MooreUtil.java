@@ -54,6 +54,21 @@ public final class MooreUtil {
         return NO_MISMATCH;
     }
 
+    public static <I, O> @Nullable DefaultQuery<I, Word<O>> shortenCounterExample(MooreMachine<?, I, ?, O> hypothesis,
+                                                                                  DefaultQuery<I, Word<O>> ceQuery) {
+        Word<I> cePrefix = ceQuery.getPrefix(), ceSuffix = ceQuery.getSuffix();
+        Word<O> hypOut = hypothesis.computeSuffixOutput(cePrefix, ceSuffix);
+        Word<O> ceOut = ceQuery.getOutput();
+        assert ceOut.length() == hypOut.length();
+
+        int mismatchIdx = findMismatch(hypOut, ceOut);
+        if (mismatchIdx == NO_MISMATCH) {
+            return null;
+        }
+
+        return new DefaultQuery<>(cePrefix, ceSuffix.prefix(mismatchIdx), ceOut.prefix(mismatchIdx + 1));
+    }
+
     public static <I, O> @Nullable DefaultQuery<I, O> reduceCounterExample(MooreMachine<?, I, ?, O> hypothesis,
                                                                            DefaultQuery<I, Word<O>> ceQuery) {
         Word<I> cePrefix = ceQuery.getPrefix(), ceSuffix = ceQuery.getSuffix();
