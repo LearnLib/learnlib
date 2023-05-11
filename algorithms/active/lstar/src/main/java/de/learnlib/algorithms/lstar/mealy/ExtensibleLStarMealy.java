@@ -90,7 +90,14 @@ public class ExtensibleLStarMealy<I, O>
     @Override
     public void addAlphabetSymbol(I symbol) {
         if (this.cexHandler.needsConsistencyCheck()) {
-            super.addGlobalSuffixes(Collections.singleton(Word.fromLetter(symbol)));
+
+            final Word<I> suffix = Word.fromLetter(symbol);
+
+            if (table.isInitialized()) {
+                super.addGlobalSuffixes(Collections.singleton(suffix));
+            } else {
+                super.initialSuffixes.add(suffix);
+            }
         }
 
         super.addAlphabetSymbol(symbol);
