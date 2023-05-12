@@ -16,13 +16,37 @@
 package de.learnlib.algorithms.aaar;
 
 /**
+ * An interface for mapping concrete symbols to their abstraction, and abstractions to their representatives,
+ * respectively.
+ *
+ * @param <AI>
+ *         abstract input symbol type
+ * @param <CI>
+ *         concrete input symbol type
+ *
  * @author fhowar
  * @author frohme
  */
 public interface Abstraction<AI, CI> {
 
+    /**
+     * Returns the abstract symbol for a given concrete one.
+     *
+     * @param c
+     *         the concrete symbol
+     *
+     * @return the abstraction of {@code c}
+     */
     AI getAbstractSymbol(CI c);
 
+    /**
+     * Returns the (concrete) representative for a given abstract symbol.
+     *
+     * @param a
+     *         the abstract symbol
+     *
+     * @return the concrete representative of {@code a}
+     */
     CI getRepresentative(AI a);
 
 }

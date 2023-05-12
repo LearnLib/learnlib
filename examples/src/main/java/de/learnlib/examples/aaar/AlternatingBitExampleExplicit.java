@@ -26,7 +26,7 @@ import java.util.function.Function;
 
 import de.learnlib.algorithms.aaar.ExplicitInitialAbstraction;
 import de.learnlib.algorithms.aaar.LearnerProvider;
-import de.learnlib.algorithms.aaar.abstraction.AbstractAbstractionTree;
+import de.learnlib.algorithms.aaar.abstraction.ExplicitAbstractionTree;
 import de.learnlib.algorithms.aaar.explicit.ExplicitAAARLearnerMealy;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
@@ -45,7 +45,8 @@ import net.automatalib.visualization.dot.DOT;
 import net.automatalib.words.Word;
 
 /**
- * Example from the paper "Automata Learning with Automated Alphabet Abstraction Refinement" by Howar et al.
+ * Example from the paper "Automata Learning with Automated Alphabet Abstraction Refinement" by Howar et al., which uses
+ * the explicit version of the AAAR learner.
  */
 @SuppressWarnings("PMD.SystemPrintln")
 public final class AlternatingBitExampleExplicit {
@@ -95,10 +96,10 @@ public final class AlternatingBitExampleExplicit {
 
         if (DOT.checkUsable()) {
             final MealyMachine<?, AI, ?, O> hyp = learner.getHypothesisModel();
-            final Map<AI, AbstractAbstractionTree<AI, CI, Word<O>>> trees = learner.getAbstractionTrees();
+            final Map<AI, ExplicitAbstractionTree<AI, CI, Word<O>>> trees = learner.getAbstractionTrees();
             final List<Graph<?, ?>> treesAsGraphs = new ArrayList<>(trees.size());
 
-            for (AbstractAbstractionTree<AI, CI, Word<O>> t : trees.values()) {
+            for (ExplicitAbstractionTree<AI, CI, Word<O>> t : trees.values()) {
                 treesAsGraphs.add(t.graphView());
             }
 
@@ -140,7 +141,7 @@ public final class AlternatingBitExampleExplicit {
         }
 
         @Override
-        public Collection<String> getSigmaA() {
+        public Collection<String> getInitialAbstracts() {
             return Arrays.asList("recv", "msg");
         }
     }

@@ -27,14 +27,41 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.words.Word;
 
+/**
+ * A {@link MealyMachine}-specific refinement of {@link AbstractExplicitAAARLearner}.
+ *
+ * @param <L>
+ *         learner type
+ * @param <AI>
+ *         abstract input symbol type
+ * @param <CI>
+ *         concrete input symbol type
+ * @param <O>
+ *         output symbol type
+ *
+ * @author frohme
+ */
 public class ExplicitAAARLearnerMealy<L extends MealyLearner<CI, O> & SupportsGrowingAlphabet<CI>, AI, CI, O>
         extends AbstractExplicitAAARLearner<L, MealyMachine<?, AI, ?, O>, MealyMachine<?, CI, ?, O>, AI, CI, Word<O>> {
 
+    /**
+     * Constructor.
+     *
+     * @param learnerProvider
+     *         the provider for constructing the internal (concrete) learner
+     * @param oracle
+     *         the (concrete) membership oracle
+     * @param explicitInitialAbstraction
+     *         the initial mapping between concrete and abstract input symbols
+     * @param incrementor
+     *         the function for creating new abstract input symbols given concrete one. This function only receives
+     *         input symbols from the provided explicitInitialAbstraction
+     */
     public ExplicitAAARLearnerMealy(LearnerProvider<L, MealyMachine<?, CI, ?, O>, CI, Word<O>> learnerProvider,
-                                    MembershipOracle<CI, Word<O>> o,
+                                    MembershipOracle<CI, Word<O>> oracle,
                                     ExplicitInitialAbstraction<AI, CI> explicitInitialAbstraction,
                                     Function<AI, AI> incrementor) {
-        super(learnerProvider, o, explicitInitialAbstraction, incrementor);
+        super(learnerProvider, oracle, explicitInitialAbstraction, incrementor);
     }
 
     @Override

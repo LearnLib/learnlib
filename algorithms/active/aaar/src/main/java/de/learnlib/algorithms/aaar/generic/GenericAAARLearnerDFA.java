@@ -25,14 +25,39 @@ import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 
+/**
+ * A {@link DFA}-specific refinement of {@link AbstractGenericAAARLearner}.
+ *
+ * @param <L>
+ *         learner type
+ * @param <AI>
+ *         abstract input symbol type
+ * @param <CI>
+ *         concrete input symbol type
+ *
+ * @author frohme
+ */
 public class GenericAAARLearnerDFA<L extends DFALearner<CI> & SupportsGrowingAlphabet<CI>, AI, CI>
         extends AbstractGenericAAARLearner<L, DFA<?, AI>, DFA<?, CI>, AI, CI, Boolean> {
 
+    /**
+     * Constructor.
+     *
+     * @param learnerProvider
+     *         the provider for constructing the internal (concrete) learner
+     * @param oracle
+     *         the (concrete) membership oracle
+     * @param initialConcrete
+     *         the initial (concrete) input symbol used for starting the learning process
+     * @param abstractor
+     *         the function for creating new abstract input symbols given concrete one. This function only receives
+     *         input symbols from the provided (concrete) counterexamples
+     */
     public GenericAAARLearnerDFA(LearnerProvider<L, DFA<?, CI>, CI, Boolean> learnerProvider,
-                                 MembershipOracle<CI, Boolean> o,
+                                 MembershipOracle<CI, Boolean> oracle,
                                  CI initialConcrete,
                                  Function<CI, AI> abstractor) {
-        super(learnerProvider, o, initialConcrete, abstractor);
+        super(learnerProvider, oracle, initialConcrete, abstractor);
     }
 
     @Override

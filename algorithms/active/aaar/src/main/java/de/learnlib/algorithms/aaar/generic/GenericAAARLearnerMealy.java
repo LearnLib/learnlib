@@ -26,14 +26,41 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.words.Word;
 
+/**
+ * A {@link MealyMachine}-specific refinement of {@link AbstractGenericAAARLearner}.
+ *
+ * @param <L>
+ *         learner type
+ * @param <AI>
+ *         abstract input symbol type
+ * @param <CI>
+ *         concrete input symbol type
+ * @param <O>
+ *         output symbol type
+ *
+ * @author frohme
+ */
 public class GenericAAARLearnerMealy<L extends MealyLearner<CI, O> & SupportsGrowingAlphabet<CI>, AI, CI, O>
         extends AbstractGenericAAARLearner<L, MealyMachine<?, AI, ?, O>, MealyMachine<?, CI, ?, O>, AI, CI, Word<O>> {
 
+    /**
+     * Constructor.
+     *
+     * @param learnerProvider
+     *         the provider for constructing the internal (concrete) learner
+     * @param oracle
+     *         the (concrete) membership oracle
+     * @param initialConcrete
+     *         the initial (concrete) input symbol used for starting the learning process
+     * @param abstractor
+     *         the function for creating new abstract input symbols given concrete one. This function only receives
+     *         input symbols from the provided (concrete) counterexamples
+     */
     public GenericAAARLearnerMealy(LearnerProvider<L, MealyMachine<?, CI, ?, O>, CI, Word<O>> learnerProvider,
-                                   MembershipOracle<CI, Word<O>> o,
+                                   MembershipOracle<CI, Word<O>> oracle,
                                    CI initialConcrete,
                                    Function<CI, AI> abstractor) {
-        super(learnerProvider, o, initialConcrete, abstractor);
+        super(learnerProvider, oracle, initialConcrete, abstractor);
     }
 
     @Override

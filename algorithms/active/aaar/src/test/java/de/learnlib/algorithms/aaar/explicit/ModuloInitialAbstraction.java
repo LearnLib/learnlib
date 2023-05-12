@@ -54,7 +54,7 @@ public class ModuloInitialAbstraction<CI> implements ExplicitInitialAbstraction<
     }
 
     @Override
-    public Collection<String> getSigmaA() {
+    public Collection<String> getInitialAbstracts() {
         return Arrays.asList("even", "odd");
     }
 }

@@ -23,6 +23,7 @@ import de.learnlib.algorithms.aaar.AbstractAAARLearner;
 import de.learnlib.algorithms.aaar.LearnerProvider;
 import de.learnlib.algorithms.aaar.abstraction.AbstractAbstractionTree;
 import de.learnlib.algorithms.aaar.abstraction.GenericAbstractionTree;
+import de.learnlib.algorithms.aaar.explicit.AbstractExplicitAAARLearner;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -30,6 +31,25 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
 /**
+ * A "generic" refinement of the {@link AbstractAAARLearner}. This implementation uses a single
+ * {@link GenericAbstractionTree} for transforming concrete input symbols to abstract ones. This may be useful if no
+ * prior knowledge about abstract symbol classes is available (cf. {@link AbstractExplicitAAARLearner}). This
+ * implementation only requires a single concrete input symbol to start in the inference process and a rather generic
+ * {@link Function abstractor} to create new abstract input symbols.
+ *
+ * @param <L>
+ *         learner type
+ * @param <AM>
+ *         abstract model type
+ * @param <CM>
+ *         concrete model type
+ * @param <AI>
+ *         abstract input symbol type
+ * @param <CI>
+ *         concrete input symbol type
+ * @param <D>
+ *         output domain type
+ *
  * @author fhowar
  * @author frohme
  */
@@ -38,17 +58,30 @@ public abstract class AbstractGenericAAARLearner<L extends LearningAlgorithm<CM,
 
     private final AI initialAbstract;
     private final CI initialConcrete;
-    private final AbstractAbstractionTree<AI, CI, D> tree;
+    private final GenericAbstractionTree<AI, CI, D> tree;
 
+    /**
+     * Constructor.
+     *
+     * @param learnerProvider
+     *         the provider for constructing the internal (concrete) learner
+     * @param oracle
+     *         the (concrete) membership oracle
+     * @param initialConcrete
+     *         the initial (concrete) input symbol used for starting the learning process
+     * @param abstractor
+     *         the function for creating new abstract input symbols given concrete one. This function only receives
+     *         input symbols from the provided (concrete) counterexamples
+     */
     public AbstractGenericAAARLearner(LearnerProvider<L, CM, CI, D> learnerProvider,
-                                      MembershipOracle<CI, D> o,
+                                      MembershipOracle<CI, D> oracle,
                                       CI initialConcrete,
                                       Function<CI, AI> abstractor) {
-        super(learnerProvider, o);
+        super(learnerProvider, oracle);
 
         this.initialConcrete = initialConcrete;
         this.initialAbstract = abstractor.apply(initialConcrete);
-        this.tree = new GenericAbstractionTree<>(this.initialAbstract, initialConcrete, o, abstractor);
+        this.tree = new GenericAbstractionTree<>(this.initialAbstract, initialConcrete, oracle, abstractor);
     }
 
     @Override
@@ -67,11 +100,11 @@ public abstract class AbstractGenericAAARLearner<L extends LearningAlgorithm<CM,
     }
 
     @Override
-    protected Collection<CI> getInitialConcretes() {
+    protected Collection<CI> getInitialRepresentatives() {
         return Collections.singleton(this.initialConcrete);
     }
 
-    public AbstractAbstractionTree<AI, CI, D> getAbstractionTree() {
+    public GenericAbstractionTree<AI, CI, D> getAbstractionTree() {
         return this.tree;
     }
 }

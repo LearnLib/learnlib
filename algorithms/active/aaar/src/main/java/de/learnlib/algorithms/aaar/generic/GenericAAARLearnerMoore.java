@@ -26,14 +26,41 @@ import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.words.Word;
 
+/**
+ * A {@link MooreMachine}-specific refinement of {@link AbstractGenericAAARLearner}.
+ *
+ * @param <L>
+ *         learner type
+ * @param <AI>
+ *         abstract input symbol type
+ * @param <CI>
+ *         concrete input symbol type
+ * @param <O>
+ *         output symbol type
+ *
+ * @author frohme
+ */
 public class GenericAAARLearnerMoore<L extends MooreLearner<CI, O> & SupportsGrowingAlphabet<CI>, AI, CI, O>
         extends AbstractGenericAAARLearner<L, MooreMachine<?, AI, ?, O>, MooreMachine<?, CI, ?, O>, AI, CI, Word<O>> {
 
+    /**
+     * Constructor.
+     *
+     * @param learnerProvider
+     *         the provider for constructing the internal (concrete) learner
+     * @param oracle
+     *         the (concrete) membership oracle
+     * @param initialConcrete
+     *         the initial (concrete) input symbol used for starting the learning process
+     * @param abstractor
+     *         the function for creating new abstract input symbols given concrete one. This function only receives
+     *         input symbols from the provided (concrete) counterexamples
+     */
     public GenericAAARLearnerMoore(LearnerProvider<L, MooreMachine<?, CI, ?, O>, CI, Word<O>> learnerProvider,
-                                   MembershipOracle<CI, Word<O>> o,
+                                   MembershipOracle<CI, Word<O>> oracle,
                                    CI initialConcrete,
                                    Function<CI, AI> abstractor) {
-        super(learnerProvider, o, initialConcrete, abstractor);
+        super(learnerProvider, oracle, initialConcrete, abstractor);
     }
 
     @Override

@@ -28,6 +28,7 @@ import de.learnlib.algorithms.aaar.ExplicitInitialAbstraction;
 import de.learnlib.algorithms.aaar.LearnerProvider;
 import de.learnlib.algorithms.aaar.abstraction.AbstractAbstractionTree;
 import de.learnlib.algorithms.aaar.abstraction.ExplicitAbstractionTree;
+import de.learnlib.algorithms.aaar.generic.AbstractGenericAAARLearner;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -35,6 +36,27 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
 /**
+ * An "explicit" refinement of the {@link AbstractAAARLearner}. This implementation requires a prior partition of (all)
+ * concrete input symbols into abstract symbol classes. Concrete input symbols are only distinguished within their
+ * initially provided abstract class (using multiple {@link ExplicitAbstractionTree}s). This may improve performance
+ * because the individual discrimination trees may be smaller than a globally shared one (cf.
+ * {@link AbstractGenericAAARLearner}). This class requires an {@link ExplicitInitialAbstraction} to provide information
+ * about the initial partitioning and an {@link Function incrementor} to increment the initially specified abstract
+ * symbols.
+ *
+ * @param <L>
+ *         learner type
+ * @param <AM>
+ *         abstract model type
+ * @param <CM>
+ *         concrete model type
+ * @param <AI>
+ *         abstract input symbol type
+ * @param <CI>
+ *         concrete input symbol type
+ * @param <D>
+ *         output domain type
+ *
  * @author fhowar
  * @author frohme
  */
@@ -42,20 +64,33 @@ public abstract class AbstractExplicitAAARLearner<L extends LearningAlgorithm<CM
         extends AbstractAAARLearner<L, AM, CM, AI, CI, D> {
 
     private final ExplicitInitialAbstraction<AI, CI> explicitInitialAbstraction;
-    private final Map<AI, AbstractAbstractionTree<AI, CI, D>> trees;
+    private final Map<AI, ExplicitAbstractionTree<AI, CI, D>> trees;
 
+    /**
+     * Constructor.
+     *
+     * @param learnerProvider
+     *         the provider for constructing the internal (concrete) learner
+     * @param oracle
+     *         the (concrete) membership oracle
+     * @param explicitInitialAbstraction
+     *         the initial mapping between concrete and abstract input symbols
+     * @param incrementor
+     *         the function for creating new abstract input symbols given concrete one. This function only receives
+     *         input symbols from the provided explicitInitialAbstraction
+     */
     public AbstractExplicitAAARLearner(LearnerProvider<L, CM, CI, D> learnerProvider,
-                                       MembershipOracle<CI, D> o,
+                                       MembershipOracle<CI, D> oracle,
                                        ExplicitInitialAbstraction<AI, CI> explicitInitialAbstraction,
                                        Function<AI, AI> incrementor) {
-        super(learnerProvider, o);
+        super(learnerProvider, oracle);
 
         this.explicitInitialAbstraction = explicitInitialAbstraction;
-        this.trees = Maps.newHashMapWithExpectedSize(explicitInitialAbstraction.getSigmaA().size());
+        this.trees = Maps.newHashMapWithExpectedSize(explicitInitialAbstraction.getInitialAbstracts().size());
 
-        for (AI a : explicitInitialAbstraction.getSigmaA()) {
+        for (AI a : explicitInitialAbstraction.getInitialAbstracts()) {
             final CI rep = explicitInitialAbstraction.getRepresentative(a);
-            this.trees.put(a, new ExplicitAbstractionTree<>(a, rep, o, incrementor));
+            this.trees.put(a, new ExplicitAbstractionTree<>(a, rep, oracle, incrementor));
         }
     }
 
@@ -80,23 +115,23 @@ public abstract class AbstractExplicitAAARLearner<L extends LearningAlgorithm<CM
 
     @Override
     protected Collection<AI> getInitialAbstracts() {
-        return this.explicitInitialAbstraction.getSigmaA();
+        return this.explicitInitialAbstraction.getInitialAbstracts();
     }
 
     @Override
-    protected Collection<CI> getInitialConcretes() {
+    protected Collection<CI> getInitialRepresentatives() {
 
-        final Collection<AI> sigmaA = this.explicitInitialAbstraction.getSigmaA();
-        final Collection<CI> sigmaC = new ArrayList<>(sigmaA.size());
+        final Collection<AI> abs = this.explicitInitialAbstraction.getInitialAbstracts();
+        final Collection<CI> rep = new ArrayList<>(abs.size());
 
-        for (AI ai : sigmaA) {
-            sigmaC.add(this.explicitInitialAbstraction.getRepresentative(ai));
+        for (AI ai : abs) {
+            rep.add(this.explicitInitialAbstraction.getRepresentative(ai));
         }
 
-        return sigmaC;
+        return rep;
     }
 
-    public Map<AI, AbstractAbstractionTree<AI, CI, D>> getAbstractionTrees() {
+    public Map<AI, ExplicitAbstractionTree<AI, CI, D>> getAbstractionTrees() {
         return this.trees;
     }
 

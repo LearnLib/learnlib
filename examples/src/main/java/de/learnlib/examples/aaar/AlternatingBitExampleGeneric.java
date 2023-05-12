@@ -39,7 +39,8 @@ import net.automatalib.visualization.dot.DOT;
 import net.automatalib.words.Word;
 
 /**
- * Example from the paper "Automata Learning with Automated Alphabet Abstraction Refinement" by Howar et al.
+ * Example from the paper "Automata Learning with Automated Alphabet Abstraction Refinement" by Howar et al., which uses
+ * the generic version of the AAAR learner.
  */
 @SuppressWarnings("PMD.SystemPrintln")
 public final class AlternatingBitExampleGeneric {

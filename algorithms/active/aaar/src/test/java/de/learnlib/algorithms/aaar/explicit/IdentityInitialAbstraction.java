@@ -42,7 +42,7 @@ public class IdentityInitialAbstraction<I> implements ExplicitInitialAbstraction
     }
 
     @Override
-    public Collection<I> getSigmaA() {
+    public Collection<I> getInitialAbstracts() {
         return this.alphabet;
     }
 }

@@ -18,13 +18,23 @@ package de.learnlib.algorithms.aaar;
 import java.util.Collection;
 
 /**
+ * This interface denotes an {@link Abstraction} that additionally provides an initial classification of abstract input
+ * symbols.
+ *
+ * @param <AI>
+ *         abstract input symbol type
+ * @param <CI>
+ *         concrete input symbol type
+ *
  * @author fhowar
  * @author frohme
  */
 public interface ExplicitInitialAbstraction<AI, CI> extends Abstraction<AI, CI> {
 
     /**
-     * @return the sigmaA
+     * Return the initial collection of abstract symbols.
+     *
+     * @return the initial collection of abstract symbols
      */
-    Collection<AI> getSigmaA();
+    Collection<AI> getInitialAbstracts();
 }
