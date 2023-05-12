@@ -35,6 +35,7 @@ public class KearnsVaziraniMealyIT extends AbstractMealyLearnerIT {
 
     @Override
     protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,
+                                             int targetSize,
                                              MealyMembershipOracle<I, O> mqOracle,
                                              MealyLearnerVariantList<I, O> variants) {
         KearnsVaziraniMealyBuilder<I, O> builder = new KearnsVaziraniMealyBuilder<>();

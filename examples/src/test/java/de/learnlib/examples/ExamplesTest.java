@@ -27,6 +27,8 @@ import javax.swing.SwingUtilities;
 
 import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.ObservationTable;
+import de.learnlib.examples.aaar.AlternatingBitExampleExplicit;
+import de.learnlib.examples.aaar.AlternatingBitExampleGeneric;
 import mockit.Mock;
 import mockit.MockUp;
 import net.automatalib.commons.util.system.JVMUtil;
@@ -55,6 +57,30 @@ public class ExamplesTest {
             }
             w.dispatchEvent(new WindowEvent(w, WindowEvent.WINDOW_CLOSING));
         }, AWTEvent.WINDOW_FOCUS_EVENT_MASK);
+    }
+
+    @Test
+    public void testAAARAlternatingBitExampleGeneric() throws InterruptedException, InvocationTargetException {
+        checkJVMCompatibility();
+        SwingUtilities.invokeAndWait(() -> {
+            try {
+                AlternatingBitExampleGeneric.main(new String[0]);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    @Test
+    public void testAAARAlternatingBitExampleExplicit() throws InterruptedException, InvocationTargetException {
+        checkJVMCompatibility();
+        SwingUtilities.invokeAndWait(() -> {
+            try {
+                AlternatingBitExampleExplicit.main(new String[0]);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Test

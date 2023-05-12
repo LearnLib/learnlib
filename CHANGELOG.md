@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Added the OML (optimal-MAT-learner) active learning algorithm, thanks to [Falk Howar](https://github.com/fhowar).
 * Added a new learning algorithm for systems of procedural automata (SPAs).
 * Added Moore versions of the learners `DT`, `TTT`, `LStar`, thanks to [Mohamad Bayram](https://github.com/mohbayram).
+* Migrated the AAAR algorithm from the old closed-source LearnLib.
 
 ### Changed
 

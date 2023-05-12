@@ -43,6 +43,10 @@ limitations under the License.
         <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-aaar</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-acex</artifactId>
         </dependency>
         <dependency>
@@ -143,7 +147,6 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-dot-visualizer</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>

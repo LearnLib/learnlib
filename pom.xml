@@ -280,6 +280,11 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-aaar</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-adt</artifactId>
                 <version>${project.version}</version>
             </dependency>

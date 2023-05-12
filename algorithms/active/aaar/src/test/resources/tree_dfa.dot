@@ -1,0 +1,16 @@
+digraph g {
+
+	s0 [shape="circle" label="Paul, Mary"];
+	s1 [shape="circle" label="Paul loves, ε"];
+	s2 [shape="circle" label="Abs.: 'loves'
+Rep.: 'loves'"];
+	s3 [shape="circle" label="Abs.: 'Paul'
+Rep.: 'Paul'"];
+	s4 [shape="circle" label="Abs.: 'Mary'
+Rep.: 'Mary'"];
+	s0 -> s1 [label="== false"];
+	s0 -> s2 [style="dashed" label="!= false"];
+	s1 -> s3 [label="== false"];
+	s1 -> s4 [style="dashed" label="!= false"];
+
+}

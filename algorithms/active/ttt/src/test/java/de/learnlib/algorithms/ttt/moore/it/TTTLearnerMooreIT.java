@@ -29,6 +29,7 @@ public class TTTLearnerMooreIT extends AbstractMooreLearnerIT {
 
     @Override
     protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,
+                                             int targetSize,
                                              MooreMembershipOracle<I, O> mqOracle,
                                              MooreLearnerVariantList<I, O> variants) {
 

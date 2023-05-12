@@ -32,9 +32,9 @@ import org.testng.annotations.Factory;
 /**
  * Abstract integration test for DFA learning algorithms.
  * <p>
- * If run, this integration test tests the functionality of all {@link #addLearnerVariants(Alphabet, int,
- * DFAMembershipOracle, DFALearnerVariantList) variants} of a DFA learning algorithm against all the examples contained
- * in {@link LearningExamples#createDFAExamples()}.
+ * If run, this integration test tests the functionality of all
+ * {@link #addLearnerVariants(Alphabet, int, DFAMembershipOracle, DFALearnerVariantList) variants} of a DFA learning
+ * algorithm against all the examples contained in {@link LearningExamples#createDFAExamples()}.
  *
  * @author Malte Isberner
  */
@@ -66,11 +66,13 @@ public abstract class AbstractDFALearnerIT {
     }
 
     /**
-     * Adds, for a given setup, all the variants of the DFA learner to be tested to the specified {@link
-     * LearnerVariantList variant list}.
+     * Adds, for a given setup, all the variants of the DFA learner to be tested to the specified
+     * {@link LearnerVariantList variant list}.
      *
      * @param alphabet
      *         the input alphabet
+     * @param targetSize
+     *         the size of the target automaton
      * @param mqOracle
      *         the membership oracle
      * @param variants
