@@ -85,9 +85,13 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
 
     @Override
     public void startLearning() {
-        getInitialAbstracts().forEach(this.abs::addSymbol);
-        getInitialRepresentatives().forEach(this.rep::addSymbol);
-        getInitialRepresentatives().forEach(((SupportsGrowingAlphabet<CI>) this.learner)::addAlphabetSymbol);
+        for (AI ai : getInitialAbstracts()) {
+            this.abs.addSymbol(ai);
+        }
+        for (CI ci : getInitialRepresentatives()) {
+            this.rep.addSymbol(ci);
+            this.learner.addAlphabetSymbol(ci);
+        }
         learner.startLearning();
     }
 

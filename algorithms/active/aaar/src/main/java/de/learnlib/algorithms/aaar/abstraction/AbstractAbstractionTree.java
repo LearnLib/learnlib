@@ -203,9 +203,9 @@ public abstract class AbstractAbstractionTree<AI, CI, D>
                 if (src instanceof InnerNode) {
                     final InnerNode<?, ?> n = (InnerNode<?, ?>) src;
                     if (n.equalsNext == tgt) {
-                        properties.put(EdgeAttrs.LABEL, "==" + n.out);
+                        properties.put(EdgeAttrs.LABEL, "== " + n.out);
                     } else {
-                        properties.put(EdgeAttrs.LABEL, "!=" + n.out);
+                        properties.put(EdgeAttrs.LABEL, "!= " + n.out);
                         properties.put(EdgeAttrs.STYLE, EdgeStyles.DASHED);
                     }
                 }
