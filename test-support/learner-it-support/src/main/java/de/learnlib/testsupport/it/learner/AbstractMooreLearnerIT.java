@@ -59,7 +59,7 @@ public abstract class AbstractMooreLearnerIT {
         final Alphabet<I> alphabet = example.getAlphabet();
         final MooreMachine<?, I, ?, O> reference = example.getReferenceAutomaton();
         final MooreMembershipOracle<I, O> mqOracle = new MooreSimulatorOracle<>(reference);
-        final MooreEquivalenceOracle<I, O> eqOracle =  new MooreSimulatorEQOracle<>(reference);
+        final MooreEquivalenceOracle<I, O> eqOracle = new MooreSimulatorEQOracle<>(reference);
         final MooreLearnerVariantListImpl<I, O> variants = new MooreLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, reference.size(), mqOracle, variants);
 
