@@ -8,9 +8,9 @@ Rep.: 'loves'"];
 Rep.: 'Paul'"];
 	s4 [shape="circle" label="Abs.: 'Mary'
 Rep.: 'Mary'"];
-	s0 -> s1 [label="==false"];
-	s0 -> s2 [style="dashed" label="!=false"];
-	s1 -> s3 [label="==false"];
-	s1 -> s4 [style="dashed" label="!=false"];
+	s0 -> s1 [label="== false"];
+	s0 -> s2 [style="dashed" label="!= false"];
+	s1 -> s3 [label="== false"];
+	s1 -> s4 [style="dashed" label="!= false"];
 
 }

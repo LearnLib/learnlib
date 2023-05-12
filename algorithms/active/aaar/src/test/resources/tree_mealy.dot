@@ -5,7 +5,7 @@ digraph g {
 Rep.: 'x'"];
 	s2 [shape="circle" label="Abs.: 'y'
 Rep.: 'y'"];
-	s0 -> s1 [label="==0 9 11 12"];
-	s0 -> s2 [style="dashed" label="!=0 9 11 12"];
+	s0 -> s1 [label="== 0 9 11 12"];
+	s0 -> s2 [style="dashed" label="!= 0 9 11 12"];
 
 }
