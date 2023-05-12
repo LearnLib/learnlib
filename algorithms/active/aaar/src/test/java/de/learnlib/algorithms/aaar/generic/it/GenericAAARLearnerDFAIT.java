@@ -21,14 +21,10 @@ import de.learnlib.algorithms.aaar.AAARTestUtil;
 import de.learnlib.algorithms.aaar.ComboConstructor;
 import de.learnlib.algorithms.aaar.TranslatingLearnerWrapper;
 import de.learnlib.algorithms.aaar.generic.GenericAAARLearnerDFA;
-import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
-import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 
@@ -40,7 +36,7 @@ public class GenericAAARLearnerDFAIT extends AbstractDFALearnerIT {
     @Override
     protected <I> void addLearnerVariants(Alphabet<I> alphabet,
                                           int targetSize,
-                                          DFAMembershipOracle<I> mqOracle,
+                                          DFAMembershipOracle<I> mqo,
                                           DFALearnerVariantList<I> variants) {
 
         final int maxRounds = alphabet.size() + targetSize;
@@ -50,17 +46,12 @@ public class GenericAAARLearnerDFAIT extends AbstractDFALearnerIT {
             final String name = l.getFirst();
             final ComboConstructor<? extends DFALearner<I>, I, Boolean> learner = l.getSecond();
 
-            variants.addLearnerVariant(name, new LearnerWrapper<>(learner, mqOracle, firstSym), maxRounds);
-        }
-    }
-
-    private static class LearnerWrapper<L extends DFALearner<I> & SupportsGrowingAlphabet<I>, I>
-            extends TranslatingLearnerWrapper<L, DFA<?, I>, I, Boolean> implements DFALearner<I> {
-
-        LearnerWrapper(LearnerConstructor<L, I, Boolean> learnerConstructor,
-                       MembershipOracle<I, Boolean> mqo,
-                       I initialConcrete) {
-            super(new GenericAAARLearnerDFA<>(learnerConstructor, mqo, initialConcrete, Function.identity()));
+            variants.addLearnerVariant(name,
+                                       new TranslatingLearnerWrapper<>(new GenericAAARLearnerDFA<>(learner,
+                                                                                                   mqo,
+                                                                                                   firstSym,
+                                                                                                   Function.identity())),
+                                       maxRounds);
         }
     }
 }

@@ -21,14 +21,10 @@ import de.learnlib.algorithms.aaar.TranslatingLearnerWrapper;
 import de.learnlib.algorithms.aaar.explicit.ExplicitAAARLearnerMoore;
 import de.learnlib.algorithms.aaar.explicit.IdentityInitialAbstraction;
 import de.learnlib.algorithms.aaar.explicit.NoopIncrementor;
-import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMooreLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreLearnerVariantList;
-import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -41,27 +37,19 @@ public class ExplicitAAARLearnerIdentityMooreIT extends AbstractMooreLearnerIT {
     @Override
     protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,
                                              int targetSize,
-                                             MooreMembershipOracle<I, O> mqOracle,
+                                             MooreMembershipOracle<I, O> mqo,
                                              MooreLearnerVariantList<I, O> variants) {
 
         for (Pair<String, ComboConstructor<? extends MooreLearner<I, O>, I, Word<O>>> l : AAARTestUtil.<I, O>getMooreLearners()) {
             final String name = l.getFirst();
             final ComboConstructor<? extends MooreLearner<I, O>, I, Word<O>> learner = l.getSecond();
 
-            variants.addLearnerVariant(name, new LearnerWrapper<>(learner, mqOracle, alphabet));
-        }
-    }
-
-    private static class LearnerWrapper<L extends MooreLearner<I, O> & SupportsGrowingAlphabet<I>, I, O>
-            extends TranslatingLearnerWrapper<L, MooreMachine<?, I, ?, O>, I, Word<O>> implements MooreLearner<I, O> {
-
-        LearnerWrapper(LearnerConstructor<L, I, Word<O>> learnerConstructor,
-                       MembershipOracle<I, Word<O>> mqo,
-                       Alphabet<I> alphabet) {
-            super(new ExplicitAAARLearnerMoore<>(learnerConstructor,
-                                                 mqo,
-                                                 new IdentityInitialAbstraction<>(alphabet),
-                                                 new NoopIncrementor<>()));
+            variants.addLearnerVariant(name,
+                                       new TranslatingLearnerWrapper<>(new ExplicitAAARLearnerMoore<>(learner,
+                                                                                                      mqo,
+                                                                                                      new IdentityInitialAbstraction<>(
+                                                                                                              alphabet),
+                                                                                                      new NoopIncrementor<>())));
         }
     }
 }

@@ -21,14 +21,10 @@ import de.learnlib.algorithms.aaar.AAARTestUtil;
 import de.learnlib.algorithms.aaar.ComboConstructor;
 import de.learnlib.algorithms.aaar.TranslatingLearnerWrapper;
 import de.learnlib.algorithms.aaar.generic.GenericAAARLearnerMoore;
-import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMooreLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreLearnerVariantList;
-import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -41,7 +37,7 @@ public class GenericAAARLearnerMooreIT extends AbstractMooreLearnerIT {
     @Override
     protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,
                                              int targetSize,
-                                             MooreMembershipOracle<I, O> mqOracle,
+                                             MooreMembershipOracle<I, O> mqo,
                                              MooreLearnerVariantList<I, O> variants) {
 
         final int maxRounds = alphabet.size() + targetSize;
@@ -51,17 +47,12 @@ public class GenericAAARLearnerMooreIT extends AbstractMooreLearnerIT {
             final String name = l.getFirst();
             final ComboConstructor<? extends MooreLearner<I, O>, I, Word<O>> learner = l.getSecond();
 
-            variants.addLearnerVariant(name, new LearnerWrapper<>(learner, mqOracle, firstSym), maxRounds);
-        }
-    }
-
-    private static class LearnerWrapper<L extends MooreLearner<I, O> & SupportsGrowingAlphabet<I>, I, O>
-            extends TranslatingLearnerWrapper<L, MooreMachine<?, I, ?, O>, I, Word<O>> implements MooreLearner<I, O> {
-
-        LearnerWrapper(LearnerConstructor<L, I, Word<O>> learnerConstructor,
-                       MembershipOracle<I, Word<O>> mqo,
-                       I initialConcrete) {
-            super(new GenericAAARLearnerMoore<>(learnerConstructor, mqo, initialConcrete, Function.identity()));
+            variants.addLearnerVariant(name,
+                                       new TranslatingLearnerWrapper<>(new GenericAAARLearnerMoore<>(learner,
+                                                                                                     mqo,
+                                                                                                     firstSym,
+                                                                                                     Function.identity())),
+                                       maxRounds);
         }
     }
 }

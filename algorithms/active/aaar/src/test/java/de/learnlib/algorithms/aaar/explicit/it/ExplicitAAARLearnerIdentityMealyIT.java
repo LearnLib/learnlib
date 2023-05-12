@@ -21,14 +21,10 @@ import de.learnlib.algorithms.aaar.TranslatingLearnerWrapper;
 import de.learnlib.algorithms.aaar.explicit.ExplicitAAARLearnerMealy;
 import de.learnlib.algorithms.aaar.explicit.IdentityInitialAbstraction;
 import de.learnlib.algorithms.aaar.explicit.NoopIncrementor;
-import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
-import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -41,27 +37,19 @@ public class ExplicitAAARLearnerIdentityMealyIT extends AbstractMealyLearnerIT {
     @Override
     protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,
                                              int targetSize,
-                                             MealyMembershipOracle<I, O> mqOracle,
+                                             MealyMembershipOracle<I, O> mqo,
                                              MealyLearnerVariantList<I, O> variants) {
 
         for (Pair<String, ComboConstructor<? extends MealyLearner<I, O>, I, Word<O>>> l : AAARTestUtil.<I, O>getMealyLearners()) {
             final String name = l.getFirst();
             final ComboConstructor<? extends MealyLearner<I, O>, I, Word<O>> learner = l.getSecond();
 
-            variants.addLearnerVariant(name, new LearnerWrapper<>(learner, mqOracle, alphabet));
-        }
-    }
-
-    private static class LearnerWrapper<L extends MealyLearner<I, O> & SupportsGrowingAlphabet<I>, I, O>
-            extends TranslatingLearnerWrapper<L, MealyMachine<?, I, ?, O>, I, Word<O>> implements MealyLearner<I, O> {
-
-        LearnerWrapper(LearnerConstructor<L, I, Word<O>> learnerConstructor,
-                       MembershipOracle<I, Word<O>> mqo,
-                       Alphabet<I> alphabet) {
-            super(new ExplicitAAARLearnerMealy<>(learnerConstructor,
-                                                 mqo,
-                                                 new IdentityInitialAbstraction<>(alphabet),
-                                                 new NoopIncrementor<>()));
+            variants.addLearnerVariant(name,
+                                       new TranslatingLearnerWrapper<>(new ExplicitAAARLearnerMealy<>(learner,
+                                                                                                      mqo,
+                                                                                                      new IdentityInitialAbstraction<>(
+                                                                                                              alphabet),
+                                                                                                      new NoopIncrementor<>())));
         }
     }
 }

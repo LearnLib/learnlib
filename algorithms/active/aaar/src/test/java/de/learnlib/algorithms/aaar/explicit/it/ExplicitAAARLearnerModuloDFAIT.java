@@ -21,14 +21,10 @@ import de.learnlib.algorithms.aaar.TranslatingLearnerWrapper;
 import de.learnlib.algorithms.aaar.explicit.ExplicitAAARLearnerDFA;
 import de.learnlib.algorithms.aaar.explicit.Incrementor;
 import de.learnlib.algorithms.aaar.explicit.ModuloInitialAbstraction;
-import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
-import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 
@@ -40,7 +36,7 @@ public class ExplicitAAARLearnerModuloDFAIT extends AbstractDFALearnerIT {
     @Override
     protected <I> void addLearnerVariants(Alphabet<I> alphabet,
                                           int targetSize,
-                                          DFAMembershipOracle<I> mqOracle,
+                                          DFAMembershipOracle<I> mqo,
                                           DFALearnerVariantList<I> variants) {
 
         final int maxRounds = alphabet.size() + targetSize;
@@ -50,21 +46,14 @@ public class ExplicitAAARLearnerModuloDFAIT extends AbstractDFALearnerIT {
                 final String name = l.getFirst();
                 final ComboConstructor<? extends DFALearner<I>, I, Boolean> learner = l.getSecond();
 
-                variants.addLearnerVariant(name, new LearnerWrapper<>(learner, mqOracle, alphabet), maxRounds);
+                variants.addLearnerVariant(name,
+                                           new TranslatingLearnerWrapper<>(new ExplicitAAARLearnerDFA<>(learner,
+                                                                                                        mqo,
+                                                                                                        new ModuloInitialAbstraction<>(
+                                                                                                                alphabet),
+                                                                                                        new Incrementor())),
+                                           maxRounds);
             }
-        }
-    }
-
-    private static class LearnerWrapper<L extends DFALearner<I> & SupportsGrowingAlphabet<I>, I>
-            extends TranslatingLearnerWrapper<L, DFA<?, I>, I, Boolean> implements DFALearner<I> {
-
-        LearnerWrapper(LearnerConstructor<L, I, Boolean> learnerConstructor,
-                       MembershipOracle<I, Boolean> mqo,
-                       Alphabet<I> alphabet) {
-            super(new ExplicitAAARLearnerDFA<>(learnerConstructor,
-                                               mqo,
-                                               new ModuloInitialAbstraction<>(alphabet),
-                                               new Incrementor()));
         }
     }
 }
