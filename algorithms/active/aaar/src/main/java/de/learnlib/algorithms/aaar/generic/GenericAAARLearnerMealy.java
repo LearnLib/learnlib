@@ -17,8 +17,8 @@ package de.learnlib.algorithms.aaar.generic;
 
 import java.util.function.Function;
 
-import de.learnlib.algorithms.aaar.LearnerProvider;
 import de.learnlib.algorithms.aaar.TranslatingMealyMachine;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -46,7 +46,7 @@ public class GenericAAARLearnerMealy<L extends MealyLearner<CI, O> & SupportsGro
     /**
      * Constructor.
      *
-     * @param learnerProvider
+     * @param learnerConstructor
      *         the provider for constructing the internal (concrete) learner
      * @param oracle
      *         the (concrete) membership oracle
@@ -56,11 +56,11 @@ public class GenericAAARLearnerMealy<L extends MealyLearner<CI, O> & SupportsGro
      *         the function for creating new abstract input symbols given concrete one. This function only receives
      *         input symbols from the provided (concrete) counterexamples
      */
-    public GenericAAARLearnerMealy(LearnerProvider<L, MealyMachine<?, CI, ?, O>, CI, Word<O>> learnerProvider,
+    public GenericAAARLearnerMealy(LearnerConstructor<L, CI, Word<O>> learnerConstructor,
                                    MembershipOracle<CI, Word<O>> oracle,
                                    CI initialConcrete,
                                    Function<CI, AI> abstractor) {
-        super(learnerProvider, oracle, initialConcrete, abstractor);
+        super(learnerConstructor, oracle, initialConcrete, abstractor);
     }
 
     @Override

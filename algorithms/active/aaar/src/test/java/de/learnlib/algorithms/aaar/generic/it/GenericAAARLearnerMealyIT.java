@@ -18,9 +18,10 @@ package de.learnlib.algorithms.aaar.generic.it;
 import java.util.function.Function;
 
 import de.learnlib.algorithms.aaar.AAARTestUtil;
-import de.learnlib.algorithms.aaar.LearnerProvider;
+import de.learnlib.algorithms.aaar.ComboConstructor;
 import de.learnlib.algorithms.aaar.TranslatingLearnerWrapper;
 import de.learnlib.algorithms.aaar.generic.GenericAAARLearnerMealy;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
@@ -46,10 +47,9 @@ public class GenericAAARLearnerMealyIT extends AbstractMealyLearnerIT {
         final int maxRounds = alphabet.size() + targetSize;
         final I firstSym = alphabet.getSymbol(0);
 
-        for (Pair<String, LearnerProvider<? extends MealyLearner<I, O>, MealyMachine<?, I, ?, O>, I, Word<O>>> l : AAARTestUtil.<I, O>getMealyLearners()) {
+        for (Pair<String, ComboConstructor<? extends MealyLearner<I, O>, I, Word<O>>> l : AAARTestUtil.<I, O>getMealyLearners()) {
             final String name = l.getFirst();
-            final LearnerProvider<? extends MealyLearner<I, O>, MealyMachine<?, I, ?, O>, I, Word<O>> learner =
-                    l.getSecond();
+            final ComboConstructor<? extends MealyLearner<I, O>, I, Word<O>> learner = l.getSecond();
 
             variants.addLearnerVariant(name, new LearnerWrapper<>(learner, mqOracle, firstSym), maxRounds);
         }
@@ -58,10 +58,10 @@ public class GenericAAARLearnerMealyIT extends AbstractMealyLearnerIT {
     private static class LearnerWrapper<L extends MealyLearner<I, O> & SupportsGrowingAlphabet<I>, I, O>
             extends TranslatingLearnerWrapper<L, MealyMachine<?, I, ?, O>, I, Word<O>> implements MealyLearner<I, O> {
 
-        LearnerWrapper(LearnerProvider<L, MealyMachine<?, I, ?, O>, I, Word<O>> learnerProvider,
+        LearnerWrapper(LearnerConstructor<L, I, Word<O>> learnerConstructor,
                        MembershipOracle<I, Word<O>> mqo,
                        I initialConcrete) {
-            super(new GenericAAARLearnerMealy<>(learnerProvider, mqo, initialConcrete, Function.identity()));
+            super(new GenericAAARLearnerMealy<>(learnerConstructor, mqo, initialConcrete, Function.identity()));
         }
     }
 }

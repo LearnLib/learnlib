@@ -25,10 +25,10 @@ import java.util.function.Function;
 import com.google.common.collect.Maps;
 import de.learnlib.algorithms.aaar.AbstractAAARLearner;
 import de.learnlib.algorithms.aaar.ExplicitInitialAbstraction;
-import de.learnlib.algorithms.aaar.LearnerProvider;
 import de.learnlib.algorithms.aaar.abstraction.AbstractAbstractionTree;
 import de.learnlib.algorithms.aaar.abstraction.ExplicitAbstractionTree;
 import de.learnlib.algorithms.aaar.generic.AbstractGenericAAARLearner;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -69,7 +69,7 @@ public abstract class AbstractExplicitAAARLearner<L extends LearningAlgorithm<CM
     /**
      * Constructor.
      *
-     * @param learnerProvider
+     * @param learnerConstructor
      *         the provider for constructing the internal (concrete) learner
      * @param oracle
      *         the (concrete) membership oracle
@@ -79,11 +79,11 @@ public abstract class AbstractExplicitAAARLearner<L extends LearningAlgorithm<CM
      *         the function for creating new abstract input symbols given concrete one. This function only receives
      *         input symbols from the provided explicitInitialAbstraction
      */
-    public AbstractExplicitAAARLearner(LearnerProvider<L, CM, CI, D> learnerProvider,
+    public AbstractExplicitAAARLearner(LearnerConstructor<L, CI, D> learnerConstructor,
                                        MembershipOracle<CI, D> oracle,
                                        ExplicitInitialAbstraction<AI, CI> explicitInitialAbstraction,
                                        Function<AI, AI> incrementor) {
-        super(learnerProvider, oracle);
+        super(learnerConstructor, oracle);
 
         this.explicitInitialAbstraction = explicitInitialAbstraction;
         this.trees = Maps.newHashMapWithExpectedSize(explicitInitialAbstraction.getInitialAbstracts().size());

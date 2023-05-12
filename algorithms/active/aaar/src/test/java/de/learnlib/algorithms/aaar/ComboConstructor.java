@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.spa;
+package de.learnlib.algorithms.aaar;
 
-import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.algorithm.LearnerConstructor;
+import de.learnlib.api.algorithm.LearningAlgorithm;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.words.Alphabet;
 
-@FunctionalInterface
-public interface LearnerProvider<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> & AccessSequenceTransformer<I>> {
-
-    L createProceduralLearner(I procedure, Alphabet<I> alphabet, MembershipOracle<I, Boolean> membershipOracle);
-
-}
+/**
+ * Utility interface to establish the combined learner constraints on {@link LearningAlgorithm} and
+ * {@link SupportsGrowingAlphabet}.
+ *
+ * @author frohme
+ */
+public interface ComboConstructor<L extends LearningAlgorithm<?, I, D> & SupportsGrowingAlphabet<I>, I, D>
+        extends LearnerConstructor<L, I, D> {}

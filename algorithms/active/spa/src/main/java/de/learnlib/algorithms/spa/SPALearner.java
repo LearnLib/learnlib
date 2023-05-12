@@ -22,13 +22,13 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.learnlib.algorithms.spa.manager.OptimizingATRManager;
 import de.learnlib.api.AccessSequenceTransformer;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
@@ -39,7 +39,7 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.spa.EmptySPA;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.automata.spa.StackSPA;
-import net.automatalib.words.Alphabet;
+import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.SPAAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -61,32 +61,32 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
 
     private final SPAAlphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;
-    private final LearnerProvider<I, L> learnerProvider;
+    private final Mapping<I, LearnerConstructor<L, I, Boolean>> learnerConstructors;
     private final ATRManager<I> atrManager;
 
     private final Map<I, L> subLearners;
     private final Set<I> activeAlphabet;
     private I initialCallSymbol;
 
-    public SPALearner(final SPAAlphabet<I> alphabet,
-                      final MembershipOracle<I, Boolean> oracle,
-                      final BiFunction<Alphabet<I>, MembershipOracle<I, Boolean>, L> learnerProvider) {
-        this(alphabet, oracle, (p, alph, mqo) -> learnerProvider.apply(alph, mqo));
+    public SPALearner(SPAAlphabet<I> alphabet,
+                      MembershipOracle<I, Boolean> oracle,
+                      LearnerConstructor<L, I, Boolean> learnerConstructor) {
+        this(alphabet, oracle, (i) -> learnerConstructor);
     }
 
-    public SPALearner(final SPAAlphabet<I> alphabet,
-                      final MembershipOracle<I, Boolean> oracle,
-                      final LearnerProvider<I, L> learnerProvider) {
-        this(alphabet, oracle, learnerProvider, new OptimizingATRManager<>(alphabet));
+    public SPALearner(SPAAlphabet<I> alphabet,
+                      MembershipOracle<I, Boolean> oracle,
+                      Mapping<I, LearnerConstructor<L, I, Boolean>> learnerConstructors) {
+        this(alphabet, oracle, learnerConstructors, new OptimizingATRManager<>(alphabet));
     }
 
-    public SPALearner(final SPAAlphabet<I> alphabet,
-                      final MembershipOracle<I, Boolean> oracle,
-                      final LearnerProvider<I, L> learnerProvider,
-                      final ATRManager<I> atrManager) {
+    public SPALearner(SPAAlphabet<I> alphabet,
+                      MembershipOracle<I, Boolean> oracle,
+                      Mapping<I, LearnerConstructor<L, I, Boolean>> learnerConstructors,
+                      ATRManager<I> atrManager) {
         this.alphabet = alphabet;
         this.oracle = oracle;
-        this.learnerProvider = learnerProvider;
+        this.learnerConstructors = learnerConstructors;
         this.atrManager = atrManager;
 
         this.subLearners = Maps.newHashMapWithExpectedSize(this.alphabet.getNumCalls());
@@ -169,12 +169,12 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         final Set<I> newProcedures = atrManager.scanPositiveCounterexample(input);
 
         for (I sym : newProcedures) {
-            final L newLearner = learnerProvider.createProceduralLearner(sym,
-                                                                         new GrowingMapAlphabet<>(this.alphabet.getInternalAlphabet()),
-                                                                         new ProceduralMembershipOracle<>(alphabet,
-                                                                                                          oracle,
-                                                                                                          sym,
-                                                                                                          atrManager));
+            final L newLearner = learnerConstructors.get(sym)
+                                                    .constructLearner(new GrowingMapAlphabet<>(alphabet.getInternalAlphabet()),
+                                                                      new ProceduralMembershipOracle<>(alphabet,
+                                                                                                       oracle,
+                                                                                                       sym,
+                                                                                                       atrManager));
             // add existing procedures (without itself) to new learner
             for (final I call : this.subLearners.keySet()) {
                 newLearner.addAlphabetSymbol(call);

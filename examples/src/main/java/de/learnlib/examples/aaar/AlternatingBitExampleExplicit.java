@@ -25,11 +25,11 @@ import java.util.Map;
 import java.util.function.Function;
 
 import de.learnlib.algorithms.aaar.ExplicitInitialAbstraction;
-import de.learnlib.algorithms.aaar.LearnerProvider;
 import de.learnlib.algorithms.aaar.abstraction.ExplicitAbstractionTree;
 import de.learnlib.algorithms.aaar.explicit.ExplicitAAARLearnerMealy;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerMealy;
@@ -63,10 +63,10 @@ public final class AlternatingBitExampleExplicit {
         final Protocol sul = new Protocol();
         final MembershipOracle<Event, Word<String>> mqo = new SimulatorOracle<>(sul);
 
-        final LearnerProvider<ExtensibleLStarMealy<Event, String>, MealyMachine<?, Event, ?, String>, Event, Word<String>>
-                lstar = (alph, mq) -> new ExtensibleLStarMealyBuilder<Event, String>().withAlphabet(alph)
-                                                                                      .withOracle(mq)
-                                                                                      .create();
+        final LearnerConstructor<ExtensibleLStarMealy<Event, String>, Event, Word<String>> lstar =
+                (alph, mq) -> new ExtensibleLStarMealyBuilder<Event, String>().withAlphabet(alph)
+                                                                              .withOracle(mq)
+                                                                              .create();
 
         final ExplicitAAARLearnerMealy<ExtensibleLStarMealy<Event, String>, String, Event, String> learner =
                 new ExplicitAAARLearnerMealy<>(lstar, mqo, new InitialAbstraction(), new Incrementor());

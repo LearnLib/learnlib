@@ -17,7 +17,6 @@ package de.learnlib.algorithms.spa;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import de.learnlib.algorithms.spa.adapter.DiscriminationTreeAdapter;
@@ -28,12 +27,12 @@ import de.learnlib.algorithms.spa.adapter.TTTAdapter;
 import de.learnlib.algorithms.spa.manager.DefaultATRManager;
 import de.learnlib.algorithms.spa.manager.OptimizingATRManager;
 import de.learnlib.api.AccessSequenceTransformer;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractSPALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPALearnerVariantList;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.words.Alphabet;
 import net.automatalib.words.SPAAlphabet;
 
 public class SPAIT extends AbstractSPALearnerIT {
@@ -67,15 +66,12 @@ public class SPAIT extends AbstractSPALearnerIT {
         }
 
         <L extends DFALearner<I> & SupportsGrowingAlphabet<I> & AccessSequenceTransformer<I>> void addLearnerVariant(
-                BiFunction<Alphabet<I>, MembershipOracle<I, Boolean>, L> adapter) {
+                LearnerConstructor<L, I, Boolean> provider) {
 
-            final LearnerProvider<I, L> adapterAsProvider = (p, alph, mqo) -> adapter.apply(alph, mqo);
-
-            for (Function<SPAAlphabet<I>, ATRManager<I>> provider : atrProviders) {
-                // cast is required by compiler
+            for (Function<SPAAlphabet<I>, ATRManager<I>> atrProvider : atrProviders) {
                 final SPALearner<I, L> learner =
-                        new SPALearner<>(alphabet, mqOracle, adapterAsProvider, provider.apply(alphabet));
-                final String name = String.format("adapter=%s,provider=%s", adapter, provider);
+                        new SPALearner<>(alphabet, mqOracle, (i) -> provider, atrProvider.apply(alphabet));
+                final String name = String.format("adapter=%s,provider=%s", provider, atrProvider);
                 variants.addLearnerVariant(name, learner);
             }
         }

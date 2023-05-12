@@ -18,8 +18,8 @@ package de.learnlib.algorithms.aaar.explicit;
 import java.util.function.Function;
 
 import de.learnlib.algorithms.aaar.ExplicitInitialAbstraction;
-import de.learnlib.algorithms.aaar.LearnerProvider;
 import de.learnlib.algorithms.aaar.TranslatingDFA;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -44,7 +44,7 @@ public class ExplicitAAARLearnerDFA<L extends DFALearner<CI> & SupportsGrowingAl
     /**
      * Constructor.
      *
-     * @param learnerProvider
+     * @param learnerConstructor
      *         the provider for constructing the internal (concrete) learner
      * @param oracle
      *         the (concrete) membership oracle
@@ -54,11 +54,11 @@ public class ExplicitAAARLearnerDFA<L extends DFALearner<CI> & SupportsGrowingAl
      *         the function for creating new abstract input symbols given concrete one. This function only receives
      *         input symbols from the provided explicitInitialAbstraction
      */
-    public ExplicitAAARLearnerDFA(LearnerProvider<L, DFA<?, CI>, CI, Boolean> learnerProvider,
+    public ExplicitAAARLearnerDFA(LearnerConstructor<L, CI, Boolean> learnerConstructor,
                                   MembershipOracle<CI, Boolean> oracle,
                                   ExplicitInitialAbstraction<AI, CI> explicitInitialAbstraction,
                                   Function<AI, AI> incrementor) {
-        super(learnerProvider, oracle, explicitInitialAbstraction, incrementor);
+        super(learnerConstructor, oracle, explicitInitialAbstraction, incrementor);
     }
 
     @Override

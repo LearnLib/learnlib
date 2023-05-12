@@ -18,8 +18,8 @@ package de.learnlib.algorithms.aaar.explicit;
 import java.util.function.Function;
 
 import de.learnlib.algorithms.aaar.ExplicitInitialAbstraction;
-import de.learnlib.algorithms.aaar.LearnerProvider;
 import de.learnlib.algorithms.aaar.TranslatingMooreMachine;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -47,7 +47,7 @@ public class ExplicitAAARLearnerMoore<L extends MooreLearner<CI, O> & SupportsGr
     /**
      * Constructor.
      *
-     * @param learnerProvider
+     * @param learnerConstructor
      *         the provider for constructing the internal (concrete) learner
      * @param oracle
      *         the (concrete) membership oracle
@@ -57,11 +57,11 @@ public class ExplicitAAARLearnerMoore<L extends MooreLearner<CI, O> & SupportsGr
      *         the function for creating new abstract input symbols given concrete one. This function only receives
      *         input symbols from the provided explicitInitialAbstraction
      */
-    public ExplicitAAARLearnerMoore(LearnerProvider<L, MooreMachine<?, CI, ?, O>, CI, Word<O>> learnerProvider,
+    public ExplicitAAARLearnerMoore(LearnerConstructor<L, CI, Word<O>> learnerConstructor,
                                     MembershipOracle<CI, Word<O>> oracle,
                                     ExplicitInitialAbstraction<AI, CI> explicitInitialAbstraction,
                                     Function<AI, AI> incrementor) {
-        super(learnerProvider, oracle, explicitInitialAbstraction, incrementor);
+        super(learnerConstructor, oracle, explicitInitialAbstraction, incrementor);
     }
 
     @Override

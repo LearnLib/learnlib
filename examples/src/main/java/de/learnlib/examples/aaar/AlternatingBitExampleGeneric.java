@@ -20,10 +20,10 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.function.Function;
 
-import de.learnlib.algorithms.aaar.LearnerProvider;
 import de.learnlib.algorithms.aaar.generic.GenericAAARLearnerMealy;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerMealy;
@@ -57,10 +57,10 @@ public final class AlternatingBitExampleGeneric {
         final Protocol sul = new Protocol();
         final MembershipOracle<Event, Word<String>> mqo = new SimulatorOracle<>(sul);
 
-        final LearnerProvider<ExtensibleLStarMealy<Event, String>, MealyMachine<?, Event, ?, String>, Event, Word<String>>
-                lstar = (alph, mq) -> new ExtensibleLStarMealyBuilder<Event, String>().withAlphabet(alph)
-                                                                                      .withOracle(mq)
-                                                                                      .create();
+        final LearnerConstructor<ExtensibleLStarMealy<Event, String>, Event, Word<String>> lstar =
+                (alph, mq) -> new ExtensibleLStarMealyBuilder<Event, String>().withAlphabet(alph)
+                                                                              .withOracle(mq)
+                                                                              .create();
 
         final GenericAAARLearnerMealy<ExtensibleLStarMealy<Event, String>, String, Event, String> learner =
                 new GenericAAARLearnerMealy<>(lstar, mqo, new Recv(), new EventAbstractor());

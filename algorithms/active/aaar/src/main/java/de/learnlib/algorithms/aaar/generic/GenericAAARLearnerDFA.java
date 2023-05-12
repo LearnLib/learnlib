@@ -17,8 +17,8 @@ package de.learnlib.algorithms.aaar.generic;
 
 import java.util.function.Function;
 
-import de.learnlib.algorithms.aaar.LearnerProvider;
 import de.learnlib.algorithms.aaar.TranslatingDFA;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -43,7 +43,7 @@ public class GenericAAARLearnerDFA<L extends DFALearner<CI> & SupportsGrowingAlp
     /**
      * Constructor.
      *
-     * @param learnerProvider
+     * @param learnerConstructor
      *         the provider for constructing the internal (concrete) learner
      * @param oracle
      *         the (concrete) membership oracle
@@ -53,11 +53,11 @@ public class GenericAAARLearnerDFA<L extends DFALearner<CI> & SupportsGrowingAlp
      *         the function for creating new abstract input symbols given concrete one. This function only receives
      *         input symbols from the provided (concrete) counterexamples
      */
-    public GenericAAARLearnerDFA(LearnerProvider<L, DFA<?, CI>, CI, Boolean> learnerProvider,
+    public GenericAAARLearnerDFA(LearnerConstructor<L, CI, Boolean> learnerConstructor,
                                  MembershipOracle<CI, Boolean> oracle,
                                  CI initialConcrete,
                                  Function<CI, AI> abstractor) {
-        super(learnerProvider, oracle, initialConcrete, abstractor);
+        super(learnerConstructor, oracle, initialConcrete, abstractor);
     }
 
     @Override

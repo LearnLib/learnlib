@@ -25,7 +25,7 @@ import java.util.function.Function;
 import com.google.common.io.CharStreams;
 import de.learnlib.algorithms.aaar.AAARTestUtil;
 import de.learnlib.algorithms.aaar.AbstractAAARTest;
-import de.learnlib.algorithms.aaar.LearnerProvider;
+import de.learnlib.algorithms.aaar.ComboConstructor;
 import de.learnlib.algorithms.aaar.abstraction.AbstractAbstractionTree;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.api.oracle.MembershipOracle;
@@ -59,7 +59,7 @@ public class GenericAAARLearnerMooreTest
     @Override
     protected GenericAAARLearnerMoore<?, Character, Character, String> getLearner(Alphabet<Character> alphabet,
                                                                                   MembershipOracle<Character, Word<String>> oracle) {
-        final Pair<String, LearnerProvider<? extends MooreLearner<Character, String>, MooreMachine<?, Character, ?, String>, Character, Word<String>>>
+        final Pair<String, ComboConstructor<? extends MooreLearner<Character, String>, Character, Word<String>>>
                 provider = AAARTestUtil.<Character, String>getMooreLearners().get(3);
 
         // The WpMethod EQ discovered an error in the TTTMoore implementation

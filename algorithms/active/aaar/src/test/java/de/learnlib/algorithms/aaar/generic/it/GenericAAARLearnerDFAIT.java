@@ -18,9 +18,10 @@ package de.learnlib.algorithms.aaar.generic.it;
 import java.util.function.Function;
 
 import de.learnlib.algorithms.aaar.AAARTestUtil;
-import de.learnlib.algorithms.aaar.LearnerProvider;
+import de.learnlib.algorithms.aaar.ComboConstructor;
 import de.learnlib.algorithms.aaar.TranslatingLearnerWrapper;
 import de.learnlib.algorithms.aaar.generic.GenericAAARLearnerDFA;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
@@ -45,9 +46,9 @@ public class GenericAAARLearnerDFAIT extends AbstractDFALearnerIT {
         final int maxRounds = alphabet.size() + targetSize;
         final I firstSym = alphabet.getSymbol(0);
 
-        for (Pair<String, LearnerProvider<? extends DFALearner<I>, DFA<?, I>, I, Boolean>> l : AAARTestUtil.<I>getDFALearners()) {
+        for (Pair<String, ComboConstructor<? extends DFALearner<I>, I, Boolean>> l : AAARTestUtil.<I>getDFALearners()) {
             final String name = l.getFirst();
-            final LearnerProvider<? extends DFALearner<I>, DFA<?, I>, I, Boolean> learner = l.getSecond();
+            final ComboConstructor<? extends DFALearner<I>, I, Boolean> learner = l.getSecond();
 
             variants.addLearnerVariant(name, new LearnerWrapper<>(learner, mqOracle, firstSym), maxRounds);
         }
@@ -56,10 +57,10 @@ public class GenericAAARLearnerDFAIT extends AbstractDFALearnerIT {
     private static class LearnerWrapper<L extends DFALearner<I> & SupportsGrowingAlphabet<I>, I>
             extends TranslatingLearnerWrapper<L, DFA<?, I>, I, Boolean> implements DFALearner<I> {
 
-        LearnerWrapper(LearnerProvider<L, DFA<?, I>, I, Boolean> learnerProvider,
+        LearnerWrapper(LearnerConstructor<L, I, Boolean> learnerConstructor,
                        MembershipOracle<I, Boolean> mqo,
                        I initialConcrete) {
-            super(new GenericAAARLearnerDFA<>(learnerProvider, mqo, initialConcrete, Function.identity()));
+            super(new GenericAAARLearnerDFA<>(learnerConstructor, mqo, initialConcrete, Function.identity()));
         }
     }
 }

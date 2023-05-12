@@ -20,10 +20,10 @@ import java.util.Collections;
 import java.util.function.Function;
 
 import de.learnlib.algorithms.aaar.AbstractAAARLearner;
-import de.learnlib.algorithms.aaar.LearnerProvider;
 import de.learnlib.algorithms.aaar.abstraction.AbstractAbstractionTree;
 import de.learnlib.algorithms.aaar.abstraction.GenericAbstractionTree;
 import de.learnlib.algorithms.aaar.explicit.AbstractExplicitAAARLearner;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -63,7 +63,7 @@ public abstract class AbstractGenericAAARLearner<L extends LearningAlgorithm<CM,
     /**
      * Constructor.
      *
-     * @param learnerProvider
+     * @param learnerConstructor
      *         the provider for constructing the internal (concrete) learner
      * @param oracle
      *         the (concrete) membership oracle
@@ -73,11 +73,11 @@ public abstract class AbstractGenericAAARLearner<L extends LearningAlgorithm<CM,
      *         the function for creating new abstract input symbols given concrete one. This function only receives
      *         input symbols from the provided (concrete) counterexamples
      */
-    public AbstractGenericAAARLearner(LearnerProvider<L, CM, CI, D> learnerProvider,
+    public AbstractGenericAAARLearner(LearnerConstructor<L, CI, D> learnerConstructor,
                                       MembershipOracle<CI, D> oracle,
                                       CI initialConcrete,
                                       Function<CI, AI> abstractor) {
-        super(learnerProvider, oracle);
+        super(learnerConstructor, oracle);
 
         this.initialConcrete = initialConcrete;
         this.initialAbstract = abstractor.apply(initialConcrete);

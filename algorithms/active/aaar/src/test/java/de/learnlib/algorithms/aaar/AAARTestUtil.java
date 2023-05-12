@@ -42,9 +42,6 @@ import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.counterexamples.LocalSuffixFinders;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 
@@ -57,18 +54,17 @@ public final class AAARTestUtil {
         // prevent instantiation
     }
 
-    public static <I> List<Pair<String, LearnerProvider<? extends DFALearner<I>, DFA<?, I>, I, Boolean>>> getDFALearners() {
+    public static <I> List<Pair<String, ComboConstructor<? extends DFALearner<I>, I, Boolean>>> getDFALearners() {
 
-        final LearnerProvider<ClassicLStarDFA<I>, DFA<?, I>, I, Boolean> lstar = ClassicLStarDFA::new;
-        final LearnerProvider<RivestSchapireDFA<I>, DFA<?, I>, I, Boolean> rs = RivestSchapireDFA::new;
-        final LearnerProvider<KearnsVaziraniDFA<I>, DFA<?, I>, I, Boolean> kv =
+        final ComboConstructor<ClassicLStarDFA<I>, I, Boolean> lstar = ClassicLStarDFA::new;
+        final ComboConstructor<RivestSchapireDFA<I>, I, Boolean> rs = RivestSchapireDFA::new;
+        final ComboConstructor<KearnsVaziraniDFA<I>, I, Boolean> kv =
                 (alph, mqo) -> new KearnsVaziraniDFA<>(alph, mqo, true, AcexAnalyzers.BINARY_SEARCH_FWD);
-        final LearnerProvider<DTLearnerDFA<I>, DFA<?, I>, I, Boolean> dt =
+        final ComboConstructor<DTLearnerDFA<I>, I, Boolean> dt =
                 (alph, mqo) -> new DTLearnerDFA<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true, true);
-        final LearnerProvider<TTTLearnerDFA<I>, DFA<?, I>, I, Boolean> ttt =
+        final ComboConstructor<TTTLearnerDFA<I>, I, Boolean> ttt =
                 (alph, mqo) -> new TTTLearnerDFA<>(alph, mqo, AcexAnalyzers.BINARY_SEARCH_FWD);
-        final LearnerProvider<OptimalTTTDFA<I>, DFA<?, I>, I, Boolean> oml =
-                (alph, mqo) -> new OptimalTTTDFA<>(alph, mqo, mqo);
+        final ComboConstructor<OptimalTTTDFA<I>, I, Boolean> oml = (alph, mqo) -> new OptimalTTTDFA<>(alph, mqo, mqo);
 
         return Arrays.asList(Pair.of("L*", lstar),
                              Pair.of("RS", rs),
@@ -78,23 +74,22 @@ public final class AAARTestUtil {
                              Pair.of("OML", oml));
     }
 
-    public static <I, O> List<Pair<String, LearnerProvider<? extends MealyLearner<I, O>, MealyMachine<?, I, ?, O>, I, Word<O>>>> getMealyLearners() {
+    public static <I, O> List<Pair<String, ComboConstructor<? extends MealyLearner<I, O>, I, Word<O>>>> getMealyLearners() {
 
-        final LearnerProvider<ExtensibleLStarMealy<I, O>, MealyMachine<?, I, ?, O>, I, Word<O>> lstar =
+        final ComboConstructor<ExtensibleLStarMealy<I, O>, I, Word<O>> lstar =
                 (alph, mqo) -> new ExtensibleLStarMealy<>(alph,
                                                           mqo,
                                                           Collections.emptyList(),
                                                           ObservationTableCEXHandlers.CLASSIC_LSTAR,
                                                           ClosingStrategies.CLOSE_FIRST);
-        final LearnerProvider<RivestSchapireMealy<I, O>, MealyMachine<?, I, ?, O>, I, Word<O>> rs =
-                RivestSchapireMealy::new;
-        final LearnerProvider<KearnsVaziraniMealy<I, O>, MealyMachine<?, I, ?, O>, I, Word<O>> kv =
+        final ComboConstructor<RivestSchapireMealy<I, O>, I, Word<O>> rs = RivestSchapireMealy::new;
+        final ComboConstructor<KearnsVaziraniMealy<I, O>, I, Word<O>> kv =
                 (alph, mqo) -> new KearnsVaziraniMealy<>(alph, mqo, true, AcexAnalyzers.BINARY_SEARCH_FWD);
-        final LearnerProvider<DTLearnerMealy<I, O>, MealyMachine<?, I, ?, O>, I, Word<O>> dt =
+        final ComboConstructor<DTLearnerMealy<I, O>, I, Word<O>> dt =
                 (alph, mqo) -> new DTLearnerMealy<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true);
-        final LearnerProvider<TTTLearnerMealy<I, O>, MealyMachine<?, I, ?, O>, I, Word<O>> ttt =
+        final ComboConstructor<TTTLearnerMealy<I, O>, I, Word<O>> ttt =
                 (alph, mqo) -> new TTTLearnerMealy<>(alph, mqo, AcexAnalyzers.BINARY_SEARCH_FWD);
-        final LearnerProvider<OptimalTTTMealy<I, O>, MealyMachine<?, I, ?, O>, I, Word<O>> oml =
+        final ComboConstructor<OptimalTTTMealy<I, O>, I, Word<O>> oml =
                 (alph, mqo) -> new OptimalTTTMealy<>(alph, mqo, mqo);
 
         return Arrays.asList(Pair.of("L*", lstar),
@@ -105,19 +100,18 @@ public final class AAARTestUtil {
                              Pair.of("OML", oml));
     }
 
-    public static <I, O> List<Pair<String, LearnerProvider<? extends MooreLearner<I, O>, MooreMachine<?, I, ?, O>, I, Word<O>>>> getMooreLearners() {
+    public static <I, O> List<Pair<String, ComboConstructor<? extends MooreLearner<I, O>, I, Word<O>>>> getMooreLearners() {
 
-        final LearnerProvider<ExtensibleLStarMoore<I, O>, MooreMachine<?, I, ?, O>, I, Word<O>> lstar =
+        final ComboConstructor<ExtensibleLStarMoore<I, O>, I, Word<O>> lstar =
                 (alph, mqo) -> new ExtensibleLStarMoore<>(alph,
                                                           mqo,
                                                           Collections.emptyList(),
                                                           ObservationTableCEXHandlers.CLASSIC_LSTAR,
                                                           ClosingStrategies.CLOSE_FIRST);
-        final LearnerProvider<RivestSchapireMoore<I, O>, MooreMachine<?, I, ?, O>, I, Word<O>> rs =
-                RivestSchapireMoore::new;
-        final LearnerProvider<DTLearnerMoore<I, O>, MooreMachine<?, I, ?, O>, I, Word<O>> dt =
+        final ComboConstructor<RivestSchapireMoore<I, O>, I, Word<O>> rs = RivestSchapireMoore::new;
+        final ComboConstructor<DTLearnerMoore<I, O>, I, Word<O>> dt =
                 (alph, mqo) -> new DTLearnerMoore<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true);
-        final LearnerProvider<TTTLearnerMoore<I, O>, MooreMachine<?, I, ?, O>, I, Word<O>> ttt =
+        final ComboConstructor<TTTLearnerMoore<I, O>, I, Word<O>> ttt =
                 (alph, mqo) -> new TTTLearnerMoore<>(alph, mqo, AcexAnalyzers.BINARY_SEARCH_FWD);
 
         return Arrays.asList(Pair.of("L*", lstar), Pair.of("RS", rs), Pair.of("DT", dt), Pair.of("TTT", ttt));

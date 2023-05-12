@@ -13,18 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.aaar;
+package de.learnlib.api.algorithm;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.words.Alphabet;
 
 /**
+ * A simplified view on the constructor of a {@link LearningAlgorithm}, that only requires an {@link Alphabet}
+ * definition and a {@link MembershipOracle}.
+ *
+ * @param <L>
+ *         learner type
+ * @param <I>
+ *         input symbol type
+ * @param <D>
+ *         output domain type
+ *
  * @author frohme
  */
-public interface LearnerProvider<L extends LearningAlgorithm<M, I, D> & SupportsGrowingAlphabet<I>, M, I, D> {
+public interface LearnerConstructor<L extends LearningAlgorithm<?, I, D>, I, D> {
 
-    L createLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle);
+    /**
+     * Construct the learner instance.
+     *
+     * @param alphabet
+     *         the (initial) alphabet for the learner
+     * @param oracle
+     *         the oracle for answering queries
+     *
+     * @return the learner instance
+     */
+    L constructLearner(Alphabet<I> alphabet, MembershipOracle<I, D> oracle);
 
 }

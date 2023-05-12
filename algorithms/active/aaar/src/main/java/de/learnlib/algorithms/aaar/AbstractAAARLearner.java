@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import de.learnlib.algorithms.aaar.abstraction.AbstractAbstractionTree;
+import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
@@ -75,12 +76,12 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
     private final GrowingAlphabet<CI> rep;
     private final GrowingAlphabet<AI> abs;
 
-    public AbstractAAARLearner(LearnerProvider<L, CM, CI, D> learnerProvider, MembershipOracle<CI, D> o) {
+    public AbstractAAARLearner(LearnerConstructor<L, CI, D> learnerConstructor, MembershipOracle<CI, D> o) {
         this.oracle = o;
         this.rep = new GrowingMapAlphabet<>();
         this.abs = new GrowingMapAlphabet<>();
 
-        this.learner = learnerProvider.createLearner(rep, oracle);
+        this.learner = learnerConstructor.constructLearner(rep, oracle);
     }
 
     @Override
