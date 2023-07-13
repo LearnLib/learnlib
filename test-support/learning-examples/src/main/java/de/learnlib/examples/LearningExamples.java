@@ -25,7 +25,9 @@ import de.learnlib.examples.LearningExample.DFALearningExample;
 import de.learnlib.examples.LearningExample.MealyLearningExample;
 import de.learnlib.examples.LearningExample.MooreLearningExample;
 import de.learnlib.examples.LearningExample.OneSEVPALearningExample;
+import de.learnlib.examples.LearningExample.SBALearningExample;
 import de.learnlib.examples.LearningExample.SPALearningExample;
+import de.learnlib.examples.LearningExample.SPMMLearningExample;
 import de.learnlib.examples.LearningExample.SSTLearningExample;
 import de.learnlib.examples.LearningExample.StateLocalInputMealyLearningExample;
 import de.learnlib.examples.dfa.ExampleAngluin;
@@ -40,23 +42,29 @@ import de.learnlib.examples.mealy.ExampleShahbazGroz;
 import de.learnlib.examples.mealy.ExampleStack;
 import de.learnlib.examples.mealy.ExampleTinyMealy;
 import de.learnlib.examples.moore.ExampleRandomMoore;
+import de.learnlib.examples.sba.ExampleRandomSBA;
 import de.learnlib.examples.spa.ExamplePalindrome;
 import de.learnlib.examples.spa.ExampleRandomSPA;
+import de.learnlib.examples.spmm.ExampleRandomSPMM;
 import de.learnlib.examples.sst.ExampleRandomSST;
 import de.learnlib.examples.vpda.ExampleRandomOneSEVPA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.SPAOutputAlphabet;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultSPAAlphabet;
+import net.automatalib.words.impl.DefaultSPAOutputAlphabet;
 import net.automatalib.words.impl.DefaultVPDAlphabet;
 
 public final class LearningExamples {
 
     private static final Alphabet<Character> RANDOM_ALPHABET = Alphabets.characters('a', 'c');
-    private static final SPAAlphabet<Character> SPA_ALPHABET =
+    private static final SPAAlphabet<Character> SPA_INPUT_ALPHABET =
             new DefaultSPAAlphabet<>(Alphabets.characters('A', 'F'), Alphabets.characters('a', 'f'), 'R');
+    private static final SPAOutputAlphabet<Character> SPA_OUTPUT_ALPHABET =
+            new DefaultSPAOutputAlphabet<>(Alphabets.characters('u', 'z'), '✗');
     private static final VPDAlphabet<Character> VPD_ALPHABET = new DefaultVPDAlphabet<>(Alphabets.characters('a', 'f'),
                                                                                         Alphabets.characters('1', '3'),
                                                                                         Alphabets.characters('7', '9'));
@@ -100,9 +108,9 @@ public final class LearningExamples {
 
     public static List<MooreLearningExample<?, ?>> createMooreExamples() {
         return Collections.singletonList(ExampleRandomMoore.createExample(new Random(RANDOM_SEED),
-                RANDOM_ALPHABET,
-                RANDOM_SIZE,
-                RANDOM_MEALY_OUTPUTS));
+                                                                          RANDOM_ALPHABET,
+                                                                          RANDOM_SIZE,
+                                                                          RANDOM_MEALY_OUTPUTS));
     }
 
     public static List<StateLocalInputMealyLearningExample<?, ?>> createSLIMealyExamples() {
@@ -123,7 +131,22 @@ public final class LearningExamples {
 
     public static List<SPALearningExample<?>> createSPAExamples() {
         return Arrays.asList(ExamplePalindrome.createExample(),
-                             ExampleRandomSPA.createExample(new Random(RANDOM_SEED), SPA_ALPHABET, PROCEDURE_SIZE));
+                             ExampleRandomSPA.createExample(new Random(RANDOM_SEED),
+                                                            SPA_INPUT_ALPHABET,
+                                                            PROCEDURE_SIZE));
+    }
+
+    public static List<SBALearningExample<?>> createSBAExamples() {
+        return Collections.singletonList(ExampleRandomSBA.createExample(new Random(RANDOM_SEED),
+                                                                        SPA_INPUT_ALPHABET,
+                                                                        PROCEDURE_SIZE));
+    }
+
+    public static List<SPMMLearningExample<?, ?>> createSPMMExamples() {
+        return Collections.singletonList(ExampleRandomSPMM.createExample(new Random(RANDOM_SEED),
+                                                                         SPA_INPUT_ALPHABET,
+                                                                         SPA_OUTPUT_ALPHABET,
+                                                                         PROCEDURE_SIZE));
     }
 
     public static List<OneSEVPALearningExample<?>> createOneSEVPAExamples() {

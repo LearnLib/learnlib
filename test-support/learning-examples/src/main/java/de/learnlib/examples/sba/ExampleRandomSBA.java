@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.examples.spa;
+package de.learnlib.examples.sba;
 
 import java.util.Random;
 
-import de.learnlib.examples.DefaultLearningExample.DefaultSPALearningExample;
+import de.learnlib.examples.DefaultLearningExample.DefaultSBALearningExample;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.SPAAlphabet;
 
-public class ExampleRandomSPA<I> extends DefaultSPALearningExample<I> {
+public class ExampleRandomSBA<I> extends DefaultSBALearningExample<I> {
 
-    public ExampleRandomSPA(SPAAlphabet<I> alphabet, int size) {
+    public ExampleRandomSBA(SPAAlphabet<I> alphabet, int size) {
         this(new Random(), alphabet, size);
     }
 
-    public ExampleRandomSPA(Random random, SPAAlphabet<I> alphabet, int size) {
-        super(RandomAutomata.randomSPA(random, alphabet, size));
+    public ExampleRandomSBA(Random random, SPAAlphabet<I> alphabet, int size) {
+        super(RandomAutomata.randomSBA(random, alphabet, size));
     }
 
-    public static <I> ExampleRandomSPA<I> createExample(Random random, SPAAlphabet<I> alphabet, int size) {
-        return new ExampleRandomSPA<>(random, alphabet, size);
+    public static <I> ExampleRandomSBA<I> createExample(Random random, SPAAlphabet<I> alphabet, int size) {
+        return new ExampleRandomSBA<>(random, alphabet, size);
     }
 }

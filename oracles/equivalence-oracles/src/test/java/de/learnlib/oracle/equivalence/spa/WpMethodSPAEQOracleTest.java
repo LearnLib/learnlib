@@ -39,7 +39,7 @@ public class WpMethodSPAEQOracleTest {
         final Random random = new Random(42);
         final SPAAlphabet<Character> alphabet =
                 new DefaultSPAAlphabet<>(Alphabets.characters('x', 'z'), Alphabets.characters('A', 'C'), 'R');
-        final SPA<?, Character> spa = RandomAutomata.randomRedundancyFreeSPA(random, alphabet, 4);
+        final SPA<?, Character> spa = RandomAutomata.randomSPA(random, alphabet, 4);
         final int lookahead = 2;
 
         final WpMethodSPAEQOracle<Character> oracle = new WpMethodSPAEQOracle<>(new SimulatorOracle<>(spa), lookahead);

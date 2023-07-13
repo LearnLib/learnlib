@@ -136,7 +136,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         final int callIdx = this.alphabet.findCallIndex(input, returnIdx);
         final I procedure = input.getSymbol(callIdx);
 
-        final Word<I> localTrace = this.alphabet.normalize(input.subWord(callIdx + 1, returnIdx), 0);
+        final Word<I> localTrace = this.alphabet.project(input.subWord(callIdx + 1, returnIdx), 0);
         final DefaultQuery<I, Boolean> localCE = new DefaultQuery<>(localTrace, defaultQuery.getOutput());
 
         localRefinement |= this.subLearners.get(procedure).refineHypothesis(localCE);
@@ -283,7 +283,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         while (idx > 0) {
             final int callIdx = this.alphabet.findCallIndex(input, idx);
             final I callSymbol = input.getSymbol(callIdx);
-            final Word<I> normalized = this.alphabet.normalize(input.subWord(callIdx + 1, idx), 0);
+            final Word<I> normalized = this.alphabet.project(input.subWord(callIdx + 1, idx), 0);
             final Word<I> expanded = this.alphabet.expand(normalized, this.atrManager::getTerminatingSequence);
 
             wordStack.push(expanded.prepend(callSymbol));
@@ -321,7 +321,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
 
             if (this.alphabet.isCallSymbol(sym)) {
                 final int returnIdx = this.alphabet.findReturnIndex(input, i + 1);
-                final Word<I> projectedRun = this.alphabet.normalize(input.subWord(i + 1, returnIdx), 0);
+                final Word<I> projectedRun = this.alphabet.project(input.subWord(i + 1, returnIdx), 0);
                 // whenever we extract a terminating sequence, we can also instantiate a learner.
                 // Therefore the existence of the hypothesis is guaranteed.
                 @SuppressWarnings("assignment.type.incompatible")

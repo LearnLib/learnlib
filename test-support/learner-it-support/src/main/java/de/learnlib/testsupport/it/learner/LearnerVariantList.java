@@ -17,7 +17,9 @@ package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.sba.SBA;
 import net.automatalib.automata.spa.SPA;
+import net.automatalib.automata.spmm.SPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.vpda.OneSEVPA;
@@ -79,8 +81,12 @@ public interface LearnerVariantList<M, I, D> {
 
     interface MooreSymLearnerVariantList<I, O> extends LearnerVariantList<MooreMachine<?, I, ?, O>, I, O> {}
 
-    interface OneSEVPALearnerVariantList<I> extends LearnerVariantList<OneSEVPA<?, I>, I, Boolean> {}
-
     interface SPALearnerVariantList<I> extends LearnerVariantList<SPA<?, I>, I, Boolean> {}
+
+    interface SBALearnerVariantList<I> extends LearnerVariantList<SBA<?, I>, I, Boolean> {}
+
+    interface SPMMLearnerVariantList<I, O> extends LearnerVariantList<SPMM<?, I, ?, O>, I, Word<O>> {}
+
+    interface OneSEVPALearnerVariantList<I> extends LearnerVariantList<OneSEVPA<?, I>, I, Boolean> {}
 
 }

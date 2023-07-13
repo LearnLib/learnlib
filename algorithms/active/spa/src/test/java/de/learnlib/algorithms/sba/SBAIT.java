@@ -13,34 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.spa;
+package de.learnlib.algorithms.sba;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import de.learnlib.algorithms.sba.manager.DefaultATManager;
+import de.learnlib.algorithms.sba.manager.OptimizingATManager;
 import de.learnlib.algorithms.spa.adapter.DiscriminationTreeAdapter;
 import de.learnlib.algorithms.spa.adapter.KearnsVaziraniAdapter;
 import de.learnlib.algorithms.spa.adapter.LStarBaseAdapter;
 import de.learnlib.algorithms.spa.adapter.RivestSchapireAdapter;
 import de.learnlib.algorithms.spa.adapter.TTTAdapter;
-import de.learnlib.algorithms.spa.manager.DefaultATRManager;
-import de.learnlib.algorithms.spa.manager.OptimizingATRManager;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractSPALearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.SPALearnerVariantList;
+import de.learnlib.testsupport.it.learner.AbstractSBALearnerIT;
+import de.learnlib.testsupport.it.learner.LearnerVariantList.SBALearnerVariantList;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.words.SPAAlphabet;
 
-public class SPAIT extends AbstractSPALearnerIT {
+public class SBAIT extends AbstractSBALearnerIT {
 
     @Override
     protected <I> void addLearnerVariants(SPAAlphabet<I> alphabet,
                                           MembershipOracle<I, Boolean> mqOracle,
-                                          SPALearnerVariantList<I> variants) {
+                                          SBALearnerVariantList<I> variants) {
 
         final Builder<I> builder = new Builder<>(alphabet, mqOracle, variants);
 
@@ -55,23 +55,23 @@ public class SPAIT extends AbstractSPALearnerIT {
 
         private final SPAAlphabet<I> alphabet;
         private final MembershipOracle<I, Boolean> mqOracle;
-        private final SPALearnerVariantList<I> variants;
-        private final List<Function<SPAAlphabet<I>, ATRManager<I>>> atrProviders;
+        private final SBALearnerVariantList<I> variants;
+        private final List<Function<SPAAlphabet<I>, ATManager<I>>> atProviders;
 
-        Builder(SPAAlphabet<I> alphabet, MembershipOracle<I, Boolean> mqOracle, SPALearnerVariantList<I> variants) {
+        Builder(SPAAlphabet<I> alphabet, MembershipOracle<I, Boolean> mqOracle, SBALearnerVariantList<I> variants) {
             this.alphabet = alphabet;
             this.mqOracle = mqOracle;
             this.variants = variants;
-            this.atrProviders = Arrays.asList(DefaultATRManager::new, OptimizingATRManager::new);
+            this.atProviders = Arrays.asList(DefaultATManager::new, OptimizingATManager::new);
         }
 
-        <L extends DFALearner<I> & SupportsGrowingAlphabet<I> & AccessSequenceTransformer<I>> void addLearnerVariant(
-                LearnerConstructor<L, I, Boolean> provider) {
+        <L extends DFALearner<SymbolWrapper<I>> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>> void addLearnerVariant(
+                LearnerConstructor<L, SymbolWrapper<I>, Boolean> provider) {
 
-            for (Function<SPAAlphabet<I>, ATRManager<I>> atrProvider : atrProviders) {
-                final SPALearner<I, L> learner =
-                        new SPALearner<>(alphabet, mqOracle, (i) -> provider, atrProvider.apply(alphabet));
-                final String name = String.format("adapter=%s,manager=%s", provider, atrProvider);
+            for (Function<SPAAlphabet<I>, ATManager<I>> atProvider : atProviders) {
+                final SBALearner<I, L> learner =
+                        new SBALearner<>(alphabet, mqOracle, (i) -> provider, atProvider.apply(alphabet));
+                final String name = String.format("adapter=%s,manager=%s", provider, atProvider);
                 variants.addLearnerVariant(name, learner);
             }
         }
