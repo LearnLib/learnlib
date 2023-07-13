@@ -34,14 +34,17 @@ import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.sba.EmptySBA;
 import net.automatalib.automata.sba.SBA;
+import net.automatalib.automata.sba.StackSBA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.sba.SBAUtil;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.SPAAlphabet;
 import net.automatalib.words.VPDAlphabet.SymbolType;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import net.automatalib.words.impl.DefaultSPAAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 
 public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>>
@@ -124,8 +127,8 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
         final int callIdx = this.alphabet.findCallIndex(input, mismatchIdx);
         final I procedure = input.getSymbol(callIdx);
 
-        final Word<I> localTrace = this.alphabet.project(input.subWord(callIdx + 1, mismatchIdx), 0)
-                                                .append(input.getSymbol(mismatchIdx));
+        final Word<I> localTrace =
+                this.alphabet.project(input.subWord(callIdx + 1, mismatchIdx), 0).append(input.getSymbol(mismatchIdx));
         final DefaultQuery<SymbolWrapper<I>, Boolean> localCE = constructLocalCE(localTrace, defaultQuery.getOutput());
 
         boolean localRefinement = this.subLearners.get(procedure).refineHypothesis(localCE);
@@ -141,7 +144,33 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
             return new EmptySBA<>(this.alphabet);
         }
 
-        return new MappedStackSBA<>(alphabet, initialCallSymbol, getSubModels(), mapper);
+        final Map<I, DFA<?, SymbolWrapper<I>>> procedures = getSubModels();
+        final Alphabet<SymbolWrapper<I>> internalAlphabet = new GrowingMapAlphabet<>();
+        final Alphabet<SymbolWrapper<I>> callAlphabet = new GrowingMapAlphabet<>();
+        final Map<SymbolWrapper<I>, DFA<?, SymbolWrapper<I>>> mappedProcedures =
+                Maps.newHashMapWithExpectedSize(procedures.size());
+
+        for (I i : this.alphabet) {
+            final SymbolWrapper<I> mappedI = this.mapper.get(i);
+
+            if (this.alphabet.isCallSymbol(i)) {
+                callAlphabet.add(mappedI);
+                final DFA<?, SymbolWrapper<I>> p = procedures.get(i);
+                if (p != null) {
+                    mappedProcedures.put(mappedI, p);
+                }
+            } else if (alphabet.isInternalSymbol(i)) {
+                internalAlphabet.add(mappedI);
+            }
+        }
+
+        final SPAAlphabet<SymbolWrapper<I>> mappedAlphabet =
+                new DefaultSPAAlphabet<>(internalAlphabet, callAlphabet, this.mapper.get(alphabet.getReturnSymbol()));
+
+        final StackSBA<?, SymbolWrapper<I>> delegate =
+                new StackSBA<>(mappedAlphabet, this.mapper.get(initialCallSymbol), mappedProcedures);
+
+        return new MappingSBA<>(alphabet, mapper, delegate);
     }
 
     private boolean extractUsefulInformationFromCounterExample(DefaultQuery<I, Boolean> defaultQuery) {

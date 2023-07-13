@@ -37,16 +37,19 @@ import de.learnlib.util.MQUtil;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.spmm.EmptySPMM;
 import net.automatalib.automata.spmm.SPMM;
+import net.automatalib.automata.spmm.StackSPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.spmm.SPMMUtil;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.SPAAlphabet;
 import net.automatalib.words.SPAOutputAlphabet;
 import net.automatalib.words.VPDAlphabet.SymbolType;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import net.automatalib.words.impl.DefaultSPAAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 
 public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>>
@@ -162,12 +165,37 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
             return new EmptySPMM<>(this.inputAlphabet, outputAlphabet);
         }
 
-        return new MappedStackSPMM<>(inputAlphabet,
-                                     outputAlphabet,
-                                     initialCallSymbol,
-                                     initialOutputSymbol,
-                                     getSubModels(),
-                                     mapper);
+        final Map<I, MealyMachine<?, SymbolWrapper<I>, ?, O>> procedures = getSubModels();
+        final Alphabet<SymbolWrapper<I>> internalAlphabet = new GrowingMapAlphabet<>();
+        final Alphabet<SymbolWrapper<I>> callAlphabet = new GrowingMapAlphabet<>();
+        final Map<SymbolWrapper<I>, MealyMachine<?, SymbolWrapper<I>, ?, O>> mappedProcedures =
+                Maps.newHashMapWithExpectedSize(procedures.size());
+
+        for (I i : this.inputAlphabet) {
+            final SymbolWrapper<I> mappedI = this.mapper.get(i);
+
+            if (this.inputAlphabet.isCallSymbol(i)) {
+                callAlphabet.add(mappedI);
+                final MealyMachine<?, SymbolWrapper<I>, ?, O> p = procedures.get(i);
+                if (p != null) {
+                    mappedProcedures.put(mappedI, p);
+                }
+            } else if (inputAlphabet.isInternalSymbol(i)) {
+                internalAlphabet.add(mappedI);
+            }
+        }
+
+        final SPAAlphabet<SymbolWrapper<I>> mappedAlphabet = new DefaultSPAAlphabet<>(internalAlphabet,
+                                                                                      callAlphabet,
+                                                                                      this.mapper.get(inputAlphabet.getReturnSymbol()));
+
+        final StackSPMM<?, SymbolWrapper<I>, ?, O> delegate = new StackSPMM<>(mappedAlphabet,
+                                                                              outputAlphabet,
+                                                                              this.mapper.get(initialCallSymbol),
+                                                                              initialOutputSymbol,
+                                                                              mappedProcedures);
+
+        return new MappingSPMM<>(inputAlphabet, outputAlphabet, mapper, delegate);
     }
 
     private boolean extractUsefulInformationFromCounterExample(DefaultQuery<I, Word<O>> defaultQuery) {
