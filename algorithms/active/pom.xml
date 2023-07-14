@@ -41,7 +41,7 @@ limitations under the License.
         <module>lstar</module>
         <module>nlstar</module>
         <module>oml</module>
-        <module>spa</module>
+        <module>procedural</module>
         <module>ttt</module>
         <module>ttt-vpda</module>
     </modules>

@@ -27,7 +27,7 @@ Kearns & Vazirani   | `DFA` `Mealy`
 L* (incl. variants) | `DFA` `Mealy` `Moore`
 NL*                 | `NFA`
 OML                 | `DFA` `Mealy`
-SPA                 | `SPA`
+Procedural          | `SPA` `SBA` `SPMM`
 TTT                 | `DFA` `Mealy` `Moore` `VPDA`
 
 
