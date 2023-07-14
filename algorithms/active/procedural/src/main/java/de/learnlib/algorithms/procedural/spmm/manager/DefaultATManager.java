@@ -28,8 +28,8 @@ import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.words.SPAAlphabet;
-import net.automatalib.words.SPAOutputAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
 
 public class DefaultATManager<I, O> implements ATManager<I, O> {
@@ -37,10 +37,10 @@ public class DefaultATManager<I, O> implements ATManager<I, O> {
     private final Map<I, Word<I>> accessSequences;
     private final Map<I, Word<I>> terminatingSequences;
 
-    private final SPAAlphabet<I> inputAlphabet;
-    private final SPAOutputAlphabet<O> outputAlphabet;
+    private final ProceduralInputAlphabet<I> inputAlphabet;
+    private final ProceduralOutputAlphabet<O> outputAlphabet;
 
-    public DefaultATManager(final SPAAlphabet<I> inputAlphabet, final SPAOutputAlphabet<O> outputAlphabet) {
+    public DefaultATManager(final ProceduralInputAlphabet<I> inputAlphabet, final ProceduralOutputAlphabet<O> outputAlphabet) {
         this.inputAlphabet = inputAlphabet;
         this.outputAlphabet = outputAlphabet;
 

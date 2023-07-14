@@ -22,10 +22,10 @@ import java.util.Map.Entry;
 import com.google.common.collect.Maps;
 import de.learnlib.algorithms.procedural.SymbolWrapper;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.sba.SBA;
+import net.automatalib.automata.procedural.SBA;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.ts.simple.SimpleDTS;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -40,13 +40,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 class MappingSBA<S, I> implements SBA<S, I>, SimpleDTS<S, I> {
 
-    private final SPAAlphabet<I> alphabet;
+    private final ProceduralInputAlphabet<I> alphabet;
     private final Mapping<I, SymbolWrapper<I>> mapping;
     private final SBA<S, SymbolWrapper<I>> delegate;
 
     private final Map<I, DFA<?, I>> procedures;
 
-    MappingSBA(SPAAlphabet<I> alphabet, Mapping<I, SymbolWrapper<I>> mapping, SBA<S, SymbolWrapper<I>> delegate) {
+    MappingSBA(ProceduralInputAlphabet<I> alphabet, Mapping<I, SymbolWrapper<I>> mapping, SBA<S, SymbolWrapper<I>> delegate) {
         this.alphabet = alphabet;
         this.mapping = mapping;
         this.delegate = delegate;
@@ -81,7 +81,7 @@ class MappingSBA<S, I> implements SBA<S, I>, SimpleDTS<S, I> {
     }
 
     @Override
-    public SPAAlphabet<I> getInputAlphabet() {
+    public ProceduralInputAlphabet<I> getInputAlphabet() {
         return this.alphabet;
     }
 

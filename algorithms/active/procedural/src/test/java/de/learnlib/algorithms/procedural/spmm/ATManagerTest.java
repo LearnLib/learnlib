@@ -19,28 +19,28 @@ import de.learnlib.algorithms.procedural.spmm.manager.DefaultATManager;
 import de.learnlib.algorithms.procedural.spmm.manager.OptimizingATManager;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.SPAAlphabet;
-import net.automatalib.words.SPAOutputAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultSPAAlphabet;
-import net.automatalib.words.impl.DefaultSPAOutputAlphabet;
+import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.words.impl.DefaultProceduralOutputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class ATManagerTest {
 
-    private static final SPAAlphabet<Character> INPUT_ALPHABET;
-    private static final SPAOutputAlphabet<Character> OUTPUT_ALPHABET;
+    private static final ProceduralInputAlphabet<Character> INPUT_ALPHABET;
+    private static final ProceduralOutputAlphabet<Character> OUTPUT_ALPHABET;
 
     static {
         final Alphabet<Character> callAlphabet = Alphabets.characters('A', 'C');
         final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'b');
         final char returnSymbol = 'R';
 
-        INPUT_ALPHABET = new DefaultSPAAlphabet<>(internalAlphabet, callAlphabet, returnSymbol);
-        OUTPUT_ALPHABET = new DefaultSPAOutputAlphabet<>(Alphabets.characters('x', 'z'), '✗');
+        INPUT_ALPHABET = new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, returnSymbol);
+        OUTPUT_ALPHABET = new DefaultProceduralOutputAlphabet<>(Alphabets.characters('x', 'z'), '✗');
     }
 
     @DataProvider

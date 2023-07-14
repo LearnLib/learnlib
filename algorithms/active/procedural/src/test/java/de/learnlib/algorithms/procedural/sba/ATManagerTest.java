@@ -18,24 +18,24 @@ package de.learnlib.algorithms.procedural.sba;
 import de.learnlib.algorithms.procedural.sba.manager.DefaultATManager;
 import de.learnlib.algorithms.procedural.sba.manager.OptimizingATManager;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultSPAAlphabet;
+import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class ATManagerTest {
 
-    private static final SPAAlphabet<Character> ALPHABET;
+    private static final ProceduralInputAlphabet<Character> ALPHABET;
 
     static {
         final Alphabet<Character> callAlphabet = Alphabets.characters('A', 'C');
         final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'b');
         final char returnSymbol = 'R';
 
-        ALPHABET = new DefaultSPAAlphabet<>(internalAlphabet, callAlphabet, returnSymbol);
+        ALPHABET = new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, returnSymbol);
     }
 
     @DataProvider

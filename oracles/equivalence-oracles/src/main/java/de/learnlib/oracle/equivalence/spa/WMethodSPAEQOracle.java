@@ -23,10 +23,10 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
 import de.learnlib.oracle.equivalence.WMethodEQOracle;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.spa.SPA;
+import net.automatalib.automata.procedural.SPA;
 import net.automatalib.util.automata.conformance.SPATestsIterator;
 import net.automatalib.util.automata.conformance.WMethodTestsIterator;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 
 /**
@@ -96,12 +96,12 @@ public class WMethodSPAEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, I
 
     @Override
     protected Stream<Word<I>> generateTestWords(SPA<?, I> hypothesis, Collection<? extends I> inputs) {
-        if (!(inputs instanceof SPAAlphabet)) {
+        if (!(inputs instanceof ProceduralInputAlphabet)) {
             throw new IllegalArgumentException("Inputs are not an SPA alphabet");
         }
 
         @SuppressWarnings("unchecked")
-        final SPAAlphabet<I> alphabet = (SPAAlphabet<I>) inputs;
+        final ProceduralInputAlphabet<I> alphabet = (ProceduralInputAlphabet<I>) inputs;
 
         return Streams.stream(new SPATestsIterator<>(hypothesis,
                                                      alphabet,

@@ -25,7 +25,7 @@ import de.learnlib.oracle.equivalence.sba.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SBALearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SBALearnerVariantListImpl;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import org.testng.annotations.Factory;
 
 /**
@@ -49,7 +49,7 @@ public abstract class AbstractSBALearnerIT {
 
     private <I> List<SBALearnerITCase<I>> createAllVariantsITCase(SBALearningExample<I> example) {
 
-        final SPAAlphabet<I> alphabet = example.getAlphabet();
+        final ProceduralInputAlphabet<I> alphabet = example.getAlphabet();
         final MembershipOracle<I, Boolean> mqOracle = new SimulatorOracle<>(example.getReferenceAutomaton());
         final SBALearnerVariantListImpl<I> variants = new SBALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, mqOracle, variants);
@@ -70,7 +70,7 @@ public abstract class AbstractSBALearnerIT {
      * @param variants
      *         list to add the learner variants to
      */
-    protected abstract <I> void addLearnerVariants(SPAAlphabet<I> alphabet,
+    protected abstract <I> void addLearnerVariants(ProceduralInputAlphabet<I> alphabet,
                                                    MembershipOracle<I, Boolean> mqOracle,
                                                    SBALearnerVariantList<I> variants);
 }

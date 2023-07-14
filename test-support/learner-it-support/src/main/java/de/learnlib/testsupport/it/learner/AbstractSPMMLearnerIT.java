@@ -25,8 +25,8 @@ import de.learnlib.oracle.equivalence.spmm.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPMMLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPMMLearnerVariantListImpl;
-import net.automatalib.words.SPAAlphabet;
-import net.automatalib.words.SPAOutputAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
 import org.testng.annotations.Factory;
 
@@ -73,8 +73,8 @@ public abstract class AbstractSPMMLearnerIT {
      * @param variants
      *         list to add the learner variants to
      */
-    protected abstract <I, O> void addLearnerVariants(SPAAlphabet<I> inputAlphabet,
-                                                      SPAOutputAlphabet<O> outputAlphabet,
+    protected abstract <I, O> void addLearnerVariants(ProceduralInputAlphabet<I> inputAlphabet,
+                                                      ProceduralOutputAlphabet<O> outputAlphabet,
                                                       MembershipOracle<I, Word<O>> mqOracle,
                                                       SPMMLearnerVariantList<I, O> variants);
 }

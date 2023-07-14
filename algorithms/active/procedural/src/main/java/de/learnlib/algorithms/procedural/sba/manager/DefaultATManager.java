@@ -27,7 +27,7 @@ import de.learnlib.algorithms.procedural.sba.ATManager;
 import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 
 public class DefaultATManager<I> implements ATManager<I> {
@@ -35,9 +35,9 @@ public class DefaultATManager<I> implements ATManager<I> {
     private final Map<I, Word<I>> accessSequences;
     private final Map<I, Word<I>> terminatingSequences;
 
-    private final SPAAlphabet<I> alphabet;
+    private final ProceduralInputAlphabet<I> alphabet;
 
-    public DefaultATManager(final SPAAlphabet<I> alphabet) {
+    public DefaultATManager(final ProceduralInputAlphabet<I> alphabet) {
         this.alphabet = alphabet;
 
         this.accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());

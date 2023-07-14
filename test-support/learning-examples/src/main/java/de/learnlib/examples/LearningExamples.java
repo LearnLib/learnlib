@@ -49,22 +49,22 @@ import de.learnlib.examples.spmm.ExampleRandomSPMM;
 import de.learnlib.examples.sst.ExampleRandomSST;
 import de.learnlib.examples.vpda.ExampleRandomOneSEVPA;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.SPAAlphabet;
-import net.automatalib.words.SPAOutputAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultSPAAlphabet;
-import net.automatalib.words.impl.DefaultSPAOutputAlphabet;
+import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.words.impl.DefaultProceduralOutputAlphabet;
 import net.automatalib.words.impl.DefaultVPDAlphabet;
 
 public final class LearningExamples {
 
     private static final Alphabet<Character> RANDOM_ALPHABET = Alphabets.characters('a', 'c');
-    private static final SPAAlphabet<Character> SPA_INPUT_ALPHABET =
-            new DefaultSPAAlphabet<>(Alphabets.characters('A', 'F'), Alphabets.characters('a', 'f'), 'R');
-    private static final SPAOutputAlphabet<Character> SPA_OUTPUT_ALPHABET =
-            new DefaultSPAOutputAlphabet<>(Alphabets.characters('u', 'z'), '✗');
+    private static final ProceduralInputAlphabet<Character> SPA_INPUT_ALPHABET =
+            new DefaultProceduralInputAlphabet<>(Alphabets.characters('A', 'F'), Alphabets.characters('a', 'f'), 'R');
+    private static final ProceduralOutputAlphabet<Character> SPA_OUTPUT_ALPHABET =
+            new DefaultProceduralOutputAlphabet<>(Alphabets.characters('u', 'z'), '✗');
     private static final VPDAlphabet<Character> VPD_ALPHABET = new DefaultVPDAlphabet<>(Alphabets.characters('a', 'f'),
                                                                                         Alphabets.characters('1', '3'),
                                                                                         Alphabets.characters('7', '9'));

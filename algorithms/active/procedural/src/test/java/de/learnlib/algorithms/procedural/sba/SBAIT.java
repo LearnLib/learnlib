@@ -34,12 +34,12 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractSBALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SBALearnerVariantList;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 
 public class SBAIT extends AbstractSBALearnerIT {
 
     @Override
-    protected <I> void addLearnerVariants(SPAAlphabet<I> alphabet,
+    protected <I> void addLearnerVariants(ProceduralInputAlphabet<I> alphabet,
                                           MembershipOracle<I, Boolean> mqOracle,
                                           SBALearnerVariantList<I> variants) {
 
@@ -54,12 +54,12 @@ public class SBAIT extends AbstractSBALearnerIT {
 
     private static class Builder<I> {
 
-        private final SPAAlphabet<I> alphabet;
+        private final ProceduralInputAlphabet<I> alphabet;
         private final MembershipOracle<I, Boolean> mqOracle;
         private final SBALearnerVariantList<I> variants;
-        private final List<Function<SPAAlphabet<I>, ATManager<I>>> atProviders;
+        private final List<Function<ProceduralInputAlphabet<I>, ATManager<I>>> atProviders;
 
-        Builder(SPAAlphabet<I> alphabet, MembershipOracle<I, Boolean> mqOracle, SBALearnerVariantList<I> variants) {
+        Builder(ProceduralInputAlphabet<I> alphabet, MembershipOracle<I, Boolean> mqOracle, SBALearnerVariantList<I> variants) {
             this.alphabet = alphabet;
             this.mqOracle = mqOracle;
             this.variants = variants;
@@ -69,7 +69,7 @@ public class SBAIT extends AbstractSBALearnerIT {
         <L extends DFALearner<SymbolWrapper<I>> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>> void addLearnerVariant(
                 LearnerConstructor<L, SymbolWrapper<I>, Boolean> provider) {
 
-            for (Function<SPAAlphabet<I>, ATManager<I>> atProvider : atProviders) {
+            for (Function<ProceduralInputAlphabet<I>, ATManager<I>> atProvider : atProviders) {
                 final SBALearner<I, L> learner =
                         new SBALearner<>(alphabet, mqOracle, (i) -> provider, atProvider.apply(alphabet));
                 final String name = String.format("adapter=%s,manager=%s", provider, atProvider);

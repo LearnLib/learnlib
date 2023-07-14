@@ -21,14 +21,14 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Streams;
 import de.learnlib.oracle.membership.SimulatorOracle;
-import net.automatalib.automata.spa.SPA;
+import net.automatalib.automata.procedural.SPA;
 import net.automatalib.util.automata.conformance.SPATestsIterator;
 import net.automatalib.util.automata.conformance.WpMethodTestsIterator;
 import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultSPAAlphabet;
+import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -37,8 +37,8 @@ public class WpMethodSPAEQOracleTest {
     @Test
     public void testOracle() {
         final Random random = new Random(42);
-        final SPAAlphabet<Character> alphabet =
-                new DefaultSPAAlphabet<>(Alphabets.characters('x', 'z'), Alphabets.characters('A', 'C'), 'R');
+        final ProceduralInputAlphabet<Character> alphabet =
+                new DefaultProceduralInputAlphabet<>(Alphabets.characters('x', 'z'), Alphabets.characters('A', 'C'), 'R');
         final SPA<?, Character> spa = RandomAutomata.randomSPA(random, alphabet, 4);
         final int lookahead = 2;
 

@@ -21,21 +21,21 @@ import java.util.List;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 final class ProceduralMembershipOracle<I> implements MembershipOracle<I, Boolean> {
 
-    private final SPAAlphabet<I> alphabet;
+    private final ProceduralInputAlphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> delegate;
     private final I procedure;
     private final ATRManager<I> atrManager;
 
-    ProceduralMembershipOracle(SPAAlphabet<I> alphabet,
-                                      MembershipOracle<I, Boolean> delegate,
-                                      I procedure,
-                                      ATRManager<I> atrManager) {
+    ProceduralMembershipOracle(ProceduralInputAlphabet<I> alphabet,
+                               MembershipOracle<I, Boolean> delegate,
+                               I procedure,
+                               ATRManager<I> atrManager) {
         this.alphabet = alphabet;
         this.delegate = delegate;
         this.procedure = procedure;

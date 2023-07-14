@@ -19,20 +19,20 @@ import java.util.Random;
 
 import de.learnlib.examples.DefaultLearningExample.DefaultSPMMLearningExample;
 import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.SPAAlphabet;
-import net.automatalib.words.SPAOutputAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.words.ProceduralOutputAlphabet;
 
 public class ExampleRandomSPMM<I, O> extends DefaultSPMMLearningExample<I, O> {
 
-    public ExampleRandomSPMM(SPAAlphabet<I> inputAlphabet, SPAOutputAlphabet<O> outputAlphabet, int size) {
+    public ExampleRandomSPMM(ProceduralInputAlphabet<I> inputAlphabet, ProceduralOutputAlphabet<O> outputAlphabet, int size) {
         this(new Random(), inputAlphabet, outputAlphabet, size);
     }
 
-    public ExampleRandomSPMM(Random random, SPAAlphabet<I> inputAlphabet, SPAOutputAlphabet<O> outputAlphabet, int size) {
+    public ExampleRandomSPMM(Random random, ProceduralInputAlphabet<I> inputAlphabet, ProceduralOutputAlphabet<O> outputAlphabet, int size) {
         super(RandomAutomata.randomSPMM(random, inputAlphabet, outputAlphabet, size));
     }
 
-    public static <I, O> ExampleRandomSPMM<I, O> createExample(Random random, SPAAlphabet<I> inputAlphabet, SPAOutputAlphabet<O> outputAlphabet, int size) {
+    public static <I, O> ExampleRandomSPMM<I, O> createExample(Random random, ProceduralInputAlphabet<I> inputAlphabet, ProceduralOutputAlphabet<O> outputAlphabet, int size) {
         return new ExampleRandomSPMM<>(random, inputAlphabet, outputAlphabet, size);
     }
 }

@@ -31,7 +31,7 @@ import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.util.automata.cover.Covers;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.VPDAlphabet.SymbolType;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -42,9 +42,9 @@ public class OptimizingATManager<I> implements ATManager<I> {
     private final Map<I, Word<I>> accessSequences;
     private final Map<I, Word<I>> terminatingSequences;
 
-    private final SPAAlphabet<I> alphabet;
+    private final ProceduralInputAlphabet<I> alphabet;
 
-    public OptimizingATManager(final SPAAlphabet<I> alphabet) {
+    public OptimizingATManager(final ProceduralInputAlphabet<I> alphabet) {
         this.alphabet = alphabet;
 
         this.accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());

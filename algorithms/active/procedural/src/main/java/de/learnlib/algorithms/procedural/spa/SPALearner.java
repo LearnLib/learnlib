@@ -36,11 +36,11 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.spa.EmptySPA;
-import net.automatalib.automata.spa.SPA;
-import net.automatalib.automata.spa.StackSPA;
+import net.automatalib.automata.procedural.EmptySPA;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.StackSPA;
 import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.GrowingMapAlphabet;
@@ -59,7 +59,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> & AccessSequenceTransformer<I>>
         implements LearningAlgorithm<SPA<?, I>, I, Boolean> {
 
-    private final SPAAlphabet<I> alphabet;
+    private final ProceduralInputAlphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;
     private final Mapping<I, LearnerConstructor<L, I, Boolean>> learnerConstructors;
     private final ATRManager<I> atrManager;
@@ -68,19 +68,19 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
     private final Set<I> activeAlphabet;
     private I initialCallSymbol;
 
-    public SPALearner(SPAAlphabet<I> alphabet,
+    public SPALearner(ProceduralInputAlphabet<I> alphabet,
                       MembershipOracle<I, Boolean> oracle,
                       LearnerConstructor<L, I, Boolean> learnerConstructor) {
         this(alphabet, oracle, (i) -> learnerConstructor);
     }
 
-    public SPALearner(SPAAlphabet<I> alphabet,
+    public SPALearner(ProceduralInputAlphabet<I> alphabet,
                       MembershipOracle<I, Boolean> oracle,
                       Mapping<I, LearnerConstructor<L, I, Boolean>> learnerConstructors) {
         this(alphabet, oracle, learnerConstructors, new OptimizingATRManager<>(alphabet));
     }
 
-    public SPALearner(SPAAlphabet<I> alphabet,
+    public SPALearner(ProceduralInputAlphabet<I> alphabet,
                       MembershipOracle<I, Boolean> oracle,
                       Mapping<I, LearnerConstructor<L, I, Boolean>> learnerConstructors,
                       ATRManager<I> atrManager) {

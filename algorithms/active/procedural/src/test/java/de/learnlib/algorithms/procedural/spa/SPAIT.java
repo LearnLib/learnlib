@@ -33,12 +33,12 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractSPALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPALearnerVariantList;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 
 public class SPAIT extends AbstractSPALearnerIT {
 
     @Override
-    protected <I> void addLearnerVariants(SPAAlphabet<I> alphabet,
+    protected <I> void addLearnerVariants(ProceduralInputAlphabet<I> alphabet,
                                           MembershipOracle<I, Boolean> mqOracle,
                                           SPALearnerVariantList<I> variants) {
 
@@ -53,12 +53,12 @@ public class SPAIT extends AbstractSPALearnerIT {
 
     private static class Builder<I> {
 
-        private final SPAAlphabet<I> alphabet;
+        private final ProceduralInputAlphabet<I> alphabet;
         private final MembershipOracle<I, Boolean> mqOracle;
         private final SPALearnerVariantList<I> variants;
-        private final List<Function<SPAAlphabet<I>, ATRManager<I>>> atrProviders;
+        private final List<Function<ProceduralInputAlphabet<I>, ATRManager<I>>> atrProviders;
 
-        Builder(SPAAlphabet<I> alphabet, MembershipOracle<I, Boolean> mqOracle, SPALearnerVariantList<I> variants) {
+        Builder(ProceduralInputAlphabet<I> alphabet, MembershipOracle<I, Boolean> mqOracle, SPALearnerVariantList<I> variants) {
             this.alphabet = alphabet;
             this.mqOracle = mqOracle;
             this.variants = variants;
@@ -68,7 +68,7 @@ public class SPAIT extends AbstractSPALearnerIT {
         <L extends DFALearner<I> & SupportsGrowingAlphabet<I> & AccessSequenceTransformer<I>> void addLearnerVariant(
                 LearnerConstructor<L, I, Boolean> provider) {
 
-            for (Function<SPAAlphabet<I>, ATRManager<I>> atrProvider : atrProviders) {
+            for (Function<ProceduralInputAlphabet<I>, ATRManager<I>> atrProvider : atrProviders) {
                 final SPALearner<I, L> learner =
                         new SPALearner<>(alphabet, mqOracle, (i) -> provider, atrProvider.apply(alphabet));
                 final String name = String.format("adapter=%s,manager=%s", provider, atrProvider);

@@ -35,28 +35,28 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.spmm.EmptySPMM;
-import net.automatalib.automata.spmm.SPMM;
-import net.automatalib.automata.spmm.StackSPMM;
+import net.automatalib.automata.procedural.EmptySPMM;
+import net.automatalib.automata.procedural.SPMM;
+import net.automatalib.automata.procedural.StackSPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.util.automata.Automata;
-import net.automatalib.util.automata.spmm.SPMMUtil;
+import net.automatalib.util.automata.procedural.SPMMUtil;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.SPAAlphabet;
-import net.automatalib.words.SPAOutputAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.VPDAlphabet.SymbolType;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.DefaultSPAAlphabet;
+import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 
 public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>>
         implements LearningAlgorithm<SPMM<?, I, ?, O>, I, Word<O>> {
 
-    private final SPAAlphabet<I> inputAlphabet;
-    private final SPAOutputAlphabet<O> outputAlphabet;
+    private final ProceduralInputAlphabet<I> inputAlphabet;
+    private final ProceduralOutputAlphabet<O> outputAlphabet;
     private final MembershipOracle<I, Word<O>> oracle;
     private final Mapping<I, LearnerConstructor<L, SymbolWrapper<I>, Word<O>>> learnerConstructors;
     private final ATManager<I, O> atManager;
@@ -67,8 +67,8 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
 
     private final AlphabetMapper<I> mapper;
 
-    public SPMMLearner(SPAAlphabet<I> inputAlphabet,
-                       SPAOutputAlphabet<O> outputAlphabet,
+    public SPMMLearner(ProceduralInputAlphabet<I> inputAlphabet,
+                       ProceduralOutputAlphabet<O> outputAlphabet,
                        MembershipOracle<I, Word<O>> oracle,
                        LearnerConstructor<L, SymbolWrapper<I>, Word<O>> learnerConstructor) {
         this(inputAlphabet,
@@ -78,8 +78,8 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
              new OptimizingATManager<>(inputAlphabet, outputAlphabet));
     }
 
-    public SPMMLearner(SPAAlphabet<I> inputAlphabet,
-                       SPAOutputAlphabet<O> outputAlphabet,
+    public SPMMLearner(ProceduralInputAlphabet<I> inputAlphabet,
+                       ProceduralOutputAlphabet<O> outputAlphabet,
                        MembershipOracle<I, Word<O>> oracle,
                        Mapping<I, LearnerConstructor<L, SymbolWrapper<I>, Word<O>>> learnerConstructors,
                        ATManager<I, O> atManager) {
@@ -185,9 +185,9 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
             }
         }
 
-        final SPAAlphabet<SymbolWrapper<I>> mappedAlphabet = new DefaultSPAAlphabet<>(internalAlphabet,
-                                                                                      callAlphabet,
-                                                                                      this.mapper.get(inputAlphabet.getReturnSymbol()));
+        final ProceduralInputAlphabet<SymbolWrapper<I>> mappedAlphabet = new DefaultProceduralInputAlphabet<>(internalAlphabet,
+                                                                                                              callAlphabet,
+                                                                                                              this.mapper.get(inputAlphabet.getReturnSymbol()));
 
         final StackSPMM<?, SymbolWrapper<I>, ?, O> delegate = new StackSPMM<>(mappedAlphabet,
                                                                               outputAlphabet,

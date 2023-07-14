@@ -19,9 +19,9 @@ import java.util.Collection;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.spmm.SPMM;
+import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.util.automata.Automata;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -36,12 +36,12 @@ public class SimulatorEQOracle<I, O> implements EquivalenceOracle<SPMM<?, I, ?, 
     @Override
     public @Nullable DefaultQuery<I, Word<O>> findCounterExample(SPMM<?, I, ?, O> hypothesis,
                                                                  Collection<? extends I> inputs) {
-        if (!(inputs instanceof SPAAlphabet)) {
+        if (!(inputs instanceof ProceduralInputAlphabet)) {
             throw new IllegalArgumentException("Inputs are not an SPA alphabet");
         }
 
         @SuppressWarnings("unchecked")
-        final SPAAlphabet<I> alphabet = (SPAAlphabet<I>) inputs;
+        final ProceduralInputAlphabet<I> alphabet = (ProceduralInputAlphabet<I>) inputs;
 
         final Word<I> sep = Automata.findSeparatingWord(spmm, hypothesis, alphabet);
 

@@ -34,25 +34,25 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.sba.EmptySBA;
-import net.automatalib.automata.sba.SBA;
-import net.automatalib.automata.sba.StackSBA;
+import net.automatalib.automata.procedural.EmptySBA;
+import net.automatalib.automata.procedural.SBA;
+import net.automatalib.automata.procedural.StackSBA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.util.automata.Automata;
-import net.automatalib.util.automata.sba.SBAUtil;
+import net.automatalib.util.automata.procedural.SBAUtil;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.VPDAlphabet.SymbolType;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.DefaultSPAAlphabet;
+import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 
 public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>>
         implements LearningAlgorithm<SBA<?, I>, I, Boolean> {
 
-    private final SPAAlphabet<I> alphabet;
+    private final ProceduralInputAlphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;
     private final Mapping<I, LearnerConstructor<L, SymbolWrapper<I>, Boolean>> learnerConstructors;
     private final ATManager<I> atManager;
@@ -62,13 +62,13 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
 
     private final AlphabetMapper<I> mapper;
 
-    public SBALearner(final SPAAlphabet<I> alphabet,
+    public SBALearner(final ProceduralInputAlphabet<I> alphabet,
                       final MembershipOracle<I, Boolean> oracle,
                       final LearnerConstructor<L, SymbolWrapper<I>, Boolean> learnerConstructor) {
         this(alphabet, oracle, (i) -> learnerConstructor, new OptimizingATManager<>(alphabet));
     }
 
-    public SBALearner(final SPAAlphabet<I> alphabet,
+    public SBALearner(final ProceduralInputAlphabet<I> alphabet,
                       final MembershipOracle<I, Boolean> oracle,
                       final Mapping<I, LearnerConstructor<L, SymbolWrapper<I>, Boolean>> learnerConstructors,
                       final ATManager<I> atManager) {
@@ -166,8 +166,8 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
             }
         }
 
-        final SPAAlphabet<SymbolWrapper<I>> mappedAlphabet =
-                new DefaultSPAAlphabet<>(internalAlphabet, callAlphabet, this.mapper.get(alphabet.getReturnSymbol()));
+        final ProceduralInputAlphabet<SymbolWrapper<I>> mappedAlphabet =
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, this.mapper.get(alphabet.getReturnSymbol()));
 
         final StackSBA<?, SymbolWrapper<I>> delegate =
                 new StackSBA<>(mappedAlphabet, this.mapper.get(initialCallSymbol), mappedProcedures);

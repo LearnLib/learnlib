@@ -17,9 +17,9 @@ package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.sba.SBA;
-import net.automatalib.automata.spa.SPA;
-import net.automatalib.automata.spmm.SPMM;
+import net.automatalib.automata.procedural.SBA;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.vpda.OneSEVPA;

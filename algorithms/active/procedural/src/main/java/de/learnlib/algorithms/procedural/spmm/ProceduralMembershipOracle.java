@@ -25,19 +25,19 @@ import java.util.stream.Collectors;
 import de.learnlib.algorithms.procedural.SymbolWrapper;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 final class ProceduralMembershipOracle<I, O> implements MembershipOracle<SymbolWrapper<I>, Word<O>> {
 
-    private final SPAAlphabet<I> alphabet;
+    private final ProceduralInputAlphabet<I> alphabet;
     private final MembershipOracle<I, Word<O>> delegate;
     private final I procedure;
     private final O errorSymbol;
     private final ATManager<I, O> atManager;
 
-    ProceduralMembershipOracle(SPAAlphabet<I> alphabet,
+    ProceduralMembershipOracle(ProceduralInputAlphabet<I> alphabet,
                                MembershipOracle<I, Word<O>> delegate,
                                I procedure,
                                O errorSymbol,

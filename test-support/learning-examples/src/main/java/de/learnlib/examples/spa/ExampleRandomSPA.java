@@ -19,19 +19,19 @@ import java.util.Random;
 
 import de.learnlib.examples.DefaultLearningExample.DefaultSPALearningExample;
 import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 
 public class ExampleRandomSPA<I> extends DefaultSPALearningExample<I> {
 
-    public ExampleRandomSPA(SPAAlphabet<I> alphabet, int size) {
+    public ExampleRandomSPA(ProceduralInputAlphabet<I> alphabet, int size) {
         this(new Random(), alphabet, size);
     }
 
-    public ExampleRandomSPA(Random random, SPAAlphabet<I> alphabet, int size) {
+    public ExampleRandomSPA(Random random, ProceduralInputAlphabet<I> alphabet, int size) {
         super(RandomAutomata.randomSPA(random, alphabet, size));
     }
 
-    public static <I> ExampleRandomSPA<I> createExample(Random random, SPAAlphabet<I> alphabet, int size) {
+    public static <I> ExampleRandomSPA<I> createExample(Random random, ProceduralInputAlphabet<I> alphabet, int size) {
         return new ExampleRandomSPA<>(random, alphabet, size);
     }
 }

@@ -17,17 +17,17 @@ package de.learnlib.examples;
 
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.sba.SBA;
-import net.automatalib.automata.spa.SPA;
-import net.automatalib.automata.spmm.SPMM;
+import net.automatalib.automata.procedural.SBA;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.SPAAlphabet;
-import net.automatalib.words.SPAOutputAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.VPDAlphabet;
 
 public interface LearningExample<I, A> {
@@ -66,21 +66,21 @@ public interface LearningExample<I, A> {
     interface SPALearningExample<I> extends LearningExample<I, SPA<?, I>> {
 
         @Override
-        SPAAlphabet<I> getAlphabet();
+        ProceduralInputAlphabet<I> getAlphabet();
     }
 
     interface SBALearningExample<I> extends LearningExample<I, SBA<?, I>> {
 
         @Override
-        SPAAlphabet<I> getAlphabet();
+        ProceduralInputAlphabet<I> getAlphabet();
     }
 
     interface SPMMLearningExample<I, O> extends LearningExample<I, SPMM<?, I, ?, O>> {
 
         @Override
-        SPAAlphabet<I> getAlphabet();
+        ProceduralInputAlphabet<I> getAlphabet();
 
-        SPAOutputAlphabet<O> getOutputAlphabet();
+        ProceduralOutputAlphabet<O> getOutputAlphabet();
     }
 
     interface OneSEVPALearningExample<I> extends LearningExample<I, OneSEVPA<?, I>> {

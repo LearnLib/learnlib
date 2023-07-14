@@ -24,7 +24,7 @@ import com.google.common.collect.Sets;
 import de.learnlib.algorithms.procedural.spa.ATRManager;
 import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 
 public class DefaultATRManager<I> implements ATRManager<I> {
@@ -33,9 +33,9 @@ public class DefaultATRManager<I> implements ATRManager<I> {
     private final Map<I, Word<I>> returnSequences;
     private final Map<I, Word<I>> terminatingSequences;
 
-    private final SPAAlphabet<I> alphabet;
+    private final ProceduralInputAlphabet<I> alphabet;
 
-    public DefaultATRManager(SPAAlphabet<I> alphabet) {
+    public DefaultATRManager(ProceduralInputAlphabet<I> alphabet) {
         this.alphabet = alphabet;
 
         this.accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());

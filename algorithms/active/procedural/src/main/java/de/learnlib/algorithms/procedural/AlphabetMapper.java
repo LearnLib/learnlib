@@ -19,15 +19,15 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 
 public class AlphabetMapper<I> implements Mapping<I, SymbolWrapper<I>> {
 
-    private final SPAAlphabet<I> source;
+    private final ProceduralInputAlphabet<I> source;
     private final SymbolWrapper<I>[] target;
 
     @SuppressWarnings("unchecked")
-    public AlphabetMapper(SPAAlphabet<I> source) {
+    public AlphabetMapper(ProceduralInputAlphabet<I> source) {
         this.source = source;
         this.target = new SymbolWrapper[source.size()];
     }

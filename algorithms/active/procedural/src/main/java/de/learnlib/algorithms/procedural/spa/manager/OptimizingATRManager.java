@@ -29,7 +29,7 @@ import de.learnlib.algorithms.procedural.spa.ATRManager;
 import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.cover.Covers;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -40,9 +40,9 @@ public class OptimizingATRManager<I> implements ATRManager<I> {
     private final Map<I, Word<I>> returnSequences;
     private final Map<I, Word<I>> terminatingSequences;
 
-    private final SPAAlphabet<I> alphabet;
+    private final ProceduralInputAlphabet<I> alphabet;
 
-    public OptimizingATRManager(SPAAlphabet<I> alphabet) {
+    public OptimizingATRManager(ProceduralInputAlphabet<I> alphabet) {
         this.alphabet = alphabet;
 
         this.accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());

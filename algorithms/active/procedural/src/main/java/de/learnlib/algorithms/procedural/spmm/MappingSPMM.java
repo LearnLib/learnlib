@@ -21,11 +21,11 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.Maps;
 import de.learnlib.algorithms.procedural.SymbolWrapper;
-import net.automatalib.automata.spmm.SPMM;
+import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.words.SPAAlphabet;
-import net.automatalib.words.SPAOutputAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.words.ProceduralOutputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -40,15 +40,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 class MappingSPMM<S, I, T, O> implements SPMM<S, I, T, O> {
 
-    private final SPAAlphabet<I> inputAlphabet;
-    private final SPAOutputAlphabet<O> outputAlphabet;
+    private final ProceduralInputAlphabet<I> inputAlphabet;
+    private final ProceduralOutputAlphabet<O> outputAlphabet;
     private final Mapping<I, SymbolWrapper<I>> mapping;
     private final SPMM<S, SymbolWrapper<I>, T, O> delegate;
 
     private final Map<I, MealyMachine<?, I, ?, O>> procedures;
 
-    MappingSPMM(SPAAlphabet<I> inputAlphabet,
-                SPAOutputAlphabet<O> outputAlphabet,
+    MappingSPMM(ProceduralInputAlphabet<I> inputAlphabet,
+                ProceduralOutputAlphabet<O> outputAlphabet,
                 Mapping<I, SymbolWrapper<I>> mapping,
                 SPMM<S, SymbolWrapper<I>, T, O> delegate) {
         this.inputAlphabet = inputAlphabet;
@@ -81,12 +81,12 @@ class MappingSPMM<S, I, T, O> implements SPMM<S, I, T, O> {
     }
 
     @Override
-    public SPAAlphabet<I> getInputAlphabet() {
+    public ProceduralInputAlphabet<I> getInputAlphabet() {
         return this.inputAlphabet;
     }
 
     @Override
-    public SPAOutputAlphabet<O> getOutputAlphabet() {
+    public ProceduralOutputAlphabet<O> getOutputAlphabet() {
         return this.outputAlphabet;
     }
 

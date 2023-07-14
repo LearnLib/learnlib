@@ -33,8 +33,8 @@ import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.util.automata.cover.Covers;
-import net.automatalib.words.SPAAlphabet;
-import net.automatalib.words.SPAOutputAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.VPDAlphabet.SymbolType;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -45,10 +45,10 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
     private final Map<I, Word<I>> accessSequences;
     private final Map<I, Word<I>> terminatingSequences;
 
-    private final SPAAlphabet<I> inputAlphabet;
-    private final SPAOutputAlphabet<O> outputAlphabet;
+    private final ProceduralInputAlphabet<I> inputAlphabet;
+    private final ProceduralOutputAlphabet<O> outputAlphabet;
 
-    public OptimizingATManager(final SPAAlphabet<I> inputAlphabet, SPAOutputAlphabet<O> outputAlphabet) {
+    public OptimizingATManager(final ProceduralInputAlphabet<I> inputAlphabet, ProceduralOutputAlphabet<O> outputAlphabet) {
         this.inputAlphabet = inputAlphabet;
         this.outputAlphabet = outputAlphabet;
 
