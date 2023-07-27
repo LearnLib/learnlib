@@ -22,7 +22,7 @@ import de.learnlib.algorithms.aaar.AbstractAAARTest;
 import de.learnlib.algorithms.aaar.ComboConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.examples.mealy.ExampleRandomMoore;
+import de.learnlib.examples.moore.ExampleRandomMoore;
 import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
