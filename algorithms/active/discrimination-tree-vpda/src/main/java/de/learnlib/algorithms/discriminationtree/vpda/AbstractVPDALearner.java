@@ -179,7 +179,7 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
         final Iterator<DTNode<I>> leavesIter = updateDTTargets(transToSift, hard).iterator();
         final List<DTNode<I>> result = new ArrayList<>(transToSift.size());
 
-        for (final AbstractHypTrans<I> transition : transToSift) {
+        for (AbstractHypTrans<I> transition : transToSift) {
             final DTNode<I> node = leavesIter.next();
             if (node.isLeaf() && node.getData() == null && transition.getNextElement() == null) {
                 result.add(node);
@@ -222,7 +222,7 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
         final List<DTNode<I>> nodes = new ArrayList<>(trans.size());
         final List<Word<I>> prefixes = new ArrayList<>(trans.size());
 
-        for (final AbstractHypTrans<I> t : trans) {
+        for (AbstractHypTrans<I> t : trans) {
             if (!t.isTree()) {
                 DTNode<I> start = t.getNonTreeTarget();
 
@@ -239,7 +239,7 @@ public abstract class AbstractVPDALearner<I> implements LearningAlgorithm<OneSEV
         final Iterator<DTNode<I>> leavesIter = dtree.sift(nodes, prefixes, hard).iterator();
         final List<DTNode<I>> result = new ArrayList<>(trans.size());
 
-        for (final AbstractHypTrans<I> t : trans) {
+        for (AbstractHypTrans<I> t : trans) {
             if (t.isTree()) {
                 result.add(t.getTargetNode());
             } else {

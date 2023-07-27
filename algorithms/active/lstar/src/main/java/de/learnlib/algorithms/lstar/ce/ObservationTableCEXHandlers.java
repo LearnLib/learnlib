@@ -106,7 +106,7 @@ public final class ObservationTableCEXHandlers {
         // prevent instantiation
     }
 
-    public static <I, D> ObservationTableCEXHandler<I, D> fromGlobalSuffixFinder(final GlobalSuffixFinder<I, D> globalFinder) {
+    public static <I, D> ObservationTableCEXHandler<I, D> fromGlobalSuffixFinder(GlobalSuffixFinder<I, D> globalFinder) {
         return new ObservationTableCEXHandler<I, D>() {
 
             @Override
@@ -136,12 +136,12 @@ public final class ObservationTableCEXHandlers {
         return table.addSuffixes(suffixes, oracle);
     }
 
-    public static <I, D> ObservationTableCEXHandler<I, D> fromLocalSuffixFinder(final LocalSuffixFinder<I, D> localFinder) {
+    public static <I, D> ObservationTableCEXHandler<I, D> fromLocalSuffixFinder(LocalSuffixFinder<I, D> localFinder) {
         return fromLocalSuffixFinder(localFinder, false);
     }
 
-    public static <I, D> ObservationTableCEXHandler<I, D> fromLocalSuffixFinder(final LocalSuffixFinder<I, D> localFinder,
-                                                                                final boolean allSuffixes) {
+    public static <I, D> ObservationTableCEXHandler<I, D> fromLocalSuffixFinder(LocalSuffixFinder<I, D> localFinder,
+                                                                                boolean allSuffixes) {
         return new ObservationTableCEXHandler<I, D>() {
 
             @Override

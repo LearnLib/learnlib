@@ -77,11 +77,11 @@ public class TTTState<I, D> implements AccessSequenceProvider<I> {
         return "s" + id;
     }
 
-    public void setTransition(final int idx, final TTTTransition<I, D> transition) {
+    public void setTransition(int idx, TTTTransition<I, D> transition) {
         transitions.array[idx] = transition;
     }
 
-    public TTTTransition<I, D> getTransition(final int idx) {
+    public TTTTransition<I, D> getTransition(int idx) {
         return transitions.array[idx];
     }
 

@@ -83,7 +83,7 @@ public abstract class AbstractParallelCacheTest<A, I, D> {
 
         final List<CountingQuery<I, D>> queries = new ArrayList<>(numQueries);
 
-        for (final List<I> word : CollectionsUtil.allTuples(alphabet, 0, MAXIMUM_LENGTH_OF_QUERIES)) {
+        for (List<I> word : CollectionsUtil.allTuples(alphabet, 0, MAXIMUM_LENGTH_OF_QUERIES)) {
             queries.add(new CountingQuery<>(Word.fromList(word)));
         }
 
@@ -113,7 +113,7 @@ public abstract class AbstractParallelCacheTest<A, I, D> {
         final List<DefaultQuery<I, D>> queries =
                 new ArrayList<>((int) Math.pow(alphabet.size(), MAXIMUM_LENGTH_OF_QUERIES));
 
-        for (final List<I> word : CollectionsUtil.allTuples(alphabet,
+        for (List<I> word : CollectionsUtil.allTuples(alphabet,
                                                             MAXIMUM_LENGTH_OF_QUERIES + 1,
                                                             MAXIMUM_LENGTH_OF_QUERIES + 1)) {
             queries.add(new DefaultQuery<>(Word.fromList(word)));

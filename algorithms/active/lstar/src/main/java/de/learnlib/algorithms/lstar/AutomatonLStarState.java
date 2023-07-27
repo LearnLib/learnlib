@@ -41,9 +41,9 @@ public class AutomatonLStarState<I, D, AI, S> {
     private final AI hypothesis;
     private final List<StateInfo<S, I>> stateInfos;
 
-    AutomatonLStarState(final GenericObservationTable<I, D> observationTable,
-                        final AI hypothesis,
-                        final List<StateInfo<S, I>> stateInfos) {
+    AutomatonLStarState(GenericObservationTable<I, D> observationTable,
+                        AI hypothesis,
+                        List<StateInfo<S, I>> stateInfos) {
         this.observationTable = observationTable;
         this.hypothesis = hypothesis;
         this.stateInfos = stateInfos;

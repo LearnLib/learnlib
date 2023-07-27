@@ -50,7 +50,7 @@ public class ADTHypothesisTest {
         Assert.assertNotNull(init);
 
         for (int s = 0; s < automaton.size(); s++) {
-            for (final Character i : alphabet) {
+            for (Character i : alphabet) {
                 automaton.addTransition(stateIds.getState(s), i, init, 0);
             }
         }

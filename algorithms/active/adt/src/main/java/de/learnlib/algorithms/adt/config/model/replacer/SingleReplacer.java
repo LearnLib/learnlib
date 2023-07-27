@@ -44,14 +44,14 @@ public class SingleReplacer implements SubtreeReplacer {
 
     private final ADSCalculator adsCalculator;
 
-    public SingleReplacer(final ADSCalculator adsProvider) {
+    public SingleReplacer(ADSCalculator adsProvider) {
         this.adsCalculator = adsProvider;
     }
 
     @Override
-    public <S, I, O> Set<ReplacementResult<S, I, O>> computeReplacements(final MealyMachine<S, I, ?, O> hypothesis,
-                                                                         final Alphabet<I> inputs,
-                                                                         final ADT<S, I, O> adt) {
+    public <S, I, O> Set<ReplacementResult<S, I, O>> computeReplacements(MealyMachine<S, I, ?, O> hypothesis,
+                                                                         Alphabet<I> inputs,
+                                                                         ADT<S, I, O> adt) {
 
         final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot());
         candidates.remove(adt.getRoot());
@@ -65,7 +65,7 @@ public class SingleReplacer implements SubtreeReplacer {
         final List<ADTNode<S, I, O>> sortedCandidates = new ArrayList<>(candidates);
         sortedCandidates.sort(Comparator.comparingDouble(candidatesScore::get));
 
-        for (final ADTNode<S, I, O> node : sortedCandidates) {
+        for (ADTNode<S, I, O> node : sortedCandidates) {
             final Set<S> targetStates = ADTUtil.collectHypothesisStates(node);
 
             // check if we can extendLeaf the parent ADS
@@ -114,22 +114,22 @@ public class SingleReplacer implements SubtreeReplacer {
      * @return a ReplacementResult for the parent (reset) node, if a valid replacement is found. {@code null} otherwise.
      */
     @Nullable
-    static <S, I, O> ReplacementResult<S, I, O> computeParentExtension(final MealyMachine<S, I, ?, O> hypothesis,
-                                                                       final Alphabet<I> inputs,
-                                                                       final ADTNode<S, I, O> node,
-                                                                       final Set<S> targetStates,
-                                                                       final ADSCalculator adsCalculator) {
+    static <S, I, O> ReplacementResult<S, I, O> computeParentExtension(MealyMachine<S, I, ?, O> hypothesis,
+                                                                       Alphabet<I> inputs,
+                                                                       ADTNode<S, I, O> node,
+                                                                       Set<S> targetStates,
+                                                                       ADSCalculator adsCalculator) {
         final ADTNode<S, I, O> parentReset = node.getParent();
         assert ADTUtil.isResetNode(parentReset) : "should not happen";
 
         final Word<I> incomingTraceInput = ADTUtil.buildTraceForNode(parentReset).getFirst();
 
         Map<S, S> currentToInitialMapping = new ReflexiveMapView<>(targetStates);
-        for (final I i : incomingTraceInput) {
+        for (I i : incomingTraceInput) {
 
             final Map<S, S> nextMapping = new HashMap<>();
 
-            for (final Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
+            for (Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
                 final S successor = hypothesis.getSuccessor(entry.getKey(), i);
 
                 // converging states
@@ -150,7 +150,7 @@ public class SingleReplacer implements SubtreeReplacer {
 
             final ADTNode<S, I, O> extension = potentialExtension.get();
 
-            for (final ADTNode<S, I, O> finalNode : ADTUtil.collectLeaves(extension)) {
+            for (ADTNode<S, I, O> finalNode : ADTUtil.collectLeaves(extension)) {
                 finalNode.setHypothesisState(currentToInitialMapping.get(finalNode.getHypothesisState()));
             }
 

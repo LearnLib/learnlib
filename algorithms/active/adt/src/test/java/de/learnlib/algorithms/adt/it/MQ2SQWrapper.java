@@ -28,7 +28,7 @@ public class MQ2SQWrapper<I, O> implements SymbolQueryOracle<I, O> {
     final WordBuilder<I> wb;
     final MembershipOracle<I, Word<O>> oracle;
 
-    public MQ2SQWrapper(final MembershipOracle<I, Word<O>> oracle) {
+    public MQ2SQWrapper(MembershipOracle<I, Word<O>> oracle) {
         this.oracle = oracle;
         this.wb = new WordBuilder<>();
     }

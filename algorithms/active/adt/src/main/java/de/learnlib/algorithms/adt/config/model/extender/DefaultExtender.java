@@ -41,14 +41,14 @@ public class DefaultExtender implements ADTExtender {
 
     private final DefensiveADSCalculator adsCalculator;
 
-    public DefaultExtender(final DefensiveADSCalculator adsCalculator) {
+    public DefaultExtender(DefensiveADSCalculator adsCalculator) {
         this.adsCalculator = adsCalculator;
     }
 
     @Override
-    public <I, O> ExtensionResult<ADTState<I, O>, I, O> computeExtension(final ADTHypothesis<I, O> hypothesis,
-                                                                         final PartialTransitionAnalyzer<ADTState<I, O>, I> partialTransitionAnalyzer,
-                                                                         final ADTNode<ADTState<I, O>, I, O> ads) {
+    public <I, O> ExtensionResult<ADTState<I, O>, I, O> computeExtension(ADTHypothesis<I, O> hypothesis,
+                                                                         PartialTransitionAnalyzer<ADTState<I, O>, I> partialTransitionAnalyzer,
+                                                                         ADTNode<ADTState<I, O>, I, O> ads) {
         // cannot compute extension for root node
         final ADTNode<ADTState<I, O>, I, O> parent = ads.getParent();
         if (parent == null) {
@@ -80,7 +80,7 @@ public class DefaultExtender implements ADTExtender {
                     final I input = inputTrace.getSymbol(idx);
                     final O output = outputTrace.getSymbol(idx);
 
-                    for (final Map.Entry<ADTState<I, O>, ADTState<I, O>> entry : currentToInitialMapping.entrySet()) {
+                    for (Map.Entry<ADTState<I, O>, ADTState<I, O>> entry : currentToInitialMapping.entrySet()) {
                         final ADTState<I, O> s = entry.getKey();
                         if (!partialTransitionAnalyzer.isTransitionDefined(s, input)) {
                             partialTransitionAnalyzer.closeTransition(s, input);

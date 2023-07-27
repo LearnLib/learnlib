@@ -157,8 +157,8 @@ public final class GlobalSuffixFinders {
      *
      * @return a global suffix finder using the analysis method from the specified local suffix finder
      */
-    public static <I, D> GlobalSuffixFinder<I, D> fromLocalFinder(final LocalSuffixFinder<I, D> localFinder,
-                                                                  final boolean allSuffixes) {
+    public static <I, D> GlobalSuffixFinder<I, D> fromLocalFinder(LocalSuffixFinder<I, D> localFinder,
+                                                                  boolean allSuffixes) {
 
         return new GlobalSuffixFinder<I, D>() {
 

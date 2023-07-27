@@ -176,7 +176,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
                                                                                                        sym,
                                                                                                        atrManager));
             // add existing procedures (without itself) to new learner
-            for (final I call : this.subLearners.keySet()) {
+            for (I call : this.subLearners.keySet()) {
                 newLearner.addAlphabetSymbol(call);
             }
 
@@ -192,7 +192,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
             this.activeAlphabet.add(sym);
 
             // add the new procedure (with a possibly shorter ts) to all learners (including the new one)
-            for (final L learner : this.subLearners.values()) {
+            for (L learner : this.subLearners.values()) {
                 learner.addAlphabetSymbol(sym);
             }
         }
@@ -208,7 +208,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
     private Map<I, DFA<?, I>> getSubModels() {
         final Map<I, DFA<?, I>> subModels = Maps.newHashMapWithExpectedSize(this.subLearners.size());
 
-        for (final Map.Entry<I, L> entry : this.subLearners.entrySet()) {
+        for (Map.Entry<I, L> entry : this.subLearners.entrySet()) {
             subModels.put(entry.getKey(), entry.getValue().getHypothesisModel());
         }
 
@@ -301,7 +301,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
     private boolean checkAndEnsureTSConformance(Map<I, DFA<?, I>> subModels) {
         boolean refinement = false;
 
-        for (final I procedure : this.subLearners.keySet()) {
+        for (I procedure : this.subLearners.keySet()) {
             final Word<I> terminatingSequence = this.atrManager.getTerminatingSequence(procedure);
             final WordBuilder<I> embeddedTS = new WordBuilder<>(terminatingSequence.size() + 2);
             embeddedTS.append(procedure);

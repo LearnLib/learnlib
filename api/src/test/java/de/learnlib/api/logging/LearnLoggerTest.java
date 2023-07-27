@@ -66,7 +66,7 @@ public class LearnLoggerTest {
         Assert.assertEquals(logStatement, loggedOutput);
     }
 
-    private OutputStreamAppender<ILoggingEvent> buildAppender(final ByteArrayOutputStream outputStream) {
+    private OutputStreamAppender<ILoggingEvent> buildAppender(ByteArrayOutputStream outputStream) {
         final LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 
         final PatternLayoutEncoder encoder = new PatternLayoutEncoder();
@@ -111,7 +111,7 @@ public class LearnLoggerTest {
         Assert.assertTrue(loggedOutput.isEmpty());
     }
 
-    private MarkerFilter buildMarkerFilter(final Category category) {
+    private MarkerFilter buildMarkerFilter(Category category) {
         final MarkerFilter result = new MarkerFilter();
 
         result.setMarker(Category.PHASE.toMarkerLabel());

@@ -78,7 +78,7 @@ public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
      *         oracle to be used
      */
     @Override
-    public final void setNext(final MembershipOracle<I, D> next) {
+    public final void setNext(MembershipOracle<I, D> next) {
         this.nextOracle = next;
     }
 }

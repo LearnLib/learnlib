@@ -109,7 +109,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      *
      * @return The output for {@code query} if already known from the {@link ReuseTree} or {@code null} if unknown.
      */
-    public @Nullable Word<O> getOutput(final Word<I> query) {
+    public @Nullable Word<O> getOutput(Word<I> query) {
         if (query == null) {
             String msg = "Query is not allowed to be null.";
             throw new IllegalArgumentException(msg);
@@ -120,7 +120,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
         this.lock.readLock().lock();
         try {
             ReuseNode<S, I, O> sink = getRoot();
-            for (final I symbol : query) {
+            for (I symbol : query) {
                 final ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(alphabet.getSymbolIndex(symbol));
                 if (edge == null) {
                     return null;
@@ -165,7 +165,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
         this.lock.readLock().lock();
         try {
             ReuseNode<S, I, O> sink = getRoot();
-            for (final I symbol : query) {
+            for (I symbol : query) {
                 final ReuseEdge<S, I, O> edge = sink.getEdgeWithInput(alphabet.getSymbolIndex(symbol));
                 // add null-pointers if no more outputs are available
                 if (edge == null) {

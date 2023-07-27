@@ -29,9 +29,9 @@ import net.automatalib.words.Alphabet;
 public class MinLengthCalculator extends AbstractCalculator {
 
     @Override
-    public <S, I, O> Optional<ADSNode<S, I, O>> computeInternal(final MealyMachine<S, I, ?, O> hypothesis,
-                                                                final Alphabet<I> alphabet,
-                                                                final Set<S> targets) {
+    public <S, I, O> Optional<ADSNode<S, I, O>> computeInternal(MealyMachine<S, I, ?, O> hypothesis,
+                                                                Alphabet<I> alphabet,
+                                                                Set<S> targets) {
         return BacktrackingSearch.computeOptimal(hypothesis,
                                                  alphabet,
                                                  targets,

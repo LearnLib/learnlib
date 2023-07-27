@@ -43,22 +43,22 @@ public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<
 
     private final int maxTests, minLength, maxLength;
 
-    public RandomWellMatchedWordsEQOracle(final Random random,
-                                          final MembershipOracle<I, Boolean> oracle,
-                                          final double callProb,
-                                          final int maxTests,
-                                          final int minLength,
-                                          final int maxLength) {
+    public RandomWellMatchedWordsEQOracle(Random random,
+                                          MembershipOracle<I, Boolean> oracle,
+                                          double callProb,
+                                          int maxTests,
+                                          int minLength,
+                                          int maxLength) {
         this(random, oracle, callProb, maxTests, minLength, maxLength, 1);
     }
 
-    public RandomWellMatchedWordsEQOracle(final Random random,
-                                          final MembershipOracle<I, Boolean> oracle,
-                                          final double callProb,
-                                          final int maxTests,
-                                          final int minLength,
-                                          final int maxLength,
-                                          final int batchSize) {
+    public RandomWellMatchedWordsEQOracle(Random random,
+                                          MembershipOracle<I, Boolean> oracle,
+                                          double callProb,
+                                          int maxTests,
+                                          int minLength,
+                                          int maxLength,
+                                          int batchSize) {
         super(oracle, batchSize);
 
         Preconditions.checkArgument(minLength <= maxLength, "minLength is smaller than maxLength");

@@ -39,7 +39,7 @@ public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
     private final ADTNode<S, I, O> successor;
     private ADTNode<S, I, O> parent;
 
-    public ADTResetNode(final ADTNode<S, I, O> successor) {
+    public ADTResetNode(ADTNode<S, I, O> successor) {
         this.successor = successor;
     }
 
@@ -59,7 +59,7 @@ public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
     }
 
     @Override
-    public void setParent(final ADTNode<S, I, O> parent) {
+    public void setParent(ADTNode<S, I, O> parent) {
         this.parent = parent;
     }
 
@@ -82,7 +82,7 @@ public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
     public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> prefix) {
         oracle.reset();
 
-        for (final I i : prefix) {
+        for (I i : prefix) {
             oracle.query(i);
         }
 

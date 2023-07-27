@@ -54,7 +54,7 @@ public class ADTState<I, O> extends AbstractFastState<ADTTransition<I, O>>
     }
 
     @Override
-    public void clearTransitionObject(final ADTTransition<I, O> transition) {
+    public void clearTransitionObject(ADTTransition<I, O> transition) {
         if (transition != null) {
             final ADTState<I, O> target = transition.getTarget();
             if (target != null) {

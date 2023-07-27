@@ -242,7 +242,7 @@ public abstract class AbstractDTLearner<M extends SuffixOutput<I, D>, I, D, SP, 
             this.hypothesis.getSuccessor(this.hypothesis.getInitialState(), symbol) == null) {
             final int newSymbolIdx = this.alphabet.getSymbolIndex(symbol);
 
-            for (final HState<I, D, SP, TP> s : this.hypothesis.getStates()) {
+            for (HState<I, D, SP, TP> s : this.hypothesis.getStates()) {
                 final HTransition<I, D, SP, TP> newTrans = new HTransition<>(s, symbol, dtree.getRoot());
                 s.setTransition(newSymbolIdx, newTrans);
                 newTransitions.add(newTrans);

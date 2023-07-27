@@ -35,8 +35,8 @@ public class ExtensibleLStarMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<ExtensibleLStarMealy<Character, Character>, AutomatonLStarState<Character, Word<Character>, CompactMealy<Character, Character>, Integer>> {
 
     @Override
-    protected ExtensibleLStarMealy<Character, Character> getLearner(final MembershipOracle<Character, Word<Character>> oracle,
-                                                                    final Alphabet<Character> alphabet) {
+    protected ExtensibleLStarMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                                    Alphabet<Character> alphabet) {
         return new ExtensibleLStarMealyBuilder<Character, Character>().withAlphabet(alphabet)
                                                                       .withOracle(oracle)
                                                                       .create();
@@ -48,7 +48,7 @@ public class ExtensibleLStarMealyResumableLearnerTest
     }
 
     @Override
-    protected MealyMachine<?, Character, ?, Character> getTarget(final Alphabet<Character> alphabet) {
+    protected MealyMachine<?, Character, ?, Character> getTarget(Alphabet<Character> alphabet) {
         return RandomAutomata.randomMealy(new Random(42), 100, alphabet, Alphabets.characters('a', 'd'));
     }
 }

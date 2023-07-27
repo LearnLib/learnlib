@@ -48,12 +48,12 @@ public class ExtensionResult<S, I, O> {
         this.counterExample = null;
     }
 
-    public ExtensionResult(final ADTNode<S, I, O> ext) {
+    public ExtensionResult(ADTNode<S, I, O> ext) {
         this.replacement = ext;
         this.counterExample = null;
     }
 
-    public ExtensionResult(final DefaultQuery<I, Word<O>> ce) {
+    public ExtensionResult(DefaultQuery<I, Word<O>> ce) {
         this.replacement = null;
         this.counterExample = ce;
     }

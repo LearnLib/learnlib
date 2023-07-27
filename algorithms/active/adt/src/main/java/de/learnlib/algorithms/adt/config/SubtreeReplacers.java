@@ -40,9 +40,9 @@ public final class SubtreeReplacers {
     public static final SubtreeReplacer NEVER_REPLACE = new SubtreeReplacer() {
 
         @Override
-        public <S, I, O> Set<ReplacementResult<S, I, O>> computeReplacements(final MealyMachine<S, I, ?, O> hypothesis,
-                                                                             final Alphabet<I> inputs,
-                                                                             final ADT<S, I, O> adt) {
+        public <S, I, O> Set<ReplacementResult<S, I, O>> computeReplacements(MealyMachine<S, I, ?, O> hypothesis,
+                                                                             Alphabet<I> inputs,
+                                                                             ADT<S, I, O> adt) {
             return Collections.emptySet();
         }
     };

@@ -64,7 +64,7 @@ public class MDLScoreTest {
     public void testPTAValue() {
         final BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(alphabet.size());
 
-        for (final IntSeq w : positiveSamplesAsIntSeq) {
+        for (IntSeq w : positiveSamplesAsIntSeq) {
             pta.addSample(w, true);
         }
 

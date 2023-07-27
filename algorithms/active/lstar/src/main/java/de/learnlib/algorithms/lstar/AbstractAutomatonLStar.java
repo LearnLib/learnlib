@@ -199,7 +199,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     }
 
     @Override
-    public void resume(final AutomatonLStarState<I, D, AI, S> state) {
+    public void resume(AutomatonLStarState<I, D, AI, S> state) {
         this.table = state.getObservationTable();
         this.internalHyp = state.getHypothesis();
         this.stateInfos = state.getStateInfos();

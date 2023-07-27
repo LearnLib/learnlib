@@ -286,7 +286,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     }
 
     @Override
-    public void resume(final MealyDHCState<I, O> state) {
+    public void resume(MealyDHCState<I, O> state) {
         this.splitters = state.getSplitters();
         this.accessSequences = new MapMapping<>(state.getAccessSequences());
         this.hypothesis = state.getHypothesis();

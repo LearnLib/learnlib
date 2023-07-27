@@ -35,13 +35,13 @@ public class SimulatorEQOracle<I> implements EquivalenceOracle<OneSEVPA<?, I>, I
 
     private final OneSEVPA<?, I> reference;
 
-    public SimulatorEQOracle(final OneSEVPA<?, I> reference) {
+    public SimulatorEQOracle(OneSEVPA<?, I> reference) {
         this.reference = reference;
     }
 
     @Override
-    public @Nullable DefaultQuery<I, Boolean> findCounterExample(final OneSEVPA<?, I> hypothesis,
-                                                                 final Collection<? extends I> inputs) {
+    public @Nullable DefaultQuery<I, Boolean> findCounterExample(OneSEVPA<?, I> hypothesis,
+                                                                 Collection<? extends I> inputs) {
         if (!(inputs instanceof VPDAlphabet)) {
             throw new IllegalArgumentException("Inputs are not an VPD alphabet");
         }

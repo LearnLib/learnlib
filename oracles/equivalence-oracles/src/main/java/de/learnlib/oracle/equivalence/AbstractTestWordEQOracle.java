@@ -100,7 +100,7 @@ public abstract class AbstractTestWordEQOracle<A extends Output<I, D>, I, D> imp
      */
     protected abstract Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs);
 
-    private Stream<DefaultQuery<I, D>> answerQueries(final Stream<DefaultQuery<I, D>> stream) {
+    private Stream<DefaultQuery<I, D>> answerQueries(Stream<DefaultQuery<I, D>> stream) {
         if (isBatched()) {
             /*
              * FIXME: currently necessary because of a bug in the JDK

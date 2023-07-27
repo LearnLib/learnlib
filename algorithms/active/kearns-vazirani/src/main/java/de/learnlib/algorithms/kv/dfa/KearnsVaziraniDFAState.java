@@ -35,9 +35,9 @@ public class KearnsVaziraniDFAState<I> {
     private final BinaryDTree<I, StateInfo<I, Boolean>> discriminationTree;
     private final List<StateInfo<I, Boolean>> stateInfos;
 
-    KearnsVaziraniDFAState(final CompactDFA<I> hypothesis,
-                           final BinaryDTree<I, StateInfo<I, Boolean>> discriminationTree,
-                           final List<StateInfo<I, Boolean>> stateInfos) {
+    KearnsVaziraniDFAState(CompactDFA<I> hypothesis,
+                           BinaryDTree<I, StateInfo<I, Boolean>> discriminationTree,
+                           List<StateInfo<I, Boolean>> stateInfos) {
         this.hypothesis = hypothesis;
         this.discriminationTree = discriminationTree;
         this.stateInfos = stateInfos;

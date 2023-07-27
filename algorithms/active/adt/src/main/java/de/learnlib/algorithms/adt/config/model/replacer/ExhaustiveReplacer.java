@@ -42,14 +42,14 @@ public class ExhaustiveReplacer implements SubtreeReplacer {
 
     private final ADSCalculator adsCalculator;
 
-    public ExhaustiveReplacer(final ADSCalculator adsProvider) {
+    public ExhaustiveReplacer(ADSCalculator adsProvider) {
         this.adsCalculator = adsProvider;
     }
 
     @Override
-    public <S, I, O> Set<ReplacementResult<S, I, O>> computeReplacements(final MealyMachine<S, I, ?, O> hypothesis,
-                                                                         final Alphabet<I> inputs,
-                                                                         final ADT<S, I, O> adt) {
+    public <S, I, O> Set<ReplacementResult<S, I, O>> computeReplacements(MealyMachine<S, I, ?, O> hypothesis,
+                                                                         Alphabet<I> inputs,
+                                                                         ADT<S, I, O> adt) {
         // if we cannot save any resets, don't bother with replacement
         if (ADTUtil.collectResetNodes(adt.getRoot()).isEmpty()) {
             return Collections.emptySet();
@@ -74,7 +74,7 @@ public class ExhaustiveReplacer implements SubtreeReplacer {
         final List<ADTNode<S, I, O>> sortedCandidates = new ArrayList<>(candidates);
         sortedCandidates.sort(Comparator.comparingInt(n -> subtreesToFinalNodes.get(n).size()));
 
-        for (final ADTNode<S, I, O> node : sortedCandidates) {
+        for (ADTNode<S, I, O> node : sortedCandidates) {
 
             final Set<S> finalNodes = subtreesToFinalNodes.get(node);
             final Set<S> targets = new HashSet<>(statesAsSet);

@@ -39,7 +39,7 @@ public class DTLearnerState<I, D, SP, TP> {
     private final AbstractWordBasedDiscriminationTree<I, D, HState<I, D, SP, TP>> dtree;
     private final DTLearnerHypothesis<I, D, SP, TP> hypothesis;
 
-    DTLearnerState(final AbstractWordBasedDiscriminationTree<I, D, HState<I, D, SP, TP>> dtree,
+    DTLearnerState(AbstractWordBasedDiscriminationTree<I, D, HState<I, D, SP, TP>> dtree,
                    final DTLearnerHypothesis<I, D, SP, TP> hypothesis) {
         this.dtree = dtree;
         this.hypothesis = hypothesis;

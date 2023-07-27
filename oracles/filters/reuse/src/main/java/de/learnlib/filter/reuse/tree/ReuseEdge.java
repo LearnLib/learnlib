@@ -48,7 +48,7 @@ public class ReuseEdge<S, I, O> {
      * @param output
      *         in case of quiescence maybe {@code null}.
      */
-    public ReuseEdge(final ReuseNode<S, I, O> source, final ReuseNode<S, I, O> target, final I input, final O output) {
+    public ReuseEdge(ReuseNode<S, I, O> source, ReuseNode<S, I, O> target, I input, O output) {
         if (source == null) {
             throw new IllegalArgumentException("Source not allowed to be null.");
         }

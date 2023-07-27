@@ -38,9 +38,9 @@ public class KearnsVaziraniMealyState<I, O> {
     private final MultiDTree<I, Word<O>, StateInfo<I, Word<O>>> discriminationTree;
     private final List<StateInfo<I, Word<O>>> stateInfos;
 
-    KearnsVaziraniMealyState(final CompactMealy<I, O> hypothesis,
-                             final MultiDTree<I, Word<O>, StateInfo<I, Word<O>>> discriminationTree,
-                             final List<StateInfo<I, Word<O>>> stateInfos) {
+    KearnsVaziraniMealyState(CompactMealy<I, O> hypothesis,
+                             MultiDTree<I, Word<O>, StateInfo<I, Word<O>>> discriminationTree,
+                             List<StateInfo<I, Word<O>>> stateInfos) {
         this.hypothesis = hypothesis;
         this.discriminationTree = discriminationTree;
         this.stateInfos = stateInfos;

@@ -43,7 +43,7 @@ public class SULSymbolQueryOracle<I, O> implements SymbolQueryOracle<I, O> {
     private boolean preRequired;
     private boolean postRequired;
 
-    public SULSymbolQueryOracle(final SUL<I, O> sul) {
+    public SULSymbolQueryOracle(SUL<I, O> sul) {
         this.sul = sul;
         this.preRequired = true;
     }

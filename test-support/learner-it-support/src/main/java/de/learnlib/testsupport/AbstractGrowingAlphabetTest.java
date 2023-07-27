@@ -127,7 +127,7 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
 
         boolean duplicateAdd = false;
 
-        for (final I i : alphabetExtensions) {
+        for (I i : alphabetExtensions) {
             currentAlphabet.add(i);
             symbolListener.forEach(c -> c.accept(i));
 
@@ -145,7 +145,7 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
 
     }
 
-    private void performLearnLoopAndCheck(final L learner, final Collection<? extends I> effectiveAlphabet) {
+    private void performLearnLoopAndCheck(L learner, Collection<? extends I> effectiveAlphabet) {
 
         M hyp = learner.getHypothesisModel();
         Word<I> sepWord = Automata.findSeparatingWord(target, hyp, effectiveAlphabet);
@@ -162,10 +162,10 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
         Assert.assertTrue(Automata.testEquivalence(target, hyp, effectiveAlphabet));
     }
 
-    private <S, T> void checkCompletenessOfHypothesis(final UniversalDeterministicAutomaton<S, I, T, ?, ?> hypothesis,
-                                                      final Collection<? extends I> alphabet) {
-        for (final S s : hypothesis.getStates()) {
-            for (final I i : alphabet) {
+    private <S, T> void checkCompletenessOfHypothesis(UniversalDeterministicAutomaton<S, I, T, ?, ?> hypothesis,
+                                                      Collection<? extends I> alphabet) {
+        for (S s : hypothesis.getStates()) {
+            for (I i : alphabet) {
                 final T trans = hypothesis.getTransition(s, i);
 
                 Assert.assertNotNull(trans);

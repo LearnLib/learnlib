@@ -70,7 +70,7 @@ public class DTLearnerMealy<I, O> extends AbstractDTLearner<MealyMachine<?, I, ?
     }
 
     @Override
-    protected Query<I, Word<O>> tpQuery(final HTransition<I, Word<O>, Void, O> transition) {
+    protected Query<I, Word<O>> tpQuery(HTransition<I, Word<O>, Void, O> transition) {
         return new AbstractQuery<I, Word<O>>(transition.getSource().getAccessSequence(),
                                              Word.fromLetter(transition.getSymbol())) {
 

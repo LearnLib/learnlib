@@ -331,7 +331,7 @@ public class KearnsVaziraniMealy<I, O>
             final List<Word<I>> transAs = new ArrayList<>(this.stateInfos.size());
             final List<DefaultQuery<I, Word<O>>> outputQueries = new ArrayList<>(this.stateInfos.size());
 
-            for (final StateInfo<I, Word<O>> si : this.stateInfos) {
+            for (StateInfo<I, Word<O>> si : this.stateInfos) {
                 transAs.add(si.accessSequence.append(symbol));
                 outputQueries.add(new DefaultQuery<>(si.accessSequence, Word.fromLetter(symbol)));
             }
@@ -359,7 +359,7 @@ public class KearnsVaziraniMealy<I, O>
     }
 
     @Override
-    public void resume(final KearnsVaziraniMealyState<I, O> state) {
+    public void resume(KearnsVaziraniMealyState<I, O> state) {
         this.hypothesis = state.getHypothesis();
         this.discriminationTree = state.getDiscriminationTree();
         this.discriminationTree.setOracle(oracle);

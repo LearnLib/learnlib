@@ -29,8 +29,8 @@ public class DTLearnerMooreResumableLearnerTest
         extends AbstractResumableLearnerMooreTest<DTLearnerMoore<Character, Character>, DTLearnerState<Character, Word<Character>, Character, Void>> {
 
     @Override
-    protected DTLearnerMoore<Character, Character> getLearner(final MembershipOracle<Character, Word<Character>> oracle,
-                                                              final Alphabet<Character> alphabet) {
+    protected DTLearnerMoore<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                              Alphabet<Character> alphabet) {
         return new DTLearnerMooreBuilder<Character, Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }
 

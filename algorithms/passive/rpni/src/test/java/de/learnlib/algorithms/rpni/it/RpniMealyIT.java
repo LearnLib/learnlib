@@ -31,8 +31,8 @@ public class RpniMealyIT extends AbstractMealyPassiveLearnerIT {
         final boolean[] determinism = {true, false};
         final boolean[] parallelism = {true, false};
 
-        for (final boolean d : determinism) {
-            for (final boolean p : parallelism) {
+        for (boolean d : determinism) {
+            for (boolean p : parallelism) {
                 final BlueFringeRPNIMealy<I, O> learner = new BlueFringeRPNIMealy<>(alphabet);
                 learner.setParallel(p);
                 learner.setDeterministic(d);

@@ -51,9 +51,9 @@ public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
 
     private boolean currentTraceValid;
 
-    public SQOOTBridge(final ObservationTree<?, I, O> observationTree,
-                       final SymbolQueryOracle<I, O> delegate,
-                       final boolean enableCache) {
+    public SQOOTBridge(ObservationTree<?, I, O> observationTree,
+                       SymbolQueryOracle<I, O> delegate,
+                       boolean enableCache) {
         this.observationTree = observationTree.getObservationTree();
         this.delegate = delegate;
         this.enableCache = enableCache;
@@ -80,7 +80,7 @@ public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
                 this.currentTraceValid = false;
                 this.delegate.reset();
 
-                for (final I trace : this.currentTrace) {
+                for (I trace : this.currentTrace) {
                     this.delegate.query(trace);
                 }
             }

@@ -149,7 +149,7 @@ public class DTLearnerHypothesis<I, O, SP, TP>
         final int newAlphabetSize = this.alphabet.size();
 
         if (alphabetSize < newAlphabetSize) {
-            for (final HState<I, O, SP, TP> s : this.getStates()) {
+            for (HState<I, O, SP, TP> s : this.getStates()) {
                 s.ensureInputCapacity(newAlphabetSize);
             }
 

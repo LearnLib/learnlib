@@ -38,14 +38,14 @@ public class LevelOrderReplacer implements SubtreeReplacer {
 
     private final ADSCalculator adsCalculator;
 
-    public LevelOrderReplacer(final ADSCalculator adsProvider) {
+    public LevelOrderReplacer(ADSCalculator adsProvider) {
         this.adsCalculator = adsProvider;
     }
 
     @Override
-    public <S, I, O> Set<ReplacementResult<S, I, O>> computeReplacements(final MealyMachine<S, I, ?, O> hypothesis,
-                                                                         final Alphabet<I> inputs,
-                                                                         final ADT<S, I, O> adt) {
+    public <S, I, O> Set<ReplacementResult<S, I, O>> computeReplacements(MealyMachine<S, I, ?, O> hypothesis,
+                                                                         Alphabet<I> inputs,
+                                                                         ADT<S, I, O> adt) {
 
         // if we cannot save any resets, don't bother with replacement
         if (ADTUtil.collectResetNodes(adt.getRoot()).isEmpty()) {

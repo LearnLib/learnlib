@@ -69,7 +69,7 @@ public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I
         return new VisualizationHelper<ADTNode<S, I, O>, ADTNode<S, I, O>>() {
 
             @Override
-            public boolean getNodeProperties(final ADTNode<S, I, O> node, final Map<String, String> properties) {
+            public boolean getNodeProperties(ADTNode<S, I, O> node, Map<String, String> properties) {
                 if (ADTUtil.isResetNode(node)) {
                     properties.put(NodeAttrs.SHAPE, NodeShapes.OCTAGON);
                     properties.put(NodeAttrs.LABEL, "reset");
@@ -85,12 +85,12 @@ public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I
             }
 
             @Override
-            public boolean getEdgeProperties(final ADTNode<S, I, O> src,
-                                             final ADTNode<S, I, O> edge,
-                                             final ADTNode<S, I, O> tgt,
-                                             final Map<String, String> properties) {
+            public boolean getEdgeProperties(ADTNode<S, I, O> src,
+                                             ADTNode<S, I, O> edge,
+                                             ADTNode<S, I, O> tgt,
+                                             Map<String, String> properties) {
 
-                for (final Map.Entry<O, ADTNode<S, I, O>> e : src.getChildren().entrySet()) {
+                for (Map.Entry<O, ADTNode<S, I, O>> e : src.getChildren().entrySet()) {
                     if (e.getValue().equals(tgt) && !ADTUtil.isResetNode(src)) {
                         properties.put(EdgeAttrs.LABEL, e.getKey().toString());
                         return true;

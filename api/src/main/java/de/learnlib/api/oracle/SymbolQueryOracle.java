@@ -54,14 +54,14 @@ public interface SymbolQueryOracle<I, O> extends MembershipOracle.MealyMembershi
 
         final WordBuilder<O> wb = new WordBuilder<>();
 
-        for (final Query<I, Word<O>> q : queries) {
+        for (Query<I, Word<O>> q : queries) {
             reset();
 
-            for (final I i : q.getPrefix()) {
+            for (I i : q.getPrefix()) {
                 query(i);
             }
 
-            for (final I i : q.getSuffix()) {
+            for (I i : q.getSuffix()) {
                 wb.append(query(i));
             }
 

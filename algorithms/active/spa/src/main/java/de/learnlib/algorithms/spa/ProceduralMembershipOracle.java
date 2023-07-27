@@ -51,7 +51,7 @@ final class ProceduralMembershipOracle<I> implements MembershipOracle<I, Boolean
     public void processQueries(Collection<? extends Query<I, Boolean>> collection) {
         final List<Query<I, Boolean>> transformedQueries = new ArrayList<>(collection.size());
 
-        for (final Query<I, Boolean> q : collection) {
+        for (Query<I, Boolean> q : collection) {
             transformedQueries.add(new TransformedQuery(q));
         }
 
@@ -62,7 +62,7 @@ final class ProceduralMembershipOracle<I> implements MembershipOracle<I, Boolean
         final WordBuilder<I> builder = new WordBuilder<>();
         builder.append(atrManager.getAccessSequence(this.procedure));
 
-        for (final I i : query) {
+        for (I i : query) {
             if (alphabet.isInternalSymbol(i)) {
                 builder.append(i);
             } else if (alphabet.isCallSymbol(i)) {

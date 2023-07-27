@@ -31,9 +31,9 @@ import net.automatalib.words.Alphabet;
 public abstract class AbstractCalculator implements ADSCalculator {
 
     @Override
-    public <S, I, O> Optional<ADTNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> hypothesis,
-                                                        final Alphabet<I> alphabet,
-                                                        final Set<S> targets) {
+    public <S, I, O> Optional<ADTNode<S, I, O>> compute(MealyMachine<S, I, ?, O> hypothesis,
+                                                        Alphabet<I> alphabet,
+                                                        Set<S> targets) {
 
         final Optional<ADSNode<S, I, O>> result = computeInternal(hypothesis, alphabet, targets);
 

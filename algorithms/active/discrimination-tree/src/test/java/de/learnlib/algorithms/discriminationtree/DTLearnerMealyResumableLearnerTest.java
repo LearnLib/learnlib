@@ -29,8 +29,8 @@ public class DTLearnerMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<DTLearnerMealy<Character, Character>, DTLearnerState<Character, Word<Character>, Void, Character>> {
 
     @Override
-    protected DTLearnerMealy<Character, Character> getLearner(final MembershipOracle<Character, Word<Character>> oracle,
-                                                              final Alphabet<Character> alphabet) {
+    protected DTLearnerMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                              Alphabet<Character> alphabet) {
         return new DTLearnerMealyBuilder<Character, Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }
 

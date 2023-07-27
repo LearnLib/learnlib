@@ -46,11 +46,11 @@ public final class ADTUtil {
         return checkNodeType(node, ADTNode.NodeType.SYMBOL_NODE);
     }
 
-    private static <S, I, O> boolean checkNodeType(final ADTNode<S, I, O> node, final ADTNode.NodeType type) {
+    private static <S, I, O> boolean checkNodeType(ADTNode<S, I, O> node, ADTNode.NodeType type) {
         return node != null && node.getNodeType() == type;
     }
 
-    public static <S, I, O> ADTNode<S, I, O> getStartOfADS(final ADTNode<S, I, O> node) {
+    public static <S, I, O> ADTNode<S, I, O> getStartOfADS(ADTNode<S, I, O> node) {
 
         ADTNode<S, I, O> iter = node;
 
@@ -65,21 +65,21 @@ public final class ADTUtil {
         return checkNodeType(node, ADTNode.NodeType.RESET_NODE);
     }
 
-    public static <S, I, O> Set<S> collectHypothesisStates(final ADTNode<S, I, O> root) {
+    public static <S, I, O> Set<S> collectHypothesisStates(ADTNode<S, I, O> root) {
         final Set<S> result = new LinkedHashSet<>();
         collectTransformedLeavesRecursively(result, root, ADTNode::getHypothesisState);
         return result;
     }
 
-    public static <S, I, O> Set<ADTNode<S, I, O>> collectLeaves(final ADTNode<S, I, O> root) {
+    public static <S, I, O> Set<ADTNode<S, I, O>> collectLeaves(ADTNode<S, I, O> root) {
         final Set<ADTNode<S, I, O>> result = new LinkedHashSet<>();
         collectTransformedLeavesRecursively(result, root, Function.identity());
         return result;
     }
 
-    private static <S, I, O, T> void collectTransformedLeavesRecursively(final Set<T> nodes,
-                                                                         final ADTNode<S, I, O> current,
-                                                                         final Function<ADTNode<S, I, O>, T> transformer) {
+    private static <S, I, O, T> void collectTransformedLeavesRecursively(Set<T> nodes,
+                                                                         ADTNode<S, I, O> current,
+                                                                         Function<ADTNode<S, I, O>, T> transformer) {
         if (ADTUtil.isLeafNode(current)) {
             nodes.add(transformer.apply(current));
         } else {
@@ -89,15 +89,15 @@ public final class ADTUtil {
         }
     }
 
-    public static <S, I, O> Set<ADTNode<S, I, O>> collectADSNodes(final ADTNode<S, I, O> root) {
+    public static <S, I, O> Set<ADTNode<S, I, O>> collectADSNodes(ADTNode<S, I, O> root) {
         final Set<ADTNode<S, I, O>> result = new LinkedHashSet<>();
         result.add(root);
         collectADSNodesRecursively(result, root);
         return result;
     }
 
-    private static <S, I, O> void collectADSNodesRecursively(final Set<ADTNode<S, I, O>> nodes,
-                                                             final ADTNode<S, I, O> current) {
+    private static <S, I, O> void collectADSNodesRecursively(Set<ADTNode<S, I, O>> nodes,
+                                                             ADTNode<S, I, O> current) {
         if (ADTUtil.isResetNode(current)) {
             nodes.addAll(current.getChildren().values());
         }
@@ -107,14 +107,13 @@ public final class ADTUtil {
         }
     }
 
-    public static <S, I, O> Set<ADTNode<S, I, O>> collectResetNodes(final ADTNode<S, I, O> root) {
+    public static <S, I, O> Set<ADTNode<S, I, O>> collectResetNodes(ADTNode<S, I, O> root) {
         final Set<ADTNode<S, I, O>> result = new LinkedHashSet<>();
         collectResetNodesRecursively(result, root);
         return result;
     }
 
-    private static <S, I, O> void collectResetNodesRecursively(final Set<ADTNode<S, I, O>> nodes,
-                                                               final ADTNode<S, I, O> current) {
+    private static <S, I, O> void collectResetNodesRecursively(Set<ADTNode<S, I, O>> nodes, ADTNode<S, I, O> current) {
         if (ADTUtil.isResetNode(current)) {
             nodes.add(current);
         }
@@ -124,15 +123,15 @@ public final class ADTUtil {
         }
     }
 
-    public static <S, I, O> Set<ADTNode<S, I, O>> collectDirectSubADSs(final ADTNode<S, I, O> node) {
+    public static <S, I, O> Set<ADTNode<S, I, O>> collectDirectSubADSs(ADTNode<S, I, O> node) {
         final Set<ADTNode<S, I, O>> result = new LinkedHashSet<>();
         collectDirectSubTreesRecursively(result, node);
         return result;
 
     }
 
-    private static <S, I, O> void collectDirectSubTreesRecursively(final Set<ADTNode<S, I, O>> nodes,
-                                                                   final ADTNode<S, I, O> current) {
+    private static <S, I, O> void collectDirectSubTreesRecursively(Set<ADTNode<S, I, O>> nodes,
+                                                                   ADTNode<S, I, O> current) {
         if (ADTUtil.isResetNode(current)) {
             nodes.addAll(current.getChildren().values());
         } else {
@@ -142,7 +141,7 @@ public final class ADTUtil {
         }
     }
 
-    public static <S, I, O> Pair<Word<I>, Word<O>> buildTraceForNode(final ADTNode<S, I, O> node) {
+    public static <S, I, O> Pair<Word<I>, Word<O>> buildTraceForNode(ADTNode<S, I, O> node) {
 
         ADTNode<S, I, O> parentIter = node.getParent();
         ADTNode<S, I, O> nodeIter = node;
@@ -160,7 +159,7 @@ public final class ADTUtil {
         return Pair.of(inputBuilder.reverse().toWord(), outputBuilder.reverse().toWord());
     }
 
-    public static <S, I, O> O getOutputForSuccessor(final ADTNode<S, I, O> node, final ADTNode<S, I, O> successor) {
+    public static <S, I, O> O getOutputForSuccessor(ADTNode<S, I, O> node, ADTNode<S, I, O> successor) {
 
         if (!node.equals(successor.getParent())) {
             throw new IllegalArgumentException("No parent relationship");
@@ -189,7 +188,7 @@ public final class ADTUtil {
      *
      * @return an equivalent ADS using the {@link ADTNode} interface
      */
-    public static <S, I, O> ADTNode<S, I, O> buildFromADS(final ADSNode<S, I, O> node) {
+    public static <S, I, O> ADTNode<S, I, O> buildFromADS(ADSNode<S, I, O> node) {
 
         if (node.isLeaf()) {
             return new ADTLeafNode<>(null, node.getHypothesisState());
@@ -224,11 +223,11 @@ public final class ADTUtil {
      *
      * @return the number of encountered reset nodes
      */
-    public static <S, I, O> int computeEffectiveResets(final ADTNode<S, I, O> adt) {
+    public static <S, I, O> int computeEffectiveResets(ADTNode<S, I, O> adt) {
         return computeEffectiveResetsInternal(adt, 0);
     }
 
-    private static <S, I, O> int computeEffectiveResetsInternal(final ADTNode<S, I, O> ads, int accumulatedResets) {
+    private static <S, I, O> int computeEffectiveResetsInternal(ADTNode<S, I, O> ads, int accumulatedResets) {
         if (ADTUtil.isLeafNode(ads)) {
             return accumulatedResets;
         }
@@ -238,9 +237,9 @@ public final class ADTUtil {
         return ads.getChildren().values().stream().mapToInt(x -> computeEffectiveResetsInternal(x, nextCosts)).sum();
     }
 
-    public static <S, I, O> Pair<ADTNode<S, I, O>, ADTNode<S, I, O>> buildADSFromTrace(final MealyMachine<S, I, ?, O> automaton,
-                                                                                       final Word<I> trace,
-                                                                                       final S state) {
+    public static <S, I, O> Pair<ADTNode<S, I, O>, ADTNode<S, I, O>> buildADSFromTrace(MealyMachine<S, I, ?, O> automaton,
+                                                                                       Word<I> trace,
+                                                                                       S state) {
 
         final Iterator<I> sequenceIter = trace.iterator();
         final I input = sequenceIter.next();
@@ -284,9 +283,9 @@ public final class ADTUtil {
      *
      * @return the root node of the constructed ADS
      */
-    public static <S, I, O> ADTNode<S, I, O> buildADSFromObservation(final Word<I> input,
-                                                                     final Word<O> output,
-                                                                     final S finalState) {
+    public static <S, I, O> ADTNode<S, I, O> buildADSFromObservation(Word<I> input,
+                                                                     Word<O> output,
+                                                                     S finalState) {
 
         if (input.size() != output.size()) {
             throw new IllegalArgumentException("Arguments differ in length");
@@ -328,7 +327,7 @@ public final class ADTUtil {
      *
      * @return {@code true} if ADSs could be merged, {@code false} otherwise
      */
-    public static <S, I, O> boolean mergeADS(final ADTNode<S, I, O> parent, final ADTNode<S, I, O> child) {
+    public static <S, I, O> boolean mergeADS(ADTNode<S, I, O> parent, ADTNode<S, I, O> child) {
 
         ADTNode<S, I, O> parentIter = parent, childIter = child;
 

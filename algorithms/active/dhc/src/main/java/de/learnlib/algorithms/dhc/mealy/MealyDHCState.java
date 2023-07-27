@@ -39,14 +39,14 @@ public class MealyDHCState<I, O> {
     private final CompactMealy<I, O> hypothesis;
     private final Map<Integer, MealyDHC.QueueElement<I, O>> accessSequences;
 
-    MealyDHCState(final Set<Word<I>> splitters,
-                  final CompactMealy<I, O> hypothesis,
-                  final MutableMapping<Integer, MealyDHC.QueueElement<I, O>> accessSequences) {
+    MealyDHCState(Set<Word<I>> splitters,
+                  CompactMealy<I, O> hypothesis,
+                  MutableMapping<Integer, MealyDHC.QueueElement<I, O>> accessSequences) {
         this.splitters = splitters;
         this.hypothesis = hypothesis;
         this.accessSequences = Maps.newHashMapWithExpectedSize(hypothesis.size());
 
-        for (final Integer s : hypothesis.getStates()) {
+        for (Integer s : hypothesis.getStates()) {
             final MealyDHC.QueueElement<I, O> elem = accessSequences.get(s);
             if (elem != null) {
                 this.accessSequences.put(s, elem);

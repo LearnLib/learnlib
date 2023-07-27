@@ -68,7 +68,7 @@ public class DTLearnerDFA<I> extends AbstractDTLearner<DFA<?, I>, I, Boolean, Bo
     }
 
     @Override
-    protected Query<I, Boolean> spQuery(final HState<I, Boolean, Boolean, Void> state) {
+    protected Query<I, Boolean> spQuery(HState<I, Boolean, Boolean, Void> state) {
         return new AbstractQuery<I, Boolean>(state.getAccessSequence(), Word.epsilon()) {
 
             @Override

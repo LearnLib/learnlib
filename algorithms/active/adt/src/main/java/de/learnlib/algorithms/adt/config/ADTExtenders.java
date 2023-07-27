@@ -34,9 +34,9 @@ public final class ADTExtenders {
     public static final ADTExtender NOP = new ADTExtender() {
 
         @Override
-        public <I, O> ExtensionResult<ADTState<I, O>, I, O> computeExtension(final ADTHypothesis<I, O> hypothesis,
-                                                                             final PartialTransitionAnalyzer<ADTState<I, O>, I> partialTransitionAnalyzer,
-                                                                             final ADTNode<ADTState<I, O>, I, O> ads) {
+        public <I, O> ExtensionResult<ADTState<I, O>, I, O> computeExtension(ADTHypothesis<I, O> hypothesis,
+                                                                             PartialTransitionAnalyzer<ADTState<I, O>, I> partialTransitionAnalyzer,
+                                                                             ADTNode<ADTState<I, O>, I, O> ads) {
             return ExtensionResult.empty();
         }
     };

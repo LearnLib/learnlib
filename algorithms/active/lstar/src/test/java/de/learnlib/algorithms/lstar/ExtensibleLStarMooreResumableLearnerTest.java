@@ -35,8 +35,8 @@ public class ExtensibleLStarMooreResumableLearnerTest
         extends AbstractResumableLearnerMooreTest<ExtensibleLStarMoore<Character, Character>, AutomatonLStarState<Character, Word<Character>, CompactMoore<Character, Character>, Integer>> {
 
     @Override
-    protected ExtensibleLStarMoore<Character, Character> getLearner(final MembershipOracle<Character, Word<Character>> oracle,
-                                                                    final Alphabet<Character> alphabet) {
+    protected ExtensibleLStarMoore<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                                    Alphabet<Character> alphabet) {
         return new ExtensibleLStarMooreBuilder<Character, Character>().withAlphabet(alphabet)
                                                                       .withOracle(oracle)
                                                                       .create();
@@ -48,7 +48,7 @@ public class ExtensibleLStarMooreResumableLearnerTest
     }
 
     @Override
-    protected MooreMachine<?, Character, ?, Character> getTarget(final Alphabet<Character> alphabet) {
+    protected MooreMachine<?, Character, ?, Character> getTarget(Alphabet<Character> alphabet) {
         return RandomAutomata.randomMoore(new Random(42), 100, alphabet, Alphabets.characters('a', 'd'));
     }
 }

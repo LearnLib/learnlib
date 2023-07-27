@@ -42,13 +42,11 @@ public class ReplacementResult<S, I, O> {
 
     private final Set<S> cutoutNodes;
 
-    public ReplacementResult(final ADTNode<S, I, O> nodeToReplace, final ADTNode<S, I, O> replacement) {
+    public ReplacementResult(ADTNode<S, I, O> nodeToReplace, ADTNode<S, I, O> replacement) {
         this(nodeToReplace, replacement, Collections.emptySet());
     }
 
-    public ReplacementResult(final ADTNode<S, I, O> nodeToReplace,
-                             final ADTNode<S, I, O> replacement,
-                             final Set<S> cutoutNodes) {
+    public ReplacementResult(ADTNode<S, I, O> nodeToReplace, ADTNode<S, I, O> replacement, Set<S> cutoutNodes) {
         this.nodeToReplace = nodeToReplace;
         this.replacement = replacement;
         this.cutoutNodes = cutoutNodes;

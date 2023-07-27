@@ -26,8 +26,8 @@ import net.automatalib.words.Alphabet;
 public class RivestSchapireDFAResumableLearnerTest extends ExtensibleLStarDFAResumableLearnerTest {
 
     @Override
-    protected ExtensibleLStarDFA<Character> getLearner(final MembershipOracle<Character, Boolean> oracle,
-                                                       final Alphabet<Character> alphabet) {
+    protected ExtensibleLStarDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+                                                       Alphabet<Character> alphabet) {
 
         return new RivestSchapireDFABuilder<Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }

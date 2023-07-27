@@ -99,7 +99,7 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
      * ReuseCapableOracle#continueQuery(Word, Object)} will be invoked with remaining suffix and the corresponding
      * {@link ReuseNode} of the {@link ReuseTree}).
      */
-    private Word<O> processQuery(final Word<I> query) {
+    private Word<O> processQuery(Word<I> query) {
         Word<O> knownOutput = tree.getOutput(query);
 
         if (knownOutput != null) {
@@ -171,7 +171,7 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
         final Iterator<I> queryIterator = filteredQueryList.iterator();
 
         // filter "reflexive" edges
-        for (final O outputSymbol : partialOutput) {
+        for (O outputSymbol : partialOutput) {
             queryIterator.next();
             if (outputSymbol != null) {
                 queryIterator.remove();
@@ -185,7 +185,7 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
         final Iterator<O> resultIterator = res.output.iterator();
 
         // insert back the a priori available outputs of "reflexive" edges
-        for (final O output : partialOutput) {
+        for (O output : partialOutput) {
             if (output == null) {
                 wordBuilder.add(resultIterator.next());
             } else {

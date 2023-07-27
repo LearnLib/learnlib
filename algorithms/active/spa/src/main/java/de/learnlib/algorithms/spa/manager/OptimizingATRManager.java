@@ -41,7 +41,7 @@ public class OptimizingATRManager<I> implements ATRManager<I> {
 
     private final SPAAlphabet<I> alphabet;
 
-    public OptimizingATRManager(final SPAAlphabet<I> alphabet) {
+    public OptimizingATRManager(SPAAlphabet<I> alphabet) {
         this.alphabet = alphabet;
 
         this.accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
@@ -123,8 +123,8 @@ public class OptimizingATRManager<I> implements ATRManager<I> {
                       .orElse(null);
     }
 
-    private void optimizeSequences(final Map<I, Word<I>> sequences) {
-        for (final Map.Entry<I, Word<I>> entry : sequences.entrySet()) {
+    private void optimizeSequences(Map<I, Word<I>> sequences) {
+        for (Map.Entry<I, Word<I>> entry : sequences.entrySet()) {
             final Word<I> currentSequence = entry.getValue();
             final Word<I> minimized = minifyWellMatched(currentSequence);
 
@@ -134,7 +134,7 @@ public class OptimizingATRManager<I> implements ATRManager<I> {
         }
     }
 
-    private void extractPotentialTerminatingSequences(final Word<I> input, final Set<I> newProcedures) {
+    private void extractPotentialTerminatingSequences(Word<I> input, Set<I> newProcedures) {
         for (int i = 0; i < input.size(); i++) {
             final I sym = input.getSymbol(i);
 
@@ -154,7 +154,7 @@ public class OptimizingATRManager<I> implements ATRManager<I> {
         }
     }
 
-    private void extractPotentialAccessAndReturnSequences(final Word<I> input) {
+    private void extractPotentialAccessAndReturnSequences(Word<I> input) {
 
         final List<I> asBuilder = new ArrayList<>(input.size());
         final List<I> rsBuilder = new ArrayList<>(input.size());

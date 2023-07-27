@@ -55,15 +55,15 @@ public class MockedObservationTable<I, D> extends SimpleObservationTable<I, D> {
         this.longPrefixes = new LinkedList<>();
     }
 
-    void addShortPrefix(final Word<I> prefix, List<D> contents) {
+    void addShortPrefix(Word<I> prefix, List<D> contents) {
         shortPrefixes.add(addPrefix(prefix, contents));
     }
 
-    void addLongPrefix(final Word<I> prefix, List<D> contents) {
+    void addLongPrefix(Word<I> prefix, List<D> contents) {
         longPrefixes.add(addPrefix(prefix, contents));
     }
 
-    private RowImpl<I> addPrefix(final Word<I> prefix, List<D> contents) {
+    private RowImpl<I> addPrefix(Word<I> prefix, List<D> contents) {
         Preconditions.checkArgument(getSuffixes().size() == contents.size());
 
         final RowImpl<I> row = new RowImpl<>(prefix, rows.size());

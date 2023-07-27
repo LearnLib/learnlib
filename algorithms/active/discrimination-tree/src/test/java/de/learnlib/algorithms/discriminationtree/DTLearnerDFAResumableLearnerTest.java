@@ -28,8 +28,8 @@ public class DTLearnerDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<DTLearnerDFA<Character>, DTLearnerState<Character, Boolean, Boolean, Void>> {
 
     @Override
-    protected DTLearnerDFA<Character> getLearner(final MembershipOracle<Character, Boolean> oracle,
-                                                 final Alphabet<Character> alphabet) {
+    protected DTLearnerDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+                                                 Alphabet<Character> alphabet) {
         return new DTLearnerDFABuilder<Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }
 

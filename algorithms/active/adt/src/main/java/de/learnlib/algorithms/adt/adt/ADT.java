@@ -48,7 +48,7 @@ public class ADT<S, I, O> {
      * @param state
      *         the referenced state of the leaf
      */
-    public void initialize(final S state) {
+    public void initialize(S state) {
         this.root = new ADTLeafNode<>(null, state);
     }
 
@@ -70,7 +70,7 @@ public class ADT<S, I, O> {
      * @param newNode
      *         the replacement
      */
-    public void replaceNode(final ADTNode<S, I, O> oldNode, final ADTNode<S, I, O> newNode) {
+    public void replaceNode(ADTNode<S, I, O> oldNode, ADTNode<S, I, O> newNode) {
 
         if (this.root.equals(oldNode)) {
             this.root = newNode;
@@ -105,9 +105,7 @@ public class ADT<S, I, O> {
      *
      * @return the leaf (see {@link ADTNode#sift(SymbolQueryOracle, Word)})
      */
-    public ADTNode<S, I, O> sift(final SymbolQueryOracle<I, O> oracle,
-                                 final Word<I> word,
-                                 final ADTNode<S, I, O> subtree) {
+    public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> word, ADTNode<S, I, O> subtree) {
 
         ADTNode<S, I, O> current = subtree;
 
@@ -135,11 +133,11 @@ public class ADT<S, I, O> {
      *
      * @return the new leaf node
      */
-    public ADTNode<S, I, O> extendLeaf(final ADTNode<S, I, O> nodeToSplit,
-                                       final Word<I> distinguishingSuffix,
-                                       final Word<O> oldOutput,
-                                       final Word<O> newOutput,
-                                       final LeafSplitter leafSplitter) {
+    public ADTNode<S, I, O> extendLeaf(ADTNode<S, I, O> nodeToSplit,
+                                       Word<I> distinguishingSuffix,
+                                       Word<O> oldOutput,
+                                       Word<O> newOutput,
+                                       LeafSplitter leafSplitter) {
 
         if (!ADTUtil.isLeafNode(nodeToSplit)) {
             throw new IllegalArgumentException("Node to split is not a leaf node");
@@ -174,11 +172,11 @@ public class ADT<S, I, O> {
      *
      * @return the new leaf node
      */
-    public ADTNode<S, I, O> splitLeaf(final ADTNode<S, I, O> nodeToSplit,
-                                      final Word<I> distinguishingSuffix,
-                                      final Word<O> oldOutput,
-                                      final Word<O> newOutput,
-                                      final LeafSplitter leafSplitter) {
+    public ADTNode<S, I, O> splitLeaf(ADTNode<S, I, O> nodeToSplit,
+                                      Word<I> distinguishingSuffix,
+                                      Word<O> oldOutput,
+                                      Word<O> newOutput,
+                                      LeafSplitter leafSplitter) {
 
         if (!ADTUtil.isLeafNode(nodeToSplit)) {
             throw new IllegalArgumentException("Node to split is not a final node");
@@ -212,7 +210,7 @@ public class ADT<S, I, O> {
      * @return A {@link LCAInfo} containing the lowest common {@link ADTNode}, the output determining the subtree of the
      * first node and the output determining the subtree of the second node
      */
-    public LCAInfo<S, I, O> findLCA(final ADTNode<S, I, O> s1, final ADTNode<S, I, O> s2) {
+    public LCAInfo<S, I, O> findLCA(ADTNode<S, I, O> s1, ADTNode<S, I, O> s2) {
 
         final Map<ADTNode<S, I, O>, ADTNode<S, I, O>> s1ParentsToS1 = new HashMap<>();
 

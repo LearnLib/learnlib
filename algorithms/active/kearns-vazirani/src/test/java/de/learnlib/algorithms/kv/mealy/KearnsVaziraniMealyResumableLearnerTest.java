@@ -27,8 +27,8 @@ public class KearnsVaziraniMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<KearnsVaziraniMealy<Character, Character>, KearnsVaziraniMealyState<Character, Character>> {
 
     @Override
-    protected KearnsVaziraniMealy<Character, Character> getLearner(final MembershipOracle<Character, Word<Character>> oracle,
-                                                                   final Alphabet<Character> alphabet) {
+    protected KearnsVaziraniMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                                   Alphabet<Character> alphabet) {
         return new KearnsVaziraniMealyBuilder<Character, Character>().withOracle(oracle)
                                                                      .withAlphabet(alphabet)
                                                                      .create();

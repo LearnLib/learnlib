@@ -35,7 +35,7 @@ public class DefaultATRManager<I> implements ATRManager<I> {
 
     private final SPAAlphabet<I> alphabet;
 
-    public DefaultATRManager(final SPAAlphabet<I> alphabet) {
+    public DefaultATRManager(SPAAlphabet<I> alphabet) {
         this.alphabet = alphabet;
 
         this.accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());

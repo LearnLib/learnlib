@@ -35,18 +35,18 @@ import net.automatalib.words.Word;
 public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, I, ADTTransition<I, O>, Void, O>
         implements MutableMealyMachine<ADTState<I, O>, I, ADTTransition<I, O>, O>, AccessSequenceTransformer<I> {
 
-    public ADTHypothesis(final Alphabet<I> alphabet) {
+    public ADTHypothesis(Alphabet<I> alphabet) {
         super(alphabet);
     }
 
     @Override
-    public ADTState<I, O> getSuccessor(final ADTTransition<I, O> transition) {
+    public ADTState<I, O> getSuccessor(ADTTransition<I, O> transition) {
         return transition.getTarget();
     }
 
-    public ADTTransition<I, O> createOpenTransition(final ADTState<I, O> source,
-                                                    final I input,
-                                                    final ADTNode<ADTState<I, O>, I, O> siftTarget) {
+    public ADTTransition<I, O> createOpenTransition(ADTState<I, O> source,
+                                                    I input,
+                                                    ADTNode<ADTState<I, O>, I, O> siftTarget) {
         ADTTransition<I, O> result = new ADTTransition<>();
         result.setSource(source);
         result.setInput(input);
@@ -58,7 +58,7 @@ public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, 
     }
 
     @Override
-    public void setTransition(final ADTState<I, O> state, I input, final ADTTransition<I, O> transition) {
+    public void setTransition(ADTState<I, O> state, I input, ADTTransition<I, O> transition) {
         final ADTTransition<I, O> oldTrans = getTransition(state, input);
 
         if (oldTrans != null) {
@@ -74,12 +74,12 @@ public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, 
     }
 
     @Override
-    protected ADTState<I, O> createState(final Void property) {
+    protected ADTState<I, O> createState(Void property) {
         return new ADTState<>(inputAlphabet.size());
     }
 
     @Override
-    public ADTTransition<I, O> createTransition(final ADTState<I, O> successor, final O properties) {
+    public ADTTransition<I, O> createTransition(ADTState<I, O> successor, O properties) {
         ADTTransition<I, O> result = new ADTTransition<>();
         result.setTarget(successor);
         result.setOutput(properties);
@@ -87,17 +87,17 @@ public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, 
     }
 
     @Override
-    public void setTransitionOutput(final ADTTransition<I, O> transition, final O output) {
+    public void setTransitionOutput(ADTTransition<I, O> transition, O output) {
         transition.setOutput(output);
     }
 
     @Override
-    public O getTransitionOutput(final ADTTransition<I, O> transition) {
+    public O getTransitionOutput(ADTTransition<I, O> transition) {
         return transition.getOutput();
     }
 
     @Override
-    public Word<I> transformAccessSequence(final Word<I> word) {
+    public Word<I> transformAccessSequence(Word<I> word) {
         final ADTState<I, O> state = this.getState(word);
         assert state != null;
         return state.getAccessSequence();

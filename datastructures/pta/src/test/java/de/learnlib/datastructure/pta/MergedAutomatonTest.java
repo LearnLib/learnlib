@@ -59,10 +59,10 @@ public class MergedAutomatonTest {
 
         final BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(alphabet.size());
 
-        for (final Word<Character> w : positiveSamples) {
+        for (Word<Character> w : positiveSamples) {
             pta.addSample(w.asIntSeq(alphabet), true);
         }
-        for (final Word<Character> w : negativeSamples) {
+        for (Word<Character> w : negativeSamples) {
             pta.addSample(w.asIntSeq(alphabet), false);
         }
 

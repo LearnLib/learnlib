@@ -311,7 +311,7 @@ public class KearnsVaziraniDFA<I>
             this.hypothesis.getSuccessor(this.hypothesis.getInitialState(), symbol) == null) {
             // use new list to prevent concurrent modification exception
             final List<Word<I>> transAs = new ArrayList<>(this.stateInfos.size());
-            for (final StateInfo<I, Boolean> si : this.stateInfos) {
+            for (StateInfo<I, Boolean> si : this.stateInfos) {
                 transAs.add(si.accessSequence.append(symbol));
             }
 
@@ -340,7 +340,7 @@ public class KearnsVaziraniDFA<I>
     }
 
     @Override
-    public void resume(final KearnsVaziraniDFAState<I> state) {
+    public void resume(KearnsVaziraniDFAState<I> state) {
         this.hypothesis = state.getHypothesis();
         this.discriminationTree = state.getDiscriminationTree();
         this.discriminationTree.setOracle(oracle);

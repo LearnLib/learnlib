@@ -31,15 +31,15 @@ import org.testng.annotations.Test;
 public class TTTLearnerVPDAIT extends AbstractOneSEVPALearnerIT {
 
     @Override
-    protected <I> void addLearnerVariants(final VPDAlphabet<I> alphabet,
-                                          final MembershipOracle<I, Boolean> mqOracle,
-                                          final LearnerVariantList.OneSEVPALearnerVariantList<I> variants) {
+    protected <I> void addLearnerVariants(VPDAlphabet<I> alphabet,
+                                          MembershipOracle<I, Boolean> mqOracle,
+                                          LearnerVariantList.OneSEVPALearnerVariantList<I> variants) {
 
         final TTTLearnerVPDABuilder<I> builder = new TTTLearnerVPDABuilder<>();
         builder.setAlphabet(alphabet);
         builder.setOracle(mqOracle);
 
-        for (final AbstractNamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
+        for (AbstractNamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
             builder.setAnalyzer(analyzer);
             variants.addLearnerVariant("analyzer=" + analyzer, builder.create());
         }

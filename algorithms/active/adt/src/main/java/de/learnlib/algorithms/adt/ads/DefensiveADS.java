@@ -68,10 +68,10 @@ public final class DefensiveADS<S, I, O> {
      */
     private @Nullable I refinementInput;
 
-    private DefensiveADS(final MealyMachine<S, I, ?, O> automaton,
-                         final Alphabet<I> alphabet,
-                         final Set<S> states,
-                         final PartialTransitionAnalyzer<S, I> partialTransitionAnalyzer) {
+    private DefensiveADS(MealyMachine<S, I, ?, O> automaton,
+                         Alphabet<I> alphabet,
+                         Set<S> states,
+                         PartialTransitionAnalyzer<S, I> partialTransitionAnalyzer) {
         this.automaton = automaton;
         this.alphabet = alphabet;
         this.states = states;
@@ -99,10 +99,10 @@ public final class DefensiveADS<S, I, O> {
      * @return {@code Optional.empty()} if there exists no ADS that distinguishes the given states, a valid ADS
      * otherwise.
      */
-    public static <S, I, O> Optional<ADTNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
-                                                               final Alphabet<I> alphabet,
-                                                               final Set<S> states,
-                                                               final PartialTransitionAnalyzer<S, I> pta) {
+    public static <S, I, O> Optional<ADTNode<S, I, O>> compute(MealyMachine<S, I, ?, O> automaton,
+                                                               Alphabet<I> alphabet,
+                                                               Set<S> states,
+                                                               PartialTransitionAnalyzer<S, I> pta) {
 
         return new DefensiveADS<>(automaton, alphabet, states, pta).compute();
     }
@@ -116,7 +116,7 @@ public final class DefensiveADS<S, I, O> {
 
             // we encountered open transitions that can be closed
             if (refinementStates != null && refinementInput != null) {
-                for (final S s : refinementStates) {
+                for (S s : refinementStates) {
                     this.partialTransitionAnalyzer.closeTransition(s, this.refinementInput);
                 }
                 this.refinementStates = null;
@@ -132,7 +132,7 @@ public final class DefensiveADS<S, I, O> {
         return interMediateResult;
     }
 
-    private Optional<ADTNode<S, I, O>> compute(final Map<S, S> mapping) {
+    private Optional<ADTNode<S, I, O>> compute(Map<S, S> mapping) {
 
         final long maximumSplittingWordLength =
                 ADSUtil.computeMaximumSplittingWordLength(automaton.size(), mapping.size(), this.states.size());
@@ -153,7 +153,7 @@ public final class DefensiveADS<S, I, O> {
                                                                                                                    prefix),
                                                                                        mapping::get));
             final BitSet currentSetAsBitSet = new BitSet();
-            for (final S s : currentToInitialMapping.keySet()) {
+            for (S s : currentToInitialMapping.keySet()) {
                 currentSetAsBitSet.set(stateIds.getStateId(s));
             }
 
@@ -162,11 +162,11 @@ public final class DefensiveADS<S, I, O> {
             }
 
             oneSymbolFuture:
-            for (final I i : this.alphabet) {
+            for (I i : this.alphabet) {
 
                 //check for missing transitions
                 final Set<S> statesWithMissingTransitions = new HashSet<>();
-                for (final S s : currentToInitialMapping.keySet()) {
+                for (S s : currentToInitialMapping.keySet()) {
                     if (!this.partialTransitionAnalyzer.isTransitionDefined(s, i)) {
                         statesWithMissingTransitions.add(s);
                     }
@@ -187,7 +187,7 @@ public final class DefensiveADS<S, I, O> {
                 // compute successors
                 final Map<O, Map<S, S>> successors = new HashMap<>();
 
-                for (final Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
+                for (Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
                     final S current = entry.getKey();
                     final S nextState = automaton.getSuccessor(current, i);
                     final O nextOutput = automaton.getOutput(current, i);
@@ -210,12 +210,12 @@ public final class DefensiveADS<S, I, O> {
                 if (successors.size() > 1) {
                     final Map<O, ADTNode<S, I, O>> results = new HashMap<>();
 
-                    for (final Map.Entry<O, Map<S, S>> entry : successors.entrySet()) {
+                    for (Map.Entry<O, Map<S, S>> entry : successors.entrySet()) {
 
                         final Map<S, S> currentMapping = entry.getValue();
 
                         final BitSet currentNodeAsBitSet = new BitSet();
-                        for (final S s : currentMapping.keySet()) {
+                        for (S s : currentMapping.keySet()) {
                             currentNodeAsBitSet.set(stateIds.getStateId(s));
                         }
 
@@ -245,7 +245,7 @@ public final class DefensiveADS<S, I, O> {
                     final ADTNode<S, I, O> head = ads.getFirst();
                     final ADTNode<S, I, O> tail = ads.getSecond();
 
-                    for (final Map.Entry<O, ADTNode<S, I, O>> entry : results.entrySet()) {
+                    for (Map.Entry<O, ADTNode<S, I, O>> entry : results.entrySet()) {
                         entry.getValue().setParent(tail);
                         tail.getChildren().put(entry.getKey(), entry.getValue());
                     }

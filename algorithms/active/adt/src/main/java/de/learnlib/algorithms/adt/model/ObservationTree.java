@@ -55,7 +55,7 @@ public class ObservationTree<S, I, O> {
 
     private final Map<S, FastMealyState<O>> nodeToObservationMap;
 
-    public ObservationTree(final Alphabet<I> alphabet) {
+    public ObservationTree(Alphabet<I> alphabet) {
         this.alphabet = alphabet;
         this.observationTree = new FastMealy<>(alphabet);
         this.nodeToObservationMap = new HashMap<>();
@@ -72,7 +72,7 @@ public class ObservationTree<S, I, O> {
      * @param state
      *         the initial state of the hypothesis
      */
-    public void initialize(final S state) {
+    public void initialize(S state) {
         final FastMealyState<O> init = this.observationTree.addInitialState();
         this.nodeToObservationMap.put(state, init);
     }
@@ -87,12 +87,12 @@ public class ObservationTree<S, I, O> {
      * @param outputFunction
      *         Function to compute the output of the access sequences
      */
-    public void initialize(final Collection<S> states,
-                           final Function<S, Word<I>> asFunction,
-                           final Function<Word<I>, Word<O>> outputFunction) {
+    public void initialize(Collection<S> states,
+                           Function<S, Word<I>> asFunction,
+                           Function<Word<I>, Word<O>> outputFunction) {
         final FastMealyState<O> init = this.observationTree.addInitialState();
 
-        for (final S s : states) {
+        for (S s : states) {
             final Word<I> as = asFunction.apply(s);
             final FastMealyState<O> treeNode = this.addTrace(init, as, outputFunction.apply(as));
             this.nodeToObservationMap.put(s, treeNode);
@@ -109,11 +109,11 @@ public class ObservationTree<S, I, O> {
      * @param output
      *         the observed output sequence
      */
-    public void addTrace(final S state, final Word<I> input, final Word<O> output) {
+    public void addTrace(S state, Word<I> input, Word<O> output) {
         this.addTrace(this.nodeToObservationMap.get(state), input, output);
     }
 
-    private FastMealyState<O> addTrace(final FastMealyState<O> state, final Word<I> input, final Word<O> output) {
+    private FastMealyState<O> addTrace(FastMealyState<O> state, Word<I> input, Word<O> output) {
 
         assert input.length() == output.length() : "Traces differ in length";
 
@@ -150,7 +150,7 @@ public class ObservationTree<S, I, O> {
      * @param adtNode
      *         the {@link ADTNode} whose traces should be stored
      */
-    public void addTrace(final S state, final ADTNode<S, I, O> adtNode) {
+    public void addTrace(S state, ADTNode<S, I, O> adtNode) {
 
         final FastMealyState<O> internalState = this.nodeToObservationMap.get(state);
 
@@ -176,7 +176,7 @@ public class ObservationTree<S, I, O> {
      * @param output
      *         the output of the last symbol of the access sequence.
      */
-    public void addState(final S newState, final Word<I> accessSequence, final O output) {
+    public void addState(S newState, Word<I> accessSequence, O output) {
         final Word<I> prefix = accessSequence.prefix(accessSequence.length() - 1);
         final I sym = accessSequence.lastSymbol();
 
@@ -208,7 +208,7 @@ public class ObservationTree<S, I, O> {
      * @return A {@link Word} separating the two states reached after applying the prefix to s1 and s2. {@code
      * Optional.empty()} if not separating word exists.
      */
-    public Optional<Word<I>> findSeparatingWord(final S s1, final S s2, final Word<I> prefix) {
+    public Optional<Word<I>> findSeparatingWord(S s1, S s2, Word<I> prefix) {
 
         final FastMealyState<O> n1 = this.nodeToObservationMap.get(s1);
         final FastMealyState<O> n2 = this.nodeToObservationMap.get(s2);
@@ -238,7 +238,7 @@ public class ObservationTree<S, I, O> {
      *
      * @return A {@link Word} separating the two words. {@code null} if no such word is found.
      */
-    public Word<I> findSeparatingWord(final S s1, final S s2) {
+    public Word<I> findSeparatingWord(S s1, S s2) {
 
         final FastMealyState<O> n1 = this.nodeToObservationMap.get(s1);
         final FastMealyState<O> n2 = this.nodeToObservationMap.get(s2);
@@ -257,7 +257,7 @@ public class ObservationTree<S, I, O> {
      *
      * @return the previously stored output behavior of the system under learning
      */
-    public Word<O> trace(final S s, final Word<I> input) {
+    public Word<O> trace(S s, Word<I> input) {
         final FastMealyState<O> q = this.nodeToObservationMap.get(s);
         return this.observationTree.computeStateOutput(q, input);
     }

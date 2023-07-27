@@ -65,7 +65,7 @@ public class PTAVisualizationTest {
 
         this.moorePTA = new BlueFringePTA<>(alphabet.size());
 
-        for (final Word<Character> trace : traces) {
+        for (Word<Character> trace : traces) {
             this.moorePTA.addSampleWithStateProperties(trace.toIntArray(alphabet), moore.computeOutput(trace).asList());
         }
     }

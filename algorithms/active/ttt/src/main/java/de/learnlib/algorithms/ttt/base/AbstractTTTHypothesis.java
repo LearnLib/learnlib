@@ -188,7 +188,7 @@ public abstract class AbstractTTTHypothesis<S extends TTTState<I, D>, I, D, T>
         final int newAlphabetSize = growingAlphabet.size();
 
         if (alphabetSize < newAlphabetSize) {
-            for (final TTTState<I, D> s : this.getStates()) {
+            for (TTTState<I, D> s : this.getStates()) {
                 s.ensureInputCapacity(newAlphabetSize);
             }
 

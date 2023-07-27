@@ -29,8 +29,8 @@ public class ExtensibleLStarDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<ExtensibleLStarDFA<Character>, AutomatonLStarState<Character, Boolean, CompactDFA<Character>, Integer>> {
 
     @Override
-    protected ExtensibleLStarDFA<Character> getLearner(final MembershipOracle<Character, Boolean> oracle,
-                                                       final Alphabet<Character> alphabet) {
+    protected ExtensibleLStarDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+                                                       Alphabet<Character> alphabet) {
         return new ExtensibleLStarDFABuilder<Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }
 

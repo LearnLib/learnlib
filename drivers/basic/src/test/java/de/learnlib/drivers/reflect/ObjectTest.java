@@ -99,7 +99,7 @@ public class ObjectTest {
         return oracle.answerQuery(wb.toWord());
     }
 
-    private StackData buildStackData(final Class<?> stackClass) throws NoSuchMethodException {
+    private StackData buildStackData(Class<?> stackClass) throws NoSuchMethodException {
         Constructor<?> c = stackClass.getConstructor(int.class);
         SimplePOJOTestDriver driver = new SimplePOJOTestDriver(c, 2);
         SULOracle<MethodInput, MethodOutput> oracle = new SULOracle<>(driver);

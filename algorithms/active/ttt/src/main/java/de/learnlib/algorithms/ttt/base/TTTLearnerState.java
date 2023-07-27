@@ -31,8 +31,8 @@ public class TTTLearnerState<I, D> {
     private final AbstractTTTHypothesis<?, I, D, ?> hypothesis;
     private final BaseTTTDiscriminationTree<I, D> discriminationTree;
 
-    TTTLearnerState(final AbstractTTTHypothesis<?, I, D, ?> hypothesis,
-                    final BaseTTTDiscriminationTree<I, D> discriminationTree) {
+    TTTLearnerState(AbstractTTTHypothesis<?, I, D, ?> hypothesis,
+                    BaseTTTDiscriminationTree<I, D> discriminationTree) {
 
         this.hypothesis = hypothesis;
         this.discriminationTree = discriminationTree;

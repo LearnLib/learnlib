@@ -48,7 +48,7 @@ public class RivestSchapireAdapter<I> extends RivestSchapireDFA<I>
 
         final Object reachedState = hypothesis.getState(word);
 
-        for (final Word<I> shortPrefix : observationTable.getShortPrefixes()) {
+        for (Word<I> shortPrefix : observationTable.getShortPrefixes()) {
             final Object reachedSPState = hypothesis.getState(shortPrefix);
 
             if (Objects.equals(reachedState, reachedSPState)) {

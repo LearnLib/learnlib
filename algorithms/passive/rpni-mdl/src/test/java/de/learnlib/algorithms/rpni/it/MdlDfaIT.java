@@ -46,8 +46,8 @@ public class MdlDfaIT extends AbstractDFAPassiveLearnerIT {
         final boolean[] determinism = {true, false};
         final boolean[] parallelism = {true, false};
 
-        for (final boolean d : determinism) {
-            for (final boolean p : parallelism) {
+        for (boolean d : determinism) {
+            for (boolean p : parallelism) {
                 final BlueFringeMDLDFA<I> learner = new BlueFringeMDLDFA<>(alphabet);
                 learner.setParallel(p);
                 learner.setDeterministic(d);

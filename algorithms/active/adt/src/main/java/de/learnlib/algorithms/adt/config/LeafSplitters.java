@@ -57,10 +57,10 @@ public final class LeafSplitters {
         // prevent instantiation
     }
 
-    private static <S, I, O> boolean canSplitParent(final ADTNode<S, I, O> nodeToSplit,
-                                                    final Word<I> distinguishingSuffix,
-                                                    final Word<O> hypothesisOutput,
-                                                    final Word<O> newOutput) {
+    private static <S, I, O> boolean canSplitParent(ADTNode<S, I, O> nodeToSplit,
+                                                    Word<I> distinguishingSuffix,
+                                                    Word<O> hypothesisOutput,
+                                                    Word<O> newOutput) {
 
         // initial split
         if (nodeToSplit.getParent() == null) {
@@ -75,10 +75,10 @@ public final class LeafSplitters {
                traceOutput.isPrefixOf(hypothesisOutput);
     }
 
-    private static <S, I, O> ADTNode<S, I, O> splitIntoNewADS(final ADTNode<S, I, O> nodeToSplit,
-                                                              final Word<I> distinguishingSuffix,
-                                                              final Word<O> oldOutput,
-                                                              final Word<O> newOutput) {
+    private static <S, I, O> ADTNode<S, I, O> splitIntoNewADS(ADTNode<S, I, O> nodeToSplit,
+                                                              Word<I> distinguishingSuffix,
+                                                              Word<O> oldOutput,
+                                                              Word<O> newOutput) {
 
         final Iterator<I> suffixIter = distinguishingSuffix.iterator();
 
@@ -109,11 +109,11 @@ public final class LeafSplitters {
         return finalizeSplit(nodeToSplit, newADS, suffixIter, oldOutput.iterator(), newOutput.iterator());
     }
 
-    private static <S, I, O> ADTNode<S, I, O> finalizeSplit(final ADTNode<S, I, O> nodeToSplit,
-                                                            final ADTNode<S, I, O> adtRoot,
-                                                            final Iterator<I> suffixIter,
-                                                            final Iterator<O> oldIter,
-                                                            final Iterator<O> newIter) {
+    private static <S, I, O> ADTNode<S, I, O> finalizeSplit(ADTNode<S, I, O> nodeToSplit,
+                                                            ADTNode<S, I, O> adtRoot,
+                                                            Iterator<I> suffixIter,
+                                                            Iterator<O> oldIter,
+                                                            Iterator<O> newIter) {
 
         ADTNode<S, I, O> previous = adtRoot;
         O oldOut = oldIter.next();
@@ -141,10 +141,10 @@ public final class LeafSplitters {
         return newFinalNode;
     }
 
-    public static <S, I, O> ADTNode<S, I, O> splitParent(final ADTNode<S, I, O> nodeToSplit,
-                                                         final Word<I> distinguishingSuffix,
-                                                         final Word<O> oldOutput,
-                                                         final Word<O> newOutput) {
+    public static <S, I, O> ADTNode<S, I, O> splitParent(ADTNode<S, I, O> nodeToSplit,
+                                                         Word<I> distinguishingSuffix,
+                                                         Word<O> oldOutput,
+                                                         Word<O> newOutput) {
 
         final ADTNode<S, I, O> previousADS = ADTUtil.getStartOfADS(nodeToSplit);
 

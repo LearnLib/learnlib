@@ -27,8 +27,8 @@ import net.automatalib.words.Word;
 public class RivestSchapireMealyResumableLearnerTest extends ExtensibleLStarMealyResumableLearnerTest {
 
     @Override
-    protected ExtensibleLStarMealy<Character, Character> getLearner(final MembershipOracle<Character, Word<Character>> oracle,
-                                                                    final Alphabet<Character> alphabet) {
+    protected ExtensibleLStarMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                                    Alphabet<Character> alphabet) {
 
         return new RivestSchapireMealyBuilder<Character, Character>().withAlphabet(alphabet)
                                                                      .withOracle(oracle)

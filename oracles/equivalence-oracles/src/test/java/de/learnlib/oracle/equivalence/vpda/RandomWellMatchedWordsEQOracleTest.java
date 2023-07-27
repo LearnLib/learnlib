@@ -75,7 +75,7 @@ public class RandomWellMatchedWordsEQOracleTest
 
         int callBalance = 0;
 
-        for (final I i : word) {
+        for (I i : word) {
             switch (alphabet.getSymbolType(i)) {
                 case CALL:
                     callBalance++;

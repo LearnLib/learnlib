@@ -30,8 +30,8 @@ public class TTTLearnerMooreResumableLearnerTest
         extends AbstractResumableLearnerMooreTest<TTTLearnerMoore<Character, Character>, TTTLearnerState<Character, Word<Character>>> {
 
     @Override
-    protected TTTLearnerMoore<Character, Character> getLearner(final MembershipOracle<Character, Word<Character>> oracle,
-                                                               final Alphabet<Character> alphabet) {
+    protected TTTLearnerMoore<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                               Alphabet<Character> alphabet) {
 
         return new TTTLearnerMooreBuilder<Character, Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }

@@ -40,7 +40,7 @@ public class ADTSymbolNode<S, I, O> extends AbstractRecursiveADSSymbolNode<S, I,
     }
 
     @Override
-    public ADTNode<S, I, O> sift(final SymbolQueryOracle<I, O> oracle, final Word<I> prefix) {
+    public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, final Word<I> prefix) {
         final O o = oracle.query(super.getSymbol());
 
         final ADTNode<S, I, O> successor = super.getChildren().get(o);

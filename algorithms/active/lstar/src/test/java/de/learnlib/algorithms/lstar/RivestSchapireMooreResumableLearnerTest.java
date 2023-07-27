@@ -27,8 +27,8 @@ import net.automatalib.words.Word;
 public class RivestSchapireMooreResumableLearnerTest extends ExtensibleLStarMooreResumableLearnerTest {
 
     @Override
-    protected ExtensibleLStarMoore<Character, Character> getLearner(final MembershipOracle<Character, Word<Character>> oracle,
-                                                                    final Alphabet<Character> alphabet) {
+    protected ExtensibleLStarMoore<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+                                                                    Alphabet<Character> alphabet) {
 
         return new RivestSchapireMooreBuilder<Character, Character>().withAlphabet(alphabet)
                                                                      .withOracle(oracle)

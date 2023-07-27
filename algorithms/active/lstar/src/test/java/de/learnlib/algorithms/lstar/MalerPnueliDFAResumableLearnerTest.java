@@ -26,8 +26,8 @@ import net.automatalib.words.Alphabet;
 public class MalerPnueliDFAResumableLearnerTest extends ExtensibleLStarDFAResumableLearnerTest {
 
     @Override
-    protected ExtensibleLStarDFA<Character> getLearner(final MembershipOracle<Character, Boolean> oracle,
-                                                       final Alphabet<Character> alphabet) {
+    protected ExtensibleLStarDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+                                                       Alphabet<Character> alphabet) {
 
         return new MalerPnueliDFABuilder<Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }

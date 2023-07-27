@@ -29,8 +29,8 @@ public class TTTLearnerDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<TTTLearnerDFA<Character>, TTTLearnerState<Character, Boolean>> {
 
     @Override
-    protected TTTLearnerDFA<Character> getLearner(final MembershipOracle<Character, Boolean> oracle,
-                                                  final Alphabet<Character> alphabet) {
+    protected TTTLearnerDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+                                                  Alphabet<Character> alphabet) {
 
         return new TTTLearnerDFABuilder<Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }

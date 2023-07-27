@@ -47,12 +47,12 @@ final class EDSMUtil {
         final int[] tp = new int[numStates];
         final int[] tn = new int[numStates];
 
-        for (final IntSeq w : positiveSamples) {
+        for (IntSeq w : positiveSamples) {
             int index = stateIDs.get(merge.getState(w));
             tp[index]++;
         }
 
-        for (final IntSeq w : negativeSamples) {
+        for (IntSeq w : negativeSamples) {
             int index = stateIDs.get(merge.getState(w));
             tn[index]++;
         }

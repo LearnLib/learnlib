@@ -32,7 +32,7 @@ final class MDLUtil {
                             List<IntSeq> positiveSamples) {
         double sampleScore = 0;
 
-        for (final IntSeq w : positiveSamples) {
+        for (IntSeq w : positiveSamples) {
             sampleScore += countWordChoices(merged, alphabetSize, w);
         }
 
@@ -47,7 +47,7 @@ final class MDLUtil {
         double result = Math.log(countStateChoices(merged, alphabetSize, currentState)) /
                         Math.log(2); // log_2 x = log_e x / log_e 2
 
-        for (final int i : word) {
+        for (int i : word) {
             currentState = merged.getSuccessor(currentState, i);
             assert currentState != null;
             result += Math.log(countStateChoices(merged, alphabetSize, currentState)) / Math.log(2);

@@ -791,7 +791,7 @@ public abstract class AbstractTTTLearner<A, I, D>
         final Iterator<AbstractBaseDTNode<I, D>> leavesIter = updateDTTargets(transToSift, hard).iterator();
         final List<AbstractBaseDTNode<I, D>> result = new ArrayList<>(transToSift.size());
 
-        for (final TTTTransition<I, D> transition : transToSift) {
+        for (TTTTransition<I, D> transition : transToSift) {
             final AbstractBaseDTNode<I, D> node = leavesIter.next();
             if (node.isLeaf() && node.getData() == null && transition.getNextElement() == null) {
                 result.add(node);
@@ -870,7 +870,7 @@ public abstract class AbstractTTTLearner<A, I, D>
         final List<AbstractBaseDTNode<I, D>> nodes = new ArrayList<>(transitions.size());
         final List<Word<I>> prefixes = new ArrayList<>(transitions.size());
 
-        for (final TTTTransition<I, D> t : transitions) {
+        for (TTTTransition<I, D> t : transitions) {
             if (!t.isTree()) {
                 AbstractBaseDTNode<I, D> dt = t.getNonTreeTarget();
 
@@ -882,7 +882,7 @@ public abstract class AbstractTTTLearner<A, I, D>
         final Iterator<AbstractBaseDTNode<I, D>> leavesIter = dtree.sift(nodes, prefixes, hard).iterator();
         final List<AbstractBaseDTNode<I, D>> result = new ArrayList<>(transitions.size());
 
-        for (final TTTTransition<I, D> t : transitions) {
+        for (TTTTransition<I, D> t : transitions) {
             if (t.isTree()) {
                 result.add(t.getTreeTarget().dtLeaf);
             } else {
@@ -955,7 +955,7 @@ public abstract class AbstractTTTLearner<A, I, D>
 
             final int newSymbolIdx = this.alphabet.getSymbolIndex(symbol);
 
-            for (final TTTState<I, D> s : this.hypothesis.getStates()) {
+            for (TTTState<I, D> s : this.hypothesis.getStates()) {
                 final TTTTransition<I, D> trans = createTransition(s, symbol);
                 trans.setNonTreeTarget(dtree.getRoot());
                 s.setTransition(newSymbolIdx, trans);
@@ -974,7 +974,7 @@ public abstract class AbstractTTTLearner<A, I, D>
     }
 
     @Override
-    public void resume(final TTTLearnerState<I, D> state) {
+    public void resume(TTTLearnerState<I, D> state) {
         this.hypothesis = state.getHypothesis();
         this.dtree = state.getDiscriminationTree();
         this.dtree.setOracle(oracle);

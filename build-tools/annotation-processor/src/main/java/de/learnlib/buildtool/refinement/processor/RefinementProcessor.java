@@ -85,7 +85,7 @@ public class RefinementProcessor extends AbstractProcessor {
 
             int idx = 0;
 
-            for (final GenerateRefinement annotation : generateRefinements.value()) {
+            for (GenerateRefinement annotation : generateRefinements.value()) {
 
                 final TypeElement annotatedClass = (TypeElement) elem;
 
@@ -111,7 +111,7 @@ public class RefinementProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void validateAnnotation(final Element element) {
+    private void validateAnnotation(Element element) {
         if (element.getKind() != ElementKind.CLASS) {
             error("Annotation " + GenerateRefinement.class + " is only supported on class level");
             throw new IllegalArgumentException();
@@ -169,7 +169,7 @@ public class RefinementProcessor extends AbstractProcessor {
 
         final List<? extends AnnotationValue> parameterMapping = find(generateRefinementMirror, "parameterMapping");
 
-        for (final ExecutableElement constructor : TypeUtils.getConstructors(annotatedClass)) {
+        for (ExecutableElement constructor : TypeUtils.getConstructors(annotatedClass)) {
 
             final MethodSpec.Builder mBuilder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC);
 
@@ -185,7 +185,7 @@ public class RefinementProcessor extends AbstractProcessor {
             javadocTypes.add(processingEnv.getTypeUtils().erasure(annotatedClass.asType()));
             javadocTypes.add(processingEnv.getTypeUtils().erasure(annotatedClass.asType()));
 
-            for (final ParameterInfo info : MethodUtils.getParameterInfos(constructor)) {
+            for (ParameterInfo info : MethodUtils.getParameterInfos(constructor)) {
                 javadocJoiner.add("$T");
                 javadocTypes.add(processingEnv.getTypeUtils().erasure(info.getType()));
                 parameterNames.add(info.getName());
@@ -298,7 +298,7 @@ public class RefinementProcessor extends AbstractProcessor {
         }
     }
 
-    private TypeName extractGeneric(final Generic annotation) {
+    private TypeName extractGeneric(Generic annotation) {
 
         final ClassName className = extractClass(annotation, Generic::clazz);
 
@@ -307,7 +307,7 @@ public class RefinementProcessor extends AbstractProcessor {
             if (annotation.generics().length > 0) {
                 final List<TypeName> genericModels = new ArrayList<>(annotation.generics().length);
 
-                for (final String generic : annotation.generics()) {
+                for (String generic : annotation.generics()) {
                     genericModels.add(TypeVariableName.get(generic));
                 }
 
@@ -322,7 +322,7 @@ public class RefinementProcessor extends AbstractProcessor {
         }
     }
 
-    private <T> ClassName extractClass(final T obj, Function<T, Class<?>> extractor) {
+    private <T> ClassName extractClass(T obj, Function<T, Class<?>> extractor) {
         try {
             final Class<?> clazz = extractor.apply(obj);
             return ClassName.get(clazz);
