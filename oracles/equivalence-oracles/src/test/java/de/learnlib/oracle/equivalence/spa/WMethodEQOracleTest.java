@@ -32,17 +32,19 @@ import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class WMethodSPAEQOracleTest {
+public class WMethodEQOracleTest {
 
     @Test
     public void testOracle() {
         final Random random = new Random(42);
         final ProceduralInputAlphabet<Character> alphabet =
-                new DefaultProceduralInputAlphabet<>(Alphabets.characters('x', 'z'), Alphabets.characters('A', 'C'), 'R');
+                new DefaultProceduralInputAlphabet<>(Alphabets.characters('x', 'z'),
+                                                     Alphabets.characters('A', 'C'),
+                                                     'R');
         final SPA<?, Character> spa = RandomAutomata.randomSPA(random, alphabet, 4);
         final int lookahead = 2;
 
-        final WMethodSPAEQOracle<Character> oracle = new WMethodSPAEQOracle<>(new SimulatorOracle<>(spa), lookahead);
+        final WMethodEQOracle<Character> oracle = new WMethodEQOracle<>(new SimulatorOracle<>(spa), lookahead);
 
         final List<Word<Character>> eqWords = oracle.generateTestWords(spa, alphabet).collect(Collectors.toList());
         final List<Word<Character>> testWords = Streams.stream(new SPATestsIterator<>(spa,

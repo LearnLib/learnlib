@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 import com.google.common.collect.Streams;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
-import de.learnlib.oracle.equivalence.WpMethodEQOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.procedural.SPA;
 import net.automatalib.util.automata.conformance.SPATestsIterator;
@@ -31,34 +30,34 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 
 /**
- * An {@link SPA} version of {@link WpMethodEQOracle} which generates test sequences based on the partial W-method for
- * each procedure.
+ * An {@link SPA} version of {@link de.learnlib.oracle.equivalence.WpMethodEQOracle} which generates test sequences
+ * based on the partial W-method for each procedure.
  *
  * @param <I>
  *         input symbol type
  *
  * @author frohme
  */
-public class WpMethodSPAEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, I, Boolean> {
+public class WpMethodEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, I, Boolean> {
 
     private final int lookahead;
     private final int expectedSize;
 
     /**
-     * Constructor. Convenience method for {@link #WpMethodSPAEQOracle(MembershipOracle, int, int)} that sets {@code
-     * expectedSize} to 0.
+     * Constructor. Convenience method for {@link #WpMethodEQOracle(MembershipOracle, int, int)} that sets
+     * {@code expectedSize} to 0.
      *
      * @param sulOracle
      *         interface to the system under learning
      * @param lookahead
      *         the maximum length of the "middle" part of the test cases
      */
-    public WpMethodSPAEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead) {
+    public WpMethodEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead) {
         this(sulOracle, lookahead, 0);
     }
 
     /**
-     * Constructor. Convenience method for {@link #WpMethodSPAEQOracle(MembershipOracle, int, int, int)} that sets
+     * Constructor. Convenience method for {@link #WpMethodEQOracle(MembershipOracle, int, int, int)} that sets
      * {@code batchSize} to 1.
      *
      * @param sulOracle
@@ -68,15 +67,16 @@ public class WpMethodSPAEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, 
      * @param expectedSize
      *         the expected size of the system under learning
      */
-    public WpMethodSPAEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead, int expectedSize) {
+    public WpMethodEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead, int expectedSize) {
         this(sulOracle, lookahead, expectedSize, 1);
     }
 
     /**
-     * Constructor. Uses {@link Math#max(int, int) Math.max}{@code (lookahead, expectedSize - }{@link DFA#size()
-     * hypothesis.size()}{@code )} (for each procedural {@code hypothesis}) to determine the maximum length of
-     * sequences, that should be appended to the transition-cover part of the test sequence to account for the fact that
-     * the system under learning may have more states than the current hypothesis.
+     * Constructor. Uses
+     * {@link Math#max(int, int) Math.max}{@code (lookahead, expectedSize - }{@link DFA#size() hypothesis.size()}{@code
+     * )} (for each procedural {@code hypothesis}) to determine the maximum length of sequences, that should be appended
+     * to the transition-cover part of the test sequence to account for the fact that the system under learning may have
+     * more states than the current hypothesis.
      *
      * @param sulOracle
      *         interface to the system under learning
@@ -89,7 +89,7 @@ public class WpMethodSPAEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, 
      *
      * @see WMethodTestsIterator
      */
-    public WpMethodSPAEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead, int expectedSize, int batchSize) {
+    public WpMethodEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead, int expectedSize, int batchSize) {
         super(sulOracle, batchSize);
         this.lookahead = lookahead;
         this.expectedSize = expectedSize;
@@ -98,7 +98,7 @@ public class WpMethodSPAEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, 
     @Override
     protected Stream<Word<I>> generateTestWords(SPA<?, I> hypothesis, Collection<? extends I> inputs) {
         if (!(inputs instanceof ProceduralInputAlphabet)) {
-            throw new IllegalArgumentException("Inputs are not an SPA alphabet");
+            throw new IllegalArgumentException("Inputs are not a procedural alphabet");
         }
 
         @SuppressWarnings("unchecked")

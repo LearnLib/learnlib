@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.oracle.equivalence.spa;
+package de.learnlib.oracle.equivalence.sba;
 
 import java.util.Collection;
 import java.util.stream.Stream;
@@ -21,44 +21,43 @@ import java.util.stream.Stream;
 import com.google.common.collect.Streams;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
-import de.learnlib.oracle.equivalence.WMethodEQOracle;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.procedural.SPA;
-import net.automatalib.util.automata.conformance.SPATestsIterator;
+import net.automatalib.automata.concepts.FiniteRepresentation;
+import net.automatalib.automata.procedural.SBA;
+import net.automatalib.util.automata.conformance.SBAWMethodTestsIterator;
 import net.automatalib.util.automata.conformance.WMethodTestsIterator;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 
 /**
- * An {@link SPA} version of {@link WMethodEQOracle} which generates test sequences based on the W-method for each
- * procedure.
+ * Implements an equivalence test by applying the W-method test on the procedures of the given hypothesis {@link SBA},
+ * as described in "Testing software design modeled by finite state machines" by T.S. Chow.
  *
  * @param <I>
  *         input symbol type
  *
  * @author frohme
  */
-public class WMethodSPAEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, I, Boolean> {
+public class WMethodEQOracle<I> extends AbstractTestWordEQOracle<SBA<?, I>, I, Boolean> {
 
     private final int lookahead;
     private final int expectedSize;
 
     /**
-     * Constructor. Convenience method for {@link #WMethodSPAEQOracle(MembershipOracle, int, int)} that sets {@code
-     * expectedSize} to 0.
+     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int)} that sets
+     * {@code expectedSize} to 0.
      *
      * @param sulOracle
      *         interface to the system under learning
      * @param lookahead
      *         the maximum length of the "middle" part of the test cases
      */
-    public WMethodSPAEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead) {
+    public WMethodEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead) {
         this(sulOracle, lookahead, 0);
     }
 
     /**
-     * Constructor. Convenience method for {@link #WMethodSPAEQOracle(MembershipOracle, int, int, int)} that sets {@code
-     * batchSize} to 1.
+     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int, int)} that sets
+     * {@code batchSize} to 1.
      *
      * @param sulOracle
      *         interface to the system under learning
@@ -67,15 +66,16 @@ public class WMethodSPAEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, I
      * @param expectedSize
      *         the expected size of the system under learning
      */
-    public WMethodSPAEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead, int expectedSize) {
+    public WMethodEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead, int expectedSize) {
         this(sulOracle, lookahead, expectedSize, 1);
     }
 
     /**
-     * Constructor. Uses {@link Math#max(int, int) Math.max}{@code (lookahead, expectedSize - }{@link DFA#size()
-     * hypothesis.size()}{@code )} (for each procedural {@code hypothesis}) to determine the maximum length of
-     * sequences, that should be appended to the transition-cover part of the test sequence to account for the fact that
-     * the system under learning may have more states than the current hypothesis.
+     * Constructor. Uses
+     * {@link Math#max(int, int) Math.max}{@code (lookahead, expectedSize - }{@link FiniteRepresentation#size()
+     * hypothesis.size()}{@code )} to determine the maximum length of sequences, that should be appended to the
+     * transition-cover part of the test sequence to account for the fact that the system under learning may have more
+     * states than the current hypothesis.
      *
      * @param sulOracle
      *         interface to the system under learning
@@ -88,27 +88,23 @@ public class WMethodSPAEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, I
      *
      * @see WMethodTestsIterator
      */
-    public WMethodSPAEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead, int expectedSize, int batchSize) {
+    public WMethodEQOracle(MembershipOracle<I, Boolean> sulOracle, int lookahead, int expectedSize, int batchSize) {
         super(sulOracle, batchSize);
         this.lookahead = lookahead;
         this.expectedSize = expectedSize;
     }
 
     @Override
-    protected Stream<Word<I>> generateTestWords(SPA<?, I> hypothesis, Collection<? extends I> inputs) {
+    protected Stream<Word<I>> generateTestWords(SBA<?, I> hypothesis, Collection<? extends I> inputs) {
         if (!(inputs instanceof ProceduralInputAlphabet)) {
-            throw new IllegalArgumentException("Inputs are not an SPA alphabet");
+            throw new IllegalArgumentException("Inputs are not a procedural alphabet");
         }
 
         @SuppressWarnings("unchecked")
         final ProceduralInputAlphabet<I> alphabet = (ProceduralInputAlphabet<I>) inputs;
 
-        return Streams.stream(new SPATestsIterator<>(hypothesis,
-                                                     alphabet,
-                                                     (dfa, alph) -> new WMethodTestsIterator<>(dfa,
-                                                                                               alph,
-                                                                                               Math.max(lookahead,
-                                                                                                        expectedSize -
-                                                                                                        dfa.size()))));
+        return Streams.stream(new SBAWMethodTestsIterator<>(hypothesis,
+                                                            alphabet,
+                                                            Math.max(lookahead, expectedSize - hypothesis.size())));
     }
 }

@@ -25,6 +25,9 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * @author frohme
+ */
 public class SimulatorEQOracle<I, O> implements EquivalenceOracle<SPMM<?, I, ?, O>, I, Word<O>> {
 
     private final SPMM<?, I, ?, O> spmm;
