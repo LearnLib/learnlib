@@ -102,14 +102,9 @@ public abstract class AbstractTestWordEQOracle<A extends Output<I, D>, I, D> imp
 
     private Stream<DefaultQuery<I, D>> answerQueries(Stream<DefaultQuery<I, D>> stream) {
         if (isBatched()) {
-            /*
-             * FIXME: currently necessary because of a bug in the JDK
-             * see https://bugs.openjdk.java.net/browse/JDK-8075939
-             */
-            return Streams.stream(Streams.stream(Iterators.partition(stream.iterator(), this.batchSize))
-                                         .peek(membershipOracle::processQueries)
-                                         .flatMap(List::stream)
-                                         .iterator());
+            return Streams.stream(Iterators.partition(stream.iterator(), this.batchSize))
+                          .peek(membershipOracle::processQueries)
+                          .flatMap(List::stream);
         } else {
             return stream.peek(membershipOracle::processQuery);
         }
