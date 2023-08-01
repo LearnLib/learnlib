@@ -240,7 +240,7 @@ limitations under the License.
         <checkerframework.version>3.7.0</checkerframework.version>
         <checkstyle.version>8.36.2</checkstyle.version>
         <error-prone.version>9+181-r4173-1</error-prone.version> <!-- required by checkerframework, keep in sync -->
-        <guava.version>30.1.1-jre</guava.version>
+        <guava.version>32.1.2-jre</guava.version>
         <javapoet.version>1.13.0</javapoet.version>
         <jmockit.version>1.49</jmockit.version>
         <logback.version>1.2.9</logback.version>
@@ -1273,7 +1273,7 @@ limitations under the License.
                 <jdk>11</jdk>
             </activation>
             <properties>
-                <cacio.version>1.11</cacio.version>
+                <cacio.version>1.11.1</cacio.version>
             </properties>
         </profile>
         <profile>
@@ -1282,7 +1282,7 @@ limitations under the License.
                 <jdk>17</jdk>
             </activation>
             <properties>
-                <cacio.version>1.17</cacio.version>
+                <cacio.version>1.17.2</cacio.version>
             </properties>
         </profile>
         <profile>
