@@ -71,9 +71,6 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, @Nullable O
 
         @Override
         public void answer(Word<O> output) {
-            if (output == null) {
-                throw new IllegalArgumentException("Query answer words must not be null");
-            }
             originalQuery.answer(output.isEmpty() ? null : output.lastSymbol());
         }
 

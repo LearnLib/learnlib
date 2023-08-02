@@ -88,7 +88,7 @@ public final class MooreUtil {
         return new MooreLearnerWrapper<>(learner);
     }
 
-    public static <I, O> MembershipOracle<I, @Nullable O> wrapWordOracle(MembershipOracle<I, Word<O>> oracle) {
+    public static <I, O> MembershipOracle<I, O> wrapWordOracle(MembershipOracle<I, Word<O>> oracle) {
         return new SymbolOracleWrapper<>(oracle);
     }
 

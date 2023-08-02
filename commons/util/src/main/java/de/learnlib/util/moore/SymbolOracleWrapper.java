@@ -70,7 +70,9 @@ final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 
         @Override
         public void answer(Word<O> output) {
-            assert !output.isEmpty();
+            if (output.isEmpty()) {
+                throw new IllegalArgumentException("Query answer must not be empty");
+            }
             originalQuery.answer(output.lastSymbol());
         }
 

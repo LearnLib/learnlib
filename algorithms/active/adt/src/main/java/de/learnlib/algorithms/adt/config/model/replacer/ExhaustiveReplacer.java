@@ -15,17 +15,14 @@
  */
 package de.learnlib.algorithms.adt.config.model.replacer;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import de.learnlib.algorithms.adt.adt.ADT;
 import de.learnlib.algorithms.adt.adt.ADTNode;
 import de.learnlib.algorithms.adt.api.SubtreeReplacer;
@@ -65,18 +62,20 @@ public class ExhaustiveReplacer implements SubtreeReplacer {
         final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot());
         candidates.remove(adt.getRoot());
 
-        final Map<ADTNode<S, I, O>, Set<S>> subtreesToFinalNodes = Maps.toMap(candidates,
-                                                                              node -> ADTUtil.collectLeaves(node)
-                                                                                             .stream()
-                                                                                             .map(ADTNode::getHypothesisState)
-                                                                                             .collect(Collectors.toSet()));
+        final PriorityQueue<Set<S>> queue = new PriorityQueue<>(candidates.size(), Comparator.comparingInt(Set::size));
+        for (ADTNode<S, I, O> node : candidates) {
+            final Set<ADTNode<S, I, O>> leaves = ADTUtil.collectLeaves(node);
+            final Set<S> set = Sets.newHashSetWithExpectedSize(leaves.size());
 
-        final List<ADTNode<S, I, O>> sortedCandidates = new ArrayList<>(candidates);
-        sortedCandidates.sort(Comparator.comparingInt(n -> subtreesToFinalNodes.get(n).size()));
+            for (ADTNode<S, I, O> l : leaves) {
+                set.add(l.getHypothesisState());
+            }
 
-        for (ADTNode<S, I, O> node : sortedCandidates) {
+            queue.add(set);
+        }
 
-            final Set<S> finalNodes = subtreesToFinalNodes.get(node);
+        while (!queue.isEmpty()) {
+            final Set<S> finalNodes = queue.remove();
             final Set<S> targets = new HashSet<>(statesAsSet);
             targets.removeAll(finalNodes);
 

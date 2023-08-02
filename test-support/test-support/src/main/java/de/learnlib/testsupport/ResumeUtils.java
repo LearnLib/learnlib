@@ -38,7 +38,7 @@ public final class ResumeUtils {
         // prevent instantiation
     }
 
-    public static <T> byte[] toBytes(T state) {
+    public static <T extends Object> byte[] toBytes(T state) {
         return X_STREAM.toXML(state).getBytes(StandardCharsets.UTF_8);
     }
 

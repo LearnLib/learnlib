@@ -70,7 +70,7 @@ public class IntrusiveList<T extends IntrusiveListElem<T>> extends IntrusiveList
         }
 
         @Override
-        protected T computeNext() {
+        protected @Nullable T computeNext() {
             if (cursor == null) {
                 return endOfData();
             }
