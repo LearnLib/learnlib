@@ -23,7 +23,6 @@ import com.google.common.collect.Maps;
 import de.learnlib.algorithms.procedural.SymbolWrapper;
 import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.ProceduralOutputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -42,14 +41,14 @@ class MappingSPMM<S, I, T, O> implements SPMM<S, I, T, O> {
 
     private final ProceduralInputAlphabet<I> inputAlphabet;
     private final ProceduralOutputAlphabet<O> outputAlphabet;
-    private final Mapping<I, SymbolWrapper<I>> mapping;
+    private final Map<I, SymbolWrapper<I>> mapping;
     private final SPMM<S, SymbolWrapper<I>, T, O> delegate;
 
     private final Map<I, MealyMachine<?, I, ?, O>> procedures;
 
     MappingSPMM(ProceduralInputAlphabet<I> inputAlphabet,
                 ProceduralOutputAlphabet<O> outputAlphabet,
-                Mapping<I, SymbolWrapper<I>> mapping,
+                Map<I, SymbolWrapper<I>> mapping,
                 SPMM<S, SymbolWrapper<I>, T, O> delegate) {
         this.inputAlphabet = inputAlphabet;
         this.outputAlphabet = outputAlphabet;
@@ -65,8 +64,9 @@ class MappingSPMM<S, I, T, O> implements SPMM<S, I, T, O> {
     }
 
     @Override
-    public T getTransition(S state, I i) {
-        return this.delegate.getTransition(state, this.mapping.get(i));
+    public @Nullable T getTransition(S state, I i) {
+        final SymbolWrapper<I> w = this.mapping.get(i);
+        return w == null ? null : this.delegate.getTransition(state, w);
     }
 
     @Override
@@ -126,10 +126,7 @@ class MappingSPMM<S, I, T, O> implements SPMM<S, I, T, O> {
         @Override
         public @Nullable T2 getTransition(S2 s2, I i) {
             final SymbolWrapper<I> w = mapping.get(i);
-            if (w == null) {
-                return null;
-            }
-            return delegate.getTransition(s2, w);
+            return w == null ? null : delegate.getTransition(s2, w);
         }
 
         @Override

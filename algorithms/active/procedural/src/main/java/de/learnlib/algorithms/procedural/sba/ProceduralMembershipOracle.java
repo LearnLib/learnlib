@@ -48,7 +48,7 @@ final class ProceduralMembershipOracle<I> implements MembershipOracle<SymbolWrap
     public void processQueries(Collection<? extends Query<SymbolWrapper<I>, Boolean>> collection) {
         final List<Query<I, Boolean>> transformedQueries = new ArrayList<>(collection.size());
 
-        for (final Query<SymbolWrapper<I>, Boolean> q : collection) {
+        for (Query<SymbolWrapper<I>, Boolean> q : collection) {
             if (isWellDefined(q)) {
                 transformedQueries.add(new TransformedQuery(q));
             } else {
@@ -64,8 +64,7 @@ final class ProceduralMembershipOracle<I> implements MembershipOracle<SymbolWrap
 
         while (iter.hasNext()) {
             final SymbolWrapper<I> wrapper = iter.next();
-            final I sym = wrapper.getDelegate();
-            if (alphabet.isReturnSymbol(sym) || alphabet.isCallSymbol(sym) && !wrapper.isTerminating()) {
+            if (!wrapper.isContinuable()) {
                 return !iter.hasNext();
             }
         }
@@ -83,7 +82,7 @@ final class ProceduralMembershipOracle<I> implements MembershipOracle<SymbolWrap
             final I i = w.getDelegate();
             builder.append(i);
             if (alphabet.isCallSymbol(i) && iter.hasNext()) {
-                assert w.isTerminating();
+                assert w.isContinuable();
                 builder.append(atManager.getTerminatingSequence(i));
                 builder.append(alphabet.getReturnSymbol());
             }

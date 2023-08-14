@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
@@ -32,7 +33,6 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.VPDAlphabet.SymbolType;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -44,7 +44,7 @@ public class OptimizingATManager<I> implements ATManager<I> {
 
     private final ProceduralInputAlphabet<I> alphabet;
 
-    public OptimizingATManager(final ProceduralInputAlphabet<I> alphabet) {
+    public OptimizingATManager(ProceduralInputAlphabet<I> alphabet) {
         this.alphabet = alphabet;
 
         this.accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
@@ -85,7 +85,8 @@ public class OptimizingATManager<I> implements ATManager<I> {
         if (!procedures.isEmpty()) {
 
             final SymbolWrapper<I> returnSymbol = inputs.stream()
-                                                        .filter(i -> i.getType() == SymbolType.RETURN)
+                                                        .filter(i -> Objects.equals(i.getDelegate(),
+                                                                                    alphabet.getReturnSymbol()))
                                                         .findAny()
                                                         .orElseThrow(IllegalArgumentException::new);
             boolean foundImprovements = false;
@@ -145,8 +146,8 @@ public class OptimizingATManager<I> implements ATManager<I> {
         return result;
     }
 
-    private void optimizeSequences(final Map<I, Word<I>> sequences) {
-        for (final Map.Entry<I, Word<I>> entry : sequences.entrySet()) {
+    private void optimizeSequences(Map<I, Word<I>> sequences) {
+        for (Map.Entry<I, Word<I>> entry : sequences.entrySet()) {
             final Word<I> currentSequence = entry.getValue();
             final Word<I> minimized = minifyWellMatched(currentSequence);
 

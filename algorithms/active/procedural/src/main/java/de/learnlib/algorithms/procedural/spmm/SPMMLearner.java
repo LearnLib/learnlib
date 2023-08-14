@@ -20,11 +20,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
-import de.learnlib.algorithms.procedural.AlphabetMapper;
 import de.learnlib.algorithms.procedural.SymbolWrapper;
 import de.learnlib.algorithms.procedural.spmm.manager.OptimizingATManager;
 import de.learnlib.api.AccessSequenceTransformer;
@@ -46,7 +46,6 @@ import net.automatalib.util.automata.procedural.SPMMUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.ProceduralOutputAlphabet;
-import net.automatalib.words.VPDAlphabet.SymbolType;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
@@ -65,7 +64,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
     private I initialCallSymbol;
     private O initialOutputSymbol;
 
-    private final AlphabetMapper<I> mapper;
+    private final Map<I, SymbolWrapper<I>> mapping;
 
     public SPMMLearner(ProceduralInputAlphabet<I> inputAlphabet,
                        ProceduralOutputAlphabet<O> outputAlphabet,
@@ -90,20 +89,15 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
         this.atManager = atManager;
 
         this.learners = Maps.newHashMapWithExpectedSize(this.inputAlphabet.getNumCalls());
-        this.mapper = new AlphabetMapper<>(inputAlphabet);
+        this.mapping = Maps.newHashMapWithExpectedSize(this.inputAlphabet.size());
 
-        for (I i : this.inputAlphabet.getCallAlphabet()) {
-            final SymbolWrapper<I> wrapper = new SymbolWrapper<>(i, false, SymbolType.CALL);
-            this.mapper.set(i, wrapper);
-        }
         for (I i : this.inputAlphabet.getInternalAlphabet()) {
-            final SymbolWrapper<I> wrapper = new SymbolWrapper<>(i, false, SymbolType.INTERNAL);
-            this.mapper.set(i, wrapper);
+            final SymbolWrapper<I> wrapper = new SymbolWrapper<>(i, true);
+            this.mapping.put(i, wrapper);
         }
 
-        final SymbolWrapper<I> wrapper =
-                new SymbolWrapper<>(this.inputAlphabet.getReturnSymbol(), false, SymbolType.RETURN);
-        this.mapper.set(this.inputAlphabet.getReturnSymbol(), wrapper);
+        final SymbolWrapper<I> wrapper = new SymbolWrapper<>(this.inputAlphabet.getReturnSymbol(), false);
+        this.mapping.put(this.inputAlphabet.getReturnSymbol(), wrapper);
     }
 
     @Override
@@ -150,10 +144,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
         final DefaultQuery<SymbolWrapper<I>, Word<O>> localCE =
                 constructLocalCE(localTraces.getFirst(), localTraces.getSecond());
         final boolean localRefinement = this.learners.get(procedure).refineHypothesis(localCE);
-
-        if (!localRefinement) {
-            throw new AssertionError();
-        }
+        assert localRefinement;
 
         return true;
     }
@@ -165,37 +156,40 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
             return new EmptySPMM<>(this.inputAlphabet, outputAlphabet);
         }
 
-        final Map<I, MealyMachine<?, SymbolWrapper<I>, ?, O>> procedures = getSubModels();
         final Alphabet<SymbolWrapper<I>> internalAlphabet = new GrowingMapAlphabet<>();
         final Alphabet<SymbolWrapper<I>> callAlphabet = new GrowingMapAlphabet<>();
+        final SymbolWrapper<I> returnSymbol;
+
+        final Map<I, MealyMachine<?, SymbolWrapper<I>, ?, O>> procedures = getSubModels();
         final Map<SymbolWrapper<I>, MealyMachine<?, SymbolWrapper<I>, ?, O>> mappedProcedures =
                 Maps.newHashMapWithExpectedSize(procedures.size());
 
-        for (I i : this.inputAlphabet) {
-            final SymbolWrapper<I> mappedI = this.mapper.get(i);
-
-            if (this.inputAlphabet.isCallSymbol(i)) {
-                callAlphabet.add(mappedI);
-                final MealyMachine<?, SymbolWrapper<I>, ?, O> p = procedures.get(i);
-                if (p != null) {
-                    mappedProcedures.put(mappedI, p);
-                }
-            } else if (inputAlphabet.isInternalSymbol(i)) {
-                internalAlphabet.add(mappedI);
-            }
+        for (Entry<I, MealyMachine<?, SymbolWrapper<I>, ?, O>> e : procedures.entrySet()) {
+            final SymbolWrapper<I> w = this.mapping.get(e.getKey());
+            assert w != null;
+            mappedProcedures.put(w, e.getValue());
+            callAlphabet.add(w);
         }
 
-        final ProceduralInputAlphabet<SymbolWrapper<I>> mappedAlphabet = new DefaultProceduralInputAlphabet<>(internalAlphabet,
-                                                                                                              callAlphabet,
-                                                                                                              this.mapper.get(inputAlphabet.getReturnSymbol()));
+        for (I i : this.inputAlphabet.getInternalAlphabet()) {
+            final SymbolWrapper<I> w = this.mapping.get(i);
+            assert w != null;
+            internalAlphabet.add(w);
+        }
+
+        returnSymbol = this.mapping.get(inputAlphabet.getReturnSymbol());
+        assert returnSymbol != null;
+
+        final ProceduralInputAlphabet<SymbolWrapper<I>> mappedAlphabet =
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, returnSymbol);
 
         final StackSPMM<?, SymbolWrapper<I>, ?, O> delegate = new StackSPMM<>(mappedAlphabet,
                                                                               outputAlphabet,
-                                                                              this.mapper.get(initialCallSymbol),
+                                                                              this.mapping.get(initialCallSymbol),
                                                                               initialOutputSymbol,
                                                                               mappedProcedures);
 
-        return new MappingSPMM<>(inputAlphabet, outputAlphabet, mapper, delegate);
+        return new MappingSPMM<>(inputAlphabet, outputAlphabet, mapping, delegate);
     }
 
     private boolean extractUsefulInformationFromCounterExample(DefaultQuery<I, Word<O>> defaultQuery) {
@@ -214,8 +208,8 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
         boolean update = false;
 
         for (I call : newTerms) {
-            final SymbolWrapper<I> sym = new SymbolWrapper<>(call, true, SymbolType.CALL);
-            this.mapper.set(call, sym);
+            final SymbolWrapper<I> sym = new SymbolWrapper<>(call, true);
+            this.mapping.put(call, sym);
             for (L learner : this.learners.values()) {
                 learner.addAlphabetSymbol(sym);
                 update = true;
@@ -225,7 +219,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
         for (I sym : newCalls) {
             update = true;
             final L newLearner = learnerConstructors.get(sym)
-                                                    .constructLearner(new GrowingMapAlphabet<>(this.mapper.values()),
+                                                    .constructLearner(new GrowingMapAlphabet<>(this.mapping.values()),
                                                                       new ProceduralMembershipOracle<>(inputAlphabet,
                                                                                                        oracle,
                                                                                                        sym,
@@ -241,11 +235,20 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
             final Set<I> newTS =
                     this.atManager.scanRefinedProcedures(Collections.singletonMap(sym, newLearner.getHypothesisModel()),
                                                          learners,
-                                                         mapper.values());
+                                                         mapping.values());
 
             for (I call : newTS) {
-                final SymbolWrapper<I> wrapper = new SymbolWrapper<>(call, true, SymbolType.CALL);
-                this.mapper.set(call, wrapper);
+                final SymbolWrapper<I> wrapper = new SymbolWrapper<>(call, true);
+                this.mapping.put(call, wrapper);
+                for (L learner : this.learners.values()) {
+                    learner.addAlphabetSymbol(wrapper);
+                }
+            }
+
+            // add non-terminating version for new call
+            if (!this.mapping.containsKey(sym)) {
+                final SymbolWrapper<I> wrapper = new SymbolWrapper<>(sym, false);
+                this.mapping.put(sym, wrapper);
                 for (L learner : this.learners.values()) {
                     learner.addAlphabetSymbol(wrapper);
                 }
@@ -259,7 +262,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
         final Map<I, MealyMachine<?, SymbolWrapper<I>, ?, O>> subModels =
                 Maps.newHashMapWithExpectedSize(this.learners.size());
 
-        for (final Map.Entry<I, L> entry : this.learners.entrySet()) {
+        for (Map.Entry<I, L> entry : this.learners.entrySet()) {
             subModels.put(entry.getKey(), entry.getValue().getHypothesisModel());
         }
 
@@ -270,7 +273,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
 
         final WordBuilder<SymbolWrapper<I>> wb = new WordBuilder<>(input.length());
         for (I i : input) {
-            wb.append(mapper.get(i));
+            wb.append(mapping.get(i));
         }
 
         return new DefaultQuery<>(wb.toWord(), output);
@@ -281,7 +284,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
             boolean stable = false;
 
             while (!stable) {
-                stable = ensureReturnClosure(learner.getHypothesisModel(), mapper.values(), learner);
+                stable = ensureReturnClosure(learner.getHypothesisModel(), mapping.values(), learner);
             }
         }
     }
@@ -299,7 +302,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
             final S state = hyp.getState(cov);
 
             for (SymbolWrapper<I> i : inputs) {
-                if (i.getType() == SymbolType.RETURN) {
+                if (Objects.equals(i.getDelegate(), inputAlphabet.getReturnSymbol())) {
 
                     final S succ = hyp.getSuccessor(state, i);
 

@@ -53,7 +53,7 @@ final class ProceduralMembershipOracle<I, O> implements MembershipOracle<SymbolW
     public void processQueries(Collection<? extends Query<SymbolWrapper<I>, Word<O>>> collection) {
         final List<Query<I, Word<O>>> transformedQueries = new ArrayList<>(collection.size());
 
-        for (final Query<SymbolWrapper<I>, Word<O>> q : collection) {
+        for (Query<SymbolWrapper<I>, Word<O>> q : collection) {
             if (hasErrorInPrefix(q.getPrefix())) {
                 q.answer(Word.fromList(Collections.nCopies(q.getSuffix().length(), errorSymbol)));
             } else {
@@ -68,7 +68,7 @@ final class ProceduralMembershipOracle<I, O> implements MembershipOracle<SymbolW
         final WordBuilder<I> builder = new WordBuilder<>();
         builder.append(atManager.getAccessSequence(this.procedure));
 
-        for (final SymbolWrapper<I> wrapper : query) {
+        for (SymbolWrapper<I> wrapper : query) {
             final I i = wrapper.getDelegate();
             if (alphabet.isInternalSymbol(i)) {
                 builder.append(i);
@@ -87,14 +87,14 @@ final class ProceduralMembershipOracle<I, O> implements MembershipOracle<SymbolW
     private Word<I> transformSuffix(Word<SymbolWrapper<I>> query, BitSet indices) {
         final WordBuilder<I> builder = new WordBuilder<>();
 
-        for (final SymbolWrapper<I> wrapper : query) {
+        for (SymbolWrapper<I> wrapper : query) {
             final I i = wrapper.getDelegate();
             indices.set(builder.size());
             if (alphabet.isInternalSymbol(i)) {
                 builder.append(i);
             } else if (alphabet.isCallSymbol(i)) {
                 builder.append(i);
-                if (wrapper.isTerminating()) {
+                if (wrapper.isContinuable()) {
                     builder.append(atManager.getTerminatingSequence(i));
                     builder.append(alphabet.getReturnSymbol());
                 } else {
@@ -112,8 +112,7 @@ final class ProceduralMembershipOracle<I, O> implements MembershipOracle<SymbolW
     private boolean hasErrorInPrefix(Word<SymbolWrapper<I>> prefix) {
 
         for (SymbolWrapper<I> wrapper : prefix) {
-            final I i = wrapper.getDelegate();
-            if (alphabet.isReturnSymbol(i) || alphabet.isCallSymbol(i) && !wrapper.isTerminating()) {
+            if (!wrapper.isContinuable()) {
                 return true;
             }
         }

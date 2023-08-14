@@ -15,39 +15,26 @@
  */
 package de.learnlib.algorithms.procedural;
 
-import java.util.Objects;
-
-import net.automatalib.words.VPDAlphabet.SymbolType;
-
 public class SymbolWrapper<I> {
 
     private final I delegate;
-    private final boolean isTerminating;
-    private final SymbolType type;
+    private final boolean continuable;
 
-    public SymbolWrapper(I delegate, boolean isTerminating, SymbolType type) {
+    public SymbolWrapper(I delegate, boolean continuable) {
         this.delegate = delegate;
-        this.isTerminating = isTerminating;
-        this.type = type;
+        this.continuable = continuable;
     }
 
     public I getDelegate() {
         return delegate;
     }
 
-    public boolean isTerminating() {
-        return isTerminating;
-    }
-
-    public SymbolType getType() {
-        return type;
+    public boolean isContinuable() {
+        return continuable;
     }
 
     @Override
     public String toString() {
-        if (type == SymbolType.CALL) {
-            return String.valueOf(delegate) + '(' + isTerminating + ')';
-        }
-        return Objects.toString(delegate);
+        return String.valueOf(delegate) + '(' + continuable + ')';
     }
 }

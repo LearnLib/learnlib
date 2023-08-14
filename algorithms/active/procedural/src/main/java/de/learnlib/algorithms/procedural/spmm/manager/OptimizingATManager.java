@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
@@ -35,7 +36,6 @@ import net.automatalib.commons.util.Pair;
 import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.ProceduralOutputAlphabet;
-import net.automatalib.words.VPDAlphabet.SymbolType;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -48,7 +48,7 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
     private final ProceduralInputAlphabet<I> inputAlphabet;
     private final ProceduralOutputAlphabet<O> outputAlphabet;
 
-    public OptimizingATManager(final ProceduralInputAlphabet<I> inputAlphabet, ProceduralOutputAlphabet<O> outputAlphabet) {
+    public OptimizingATManager(ProceduralInputAlphabet<I> inputAlphabet, ProceduralOutputAlphabet<O> outputAlphabet) {
         this.inputAlphabet = inputAlphabet;
         this.outputAlphabet = outputAlphabet;
 
@@ -89,7 +89,8 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
         if (!procedures.isEmpty()) {
 
             final SymbolWrapper<I> returnSymbol = inputs.stream()
-                                                        .filter(i -> i.getType() == SymbolType.RETURN)
+                                                        .filter(i -> Objects.equals(i.getDelegate(),
+                                                                                    inputAlphabet.getReturnSymbol()))
                                                         .findAny()
                                                         .orElseThrow(IllegalArgumentException::new);
             boolean foundImprovements = false;
@@ -150,8 +151,8 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
         return result;
     }
 
-    private void optimizeSequences(final Map<I, Word<I>> sequences) {
-        for (final Entry<I, Word<I>> entry : sequences.entrySet()) {
+    private void optimizeSequences(Map<I, Word<I>> sequences) {
+        for (Entry<I, Word<I>> entry : sequences.entrySet()) {
             final Word<I> currentSequence = entry.getValue();
             final Word<I> minimized = minifyWellMatched(currentSequence);
 
@@ -161,8 +162,7 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
         }
     }
 
-    private void extractPotentialTerminatingSequences(final DefaultQuery<I, Word<O>> counterexample,
-                                                      final Set<I> newProcedures) {
+    private void extractPotentialTerminatingSequences(DefaultQuery<I, Word<O>> counterexample, Set<I> newProcedures) {
 
         final Word<I> input = counterexample.getInput();
         final Word<O> output = counterexample.getOutput();
@@ -189,7 +189,7 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
         }
     }
 
-    private void extractPotentialAccessSequences(final DefaultQuery<I, Word<O>> counterexample, final Set<I> newCalls) {
+    private void extractPotentialAccessSequences(DefaultQuery<I, Word<O>> counterexample, Set<I> newCalls) {
 
         final Word<I> input = counterexample.getInput();
         final Word<O> output = counterexample.getOutput();

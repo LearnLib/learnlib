@@ -37,7 +37,7 @@ public class DefaultATManager<I> implements ATManager<I> {
 
     private final ProceduralInputAlphabet<I> alphabet;
 
-    public DefaultATManager(final ProceduralInputAlphabet<I> alphabet) {
+    public DefaultATManager(ProceduralInputAlphabet<I> alphabet) {
         this.alphabet = alphabet;
 
         this.accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());

@@ -19,10 +19,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
-import de.learnlib.algorithms.procedural.AlphabetMapper;
 import de.learnlib.algorithms.procedural.SymbolWrapper;
 import de.learnlib.algorithms.procedural.sba.manager.OptimizingATManager;
 import de.learnlib.api.AccessSequenceTransformer;
@@ -43,7 +43,6 @@ import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.procedural.SBAUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.VPDAlphabet.SymbolType;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
@@ -57,40 +56,36 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
     private final Mapping<I, LearnerConstructor<L, SymbolWrapper<I>, Boolean>> learnerConstructors;
     private final ATManager<I> atManager;
 
-    private final Map<I, L> subLearners;
+    private final Map<I, L> learners;
     private I initialCallSymbol;
 
-    private final AlphabetMapper<I> mapper;
+    private final Map<I, SymbolWrapper<I>> mapping;
 
-    public SBALearner(final ProceduralInputAlphabet<I> alphabet,
-                      final MembershipOracle<I, Boolean> oracle,
-                      final LearnerConstructor<L, SymbolWrapper<I>, Boolean> learnerConstructor) {
+    public SBALearner(ProceduralInputAlphabet<I> alphabet,
+                      MembershipOracle<I, Boolean> oracle,
+                      LearnerConstructor<L, SymbolWrapper<I>, Boolean> learnerConstructor) {
         this(alphabet, oracle, (i) -> learnerConstructor, new OptimizingATManager<>(alphabet));
     }
 
-    public SBALearner(final ProceduralInputAlphabet<I> alphabet,
-                      final MembershipOracle<I, Boolean> oracle,
-                      final Mapping<I, LearnerConstructor<L, SymbolWrapper<I>, Boolean>> learnerConstructors,
-                      final ATManager<I> atManager) {
+    public SBALearner(ProceduralInputAlphabet<I> alphabet,
+                      MembershipOracle<I, Boolean> oracle,
+                      Mapping<I, LearnerConstructor<L, SymbolWrapper<I>, Boolean>> learnerConstructors,
+                      ATManager<I> atManager) {
         this.alphabet = alphabet;
         this.oracle = oracle;
         this.learnerConstructors = learnerConstructors;
         this.atManager = atManager;
 
-        this.subLearners = Maps.newHashMapWithExpectedSize(this.alphabet.getNumCalls());
-        this.mapper = new AlphabetMapper<>(alphabet);
+        this.learners = Maps.newHashMapWithExpectedSize(this.alphabet.getNumCalls());
+        this.mapping = Maps.newHashMapWithExpectedSize(this.alphabet.size());
 
-        for (I i : this.alphabet.getCallAlphabet()) {
-            final SymbolWrapper<I> wrapper = new SymbolWrapper<>(i, false, SymbolType.CALL);
-            this.mapper.set(i, wrapper);
-        }
         for (I i : this.alphabet.getInternalAlphabet()) {
-            final SymbolWrapper<I> wrapper = new SymbolWrapper<>(i, false, SymbolType.INTERNAL);
-            this.mapper.set(i, wrapper);
+            final SymbolWrapper<I> wrapper = new SymbolWrapper<>(i, true);
+            this.mapping.put(i, wrapper);
         }
 
-        final SymbolWrapper<I> wrapper = new SymbolWrapper<>(this.alphabet.getReturnSymbol(), false, SymbolType.RETURN);
-        this.mapper.set(this.alphabet.getReturnSymbol(), wrapper);
+        final SymbolWrapper<I> wrapper = new SymbolWrapper<>(this.alphabet.getReturnSymbol(), false);
+        this.mapping.put(this.alphabet.getReturnSymbol(), wrapper);
     }
 
     @Override
@@ -133,7 +128,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
                 this.alphabet.project(input.subWord(callIdx + 1, mismatchIdx), 0).append(input.getSymbol(mismatchIdx));
         final DefaultQuery<SymbolWrapper<I>, Boolean> localCE = constructLocalCE(localTrace, defaultQuery.getOutput());
 
-        boolean localRefinement = this.subLearners.get(procedure).refineHypothesis(localCE);
+        boolean localRefinement = this.learners.get(procedure).refineHypothesis(localCE);
         assert localRefinement;
 
         return true;
@@ -142,37 +137,41 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
     @Override
     public SBA<?, I> getHypothesisModel() {
 
-        if (this.subLearners.isEmpty()) {
+        if (this.learners.isEmpty()) {
             return new EmptySBA<>(this.alphabet);
         }
 
-        final Map<I, DFA<?, SymbolWrapper<I>>> procedures = getSubModels();
         final Alphabet<SymbolWrapper<I>> internalAlphabet = new GrowingMapAlphabet<>();
         final Alphabet<SymbolWrapper<I>> callAlphabet = new GrowingMapAlphabet<>();
+        final SymbolWrapper<I> returnSymbol;
+
+        final Map<I, DFA<?, SymbolWrapper<I>>> procedures = getSubModels();
         final Map<SymbolWrapper<I>, DFA<?, SymbolWrapper<I>>> mappedProcedures =
                 Maps.newHashMapWithExpectedSize(procedures.size());
 
-        for (I i : this.alphabet) {
-            final SymbolWrapper<I> mappedI = this.mapper.get(i);
-
-            if (this.alphabet.isCallSymbol(i)) {
-                callAlphabet.add(mappedI);
-                final DFA<?, SymbolWrapper<I>> p = procedures.get(i);
-                if (p != null) {
-                    mappedProcedures.put(mappedI, p);
-                }
-            } else if (alphabet.isInternalSymbol(i)) {
-                internalAlphabet.add(mappedI);
-            }
+        for (Entry<I, DFA<?, SymbolWrapper<I>>> e : procedures.entrySet()) {
+            final SymbolWrapper<I> w = this.mapping.get(e.getKey());
+            assert w != null;
+            mappedProcedures.put(w, e.getValue());
+            callAlphabet.add(w);
         }
 
+        for (I i : this.alphabet.getInternalAlphabet()) {
+            final SymbolWrapper<I> w = this.mapping.get(i);
+            assert w != null;
+            internalAlphabet.add(w);
+        }
+
+        returnSymbol = this.mapping.get(alphabet.getReturnSymbol());
+        assert returnSymbol != null;
+
         final ProceduralInputAlphabet<SymbolWrapper<I>> mappedAlphabet =
-                new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, this.mapper.get(alphabet.getReturnSymbol()));
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, returnSymbol);
 
         final StackSBA<?, SymbolWrapper<I>> delegate =
-                new StackSBA<>(mappedAlphabet, this.mapper.get(initialCallSymbol), mappedProcedures);
+                new StackSBA<>(mappedAlphabet, this.mapping.get(initialCallSymbol), mappedProcedures);
 
-        return new MappingSBA<>(alphabet, mapper, delegate);
+        return new MappingSBA<>(alphabet, mapping, delegate);
     }
 
     private boolean extractUsefulInformationFromCounterExample(DefaultQuery<I, Boolean> defaultQuery) {
@@ -192,9 +191,9 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
         final Set<I> newTerms = newSeqs.getSecond();
 
         for (I call : newTerms) {
-            final SymbolWrapper<I> sym = new SymbolWrapper<>(call, true, SymbolType.CALL);
-            this.mapper.set(call, sym);
-            for (L learner : this.subLearners.values()) {
+            final SymbolWrapper<I> sym = new SymbolWrapper<>(call, true);
+            this.mapping.put(call, sym);
+            for (L learner : this.learners.values()) {
                 learner.addAlphabetSymbol(sym);
                 update = true;
             }
@@ -203,7 +202,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
         for (I sym : newCalls) {
             update = true;
             final L newLearner = learnerConstructors.get(sym)
-                                                    .constructLearner(new GrowingMapAlphabet<>(this.mapper.values()),
+                                                    .constructLearner(new GrowingMapAlphabet<>(this.mapping.values()),
                                                                       new ProceduralMembershipOracle<>(alphabet,
                                                                                                        oracle,
                                                                                                        sym,
@@ -212,18 +211,27 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
             newLearner.startLearning();
 
             // add new learner here, so that we have an AccessSequenceTransformer available when scanning for shorter ts
-            this.subLearners.put(sym, newLearner);
+            this.learners.put(sym, newLearner);
 
             // try to find a shorter terminating sequence for 'sym' before procedure is added to other hypotheses
             final Set<I> newTS =
                     this.atManager.scanRefinedProcedures(Collections.singletonMap(sym, newLearner.getHypothesisModel()),
-                                                         subLearners,
-                                                         mapper.values());
+                                                         learners,
+                                                         mapping.values());
 
             for (I call : newTS) {
-                final SymbolWrapper<I> wrapper = new SymbolWrapper<>(call, true, SymbolType.CALL);
-                this.mapper.set(call, wrapper);
-                for (L learner : this.subLearners.values()) {
+                final SymbolWrapper<I> wrapper = new SymbolWrapper<>(call, true);
+                this.mapping.put(call, wrapper);
+                for (L learner : this.learners.values()) {
+                    learner.addAlphabetSymbol(wrapper);
+                }
+            }
+
+            // add non-terminating version for new call
+            if (!this.mapping.containsKey(sym)) {
+                final SymbolWrapper<I> wrapper = new SymbolWrapper<>(sym, false);
+                this.mapping.put(sym, wrapper);
+                for (L learner : this.learners.values()) {
                     learner.addAlphabetSymbol(wrapper);
                 }
             }
@@ -233,9 +241,9 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
     }
 
     private Map<I, DFA<?, SymbolWrapper<I>>> getSubModels() {
-        final Map<I, DFA<?, SymbolWrapper<I>>> subModels = Maps.newHashMapWithExpectedSize(this.subLearners.size());
+        final Map<I, DFA<?, SymbolWrapper<I>>> subModels = Maps.newHashMapWithExpectedSize(this.learners.size());
 
-        for (final Map.Entry<I, L> entry : this.subLearners.entrySet()) {
+        for (Map.Entry<I, L> entry : this.learners.entrySet()) {
             subModels.put(entry.getKey(), entry.getValue().getHypothesisModel());
         }
 
@@ -283,7 +291,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
 
         final WordBuilder<SymbolWrapper<I>> wb = new WordBuilder<>(input.length());
         for (I i : input) {
-            wb.append(mapper.get(i));
+            wb.append(mapping.get(i));
         }
 
         return new DefaultQuery<>(wb.toWord(), output);
@@ -292,15 +300,13 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
     private void ensureCallAndReturnClosure() {
 
         final Set<SymbolWrapper<I>> nonContinuableSymbols = new HashSet<>();
-        nonContinuableSymbols.add(mapper.get(alphabet.getReturnSymbol()));
-        for (I i : alphabet.getCallAlphabet()) {
-            final SymbolWrapper<I> mapped = mapper.get(i);
-            if (!mapped.isTerminating()) {
+        for (SymbolWrapper<I> mapped : mapping.values()) {
+            if (!mapped.isContinuable()) {
                 nonContinuableSymbols.add(mapped);
             }
         }
 
-        for (L learner : this.subLearners.values()) {
+        for (L learner : this.learners.values()) {
             boolean stable = false;
 
             while (!stable) {
@@ -314,7 +320,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
                                                    L learner) {
 
         final Set<Word<SymbolWrapper<I>>> cover = new HashSet<>();
-        for (Word<SymbolWrapper<I>> sc : Automata.stateCover(hyp, mapper.values())) {
+        for (Word<SymbolWrapper<I>> sc : Automata.stateCover(hyp, mapping.values())) {
             cover.add(learner.transformAccessSequence(sc));
         }
 
@@ -324,7 +330,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
             for (SymbolWrapper<I> i : nonContinuableSymbols) {
                 final S succ = hyp.getSuccessor(state, i);
 
-                for (SymbolWrapper<I> next : mapper.values()) {
+                for (SymbolWrapper<I> next : mapping.values()) {
 
                     if (hyp.isAccepting(hyp.getSuccessor(succ, next))) { // closure is violated
 

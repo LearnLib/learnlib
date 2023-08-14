@@ -40,7 +40,7 @@ public class DefaultATManager<I, O> implements ATManager<I, O> {
     private final ProceduralInputAlphabet<I> inputAlphabet;
     private final ProceduralOutputAlphabet<O> outputAlphabet;
 
-    public DefaultATManager(final ProceduralInputAlphabet<I> inputAlphabet, final ProceduralOutputAlphabet<O> outputAlphabet) {
+    public DefaultATManager(ProceduralInputAlphabet<I> inputAlphabet, ProceduralOutputAlphabet<O> outputAlphabet) {
         this.inputAlphabet = inputAlphabet;
         this.outputAlphabet = outputAlphabet;
 
