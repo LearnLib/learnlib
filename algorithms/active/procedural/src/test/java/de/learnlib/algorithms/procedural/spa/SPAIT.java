@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
+import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.procedural.adapter.dfa.DiscriminationTreeAdapterDFA;
 import de.learnlib.algorithms.procedural.adapter.dfa.KearnsVaziraniAdapterDFA;
 import de.learnlib.algorithms.procedural.adapter.dfa.LStarBaseAdapterDFA;
@@ -68,11 +70,17 @@ public class SPAIT extends AbstractSPALearnerIT {
         <L extends DFALearner<I> & SupportsGrowingAlphabet<I> & AccessSequenceTransformer<I>> void addLearnerVariant(
                 LearnerConstructor<L, I, Boolean> provider) {
 
-            for (Function<ProceduralInputAlphabet<I>, ATRManager<I>> atrProvider : atrProviders) {
-                final SPALearner<I, L> learner =
-                        new SPALearner<>(alphabet, mqOracle, (i) -> provider, atrProvider.apply(alphabet));
-                final String name = String.format("adapter=%s,manager=%s", provider, atrProvider);
-                variants.addLearnerVariant(name, learner);
+            for (AbstractNamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
+                for (Function<ProceduralInputAlphabet<I>, ATRManager<I>> atrProvider : atrProviders) {
+                    final SPALearner<I, L> learner = new SPALearner<>(alphabet,
+                                                                      mqOracle,
+                                                                      (i) -> provider,
+                                                                      analyzer,
+                                                                      atrProvider.apply(alphabet));
+                    final String name =
+                            String.format("adapter=%s,analyzer=%s,manager=%s", provider, analyzer, atrProvider);
+                    variants.addLearnerVariant(name, learner);
+                }
             }
         }
     }

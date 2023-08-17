@@ -21,11 +21,15 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import de.learnlib.acex.AcexAnalyzer;
+import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.impl.AbstractBaseCounterexample;
 import de.learnlib.algorithms.procedural.spa.manager.OptimizingATRManager;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.algorithm.LearnerConstructor;
@@ -62,6 +66,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
     private final ProceduralInputAlphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;
     private final Mapping<I, LearnerConstructor<L, I, Boolean>> learnerConstructors;
+    private final AcexAnalyzer analyzer;
     private final ATRManager<I> atrManager;
 
     private final Map<I, L> subLearners;
@@ -77,16 +82,22 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
     public SPALearner(ProceduralInputAlphabet<I> alphabet,
                       MembershipOracle<I, Boolean> oracle,
                       Mapping<I, LearnerConstructor<L, I, Boolean>> learnerConstructors) {
-        this(alphabet, oracle, learnerConstructors, new OptimizingATRManager<>(alphabet));
+        this(alphabet,
+             oracle,
+             learnerConstructors,
+             AcexAnalyzers.BINARY_SEARCH_FWD,
+             new OptimizingATRManager<>(alphabet));
     }
 
     public SPALearner(ProceduralInputAlphabet<I> alphabet,
                       MembershipOracle<I, Boolean> oracle,
                       Mapping<I, LearnerConstructor<L, I, Boolean>> learnerConstructors,
+                      AcexAnalyzer analyzer,
                       ATRManager<I> atrManager) {
         this.alphabet = alphabet;
         this.oracle = oracle;
         this.learnerConstructors = learnerConstructors;
+        this.analyzer = analyzer;
         this.atrManager = atrManager;
 
         this.subLearners = Maps.newHashMapWithExpectedSize(this.alphabet.getNumCalls());
@@ -119,18 +130,21 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
             return false;
         }
 
-        final Word<I> input = defaultQuery.getInput();
-
         // look for better sequences and ensure TS conformance prior to CE analysis
         boolean localRefinement = updateATRAndCheckTSConformance(hypothesis);
 
-        final int returnIdx;
-
-        if (defaultQuery.getOutput()) {
-            returnIdx = detectRejectingProcedure(getHypothesisModel()::accepts, input);
-        } else {
-            returnIdx = detectRejectingProcedure(this.oracle::answerQuery, input);
+        if (!MQUtil.isCounterexample(defaultQuery, hypothesis)) {
+            return localRefinement;
         }
+
+        final Word<I> input = defaultQuery.getInput();
+        final List<Integer> returnIndices = determineReturnIndices(input);
+        final int idx = analyzer.analyzeAbstractCounterexample(new Acex(input,
+                                                                        defaultQuery.getOutput() ?
+                                                                                hypothesis::accepts :
+                                                                                this.oracle::answerQuery,
+                                                                        returnIndices));
+        final int returnIdx = returnIndices.get(idx);
 
         // extract local ce
         final int callIdx = this.alphabet.findCallIndex(input, returnIdx);
@@ -228,7 +242,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         return refinement;
     }
 
-    private int detectRejectingProcedure(Predicate<Word<I>> rejectingSystem, Word<I> input) {
+    private List<Integer> determineReturnIndices(Word<I> input) {
 
         final List<Integer> returnIndices = new ArrayList<>();
 
@@ -238,64 +252,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
             }
         }
 
-        // skip last index, because we know its accepting
-        int returnIdxPos = findLowestAcceptingReturnIndex(rejectingSystem,
-                                                          input,
-                                                          returnIndices.subList(0, returnIndices.size() - 1));
-
-        // if everything is rejecting the error happens at the main procedure
-        if (returnIdxPos == -1) {
-            returnIdxPos = returnIndices.size() - 1;
-        }
-
-        return returnIndices.get(returnIdxPos);
-    }
-
-    private int findLowestAcceptingReturnIndex(Predicate<? super Word<I>> system,
-                                               Word<I> input,
-                                               List<Integer> returnIndices) {
-
-        int lower = 0;
-        int upper = returnIndices.size() - 1;
-        int result = -1;
-
-        while (upper - lower > -1) {
-            final int mid = lower + ((upper - lower) / 2);
-            final int returnIdx = returnIndices.get(mid);
-
-            final boolean answer = acceptsDecomposition(system, input, returnIdx + 1);
-
-            if (answer) {
-                result = mid;
-                upper = mid - 1;
-            } else {
-                lower = mid + 1;
-            }
-        }
-
-        return result;
-    }
-
-    private boolean acceptsDecomposition(Predicate<? super Word<I>> system, Word<I> input, int idxAfterReturn) {
-        final Deque<Word<I>> wordStack = new ArrayDeque<>();
-        int idx = idxAfterReturn;
-
-        while (idx > 0) {
-            final int callIdx = this.alphabet.findCallIndex(input, idx);
-            final I callSymbol = input.getSymbol(callIdx);
-            final Word<I> normalized = this.alphabet.project(input.subWord(callIdx + 1, idx), 0);
-            final Word<I> expanded = this.alphabet.expand(normalized, this.atrManager::getTerminatingSequence);
-
-            wordStack.push(expanded.prepend(callSymbol));
-
-            idx = callIdx;
-        }
-
-        final WordBuilder<I> builder = new WordBuilder<>();
-        wordStack.forEach(builder::append);
-        builder.append(input.subWord(idxAfterReturn));
-
-        return system.test(builder.toWord());
+        return returnIndices;
     }
 
     private boolean checkAndEnsureTSConformance(Map<I, DFA<?, I>> subModels) {
@@ -337,4 +294,48 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         return refinement;
     }
 
+    private class Acex extends AbstractBaseCounterexample<Boolean> {
+
+        private final Word<I> input;
+        private final Predicate<? super Word<I>> oracle;
+        private final List<Integer> returnIndices;
+
+        Acex(Word<I> input, Predicate<? super Word<I>> oracle, List<Integer> returnIndices) {
+            super(returnIndices.size() + 1);
+            this.input = input;
+            this.oracle = oracle;
+            this.returnIndices = returnIndices;
+
+            setEffect(returnIndices.size(), true);
+            setEffect(0, false);
+        }
+
+        @Override
+        protected Boolean computeEffect(int index) {
+            final Deque<Word<I>> wordStack = new ArrayDeque<>();
+            int idx = this.returnIndices.get(index);
+
+            while (idx > 0) {
+                final int callIdx = alphabet.findCallIndex(input, idx);
+                final I callSymbol = input.getSymbol(callIdx);
+                final Word<I> normalized = alphabet.project(input.subWord(callIdx + 1, idx), 0);
+                final Word<I> expanded = alphabet.expand(normalized, atrManager::getTerminatingSequence);
+
+                wordStack.push(expanded.prepend(callSymbol));
+
+                idx = callIdx;
+            }
+
+            final WordBuilder<I> builder = new WordBuilder<>();
+            wordStack.forEach(builder::append);
+            builder.append(input.subWord(this.returnIndices.get(index)));
+
+            return oracle.test(builder.toWord());
+        }
+
+        @Override
+        public boolean checkEffects(Boolean eff1, Boolean eff2) {
+            return Objects.equals(eff1, eff2);
+        }
+    }
 }

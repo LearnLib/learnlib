@@ -20,9 +20,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import com.google.common.collect.Maps;
+import de.learnlib.acex.AcexAnalyzer;
+import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.impl.AbstractBaseCounterexample;
 import de.learnlib.algorithms.procedural.SymbolWrapper;
 import de.learnlib.algorithms.procedural.sba.manager.OptimizingATManager;
 import de.learnlib.api.AccessSequenceTransformer;
@@ -54,6 +59,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
     private final ProceduralInputAlphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;
     private final Mapping<I, LearnerConstructor<L, SymbolWrapper<I>, Boolean>> learnerConstructors;
+    private final AcexAnalyzer analyzer;
     private final ATManager<I> atManager;
 
     private final Map<I, L> learners;
@@ -64,16 +70,22 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
     public SBALearner(ProceduralInputAlphabet<I> alphabet,
                       MembershipOracle<I, Boolean> oracle,
                       LearnerConstructor<L, SymbolWrapper<I>, Boolean> learnerConstructor) {
-        this(alphabet, oracle, (i) -> learnerConstructor, new OptimizingATManager<>(alphabet));
+        this(alphabet,
+             oracle,
+             (i) -> learnerConstructor,
+             AcexAnalyzers.BINARY_SEARCH_BWD,
+             new OptimizingATManager<>(alphabet));
     }
 
     public SBALearner(ProceduralInputAlphabet<I> alphabet,
                       MembershipOracle<I, Boolean> oracle,
                       Mapping<I, LearnerConstructor<L, SymbolWrapper<I>, Boolean>> learnerConstructors,
+                      AcexAnalyzer analyzer,
                       ATManager<I> atManager) {
         this.alphabet = alphabet;
         this.oracle = oracle;
         this.learnerConstructors = learnerConstructors;
+        this.analyzer = analyzer;
         this.atManager = atManager;
 
         this.learners = Maps.newHashMapWithExpectedSize(this.alphabet.getNumCalls());
@@ -118,7 +130,10 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
         }
 
         final Word<I> input = defaultQuery.getInput();
-        final int mismatchIdx = detectMismatchingIdx(hypothesis, input, defaultQuery.getOutput());
+        final int mismatchIdx = analyzer.analyzeAbstractCounterexample(new Acex<>(input,
+                                                                                  defaultQuery.getOutput() ?
+                                                                                          hypothesis::accepts :
+                                                                                          this.oracle::answerQuery));
 
         // extract local ce
         final int callIdx = this.alphabet.findCallIndex(input, mismatchIdx);
@@ -250,43 +265,6 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
         return subModels;
     }
 
-    private <S> int detectMismatchingIdx(SBA<S, I> sba, Word<I> input, boolean output) {
-
-        if (output) {
-            S stateIter = sba.getInitialState();
-            int idx = 0;
-
-            for (I i : input) {
-                final S succ = sba.getSuccessor(stateIter, i);
-
-                if (succ == null || !sba.isAccepting(succ)) {
-                    return idx;
-                }
-                stateIter = succ;
-                idx++;
-            }
-        } else {
-            int lower = 0;
-            int upper = input.size() - 1;
-            int result = input.size();
-
-            while (upper - lower > -1) {
-                int mid = lower + (upper - lower) / 2;
-                boolean answer = this.oracle.answerQuery(input.prefix(mid));
-                if (answer) {
-                    lower = mid + 1;
-                } else {
-                    result = mid;
-                    upper = mid - 1;
-                }
-            }
-
-            return result - 1;
-        }
-
-        throw new IllegalStateException("Could not properly analyze CE");
-    }
-
     private DefaultQuery<SymbolWrapper<I>, Boolean> constructLocalCE(Word<I> input, boolean output) {
 
         final WordBuilder<SymbolWrapper<I>> wb = new WordBuilder<>(input.length());
@@ -346,5 +324,27 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
         }
 
         return true;
+    }
+
+    private static class Acex<I> extends AbstractBaseCounterexample<Boolean> {
+
+        private final Word<I> input;
+        private final Predicate<? super Word<I>> oracle;
+
+        Acex(Word<I> input, Predicate<? super Word<I>> oracle) {
+            super(input.size() + 1);
+            this.input = input;
+            this.oracle = oracle;
+        }
+
+        @Override
+        protected Boolean computeEffect(int index) {
+            return oracle.test(input.prefix(index));
+        }
+
+        @Override
+        public boolean checkEffects(Boolean eff1, Boolean eff2) {
+            return Objects.equals(eff1, eff2);
+        }
     }
 }

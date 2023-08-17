@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
+import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.procedural.SymbolWrapper;
 import de.learnlib.algorithms.procedural.adapter.dfa.DiscriminationTreeAdapterDFA;
 import de.learnlib.algorithms.procedural.adapter.dfa.KearnsVaziraniAdapterDFA;
@@ -69,11 +71,14 @@ public class SBAIT extends AbstractSBALearnerIT {
         <L extends DFALearner<SymbolWrapper<I>> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>> void addLearnerVariant(
                 LearnerConstructor<L, SymbolWrapper<I>, Boolean> provider) {
 
-            for (Function<ProceduralInputAlphabet<I>, ATManager<I>> atProvider : atProviders) {
-                final SBALearner<I, L> learner =
-                        new SBALearner<>(alphabet, mqOracle, (i) -> provider, atProvider.apply(alphabet));
-                final String name = String.format("adapter=%s,manager=%s", provider, atProvider);
-                variants.addLearnerVariant(name, learner);
+            for (AbstractNamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
+                for (Function<ProceduralInputAlphabet<I>, ATManager<I>> atProvider : atProviders) {
+                    final SBALearner<I, L> learner =
+                            new SBALearner<>(alphabet, mqOracle, (i) -> provider, analyzer, atProvider.apply(alphabet));
+                    final String name =
+                            String.format("adapter=%s,analyzer=%s,manager=%s", provider, analyzer, atProvider);
+                    variants.addLearnerVariant(name, learner);
+                }
             }
         }
     }
