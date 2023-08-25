@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import de.learnlib.algorithms.dhc.mealy.MealyDHC;
 import de.learnlib.algorithms.procedural.SymbolWrapper;
-import de.learnlib.algorithms.procedural.adapter.mealy.DHCAdapterMealy;
 import de.learnlib.algorithms.procedural.adapter.mealy.DiscriminationTreeAdapterMealy;
 import de.learnlib.algorithms.procedural.adapter.mealy.KearnsVaziraniAdapterMealy;
 import de.learnlib.algorithms.procedural.adapter.mealy.LStarBaseAdapterMealy;
@@ -51,7 +51,7 @@ public class SPMMIT extends AbstractSPMMLearnerIT {
         final Builder<I, O> builder = new Builder<>(alphabet, outputAlphabet, mqOracle, variants);
 
         builder.addLearnerVariant(DiscriminationTreeAdapterMealy::new);
-        builder.addLearnerVariant(DHCAdapterMealy::new);
+        builder.addLearnerVariant(MealyDHC::new);
         builder.addLearnerVariant(KearnsVaziraniAdapterMealy::new);
         builder.addLearnerVariant(LStarBaseAdapterMealy::new);
         builder.addLearnerVariant(OptimalTTTAdapterMealy::new);
