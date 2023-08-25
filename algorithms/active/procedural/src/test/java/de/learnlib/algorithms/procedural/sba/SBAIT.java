@@ -25,6 +25,7 @@ import de.learnlib.algorithms.procedural.SymbolWrapper;
 import de.learnlib.algorithms.procedural.adapter.dfa.DiscriminationTreeAdapterDFA;
 import de.learnlib.algorithms.procedural.adapter.dfa.KearnsVaziraniAdapterDFA;
 import de.learnlib.algorithms.procedural.adapter.dfa.LStarBaseAdapterDFA;
+import de.learnlib.algorithms.procedural.adapter.dfa.OptimalTTTAdapterDFA;
 import de.learnlib.algorithms.procedural.adapter.dfa.RivestSchapireAdapterDFA;
 import de.learnlib.algorithms.procedural.adapter.dfa.TTTAdapterDFA;
 import de.learnlib.algorithms.procedural.sba.manager.DefaultATManager;
@@ -50,6 +51,7 @@ public class SBAIT extends AbstractSBALearnerIT {
         builder.addLearnerVariant(DiscriminationTreeAdapterDFA::new);
         builder.addLearnerVariant(KearnsVaziraniAdapterDFA::new);
         builder.addLearnerVariant(LStarBaseAdapterDFA::new);
+        builder.addLearnerVariant(OptimalTTTAdapterDFA::new);
         builder.addLearnerVariant(RivestSchapireAdapterDFA::new);
         builder.addLearnerVariant(TTTAdapterDFA::new);
     }

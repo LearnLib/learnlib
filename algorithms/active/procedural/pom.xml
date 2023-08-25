@@ -48,11 +48,15 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-discrimination-tree</artifactId>
+            <artifactId>learnlib-datastructure-ot</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-ot</artifactId>
+            <artifactId>learnlib-dhc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-discrimination-tree</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
@@ -61,6 +65,10 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-lstar</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-oml</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
