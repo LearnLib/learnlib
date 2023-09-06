@@ -61,9 +61,9 @@ import net.automatalib.words.impl.DefaultVPDAlphabet;
 public final class LearningExamples {
 
     private static final Alphabet<Character> RANDOM_ALPHABET = Alphabets.characters('a', 'c');
-    private static final ProceduralInputAlphabet<Character> SPA_INPUT_ALPHABET =
+    private static final ProceduralInputAlphabet<Character> PROCEDURAL_INPUT_ALPHABET =
             new DefaultProceduralInputAlphabet<>(Alphabets.characters('A', 'F'), Alphabets.characters('a', 'f'), 'R');
-    private static final ProceduralOutputAlphabet<Character> SPA_OUTPUT_ALPHABET =
+    private static final ProceduralOutputAlphabet<Character> PROCEDURAL_OUTPUT_ALPHABET =
             new DefaultProceduralOutputAlphabet<>(Alphabets.characters('u', 'z'), '✗');
     private static final VPDAlphabet<Character> VPD_ALPHABET = new DefaultVPDAlphabet<>(Alphabets.characters('a', 'f'),
                                                                                         Alphabets.characters('1', '3'),
@@ -132,20 +132,20 @@ public final class LearningExamples {
     public static List<SPALearningExample<?>> createSPAExamples() {
         return Arrays.asList(ExamplePalindrome.createExample(),
                              ExampleRandomSPA.createExample(new Random(RANDOM_SEED),
-                                                            SPA_INPUT_ALPHABET,
+                                                            PROCEDURAL_INPUT_ALPHABET,
                                                             PROCEDURE_SIZE));
     }
 
     public static List<SBALearningExample<?>> createSBAExamples() {
         return Collections.singletonList(ExampleRandomSBA.createExample(new Random(RANDOM_SEED),
-                                                                        SPA_INPUT_ALPHABET,
+                                                                        PROCEDURAL_INPUT_ALPHABET,
                                                                         PROCEDURE_SIZE));
     }
 
     public static List<SPMMLearningExample<?, ?>> createSPMMExamples() {
         return Collections.singletonList(ExampleRandomSPMM.createExample(new Random(RANDOM_SEED),
-                                                                         SPA_INPUT_ALPHABET,
-                                                                         SPA_OUTPUT_ALPHABET,
+                                                                         PROCEDURAL_INPUT_ALPHABET,
+                                                                         PROCEDURAL_OUTPUT_ALPHABET,
                                                                          PROCEDURE_SIZE));
     }
 

@@ -24,7 +24,6 @@ import de.learnlib.algorithms.procedural.SymbolWrapper;
 import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -39,19 +38,19 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 class MappingSPMM<S, I, T, O> implements SPMM<S, I, T, O> {
 
-    private final ProceduralInputAlphabet<I> inputAlphabet;
-    private final ProceduralOutputAlphabet<O> outputAlphabet;
+    private final ProceduralInputAlphabet<I> alphabet;
+    private final O errorOutput;
     private final Map<I, SymbolWrapper<I>> mapping;
     private final SPMM<S, SymbolWrapper<I>, T, O> delegate;
 
     private final Map<I, MealyMachine<?, I, ?, O>> procedures;
 
-    MappingSPMM(ProceduralInputAlphabet<I> inputAlphabet,
-                ProceduralOutputAlphabet<O> outputAlphabet,
+    MappingSPMM(ProceduralInputAlphabet<I> alphabet,
+                O errorOutput,
                 Map<I, SymbolWrapper<I>> mapping,
                 SPMM<S, SymbolWrapper<I>, T, O> delegate) {
-        this.inputAlphabet = inputAlphabet;
-        this.outputAlphabet = outputAlphabet;
+        this.alphabet = alphabet;
+        this.errorOutput = errorOutput;
         this.mapping = mapping;
         this.delegate = delegate;
 
@@ -82,12 +81,12 @@ class MappingSPMM<S, I, T, O> implements SPMM<S, I, T, O> {
 
     @Override
     public ProceduralInputAlphabet<I> getInputAlphabet() {
-        return this.inputAlphabet;
+        return this.alphabet;
     }
 
     @Override
-    public ProceduralOutputAlphabet<O> getOutputAlphabet() {
-        return this.outputAlphabet;
+    public O getErrorOutput() {
+        return this.errorOutput;
     }
 
     @Override

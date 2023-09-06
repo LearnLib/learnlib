@@ -35,7 +35,6 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -46,11 +45,11 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
     private final Map<I, Word<I>> terminatingSequences;
 
     private final ProceduralInputAlphabet<I> inputAlphabet;
-    private final ProceduralOutputAlphabet<O> outputAlphabet;
+    private final O errorOutput;
 
-    public OptimizingATManager(ProceduralInputAlphabet<I> inputAlphabet, ProceduralOutputAlphabet<O> outputAlphabet) {
+    public OptimizingATManager(ProceduralInputAlphabet<I> inputAlphabet, O errorOutput) {
         this.inputAlphabet = inputAlphabet;
-        this.outputAlphabet = outputAlphabet;
+        this.errorOutput = errorOutput;
 
         this.accessSequences = Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls());
         this.terminatingSequences = Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls());
@@ -139,7 +138,7 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
             final Word<SymbolWrapper<I>> as = asTransformer.transformAccessSequence(cover);
             final Word<SymbolWrapper<I>> asReturn = as.append(returnSymbol);
 
-            if (!this.outputAlphabet.isErrorSymbol(hyp.computeOutput(asReturn).lastSymbol())) {
+            if (!Objects.equals(this.errorOutput, hyp.computeOutput(asReturn).lastSymbol())) {
                 final Word<I> ts =
                         this.inputAlphabet.expand(as.transform(SymbolWrapper::getDelegate), terminatingSequences::get);
                 if (result == null || result.size() > ts.size()) {
@@ -174,7 +173,7 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
 
                 final int returnIdx = inputAlphabet.findReturnIndex(input, i + 1);
 
-                if (returnIdx > 0 && !this.outputAlphabet.isErrorSymbol(output.getSymbol(returnIdx))) {
+                if (returnIdx > 0 && !Objects.equals(this.errorOutput, output.getSymbol(returnIdx))) {
                     final Word<I> potentialTermSeq = input.subWord(i + 1, returnIdx);
                     final Word<I> currentTermSeq = this.terminatingSequences.get(sym);
 
@@ -203,7 +202,7 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
 
             if (this.inputAlphabet.isCallSymbol(sym)) {
 
-                if (this.outputAlphabet.isErrorSymbol(output.getSymbol(i))) {
+                if (Objects.equals(this.errorOutput, output.getSymbol(i))) {
                     return;
                 }
 

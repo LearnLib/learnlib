@@ -28,7 +28,6 @@ import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 
@@ -190,11 +189,6 @@ public class DefaultLearningExample<I, D, A extends UniversalAutomaton<?, I, ?, 
         @Override
         public ProceduralInputAlphabet<I> getAlphabet() {
             return this.referenceAutomaton.getInputAlphabet();
-        }
-
-        @Override
-        public ProceduralOutputAlphabet<O> getOutputAlphabet() {
-            return this.referenceAutomaton.getOutputAlphabet();
         }
     }
 

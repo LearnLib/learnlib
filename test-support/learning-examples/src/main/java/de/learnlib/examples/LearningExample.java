@@ -27,7 +27,6 @@ import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.VPDAlphabet;
 
 public interface LearningExample<I, A> {
@@ -79,8 +78,6 @@ public interface LearningExample<I, A> {
 
         @Override
         ProceduralInputAlphabet<I> getAlphabet();
-
-        ProceduralOutputAlphabet<O> getOutputAlphabet();
     }
 
     interface OneSEVPALearningExample<I> extends LearningExample<I, OneSEVPA<?, I>> {

@@ -37,18 +37,17 @@ import de.learnlib.testsupport.it.learner.AbstractSPMMLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPMMLearnerVariantList;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
 
 public class SPMMIT extends AbstractSPMMLearnerIT {
 
     @Override
     protected <I, O> void addLearnerVariants(ProceduralInputAlphabet<I> alphabet,
-                                             ProceduralOutputAlphabet<O> outputAlphabet,
+                                             O errorOutput,
                                              MembershipOracle<I, Word<O>> mqOracle,
                                              SPMMLearnerVariantList<I, O> variants) {
 
-        final Builder<I, O> builder = new Builder<>(alphabet, outputAlphabet, mqOracle, variants);
+        final Builder<I, O> builder = new Builder<>(alphabet, errorOutput, mqOracle, variants);
 
         builder.addLearnerVariant(DiscriminationTreeAdapterMealy::new);
         builder.addLearnerVariant(MealyDHC::new);
@@ -61,18 +60,18 @@ public class SPMMIT extends AbstractSPMMLearnerIT {
 
     private static class Builder<I, O> {
 
-        private final ProceduralInputAlphabet<I> inputAlphabet;
-        private final ProceduralOutputAlphabet<O> outputAlphabet;
+        private final ProceduralInputAlphabet<I> alphabet;
+        private final O errorOutput;
         private final MembershipOracle<I, Word<O>> mqOracle;
         private final SPMMLearnerVariantList<I, O> variants;
-        private final List<BiFunction<ProceduralInputAlphabet<I>, ProceduralOutputAlphabet<O>, ATManager<I, O>>> atProviders;
+        private final List<BiFunction<ProceduralInputAlphabet<I>, O, ATManager<I, O>>> atProviders;
 
-        Builder(ProceduralInputAlphabet<I> inputAlphabet,
-                ProceduralOutputAlphabet<O> outputAlphabet,
+        Builder(ProceduralInputAlphabet<I> alphabet,
+                O errorOutput,
                 MembershipOracle<I, Word<O>> mqOracle,
                 SPMMLearnerVariantList<I, O> variants) {
-            this.inputAlphabet = inputAlphabet;
-            this.outputAlphabet = outputAlphabet;
+            this.alphabet = alphabet;
+            this.errorOutput = errorOutput;
             this.mqOracle = mqOracle;
             this.variants = variants;
             this.atProviders = Arrays.asList(DefaultATManager::new, OptimizingATManager::new);
@@ -81,12 +80,12 @@ public class SPMMIT extends AbstractSPMMLearnerIT {
         <L extends MealyLearner<SymbolWrapper<I>, O> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>> void addLearnerVariant(
                 LearnerConstructor<L, SymbolWrapper<I>, Word<O>> provider) {
 
-            for (BiFunction<ProceduralInputAlphabet<I>, ProceduralOutputAlphabet<O>, ATManager<I, O>> atProvider : atProviders) {
-                final SPMMLearner<I, O, L> learner = new SPMMLearner<>(inputAlphabet,
-                                                                       outputAlphabet,
+            for (BiFunction<ProceduralInputAlphabet<I>, O, ATManager<I, O>> atProvider : atProviders) {
+                final SPMMLearner<I, O, L> learner = new SPMMLearner<>(alphabet,
+                                                                       errorOutput,
                                                                        mqOracle,
                                                                        (i) -> provider,
-                                                                       atProvider.apply(inputAlphabet, outputAlphabet));
+                                                                       atProvider.apply(alphabet, errorOutput));
                 final String name = String.format("adapter=%s,manager=%s", provider, atProvider);
                 variants.addLearnerVariant(name, learner);
             }

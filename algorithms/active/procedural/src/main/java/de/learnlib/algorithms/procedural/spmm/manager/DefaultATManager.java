@@ -18,6 +18,7 @@ package de.learnlib.algorithms.procedural.spmm.manager;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
@@ -29,7 +30,6 @@ import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
 
 public class DefaultATManager<I, O> implements ATManager<I, O> {
@@ -38,11 +38,11 @@ public class DefaultATManager<I, O> implements ATManager<I, O> {
     private final Map<I, Word<I>> terminatingSequences;
 
     private final ProceduralInputAlphabet<I> inputAlphabet;
-    private final ProceduralOutputAlphabet<O> outputAlphabet;
+    private final O errorOutput;
 
-    public DefaultATManager(ProceduralInputAlphabet<I> inputAlphabet, ProceduralOutputAlphabet<O> outputAlphabet) {
+    public DefaultATManager(ProceduralInputAlphabet<I> inputAlphabet, O errorOutput) {
         this.inputAlphabet = inputAlphabet;
-        this.outputAlphabet = outputAlphabet;
+        this.errorOutput = errorOutput;
 
         this.accessSequences = Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls());
         this.terminatingSequences = Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls());
@@ -82,7 +82,7 @@ public class DefaultATManager<I, O> implements ATManager<I, O> {
                 final int returnIdx = inputAlphabet.findReturnIndex(input, i + 1);
 
                 if (returnIdx > 0 && !this.terminatingSequences.containsKey(sym) &&
-                    !this.outputAlphabet.isErrorSymbol(output.getSymbol(returnIdx))) {
+                    !Objects.equals(this.errorOutput, output.getSymbol(returnIdx))) {
                     this.terminatingSequences.put(sym, input.subWord(i + 1, returnIdx));
                     newTerms.add(sym);
                 }

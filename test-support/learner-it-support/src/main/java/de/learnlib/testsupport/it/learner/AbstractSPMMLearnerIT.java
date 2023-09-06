@@ -25,8 +25,8 @@ import de.learnlib.oracle.equivalence.spmm.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPMMLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPMMLearnerVariantListImpl;
+import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
 import org.testng.annotations.Factory;
 
@@ -51,30 +51,29 @@ public abstract class AbstractSPMMLearnerIT {
 
     private <I, O> List<SPMMLearnerITCase<I, O>> createAllVariantsITCase(SPMMLearningExample<I, O> example) {
 
-        final MembershipOracle<I, Word<O>> mqOracle = new SimulatorOracle<>(example.getReferenceAutomaton());
+        final SPMM<?, I, ?, O> reference = example.getReferenceAutomaton();
+        final MembershipOracle<I, Word<O>> mqOracle = new SimulatorOracle<>(reference);
         final SPMMLearnerVariantListImpl<I, O> variants = new SPMMLearnerVariantListImpl<>();
-        addLearnerVariants(example.getAlphabet(), example.getOutputAlphabet(), mqOracle, variants);
+        addLearnerVariants(example.getAlphabet(), reference.getErrorOutput(), mqOracle, variants);
 
-        return LearnerITUtil.createExampleITCases(example,
-                                                  variants,
-                                                  new SimulatorEQOracle<>(example.getReferenceAutomaton()));
+        return LearnerITUtil.createExampleITCases(example, variants, new SimulatorEQOracle<>(reference));
     }
 
     /**
      * Adds, for a given setup, all the variants of the DFA learner to be tested to the specified
      * {@link LearnerVariantList variant list}.
      *
-     * @param inputAlphabet
+     * @param alphabet
      *         the input alphabet
-     * @param outputAlphabet
-     *         the output alphabet
+     * @param errorOutput
+     *         the erroneous output symbol
      * @param mqOracle
      *         the membership oracle
      * @param variants
      *         list to add the learner variants to
      */
-    protected abstract <I, O> void addLearnerVariants(ProceduralInputAlphabet<I> inputAlphabet,
-                                                      ProceduralOutputAlphabet<O> outputAlphabet,
+    protected abstract <I, O> void addLearnerVariants(ProceduralInputAlphabet<I> alphabet,
+                                                      O errorOutput,
                                                       MembershipOracle<I, Word<O>> mqOracle,
                                                       SPMMLearnerVariantList<I, O> variants);
 }
