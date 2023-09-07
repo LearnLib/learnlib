@@ -15,6 +15,14 @@
  */
 package de.learnlib.algorithms.procedural;
 
+/**
+ * A utility class to annotate an input symbol with a (boolean) <i>continuable</i> flag.
+ *
+ * @param <I>
+ *         input symbol type
+ *
+ * @author frohme
+ */
 public class SymbolWrapper<I> {
 
     private final I delegate;

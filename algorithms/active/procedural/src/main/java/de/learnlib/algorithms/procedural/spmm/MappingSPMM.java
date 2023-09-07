@@ -27,13 +27,6 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A stack-based implementation for the (instrumented) semantics of a System of Procedural Automata.
- *
- * @param <S>
- *         hypotheses state type
- * @param <I>
- *         input symbol type
- *
  * @author frohme
  */
 class MappingSPMM<S, I, T, O> implements SPMM<S, I, T, O> {

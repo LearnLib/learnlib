@@ -34,6 +34,15 @@ import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * An optimizing {@link ATRManager} that continuously scans positive counterexamples and procedural models in order to
+ * find shorter access, terminating, and return sequences.
+ *
+ * @param <I>
+ *         input symbol type
+ *
+ * @author frohme
+ */
 public class OptimizingATRManager<I> implements ATRManager<I> {
 
     private final Map<I, Word<I>> accessSequences;
@@ -80,9 +89,9 @@ public class OptimizingATRManager<I> implements ATRManager<I> {
     }
 
     @Override
-    public void scanRefinedProcedures(Map<I, ? extends DFA<?, I>> procedures,
-                                      Map<I, ? extends AccessSequenceTransformer<I>> providers,
-                                      Collection<I> inputs) {
+    public void scanProcedures(Map<I, ? extends DFA<?, I>> procedures,
+                               Map<I, ? extends AccessSequenceTransformer<I>> providers,
+                               Collection<I> inputs) {
         if (!procedures.isEmpty()) {
 
             boolean foundImprovements = false;

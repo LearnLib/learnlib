@@ -51,7 +51,7 @@ import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * The learning algorithm for {@link StackSPA}s.
+ * A learning algorithm for {@link SPA}s.
  *
  * @param <I>
  *         input symbol type
@@ -200,9 +200,9 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
             this.subLearners.put(sym, newLearner);
 
             // try to find a shorter terminating sequence for 'sym' before procedure is added to other hypotheses
-            this.atrManager.scanRefinedProcedures(Collections.singletonMap(sym, newLearner.getHypothesisModel()),
-                                                  subLearners,
-                                                  activeAlphabet);
+            this.atrManager.scanProcedures(Collections.singletonMap(sym, newLearner.getHypothesisModel()),
+                                           subLearners,
+                                           activeAlphabet);
             this.activeAlphabet.add(sym);
 
             // add the new procedure (with a possibly shorter ts) to all learners (including the new one)
@@ -212,7 +212,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         }
 
         if (!newProcedures.isEmpty()) {
-            this.atrManager.scanRefinedProcedures(getSubModels(), subLearners, activeAlphabet);
+            this.atrManager.scanProcedures(getSubModels(), subLearners, activeAlphabet);
             return true;
         } else {
             return false;
@@ -236,7 +236,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         while (checkAndEnsureTSConformance(subModels)) {
             refinement = true;
             subModels = getSubModels();
-            this.atrManager.scanRefinedProcedures(subModels, subLearners, activeAlphabet);
+            this.atrManager.scanProcedures(subModels, subLearners, activeAlphabet);
         }
 
         return refinement;

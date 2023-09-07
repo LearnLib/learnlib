@@ -21,20 +21,77 @@ import java.util.Set;
 
 import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.procedural.SPA;
 import net.automatalib.words.Word;
 
+/**
+ * A manager of access, terminating, and return sequences of {@link SPA}s during the learning process.
+ *
+ * @param <I>
+ *         input symbol type
+ *
+ * @author frohme
+ */
 public interface ATRManager<I> {
 
+    /**
+     * Returns an access sequence for the given procedure.
+     *
+     * @param procedure
+     *         the call symbol that identifies the procedure
+     *
+     * @return the access sequence for the given procedure
+     */
     Word<I> getAccessSequence(I procedure);
 
+    /**
+     * Returns a terminating sequence for the given procedure.
+     *
+     * @param procedure
+     *         the call symbol that identifies the procedure
+     *
+     * @return the terminating sequence for the given procedure
+     */
     Word<I> getTerminatingSequence(I procedure);
 
+    /**
+     * Returns a return sequence for the given procedure. Note that the sequence must match the
+     * {@link #getAccessSequence(Object) access sequence} in order to provide an admissible context for query
+     * expansion.
+     *
+     * @param procedure
+     *         the call symbol that identifies the procedure
+     *
+     * @return the return sequence for the given procedure
+     */
     Word<I> getReturnSequence(I procedure);
 
+    /**
+     * Extracts from a positive counterexample (potentially new) access, terminating, and return sequences.
+     *
+     * @param counterexample
+     *         the counterexample
+     *
+     * @return a {@link Set} of procedures (identified by their respective call symbols) for which new access,
+     * terminating, and return sequences could be extracted and for which previously none of the sequences were
+     * available.
+     */
     Set<I> scanPositiveCounterexample(Word<I> counterexample);
 
-    void scanRefinedProcedures(Map<I, ? extends DFA<?, I>> procedures,
-                               Map<I, ? extends AccessSequenceTransformer<I>> providers,
-                               Collection<I> inputs);
+    /**
+     * Scans a set of (hypothesis) procedures in order to potentially extract new access, terminating, and return
+     * sequences.
+     *
+     * @param procedures
+     *         a {@link Map} from call symbols to the respective procedural (hypothesis) models
+     * @param providers
+     *         a {@link Map} from call symbols to {@link AccessSequenceTransformer}s
+     * @param inputs
+     *         a {@link Collection} of input symbols which should be used for finding new access, terminating, and
+     *         return sequences
+     */
+    void scanProcedures(Map<I, ? extends DFA<?, I>> procedures,
+                        Map<I, ? extends AccessSequenceTransformer<I>> providers,
+                        Collection<I> inputs);
 
 }

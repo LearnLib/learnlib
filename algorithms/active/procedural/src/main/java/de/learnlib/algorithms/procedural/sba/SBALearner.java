@@ -53,6 +53,16 @@ import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 
+/**
+ * A learning algorithm for {@link SBA}s.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <L>
+ *         sub-learner type
+ *
+ * @author frohme
+ */
 public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>>
         implements LearningAlgorithm<SBA<?, I>, I, Boolean> {
 
@@ -230,9 +240,9 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
 
             // try to find a shorter terminating sequence for 'sym' before procedure is added to other hypotheses
             final Set<I> newTS =
-                    this.atManager.scanRefinedProcedures(Collections.singletonMap(sym, newLearner.getHypothesisModel()),
-                                                         learners,
-                                                         mapping.values());
+                    this.atManager.scanProcedures(Collections.singletonMap(sym, newLearner.getHypothesisModel()),
+                                                  learners,
+                                                  mapping.values());
 
             for (I call : newTS) {
                 final SymbolWrapper<I> wrapper = new SymbolWrapper<>(call, true);

@@ -32,6 +32,17 @@ import net.automatalib.commons.util.Pair;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 
+/**
+ * A default {@link ATManager} that only extracts initial access and terminating sequences from positive
+ * counterexamples.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ *
+ * @author frohme
+ */
 public class DefaultATManager<I, O> implements ATManager<I, O> {
 
     private final Map<I, Word<I>> accessSequences;
@@ -93,9 +104,9 @@ public class DefaultATManager<I, O> implements ATManager<I, O> {
     }
 
     @Override
-    public Set<I> scanRefinedProcedures(Map<I, ? extends MealyMachine<?, SymbolWrapper<I>, ?, O>> procedures,
-                                        Map<I, ? extends AccessSequenceTransformer<SymbolWrapper<I>>> providers,
-                                        Collection<SymbolWrapper<I>> inputs) {
+    public Set<I> scanProcedures(Map<I, ? extends MealyMachine<?, SymbolWrapper<I>, ?, O>> procedures,
+                                 Map<I, ? extends AccessSequenceTransformer<SymbolWrapper<I>>> providers,
+                                 Collection<SymbolWrapper<I>> inputs) {
         return Collections.emptySet();
     }
 }

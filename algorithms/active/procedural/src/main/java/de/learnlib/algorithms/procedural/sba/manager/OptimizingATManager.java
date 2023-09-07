@@ -37,6 +37,16 @@ import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * An optimizing {@link ATManager} that continuously scans positive counterexamples and procedural models in order to
+ * find shorter access and terminating sequences.
+ *
+ * @param <I>
+ *         input symbol type
+ *
+ * @author frohme
+ */
+
 public class OptimizingATManager<I> implements ATManager<I> {
 
     private final Map<I, Word<I>> accessSequences;
@@ -77,9 +87,9 @@ public class OptimizingATManager<I> implements ATManager<I> {
     }
 
     @Override
-    public Set<I> scanRefinedProcedures(Map<I, ? extends DFA<?, SymbolWrapper<I>>> procedures,
-                                        Map<I, ? extends AccessSequenceTransformer<SymbolWrapper<I>>> providers,
-                                        Collection<SymbolWrapper<I>> inputs) {
+    public Set<I> scanProcedures(Map<I, ? extends DFA<?, SymbolWrapper<I>>> procedures,
+                                 Map<I, ? extends AccessSequenceTransformer<SymbolWrapper<I>>> providers,
+                                 Collection<SymbolWrapper<I>> inputs) {
 
         final Set<I> newTS = new HashSet<>();
         if (!procedures.isEmpty()) {

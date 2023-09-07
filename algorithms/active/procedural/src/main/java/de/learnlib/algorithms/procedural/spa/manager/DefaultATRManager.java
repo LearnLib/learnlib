@@ -27,6 +27,15 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 
+/**
+ * A default {@link ATRManager} that only extracts initial access, terminating, and return sequences from positive
+ * counterexamples.
+ *
+ * @param <I>
+ *         input symbol type
+ *
+ * @author frohme
+ */
 public class DefaultATRManager<I> implements ATRManager<I> {
 
     private final Map<I, Word<I>> accessSequences;
@@ -84,9 +93,9 @@ public class DefaultATRManager<I> implements ATRManager<I> {
     }
 
     @Override
-    public void scanRefinedProcedures(Map<I, ? extends DFA<?, I>> procedures,
-                                      Map<I, ? extends AccessSequenceTransformer<I>> providers,
-                                      Collection<I> inputs) {
+    public void scanProcedures(Map<I, ? extends DFA<?, I>> procedures,
+                               Map<I, ? extends AccessSequenceTransformer<I>> providers,
+                               Collection<I> inputs) {
         // do nothing
     }
 }
