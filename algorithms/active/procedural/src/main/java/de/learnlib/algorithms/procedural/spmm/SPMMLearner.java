@@ -119,6 +119,8 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> defaultQuery) {
 
+        assert this.alphabet.isReturnMatched(defaultQuery.getInput());
+
         boolean changed = this.extractUsefulInformationFromCounterExample(defaultQuery);
 
         while (refineHypothesisInternal(defaultQuery)) {

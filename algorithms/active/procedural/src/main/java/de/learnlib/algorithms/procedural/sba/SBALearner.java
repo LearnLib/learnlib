@@ -118,6 +118,8 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Boolean> defaultQuery) {
 
+        assert this.alphabet.isReturnMatched(defaultQuery.getInput());
+
         boolean changed = this.extractUsefulInformationFromCounterExample(defaultQuery);
 
         while (refineHypothesisInternal(defaultQuery)) {

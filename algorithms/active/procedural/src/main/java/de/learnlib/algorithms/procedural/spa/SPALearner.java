@@ -113,6 +113,8 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Boolean> defaultQuery) {
 
+        assert this.alphabet.isWellMatched(defaultQuery.getInput());
+
         boolean changed = this.extractUsefulInformationFromCounterExample(defaultQuery);
 
         while (refineHypothesisInternal(defaultQuery)) {
