@@ -25,11 +25,12 @@ import de.learnlib.oracle.equivalence.sba.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SBALearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SBALearnerVariantListImpl;
+import net.automatalib.automata.procedural.SBA;
 import net.automatalib.words.ProceduralInputAlphabet;
 import org.testng.annotations.Factory;
 
 /**
- * Abstract integration test for VPDA learning algorithms.
+ * Abstract integration test for {@link SBA} learning algorithms.
  *
  * @author frohme
  */

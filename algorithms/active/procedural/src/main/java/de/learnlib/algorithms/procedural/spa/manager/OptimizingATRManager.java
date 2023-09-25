@@ -36,7 +36,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An optimizing {@link ATRManager} that continuously scans positive counterexamples and procedural models in order to
- * find shorter access, terminating, and return sequences.
+ * find shorter access sequences, terminating sequences, and return sequences.
  *
  * @param <I>
  *         input symbol type

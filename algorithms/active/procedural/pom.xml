@@ -29,7 +29,7 @@ limitations under the License.
 
     <name>LearnLib :: Algorithms :: Procedural</name>
     <description>
-        Active learning algorithms for procedural systems. Currently, contains learners for SPAs, SBAs, and SPMMs including adapters for orchestrating various regular learners of LearnLib to the context-free learning setup.
+        Active learning algorithms for procedural systems. Currently, contains learners for SPAs, SBAs, and SPMMs including adapters for integrating various regular learners of LearnLib in the context-free learning setup.
     </description>
 
     <dependencies>

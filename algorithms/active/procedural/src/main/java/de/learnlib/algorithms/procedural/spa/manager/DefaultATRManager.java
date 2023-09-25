@@ -28,8 +28,8 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 
 /**
- * A default {@link ATRManager} that only extracts initial access, terminating, and return sequences from positive
- * counterexamples.
+ * A default {@link ATRManager} that only extracts initial access sequences, terminating sequences, and return sequences
+ * from positive counterexamples.
  *
  * @param <I>
  *         input symbol type

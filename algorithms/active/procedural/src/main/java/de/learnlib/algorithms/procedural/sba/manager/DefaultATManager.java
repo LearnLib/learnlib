@@ -31,7 +31,7 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 
 /**
- * A default {@link ATManager} that only extracts initial access and terminating sequences from positive
+ * A default {@link ATManager} that only extracts initial access sequences and terminating sequences from positive
  * counterexamples.
  *
  * @param <I>

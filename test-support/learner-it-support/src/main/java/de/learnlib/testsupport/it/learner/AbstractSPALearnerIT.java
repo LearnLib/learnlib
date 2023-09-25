@@ -25,11 +25,12 @@ import de.learnlib.oracle.equivalence.spa.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPALearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPALearnerVariantListImpl;
+import net.automatalib.automata.procedural.SPA;
 import net.automatalib.words.ProceduralInputAlphabet;
 import org.testng.annotations.Factory;
 
 /**
- * Abstract integration test for VPDA learning algorithms.
+ * Abstract integration test for {@link SPA} learning algorithms.
  *
  * @author frohme
  */
@@ -60,8 +61,8 @@ public abstract class AbstractSPALearnerIT {
     }
 
     /**
-     * Adds, for a given setup, all the variants of the DFA learner to be tested to the specified {@link
-     * LearnerVariantList variant list}.
+     * Adds, for a given setup, all the variants of the DFA learner to be tested to the specified
+     * {@link LearnerVariantList variant list}.
      *
      * @param alphabet
      *         the input alphabet

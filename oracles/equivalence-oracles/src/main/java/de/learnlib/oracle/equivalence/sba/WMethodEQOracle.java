@@ -29,8 +29,8 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 
 /**
- * Implements an equivalence test by applying the W-method test on the procedures of the given hypothesis {@link SBA},
- * as described in "Testing software design modeled by finite state machines" by T.S. Chow.
+ * An {@link SBA} version of {@link de.learnlib.oracle.equivalence.WMethodEQOracle} which generates test sequences based
+ * on the {@link SBAWMethodTestsIterator W-method} for each procedure.
  *
  * @param <I>
  *         input symbol type

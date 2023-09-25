@@ -25,7 +25,8 @@ import net.automatalib.automata.procedural.SPA;
 import net.automatalib.words.Word;
 
 /**
- * A manager of access, terminating, and return sequences of {@link SPA}s during the learning process.
+ * A manager of access sequences, terminating sequences, and return sequences of {@link SPA}s during the learning
+ * process.
  *
  * @param <I>
  *         input symbol type
@@ -67,7 +68,8 @@ public interface ATRManager<I> {
     Word<I> getReturnSequence(I procedure);
 
     /**
-     * Extracts from a positive counterexample (potentially new) access, terminating, and return sequences.
+     * Extracts from a positive counterexample (potentially new) access sequences, terminating sequences, and return
+     * sequences.
      *
      * @param counterexample
      *         the counterexample
@@ -79,16 +81,16 @@ public interface ATRManager<I> {
     Set<I> scanPositiveCounterexample(Word<I> counterexample);
 
     /**
-     * Scans a set of (hypothesis) procedures in order to potentially extract new access, terminating, and return
-     * sequences.
+     * Scans a set of (hypothesis) procedures in order to potentially extract new access sequences, terminating
+     * sequences, and return sequences.
      *
      * @param procedures
      *         a {@link Map} from call symbols to the respective procedural (hypothesis) models
      * @param providers
      *         a {@link Map} from call symbols to {@link AccessSequenceTransformer}s
      * @param inputs
-     *         a {@link Collection} of input symbols which should be used for finding new access, terminating, and
-     *         return sequences
+     *         a {@link Collection} of input symbols which should be used for finding new access sequences, terminating
+     *         sequences, and return sequences
      */
     void scanProcedures(Map<I, ? extends DFA<?, I>> procedures,
                         Map<I, ? extends AccessSequenceTransformer<I>> providers,

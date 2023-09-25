@@ -43,6 +43,6 @@ public class SymbolWrapper<I> {
 
     @Override
     public String toString() {
-        return String.valueOf(delegate) + '(' + continuable + ')';
+        return delegate + " (" + continuable + ')';
     }
 }

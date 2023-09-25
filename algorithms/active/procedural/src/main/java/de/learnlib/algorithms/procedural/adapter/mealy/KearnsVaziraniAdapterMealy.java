@@ -24,7 +24,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 /**
- * Adapter for using {@link KearnsVaziraniMealy} as a sub-procedural learner.
+ * Adapter for using {@link KearnsVaziraniMealy} as a procedural learner.
  *
  * @param <I>
  *         input symbol type

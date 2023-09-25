@@ -362,6 +362,6 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
             idx++;
         }
 
-        return -1;
+        throw new IllegalStateException("Non-counterexamples shouldn't be scanned for a mis-match");
     }
 }

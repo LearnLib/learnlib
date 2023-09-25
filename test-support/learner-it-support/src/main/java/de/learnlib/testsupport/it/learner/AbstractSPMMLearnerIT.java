@@ -31,7 +31,7 @@ import net.automatalib.words.Word;
 import org.testng.annotations.Factory;
 
 /**
- * Abstract integration test for VPDA learning algorithms.
+ * Abstract integration test for {@link SPMM} learning algorithms.
  *
  * @author frohme
  */

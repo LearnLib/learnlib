@@ -28,7 +28,7 @@ import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 
 /**
- * A manager of access and terminating sequences of {@link SPMM}s during the learning process.
+ * A manager of access sequences and terminating sequences of {@link SPMM}s during the learning process.
  *
  * @param <I>
  *         input symbol type
@@ -60,7 +60,7 @@ public interface ATManager<I, O> {
     Word<I> getTerminatingSequence(I procedure);
 
     /**
-     * Extracts from a positive counterexample (potentially new) access and terminating sequences.
+     * Extracts from a positive counterexample (potentially new) access sequences and terminating sequences.
      *
      * @param counterexample
      *         the counterexample
@@ -72,15 +72,16 @@ public interface ATManager<I, O> {
     Pair<Set<I>, Set<I>> scanCounterexample(DefaultQuery<I, Word<O>> counterexample);
 
     /**
-     * Scans a set of (hypothesis) procedures in order to potentially extract new access and terminating sequences.
+     * Scans a set of (hypothesis) procedures in order to potentially extract new access sequences and terminating
+     * sequences.
      *
      * @param procedures
      *         a {@link Map} from call symbols to the respective procedural (hypothesis) models
      * @param providers
      *         a {@link Map} from call symbols to {@link AccessSequenceTransformer}s
      * @param inputs
-     *         a {@link Collection} of input symbols which should be used for finding new access, terminating, and
-     *         return sequences
+     *         a {@link Collection} of input symbols which should be used for finding new access sequences, terminating
+     *         sequences, and return sequences
      *
      * @return a {@link Set} of procedures (identified by their respective call symbols) for which terminating sequences
      * could be extracted and for which previously no such sequences were available.
