@@ -137,9 +137,10 @@ public final class LearningExamples {
     }
 
     public static List<SBALearningExample<?>> createSBAExamples() {
-        return Collections.singletonList(ExampleRandomSBA.createExample(new Random(RANDOM_SEED),
-                                                                        PROCEDURAL_INPUT_ALPHABET,
-                                                                        PROCEDURE_SIZE));
+        return Arrays.asList(de.learnlib.examples.sba.ExamplePalindrome.createExample(),
+                             ExampleRandomSBA.createExample(new Random(RANDOM_SEED),
+                                                            PROCEDURAL_INPUT_ALPHABET,
+                                                            PROCEDURE_SIZE));
     }
 
     public static List<SPMMLearningExample<?, ?>> createSPMMExamples() {
