@@ -76,15 +76,9 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
     public SPALearner(ProceduralInputAlphabet<I> alphabet,
                       MembershipOracle<I, Boolean> oracle,
                       LearnerConstructor<L, I, Boolean> learnerConstructor) {
-        this(alphabet, oracle, (i) -> learnerConstructor);
-    }
-
-    public SPALearner(ProceduralInputAlphabet<I> alphabet,
-                      MembershipOracle<I, Boolean> oracle,
-                      Mapping<I, LearnerConstructor<L, I, Boolean>> learnerConstructors) {
         this(alphabet,
              oracle,
-             learnerConstructors,
+             (i) -> learnerConstructor,
              AcexAnalyzers.BINARY_SEARCH_FWD,
              new OptimizingATRManager<>(alphabet));
     }

@@ -197,9 +197,9 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, returnSymbol);
 
         final StackSPMM<?, SymbolWrapper<I>, ?, O> delegate = new StackSPMM<>(mappedAlphabet,
-                                                                              errorOutput,
                                                                               this.mapping.get(initialCallSymbol),
                                                                               initialOutputSymbol,
+                                                                              errorOutput,
                                                                               mappedProcedures);
 
         return new MappingSPMM<>(alphabet, errorOutput, mapping, delegate);
@@ -362,6 +362,6 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
             idx++;
         }
 
-        throw new IllegalStateException("Non-counterexamples shouldn't be scanned for a mis-match");
+        throw new IllegalArgumentException("Non-counterexamples shouldn't be scanned for a mis-match");
     }
 }

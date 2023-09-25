@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.procedural.spmm;
+package de.learnlib.algorithms.procedural.spmm.it;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +27,8 @@ import de.learnlib.algorithms.procedural.adapter.mealy.LStarBaseAdapterMealy;
 import de.learnlib.algorithms.procedural.adapter.mealy.OptimalTTTAdapterMealy;
 import de.learnlib.algorithms.procedural.adapter.mealy.RivestSchapireAdapterMealy;
 import de.learnlib.algorithms.procedural.adapter.mealy.TTTAdapterMealy;
+import de.learnlib.algorithms.procedural.spmm.ATManager;
+import de.learnlib.algorithms.procedural.spmm.SPMMLearner;
 import de.learnlib.algorithms.procedural.spmm.manager.DefaultATManager;
 import de.learnlib.algorithms.procedural.spmm.manager.OptimizingATManager;
 import de.learnlib.api.AccessSequenceTransformer;

@@ -144,10 +144,11 @@ public final class LearningExamples {
     }
 
     public static List<SPMMLearningExample<?, ?>> createSPMMExamples() {
-        return Collections.singletonList(ExampleRandomSPMM.createExample(new Random(RANDOM_SEED),
-                                                                         PROCEDURAL_INPUT_ALPHABET,
-                                                                         PROCEDURAL_OUTPUT_ALPHABET,
-                                                                         PROCEDURE_SIZE));
+        return Arrays.asList(de.learnlib.examples.spmm.ExamplePalindrome.createExample(),
+                             ExampleRandomSPMM.createExample(new Random(RANDOM_SEED),
+                                                             PROCEDURAL_INPUT_ALPHABET,
+                                                             PROCEDURAL_OUTPUT_ALPHABET,
+                                                             PROCEDURE_SIZE));
     }
 
     public static List<OneSEVPALearningExample<?>> createOneSEVPAExamples() {

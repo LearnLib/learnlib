@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.procedural.sba;
+package de.learnlib.algorithms.procedural.spa.it;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,30 +21,31 @@ import java.util.function.Function;
 
 import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
-import de.learnlib.algorithms.procedural.SymbolWrapper;
 import de.learnlib.algorithms.procedural.adapter.dfa.DiscriminationTreeAdapterDFA;
 import de.learnlib.algorithms.procedural.adapter.dfa.KearnsVaziraniAdapterDFA;
 import de.learnlib.algorithms.procedural.adapter.dfa.LStarBaseAdapterDFA;
 import de.learnlib.algorithms.procedural.adapter.dfa.OptimalTTTAdapterDFA;
 import de.learnlib.algorithms.procedural.adapter.dfa.RivestSchapireAdapterDFA;
 import de.learnlib.algorithms.procedural.adapter.dfa.TTTAdapterDFA;
-import de.learnlib.algorithms.procedural.sba.manager.DefaultATManager;
-import de.learnlib.algorithms.procedural.sba.manager.OptimizingATManager;
+import de.learnlib.algorithms.procedural.spa.ATRManager;
+import de.learnlib.algorithms.procedural.spa.SPALearner;
+import de.learnlib.algorithms.procedural.spa.manager.DefaultATRManager;
+import de.learnlib.algorithms.procedural.spa.manager.OptimizingATRManager;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractSBALearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.SBALearnerVariantList;
+import de.learnlib.testsupport.it.learner.AbstractSPALearnerIT;
+import de.learnlib.testsupport.it.learner.LearnerVariantList.SPALearnerVariantList;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
 
-public class SBAIT extends AbstractSBALearnerIT {
+public class SPAIT extends AbstractSPALearnerIT {
 
     @Override
     protected <I> void addLearnerVariants(ProceduralInputAlphabet<I> alphabet,
                                           MembershipOracle<I, Boolean> mqOracle,
-                                          SBALearnerVariantList<I> variants) {
+                                          SPALearnerVariantList<I> variants) {
 
         final Builder<I> builder = new Builder<>(alphabet, mqOracle, variants);
 
@@ -60,25 +61,28 @@ public class SBAIT extends AbstractSBALearnerIT {
 
         private final ProceduralInputAlphabet<I> alphabet;
         private final MembershipOracle<I, Boolean> mqOracle;
-        private final SBALearnerVariantList<I> variants;
-        private final List<Function<ProceduralInputAlphabet<I>, ATManager<I>>> atProviders;
+        private final SPALearnerVariantList<I> variants;
+        private final List<Function<ProceduralInputAlphabet<I>, ATRManager<I>>> atrProviders;
 
-        Builder(ProceduralInputAlphabet<I> alphabet, MembershipOracle<I, Boolean> mqOracle, SBALearnerVariantList<I> variants) {
+        Builder(ProceduralInputAlphabet<I> alphabet, MembershipOracle<I, Boolean> mqOracle, SPALearnerVariantList<I> variants) {
             this.alphabet = alphabet;
             this.mqOracle = mqOracle;
             this.variants = variants;
-            this.atProviders = Arrays.asList(DefaultATManager::new, OptimizingATManager::new);
+            this.atrProviders = Arrays.asList(DefaultATRManager::new, OptimizingATRManager::new);
         }
 
-        <L extends DFALearner<SymbolWrapper<I>> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>> void addLearnerVariant(
-                LearnerConstructor<L, SymbolWrapper<I>, Boolean> provider) {
+        <L extends DFALearner<I> & SupportsGrowingAlphabet<I> & AccessSequenceTransformer<I>> void addLearnerVariant(
+                LearnerConstructor<L, I, Boolean> provider) {
 
             for (AbstractNamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
-                for (Function<ProceduralInputAlphabet<I>, ATManager<I>> atProvider : atProviders) {
-                    final SBALearner<I, L> learner =
-                            new SBALearner<>(alphabet, mqOracle, (i) -> provider, analyzer, atProvider.apply(alphabet));
+                for (Function<ProceduralInputAlphabet<I>, ATRManager<I>> atrProvider : atrProviders) {
+                    final SPALearner<I, L> learner = new SPALearner<>(alphabet,
+                                                                      mqOracle,
+                                                                      (i) -> provider,
+                                                                      analyzer,
+                                                                      atrProvider.apply(alphabet));
                     final String name =
-                            String.format("adapter=%s,analyzer=%s,manager=%s", provider, analyzer, atProvider);
+                            String.format("adapter=%s,analyzer=%s,manager=%s", provider, analyzer, atrProvider);
                     variants.addLearnerVariant(name, learner);
                 }
             }

@@ -17,7 +17,6 @@ package de.learnlib.algorithms.procedural.spmm.manager;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -95,7 +94,8 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
     public Set<I> scanProcedures(Map<I, ? extends MealyMachine<?, SymbolWrapper<I>, ?, O>> procedures,
                                  Map<I, ? extends AccessSequenceTransformer<SymbolWrapper<I>>> providers,
                                  Collection<SymbolWrapper<I>> inputs) {
-        final Set<I> newTS = new HashSet<>();
+
+        final Set<I> newTS = Sets.newHashSetWithExpectedSize(procedures.size());
         if (!procedures.isEmpty()) {
 
             final SymbolWrapper<I> returnSymbol = inputs.stream()
