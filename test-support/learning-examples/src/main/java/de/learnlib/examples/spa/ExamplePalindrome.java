@@ -22,14 +22,14 @@ import de.learnlib.examples.DefaultLearningExample.DefaultSPALearningExample;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.spa.SPA;
-import net.automatalib.automata.spa.StackSPA;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.StackSPA;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.util.automata.fsa.MutableDFAs;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultSPAAlphabet;
+import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 
 public class ExamplePalindrome extends DefaultSPALearningExample<Character> {
 
@@ -44,7 +44,7 @@ public class ExamplePalindrome extends DefaultSPALearningExample<Character> {
     private static SPA<?, Character> createSPA() {
         final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
         final Alphabet<Character> callAlphabet = Alphabets.characters('S', 'T');
-        final SPAAlphabet<Character> alphabet = new DefaultSPAAlphabet<>(internalAlphabet, callAlphabet, 'R');
+        final ProceduralInputAlphabet<Character> alphabet = new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, 'R');
 
         final DFA<?, Character> sProcedure = buildSProcedure(alphabet);
         final DFA<?, Character> tProcedure = buildTProcedure(alphabet);
@@ -56,7 +56,7 @@ public class ExamplePalindrome extends DefaultSPALearningExample<Character> {
         return new StackSPA<>(alphabet, 'S', subModels);
     }
 
-    private static DFA<?, Character> buildSProcedure(SPAAlphabet<Character> alphabet) {
+    private static DFA<?, Character> buildSProcedure(ProceduralInputAlphabet<Character> alphabet) {
 
         final CompactDFA<Character> result = new CompactDFA<>(alphabet.getProceduralAlphabet());
 
@@ -78,7 +78,7 @@ public class ExamplePalindrome extends DefaultSPALearningExample<Character> {
         return result;
     }
 
-    private static DFA<?, Character> buildTProcedure(SPAAlphabet<Character> alphabet) {
+    private static DFA<?, Character> buildTProcedure(ProceduralInputAlphabet<Character> alphabet) {
 
         final FastDFA<Character> result = new FastDFA<>(alphabet.getProceduralAlphabet());
 

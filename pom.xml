@@ -325,7 +325,7 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-spa</artifactId>
+                <artifactId>learnlib-procedural</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

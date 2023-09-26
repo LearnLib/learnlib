@@ -22,7 +22,9 @@ import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.util.mealy.MealyUtil;
 import de.learnlib.util.moore.MooreUtil;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.spa.SPA;
+import net.automatalib.automata.procedural.SBA;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.vpda.OneSEVPA;
@@ -63,6 +65,12 @@ class LearnerVariantListImpl<M, I, D> implements LearnerVariantList<M, I, D> {
 
     public static class SPALearnerVariantListImpl<I> extends LearnerVariantListImpl<SPA<?, I>, I, Boolean>
             implements SPALearnerVariantList<I> {}
+
+    public static class SBALearnerVariantListImpl<I> extends LearnerVariantListImpl<SBA<?, I>, I, Boolean>
+            implements SBALearnerVariantList<I> {}
+
+    public static class SPMMLearnerVariantListImpl<I, O> extends LearnerVariantListImpl<SPMM<?, I, ?, O>, I, Word<O>>
+            implements SPMMLearnerVariantList<I, O> {}
 
     public static class MealySymLearnerVariantListImpl<I, O> implements MealySymLearnerVariantList<I, O> {
 

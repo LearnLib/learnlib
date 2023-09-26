@@ -24,16 +24,22 @@ import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.examples.LearningExample;
 import de.learnlib.examples.LearningExample.OneSEVPALearningExample;
+import de.learnlib.examples.LearningExample.SBALearningExample;
 import de.learnlib.examples.LearningExample.SPALearningExample;
+import de.learnlib.examples.LearningExample.SPMMLearningExample;
 import de.learnlib.examples.LearningExample.UniversalDeterministicLearningExample;
 import de.learnlib.examples.PassiveLearningExample;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.OneSEVPALearnerVariantListImpl;
+import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SBALearnerVariantListImpl;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPALearnerVariantListImpl;
+import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPMMLearnerVariantListImpl;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.FiniteRepresentation;
 import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.automata.spa.SPA;
+import net.automatalib.automata.procedural.SBA;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -87,6 +93,38 @@ public final class LearnerITUtil {
                 variants,
                 eqOracle,
                 SPALearnerITCase::new);
+    }
+
+    /**
+     * Creates a list of per-example test cases for all learner variants.
+     *
+     * @return the list of test cases, one for each example
+     */
+    public static <I> List<SBALearnerITCase<I>> createExampleITCases(SBALearningExample<I> example,
+                                                                     SBALearnerVariantListImpl<I> variants,
+                                                                     EquivalenceOracle<SBA<?, I>, I, Boolean> eqOracle) {
+        // explicit generics are required for correct type-inference
+        return LearnerITUtil.<I, Boolean, SBA<?, I>, SBALearningExample<I>, SBALearnerITCase<I>>createExampleITCasesInternal(
+                example,
+                variants,
+                eqOracle,
+                SBALearnerITCase::new);
+    }
+
+    /**
+     * Creates a list of per-example test cases for all learner variants.
+     *
+     * @return the list of test cases, one for each example
+     */
+    public static <I, O> List<SPMMLearnerITCase<I, O>> createExampleITCases(SPMMLearningExample<I, O> example,
+                                                                     SPMMLearnerVariantListImpl<I, O> variants,
+                                                                     EquivalenceOracle<SPMM<?, I, ?, O>, I, Word<O>> eqOracle) {
+        // explicit generics are required for correct type-inference
+        return LearnerITUtil.<I, Word<O>, SPMM<?, I, ?, O>, SPMMLearningExample<I, O>, SPMMLearnerITCase<I, O>>createExampleITCasesInternal(
+                example,
+                variants,
+                eqOracle,
+                SPMMLearnerITCase::new);
     }
 
     /**

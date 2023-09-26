@@ -19,13 +19,15 @@ import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.spa.SPA;
+import net.automatalib.automata.procedural.SBA;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.transducers.SubsequentialTransducer;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 
@@ -147,7 +149,45 @@ public class DefaultLearningExample<I, D, A extends UniversalAutomaton<?, I, ?, 
         }
 
         @Override
-        public SPAAlphabet<I> getAlphabet() {
+        public ProceduralInputAlphabet<I> getAlphabet() {
+            return this.referenceAutomaton.getInputAlphabet();
+        }
+    }
+
+    public static class DefaultSBALearningExample<I> implements SBALearningExample<I> {
+
+        private final SBA<?, I> referenceAutomaton;
+
+        public DefaultSBALearningExample(SBA<?, I> referenceAutomaton) {
+            this.referenceAutomaton = referenceAutomaton;
+        }
+
+        @Override
+        public SBA<?, I> getReferenceAutomaton() {
+            return this.referenceAutomaton;
+        }
+
+        @Override
+        public ProceduralInputAlphabet<I> getAlphabet() {
+            return this.referenceAutomaton.getInputAlphabet();
+        }
+    }
+
+    public static class DefaultSPMMLearningExample<I, O> implements SPMMLearningExample<I, O> {
+
+        private final SPMM<?, I, ?, O> referenceAutomaton;
+
+        public DefaultSPMMLearningExample(SPMM<?, I, ?, O> referenceAutomaton) {
+            this.referenceAutomaton = referenceAutomaton;
+        }
+
+        @Override
+        public SPMM<?, I, ?, O> getReferenceAutomaton() {
+            return this.referenceAutomaton;
+        }
+
+        @Override
+        public ProceduralInputAlphabet<I> getAlphabet() {
             return this.referenceAutomaton.getInputAlphabet();
         }
     }
