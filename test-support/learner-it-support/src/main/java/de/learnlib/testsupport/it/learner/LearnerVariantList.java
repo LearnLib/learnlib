@@ -22,7 +22,7 @@ import net.automatalib.automata.procedural.SPA;
 import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.automata.vpa.OneSEVPA;
 import net.automatalib.words.Word;
 
 /**

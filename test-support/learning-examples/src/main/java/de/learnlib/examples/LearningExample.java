@@ -24,10 +24,10 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.automata.transducers.SubsequentialTransducer;
-import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.automata.vpa.OneSEVPA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.VPDAlphabet;
+import net.automatalib.words.VPAlphabet;
 
 public interface LearningExample<I, A> {
 
@@ -83,7 +83,7 @@ public interface LearningExample<I, A> {
     interface OneSEVPALearningExample<I> extends LearningExample<I, OneSEVPA<?, I>> {
 
         @Override
-        VPDAlphabet<I> getAlphabet();
+        VPAlphabet<I> getAlphabet();
     }
 
 }

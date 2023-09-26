@@ -47,16 +47,16 @@ import de.learnlib.examples.spa.ExamplePalindrome;
 import de.learnlib.examples.spa.ExampleRandomSPA;
 import de.learnlib.examples.spmm.ExampleRandomSPMM;
 import de.learnlib.examples.sst.ExampleRandomSST;
-import de.learnlib.examples.vpda.ExampleRandomOneSEVPA;
+import de.learnlib.examples.vpa.ExampleRandomOneSEVPA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.ProceduralOutputAlphabet;
-import net.automatalib.words.VPDAlphabet;
+import net.automatalib.words.VPAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.words.impl.DefaultProceduralOutputAlphabet;
-import net.automatalib.words.impl.DefaultVPDAlphabet;
+import net.automatalib.words.impl.DefaultVPAlphabet;
 
 public final class LearningExamples {
 
@@ -65,9 +65,9 @@ public final class LearningExamples {
             new DefaultProceduralInputAlphabet<>(Alphabets.characters('A', 'F'), Alphabets.characters('a', 'f'), 'R');
     private static final ProceduralOutputAlphabet<Character> PROCEDURAL_OUTPUT_ALPHABET =
             new DefaultProceduralOutputAlphabet<>(Alphabets.characters('u', 'z'), '✗');
-    private static final VPDAlphabet<Character> VPD_ALPHABET = new DefaultVPDAlphabet<>(Alphabets.characters('a', 'f'),
-                                                                                        Alphabets.characters('1', '3'),
-                                                                                        Alphabets.characters('7', '9'));
+    private static final VPAlphabet<Character> VP_ALPHABET = new DefaultVPAlphabet<>(Alphabets.characters('a', 'f'),
+                                                                                     Alphabets.characters('1', '3'),
+                                                                                     Alphabets.characters('7', '9'));
     private static final double ACCEPTANCE_PROB = 0.3;
     private static final double RETURN_PROB = 0.3;
 
@@ -153,7 +153,7 @@ public final class LearningExamples {
 
     public static List<OneSEVPALearningExample<?>> createOneSEVPAExamples() {
         return Collections.singletonList(ExampleRandomOneSEVPA.createExample(new Random(RANDOM_SEED),
-                                                                             VPD_ALPHABET,
+                                                                             VP_ALPHABET,
                                                                              RANDOM_SIZE,
                                                                              ACCEPTANCE_PROB,
                                                                              RETURN_PROB));

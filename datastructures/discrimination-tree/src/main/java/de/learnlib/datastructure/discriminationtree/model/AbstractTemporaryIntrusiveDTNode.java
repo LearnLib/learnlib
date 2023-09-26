@@ -24,7 +24,7 @@ import de.learnlib.datastructure.list.IntrusiveListElem;
 /**
  * An extension of the {@link AbstractDTNode} that adds the concept of temporary splitters as well as linking
  * discrimination tree nodes outside of their regular tree structure. Currently used by the TTT algorithm (both regular
- * and VPDA) and the DT algorithm (VPDA variant).
+ * and VPA) and the DT algorithm (VPA variant).
  *
  * @param <DSCR>
  *         discriminator type

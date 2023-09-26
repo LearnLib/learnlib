@@ -25,10 +25,10 @@ import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.transducers.SubsequentialTransducer;
-import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.automata.vpa.OneSEVPA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.VPDAlphabet;
+import net.automatalib.words.VPAlphabet;
 import net.automatalib.words.Word;
 
 /**
@@ -116,10 +116,10 @@ public class DefaultLearningExample<I, D, A extends UniversalAutomaton<?, I, ?, 
 
     public static class DefaultOneSEVPALearningExample<I> implements OneSEVPALearningExample<I> {
 
-        private final VPDAlphabet<I> alphabet;
+        private final VPAlphabet<I> alphabet;
         private final OneSEVPA<?, I> referenceAutomaton;
 
-        public DefaultOneSEVPALearningExample(VPDAlphabet<I> alphabet, OneSEVPA<?, I> referenceAutomaton) {
+        public DefaultOneSEVPALearningExample(VPAlphabet<I> alphabet, OneSEVPA<?, I> referenceAutomaton) {
             this.alphabet = alphabet;
             this.referenceAutomaton = referenceAutomaton;
         }
@@ -130,7 +130,7 @@ public class DefaultLearningExample<I, D, A extends UniversalAutomaton<?, I, ?, 
         }
 
         @Override
-        public VPDAlphabet<I> getAlphabet() {
+        public VPAlphabet<I> getAlphabet() {
             return this.alphabet;
         }
     }

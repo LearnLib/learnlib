@@ -47,7 +47,6 @@ limitations under the License.
                             <exclude>**/ADTLearnerBuilder.class</exclude>
                             <exclude>**/MealyDHCBuilder.class</exclude>
                             <exclude>**/DTLearner*Builder.class</exclude>
-                            <exclude>**/DTLearnerVPDABuilder.class</exclude>
                             <exclude>**/KearnsVazirani*Builder.class</exclude>
                             <exclude>**/ClassicLStar*Builder.class</exclude>
                             <exclude>**/ExtensibleLStar*Builder.class</exclude>
@@ -55,7 +54,6 @@ limitations under the License.
                             <exclude>**/RivestSchapire*Builder.class</exclude>
                             <exclude>**/NLStarLearnerBuilder.class</exclude>
                             <exclude>**/TTTLearner*Builder.class</exclude>
-                            <exclude>**/TTTLearnerVPDABuilder.class</exclude>
 
                             <!-- generated refinements for oracles -->
                             <exclude>de/learnlib/filter/statistic/**/DFA*.class</exclude>
@@ -235,7 +233,7 @@ limitations under the License.
                                     <compilerArgs>
                                         <arg>-J-Xbootclasspath/p:${com.google.errorprone:javac:jar}</arg>
                                         <arg>-AskipDefs=^de.learnlib.algorithms.adt.*|\
-                                                        ^de.learnlib.algorithms.discriminationtree.*.vpda.*|\
+                                                        ^de.learnlib.algorithms.discriminationtree.*.vpa.*|\
                                                         ^de.learnlib.algorithms.ttt.*|\
                                                         ^de.learnlib.datastructure.discriminationtree.*|\
                                         </arg>

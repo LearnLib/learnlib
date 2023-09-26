@@ -40,7 +40,7 @@ import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.procedural.SBA;
 import net.automatalib.automata.procedural.SPA;
 import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.automata.vpa.OneSEVPA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;

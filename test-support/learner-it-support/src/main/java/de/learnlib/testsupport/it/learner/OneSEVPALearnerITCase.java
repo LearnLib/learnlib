@@ -17,7 +17,7 @@ package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.examples.LearningExample.OneSEVPALearningExample;
-import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.automata.vpa.OneSEVPA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
 

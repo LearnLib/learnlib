@@ -300,7 +300,7 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-discrimination-tree-vpda</artifactId>
+                <artifactId>learnlib-discrimination-tree-vpa</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -335,7 +335,7 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-ttt-vpda</artifactId>
+                <artifactId>learnlib-ttt-vpa</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

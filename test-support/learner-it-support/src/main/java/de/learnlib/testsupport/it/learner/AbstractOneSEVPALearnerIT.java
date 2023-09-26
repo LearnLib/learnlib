@@ -21,11 +21,11 @@ import java.util.List;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.examples.LearningExample.OneSEVPALearningExample;
 import de.learnlib.examples.LearningExamples;
-import de.learnlib.oracle.equivalence.vpda.SimulatorEQOracle;
+import de.learnlib.oracle.equivalence.vpa.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.OneSEVPALearnerVariantListImpl;
-import net.automatalib.automata.vpda.OneSEVPA;
-import net.automatalib.words.VPDAlphabet;
+import net.automatalib.automata.vpa.OneSEVPA;
+import net.automatalib.words.VPAlphabet;
 import org.testng.annotations.Factory;
 
 /**
@@ -49,7 +49,7 @@ public abstract class AbstractOneSEVPALearnerIT {
 
     private <I> List<OneSEVPALearnerITCase<I>> createAllVariantsITCase(OneSEVPALearningExample<I> example) {
 
-        final VPDAlphabet<I> alphabet = example.getAlphabet();
+        final VPAlphabet<I> alphabet = example.getAlphabet();
         final MembershipOracle<I, Boolean> mqOracle = new SimulatorOracle<>(example.getReferenceAutomaton());
         final OneSEVPALearnerVariantListImpl<I> variants = new OneSEVPALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, mqOracle, variants);
@@ -70,7 +70,7 @@ public abstract class AbstractOneSEVPALearnerIT {
      * @param variants
      *         list to add the learner variants to
      */
-    protected abstract <I> void addLearnerVariants(VPDAlphabet<I> alphabet,
+    protected abstract <I> void addLearnerVariants(VPAlphabet<I> alphabet,
                                                    MembershipOracle<I, Boolean> mqOracle,
                                                    LearnerVariantList.OneSEVPALearnerVariantList<I> variants);
 }
