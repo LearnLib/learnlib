@@ -186,7 +186,7 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M> implements Passive
      * @return the merges that should be considered for selecting a merge.
      */
     protected Stream<RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>>> selectMerges(Stream<RedBlueMerge<SP, TP, BlueFringePTAState<SP, TP>>> merges) {
-        // by default we are greedy and try to merge the first merge
+        // by default, we are greedy and try to merge the first merge
         return merges;
     }
 

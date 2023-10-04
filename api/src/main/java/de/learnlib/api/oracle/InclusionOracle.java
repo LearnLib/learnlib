@@ -24,10 +24,10 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
 /**
- * Decides whether the language of a given hypothesis is included in some other language (e.g. from a {@link SUL}. If
+ * Decides whether the language of a given hypothesis is included in some other language (e.g., from a {@link SUL}). If
  * the whole language is not included, it provides a counterexample, such that it is a word in the given hypothesis, and
  * not in the other language.
- *
+ * <p>
  * Note that from the perspective of a learner an inclusion oracle is also an equivalence oracle, but a poor one, i.e.
  * an inclusion oracle only implements L(H) ⊆ L(SUL), not L(H) ⊇ L(SUL).
  *

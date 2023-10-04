@@ -623,7 +623,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     /**
      * Verify the proposed ADT replacement by checking the actual behavior of the system under learning. During the
      * verification process, the system under learning may behave differently from what the ADT replacement suggests:
-     * This means a counterexample is witnessed and it is added to the queue of counterexamples for later investigation.
+     * This means a counterexample is witnessed and added to the queue of counterexamples for later investigation.
      * Albeit observing diverging behavior, this method continues to trying to construct a valid ADT using the observed
      * output. If for two states, no distinguishing output can be observed, the states a separated by means of {@link
      * #resolveAmbiguities(ADTNode, ADTNode, ADTState, Set)}.

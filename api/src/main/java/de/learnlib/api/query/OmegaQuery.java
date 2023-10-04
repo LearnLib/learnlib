@@ -27,10 +27,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * strings <i>u</i>, <i>v</i>, this class represents the query of the infinite word <i>uv<sup>ω</sup></i>.
  * <p>
  * When answering OmegaQueries, one needs to specify the periodicity <i>p</i> of the looping suffix <i>v</i>, i.e. for
- * what <i>p</i> the answer contains information about the response to the query <i>uv<sup>p</sup></i> (which can then
+ * what <i>p</i> the answer contains information about the response to the query <i>uv<sup>p</sup></i> which can then
  * be generalized to the infinite case since <i>u(v<sup>p</sup>)<sup>ω</sup></i> = <i>uv<sup>ω</sup></i>.
  * <p>
- * If one cannot determine this value (e.g. because the response exhibits a non periodic pattern), one may specify a
+ * If one cannot determine this value (e.g. because the response exhibits a non-periodic pattern), one may specify a
  * negative value for <i>p</i>. {@link #isUltimatelyPeriodic()} then consequently returns {@code false}. In this case
  * the output of the query ({@link #getOutput()}) may be undefined.
  *

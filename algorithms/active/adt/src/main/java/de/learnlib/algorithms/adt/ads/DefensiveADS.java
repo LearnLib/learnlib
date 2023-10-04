@@ -142,7 +142,6 @@ public final class DefensiveADS<S, I, O> {
 
         splittingWordCandidates.add(Word.epsilon());
 
-        candidateLoop:
         while (!splittingWordCandidates.isEmpty()) {
 
             @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
@@ -158,7 +157,7 @@ public final class DefensiveADS<S, I, O> {
             }
 
             if (cache.contains(currentSetAsBitSet)) {
-                continue candidateLoop;
+                continue;
             }
 
             oneSymbolFuture:
@@ -181,7 +180,7 @@ public final class DefensiveADS<S, I, O> {
                         refinementInput = i;
                     }
 
-                    continue oneSymbolFuture;
+                    continue;
                 }
 
                 // compute successors

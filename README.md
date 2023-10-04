@@ -75,7 +75,7 @@ For developing the code base of LearnLib it is suggested to use one of the major
 
 * For [Eclipse][eclipse]:
   1. **Note**: LearnLib uses annotation processing on several occasions throughout the build process.
-  This is usually handled correctly by Maven, however, for Eclipse you need to install the [m2e-apt-plugin](https://marketplace.eclipse.org/content/m2e-apt) and activate annotation processing afterwards (see the [issue #32](https://github.com/LearnLib/learnlib/issues/32)).
+  This is usually handled correctly by Maven, however, for Eclipse you need to install the [m2e-apt-plugin](https://marketplace.eclipse.org/content/m2e-apt) and activate annotation processing afterward (see the [issue #32](https://github.com/LearnLib/learnlib/issues/32)).
   1. Select `File` -> `Import...` and select "Existing Maven Projects".
   1. Select the folder containing the development checkout as the root directory and click `Finish`.
   1. In order to have both development versions of AutomataLib and LearnLib available at once, continue to import AutomataLib as documented in the project's README.

@@ -131,7 +131,7 @@ public class ObservationTable<I> {
     public List<List<Row<I>>> addSuffixes(List<? extends Word<I>> suffixesToAdd) {
         List<Word<I>> newSuffixes = new ArrayList<>();
 
-        // we change the suffix list afterwards
+        // we change the suffix list afterward
         @SuppressWarnings("PMD.PrematureDeclaration")
         int oldNumSuffixes = suffixes.size();
 

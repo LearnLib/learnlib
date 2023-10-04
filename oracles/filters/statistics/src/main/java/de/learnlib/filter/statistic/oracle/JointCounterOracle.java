@@ -30,8 +30,8 @@ import de.learnlib.buildtool.refinement.annotation.Map;
 import net.automatalib.words.Word;
 
 /**
- * A {@link MembershipOracle} that counts both the number of queries, as well as the total number of symbols occurring
- * in all those queries.
+ * A {@link MembershipOracle} that counts both the number of queries and the total number of symbols occurring in all
+ * those queries.
  *
  * @param <I>
  *         input symbol type

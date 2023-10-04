@@ -175,7 +175,7 @@ public final class ADTUtil {
     }
 
     /**
-     * Utility method that wraps a ADS of type {@link ADSNode} into the equivalent ADS of type {@link ADTNode}.
+     * Utility method that wraps an ADS of type {@link ADSNode} into the equivalent ADS of type {@link ADTNode}.
      *
      * @param node
      *         the root node of the ADS
@@ -312,7 +312,7 @@ public final class ADTUtil {
 
     /**
      * Tries to merge the given (single trace) ADSs (which only contains one leaf) into the given parent ADSs. If
-     * possible, the parent ADS is altered as a side-effect
+     * possible, the parent ADS is altered as a side effect
      *
      * @param parent
      *         the parent ADS in which the given child ADS should be merged into

@@ -38,10 +38,10 @@ import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Word;
 
 /**
- * An abstract super class for aggregating several information/functionality for discrimination trees.
+ * An abstract super class for aggregating some information/functionality for discrimination trees.
  *
  * @param <DSCR>
- *         type of discrimantor
+ *         type of discriminator
  * @param <I>
  *         input symbol type
  * @param <O>

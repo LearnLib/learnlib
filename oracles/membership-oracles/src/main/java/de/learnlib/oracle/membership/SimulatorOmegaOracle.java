@@ -104,7 +104,7 @@ public class SimulatorOmegaOracle<S extends Object, I, D> implements SingleQuery
 
     /**
      * Returns an answer for an {@link OmegaQuery}.
-     *
+     * <p>
      * The output is obtained through the {@link SimulatorOracle}, while the states are obtained by means of creating
      * two access sequences to states in the simulated automaton.
      *

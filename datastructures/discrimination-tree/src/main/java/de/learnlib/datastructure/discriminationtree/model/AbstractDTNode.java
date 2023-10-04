@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * An abstract super class (DAO) for aggregating several information stored in a node of an discrimination tree.
+ * An abstract super class (DAO) for aggregating some information stored in a node of a discrimination tree.
  *
  * @param <DSCR>
  *         discriminator type

@@ -92,7 +92,7 @@ public class SingleReplacer implements SubtreeReplacer {
     }
 
     /**
-     * Try to compute a replacement for a ADT sub-tree that extends the parent ADS.
+     * Try to compute a replacement for an ADT subtree that extends the parent ADS.
      *
      * @param hypothesis
      *         the hypothesis for determining the system behavior

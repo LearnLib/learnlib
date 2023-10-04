@@ -91,7 +91,7 @@ public abstract class AbstractStaticBatchProcessor<Q, P extends BatchProcessor<Q
     @Override
     public void processBatch(Collection<? extends Q> queries) {
         int num = queries.size();
-        if (num <= 0) {
+        if (num == 0) {
             return;
         }
 

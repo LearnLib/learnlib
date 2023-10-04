@@ -35,7 +35,7 @@ public class CounterOracleTest {
 
     @SuppressWarnings("unchecked")
     public CounterOracleTest() {
-        this.oracle = new CounterOracle<>(Mockito.mock(MembershipOracle.class), COUNTER_NAME);
+        this.oracle = new CounterOracle<Object, Object>(Mockito.mock(MembershipOracle.class), COUNTER_NAME);
     }
 
     @Test

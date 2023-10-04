@@ -91,7 +91,7 @@ public final class OTUtils {
     }
 
     /**
-     * Displays the observation table as a HTML document in the default browser.
+     * Displays the observation table as an HTML document in the default browser.
      * <p>
      * This method internally relies on {@link Desktop#browse(java.net.URI)}, hence it will not work if {@link Desktop}
      * is not supported, or if the application is running in headless mode.

@@ -72,7 +72,7 @@ public class MergedAutomatonTest {
         final BlueFringePTAState<Boolean, Void> q4 = pta.getState(Word.fromSymbols(0, 0));
         final BlueFringePTAState<Boolean, Void> q6 = pta.getState(Word.fromSymbols(0, 0, 0));
 
-        // fast forward algorithm
+        // fast-forward algorithm
         pta.init((q) -> {});
         pta.promote(q2, (q) -> {});
         pta.promote(q3, (q) -> {});

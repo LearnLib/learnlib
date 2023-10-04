@@ -221,7 +221,7 @@ public class Example3 {
     }
 
     /**
-     * An implementation of the {@link ReuseCapableOracle} needed for the {@link ReuseOracle}. It only does resets (by
+     * An implementation of the {@link ReuseCapableOracle} needed for the {@link ReuseOracle}. It only does reset by
      * means of creating a new {@link BoundedStringQueue} instance in {@link ReuseCapableOracle#processQuery(Word)}.
      */
     class ReuseCapableImpl implements ReuseCapableOracle<BoundedStringQueue, String, @Nullable String> {
@@ -254,7 +254,7 @@ public class Example3 {
             fullQueries++;
             symbols += trace.size();
 
-            // Suppose the reset would be a time consuming operation
+            // Suppose the reset would be a time-consuming operation
             BoundedStringQueue s = new BoundedStringQueue();
 
             WordBuilder<@Nullable String> output = new WordBuilder<>();

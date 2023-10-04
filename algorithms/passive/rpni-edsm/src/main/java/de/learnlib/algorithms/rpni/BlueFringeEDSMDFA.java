@@ -43,7 +43,7 @@ import net.automatalib.words.Word;
  * pair of nodes that resemble a valid merge, the EDSM variant prioritizes the promotion of states (to be unmergable)
  * and only proceeds to merge states, if there exists at least one mergable blue state for every red state. If such a
  * situation occurs, the algorithm merges the two states whose merge would yield the biggest score (see {@link
- * EDSMUtil#score(UniversalDeterministicAutomaton, List, List)}). Thus the behavior of this algorithm is more passive,
+ * EDSMUtil#score(UniversalDeterministicAutomaton, List, List)}). Thus, the behavior of this algorithm is more passive,
  * or as the name suggest evidence-driven.
  * <p>
  * <b>Implementation note:</b> This implementation does support repeated calls to {@link

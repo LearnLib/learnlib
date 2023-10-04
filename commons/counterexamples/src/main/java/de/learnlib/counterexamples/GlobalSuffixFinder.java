@@ -63,7 +63,7 @@ public interface GlobalSuffixFinder<I, D> {
      * @param oracle
      *         interface to the System Under Learning (SUL).
      *
-     * @return a set of distinguishing suffixes, or the empty set if the counterexample could not be analyzed.
+     * @return a list of distinguishing suffixes, or the empty set if the counterexample could not be analyzed.
      */
     <RI extends I, RD extends D> List<Word<RI>> findSuffixes(Query<RI, RD> ceQuery,
                                                              AccessSequenceTransformer<RI> asTransformer,

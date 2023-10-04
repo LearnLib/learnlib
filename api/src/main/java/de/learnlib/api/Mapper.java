@@ -90,7 +90,7 @@ public interface Mapper<AI, AO, CI, CO> {
     interface SynchronousMapper<AI, AO, CI, CO> extends Mapper<AI, AO, CI, CO> {}
 
     /**
-     * A mapper refinement to establish the contract of a asynchronous, query-wise translation of input words. This
+     * A mapper refinement to establish the contract of an asynchronous, query-wise translation of input words. This
      * means, for a sequence of input symbols, {@link #mapInput(Object)} may be called multiple times before any call to
      * {@link #mapOutput(Object)} occurs.
      * <p>

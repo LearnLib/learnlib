@@ -25,16 +25,21 @@ import net.automatalib.automata.concepts.Output;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A {@link PropertyOracle} that uses {@link InclusionOracle}s and {@link EmptinessOracle}s to find counter examples
- * and disprove properties.
+ * A {@link PropertyOracle} that uses {@link InclusionOracle}s and {@link EmptinessOracle}s to find counter examples and
+ * disprove properties.
+ *
+ * @param <I>
+ *         the input type
+ * @param <A>
+ *         the automaton type
+ * @param <P>
+ *         the property type
+ * @param <D>
+ *         the output type
+ * @param <R>
+ *         the result type of model checker
  *
  * @author Jeroen Meijer
- *
- * @param <I> the input type
- * @param <A> the automaton type
- * @param <P> the property type
- * @param <D> the output type
- * @param <R> the result type of a model checker
  */
 abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends A>
         implements PropertyOracle<I, A, P, D> {

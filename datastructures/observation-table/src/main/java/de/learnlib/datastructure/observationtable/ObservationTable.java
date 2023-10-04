@@ -33,7 +33,7 @@ import org.checkerframework.checker.signedness.qual.Signed;
  * implementation.
  * <p>
  * Instances implementing this interface can be obtained from learning algorithms implementing the {@link
- * ObservationTableFeature observation table feature} (or {@link OTLearner}s.
+ * ObservationTableFeature observation table feature} (or {@link OTLearner}s).
  * <p>
  * Basically, an observation table is a two-dimensional table, where both rows and columns are indexed by {@link Word}s.
  * The row indices are called <i>prefixes</i>, whereas the column indexes are referred to as <i>suffixes</i>. The table
@@ -173,7 +173,7 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
 
     /**
      * Returns the number of distinct (regarding row values) rows in this observation table. This number may be used as
-     * the upper bound for the (content ids of the table rows.
+     * the upper bound for the (content ids of the) table rows.
      *
      * @return the number of distinct rows
      *

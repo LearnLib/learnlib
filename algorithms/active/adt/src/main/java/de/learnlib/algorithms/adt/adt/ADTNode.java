@@ -54,7 +54,7 @@ public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I
      * @return the corresponding child node
      *
      * @throws UnsupportedOperationException
-     *         when invoked on a leaf node (see {@link #getNodeType()}.
+     *         when invoked on a leaf node (see {@link #getNodeType()}).
      */
     ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> prefix);
 

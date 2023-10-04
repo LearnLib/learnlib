@@ -26,17 +26,21 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 
 /**
- * A {@link PropertyOracle} can disprove a property, and used to find a counter example to an hypothesis.
+ * A {@link PropertyOracle} can disprove a property, and used to find a counter example to a hypothesis.
  * <p>
- * Note that a property oracle is also an {@link InclusionOracle} and thus an {@link EquivalenceOracle}, hence it can
- * be use used to find counterexamples to hypotheses.
+ * Note that a property oracle is also an {@link InclusionOracle} and thus an {@link EquivalenceOracle}, hence it can be
+ * use used to find counterexamples to hypotheses.
  * <p>
  * An implementation should keep track of whether the property is already disproved.
  *
- * @param <I> the input type
- * @param <A> the automaton type
- * @param <P> the property type
- * @param <D> the output type
+ * @param <I>
+ *         the input type
+ * @param <A>
+ *         the automaton type
+ * @param <P>
+ *         the property type
+ * @param <D>
+ *         the output type
  *
  * @author Jeroen Meijer
  */
@@ -67,7 +71,7 @@ public interface PropertyOracle<I, A extends Output<I, D>, P, D> extends Inclusi
 
     /**
      * Returns the counterexample for the property if {@link #isDisproved()}, {@code null} otherwise.
-     *
+     * <p>
      * If this method does not return {@code null}, a previous call to {@link #disprove(Output, Collection)} must
      * have returned a {@link DefaultQuery}.
      *

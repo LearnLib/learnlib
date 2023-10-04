@@ -22,7 +22,7 @@ import net.automatalib.words.Word;
 
 /**
  * Base interface for oracles whose semantic is defined in terms of directly answering single queries (like a {@link
- * QueryAnswerer}, and that cannot profit from batch processing of queries.
+ * QueryAnswerer}), and that cannot profit from batch processing of queries.
  * <p>
  * Implementing this class instead of directly implementing {@link MembershipOracle} means that the {@link
  * #answerQuery(Word, Word)} instead of the {@link #processQueries(Collection)} method needs to be implemented.

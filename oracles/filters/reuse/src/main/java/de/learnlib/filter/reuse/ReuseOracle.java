@@ -91,9 +91,9 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
     }
 
     /**
-     * This methods returns the full output to the input query.
+     * This method returns the full output to the input query.
      * <p>
-     * It is possible that the query is already known (answer provided by {@link ReuseTree#getOutput(Word)}, the query
+     * It is possible that the query is already known (answer provided by {@link ReuseTree#getOutput(Word)}), the query
      * is new and no system state could be found for reuse ({@link ReuseCapableOracle#processQuery(Word)} will be
      * invoked) or there exists a prefix that (maybe epsilon) could be reused so save reset invocation ( {@link
      * ReuseCapableOracle#continueQuery(Word, Object)} will be invoked with remaining suffix and the corresponding

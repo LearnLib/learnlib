@@ -32,7 +32,7 @@ public class JointCounterOracleTest {
 
     @SuppressWarnings("unchecked")
     public JointCounterOracleTest() {
-        this.oracle = new JointCounterOracle<>(Mockito.mock(MembershipOracle.class));
+        this.oracle = new JointCounterOracle<Integer, Word<Character>>(Mockito.mock(MembershipOracle.class));
     }
 
     @Test

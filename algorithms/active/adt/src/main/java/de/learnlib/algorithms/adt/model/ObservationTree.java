@@ -167,7 +167,7 @@ public class ObservationTree<S, I, O> {
     /**
      * Registers a new hypothesis state at the observation tree. It is expected to register states in the order of their
      * discovery, meaning whenever a new state is added, information about all prefixes of its access sequence are
-     * already stored. Therefore providing only the output of the last symbol of its access sequence is sufficient.
+     * already stored. Therefore, providing only the output of the last symbol of its access sequence is sufficient.
      *
      * @param newState
      *         the hypothesis state in question

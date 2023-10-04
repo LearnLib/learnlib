@@ -38,14 +38,18 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * A chain of property oracles. Useful when combining multiple model checking strategies to disprove a property, or when
  * finding counter examples to hypotheses.
  * <p>
- * For example you may want to construct a chain that first uses a model checker for monitors, and next, one that uses
+ * For example, you may want to construct a chain that first uses a model checker for monitors, and next, one that uses
  * a model checker for full LTL. This strategy tends to give shorter counter examples for properties, and these counter
  * examples can be found more quickly (as in smaller hypothesis size and less learning queries).
  *
- * @param <I> the input type.
- * @param <A> the automaton type.
- * @param <P> the property type.
- * @param <D> the output type.
+ * @param <I>
+ *         the input type.
+ * @param <A>
+ *         the automaton type.
+ * @param <P>
+ *         the property type.
+ * @param <D>
+ *         the output type.
  *
  * @author Jeroen Meijer
  */

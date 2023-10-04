@@ -38,8 +38,7 @@ public interface ClosingStrategy<I, D> {
      * which is being closed. This corresponds to selecting one of several long prefixes (i.e., transitions reaching an
      * unknown state) to be an access sequence.
      * <p>
-     * By contract, the size of the the returned list <b>must</b> equal the size of the {@code unclosedClasses}
-     * argument.
+     * By contract, the size of the returned list <b>must</b> equal the size of the {@code unclosedClasses} argument.
      *
      * @param unclosedClasses
      *         the list of row equivalence classes

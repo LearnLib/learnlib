@@ -27,12 +27,15 @@ import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Finds counterexamples (to particular claims) to an hypothesis, while generating words that are in the given
+ * Finds counterexamples (to particular claims) to a hypothesis, while generating words that are in the given
  * hypothesis.
  *
- * @param <A> the automaton type
- * @param <I> the input type
- * @param <D> the output type
+ * @param <A>
+ *         the automaton type
+ * @param <I>
+ *         the input type
+ * @param <D>
+ *         the output type
  *
  * @author Jeroen Meijer
  */
@@ -57,7 +60,7 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
      * <p>
      * Implementations could for example return words in a breadth-first, or depth-first manner.
      *
-     * @return the next input word, or {@code null} if t here is no next input.
+     * @return the next input word, or {@code null} if there is no next input.
      */
     @Nullable Word<I> nextInput();
 
@@ -171,7 +174,7 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
     }
 
     /**
-     * Finds a counter example to the given hypothesis. By default the maximum number of queries performed are
+     * Finds a counter example to the given hypothesis. By default, the maximum number of queries performed are
      * {@code hypothesis.size() * getMultiplier()}.
      *
      * @param hypothesis

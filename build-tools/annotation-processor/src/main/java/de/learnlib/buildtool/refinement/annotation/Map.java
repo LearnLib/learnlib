@@ -43,7 +43,7 @@ public @interface Map {
     Class<?> to();
 
     /**
-     * Potential nested type parameters of the replacement (cf. {@link #to()} type. If the replacement type has inner
+     * Potential nested type parameters of the replacement (cf. {@link #to()}) type. If the replacement type has inner
      * type variables use {@link #withComplexGenerics()}.
      *
      * @return potential nested type parameters of the replacement type
@@ -51,8 +51,8 @@ public @interface Map {
     String[] withGenerics() default {};
 
     /**
-     * Potential nested type parameters of the replacement (cf. {@link #to()} type that may contain inner type variables
-     * themselves.
+     * Potential nested type parameters of the replacement (cf. {@link #to()}) type that may contain inner type
+     * variables themselves.
      *
      * @return potential nested type parameters of the replacement type
      */

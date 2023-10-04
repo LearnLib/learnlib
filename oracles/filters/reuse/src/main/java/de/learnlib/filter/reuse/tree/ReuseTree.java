@@ -214,7 +214,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
         for (ReuseEdge<S, I, O> edge : node.getEdges()) {
             if (edge != null) {
                 if (!edge.getTarget().equals(node)) {
-                    // only for non reflexive edges, there are no circles in a tree
+                    // only for non-reflexive edges, there are no circles in a tree
                     disposeSystemStates(edge.getTarget());
                 }
             }
@@ -267,7 +267,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
                 node = sink.getTargetNodeForInput(alphabet.getSymbolIndex(query.getSymbol(i)));
 
                 if (node == null) {
-                    // we have reached longest known prefix
+                    // we have reached the longest known prefix
                     break;
                 }
 
@@ -303,7 +303,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * doing (you may want to create a predefined reuse tree before start learning).
      *
      * @throws ReuseException
-     *         if non deterministic behavior is detected
+     *         if non-deterministic behavior is detected
      */
     public void insert(Word<I> query, ReuseCapableOracle.QueryResult<S, O> queryResult) {
         insert(query, getRoot(), queryResult);
@@ -323,7 +323,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * doing (you may want to create a predefined reuse tree before start learning).
      *
      * @throws ReuseException
-     *         if non deterministic behavior is detected
+     *         if non-deterministic behavior is detected
      */
     public void insert(Word<I> query, ReuseNode<S, I, O> sink, ReuseCapableOracle.QueryResult<S, O> queryResult) {
         if (queryResult == null) {

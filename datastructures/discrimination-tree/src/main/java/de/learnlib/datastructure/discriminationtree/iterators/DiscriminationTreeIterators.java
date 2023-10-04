@@ -71,7 +71,7 @@ public final class DiscriminationTreeIterators {
 
     /**
      * Iterator that traverses all leaves (no inner nodes) of a subtree of a given discrimination tree node.
-     * Additionally allows to specify a transformer that is applied to the leaf nodes
+     * Additionally, allows to specify a transformer that is applied to the leaf nodes
      *
      * @param root
      *         the root node, from which traversal should start

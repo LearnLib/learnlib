@@ -17,8 +17,8 @@ package de.learnlib.filter.reuse.tree;
 
 /**
  * A {@link ReuseEdge} connects two {@link ReuseNode}'s in the {@link ReuseTree} and is labeled with input and output
- * behavior. Please note that a edge may be reflexive if domain knowledge is used (input is invariant and/or output is a
- * failure output).
+ * behavior. Please note that an edge may be reflexive if domain knowledge is used (input is invariant and/or output is
+ * a failure output).
  *
  * @param <S>
  *         system state class
@@ -102,6 +102,6 @@ public class ReuseEdge<S, I, O> {
 
     @Override
     public final String toString() {
-        return source.toString() + " -> " + target.toString() + " i/o " + input + "/" + output;
+        return source + " -> " + target + " i/o " + input + "/" + output;
     }
 }

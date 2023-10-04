@@ -26,7 +26,7 @@ import net.automatalib.words.Word;
 /**
  * Membership oracle interface. A membership oracle provides an elementary abstraction to a System Under Learning (SUL),
  * by allowing to pose {@link Query queries}: A query is a sequence of input symbols (divided into a prefix and a suffix
- * part, cf. {@link Query#getPrefix()} and {@link Query#getSuffix()}, in reaction to which the SUL produces a specific
+ * part, cf. {@link Query#getPrefix()} and {@link Query#getSuffix()}) in reaction to which the SUL produces a specific
  * observable behavior (outputting a word, acceptance/rejection etc.).
  *
  * @author Malte Isberner

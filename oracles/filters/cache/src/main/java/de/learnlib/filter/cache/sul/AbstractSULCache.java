@@ -180,11 +180,6 @@ abstract class AbstractSULCache<I, O, C extends SULCacheState<I, O>>
         }
 
         @Override
-        public boolean canFork() {
-            return false;
-        }
-
-        @Override
         public MealyEquivalenceOracle<I, O> createCacheConsistencyTest() {
             return new MealyCacheConsistencyTest<>(incMealy);
         }

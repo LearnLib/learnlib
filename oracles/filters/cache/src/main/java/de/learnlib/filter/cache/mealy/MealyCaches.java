@@ -130,8 +130,8 @@ public final class MealyCaches {
      * internal cache organization.
      * <p>
      * Note: Due to the dynamic alphabet storage, memory consumption of a dense tree may be higher than normal caches
-     * with a predefined alphabet. However, for sparse data, the memory consumption may be lower as only memory for the
-     * actual data of the tree is allocated.
+     * with a predefined alphabet. However, for sparse data, the memory consumption may be lower than only memory for
+     * the actual data of the tree is allocated.
      *
      * @param mqOracle
      *         the membership oracle
@@ -149,8 +149,8 @@ public final class MealyCaches {
      * internal cache organization.
      * <p>
      * Note: Due to the dynamic alphabet storage, memory consumption of a dense tree may be higher than normal caches
-     * with a predefined alphabet. However, for sparse data, the memory consumption may be lower as only memory for the
-     * actual data of the tree is allocated.
+     * with a predefined alphabet. However, for sparse data, the memory consumption may be lower than only memory for
+     * the actual data of the tree is allocated.
      *
      * @param errorSyms
      *         a mapping for the prefix-closure filter

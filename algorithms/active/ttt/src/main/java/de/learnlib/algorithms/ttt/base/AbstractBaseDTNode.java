@@ -44,12 +44,6 @@ public abstract class AbstractBaseDTNode<I, D>
         return curr.data;
     }
 
-    @Override
-    public AbstractBaseDTNode<I, D> anyChild() {
-        assert isInner();
-        return children.values().iterator().next();
-    }
-
     public Iterable<TTTState<I, D>> subtreeStates() {
         return this::subtreeStatesIterator;
     }

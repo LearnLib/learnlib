@@ -276,7 +276,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
                 final int returnIdx = this.alphabet.findReturnIndex(input, i + 1);
                 final Word<I> projectedRun = this.alphabet.project(input.subWord(i + 1, returnIdx), 0);
                 // whenever we extract a terminating sequence, we can also instantiate a learner.
-                // Therefore the existence of the hypothesis is guaranteed.
+                // Therefore, the existence of the hypothesis is guaranteed.
                 @SuppressWarnings("assignment.type.incompatible")
                 final @NonNull DFA<?, I> hyp = hypotheses.get(sym);
 

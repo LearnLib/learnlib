@@ -22,10 +22,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Renamed `PassiveLearnerVariantTICase` to `PassiveLearnerVariantITCase`
 * The `Resumable` semantics have changed: the returned state object no longer implements `Serializable`. We never fully supported the semantics of the interface and never intended to do so. In fact, the old approach failed miserably if any class was involved where we missed an "implements Serializable" statement. In order to prevent confusion by promising false contracts, implementing this markup interface has been removed. Serialization should now be done in user-land via one of the many external (and more optimizable) serialization frameworks such as FST, XStream, etc. See the in-tree `ResumableExample` for reference.
 * The `ADT` class is no longer initialized with a `leafSplitter` but the `extendLeaf` and `splitLeaf` methods take an additional argument. This allows for a more customizable behavior.
-* The `{DFA,Mealy}CacheOracle`s and the `SULCache` are no longer thread-safe because the intended pipeline of a parallel setup (as suggested by the LearnLib factory methods) consists of a single-threaded cache that delegates to parallel (non-cached) oracles. Here, the synchronization logic only adds unnecessary overhead. In case you want a shared, thread-safe cache (which was currently not conveniently possible to setup) the `learnlib-parallelism` module now contains the `ThreadSafe{DFA,Mealy,SUL}Caches` factories which allow one to construct parallel oracles (whose parameters and return types are tailored towards using our `ParallelOracleBuilders` factory) with a shared cache. See the in-tree `ParallelismExample2` for reference.
+* The `{DFA,Mealy}CacheOracle`s and the `SULCache` are no longer thread-safe because the intended pipeline of a parallel setup (as suggested by the LearnLib factory methods) consists of a single-threaded cache that delegates to parallel (non-cached) oracles. Here, the synchronization logic only adds unnecessary overhead. In case you want a shared, thread-safe cache (which was currently not conveniently possible to set up) the `learnlib-parallelism` module now contains the `ThreadSafe{DFA,Mealy,SUL}Caches` factories which allow one to construct parallel oracles (whose parameters and return types are tailored towards using our `ParallelOracleBuilders` factory) with a shared cache. See the in-tree `ParallelismExample2` for reference.
 * `SymbolQueryCache` now needs to be created via the `MealyCaches` factory.
 * `AbstractTTTHypothesis` has received an additional type parameter for its state type.
-* Removed the (protected) `exposeInternalHypothesis` method on `AbstractAutomatonLStar`. Sub-classes should directly implement the `getHypothesisModel` method.
+* Removed the (protected) `exposeInternalHypothesis` method on `AbstractAutomatonLStar`. Subclasses should directly implement the `getHypothesisModel` method.
 
 
 ### Removed
@@ -55,7 +55,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * The `ParallelOracleBuilders` factory now offers builder methods for `SUL`s, `ObservableSUL`s, `StateLocalInputSUL`s, `MembershipOracles`s and `OmegaMembershipOracle`s to allow an easy (and correct) construction of parallel setups given one of the mentioned implementations.
 * Refactored the following packages/classes:
   * `de.learnlib.oracle.parallelism.ParallelOracleInterruptedException` -> `de.learnlib.api.oracle.parallelism.BatchInterruptedException`
-* The `initialPrefixes` and `initialSuffixes` methods of `AbstractExtensibleAutomatonLStar` are now `final` since these values can be provided via the constructor of the class. This allows one to simplify sub-classes.
+* The `initialPrefixes` and `initialSuffixes` methods of `AbstractExtensibleAutomatonLStar` are now `final` since these values can be provided via the constructor of the class. This allows one to simplify subclasses.
 * Updated to [AutomataLib 0.10.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0)
 
 ### Removed

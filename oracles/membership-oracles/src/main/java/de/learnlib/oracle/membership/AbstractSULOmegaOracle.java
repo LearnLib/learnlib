@@ -32,20 +32,24 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An omega membership oracle for an {@link ObservableSUL}.
- *
+ * <p>
  * The behavior is similar to a {@link SULOracle}, except that this class answers {@link OmegaQuery}s.
- *
+ * <p>
  * After some symbols (i.e. after {@link OmegaQuery#getPrefix()}, and after each {@link OmegaQuery#getLoop()}) the state
  * of the {@link ObservableSUL} is retrieved, and used to answer the query.
- *
+ * <p>
  * This class is <b>not</b> thread-safe.
  *
- * @author Jeroen Meijer
+ * @param <S>
+ *         the state type of the {@link ObservableSUL}
+ * @param <I>
+ *         the input type
+ * @param <O>
+ *         the output type
+ * @param <Q>
+ *         the state information type that is used to answer {@link OmegaQuery}s
  *
- * @param <S> the state type of the {@link ObservableSUL}
- * @param <I> the input type
- * @param <O> the output type
- * @param <Q> the state information type that is used to answer {@link OmegaQuery}s
+ * @author Jeroen Meijer
  */
 public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implements MealyOmegaMembershipOracle<Q, I, O> {
 
@@ -167,7 +171,7 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
      * A {@link AbstractSULOmegaOracle} that uses {@link Object#hashCode()}, and {@link Object#equals(Object)} to test
      * for state equivalence. When the hash codes of two states are equal this class will use two access sequences to
      * move two {@link ObservableSUL}s to those states and perform an equality check.
-     *
+     * <p>
      * The state information used to answer {@link OmegaQuery}s is of type {@link Integer}. The values of those integers
      * are actually hash codes of states of the {@link ObservableSUL}.
      *
@@ -187,8 +191,8 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
 
         /**
          * Constructs a new {@link ShallowCopySULOmegaOracle}, use {@link #newOracle(ObservableSUL)} to create an
-         * instance. This method makes sure the invariants of the {@link ObservableSUL} are satisfied (i.e. the {@link
-         * ObservableSUL} must be forkable, i.e. ({@code {@link SUL#canFork()} == true}.
+         * instance. This method makes sure the invariants of the {@link ObservableSUL} are satisfied (i.e., the {@link
+         * ObservableSUL} must be forkable, i.e. ({@code {@link SUL#canFork()} == true}).
          *
          * @param sul the SUL
          */
@@ -253,7 +257,7 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
     /**
      * A {@link AbstractSULOmegaOracle} for states that are deep copies. When a state is a deep copy, this means we can
      * simply invoke {@link Object#equals(Object)} on both.
-     *
+     * <p>
      * The state information used to answer {@link OmegaQuery}s is of type {@link S}.
      *
      * @author Jeroen Meijer

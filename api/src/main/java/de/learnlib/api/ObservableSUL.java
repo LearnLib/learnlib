@@ -17,7 +17,7 @@ package de.learnlib.api;
 
 /**
  * A System Under Learning (SUL) where at any point in time the internal state can be observed.
- *
+ * <p>
  * The main purpose of this interface is to check whether infinite words are accepted by the SUL.
  *
  * @param <S> the state type
@@ -35,7 +35,7 @@ public interface ObservableSUL<S, I, O> extends SUL<I, O> {
 
     /**
      * Returns the current state of the system.
-     *
+     * <p>
      * Implementation note: it is important that the returned Object has a well-defined {@link Object#equals(Object)}
      * method, and a good {@link Object#hashCode()} function.
      *
@@ -45,10 +45,10 @@ public interface ObservableSUL<S, I, O> extends SUL<I, O> {
 
     /**
      * Returns whether each state retrieved with {@link #getState()} is a deep copy.
-     *
+     * <p>
      * A state is a deep copy if calls to either {@link #step(Object)}, {@link #pre()}, or {@link #post()} do not modify
      * any state previously obtained with {@link #getState()}.
-     *
+     * <p>
      * More formally (assuming a perfect hash function): the result must be false if there is a case where in the
      * following statements the assertion does not hold:
      * {@code Object o = getState(); int hc = o.hashCode(); [step(...)|pre()|post()]; assert o.hashCode() == hc;}

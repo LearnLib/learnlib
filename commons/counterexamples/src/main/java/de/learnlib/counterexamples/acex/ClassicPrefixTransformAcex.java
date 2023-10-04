@@ -28,7 +28,7 @@ import net.automatalib.words.Word;
  * derivatives, the effect of this abstract counterexamples is not directly determined by the system outputs, but
  * instead by whether they match the hypothesis output or not (as described in the paper <a
  * href="jmlr.org/proceedings/papers/v34/isberner14a.pdf"> <i>An Abstract Framework for Counterexample Analysis in
- * Active Automata Learning</i> (M. Isberner, B. Steffen; Proc. ICGI 2014)</a>.
+ * Active Automata Learning</i> (M. Isberner, B. Steffen; Proc. ICGI 2014)</a>).
  *
  * @param <I>
  *         input symbol type

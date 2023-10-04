@@ -27,8 +27,8 @@ import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Decides whether the intersection of the language of a given hypothesis and some other language (e.g. from a {@link
- * SUL} is empty. If the intersection is not empty it provides a counterexample, such that it is a word in the
+ * Decides whether the intersection of the language of a given hypothesis and some other language (e.g., from a {@link
+ * SUL}) is empty. If the intersection is not empty it provides a counterexample, such that it is a word in the
  * intersection. More precisely an emptiness oracle decides whether L(H) ∩ L(SUL) = ∅.
  *
  * @param <A>

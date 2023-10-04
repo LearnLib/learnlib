@@ -27,7 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A PropertyOracle that performs logging.
- *
+ * <p>
  * This class will log whenever the property is disproved, or when a counterexample to an automaton is found (i.e. a
  * spurious counterexample is found).
  *
@@ -85,7 +85,7 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
     public @Nullable DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs) {
         final DefaultQuery<I, D> result = propertyOracle.disprove(hypothesis, inputs);
         if (result != null) {
-            LOGGER.logEvent("Property violated: '" + toString() + "'");
+            LOGGER.logEvent("Property violated: '" + this + "'");
             LOGGER.logQuery("Counter example for property: " + getCounterExample());
         }
 
@@ -101,7 +101,7 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
     public @Nullable DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {
         final DefaultQuery<I, D> result = propertyOracle.findCounterExample(hypothesis, inputs);
         if (result != null) {
-            LOGGER.logEvent("Spurious counterexample found for property: '" + toString() + "'");
+            LOGGER.logEvent("Spurious counterexample found for property: '" + this + "'");
             LOGGER.logCounterexample("Spurious counterexample: " + result);
         }
         return result;

@@ -15,8 +15,6 @@
  */
 package de.learnlib.testsupport;
 
-import java.io.IOException;
-
 import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.EquivalenceOracle;
@@ -83,7 +81,7 @@ public abstract class AbstractResumableLearnerTest<L extends Resumable<T> & Lear
     protected abstract int getRounds();
 
     @Test
-    public void testSuspendAndResumeLearner() throws IOException {
+    public void testSuspendAndResumeLearner() {
         learner.startLearning();
 
         int roundsPre = 0, roundsPost = 0;

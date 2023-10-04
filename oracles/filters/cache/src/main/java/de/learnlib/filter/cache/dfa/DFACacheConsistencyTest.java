@@ -27,7 +27,7 @@ import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * An {@link EquivalenceOracle} that tests an hypothesis for consistency with the contents of a {@link DFACacheOracle}.
+ * An {@link EquivalenceOracle} that tests a hypothesis for consistency with the contents of a {@link DFACacheOracle}.
  *
  * @param <I>
  *         input symbol class

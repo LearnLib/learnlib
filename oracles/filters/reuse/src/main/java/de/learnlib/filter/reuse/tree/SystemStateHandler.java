@@ -16,7 +16,7 @@
 package de.learnlib.filter.reuse.tree;
 
 /**
- * A implementation of this interface that is set to the {@link ReuseTree} (see {@link
+ * AN implementation of this interface that is set to the {@link ReuseTree} (see {@link
  * de.learnlib.filter.reuse.ReuseOracle.ReuseOracleBuilder#withSystemStateHandler(SystemStateHandler)}) will be informed
  * about all removed system states whenever {@link ReuseTree#disposeSystemStates()} gets called.
  * <p>

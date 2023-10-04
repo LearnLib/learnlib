@@ -24,7 +24,7 @@ import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.words.Word;
 
 /**
- * Writes an observation table as a HTML table.
+ * Writes an observation table as an HTML table.
  * <p>
  *
  * @param <I>

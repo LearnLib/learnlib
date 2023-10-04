@@ -111,7 +111,6 @@ public final class Example4 {
 
         // create an LTL property oracle, that also logs stuff
         // also it chains the property oracle that uses monitors and Buchi automata
-        @SuppressWarnings("unchecked")
         DFAPropertyOracle<Character, String> ltl = new DFALoggingPropertyOracle<>(
                 new DFAPropertyOracleChain<>(
                         new DFAFinitePropertyOracle<>("letter==\"b\"", inclusionOracle, emptinessOracle, modelCheckerMonitor),
@@ -119,7 +118,6 @@ public final class Example4 {
 
         // create an equivalence oracle, that first searches for a counter example using the ltl properties, and next
         // with the W-method.
-        @SuppressWarnings("unchecked")
         DFAEquivalenceOracle<Character> eqOracle =
                 new DFAEQOracleChain<>(new DFACExFirstOracle<>(ltl), new DFAWpMethodEQOracle<>(mqOracle, 3));
 

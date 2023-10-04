@@ -38,7 +38,7 @@ public class HistogramOracleTest {
 
     @SuppressWarnings("unchecked")
     public HistogramOracleTest() {
-        this.oracle = new HistogramOracle<>(Mockito.mock(MembershipOracle.class), COUNTER_NAME);
+        this.oracle = new HistogramOracle<Integer, Word<Character>>(Mockito.mock(MembershipOracle.class), COUNTER_NAME);
     }
 
     @Test
