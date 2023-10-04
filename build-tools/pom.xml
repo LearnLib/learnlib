@@ -25,6 +25,7 @@ limitations under the License.
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <groupId>de.learnlib.tooling</groupId>
     <artifactId>learnlib-build-tools-parent</artifactId>
     <packaging>pom</packaging>
 

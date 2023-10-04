@@ -25,6 +25,7 @@ limitations under the License.
         <relativePath>../../build-parent/pom.xml</relativePath>
     </parent>
 
+    <groupId>de.learnlib.tooling</groupId>
     <artifactId>learnlib-annotation-processor</artifactId>
 
     <name>LearnLib :: Annotation Processor</name>

@@ -605,7 +605,7 @@ limitations under the License.
                                     <version>${buildergen.version}</version>
                                 </additionalDependency>
                                 <additionalDependency>
-                                    <groupId>de.learnlib</groupId>
+                                    <groupId>de.learnlib.tooling</groupId>
                                     <artifactId>learnlib-annotation-processor</artifactId>
                                     <version>${project.version}</version>
                                 </additionalDependency>

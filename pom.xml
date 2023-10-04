@@ -399,19 +399,19 @@ limitations under the License.
 
             <!-- build-tools -->
             <dependency>
-                <groupId>de.learnlib</groupId>
+                <groupId>de.learnlib.tooling</groupId>
                 <artifactId>learnlib-build-tools-parent</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>de.learnlib</groupId>
+                <groupId>de.learnlib.tooling</groupId>
                 <artifactId>learnlib-build-config</artifactId>
                 <version>${project.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>de.learnlib</groupId>
+                <groupId>de.learnlib.tooling</groupId>
                 <artifactId>learnlib-annotation-processor</artifactId>
                 <version>${project.version}</version>
                 <scope>provided</scope>

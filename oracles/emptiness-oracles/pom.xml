@@ -18,15 +18,16 @@
         <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-annotation-processor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-util</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>learnlib-annotation-processor</artifactId>
         </dependency>
 
         <!-- external -->
