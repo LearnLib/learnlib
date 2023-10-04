@@ -16,7 +16,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!--
@@ -206,31 +206,29 @@ limitations under the License.
         <javadoc-plugin.conf.release>8</javadoc-plugin.conf.release>
 
         <!-- plugin versions -->
-        <antrun-plugin.version>1.8</antrun-plugin.version>
-        <archetype-plugin.version>3.2.0</archetype-plugin.version>
-        <assembly-plugin.version>3.3.0</assembly-plugin.version>
-        <checkstyle-plugin.version>3.1.2</checkstyle-plugin.version>
-        <compiler-plugin.version>3.8.1</compiler-plugin.version>
+        <antrun-plugin.version>3.1.0</antrun-plugin.version>
+        <archetype-plugin.version>3.2.1</archetype-plugin.version>
+        <assembly-plugin.version>3.6.0</assembly-plugin.version>
+        <checkstyle-plugin.version>3.3.0</checkstyle-plugin.version>
+        <compiler-plugin.version>3.11.0</compiler-plugin.version>
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
-        <dependency-plugin.version>3.1.2</dependency-plugin.version>
-        <deploy-plugin.version>3.0.0-M1</deploy-plugin.version>
-        <enforcer-plugin.version>3.0.0-M3</enforcer-plugin.version>
-        <failsafe-plugin.version>3.0.0-M4</failsafe-plugin.version>
-        <gpg-plugin.version>1.6</gpg-plugin.version>
-        <info-reports-plugin.version>3.1.1</info-reports-plugin.version>
+        <dependency-plugin.version>3.6.0</dependency-plugin.version>
+        <deploy-plugin.version>3.1.1</deploy-plugin.version>
+        <enforcer-plugin.version>3.4.1</enforcer-plugin.version>
+        <failsafe-plugin.version>3.1.2</failsafe-plugin.version>
+        <gpg-plugin.version>3.1.0</gpg-plugin.version>
+        <info-reports-plugin.version>3.4.5</info-reports-plugin.version>
         <jacoco-plugin.version>0.8.8</jacoco-plugin.version>
-        <javadoc-plugin.version>3.1.1</javadoc-plugin.version>
-        <jsr305.version>3.0.2</jsr305.version>
+        <javadoc-plugin.version>3.6.0</javadoc-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <pmd-plugin.version>3.14.0</pmd-plugin.version>
-        <release-plugin.version>3.0.0-M1</release-plugin.version>
-        <resources-plugin.version>3.2.0</resources-plugin.version>
-        <scm-publish-plugin.version>3.0.0</scm-publish-plugin.version>
-        <site-plugin.version>3.9.1</site-plugin.version>
-        <source-plugin.version>3.2.1</source-plugin.version>
-        <spotbugs-plugin.version>4.7.3.4</spotbugs-plugin.version>
-        <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-        <tidy-pom.version>1.1.0</tidy-pom.version>
+        <release-plugin.version>3.0.1</release-plugin.version>
+        <scm-publish-plugin.version>3.2.1</scm-publish-plugin.version>
+        <site-plugin.version>3.12.1</site-plugin.version>
+        <source-plugin.version>3.3.0</source-plugin.version>
+        <spotbugs-plugin.version>4.7.3.6</spotbugs-plugin.version>
+        <surefire-plugin.version>3.1.2</surefire-plugin.version>
+        <tidy-pom.version>1.2.0</tidy-pom.version>
 
         <!-- dependency versions -->
         <ap-commons.version>0.0.2</ap-commons.version>
@@ -238,15 +236,16 @@ limitations under the License.
         <buildergen.version>0.1</buildergen.version>
         <cacio.version>1.10</cacio.version>
         <checkerframework.version>3.7.0</checkerframework.version>
-        <checkstyle.version>8.36.2</checkstyle.version>
+        <checkstyle.version>9.3</checkstyle.version>
         <error-prone.version>9+181-r4173-1</error-prone.version> <!-- required by checkerframework, keep in sync -->
         <guava.version>32.1.2-jre</guava.version>
         <javapoet.version>1.13.0</javapoet.version>
         <jmockit.version>1.49</jmockit.version>
+        <jsr305.version>3.0.2</jsr305.version>
         <logback.version>1.2.9</logback.version>
         <metainf-services.version>1.8</metainf-services.version>
         <mockito.version>4.11.0</mockito.version>
-        <slf4j.version>1.7.30</slf4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
         <testng.version>7.5.1</testng.version>
         <xstream.version>1.4.20</xstream.version>
 
@@ -719,6 +718,14 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>${dependency-plugin.version}</version>
+                    <!--
+                     TODO: Remove once the plugin no longer throws false-positives. Apparently the problem has been
+                           fixed (https://issues.apache.org/jira/projects/MDEP/issues/MDEP-757) but we still run into
+                           this issue.
+                    -->
+                    <configuration>
+                        <ignoreAllNonTestScoped>true</ignoreAllNonTestScoped>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
