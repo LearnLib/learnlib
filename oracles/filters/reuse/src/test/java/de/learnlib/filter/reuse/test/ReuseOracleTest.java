@@ -35,9 +35,6 @@ public class ReuseOracleTest {
 
     private ReuseOracle<Integer, Integer, String> reuseOracle;
 
-    /**
-     * {@inheritDoc}.
-     */
     @BeforeMethod
     protected void setUp() {
         // We don't use this oracle, we directly test against the reuse tree!
@@ -80,7 +77,7 @@ public class ReuseOracleTest {
         return Word.fromSymbols(param);
     }
 
-    @Test(dependsOnMethods = {"testTreeIsEmpty"})
+    @Test(dependsOnMethods = "testTreeIsEmpty")
     public void testTreeIsAbleToCache() {
         // Add one entry (1,ok)
         ReuseCapableOracle.QueryResult<Integer, String> qr = new ReuseCapableOracle.QueryResult<>(getOutput("ok"), 1);
@@ -96,7 +93,7 @@ public class ReuseOracleTest {
         return Word.fromSymbols(param);
     }
 
-    @Test(dependsOnMethods = {"testTreeIsAbleToCache"})
+    @Test(dependsOnMethods = "testTreeIsAbleToCache")
     public void testTreeDoesNotPump() {
         // Add one entry (0,ok)
         ReuseCapableOracle.QueryResult<Integer, String> qr = new ReuseCapableOracle.QueryResult<>(getOutput("ok"), 0);
@@ -161,7 +158,7 @@ public class ReuseOracleTest {
         Assert.assertNull(node);
     }
 
-    @Test(dependsOnMethods = {"testNoReusePossible"})
+    @Test(dependsOnMethods = "testNoReusePossible")
     public void testReusePossibleWithInvalidation() {
         ReuseCapableOracle.QueryResult<Integer, String> qr =
                 new ReuseCapableOracle.QueryResult<>(getOutput("ok", "ok"), 2);
@@ -208,7 +205,7 @@ public class ReuseOracleTest {
         Assert.assertNotNull(node);
     }
 
-    @Test(expectedExceptions = {ReuseException.class})
+    @Test(expectedExceptions = ReuseException.class)
     public void testConflictException() {
         /*
          * Create:

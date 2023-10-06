@@ -36,9 +36,6 @@ public class DomainKnowledgeTest {
 
     private ReuseOracle<Integer, Integer, String> reuseOracle;
 
-    /**
-     * {@inheritDoc}.
-     */
     @BeforeMethod
     protected void setUp() {
         // We don't use this oracle, we directly test against the reuse tree!
@@ -68,7 +65,7 @@ public class DomainKnowledgeTest {
         return Word.fromSymbols(param);
     }
 
-    @Test(dependsOnMethods = {"testPumpSymbolsSimple"})
+    @Test(dependsOnMethods = "testPumpSymbolsSimple")
     public void testPumpSymbolsComplex() {
         // Add one entry (101,ok1 ok0 ok1) where 0 is model invariant
         QueryResult<Integer, String> qr = new QueryResult<>(getOutput("ok1", "ok0", "ok1"), 2);

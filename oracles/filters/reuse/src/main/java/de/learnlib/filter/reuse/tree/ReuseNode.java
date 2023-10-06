@@ -123,7 +123,6 @@ public class ReuseNode<S, I, O> {
         public final int prefixLength;
 
         public NodeResult(ReuseNode<S, I, O> reuseNode, S systemState, int prefixLength) {
-            super();
             this.reuseNode = reuseNode;
             this.systemState = systemState;
             this.prefixLength = prefixLength;

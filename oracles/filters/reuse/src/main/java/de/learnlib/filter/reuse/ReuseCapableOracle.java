@@ -68,7 +68,6 @@ public interface ReuseCapableOracle<S, I, O> {
         public final S newState;
 
         public QueryResult(Word<O> output, S newState) {
-            super();
             this.output = output;
             this.newState = newState;
         }

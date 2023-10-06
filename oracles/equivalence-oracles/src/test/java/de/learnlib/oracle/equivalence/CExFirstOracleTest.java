@@ -35,7 +35,7 @@ public class CExFirstOracleTest {
 
     private AutoCloseable mock;
 
-    @Mock()
+    @Mock
     private PropertyOracle<Boolean, Output<Boolean, Boolean>, Boolean, Boolean> po1;
 
     @Mock

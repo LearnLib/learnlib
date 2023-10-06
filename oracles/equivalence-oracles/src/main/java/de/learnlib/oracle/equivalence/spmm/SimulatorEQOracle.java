@@ -52,4 +52,3 @@ public class SimulatorEQOracle<I, O> implements EquivalenceOracle<SPMM<?, I, ?, 
         return new DefaultQuery<>(sep, spmm.computeOutput(sep));
     }
 }
-

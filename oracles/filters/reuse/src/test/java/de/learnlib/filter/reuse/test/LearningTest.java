@@ -41,9 +41,6 @@ public class LearningTest {
     private ReuseOracle<Integer, Integer, String> reuseOracle;
     private Alphabet<Integer> sigma;
 
-    /**
-     * {@inheritDoc}.
-     */
     @BeforeClass
     protected void setUp() {
         sigma = Alphabets.integers(0, 3);

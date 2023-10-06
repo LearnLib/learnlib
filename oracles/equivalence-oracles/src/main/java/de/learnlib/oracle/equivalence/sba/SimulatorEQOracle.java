@@ -51,4 +51,3 @@ public class SimulatorEQOracle<I> implements EquivalenceOracle<SBA<?, I>, I, Boo
         return new DefaultQuery<>(sep, sba.computeOutput(sep));
     }
 }
-

@@ -110,7 +110,7 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
         private int tempPrefix = -1;
 
         public ExtDTNode() {
-            super();
+            // default constructor
         }
 
         public ExtDTNode(ExtDTNode<I> parent, Boolean parentOut) {

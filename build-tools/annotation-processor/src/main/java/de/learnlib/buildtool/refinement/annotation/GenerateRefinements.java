@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * Container annotation used in {@link GenerateRefinement}s {@link Repeatable} configuration.
  */
 @Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.TYPE})
+@Target(ElementType.TYPE)
 public @interface GenerateRefinements {
 
     GenerateRefinement[] value() default {};

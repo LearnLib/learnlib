@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  */
 @Repeatable(GenerateRefinements.class)
 @Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.TYPE})
+@Target(ElementType.TYPE)
 public @interface GenerateRefinement {
 
     /**

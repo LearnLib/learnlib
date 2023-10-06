@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
-        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
 <!--
     Checkstyle-Configuration: AutomataLib & LearnLib Checkstyle
     Description: Default Checkstyle configuration for AutomataLib and LearnLib
@@ -47,49 +47,81 @@ limitations under the License.
 
     <module name="FileTabCharacter"/>
     <module name="UniqueProperties"/>
+    <module name="NewlineAtEndOfFile"/>
 
     <module name="TreeWalker">
 
-        <!-- Checks for Javadoc comments.                     -->
-        <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <module name="AtclauseOrder">
-            <property name="tagOrder" value="@param, @return, @throws, @deprecated"/>
+        <!-- https://checkstyle.org/checks/annotation/index.html -->
+        <module name="AnnotationUseStyle"/>
+        <module name="MissingDeprecated"/>
+        <module name="MissingOverride"/>
+
+        <!-- https://checkstyle.org/checks/blocks/index.html -->
+        <module name="AvoidNestedBlocks">
+            <property name="allowInSwitchCase" value="true"/>
         </module>
-        <module name="JavadocStyle"/>
-        <module name="NonEmptyAtclauseDescription"/>
-        <module name="AbstractClassName"/>
-        <module name="ClassTypeParameterName">
-            <property name="format" value="^[A-Z][A-Z0-9]*$"/>
+        <module name="EmptyCatchBlock"/>
+        <module name="LeftCurly"/>
+        <module name="NeedBraces"/>
+        <module name="RightCurly">
+            <property name="id" value="RightCurlySame"/>
+            <property name="tokens"
+                      value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_DO"/>
+        </module>
+        <module name="RightCurly">
+            <property name="id" value="RightCurlyAlone"/>
+            <property name="option" value="alone_or_singleline"/>
+            <property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, INSTANCE_INIT"/>
         </module>
 
-        <!-- Checks for Naming Conventions.                  -->
-        <!-- See http://checkstyle.sf.net/config_naming.html -->
-        <module name="ConstantName"/>
-        <module name="LocalFinalVariableName">
-            <property name="format" value="^[a-zA-Z][a-zA-Z0-9]*$"/>
-        </module>
-        <module name="LocalVariableName">
-            <property name="format" value="^[a-zA-Z][a-zA-Z0-9]*$"/>
-        </module>
-        <module name="MemberName"/>
-        <module name="MethodName"/>
-        <module name="MethodTypeParameterName">
-            <property name="format" value="^[A-Z][A-Z0-9]*$"/>
-        </module>
-        <module name="InterfaceTypeParameterName">
-            <property name="format" value="^[A-Z][A-Z0-9]*$"/>
-        </module>
-        <module name="PackageName"/>
-        <module name="ParameterName">
-            <property name="accessModifiers" value="public"/>
-        </module>
-        <module name="StaticVariableName">
-            <property name="format" value="^[a-zA-Z][a-zA-Z0-9]*$"/>
-        </module>
-        <module name="TypeName"/>
+        <!-- https://checkstyle.org/checks/design/index.html -->
+        <module name="FinalClass"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="InnerTypeLast"/>
+        <module name="InterfaceIsType"/>
+        <module name="MutableException"/>
+        <module name="OneTopLevelClass"/>
 
-        <!-- Checks for imports                              -->
-        <!-- See http://checkstyle.sf.net/config_imports.html -->
+        <!-- https://checkstyle.org/checks/coding/index.html -->
+        <module name="AvoidDoubleBraceInitialization"/>
+        <module name="AvoidNoArgumentSuperConstructorCall"/>
+        <module name="CovariantEquals"/>
+        <module name="DeclarationOrder">
+            <property name="ignoreModifiers" value="true"/>
+        </module>
+        <module name="DefaultComesLast"/>
+        <module name="EmptyStatement"/>
+        <module name="EqualsAvoidNull "/>
+        <module name="EqualsHashCode"/>
+        <module name="ExplicitInitialization"/>
+        <module name="IllegalCatch">
+            <property name="illegalClassNames" value="Error, Exception, Throwable, java.lang.Error, java.lang.Exception, java.lang.Throwable"/>
+        </module>
+        <module name="IllegalThrows"/>
+        <module name="InnerAssignment"/>
+        <module name="MagicNumber">
+            <property name="ignoreNumbers" value="-1, 0, 1, 2, 3"/>
+            <property name="constantWaiverParentToken"
+                      value="TYPECAST,METHOD_CALL,EXPR,ARRAY_INIT,UNARY_MINUS,UNARY_PLUS,ELIST,STAR,ASSIGN,PLUS,MINUS,DIV,LITERAL_NEW"/>
+            <property name="ignoreHashCodeMethod" value="true"/>
+        </module>
+        <module name="MissingSwitchDefault"/>
+        <module name="NoArrayTrailingComma"/>
+        <module name="OneStatementPerLine"/>
+        <module name="OverloadMethodsDeclarationOrder"/>
+        <module name="PackageDeclaration"/>
+        <module name="ParameterAssignment"/>
+        <module name="RequireThis"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="StringLiteralEquality"/>
+        <module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/>
+        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
+        <module name="UnnecessarySemicolonInEnumeration"/>
+        <module name="UnnecessarySemicolonInTryWithResources"/>
+        <module name="UnusedLocalVariable"/>
+
+        <!-- https://checkstyle.org/checks/imports/index.html -->
         <module name="AvoidStarImport"/>
         <module name="AvoidStaticImport"/>
         <module name="IllegalImport"/>
@@ -101,95 +133,75 @@ limitations under the License.
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
 
-        <!-- Checks for Size Violations.                    -->
-        <!-- See http://checkstyle.sf.net/config_sizes.html -->
+        <!-- https://checkstyle.org/checks/javadoc/index.html -->
+        <module name="AtclauseOrder">
+            <property name="tagOrder" value="@param, @return, @throws, @deprecated"/>
+        </module>
+        <module name="InvalidJavadocPosition"/>
+        <module name="JavadocContentLocation"/>
+        <module name="JavadocMissingLeadingAsterisk"/>
+        <module name="JavadocMissingWhitespaceAfterAsterisk"/>
+        <module name="JavadocStyle"/>
+        <module name="NonEmptyAtclauseDescription"/>
+        <module name="RequireEmptyLineBeforeBlockTagGroup"/>
+
+        <!-- https://checkstyle.org/checks/misc/index.html -->
+        <module name="ArrayTypeStyle"/>
+        <module name="AvoidEscapedUnicodeCharacters">
+            <property name="allowEscapesForControlCharacters" value="true"/>
+            <property name="allowNonPrintableEscapes" value="true"/>
+        </module>
+        <module name="CommentsIndentation"/>
+        <module name="OuterTypeFilename"/>
+        <module name="UpperEll"/>
+
+        <!-- https://checkstyle.org/checks/modifier/index.html -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+
+        <!-- https://checkstyle.org/checks/naming/index.html -->
+        <module name="AbstractClassName"/>
+        <module name="ClassTypeParameterName">
+            <property name="format" value="^[A-Z][A-Z0-9]*$"/>
+        </module>
+        <module name="ConstantName"/>
+        <module name="InterfaceTypeParameterName">
+            <property name="format" value="^[A-Z][A-Z0-9]*$"/>
+        </module>
+        <module name="LambdaParameterName"/>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+        <module name="MethodName"/>
+        <module name="MethodTypeParameterName">
+            <property name="format" value="^[A-Z][A-Z0-9]*$"/>
+        </module>
+        <module name="PackageName"/>
+        <module name="ParameterName"/>
+        <module name="StaticVariableName">
+            <property name="format" value="^[a-zA-Z][a-zA-Z0-9]*$"/>
+        </module>
+        <module name="TypeName"/>
+
+        <!-- https://checkstyle.org/checks/sizes/index.html -->
         <module name="AnonInnerLength">
             <property name="max" value="100"/>
         </module>
         <module name="OuterTypeNumber"/>
 
-        <!-- Checks for whitespace                               -->
-        <!-- See http://checkstyle.sf.net/config_whitespace.html -->
+        <!-- https://checkstyle.org/checks/whitespace/index.html -->
+        <module name="EmptyForInitializerPad"/>
+        <module name="EmptyForIteratorPad"/>
         <module name="GenericWhitespace"/>
+        <module name="MethodParamPad"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBefore"/>
-        <module name="WhitespaceAfter"/>
         <module name="SingleSpaceSeparator">
             <property name="validateComments" value="true"/>
         </module>
+        <module name="TypecastParenPad"/>
+        <module name="WhitespaceAfter"/>
 
-        <!-- Modifier Checks                                    -->
-        <!-- See http://checkstyle.sf.net/config_modifiers.html -->
-        <module name="ModifierOrder"/>
-        <module name="RedundantModifier"/>
-
-        <!-- Checks for blocks. You know, those {}'s         -->
-        <!-- See http://checkstyle.sf.net/config_blocks.html -->
-        <module name="AvoidNestedBlocks">
-            <property name="allowInSwitchCase" value="true"/>
-        </module>
-        <module name="LeftCurly"/>
-        <module name="NeedBraces"/>
-        <module name="RightCurly">
-            <property name="id" value="RightCurlySame"/>
-            <property name="tokens"
-                      value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_DO"/>
-        </module>
-        <module name="RightCurly">
-            <property name="id" value="RightCurlyAlone"/>
-            <property name="option" value="alone_or_singleline"/>
-            <property name="tokens"
-                      value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, INSTANCE_INIT"/>
-        </module>
-
-        <!-- Checks for common coding problems               -->
-        <!-- See http://checkstyle.sf.net/config_coding.html -->
-        <module name="CovariantEquals"/>
-        <module name="DefaultComesLast"/>
-        <module name="DeclarationOrder">
-            <property name="ignoreModifiers" value="true"/>
-        </module>
-        <module name="EmptyStatement"/>
-        <module name="EqualsHashCode"/>
-        <module name="ExplicitInitialization"/>
-        <module name="IllegalCatch">
-            <property name="illegalClassNames" value="java.lang.Exception, java.lang.Throwable"/>
-        </module>
-        <module name="IllegalThrows"/>
-        <module name="InnerAssignment"/>
-        <module name="MagicNumber">
-            <property name="ignoreNumbers" value="-1, 0, 1, 2, 3"/>
-            <property name="constantWaiverParentToken"
-                      value="TYPECAST,METHOD_CALL,EXPR,ARRAY_INIT,UNARY_MINUS,UNARY_PLUS,ELIST,STAR,ASSIGN,PLUS,MINUS,DIV,LITERAL_NEW"/>
-            <property name="ignoreHashCodeMethod" value="true"/>
-        </module>
-        <module name="MissingSwitchDefault"/>
-        <module name="PackageDeclaration"/>
-        <module name="ParameterAssignment"/>
-        <module name="SimplifyBooleanExpression"/>
-        <module name="SimplifyBooleanReturn"/>
-        <module name="StringLiteralEquality"/>
-        <module name="OneStatementPerLine"/>
-        <module name="OverloadMethodsDeclarationOrder"/>
-
-        <!-- Checks for class design                         -->
-        <!-- See http://checkstyle.sf.net/config_design.html -->
-        <module name="FinalClass"/>
-        <module name="InnerTypeLast"/>
-        <module name="HideUtilityClassConstructor"/>
-        <module name="InterfaceIsType"/>
-        <module name="MutableException"/>
-        <module name="OneTopLevelClass"/>
-
-        <!-- Miscellaneous other checks.                   -->
-        <!-- See http://checkstyle.sf.net/config_misc.html -->
-        <module name="ArrayTypeStyle"/>
-        <module name="CommentsIndentation"/>
-        <module name="UpperEll"/>
-        <module name="OuterTypeFilename"/>
-        <module name="AvoidEscapedUnicodeCharacters">
-            <property name="allowEscapesForControlCharacters" value="true"/>
-            <property name="allowNonPrintableEscapes" value="true"/>
-        </module>
     </module>
+
 </module>

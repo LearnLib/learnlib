@@ -51,4 +51,3 @@ public class SimulatorEQOracle<I> implements EquivalenceOracle<SPA<?, I>, I, Boo
         return new DefaultQuery<>(sep, spa.computeOutput(sep));
     }
 }
-

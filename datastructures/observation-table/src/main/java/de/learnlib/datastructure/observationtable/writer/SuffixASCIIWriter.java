@@ -62,7 +62,6 @@ public class SuffixASCIIWriter<I, D> extends AbstractObservationTableWriter<I, D
     };
 
     public SuffixASCIIWriter() {
-        super();
         super.setWordToString(WORD_TO_STRING);
     }
 
