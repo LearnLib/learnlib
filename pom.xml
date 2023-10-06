@@ -63,6 +63,8 @@ limitations under the License.
             <id>misberner</id>
             <name>Malte Isberner</name>
             <email>malte.isberner@gmail.com</email>
+            <organization>TU Dortmund, Chair for Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer (inactive)</role>
             </roles>
@@ -70,22 +72,10 @@ limitations under the License.
     </developers>
     <contributors>
         <contributor>
-            <name>Stephan Windmüller</name>
-            <email>stephan.windmueller@tu-dortmund.de</email>
-            <roles>
-                <role>Developer</role>
-            </roles>
-        </contributor>
-        <contributor>
-            <name>Maik Merten</name>
-            <email>maikmerten@googlemail.com</email>
-            <roles>
-                <role>Developer</role>
-            </roles>
-        </contributor>
-        <contributor>
             <name>Oliver Bauer</name>
             <email>oliver.bauer@tu-dortmund.de</email>
+            <organization>TU Dortmund, Chair for Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
             </roles>
@@ -96,6 +86,14 @@ limitations under the License.
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer (Graduate)</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>Maren Geske</name>
+            <organization>TU Dortmund, Chair for Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer</role>
             </roles>
         </contributor>
         <contributor>
@@ -110,6 +108,32 @@ limitations under the License.
         <contributor>
             <name>Aleksander Mendoza-Drosik</name>
             <email>aleksander.mendoza.drosik@gmail.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>Maik Merten</name>
+            <email>maikmerten@googlemail.com</email>
+            <organization>TU Dortmund, Chair for Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>Joshua Moerman</name>
+            <organization>Radboud Universiteit, Institute for Computing and Information Sciences</organization>
+            <organizationUrl>https://www.ru.nl/icis/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>Stephan Windmüller</name>
+            <email>stephan.windmueller@tu-dortmund.de</email>
+            <organization>TU Dortmund, Chair for Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
             </roles>
