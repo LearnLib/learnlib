@@ -36,10 +36,6 @@ import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Word;
 
-/**
- * @author fhowar
- * @author frohme
- */
 public abstract class AbstractAbstractionTree<AI, CI, D>
         implements Abstraction<AI, CI>, GraphViewable, Graph<Node, Node> {
 

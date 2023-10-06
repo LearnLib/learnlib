@@ -64,8 +64,6 @@ import net.automatalib.words.Word;
  *      .withPoolPolicy(PoolPolicy.CACHED)
  *      .create();
  * </pre>
- *
- * @author Malte Isberner
  */
 public final class ParallelOracleBuilders {
 

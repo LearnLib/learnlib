@@ -31,8 +31,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class OptimalTTTAdapterMealy<I, O> extends OptimalTTTMealy<I, O> implements AccessSequenceTransformer<I> {
 

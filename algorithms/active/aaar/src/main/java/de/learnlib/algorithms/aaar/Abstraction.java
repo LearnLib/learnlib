@@ -23,9 +23,6 @@ package de.learnlib.algorithms.aaar;
  *         abstract input symbol type
  * @param <CI>
  *         concrete input symbol type
- *
- * @author fhowar
- * @author frohme
  */
 public interface Abstraction<AI, CI> {
 

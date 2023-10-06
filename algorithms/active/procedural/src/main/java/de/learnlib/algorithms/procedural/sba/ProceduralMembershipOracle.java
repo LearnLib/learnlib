@@ -27,9 +27,6 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-/**
- * @author frohme
- */
 class ProceduralMembershipOracle<I> implements MembershipOracle<SymbolWrapper<I>, Boolean> {
 
     private final ProceduralInputAlphabet<I> alphabet;

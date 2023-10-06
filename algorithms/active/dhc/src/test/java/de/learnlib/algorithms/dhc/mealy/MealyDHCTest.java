@@ -38,9 +38,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author merten
- */
 public class MealyDHCTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MealyDHCTest.class);

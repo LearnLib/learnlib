@@ -33,8 +33,6 @@ import de.learnlib.api.oracle.SymbolQueryOracle;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public class SULSymbolQueryOracle<I, O> implements SymbolQueryOracle<I, O> {
 

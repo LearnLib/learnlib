@@ -26,9 +26,6 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.ProceduralInputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author frohme
- */
 class MappingSPMM<S, I, T, O> implements SPMM<S, I, T, O> {
 
     private final ProceduralInputAlphabet<I> alphabet;

@@ -37,8 +37,6 @@ import net.automatalib.words.Word;
  *         the input type
  * @param <D>
  *         the output type
- *
- * @author Jeroen Meijer
  */
 public interface InclusionOracle<A extends Output<I, D>, I, D> extends EquivalenceOracle<A, I, D> {
 

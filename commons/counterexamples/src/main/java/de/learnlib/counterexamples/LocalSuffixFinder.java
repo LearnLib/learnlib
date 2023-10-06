@@ -45,8 +45,6 @@ import net.automatalib.automata.concepts.SuffixOutput;
  *         input symbol type upper bound
  * @param <D>
  *         output domain type upper bound
- *
- * @author Malte Isberner
  */
 public interface LocalSuffixFinder<I, D> {
 

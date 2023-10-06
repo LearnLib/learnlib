@@ -35,8 +35,6 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * An example showcasing the usage of learning partial systems using the {@link StateLocalInputSUL} interface.
- *
- * @author frohme
  */
 @SuppressWarnings("PMD.SystemPrintln")
 public final class Example1 {

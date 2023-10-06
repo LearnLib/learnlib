@@ -21,9 +21,6 @@ import de.learnlib.testsupport.AbstractGrowingAlphabetMooreTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public class MalerPnueliMooreGrowingAlphabetTest
         extends AbstractGrowingAlphabetMooreTest<MalerPnueliMoore<Character, Character>> {
 

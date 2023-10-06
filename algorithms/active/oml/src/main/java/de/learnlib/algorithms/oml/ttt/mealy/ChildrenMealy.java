@@ -25,9 +25,6 @@ import de.learnlib.algorithms.oml.ttt.dt.DTInnerNode;
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author fhowar
- */
 class ChildrenMealy<I, D> implements Children<I, D> {
 
     private final Map<D, AbstractDTNode<I, D>> children = new HashMap<>();

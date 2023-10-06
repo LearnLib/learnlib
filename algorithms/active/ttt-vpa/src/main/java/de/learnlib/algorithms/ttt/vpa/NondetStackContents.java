@@ -20,9 +20,6 @@ import java.util.Set;
 
 import net.automatalib.automata.vpa.StackContents;
 
-/**
- * @author Malte Isberner
- */
 final class NondetStackContents {
 
     private final Set<Integer> syms;

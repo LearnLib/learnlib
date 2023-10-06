@@ -36,8 +36,6 @@ import org.testng.annotations.Test;
  *         output domain type
  * @param <M>
  *         inferred model type
- *
- * @author frohme
  */
 public final class PassiveLearnerVariantITCase<I, D, M extends SuffixOutput<I, D>> implements ITest {
 

@@ -28,8 +28,6 @@ import net.automatalib.words.Alphabet;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author frohme
  */
 public interface LearnerConstructor<L extends LearningAlgorithm<?, I, D>, I, D> {
 

@@ -25,8 +25,6 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * This class provides the example used in the paper ''Inferring Mealy Machines'' by Muzammil Shahbaz and Roland Groz
  * (see Figure 1).
- *
- * @author Oliver Bauer
  */
 public class ExampleShahbazGroz extends DefaultMealyLearningExample<Character, String> {
 

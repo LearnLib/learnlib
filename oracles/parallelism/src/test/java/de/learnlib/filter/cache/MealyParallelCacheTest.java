@@ -33,9 +33,6 @@ import net.automatalib.words.Word;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 
-/**
- * @author frohme
- */
 public class MealyParallelCacheTest
         extends AbstractParallelCacheTest<MealyMachine<?, Character, ?, Character>, Character, Word<Character>> {
 

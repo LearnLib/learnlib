@@ -52,8 +52,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol class
  * @param <O>
  *         output symbol class
- *
- * @author Oliver Bauer
  */
 public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I, O>, @Nullable ReuseEdge<S, I, O>> {
 

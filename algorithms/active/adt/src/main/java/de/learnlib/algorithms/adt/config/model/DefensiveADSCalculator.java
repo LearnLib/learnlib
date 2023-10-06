@@ -23,9 +23,6 @@ import de.learnlib.algorithms.adt.api.PartialTransitionAnalyzer;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public interface DefensiveADSCalculator {
 
     <S, I, O> Optional<ADTNode<S, I, O>> compute(MealyMachine<S, I, ?, O> automaton,

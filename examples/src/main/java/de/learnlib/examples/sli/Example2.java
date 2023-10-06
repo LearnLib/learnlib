@@ -48,8 +48,6 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * An example showcasing the performance impact of the {@link StateLocalInputSUL} interface compared to the regular
  * {@link SUL} interface which continues querying over potentially undefined transitions.
- *
- * @author frohme
  */
 @SuppressWarnings("PMD.SystemPrintln")
 public final class Example2 {

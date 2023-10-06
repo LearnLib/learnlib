@@ -29,8 +29,6 @@ import net.automatalib.modelchecking.ModelChecker.DFAModelChecker;
  *         the input type
  * @param <P>
  *         the property type
- *
- * @author Jeroen Meijer
  */
 public class DFAFinitePropertyOracle<I, P> extends AbstractPropertyOracle<I, DFA<?, I>, P, Boolean, DFA<?, I>>
         implements DFAPropertyOracle<I, P> {

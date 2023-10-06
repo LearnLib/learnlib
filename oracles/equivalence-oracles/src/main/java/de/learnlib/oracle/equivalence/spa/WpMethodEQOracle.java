@@ -35,8 +35,6 @@ import net.automatalib.words.Word;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class WpMethodEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, I, Boolean> {
 

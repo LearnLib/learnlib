@@ -22,8 +22,6 @@ import de.learnlib.api.Resumable;
 
 /**
  * Utility functions for {@link Resumable} features.
- *
- * @author frohme
  */
 public final class ResumeUtils {
 

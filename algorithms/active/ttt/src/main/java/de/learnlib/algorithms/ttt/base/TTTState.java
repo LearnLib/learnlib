@@ -24,8 +24,6 @@ import net.automatalib.words.Word;
  *
  * @param <I>
  *         input symbol
- *
- * @author Malte Isberner
  */
 public class TTTState<I, D> implements AccessSequenceProvider<I> {
 

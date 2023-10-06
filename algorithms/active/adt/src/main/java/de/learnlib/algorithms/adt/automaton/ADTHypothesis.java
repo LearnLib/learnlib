@@ -29,8 +29,6 @@ import net.automatalib.words.Word;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public class ADTHypothesis<I, O> extends AbstractFastMutableDet<ADTState<I, O>, I, ADTTransition<I, O>, Void, O>
         implements MutableMealyMachine<ADTState<I, O>, I, ADTTransition<I, O>, O>, AccessSequenceTransformer<I> {

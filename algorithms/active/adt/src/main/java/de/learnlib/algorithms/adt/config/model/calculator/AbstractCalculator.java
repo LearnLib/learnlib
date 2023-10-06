@@ -25,9 +25,6 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public abstract class AbstractCalculator implements ADSCalculator {
 
     @Override

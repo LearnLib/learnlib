@@ -46,8 +46,6 @@ import org.slf4j.LoggerFactory;
  *         state property type
  * @param <TP>
  *         transition property type
- *
- * @author Malte Isberner
  */
 public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends MutableDeterministic<S, I, T, SP, TP> & SupportsGrowingAlphabet<I>>
         extends AbstractLStar<A, I, D> implements Resumable<AutomatonLStarState<I, D, AI, S>> {

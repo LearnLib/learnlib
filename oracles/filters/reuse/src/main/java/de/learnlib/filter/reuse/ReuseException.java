@@ -18,8 +18,6 @@ package de.learnlib.filter.reuse;
 /**
  * This exception will be thrown whenever some nondeterministic behavior in the reuse tree is detected when inserting
  * new queries.
- *
- * @author Oliver Bauer
  */
 public class ReuseException extends IllegalArgumentException {
 

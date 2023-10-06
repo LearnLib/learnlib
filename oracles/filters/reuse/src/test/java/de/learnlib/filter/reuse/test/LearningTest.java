@@ -35,8 +35,6 @@ import org.testng.annotations.Test;
 
 /**
  * Simple learning test that shows who to use the reuse oracle.
- *
- * @author Oliver Bauer
  */
 public class LearningTest {
 

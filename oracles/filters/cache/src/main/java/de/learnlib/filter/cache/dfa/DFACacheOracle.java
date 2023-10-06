@@ -47,8 +47,6 @@ import org.slf4j.LoggerFactory;
  *
  * @param <I>
  *         input symbol class
- *
- * @author Malte Isberner
  */
 public class DFACacheOracle<I>
         implements DFALearningCacheOracle<I>, SupportsGrowingAlphabet<I>, Resumable<DFACacheOracleState<I>> {

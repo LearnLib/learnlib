@@ -18,8 +18,6 @@ package de.learnlib.algorithms.discriminationtree.hypothesis.vpa;
 /**
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class HypIntTrans<I> extends AbstractHypTrans<I> {
 

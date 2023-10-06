@@ -27,9 +27,6 @@ import net.automatalib.words.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class StateLocalInputSULTreeCacheTest
         extends AbstractCacheTest<SULLearningCacheOracle<Character, Integer, StateLocalInputSULCache<Character, Integer>>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 

@@ -36,8 +36,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests for specific corner-cases of Mealy-based L*-style learning.
- *
- * @author frohme
  */
 public class ClassicLStarMealyGrowingAlphabetTest {
 

@@ -29,9 +29,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class StateLocalInputSULSymbolQueryOracleTest {
 
     private ExampleRandomStateLocalInputMealy<Character, Integer> example;

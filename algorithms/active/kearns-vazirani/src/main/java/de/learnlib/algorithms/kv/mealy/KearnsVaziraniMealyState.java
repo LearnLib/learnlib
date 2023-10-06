@@ -29,8 +29,6 @@ import net.automatalib.words.Word;
  *         The input alphabet type.
  * @param <O>
  *         The output alphabet type.
- *
- * @author bainczyk
  */
 public class KearnsVaziraniMealyState<I, O> {
 

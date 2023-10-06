@@ -17,8 +17,6 @@ package de.learnlib.setting;
 
 /**
  * An enum of all the system properties currently used by LearnLib.
- *
- * @author frohme
  */
 public enum LearnLibProperty {
 

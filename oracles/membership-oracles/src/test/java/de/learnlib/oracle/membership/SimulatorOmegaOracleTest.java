@@ -29,8 +29,6 @@ import org.testng.annotations.Test;
 /**
  * Tests the same functionality as in {@link SimulatorOracleTest}, but also tests whether the correct states are
  * visited.
- *
- * @author Jeroen Meijer
  */
 public class SimulatorOmegaOracleTest {
 

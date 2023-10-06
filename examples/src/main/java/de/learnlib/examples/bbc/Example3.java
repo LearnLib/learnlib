@@ -48,7 +48,6 @@ import net.automatalib.words.Alphabet;
  * <p>
  * The main difference with {@link Example2} is how the LTL formula is written.
  *
- * @author Jeroen Meijer
  * @see Example2
  */
 public final class Example3 {

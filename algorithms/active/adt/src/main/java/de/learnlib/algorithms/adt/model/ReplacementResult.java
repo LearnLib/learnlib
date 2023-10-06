@@ -33,8 +33,6 @@ import de.learnlib.algorithms.adt.api.SubtreeReplacer;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public class ReplacementResult<S, I, O> {
 

@@ -22,8 +22,6 @@ import java.util.TreeMap;
 
 /**
  * A simple histogram data set.
- *
- * @author falkhowar
  */
 public class HistogramDataSet extends AbstractStatisticData {
 

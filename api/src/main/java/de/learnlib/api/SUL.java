@@ -24,9 +24,6 @@ import de.learnlib.api.exception.SULException;
  *         input symbols
  * @param <O>
  *         output symbols
- *
- * @author falkhowar
- * @author Malte Isberner
  */
 public interface SUL<I, O> {
 

@@ -30,8 +30,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         output symbol type
  * @param <C>
  *         context type
- *
- * @author Malte Isberner
  */
 public abstract class AbstractContextExecutableInputSUL<I extends ContextExecutableInput<? extends O, ? super C>, O, C>
         implements SUL<I, O> {

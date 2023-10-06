@@ -29,8 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public final class ThreadSafeMealyCacheConsistencyTest<I, O> implements MealyEquivalenceOracle<I, O> {
 

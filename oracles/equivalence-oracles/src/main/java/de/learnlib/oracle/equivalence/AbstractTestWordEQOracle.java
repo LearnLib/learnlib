@@ -45,8 +45,6 @@ import org.slf4j.LoggerFactory;
  *         input symbol type
  * @param <D>
  *         output (domain) type
- *
- * @author frohme
  */
 public abstract class AbstractTestWordEQOracle<A extends Output<I, D>, I, D> implements EquivalenceOracle<A, I, D> {
 

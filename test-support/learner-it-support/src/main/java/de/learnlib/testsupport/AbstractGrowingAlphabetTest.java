@@ -40,8 +40,6 @@ import org.testng.annotations.Test;
 /**
  * Simple (abstract super) test class that checks the basic workflow of a learning algorithm that implements {@link
  * SupportsGrowingAlphabet}.
- *
- * @author frohme
  */
 public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlphabet<I> & LearningAlgorithm<M, I, D>, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, OR, I, D> {
 

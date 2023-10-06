@@ -27,8 +27,6 @@ import java.io.Serializable;
  *
  * @param <T>
  *         The type of the learner state.
- *
- * @author bainczyk
  */
 public interface Resumable<T> {
 

@@ -20,9 +20,6 @@ import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class LCATest {
 
     @Test

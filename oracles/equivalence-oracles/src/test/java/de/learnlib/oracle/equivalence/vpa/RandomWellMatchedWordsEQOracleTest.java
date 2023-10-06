@@ -30,9 +30,6 @@ import net.automatalib.words.impl.DefaultVPAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 
-/**
- * @author frohme
- */
 public class RandomWellMatchedWordsEQOracleTest
         extends AbstractEQOracleTest<SuffixOutput<Character, Boolean>, Character, Boolean> {
 

@@ -22,7 +22,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Answers {@link de.learnlib.api.query.OmegaQuery}s.
  *
- * @author Jeroen Meijer
  * @see OmegaMembershipOracle
  * @see QueryAnswerer
  */

@@ -23,9 +23,6 @@ import de.learnlib.algorithms.oml.ttt.pt.PrefixTree;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
-/**
- * @author fhowar
- */
 class HypothesisMealy<I, O> implements MealyMachine<DTLeaf<I, Word<O>>, I, MealyTransition<I, O>, O> {
 
     private final PrefixTree<I, Word<O>> ptree;

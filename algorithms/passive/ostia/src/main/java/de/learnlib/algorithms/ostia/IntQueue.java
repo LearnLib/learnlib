@@ -23,9 +23,6 @@ import net.automatalib.commons.smartcollections.IntSeq;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 
-/**
- * @author Aleksander Mendoza-Drosik
- */
 class IntQueue {
 
     int value;

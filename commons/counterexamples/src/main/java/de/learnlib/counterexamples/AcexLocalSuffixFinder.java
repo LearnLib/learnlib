@@ -29,8 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Wraps a {@link AbstractNamedAcexAnalyzer}. This class is both responsible for adapting it to the standard LearnLib
  * {@link LocalSuffixFinder} interface, and for maintaining statistics. Hence, a new object of this class should be
  * instantiated for every learning process.
- *
- * @author Malte Isberner
  */
 public class AcexLocalSuffixFinder implements LocalSuffixFinder<@Nullable Object, @Nullable Object> {
 

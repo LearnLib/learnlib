@@ -29,9 +29,6 @@ import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public class GenericAAARLearnerMooreIT extends AbstractMooreLearnerIT {
 
     @Override

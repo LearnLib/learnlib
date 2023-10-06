@@ -22,8 +22,6 @@ package de.learnlib.datastructure.discriminationtree.model;
  *         output symbol type
  * @param <N>
  *         node type
- *
- * @author Malte Isberner
  */
 public class LCAInfo<O, N> {
 

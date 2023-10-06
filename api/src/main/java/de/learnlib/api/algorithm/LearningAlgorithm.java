@@ -34,9 +34,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author Maik Merten
- * @author Malte Isberner
  */
 public interface LearningAlgorithm<M, I, D> {
 

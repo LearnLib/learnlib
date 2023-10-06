@@ -34,9 +34,6 @@ import net.automatalib.commons.smartcollections.ReflexiveMapView;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public class DefaultExtender implements ADTExtender {
 
     private final DefensiveADSCalculator adsCalculator;

@@ -29,8 +29,6 @@ import de.learnlib.mapper.api.ContextExecutableInput;
  *         output symbol type
  * @param <C>
  *         context type
- *
- * @author Malte Isberner
  */
 public class ContextExecutableInputSUL<I extends ContextExecutableInput<? extends O, ? super C>, O, C>
         extends AbstractContextExecutableInputSUL<I, O, C> {
@@ -70,8 +68,6 @@ public class ContextExecutableInputSUL<I extends ContextExecutableInput<? extend
      *
      * @param <C>
      *         context type
-     *
-     * @author Malte Isberner
      */
     public interface ContextHandler<C> {
 

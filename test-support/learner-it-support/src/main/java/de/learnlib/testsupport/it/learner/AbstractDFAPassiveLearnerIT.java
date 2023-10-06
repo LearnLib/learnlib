@@ -37,8 +37,6 @@ import org.testng.annotations.Factory;
  * <p>
  * Subclasses can perform further sample filtering by overriding the {@link #generateSamplesInternal(Alphabet, DFA)}
  * method, e.g. if the learning algorithm is only capable of learning from positive examples.
- *
- * @author frohme
  */
 public abstract class AbstractDFAPassiveLearnerIT {
 

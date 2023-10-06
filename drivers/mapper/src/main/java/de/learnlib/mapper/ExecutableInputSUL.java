@@ -25,8 +25,6 @@ import de.learnlib.mapper.api.ExecutableInput;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author Malte Isberner
  */
 public class ExecutableInputSUL<I extends ExecutableInput<? extends O>, O> implements SUL<I, O> {
 

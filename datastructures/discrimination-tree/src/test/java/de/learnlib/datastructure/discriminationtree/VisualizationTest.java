@@ -24,9 +24,6 @@ import net.automatalib.serialization.dot.GraphDOT;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class VisualizationTest {
 
     @Test

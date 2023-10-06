@@ -17,9 +17,6 @@ package de.learnlib.algorithms.ostia;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author Aleksander Mendoza-Drosik
- */
 class StateCopy extends StateParent {
 
     final State original;

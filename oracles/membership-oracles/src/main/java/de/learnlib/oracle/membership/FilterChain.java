@@ -23,8 +23,6 @@ import de.learnlib.api.query.Query;
 
 /**
  * A chain of oracles.
- *
- * @author falkhowar
  */
 public class FilterChain<I, D> implements MembershipOracle<I, D> {
 

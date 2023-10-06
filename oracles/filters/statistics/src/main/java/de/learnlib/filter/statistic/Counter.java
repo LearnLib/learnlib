@@ -20,8 +20,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * simple counter.
- *
- * @author falkhowar
  */
 public class Counter extends AbstractStatisticData {
 

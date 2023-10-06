@@ -21,9 +21,6 @@ import java.util.List;
 import de.learnlib.algorithms.oml.ttt.pt.PTNode;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author fhowar
- */
 public abstract class AbstractDTNode<I, D> {
 
     final @Nullable DTInnerNode<I, D> parent;

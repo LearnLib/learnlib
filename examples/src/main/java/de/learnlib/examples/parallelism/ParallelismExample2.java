@@ -40,8 +40,6 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * An example for using caches in combination with {@link ParallelOracle}s.
- *
- * @author frohme
  */
 @SuppressWarnings("PMD.SystemPrintln")
 public class ParallelismExample2 {

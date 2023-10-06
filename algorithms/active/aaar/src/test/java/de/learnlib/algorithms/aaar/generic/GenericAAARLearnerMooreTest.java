@@ -41,9 +41,6 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class GenericAAARLearnerMooreTest
         extends AbstractAAARTest<GenericAAARLearnerMoore<?, Character, Character, String>, Character, Word<String>, MooreMachine<?, Character, ?, String>> {
 

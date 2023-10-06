@@ -33,9 +33,6 @@ import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author fhowar
- */
 abstract class AbstractOptimalLStar<M, I, D>
         implements LearningAlgorithm<M, I, D>, Hypothesis<I, D>, InputAlphabetHolder<I> {
 

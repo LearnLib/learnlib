@@ -35,8 +35,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol class
  * @param <O>
  *         output symbol class
- *
- * @author Oliver Bauer
  */
 public class ReuseNode<S, I, O> {
 

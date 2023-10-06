@@ -47,8 +47,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author Malte Isberner
  */
 public class SampleSetEQOracle<I, D> implements EquivalenceOracle<SuffixOutput<I, D>, I, D> {
 

@@ -32,8 +32,6 @@ import de.learnlib.mapper.api.SULMapper;
  *         abstract output type
  * @param <CO>
  *         concrete output type
- *
- * @author falkhowar
  */
 public class TestDriver<AI, AO, CI extends ExecutableInput<CO>, CO> implements SUL<AI, AO> {
 

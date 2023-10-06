@@ -53,8 +53,6 @@ import org.slf4j.LoggerFactory;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 @SuppressWarnings("PMD.ExcessiveClassLength")
 public abstract class AbstractTTTLearner<A, I, D>
@@ -1011,8 +1009,6 @@ public abstract class AbstractTTTLearner<A, I, D>
      *
      * @param <I>
      *         input symbol type
-     *
-     * @author Malte Isberner
      */
     public static final class Splitter<I, D> {
 
@@ -1046,8 +1042,6 @@ public abstract class AbstractTTTLearner<A, I, D>
      *
      * @param <I>
      *         input symbol type
-     *
-     * @author Malte Isberner
      */
     private static final class GlobalSplitter<I, D> {
 
@@ -1067,8 +1061,6 @@ public abstract class AbstractTTTLearner<A, I, D>
      *
      * @param <I>
      *         input symbol type
-     *
-     * @author Malte Isberner
      */
     private static final class ExtractRecord<I, D> {
 

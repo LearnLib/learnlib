@@ -41,8 +41,6 @@ import org.checkerframework.dataflow.qual.Pure;
  *         the property type
  * @param <D>
  *         the output type
- *
- * @author Jeroen Meijer
  */
 public interface PropertyOracle<I, A extends Output<I, D>, P, D> extends InclusionOracle<A, I, D> {
 

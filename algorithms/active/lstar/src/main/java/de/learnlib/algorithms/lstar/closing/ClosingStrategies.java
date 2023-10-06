@@ -28,7 +28,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Collection of predefined observation table closing strategies.
  *
- * @author Malte Isberner
  * @see ClosingStrategy
  */
 public final class ClosingStrategies {

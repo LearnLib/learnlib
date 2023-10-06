@@ -22,9 +22,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class LearnLibSettingsTest {
 
     @BeforeSuite

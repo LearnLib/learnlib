@@ -23,8 +23,6 @@ import de.learnlib.algorithms.adt.model.ExtensionResult;
 /**
  * Interface for configuration objects that specify how to finalize the temporary splitter given by regular
  * counterexample decomposition.
- *
- * @author frohme
  */
 public interface ADTExtender {
 

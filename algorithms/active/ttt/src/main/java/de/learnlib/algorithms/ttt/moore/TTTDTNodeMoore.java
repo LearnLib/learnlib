@@ -29,9 +29,6 @@ import net.automatalib.automata.transducers.MooreMachine;
  *         input symbol type
  * @param <D>
  *         output symbol type
- *
- * @author bayram
- * @author frohme
  */
 public class TTTDTNodeMoore<I, D> extends AbstractBaseDTNode<I, D> {
 

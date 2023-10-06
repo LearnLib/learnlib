@@ -22,9 +22,6 @@ import de.learnlib.testsupport.AbstractResumableLearnerMooreTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public class DTLearnerMooreResumableLearnerTest
         extends AbstractResumableLearnerMooreTest<DTLearnerMoore<Character, Character>, DTLearnerState<Character, Word<Character>, Character, Void>> {
 

@@ -23,8 +23,6 @@ import de.learnlib.api.exception.SULException;
  *
  * @param <CO>
  *         concrete output
- *
- * @author falkhowar
  */
 public interface ExecutableInput<CO> {
 

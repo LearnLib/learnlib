@@ -33,8 +33,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <D>
  *         observation (output) domain type
- *
- * @author frohme
  */
 public class MockedObservationTable<I, D> extends SimpleObservationTable<I, D> {
 

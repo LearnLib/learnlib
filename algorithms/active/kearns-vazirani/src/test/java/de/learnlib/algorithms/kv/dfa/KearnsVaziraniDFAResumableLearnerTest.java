@@ -19,9 +19,6 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author bainczyk
- */
 public class KearnsVaziraniDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<KearnsVaziraniDFA<Character>, KearnsVaziraniDFAState<Character>> {
 

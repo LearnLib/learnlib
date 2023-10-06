@@ -27,8 +27,6 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * This example encodes a small stack with a capacity of three elements and "push" and "pop" operations as Mealy
  * machine. Outputs are "ok", "empty" and "full".
- *
- * @author Maik Merten
  */
 public class ExampleStack extends DefaultMealyLearningExample<Input, Output> {
 

@@ -22,8 +22,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <T>
  *         element type
- *
- * @author Malte Isberner
  */
 public class IntrusiveListElemImpl<T> implements IntrusiveListElem<T> {
 

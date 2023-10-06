@@ -31,8 +31,6 @@ import net.automatalib.words.Word;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class LStarBaseAdapterDFA<I> extends ClassicLStarDFA<I> implements AccessSequenceTransformer<I>, DFALearner<I> {
 

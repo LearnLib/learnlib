@@ -35,8 +35,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         (sub-) processor type
  * @param <OR>
  *         constructed oracle type
- *
- * @author Malte Isberner
  */
 public abstract class AbstractStaticBatchProcessorBuilder<Q, P extends BatchProcessor<Q>, OR> {
 

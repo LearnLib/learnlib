@@ -26,8 +26,6 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
  *
  * @param <I>
  *         The input alphabet type.
- *
- * @author bainczyk
  */
 public class KearnsVaziraniDFAState<I> {
 

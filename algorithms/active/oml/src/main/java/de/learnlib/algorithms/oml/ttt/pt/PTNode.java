@@ -19,9 +19,6 @@ import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author fhowar
- */
 public interface PTNode<I, D> {
 
     Word<I> word();

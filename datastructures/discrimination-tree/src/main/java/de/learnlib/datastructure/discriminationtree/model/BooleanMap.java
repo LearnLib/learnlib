@@ -31,8 +31,6 @@ import java.util.Set;
  *
  * @param <V>
  *         value type
- *
- * @author Malte Isberner
  */
 public class BooleanMap<V> extends AbstractMap<Boolean, V> {
 

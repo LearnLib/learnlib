@@ -29,8 +29,6 @@ import net.automatalib.words.WordBuilder;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public interface SymbolQueryOracle<I, O> extends MembershipOracle.MealyMembershipOracle<I, O> {
 

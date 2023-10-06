@@ -59,8 +59,6 @@ import org.slf4j.LoggerFactory;
  *         input symbol class
  * @param <O>
  *         output symbol class
- *
- * @author Malte Isberner
  */
 public class MealyCacheOracle<I, O>
         implements MealyLearningCacheOracle<I, O>, SupportsGrowingAlphabet<I>, Resumable<MealyCacheOracleState<I, O>> {

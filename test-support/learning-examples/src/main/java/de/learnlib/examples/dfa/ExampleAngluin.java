@@ -26,8 +26,6 @@ import net.automatalib.words.impl.Alphabets;
  * This class provides the example used in the paper ''Learning Regular Sets from Queries and Counterexamples'' by Dana
  * Angluin that consists of an automaton that accepts ''all strings over {0,1} with an even number of 0's and an even
  * number of 1's''.
- *
- * @author Oliver Bauer
  */
 public class ExampleAngluin extends DefaultDFALearningExample<Integer> {
 

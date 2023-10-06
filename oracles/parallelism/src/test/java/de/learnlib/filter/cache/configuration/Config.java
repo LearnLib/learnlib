@@ -34,9 +34,6 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
-/**
- * @author frohme
- */
 public final class Config {
 
     public static final Alphabet<Character> ALPHABET;

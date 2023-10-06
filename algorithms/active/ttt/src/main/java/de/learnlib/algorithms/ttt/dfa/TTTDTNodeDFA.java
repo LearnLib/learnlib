@@ -26,8 +26,6 @@ import de.learnlib.datastructure.discriminationtree.model.BooleanMap;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class TTTDTNodeDFA<I> extends AbstractBaseDTNode<I, Boolean> {
 

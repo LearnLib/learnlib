@@ -15,9 +15,6 @@
  */
 package de.learnlib.algorithms.oml.ttt.st;
 
-/**
- * @author fhowar
- */
 public class SuffixTrie<I> {
 
     private final STNode<I> epsilon = new STNodeImpl<>(null, null);

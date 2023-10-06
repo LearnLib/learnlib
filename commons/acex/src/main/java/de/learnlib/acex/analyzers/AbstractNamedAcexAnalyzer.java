@@ -19,8 +19,6 @@ import de.learnlib.acex.AcexAnalyzer;
 
 /**
  * An abstract counterexample analyzer that carries a name.
- *
- * @author Malte Isberner
  */
 public abstract class AbstractNamedAcexAnalyzer implements AcexAnalyzer {
 

@@ -28,9 +28,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 
-/**
- * @author Jeroen Meijer
- */
 public class MealyBFEmptinessOracleTest
         extends AbstractBFEmptinessOracleTest<MealyMachine<?, Character, ?, Character>, Word<Character>> {
 

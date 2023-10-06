@@ -21,8 +21,6 @@ import java.util.Collection;
  * Exception that is thrown if a parallel batch is interrupted during processing. Note that we cannot rethrow the {@link
  * InterruptedException} since the {@code throws} specification of {@link BatchProcessor#processBatch(Collection)} does
  * not allow doing so.
- *
- * @author Malte Isberner
  */
 public class BatchInterruptedException extends RuntimeException {
 

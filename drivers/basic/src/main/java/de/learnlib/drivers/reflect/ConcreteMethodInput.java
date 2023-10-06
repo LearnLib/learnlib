@@ -25,8 +25,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A concrete inputs contains the information for one specific method call.
- *
- * @author falkhowar
  */
 public class ConcreteMethodInput implements ExecutableInput<@Nullable Object> {
 

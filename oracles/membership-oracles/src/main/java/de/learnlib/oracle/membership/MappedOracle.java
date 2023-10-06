@@ -32,8 +32,6 @@ import net.automatalib.words.Word;
  *         concrete input symbol type.
  * @param <CO>
  *         concrete output symbol type.
- *
- * @author frohme
  */
 public class MappedOracle<AI, AO, CI, CO> implements SingleQueryOracle<AI, AO> {
 

@@ -22,8 +22,6 @@ import de.learnlib.datastructure.list.IntrusiveList;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class IncomingList<I, D> extends IntrusiveList<TTTTransition<I, D>> {
 

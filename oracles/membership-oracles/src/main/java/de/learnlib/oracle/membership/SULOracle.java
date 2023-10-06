@@ -27,9 +27,6 @@ import net.automatalib.words.WordBuilder;
  * A wrapper around a system under learning (SUL).
  * <p>
  * This membership oracle is <b>not</b> thread-safe.
- *
- * @author Falk Howar
- * @author Malte Isberner
  */
 public class SULOracle<I, O> implements MealyMembershipOracle<I, O> {
 

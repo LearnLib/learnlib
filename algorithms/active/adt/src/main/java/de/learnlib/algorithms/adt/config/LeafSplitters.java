@@ -30,8 +30,6 @@ import net.automatalib.words.Word;
 
 /**
  * A collection of default {@link LeafSplitter} configurations.
- *
- * @author frohme
  */
 public final class LeafSplitters {
 

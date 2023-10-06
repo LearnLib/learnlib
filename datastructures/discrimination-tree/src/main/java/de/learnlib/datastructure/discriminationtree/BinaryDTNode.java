@@ -27,8 +27,6 @@ import de.learnlib.datastructure.discriminationtree.model.BooleanMap;
  *         input symbol type
  * @param <D>
  *         node data type
- *
- * @author Malte Isberner
  */
 public class BinaryDTNode<I, D> extends AbstractWordBasedDTNode<I, Boolean, D> {
 

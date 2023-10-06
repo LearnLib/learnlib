@@ -20,9 +20,6 @@ import de.learnlib.algorithms.malerpnueli.MalerPnueliDFABuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author bainczyk
- */
 public class MalerPnueliDFAResumableLearnerTest extends ExtensibleLStarDFAResumableLearnerTest {
 
     @Override

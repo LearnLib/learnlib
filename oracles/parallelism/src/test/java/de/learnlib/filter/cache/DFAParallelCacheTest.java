@@ -27,9 +27,6 @@ import net.automatalib.words.Alphabet;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 
-/**
- * @author frohme
- */
 public class DFAParallelCacheTest extends AbstractParallelCacheTest<DFA<?, Character>, Character, Boolean> {
 
     private final DFACounterOracle<Character> sul;

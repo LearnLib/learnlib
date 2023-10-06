@@ -22,8 +22,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * A stack implementation with limited size, that ignores operations/returns null when pushing/pop beyond its
  * capacity/size.
- *
- * @author frohme
  */
 public class StackWithNull {
 

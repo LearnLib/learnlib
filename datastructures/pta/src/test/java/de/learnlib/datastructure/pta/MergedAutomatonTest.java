@@ -30,8 +30,6 @@ import org.testng.annotations.Test;
 
 /**
  * Test if the inferred automaton of a merge result behaves correctly.
- *
- * @author frohme
  */
 @Test
 public class MergedAutomatonTest {

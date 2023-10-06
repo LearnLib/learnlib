@@ -41,8 +41,6 @@ import de.learnlib.api.Mapper.SynchronousMapper;
  *         type of the outer mapper
  * @param <INNER>
  *         type of the inner mapper
- *
- * @author frohme
  */
 class MapperComposition<AI, AO, ACI, CAO, CI, CO, OUTER extends Mapper<? super AI, ? extends AO, ACI, CAO>, INNER extends Mapper<? super ACI, ? extends CAO, ? extends CI, ? super CO>>
         implements SynchronousMapper<AI, AO, CI, CO>, AsynchronousMapper<AI, AO, CI, CO> {

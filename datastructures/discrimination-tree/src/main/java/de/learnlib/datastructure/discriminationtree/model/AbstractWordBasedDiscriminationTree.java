@@ -28,8 +28,6 @@ import net.automatalib.words.Word;
  *         output symbol type
  * @param <D>
  *         node data type
- *
- * @author frohme
  */
 public abstract class AbstractWordBasedDiscriminationTree<I, O, D>
         extends AbstractDiscriminationTree<Word<I>, I, O, D, AbstractWordBasedDTNode<I, O, D>> {

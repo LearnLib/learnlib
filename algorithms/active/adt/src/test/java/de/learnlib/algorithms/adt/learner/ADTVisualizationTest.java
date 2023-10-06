@@ -28,9 +28,6 @@ import org.checkerframework.checker.initialization.qual.UnderInitialization;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class ADTVisualizationTest extends AbstractVisualizationTest<ADTLearner<Input, String>> {
 
     @Override

@@ -42,8 +42,6 @@ import net.automatalib.words.Word;
 /**
  * @param <I>
  *         input alphabet type
- *
- * @author Malte Isberner
  */
 public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVPA<?, I>, I, Boolean> {
 

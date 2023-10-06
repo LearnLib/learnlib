@@ -46,8 +46,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         concrete input symbol type.
  * @param <CO>
  *         concrete output symbol type.
- *
- * @author Malte Isberner
  */
 public interface SULMapper<AI, AO, CI, CO> extends SynchronousMapper<AI, AO, CI, CO> {
 

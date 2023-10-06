@@ -20,9 +20,6 @@ import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public class MealyDHCGrowingAlphabetTest extends AbstractGrowingAlphabetMealyTest<MealyDHC<Character, Character>> {
 
     @Override

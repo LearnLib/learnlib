@@ -30,8 +30,6 @@ import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
  *         the input type
  * @param <P>
  *         the property type
- *
- * @author Jeroen Meijer
  */
 public class DFALassoPropertyOracle<I, P> extends AbstractPropertyOracle<I, DFA<?, I>, P, Boolean, DFALasso<I>>
         implements DFAPropertyOracle<I, P> {

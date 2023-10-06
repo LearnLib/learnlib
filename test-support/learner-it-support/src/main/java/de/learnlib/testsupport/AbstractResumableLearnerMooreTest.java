@@ -29,9 +29,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
-/**
- * @author frohme
- */
 public abstract class AbstractResumableLearnerMooreTest<L extends Resumable<T> & LearningAlgorithm<MooreMachine<?, Character, ?, Character>, Character, Word<Character>>, T>
         extends AbstractResumableLearnerTest<L, MooreMachine<?, Character, ?, Character>, MembershipOracle<Character, Word<Character>>, Character, Word<Character>, T> {
 

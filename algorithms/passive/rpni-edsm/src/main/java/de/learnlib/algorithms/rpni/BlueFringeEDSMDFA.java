@@ -51,8 +51,6 @@ import net.automatalib.words.Word;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class BlueFringeEDSMDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>>
         implements PassiveDFALearner<I> {

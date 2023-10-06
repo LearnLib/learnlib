@@ -38,8 +38,6 @@ import net.automatalib.words.Word;
  *         concrete input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class ExplicitAAARLearnerMealy<L extends MealyLearner<CI, O> & SupportsGrowingAlphabet<CI>, AI, CI, O>
         extends AbstractExplicitAAARLearner<L, MealyMachine<?, AI, ?, O>, MealyMachine<?, CI, ?, O>, AI, CI, Word<O>> {

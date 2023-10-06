@@ -38,8 +38,6 @@ import net.automatalib.words.Word;
  *
  * @param <I>
  *         input symbol class.
- *
- * @author Malte Isberner
  */
 public class ExtensibleLStarDFA<I>
         extends AbstractExtensibleAutomatonLStar<DFA<?, I>, I, Boolean, Integer, Integer, Boolean, Void, CompactDFA<I>>

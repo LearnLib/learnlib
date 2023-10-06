@@ -44,8 +44,6 @@ import org.testng.annotations.Factory;
  * Mealy machine learning algorithms tested by this integration test are expected to assume membership queries yield the
  * full output word corresponding to the suffix part of the query. If the learning algorithm only expects the last
  * symbol as output, use {@link AbstractMealySymLearnerIT}.
- *
- * @author Malte Isberner
  */
 public abstract class AbstractMealyLearnerIT {
 

@@ -30,8 +30,6 @@ import net.automatalib.words.Word;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public interface ATRManager<I> {
 

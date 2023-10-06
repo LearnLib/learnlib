@@ -22,8 +22,6 @@ import net.automatalib.words.Word;
 /**
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public abstract class AbstractHypTrans<I> extends IntrusiveListElemImpl<AbstractHypTrans<I>>
         implements AccessSequenceProvider<I> {

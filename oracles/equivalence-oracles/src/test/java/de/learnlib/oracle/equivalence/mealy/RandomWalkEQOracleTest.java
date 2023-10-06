@@ -28,9 +28,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class RandomWalkEQOracleTest {
 
     private static final int MAX_LENGTH;

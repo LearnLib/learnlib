@@ -31,9 +31,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 
-/**
- * @author Jeroen Meijer
- */
 public class MealyLassoEmptinessOracleImplTest
         extends AbstractLassoEmptinessOracleImplTest<Lasso.MealyLasso<Character, Character>, Word<Character>> {
 

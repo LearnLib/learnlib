@@ -23,9 +23,6 @@ import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.util.automata.ads.BacktrackingSearch;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public class MinLengthCalculator extends AbstractCalculator {
 
     @Override

@@ -22,9 +22,6 @@ import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author bainczyk
- */
 public class DTLearnerMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<DTLearnerMealy<Character, Character>, DTLearnerState<Character, Word<Character>, Void, Character>> {
 

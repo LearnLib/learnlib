@@ -20,8 +20,6 @@ package de.learnlib.algorithms.nlstar;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class Inconsistency<I> {
 

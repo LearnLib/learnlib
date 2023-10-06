@@ -22,9 +22,6 @@ import de.learnlib.examples.dfa.ExamplePaulAndMary;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public class ExplicitAAARLearnerDFATest
         extends AbstractAAARTest<ExplicitAAARLearnerDFA<?, String, String>, String, Boolean, DFA<?, String>> {
 

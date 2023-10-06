@@ -28,8 +28,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author Malte Isberner
  */
 public class MealySimulatorSUL<I, O> implements SUL<I, O> {
 
@@ -104,8 +102,6 @@ public class MealySimulatorSUL<I, O> implements SUL<I, O> {
      *         Mealy machine transition type
      * @param <O>
      *         output symbol type
-     *
-     * @author Malte Isberner
      */
     static class MealySimulatorSULImpl<S, I, T, O> implements SUL<I, O> {
 

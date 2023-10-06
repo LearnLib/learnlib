@@ -42,8 +42,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 
 public class OptimizingATManager<I> implements ATManager<I> {

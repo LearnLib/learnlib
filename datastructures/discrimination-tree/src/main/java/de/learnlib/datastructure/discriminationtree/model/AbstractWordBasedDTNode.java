@@ -26,8 +26,6 @@ import net.automatalib.words.Word;
  *         output symbol type
  * @param <D>
  *         node data type
- *
- * @author frohme
  */
 public abstract class AbstractWordBasedDTNode<I, O, D>
         extends AbstractDTNode<Word<I>, O, D, AbstractWordBasedDTNode<I, O, D>> {

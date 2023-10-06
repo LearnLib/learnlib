@@ -35,8 +35,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author Malte Isberner
  */
 public class DTLearnerMealy<I, O> extends AbstractDTLearner<MealyMachine<?, I, ?, O>, I, Word<O>, Void, O>
         implements MealyLearner<I, O> {

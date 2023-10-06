@@ -42,8 +42,6 @@ import net.automatalib.words.Word;
  *         input symbol class
  * @param <O>
  *         output symbol class
- *
- * @author Malte Isberner
  */
 public class ClassicLStarMealy<I, O>
         extends AbstractExtensibleAutomatonLStar<MealyMachine<?, I, ?, O>, I, O, Integer, CompactTransition<O>, Void, O, CompactMealy<I, O>> {

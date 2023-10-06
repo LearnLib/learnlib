@@ -19,9 +19,6 @@ import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.SupportsGrowingAlphabet;
 
-/**
- * @author frohme
- */
 public class TranslatingLearnerWrapper<L extends LearningAlgorithm<CM, CI, D> & SupportsGrowingAlphabet<CI>, CM, CI, D>
         implements LearningAlgorithm<CM, CI, D> {
 

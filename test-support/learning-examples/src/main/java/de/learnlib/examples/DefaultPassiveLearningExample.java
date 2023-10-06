@@ -28,7 +28,6 @@ import net.automatalib.words.Alphabet;
  * @param <D>
  *         output domain type
  *
- * @author frohme
  * @see DefaultLearningExample
  */
 public class DefaultPassiveLearningExample<I, D> implements PassiveLearningExample<I, D> {

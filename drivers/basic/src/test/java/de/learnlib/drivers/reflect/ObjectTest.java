@@ -25,9 +25,6 @@ import net.automatalib.words.WordBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author falk
- */
 @Test
 public class ObjectTest {
 

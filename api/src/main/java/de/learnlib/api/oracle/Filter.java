@@ -22,8 +22,6 @@ package de.learnlib.api.oracle;
  *         input symbol class
  * @param <D>
  *         output domain type
- *
- * @author falkhowar
  */
 public interface Filter<I, D> extends MembershipOracle<I, D> {
 

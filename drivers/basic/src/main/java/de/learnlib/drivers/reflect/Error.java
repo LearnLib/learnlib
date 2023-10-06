@@ -21,8 +21,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Error output.
- *
- * @author falkhowar
  */
 public class Error extends MethodOutput {
 

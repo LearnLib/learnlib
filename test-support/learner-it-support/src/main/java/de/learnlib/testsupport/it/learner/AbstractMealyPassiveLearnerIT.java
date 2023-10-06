@@ -34,8 +34,6 @@ import org.testng.annotations.Factory;
  * <p>
  * Mealy machine learning algorithms tested by this integration test are expected to assume membership queries yield the
  * full output word corresponding to the suffix part of the query.
- *
- * @author frohme
  */
 public abstract class AbstractMealyPassiveLearnerIT {
 

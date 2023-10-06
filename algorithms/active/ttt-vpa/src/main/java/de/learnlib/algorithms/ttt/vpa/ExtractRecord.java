@@ -23,8 +23,6 @@ import de.learnlib.algorithms.discriminationtree.hypothesis.vpa.DTNode;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 final class ExtractRecord<I> {
 

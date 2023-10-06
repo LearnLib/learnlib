@@ -31,9 +31,6 @@ import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public class ADTIT extends AbstractMealyLearnerIT {
 
     @Override

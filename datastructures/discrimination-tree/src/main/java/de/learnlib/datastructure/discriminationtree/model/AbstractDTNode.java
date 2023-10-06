@@ -30,8 +30,6 @@ import java.util.Objects;
  *         data type
  * @param <N>
  *         (recursive) node type
- *
- * @author frohme
  */
 public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, O, D, N>> {
 

@@ -30,8 +30,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class TTTAdapterMealy<I, O> extends TTTLearnerMealy<I, O> implements AccessSequenceTransformer<I> {
 

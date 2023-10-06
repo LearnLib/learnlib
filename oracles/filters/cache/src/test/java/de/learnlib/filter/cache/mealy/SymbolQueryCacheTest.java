@@ -24,9 +24,6 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public class SymbolQueryCacheTest
         extends AbstractCacheTest<SymbolQueryCache<Character, Integer>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 

@@ -37,9 +37,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author bayram
- * @author frohme
  */
 public class DTLearnerMoore<I, O> extends AbstractDTLearner<MooreMachine<?, I, ?, O>, I, Word<O>, O, Void>
         implements MooreLearner<I, O> {

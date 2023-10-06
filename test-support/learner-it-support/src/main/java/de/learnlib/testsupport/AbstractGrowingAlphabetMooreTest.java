@@ -30,9 +30,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
-/**
- * @author frohme
- */
 public abstract class AbstractGrowingAlphabetMooreTest<L extends SupportsGrowingAlphabet<Character> & LearningAlgorithm<MooreMachine<?, Character, ?, Character>, Character, Word<Character>>>
         extends AbstractGrowingAlphabetTest<L, MooreMachine<?, Character, ?, Character>, MembershipOracle<Character, Word<Character>>, Character, Word<Character>> {
 

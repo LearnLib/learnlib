@@ -50,8 +50,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public final class DefensiveADS<S, I, O> {
 

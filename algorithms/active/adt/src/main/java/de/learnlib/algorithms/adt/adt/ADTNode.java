@@ -34,8 +34,6 @@ import net.automatalib.words.Word;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I, O>> {
 

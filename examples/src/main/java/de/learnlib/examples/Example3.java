@@ -42,8 +42,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <p>
  * Please note that there is no equivalence oracle used in this example so the resulting mealy machines are only first
  * "guesses".
- *
- * @author Oliver Bauer
  */
 @SuppressWarnings("PMD.SystemPrintln")
 public class Example3 {

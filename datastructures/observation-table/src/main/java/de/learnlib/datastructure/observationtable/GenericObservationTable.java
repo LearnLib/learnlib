@@ -57,8 +57,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author Malte Isberner
  */
 public final class GenericObservationTable<I, D> implements MutableObservationTable<I, D> {
 

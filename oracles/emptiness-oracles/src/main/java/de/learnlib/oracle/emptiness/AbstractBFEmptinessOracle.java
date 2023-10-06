@@ -46,8 +46,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         the input type
  * @param <D>
  *         the output type
- *
- * @author Jeroen Meijer
  */
 @GenerateRefinement(name = "DFABFEmptinessOracle",
                     generics = "I",

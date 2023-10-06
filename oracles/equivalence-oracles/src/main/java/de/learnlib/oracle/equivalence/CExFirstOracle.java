@@ -53,7 +53,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <D>
  *         the output type
  *
- * @author Jeroen Meijer
  * @see DisproveFirstOracle
  */
 @GenerateRefinement(name = "DFACExFirstOracle",

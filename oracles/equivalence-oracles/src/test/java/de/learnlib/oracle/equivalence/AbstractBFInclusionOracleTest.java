@@ -27,8 +27,6 @@ import org.testng.annotations.Test;
 /**
  * Tests any breadth-first inclusion oracle.
  *
- * @author Jeroen Meijer
- *
  * @param <D> the output type
  */
 public abstract class AbstractBFInclusionOracleTest<A extends DetOutputAutomaton<?, Character, ?, D>, D>

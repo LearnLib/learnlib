@@ -27,8 +27,6 @@ import net.automatalib.words.VPAlphabet;
 /**
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class OneSEVPAHypothesis<I> extends AbstractSEVPA<HypLoc<I>, I> implements OneSEVPA<HypLoc<I>, I> {
 

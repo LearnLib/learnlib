@@ -34,8 +34,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <L> the type of Lasso.
  * @param <I> the type of input.
  * @param <D> the type of output.
- *
- * @author Jeroen Meijer
  */
 public interface LassoOracle<L extends Lasso<I, D>, I, D> {
 

@@ -23,8 +23,6 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractDTNode;
 
 /**
  * Factory methods for several kinds of discrimination tree node iterators.
- *
- * @author frohme
  */
 public final class DiscriminationTreeIterators {
 

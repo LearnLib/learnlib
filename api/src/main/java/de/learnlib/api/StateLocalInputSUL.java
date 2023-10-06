@@ -28,9 +28,6 @@ import de.learnlib.api.exception.SULException;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author Maren Geske
- * @author frohme
  */
 public interface StateLocalInputSUL<I, O> extends SUL<I, O> {
 

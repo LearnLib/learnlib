@@ -31,8 +31,6 @@ import org.testng.annotations.Test;
 /**
  * Similar to the {@link LearningTest} but this time with quiescence in outputs. The purpose of this test is just to
  * check that the reuse filter is able to work with {@code null} outputs.
- *
- * @author Oliver Bauer
  */
 public class QuiescenceTest {
 

@@ -22,8 +22,6 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * Tiny machine with the language (a1a2)^*.
- *
- * @author Jeroen Meijer
  */
 public class ExampleTinyMealy extends DefaultMealyLearningExample<Character, Character> {
 

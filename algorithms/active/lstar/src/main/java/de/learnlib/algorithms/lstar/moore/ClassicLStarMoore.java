@@ -37,9 +37,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author bayram
- * @author frohme
  */
 public class ClassicLStarMoore<I, O>
         extends AbstractExtensibleAutomatonLStar<MooreMachine<?, I, ?, O>, I, O, Integer, Integer, O, Void, CompactMoore<I, O>> {

@@ -40,8 +40,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <D>
  *         output type
- *
- * @author Malte Isberner
  */
 public interface LearnerVariantList<M, I, D> {
 

@@ -31,8 +31,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author Malte Isberner
  */
 public interface SingleQueryOracle<I, D> extends MembershipOracle<I, D> {
 

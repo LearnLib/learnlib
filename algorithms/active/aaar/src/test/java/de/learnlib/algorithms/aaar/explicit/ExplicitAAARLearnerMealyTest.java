@@ -24,9 +24,6 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public class ExplicitAAARLearnerMealyTest
         extends AbstractAAARTest<ExplicitAAARLearnerMealy<?, Input, Input, String>, Input, Word<String>, MealyMachine<?, Input, ?, String>> {
 

@@ -37,9 +37,6 @@ import de.learnlib.filter.cache.configuration.CacheConfig.SULConfig;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public interface CacheCreator<I, D, M, C extends LearningCache<?, I, D>>
         extends BiFunction<Alphabet<I>, M, CacheConfig<I, D, C>> {
 

@@ -18,7 +18,5 @@ package de.learnlib.algorithms.ttt.base;
 /**
  * Exception to indicate structural changes of the hypothesis during counterexample analysis, thus possibly invalidating
  * the counterexample.
- *
- * @author Malte Isberner
  */
 public class HypothesisChangedException extends RuntimeException {}

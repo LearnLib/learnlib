@@ -25,8 +25,6 @@ import org.testng.annotations.Test;
 
 /**
  * Function test for the Kearns/Vazirani algorithm for DFA learning.
- *
- * @author Malte Isberner
  */
 @Test
 public class KearnsVaziraniDFAIT extends AbstractDFALearnerIT {

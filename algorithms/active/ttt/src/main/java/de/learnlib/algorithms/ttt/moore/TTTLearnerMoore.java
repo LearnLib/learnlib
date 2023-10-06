@@ -41,9 +41,6 @@ import net.automatalib.words.WordBuilder;
  *         input symbol type
  * @param <O>
  *         output symbols type
- *
- * @author bayram
- * @author frohme
  */
 public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I, ?, O>, I, Word<O>>
         implements MooreLearner<I, O> {

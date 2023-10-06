@@ -21,8 +21,6 @@ import de.learnlib.api.Mapper.SynchronousMapper;
 
 /**
  * Utility methods for manipulating mappers.
- *
- * @author frohme
  */
 public final class Mappers {
 

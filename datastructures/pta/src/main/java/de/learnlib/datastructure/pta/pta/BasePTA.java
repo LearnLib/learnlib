@@ -54,8 +54,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         transition property type
  * @param <S>
  *         state type
- *
- * @author Malte Isberner
  */
 public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
         implements UniversalDeterministicAutomaton<S, Integer, PTATransition<S>, SP, TP> {

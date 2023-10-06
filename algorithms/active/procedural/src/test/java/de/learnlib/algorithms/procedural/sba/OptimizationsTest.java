@@ -38,8 +38,6 @@ import org.testng.annotations.Test;
  * A test for checking the optimizations performed by the {@link OptimizingATManager}. This test provides the
  * {@link SBALearner} with a long, non-optimal counterexample first, so that following analysis steps should extract
  * optimized sequences.
- *
- * @author frohme
  */
 public class OptimizationsTest {
 

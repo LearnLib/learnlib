@@ -28,8 +28,6 @@ import net.automatalib.words.WordBuilder;
  * A wrapper around a system under learning (SUL) with state local inputs.
  * <p>
  * This membership oracle is <b>not</b> thread-safe.
- *
- * @author frohme
  */
 public class StateLocalInputSULOracle<I, O> implements MealyMembershipOracle<I, O> {
 

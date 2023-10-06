@@ -31,8 +31,6 @@ import org.testng.annotations.Factory;
 
 /**
  * Abstract integration test for {@link SBA} learning algorithms.
- *
- * @author frohme
  */
 public abstract class AbstractSBALearnerIT {
 

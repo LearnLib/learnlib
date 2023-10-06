@@ -26,8 +26,6 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * This example represents the Coffee Machine example from Steffen et al. "Introduction to Active Automata Learning from
  * a Practical Perspective" (Figure 3)
- *
- * @author Maik Merten
  */
 public class ExampleCoffeeMachine extends DefaultMealyLearningExample<Input, String> {
 

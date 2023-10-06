@@ -34,8 +34,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public interface ATManager<I, O> {
 

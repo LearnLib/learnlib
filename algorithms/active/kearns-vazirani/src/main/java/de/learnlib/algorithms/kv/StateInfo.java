@@ -31,8 +31,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <D>
  *         data type
- *
- * @author Malte Isberner
  */
 public final class StateInfo<I, D> {
 

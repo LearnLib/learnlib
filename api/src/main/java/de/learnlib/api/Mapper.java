@@ -33,8 +33,6 @@ import de.learnlib.api.oracle.MembershipOracle;
  *         concrete input symbol type.
  * @param <CO>
  *         concrete output symbol type.
- *
- * @author Malte Isberner
  */
 public interface Mapper<AI, AO, CI, CO> {
 
@@ -84,7 +82,6 @@ public interface Mapper<AI, AO, CI, CO> {
      * @param <CO>
      *         concrete output symbol type.
      *
-     * @author frohme
      * @see AsynchronousMapper
      */
     interface SynchronousMapper<AI, AO, CI, CO> extends Mapper<AI, AO, CI, CO> {}
@@ -108,7 +105,6 @@ public interface Mapper<AI, AO, CI, CO> {
      * @param <CO>
      *         concrete output symbol type.
      *
-     * @author frohme
      * @see SynchronousMapper
      */
     interface AsynchronousMapper<AI, AO, CI, CO> extends Mapper<AI, AO, CI, CO> {}

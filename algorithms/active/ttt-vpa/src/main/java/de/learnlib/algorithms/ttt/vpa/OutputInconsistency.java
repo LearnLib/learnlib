@@ -21,8 +21,6 @@ import de.learnlib.algorithms.discriminationtree.hypothesis.vpa.HypLoc;
 /**
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 final class OutputInconsistency<I> {
 

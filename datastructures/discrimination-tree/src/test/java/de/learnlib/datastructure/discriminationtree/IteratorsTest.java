@@ -25,9 +25,6 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNod
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class IteratorsTest {
 
     @Test

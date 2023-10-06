@@ -36,8 +36,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author Malte Isberner
  */
 public class BlueFringeRPNIMealy<I, O> extends AbstractBlueFringeRPNI<I, Word<O>, Void, O, MealyMachine<?, I, ?, O>>
         implements PassiveMealyLearner<I, O> {

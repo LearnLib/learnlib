@@ -36,8 +36,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         the input type
  * @param <D>
  *         the output type
- *
- * @author Jeroen Meijer
  */
 public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D> {
 

@@ -26,9 +26,6 @@ import net.automatalib.words.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Maik Merten
- */
 public class SimulatorOracleTest {
 
     @Test

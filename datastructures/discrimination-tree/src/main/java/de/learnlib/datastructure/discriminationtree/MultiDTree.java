@@ -27,8 +27,6 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscr
  *         output symbol type
  * @param <D>
  *         node data type
- *
- * @author Malte Isberner
  */
 public class MultiDTree<I, O, D> extends AbstractWordBasedDiscriminationTree<I, O, D> {
 

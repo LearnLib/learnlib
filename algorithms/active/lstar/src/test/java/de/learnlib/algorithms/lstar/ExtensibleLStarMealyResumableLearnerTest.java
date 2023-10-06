@@ -28,9 +28,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
-/**
- * @author bainczyk
- */
 public class ExtensibleLStarMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<ExtensibleLStarMealy<Character, Character>, AutomatonLStarState<Character, Word<Character>, CompactMealy<Character, Character>, Integer>> {
 

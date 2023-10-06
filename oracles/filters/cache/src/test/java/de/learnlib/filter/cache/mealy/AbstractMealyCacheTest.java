@@ -26,9 +26,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author frohme
- */
 public abstract class AbstractMealyCacheTest
         extends AbstractCacheTest<MealyCacheOracle<Character, Integer>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 

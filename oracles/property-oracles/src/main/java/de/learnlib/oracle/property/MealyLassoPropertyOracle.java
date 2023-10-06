@@ -33,8 +33,6 @@ import net.automatalib.words.Word;
  *         the output type
  * @param <P>
  *         the property type
- *
- * @author Jeroen Meijer
  */
 public class MealyLassoPropertyOracle<I, O, P>
         extends AbstractPropertyOracle<I, MealyMachine<?, I, ?, O>, P, Word<O>, MealyLasso<I, O>>

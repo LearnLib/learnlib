@@ -32,8 +32,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * {@code catch(Throwable)} statement! This would also catch internal VM-related errors such as {@link
  * StackOverflowError} or {@link OutOfMemoryError}. Only ever catch {@link Exception} and any user-created subclasses of
  * {@link Throwable} that apply.
- *
- * @author Malte Isberner
  */
 public class SULException extends RuntimeException {
 

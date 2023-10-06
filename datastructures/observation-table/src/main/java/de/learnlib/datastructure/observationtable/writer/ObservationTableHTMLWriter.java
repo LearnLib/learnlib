@@ -31,8 +31,6 @@ import net.automatalib.words.Word;
  *         input symbol type (upper bound)
  * @param <D>
  *         output domain type (upper bound)
- *
- * @author Malte Isberner
  */
 public class ObservationTableHTMLWriter<I, D> extends AbstractObservationTableWriter<I, D> {
 

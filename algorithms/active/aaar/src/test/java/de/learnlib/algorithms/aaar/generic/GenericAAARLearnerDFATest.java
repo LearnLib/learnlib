@@ -35,9 +35,6 @@ import net.automatalib.words.Alphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class GenericAAARLearnerDFATest
         extends AbstractAAARTest<GenericAAARLearnerDFA<?, String, String>, String, Boolean, DFA<?, String>> {
 

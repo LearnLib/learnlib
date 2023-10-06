@@ -32,8 +32,6 @@ import de.learnlib.api.oracle.SymbolQueryOracle;
  * @param <O>
  *         output symbol type
  *
- * @author bainczyk
- * @author frohme
  * @see SULSymbolQueryOracle
  */
 public class StateLocalInputSULSymbolQueryOracle<I, O> extends SULSymbolQueryOracle<I, O>

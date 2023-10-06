@@ -20,8 +20,6 @@ import org.slf4j.helpers.SubstituteLogger;
 
 /**
  * A simple {@link LearnLogger} implementation, that delegates all calls to a given {@link Logger} instance.
- *
- * @author frohme
  */
 public class Slf4jDelegator extends SubstituteLogger implements LearnLogger {
 

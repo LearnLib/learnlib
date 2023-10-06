@@ -36,8 +36,6 @@ import net.automatalib.words.Alphabet;
 /**
  * A factory for creating thread-safe caches for {@link DFA}-based {@link MembershipOracle}s. Parameters and return
  * types are tailored towards the use with {@link ParallelOracleBuilders}.
- *
- * @author frohme
  */
 public final class ThreadSafeDFACaches {
 

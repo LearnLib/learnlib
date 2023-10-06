@@ -21,9 +21,6 @@ import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public class RivestSchapireMooreResumableLearnerTest extends ExtensibleLStarMooreResumableLearnerTest {
 
     @Override

@@ -50,8 +50,6 @@ import net.automatalib.words.WordBuilder;
  * <p>
  * A learner integration test tests the functionality of a learning algorithm against a well-defined set of example
  * setups.
- *
- * @author Malte Isberner
  */
 public final class LearnerITUtil {
 

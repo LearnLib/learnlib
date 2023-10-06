@@ -19,9 +19,6 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public class OptimalTTTDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<OptimalTTTDFA<Character>> {
 
     @Override

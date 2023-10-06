@@ -45,8 +45,6 @@ import net.automatalib.words.impl.Alphabets;
  *         state property type
  * @param <TP>
  *         transition property type
- *
- * @author Malte Isberner
  */
 public class DTLearnerHypothesis<I, O, SP, TP>
         implements UniversalDeterministicAutomaton<HState<I, O, SP, TP>, I, HTransition<I, O, SP, TP>, SP, TP>,

@@ -31,9 +31,6 @@ import de.learnlib.algorithms.adt.util.ADTUtil;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public class LevelOrderReplacer implements SubtreeReplacer {
 
     private final ADSCalculator adsCalculator;

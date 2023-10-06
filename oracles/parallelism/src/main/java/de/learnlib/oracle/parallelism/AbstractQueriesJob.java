@@ -26,8 +26,6 @@ import de.learnlib.api.oracle.parallelism.BatchProcessor;
  *
  * @param <Q>
  *         query type
- *
- * @author Malte Isberner
  */
 abstract class AbstractQueriesJob<Q> implements Runnable {
 

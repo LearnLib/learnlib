@@ -29,9 +29,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class RandomWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, String>, String, Boolean> {
 
     private static final int MAX_TESTS;

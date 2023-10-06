@@ -17,9 +17,6 @@ package de.learnlib.filter.cache.mealy;
 
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 
-/**
- * @author frohme
- */
 public class DynamicMealyTreeMapperCacheTest extends AbstractMealyCacheTest {
 
     @Override

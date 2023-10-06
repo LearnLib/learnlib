@@ -25,7 +25,5 @@ import de.learnlib.api.oracle.Filter;
  *         input symbol class
  * @param <D>
  *         output domain class
- *
- * @author falkhowar
  */
 public interface StatisticOracle<I, D> extends Filter<I, D>, StatisticCollector {}

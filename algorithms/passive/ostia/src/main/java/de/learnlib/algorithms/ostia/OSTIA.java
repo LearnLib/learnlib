@@ -46,9 +46,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Implementation of the "onward subsequential transducer inference algorithm" (OSTIA) from the paper <a
  * href="https://doi.org/10.1109/34.211465">Learning Subsequential Transducers for Pattern Recognition Interpretation
  * Tasks</a> by Oncina, García and Vidal.
- *
- * @author Aleksander Mendoza-Drosik
- * @author frohme
  */
 public class OSTIA<I, O> implements PassiveLearningAlgorithm<SubsequentialTransducer<?, I, ?, O>, I, Word<O>> {
 

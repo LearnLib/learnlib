@@ -29,9 +29,6 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author fhowar
- */
 public class OptimalLStarMealy<I, O> extends AbstractOptimalLStar<MealyMachine<?, I, ?, O>, I, Word<O>>
         implements MealyLearner<I, O> {
 

@@ -46,8 +46,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * This example shows how a model of a Java class can be learned using the SUL (system under learning) interfaces and
  * the random walks equivalence test.
- *
- * @author falkhowar
  */
 @SuppressWarnings("PMD.SystemPrintln")
 public final class Example2 {

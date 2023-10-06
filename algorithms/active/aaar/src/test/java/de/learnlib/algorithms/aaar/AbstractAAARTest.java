@@ -34,9 +34,6 @@ import net.automatalib.words.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public abstract class AbstractAAARTest<L extends AbstractAAARLearner<?, A, A, I, I, D>, I, D, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>> {
 
     private final Alphabet<I> alphabet;

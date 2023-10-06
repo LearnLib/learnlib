@@ -23,9 +23,6 @@ import de.learnlib.algorithms.oml.ttt.st.STNode;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author fhowar
- */
 public abstract class AbstractDecisionTree<I, D> {
 
     private final STNode<I> stRoot;

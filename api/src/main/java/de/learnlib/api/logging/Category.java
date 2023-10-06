@@ -18,8 +18,6 @@ package de.learnlib.api.logging;
 
 /**
  * Categories for markers.
- *
- * @author falkhowar
  */
 public enum Category {
     SYSTEM,

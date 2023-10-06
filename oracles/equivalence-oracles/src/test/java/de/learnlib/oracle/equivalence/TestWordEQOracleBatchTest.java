@@ -30,8 +30,6 @@ import org.testng.annotations.Test;
 
 /**
  * Test for size of batch generation of {@link AbstractTestWordEQOracle}.
- *
- * @author frohme
  */
 public class TestWordEQOracleBatchTest {
 

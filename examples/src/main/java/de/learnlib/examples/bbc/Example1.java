@@ -45,8 +45,6 @@ import net.automatalib.words.Alphabet;
 
 /**
  * Runs a black-box checking experiment for a DFA.
- *
- * @author Jeroen Meijer
  */
 public final class Example1 {
 

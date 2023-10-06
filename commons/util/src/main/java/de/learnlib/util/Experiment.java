@@ -32,8 +32,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * runs a learning experiment.
  *
  * @param <A> the automaton type
- *
- * @author falkhowar
  */
 public class Experiment<A extends Object> {
 

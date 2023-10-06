@@ -23,8 +23,6 @@ import net.automatalib.words.Word;
  *
  * @param <I>
  *         input symbol class
- *
- * @author Malte Isberner
  */
 final class ProxyQuery<I> extends Query<I, Boolean> {
 

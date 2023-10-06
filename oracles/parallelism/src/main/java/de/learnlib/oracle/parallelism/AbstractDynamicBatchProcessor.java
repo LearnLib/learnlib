@@ -38,8 +38,6 @@ import org.checkerframework.checker.index.qual.NonNegative;
  *         query type
  * @param <P>
  *         (sub-) processor type
- *
- * @author Malte Isberner
  */
 public abstract class AbstractDynamicBatchProcessor<Q, P extends BatchProcessor<Q>>
         implements ThreadPool, BatchProcessor<Q> {

@@ -22,8 +22,6 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * Tiny DFA with language (ab)*.
- *
- * @author Jeroen Meijer
  */
 public class ExampleTinyDFA extends DefaultDFALearningExample<Character> {
 

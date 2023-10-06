@@ -25,9 +25,6 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author frohme
- */
 public class SimulatorEQOracle<I> implements EquivalenceOracle<SBA<?, I>, I, Boolean> {
 
     private final SBA<?, I> sba;

@@ -60,8 +60,6 @@ import net.automatalib.words.impl.GrowingMapAlphabet;
  *         input symbol type
  * @param <L>
  *         sub-learner type
- *
- * @author frohme
  */
 public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>>
         implements LearningAlgorithm<SBA<?, I>, I, Boolean> {

@@ -32,8 +32,6 @@ import net.automatalib.words.Alphabet;
 
 /**
  * A collection of default {@link SubtreeReplacer} configurations.
- *
- * @author frohme
  */
 public final class SubtreeReplacers {
 

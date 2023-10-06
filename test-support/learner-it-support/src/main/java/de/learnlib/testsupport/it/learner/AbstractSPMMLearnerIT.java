@@ -32,8 +32,6 @@ import org.testng.annotations.Factory;
 
 /**
  * Abstract integration test for {@link SPMM} learning algorithms.
- *
- * @author frohme
  */
 public abstract class AbstractSPMMLearnerIT {
 

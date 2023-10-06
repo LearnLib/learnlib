@@ -31,8 +31,6 @@ import net.automatalib.words.Word;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class RivestSchapireAdapterDFA<I> extends RivestSchapireDFA<I>
         implements AccessSequenceTransformer<I>, DFALearner<I> {

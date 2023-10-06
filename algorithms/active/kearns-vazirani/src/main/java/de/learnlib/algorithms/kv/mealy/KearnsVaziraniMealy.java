@@ -54,8 +54,6 @@ import org.slf4j.LoggerFactory;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author Malte Isberner
  */
 public class KearnsVaziraniMealy<I, O>
         implements MealyLearner<I, O>, SupportsGrowingAlphabet<I>, Resumable<KearnsVaziraniMealyState<I, O>> {

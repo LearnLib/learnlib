@@ -38,8 +38,6 @@ import net.automatalib.ts.output.MealyTransitionSystem;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author Malte Isberner
  */
 public class SULCache<I, O> extends AbstractSULCache<I, O, SULCacheState<I, O>> {
 
@@ -63,8 +61,6 @@ public class SULCache<I, O> extends AbstractSULCache<I, O, SULCacheState<I, O>> 
      *         transition system transition type
      * @param <O>
      *         output symbol type
-     *
-     * @author Malte Isberner
      */
     static class SULCacheImpl<S, I, T, O> extends AbstractSULCacheImpl<S, I, T, O, SULCacheState<I, O>> {
 

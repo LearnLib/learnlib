@@ -21,9 +21,6 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author bainczyk
- */
 public class DTLearnerDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<DTLearnerDFA<Character>, DTLearnerState<Character, Boolean, Boolean, Void>> {
 

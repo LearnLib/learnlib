@@ -40,8 +40,6 @@ import org.slf4j.LoggerFactory;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author falkhowar
  */
 public class RandomWalkEQOracle<I, O> implements MealyEquivalenceOracle<I, O> {
 

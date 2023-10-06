@@ -36,8 +36,6 @@ import de.learnlib.datastructure.list.IntrusiveListElem;
  *         link structure type
  * @param <N>
  *         node type
- *
- * @author frohme
  */
 public abstract class AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T extends IntrusiveList<?>, N extends AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T, N>>
         extends AbstractDTNode<DSCR, O, D, N> implements IntrusiveListElem<N> {

@@ -38,8 +38,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * @param <I>
  *         input alphabet type
- *
- * @author Malte Isberner
  */
 public class DTLearnerVPA<I> extends AbstractVPALearner<I> {
 

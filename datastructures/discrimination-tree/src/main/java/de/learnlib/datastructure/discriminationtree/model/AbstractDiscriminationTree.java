@@ -50,8 +50,6 @@ import net.automatalib.words.Word;
  *         data symbol type
  * @param <N>
  *         node type
- *
- * @author frohme
  */
 public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends AbstractDTNode<DSCR, O, D, N>>
         implements Graph<N, Map.Entry<O, N>> {

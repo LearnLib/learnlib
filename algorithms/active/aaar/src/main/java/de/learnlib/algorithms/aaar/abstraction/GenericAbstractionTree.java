@@ -19,10 +19,6 @@ import java.util.function.Function;
 
 import de.learnlib.api.oracle.MembershipOracle;
 
-/**
- * @author fhowar
- * @author frohme
- */
 public class GenericAbstractionTree<AI, CI, D> extends AbstractAbstractionTree<AI, CI, D> {
 
     private final Function<CI, AI> abstractor;

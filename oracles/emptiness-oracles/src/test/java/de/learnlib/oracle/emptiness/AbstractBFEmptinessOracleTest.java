@@ -26,8 +26,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests any breadth-first emptiness oracle.
- *
- * @author Jeroen Meijer
  */
 public abstract class AbstractBFEmptinessOracleTest<A extends DetOutputAutomaton<?, Character, ?, D>, D>
         extends AbstractBFOracleTest<D> {

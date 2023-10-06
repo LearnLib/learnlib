@@ -33,9 +33,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class ExperimentTest {
 
     private static final Random RANDOM = new Random(42);

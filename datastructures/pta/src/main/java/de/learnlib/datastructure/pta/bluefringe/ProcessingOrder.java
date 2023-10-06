@@ -30,7 +30,6 @@ import de.learnlib.datastructure.pta.pta.PTATransition;
  * This interface is provided for extensibility only, but most probably does not need to be implemented by a user. See
  * {@link DefaultProcessingOrders} for a (probably) sufficient set of pre-defined processing orders.
  *
- * @author Malte Isberner
  * @see DefaultProcessingOrders
  */
 public interface ProcessingOrder {

@@ -22,9 +22,6 @@ import de.learnlib.algorithms.aaar.abstraction.AbstractAbstractionTree;
 import net.automatalib.automata.transducers.MooreMachine;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author frohme
- */
 public class TranslatingMooreMachine<S, AI, CI, T, O> implements MooreMachine<S, CI, T, O> {
 
     private final MooreMachine<S, CI, T, O> delegate;

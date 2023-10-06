@@ -30,8 +30,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author Malte Isberner
  */
 public interface GlobalSuffixLearner<M, I, D> extends LearningAlgorithm<M, I, D>, GlobalSuffixFeature<I> {
 

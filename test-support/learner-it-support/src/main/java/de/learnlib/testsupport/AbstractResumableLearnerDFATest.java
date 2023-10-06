@@ -28,9 +28,6 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
-/**
- * @author bainczyk
- */
 public abstract class AbstractResumableLearnerDFATest<L extends Resumable<T> & LearningAlgorithm<DFA<?, Character>, Character, Boolean>, T>
         extends AbstractResumableLearnerTest<L, DFA<?, Character>, MembershipOracle<Character, Boolean>, Character, Boolean, T> {
 

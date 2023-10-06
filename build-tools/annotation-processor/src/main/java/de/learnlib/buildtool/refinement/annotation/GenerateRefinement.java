@@ -24,8 +24,6 @@ import java.lang.annotation.Target;
 /**
  * Annotation to indicate that a subclass with the specified configuration should be generated. Currently only supports
  * narrowing type parameters/constructor parameters/interfaces. Delegates to super constructors.
- *
- * @author frohme
  */
 @Repeatable(GenerateRefinements.class)
 @Retention(RetentionPolicy.SOURCE)

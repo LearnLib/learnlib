@@ -29,8 +29,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class DiscriminationTreeAdapterMealy<I, O> extends DTLearnerMealy<I, O> implements AccessSequenceTransformer<I> {
 

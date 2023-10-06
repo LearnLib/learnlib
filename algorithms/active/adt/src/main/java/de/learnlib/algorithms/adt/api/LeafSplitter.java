@@ -21,8 +21,6 @@ import net.automatalib.words.Word;
 /**
  * Interface for configuration objects that specify how to split the ADT leaf of a hypothesis state that needs
  * refinement.
- *
- * @author frohme
  */
 public interface LeafSplitter {
 

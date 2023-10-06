@@ -28,8 +28,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * An equivalence oracle based on the computation of a separating word for a given hypothesis and a previously known
  * target system.
- *
- * @author frohme
  */
 public class SimulatorEQOracle<I> implements EquivalenceOracle<OneSEVPA<?, I>, I, Boolean> {
 

@@ -38,8 +38,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         the output type
  * @param <R>
  *         the result type of model checker
- *
- * @author Jeroen Meijer
  */
 abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends A>
         implements PropertyOracle<I, A, P, D> {

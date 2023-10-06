@@ -30,8 +30,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class KearnsVaziraniAdapterMealy<I, O> extends KearnsVaziraniMealy<I, O>
         implements AccessSequenceTransformer<I> {

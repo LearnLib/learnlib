@@ -52,8 +52,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         transition property type
  * @param <M>
  *         model type
- *
- * @author Malte Isberner
  */
 public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M> implements PassiveLearningAlgorithm<M, I, D> {
 

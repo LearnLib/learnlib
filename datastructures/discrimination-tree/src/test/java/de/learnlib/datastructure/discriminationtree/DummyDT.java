@@ -18,9 +18,6 @@ package de.learnlib.datastructure.discriminationtree;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 final class DummyDT {
 
     static final BinaryDTree<Integer, Character> DT;

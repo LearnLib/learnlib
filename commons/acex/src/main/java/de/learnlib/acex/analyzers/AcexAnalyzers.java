@@ -24,8 +24,6 @@ import de.learnlib.acex.AbstractCounterexample;
 
 /**
  * This is a utility class, acting as a container for several {@link AbstractNamedAcexAnalyzer}s.
- *
- * @author Malte Isberner
  */
 public final class AcexAnalyzers {
 

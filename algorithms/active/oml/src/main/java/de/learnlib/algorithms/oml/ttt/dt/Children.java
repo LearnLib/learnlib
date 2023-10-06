@@ -19,9 +19,6 @@ import java.util.Collection;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author fhowar
- */
 public interface Children<I, D> {
 
     @Nullable AbstractDTNode<I, D> child(D out);

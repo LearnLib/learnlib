@@ -25,7 +25,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * A collection of suffix-based local counterexample analyzers.
  *
- * @author Malte Isberner
  * @see LocalSuffixFinder
  */
 public final class LocalSuffixFinders {

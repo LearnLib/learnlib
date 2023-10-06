@@ -17,10 +17,6 @@ package de.learnlib.algorithms.aaar.abstraction;
 
 import net.automatalib.words.Word;
 
-/**
- * @author fhowar
- * @author frohme
- */
 class Node {
 
     static class InnerNode<CI, D> extends Node {

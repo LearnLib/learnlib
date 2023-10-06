@@ -25,8 +25,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * An {@link OmegaMembershipOracle} that answers single queries.
  *
- * @author Jeroen Meijer
- *
  * @see OmegaMembershipOracle
  * @see SingleQueryOracle
  */

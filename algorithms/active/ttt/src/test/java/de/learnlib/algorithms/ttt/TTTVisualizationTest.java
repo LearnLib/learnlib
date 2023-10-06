@@ -29,9 +29,6 @@ import net.automatalib.words.Alphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class TTTVisualizationTest extends AbstractVisualizationTest<TTTLearnerMealy<Input, String>> {
 
     @Override

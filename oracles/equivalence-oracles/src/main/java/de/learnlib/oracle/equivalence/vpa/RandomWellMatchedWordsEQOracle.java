@@ -32,8 +32,6 @@ import net.automatalib.words.WordBuilder;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<Output<I, Boolean>, I, Boolean> {
 

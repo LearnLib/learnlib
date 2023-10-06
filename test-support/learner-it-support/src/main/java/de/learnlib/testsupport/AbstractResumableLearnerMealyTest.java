@@ -29,9 +29,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
-/**
- * @author bainczyk
- */
 public abstract class AbstractResumableLearnerMealyTest<L extends Resumable<T> & LearningAlgorithm<MealyMachine<?, Character, ?, Character>, Character, Word<Character>>, T>
         extends AbstractResumableLearnerTest<L, MealyMachine<?, Character, ?, Character>, MembershipOracle<Character, Word<Character>>, Character, Word<Character>, T> {
 

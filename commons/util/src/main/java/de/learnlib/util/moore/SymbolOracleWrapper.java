@@ -33,8 +33,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, O> {
 

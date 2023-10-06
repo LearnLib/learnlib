@@ -56,9 +56,6 @@ import net.automatalib.words.impl.Alphabets;
  *         concrete input symbol type
  * @param <D>
  *         output domain type
- *
- * @author fhowar
- * @author frohme
  */
 public abstract class AbstractExplicitAAARLearner<L extends LearningAlgorithm<CM, CI, D> & SupportsGrowingAlphabet<CI>, AM, CM, AI, CI, D>
         extends AbstractAAARLearner<L, AM, CM, AI, CI, D> {

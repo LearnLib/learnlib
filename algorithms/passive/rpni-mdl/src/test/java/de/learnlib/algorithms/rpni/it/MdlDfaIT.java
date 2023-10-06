@@ -26,9 +26,6 @@ import de.learnlib.testsupport.it.learner.PassiveLearnerVariantList;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public class MdlDfaIT extends AbstractDFAPassiveLearnerIT {
 
     @Override

@@ -26,8 +26,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <D>
  *         node data type
- *
- * @author Malte Isberner
  */
 public class BinaryDTree<I, D> extends AbstractWordBasedDiscriminationTree<I, Boolean, D> {
 

@@ -28,9 +28,6 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author fhowar
- */
 public class OptimalLStarDFA<I> extends AbstractOptimalLStar<DFA<?, I>, I, Boolean> implements DFALearner<I> {
 
     private CompactDFA<I> hypothesis;

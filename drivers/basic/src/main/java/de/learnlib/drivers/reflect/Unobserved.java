@@ -18,8 +18,6 @@ package de.learnlib.drivers.reflect;
 /**
  * Unobserved indicates that the corresponding input was not executed on the system. This usually happens after an
  * exception occurred.
- *
- * @author falkhowar
  */
 public final class Unobserved extends MethodOutput {
 

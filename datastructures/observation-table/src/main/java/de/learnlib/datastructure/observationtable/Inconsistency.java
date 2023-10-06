@@ -22,8 +22,6 @@ package de.learnlib.datastructure.observationtable;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class Inconsistency<I> {
 

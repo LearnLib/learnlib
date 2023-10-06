@@ -30,9 +30,6 @@ import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 
-/**
- * @author frohme
- */
 public class ExplicitAAARLearnerMooreTest
         extends AbstractAAARTest<ExplicitAAARLearnerMoore<?, Character, Character, String>, Character, Word<String>, MooreMachine<?, Character, ?, String>> {
 

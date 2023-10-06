@@ -40,8 +40,6 @@ import org.checkerframework.checker.initialization.qual.UnderInitialization;
  *
  * @param <L>
  *         type of the learner
- *
- * @author frohme
  */
 public abstract class AbstractVisualizationTest<L extends LearningAlgorithm<? extends MealyMachine<?, Input, ?, String>, Input, Word<String>>> {
 

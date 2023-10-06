@@ -31,8 +31,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         input symbol class
- *
- * @author Malte Isberner
  */
 final class DFACacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {
 

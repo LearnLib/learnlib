@@ -50,8 +50,6 @@ import net.automatalib.words.impl.Alphabets;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author Malte Isberner
  */
 public abstract class AbstractLStar<A, I, D>
         implements OTLearner<A, I, D>, GlobalSuffixLearner<A, I, D>, SupportsGrowingAlphabet<I> {

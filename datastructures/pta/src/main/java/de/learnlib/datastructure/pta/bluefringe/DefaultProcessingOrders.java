@@ -28,8 +28,6 @@ import net.automatalib.commons.util.comparison.CmpUtil;
 
 /**
  * Standard processing orders that can be used for the RPNI algorithm.
- *
- * @author Malte Isberner
  */
 public enum DefaultProcessingOrders implements ProcessingOrder {
     /**

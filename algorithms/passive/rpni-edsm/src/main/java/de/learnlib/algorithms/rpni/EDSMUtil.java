@@ -23,9 +23,6 @@ import com.google.common.collect.Maps;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.commons.smartcollections.IntSeq;
 
-/**
- * @author frohme
- */
 final class EDSMUtil {
 
     private EDSMUtil() {}

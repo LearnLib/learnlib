@@ -25,8 +25,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Basic stateless data mapper for objects.
- *
- * @author falkhowar
  */
 public class SimplePOJODataMapper
         implements SULMapper<MethodInput, MethodOutput, ConcreteMethodInput, @Nullable Object> {

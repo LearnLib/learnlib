@@ -34,8 +34,6 @@ import net.automatalib.automata.transducers.impl.FastMealyState;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
 

@@ -28,9 +28,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
-/**
- * @author frohme
- */
 public class ExtensibleLStarMooreResumableLearnerTest
         extends AbstractResumableLearnerMooreTest<ExtensibleLStarMoore<Character, Character>, AutomatonLStarState<Character, Word<Character>, CompactMoore<Character, Character>, Integer>> {
 

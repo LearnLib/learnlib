@@ -25,8 +25,6 @@ import org.testng.annotations.Test;
 
 /**
  * Function test for the Kearns/Vazirani algorithm for Mealy machine learning.
- *
- * @author Malte Isberner
  */
 @Test
 public class KearnsVaziraniMealyIT extends AbstractMealyLearnerIT {

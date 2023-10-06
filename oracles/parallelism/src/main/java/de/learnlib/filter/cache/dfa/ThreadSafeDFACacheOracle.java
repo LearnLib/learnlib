@@ -29,8 +29,6 @@ import net.automatalib.incremental.dfa.IncrementalDFABuilder;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class ThreadSafeDFACacheOracle<I> extends DFACacheOracle<I> {
 

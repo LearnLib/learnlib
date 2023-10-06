@@ -25,9 +25,6 @@ import de.learnlib.algorithms.adt.config.model.DefensiveADSCalculator;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public class BestEffortDefensiveCalculator implements DefensiveADSCalculator {
 
     @Override

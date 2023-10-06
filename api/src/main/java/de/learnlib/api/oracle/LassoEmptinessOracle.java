@@ -28,8 +28,6 @@ import net.automatalib.words.Word;
  * @param <L> the lasso type
  * @param <I> the input type
  * @param <D> the output type
- *
- * @author Jeroen Meijer
  */
 public interface LassoEmptinessOracle<L extends Lasso<I, D>, I, D> extends EmptinessOracle<L, I, D> {
 

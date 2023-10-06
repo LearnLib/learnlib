@@ -28,9 +28,6 @@ import de.learnlib.datastructure.observationtable.ObservationTableSource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class ObservationTableWriterTest {
 
     @Test

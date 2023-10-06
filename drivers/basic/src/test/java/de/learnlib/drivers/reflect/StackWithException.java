@@ -19,8 +19,6 @@ import java.util.LinkedList;
 
 /**
  * A stack implementation with limited size, that throws exception when pushing/pop beyond its capacity/size.
- *
- * @author falkhowar
  */
 public class StackWithException {
 

@@ -41,8 +41,6 @@ import net.automatalib.words.Word;
  *         output type
  * @param <A>
  *         automaton type
- *
- * @author Malte Isberner
  */
 public class DefaultLearningExample<I, D, A extends UniversalAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>>
         implements LearningExample<I, A> {

@@ -26,8 +26,6 @@ import de.learnlib.datastructure.list.IntrusiveListElem;
 /**
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class DTNode<I>
         extends AbstractTemporaryIntrusiveDTNode<ContextPair<I>, Boolean, HypLoc<I>, TransList<I>, DTNode<I>>

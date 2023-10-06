@@ -20,9 +20,6 @@ import java.util.Collection;
 import de.learnlib.algorithms.aaar.ExplicitInitialAbstraction;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public class IdentityInitialAbstraction<I> implements ExplicitInitialAbstraction<I, I> {
 
     private final Alphabet<I> alphabet;

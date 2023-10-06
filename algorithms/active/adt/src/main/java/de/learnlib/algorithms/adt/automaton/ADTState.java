@@ -29,8 +29,6 @@ import net.automatalib.words.Word;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public class ADTState<I, O> extends AbstractFastState<ADTTransition<I, O>>
         implements AccessSequenceProvider<I> {

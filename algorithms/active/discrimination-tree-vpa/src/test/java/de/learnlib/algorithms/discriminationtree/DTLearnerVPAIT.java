@@ -24,9 +24,6 @@ import de.learnlib.testsupport.it.learner.LearnerVariantList;
 import net.automatalib.words.VPAlphabet;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 @Test
 public class DTLearnerVPAIT extends AbstractOneSEVPALearnerIT {
 

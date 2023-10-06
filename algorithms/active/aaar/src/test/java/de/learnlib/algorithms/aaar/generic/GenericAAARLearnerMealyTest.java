@@ -36,9 +36,6 @@ import net.automatalib.words.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class GenericAAARLearnerMealyTest
         extends AbstractAAARTest<GenericAAARLearnerMealy<?, Character, Character, Integer>, Character, Word<Integer>, MealyMachine<?, Character, ?, Integer>> {
 

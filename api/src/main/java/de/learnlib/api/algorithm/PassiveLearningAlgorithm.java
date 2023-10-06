@@ -75,8 +75,6 @@ public interface PassiveLearningAlgorithm<M, I, D> {
      *
      * @param <I>
      *         input symbol type
-     *
-     * @author Malte Isberner
      */
     interface PassiveDFALearner<I> extends PassiveAcceptorLearner<DFA<?, I>, I> {}
 
@@ -87,8 +85,6 @@ public interface PassiveLearningAlgorithm<M, I, D> {
      *         input symbol type
      * @param <O>
      *         output symbol type
-     *
-     * @author Malte Isberner
      */
     interface PassiveMealyLearner<I, O> extends PassiveLearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 
@@ -97,8 +93,6 @@ public interface PassiveLearningAlgorithm<M, I, D> {
      *
      * @param <I>
      *         input symbol type
-     *
-     * @author Malte Isberner
      */
     interface PassiveNFALearner<I> extends PassiveAcceptorLearner<NFA<?, I>, I> {}
 
@@ -110,8 +104,6 @@ public interface PassiveLearningAlgorithm<M, I, D> {
      *         model type
      * @param <I>
      *         input symbol type
-     *
-     * @author Malte Isberner
      */
     interface PassiveAcceptorLearner<M extends FiniteStateAcceptor<?, I>, I>
             extends PassiveLearningAlgorithm<M, I, Boolean> {

@@ -29,8 +29,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author Malte Isberner
  */
 public interface LearningCacheOracle<A, I, D> extends LearningCache<A, I, D>, MembershipOracle<I, D> {
 
@@ -39,8 +37,6 @@ public interface LearningCacheOracle<A, I, D> extends LearningCache<A, I, D>, Me
      *
      * @param <I>
      *         input symbol type
-     *
-     * @author Malte Isberner
      */
     interface DFALearningCacheOracle<I>
             extends LearningCacheOracle<DFA<?, I>, I, Boolean>, DFALearningCache<I>, DFAMembershipOracle<I> {}
@@ -52,8 +48,6 @@ public interface LearningCacheOracle<A, I, D> extends LearningCache<A, I, D>, Me
      *         input symbol type
      * @param <O>
      *         output symbol type
-     *
-     * @author Malte Isberner
      */
     interface MealyLearningCacheOracle<I, O> extends LearningCacheOracle<MealyMachine<?, I, ?, O>, I, Word<O>>,
                                                      MealyLearningCache<I, O>,

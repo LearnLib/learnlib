@@ -17,9 +17,6 @@ package de.learnlib.algorithms.aaar.explicit;
 
 import java.util.function.Function;
 
-/**
- * @author frohme
- */
 public class Incrementor implements Function<String, String> {
 
     private int cnt;

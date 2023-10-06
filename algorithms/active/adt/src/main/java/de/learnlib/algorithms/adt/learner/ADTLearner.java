@@ -72,8 +72,6 @@ import org.slf4j.LoggerFactory;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                                          PartialTransitionAnalyzer<ADTState<I, O>, I>,

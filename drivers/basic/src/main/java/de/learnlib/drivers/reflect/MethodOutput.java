@@ -17,8 +17,6 @@ package de.learnlib.drivers.reflect;
 
 /**
  * abstract output of a method.
- *
- * @author falk
  */
 public class MethodOutput {
 

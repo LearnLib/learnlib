@@ -31,8 +31,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <A> the automaton type
  * @param <I> the input type
  * @param <D> the output type
- *
- * @author Jeroen Meijer
  */
 public abstract class AbstractBFOracle<A extends DeterministicAutomaton<?, I, ?>, I, D>
         implements AutomatonOracle<A, I, D> {

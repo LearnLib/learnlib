@@ -26,8 +26,6 @@ import de.learnlib.algorithms.adt.model.ExtensionResult;
 
 /**
  * A collection of default {@link ADTExtender} configurations.
- *
- * @author frohme
  */
 public final class ADTExtenders {
 

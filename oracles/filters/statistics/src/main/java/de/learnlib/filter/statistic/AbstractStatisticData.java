@@ -20,8 +20,6 @@ import de.learnlib.api.statistic.StatisticData;
 
 /**
  * Common interface for statistical data.
- *
- * @author falkhowar
  */
 public abstract class AbstractStatisticData implements StatisticData {
 

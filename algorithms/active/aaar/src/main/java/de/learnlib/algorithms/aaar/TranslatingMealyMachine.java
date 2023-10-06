@@ -22,9 +22,6 @@ import de.learnlib.algorithms.aaar.abstraction.AbstractAbstractionTree;
 import net.automatalib.automata.transducers.MealyMachine;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author frohme
- */
 public class TranslatingMealyMachine<S, AI, CI, T, O> implements MealyMachine<S, CI, T, O> {
 
     private final MealyMachine<S, CI, T, O> delegate;

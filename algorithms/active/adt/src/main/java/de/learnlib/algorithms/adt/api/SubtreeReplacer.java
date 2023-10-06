@@ -24,8 +24,6 @@ import net.automatalib.words.Alphabet;
 
 /**
  * Interface for configuration objects that specify how nodes of the current ADT should be replaced.
- *
- * @author frohme
  */
 public interface SubtreeReplacer {
 

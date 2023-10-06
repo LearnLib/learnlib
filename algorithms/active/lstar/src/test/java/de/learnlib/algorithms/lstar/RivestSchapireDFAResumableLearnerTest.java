@@ -20,9 +20,6 @@ import de.learnlib.algorithms.rivestschapire.RivestSchapireDFABuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author bainczyk
- */
 public class RivestSchapireDFAResumableLearnerTest extends ExtensibleLStarDFAResumableLearnerTest {
 
     @Override

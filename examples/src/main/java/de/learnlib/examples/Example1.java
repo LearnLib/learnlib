@@ -38,8 +38,6 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * This example shows the usage of a learning algorithm and an equivalence test as part of an experiment in order to
  * learn a simulated SUL (system under learning).
- *
- * @author falkhowar
  */
 @SuppressWarnings("PMD.SystemPrintln")
 public final class Example1 {

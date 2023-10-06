@@ -41,8 +41,6 @@ import org.testng.annotations.Test;
  *         output domain type
  * @param <T>
  *         state type
- *
- * @author bainczyk
  */
 public abstract class AbstractResumableLearnerTest<L extends Resumable<T> & LearningAlgorithm<M, I, D>, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>, OR, I, D, T> {
 

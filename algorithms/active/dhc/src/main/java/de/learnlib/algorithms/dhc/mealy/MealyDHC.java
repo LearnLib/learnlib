@@ -51,9 +51,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Maik Merten
- */
 public class MealyDHC<I, O> implements MealyLearner<I, O>,
                                        AccessSequenceTransformer<I>,
                                        GlobalSuffixLearnerMealy<I, O>,

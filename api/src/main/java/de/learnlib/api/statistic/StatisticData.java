@@ -17,8 +17,6 @@ package de.learnlib.api.statistic;
 
 /**
  * Common interface for statistical data.
- *
- * @author falkhowar
  */
 public interface StatisticData {
 

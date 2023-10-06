@@ -32,8 +32,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <E>
  *         element type
- *
- * @author Malte Isberner
  */
 public class BoundedDeque<E> extends AbstractCollection<E> {
 
@@ -177,8 +175,6 @@ public class BoundedDeque<E> extends AbstractCollection<E> {
 
     /**
      * The policy which determines in which order elements are accessed.
-     *
-     * @author Malte Isberner
      */
     public enum AccessPolicy {
         /**
@@ -193,8 +189,6 @@ public class BoundedDeque<E> extends AbstractCollection<E> {
 
     /**
      * The policy which determines in which order elements are removed if the maximum capacity is reached.
-     *
-     * @author Malte Isberner
      */
     public enum EvictPolicy {
         /**

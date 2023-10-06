@@ -35,9 +35,6 @@ import org.testng.annotations.Test;
 
 /**
  * A simple test against various cache implementations.
- *
- * @author Oliver Bauer
- * @author frohme
  */
 public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>, A extends Output<I, D>, I, D> {
 

@@ -28,9 +28,6 @@ import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author Malte Isberner
- */
 public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
 
     private final ExtDTNode<I> unlabeledList = new ExtDTNode<>();

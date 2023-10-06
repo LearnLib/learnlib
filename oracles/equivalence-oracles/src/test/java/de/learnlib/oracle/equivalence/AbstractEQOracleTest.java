@@ -34,8 +34,6 @@ import org.testng.annotations.Test;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author frohme
  */
 public abstract class AbstractEQOracleTest<A extends SuffixOutput<I, D>, I, D> {
 

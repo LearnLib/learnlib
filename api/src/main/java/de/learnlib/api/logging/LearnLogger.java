@@ -24,8 +24,6 @@ import org.slf4j.MarkerFactory;
 
 /**
  * LearnLib specific logger. Adds some methods to Logger for logging artifacts specific to learning.
- *
- * @author falkhowar
  */
 public interface LearnLogger extends Logger {
 

@@ -56,8 +56,6 @@ import net.automatalib.words.Alphabet;
  * <p>
  * This example is similar to {@link Example1}, except that is also uses a monitor to disprove properties for the
  * learned DFA.
- *
- * @author Jeroen Meijer
  */
 public final class Example4 {
 

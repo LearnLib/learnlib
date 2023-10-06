@@ -27,8 +27,6 @@ import net.automatalib.words.Word;
  * hypothesis, are included in a language.
  * If there is such a word not included, it serves as a counter example for the given hypothesis.
  *
- * @author Jeroen Meijer
- *
  * @param <A> the automaton type
  * @param <I> the input type
  * @param <D> the output type

@@ -26,8 +26,6 @@ import net.automatalib.words.Word;
 /**
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class DTree<I> extends AbstractDiscriminationTree<ContextPair<I>, I, Boolean, HypLoc<I>, DTNode<I>> {
 

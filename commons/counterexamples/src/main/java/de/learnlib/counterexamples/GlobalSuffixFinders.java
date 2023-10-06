@@ -28,7 +28,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * A collection of suffix-based global counterexample analyzers.
  *
- * @author Malte Isberner
  * @see GlobalSuffixFinder
  */
 public final class GlobalSuffixFinders {

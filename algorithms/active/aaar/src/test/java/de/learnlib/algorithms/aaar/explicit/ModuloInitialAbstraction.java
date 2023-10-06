@@ -21,9 +21,6 @@ import java.util.Collection;
 import de.learnlib.algorithms.aaar.ExplicitInitialAbstraction;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public class ModuloInitialAbstraction<CI> implements ExplicitInitialAbstraction<String, CI> {
 
     private final Alphabet<CI> alphabet;

@@ -28,7 +28,5 @@ import de.learnlib.api.oracle.MembershipOracle;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author Malte Isberner
  */
 public interface ParallelOracle<I, D> extends ThreadPool, MembershipOracle<I, D> {}

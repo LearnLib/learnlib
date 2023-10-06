@@ -35,8 +35,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class LStarBaseAdapterMealy<I, O> extends ExtensibleLStarMealy<I, O> implements AccessSequenceTransformer<I> {
 

@@ -26,9 +26,6 @@ import net.automatalib.automata.procedural.SBA;
 import net.automatalib.words.ProceduralInputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author frohme
- */
 class MappingSBA<S, I> implements SBA<S, I> {
 
     private final ProceduralInputAlphabet<I> alphabet;

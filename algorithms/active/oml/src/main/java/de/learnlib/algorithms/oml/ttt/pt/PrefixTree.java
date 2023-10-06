@@ -15,9 +15,6 @@
  */
 package de.learnlib.algorithms.oml.ttt.pt;
 
-/**
- * @author fhowar
- */
 public class PrefixTree<I, D> {
 
     private final PTNodeImpl<I, D> epsilon = new PTNodeImpl<>(null, null);

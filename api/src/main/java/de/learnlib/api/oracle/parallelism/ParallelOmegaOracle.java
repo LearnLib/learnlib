@@ -26,7 +26,5 @@ import de.learnlib.api.oracle.OmegaMembershipOracle;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author frohme
  */
 public interface ParallelOmegaOracle<S, I, D> extends ThreadPool, OmegaMembershipOracle<S, I, D> {}

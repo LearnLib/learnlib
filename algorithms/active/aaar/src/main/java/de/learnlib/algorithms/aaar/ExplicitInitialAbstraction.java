@@ -25,9 +25,6 @@ import java.util.Collection;
  *         abstract input symbol type
  * @param <CI>
  *         concrete input symbol type
- *
- * @author fhowar
- * @author frohme
  */
 public interface ExplicitInitialAbstraction<AI, CI> extends Abstraction<AI, CI> {
 

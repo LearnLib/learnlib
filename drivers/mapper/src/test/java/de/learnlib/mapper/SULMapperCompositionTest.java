@@ -22,9 +22,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class SULMapperCompositionTest {
 
     private static final char OUTER_EXCEPTION_TRIGGER_CHAR = 'X';

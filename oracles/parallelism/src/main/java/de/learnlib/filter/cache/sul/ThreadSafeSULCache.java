@@ -32,8 +32,6 @@ import net.automatalib.words.WordBuilder;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class ThreadSafeSULCache<I, O> extends SULCache<I, O> {
 

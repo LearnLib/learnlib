@@ -22,9 +22,6 @@ import de.learnlib.algorithms.aaar.abstraction.AbstractAbstractionTree;
 import net.automatalib.automata.fsa.DFA;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author frohme
- */
 public class TranslatingDFA<S, AI, CI> implements DFA<S, CI> {
 
     private final DFA<S, CI> delegate;

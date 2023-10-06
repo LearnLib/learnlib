@@ -37,9 +37,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author frohme
- */
 public class SingleReplacer implements SubtreeReplacer {
 
     private final ADSCalculator adsCalculator;

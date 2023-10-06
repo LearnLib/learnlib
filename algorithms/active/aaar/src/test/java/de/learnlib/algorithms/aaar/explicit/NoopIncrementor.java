@@ -17,9 +17,6 @@ package de.learnlib.algorithms.aaar.explicit;
 
 import java.util.function.Function;
 
-/**
- * @author frohme
- */
 public class NoopIncrementor<I> implements Function<I, I> {
 
     @Override

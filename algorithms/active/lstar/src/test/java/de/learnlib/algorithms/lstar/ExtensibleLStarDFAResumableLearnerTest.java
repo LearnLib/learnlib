@@ -22,9 +22,6 @@ import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author bainczyk
- */
 public class ExtensibleLStarDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<ExtensibleLStarDFA<Character>, AutomatonLStarState<Character, Boolean, CompactDFA<Character>, Integer>> {
 

@@ -103,8 +103,6 @@ abstract class AbstractSULCache<I, O, C extends SULCacheState<I, O>>
      *         output symbol type
      * @param <C>
      *         cache type
-     *
-     * @author Malte Isberner
      */
     abstract static class AbstractSULCacheImpl<S, I, T, O, C extends SULCacheState<I, O>>
             implements SUL<I, O>, MealyLearningCache<I, O>, SupportsGrowingAlphabet<I>, Resumable<C> {

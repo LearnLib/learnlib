@@ -21,8 +21,6 @@ import java.lang.annotation.Target;
 
 /**
  * Definition of an additional inferface.
- *
- * @author frohme
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({})

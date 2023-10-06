@@ -34,8 +34,6 @@ import org.testng.annotations.Test;
 /**
  * Tests the {@link LassoEmptinessOracleImpl} and all its subtypes.
  *
- * @author Jeroen Meijer
- *
  * @param <L> the lasso type
  * @param <D> the output type
  */

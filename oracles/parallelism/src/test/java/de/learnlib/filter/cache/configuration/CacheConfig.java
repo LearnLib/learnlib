@@ -39,9 +39,6 @@ import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public interface CacheConfig<I, D, C extends LearningCache<?, I, D>> {
 
     C getRepresentative();

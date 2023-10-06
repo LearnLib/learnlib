@@ -48,9 +48,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author Malte Isberner
- * @author frohme
  */
 @GenerateRefinement(name = "DFAWpMethodEQOracle",
                     generics = "I",

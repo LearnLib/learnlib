@@ -23,8 +23,6 @@ import net.automatalib.words.Alphabet;
 
 /**
  * A factory for creating thread-safe {@link SUL} caches.
- *
- * @author frohme
  */
 public final class ThreadSafeSULCaches {
 

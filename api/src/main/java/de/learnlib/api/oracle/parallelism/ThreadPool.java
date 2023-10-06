@@ -21,8 +21,6 @@ import java.util.concurrent.Executors;
 /**
  * A markup interface for a component that manages a pool of threads that may want to be shut down after usage.
  *
- * @author Malte Isberner
- * @author frohme
  * @see ExecutorService
  */
 public interface ThreadPool {
@@ -43,8 +41,6 @@ public interface ThreadPool {
 
     /**
      * The policy for dealing with thread pools.
-     *
-     * @author Malte Isberner
      */
     enum PoolPolicy {
         /**

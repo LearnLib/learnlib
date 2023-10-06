@@ -21,9 +21,6 @@ import java.util.Map;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author fhowar
- */
 class STNodeImpl<I> implements STNode<I> {
 
     private final @Nullable STNodeImpl<I> parent;

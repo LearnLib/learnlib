@@ -38,8 +38,6 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * An example for creating {@link ParallelOracle}s using the {@link ParallelOracleBuilders} factory.
- *
- * @author frohme
  */
 @SuppressWarnings("PMD.SystemPrintln")
 public class ParallelismExample1 {

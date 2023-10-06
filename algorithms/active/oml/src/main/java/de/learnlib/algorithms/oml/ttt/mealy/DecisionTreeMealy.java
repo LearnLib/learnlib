@@ -29,9 +29,6 @@ import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author fhowar
- */
 class DecisionTreeMealy<I, O> extends AbstractDecisionTree<I, Word<O>> {
 
     private final Map<Word<I>, Word<O>> outputs;

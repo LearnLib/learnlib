@@ -45,8 +45,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <b>Implementation note</b>: Under the assumption that read-operations do not alter the internal state of the
  * automaton, this oracle is thread-safe.
  *
- * @author Jeroen Meijer
- *
  * @see SimulatorOracle
  *
  * @param <S> the state type.

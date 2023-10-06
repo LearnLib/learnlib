@@ -44,8 +44,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public class SymbolQueryCache<I, O>
         implements SymbolQueryOracle<I, O>, MealyLearningCacheOracle<I, O>, Resumable<SymbolQueryCacheState<I, O>> {

@@ -21,9 +21,6 @@ import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public class MalerPnueliMealyGrowingAlphabetTest
         extends AbstractGrowingAlphabetMealyTest<MalerPnueliMealy<Character, Character>> {
 

@@ -31,9 +31,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class SampleSetEQOracleTest extends AbstractEQOracleTest<SuffixOutput<Character, Boolean>, Character, Boolean> {
 
     private static final Alphabet<Character> ALPHABET = Alphabets.characters('1', '6');

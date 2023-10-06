@@ -39,9 +39,6 @@ import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-/**
- * @author Maik Merten
- */
 @GenerateRefinement(name = "DFARandomWordsEQOracle",
                     generics = "I",
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),

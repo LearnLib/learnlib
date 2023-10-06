@@ -21,9 +21,6 @@ import de.learnlib.counterexamples.LocalSuffixFinders;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public class DTLearnerDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<DTLearnerDFA<Character>> {
 
     @Override

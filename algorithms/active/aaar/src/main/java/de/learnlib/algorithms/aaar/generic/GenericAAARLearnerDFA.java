@@ -34,8 +34,6 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
  *         abstract input symbol type
  * @param <CI>
  *         concrete input symbol type
- *
- * @author frohme
  */
 public class GenericAAARLearnerDFA<L extends DFALearner<CI> & SupportsGrowingAlphabet<CI>, AI, CI>
         extends AbstractGenericAAARLearner<L, DFA<?, AI>, DFA<?, CI>, AI, CI, Boolean> {

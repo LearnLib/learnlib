@@ -57,8 +57,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *         input symbol type
  * @param <L>
  *         sub-learner type
- *
- * @author frohme
  */
 public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> & AccessSequenceTransformer<I>>
         implements LearningAlgorithm<SPA<?, I>, I, Boolean> {

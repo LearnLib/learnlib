@@ -31,8 +31,6 @@ import org.testng.annotations.Factory;
 
 /**
  * Abstract integration test for {@link SPA} learning algorithms.
- *
- * @author frohme
  */
 public abstract class AbstractSPALearnerIT {
 

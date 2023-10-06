@@ -22,8 +22,6 @@ import net.automatalib.SupportsGrowingAlphabet;
 /**
  * Utility interface to establish the combined learner constraints on {@link LearningAlgorithm} and
  * {@link SupportsGrowingAlphabet}.
- *
- * @author frohme
  */
 public interface ComboConstructor<L extends LearningAlgorithm<?, I, D> & SupportsGrowingAlphabet<I>, I, D>
         extends LearnerConstructor<L, I, D> {}

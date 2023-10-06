@@ -30,8 +30,6 @@ import org.testng.annotations.Test;
 
 /**
  * Simple tests for the reuse oracle without domain knowledge.
- *
- * @author Oliver Bauer
  */
 public class ReuseOracleTest {
 

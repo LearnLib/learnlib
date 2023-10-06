@@ -25,9 +25,6 @@ import de.learnlib.algorithms.oml.ttt.dt.DTInnerNode;
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author fhowar
- */
 class ChildrenDFA<I> implements Children<I, Boolean> {
 
     private @Nullable AbstractDTNode<I, Boolean> trueChild;

@@ -24,8 +24,6 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * This class generates a Mealy machine consisting of a two-dimensional grid of states. Each transition has unique
  * output.
- *
- * @author Maik Merten
  */
 public class ExampleGrid extends DefaultMealyLearningExample<Character, Integer> {
 

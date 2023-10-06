@@ -50,8 +50,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         the property type.
  * @param <D>
  *         the output type.
- *
- * @author Jeroen Meijer
  */
 @GenerateRefinement(name = "DFAPropertyOracleChain",
                     generics = {"I", "P"},

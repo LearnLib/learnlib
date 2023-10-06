@@ -25,9 +25,6 @@ import de.learnlib.testsupport.AbstractGrowingAlphabetMooreTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public class ExtensibleLStarMooreGrowingAlphabetTest
         extends AbstractGrowingAlphabetMooreTest<ExtensibleLStarMoore<Character, Character>> {
 

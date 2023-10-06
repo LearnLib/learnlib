@@ -20,8 +20,6 @@ package de.learnlib.algorithms.procedural;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class SymbolWrapper<I> {
 

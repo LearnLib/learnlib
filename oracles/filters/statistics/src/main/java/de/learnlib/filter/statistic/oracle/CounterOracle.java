@@ -33,8 +33,6 @@ import net.automatalib.words.Word;
 
 /**
  * Counts queries.
- *
- * @author falkhowar
  */
 @GenerateRefinement(name = "DFACounterOracle",
                     generics = "I",

@@ -34,8 +34,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author Malte Isberner
  */
 final class SymbolOracleWrapper<I, O> implements MembershipOracle<I, @Nullable O> {
 

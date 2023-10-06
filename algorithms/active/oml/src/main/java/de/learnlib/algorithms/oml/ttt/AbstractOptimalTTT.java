@@ -34,9 +34,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
-/**
- * @author fhowar
- */
 public abstract class AbstractOptimalTTT<M, I, D>
         implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, InputAlphabetHolder<I> {
 

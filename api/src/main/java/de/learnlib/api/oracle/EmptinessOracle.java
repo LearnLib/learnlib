@@ -37,8 +37,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         the input type
  * @param <D>
  *         the output type
- *
- * @author Jeroen Meijer
  */
 public interface EmptinessOracle<A extends Output<I, D>, I, D> {
 

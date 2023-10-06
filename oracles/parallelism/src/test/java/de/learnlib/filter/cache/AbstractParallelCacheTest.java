@@ -38,8 +38,6 @@ import org.testng.annotations.Test;
  * <p>
  * This test checks that the other way around, i.e. <i>learner</i> -> <i>(parallel querying) cache</i> -> <i>single
  * oracle</i> does at least not throw any synchronization errors.
- *
- * @author frohme
  */
 public abstract class AbstractParallelCacheTest<A, I, D> {
 

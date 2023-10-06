@@ -25,9 +25,6 @@ import de.learnlib.algorithms.oml.ttt.st.STNode;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author fhowar
- */
 class DecisionTreeDFA<I> extends AbstractDecisionTree<I, Boolean> {
 
     DecisionTreeDFA(MembershipOracle<I, Boolean> mqOracle, Alphabet<I> sigma, STNode<I> stRoot) {

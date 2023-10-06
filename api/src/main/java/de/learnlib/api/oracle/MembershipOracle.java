@@ -29,8 +29,6 @@ import net.automatalib.words.Word;
  * part, cf. {@link Query#getPrefix()} and {@link Query#getSuffix()}) in reaction to which the SUL produces a specific
  * observable behavior (outputting a word, acceptance/rejection etc.).
  *
- * @author Malte Isberner
- * @author Maik Merten
  * @see DefaultQuery
  */
 public interface MembershipOracle<I, D> extends QueryAnswerer<I, D>, BatchProcessor<Query<I, D>> {

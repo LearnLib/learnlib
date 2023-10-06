@@ -29,8 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Simple test driver for plain java objects. Uses a very simple data mapper without state or storage. Inputs cannot
  * have abstract parameters.
- *
- * @author falkhowar
  */
 public final class SimplePOJOTestDriver
         extends TestDriver<MethodInput, MethodOutput, ConcreteMethodInput, @Nullable Object> {

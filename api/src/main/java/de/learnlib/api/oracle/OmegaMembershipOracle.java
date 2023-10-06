@@ -31,8 +31,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Answers {@link OmegaQuery}s, similar to a {@link MembershipOracle}. Additionally, one can ask whether two states
  * are equal to each other.
  *
- * @author Jeroen Meijer
- *
  * @param <S> the state type
  * @param <I> the input type
  * @param <D> the output type

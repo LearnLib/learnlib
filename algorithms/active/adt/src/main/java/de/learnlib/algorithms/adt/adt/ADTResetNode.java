@@ -31,8 +31,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
 

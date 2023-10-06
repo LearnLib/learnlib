@@ -39,8 +39,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * A factory for creating thread-safe caches for {@link MealyMachine}-based {@link MembershipOracle}s. Parameters and
  * return types are tailored towards the use with {@link ParallelOracleBuilders}.
- *
- * @author frohme
  */
 public final class ThreadSafeMealyCaches {
 

@@ -38,8 +38,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author Malte Isberner
  */
 public interface LearningCache<A, I, O> {
 
@@ -59,8 +57,6 @@ public interface LearningCache<A, I, O> {
      *
      * @param <I>
      *         input symbol type
-     *
-     * @author Malte Isberner
      */
     interface DFALearningCache<I> extends LearningCache<DFA<?, I>, I, Boolean> {}
 
@@ -71,8 +67,6 @@ public interface LearningCache<A, I, O> {
      *         input symbol type
      * @param <O>
      *         output symbol type
-     *
-     * @author Malte Isberner
      */
     interface MealyLearningCache<I, O> extends LearningCache<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 }

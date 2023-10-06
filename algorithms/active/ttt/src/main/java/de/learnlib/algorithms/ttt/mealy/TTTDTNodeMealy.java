@@ -28,8 +28,6 @@ import de.learnlib.algorithms.ttt.base.TTTState;
  *         input symbol type
  * @param <D>
  *         output symbol type
- *
- * @author frohme
  */
 public class TTTDTNodeMealy<I, D> extends AbstractBaseDTNode<I, D> {
 

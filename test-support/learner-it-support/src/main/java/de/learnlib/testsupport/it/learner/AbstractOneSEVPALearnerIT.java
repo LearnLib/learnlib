@@ -30,8 +30,6 @@ import org.testng.annotations.Factory;
 
 /**
  * Abstract integration test for {@link OneSEVPA} learning algorithms.
- *
- * @author frohme
  */
 public abstract class AbstractOneSEVPALearnerIT {
 

@@ -38,8 +38,6 @@ import org.testng.annotations.Test;
 /**
  * Unit test for computing an EDSM score. The example is based on chapter 14.5 of the book "Grammatical Inference" by
  * Colin de la Higuera.
- *
- * @author frohme
  */
 @Test
 public class EDSMScoreTest {

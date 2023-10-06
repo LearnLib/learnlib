@@ -63,8 +63,6 @@ import net.automatalib.words.WordBuilder;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author Joshua Moerman
  */
 @GenerateRefinement(name = "DFARandomWpMethodEQOracle",
                     generics = "I",

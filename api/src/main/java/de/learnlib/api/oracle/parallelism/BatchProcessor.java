@@ -25,8 +25,6 @@ import de.learnlib.api.oracle.MembershipOracle;
  *
  * @param <T>
  *         batch type
- *
- * @author frohme
  */
 public interface BatchProcessor<T> {
 

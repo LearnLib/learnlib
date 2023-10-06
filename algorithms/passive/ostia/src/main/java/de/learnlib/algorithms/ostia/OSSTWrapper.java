@@ -28,9 +28,6 @@ import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author frohme
- */
 class OSSTWrapper<I, O> implements SubsequentialTransducer<State, I, Edge, O> {
 
     private final State root;

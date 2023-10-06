@@ -35,8 +35,6 @@ import net.automatalib.words.WordBuilder;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class ThreadSafeStateLocalInputSULCache<I, O> extends StateLocalInputSULCache<I, O> {
 

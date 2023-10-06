@@ -27,8 +27,6 @@ import de.learnlib.api.oracle.SymbolQueryOracle;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class CounterSymbolQueryOracle<I, O> implements SymbolQueryOracle<I, O> {
 

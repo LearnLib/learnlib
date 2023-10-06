@@ -48,8 +48,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         the output type
  * @param <Q>
  *         the state information type that is used to answer {@link OmegaQuery}s
- *
- * @author Jeroen Meijer
  */
 public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implements MealyOmegaMembershipOracle<Q, I, O> {
 
@@ -175,8 +173,6 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
      * The state information used to answer {@link OmegaQuery}s is of type {@link Integer}. The values of those integers
      * are actually hash codes of states of the {@link ObservableSUL}.
      *
-     * @author Jeroen Meijer
-     *
      * @param <S> the state type
      * @param <I> the input type
      * @param <O> the output type
@@ -259,8 +255,6 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
      * simply invoke {@link Object#equals(Object)} on both.
      * <p>
      * The state information used to answer {@link OmegaQuery}s is of type {@link S}.
-     *
-     * @author Jeroen Meijer
      *
      * @param <S> the state type
      * @param <I> the input type

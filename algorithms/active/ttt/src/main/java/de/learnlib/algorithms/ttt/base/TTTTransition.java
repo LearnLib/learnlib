@@ -26,8 +26,6 @@ import net.automatalib.words.WordBuilder;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class TTTTransition<I, D> extends IntrusiveListElemImpl<TTTTransition<I, D>>
         implements AccessSequenceProvider<I> {

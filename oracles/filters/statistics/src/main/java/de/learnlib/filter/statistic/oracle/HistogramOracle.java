@@ -29,8 +29,6 @@ import de.learnlib.filter.statistic.HistogramDataSet;
  *         input symbol class
  * @param <D>
  *         output symbol class
- *
- * @author falkhowar
  */
 public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
 

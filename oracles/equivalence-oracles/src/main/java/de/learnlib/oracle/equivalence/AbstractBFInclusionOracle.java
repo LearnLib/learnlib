@@ -40,7 +40,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * An {@link InclusionOracle} that generates words in a breadth-first manner.
  *
- * @author Jeroen Meijer
  * @see InclusionOracle
  * @see AbstractBFOracle
  */

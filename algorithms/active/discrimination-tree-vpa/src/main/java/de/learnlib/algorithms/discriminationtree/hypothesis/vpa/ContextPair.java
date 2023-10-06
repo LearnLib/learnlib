@@ -20,8 +20,6 @@ import net.automatalib.words.Word;
 /**
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class ContextPair<I> {
 

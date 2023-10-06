@@ -20,9 +20,6 @@ import java.util.List;
 import net.automatalib.automata.concepts.FiniteRepresentation;
 import net.automatalib.words.Word;
 
-/**
- * @author fhowar
- */
 interface Hypothesis<I, D> extends FiniteRepresentation {
 
     List<D> rowForState(Word<I> input);

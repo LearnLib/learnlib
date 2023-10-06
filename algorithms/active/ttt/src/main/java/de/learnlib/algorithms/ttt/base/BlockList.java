@@ -23,8 +23,6 @@ import de.learnlib.datastructure.list.IntrusiveList;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class BlockList<I, D> extends IntrusiveList<AbstractBaseDTNode<I, D>> {
 

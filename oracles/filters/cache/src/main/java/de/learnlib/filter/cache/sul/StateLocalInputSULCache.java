@@ -36,8 +36,6 @@ import net.automatalib.words.WordBuilder;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O, StateLocalInputSULCacheState<I, O>>
         implements StateLocalInputSUL<I, O> {

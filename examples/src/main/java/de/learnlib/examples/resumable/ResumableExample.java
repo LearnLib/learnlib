@@ -38,8 +38,6 @@ import net.automatalib.words.impl.GrowingMapAlphabet;
 /**
  * An example to demonstrate the {@link Resumable} feature of LearnLib to continue learning setups from previously
  * stored snapshots.
- *
- * @author frohme
  */
 @SuppressWarnings("PMD.SystemPrintln")
 public final class ResumableExample {

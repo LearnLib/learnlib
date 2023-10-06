@@ -28,9 +28,6 @@ import net.automatalib.words.Word;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class IncrementalWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, String>, String, Boolean> {
 
     private DFA<?, String> dfa;

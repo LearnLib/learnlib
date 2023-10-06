@@ -23,9 +23,6 @@ import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public abstract class AbstractDFACacheTest
         extends AbstractCacheTest<DFACacheOracle<Character>, DFA<?, Character>, Character, Boolean> {
 

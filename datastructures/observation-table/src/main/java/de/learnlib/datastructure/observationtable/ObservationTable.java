@@ -58,8 +58,6 @@ import org.checkerframework.checker.signedness.qual.Signed;
  *         input symbol type
  * @param <D>
  *         observation (output) domain type
- *
- * @author Malte Isberner
  */
 public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
 

@@ -32,8 +32,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class RivestSchapireAdapterMealy<I, O> extends RivestSchapireMealy<I, O>
         implements AccessSequenceTransformer<I> {

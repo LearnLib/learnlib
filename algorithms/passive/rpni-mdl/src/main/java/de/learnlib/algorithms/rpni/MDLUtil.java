@@ -20,9 +20,6 @@ import java.util.List;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.commons.smartcollections.IntSeq;
 
-/**
- * @author frohme
- */
 final class MDLUtil {
 
     private MDLUtil() {}

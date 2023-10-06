@@ -23,9 +23,6 @@ import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author bainczyk
- */
 public class TTTLearnerMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<TTTLearnerMealy<Character, Character>, TTTLearnerState<Character, Word<Character>>> {
 

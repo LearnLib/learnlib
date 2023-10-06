@@ -23,8 +23,6 @@ package de.learnlib.algorithms.ttt.base;
  *         The input alphabet type.
  * @param <D>
  *         The output domain type.
- *
- * @author bainczyk
  */
 public class TTTLearnerState<I, D> {
 

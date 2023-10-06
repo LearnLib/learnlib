@@ -25,9 +25,6 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public abstract class AbstractSULCacheTest
         extends AbstractCacheTest<SULLearningCacheOracle<Character, Integer, SULCache<Character, Integer>>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 

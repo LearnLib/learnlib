@@ -18,9 +18,6 @@ package de.learnlib.algorithms.oml.ttt.mealy;
 import de.learnlib.algorithms.oml.ttt.dt.DTLeaf;
 import net.automatalib.words.Word;
 
-/**
- * @author fhowar
- */
 class MealyTransition<I, O> {
 
     final DTLeaf<I, Word<O>> source;

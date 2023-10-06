@@ -27,9 +27,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class RandomWordsEQOracleTest
         extends AbstractEQOracleTest<SuffixOutput<Character, Boolean>, Character, Boolean> {
 

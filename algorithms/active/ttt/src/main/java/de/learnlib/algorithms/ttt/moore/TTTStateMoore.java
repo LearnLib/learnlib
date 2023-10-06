@@ -27,9 +27,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbols type
- *
- * @author bayram
- * @author frohme
  */
 public class TTTStateMoore<I, O> extends TTTState<I, Word<O>> {
 

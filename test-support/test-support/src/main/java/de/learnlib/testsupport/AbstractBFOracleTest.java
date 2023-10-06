@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Class to test any {@link AbstractBFOracle}.
- *
- * @author Jeroen Meijer
  */
 public abstract class AbstractBFOracleTest<D> {
 

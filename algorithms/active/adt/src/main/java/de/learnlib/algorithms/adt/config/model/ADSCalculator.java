@@ -22,9 +22,6 @@ import de.learnlib.algorithms.adt.adt.ADTNode;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public interface ADSCalculator {
 
     <S, I, O> Optional<ADTNode<S, I, O>> compute(MealyMachine<S, I, ?, O> hypothesis,

@@ -21,8 +21,6 @@ import java.lang.annotation.Target;
 
 /**
  * Definition of a generic parameter.
- *
- * @author frohme
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({})

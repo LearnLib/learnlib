@@ -23,8 +23,6 @@ import net.automatalib.automata.vpa.State;
 /**
  * @param <L>
  *         location type
- *
- * @author Malte Isberner
  */
 final class NonDetState<L> {
 

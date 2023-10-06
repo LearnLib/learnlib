@@ -29,8 +29,6 @@ import net.automatalib.words.Word;
  *         input symbol class
  * @param <D>
  *         output symbol class
- *
- * @author Jeroen Meijer
  */
 public interface StatisticLearner<M, I, D> extends LearningAlgorithm<M, I, D>, StatisticCollector {
 

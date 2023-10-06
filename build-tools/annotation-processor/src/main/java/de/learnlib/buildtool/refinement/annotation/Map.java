@@ -21,8 +21,6 @@ import java.lang.annotation.Target;
 
 /**
  * A refinement mapping of (constructor) parameters for the to-be-generated refinement.
- *
- * @author frohme
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({})

@@ -26,8 +26,6 @@ import org.checkerframework.checker.nullness.qual.KeyFor;
 
 /**
  * abstract method input, may have abstract parameters.
- *
- * @author falkhowar
  */
 public class MethodInput {
 

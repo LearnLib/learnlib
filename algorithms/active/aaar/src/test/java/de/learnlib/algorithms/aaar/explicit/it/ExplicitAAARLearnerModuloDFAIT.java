@@ -28,9 +28,6 @@ import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantLi
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public class ExplicitAAARLearnerModuloDFAIT extends AbstractDFALearnerIT {
 
     @Override

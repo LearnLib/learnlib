@@ -23,9 +23,6 @@ import de.learnlib.testsupport.AbstractResumableLearnerMooreTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 public class TTTLearnerMooreResumableLearnerTest
         extends AbstractResumableLearnerMooreTest<TTTLearnerMoore<Character, Character>, TTTLearnerState<Character, Word<Character>>> {
 

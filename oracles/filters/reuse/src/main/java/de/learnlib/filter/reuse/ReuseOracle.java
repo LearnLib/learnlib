@@ -56,8 +56,6 @@ import net.automatalib.words.WordBuilder;
  *         input symbol class
  * @param <O>
  *         output symbol class
- *
- * @author Oliver Bauer
  */
 public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> {
 

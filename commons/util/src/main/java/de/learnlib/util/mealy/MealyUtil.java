@@ -28,8 +28,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility class helping to unify various approaches to actively learning Mealy machines.
- *
- * @author Malte Isberner
  */
 public final class MealyUtil {
 

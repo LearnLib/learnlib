@@ -24,9 +24,6 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author fhowar
- */
 public class OptimalTTTMealy<I, O> extends AbstractOptimalTTT<MealyMachine<?, I, ?, O>, I, Word<O>>
         implements MealyLearner<I, O> {
 

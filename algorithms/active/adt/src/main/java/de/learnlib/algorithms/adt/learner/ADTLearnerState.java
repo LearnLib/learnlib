@@ -27,8 +27,6 @@ import de.learnlib.algorithms.adt.automaton.ADTHypothesis;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class ADTLearnerState<S, I, O> {
 

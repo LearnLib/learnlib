@@ -31,8 +31,6 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscr
  *         The state property type.
  * @param <TP>
  *         The transition property type.
- *
- * @author bainczyk
  */
 public class DTLearnerState<I, D, SP, TP> {
 

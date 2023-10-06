@@ -24,8 +24,6 @@ import de.learnlib.algorithms.adt.adt.ADTNode;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public class ADTTransition<I, O> {
 

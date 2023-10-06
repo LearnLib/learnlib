@@ -26,8 +26,6 @@ package de.learnlib.filter.reuse.tree;
  *         input symbol class
  * @param <O>
  *         output symbol class
- *
- * @author Oliver Bauer
  */
 public class ReuseEdge<S, I, O> {
 

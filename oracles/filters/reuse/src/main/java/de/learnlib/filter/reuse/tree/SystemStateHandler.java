@@ -28,8 +28,6 @@ package de.learnlib.filter.reuse.tree;
  *
  * @param <S>
  *         system state class
- *
- * @author Oliver Bauer
  */
 public interface SystemStateHandler<S> {
 

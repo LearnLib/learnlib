@@ -30,8 +30,6 @@ import de.learnlib.datastructure.list.IntrusiveList;
  *         output symbol type
  * @param <T>
  *         transition type
- *
- * @author Malte Isberner
  */
 public class SplitData<O, T extends IntrusiveList<?>> {
 

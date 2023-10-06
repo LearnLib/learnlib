@@ -23,8 +23,6 @@ package de.learnlib.api;
  * @param <S> the state type
  * @param <I> the input type
  * @param <O> the output type
- *
- * @author Jeroen Meijer
  */
 public interface ObservableSUL<S, I, O> extends SUL<I, O> {
 

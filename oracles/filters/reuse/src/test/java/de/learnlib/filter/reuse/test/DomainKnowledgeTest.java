@@ -31,8 +31,6 @@ import org.testng.annotations.Test;
 
 /**
  * Reuse oracle test that uses invariant input symbols.
- *
- * @author Oliver Bauer
  */
 public class DomainKnowledgeTest {
 

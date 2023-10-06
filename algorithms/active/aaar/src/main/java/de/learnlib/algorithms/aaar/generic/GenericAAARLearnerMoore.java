@@ -37,8 +37,6 @@ import net.automatalib.words.Word;
  *         concrete input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class GenericAAARLearnerMoore<L extends MooreLearner<CI, O> & SupportsGrowingAlphabet<CI>, AI, CI, O>
         extends AbstractGenericAAARLearner<L, MooreMachine<?, AI, ?, O>, MooreMachine<?, CI, ?, O>, AI, CI, Word<O>> {

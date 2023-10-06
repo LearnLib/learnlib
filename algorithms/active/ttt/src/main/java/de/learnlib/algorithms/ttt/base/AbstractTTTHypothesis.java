@@ -43,8 +43,6 @@ import net.automatalib.words.impl.Alphabets;
  *         output domain type
  * @param <T>
  *         transition type
- *
- * @author Malte Isberner
  */
 public abstract class AbstractTTTHypothesis<S extends TTTState<I, D>, I, D, T>
         implements DeterministicAutomaton<S, I, T>,

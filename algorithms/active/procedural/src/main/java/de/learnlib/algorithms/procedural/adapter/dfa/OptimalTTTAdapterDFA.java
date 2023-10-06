@@ -29,8 +29,6 @@ import net.automatalib.words.Word;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class OptimalTTTAdapterDFA<I> extends OptimalTTTDFA<I> implements AccessSequenceTransformer<I> {
 

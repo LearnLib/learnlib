@@ -31,8 +31,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * This class will log whenever the property is disproved, or when a counterexample to an automaton is found (i.e. a
  * spurious counterexample is found).
  *
- * @author Jeroen Meijer
- *
  * @param <I> the input type
  * @param <A> the automaton type
  * @param <P> the property type

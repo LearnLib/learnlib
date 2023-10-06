@@ -23,8 +23,6 @@ import org.testng.annotations.Test;
 
 /**
  * Test for the {@link ADTHypothesis} class.
- *
- * @author frohme.
  */
 public class ADTHypothesisTest {
 

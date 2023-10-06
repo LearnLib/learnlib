@@ -31,9 +31,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author bayram
- * @author frohme
  */
 class HypothesisWrapperMoore<I, O>
         implements MooreMachine<HState<I, Word<O>, O, Void>, I, HTransition<I, Word<O>, O, Void>, O> {

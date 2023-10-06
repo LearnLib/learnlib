@@ -23,9 +23,6 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
-/**
- * @author frohme
- */
 public final class CacheTestUtils {
 
     public static final Alphabet<Character> INPUT_ALPHABET;

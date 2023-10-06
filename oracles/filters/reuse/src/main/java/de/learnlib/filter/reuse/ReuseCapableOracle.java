@@ -31,8 +31,6 @@ import net.automatalib.words.Word;
  *         input symbol class
  * @param <O>
  *         output symbol class
- *
- * @author Oliver Bauer
  */
 public interface ReuseCapableOracle<S, I, O> {
 

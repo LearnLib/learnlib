@@ -23,9 +23,6 @@ import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.util.automata.ads.ADS;
 import net.automatalib.words.Alphabet;
 
-/**
- * @author frohme
- */
 public class BestEffortCalculator extends AbstractCalculator {
 
     @Override

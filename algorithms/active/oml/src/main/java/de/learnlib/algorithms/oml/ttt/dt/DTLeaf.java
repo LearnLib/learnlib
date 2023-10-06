@@ -25,9 +25,6 @@ import de.learnlib.algorithms.oml.ttt.pt.PTNode;
 import de.learnlib.algorithms.oml.ttt.st.STNode;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author fhowar
- */
 public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
 
     private final List<PTNode<I, D>> shortPrefixes;

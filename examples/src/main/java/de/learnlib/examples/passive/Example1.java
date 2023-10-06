@@ -29,8 +29,6 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * Example of setting up a passive DFA learner.
- *
- * @author frohme
  */
 public final class Example1 {
 

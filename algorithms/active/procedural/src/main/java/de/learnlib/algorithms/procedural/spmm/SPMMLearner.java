@@ -59,8 +59,6 @@ import net.automatalib.words.impl.GrowingMapAlphabet;
  *         output symbol type
  * @param <L>
  *         sub-learner type
- *
- * @author frohme
  */
 public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>>
         implements LearningAlgorithm<SPMM<?, I, ?, O>, I, Word<O>> {

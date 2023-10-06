@@ -22,9 +22,6 @@ import de.learnlib.algorithms.oml.ttt.pt.PTNode;
 import de.learnlib.algorithms.oml.ttt.pt.PrefixTree;
 import net.automatalib.automata.fsa.DFA;
 
-/**
- * @author fhowar
- */
 class HypothesisDFA<I> implements DFA<DTLeaf<I, Boolean>, I> {
 
     private final PrefixTree<I, Boolean> ptree;

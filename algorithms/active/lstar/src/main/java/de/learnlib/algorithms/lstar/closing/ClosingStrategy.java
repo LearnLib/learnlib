@@ -28,8 +28,6 @@ import de.learnlib.datastructure.observationtable.Row;
  *         type variable for input symbol upper bound.
  * @param <D>
  *         type variable for output symbol upper bound.
- *
- * @author Malte Isberner
  */
 public interface ClosingStrategy<I, D> {
 

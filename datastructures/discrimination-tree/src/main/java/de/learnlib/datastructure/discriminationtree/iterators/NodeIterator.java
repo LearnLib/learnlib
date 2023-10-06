@@ -26,9 +26,6 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractDTNode;
  *
  * @param <N>
  *         node type
- *
- * @author Malte Isberner
- * @author frohme
  */
 class NodeIterator<N extends AbstractDTNode<?, ?, ?, N>> extends AbstractIterator<N> {
 

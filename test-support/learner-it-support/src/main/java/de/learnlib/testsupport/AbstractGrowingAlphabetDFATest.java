@@ -31,9 +31,6 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
-/**
- * @author frohme
- */
 public abstract class AbstractGrowingAlphabetDFATest<L extends SupportsGrowingAlphabet<Character> & LearningAlgorithm<DFA<?, Character>, Character, Boolean>>
         extends AbstractGrowingAlphabetTest<L, DFA<?, Character>, MembershipOracle<Character, Boolean>, Character, Boolean> {
 

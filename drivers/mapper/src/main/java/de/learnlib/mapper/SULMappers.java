@@ -20,8 +20,6 @@ import de.learnlib.mapper.api.SULMapper;
 
 /**
  * Utility methods for manipulating mappers.
- *
- * @author Malte Isberner
  */
 public final class SULMappers {
 

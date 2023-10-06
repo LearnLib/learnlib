@@ -32,8 +32,6 @@ import de.learnlib.datastructure.observationtable.GenericObservationTable;
  *         The hypothesis type.
  * @param <S>
  *         The hypothesis state type.
- *
- * @author bainczyk
  */
 public class AutomatonLStarState<I, D, AI, S> {
 

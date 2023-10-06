@@ -25,8 +25,6 @@ import de.learnlib.api.oracle.parallelism.BatchProcessor;
  *
  * @param <Q>
  *         query type
- *
- * @author Malte Isberner
  */
 final class StaticQueriesJob<Q> extends AbstractQueriesJob<Q> {
 

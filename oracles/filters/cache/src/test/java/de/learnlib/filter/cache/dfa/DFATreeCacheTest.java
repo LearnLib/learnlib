@@ -17,9 +17,6 @@ package de.learnlib.filter.cache.dfa;
 
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 
-/**
- * @author frohme
- */
 public class DFATreeCacheTest extends AbstractDFACacheTest {
 
     @Override

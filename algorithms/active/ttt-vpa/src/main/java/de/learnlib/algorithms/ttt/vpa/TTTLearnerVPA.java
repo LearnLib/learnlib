@@ -50,8 +50,6 @@ import org.slf4j.LoggerFactory;
 /**
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class TTTLearnerVPA<I> extends DTLearnerVPA<I> {
 

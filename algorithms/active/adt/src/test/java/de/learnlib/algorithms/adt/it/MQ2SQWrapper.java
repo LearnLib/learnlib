@@ -20,9 +20,6 @@ import de.learnlib.api.oracle.SymbolQueryOracle;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-/**
- * @author frohme
- */
 public class MQ2SQWrapper<I, O> implements SymbolQueryOracle<I, O> {
 
     final WordBuilder<I> wb;

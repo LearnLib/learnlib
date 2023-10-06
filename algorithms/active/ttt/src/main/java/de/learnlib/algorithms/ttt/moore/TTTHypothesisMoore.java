@@ -30,9 +30,6 @@ import net.automatalib.words.Word;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author bayram
- * @author frohme
  */
 public class TTTHypothesisMoore<I, O>
         extends AbstractTTTHypothesis<TTTStateMoore<I, O>, I, Word<O>, TTTStateMoore<I, O>>

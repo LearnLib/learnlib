@@ -32,8 +32,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol class
  * @param <O>
  *         output symbol class
- *
- * @author Oliver Bauer
  */
 class ReuseTreeDotHelper<S, I, O>
         extends DefaultVisualizationHelper<@Nullable ReuseNode<S, I, O>, @Nullable ReuseEdge<S, I, O>> {

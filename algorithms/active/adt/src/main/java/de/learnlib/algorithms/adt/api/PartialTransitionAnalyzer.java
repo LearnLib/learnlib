@@ -25,8 +25,6 @@ package de.learnlib.algorithms.adt.api;
  *         (hypothesis) state type
  * @param <I>
  *         input alphabet type
- *
- * @author frohme
  */
 public interface PartialTransitionAnalyzer<S, I> {
 
