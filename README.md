@@ -22,10 +22,10 @@ Algorithm (active)  | Target models               || Algorithm (passive) | Model
 AAAR                | `DFA` `Mealy` `Moore`       || OSTIA               | `SST`
 ADT                 | `Mealy`                     || RPNI                | `DFA` `Mealy`
 DHC                 | `Mealy`                     || RPNI (EDSM)         | `DFA`
-Discrimination Tree | `DFA` `Mealy` `Moore` `VPA` || RPNI (MDL)          | `DFA`
-Kearns & Vazirani   | `DFA` `Mealy`
+Kearns & Vazirani   | `DFA` `Mealy`               || RPNI (MDL)          | `DFA`
 L* (incl. variants) | `DFA` `Mealy` `Moore`
 NL*                 | `NFA`
+Observation Pack    | `DFA` `Mealy` `Moore` `VPA`
 OML                 | `DFA` `Mealy`
 Procedural          | `SPA` `SBA` `SPMM`
 TTT                 | `DFA` `Mealy` `Moore` `VPA`
