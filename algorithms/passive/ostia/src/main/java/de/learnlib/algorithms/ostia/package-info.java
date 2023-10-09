@@ -13,25 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.ttt.vpa;
-
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.DTNode;
 
 /**
- * A global splitter. In addition to the information stored in a (local) {@link Splitter}, this class also stores the
- * block the local splitter applies to.
- *
- * @param <I>
- *         input symbol type
+ * This package (and sub-packages) provides the implementation of the "onward subsequential transducer inference
+ * algorithm" (OSTIA) learning algorithm as presented in the paper <a href="https://doi.org/10.1109/34.211465">Learning
+ * Subsequential Transducers for Pattern Recognition Interpretation Tasks</a> by Jose Oncina, Pedro García, and Enrique
+ * Vidal.
  */
-final class GlobalSplitter<I> {
-
-    public final Splitter<I> localSplitter;
-
-    public final DTNode<I> blockRoot;
-
-    GlobalSplitter(DTNode<I> blockRoot, Splitter<I> localSplitter) {
-        this.blockRoot = blockRoot;
-        this.localSplitter = localSplitter;
-    }
-}
+package de.learnlib.algorithms.ostia;

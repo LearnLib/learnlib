@@ -15,9 +15,9 @@
  */
 package de.learnlib.algorithms.ttt.vpa;
 
-import de.learnlib.algorithms.discriminationtree.hypothesis.vpa.ContextPair;
-import de.learnlib.algorithms.discriminationtree.hypothesis.vpa.DTNode;
-import de.learnlib.algorithms.discriminationtree.hypothesis.vpa.HypLoc;
+import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.ContextPair;
+import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.DTNode;
+import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.HypLoc;
 import net.automatalib.words.Word;
 
 /**

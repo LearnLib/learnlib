@@ -29,7 +29,10 @@ limitations under the License.
 
     <name>LearnLib :: Algorithms :: Procedural</name>
     <description>
-        Active learning algorithms for procedural systems. Currently, contains learners for SPAs, SBAs, and SPMMs including adapters for integrating various regular learners of LearnLib in the context-free learning setup.
+        This artifact provides the implementations of various learning algorithms for systems of procedural automata
+        such as the ones described in the papers "Compositional learning of mutually recursive procedural systems
+        (https://doi.org/10.1007/s10009-021-00634-y) and "From Languages to Behaviors and Back"
+        (https://doi.org/10.1007/978-3-031-15629-8_11) by Markus Frohme and Bernhard Steffen.
     </description>
 
     <dependencies>

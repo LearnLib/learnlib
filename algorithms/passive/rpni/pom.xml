@@ -28,7 +28,14 @@ limitations under the License.
     <artifactId>learnlib-rpni</artifactId>
 
     <name>LearnLib :: Algorithms :: RPNI</name>
-    <description>The RPNI passive learning algorithm</description>
+    <description>
+        This artifact provides the implementation of (a blue-fringe version of) the "regular positive negative
+        inference" (RPNI) learning algorithm as presented in the paper "Inferring regular languages in polynomial update
+        time" (https://dx.doi.org/10.1142/9789812797902_0004) by Jose Oncina and Pedro García.
+
+        More details on the blue-fringe version of this algorithm can be found in the book "Grammatical Inference"
+        (https://doi.org/10.1017/CBO9781139194655) by Colin de la Higuera.
+    </description>
 
     <dependencies>
         <!-- internal -->

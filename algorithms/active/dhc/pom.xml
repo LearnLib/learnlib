@@ -28,7 +28,11 @@ limitations under the License.
     <artifactId>learnlib-dhc</artifactId>
 
     <name>LearnLib :: Algorithms :: DHC</name>
-    <description>The Direct Hypothesis Construction algorithm for active learning of Mealy machines</description>
+    <description>
+        This artifact provides the implementation of the DHC learning algorithm as described in the paper "Automata
+        Learning with on-the-Fly Direct Hypothesis Construction" (https://doi.org/10.1007/978-3-642-34781-8_19) by Maik
+        Merten, Falk Howar, Bernhard Steffen, and Tiziana Margaria.
+    </description>
 
     <dependencies>
         <!-- internal -->

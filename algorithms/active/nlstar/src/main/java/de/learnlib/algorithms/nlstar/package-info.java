@@ -13,25 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.ttt.vpa;
-
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.DTNode;
 
 /**
- * A global splitter. In addition to the information stored in a (local) {@link Splitter}, this class also stores the
- * block the local splitter applies to.
- *
- * @param <I>
- *         input symbol type
+ * This package (and sub-packages) provides the implementation of the NL* learning algorithm as described in the paper
+ * <a href="http://ijcai.org/Proceedings/09/Papers/170.pdf">Angluin-Style Learning of NFA</a> by Benedikt Bollig, Peter
+ * Habermehl, Carsten Kern, and Martin Leucker.
  */
-final class GlobalSplitter<I> {
-
-    public final Splitter<I> localSplitter;
-
-    public final DTNode<I> blockRoot;
-
-    GlobalSplitter(DTNode<I> blockRoot, Splitter<I> localSplitter) {
-        this.blockRoot = blockRoot;
-        this.localSplitter = localSplitter;
-    }
-}
+package de.learnlib.algorithms.nlstar;

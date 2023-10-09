@@ -13,16 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.discriminationtree.hypothesis.vpa;
 
 /**
- * @param <I>
- *         input symbol type
+ * This package (and sub-packages) provides the implementation of the VPA adaption of the TTT learning algorithm as
+ * presented in the PhD thesis <a href="https://dx.doi.org/10.17877/DE290R-16359">Foundations of Active Automata
+ * Learning: An Algorithmic Perspective</a> by Malte Isberner.
  */
-public class HypIntTrans<I> extends AbstractHypTrans<I> {
-
-    public HypIntTrans(HypLoc<I> src, I intSym) {
-        super(src.getAccessSequence().append(intSym));
-    }
-
-}
+package de.learnlib.algorithms.ttt.vpa;

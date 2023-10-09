@@ -39,8 +39,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * successors of which are called blue states. In each iteration of the main loop, an attempt is made to merge a blue
  * state into any red state. If this is impossible, the blue state is promoted, meaning it is converted into a red state
  * itself. The procedure terminates when all states are red.
- * <p>
- * A blue fringe version of RPNI is described in the book "Grammatical Inference" by Colin de la Higuera.
  *
  * @param <I>
  *         input symbol type

@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.ttt.vpa;
+package de.learnlib.algorithms.discriminationtree.vpa.hypothesis;
 
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.DTNode;
+import de.learnlib.datastructure.list.IntrusiveList;
 
 /**
- * A global splitter. In addition to the information stored in a (local) {@link Splitter}, this class also stores the
- * block the local splitter applies to.
- *
  * @param <I>
  *         input symbol type
  */
-final class GlobalSplitter<I> {
+public class BlockList<I> extends IntrusiveList<DTNode<I>> {
 
-    public final Splitter<I> localSplitter;
-
-    public final DTNode<I> blockRoot;
-
-    GlobalSplitter(DTNode<I> blockRoot, Splitter<I> localSplitter) {
-        this.blockRoot = blockRoot;
-        this.localSplitter = localSplitter;
+    public void add(DTNode<I> block) {
+        block.setNextElement(next);
+        if (next != null) {
+            next.setPrevElement(block);
+        }
+        block.setPrevElement(this);
+        this.next = block;
     }
+
 }

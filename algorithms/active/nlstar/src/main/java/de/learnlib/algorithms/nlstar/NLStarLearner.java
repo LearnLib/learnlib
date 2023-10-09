@@ -31,8 +31,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 /**
- * The NL* algorithm, as described in the paper <a href="http://ijcai.org/papers09/Papers/IJCAI09-170.pdf">"Angluin-Style
- * Learning of NFA"</a> by B. Bollig et al. (IJCAI'09).
+ * The NL* learner.
  *
  * @param <I>
  *         input symbol type
@@ -105,8 +104,8 @@ public class NLStarLearner<I> implements NFALearner<I> {
     }
 
     /**
-     * Retrieves a deterministic version of the hypothesis. The DFA is obtained through {@link
-     * NFAs#determinize(net.automatalib.automata.fsa.NFA)}.
+     * Retrieves a deterministic version of the hypothesis. The DFA is obtained through
+     * {@link NFAs#determinize(net.automatalib.automata.fsa.NFA)}.
      *
      * @return a deterministic version of the hypothesis
      */

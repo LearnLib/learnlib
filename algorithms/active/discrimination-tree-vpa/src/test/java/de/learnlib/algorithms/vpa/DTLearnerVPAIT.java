@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.discriminationtree;
+package de.learnlib.algorithms.vpa;
 
 import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
 import de.learnlib.acex.analyzers.AcexAnalyzers;

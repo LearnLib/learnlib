@@ -28,7 +28,11 @@ limitations under the License.
     <artifactId>learnlib-oml</artifactId>
 
     <name>LearnLib :: Algorithms :: OML</name>
-    <description>The Optimal MAT Learner</description>
+    <description>
+        This artifact provides the implementations of various learning algorithms based on the "optimal MAT learning"
+        concept as described in the paper "Active Automata Learning as Black-Box Search and Lazy Partition Refinement"
+        (https://doi.org/10.1007/978-3-031-15629-8_17) by Falk Howar and Bernhard Steffen.
+    </description>
 
     <dependencies>
         <!-- internal -->

@@ -13,25 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.ttt.vpa;
-
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.DTNode;
 
 /**
- * A global splitter. In addition to the information stored in a (local) {@link Splitter}, this class also stores the
- * block the local splitter applies to.
- *
- * @param <I>
- *         input symbol type
+ * This package (and sub-packages) provides the implementations of various learning algorithms based on the "optimal MAT
+ * learning" concept as described in the paper <a href="https://doi.org/10.1007/978-3-031-15629-8_17">Active Automata
+ * Learning as Black-Box Search and Lazy Partition Refinement</a> by Falk Howar and Bernhard Steffen.
  */
-final class GlobalSplitter<I> {
-
-    public final Splitter<I> localSplitter;
-
-    public final DTNode<I> blockRoot;
-
-    GlobalSplitter(DTNode<I> blockRoot, Splitter<I> localSplitter) {
-        this.blockRoot = blockRoot;
-        this.localSplitter = localSplitter;
-    }
-}
+package de.learnlib.algorithms.oml;

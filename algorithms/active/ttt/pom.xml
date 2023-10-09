@@ -28,7 +28,11 @@ limitations under the License.
     <artifactId>learnlib-ttt</artifactId>
 
     <name>LearnLib :: Algorithms :: TTT</name>
-    <description>The TTT Algorithm</description>
+    <description>
+        This artifact provides the implementation of the TTT algorithm as described in the paper "The TTT Algorithm: A
+        Redundancy-Free Approach to Active Automata Learning" (https://doi.org/10.1007/978-3-319-11164-3_26) by Malte
+        Isberner, Falk Howar, and Bernhard Steffen.
+    </description>
 
     <dependencies>
         <!-- internal -->

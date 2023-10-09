@@ -13,25 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.ttt.vpa;
-
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.DTNode;
 
 /**
- * A global splitter. In addition to the information stored in a (local) {@link Splitter}, this class also stores the
- * block the local splitter applies to.
- *
- * @param <I>
- *         input symbol type
+ * This package (and sub-packages) provides the implementation of (a blue-fringe version of) the "regular positive
+ * negative inference" (RPNI) learning algorithm as presented in the paper <a
+ * href="https://dx.doi.org/10.1142/9789812797902_0004">Inferring regular languages in polynomial update time</a> by
+ * Jose Oncina and Pedro García.
+ * <p>
+ * More details on the blue-fringe version of this algorithm can be found in the book <a
+ * href="https://doi.org/10.1017/CBO9781139194655">Grammatical Inference</a> by Colin de la Higuera.
  */
-final class GlobalSplitter<I> {
-
-    public final Splitter<I> localSplitter;
-
-    public final DTNode<I> blockRoot;
-
-    GlobalSplitter(DTNode<I> blockRoot, Splitter<I> localSplitter) {
-        this.blockRoot = blockRoot;
-        this.localSplitter = localSplitter;
-    }
-}
+package de.learnlib.algorithms.rpni;

@@ -28,7 +28,10 @@ limitations under the License.
     <artifactId>learnlib-kearns-vazirani</artifactId>
 
     <name>LearnLib :: Algorithms :: Kearns/Vazirani</name>
-    <description>The automata learning algorithm described by Kearns &amp; Vazirani</description>
+    <description>
+        This artifact provides the implementation of the learning algorithm described in the book "An Introduction to
+        Computational Learning Theory" by Michael Kearns and Umesh Vazirani.
+    </description>
 
     <dependencies>
         <!-- internal -->

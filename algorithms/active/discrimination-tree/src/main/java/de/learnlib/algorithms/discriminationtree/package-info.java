@@ -13,23 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.discriminationtree.hypothesis.vpa;
-
-import de.learnlib.datastructure.list.IntrusiveList;
 
 /**
- * @param <I>
- *         input symbol type
+ * This package (and sub-packages) provides the implementation of the Observation-Pack learning algorithm as described
+ * in the PhD thesis <a href="http://dx.doi.org/10.17877/DE290R-4817">Active learning of interface programs</a> by Falk
+ * Howar.
  */
-public class BlockList<I> extends IntrusiveList<DTNode<I>> {
-
-    public void add(DTNode<I> block) {
-        block.setNextElement(next);
-        if (next != null) {
-            next.setPrevElement(block);
-        }
-        block.setPrevElement(this);
-        this.next = block;
-    }
-
-}
+package de.learnlib.algorithms.discriminationtree;

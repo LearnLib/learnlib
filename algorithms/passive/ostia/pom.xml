@@ -27,7 +27,11 @@ limitations under the License.
     <artifactId>learnlib-ostia</artifactId>
 
     <name>LearnLib :: Algorithms :: OSTIA</name>
-    <description>The OSTIA passive learning algorithm</description>
+    <description>
+        This artifact provides the implementation of the "onward subsequential transducer inference algorithm" (OSTIA)
+        learning algorithm as presented in the paper "Learning Subsequential Transducers for Pattern Recognition
+        Interpretation Tasks" (https://doi.org/10.1109/34.211465) by Jose Oncina, Pedro García, and Enrique Vidal.
+    </description>
 
     <dependencies>
         <dependency>

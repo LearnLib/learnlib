@@ -27,7 +27,11 @@ limitations under the License.
     <artifactId>learnlib-nlstar</artifactId>
 
     <name>LearnLib :: Algorithms :: NL*</name>
-    <description>A variant of the L* algorithm for inferring non-deterministic hypothesis automata.</description>
+    <description>
+        This artifact provides the implementation of the NL* learning algorithm as described in the paper "Angluin-Style
+        Learning of NFA" (http://ijcai.org/Proceedings/09/Papers/170.pdf) by by Benedikt Bollig, Peter Habermehl,
+        Carsten Kern, and Martin Leucker.
+    </description>
 
     <dependencies>
         <!-- internal -->

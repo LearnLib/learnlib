@@ -29,8 +29,9 @@ limitations under the License.
 
     <name>LearnLib :: Algorithms :: ADT</name>
     <description>
-        The ADT Algorithm. Uses adaptive distinguishing trees (a generalization of adaptive distinguishing sequences) to
-        separate hypothesis states and focuses on minimizing the amount of resets during the learning process.
+        This artifact provides the implementation of the ADT learning algorithm as described in the Master thesis
+        "Active Automata Learning with Adaptive Distinguishing Sequences" (http://arxiv.org/abs/1902.01139) by Markus
+        Frohme.
     </description>
 
     <dependencies>

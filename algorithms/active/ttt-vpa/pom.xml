@@ -28,7 +28,11 @@ limitations under the License.
     <artifactId>learnlib-ttt-vpa</artifactId>
 
     <name>LearnLib :: Algorithms :: TTT [VPA]</name>
-    <description>The TTT Algorithm (visibly push-down automata variant)</description>
+    <description>
+        This artifact provides the implementation of the VPA adaption of the TTT learning algorithm as presented in the
+        PhD thesis "Foundations of Active Automata Learning: An Algorithmic Perspective"
+        (https://dx.doi.org/10.17877/DE290R-16359) by Malte Isberner.
+    </description>
 
     <dependencies>
         <!-- internal -->

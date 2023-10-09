@@ -27,8 +27,16 @@ limitations under the License.
 
     <artifactId>learnlib-rpni-mdl</artifactId>
 
-    <name>LearnLib :: Algorithms :: MDL</name>
-    <description>The MDL passive learning algorithm</description>
+    <name>LearnLib :: Algorithms :: RPNI (MDL)</name>
+    <description>
+        This artifact provides the implementation of (a blue-fringe version of) the "regular positive negative
+        inference" (RPNI) learning algorithm as presented in the paper "Inferring regular languages in polynomial update
+        time" (https://dx.doi.org/10.1142/9789812797902_0004) by Jose Oncina and Pedro García using the "minimum
+        description length" (MDL) heuristic.
+
+        More details on this algorithm can be found in the book "Grammatical Inference"
+        (https://doi.org/10.1017/CBO9781139194655) by Colin de la Higuera.
+    </description>
 
     <dependencies>
         <!-- internal -->

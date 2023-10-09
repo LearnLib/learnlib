@@ -13,25 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithms.ttt.vpa;
-
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.DTNode;
 
 /**
- * A global splitter. In addition to the information stored in a (local) {@link Splitter}, this class also stores the
- * block the local splitter applies to.
- *
- * @param <I>
- *         input symbol type
+ * This package (and sub-packages) provides the implementation of the ADT learning algorithm as described in the Master
+ * thesis <a href="http://arxiv.org/abs/1902.01139">Active Automata Learning with Adaptive Distinguishing Sequences</a>
+ * by Markus Frohme.
  */
-final class GlobalSplitter<I> {
-
-    public final Splitter<I> localSplitter;
-
-    public final DTNode<I> blockRoot;
-
-    GlobalSplitter(DTNode<I> blockRoot, Splitter<I> localSplitter) {
-        this.blockRoot = blockRoot;
-        this.localSplitter = localSplitter;
-    }
-}
+package de.learnlib.algorithms.adt;

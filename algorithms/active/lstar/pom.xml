@@ -28,9 +28,12 @@ limitations under the License.
     <artifactId>learnlib-lstar</artifactId>
 
     <name>LearnLib :: Algorithms :: L*</name>
-    <description>A flexible, optimized version of Dana Angluin's L* algorithm. This module provides access to the
-        original version of L*, extensions for Mealy machines, and variants with enhanced counterexample analysis (as
-        proposed by e.g. Maler &amp; Pnueli and Rivest &amp; Schapire).
+    <description>
+        This artifact provides the implementation of the L* learning algorithm described in the paper "Learning Regular
+        Sets from Queries and Counterexamples" (https://doi.org/10.1016/0890-5401(87)90052-6) by Dana Angluin including
+        variations and optimizations thereof such as the versions based on "On the Learnability of Infinitary Regular
+        Sets" (https://dx.doi.org/10.1006/inco.1995.1070) by Oded Maler and Amir Pnueli or "Inference of finite automata
+        using homing sequences" (http://dx.doi.org/10.1006/inco.1993.1021) by Ronald L. Rivest and Robert E. Schapire.
     </description>
 
     <dependencies>

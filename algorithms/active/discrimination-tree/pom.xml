@@ -28,7 +28,10 @@ limitations under the License.
     <artifactId>learnlib-discrimination-tree</artifactId>
 
     <name>LearnLib :: Algorithms :: Discrimination Tree</name>
-    <description>A learning algorithm, which distinguishes hypothesis states using a discrimination tree.</description>
+    <description>
+        This artifact provides the implementation of the Observation-Pack learning algorithm as described in the PhD
+        thesis "Active learning of interface programs" (http://dx.doi.org/10.17877/DE290R-4817) by Falk Howar.
+    </description>
 
     <dependencies>
         <!-- internal -->
