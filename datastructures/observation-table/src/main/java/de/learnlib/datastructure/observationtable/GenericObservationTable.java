@@ -529,7 +529,7 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
     }
 
     @Override
-    public List<List<Row<I>>> addAlphabetSymbol(I symbol, final MembershipOracle<I, D> oracle) {
+    public List<List<Row<I>>> addAlphabetSymbol(I symbol, MembershipOracle<I, D> oracle) {
 
         if (!alphabet.containsSymbol(symbol)) {
             Alphabets.toGrowingAlphabetOrThrowException(alphabet).addSymbol(symbol);

@@ -38,7 +38,7 @@ public class ADTLeafNode<S, I, O> extends AbstractRecursiveADSLeafNode<S, I, O, 
     }
 
     @Override
-    public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, final Word<I> prefix) {
+    public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> prefix) {
         throw new UnsupportedOperationException("Final nodes cannot sift words");
     }
 

@@ -38,7 +38,7 @@ public class OPLearnerState<I, D, SP, TP> {
     private final OPLearnerHypothesis<I, D, SP, TP> hypothesis;
 
     OPLearnerState(AbstractWordBasedDiscriminationTree<I, D, HState<I, D, SP, TP>> dtree,
-                   final OPLearnerHypothesis<I, D, SP, TP> hypothesis) {
+                   OPLearnerHypothesis<I, D, SP, TP> hypothesis) {
         this.dtree = dtree;
         this.hypothesis = hypothesis;
     }

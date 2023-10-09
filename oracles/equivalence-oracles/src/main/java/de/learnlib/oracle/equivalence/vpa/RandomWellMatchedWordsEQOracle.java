@@ -84,7 +84,7 @@ public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<
                      .limit(maxTests);
     }
 
-    private Word<I> generateWellMatched(VPAlphabet<I> alphabet, final int len) {
+    private Word<I> generateWellMatched(VPAlphabet<I> alphabet, int len) {
         WordBuilder<I> wb = new WordBuilder<>(len);
         generateWellMatched(wb, alphabet, len);
         return wb.toWord();
