@@ -15,7 +15,7 @@
  */
 
 /**
- * This package (and sub-packages) provides the implementation of the {@link de.learnlib.algorithms.lstar L* variation}
+ * This package (and sub-packages) provides the implementation of the {@link de.learnlib.algorithm.lstar L* variation}
  * based on the paper <a href="https://dx.doi.org/10.1006/inco.1995.1070">On the Learnability of Infinitary Regular
  * Sets</a> by Oded Maler and Amir Pnueli.
  */
