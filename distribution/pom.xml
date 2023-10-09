@@ -191,17 +191,7 @@ limitations under the License.
             <artifactId>learnlib-drivers-simulator</artifactId>
         </dependency>
 
-        <!-- oracles -->
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-emptiness-oracles</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-equivalence-oracles</artifactId>
-        </dependency>
-
+        <!-- filters -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-cache</artifactId>
@@ -215,6 +205,17 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-statistics</artifactId>
+        </dependency>
+
+        <!-- oracles -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-emptiness-oracles</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-equivalence-oracles</artifactId>
         </dependency>
 
         <dependency>
@@ -479,21 +480,7 @@ limitations under the License.
                     <classifier>sources</classifier>
                 </dependency>
 
-                <!-- oracles -->
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-emptiness-oracles</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-equivalence-oracles</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
+                <!-- filters -->
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-cache</artifactId>
@@ -511,6 +498,21 @@ limitations under the License.
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-statistics</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <!-- oracles -->
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-emptiness-oracles</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-equivalence-oracles</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

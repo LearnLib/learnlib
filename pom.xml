@@ -177,6 +177,7 @@ limitations under the License.
         <module>datastructures</module>
         <module>distribution</module>
         <module>drivers</module>
+        <module>filters</module>
         <module>oracles</module>
         <module>test-support</module>
     </modules>
@@ -536,23 +537,7 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency-->
 
-            <!-- oracles -->
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-oracles-parent</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-emptiness-oracles</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-equivalence-oracles</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+            <!-- filters -->
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-filters-parent</artifactId>
@@ -571,6 +556,24 @@ limitations under the License.
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-statistics</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- oracles -->
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-oracles-parent</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-emptiness-oracles</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-equivalence-oracles</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

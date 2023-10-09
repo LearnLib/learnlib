@@ -34,7 +34,6 @@ limitations under the License.
     <modules>
         <module>emptiness-oracles</module>
         <module>equivalence-oracles</module>
-        <module>filters</module>
         <module>membership-oracles</module>
         <module>parallelism</module>
         <module>property-oracles</module>

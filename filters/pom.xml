@@ -20,9 +20,9 @@ limitations under the License.
 
     <parent>
         <groupId>de.learnlib</groupId>
-        <artifactId>learnlib-oracles-parent</artifactId>
+        <artifactId>learnlib-build-parent</artifactId>
         <version>0.17.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>learnlib-filters-parent</artifactId>
