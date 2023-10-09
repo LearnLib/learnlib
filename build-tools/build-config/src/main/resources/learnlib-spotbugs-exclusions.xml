@@ -62,35 +62,35 @@ limitations under the License.
             </And>
             <!-- SpotBugs doesn't understand pure functions -->
             <And>
-                <Class name="de.learnlib.algorithms.adt.adt.ADT"/>
+                <Class name="de.learnlib.algorithm.adt.adt.ADT"/>
                 <Or>
                     <Method name="findLCA"/>
                     <Method name="replaceNode"/>
                 </Or>
             </And>
             <And>
-                <Class name="de.learnlib.algorithms.observationpack.vpa.hypothesis.TransList"/>
+                <Class name="de.learnlib.algorithm.observationpack.vpa.hypothesis.TransList"/>
                 <Or>
                     <Method name="poll"/>
                     <Method name="addAll"/>
                 </Or>
             </And>
             <And>
-                <Class name="de.learnlib.algorithms.ttt.base.IncomingList"/>
+                <Class name="de.learnlib.algorithm.ttt.base.IncomingList"/>
                 <Method name="insertAllIncoming"/>
             </And>
             <And>
-                <Class name="de.learnlib.algorithms.adt.util.ADTUtil"/>
+                <Class name="de.learnlib.algorithm.adt.util.ADTUtil"/>
                 <Method name="getStartOfADS"/>
             </And>
             <And>
                 <!-- SpotBugs doesn't understand conditional non-nulls -->
-                <Class name="de.learnlib.algorithms.adt.config.LeafSplitters"/>
+                <Class name="de.learnlib.algorithm.adt.config.LeafSplitters"/>
                 <Method name="splitParent"/>
             </And>
             <And>
                 <!-- The node(s) was(were) selected such that getHypothesisState is NOT null -->
-                <Class name="de.learnlib.algorithms.adt.learner.ADTLearner"/>
+                <Class name="de.learnlib.algorithm.adt.learner.ADTLearner"/>
                 <Or>
                     <Method name="refineHypothesisInternal"/>
                     <Method name="resiftAffectedTransitions"/>

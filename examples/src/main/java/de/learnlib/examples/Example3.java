@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
+import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;

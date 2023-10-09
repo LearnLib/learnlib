@@ -17,8 +17,8 @@ package de.learnlib.examples;
 
 import java.io.IOException;
 
-import de.learnlib.algorithms.lstar.dfa.ClassicLStarDFA;
-import de.learnlib.algorithms.lstar.dfa.ClassicLStarDFABuilder;
+import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFA;
+import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFABuilder;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;

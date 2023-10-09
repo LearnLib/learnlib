@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 import com.thoughtworks.xstream.XStream;
-import de.learnlib.algorithms.lstar.dfa.ClassicLStarDFA;
+import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFA;
 import de.learnlib.api.Resumable;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;

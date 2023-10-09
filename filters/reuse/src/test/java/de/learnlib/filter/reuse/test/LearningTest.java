@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.function.Supplier;
 
-import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
+import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseOracle;

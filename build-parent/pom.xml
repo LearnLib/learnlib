@@ -232,13 +232,13 @@ limitations under the License.
                                     </annotationProcessors>
                                     <compilerArgs>
                                         <arg>-J-Xbootclasspath/p:${com.google.errorprone:javac:jar}</arg>
-                                        <arg>-AskipDefs=^de.learnlib.algorithms.adt.*|\
-                                            ^de.learnlib.algorithms.observationpack.*.vpa.*|\
-                                            ^de.learnlib.algorithms.ttt.*|\
+                                        <arg>-AskipDefs=^de.learnlib.algorithm.adt.*|\
+                                            ^de.learnlib.algorithm.observationpack.*.vpa.*|\
+                                            ^de.learnlib.algorithm.ttt.*|\
                                             ^de.learnlib.datastructure.discriminationtree.*|\
                                         </arg>
-                                        <arg>-AskipUses=^de.learnlib.algorithms.adt.*|\
-                                                        ^de.learnlib.algorithms.ttt.*|\
+                                        <arg>-AskipUses=^de.learnlib.algorithm.adt.*|\
+                                                        ^de.learnlib.algorithm.ttt.*|\
                                                         ^de.learnlib.datastructure.discriminationtree.*|\
                                                         ^java.lang.ThreadLocal|\
                                                         ^net.automatalib.*|\

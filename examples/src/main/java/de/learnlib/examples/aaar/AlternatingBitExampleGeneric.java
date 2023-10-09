@@ -20,9 +20,9 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.function.Function;
 
-import de.learnlib.algorithms.aaar.generic.GenericAAARLearnerMealy;
-import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealy;
-import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
+import de.learnlib.algorithm.aaar.generic.GenericAAARLearnerMealy;
+import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
+import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;

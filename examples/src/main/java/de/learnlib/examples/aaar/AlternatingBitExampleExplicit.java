@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import de.learnlib.algorithms.aaar.ExplicitInitialAbstraction;
-import de.learnlib.algorithms.aaar.abstraction.ExplicitAbstractionTree;
-import de.learnlib.algorithms.aaar.explicit.ExplicitAAARLearnerMealy;
-import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealy;
-import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
+import de.learnlib.algorithm.aaar.ExplicitInitialAbstraction;
+import de.learnlib.algorithm.aaar.abstraction.ExplicitAbstractionTree;
+import de.learnlib.algorithm.aaar.explicit.ExplicitAAARLearnerMealy;
+import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
+import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;

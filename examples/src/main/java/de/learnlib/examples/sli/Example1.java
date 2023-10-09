@@ -15,7 +15,7 @@
  */
 package de.learnlib.examples.sli;
 
-import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
+import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.StateLocalInputSUL;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
+import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.SUL;
 import de.learnlib.api.StateLocalInputSUL;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;

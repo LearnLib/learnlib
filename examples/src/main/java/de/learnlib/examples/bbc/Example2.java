@@ -18,7 +18,7 @@ package de.learnlib.examples.bbc;
 import java.util.function.Function;
 
 import de.learnlib.acex.analyzers.AcexAnalyzers;
-import de.learnlib.algorithms.ttt.mealy.TTTLearnerMealy;
+import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.logging.LoggingPropertyOracle.MealyLoggingPropertyOracle;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
