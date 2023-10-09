@@ -29,13 +29,13 @@ import java.util.Set;
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import com.google.common.collect.Iterables;
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.algorithms.discriminationtree.vpa.DTLearnerVPA;
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.AbstractHypTrans;
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.BlockList;
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.ContextPair;
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.DTNode;
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.HypLoc;
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.TransList;
+import de.learnlib.algorithms.observationpack.vpa.OPLearnerVPA;
+import de.learnlib.algorithms.observationpack.vpa.hypothesis.AbstractHypTrans;
+import de.learnlib.algorithms.observationpack.vpa.hypothesis.BlockList;
+import de.learnlib.algorithms.observationpack.vpa.hypothesis.ContextPair;
+import de.learnlib.algorithms.observationpack.vpa.hypothesis.DTNode;
+import de.learnlib.algorithms.observationpack.vpa.hypothesis.HypLoc;
+import de.learnlib.algorithms.observationpack.vpa.hypothesis.TransList;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.SplitData;
@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * @param <I>
  *         input symbol type
  */
-public class TTTLearnerVPA<I> extends DTLearnerVPA<I> {
+public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TTTLearnerVPA.class);
 

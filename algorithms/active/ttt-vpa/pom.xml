@@ -54,7 +54,7 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-discrimination-tree-vpa</artifactId>
+            <artifactId>learnlib-observation-pack-vpa</artifactId>
         </dependency>
 
         <!-- external -->

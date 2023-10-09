@@ -233,9 +233,9 @@ limitations under the License.
                                     <compilerArgs>
                                         <arg>-J-Xbootclasspath/p:${com.google.errorprone:javac:jar}</arg>
                                         <arg>-AskipDefs=^de.learnlib.algorithms.adt.*|\
-                                                        ^de.learnlib.algorithms.discriminationtree.*.vpa.*|\
-                                                        ^de.learnlib.algorithms.ttt.*|\
-                                                        ^de.learnlib.datastructure.discriminationtree.*|\
+                                            ^de.learnlib.algorithms.observationpack.*.vpa.*|\
+                                            ^de.learnlib.algorithms.ttt.*|\
+                                            ^de.learnlib.datastructure.discriminationtree.*|\
                                         </arg>
                                         <arg>-AskipUses=^de.learnlib.algorithms.adt.*|\
                                                         ^de.learnlib.algorithms.ttt.*|\

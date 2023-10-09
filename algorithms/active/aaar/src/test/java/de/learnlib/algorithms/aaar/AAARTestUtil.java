@@ -20,9 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import de.learnlib.acex.analyzers.AcexAnalyzers;
-import de.learnlib.algorithms.discriminationtree.dfa.DTLearnerDFA;
-import de.learnlib.algorithms.discriminationtree.mealy.DTLearnerMealy;
-import de.learnlib.algorithms.discriminationtree.moore.DTLearnerMoore;
 import de.learnlib.algorithms.kv.dfa.KearnsVaziraniDFA;
 import de.learnlib.algorithms.kv.mealy.KearnsVaziraniMealy;
 import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandlers;
@@ -30,6 +27,9 @@ import de.learnlib.algorithms.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithms.lstar.dfa.ClassicLStarDFA;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.algorithms.lstar.moore.ExtensibleLStarMoore;
+import de.learnlib.algorithms.observationpack.dfa.OPLearnerDFA;
+import de.learnlib.algorithms.observationpack.mealy.OPLearnerMealy;
+import de.learnlib.algorithms.observationpack.moore.OPLearnerMoore;
 import de.learnlib.algorithms.oml.ttt.dfa.OptimalTTTDFA;
 import de.learnlib.algorithms.oml.ttt.mealy.OptimalTTTMealy;
 import de.learnlib.algorithms.rivestschapire.RivestSchapireDFA;
@@ -57,8 +57,8 @@ public final class AAARTestUtil {
         final ComboConstructor<RivestSchapireDFA<I>, I, Boolean> rs = RivestSchapireDFA::new;
         final ComboConstructor<KearnsVaziraniDFA<I>, I, Boolean> kv =
                 (alph, mqo) -> new KearnsVaziraniDFA<>(alph, mqo, true, AcexAnalyzers.BINARY_SEARCH_FWD);
-        final ComboConstructor<DTLearnerDFA<I>, I, Boolean> dt =
-                (alph, mqo) -> new DTLearnerDFA<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true, true);
+        final ComboConstructor<OPLearnerDFA<I>, I, Boolean> dt =
+                (alph, mqo) -> new OPLearnerDFA<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true, true);
         final ComboConstructor<TTTLearnerDFA<I>, I, Boolean> ttt =
                 (alph, mqo) -> new TTTLearnerDFA<>(alph, mqo, AcexAnalyzers.BINARY_SEARCH_FWD);
         final ComboConstructor<OptimalTTTDFA<I>, I, Boolean> oml = (alph, mqo) -> new OptimalTTTDFA<>(alph, mqo, mqo);
@@ -82,8 +82,8 @@ public final class AAARTestUtil {
         final ComboConstructor<RivestSchapireMealy<I, O>, I, Word<O>> rs = RivestSchapireMealy::new;
         final ComboConstructor<KearnsVaziraniMealy<I, O>, I, Word<O>> kv =
                 (alph, mqo) -> new KearnsVaziraniMealy<>(alph, mqo, true, AcexAnalyzers.BINARY_SEARCH_FWD);
-        final ComboConstructor<DTLearnerMealy<I, O>, I, Word<O>> dt =
-                (alph, mqo) -> new DTLearnerMealy<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true);
+        final ComboConstructor<OPLearnerMealy<I, O>, I, Word<O>> dt =
+                (alph, mqo) -> new OPLearnerMealy<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true);
         final ComboConstructor<TTTLearnerMealy<I, O>, I, Word<O>> ttt =
                 (alph, mqo) -> new TTTLearnerMealy<>(alph, mqo, AcexAnalyzers.BINARY_SEARCH_FWD);
         final ComboConstructor<OptimalTTTMealy<I, O>, I, Word<O>> oml =
@@ -106,8 +106,8 @@ public final class AAARTestUtil {
                                                           ObservationTableCEXHandlers.CLASSIC_LSTAR,
                                                           ClosingStrategies.CLOSE_FIRST);
         final ComboConstructor<RivestSchapireMoore<I, O>, I, Word<O>> rs = RivestSchapireMoore::new;
-        final ComboConstructor<DTLearnerMoore<I, O>, I, Word<O>> dt =
-                (alph, mqo) -> new DTLearnerMoore<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true);
+        final ComboConstructor<OPLearnerMoore<I, O>, I, Word<O>> dt =
+                (alph, mqo) -> new OPLearnerMoore<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true);
         final ComboConstructor<TTTLearnerMoore<I, O>, I, Word<O>> ttt =
                 (alph, mqo) -> new TTTLearnerMoore<>(alph, mqo, AcexAnalyzers.BINARY_SEARCH_FWD);
 

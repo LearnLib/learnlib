@@ -21,9 +21,9 @@ import java.util.function.BiFunction;
 
 import de.learnlib.algorithms.dhc.mealy.MealyDHC;
 import de.learnlib.algorithms.procedural.SymbolWrapper;
-import de.learnlib.algorithms.procedural.adapter.mealy.DiscriminationTreeAdapterMealy;
 import de.learnlib.algorithms.procedural.adapter.mealy.KearnsVaziraniAdapterMealy;
 import de.learnlib.algorithms.procedural.adapter.mealy.LStarBaseAdapterMealy;
+import de.learnlib.algorithms.procedural.adapter.mealy.ObservationPackAdapterMealy;
 import de.learnlib.algorithms.procedural.adapter.mealy.OptimalTTTAdapterMealy;
 import de.learnlib.algorithms.procedural.adapter.mealy.RivestSchapireAdapterMealy;
 import de.learnlib.algorithms.procedural.adapter.mealy.TTTAdapterMealy;
@@ -51,10 +51,10 @@ public class SPMMIT extends AbstractSPMMLearnerIT {
 
         final Builder<I, O> builder = new Builder<>(alphabet, errorOutput, mqOracle, variants);
 
-        builder.addLearnerVariant(DiscriminationTreeAdapterMealy::new);
-        builder.addLearnerVariant(MealyDHC::new);
         builder.addLearnerVariant(KearnsVaziraniAdapterMealy::new);
         builder.addLearnerVariant(LStarBaseAdapterMealy::new);
+        builder.addLearnerVariant(MealyDHC::new);
+        builder.addLearnerVariant(ObservationPackAdapterMealy::new);
         builder.addLearnerVariant(OptimalTTTAdapterMealy::new);
         builder.addLearnerVariant(RivestSchapireAdapterMealy::new);
         builder.addLearnerVariant(TTTAdapterMealy::new);

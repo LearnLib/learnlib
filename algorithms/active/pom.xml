@@ -35,11 +35,11 @@ limitations under the License.
         <module>aaar</module>
         <module>adt</module>
         <module>dhc</module>
-        <module>discrimination-tree</module>
-        <module>discrimination-tree-vpa</module>
         <module>kearns-vazirani</module>
         <module>lstar</module>
         <module>nlstar</module>
+        <module>observation-pack</module>
+        <module>observation-pack-vpa</module>
         <module>oml</module>
         <module>procedural</module>
         <module>ttt</module>

@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithms.ttt.vpa;
 
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.DTNode;
+import de.learnlib.algorithms.observationpack.vpa.hypothesis.DTNode;
 
 /**
  * Data structure required during an extract operation. The latter basically works by copying nodes that are required in

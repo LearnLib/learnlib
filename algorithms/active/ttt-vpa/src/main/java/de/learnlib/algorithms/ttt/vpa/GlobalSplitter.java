@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithms.ttt.vpa;
 
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.DTNode;
+import de.learnlib.algorithms.observationpack.vpa.hypothesis.DTNode;
 
 /**
  * A global splitter. In addition to the information stored in a (local) {@link Splitter}, this class also stores the

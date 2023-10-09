@@ -15,8 +15,8 @@
  */
 package de.learnlib.algorithms.ttt.vpa;
 
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.ContextPair;
-import de.learnlib.algorithms.discriminationtree.vpa.hypothesis.HypLoc;
+import de.learnlib.algorithms.observationpack.vpa.hypothesis.ContextPair;
+import de.learnlib.algorithms.observationpack.vpa.hypothesis.HypLoc;
 
 /**
  * @param <I>
