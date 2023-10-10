@@ -20,7 +20,7 @@ import de.learnlib.api.logging.LearnLogger;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.filter.statistic.Counter;
-import de.learnlib.util.statistics.SimpleProfiler;
+import de.learnlib.util.statistic.SimpleProfiler;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MooreMachine;

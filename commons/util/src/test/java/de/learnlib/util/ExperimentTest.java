@@ -22,7 +22,7 @@ import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.util.Experiment.DFAExperiment;
-import de.learnlib.util.statistics.SimpleProfiler;
+import de.learnlib.util.statistic.SimpleProfiler;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.util.automata.random.RandomAutomata;

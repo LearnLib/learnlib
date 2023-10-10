@@ -11,7 +11,7 @@ import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.equivalence.DFAWMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.util.Experiment.DFAExperiment;
-import de.learnlib.util.statistics.SimpleProfiler;
+import de.learnlib.util.statistic.SimpleProfiler;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
