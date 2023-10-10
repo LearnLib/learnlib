@@ -140,30 +140,6 @@ limitations under the License.
         </contributor>
     </contributors>
 
-    <mailingLists>
-        <mailingList>
-            <name>Q&amp;A List</name>
-            <subscribe>learnlib-qa+subscribe@googlegroups.com</subscribe>
-            <unsubscribe>learnlib-qa+unsubscribe@googlegroups.com</unsubscribe>
-            <post>learnlib-qa@googlegroups.com</post>
-            <archive>https://groups.google.com/d/forum/learnlib-qa</archive>
-        </mailingList>
-        <mailingList>
-            <name>Discussion List</name>
-            <subscribe>learnlib-discussion+subscribe@googlegroups.com</subscribe>
-            <unsubscribe>learnlib-discussion+unsubscribe@googlegroups.com</unsubscribe>
-            <post>learnlib-discussion@googlegroups.com</post>
-            <archive>https://groups.google.com/d/forum/learnlib-discussion</archive>
-        </mailingList>
-        <mailingList>
-            <name>Developers List</name>
-            <subscribe>learnlib-internal+subscribe@googlegroups.com</subscribe>
-            <unsubscribe>learnlib-internal+unsubscribe@googlegroups.com</unsubscribe>
-            <post>learnlib-internal@googlegroups.com</post>
-            <archive>https://groups.google.com/d/forum/learnlib-internal</archive>
-        </mailingList>
-    </mailingLists>
-
     <!--
     ================================= MODULES ===================================
     -->

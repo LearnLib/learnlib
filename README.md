@@ -87,11 +87,9 @@ For developing the code base of LearnLib it is suggested to use one of the major
 * **API Documentation:** [latest release](http://learnlib.github.io/learnlib/maven-site/latest/apidocs/) | [older versions](http://learnlib.github.io/learnlib/maven-site/)
 
 
-## Mailing Lists
+## Questions?
 
-  * [Q&A @ Google Groups][learnlib-qa] -- General questions regarding the usage of LearnLib.
-  * [Discussion @ Google Groups][learnlib-discussion] -- Discussions about the internals of LearnLib.
-  * [Internal (private) @ Google Groups][learnlib-internal] -- Discussions about future development plans.
+If you have any questions regarding the usage of LearnLib or if you want to discuss new and exiting ideas for future contributions, feel free to use the [Discussions](https://github.com/LearnLib/learnlib/discussions) page to get in touch with the LearnLib community.
 
 
 ## Maintainers
