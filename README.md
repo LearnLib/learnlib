@@ -89,7 +89,7 @@ For developing the code base of LearnLib it is suggested to use one of the major
 
 ## Questions?
 
-If you have any questions regarding the usage of LearnLib or if you want to discuss new and exiting ideas for future contributions, feel free to use the [Discussions](https://github.com/LearnLib/learnlib/discussions) page to get in touch with the LearnLib community.
+If you have any questions regarding the usage of LearnLib or if you want to discuss new and exciting ideas for future contributions, feel free to use the [Discussions](https://github.com/LearnLib/learnlib/discussions) page to get in touch with the LearnLib community.
 
 
 ## Maintainers
