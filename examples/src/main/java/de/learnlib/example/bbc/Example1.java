@@ -37,11 +37,11 @@ import de.learnlib.oracle.equivalence.DFAWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.DFASimulatorOmegaOracle;
 import de.learnlib.oracle.property.DFALassoPropertyOracle;
 import de.learnlib.util.Experiment.DFAExperiment;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLDFABuilder;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
-import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
-import net.automatalib.words.Alphabet;
+import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest;
 
 /**
  * Runs a black-box checking experiment for a DFA.

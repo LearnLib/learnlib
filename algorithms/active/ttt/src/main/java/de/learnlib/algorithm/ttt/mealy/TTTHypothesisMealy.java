@@ -18,11 +18,11 @@ package de.learnlib.algorithm.ttt.mealy;
 import de.learnlib.algorithm.ttt.base.AbstractTTTHypothesis;
 import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.UniversalDeterministicAutomaton.FullIntAbstraction;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.FullIntAbstraction;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 public class TTTHypothesisMealy<I, O>
         extends AbstractTTTHypothesis<TTTState<I, Word<O>>, I, Word<O>, TTTTransitionMealy<I, O>> implements

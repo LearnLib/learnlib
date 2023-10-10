@@ -27,12 +27,12 @@ import de.learnlib.filter.statistic.sul.ResetCounterSUL;
 import de.learnlib.filter.statistic.sul.ResetCounterStateLocalInputSUL;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.util.automaton.random.RandomAutomata;
 
 public final class Config {
 

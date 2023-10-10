@@ -18,7 +18,7 @@ package de.learnlib.oracle.emptiness;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.testsupport.AbstractBFOracleTest;
 import de.learnlib.util.AbstractBFOracle;
-import net.automatalib.automata.concepts.DetOutputAutomaton;
+import net.automatalib.automaton.concept.DetOutputAutomaton;
 import net.automatalib.ts.simple.SimpleDTS;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;

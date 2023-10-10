@@ -17,8 +17,8 @@ package de.learnlib.algorithm.rpni;
 
 import java.util.List;
 
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.commons.smartcollections.IntSeq;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.common.smartcollection.IntSeq;
 
 final class MDLUtil {
 

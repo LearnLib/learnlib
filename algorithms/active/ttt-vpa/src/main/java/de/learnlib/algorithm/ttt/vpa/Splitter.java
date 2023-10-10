@@ -18,7 +18,7 @@ package de.learnlib.algorithm.ttt.vpa;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.ContextPair;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.DTNode;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.HypLoc;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Data structure for representing a splitter.

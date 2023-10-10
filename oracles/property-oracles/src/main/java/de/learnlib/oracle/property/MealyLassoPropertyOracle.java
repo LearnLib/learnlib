@@ -19,10 +19,10 @@ import java.util.Collection;
 
 import de.learnlib.api.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
 import de.learnlib.api.oracle.PropertyOracle.MealyPropertyOracle;
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * A property oracle for Mealy machines that can check lassos from the model checker.

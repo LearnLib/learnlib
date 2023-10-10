@@ -21,8 +21,8 @@ import java.util.Queue;
 import de.learnlib.api.oracle.AutomatonOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.DeterministicAutomaton;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

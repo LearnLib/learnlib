@@ -39,7 +39,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractSBALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SBALearnerVariantList;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 
 public class SBAIT extends AbstractSBALearnerIT {
 

@@ -19,7 +19,7 @@ import java.util.Collection;
 
 import de.learnlib.api.oracle.EmptinessOracle.DFAEmptinessOracle;
 import de.learnlib.api.oracle.PropertyOracle.DFAPropertyOracle;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecking.ModelChecker.DFAModelChecker;
 
 /**

@@ -18,7 +18,7 @@ package de.learnlib.algorithm.oml.ttt.st;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 class STNodeImpl<I> implements STNode<I> {

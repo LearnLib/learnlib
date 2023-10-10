@@ -20,8 +20,8 @@ import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
 
 public abstract class AbstractDFACacheTest
         extends AbstractCacheTest<DFACacheOracle<Character>, DFA<?, Character>, Character, Boolean> {

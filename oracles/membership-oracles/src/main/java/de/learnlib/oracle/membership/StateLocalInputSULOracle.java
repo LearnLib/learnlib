@@ -21,8 +21,8 @@ import java.util.Collections;
 import de.learnlib.api.StateLocalInputSUL;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * A wrapper around a system under learning (SUL) with state local inputs.

@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.aaar.abstraction;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 class Node {
 

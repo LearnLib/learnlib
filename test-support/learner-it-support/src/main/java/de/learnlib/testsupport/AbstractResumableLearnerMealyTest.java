@@ -23,11 +23,11 @@ import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.QueryAnswerer;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 
 public abstract class AbstractResumableLearnerMealyTest<L extends Resumable<T> & LearningAlgorithm<MealyMachine<?, Character, ?, Character>, Character, Word<Character>>, T>
         extends AbstractResumableLearnerTest<L, MealyMachine<?, Character, ?, Character>, MembershipOracle<Character, Word<Character>>, Character, Word<Character>, T> {

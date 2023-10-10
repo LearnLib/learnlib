@@ -22,8 +22,8 @@ import de.learnlib.algorithm.adt.ads.DefensiveADS;
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.api.PartialTransitionAnalyzer;
 import de.learnlib.algorithm.adt.config.model.DefensiveADSCalculator;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
 
 public class BestEffortDefensiveCalculator implements DefensiveADSCalculator {
 

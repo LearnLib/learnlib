@@ -16,7 +16,7 @@
 package de.learnlib.driver.util;
 
 import de.learnlib.api.SUL;
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

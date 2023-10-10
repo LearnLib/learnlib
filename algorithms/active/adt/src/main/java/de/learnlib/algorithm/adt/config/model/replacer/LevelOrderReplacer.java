@@ -28,8 +28,8 @@ import de.learnlib.algorithm.adt.api.SubtreeReplacer;
 import de.learnlib.algorithm.adt.config.model.ADSCalculator;
 import de.learnlib.algorithm.adt.model.ReplacementResult;
 import de.learnlib.algorithm.adt.util.ADTUtil;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
 
 public class LevelOrderReplacer implements SubtreeReplacer {
 

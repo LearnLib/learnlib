@@ -39,15 +39,15 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.procedural.EmptySPA;
-import net.automatalib.automata.procedural.SPA;
-import net.automatalib.automata.procedural.StackSPA;
-import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.procedural.EmptySPA;
+import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.automaton.procedural.StackSPA;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**

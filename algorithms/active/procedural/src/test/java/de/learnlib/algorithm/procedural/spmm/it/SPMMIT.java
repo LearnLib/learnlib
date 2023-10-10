@@ -38,8 +38,8 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractSPMMLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPMMLearnerVariantList;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.word.Word;
 
 public class SPMMIT extends AbstractSPMMLearnerIT {
 

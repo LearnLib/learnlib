@@ -25,13 +25,13 @@ import java.util.function.Supplier;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalPCDFADAGBuilder;
 import net.automatalib.incremental.dfa.tree.IncrementalDFATreeBuilder;
 import net.automatalib.incremental.dfa.tree.IncrementalPCDFATreeBuilder;
-import net.automatalib.words.Alphabet;
 
 /**
  * A factory for creating thread-safe caches for {@link DFA}-based {@link MembershipOracle}s. Parameters and return

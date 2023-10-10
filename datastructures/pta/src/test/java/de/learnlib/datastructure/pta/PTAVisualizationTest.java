@@ -22,14 +22,14 @@ import java.util.List;
 
 import com.google.common.io.CharStreams;
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
-import net.automatalib.automata.transducers.impl.compact.CompactMoore;
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.impl.compact.CompactMoore;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.dot.GraphDOT;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
-import net.automatalib.util.automata.cover.Covers;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
+import net.automatalib.util.automaton.cover.Covers;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

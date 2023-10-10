@@ -29,12 +29,12 @@ import de.learnlib.driver.util.MealySimulatorSUL;
 import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 
 /**
  * An example for creating {@link ParallelOracle}s using the {@link ParallelOracleBuilders} factory.

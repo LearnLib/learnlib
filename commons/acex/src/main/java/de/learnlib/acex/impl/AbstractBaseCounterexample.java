@@ -16,7 +16,7 @@
 package de.learnlib.acex.impl;
 
 import de.learnlib.acex.AbstractCounterexample;
-import net.automatalib.commons.smartcollections.ArrayStorage;
+import net.automatalib.common.smartcollection.ArrayStorage;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 public abstract class AbstractBaseCounterexample<E> implements AbstractCounterexample<E> {

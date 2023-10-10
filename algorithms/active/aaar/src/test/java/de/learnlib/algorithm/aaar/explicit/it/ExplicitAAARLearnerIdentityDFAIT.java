@@ -25,8 +25,8 @@ import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.common.util.Pair;
 
 public class ExplicitAAARLearnerIdentityDFAIT extends AbstractDFALearnerIT {
 

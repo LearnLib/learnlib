@@ -22,8 +22,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.learnlib.api.AccessSequenceTransformer;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.Signed;
 

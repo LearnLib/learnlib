@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.List;
 
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
-import net.automatalib.commons.smartcollections.ResizingArrayStorage;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class HState<I, O, SP, TP> {

@@ -20,12 +20,12 @@ import java.util.Map;
 
 import de.learnlib.algorithm.adt.util.ADTUtil;
 import de.learnlib.api.oracle.SymbolQueryOracle;
-import net.automatalib.graphs.ads.RecursiveADSNode;
+import net.automatalib.graph.ads.RecursiveADSNode;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
- * The ADT equivalent of {@link net.automatalib.graphs.ads.ADSNode}. In contrast to regular adaptive distinguishing
+ * The ADT equivalent of {@link net.automatalib.graph.ads.ADSNode}. In contrast to regular adaptive distinguishing
  * sequences, an ADT node may also represent a reset node that semantically separates multiple ADSs.
  *
  * @param <S>

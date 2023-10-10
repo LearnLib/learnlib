@@ -23,11 +23,11 @@ import de.learnlib.algorithm.aaar.ComboConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.example.moore.ExampleRandomMoore;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 
 public class ExplicitAAARLearnerMooreTest

@@ -17,8 +17,8 @@ package de.learnlib.algorithm.oml.lstar;
 
 import java.util.List;
 
-import net.automatalib.automata.concepts.FiniteRepresentation;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.concept.FiniteRepresentation;
+import net.automatalib.word.Word;
 
 interface Hypothesis<I, D> extends FiniteRepresentation {
 

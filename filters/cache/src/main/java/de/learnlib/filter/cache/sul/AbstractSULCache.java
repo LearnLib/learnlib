@@ -24,7 +24,7 @@ import de.learnlib.filter.cache.sul.AbstractSULCache.SULCacheState;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

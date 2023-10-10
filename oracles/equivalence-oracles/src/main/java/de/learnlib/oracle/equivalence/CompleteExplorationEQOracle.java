@@ -30,12 +30,12 @@ import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
 import de.learnlib.buildtool.refinement.annotation.Generic;
 import de.learnlib.buildtool.refinement.annotation.Interface;
 import de.learnlib.buildtool.refinement.annotation.Map;
-import net.automatalib.automata.concepts.Output;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.concept.Output;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.word.Word;
 
 /**
  * Implements an equivalence check by complete exploration up to a given depth, i.e., by testing all possible sequences

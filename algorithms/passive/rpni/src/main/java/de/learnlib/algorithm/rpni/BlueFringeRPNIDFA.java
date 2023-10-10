@@ -22,9 +22,9 @@ import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.pta.PTAUtil;
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 
 /**
  * A Blue Fringe version of RPNI for learning DFAs.

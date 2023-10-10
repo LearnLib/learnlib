@@ -20,9 +20,9 @@ import java.util.Collections;
 import java.util.Random;
 
 import de.learnlib.example.DefaultLearningExample.DefaultMooreLearningExample;
-import net.automatalib.automata.transducers.impl.compact.CompactMoore;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.impl.compact.CompactMoore;
+import net.automatalib.util.automaton.random.RandomAutomata;
 
 public class ExampleRandomMoore<I, O> extends DefaultMooreLearningExample<I, O> {
 

@@ -26,9 +26,9 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.MutableDeterministic;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.word.Word;
 
 public abstract class AbstractExtensibleAutomatonLStar<A, I, D, S, T, SP, TP, AI extends MutableDeterministic<S, I, T, SP, TP> & SupportsGrowingAlphabet<I>>
         extends AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI> {

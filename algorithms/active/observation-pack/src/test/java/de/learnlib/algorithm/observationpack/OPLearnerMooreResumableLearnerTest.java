@@ -19,8 +19,8 @@ import de.learnlib.algorithm.observationpack.moore.OPLearnerMoore;
 import de.learnlib.algorithm.observationpack.moore.OPLearnerMooreBuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMooreTest;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class OPLearnerMooreResumableLearnerTest
         extends AbstractResumableLearnerMooreTest<OPLearnerMoore<Character, Character>, OPLearnerState<Character, Word<Character>, Character, Void>> {

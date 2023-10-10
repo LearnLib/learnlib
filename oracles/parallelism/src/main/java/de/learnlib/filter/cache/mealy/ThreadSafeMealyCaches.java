@@ -26,14 +26,14 @@ import java.util.function.Supplier;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.incremental.mealy.tree.dynamic.DynamicIncrementalMealyTreeBuilder;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

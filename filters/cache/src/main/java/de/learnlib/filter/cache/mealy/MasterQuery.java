@@ -20,9 +20,9 @@ import java.util.List;
 
 import de.learnlib.api.query.AbstractQuery;
 import de.learnlib.api.query.Query;
-import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

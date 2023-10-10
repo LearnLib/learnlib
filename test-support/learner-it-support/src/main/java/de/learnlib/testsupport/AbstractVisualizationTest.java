@@ -26,11 +26,11 @@ import de.learnlib.example.mealy.ExampleCoffeeMachine;
 import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.util.Experiment;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;
 
 /**

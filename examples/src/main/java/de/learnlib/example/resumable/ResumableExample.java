@@ -29,11 +29,11 @@ import de.learnlib.filter.cache.dfa.DFACaches;
 import de.learnlib.filter.statistic.oracle.DFAJointCounterOracle;
 import de.learnlib.oracle.equivalence.DFASimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.util.automaton.random.RandomAutomata;
 
 /**
  * An example to demonstrate the {@link Resumable} feature of LearnLib to continue learning setups from previously

@@ -17,7 +17,7 @@ package de.learnlib.algorithm.malerpnueli;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class MalerPnueliDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<MalerPnueliDFA<Character>> {
 

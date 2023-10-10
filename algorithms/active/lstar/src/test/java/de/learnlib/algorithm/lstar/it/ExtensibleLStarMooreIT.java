@@ -25,8 +25,8 @@ import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMooreBuilder;
 import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMooreLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreLearnerVariantList;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class ExtensibleLStarMooreIT extends AbstractMooreLearnerIT {
 

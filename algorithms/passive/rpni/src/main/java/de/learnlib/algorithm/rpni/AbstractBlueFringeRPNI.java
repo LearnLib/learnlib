@@ -28,7 +28,7 @@ import de.learnlib.datastructure.pta.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.pta.BlueFringePTAState;
 import de.learnlib.datastructure.pta.pta.PTATransition;
 import de.learnlib.datastructure.pta.pta.RedBlueMerge;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

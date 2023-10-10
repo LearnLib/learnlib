@@ -21,14 +21,14 @@ import java.util.List;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.util.mealy.MealyUtil;
 import de.learnlib.util.moore.MooreUtil;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.procedural.SBA;
-import net.automatalib.automata.procedural.SPA;
-import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.automata.vpa.OneSEVPA;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.automaton.procedural.SPMM;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.word.Word;
 
 class LearnerVariantListImpl<M, I, D> implements LearnerVariantList<M, I, D> {
 

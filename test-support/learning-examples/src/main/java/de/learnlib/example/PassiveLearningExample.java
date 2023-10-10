@@ -18,8 +18,8 @@ package de.learnlib.example;
 import java.util.Collection;
 
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public interface PassiveLearningExample<I, D> {
 

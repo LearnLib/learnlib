@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 import de.learnlib.example.DefaultLearningExample.DefaultDFALearningExample;
 import de.learnlib.example.LearningExample.DFALearningExample;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.serialization.learnlibv2.LearnLibV2Serialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;

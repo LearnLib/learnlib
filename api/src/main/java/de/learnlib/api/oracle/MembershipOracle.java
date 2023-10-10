@@ -21,7 +21,7 @@ import java.util.Collections;
 import de.learnlib.api.oracle.parallelism.BatchProcessor;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.Query;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Membership oracle interface. A membership oracle provides an elementary abstraction to a System Under Learning (SUL),

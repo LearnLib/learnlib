@@ -27,12 +27,12 @@ import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
-import net.automatalib.automata.base.compact.CompactTransition;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.base.compact.CompactTransition;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.word.Word;
 
 /**
  * An implementation of the L*Mealy algorithm for inferring Mealy machines, as described by Oliver Niese in his Ph.D.

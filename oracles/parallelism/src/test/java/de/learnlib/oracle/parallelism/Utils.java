@@ -21,7 +21,7 @@ import java.util.Random;
 
 import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
 import de.learnlib.oracle.parallelism.AbstractStaticParallelOracleTest.TestOutput;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 

@@ -22,8 +22,8 @@ import java.util.Objects;
 
 import com.google.common.collect.Maps;
 import de.learnlib.datastructure.observationtable.ObservationTable;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class SuffixASCIIReader<I, D> implements ObservationTableReader<I, D> {
 

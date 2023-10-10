@@ -20,8 +20,8 @@ import java.util.Collection;
 import de.learnlib.algorithm.observationpack.hypothesis.HState;
 import de.learnlib.algorithm.observationpack.hypothesis.HTransition;
 import de.learnlib.algorithm.observationpack.hypothesis.OPLearnerHypothesis;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

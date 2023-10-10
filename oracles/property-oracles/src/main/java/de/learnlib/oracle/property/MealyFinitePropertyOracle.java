@@ -19,9 +19,9 @@ import java.util.Collection;
 
 import de.learnlib.api.oracle.EmptinessOracle.MealyEmptinessOracle;
 import de.learnlib.api.oracle.PropertyOracle.MealyPropertyOracle;
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecking.ModelChecker.MealyModelChecker;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * A property oracle for Mealy Machines where it is fine to only check finite words from the model checker.

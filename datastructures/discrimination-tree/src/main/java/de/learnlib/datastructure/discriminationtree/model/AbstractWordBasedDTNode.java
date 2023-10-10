@@ -15,7 +15,7 @@
  */
 package de.learnlib.datastructure.discriminationtree.model;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Convenient class for word-based discrimination tree nodes that already binds certain generics.

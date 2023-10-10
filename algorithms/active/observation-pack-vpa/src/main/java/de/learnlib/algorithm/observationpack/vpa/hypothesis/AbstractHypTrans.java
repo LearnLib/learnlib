@@ -17,7 +17,7 @@ package de.learnlib.algorithm.observationpack.vpa.hypothesis;
 
 import de.learnlib.api.AccessSequenceProvider;
 import de.learnlib.datastructure.list.IntrusiveListElemImpl;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * @param <I>

@@ -21,9 +21,9 @@ import java.util.List;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 class ProceduralMembershipOracle<I> implements MembershipOracle<I, Boolean> {
 

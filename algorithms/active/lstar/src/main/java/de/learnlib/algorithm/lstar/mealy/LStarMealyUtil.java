@@ -18,8 +18,8 @@ package de.learnlib.algorithm.lstar.mealy;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public final class LStarMealyUtil {
 

@@ -24,12 +24,12 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.driver.util.MealySimulatorSUL;
 import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerTest;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 
 public class ADTResumableLearnerTest
         extends AbstractResumableLearnerTest<ADTLearner<Integer, Character>, MealyMachine<?, Integer, ?, Character>, SymbolQueryOracle<Integer, Character>, Integer, Word<Character>, ADTLearnerState<ADTState<Integer, Character>, Integer, Character>> {

@@ -26,7 +26,7 @@ import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.filter.cache.mealy.ThreadSafeMealyCacheConsistencyTest;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.word.WordBuilder;
 
 /**
  * A thread-safe variant of {@link StateLocalInputSULCache}.

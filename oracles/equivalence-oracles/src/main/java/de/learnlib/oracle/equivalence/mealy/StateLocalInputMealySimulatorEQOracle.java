@@ -17,9 +17,9 @@ package de.learnlib.oracle.equivalence.mealy;
 
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.util.automata.transducers.MealyMachines;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.util.automaton.transducer.MealyMachines;
 
 public class StateLocalInputMealySimulatorEQOracle<I, O> extends MealySimulatorEQOracle<I, O>
         implements MealyEquivalenceOracle<I, O> {

@@ -18,7 +18,7 @@ package de.learnlib.api.oracle;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * An emptiness oracle for lassos.

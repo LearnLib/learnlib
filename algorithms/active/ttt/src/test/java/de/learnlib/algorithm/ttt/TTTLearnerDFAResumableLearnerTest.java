@@ -20,7 +20,7 @@ import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFABuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class TTTLearnerDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<TTTLearnerDFA<Character>, TTTLearnerState<Character, Boolean>> {

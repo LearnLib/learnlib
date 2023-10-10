@@ -15,7 +15,7 @@
  */
 package de.learnlib.filter.reuse;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Required interface for the {@link ReuseOracle}. An implementation needs to provide the ability to answer queries with

@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.commons.smartcollections.IntSeq;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.common.smartcollection.IntSeq;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

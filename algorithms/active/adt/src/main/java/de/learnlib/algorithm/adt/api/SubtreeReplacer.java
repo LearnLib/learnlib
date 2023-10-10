@@ -19,8 +19,8 @@ import java.util.Set;
 
 import de.learnlib.algorithm.adt.adt.ADT;
 import de.learnlib.algorithm.adt.model.ReplacementResult;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
 
 /**
  * Interface for configuration objects that specify how nodes of the current ADT should be replaced.

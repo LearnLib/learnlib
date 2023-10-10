@@ -21,9 +21,9 @@ import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.cache.SULLearningCacheOracle;
 import de.learnlib.filter.statistic.sul.ResetCounterStateLocalInputSUL;
 import de.learnlib.filter.statistic.sul.SLICounterStateLocalInputSUL;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

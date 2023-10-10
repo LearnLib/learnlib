@@ -16,7 +16,7 @@
 package de.learnlib.algorithm.adt.api;
 
 import de.learnlib.algorithm.adt.adt.ADTNode;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Interface for configuration objects that specify how to split the ADT leaf of a hypothesis state that needs

@@ -20,9 +20,9 @@ import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.CounterSymbolQueryOracle;
 import de.learnlib.oracle.membership.SULSymbolQueryOracle;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 public class SymbolQueryCacheTest
         extends AbstractCacheTest<SymbolQueryCache<Character, Integer>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {

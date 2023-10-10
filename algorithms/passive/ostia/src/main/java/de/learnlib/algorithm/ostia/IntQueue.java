@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringJoiner;
 
-import net.automatalib.commons.smartcollections.IntSeq;
+import net.automatalib.common.smartcollection.IntSeq;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 

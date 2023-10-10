@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.model.AbstractDiscriminationTree;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * @param <I>

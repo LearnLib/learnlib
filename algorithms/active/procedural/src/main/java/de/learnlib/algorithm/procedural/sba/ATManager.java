@@ -21,10 +21,10 @@ import java.util.Set;
 
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.api.AccessSequenceTransformer;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.procedural.SBA;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 
 /**
  * A manager of access sequences and terminating sequences of {@link SBA}s during the learning process.

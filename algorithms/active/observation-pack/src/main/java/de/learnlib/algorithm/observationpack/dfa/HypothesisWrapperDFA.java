@@ -19,7 +19,7 @@ import java.util.Collection;
 
 import de.learnlib.algorithm.observationpack.hypothesis.HState;
 import de.learnlib.algorithm.observationpack.hypothesis.OPLearnerHypothesis;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.fsa.DFA;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class HypothesisWrapperDFA<I> implements DFA<HState<I, Boolean, Boolean, Void>, I> {

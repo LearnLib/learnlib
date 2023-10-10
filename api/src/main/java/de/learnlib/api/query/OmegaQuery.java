@@ -18,8 +18,8 @@ package de.learnlib.api.query;
 import java.util.Objects;
 
 import de.learnlib.api.ObservableSUL;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

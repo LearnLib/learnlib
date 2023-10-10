@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import de.learnlib.algorithm.aaar.abstraction.AbstractAbstractionTree;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.fsa.DFA;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class TranslatingDFA<S, AI, CI> implements DFA<S, CI> {

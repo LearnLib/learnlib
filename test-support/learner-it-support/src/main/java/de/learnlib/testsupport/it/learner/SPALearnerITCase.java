@@ -17,9 +17,9 @@ package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.example.LearningExample.SPALearningExample;
-import net.automatalib.automata.procedural.SPA;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.word.Word;
 
 public class SPALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Boolean, SPA<?, I>> {
 

@@ -15,7 +15,7 @@
  */
 package de.learnlib.oracle.parallelism;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public class DynamicParallelSULTest extends AbstractDynamicParallelOracleTest<Word<Void>> {
 

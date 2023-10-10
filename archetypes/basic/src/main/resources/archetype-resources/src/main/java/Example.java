@@ -5,19 +5,18 @@ import java.io.IOException;
 import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFA;
 import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFABuilder;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.equivalence.DFAWMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.util.Experiment.DFAExperiment;
 import de.learnlib.util.statistic.SimpleProfiler;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.visualization.Visualization;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
 
 /**
  * This example shows the usage of a learning algorithm and an equivalence test as part of an experiment in order to

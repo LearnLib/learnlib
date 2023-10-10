@@ -18,8 +18,8 @@ package de.learnlib.algorithm.rpni.it;
 import de.learnlib.algorithm.rpni.BlueFringeRPNIDFA;
 import de.learnlib.testsupport.it.learner.AbstractDFAPassiveLearnerIT;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantList;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
 
 public class RpniDfaIT extends AbstractDFAPassiveLearnerIT {
 

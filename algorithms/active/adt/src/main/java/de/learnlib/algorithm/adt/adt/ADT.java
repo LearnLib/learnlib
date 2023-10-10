@@ -23,7 +23,7 @@ import de.learnlib.algorithm.adt.api.LeafSplitter;
 import de.learnlib.algorithm.adt.config.LeafSplitters;
 import de.learnlib.algorithm.adt.util.ADTUtil;
 import de.learnlib.api.oracle.SymbolQueryOracle;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * The adaptive discrimination tree class. Essentially holds a reference to the root {@link ADTNode} and offers some

@@ -28,9 +28,9 @@ import de.learnlib.algorithm.ttt.base.TTTTransition;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.counterexample.acex.OutInconsPrefixTransformAcex;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.word.Word;
 
 public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> implements DFALearner<I> {
 

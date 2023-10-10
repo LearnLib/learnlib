@@ -21,9 +21,9 @@ import de.learnlib.algorithm.oml.ttt.dt.DTInnerNode;
 import de.learnlib.algorithm.oml.ttt.dt.DTLeaf;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.word.Word;
 
 public class OptimalTTTDFA<I> extends AbstractOptimalTTT<DFA<?, I>, I, Boolean> implements DFALearner<I> {
 

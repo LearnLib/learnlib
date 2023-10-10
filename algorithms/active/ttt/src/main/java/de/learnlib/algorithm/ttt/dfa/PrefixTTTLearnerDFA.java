@@ -24,9 +24,9 @@ import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.commons.smartcollections.ArrayStorage;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.word.Word;
 
 public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
 

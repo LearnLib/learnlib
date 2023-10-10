@@ -23,9 +23,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
-import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

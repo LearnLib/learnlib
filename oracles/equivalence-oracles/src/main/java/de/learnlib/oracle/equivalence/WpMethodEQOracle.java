@@ -30,13 +30,13 @@ import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
 import de.learnlib.buildtool.refinement.annotation.Generic;
 import de.learnlib.buildtool.refinement.annotation.Interface;
 import de.learnlib.buildtool.refinement.annotation.Map;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.Output;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.util.automata.conformance.WpMethodTestsIterator;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.Output;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.util.automaton.conformance.WpMethodTestsIterator;
+import net.automatalib.word.Word;
 
 /**
  * Implements an equivalence test by applying the Wp-method test on the given hypothesis automaton, as described in

@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.commons.smartcollections.IntSeq;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.common.smartcollection.IntSeq;
 
 final class EDSMUtil {
 

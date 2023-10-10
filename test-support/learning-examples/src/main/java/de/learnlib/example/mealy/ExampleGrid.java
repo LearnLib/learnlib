@@ -16,10 +16,10 @@
 package de.learnlib.example.mealy;
 
 import de.learnlib.example.DefaultLearningExample.DefaultMealyLearningExample;
-import net.automatalib.automata.transducers.MutableMealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MutableMealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 
 /**
  * This class generates a Mealy machine consisting of a two-dimensional grid of states. Each transition has unique

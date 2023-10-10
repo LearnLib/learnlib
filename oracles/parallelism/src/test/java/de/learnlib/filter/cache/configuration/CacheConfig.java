@@ -36,8 +36,8 @@ import de.learnlib.filter.cache.configuration.CacheCreator.SLISULCacheCreator;
 import de.learnlib.filter.cache.configuration.CacheCreator.SULCacheCreator;
 import de.learnlib.oracle.parallelism.AbstractStaticBatchProcessor;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public interface CacheConfig<I, D, C extends LearningCache<?, I, D>> {
 

@@ -28,10 +28,10 @@ import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
 import de.learnlib.filter.cache.dfa.DFACacheOracle.DFACacheOracleState;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.common.util.Pair;
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

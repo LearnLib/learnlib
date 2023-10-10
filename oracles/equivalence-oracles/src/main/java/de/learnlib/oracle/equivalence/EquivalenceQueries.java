@@ -16,8 +16,8 @@
 package de.learnlib.oracle.equivalence;
 
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.Output;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.Output;
 
 public final class EquivalenceQueries {
 

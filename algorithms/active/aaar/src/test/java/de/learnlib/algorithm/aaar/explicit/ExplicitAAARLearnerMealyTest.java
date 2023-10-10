@@ -20,9 +20,9 @@ import de.learnlib.algorithm.aaar.AbstractAAARTest;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.example.mealy.ExampleCoffeeMachine;
 import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 public class ExplicitAAARLearnerMealyTest
         extends AbstractAAARTest<ExplicitAAARLearnerMealy<?, Input, Input, String>, Input, Word<String>, MealyMachine<?, Input, ?, String>> {

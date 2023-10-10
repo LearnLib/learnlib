@@ -15,8 +15,8 @@
  */
 package de.learnlib.datastructure.observationtable;
 
-import net.automatalib.commons.smartcollections.ResizingArrayStorage;
-import net.automatalib.words.Word;
+import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.word.Word;
 
 final class RowImpl<I> implements Row<I> {
 

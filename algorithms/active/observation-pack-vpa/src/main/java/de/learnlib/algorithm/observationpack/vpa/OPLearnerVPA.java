@@ -28,11 +28,11 @@ import de.learnlib.algorithm.observationpack.vpa.hypothesis.DTNode;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.HypLoc;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.vpa.StackContents;
-import net.automatalib.automata.vpa.State;
-import net.automatalib.words.VPAlphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.vpa.StackContents;
+import net.automatalib.automaton.vpa.State;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

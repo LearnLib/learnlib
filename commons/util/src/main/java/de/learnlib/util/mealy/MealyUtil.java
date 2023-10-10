@@ -22,8 +22,8 @@ import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

@@ -21,9 +21,9 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.Maps;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
-import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.automaton.procedural.SPMM;
+import net.automatalib.automaton.transducer.MealyMachine;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 class MappingSPMM<S, I, T, O> implements SPMM<S, I, T, O> {

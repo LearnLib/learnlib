@@ -21,8 +21,8 @@ import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.counterexample.acex.ClassicPrefixTransformAcex;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

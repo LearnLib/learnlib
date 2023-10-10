@@ -25,8 +25,8 @@ import de.learnlib.oracle.equivalence.spa.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPALearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPALearnerVariantListImpl;
-import net.automatalib.automata.procedural.SPA;
-import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.automaton.procedural.SPA;
 import org.testng.annotations.Factory;
 
 /**

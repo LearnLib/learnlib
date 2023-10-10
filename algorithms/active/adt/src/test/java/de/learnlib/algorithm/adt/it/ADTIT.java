@@ -29,7 +29,7 @@ import de.learnlib.algorithm.adt.learner.ADTLearnerBuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class ADTIT extends AbstractMealyLearnerIT {
 

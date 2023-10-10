@@ -19,7 +19,7 @@ import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class TTTDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<TTTLearnerDFA<Character>> {
 

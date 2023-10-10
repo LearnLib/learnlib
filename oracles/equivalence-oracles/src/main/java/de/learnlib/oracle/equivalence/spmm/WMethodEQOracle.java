@@ -21,13 +21,13 @@ import java.util.stream.Stream;
 import com.google.common.collect.Streams;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
-import net.automatalib.automata.concepts.FiniteRepresentation;
-import net.automatalib.automata.procedural.SBA;
-import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.util.automata.conformance.SPMMWMethodTestsIterator;
-import net.automatalib.util.automata.conformance.WMethodTestsIterator;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.automaton.concept.FiniteRepresentation;
+import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.automaton.procedural.SPMM;
+import net.automatalib.util.automaton.conformance.SPMMWMethodTestsIterator;
+import net.automatalib.util.automaton.conformance.WMethodTestsIterator;
+import net.automatalib.word.Word;
 
 /**
  * Implements an equivalence test by applying the W-method test on the procedures of the given hypothesis {@link SBA},

@@ -19,8 +19,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import de.learnlib.api.AccessSequenceProvider;
-import net.automatalib.automata.base.fast.AbstractFastState;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.base.fast.AbstractFastState;
+import net.automatalib.word.Word;
 
 /**
  * Hypothesis state model.

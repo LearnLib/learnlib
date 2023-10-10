@@ -21,12 +21,12 @@ import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMoore;
 import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMooreBuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMooreTest;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMoore;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMoore;
+import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 
 public class ExtensibleLStarMooreResumableLearnerTest
         extends AbstractResumableLearnerMooreTest<ExtensibleLStarMoore<Character, Character>, AutomatonLStarState<Character, Word<Character>, CompactMoore<Character, Character>, Integer>> {

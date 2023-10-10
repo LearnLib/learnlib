@@ -22,15 +22,15 @@ import java.util.List;
 import java.util.Map;
 
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.DeterministicAutomaton;
-import net.automatalib.automata.FiniteAlphabetAutomaton;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.graphs.Graph;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.automaton.FiniteAlphabetAutomaton;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.graph.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.impl.Alphabets;
 
 /**
  * Hypothesis DFA for the {@link AbstractTTTLearner TTT algorithm}.

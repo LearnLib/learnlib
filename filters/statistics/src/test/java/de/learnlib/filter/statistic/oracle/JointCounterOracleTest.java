@@ -21,7 +21,7 @@ import java.util.Collections;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.filter.statistic.TestQueries;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;

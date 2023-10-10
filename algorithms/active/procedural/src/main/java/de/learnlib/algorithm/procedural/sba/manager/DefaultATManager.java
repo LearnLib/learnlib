@@ -25,10 +25,10 @@ import com.google.common.collect.Sets;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.sba.ATManager;
 import de.learnlib.api.AccessSequenceTransformer;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 
 /**
  * A default {@link ATManager} that only extracts initial access sequences and terminating sequences from positive

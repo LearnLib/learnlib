@@ -27,7 +27,7 @@ import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
 import de.learnlib.buildtool.refinement.annotation.Generic;
 import de.learnlib.buildtool.refinement.annotation.Interface;
 import de.learnlib.buildtool.refinement.annotation.Map;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * A {@link MembershipOracle} that counts both the number of queries and the total number of symbols occurring in all

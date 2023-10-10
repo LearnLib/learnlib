@@ -24,11 +24,11 @@ import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.QueryAnswerer;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 
 public abstract class AbstractGrowingAlphabetMooreTest<L extends SupportsGrowingAlphabet<Character> & LearningAlgorithm<MooreMachine<?, Character, ?, Character>, Character, Word<Character>>>
         extends AbstractGrowingAlphabetTest<L, MooreMachine<?, Character, ?, Character>, MembershipOracle<Character, Word<Character>>, Character, Word<Character>> {

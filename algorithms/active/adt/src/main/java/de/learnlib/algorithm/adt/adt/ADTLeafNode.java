@@ -16,8 +16,8 @@
 package de.learnlib.algorithm.adt.adt;
 
 import de.learnlib.api.oracle.SymbolQueryOracle;
-import net.automatalib.graphs.ads.impl.AbstractRecursiveADSLeafNode;
-import net.automatalib.words.Word;
+import net.automatalib.graph.ads.impl.AbstractRecursiveADSLeafNode;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

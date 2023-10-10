@@ -20,8 +20,8 @@ import java.util.Collection;
 import de.learnlib.algorithm.oml.ttt.dt.DTLeaf;
 import de.learnlib.algorithm.oml.ttt.pt.PTNode;
 import de.learnlib.algorithm.oml.ttt.pt.PrefixTree;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 class HypothesisMealy<I, O> implements MealyMachine<DTLeaf<I, Word<O>>, I, MealyTransition<I, O>, O> {
 

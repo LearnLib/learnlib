@@ -20,9 +20,9 @@ import java.util.Collections;
 import java.util.Random;
 
 import de.learnlib.example.DefaultLearningExample.DefaultMealyLearningExample;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.util.automaton.random.RandomAutomata;
 
 public class ExampleRandomMealy<I, O> extends DefaultMealyLearningExample<I, O> {
 

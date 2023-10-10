@@ -19,8 +19,8 @@ import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.moore.TTTLearnerMoore;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMooreTest;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class TTTLearnerMooreGrowingAlphabetTest
         extends AbstractGrowingAlphabetMooreTest<TTTLearnerMoore<Character, Character>> {

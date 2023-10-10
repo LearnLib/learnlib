@@ -27,11 +27,11 @@ import de.learnlib.algorithm.aaar.AbstractAAARTest;
 import de.learnlib.algorithm.aaar.abstraction.AbstractAbstractionTree;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.example.dfa.ExamplePaulAndMary;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.graphs.concepts.GraphViewable;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.serialization.dot.GraphDOT;
-import net.automatalib.words.Alphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -27,10 +27,10 @@ import de.learnlib.oracle.equivalence.SampleSetEQOracle;
 import de.learnlib.oracle.equivalence.sba.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.util.Experiment;
-import net.automatalib.automata.procedural.SBA;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

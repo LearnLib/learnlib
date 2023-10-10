@@ -22,11 +22,11 @@ import java.util.Collections;
 import java.util.List;
 
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.FiniteStateAcceptor;
-import net.automatalib.automata.fsa.NFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.FiniteStateAcceptor;
+import net.automatalib.automaton.fsa.NFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 public interface PassiveLearningAlgorithm<M, I, D> {
 

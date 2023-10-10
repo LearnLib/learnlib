@@ -20,8 +20,8 @@ import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealyBuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class TTTLearnerMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<TTTLearnerMealy<Character, Character>, TTTLearnerState<Character, Word<Character>>> {

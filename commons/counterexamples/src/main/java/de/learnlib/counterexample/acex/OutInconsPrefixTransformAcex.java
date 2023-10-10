@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 import de.learnlib.acex.impl.AbstractBaseCounterexample;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * An abstract counterexample for output inconsistencies, based on prefix transformations.

@@ -21,11 +21,11 @@ import java.util.Collections;
 
 import de.learnlib.algorithm.rpni.BlueFringeRPNIDFA;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.visualization.Visualization;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.Word;
 
 /**
  * Example of setting up a passive DFA learner.

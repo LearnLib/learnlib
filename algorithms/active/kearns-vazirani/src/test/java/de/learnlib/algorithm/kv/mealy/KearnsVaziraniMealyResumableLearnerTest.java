@@ -17,8 +17,8 @@ package de.learnlib.algorithm.kv.mealy;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class KearnsVaziraniMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<KearnsVaziraniMealy<Character, Character>, KearnsVaziraniMealyState<Character, Character>> {

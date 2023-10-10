@@ -32,13 +32,13 @@ import java.util.Set;
 
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.transducers.SubsequentialTransducer;
-import net.automatalib.commons.smartcollections.IntSeq;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.transducer.SubsequentialTransducer;
+import net.automatalib.common.smartcollection.IntSeq;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

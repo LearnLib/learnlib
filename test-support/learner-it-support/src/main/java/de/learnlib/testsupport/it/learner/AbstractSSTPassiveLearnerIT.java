@@ -26,11 +26,11 @@ import de.learnlib.example.LearningExample.MealyLearningExample;
 import de.learnlib.example.LearningExample.SSTLearningExample;
 import de.learnlib.example.LearningExamples;
 import de.learnlib.example.PassiveLearningExample;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.automata.transducers.SubsequentialTransducer;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.automaton.transducer.SubsequentialTransducer;
+import net.automatalib.word.Word;
 import org.testng.annotations.Factory;
 
 /**

@@ -23,7 +23,7 @@ import de.learnlib.algorithm.lstar.mealy.ClassicLStarMealyBuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMealySymLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealySymLearnerVariantList;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class ClassicLStarMealyIT extends AbstractMealySymLearnerIT {
 

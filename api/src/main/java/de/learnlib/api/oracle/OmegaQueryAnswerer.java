@@ -15,8 +15,8 @@
  */
 package de.learnlib.api.oracle;
 
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Word;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

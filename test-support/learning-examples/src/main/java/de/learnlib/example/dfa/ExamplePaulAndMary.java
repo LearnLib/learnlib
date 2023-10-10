@@ -16,11 +16,11 @@
 package de.learnlib.example.dfa;
 
 import de.learnlib.example.DefaultLearningExample.DefaultDFALearningExample;
-import net.automatalib.automata.fsa.MutableDFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.MutableDFA;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
 
 /**
  * This class implements a sad love story - DFA style.

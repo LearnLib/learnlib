@@ -23,8 +23,8 @@ import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.oracle.parallelism.BatchProcessor;
 import de.learnlib.api.query.OmegaQuery;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Word;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

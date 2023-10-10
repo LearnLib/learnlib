@@ -27,8 +27,8 @@ import de.learnlib.counterexample.LocalSuffixFinder;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.datastructure.observationtable.MutableObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class ObservationTableCEXHandlers {

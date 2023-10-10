@@ -22,10 +22,10 @@ import java.util.Set;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.procedural.SPMM;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 
 /**
  * A manager of access sequences and terminating sequences of {@link SPMM}s during the learning process.

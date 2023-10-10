@@ -39,12 +39,12 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexample.acex.OutInconsPrefixTransformAcex;
 import de.learnlib.datastructure.discriminationtree.SplitData;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.commons.smartcollections.ElementReference;
-import net.automatalib.commons.smartcollections.UnorderedCollection;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.common.smartcollection.ElementReference;
+import net.automatalib.common.smartcollection.UnorderedCollection;
+import net.automatalib.word.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

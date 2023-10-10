@@ -31,12 +31,12 @@ import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWr
 import de.learnlib.example.aaar.Event.Msg;
 import de.learnlib.example.aaar.Event.Recv;
 import de.learnlib.oracle.membership.SimulatorOracle;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.graphs.concepts.GraphViewable;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.Pair;
+import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.visualization.dot.DOT;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Example from the paper "Automata Learning with Automated Alphabet Abstraction Refinement" by Howar et al., which uses

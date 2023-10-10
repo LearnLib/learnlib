@@ -23,10 +23,10 @@ import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.QueryAnswerer;
 import de.learnlib.oracle.equivalence.DFASimulatorEQOracle;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.util.automaton.random.RandomAutomata;
 
 public abstract class AbstractResumableLearnerDFATest<L extends Resumable<T> & LearningAlgorithm<DFA<?, Character>, Character, Boolean>, T>
         extends AbstractResumableLearnerTest<L, DFA<?, Character>, MembershipOracle<Character, Boolean>, Character, Boolean, T> {

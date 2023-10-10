@@ -29,11 +29,11 @@ import de.learnlib.filter.reuse.ReuseException;
 import de.learnlib.filter.reuse.ReuseOracle;
 import de.learnlib.filter.reuse.tree.BoundedDeque.AccessPolicy;
 import de.learnlib.filter.reuse.tree.BoundedDeque.EvictPolicy;
-import net.automatalib.graphs.Graph;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.graph.Graph;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

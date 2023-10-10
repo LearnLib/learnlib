@@ -21,7 +21,7 @@ import de.learnlib.counterexample.LocalSuffixFinder;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 import org.testng.annotations.Test;
 
 @Test

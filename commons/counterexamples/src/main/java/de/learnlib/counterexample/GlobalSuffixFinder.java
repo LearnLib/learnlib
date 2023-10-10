@@ -21,8 +21,8 @@ import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.Query;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.word.Word;
 
 /**
  * Interface for a global suffix finder. A global suffix finder takes a counterexample (plus other supplemental

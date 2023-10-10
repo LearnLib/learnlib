@@ -16,7 +16,7 @@
 package de.learnlib.algorithm.oml.ttt.mealy;
 
 import de.learnlib.algorithm.oml.ttt.dt.DTLeaf;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 class MealyTransition<I, O> {
 

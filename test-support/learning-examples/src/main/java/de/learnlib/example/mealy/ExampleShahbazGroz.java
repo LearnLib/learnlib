@@ -16,11 +16,11 @@
 package de.learnlib.example.mealy;
 
 import de.learnlib.example.DefaultLearningExample.DefaultMealyLearningExample;
-import net.automatalib.automata.transducers.MutableMealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MutableMealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
 
 /**
  * This class provides the example used in the paper ''Inferring Mealy Machines'' by Muzammil Shahbaz and Roland Groz

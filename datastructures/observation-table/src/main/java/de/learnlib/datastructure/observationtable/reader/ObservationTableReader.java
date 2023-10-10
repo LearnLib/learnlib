@@ -16,7 +16,7 @@
 package de.learnlib.datastructure.observationtable.reader;
 
 import de.learnlib.datastructure.observationtable.ObservationTable;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 /**
  * Reads an {@link ObservationTable} from a string source.

@@ -18,10 +18,10 @@ package de.learnlib.algorithm.adt.config.model.calculator;
 import java.util.Optional;
 import java.util.Set;
 
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.graphs.ads.ADSNode;
-import net.automatalib.util.automata.ads.BacktrackingSearch;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.graph.ads.ADSNode;
+import net.automatalib.util.automaton.ads.BacktrackingSearch;
 
 public class MinLengthCalculator extends AbstractCalculator {
 

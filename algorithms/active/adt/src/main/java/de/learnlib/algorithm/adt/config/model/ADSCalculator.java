@@ -19,8 +19,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import de.learnlib.algorithm.adt.adt.ADTNode;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
 
 public interface ADSCalculator {
 

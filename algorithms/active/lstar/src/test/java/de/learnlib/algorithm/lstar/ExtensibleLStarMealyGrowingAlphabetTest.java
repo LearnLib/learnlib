@@ -22,8 +22,8 @@ import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class ExtensibleLStarMealyGrowingAlphabetTest
         extends AbstractGrowingAlphabetMealyTest<ExtensibleLStarMealy<Character, Character>> {

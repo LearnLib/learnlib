@@ -21,8 +21,8 @@ import java.util.List;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
-import net.automatalib.commons.util.comparison.CmpUtil;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.common.util.comparison.CmpUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

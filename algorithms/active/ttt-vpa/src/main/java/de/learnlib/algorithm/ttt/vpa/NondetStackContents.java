@@ -18,7 +18,7 @@ package de.learnlib.algorithm.ttt.vpa;
 import java.util.Collections;
 import java.util.Set;
 
-import net.automatalib.automata.vpa.StackContents;
+import net.automatalib.automaton.vpa.StackContents;
 
 final class NondetStackContents {
 

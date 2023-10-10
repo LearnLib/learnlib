@@ -16,8 +16,8 @@
 package de.learnlib.algorithm.ttt.base;
 
 import de.learnlib.api.AccessSequenceProvider;
-import net.automatalib.commons.smartcollections.ResizingArrayStorage;
-import net.automatalib.words.Word;
+import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.word.Word;
 
 /**
  * A state in a {@link AbstractTTTHypothesis}.

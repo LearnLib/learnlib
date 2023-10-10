@@ -17,10 +17,10 @@ package de.learnlib.util.nfa;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.fsa.NFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.util.automata.fsa.NFAs;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.NFA;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.util.automaton.fsa.NFAs;
 
 public class NFALearnerWrapper<I> implements LearningAlgorithm.DFALearner<I> {
 

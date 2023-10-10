@@ -16,7 +16,7 @@
 package de.learnlib.driver.util;
 
 import de.learnlib.api.ObservableSUL;
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine;
 
 public class ObservableMealySimulatorSUL<S, I, O> extends MealySimulatorSUL<I, O> implements ObservableSUL<S, I, O> {
 

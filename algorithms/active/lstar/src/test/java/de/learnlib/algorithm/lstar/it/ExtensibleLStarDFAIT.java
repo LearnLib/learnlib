@@ -23,7 +23,7 @@ import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFABuilder;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class ExtensibleLStarDFAIT extends AbstractDFALearnerIT {
 

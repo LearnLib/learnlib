@@ -19,8 +19,8 @@ import java.util.List;
 
 import de.learnlib.algorithm.kv.StateInfo;
 import de.learnlib.datastructure.discriminationtree.MultiDTree;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.word.Word;
 
 /**
  * Class that contains all data that represent the internal state of the {@link KearnsVaziraniMealy} learner.

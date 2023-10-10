@@ -20,7 +20,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.fsa.DFA;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

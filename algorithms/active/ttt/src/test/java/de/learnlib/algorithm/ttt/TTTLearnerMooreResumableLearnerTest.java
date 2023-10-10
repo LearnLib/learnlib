@@ -20,8 +20,8 @@ import de.learnlib.algorithm.ttt.moore.TTTLearnerMoore;
 import de.learnlib.algorithm.ttt.moore.TTTLearnerMooreBuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMooreTest;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class TTTLearnerMooreResumableLearnerTest
         extends AbstractResumableLearnerMooreTest<TTTLearnerMoore<Character, Character>, TTTLearnerState<Character, Word<Character>>> {

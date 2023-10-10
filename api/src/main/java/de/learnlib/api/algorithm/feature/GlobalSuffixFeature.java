@@ -18,7 +18,7 @@ package de.learnlib.api.algorithm.feature;
 import java.util.Collection;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public interface GlobalSuffixFeature<I> {
 

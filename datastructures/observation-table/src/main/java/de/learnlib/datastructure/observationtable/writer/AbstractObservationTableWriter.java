@@ -18,7 +18,7 @@ package de.learnlib.datastructure.observationtable.writer;
 import java.util.Objects;
 import java.util.function.Function;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 public abstract class AbstractObservationTableWriter<I, D> implements ObservationTableWriter<I, D> {

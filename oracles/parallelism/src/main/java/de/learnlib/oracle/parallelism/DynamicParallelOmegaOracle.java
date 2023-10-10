@@ -23,7 +23,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.OmegaMembershipOracle;
 import de.learnlib.api.oracle.parallelism.ParallelOmegaOracle;
 import de.learnlib.api.query.OmegaQuery;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**

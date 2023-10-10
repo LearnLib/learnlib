@@ -24,7 +24,7 @@ import java.util.function.Function;
 
 import de.learnlib.datastructure.pta.pta.AbstractBlueFringePTAState;
 import de.learnlib.datastructure.pta.pta.PTATransition;
-import net.automatalib.commons.util.comparison.CmpUtil;
+import net.automatalib.common.util.comparison.CmpUtil;
 
 /**
  * Standard processing orders that can be used for the RPNI algorithm.

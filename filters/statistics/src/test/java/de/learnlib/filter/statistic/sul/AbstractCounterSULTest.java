@@ -25,7 +25,7 @@ import de.learnlib.api.query.Query;
 import de.learnlib.api.statistic.StatisticSUL;
 import de.learnlib.filter.statistic.Counter;
 import de.learnlib.filter.statistic.TestQueries;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

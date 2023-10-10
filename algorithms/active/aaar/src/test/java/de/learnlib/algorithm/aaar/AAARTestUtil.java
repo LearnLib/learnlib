@@ -42,8 +42,8 @@ import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.counterexample.LocalSuffixFinders;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Word;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 
 public final class AAARTestUtil {
 

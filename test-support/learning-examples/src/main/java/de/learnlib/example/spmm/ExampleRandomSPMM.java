@@ -18,9 +18,9 @@ package de.learnlib.example.spmm;
 import java.util.Random;
 
 import de.learnlib.example.DefaultLearningExample.DefaultSPMMLearningExample;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.ProceduralOutputAlphabet;
+import net.automatalib.util.automaton.random.RandomAutomata;
 
 public class ExampleRandomSPMM<I, O> extends DefaultSPMMLearningExample<I, O> {
 

@@ -33,17 +33,17 @@ import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.OneSEVPALearner
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SBALearnerVariantListImpl;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPALearnerVariantListImpl;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPMMLearnerVariantListImpl;
-import net.automatalib.automata.UniversalAutomaton;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.FiniteRepresentation;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.automata.procedural.SBA;
-import net.automatalib.automata.procedural.SPA;
-import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.automata.vpa.OneSEVPA;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.UniversalAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.FiniteRepresentation;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.automaton.procedural.SPMM;
+import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * Utility class for integration tests for a learning algorithm (or "learner").

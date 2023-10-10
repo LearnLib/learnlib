@@ -30,11 +30,11 @@ import de.learnlib.algorithm.aaar.Abstraction;
 import de.learnlib.algorithm.aaar.abstraction.Node.InnerNode;
 import de.learnlib.algorithm.aaar.abstraction.Node.Leaf;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.concepts.GraphViewable;
+import net.automatalib.graph.Graph;
+import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public abstract class AbstractAbstractionTree<AI, CI, D>
         implements Abstraction<AI, CI>, GraphViewable, Graph<Node, Node> {

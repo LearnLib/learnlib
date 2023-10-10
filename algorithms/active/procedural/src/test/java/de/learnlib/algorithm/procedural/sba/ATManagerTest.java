@@ -17,11 +17,11 @@ package de.learnlib.algorithm.procedural.sba;
 
 import de.learnlib.algorithm.procedural.sba.manager.DefaultATManager;
 import de.learnlib.algorithm.procedural.sba.manager.OptimizingATManager;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

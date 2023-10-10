@@ -21,8 +21,8 @@ import de.learnlib.algorithm.oml.ttt.dfa.OptimalTTTDFA;
 import de.learnlib.algorithm.oml.ttt.pt.PTNode;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 /**
  * Adapter for using {@link OptimalTTTDFA} as a procedural learner.

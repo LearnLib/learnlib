@@ -24,8 +24,8 @@ import de.learnlib.example.DefaultPassiveLearningExample;
 import de.learnlib.example.LearningExample;
 import de.learnlib.example.LearningExamples;
 import de.learnlib.example.PassiveLearningExample;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
 import org.testng.annotations.Factory;
 
 /**

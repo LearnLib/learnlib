@@ -20,9 +20,9 @@ import java.util.Map;
 import java.util.Set;
 
 import de.learnlib.api.AccessSequenceTransformer;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.procedural.SPA;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.word.Word;
 
 /**
  * A manager of access sequences, terminating sequences, and return sequences of {@link SPA}s during the learning

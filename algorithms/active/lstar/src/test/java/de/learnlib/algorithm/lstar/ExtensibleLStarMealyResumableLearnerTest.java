@@ -21,12 +21,12 @@ import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 
 public class ExtensibleLStarMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<ExtensibleLStarMealy<Character, Character>, AutomatonLStarState<Character, Word<Character>, CompactMealy<Character, Character>, Integer>> {

@@ -17,8 +17,8 @@ package de.learnlib.algorithm.rivestschapire;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMooreTest;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class RivestSchapireMooreGrowingAlphabetTest
         extends AbstractGrowingAlphabetMooreTest<RivestSchapireMoore<Character, Character>> {

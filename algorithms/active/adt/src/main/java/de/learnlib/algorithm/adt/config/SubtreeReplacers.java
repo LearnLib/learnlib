@@ -27,8 +27,8 @@ import de.learnlib.algorithm.adt.config.model.replacer.ExhaustiveReplacer;
 import de.learnlib.algorithm.adt.config.model.replacer.LevelOrderReplacer;
 import de.learnlib.algorithm.adt.config.model.replacer.SingleReplacer;
 import de.learnlib.algorithm.adt.model.ReplacementResult;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
 
 /**
  * A collection of default {@link SubtreeReplacer} configurations.

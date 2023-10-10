@@ -22,9 +22,9 @@ import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveMealyLearner;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.pta.PTAUtil;
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 /**
  * Blue-fringe version of RPNI for inferring Mealy machines.

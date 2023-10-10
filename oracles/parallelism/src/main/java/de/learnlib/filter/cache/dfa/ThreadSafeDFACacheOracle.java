@@ -21,7 +21,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.common.util.Pair;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 
 /**

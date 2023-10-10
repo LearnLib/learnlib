@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public interface MutableObservationTable<I, D> extends ObservationTable<I, D> {
 

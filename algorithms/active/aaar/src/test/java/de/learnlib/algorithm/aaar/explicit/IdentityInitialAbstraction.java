@@ -18,7 +18,7 @@ package de.learnlib.algorithm.aaar.explicit;
 import java.util.Collection;
 
 import de.learnlib.algorithm.aaar.ExplicitInitialAbstraction;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class IdentityInitialAbstraction<I> implements ExplicitInitialAbstraction<I, I> {
 

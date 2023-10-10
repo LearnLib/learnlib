@@ -19,7 +19,7 @@ import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
 import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFABuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class OPLearnerDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<OPLearnerDFA<Character>, OPLearnerState<Character, Boolean, Boolean, Void>> {

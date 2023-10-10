@@ -18,8 +18,8 @@ package de.learnlib.util.mealy;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 final class MealyLearnerWrapper<M extends MealyMachine<?, I, ?, O>, I, O> implements MealyLearner<I, O> {
 

@@ -37,11 +37,11 @@ import de.learnlib.oracle.equivalence.MealyWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOracle;
 import de.learnlib.oracle.property.MealyLassoPropertyOracle;
 import de.learnlib.util.Experiment.MealyExperiment;
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLAlternatingBuilder;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
-import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
-import net.automatalib.words.Alphabet;
+import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest;
 
 /**
  * Run a black-box checking experiment with a Mealy machine and alternating edge semantics.

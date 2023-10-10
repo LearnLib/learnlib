@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.learnlib.algorithm.oml.ttt.dt.DTLeaf;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class PTNodeImpl<I, D> implements PTNode<I, D> {

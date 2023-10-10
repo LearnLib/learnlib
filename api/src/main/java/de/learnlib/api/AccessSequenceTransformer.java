@@ -15,7 +15,7 @@
  */
 package de.learnlib.api;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public interface AccessSequenceTransformer<I> {
 

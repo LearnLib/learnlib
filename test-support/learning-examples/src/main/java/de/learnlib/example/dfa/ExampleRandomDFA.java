@@ -18,8 +18,8 @@ package de.learnlib.example.dfa;
 import java.util.Random;
 
 import de.learnlib.example.DefaultLearningExample.DefaultDFALearningExample;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.util.automaton.random.RandomAutomata;
 
 public class ExampleRandomDFA extends DefaultDFALearningExample<Integer> {
 

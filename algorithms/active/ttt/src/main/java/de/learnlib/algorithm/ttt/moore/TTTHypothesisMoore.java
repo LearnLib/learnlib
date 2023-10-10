@@ -17,11 +17,11 @@ package de.learnlib.algorithm.ttt.moore;
 
 import de.learnlib.algorithm.ttt.base.AbstractTTTHypothesis;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.UniversalDeterministicAutomaton.FullIntAbstraction;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.FullIntAbstraction;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.word.Word;
 
 /**
  * A {@link MooreMachine}-based specialization of the TTT hypothesis.

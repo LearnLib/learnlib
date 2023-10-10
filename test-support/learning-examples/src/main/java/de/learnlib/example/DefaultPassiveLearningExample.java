@@ -18,7 +18,7 @@ package de.learnlib.example;
 import java.util.Collection;
 
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 /**
  * Default implementation for a passive learning example.

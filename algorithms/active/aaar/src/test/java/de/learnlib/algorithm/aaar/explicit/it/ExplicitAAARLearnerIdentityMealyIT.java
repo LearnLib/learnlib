@@ -25,9 +25,9 @@ import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 
 public class ExplicitAAARLearnerIdentityMealyIT extends AbstractMealyLearnerIT {
 

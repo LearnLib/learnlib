@@ -29,7 +29,7 @@ import de.learnlib.buildtool.refinement.annotation.Generic;
 import de.learnlib.buildtool.refinement.annotation.Interface;
 import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.filter.statistic.Counter;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Counts queries.

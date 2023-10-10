@@ -19,7 +19,7 @@ import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class OPLearnerDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<OPLearnerDFA<Character>> {
 

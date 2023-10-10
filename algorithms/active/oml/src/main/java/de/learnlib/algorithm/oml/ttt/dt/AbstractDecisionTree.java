@@ -21,7 +21,7 @@ import java.util.List;
 import de.learnlib.algorithm.oml.ttt.pt.PTNode;
 import de.learnlib.algorithm.oml.ttt.st.STNode;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public abstract class AbstractDecisionTree<I, D> {
 

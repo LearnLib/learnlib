@@ -18,8 +18,8 @@ package de.learnlib.algorithm.ttt.base;
 import de.learnlib.api.AccessSequenceProvider;
 import de.learnlib.datastructure.list.IntrusiveListElem;
 import de.learnlib.datastructure.list.IntrusiveListElemImpl;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * A transition in a {@link AbstractTTTHypothesis}.

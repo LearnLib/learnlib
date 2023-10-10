@@ -18,11 +18,11 @@ package de.learnlib.algorithm.observationpack.vpa.hypothesis;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.automata.vpa.AbstractSEVPA;
-import net.automatalib.automata.vpa.OneSEVPA;
-import net.automatalib.automata.vpa.StackContents;
-import net.automatalib.automata.vpa.State;
-import net.automatalib.words.VPAlphabet;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.vpa.AbstractSEVPA;
+import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.automaton.vpa.StackContents;
+import net.automatalib.automaton.vpa.State;
 
 /**
  * @param <I>

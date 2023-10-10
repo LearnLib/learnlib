@@ -18,7 +18,7 @@ package de.learnlib.api.oracle;
 import java.util.Collection;
 
 import de.learnlib.api.query.Query;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Base interface for oracles whose semantic is defined in terms of directly answering single queries (like a {@link

@@ -17,9 +17,9 @@ package de.learnlib.algorithm.ostia;
 
 import de.learnlib.testsupport.it.learner.AbstractSSTPassiveLearnerIT;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantList;
-import net.automatalib.automata.transducers.SubsequentialTransducer;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.SubsequentialTransducer;
+import net.automatalib.word.Word;
 
 public class OSTIAIT extends AbstractSSTPassiveLearnerIT {
 

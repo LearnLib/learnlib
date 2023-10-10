@@ -29,10 +29,10 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexample.acex.MooreOutInconsPrefixTransformAcex;
 import de.learnlib.counterexample.acex.OutInconsPrefixTransformAcex;
 import de.learnlib.util.moore.MooreUtil;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * A {@link MooreMachine}-based specialization of the TTT learner.

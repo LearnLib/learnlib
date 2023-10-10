@@ -29,7 +29,7 @@ import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
 import de.learnlib.oracle.membership.AbstractSULOmegaOracle;
 import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Builders for (static and dynamic) parallel oracles.

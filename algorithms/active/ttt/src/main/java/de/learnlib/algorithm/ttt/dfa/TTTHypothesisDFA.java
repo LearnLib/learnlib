@@ -17,10 +17,10 @@ package de.learnlib.algorithm.ttt.dfa;
 
 import de.learnlib.algorithm.ttt.base.AbstractTTTHypothesis;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.UniversalDeterministicAutomaton.FullIntAbstraction;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.FullIntAbstraction;
+import net.automatalib.automaton.fsa.DFA;
 
 public class TTTHypothesisDFA<I> extends AbstractTTTHypothesis<TTTStateDFA<I>, I, Boolean, TTTStateDFA<I>>
         implements DFA<TTTStateDFA<I>, I>, FullIntAbstraction<TTTStateDFA<I>, Boolean, Void> {

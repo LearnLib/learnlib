@@ -21,9 +21,9 @@ import java.util.Set;
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.config.model.ADSCalculator;
 import de.learnlib.algorithm.adt.util.ADTUtil;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.graphs.ads.ADSNode;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.graph.ads.ADSNode;
 
 public abstract class AbstractCalculator implements ADSCalculator {
 

@@ -16,7 +16,7 @@
 package de.learnlib.filter.cache.dfa;
 
 import de.learnlib.api.query.Query;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Proxy query. Answers an underlying query, and also stores the result.

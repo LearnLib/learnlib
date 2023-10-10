@@ -31,10 +31,10 @@ import de.learnlib.algorithm.adt.api.SubtreeReplacer;
 import de.learnlib.algorithm.adt.config.model.ADSCalculator;
 import de.learnlib.algorithm.adt.model.ReplacementResult;
 import de.learnlib.algorithm.adt.util.ADTUtil;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.smartcollections.ReflexiveMapView;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.smartcollection.ReflexiveMapView;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class SingleReplacer implements SubtreeReplacer {

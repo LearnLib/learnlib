@@ -19,7 +19,7 @@ import de.learnlib.algorithm.oml.lstar.OptimalLStarDFA;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 import org.testng.annotations.Test;
 
 @Test

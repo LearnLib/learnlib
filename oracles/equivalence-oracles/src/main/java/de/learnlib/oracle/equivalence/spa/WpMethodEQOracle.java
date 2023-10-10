@@ -21,13 +21,13 @@ import java.util.stream.Stream;
 import com.google.common.collect.Streams;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.procedural.SPA;
-import net.automatalib.util.automata.conformance.SPATestsIterator;
-import net.automatalib.util.automata.conformance.WMethodTestsIterator;
-import net.automatalib.util.automata.conformance.WpMethodTestsIterator;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.util.automaton.conformance.SPATestsIterator;
+import net.automatalib.util.automaton.conformance.WMethodTestsIterator;
+import net.automatalib.util.automaton.conformance.WpMethodTestsIterator;
+import net.automatalib.word.Word;
 
 /**
  * An {@link SPA} version of {@link de.learnlib.oracle.equivalence.WpMethodEQOracle} which generates test sequences

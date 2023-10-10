@@ -20,9 +20,9 @@ import java.util.Collections;
 import java.util.List;
 
 import de.learnlib.api.AccessSequenceProvider;
-import net.automatalib.commons.smartcollections.ArrayStorage;
-import net.automatalib.words.VPAlphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.word.Word;
 
 /**
  * @param <I>

@@ -19,17 +19,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.learnlib.example.DefaultLearningExample.DefaultSPMMLearningExample;
-import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.automata.procedural.StackSPMM;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.FastMealy;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
-import net.automatalib.util.automata.transducers.MutableMealyMachines;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.automaton.procedural.SPMM;
+import net.automatalib.automaton.procedural.StackSPMM;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.FastMealy;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
+import net.automatalib.util.automaton.transducer.MutableMealyMachines;
 
 public class ExamplePalindrome extends DefaultSPMMLearningExample<Character, Character> {
 

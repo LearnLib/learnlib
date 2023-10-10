@@ -25,13 +25,13 @@ import de.learnlib.driver.util.StateLocalInputMealySimulatorSUL;
 import de.learnlib.oracle.equivalence.mealy.StateLocalInputMealySimulatorEQOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
 import de.learnlib.util.Experiment.MealyExperiment;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
-import net.automatalib.util.automata.transducers.MealyFilter;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
+import net.automatalib.util.automaton.transducer.MealyFilter;
 import net.automatalib.visualization.Visualization;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
 
 /**
  * An example showcasing the usage of learning partial systems using the {@link StateLocalInputSUL} interface.

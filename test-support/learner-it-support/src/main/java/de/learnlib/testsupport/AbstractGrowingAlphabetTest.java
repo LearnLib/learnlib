@@ -24,15 +24,15 @@ import java.util.function.Consumer;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.Output;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.Output;
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.GrowingMapAlphabet;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -90,7 +90,7 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
 
     /**
      * In case of passing a growing alphabet, the learners may use the existing {@link
-     * net.automatalib.words.GrowingAlphabet#addSymbol(Object)} functionality. Due to references, this may alter their
+     * GrowingAlphabet#addSymbol(Object)} functionality. Due to references, this may alter their
      * behavior. Check it!
      */
     @Test

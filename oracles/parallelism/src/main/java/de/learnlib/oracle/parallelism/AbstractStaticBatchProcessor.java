@@ -30,7 +30,7 @@ import de.learnlib.api.oracle.parallelism.BatchProcessor;
 import de.learnlib.api.oracle.parallelism.ThreadPool;
 import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
-import net.automatalib.commons.smartcollections.ArrayStorage;
+import net.automatalib.common.smartcollection.ArrayStorage;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**

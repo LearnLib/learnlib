@@ -29,13 +29,13 @@ import de.learnlib.datastructure.pta.PTAUtil;
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.pta.BlueFringePTAState;
 import de.learnlib.datastructure.pta.pta.RedBlueMerge;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.commons.smartcollections.IntSeq;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.common.smartcollection.IntSeq;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 
 /**
  * A state-merging learning algorithm based on the evidence principle. On an operational level this algorithm is very

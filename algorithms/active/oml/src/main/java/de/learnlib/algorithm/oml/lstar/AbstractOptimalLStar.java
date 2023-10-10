@@ -29,9 +29,9 @@ import java.util.Set;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.word.Word;
 
 abstract class AbstractOptimalLStar<M, I, D>
         implements LearningAlgorithm<M, I, D>, Hypothesis<I, D>, InputAlphabetHolder<I> {

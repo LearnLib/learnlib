@@ -28,9 +28,9 @@ import de.learnlib.example.mealy.ExampleCoffeeMachine;
 import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
 import de.learnlib.util.mealy.MealyUtil;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

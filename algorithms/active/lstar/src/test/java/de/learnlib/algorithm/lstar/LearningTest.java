@@ -22,8 +22,8 @@ import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import org.testng.Assert;
 
 public class LearningTest {

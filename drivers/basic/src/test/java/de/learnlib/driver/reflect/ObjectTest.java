@@ -19,9 +19,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import de.learnlib.oracle.membership.SULOracle;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

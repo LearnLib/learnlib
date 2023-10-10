@@ -31,12 +31,12 @@ import de.learnlib.filter.cache.sul.SULCache;
 import de.learnlib.filter.cache.sul.ThreadSafeSULCaches;
 import de.learnlib.filter.statistic.sul.ResetCounterSUL;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.commons.util.random.RandomUtil;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.common.util.random.RandomUtil;
+import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 
 /**
  * An example for using caches in combination with {@link ParallelOracle}s.

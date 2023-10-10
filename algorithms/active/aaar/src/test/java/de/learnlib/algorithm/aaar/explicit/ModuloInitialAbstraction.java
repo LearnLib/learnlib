@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import de.learnlib.algorithm.aaar.ExplicitInitialAbstraction;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class ModuloInitialAbstraction<CI> implements ExplicitInitialAbstraction<String, CI> {
 

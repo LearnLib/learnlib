@@ -25,7 +25,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.model.AbstractDiscriminationTree;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * The discrimination tree data structure.

@@ -16,7 +16,7 @@
 package de.learnlib.algorithm.oml.ttt.pt;
 
 import de.learnlib.algorithm.oml.ttt.dt.DTLeaf;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface PTNode<I, D> {

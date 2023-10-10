@@ -19,10 +19,10 @@ import java.util.Collection;
 import java.util.Random;
 
 import de.learnlib.example.DefaultLearningExample.DefaultSSTLearningExample;
-import net.automatalib.automata.transducers.impl.compact.CompactSST;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.impl.compact.CompactSST;
+import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 
 public class ExampleRandomSST<I, O> extends DefaultSSTLearningExample<I, O> {
 

@@ -19,8 +19,8 @@ import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.counterexample.LocalSuffixFinders;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 /**
  * Adapter for using {@link OPLearnerDFA} as a procedural learner.

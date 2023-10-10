@@ -25,12 +25,12 @@ import de.learnlib.example.LearningExample;
 import de.learnlib.oracle.equivalence.SampleSetEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.util.Experiment;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.util.automata.conformance.WpMethodTestsIterator;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.conformance.WpMethodTestsIterator;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

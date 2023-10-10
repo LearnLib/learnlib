@@ -29,19 +29,19 @@ import de.learnlib.algorithm.adt.adt.ADTLeafNode;
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.api.PartialTransitionAnalyzer;
 import de.learnlib.algorithm.adt.util.ADTUtil;
-import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.smartcollections.ReflexiveMapView;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.util.automata.ads.ADSUtil;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.smartcollection.ReflexiveMapView;
+import net.automatalib.common.util.Pair;
+import net.automatalib.util.automaton.ads.ADSUtil;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A variant of the backtracking ADS search (see {@link net.automatalib.util.automata.ads.ADS}, {@link
- * net.automatalib.util.automata.ads.BacktrackingSearch}), that works on partially defined automata. It tries to find an
+ * A variant of the backtracking ADS search (see {@link net.automatalib.util.automaton.ads.ADS}, {@link
+ * net.automatalib.util.automaton.ads.BacktrackingSearch}), that works on partially defined automata. It tries to find an
  * ADS based on defined transitions and successively closes transitions if no ADS has been found.
  *
  * @param <S>

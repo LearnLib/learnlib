@@ -22,10 +22,10 @@ import java.util.stream.Stream;
 import com.google.common.base.Preconditions;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
-import net.automatalib.automata.concepts.Output;
-import net.automatalib.words.VPAlphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.concept.Output;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * An equivalence oracle based on the generation of random (well-matched) words.

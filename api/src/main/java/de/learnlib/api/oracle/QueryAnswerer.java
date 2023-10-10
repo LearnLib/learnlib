@@ -15,7 +15,7 @@
  */
 package de.learnlib.api.oracle;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * @param <I>

@@ -17,8 +17,8 @@ package de.learnlib.algorithm.ttt.moore;
 
 import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.word.Word;
 
 /**
  * A {@link MooreMachine}-specific state of the {@link TTTHypothesisMoore} class.

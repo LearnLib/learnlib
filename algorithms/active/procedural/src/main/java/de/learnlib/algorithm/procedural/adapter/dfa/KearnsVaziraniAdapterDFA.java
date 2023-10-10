@@ -19,9 +19,9 @@ import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFA;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.word.Word;
 
 /**
  * Adapter for using {@link KearnsVaziraniDFA} as a procedural learner.

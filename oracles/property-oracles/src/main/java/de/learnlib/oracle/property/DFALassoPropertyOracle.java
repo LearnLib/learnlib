@@ -19,7 +19,7 @@ import java.util.Collection;
 
 import de.learnlib.api.oracle.LassoEmptinessOracle.DFALassoEmptinessOracle;
 import de.learnlib.api.oracle.PropertyOracle.DFAPropertyOracle;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
 

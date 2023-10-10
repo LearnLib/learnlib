@@ -20,7 +20,7 @@ import java.util.Collection;
 import de.learnlib.algorithm.oml.ttt.dt.DTLeaf;
 import de.learnlib.algorithm.oml.ttt.pt.PTNode;
 import de.learnlib.algorithm.oml.ttt.pt.PrefixTree;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.fsa.DFA;
 
 class HypothesisDFA<I> implements DFA<DTLeaf<I, Boolean>, I> {
 

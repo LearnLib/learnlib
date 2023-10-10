@@ -23,7 +23,7 @@ import de.learnlib.algorithm.lstar.moore.ClassicLStarMooreBuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMooreSymLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreSymLearnerVariantList;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class ClassicLStarMooreIT extends AbstractMooreSymLearnerIT {
 

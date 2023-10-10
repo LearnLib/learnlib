@@ -26,7 +26,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.parallelism.ParallelOracle;
 import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
 import de.learnlib.api.query.Query;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -32,10 +32,10 @@ import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import de.learnlib.util.MQUtil;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.word.Word;
 
 /**
  * An abstract base class for L*-style algorithms.

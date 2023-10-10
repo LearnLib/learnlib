@@ -27,7 +27,7 @@ import de.learnlib.api.oracle.OmegaMembershipOracle;
 import de.learnlib.api.oracle.parallelism.ParallelOmegaOracle;
 import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
 import de.learnlib.api.query.OmegaQuery;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;

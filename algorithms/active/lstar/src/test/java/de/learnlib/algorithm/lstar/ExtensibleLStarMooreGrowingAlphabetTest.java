@@ -22,8 +22,8 @@ import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMoore;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMooreTest;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class ExtensibleLStarMooreGrowingAlphabetTest
         extends AbstractGrowingAlphabetMooreTest<ExtensibleLStarMoore<Character, Character>> {

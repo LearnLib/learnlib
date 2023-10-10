@@ -24,7 +24,7 @@ import java.util.Map;
 
 import com.google.common.base.Preconditions;
 import de.learnlib.datastructure.observationtable.reader.SimpleObservationTable;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Mock-up observation table for testing writers.

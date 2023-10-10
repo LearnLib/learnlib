@@ -26,11 +26,11 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerMoore;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMoore;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMoore;
+import net.automatalib.word.Word;
 
 /**
  * A {@link MooreMachine}-based specialization of the extensible L* learner.

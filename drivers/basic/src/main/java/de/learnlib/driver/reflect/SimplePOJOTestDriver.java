@@ -20,10 +20,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import de.learnlib.driver.api.TestDriver;
-import net.automatalib.commons.util.ReflectUtil;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.common.util.ReflectUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

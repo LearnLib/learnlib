@@ -18,7 +18,7 @@ package de.learnlib.counterexample.acex;
 import java.util.function.Function;
 
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public class MooreOutInconsPrefixTransformAcex<I, O> extends OutInconsPrefixTransformAcex<I, Word<O>> {
 

@@ -22,8 +22,8 @@ import java.util.Objects;
 
 import de.learnlib.algorithm.adt.model.ObservationTree;
 import de.learnlib.api.oracle.SymbolQueryOracle;
-import net.automatalib.automata.transducers.impl.FastMealy;
-import net.automatalib.automata.transducers.impl.FastMealyState;
+import net.automatalib.automaton.transducer.impl.FastMealy;
+import net.automatalib.automaton.transducer.impl.FastMealyState;
 
 /**
  * A utility class that links an observation tree with a symbol query oracle, meaning that all queries to the symbol

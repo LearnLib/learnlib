@@ -16,7 +16,7 @@
 package de.learnlib.mapper;
 
 import de.learnlib.api.Mapper;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

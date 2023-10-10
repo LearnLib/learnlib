@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import com.google.common.io.CharStreams;
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.dot.GraphDOT;
 import org.testng.Assert;
 import org.testng.annotations.Test;

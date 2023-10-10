@@ -25,9 +25,9 @@ import de.learnlib.oracle.equivalence.spmm.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPMMLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPMMLearnerVariantListImpl;
-import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.automaton.procedural.SPMM;
+import net.automatalib.word.Word;
 import org.testng.annotations.Factory;
 
 /**

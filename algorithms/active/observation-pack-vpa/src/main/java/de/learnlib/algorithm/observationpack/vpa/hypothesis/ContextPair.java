@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.observationpack.vpa.hypothesis;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * @param <I>

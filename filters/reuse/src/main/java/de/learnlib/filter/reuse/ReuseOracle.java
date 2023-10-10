@@ -30,9 +30,9 @@ import de.learnlib.filter.reuse.tree.ReuseNode.NodeResult;
 import de.learnlib.filter.reuse.tree.ReuseTree;
 import de.learnlib.filter.reuse.tree.ReuseTree.ReuseTreeBuilder;
 import de.learnlib.filter.reuse.tree.SystemStateHandler;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * The reuse oracle is a {@link MealyMembershipOracle} that is able to <ul> <li>Cache queries: Each processed query will

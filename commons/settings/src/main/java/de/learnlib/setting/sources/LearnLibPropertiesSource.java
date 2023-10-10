@@ -16,7 +16,7 @@
 package de.learnlib.setting.sources;
 
 import de.learnlib.api.setting.LearnLibSettingsSource;
-import net.automatalib.commons.util.settings.AbstractClassPathFileSource;
+import net.automatalib.common.util.setting.AbstractClassPathFileSource;
 import org.kohsuke.MetaInfServices;
 
 @MetaInfServices(LearnLibSettingsSource.class)

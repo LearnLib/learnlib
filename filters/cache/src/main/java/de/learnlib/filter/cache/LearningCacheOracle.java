@@ -16,9 +16,9 @@
 package de.learnlib.filter.cache;
 
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 /**
  * A {@link LearningCache learning cache} that also serves as a {@link MembershipOracle membership oracle}.

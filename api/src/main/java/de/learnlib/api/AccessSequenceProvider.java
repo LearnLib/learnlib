@@ -15,7 +15,7 @@
  */
 package de.learnlib.api;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Common interface for objects that have an access sequence associated with them (e.g., states and transitions of a

@@ -20,8 +20,8 @@ import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 /**
  * Adapter for using {@link TTTLearnerDFA} as a procedural learner.

@@ -29,10 +29,10 @@ import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.word.Word;
 
 public abstract class AbstractOptimalTTT<M, I, D>
         implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, InputAlphabetHolder<I> {

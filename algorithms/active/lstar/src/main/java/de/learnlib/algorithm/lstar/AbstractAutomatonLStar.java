@@ -25,8 +25,8 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.MutableDeterministic;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.MutableDeterministic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

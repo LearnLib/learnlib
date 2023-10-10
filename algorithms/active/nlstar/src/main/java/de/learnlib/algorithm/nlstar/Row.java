@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * A single row in the {@link ObservationTable} for {@link NLStarLearner NL*}.

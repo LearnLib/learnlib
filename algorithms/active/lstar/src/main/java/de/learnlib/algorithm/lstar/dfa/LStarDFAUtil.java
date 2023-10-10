@@ -18,7 +18,7 @@ package de.learnlib.algorithm.lstar.dfa;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public final class LStarDFAUtil {
 

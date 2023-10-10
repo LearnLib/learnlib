@@ -25,12 +25,12 @@ import java.util.function.Function;
 
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.util.ADTUtil;
-import net.automatalib.automata.transducers.impl.FastMealy;
-import net.automatalib.automata.transducers.impl.FastMealyState;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.impl.FastMealy;
+import net.automatalib.automaton.transducer.impl.FastMealyState;
+import net.automatalib.common.util.Pair;
+import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
+import net.automatalib.word.Word;
 
 /**
  * A class, that stores observations of the system under learning in a tree-like structure. Can be used to <ul> <li>

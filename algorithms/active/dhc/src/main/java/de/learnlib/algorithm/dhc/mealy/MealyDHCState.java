@@ -19,9 +19,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.word.Word;
 
 /**
  * Class that contains all data that represent the internal state of the {@link MealyDHC} learner.

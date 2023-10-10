@@ -21,7 +21,7 @@ import de.learnlib.api.oracle.EmptinessOracle;
 import de.learnlib.api.oracle.InclusionOracle;
 import de.learnlib.api.oracle.PropertyOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.concepts.Output;
+import net.automatalib.automaton.concept.Output;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

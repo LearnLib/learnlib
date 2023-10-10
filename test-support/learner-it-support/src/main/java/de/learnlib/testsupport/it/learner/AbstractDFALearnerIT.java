@@ -25,8 +25,8 @@ import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.DFALearnerVariantListImpl;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
 import org.testng.annotations.Factory;
 
 /**

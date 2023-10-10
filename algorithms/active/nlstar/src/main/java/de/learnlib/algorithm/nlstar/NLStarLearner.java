@@ -24,11 +24,11 @@ import de.learnlib.api.algorithm.NFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.fsa.impl.compact.CompactNFA;
-import net.automatalib.util.automata.fsa.NFAs;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.fsa.impl.compact.CompactNFA;
+import net.automatalib.util.automaton.fsa.NFAs;
+import net.automatalib.word.Word;
 
 /**
  * The NL* learner.
@@ -105,7 +105,7 @@ public class NLStarLearner<I> implements NFALearner<I> {
 
     /**
      * Retrieves a deterministic version of the hypothesis. The DFA is obtained through
-     * {@link NFAs#determinize(net.automatalib.automata.fsa.NFA)}.
+     * {@link NFAs#determinize(net.automatalib.automaton.fsa.NFA)}.
      *
      * @return a deterministic version of the hypothesis
      */

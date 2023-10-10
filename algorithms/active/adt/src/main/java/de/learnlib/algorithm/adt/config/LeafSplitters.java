@@ -25,8 +25,8 @@ import de.learnlib.algorithm.adt.adt.ADTResetNode;
 import de.learnlib.algorithm.adt.adt.ADTSymbolNode;
 import de.learnlib.algorithm.adt.api.LeafSplitter;
 import de.learnlib.algorithm.adt.util.ADTUtil;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Word;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 
 /**
  * A collection of default {@link LeafSplitter} configurations.

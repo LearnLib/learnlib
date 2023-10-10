@@ -16,10 +16,10 @@
 package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.vpa.OneSEVPA;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.word.Word;
 
 public interface PassiveLearnerVariantList<M, I, D> {
 

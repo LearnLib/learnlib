@@ -17,9 +17,9 @@ package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.example.LearningExample.SPMMLearningExample;
-import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.procedural.SPMM;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.word.Word;
 
 public class SPMMLearnerITCase<I, O> extends AbstractLearnerVariantITCase<I, Word<O>, SPMM<?, I, ?, O>> {
 

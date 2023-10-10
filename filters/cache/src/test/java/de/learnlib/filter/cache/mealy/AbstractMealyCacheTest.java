@@ -20,10 +20,10 @@ import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.MealyCounterOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractMealyCacheTest

@@ -38,20 +38,20 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.procedural.EmptySBA;
-import net.automatalib.automata.procedural.SBA;
-import net.automatalib.automata.procedural.StackSBA;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.util.automata.procedural.SBAUtil;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
-import net.automatalib.words.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.procedural.EmptySBA;
+import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.automaton.procedural.StackSBA;
+import net.automatalib.common.util.Pair;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.procedural.SBAUtil;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * A learning algorithm for {@link SBA}s.

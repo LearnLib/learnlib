@@ -18,8 +18,8 @@ package de.learnlib.algorithm.rivestschapire;
 import de.learnlib.algorithm.lstar.ExtensibleLStarMooreResumableLearnerTest;
 import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMoore;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class RivestSchapireMooreResumableLearnerTest extends ExtensibleLStarMooreResumableLearnerTest {
 

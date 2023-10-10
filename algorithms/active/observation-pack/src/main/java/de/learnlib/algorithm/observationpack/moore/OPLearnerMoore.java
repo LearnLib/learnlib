@@ -25,9 +25,9 @@ import de.learnlib.api.query.AbstractQuery;
 import de.learnlib.api.query.Query;
 import de.learnlib.counterexample.LocalSuffixFinder;
 import de.learnlib.datastructure.discriminationtree.MultiDTree;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

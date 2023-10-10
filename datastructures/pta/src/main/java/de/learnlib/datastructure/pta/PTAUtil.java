@@ -16,10 +16,10 @@
 package de.learnlib.datastructure.pta;
 
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 
 public final class PTAUtil {
 

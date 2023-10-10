@@ -18,12 +18,12 @@ package de.learnlib.filter.cache.dfa;
 import java.util.Map;
 
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalPCDFADAGBuilder;
 import net.automatalib.incremental.dfa.tree.IncrementalDFATreeBuilder;
 import net.automatalib.incremental.dfa.tree.IncrementalPCDFATreeBuilder;
-import net.automatalib.words.Alphabet;
 
 /**
  * A factory for creating caches for {@link DFA}-based {@link MembershipOracle}s.

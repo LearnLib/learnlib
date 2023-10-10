@@ -20,8 +20,8 @@ import java.util.Collection;
 import de.learnlib.algorithm.observationpack.hypothesis.HState;
 import de.learnlib.algorithm.observationpack.hypothesis.HTransition;
 import de.learnlib.algorithm.observationpack.hypothesis.OPLearnerHypothesis;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 final class HypothesisWrapperMealy<I, O>
         implements MealyMachine<HState<I, Word<O>, Void, O>, I, HTransition<I, Word<O>, Void, O>, O> {

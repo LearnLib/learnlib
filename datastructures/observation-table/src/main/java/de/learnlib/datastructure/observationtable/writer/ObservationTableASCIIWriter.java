@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableWriter<I, D> {
 

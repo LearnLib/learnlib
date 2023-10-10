@@ -33,15 +33,15 @@ import java.util.stream.IntStream;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Iterators;
-import net.automatalib.automata.MutableDeterministic;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.commons.smartcollections.IntSeq;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.graphs.Graph;
-import net.automatalib.util.automata.Automata;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.common.smartcollection.IntSeq;
+import net.automatalib.common.util.Pair;
+import net.automatalib.graph.Graph;
+import net.automatalib.util.automaton.Automata;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

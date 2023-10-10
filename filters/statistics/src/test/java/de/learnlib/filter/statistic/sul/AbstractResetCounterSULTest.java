@@ -19,7 +19,7 @@ import java.util.Collection;
 
 import de.learnlib.api.query.Query;
 import de.learnlib.filter.statistic.TestQueries;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public abstract class AbstractResetCounterSULTest extends AbstractCounterSULTest {
 

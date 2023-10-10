@@ -21,15 +21,15 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Streams;
 import de.learnlib.oracle.membership.SimulatorOracle;
-import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.util.automata.conformance.SPMMWMethodTestsIterator;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
-import net.automatalib.words.impl.DefaultProceduralOutputAlphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.ProceduralOutputAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.DefaultProceduralOutputAlphabet;
+import net.automatalib.automaton.procedural.SPMM;
+import net.automatalib.util.automaton.conformance.SPMMWMethodTestsIterator;
+import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

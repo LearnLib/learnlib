@@ -20,11 +20,11 @@ import java.util.Collection;
 import de.learnlib.api.oracle.SingleQueryOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.util.MQUtil;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.word.Word;
 
 /**
  * A membership oracle backed by an automaton. The automaton must implement the {@link SuffixOutput} concept, allowing

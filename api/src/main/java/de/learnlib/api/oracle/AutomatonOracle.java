@@ -20,10 +20,10 @@ import java.util.Queue;
 import java.util.Stack;
 
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.DeterministicAutomaton;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

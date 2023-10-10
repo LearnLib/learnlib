@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import de.learnlib.algorithm.aaar.abstraction.AbstractAbstractionTree;
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class TranslatingMealyMachine<S, AI, CI, T, O> implements MealyMachine<S, CI, T, O> {

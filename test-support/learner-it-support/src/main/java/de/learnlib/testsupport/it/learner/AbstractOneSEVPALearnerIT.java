@@ -24,8 +24,8 @@ import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.equivalence.vpa.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.OneSEVPALearnerVariantListImpl;
-import net.automatalib.automata.vpa.OneSEVPA;
-import net.automatalib.words.VPAlphabet;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.vpa.OneSEVPA;
 import org.testng.annotations.Factory;
 
 /**

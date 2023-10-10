@@ -17,9 +17,9 @@ package de.learnlib.filter.cache.sul;
 
 import de.learnlib.api.SUL;
 import de.learnlib.api.StateLocalInputSUL;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
-import net.automatalib.words.Alphabet;
 
 /**
  * A factory for creating thread-safe {@link SUL} caches.

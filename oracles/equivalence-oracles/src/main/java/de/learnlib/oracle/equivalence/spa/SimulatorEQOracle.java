@@ -19,10 +19,10 @@ import java.util.Collection;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.procedural.SPA;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class SimulatorEQOracle<I> implements EquivalenceOracle<SPA<?, I>, I, Boolean> {

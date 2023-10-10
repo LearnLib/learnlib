@@ -20,8 +20,8 @@ import java.util.function.Function;
 
 import de.learnlib.acex.impl.AbstractBaseCounterexample;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.word.Word;
 
 /**
  * An abstract counterexample based on prefix transformations. Unlike {@link OutInconsPrefixTransformAcex} and its

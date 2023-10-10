@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.learnlib.mapper.api.SULMapper;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 
 public class StringMapper<CI> implements SULMapper<String, String, CI, Object> {
 

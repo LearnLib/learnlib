@@ -15,7 +15,7 @@
  */
 package de.learnlib.api.algorithm;
 
-import net.automatalib.automata.fsa.NFA;
+import net.automatalib.automaton.fsa.NFA;
 
 public interface NFALearner<I> extends LearningAlgorithm<NFA<?, I>, I, Boolean> {
 

@@ -17,10 +17,10 @@ package de.learnlib.api.oracle;
 
 import java.util.List;
 
-import net.automatalib.automata.concepts.Output;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.concept.Output;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 /**
  * Decides whether some words that do not satisfy properties evaluated by {@link #getPropertyOracles()} on a given

@@ -20,8 +20,8 @@ import java.util.Objects;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.concept.DetSuffixOutputAutomaton;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class SymbolEQOracleWrapper<A extends DetSuffixOutputAutomaton<?, I, ?, Word<O>>, I, O>

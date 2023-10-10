@@ -17,8 +17,8 @@ package de.learnlib.algorithm.adt.it;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.SymbolQueryOracle;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 public class MQ2SQWrapper<I, O> implements SymbolQueryOracle<I, O> {
 

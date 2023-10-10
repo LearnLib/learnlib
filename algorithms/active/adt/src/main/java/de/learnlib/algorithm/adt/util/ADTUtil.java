@@ -25,11 +25,11 @@ import java.util.function.Function;
 import de.learnlib.algorithm.adt.adt.ADTLeafNode;
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.adt.ADTSymbolNode;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.graphs.ads.ADSNode;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.Pair;
+import net.automatalib.graph.ads.ADSNode;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * Utility class, that offers some operations revolving around adaptive distinguishing sequences.

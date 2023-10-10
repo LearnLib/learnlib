@@ -30,12 +30,12 @@ import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MealyLearnerVariantListImpl;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.util.automata.transducers.MealyFilter;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.util.automaton.transducer.MealyFilter;
+import net.automatalib.word.Word;
 import org.testng.annotations.Factory;
 
 /**

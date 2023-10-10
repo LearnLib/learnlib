@@ -27,11 +27,11 @@ import de.learnlib.api.oracle.SymbolQueryOracle;
 import de.learnlib.driver.util.MealySimulatorSUL;
 import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetTest;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 
 public class ADTGrowingAlphabetTest
         extends AbstractGrowingAlphabetTest<ADTLearner<Integer, Character>, MealyMachine<?, Integer, ?, Character>, SymbolQueryOracle<Integer, Character>, Integer, Word<Character>> {

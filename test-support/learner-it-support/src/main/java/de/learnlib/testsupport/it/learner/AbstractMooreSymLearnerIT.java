@@ -27,9 +27,9 @@ import de.learnlib.oracle.membership.SimulatorOracle.MooreSimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreSymLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MooreSymLearnerVariantListImpl;
 import de.learnlib.util.moore.MooreUtil;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.word.Word;
 import org.testng.annotations.Factory;
 
 /**

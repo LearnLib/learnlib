@@ -21,7 +21,7 @@ import java.io.PrintStream;
 import java.io.Writer;
 
 import de.learnlib.datastructure.observationtable.ObservationTable;
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.common.util.IOUtil;
 
 public interface ObservationTableWriter<I, D> {
 

@@ -19,7 +19,7 @@ import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
-import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.automaton.concept.SuffixOutput;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

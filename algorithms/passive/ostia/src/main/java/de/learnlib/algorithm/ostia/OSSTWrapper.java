@@ -21,10 +21,10 @@ import java.util.LinkedHashSet;
 import java.util.Queue;
 import java.util.Set;
 
-import net.automatalib.automata.transducers.SubsequentialTransducer;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.SubsequentialTransducer;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

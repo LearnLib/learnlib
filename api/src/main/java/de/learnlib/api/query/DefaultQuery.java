@@ -15,7 +15,7 @@
  */
 package de.learnlib.api.query;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * A query is a container for tests a learning algorithms performs, containing the actual test and the corresponding

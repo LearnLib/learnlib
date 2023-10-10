@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.oml.ttt.st;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public interface STNode<I> {
 

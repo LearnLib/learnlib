@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 import com.google.common.base.Preconditions;
 import de.learnlib.api.oracle.parallelism.BatchProcessor;
 import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
-import net.automatalib.commons.util.concurrent.ScalingThreadPoolExecutor;
+import net.automatalib.common.util.concurrent.ScalingThreadPoolExecutor;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

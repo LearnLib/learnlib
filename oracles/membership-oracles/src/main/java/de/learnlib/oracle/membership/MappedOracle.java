@@ -18,7 +18,7 @@ package de.learnlib.oracle.membership;
 import de.learnlib.api.Mapper.AsynchronousMapper;
 import de.learnlib.api.oracle.QueryAnswerer;
 import de.learnlib.api.oracle.SingleQueryOracle;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * A utility class that allows to lift a membership oracle of concrete input/output symbols to a membership oracle of

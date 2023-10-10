@@ -22,8 +22,8 @@ import de.learnlib.filter.cache.configuration.Config;
 import de.learnlib.filter.cache.dfa.ThreadSafeDFACacheOracle;
 import de.learnlib.filter.cache.dfa.ThreadSafeDFACaches;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 

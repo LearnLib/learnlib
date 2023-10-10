@@ -23,8 +23,8 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.testsupport.it.learner.AbstractDFAPassiveLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerITUtil;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantList;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
 
 public class MdlDfaIT extends AbstractDFAPassiveLearnerIT {
 

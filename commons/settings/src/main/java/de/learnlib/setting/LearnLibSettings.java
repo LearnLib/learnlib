@@ -20,8 +20,8 @@ import java.util.Properties;
 import java.util.function.Function;
 
 import de.learnlib.api.setting.LearnLibSettingsSource;
-import net.automatalib.commons.util.WrapperUtil;
-import net.automatalib.commons.util.settings.SettingsSource;
+import net.automatalib.common.util.WrapperUtil;
+import net.automatalib.common.util.setting.SettingsSource;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

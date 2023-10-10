@@ -19,8 +19,8 @@ import java.util.stream.StreamSupport;
 
 import de.learnlib.example.aaar.Event.Msg;
 import de.learnlib.example.aaar.Event.Recv;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 class Protocol implements SuffixOutput<Event, Word<String>> {

@@ -23,16 +23,16 @@ import java.util.Map;
 
 import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.concepts.GraphViewable;
-import net.automatalib.graphs.concepts.NodeIDs;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.graph.Graph;
+import net.automatalib.graph.concept.GraphViewable;
+import net.automatalib.graph.concept.NodeIDs;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.Word;
 
 /**
  * Basic hypothesis data structure for Discrimination Tree learning algorithms.

@@ -26,9 +26,9 @@ import java.util.function.Function;
 import de.learnlib.datastructure.observationtable.reader.ObservationTableReader;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableHTMLWriter;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableWriter;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.word.Word;
 
 public final class OTUtils {
 

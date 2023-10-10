@@ -22,7 +22,7 @@ import java.util.StringJoiner;
 import java.util.function.Function;
 
 import de.learnlib.datastructure.observationtable.ObservationTable;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

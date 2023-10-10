@@ -35,20 +35,20 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.procedural.EmptySPMM;
-import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.automata.procedural.StackSPMM;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.util.automata.procedural.SPMMUtil;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
-import net.automatalib.words.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.procedural.EmptySPMM;
+import net.automatalib.automaton.procedural.SPMM;
+import net.automatalib.automaton.procedural.StackSPMM;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.Pair;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.procedural.SPMMUtil;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * A learning algorithm for {@link SPMM}s.

@@ -19,10 +19,10 @@ import java.util.Collection;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.vpa.OneSEVPA;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.words.VPAlphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

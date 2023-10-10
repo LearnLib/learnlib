@@ -26,9 +26,9 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.commons.smartcollections.ArrayStorage;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.common.util.Pair;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S>> {

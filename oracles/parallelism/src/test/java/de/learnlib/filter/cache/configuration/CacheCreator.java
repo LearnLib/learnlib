@@ -34,8 +34,8 @@ import de.learnlib.filter.cache.configuration.CacheConfig.MealyCollectionConfig;
 import de.learnlib.filter.cache.configuration.CacheConfig.MealySupplierConfig;
 import de.learnlib.filter.cache.configuration.CacheConfig.SLISULConfig;
 import de.learnlib.filter.cache.configuration.CacheConfig.SULConfig;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public interface CacheCreator<I, D, M, C extends LearningCache<?, I, D>>
         extends BiFunction<Alphabet<I>, M, CacheConfig<I, D, C>> {

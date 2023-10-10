@@ -17,7 +17,7 @@ package de.learnlib.datastructure.discriminationtree.model;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Convenient class for word-based discrimination trees that already binds certain generics.

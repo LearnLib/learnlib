@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.ttt.base;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Class for representing output inconsistencies within the TTT algorithm.

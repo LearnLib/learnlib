@@ -27,12 +27,12 @@ import de.learnlib.algorithm.aaar.AbstractAAARTest;
 import de.learnlib.algorithm.aaar.abstraction.AbstractAbstractionTree;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.example.mealy.ExampleGrid;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.graphs.concepts.GraphViewable;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.serialization.dot.GraphDOT;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

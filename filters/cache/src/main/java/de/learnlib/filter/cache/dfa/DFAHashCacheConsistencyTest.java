@@ -20,8 +20,8 @@ import java.util.Map;
 
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class DFAHashCacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {

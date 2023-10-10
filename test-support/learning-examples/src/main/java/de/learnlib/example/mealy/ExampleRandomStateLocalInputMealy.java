@@ -23,15 +23,15 @@ import java.util.Objects;
 import java.util.Random;
 
 import de.learnlib.example.LearningExample.StateLocalInputMealyLearningExample;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.commons.util.random.RandomUtil;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.common.util.random.RandomUtil;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.random.RandomAutomata;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ExampleRandomStateLocalInputMealy<I, O> implements StateLocalInputMealyLearningExample<I, O> {

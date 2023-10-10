@@ -16,9 +16,9 @@
 package de.learnlib.example.dfa;
 
 import de.learnlib.example.DefaultLearningExample.DefaultDFALearningExample;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 
 public class ExampleKeylock extends DefaultDFALearningExample<Integer> {
 

@@ -33,11 +33,11 @@ import de.learnlib.api.AccessSequenceProvider;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.automata.vpa.OneSEVPA;
-import net.automatalib.commons.smartcollections.ElementReference;
-import net.automatalib.commons.smartcollections.UnorderedCollection;
-import net.automatalib.words.VPAlphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.common.smartcollection.ElementReference;
+import net.automatalib.common.smartcollection.UnorderedCollection;
+import net.automatalib.word.Word;
 
 /**
  * @param <I>

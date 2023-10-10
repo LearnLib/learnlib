@@ -30,8 +30,8 @@ import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
 import de.learnlib.api.query.OmegaQuery;
 import de.learnlib.oracle.parallelism.Utils.Analysis;
 import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

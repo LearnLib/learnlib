@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import de.learnlib.api.oracle.SymbolQueryOracle;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

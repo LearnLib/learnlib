@@ -18,7 +18,7 @@ package de.learnlib.algorithm.rivestschapire;
 import de.learnlib.algorithm.lstar.ExtensibleLStarDFAResumableLearnerTest;
 import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFA;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class RivestSchapireDFAResumableLearnerTest extends ExtensibleLStarDFAResumableLearnerTest {
 

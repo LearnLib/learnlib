@@ -17,7 +17,7 @@ package de.learnlib.algorithm.ttt.mealy;
 
 import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public class TTTTransitionMealy<I, O> extends TTTTransition<I, Word<O>> {
 

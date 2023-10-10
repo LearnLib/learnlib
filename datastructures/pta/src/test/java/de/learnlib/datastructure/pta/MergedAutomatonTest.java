@@ -21,10 +21,10 @@ import java.util.List;
 import de.learnlib.datastructure.pta.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.pta.BlueFringePTAState;
 import de.learnlib.datastructure.pta.pta.RedBlueMerge;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

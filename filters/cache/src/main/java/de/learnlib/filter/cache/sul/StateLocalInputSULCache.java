@@ -26,7 +26,7 @@ import de.learnlib.filter.cache.sul.AbstractSULCache.SULCacheState;
 import de.learnlib.filter.cache.sul.StateLocalInputSULCache.StateLocalInputSULCacheState;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.word.WordBuilder;
 
 /**
  * A {@link SULCache} that additionally caches the {@link StateLocalInputSUL#currentlyEnabledInputs() currently enabled

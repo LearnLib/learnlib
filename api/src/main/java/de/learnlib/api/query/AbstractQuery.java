@@ -15,7 +15,7 @@
  */
 package de.learnlib.api.query;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public abstract class AbstractQuery<I, D> extends Query<I, D> {
 

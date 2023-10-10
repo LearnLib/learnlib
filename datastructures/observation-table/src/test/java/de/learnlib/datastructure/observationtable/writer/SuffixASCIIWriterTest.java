@@ -19,8 +19,8 @@ import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.ObservationTableSource;
 import de.learnlib.datastructure.observationtable.reader.SuffixASCIIReader;
-import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

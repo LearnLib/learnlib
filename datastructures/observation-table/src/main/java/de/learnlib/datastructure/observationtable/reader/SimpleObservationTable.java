@@ -22,15 +22,15 @@ import java.util.List;
 import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This class represents the data structure of an {@link ObservationTable} without providing any meaningful
  * functionality. It is used to store the result of reading string representations like with {@link
- * OTUtils#fromString(String, net.automatalib.words.Alphabet, ObservationTableReader)}.
+ * OTUtils#fromString(String, Alphabet, ObservationTableReader)}.
  *
  * @param <I>
  *         The input type.

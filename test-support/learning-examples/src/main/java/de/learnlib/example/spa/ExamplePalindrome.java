@@ -19,17 +19,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.learnlib.example.DefaultLearningExample.DefaultSPALearningExample;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.FastDFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.procedural.SPA;
-import net.automatalib.automata.procedural.StackSPA;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
-import net.automatalib.util.automata.fsa.MutableDFAs;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.FastDFA;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.automaton.procedural.StackSPA;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
+import net.automatalib.util.automaton.fsa.MutableDFAs;
 
 public class ExamplePalindrome extends DefaultSPALearningExample<Character> {
 

@@ -19,8 +19,8 @@ import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealy;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class OPLearnerMealyGrowingAlphabetTest
         extends AbstractGrowingAlphabetMealyTest<OPLearnerMealy<Character, Character>> {

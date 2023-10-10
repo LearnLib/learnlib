@@ -34,10 +34,10 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNod
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
 import de.learnlib.util.MQUtil;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, TP>

@@ -20,7 +20,7 @@ import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractOneSEVPALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList;
-import net.automatalib.words.VPAlphabet;
+import net.automatalib.alphabet.VPAlphabet;
 import org.testng.annotations.Test;
 
 @Test

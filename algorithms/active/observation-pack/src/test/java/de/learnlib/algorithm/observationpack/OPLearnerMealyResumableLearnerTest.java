@@ -19,8 +19,8 @@ import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealy;
 import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealyBuilder;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 public class OPLearnerMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<OPLearnerMealy<Character, Character>, OPLearnerState<Character, Word<Character>, Void, Character>> {

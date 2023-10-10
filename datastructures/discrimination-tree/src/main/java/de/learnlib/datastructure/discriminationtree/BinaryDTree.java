@@ -17,7 +17,7 @@ package de.learnlib.datastructure.discriminationtree;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * Binary discrimination tree specialization.

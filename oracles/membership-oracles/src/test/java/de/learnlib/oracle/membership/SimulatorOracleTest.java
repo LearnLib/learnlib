@@ -21,8 +21,8 @@ import java.util.List;
 
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.example.dfa.ExamplePaulAndMary;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -25,9 +25,9 @@ import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMooreLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreLearnerVariantList;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 
 public class ExplicitAAARLearnerIdentityMooreIT extends AbstractMooreLearnerIT {
 

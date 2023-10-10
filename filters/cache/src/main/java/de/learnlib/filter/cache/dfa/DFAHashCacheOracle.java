@@ -29,8 +29,8 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
 import de.learnlib.filter.cache.dfa.DFAHashCacheOracle.DFAHashCacheOracleState;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.word.Word;
 
 /**
  * A {@link DFALearningCacheOracle} that uses a {@link Map} for internal cache organization.

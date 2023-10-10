@@ -30,9 +30,9 @@ import de.learnlib.algorithm.adt.config.model.DefensiveADSCalculator;
 import de.learnlib.algorithm.adt.model.ExtensionResult;
 import de.learnlib.algorithm.adt.util.ADTUtil;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.commons.smartcollections.ReflexiveMapView;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.words.Word;
+import net.automatalib.common.smartcollection.ReflexiveMapView;
+import net.automatalib.common.util.Pair;
+import net.automatalib.word.Word;
 
 public class DefaultExtender implements ADTExtender {
 

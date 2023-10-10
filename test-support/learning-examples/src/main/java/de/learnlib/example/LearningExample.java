@@ -15,19 +15,19 @@
  */
 package de.learnlib.example;
 
-import net.automatalib.automata.UniversalAutomaton;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.procedural.SBA;
-import net.automatalib.automata.procedural.SPA;
-import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.MooreMachine;
-import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
-import net.automatalib.automata.transducers.SubsequentialTransducer;
-import net.automatalib.automata.vpa.OneSEVPA;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.VPAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.UniversalAutomaton;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.automaton.procedural.SPMM;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
+import net.automatalib.automaton.transducer.SubsequentialTransducer;
+import net.automatalib.automaton.vpa.OneSEVPA;
 
 public interface LearningExample<I, A> {
 

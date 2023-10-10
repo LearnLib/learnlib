@@ -18,8 +18,8 @@ package de.learnlib.example.sba;
 import java.util.Random;
 
 import de.learnlib.example.DefaultLearningExample.DefaultSBALearningExample;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.util.automaton.random.RandomAutomata;
 
 public class ExampleRandomSBA<I> extends DefaultSBALearningExample<I> {
 

@@ -17,7 +17,7 @@ package de.learnlib.datastructure.pta.pta;
 
 import java.awt.Color;
 
-import net.automatalib.commons.util.comparison.CmpUtil;
+import net.automatalib.common.util.comparison.CmpUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractBlueFringePTAState<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S>>

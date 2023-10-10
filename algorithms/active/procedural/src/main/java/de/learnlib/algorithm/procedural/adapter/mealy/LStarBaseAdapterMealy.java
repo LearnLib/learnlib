@@ -24,9 +24,9 @@ import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.observationtable.ObservationTable;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 /**
  * Adapter for using {@link ExtensibleLStarMealy} as a procedural learner.

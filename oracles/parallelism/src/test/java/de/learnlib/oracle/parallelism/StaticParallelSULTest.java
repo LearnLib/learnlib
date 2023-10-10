@@ -18,7 +18,7 @@ package de.learnlib.oracle.parallelism;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 public class StaticParallelSULTest extends AbstractStaticParallelOracleTest<Word<TestSULOutput>> {
 

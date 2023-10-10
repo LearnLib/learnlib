@@ -29,13 +29,13 @@ import java.util.function.Predicate;
 import com.google.common.collect.Iterables;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.commons.smartcollections.ArrayStorage;
-import net.automatalib.commons.util.collections.BitSetIterator;
-import net.automatalib.graphs.Graph;
-import net.automatalib.util.graphs.traversal.GraphTraversal;
+import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.common.util.collection.BitSetIterator;
+import net.automatalib.graph.Graph;
+import net.automatalib.util.graph.traversal.GraphTraversal;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * An abstract super class for aggregating some information/functionality for discrimination trees.

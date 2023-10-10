@@ -18,8 +18,8 @@ package de.learnlib.example.spa;
 import java.util.Random;
 
 import de.learnlib.example.DefaultLearningExample.DefaultSPALearningExample;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.util.automaton.random.RandomAutomata;
 
 public class ExampleRandomSPA<I> extends DefaultSPALearningExample<I> {
 

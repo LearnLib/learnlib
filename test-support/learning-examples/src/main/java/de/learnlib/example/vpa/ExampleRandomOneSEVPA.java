@@ -18,8 +18,8 @@ package de.learnlib.example.vpa;
 import java.util.Random;
 
 import de.learnlib.example.DefaultLearningExample.DefaultOneSEVPALearningExample;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.VPAlphabet;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.util.automaton.random.RandomAutomata;
 
 public class ExampleRandomOneSEVPA<I> extends DefaultOneSEVPALearningExample<I> {
 

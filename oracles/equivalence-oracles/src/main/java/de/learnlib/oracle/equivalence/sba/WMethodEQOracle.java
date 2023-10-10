@@ -21,12 +21,12 @@ import java.util.stream.Stream;
 import com.google.common.collect.Streams;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
-import net.automatalib.automata.concepts.FiniteRepresentation;
-import net.automatalib.automata.procedural.SBA;
-import net.automatalib.util.automata.conformance.SBAWMethodTestsIterator;
-import net.automatalib.util.automata.conformance.WMethodTestsIterator;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.automaton.concept.FiniteRepresentation;
+import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.util.automaton.conformance.SBAWMethodTestsIterator;
+import net.automatalib.util.automaton.conformance.WMethodTestsIterator;
+import net.automatalib.word.Word;
 
 /**
  * An {@link SBA} version of {@link de.learnlib.oracle.equivalence.WMethodEQOracle} which generates test sequences based

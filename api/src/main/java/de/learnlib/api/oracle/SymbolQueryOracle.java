@@ -18,8 +18,8 @@ package de.learnlib.api.oracle;
 import java.util.Collection;
 
 import de.learnlib.api.query.Query;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * Symbol query interface. Semantically similar to {@link MembershipOracle.MealyMembershipOracle}, but allows to pose

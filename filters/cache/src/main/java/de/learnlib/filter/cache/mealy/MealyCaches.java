@@ -17,12 +17,12 @@ package de.learnlib.filter.cache.mealy;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.SymbolQueryOracle;
-import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.incremental.mealy.tree.dynamic.DynamicIncrementalMealyTreeBuilder;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * A factory for creating caches for mealy-based {@link MembershipOracle}s.

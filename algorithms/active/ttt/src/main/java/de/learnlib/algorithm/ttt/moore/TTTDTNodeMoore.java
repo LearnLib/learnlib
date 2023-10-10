@@ -20,7 +20,7 @@ import java.util.Map;
 
 import de.learnlib.algorithm.ttt.base.AbstractBaseDTNode;
 import de.learnlib.algorithm.ttt.base.TTTState;
-import net.automatalib.automata.transducers.MooreMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
 
 /**
  * A {@link MooreMachine}-based specialization of the DT node.

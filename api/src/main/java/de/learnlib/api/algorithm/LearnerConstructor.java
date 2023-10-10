@@ -16,7 +16,7 @@
 package de.learnlib.api.algorithm;
 
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 /**
  * A simplified view on the constructor of a {@link LearningAlgorithm}, that only requires an {@link Alphabet}

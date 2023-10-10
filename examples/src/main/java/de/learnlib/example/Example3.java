@@ -29,12 +29,12 @@ import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseOracle;
 import de.learnlib.filter.reuse.ReuseOracle.ReuseOracleBuilder;
 import de.learnlib.filter.reuse.tree.SystemStateHandler;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

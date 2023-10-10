@@ -18,7 +18,7 @@ package de.learnlib.algorithm.kv.dfa;
 import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public class KearnsVaziraniDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<KearnsVaziraniDFA<Character>> {
 

@@ -16,9 +16,9 @@
 package de.learnlib.api.algorithm.feature;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 /**
  * Common interface for learning algorithms that use a global suffix set. These are mostly algorithms using an

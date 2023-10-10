@@ -15,7 +15,7 @@
  */
 package de.learnlib.datastructure.observationtable;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * A row in an observation table. Minimally, a row consists of a prefix (the row label) and a unique identifier in its

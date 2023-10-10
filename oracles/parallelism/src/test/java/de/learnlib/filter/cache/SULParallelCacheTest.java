@@ -22,9 +22,9 @@ import de.learnlib.filter.cache.configuration.Config;
 import de.learnlib.filter.cache.sul.ThreadSafeSULCache;
 import de.learnlib.filter.cache.sul.ThreadSafeSULCaches;
 import de.learnlib.filter.statistic.sul.ResetCounterSUL;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 

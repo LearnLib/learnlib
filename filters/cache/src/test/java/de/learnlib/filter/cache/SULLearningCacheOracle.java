@@ -26,8 +26,8 @@ import de.learnlib.filter.cache.sul.SULCache;
 import de.learnlib.filter.cache.sul.StateLocalInputSULCache;
 import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 public class SULLearningCacheOracle<I, O, C extends MealyLearningCache<I, O> & Resumable<?>>
         implements MealyLearningCacheOracle<I, O> {
