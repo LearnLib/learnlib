@@ -17,8 +17,8 @@ package de.learnlib.algorithm.dhc.mealy.it;
 
 import de.learnlib.algorithm.dhc.mealy.MealyDHCBuilder;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.counterexamples.GlobalSuffixFinder;
-import de.learnlib.counterexamples.GlobalSuffixFinders;
+import de.learnlib.counterexample.GlobalSuffixFinder;
+import de.learnlib.counterexample.GlobalSuffixFinders;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 import net.automatalib.words.Alphabet;

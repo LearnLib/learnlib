@@ -41,7 +41,7 @@ import de.learnlib.algorithm.ttt.moore.TTTLearnerMoore;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
-import de.learnlib.counterexamples.LocalSuffixFinders;
+import de.learnlib.counterexample.LocalSuffixFinders;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 

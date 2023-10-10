@@ -27,7 +27,7 @@ import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
+import de.learnlib.counterexample.acex.OutInconsPrefixTransformAcex;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;

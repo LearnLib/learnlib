@@ -23,7 +23,7 @@ import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.AbstractQuery;
 import de.learnlib.api.query.Query;
-import de.learnlib.counterexamples.LocalSuffixFinder;
+import de.learnlib.counterexample.LocalSuffixFinder;
 import de.learnlib.datastructure.discriminationtree.MultiDTree;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;

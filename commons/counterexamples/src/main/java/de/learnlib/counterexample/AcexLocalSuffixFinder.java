@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.counterexamples;
+package de.learnlib.counterexample;
 
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
-import de.learnlib.counterexamples.acex.ClassicPrefixTransformAcex;
+import de.learnlib.counterexample.acex.ClassicPrefixTransformAcex;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;

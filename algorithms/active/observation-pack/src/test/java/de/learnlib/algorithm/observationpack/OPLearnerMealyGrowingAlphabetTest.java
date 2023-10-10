@@ -17,7 +17,7 @@ package de.learnlib.algorithm.observationpack;
 
 import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealy;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.counterexamples.LocalSuffixFinders;
+import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;

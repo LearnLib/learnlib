@@ -18,7 +18,7 @@ package de.learnlib.algorithm.procedural.adapter.dfa;
 import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.counterexamples.LocalSuffixFinders;
+import de.learnlib.counterexample.LocalSuffixFinders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 

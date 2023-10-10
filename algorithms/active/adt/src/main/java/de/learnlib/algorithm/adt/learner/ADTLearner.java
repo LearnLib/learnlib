@@ -53,7 +53,7 @@ import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.SymbolQueryOracle;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.counterexamples.LocalSuffixFinders;
+import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.util.MQUtil;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.transducers.MealyMachine;

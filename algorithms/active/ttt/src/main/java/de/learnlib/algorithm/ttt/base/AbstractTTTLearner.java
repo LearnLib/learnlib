@@ -36,7 +36,7 @@ import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.counterexamples.acex.OutInconsPrefixTransformAcex;
+import de.learnlib.counterexample.acex.OutInconsPrefixTransformAcex;
 import de.learnlib.datastructure.discriminationtree.SplitData;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.fsa.DFA;

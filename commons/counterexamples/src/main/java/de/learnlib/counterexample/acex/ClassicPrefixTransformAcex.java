@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.counterexamples.acex;
+package de.learnlib.counterexample.acex;
 
 import java.util.Objects;
 import java.util.function.Function;
