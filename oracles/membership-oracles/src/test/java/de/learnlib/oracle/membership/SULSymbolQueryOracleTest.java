@@ -19,7 +19,7 @@ import java.util.Random;
 
 import de.learnlib.api.SUL;
 import de.learnlib.driver.util.MealySimulatorSUL;
-import de.learnlib.examples.mealy.ExampleRandomMealy;
+import de.learnlib.example.mealy.ExampleRandomMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;

@@ -21,7 +21,7 @@ import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.adapter.dfa.TTTAdapterDFA;
 import de.learnlib.algorithm.procedural.sba.manager.OptimizingATManager;
 import de.learnlib.api.algorithm.LearnerConstructor;
-import de.learnlib.examples.sba.ExamplePalindrome;
+import de.learnlib.example.sba.ExamplePalindrome;
 import de.learnlib.oracle.equivalence.EQOracleChain;
 import de.learnlib.oracle.equivalence.SampleSetEQOracle;
 import de.learnlib.oracle.equivalence.sba.SimulatorEQOracle;

@@ -19,7 +19,7 @@ import java.util.Collection;
 
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.examples.PassiveLearningExample;
+import de.learnlib.example.PassiveLearningExample;
 import net.automatalib.automata.concepts.SuffixOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -25,7 +25,7 @@ import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFA;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.examples.dfa.ExamplePaulAndMary;
+import de.learnlib.example.dfa.ExamplePaulAndMary;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.equivalence.WMethodEQOracle;
 import de.learnlib.oracle.equivalence.WpMethodEQOracle;

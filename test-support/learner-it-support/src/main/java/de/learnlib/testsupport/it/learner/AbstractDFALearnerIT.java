@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.examples.LearningExample.DFALearningExample;
-import de.learnlib.examples.LearningExamples;
+import de.learnlib.example.LearningExample.DFALearningExample;
+import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.learnlib.api.query.OmegaQuery;
-import de.learnlib.examples.dfa.ExamplePaulAndMary;
+import de.learnlib.example.dfa.ExamplePaulAndMary;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.DFASimulatorOmegaOracle;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Word;

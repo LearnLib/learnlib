@@ -26,7 +26,7 @@ import de.learnlib.algorithm.aaar.AAARTestUtil;
 import de.learnlib.algorithm.aaar.AbstractAAARTest;
 import de.learnlib.algorithm.aaar.abstraction.AbstractAbstractionTree;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.examples.mealy.ExampleGrid;
+import de.learnlib.example.mealy.ExampleGrid;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.graphs.concepts.GraphViewable;

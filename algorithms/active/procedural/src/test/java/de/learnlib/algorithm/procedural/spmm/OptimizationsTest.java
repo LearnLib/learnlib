@@ -21,7 +21,7 @@ import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.adapter.mealy.TTTAdapterMealy;
 import de.learnlib.algorithm.procedural.spmm.manager.OptimizingATManager;
 import de.learnlib.api.algorithm.LearnerConstructor;
-import de.learnlib.examples.spmm.ExamplePalindrome;
+import de.learnlib.example.spmm.ExamplePalindrome;
 import de.learnlib.oracle.equivalence.EQOracleChain;
 import de.learnlib.oracle.equivalence.SampleSetEQOracle;
 import de.learnlib.oracle.equivalence.spmm.SimulatorEQOracle;

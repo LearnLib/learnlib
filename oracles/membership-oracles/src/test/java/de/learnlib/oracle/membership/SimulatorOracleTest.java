@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.examples.dfa.ExamplePaulAndMary;
+import de.learnlib.example.dfa.ExamplePaulAndMary;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Word;
 import org.testng.Assert;

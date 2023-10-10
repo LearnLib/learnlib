@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Random;
 
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.examples.mealy.ExampleCoffeeMachine;
-import de.learnlib.examples.mealy.ExampleGrid;
-import de.learnlib.examples.mealy.ExampleStack;
+import de.learnlib.example.mealy.ExampleCoffeeMachine;
+import de.learnlib.example.mealy.ExampleGrid;
+import de.learnlib.example.mealy.ExampleStack;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;

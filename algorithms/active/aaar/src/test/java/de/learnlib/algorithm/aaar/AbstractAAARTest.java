@@ -21,7 +21,7 @@ import java.util.HashSet;
 import com.google.common.collect.Lists;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.examples.LearningExample;
+import de.learnlib.example.LearningExample;
 import de.learnlib.oracle.equivalence.SampleSetEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.util.Experiment;

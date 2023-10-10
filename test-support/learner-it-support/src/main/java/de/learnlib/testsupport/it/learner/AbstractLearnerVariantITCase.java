@@ -18,7 +18,7 @@ package de.learnlib.testsupport.it.learner;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.examples.LearningExample;
+import de.learnlib.example.LearningExample;
 import net.automatalib.automata.concepts.FiniteRepresentation;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;

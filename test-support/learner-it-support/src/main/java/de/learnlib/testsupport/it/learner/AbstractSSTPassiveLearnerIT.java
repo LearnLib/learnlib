@@ -20,12 +20,12 @@ import java.util.Collection;
 import java.util.List;
 
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.examples.DefaultPassiveLearningExample;
-import de.learnlib.examples.LearningExample;
-import de.learnlib.examples.LearningExample.MealyLearningExample;
-import de.learnlib.examples.LearningExample.SSTLearningExample;
-import de.learnlib.examples.LearningExamples;
-import de.learnlib.examples.PassiveLearningExample;
+import de.learnlib.example.DefaultPassiveLearningExample;
+import de.learnlib.example.LearningExample;
+import de.learnlib.example.LearningExample.MealyLearningExample;
+import de.learnlib.example.LearningExample.SSTLearningExample;
+import de.learnlib.example.LearningExamples;
+import de.learnlib.example.PassiveLearningExample;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.transducers.SubsequentialTransducer;

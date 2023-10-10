@@ -20,7 +20,7 @@ import java.util.Random;
 
 import de.learnlib.api.StateLocalInputSUL;
 import de.learnlib.driver.util.StateLocalInputMealySimulatorSUL;
-import de.learnlib.examples.mealy.ExampleRandomStateLocalInputMealy;
+import de.learnlib.example.mealy.ExampleRandomStateLocalInputMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;

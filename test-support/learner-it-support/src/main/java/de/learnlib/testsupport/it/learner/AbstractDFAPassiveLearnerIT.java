@@ -20,10 +20,10 @@ import java.util.Collection;
 import java.util.List;
 
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.examples.DefaultPassiveLearningExample;
-import de.learnlib.examples.LearningExample;
-import de.learnlib.examples.LearningExamples;
-import de.learnlib.examples.PassiveLearningExample;
+import de.learnlib.example.DefaultPassiveLearningExample;
+import de.learnlib.example.LearningExample;
+import de.learnlib.example.LearningExamples;
+import de.learnlib.example.PassiveLearningExample;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.words.Alphabet;
 import org.testng.annotations.Factory;

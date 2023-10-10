@@ -20,7 +20,7 @@ import java.util.Set;
 
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.examples.dfa.ExamplePaulAndMary;
+import de.learnlib.example.dfa.ExamplePaulAndMary;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
