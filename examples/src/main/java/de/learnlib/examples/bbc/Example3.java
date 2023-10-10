@@ -38,7 +38,7 @@ import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOra
 import de.learnlib.oracle.property.MealyLassoPropertyOracle;
 import de.learnlib.util.Experiment.MealyExperiment;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLAlternatingBuilder;
+import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLAlternatingBuilder;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.words.Alphabet;

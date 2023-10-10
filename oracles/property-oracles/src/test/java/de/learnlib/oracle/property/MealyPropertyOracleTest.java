@@ -32,10 +32,10 @@ import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOra
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
-import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
-import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLIOBuilder;
-import net.automatalib.modelcheckers.ltsmin.monitor.LTSminMonitorIOBuilder;
+import net.automatalib.modelchecker.ltsmin.LTSminUtil;
+import net.automatalib.modelchecker.ltsmin.LTSminVersion;
+import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLIOBuilder;
+import net.automatalib.modelchecker.ltsmin.monitor.LTSminMonitorIOBuilder;
 import net.automatalib.modelchecking.ModelChecker.MealyModelChecker;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
