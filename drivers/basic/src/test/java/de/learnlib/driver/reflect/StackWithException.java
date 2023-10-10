@@ -13,21 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.drivers.reflect;
+package de.learnlib.driver.reflect;
+
+import java.util.LinkedList;
 
 /**
- * Unobserved indicates that the corresponding input was not executed on the system. This usually happens after an
- * exception occurred.
+ * A stack implementation with limited size, that throws exception when pushing/pop beyond its capacity/size.
  */
-public final class Unobserved extends MethodOutput {
+public class StackWithException {
 
-    public static final Unobserved INSTANCE = new Unobserved();
+    private final int capacity;
 
-    private Unobserved() {}
+    private final LinkedList<Object> back = new LinkedList<>();
 
-    @Override
-    public String toString() {
-        return "unobserved";
+    public StackWithException(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public void push(Object o) {
+        if (back.size() >= capacity) {
+            throw new IllegalStateException("capacity exceeded");
+        }
+        back.push(o);
+    }
+
+    public Object pop() {
+        return back.pop();
     }
 
 }

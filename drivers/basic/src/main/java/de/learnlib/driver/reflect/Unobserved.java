@@ -13,33 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.drivers.reflect;
-
-import java.util.LinkedList;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
+package de.learnlib.driver.reflect;
 
 /**
- * A stack implementation with limited size, that ignores operations/returns null when pushing/pop beyond its
- * capacity/size.
+ * Unobserved indicates that the corresponding input was not executed on the system. This usually happens after an
+ * exception occurred.
  */
-public class StackWithNull {
+public final class Unobserved extends MethodOutput {
 
-    private final int capacity;
+    public static final Unobserved INSTANCE = new Unobserved();
 
-    private final LinkedList<Object> back = new LinkedList<>();
+    private Unobserved() {}
 
-    public StackWithNull(int capacity) {
-        this.capacity = capacity;
+    @Override
+    public String toString() {
+        return "unobserved";
     }
 
-    public void push(Object o) {
-        if (back.size() < capacity) {
-            back.push(o);
-        }
-    }
-
-    public @Nullable Object pop() {
-        return back.isEmpty() ? null : back.pop();
-    }
 }

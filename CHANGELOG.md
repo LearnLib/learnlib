@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * Refactored the package `de.learnlib.examples.*` to `de.learnlib.example.*`.
   * Refactored the package `de.learnlib.counterexamples.*` to `de.learnlib.counterexample.*`.
   * Refactored the package `de.learnlib.acex.analyzers.*` to `de.learnlib.acex.analyzer.*`.
+  * Refactored the package `de.learnlib.drivers.*` to `de.learnlib.driver.*`.
   * Renamed `PassiveLearnerVariantTICase` to `PassiveLearnerVariantITCase`
 * `PassiveLearningAlgorithm#comuteModel` did not specify whether repeated calls to the method should yield identical models. It is now explicitly left open to the respective implementation to support this behavior. `BlueFringeRPNI{DFA,Mealy}` explicitly does not support this behavior, as the internal prefix-tree acceptor is now constructed on-the-fly as samples are added via the `addSample` methods. This allows to drop the previously redundant caching of samples and reduce memory pressure. `BlueFringeEDSMDFA` and `BlueFringeMDLDFA` still have to cache the samples internally and therefore still support repeated model construction.  
 * `PTA`s now read their sample inputs as `IntSeq`s

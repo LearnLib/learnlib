@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.drivers.reflect;
+package de.learnlib.driver.reflect;
 
 import java.util.Objects;
 
@@ -22,15 +22,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Error output.
  */
-public class ReturnValue extends MethodOutput {
+public class Error extends MethodOutput {
 
-    private final @Nullable Object ret;
+    private final Throwable cause;
 
     private final String id;
 
-    public ReturnValue(@Nullable Object ret) {
-        this.ret = ret;
-        this.id = String.valueOf(ret);
+    public Error(Throwable cause) {
+        this.cause = cause;
+        this.id = cause.getClass().getSimpleName();
     }
 
     @Override
@@ -43,24 +43,24 @@ public class ReturnValue extends MethodOutput {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof ReturnValue)) {
+        if (!(obj instanceof Error)) {
             return false;
         }
 
-        final ReturnValue other = (ReturnValue) obj;
+        final Error other = (Error) obj;
         return Objects.equals(this.id, other.id);
     }
 
     @Override
     public String toString() {
-        return this.id;
+        return "ERR_" + this.id;
     }
 
     /**
      * @return the cause
      */
-    public @Nullable Object getValue() {
-        return ret;
+    public Throwable getCause() {
+        return cause;
     }
 
     /**

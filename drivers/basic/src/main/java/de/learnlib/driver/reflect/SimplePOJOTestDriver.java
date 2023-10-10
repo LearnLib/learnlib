@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.drivers.reflect;
+package de.learnlib.driver.reflect;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import de.learnlib.drivers.api.TestDriver;
+import de.learnlib.driver.api.TestDriver;
 import net.automatalib.commons.util.ReflectUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;

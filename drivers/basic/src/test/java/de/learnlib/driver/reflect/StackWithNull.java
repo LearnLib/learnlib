@@ -13,32 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.drivers.reflect;
+package de.learnlib.driver.reflect;
 
 import java.util.LinkedList;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
- * A stack implementation with limited size, that throws exception when pushing/pop beyond its capacity/size.
+ * A stack implementation with limited size, that ignores operations/returns null when pushing/pop beyond its
+ * capacity/size.
  */
-public class StackWithException {
+public class StackWithNull {
 
     private final int capacity;
 
     private final LinkedList<Object> back = new LinkedList<>();
 
-    public StackWithException(int capacity) {
+    public StackWithNull(int capacity) {
         this.capacity = capacity;
     }
 
     public void push(Object o) {
-        if (back.size() >= capacity) {
-            throw new IllegalStateException("capacity exceeded");
+        if (back.size() < capacity) {
+            back.push(o);
         }
-        back.push(o);
     }
 
-    public Object pop() {
-        return back.pop();
+    public @Nullable Object pop() {
+        return back.isEmpty() ? null : back.pop();
     }
-
 }
