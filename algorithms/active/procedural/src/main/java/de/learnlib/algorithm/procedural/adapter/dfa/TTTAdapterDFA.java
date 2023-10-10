@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.procedural.adapter.dfa;
 
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.api.AccessSequenceTransformer;

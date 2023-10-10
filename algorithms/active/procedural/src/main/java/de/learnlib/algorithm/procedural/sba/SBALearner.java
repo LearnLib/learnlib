@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 
 import com.google.common.collect.Maps;
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.acex.impl.AbstractBaseCounterexample;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.sba.manager.OptimizingATManager;

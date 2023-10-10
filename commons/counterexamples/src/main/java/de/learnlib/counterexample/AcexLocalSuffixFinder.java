@@ -16,7 +16,7 @@
 package de.learnlib.counterexample;
 
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
+import de.learnlib.acex.analyzer.AbstractNamedAcexAnalyzer;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;

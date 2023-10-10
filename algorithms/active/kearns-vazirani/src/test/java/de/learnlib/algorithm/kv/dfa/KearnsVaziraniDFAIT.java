@@ -15,8 +15,8 @@
  */
 package de.learnlib.algorithm.kv.dfa;
 
-import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AbstractNamedAcexAnalyzer;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;

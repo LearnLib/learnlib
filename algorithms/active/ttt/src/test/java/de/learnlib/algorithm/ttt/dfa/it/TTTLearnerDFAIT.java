@@ -15,8 +15,8 @@
  */
 package de.learnlib.algorithm.ttt.dfa.it;
 
-import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AbstractNamedAcexAnalyzer;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFABuilder;
 import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;

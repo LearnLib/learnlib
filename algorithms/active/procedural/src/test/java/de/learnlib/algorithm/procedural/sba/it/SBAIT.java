@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AbstractNamedAcexAnalyzer;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.adapter.dfa.KearnsVaziraniAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.LStarBaseAdapterDFA;

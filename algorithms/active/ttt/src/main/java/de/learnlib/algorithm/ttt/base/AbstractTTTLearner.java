@@ -30,7 +30,7 @@ import java.util.Set;
 
 import com.google.common.collect.Iterators;
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.api.AccessSequenceProvider;
 import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm;

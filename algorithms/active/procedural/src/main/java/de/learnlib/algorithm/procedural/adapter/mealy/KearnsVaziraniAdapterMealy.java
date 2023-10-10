@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.procedural.adapter.mealy;
 
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.kv.mealy.KearnsVaziraniMealy;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;

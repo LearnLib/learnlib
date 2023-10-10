@@ -21,7 +21,7 @@ import java.io.StringWriter;
 import java.util.Random;
 
 import com.google.common.io.CharStreams;
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.oracle.equivalence.vpa.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.util.Experiment;

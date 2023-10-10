@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.kv.mealy;
 
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.words.Alphabet;

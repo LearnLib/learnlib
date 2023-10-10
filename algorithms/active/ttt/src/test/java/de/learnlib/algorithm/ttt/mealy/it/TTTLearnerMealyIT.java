@@ -15,8 +15,8 @@
  */
 package de.learnlib.algorithm.ttt.mealy.it;
 
-import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AbstractNamedAcexAnalyzer;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealyBuilder;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;

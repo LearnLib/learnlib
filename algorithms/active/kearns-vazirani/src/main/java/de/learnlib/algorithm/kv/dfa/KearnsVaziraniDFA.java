@@ -25,7 +25,7 @@ import java.util.function.BooleanSupplier;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.acex.impl.AbstractBaseCounterexample;
 import de.learnlib.algorithm.kv.StateInfo;
 import de.learnlib.api.Resumable;

@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFA;
 import de.learnlib.algorithm.kv.mealy.KearnsVaziraniMealy;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;

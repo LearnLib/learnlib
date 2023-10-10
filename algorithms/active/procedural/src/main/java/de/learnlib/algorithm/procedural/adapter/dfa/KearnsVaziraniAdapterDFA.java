@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.procedural.adapter.dfa;
 
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFA;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;

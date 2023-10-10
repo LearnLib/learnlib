@@ -15,8 +15,8 @@
  */
 package de.learnlib.algorithm.observationpack.vpa;
 
-import de.learnlib.acex.analyzers.AbstractNamedAcexAnalyzer;
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AbstractNamedAcexAnalyzer;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractOneSEVPALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList;

@@ -13,39 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.acex.analyzers;
+package de.learnlib.acex.analyzer;
 
-import de.learnlib.acex.AcexAnalyzer;
+import de.learnlib.acex.AbstractCounterexample;
 
-/**
- * An abstract counterexample analyzer that carries a name.
- */
-public abstract class AbstractNamedAcexAnalyzer implements AcexAnalyzer {
+public class DummyAcex implements AbstractCounterexample<Integer> {
 
-    private final String name;
+    private final int[] values;
 
-    /**
-     * Constructor.
-     *
-     * @param name
-     *         the name of the counterexample analyzer
-     */
-    public AbstractNamedAcexAnalyzer(String name) {
-        this.name = name;
+    public DummyAcex(int[] values) {
+        this.values = values.clone();
     }
 
     @Override
-    public String toString() {
-        return getName();
+    public int getLength() {
+        return values.length;
     }
 
-    /**
-     * Retrieves the name of this analyzer.
-     *
-     * @return the name of this analyzer
-     */
-    public String getName() {
-        return name;
+    @Override
+    public boolean checkEffects(Integer eff1, Integer eff2) {
+        return eff1.equals(eff2);
+    }
+
+    @Override
+    public Integer effect(int index) {
+        return values[index];
     }
 
 }

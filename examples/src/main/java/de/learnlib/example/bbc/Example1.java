@@ -17,7 +17,7 @@ package de.learnlib.example.bbc;
 
 import java.util.function.Function;
 
-import de.learnlib.acex.analyzers.AcexAnalyzers;
+import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.logging.LoggingPropertyOracle.DFALoggingPropertyOracle;
