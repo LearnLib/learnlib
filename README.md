@@ -9,7 +9,7 @@ LearnLib is a free, open source ([Apache License, v2.0][1]) Java library for aut
 
 ## About
 
-LearnLib is mainly developed at the [Dortmund University of Technology, Germany][2].
+LearnLib is mainly developed at [TU Dortmund University, Germany][2].
 Its original purpose is to provide a framework for research on automata learning algorithms as well as for their application in practice.
 
 The public version is a re-implemented version of the former closed-source version of LearnLib.
