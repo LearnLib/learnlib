@@ -1291,6 +1291,15 @@ limitations under the License.
             </properties>
         </profile>
         <profile>
+            <id>jdk21-compat</id>
+            <activation>
+                <jdk>[21,)</jdk>
+            </activation>
+            <properties>
+                <mockito.version>5.6.0</mockito.version>
+            </properties>
+        </profile>
+        <profile>
             <id>examples</id>
             <!-- don't include examples in a release -->
             <activation>

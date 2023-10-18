@@ -80,6 +80,7 @@ public abstract class AbstractDynamicBatchProcessorBuilder<Q, P extends BatchPro
         return this;
     }
 
+    @SuppressWarnings("PMD.CloseResource") // false positive on JDK21 builds
     public OR create() {
 
         final Supplier<? extends P> supplier;
