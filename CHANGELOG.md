@@ -8,11 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-* Added the OSTIA passive learning algorithm, thanks to [Aleksander Mendoza-Drosik](https://github.com/aleksander-mendoza).
-* Added the OML (optimal-MAT-learner) active learning algorithm, thanks to [Falk Howar](https://github.com/fhowar).
-* Added a new learning algorithm for procedural systems (SPAs, SBAs, SPMMs).
-* Added Moore versions of the learners `DT`, `TTT`, `LStar`, thanks to [Mohamad Bayram](https://github.com/mohbayram).
-* Migrated the AAAR algorithm from the old closed-source LearnLib.
+* Added the OSTIA passive learning algorithm (thanks to [Aleksander Mendoza-Drosik](https://github.com/aleksander-mendoza)).
+* Added the OML (optimal-MAT-learner) active learning algorithm (thanks to [Falk Howar](https://github.com/fhowar)).
+* Added new learning algorithms for procedural systems such as SPAs, SBAs, and SPMMs (thanks to [Markus Frohme](https://github.com/mtf90)).
+* Added Moore versions of the `OP`, `TTT`, and `LStar` learners (thanks to [Mohamad Bayram](https://github.com/mohbayram)).
+* Migrated the AAAR algorithm from the old closed-source LearnLib (thanks to [Markus Frohme](https://github.com/mtf90)).
 
 ### Changed
 
