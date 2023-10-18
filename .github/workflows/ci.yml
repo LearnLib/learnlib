@@ -83,7 +83,7 @@ jobs:
         run: |
           git clone -b ${AUTOMATALIB_BRANCH:-develop} --single-branch https://github.com/${AUTOMATALIB_FORK:-LearnLib}/automatalib.git ${HOME}/automatalib-git
           cd ${HOME}/automatalib-git
-          mvn -B install -DskipTests
+          mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' install -DskipTests
           cd $GITHUB_WORKSPACE
       - name: Run Maven
         run: mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' install
