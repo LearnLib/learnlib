@@ -19,9 +19,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.learnlib.api.logging.LearnLogger;
+import de.learnlib.api.logging.Category;
 import de.learnlib.filter.statistic.Counter;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Very rudimentary profiler.
@@ -30,7 +32,7 @@ public final class SimpleProfiler {
 
     private static final Map<String, Counter> CUMULATED = new ConcurrentHashMap<>();
     private static final Map<String, Long> PENDING = new ConcurrentHashMap<>();
-    private static final LearnLogger LOGGER = LearnLogger.getLogger(SimpleProfiler.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleProfiler.class.getName());
     private static final double MILLISECONDS_PER_SECOND = 1000.0;
 
     private SimpleProfiler() {
@@ -104,7 +106,7 @@ public final class SimpleProfiler {
      */
     public static void logResults() {
         for (Entry<String, Counter> e : CUMULATED.entrySet()) {
-            LOGGER.logProfilingInfo(e.getValue());
+            LOGGER.info(Category.PROFILING, e.getValue().toString());
         }
     }
 

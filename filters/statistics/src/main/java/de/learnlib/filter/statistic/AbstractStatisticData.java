@@ -16,12 +16,17 @@
 
 package de.learnlib.filter.statistic;
 
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.statistic.StatisticData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Common interface for statistical data.
  */
 public abstract class AbstractStatisticData implements StatisticData {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractStatisticData.class);
 
     private final String name;
     private final String unit;
@@ -46,4 +51,8 @@ public abstract class AbstractStatisticData implements StatisticData {
 
     @Override
     public abstract String getDetails();
+
+    public void logData() {
+        LOGGER.info(Category.STATISTIC, getDetails());
+    }
 }

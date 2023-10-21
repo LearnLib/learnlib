@@ -19,6 +19,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.function.Function;
 
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.setting.LearnLibSettingsSource;
 import net.automatalib.common.util.WrapperUtil;
 import net.automatalib.common.util.setting.SettingsSource;
@@ -88,7 +89,7 @@ public final class LearnLibSettings {
         try {
             return valueExtractor.apply(prop);
         } catch (IllegalArgumentException ex) {
-            LOG.warn("Could not parse LearnLib property '" + property + "'.", ex);
+            LOG.warn(Category.CONFIG, "Could not parse LearnLib property '" + property + "'.", ex);
             return null;
         }
     }

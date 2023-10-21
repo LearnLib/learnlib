@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.learnlib.api.Resumable;
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
@@ -100,10 +101,10 @@ public class DFACacheOracle<I>
         final Class<?> stateClass = state.getBuilder().getClass();
 
         if (!thisClass.equals(stateClass)) {
-            LOGGER.warn(
-                    "You currently plan to use a '{}', but the state contained a '{}'. This may yield unexpected behavior.",
-                    thisClass,
-                    stateClass);
+            LOGGER.warn(Category.DATASTRUCTURE,
+                        "You currently plan to use a '{}', but the state contained a '{}'. This may yield unexpected behavior.",
+                        thisClass,
+                        stateClass);
         }
 
         this.incDfa = state.getBuilder();

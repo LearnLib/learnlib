@@ -16,7 +16,7 @@
 package de.learnlib.util;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.logging.LearnLogger;
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.filter.statistic.Counter;
@@ -27,6 +27,8 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * runs a learning experiment.
@@ -38,7 +40,7 @@ public class Experiment<A extends Object> {
     public static final String LEARNING_PROFILE_KEY = "Learning";
     public static final String COUNTEREXAMPLE_PROFILE_KEY = "Searching for counterexample";
 
-    private static final LearnLogger LOGGER = LearnLogger.getLogger(Experiment.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Experiment.class);
     private final ExperimentImpl<?, ?> impl;
     private boolean logModels;
     private boolean profile;
@@ -119,8 +121,8 @@ public class Experiment<A extends Object> {
 
         public A run() {
             rounds.increment();
-            LOGGER.logPhase("Starting round " + rounds.getCount());
-            LOGGER.logPhase("Learning");
+            LOGGER.info(Category.PHASE, "Starting round {}", rounds.getCount());
+            LOGGER.info(Category.PHASE, "Learning");
 
             profileStart(LEARNING_PROFILE_KEY);
             learningAlgorithm.startLearning();
@@ -130,10 +132,10 @@ public class Experiment<A extends Object> {
                 final A hyp = learningAlgorithm.getHypothesisModel();
 
                 if (logModels) {
-                    LOGGER.logModel(hyp);
+                    LOGGER.info(Category.MODEL, hyp.toString());
                 }
 
-                LOGGER.logPhase("Searching for counterexample");
+                LOGGER.info(Category.PHASE, "Searching for counterexample");
 
                 profileStart(COUNTEREXAMPLE_PROFILE_KEY);
                 DefaultQuery<I, D> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
@@ -143,12 +145,12 @@ public class Experiment<A extends Object> {
                     return hyp;
                 }
 
-                LOGGER.logCounterexample(ce.getInput().toString());
+                LOGGER.info(Category.COUNTEREXAMPLE, ce.getInput().toString());
 
                 // next round ...
                 rounds.increment();
-                LOGGER.logPhase("Starting round " + rounds.getCount());
-                LOGGER.logPhase("Learning");
+                LOGGER.info(Category.PHASE, "Starting round {}", rounds.getCount());
+                LOGGER.info(Category.PHASE, "Learning");
 
                 profileStart(LEARNING_PROFILE_KEY);
                 final boolean refined = learningAlgorithm.refineHypothesis(ce);

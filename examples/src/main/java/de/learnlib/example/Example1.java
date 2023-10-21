@@ -94,11 +94,11 @@ public final class Example1 {
         System.out.println("-------------------------------------------------------");
 
         // profiling
-        System.out.println(SimpleProfiler.getResults());
+        SimpleProfiler.logResults();
 
         // learning statistics
-        System.out.println(experiment.getRounds().getSummary());
-        System.out.println(mqOracle.getStatisticalData().getSummary());
+        experiment.getRounds().logData();
+        mqOracle.getStatisticalData().logData();
 
         // model statistics
         System.out.println("States: " + result.size());

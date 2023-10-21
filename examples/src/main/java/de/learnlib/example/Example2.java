@@ -131,7 +131,7 @@ public final class Example2 {
         System.out.println("-------------------------------------------------------");
 
         // profiling
-        System.out.println(SimpleProfiler.getResults());
+        SimpleProfiler.logResults();
 
         // learning statistics
         System.out.println(experiment.getRounds().getSummary());

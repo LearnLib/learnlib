@@ -33,14 +33,10 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class MealyDHCTest {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MealyDHCTest.class);
 
     @Test(expectedExceptions = Exception.class)
     public void testMealyDHCInternalSate() {
@@ -176,7 +172,6 @@ public class MealyDHCTest {
             if (counterexample == null) {
                 dhc.startLearning();
             } else {
-                LOGGER.debug("found counterexample: {} / {}", counterexample.getInput(), counterexample.getOutput());
                 Assert.assertTrue(dhc.refineHypothesis(counterexample), "Counterexample did not refine hypothesis");
             }
 
@@ -189,7 +184,6 @@ public class MealyDHCTest {
         Assert.assertEquals(dhc.getHypothesisModel().size(),
                             fm.size(),
                             "Mismatch in size of learned hypothesis and target model");
-        LOGGER.debug("Hypothesis has {} states", dhc.getHypothesisModel().size());
 
     }
 }

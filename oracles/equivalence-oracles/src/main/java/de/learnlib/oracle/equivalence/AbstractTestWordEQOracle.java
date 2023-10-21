@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Streams;
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
@@ -68,7 +69,8 @@ public abstract class AbstractTestWordEQOracle<A extends Output<I, D>, I, D> imp
     public @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
         // Fail fast on empty inputs
         if (inputs.isEmpty()) {
-            LOGGER.warn("Passed empty set of inputs to equivalence oracle; no counterexample can be found!");
+            LOGGER.warn(Category.COUNTEREXAMPLE,
+                        "Passed empty set of inputs to equivalence oracle; no counterexample can be found!");
             return null;
         }
 

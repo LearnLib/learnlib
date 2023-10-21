@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.learnlib.api.Resumable;
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.ObservationTable;
@@ -204,10 +205,10 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
 
         final Alphabet<I> oldAlphabet = this.table.getInputAlphabet();
         if (!oldAlphabet.equals(this.alphabet)) {
-            LOGGER.warn(
-                    "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
-                    this.alphabet,
-                    oldAlphabet);
+            LOGGER.warn(Category.DATASTRUCTURE,
+                        "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
+                        this.alphabet,
+                        oldAlphabet);
         }
     }
 

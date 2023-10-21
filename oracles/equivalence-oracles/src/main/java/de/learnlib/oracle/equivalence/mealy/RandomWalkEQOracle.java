@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import de.learnlib.api.SUL;
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -101,7 +102,8 @@ public class RandomWalkEQOracle<I, O> implements MealyEquivalenceOracle<I, O> {
         }
 
         if (inputs.isEmpty()) {
-            LOGGER.warn("Passed empty set of inputs to equivalence oracle; no counterexample can be found!");
+            LOGGER.warn(Category.COUNTEREXAMPLE,
+                        "Passed empty set of inputs to equivalence oracle; no counterexample can be found!");
             return null;
         }
 

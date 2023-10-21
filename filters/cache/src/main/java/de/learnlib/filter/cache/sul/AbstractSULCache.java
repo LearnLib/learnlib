@@ -17,6 +17,7 @@ package de.learnlib.filter.cache.sul;
 
 import de.learnlib.api.Resumable;
 import de.learnlib.api.SUL;
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.filter.cache.LearningCache.MealyLearningCache;
 import de.learnlib.filter.cache.mealy.MealyCacheConsistencyTest;
@@ -194,10 +195,10 @@ abstract class AbstractSULCache<I, O, C extends SULCacheState<I, O>>
             final Class<?> stateClass = state.builder.getClass();
 
             if (!thisClass.equals(stateClass)) {
-                LOGGER.warn(
-                        "You currently plan to use a '{}', but the state contained a '{}'. This may yield unexpected behavior.",
-                        thisClass,
-                        stateClass);
+                LOGGER.warn(Category.DATASTRUCTURE,
+                            "You currently plan to use a '{}', but the state contained a '{}'. This may yield unexpected behavior.",
+                            thisClass,
+                            stateClass);
             }
 
             this.incMealy = state.builder;

@@ -18,6 +18,7 @@ package de.learnlib.testsupport.it.learner;
 import java.util.Collection;
 
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.example.PassiveLearningExample;
 import net.automatalib.automaton.concept.SuffixOutput;
@@ -68,7 +69,8 @@ public final class PassiveLearnerVariantITCase<I, D, M extends SuffixOutput<I, D
         }
 
         long duration = (System.nanoTime() - start) / NANOS_PER_MILLISECOND;
-        LOGGER.info("Passed learner integration test {} ... took [{}]",
+        LOGGER.info(Category.EVENT,
+                    "Passed learner integration test {} ... took [{}]",
                     getTestName(),
                     String.format("%d.%03ds", duration / MILLIS_PER_SECOND, duration % MILLIS_PER_SECOND));
     }

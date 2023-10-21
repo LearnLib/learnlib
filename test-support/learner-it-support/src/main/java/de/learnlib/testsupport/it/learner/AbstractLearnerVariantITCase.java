@@ -16,6 +16,7 @@
 package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.example.LearningExample;
@@ -81,7 +82,8 @@ abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation
         Assert.assertNull(checkEquivalence(hypothesis), "Final hypothesis does not match reference automaton");
 
         long duration = (System.nanoTime() - start) / NANOS_PER_MILLISECOND;
-        LOGGER.info("Passed learner integration test {} ... took [{}]",
+        LOGGER.info(Category.EVENT,
+                    "Passed learner integration test {} ... took [{}]",
                     getTestName(),
                     String.format("%d.%03ds", duration / MILLIS_PER_SECOND, duration % MILLIS_PER_SECOND));
     }

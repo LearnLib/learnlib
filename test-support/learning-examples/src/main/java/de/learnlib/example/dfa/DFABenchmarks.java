@@ -18,6 +18,7 @@ package de.learnlib.example.dfa;
 import java.io.IOException;
 import java.io.InputStream;
 
+import de.learnlib.api.logging.Category;
 import de.learnlib.example.DefaultLearningExample.DefaultDFALearningExample;
 import de.learnlib.example.LearningExample.DFALearningExample;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
@@ -39,13 +40,13 @@ public final class DFABenchmarks {
         final InputStream resourceStream = DFABenchmarks.class.getResourceAsStream(resourceName);
 
         if (resourceStream == null) {
-            LOGGER.info("Couldn't find resource '{}'", resourceName);
+            LOGGER.info(Category.SYSTEM, "Couldn't find resource '{}'", resourceName);
         } else {
             try (InputStream is = resourceStream) {
                 CompactDFA<Integer> dfa = LearnLibV2Serialization.getInstance().readGenericDFA(is);
                 return new DefaultDFALearningExample<>(dfa);
             } catch (IOException ex) {
-                LOGGER.error("Could not load benchmark", ex);
+                LOGGER.error(Category.SYSTEM, "Could not load benchmark", ex);
             }
         }
 

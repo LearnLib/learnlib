@@ -30,6 +30,7 @@ import de.learnlib.acex.impl.AbstractBaseCounterexample;
 import de.learnlib.algorithm.kv.StateInfo;
 import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.BinaryDTree;
@@ -346,10 +347,10 @@ public class KearnsVaziraniDFA<I>
 
         final Alphabet<I> oldAlphabet = this.hypothesis.getInputAlphabet();
         if (!oldAlphabet.equals(this.alphabet)) {
-            LOGGER.warn(
-                    "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
-                    this.alphabet,
-                    oldAlphabet);
+            LOGGER.warn(Category.DATASTRUCTURE,
+                        "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
+                        this.alphabet,
+                        oldAlphabet);
         }
     }
 

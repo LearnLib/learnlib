@@ -24,6 +24,8 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A PropertyOracle that performs logging.
@@ -38,7 +40,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements PropertyOracle<I, A, P, D> {
 
-    private static final LearnLogger LOGGER = LearnLogger.getLogger(LoggingPropertyOracle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingPropertyOracle.class);
 
     /**
      * The wrapped {@link PropertyOracle}.
@@ -83,8 +85,8 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
     public @Nullable DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs) {
         final DefaultQuery<I, D> result = propertyOracle.disprove(hypothesis, inputs);
         if (result != null) {
-            LOGGER.logEvent("Property violated: '" + this + "'");
-            LOGGER.logQuery("Counter example for property: " + getCounterExample());
+            LOGGER.info(Category.EVENT, "Property violated: '{}'", this);
+            LOGGER.info(Category.QUERY, "Counter example for property: {}", getCounterExample());
         }
 
         return result;
@@ -99,8 +101,8 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
     public @Nullable DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {
         final DefaultQuery<I, D> result = propertyOracle.findCounterExample(hypothesis, inputs);
         if (result != null) {
-            LOGGER.logEvent("Spurious counterexample found for property: '" + this + "'");
-            LOGGER.logCounterexample("Spurious counterexample: " + result);
+            LOGGER.info(Category.EVENT, "Spurious counterexample found for property: '{}'", this);
+            LOGGER.info(Category.COUNTEREXAMPLE, "Spurious counterexample: {}", result);
         }
         return result;
     }

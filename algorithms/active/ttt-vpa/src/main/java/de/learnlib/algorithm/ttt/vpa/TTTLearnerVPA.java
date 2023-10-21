@@ -44,16 +44,12 @@ import net.automatalib.automaton.vpa.StackContents;
 import net.automatalib.automaton.vpa.State;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @param <I>
  *         input symbol type
  */
 public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TTTLearnerVPA.class);
 
     private final BlockList<I> blockList = new BlockList<>();
 
@@ -110,7 +106,6 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         }
 
         if (lastDet < suffix.length()) {
-            LOGGER.debug("last det: {}", lastDet);
             determinize(lastDetState.determinize(), suffix.subWord(lastDet));
         }
         return hypothesis.getSuccessor(baseState, suffix);
@@ -302,18 +297,16 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
 
         ContextPair<I> newDiscr = splitter.getNewDiscriminator();
 
-        if (!blockRoot.getDiscriminator().equals(newDiscr)) {
-            ContextPair<I> finalDiscriminator = prepareSplit(blockRoot, splitter);
-            Map<Boolean, DTNode<I>> repChildren = new HashMap<>();
-            for (Boolean label : blockRoot.getSplitData().getLabels()) {
-                repChildren.put(label, extractSubtree(blockRoot, label));
-            }
-            blockRoot.replaceChildren(repChildren);
+        assert !blockRoot.getDiscriminator().equals(newDiscr);
 
-            blockRoot.setDiscriminator(finalDiscriminator);
-        } else {
-            LOGGER.debug("Weird..");
+        ContextPair<I> finalDiscriminator = prepareSplit(blockRoot, splitter);
+        Map<Boolean, DTNode<I>> repChildren = new HashMap<>();
+        for (Boolean label : blockRoot.getSplitData().getLabels()) {
+            repChildren.put(label, extractSubtree(blockRoot, label));
         }
+        blockRoot.replaceChildren(repChildren);
+
+        blockRoot.setDiscriminator(finalDiscriminator);
 
         declareFinal(blockRoot);
     }
@@ -610,7 +603,6 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
      *         the extracted node
      */
     private void createNewState(DTNode<I> newNode) {
-        LOGGER.debug("Create new state");
         AbstractHypTrans<I> newTreeTrans = newNode.getIncoming().chooseMinimal();
         assert newTreeTrans != null;
 

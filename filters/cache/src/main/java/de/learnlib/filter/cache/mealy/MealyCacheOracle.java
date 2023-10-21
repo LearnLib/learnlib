@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.learnlib.api.Resumable;
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
@@ -123,10 +124,10 @@ public class MealyCacheOracle<I, O>
         final Class<?> stateClass = state.getBuilder().getClass();
 
         if (!thisClass.equals(stateClass)) {
-            LOGGER.warn(
-                    "You currently plan to use a '{}', but the state contained a '{}'. This may yield unexpected behavior.",
-                    thisClass,
-                    stateClass);
+            LOGGER.warn(Category.DATASTRUCTURE,
+                        "You currently plan to use a '{}', but the state contained a '{}'. This may yield unexpected behavior.",
+                        thisClass,
+                        stateClass);
         }
 
         this.incMealy = state.getBuilder();

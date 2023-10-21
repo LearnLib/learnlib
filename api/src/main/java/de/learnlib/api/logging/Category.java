@@ -16,34 +16,61 @@
 
 package de.learnlib.api.logging;
 
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+
 /**
- * Categories for markers.
+ * A set of markers that allow one to categorize logging output.
  */
-public enum Category {
-    SYSTEM,
-    // not LearnLib related
-    PHASE,
-    // new phase (learning, ce-handling, etc.)
-    QUERY,
-    // membership query
-    COUNTEREXAMPLE,
-    // counterexample
-    STATISTIC,
-    // statistic information
-    PROFILING,
-    // profiling information
-    DATASTRUCTURE,
-    // ds maintained by algorithm
-    MODEL,
-    // inferred hypothesis
-    CONFIG,
-    // learning setup
-    EVENT;
-    // splitting of a table cell or similar
+public final class Category {
 
-    private static final String LEARNLIB_PREFIX = "LEARNLIB";
+    /**
+     * Marker for config-related properties.
+     */
+    public static final Marker CONFIG = toMarker("CONFIG");
+    /**
+     * Marker for counterexample-related properties.
+     */
+    public static final Marker COUNTEREXAMPLE = toMarker("COUNTEREXAMPLE");
+    /**
+     * Marker for data structure-related properties.
+     */
+    public static final Marker DATASTRUCTURE = toMarker("DATASTRUCTURE");
+    /**
+     * Marker for event-related properties.
+     */
+    public static final Marker EVENT = toMarker("EVENT");
+    /**
+     * Marker for model-related properties.
+     */
+    public static final Marker MODEL = toMarker("MODEL");
+    /**
+     * Marker for phase-related properties.
+     */
+    public static final Marker PHASE = toMarker("PHASE");
+    /**
+     * Marker for profiling-related properties.
+     */
+    public static final Marker PROFILING = toMarker("PROFILING");
+    /**
+     * Marker for query-related properties.
+     */
+    public static final Marker QUERY = toMarker("QUERY");
+    /**
+     * Marker for statistic-related properties.
+     */
+    public static final Marker STATISTIC = toMarker("STATISTIC");
+    /**
+     * Marker for system-related properties.
+     */
+    public static final Marker SYSTEM = toMarker("SYSTEM");
 
-    public String toMarkerLabel() {
-        return LEARNLIB_PREFIX + '_' + name();
+    private Category() {
+        // prevent instantiation
     }
+
+    private static Marker toMarker(String name) {
+        return MarkerFactory.getMarker("LEARNLIB_" + name);
+    }
+
 }

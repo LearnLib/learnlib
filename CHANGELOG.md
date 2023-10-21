@@ -44,6 +44,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Removed (unused) `de.learnlib.datastructure.pta.pta.PropertyConflictException`, `de.learnlib.datastructure.observationtable.InvalidRowException`.
 * Removed the (protected) `exposeInternalHypothesis` method on `AbstractAutomatonLStar`. Subclasses should directly implement the `getHypothesisModel` method.
+* Removed `LearnLogger`. All code was migrated to use the native SLF4j facade and now uses the markers provided in the `Category` class to accentuate the different log messages and provide client code with a means to handle the different log messages (similar to the previous purpose-specific log methods).
 
 
 ### Fixed

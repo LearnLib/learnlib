@@ -48,8 +48,6 @@ import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MealyDHC<I, O> implements MealyLearner<I, O>,
                                        AccessSequenceTransformer<I>,
@@ -57,7 +55,6 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
                                        SupportsGrowingAlphabet<I>,
                                        Resumable<MealyDHCState<I, O>> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MealyDHC.class);
     private final MembershipOracle<I, Word<O>> oracle;
     private final Alphabet<I> alphabet;
     private Set<Word<I>> splitters = new LinkedHashSet<>();
@@ -129,12 +126,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     protected boolean addSuffixesUnchecked(Collection<? extends Word<I>> newSuffixes) {
         int oldSize = hypothesis.size();
 
-        for (Word<I> suf : newSuffixes) {
-            if (!splitters.contains(suf)) {
-                splitters.add(suf);
-                LOG.debug("added suffix: {}", suf);
-            }
-        }
+        splitters.addAll(newSuffixes);
 
         startLearning();
 

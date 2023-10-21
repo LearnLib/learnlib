@@ -51,6 +51,7 @@ import de.learnlib.algorithm.adt.util.ADTUtil;
 import de.learnlib.algorithm.adt.util.SQOOTBridge;
 import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.api.logging.Category;
 import de.learnlib.api.oracle.SymbolQueryOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexample.LocalSuffixFinders;
@@ -412,10 +413,10 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
         final Alphabet<I> oldAlphabet = this.hypothesis.getInputAlphabet();
         if (!oldAlphabet.equals(this.alphabet)) {
-            LOGGER.warn(
-                    "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
-                    this.alphabet,
-                    oldAlphabet);
+            LOGGER.warn(Category.DATASTRUCTURE,
+                        "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
+                        this.alphabet,
+                        oldAlphabet);
         }
 
         // startLearning has already been invoked
@@ -623,8 +624,8 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
      * verification process, the system under learning may behave differently from what the ADT replacement suggests:
      * This means a counterexample is witnessed and added to the queue of counterexamples for later investigation.
      * Albeit observing diverging behavior, this method continues to trying to construct a valid ADT using the observed
-     * output. If for two states, no distinguishing output can be observed, the states a separated by means of {@link
-     * #resolveAmbiguities(ADTNode, ADTNode, ADTState, Set)}.
+     * output. If for two states, no distinguishing output can be observed, the states a separated by means of
+     * {@link #resolveAmbiguities(ADTNode, ADTNode, ADTState, Set)}.
      *
      * @param nodeToReplace
      *         the old ADT (subtree) to be replaced
