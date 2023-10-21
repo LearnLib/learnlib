@@ -58,17 +58,17 @@ import net.automatalib.word.Word;
 public class CounterOracle<I, D> implements StatisticOracle<I, D> {
 
     private final Counter counter;
-    private MembershipOracle<I, D> nextOracle;
+    private final MembershipOracle<I, D> delegate;
 
-    public CounterOracle(MembershipOracle<I, D> nextOracle, String name) {
-        this.nextOracle = nextOracle;
+    public CounterOracle(MembershipOracle<I, D> delegate, String name) {
+        this.delegate = delegate;
         this.counter = new Counter(name, "queries");
     }
 
     @Override
     public void processQueries(Collection<? extends Query<I, D>> queries) {
         this.counter.increment(queries.size());
-        nextOracle.processQueries(queries);
+        this.delegate.processQueries(queries);
     }
 
     @Override
@@ -82,10 +82,5 @@ public class CounterOracle<I, D> implements StatisticOracle<I, D> {
 
     public long getCount() {
         return counter.getCount();
-    }
-
-    @Override
-    public void setNext(MembershipOracle<I, D> next) {
-        this.nextOracle = next;
     }
 }

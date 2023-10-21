@@ -16,7 +16,7 @@
 
 package de.learnlib.api.statistic;
 
-import de.learnlib.api.oracle.Filter;
+import de.learnlib.api.oracle.MembershipOracle;
 
 /**
  * Common interface for oracles keeping statistics.
@@ -26,4 +26,4 @@ import de.learnlib.api.oracle.Filter;
  * @param <D>
  *         output domain class
  */
-public interface StatisticOracle<I, D> extends Filter<I, D>, StatisticCollector {}
+public interface StatisticOracle<I, D> extends MembershipOracle<I, D>, StatisticCollector {}

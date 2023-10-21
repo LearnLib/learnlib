@@ -40,7 +40,7 @@ public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
     /**
      * oracle used to answer queries.
      */
-    private MembershipOracle<I, D> nextOracle;
+    private final MembershipOracle<I, D> delegate;
 
     /**
      * @param next
@@ -49,7 +49,7 @@ public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
      *         name of the collected data set
      */
     public HistogramOracle(MembershipOracle<I, D> next, String name) {
-        this.nextOracle = next;
+        this.delegate = next;
         this.dataSet = new HistogramDataSet(name, "query length");
     }
 
@@ -58,7 +58,7 @@ public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
         for (Query<I, D> q : queries) {
             this.dataSet.addDataPoint((long) q.getInput().size());
         }
-        nextOracle.processQueries(queries);
+        this.delegate.processQueries(queries);
     }
 
     /**
@@ -67,16 +67,5 @@ public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
     @Override
     public final HistogramDataSet getStatisticalData() {
         return this.dataSet;
-    }
-
-    /**
-     * set used oracle.
-     *
-     * @param next
-     *         oracle to be used
-     */
-    @Override
-    public final void setNext(MembershipOracle<I, D> next) {
-        this.nextOracle = next;
     }
 }
