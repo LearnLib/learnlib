@@ -13,21 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.mapper.api;
+package de.learnlib.api;
 
-import java.util.Optional;
-
-import de.learnlib.api.Mapper;
 import de.learnlib.api.Mapper.SynchronousMapper;
-import de.learnlib.api.SUL;
+import de.learnlib.api.exception.MappedException;
 import de.learnlib.api.exception.SULException;
-import de.learnlib.mapper.SULMappers;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An extension of the {@link Mapper} interface specifically for {@link SUL}s.
- * <p>
- * The class {@link SULMappers} provides static utility functions for manipulating mappers.
  * <p>
  * SULMappers, like {@link SUL}s, may be {@link SUL#fork() forkable}. The requirements and semantics of {@link #fork()}
  * are basically the same as set forth for {@link SUL#fork()}. Stateless mappers (e.g., with empty {@link #pre()} and
@@ -107,42 +100,4 @@ public interface SULMapper<AI, AO, CI, CO> extends SynchronousMapper<AI, AO, CI,
         throw exception;
     }
 
-    final class MappedException<AO> {
-
-        private final AO thisStepOutput;
-        private final Optional<AO> subsequentStepsOutput;
-
-        private MappedException(AO output) {
-            this(output, null);
-        }
-
-        private MappedException(AO thisStepOutput, @Nullable AO subsequentStepsOutput) {
-            this.thisStepOutput = thisStepOutput;
-            this.subsequentStepsOutput = Optional.ofNullable(subsequentStepsOutput);
-        }
-
-        public static <AO> MappedException<AO> ignoreAndContinue(AO output) {
-            return new MappedException<>(output);
-        }
-
-        public static <AO> MappedException<AO> repeatOutput(AO output) {
-            return repeatOutput(output, output);
-        }
-
-        public static <AO> MappedException<AO> repeatOutput(AO thisStepOutput, AO subsequentOutput) {
-            return new MappedException<>(thisStepOutput, subsequentOutput);
-        }
-
-        public static <AO> MappedException<AO> pass(SULException exception) {
-            throw exception;
-        }
-
-        public AO getThisStepOutput() {
-            return thisStepOutput;
-        }
-
-        public Optional<AO> getSubsequentStepsOutput() {
-            return subsequentStepsOutput;
-        }
-    }
 }

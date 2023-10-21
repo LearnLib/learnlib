@@ -18,7 +18,7 @@ package de.learnlib.testsupport.it.learner;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.automaton.transducer.SubsequentialTransducer;
 import net.automatalib.word.Word;
 
 public interface PassiveLearnerVariantList<M, I, D> {
@@ -40,7 +40,6 @@ public interface PassiveLearnerVariantList<M, I, D> {
 
     interface MealyLearnerVariantList<I, O> extends PassiveLearnerVariantList<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 
-    interface MealySymLearnerVariantList<I, O> extends PassiveLearnerVariantList<MealyMachine<?, I, ?, O>, I, O> {}
-
-    interface OneSEVPALearnerVariantList<I> extends PassiveLearnerVariantList<OneSEVPA<?, I>, I, Boolean> {}
+    interface SSTLearnerVariantList<I, O>
+            extends PassiveLearnerVariantList<SubsequentialTransducer<?, I, ?, O>, I, Word<O>> {}
 }

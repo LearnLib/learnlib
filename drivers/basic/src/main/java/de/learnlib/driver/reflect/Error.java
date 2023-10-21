@@ -20,12 +20,11 @@ import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Error output.
+ * A wrapper for representing an exception-based method output via its {@link Class#getSimpleName()}.
  */
-public class Error extends MethodOutput {
+public final class Error extends MethodOutput {
 
     private final Throwable cause;
-
     private final String id;
 
     public Error(Throwable cause) {
@@ -34,12 +33,12 @@ public class Error extends MethodOutput {
     }
 
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return Objects.hashCode(this.id);
     }
 
     @Override
-    public final boolean equals(@Nullable Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (this == obj) {
             return true;
         }
@@ -53,20 +52,10 @@ public class Error extends MethodOutput {
 
     @Override
     public String toString() {
-        return "ERR_" + this.id;
+        return this.id;
     }
 
-    /**
-     * @return the cause
-     */
     public Throwable getCause() {
         return cause;
-    }
-
-    /**
-     * @return the id
-     */
-    public String getId() {
-        return id;
     }
 }

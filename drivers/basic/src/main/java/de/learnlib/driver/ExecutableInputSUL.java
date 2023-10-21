@@ -13,27 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.mapper.api;
+package de.learnlib.driver;
 
+import de.learnlib.api.ExecutableInput;
 import de.learnlib.api.SUL;
-import de.learnlib.api.exception.SULException;
 
 /**
- * An executable input is a concrete input produced by a data mapper and can be executed directly.
+ * A {@link SUL} that executes {@link ExecutableInput} symbols.
  *
- * @param <CO>
- *         concrete output
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
  */
-public interface ExecutableInput<CO> {
+public class ExecutableInputSUL<I extends ExecutableInput<? extends O>, O> implements SUL<I, O> {
 
-    /**
-     * executes the input.
-     *
-     * @return concrete output for this input
-     *
-     * @throws SULException
-     *         if the input cannot be executed on the {@link SUL}
-     */
-    CO execute();
+    @Override
+    public void pre() {}
 
+    @Override
+    public void post() {}
+
+    @Override
+    public O step(I in) {
+        return in.execute();
+    }
+
+    @Override
+    public boolean canFork() {
+        return true;
+    }
+
+    @Override
+    public SUL<I, O> fork() {
+        return this;
+    }
 }

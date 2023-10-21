@@ -24,10 +24,6 @@ import net.automatalib.util.automaton.random.RandomAutomata;
 
 public class ExampleRandomSPMM<I, O> extends DefaultSPMMLearningExample<I, O> {
 
-    public ExampleRandomSPMM(ProceduralInputAlphabet<I> inputAlphabet, ProceduralOutputAlphabet<O> outputAlphabet, int size) {
-        this(new Random(), inputAlphabet, outputAlphabet, size);
-    }
-
     public ExampleRandomSPMM(Random random, ProceduralInputAlphabet<I> inputAlphabet, ProceduralOutputAlphabet<O> outputAlphabet, int size) {
         super(RandomAutomata.randomSPMM(random, inputAlphabet, outputAlphabet, size));
     }

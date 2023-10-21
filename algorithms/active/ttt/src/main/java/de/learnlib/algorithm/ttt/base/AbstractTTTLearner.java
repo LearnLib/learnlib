@@ -367,11 +367,6 @@ public abstract class AbstractTTTLearner<A, I, D>
         return curr;
     }
 
-    protected TTTTransition<I, D> getStateTransition(TTTState<I, D> state, I sym) {
-        int idx = alphabet.getSymbolIndex(sym);
-        return state.getTransition(idx);
-    }
-
     private TTTState<I, D> requireSuccessor(TTTTransition<I, D> trans) {
         if (trans.isTree()) {
             return trans.getTreeTarget();

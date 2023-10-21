@@ -17,33 +17,32 @@ package de.learnlib.driver.reflect;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 
-import de.learnlib.driver.api.TestDriver;
+import de.learnlib.api.SUL;
+import de.learnlib.driver.ContextExecutableInputSUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.common.util.ReflectUtil;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Simple test driver for plain java objects. Uses a very simple data mapper without state or storage. Inputs cannot
- * have abstract parameters.
+ * A test driver for plain old java objects. Given a constructor of a Java {@link Class}, this {@link SUL} creates
+ * objects of the respective class and invokes methods on these objects as specified in the respective
+ * {@link #addInput(String, Method, Object...) addInput} methods.
  */
-public final class SimplePOJOTestDriver
-        extends TestDriver<MethodInput, MethodOutput, ConcreteMethodInput, @Nullable Object> {
-
-    private final GrowingAlphabet<MethodInput> inputs = new GrowingMapAlphabet<>();
+public final class SimplePOJOTestDriver extends ContextExecutableInputSUL<MethodInput, MethodOutput, Object> {
 
     private final Class<?> instanceClass;
+    private final GrowingAlphabet<MethodInput> inputs;
 
     public SimplePOJOTestDriver(Class<?> c) throws NoSuchMethodException {
         this(c.getConstructor());
     }
 
     public SimplePOJOTestDriver(Constructor<?> c, Object... cParams) {
-        super(new SimplePOJODataMapper(c, cParams));
+        super(new InstanceConstructor(c, cParams));
         this.instanceClass = c.getDeclaringClass();
+        this.inputs = new GrowingMapAlphabet<>();
     }
 
     public MethodInput addInput(String name, String methodName, Object... params) {
@@ -55,14 +54,11 @@ public final class SimplePOJOTestDriver
     }
 
     public MethodInput addInput(String name, Method m, Object... params) {
-        MethodInput i = new MethodInput(name, m, new HashMap<>(), params);
+        MethodInput i = new MethodInput(name, m, params);
         inputs.add(i);
         return i;
     }
 
-    /**
-     * @return the inputs
-     */
     public Alphabet<MethodInput> getInputs() {
         return this.inputs;
     }

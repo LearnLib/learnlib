@@ -241,17 +241,16 @@ public class RefinementProcessor extends AbstractProcessor {
 
         if (replacementClass != null) {
             final Map map = parametersAnn[i];
-            final List<TypeName> generics =
-                    new ArrayList<>(Math.max(map.withGenerics().length, map.withComplexGenerics().length));
+            final String[] gens = map.withGenerics();
+            final Generic[] cgens = map.withComplexGenerics();
 
-            if (map.withGenerics().length > 0) {
-                for (String generic : map.withGenerics()) {
-                    generics.add(TypeVariableName.get(generic));
-                }
-            } else if (map.withComplexGenerics().length > 0) {
-                for (Generic generic : map.withComplexGenerics()) {
-                    generics.add(extractGeneric(generic));
-                }
+            final List<TypeName> generics = new ArrayList<>(gens.length + cgens.length);
+
+            for (String generic : gens) {
+                generics.add(TypeVariableName.get(generic));
+            }
+            for (Generic generic : cgens) {
+                generics.add(extractGeneric(generic));
             }
 
             final ParameterizedTypeName parameterizedTypeName =

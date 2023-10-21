@@ -21,7 +21,7 @@ import java.util.List;
 import de.learnlib.api.ObservableSUL;
 import de.learnlib.api.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
 import de.learnlib.api.query.OmegaQuery;
-import de.learnlib.driver.util.ObservableMealySimulatorSUL;
+import de.learnlib.driver.simulator.ObservableMealySimulatorSUL;
 import de.learnlib.example.mealy.ExampleCoffeeMachine;
 import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;

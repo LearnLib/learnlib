@@ -24,7 +24,7 @@ import de.learnlib.algorithm.adt.config.ADTExtenders;
 import de.learnlib.algorithm.adt.config.LeafSplitters;
 import de.learnlib.algorithm.adt.config.SubtreeReplacers;
 import de.learnlib.api.oracle.SymbolQueryOracle;
-import de.learnlib.driver.util.MealySimulatorSUL;
+import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetTest;
 import net.automatalib.alphabet.Alphabet;

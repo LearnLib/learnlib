@@ -26,20 +26,12 @@ import net.automatalib.word.Word;
 
 public class ExampleRandomSST<I, O> extends DefaultSSTLearningExample<I, O> {
 
-    public ExampleRandomSST(Alphabet<I> alphabet,
-                            int size,
-                            Collection<Word<O>> stateProperties,
-                            Collection<Word<O>> transitionProperties) {
-        this(new Random(), alphabet, size, stateProperties, transitionProperties);
-    }
-
     public ExampleRandomSST(Random random,
                             Alphabet<I> alphabet,
                             int size,
                             Collection<Word<O>> stateProperties,
                             Collection<Word<O>> transitionProperties) {
-        super(alphabet,
-              RandomAutomata.randomDeterministic(random,
+        super(RandomAutomata.randomDeterministic(random,
                                                  size,
                                                  alphabet,
                                                  stateProperties,

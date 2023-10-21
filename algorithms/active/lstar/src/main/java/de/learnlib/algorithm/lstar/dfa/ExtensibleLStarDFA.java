@@ -22,6 +22,7 @@ import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithm.lstar.AbstractExtensibleAutomatonLStar;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
+import de.learnlib.api.algorithm.feature.GlobalSuffixLearner.GlobalSuffixLearnerDFA;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerDFA;
 import de.learnlib.datastructure.observationtable.ObservationTable;
@@ -41,7 +42,7 @@ import net.automatalib.word.Word;
  */
 public class ExtensibleLStarDFA<I>
         extends AbstractExtensibleAutomatonLStar<DFA<?, I>, I, Boolean, Integer, Integer, Boolean, Void, CompactDFA<I>>
-        implements OTLearnerDFA<I> {
+        implements OTLearnerDFA<I>, GlobalSuffixLearnerDFA<I> {
 
     /**
      * Constructor.

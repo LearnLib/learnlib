@@ -13,33 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.driver.reflect;
-
-import java.util.LinkedList;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
+package de.learnlib.api;
 
 /**
- * A stack implementation with limited size, that ignores operations/returns null when pushing/pop beyond its
- * capacity/size.
+ * Facility for creating and disposing of contexts on which {@link ContextExecutableInput}s operate.
+ * <p>
+ * If used in a multi-threaded environment (e.g., {@link SUL#fork()}, an implementation of this interface must be
+ * thread-safe, i.e., both the {@link #createContext()} and {@link #disposeContext(Object)} methods must be reentrant.
+ * Furthermore, it must not make any assumptions as to the particular sequence in which these methods are called.
+ *
+ * @param <C>
+ *         context type
  */
-public class StackWithNull {
+public interface ContextHandler<C> {
 
-    private final int capacity;
+    C createContext();
 
-    private final LinkedList<Object> back = new LinkedList<>();
-
-    public StackWithNull(int capacity) {
-        this.capacity = capacity;
-    }
-
-    public void push(Object o) {
-        if (back.size() < capacity) {
-            back.push(o);
-        }
-    }
-
-    public @Nullable Object pop() {
-        return back.isEmpty() ? null : back.pop();
-    }
+    void disposeContext(C context);
 }

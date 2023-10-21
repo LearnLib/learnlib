@@ -36,10 +36,6 @@ limitations under the License.
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-mapper</artifactId>
-        </dependency>
 
         <!-- external -->
         <dependency>

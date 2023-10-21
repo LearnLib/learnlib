@@ -23,10 +23,6 @@ import net.automatalib.util.automaton.random.RandomAutomata;
 
 public class ExampleRandomSPA<I> extends DefaultSPALearningExample<I> {
 
-    public ExampleRandomSPA(ProceduralInputAlphabet<I> alphabet, int size) {
-        this(new Random(), alphabet, size);
-    }
-
     public ExampleRandomSPA(Random random, ProceduralInputAlphabet<I> alphabet, int size) {
         super(RandomAutomata.randomSPA(random, alphabet, size));
     }

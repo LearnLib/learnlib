@@ -26,7 +26,6 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 public class IncrementalWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, String>, String, Boolean> {
 
@@ -41,11 +40,6 @@ public class IncrementalWMethodEQOracleTest extends AbstractEQOracleTest<DFA<?, 
         this.transitionCover = new HashSet<>(Automata.transitionCover(this.dfa, getAlphabet()));
         this.characterizingSet = new HashSet<>(Automata.characterizingSet(this.dfa, getAlphabet()));
     }
-
-    // TODO: this currently seems necessary to fix test scheduling (removing this breaks _other_ tests?!?).
-    // Check with newer versions of TestNG again.
-    @Test(dependsOnMethods = "testGeneratedEQQueries")
-    public void testNGFix() {}
 
     @Override
     protected void checkGeneratedQuery(Word<String> query) {

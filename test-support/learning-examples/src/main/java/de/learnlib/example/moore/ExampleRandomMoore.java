@@ -27,11 +27,6 @@ import net.automatalib.util.automaton.random.RandomAutomata;
 public class ExampleRandomMoore<I, O> extends DefaultMooreLearningExample<I, O> {
 
     @SafeVarargs
-    public ExampleRandomMoore(Alphabet<I> alphabet, int size, O... outputs) {
-        this(new Random(), alphabet, size, outputs);
-    }
-
-    @SafeVarargs
     public ExampleRandomMoore(Random random, Alphabet<I> alphabet, int size, O... outputs) {
         super(RandomAutomata.randomDeterministic(random,
                                                  size,

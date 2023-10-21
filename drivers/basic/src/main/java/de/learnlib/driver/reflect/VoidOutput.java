@@ -15,30 +15,19 @@
  */
 package de.learnlib.driver.reflect;
 
-import java.util.LinkedList;
-
 /**
- * A stack implementation with limited size, that throws exception when pushing/pop beyond its capacity/size.
+ * The (empty) output of a void method call.
  */
-public class StackWithException {
+public final class VoidOutput extends MethodOutput {
 
-    private final int capacity;
+    public static final VoidOutput INSTANCE = new VoidOutput();
 
-    private final LinkedList<Object> back = new LinkedList<>();
-
-    public StackWithException(int capacity) {
-        this.capacity = capacity;
+    private VoidOutput() {
+        // prevent instantiation
     }
 
-    public void push(Object o) {
-        if (back.size() >= capacity) {
-            throw new IllegalStateException("capacity exceeded");
-        }
-        back.push(o);
+    @Override
+    public String toString() {
+        return "void";
     }
-
-    public Object pop() {
-        return back.pop();
-    }
-
 }

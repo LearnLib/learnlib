@@ -19,7 +19,7 @@ limitations under the License.
     <Match>
         <!-- Could be refactored ... -->
         <Bug pattern="NM_CLASS_NOT_EXCEPTION"/>
-        <Class name="de.learnlib.mapper.api.SULMapper$MappedException"/>
+        <Class name="de.learnlib.api.exception.MappedException"/>
     </Match>
     <Match>
         <!-- Passing references is mostly fine for performance reasons. Since we do not deal with security-related code,

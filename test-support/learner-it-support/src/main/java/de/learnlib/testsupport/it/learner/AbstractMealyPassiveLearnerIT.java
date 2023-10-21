@@ -20,10 +20,11 @@ import java.util.Collection;
 import java.util.List;
 
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.example.DefaultPassiveLearningExample;
+import de.learnlib.example.DefaultPassiveLearningExample.DefaultMealyPassiveLearningExample;
 import de.learnlib.example.LearningExample;
 import de.learnlib.example.LearningExamples;
-import de.learnlib.example.PassiveLearningExample;
+import de.learnlib.example.PassiveLearningExample.MealyPassiveLearningExample;
+import de.learnlib.testsupport.it.learner.PassiveLearnerVariantListImpl.MealyLearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
@@ -57,12 +58,11 @@ public abstract class AbstractMealyPassiveLearnerIT {
 
         Collection<DefaultQuery<I, Word<O>>> queries = LearnerITUtil.generateSamples(alphabet, reference);
 
-        final PassiveLearnerVariantListImpl<MealyMachine<?, I, ?, O>, I, Word<O>> variants =
-                new PassiveLearnerVariantListImpl<>();
+        final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, variants);
 
-        final PassiveLearningExample<I, Word<O>> effectiveExample =
-                new DefaultPassiveLearningExample<>(queries, alphabet);
+        final MealyPassiveLearningExample<I, O> effectiveExample =
+                new DefaultMealyPassiveLearningExample<>(queries, alphabet);
 
         return LearnerITUtil.createPassiveExampleITCases(effectiveExample, variants);
     }

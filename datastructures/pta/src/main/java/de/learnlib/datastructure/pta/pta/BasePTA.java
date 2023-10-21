@@ -75,24 +75,6 @@ public class BasePTA<SP, TP, S extends AbstractBasePTAState<SP, TP, S>>
     }
 
     /**
-     * Retrieves the state reached by the given word (represented as an {@code int} array). If there is no path for the
-     * given word in the PTA, {@code null} is returned.
-     *
-     * @param word
-     *         the word
-     *
-     * @return the state reached by this word, or {@code null} if there is no path for the given word in the PTA
-     */
-    public @Nullable S getState(int[] word) {
-        S curr = root;
-        int len = word.length;
-        for (int i = 0; i < len && curr != null; i++) {
-            curr = curr.getSuccessor(word[i]);
-        }
-        return curr;
-    }
-
-    /**
      * Adds a sample to the PTA, and sets the property of the last reached (or inserted) state accordingly.
      *
      * @param sample

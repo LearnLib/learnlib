@@ -23,12 +23,12 @@ import net.automatalib.util.automaton.random.RandomAutomata;
 
 public class ExampleRandomDFA extends DefaultDFALearningExample<Integer> {
 
-    public ExampleRandomDFA(int numInputs, int size) {
-        this(new Random(), numInputs, size);
-    }
-
     public ExampleRandomDFA(Random rand, int numInputs, int size) {
         super(RandomAutomata.randomDFA(rand, size, Alphabets.integers(0, numInputs - 1)));
+    }
+
+    public static ExampleRandomDFA createExample(Random rand, int numInputs, int size) {
+        return new ExampleRandomDFA(rand, numInputs, size);
     }
 
 }

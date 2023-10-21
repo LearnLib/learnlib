@@ -19,6 +19,7 @@ import java.util.Collection;
 
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 /**
  * Default implementation for a passive learning example.
@@ -49,5 +50,29 @@ public class DefaultPassiveLearningExample<I, D> implements PassiveLearningExamp
     @Override
     public Alphabet<I> getAlphabet() {
         return this.alphabet;
+    }
+
+    public static class DefaultDFAPassiveLearningExample<I> extends DefaultPassiveLearningExample<I, Boolean>
+            implements DFAPassiveLearningExample<I> {
+
+        public DefaultDFAPassiveLearningExample(Collection<DefaultQuery<I, Boolean>> samples, Alphabet<I> alphabet) {
+            super(samples, alphabet);
+        }
+    }
+
+    public static class DefaultMealyPassiveLearningExample<I, O> extends DefaultPassiveLearningExample<I, Word<O>>
+            implements MealyPassiveLearningExample<I, O> {
+
+        public DefaultMealyPassiveLearningExample(Collection<DefaultQuery<I, Word<O>>> samples, Alphabet<I> alphabet) {
+            super(samples, alphabet);
+        }
+    }
+
+    public static class DefaultSSTPassiveLearningExample<I, O> extends DefaultPassiveLearningExample<I, Word<O>>
+            implements SSTPassiveLearningExample<I, O> {
+
+        public DefaultSSTPassiveLearningExample(Collection<DefaultQuery<I, Word<O>>> samples, Alphabet<I> alphabet) {
+            super(samples, alphabet);
+        }
     }
 }

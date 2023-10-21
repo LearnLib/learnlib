@@ -19,8 +19,8 @@ import java.util.Random;
 
 import de.learnlib.api.SUL;
 import de.learnlib.api.StateLocalInputSUL;
-import de.learnlib.driver.util.MealySimulatorSUL;
-import de.learnlib.driver.util.StateLocalInputMealySimulatorSUL;
+import de.learnlib.driver.simulator.MealySimulatorSUL;
+import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.filter.statistic.oracle.MealyCounterOracle;
 import de.learnlib.filter.statistic.sul.ResetCounterSUL;

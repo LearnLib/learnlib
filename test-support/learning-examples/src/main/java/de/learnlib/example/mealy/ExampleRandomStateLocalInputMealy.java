@@ -41,11 +41,6 @@ public class ExampleRandomStateLocalInputMealy<I, O> implements StateLocalInputM
     private final O undefinedOutput;
 
     @SafeVarargs
-    public ExampleRandomStateLocalInputMealy(Alphabet<I> alphabet, int size, O undefinedOutput, O... outputs) {
-        this(new Random(), alphabet, size, undefinedOutput, outputs);
-    }
-
-    @SafeVarargs
     public ExampleRandomStateLocalInputMealy(Random random,
                                              Alphabet<I> alphabet,
                                              int size,

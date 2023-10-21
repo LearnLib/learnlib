@@ -23,6 +23,7 @@ import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithm.lstar.AbstractExtensibleAutomatonLStar;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
+import de.learnlib.api.algorithm.feature.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerMealy;
@@ -37,7 +38,7 @@ import net.automatalib.word.Word;
 
 public class ExtensibleLStarMealy<I, O>
         extends AbstractExtensibleAutomatonLStar<MealyMachine<?, I, ?, O>, I, Word<O>, Integer, CompactTransition<O>, Void, O, CompactMealy<I, O>>
-        implements OTLearnerMealy<I, O> {
+        implements OTLearnerMealy<I, O>, GlobalSuffixLearnerMealy<I, O> {
 
     private final List<O> outputTable = new ArrayList<>();
 

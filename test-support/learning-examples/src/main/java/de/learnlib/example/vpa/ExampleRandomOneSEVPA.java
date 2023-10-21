@@ -23,10 +23,6 @@ import net.automatalib.util.automaton.random.RandomAutomata;
 
 public class ExampleRandomOneSEVPA<I> extends DefaultOneSEVPALearningExample<I> {
 
-    public ExampleRandomOneSEVPA(VPAlphabet<I> alphabet, int size, double acceptanceProb, double initialRetTransProb) {
-        this(new Random(), alphabet, size, acceptanceProb, initialRetTransProb);
-    }
-
     public ExampleRandomOneSEVPA(Random random,
                                  VPAlphabet<I> alphabet,
                                  int size,

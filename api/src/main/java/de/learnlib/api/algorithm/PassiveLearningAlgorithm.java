@@ -89,14 +89,6 @@ public interface PassiveLearningAlgorithm<M, I, D> {
     interface PassiveMealyLearner<I, O> extends PassiveLearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 
     /**
-     * Basic interface for passive learning algorithms that infer {@link NFA}s.
-     *
-     * @param <I>
-     *         input symbol type
-     */
-    interface PassiveNFALearner<I> extends PassiveAcceptorLearner<NFA<?, I>, I> {}
-
-    /**
      * Basic interface for passive learning algorithms that infer finite-state acceptors ({@link DFA}s or {@link
      * NFA}s).
      *

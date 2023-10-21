@@ -16,7 +16,7 @@
 package de.learnlib.filter.statistic.sul;
 
 import de.learnlib.api.statistic.StatisticSUL;
-import de.learnlib.driver.util.StateLocalInputMealySimulatorSUL;
+import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
 import de.learnlib.filter.statistic.TestQueries;
 
 public class SymbolCounterStateLocalInputSULTest extends AbstractSymbolCounterSULTest {

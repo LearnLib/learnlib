@@ -120,7 +120,8 @@ public final class MealyUtil {
     }
 
     public static <I, O> MembershipOracle<I, @Nullable O> wrapWordOracle(MembershipOracle<I, Word<O>> oracle) {
-        return new SymbolOracleWrapper<>(oracle);
+        // explicit type specification is required by checker-framework
+        return new SymbolOracleWrapper<I, O>(oracle);
     }
 
 }

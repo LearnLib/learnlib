@@ -41,11 +41,6 @@ limitations under the License.
             <artifactId>learnlib-util</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>de.learnlib.tooling</groupId>
-            <artifactId>learnlib-annotation-processor</artifactId>
-        </dependency>
-
         <!-- external -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -77,6 +72,12 @@ limitations under the License.
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- build -->
+        <dependency>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>learnlib-annotation-processor</artifactId>
         </dependency>
 
         <!-- test -->

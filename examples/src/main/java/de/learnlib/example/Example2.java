@@ -61,7 +61,7 @@ public final class Example2 {
     public static void main(String[] args) throws NoSuchMethodException, IOException {
 
         // instantiate test driver
-        SimplePOJOTestDriver driver = new SimplePOJOTestDriver(BoundedStringQueue.class.getConstructor());
+        SimplePOJOTestDriver driver = new SimplePOJOTestDriver(BoundedStringQueue.class);
 
         // create learning alphabet
         Method mOffer = BoundedStringQueue.class.getMethod("offer", String.class);

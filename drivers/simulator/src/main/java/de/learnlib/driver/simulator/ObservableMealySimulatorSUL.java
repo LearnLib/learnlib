@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.driver.util;
+package de.learnlib.driver.simulator;
 
 import de.learnlib.api.ObservableSUL;
 import net.automatalib.automaton.transducer.MealyMachine;

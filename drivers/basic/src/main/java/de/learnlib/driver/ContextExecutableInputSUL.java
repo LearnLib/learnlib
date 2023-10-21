@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.mapper;
+package de.learnlib.driver;
 
+import de.learnlib.api.ContextExecutableInput;
+import de.learnlib.api.ContextHandler;
 import de.learnlib.api.SUL;
-import de.learnlib.mapper.api.ContextExecutableInput;
 
 /**
  * A {@link SUL} that executes {@link ContextExecutableInput} symbols.
@@ -59,20 +60,4 @@ public class ContextExecutableInputSUL<I extends ContextExecutableInput<? extend
         return new ContextExecutableInputSUL<>(contextHandler);
     }
 
-    /**
-     * Facility for creating and disposing of contexts on which {@link ContextExecutableInput}s operate.
-     * <p>
-     * An implementation of this interface must be thread-safe, i.e., both the {@link #createContext()} and {@link
-     * #disposeContext(Object)} methods must be reentrant. Furthermore, it must not make any assumptions as to the
-     * particular sequence in which these methods are called.
-     *
-     * @param <C>
-     *         context type
-     */
-    public interface ContextHandler<C> {
-
-        C createContext();
-
-        void disposeContext(C context);
-    }
 }

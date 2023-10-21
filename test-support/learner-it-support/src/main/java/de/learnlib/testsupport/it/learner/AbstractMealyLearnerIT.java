@@ -20,7 +20,7 @@ import java.util.List;
 
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.driver.util.StateLocalInputMealySimulatorSUL;
+import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
 import de.learnlib.example.LearningExample.MealyLearningExample;
 import de.learnlib.example.LearningExample.StateLocalInputMealyLearningExample;
 import de.learnlib.example.LearningExamples;

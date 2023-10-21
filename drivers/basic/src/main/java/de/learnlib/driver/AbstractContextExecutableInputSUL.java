@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.mapper;
+package de.learnlib.driver;
 
+import de.learnlib.api.ContextExecutableInput;
 import de.learnlib.api.SUL;
-import de.learnlib.mapper.api.ContextExecutableInput;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -55,4 +55,5 @@ public abstract class AbstractContextExecutableInputSUL<I extends ContextExecuta
     public O step(I in) {
         return in.execute(currentContext);
     }
+
 }

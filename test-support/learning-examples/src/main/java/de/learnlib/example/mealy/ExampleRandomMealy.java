@@ -27,11 +27,6 @@ import net.automatalib.util.automaton.random.RandomAutomata;
 public class ExampleRandomMealy<I, O> extends DefaultMealyLearningExample<I, O> {
 
     @SafeVarargs
-    public ExampleRandomMealy(Alphabet<I> alphabet, int size, O... outputs) {
-        this(new Random(), alphabet, size, outputs);
-    }
-
-    @SafeVarargs
     public ExampleRandomMealy(Random random, Alphabet<I> alphabet, int size, O... outputs) {
         super(RandomAutomata.randomDeterministic(random,
                                                  size,

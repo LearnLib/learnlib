@@ -15,7 +15,7 @@
  */
 package de.learnlib.filter.cache.sul;
 
-import de.learnlib.driver.util.StateLocalInputMealySimulatorSUL;
+import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.cache.SULLearningCacheOracle;

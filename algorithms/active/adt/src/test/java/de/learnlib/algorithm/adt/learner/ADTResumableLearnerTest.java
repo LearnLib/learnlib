@@ -21,7 +21,7 @@ import de.learnlib.algorithm.adt.automaton.ADTState;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.SymbolQueryOracle;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.driver.util.MealySimulatorSUL;
+import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerTest;
 import net.automatalib.alphabet.Alphabet;

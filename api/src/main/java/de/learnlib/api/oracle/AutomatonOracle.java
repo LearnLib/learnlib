@@ -130,15 +130,13 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
      * Returns whether the given input is accepted by the given hypothesis.
      *
      * @param hypothesis
-     *          the hypothesis automaton.
+     *         the hypothesis automaton.
      * @param input
-     *          the input.
-     * @param length
-     *          the length of the input.
+     *         the input.
      *
      * @return whether the given input is accepted.
      */
-    boolean accepts(A hypothesis, Iterable<? extends I> input, int length);
+    boolean accepts(A hypothesis, Iterable<? extends I> input);
 
     /**
      * Find a counterexample for a given {@code hypothesis}.
@@ -161,7 +159,7 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
         int queries = 0;
         for (Word<I> input = nextInput(); input != null && ce == null && queries != maxQueries; input = nextInput()) {
             addWords(hypothesis, inputs, input);
-            if (accepts(hypothesis, input, input.length())) {
+            if (accepts(hypothesis, input)) {
                 final DefaultQuery<I, D> query = processInput(hypothesis, input);
                 ce = isCounterExample(hypothesis, query.getInput(), query.getOutput()) ? query : null;
                 queries++;
@@ -189,7 +187,7 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
     interface DFAOracle<I> extends AutomatonOracle<DFA<?, I>, I, Boolean> {
 
         @Override
-        default boolean accepts(DFA<?, I> hypothesis, Iterable<? extends I> input, int length) {
+        default boolean accepts(DFA<?, I> hypothesis, Iterable<? extends I> input) {
             return hypothesis.accepts(input);
         }
     }
@@ -197,7 +195,7 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
     interface MealyOracle<I, O> extends AutomatonOracle<MealyMachine<?, I, ?, O>, I, Word<O>> {
 
         @Override
-        default boolean accepts(MealyMachine<?, I, ?, O> hypothesis, Iterable<? extends I> input, int length) {
+        default boolean accepts(MealyMachine<?, I, ?, O> hypothesis, Iterable<? extends I> input) {
             return hypothesis.computeOutput(input) != null;
         }
     }

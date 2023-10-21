@@ -15,73 +15,48 @@
  */
 package de.learnlib.driver.reflect;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import org.checkerframework.checker.nullness.qual.KeyFor;
+import de.learnlib.api.ContextExecutableInput;
+import de.learnlib.api.exception.SULException;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * abstract method input, may have abstract parameters.
+ * An input symbol that represents a call to a method with a specific set of parameters.
  */
-public class MethodInput {
+public class MethodInput implements ContextExecutableInput<MethodOutput, Object> {
 
-    private final String name;
-
+    private final String displayName;
     private final Method method;
+    private final Object[] parameters;
 
-    private final Map<String, Integer> parameters;
-
-    private final Object[] values;
-
-    public MethodInput(String name, Method method, Map<String, Integer> parameters, Object[] values) {
-        this.name = name;
+    public MethodInput(String displayName, Method method, Object[] parameters) {
+        this.displayName = displayName;
         this.method = method;
         this.parameters = parameters;
-        this.values = values;
+    }
+
+    @SuppressWarnings("PMD.PreserveStackTrace")
+    @Override
+    public MethodOutput execute(Object context) {
+        try {
+            final Object ret = this.method.invoke(context, parameters);
+            if (Void.TYPE.equals(this.method.getReturnType())) {
+                return VoidOutput.INSTANCE;
+            } else {
+                return new ReturnValue<@Nullable Object>(ret);
+            }
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            throw new SULException(e);
+        } catch (InvocationTargetException e) {
+            throw new SULException(e.getCause());
+        }
     }
 
     @Override
     public String toString() {
-        return this.name() + Arrays.toString(this.parameters.keySet().toArray());
-    }
-
-    public String name() {
-        return this.name;
-    }
-
-    public String getCall() {
-        Map<String, Object> names = new HashMap<>();
-        for (String p : getParameterNames()) {
-            names.put(p, p);
-        }
-        return this.method.getName() + Arrays.toString(getParameters(names));
-    }
-
-    public Collection<@KeyFor("parameters") String> getParameterNames() {
-        return this.parameters.keySet();
-    }
-
-    public Object[] getParameters(Map<String, Object> fill) {
-        Object[] ret = new Object[this.values.length];
-        System.arraycopy(this.values, 0, ret, 0, this.values.length);
-        for (Entry<String, Object> e : fill.entrySet()) {
-            Integer idx = this.parameters.get(e.getKey());
-            ret[idx] = e.getValue();
-        }
-        return ret;
-    }
-
-    public Class<?> getParameterType(@KeyFor("parameters") String name) {
-        int id = parameters.get(name);
-        return this.method.getParameterTypes()[id];
-    }
-
-    public Method getMethod() {
-        return this.method;
+        return this.displayName;
     }
 
 }

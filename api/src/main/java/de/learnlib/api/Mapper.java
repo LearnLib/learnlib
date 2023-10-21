@@ -16,6 +16,7 @@
 package de.learnlib.api;
 
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.query.Query;
 
 /**
  * A mapper that lifts a {@link SUL} or {@link MembershipOracle} from an "abstract" to a "concrete" level.
@@ -91,10 +92,9 @@ public interface Mapper<AI, AO, CI, CO> {
      * means, for a sequence of input symbols, {@link #mapInput(Object)} may be called multiple times before any call to
      * {@link #mapOutput(Object)} occurs.
      * <p>
-     * Especially in the context of translating {@link de.learnlib.api.query.Query queries} for mealy machines, which
-     * support the concept of un-answered prefixes (combined with answered suffixes) this means, the number of {@link
-     * #mapInput(Object)} invocations may be larger than the size of the output word passed to the {@link
-     * #mapOutput(Object)} function.
+     * Especially in the context of translating {@link Query queries} for Mealy machines, which support the concept of
+     * un-answered prefixes (combined with answered suffixes) this means, the number of {@link #mapInput(Object)}
+     * invocations may be larger than the size of the output word passed to the {@link #mapOutput(Object)} function.
      *
      * @param <AI>
      *         abstract input symbol type.

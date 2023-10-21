@@ -16,8 +16,9 @@
 package de.learnlib.mapper;
 
 import de.learnlib.api.SUL;
+import de.learnlib.api.SULMapper;
+import de.learnlib.api.exception.MappedException;
 import de.learnlib.api.exception.SULException;
-import de.learnlib.mapper.api.SULMapper;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

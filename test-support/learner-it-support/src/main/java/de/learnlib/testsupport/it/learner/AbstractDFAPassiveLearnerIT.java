@@ -20,10 +20,11 @@ import java.util.Collection;
 import java.util.List;
 
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.example.DefaultPassiveLearningExample;
+import de.learnlib.example.DefaultPassiveLearningExample.DefaultDFAPassiveLearningExample;
 import de.learnlib.example.LearningExample;
 import de.learnlib.example.LearningExamples;
-import de.learnlib.example.PassiveLearningExample;
+import de.learnlib.example.PassiveLearningExample.DFAPassiveLearningExample;
+import de.learnlib.testsupport.it.learner.PassiveLearnerVariantListImpl.DFAPassiveLearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import org.testng.annotations.Factory;
@@ -59,11 +60,10 @@ public abstract class AbstractDFAPassiveLearnerIT {
 
         Collection<DefaultQuery<I, Boolean>> queries = generateSamplesInternal(alphabet, reference);
 
-        final PassiveLearnerVariantListImpl<DFA<?, I>, I, Boolean> variants = new PassiveLearnerVariantListImpl<>();
+        final DFAPassiveLearnerVariantListImpl<I> variants = new DFAPassiveLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, variants);
 
-        final PassiveLearningExample<I, Boolean> effectiveExample =
-                new DefaultPassiveLearningExample<>(queries, alphabet);
+        final DFAPassiveLearningExample<I> effectiveExample = new DefaultDFAPassiveLearningExample<>(queries, alphabet);
 
         return LearnerITUtil.createPassiveExampleITCases(effectiveExample, variants);
     }

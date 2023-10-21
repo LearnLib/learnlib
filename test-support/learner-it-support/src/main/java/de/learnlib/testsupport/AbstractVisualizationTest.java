@@ -21,7 +21,7 @@ import java.io.InputStream;
 import com.google.common.io.CharStreams;
 import de.learnlib.api.SUL;
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.driver.util.MealySimulatorSUL;
+import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.example.mealy.ExampleCoffeeMachine;
 import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;

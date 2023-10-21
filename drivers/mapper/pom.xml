@@ -47,12 +47,13 @@ limitations under the License.
             <artifactId>automata-core</artifactId>
         </dependency>
 
+        <!-- test -->
         <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-drivers-basic</artifactId>
+            <scope>test</scope>
         </dependency>
 
-        <!-- test -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

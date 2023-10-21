@@ -30,4 +30,6 @@ public interface PassiveLearningExample<I, D> {
     interface DFAPassiveLearningExample<I> extends PassiveLearningExample<I, Boolean> {}
 
     interface MealyPassiveLearningExample<I, O> extends PassiveLearningExample<I, Word<O>> {}
+
+    interface SSTPassiveLearningExample<I, O> extends PassiveLearningExample<I, Word<O>> {}
 }

@@ -25,7 +25,7 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.oracle.parallelism.ParallelOracle;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.driver.util.MealySimulatorSUL;
+import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;

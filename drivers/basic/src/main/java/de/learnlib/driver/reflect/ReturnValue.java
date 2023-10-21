@@ -20,26 +20,26 @@ import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Error output.
+ * A (non-empty) output of a method call.
+ *
+ * @param <T>
+ *         return value type
  */
-public class ReturnValue extends MethodOutput {
+public final class ReturnValue<T> extends MethodOutput {
 
-    private final @Nullable Object ret;
+    private final T ret;
 
-    private final String id;
-
-    public ReturnValue(@Nullable Object ret) {
+    public ReturnValue(T ret) {
         this.ret = ret;
-        this.id = String.valueOf(ret);
     }
 
     @Override
-    public final int hashCode() {
-        return Objects.hashCode(this.id);
+    public int hashCode() {
+        return Objects.hashCode(this.ret);
     }
 
     @Override
-    public final boolean equals(@Nullable Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (this == obj) {
             return true;
         }
@@ -47,26 +47,17 @@ public class ReturnValue extends MethodOutput {
             return false;
         }
 
-        final ReturnValue other = (ReturnValue) obj;
-        return Objects.equals(this.id, other.id);
+        final ReturnValue<?> other = (ReturnValue<?>) obj;
+        return Objects.equals(this.ret, other.ret);
     }
 
     @Override
     public String toString() {
-        return this.id;
+        return Objects.toString(this.ret);
     }
 
-    /**
-     * @return the cause
-     */
-    public @Nullable Object getValue() {
+    public T getValue() {
         return ret;
     }
 
-    /**
-     * @return the id
-     */
-    public String getId() {
-        return id;
-    }
 }

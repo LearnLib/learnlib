@@ -16,18 +16,18 @@
 package de.learnlib.driver.reflect;
 
 /**
- * Unobserved indicates that the corresponding input was not executed on the system. This usually happens after an
- * exception occurred.
+ * An artificial output symbol for a (non-executed) input after an exception has occurred.
  */
 public final class Unobserved extends MethodOutput {
 
     public static final Unobserved INSTANCE = new Unobserved();
 
-    private Unobserved() {}
+    private Unobserved() {
+        // prevent instantiation
+    }
 
     @Override
     public String toString() {
         return "unobserved";
     }
-
 }

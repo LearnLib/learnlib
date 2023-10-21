@@ -21,6 +21,7 @@ import java.util.List;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.SubsequentialTransducer;
 import net.automatalib.word.Word;
 
 public class PassiveLearnerVariantListImpl<M, I, D> implements PassiveLearnerVariantList<M, I, D> {
@@ -37,9 +38,13 @@ public class PassiveLearnerVariantListImpl<M, I, D> implements PassiveLearnerVar
     }
 
     public static class DFAPassiveLearnerVariantListImpl<I> extends PassiveLearnerVariantListImpl<DFA<?, I>, I, Boolean>
-            implements PassiveLearnerVariantList.DFALearnerVariantList<I> {}
+            implements DFALearnerVariantList<I> {}
 
     public static class MealyLearnerVariantListImpl<I, O>
             extends PassiveLearnerVariantListImpl<MealyMachine<?, I, ?, O>, I, Word<O>>
-            implements PassiveLearnerVariantList.MealyLearnerVariantList<I, O> {}
+            implements MealyLearnerVariantList<I, O> {}
+
+    public static class SSTLearnerVariantListImpl<I, O>
+            extends PassiveLearnerVariantListImpl<SubsequentialTransducer<?, I, ?, O>, I, Word<O>>
+            implements SSTLearnerVariantList<I, O> {}
 }

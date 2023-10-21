@@ -20,12 +20,13 @@ import java.util.Collection;
 import java.util.List;
 
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.example.DefaultPassiveLearningExample;
+import de.learnlib.example.DefaultPassiveLearningExample.DefaultSSTPassiveLearningExample;
 import de.learnlib.example.LearningExample;
 import de.learnlib.example.LearningExample.MealyLearningExample;
 import de.learnlib.example.LearningExample.SSTLearningExample;
 import de.learnlib.example.LearningExamples;
-import de.learnlib.example.PassiveLearningExample;
+import de.learnlib.example.PassiveLearningExample.SSTPassiveLearningExample;
+import de.learnlib.testsupport.it.learner.PassiveLearnerVariantListImpl.SSTLearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.SuffixOutput;
@@ -64,12 +65,11 @@ public abstract class AbstractSSTPassiveLearnerIT {
 
         Collection<DefaultQuery<I, Word<O>>> queries = LearnerITUtil.generateSamples(alphabet, reference);
 
-        final PassiveLearnerVariantListImpl<SubsequentialTransducer<?, I, ?, O>, I, Word<O>> variants =
-                new PassiveLearnerVariantListImpl<>();
+        final SSTLearnerVariantListImpl<I, O> variants = new SSTLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, variants);
 
-        final PassiveLearningExample<I, Word<O>> effectiveExample =
-                new DefaultPassiveLearningExample<>(queries, alphabet);
+        final SSTPassiveLearningExample<I, O> effectiveExample =
+                new DefaultSSTPassiveLearningExample<>(queries, alphabet);
 
         return LearnerITUtil.createPassiveExampleITCases(effectiveExample, variants);
     }

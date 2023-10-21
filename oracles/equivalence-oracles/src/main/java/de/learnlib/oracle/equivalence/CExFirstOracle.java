@@ -83,7 +83,7 @@ public class CExFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOra
         this(Collections.emptySet());
     }
 
-    public CExFirstOracle(PropertyOracle<I, A, ?, D> propertyOracle) {
+    public CExFirstOracle(PropertyOracle<I, ? super A, ?, D> propertyOracle) {
         this(Collections.singleton(propertyOracle));
     }
 

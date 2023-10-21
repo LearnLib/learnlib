@@ -16,7 +16,7 @@
 package de.learnlib.filter.statistic.sul;
 
 import de.learnlib.api.statistic.StatisticSUL;
-import de.learnlib.driver.util.ObservableMealySimulatorSUL;
+import de.learnlib.driver.simulator.ObservableMealySimulatorSUL;
 import de.learnlib.filter.statistic.TestQueries;
 
 public class SymbolCounterObservableSULTest extends AbstractSymbolCounterSULTest {
