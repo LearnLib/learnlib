@@ -44,6 +44,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Removed (unused) `de.learnlib.datastructure.pta.pta.PropertyConflictException`, `de.learnlib.datastructure.observationtable.InvalidRowException`.
 * Removed the (protected) `exposeInternalHypothesis` method on `AbstractAutomatonLStar`. Subclasses should directly implement the `getHypothesisModel` method.
+* Removed the `EquivalenceQueries` factory. All provided equivalence checkers are available via public constructors with for more flexible parameterization.
 * Removed the `Filter` interface and `FilterChain` class. Instantiating the filters that are required for constructing a filter chain already requires setting the delegate oracles. Therefore, the only effect of this interface is that the attributes of the filters cannot be final.
 * Removed `LearnLogger`. All code was migrated to use the native SLF4j facade and now uses the markers provided in the `Category` class to accentuate the different log messages and provide client code with a means to handle the different log messages (similar to the previous purpose-specific log methods).
 
