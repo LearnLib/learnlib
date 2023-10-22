@@ -21,7 +21,7 @@ import java.util.List;
 
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.example.DefaultPassiveLearningExample.DefaultMealyPassiveLearningExample;
-import de.learnlib.example.LearningExample;
+import de.learnlib.example.LearningExample.MealyLearningExample;
 import de.learnlib.example.LearningExamples;
 import de.learnlib.example.PassiveLearningExample.MealyPassiveLearningExample;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantListImpl.MealyLearnerVariantListImpl;
@@ -40,10 +40,10 @@ public abstract class AbstractMealyPassiveLearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
-        final List<LearningExample.MealyLearningExample<?, ?>> examples = LearningExamples.createMealyExamples();
+        final List<MealyLearningExample<?, ?>> examples = LearningExamples.createMealyExamples();
         final List<PassiveLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
 
-        for (LearningExample.MealyLearningExample<?, ?> example : examples) {
+        for (MealyLearningExample<?, ?> example : examples) {
             result.addAll(createAllVariantsITCase(example));
         }
 
@@ -51,7 +51,7 @@ public abstract class AbstractMealyPassiveLearnerIT {
     }
 
     private <I, O> List<PassiveLearnerVariantITCase<I, Word<O>, MealyMachine<?, I, ?, O>>> createAllVariantsITCase(
-            LearningExample.MealyLearningExample<I, O> example) {
+            MealyLearningExample<I, O> example) {
 
         final Alphabet<I> alphabet = example.getAlphabet();
         final MealyMachine<?, I, ?, O> reference = example.getReferenceAutomaton();
@@ -61,8 +61,7 @@ public abstract class AbstractMealyPassiveLearnerIT {
         final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, variants);
 
-        final MealyPassiveLearningExample<I, O> effectiveExample =
-                new DefaultMealyPassiveLearningExample<>(queries, alphabet);
+        final MealyPassiveLearningExample<I, O> effectiveExample = new DefaultMealyPassiveLearningExample<>(queries);
 
         return LearnerITUtil.createPassiveExampleITCases(effectiveExample, variants);
     }

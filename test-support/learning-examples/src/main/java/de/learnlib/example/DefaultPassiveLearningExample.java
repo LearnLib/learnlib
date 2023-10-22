@@ -18,7 +18,6 @@ package de.learnlib.example;
 import java.util.Collection;
 
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 
 /**
@@ -35,11 +34,8 @@ public class DefaultPassiveLearningExample<I, D> implements PassiveLearningExamp
 
     private final Collection<DefaultQuery<I, D>> samples;
 
-    private final Alphabet<I> alphabet;
-
-    public DefaultPassiveLearningExample(Collection<DefaultQuery<I, D>> samples, Alphabet<I> alphabet) {
+    public DefaultPassiveLearningExample(Collection<DefaultQuery<I, D>> samples) {
         this.samples = samples;
-        this.alphabet = alphabet;
     }
 
     @Override
@@ -47,32 +43,27 @@ public class DefaultPassiveLearningExample<I, D> implements PassiveLearningExamp
         return this.samples;
     }
 
-    @Override
-    public Alphabet<I> getAlphabet() {
-        return this.alphabet;
-    }
-
     public static class DefaultDFAPassiveLearningExample<I> extends DefaultPassiveLearningExample<I, Boolean>
             implements DFAPassiveLearningExample<I> {
 
-        public DefaultDFAPassiveLearningExample(Collection<DefaultQuery<I, Boolean>> samples, Alphabet<I> alphabet) {
-            super(samples, alphabet);
+        public DefaultDFAPassiveLearningExample(Collection<DefaultQuery<I, Boolean>> samples) {
+            super(samples);
         }
     }
 
     public static class DefaultMealyPassiveLearningExample<I, O> extends DefaultPassiveLearningExample<I, Word<O>>
             implements MealyPassiveLearningExample<I, O> {
 
-        public DefaultMealyPassiveLearningExample(Collection<DefaultQuery<I, Word<O>>> samples, Alphabet<I> alphabet) {
-            super(samples, alphabet);
+        public DefaultMealyPassiveLearningExample(Collection<DefaultQuery<I, Word<O>>> samples) {
+            super(samples);
         }
     }
 
     public static class DefaultSSTPassiveLearningExample<I, O> extends DefaultPassiveLearningExample<I, Word<O>>
             implements SSTPassiveLearningExample<I, O> {
 
-        public DefaultSSTPassiveLearningExample(Collection<DefaultQuery<I, Word<O>>> samples, Alphabet<I> alphabet) {
-            super(samples, alphabet);
+        public DefaultSSTPassiveLearningExample(Collection<DefaultQuery<I, Word<O>>> samples) {
+            super(samples);
         }
     }
 }

@@ -21,7 +21,7 @@ import java.util.List;
 
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.example.DefaultPassiveLearningExample.DefaultDFAPassiveLearningExample;
-import de.learnlib.example.LearningExample;
+import de.learnlib.example.LearningExample.DFALearningExample;
 import de.learnlib.example.LearningExamples;
 import de.learnlib.example.PassiveLearningExample.DFAPassiveLearningExample;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantListImpl.DFAPassiveLearnerVariantListImpl;
@@ -43,17 +43,17 @@ public abstract class AbstractDFAPassiveLearnerIT {
 
     @Factory
     public Object[] createExampleITCases() {
-        final List<LearningExample.DFALearningExample<?>> examples = LearningExamples.createDFAExamples();
+        final List<DFALearningExample<?>> examples = LearningExamples.createDFAExamples();
         final List<PassiveLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
 
-        for (LearningExample.DFALearningExample<?> example : examples) {
+        for (DFALearningExample<?> example : examples) {
             result.addAll(createAllVariantsITCase(example));
         }
 
         return result.toArray();
     }
 
-    private <I> List<PassiveLearnerVariantITCase<I, Boolean, DFA<?, I>>> createAllVariantsITCase(LearningExample.DFALearningExample<I> example) {
+    private <I> List<PassiveLearnerVariantITCase<I, Boolean, DFA<?, I>>> createAllVariantsITCase(DFALearningExample<I> example) {
 
         final Alphabet<I> alphabet = example.getAlphabet();
         final DFA<?, I> reference = example.getReferenceAutomaton();
@@ -63,7 +63,7 @@ public abstract class AbstractDFAPassiveLearnerIT {
         final DFAPassiveLearnerVariantListImpl<I> variants = new DFAPassiveLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, variants);
 
-        final DFAPassiveLearningExample<I> effectiveExample = new DefaultDFAPassiveLearningExample<>(queries, alphabet);
+        final DFAPassiveLearningExample<I> effectiveExample = new DefaultDFAPassiveLearningExample<>(queries);
 
         return LearnerITUtil.createPassiveExampleITCases(effectiveExample, variants);
     }

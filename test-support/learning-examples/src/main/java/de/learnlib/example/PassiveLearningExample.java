@@ -18,14 +18,11 @@ package de.learnlib.example;
 import java.util.Collection;
 
 import de.learnlib.api.query.DefaultQuery;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 
 public interface PassiveLearningExample<I, D> {
 
     Collection<DefaultQuery<I, D>> getSamples();
-
-    Alphabet<I> getAlphabet();
 
     interface DFAPassiveLearningExample<I> extends PassiveLearningExample<I, Boolean> {}
 

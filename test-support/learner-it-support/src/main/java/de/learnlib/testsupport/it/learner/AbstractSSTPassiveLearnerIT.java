@@ -68,8 +68,7 @@ public abstract class AbstractSSTPassiveLearnerIT {
         final SSTLearnerVariantListImpl<I, O> variants = new SSTLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, variants);
 
-        final SSTPassiveLearningExample<I, O> effectiveExample =
-                new DefaultSSTPassiveLearningExample<>(queries, alphabet);
+        final SSTPassiveLearningExample<I, O> effectiveExample = new DefaultSSTPassiveLearningExample<>(queries);
 
         return LearnerITUtil.createPassiveExampleITCases(effectiveExample, variants);
     }
