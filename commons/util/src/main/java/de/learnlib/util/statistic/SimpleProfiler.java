@@ -16,7 +16,6 @@
 package de.learnlib.util.statistic;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.learnlib.api.logging.Category;
@@ -87,26 +86,11 @@ public final class SimpleProfiler {
     }
 
     /**
-     * Get profiling results as string.
-     */
-    public static String getResults() {
-        StringBuilder sb = new StringBuilder();
-        for (Entry<String, Counter> e : CUMULATED.entrySet()) {
-            sb.append(e.getValue().getSummary())
-              .append(", (")
-              .append(e.getValue().getCount() / MILLISECONDS_PER_SECOND)
-              .append(" s)")
-              .append(System.lineSeparator());
-        }
-        return sb.toString();
-    }
-
-    /**
      * Log results in category PROFILING.
      */
     public static void logResults() {
-        for (Entry<String, Counter> e : CUMULATED.entrySet()) {
-            LOGGER.info(Category.PROFILING, e.getValue().toString());
+        for (Counter c : CUMULATED.values()) {
+            LOGGER.info(Category.PROFILING, "{}, ({} s)", c.getSummary(), c.getCount() / MILLISECONDS_PER_SECOND);
         }
     }
 

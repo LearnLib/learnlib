@@ -76,7 +76,7 @@ public final class Example {
         System.out.println("-------------------------------------------------------");
 
         // profiling
-        System.out.println(SimpleProfiler.getResults());
+        SimpleProfiler.logResults();
 
         // learning statistics
         System.out.println(experiment.getRounds().getSummary());
