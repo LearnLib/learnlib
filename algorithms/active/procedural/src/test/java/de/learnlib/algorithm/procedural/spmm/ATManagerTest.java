@@ -50,18 +50,18 @@ public class ATManagerTest {
     @Test(dataProvider = "atManager")
     public void testScanning(ATManager<Character, Character> manager) {
 
-        final Word<Character> inputWord = Word.fromCharSequence("ABaRCbRR");
-        final Word<Character> outputWord = Word.fromCharSequence("✓✓x✓✓y✓✓");
+        final Word<Character> inputWord = Word.fromString("ABaRCbRR");
+        final Word<Character> outputWord = Word.fromString("✓✓x✓✓y✓✓");
 
         manager.scanCounterexample(new DefaultQuery<>(Word.epsilon(), inputWord, outputWord));
 
-        Assert.assertEquals(manager.getAccessSequence('A'), Word.fromCharSequence("A"));
-        Assert.assertEquals(manager.getAccessSequence('B'), Word.fromCharSequence("AB"));
-        Assert.assertEquals(manager.getAccessSequence('C'), Word.fromCharSequence("ABaRC"));
+        Assert.assertEquals(manager.getAccessSequence('A'), Word.fromLetter('A'));
+        Assert.assertEquals(manager.getAccessSequence('B'), Word.fromString("AB"));
+        Assert.assertEquals(manager.getAccessSequence('C'), Word.fromString("ABaRC"));
 
-        Assert.assertEquals(manager.getTerminatingSequence('A'), Word.fromCharSequence("BaRCbR"));
-        Assert.assertEquals(manager.getTerminatingSequence('B'), Word.fromCharSequence("a"));
-        Assert.assertEquals(manager.getTerminatingSequence('C'), Word.fromCharSequence("b"));
+        Assert.assertEquals(manager.getTerminatingSequence('A'), Word.fromString("BaRCbR"));
+        Assert.assertEquals(manager.getTerminatingSequence('B'), Word.fromLetter('a'));
+        Assert.assertEquals(manager.getTerminatingSequence('C'), Word.fromLetter('b'));
     }
 
 }

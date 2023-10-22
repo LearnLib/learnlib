@@ -76,7 +76,7 @@ public final class LearningExamples {
     private static final int GRID_YSIZE = 5;
     private static final String[] RANDOM_MEALY_OUTPUTS = {"o1", "o2", "o3"};
     private static final Collection<Word<Character>> RANDOM_SST_PROPS =
-            Arrays.asList(Word.fromCharSequence("ab"), Word.fromCharSequence("bc"), Word.fromCharSequence("ca"));
+            Arrays.asList(Word.fromString("ab"), Word.fromString("bc"), Word.fromString("ca"));
     private static final String UNDEFINED_MEALY_OUTPUT = "undefined";
     private static final int KEYLOCK_SIZE = 100;
     private static final int PROCEDURE_SIZE = 10;

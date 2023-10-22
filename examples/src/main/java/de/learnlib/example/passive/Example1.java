@@ -66,10 +66,10 @@ public final class Example1 {
      * @return a collection of (positive) training samples
      */
     private static Collection<Word<Character>> getPositiveTrainingSamples() {
-        return Arrays.asList(Word.fromCharSequence("aaa"),
-                             Word.fromCharSequence("aaba"),
-                             Word.fromCharSequence("bba"),
-                             Word.fromCharSequence("bbaba"));
+        return Arrays.asList(Word.fromString("aaa"),
+                             Word.fromString("aaba"),
+                             Word.fromString("bba"),
+                             Word.fromString("bbaba"));
     }
 
     /**
@@ -79,10 +79,10 @@ public final class Example1 {
      * @return a collection of (negative) training samples
      */
     private static Collection<Word<Character>> getNegativeTrainingSamples() {
-        return Arrays.asList(Word.fromCharSequence("a"),
-                             Word.fromCharSequence("bb"),
-                             Word.fromCharSequence("aab"),
-                             Word.fromCharSequence("aba"));
+        return Arrays.asList(Word.fromString("a"),
+                             Word.fromString("bb"),
+                             Word.fromString("aab"),
+                             Word.fromString("aba"));
     }
 
     /**

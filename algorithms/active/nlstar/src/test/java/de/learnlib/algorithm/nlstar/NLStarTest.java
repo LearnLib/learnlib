@@ -54,10 +54,10 @@ public class NLStarTest {
 
         final SampleSetEQOracle<Character, Boolean> eqOracle = new SampleSetEQOracle<>(false);
         eqOracle.addAll(mqOracle,
-                        Word.fromCharSequence("a"),
-                        Word.fromCharSequence("ab"),
-                        Word.fromCharSequence("aa"),
-                        Word.fromCharSequence("bab"));
+                        Word.fromLetter('a'),
+                        Word.fromString("ab"),
+                        Word.fromString("aa"),
+                        Word.fromString("bab"));
 
         final NLStarLearner<Character> learner = new NLStarLearner<>(alphabet, mqOracle);
 

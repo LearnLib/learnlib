@@ -106,7 +106,7 @@ public class StateLocalInputSULTreeCacheTest
         final long oldCount = getNumberOfPosedQueries();
 
         final Word<Character> oldQuery = getQuery(0).getInput();
-        final Word<Integer> answer = super.oracle.answerQuery(oldQuery.concat(Word.fromCharSequence("dcba")));
+        final Word<Integer> answer = super.oracle.answerQuery(oldQuery.concat(Word.fromString("dcba")));
 
         Assert.assertEquals(getNumberOfPosedQueries(), oldCount);
 

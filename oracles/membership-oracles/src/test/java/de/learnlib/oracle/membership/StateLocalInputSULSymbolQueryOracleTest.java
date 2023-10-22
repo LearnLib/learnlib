@@ -78,7 +78,7 @@ public class StateLocalInputSULSymbolQueryOracleTest {
         Mockito.verify(mock, Mockito.times(0)).pre();
         Mockito.verify(mock, Mockito.times(0)).post();
 
-        final Word<Character> i1 = Word.fromCharSequence("abcabcabc");
+        final Word<Character> i1 = Word.fromString("abcabcabc");
         final Word<Integer> o1 = oracle.answerQuery(i1);
         oracle.reset(); // cleanup
 
@@ -90,7 +90,7 @@ public class StateLocalInputSULSymbolQueryOracleTest {
         Mockito.verify(mock, Mockito.times(2)).currentlyEnabledInputs();
         Mockito.verify(mock, Mockito.times(1)).step(Mockito.anyChar());
 
-        final Word<Character> i2 = Word.fromCharSequence("aaaaa");
+        final Word<Character> i2 = Word.fromString("aaaaa");
         final Word<Integer> o2 = oracle.answerQuery(i2);
         oracle.reset(); // cleanup
         oracle.reset(); // twice
