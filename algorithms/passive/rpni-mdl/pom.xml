@@ -60,10 +60,6 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-smartcollections</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-util</artifactId>
         </dependency>
         <dependency>

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.datastructure.pta.pta;
+package de.learnlib.datastructure.pta;
 
 import java.util.Objects;
 
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class PTATransition<S extends AbstractBasePTAState<?, ?, S>> {
+public class PTATransition<S extends AbstractBasePTAState<S, ?, ?>> {
 
     private final S source;
     private final int index;

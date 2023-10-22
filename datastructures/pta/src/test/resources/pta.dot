@@ -20,4 +20,7 @@ digraph g {
 	s3 -> s8 [label="z"];
 	s5 -> s9 [label="y"];
 
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s0;
+
 }

@@ -13,11 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.datastructure.pta.pta;
+package de.learnlib.datastructure.pta;
 
-public class BlueFringePTA<SP, TP> extends AbstractBlueFringePTA<SP, TP, BlueFringePTAState<SP, TP>> {
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
 
-    public BlueFringePTA(int alphabetSize) {
-        super(alphabetSize, new BlueFringePTAState<>());
+public class BlueFringePTAMealy<I, O> extends BlueFringePTA<I, Void, O>
+        implements MealyMachine<BlueFringePTAState<Void, O>, I, PTATransition<BlueFringePTAState<Void, O>>, O> {
+
+    public BlueFringePTAMealy(Alphabet<I> alphabet) {
+        super(alphabet);
+    }
+
+    @Override
+    public O getTransitionOutput(PTATransition<BlueFringePTAState<Void, O>> transition) {
+        return getTransitionProperty(transition);
     }
 }

@@ -18,9 +18,6 @@ package de.learnlib.datastructure.pta;
 import java.util.Arrays;
 import java.util.List;
 
-import de.learnlib.datastructure.pta.pta.BlueFringePTA;
-import de.learnlib.datastructure.pta.pta.BlueFringePTAState;
-import de.learnlib.datastructure.pta.pta.RedBlueMerge;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
@@ -55,39 +52,38 @@ public class MergedAutomatonTest {
         final List<Word<Character>> positiveSamples = Arrays.asList(p1, p2, p3, p4);
         final List<Word<Character>> negativeSamples = Arrays.asList(n1, n2, n3, n4);
 
-        final BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(alphabet.size());
+        final BlueFringePTA<Character, Boolean, Void> pta = new BlueFringePTA<>(alphabet);
 
         for (Word<Character> w : positiveSamples) {
-            pta.addSample(w.asIntSeq(alphabet), true);
+            pta.addSample(w, true);
         }
         for (Word<Character> w : negativeSamples) {
-            pta.addSample(w.asIntSeq(alphabet), false);
+            pta.addSample(w, false);
         }
 
-        // the PTA works on an Integer alphabet abstraction, hence a -> 0, b -> 1
-        final BlueFringePTAState<Boolean, Void> q2 = pta.getState(Word.fromSymbols(0));
-        final BlueFringePTAState<Boolean, Void> q3 = pta.getState(Word.fromSymbols(1));
-        final BlueFringePTAState<Boolean, Void> q4 = pta.getState(Word.fromSymbols(0, 0));
-        final BlueFringePTAState<Boolean, Void> q6 = pta.getState(Word.fromSymbols(0, 0, 0));
+        final BlueFringePTAState<Boolean, Void> q2 = pta.getState(Word.fromSymbols('a'));
+        final BlueFringePTAState<Boolean, Void> q3 = pta.getState(Word.fromSymbols('b'));
+        final BlueFringePTAState<Boolean, Void> q4 = pta.getState(Word.fromSymbols('a', 'a'));
+        final BlueFringePTAState<Boolean, Void> q6 = pta.getState(Word.fromSymbols('a', 'a', 'a'));
 
         // fast-forward algorithm
         pta.init((q) -> {});
         pta.promote(q2, (q) -> {});
         pta.promote(q3, (q) -> {});
 
-        final RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>> merge = pta.tryMerge(q3, q4);
+        final RedBlueMerge<BlueFringePTAState<Boolean, Void>, Character, Boolean, Void> merge = pta.tryMerge(q3, q4);
         Assert.assertNotNull(merge);
 
-        final UniversalDeterministicAutomaton<BlueFringePTAState<Boolean, Void>, Integer, ?, Boolean, Void>
+        final UniversalDeterministicAutomaton<BlueFringePTAState<Boolean, Void>, Character, ?, Boolean, Void>
                 mergedAutomaton = merge.toMergedAutomaton();
 
         // subtree of 3 states has been subsumed
         Assert.assertEquals(pta.size() - 3, mergedAutomaton.size());
 
-        Assert.assertEquals(mergedAutomaton.getState(Word.fromSymbols(0, 0)), q3);
-        Assert.assertEquals(mergedAutomaton.getSuccessor(q2, 0), q3);
+        Assert.assertEquals(mergedAutomaton.getState(Word.fromSymbols('a', 'a')), q3);
+        Assert.assertEquals(mergedAutomaton.getSuccessor(q2, 'a'), q3);
 
-        Assert.assertEquals(mergedAutomaton.getState(Word.fromSymbols(1, 0)), q6);
-        Assert.assertEquals(mergedAutomaton.getSuccessor(q3, 0), q6);
+        Assert.assertEquals(mergedAutomaton.getState(Word.fromSymbols('b', 'a')), q6);
+        Assert.assertEquals(mergedAutomaton.getSuccessor(q3, 'a'), q6);
     }
 }

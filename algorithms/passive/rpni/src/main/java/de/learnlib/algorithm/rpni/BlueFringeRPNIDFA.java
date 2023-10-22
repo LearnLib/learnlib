@@ -20,11 +20,9 @@ import java.util.Collection;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.datastructure.pta.PTAUtil;
-import de.learnlib.datastructure.pta.pta.BlueFringePTA;
+import de.learnlib.datastructure.pta.BlueFringePTADFA;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 
 /**
  * A Blue Fringe version of RPNI for learning DFAs.
@@ -35,10 +33,11 @@ import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
  * @param <I>
  *         input symbol type
  */
-public class BlueFringeRPNIDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>>
+public class BlueFringeRPNIDFA<I>
+        extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>, BlueFringePTADFA<I>>
         implements PassiveDFALearner<I> {
 
-    private final BlueFringePTA<Boolean, Void> pta;
+    private final BlueFringePTADFA<I> pta;
     private boolean merged;
 
     /**
@@ -49,19 +48,19 @@ public class BlueFringeRPNIDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boo
      */
     public BlueFringeRPNIDFA(Alphabet<I> alphabet) {
         super(alphabet);
-        this.pta = new BlueFringePTA<>(alphabetSize);
+        this.pta = new BlueFringePTADFA<>(alphabet);
         this.merged = false;
     }
 
     @Override
     public void addSamples(Collection<? extends DefaultQuery<I, Boolean>> samples) {
         for (DefaultQuery<I, Boolean> query : samples) {
-            pta.addSample(query.getInput().asIntSeq(alphabet), query.getOutput());
+            pta.addSample(query.getInput(), query.getOutput());
         }
     }
 
     @Override
-    protected BlueFringePTA<Boolean, Void> fetchPTA() {
+    protected BlueFringePTADFA<I> fetchPTA() {
         if (merged) {
             throw new IllegalStateException(
                     "A model has already been computed once. This learner does not support repeated model constructions");
@@ -72,8 +71,8 @@ public class BlueFringeRPNIDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boo
     }
 
     @Override
-    protected CompactDFA<I> ptaToModel(BlueFringePTA<Boolean, Void> pta) {
-        return PTAUtil.toDFA(pta, alphabet);
+    protected DFA<?, I> ptaToModel(BlueFringePTADFA<I> pta) {
+        return pta.asDFA();
     }
 
 }

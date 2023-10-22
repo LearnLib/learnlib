@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.datastructure.pta.pta;
+package de.learnlib.datastructure.pta;
 
-public class BlueFringePTAState<SP, TP> extends AbstractBlueFringePTAState<SP, TP, BlueFringePTAState<SP, TP>> {
+import net.automatalib.alphabet.Alphabet;
 
-    @Override
-    protected BlueFringePTAState<SP, TP> createState() {
-        return new BlueFringePTAState<>();
+public class BlueFringePTA<I, SP, TP> extends AbstractBlueFringePTA<BlueFringePTAState<SP, TP>, I, SP, TP> {
+
+    public BlueFringePTA(Alphabet<I> alphabet) {
+        super(alphabet, new BlueFringePTAState<>());
     }
 }

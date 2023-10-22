@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.datastructure.pta.pta;
+package de.learnlib.datastructure.pta;
 
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import net.automatalib.common.smartcollection.ArrayStorage;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAState<SP, TP, S>> implements Cloneable {
+public abstract class AbstractBasePTAState<S extends AbstractBasePTAState<S, SP, TP>, SP, TP> implements Cloneable {
 
     protected SP property;
     protected @MonotonicNonNull ArrayStorage<TP> transProperties;
@@ -133,13 +132,6 @@ public abstract class AbstractBasePTAState<SP, TP, S extends AbstractBasePTAStat
         }
         this.property = newSP;
         return true;
-    }
-
-    public Stream<S> successors() {
-        if (successors == null) {
-            return Stream.empty();
-        }
-        return successors.stream().filter(Objects::nonNull);
     }
 
     public SP getProperty() {

@@ -19,11 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.learnlib.datastructure.pta.pta.BlueFringePTA;
+import de.learnlib.datastructure.pta.BlueFringePTA;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.common.smartcollection.IntSeq;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -40,7 +39,6 @@ public class MDLScoreTest {
     private Alphabet<Integer> alphabetAsInt;
 
     private List<Word<Character>> positiveSamples;
-    private List<IntSeq> positiveSamplesAsIntSeq;
 
     @BeforeClass
     public void setUp() {
@@ -57,20 +55,19 @@ public class MDLScoreTest {
         final Word<Character> p8 = Word.fromString("bbbb");
 
         positiveSamples = Arrays.asList(p1, p2, p3, p4, p5, p6, p7, p8);
-        positiveSamplesAsIntSeq = positiveSamples.stream().map(s -> s.asIntSeq(alphabet)).collect(Collectors.toList());
     }
 
     @Test
     public void testPTAValue() {
-        final BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(alphabet.size());
+        final BlueFringePTA<Character, Boolean, Void> pta = new BlueFringePTA<>(alphabet);
 
-        for (IntSeq w : positiveSamplesAsIntSeq) {
+        for (Word<Character> w : positiveSamples) {
             pta.addSample(w, true);
         }
 
         Assert.assertEquals(pta.size(), 13);
 
-        final double encodingInformation = MDLUtil.score(pta, alphabet.size(), positiveSamplesAsIntSeq);
+        final double encodingInformation = MDLUtil.score(pta, alphabet, positiveSamples);
 
         Assert.assertTrue(51.67 < encodingInformation);
         Assert.assertTrue(encodingInformation < 51.68);
@@ -80,9 +77,11 @@ public class MDLScoreTest {
     public void testFinalHypothesis() {
         final BlueFringeMDLDFA<Integer> learner = new BlueFringeMDLDFA<>(alphabetAsInt);
 
-        positiveSamples.stream()
-                       .map(w -> w.transform(alphabetAsInt.translateFrom(alphabet)))
-                       .forEach(learner::addPositiveSample);
+        final List<Word<Integer>> positiveSamplesAsInt = positiveSamples.stream()
+                                                                        .map(w -> w.transform(alphabetAsInt.translateFrom(
+                                                                                alphabet)))
+                                                                        .collect(Collectors.toList());
+        learner.addPositiveSamples(positiveSamplesAsInt);
 
         final DFA<?, Integer> model = learner.computeModel();
 
@@ -91,7 +90,7 @@ public class MDLScoreTest {
         Assert.assertFalse(model.accepts(Word.fromSymbols(1)));
         Assert.assertTrue(model.accepts(Word.fromSymbols(1, 1)));
 
-        final double finalEncodingInformation = MDLUtil.score(model, alphabet.size(), positiveSamplesAsIntSeq);
+        final double finalEncodingInformation = MDLUtil.score(model, alphabetAsInt, positiveSamplesAsInt);
 
         // the official value of the book (43.68) is wrong. if computed by hand the value should be around 45.21
         Assert.assertTrue(45.2 < finalEncodingInformation);

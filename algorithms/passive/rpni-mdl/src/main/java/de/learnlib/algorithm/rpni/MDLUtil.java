@@ -17,48 +17,49 @@ package de.learnlib.algorithm.rpni;
 
 import java.util.List;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.common.smartcollection.IntSeq;
+import net.automatalib.word.Word;
 
 final class MDLUtil {
 
     private MDLUtil() {}
 
-    static <S> double score(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> merged,
-                            int alphabetSize,
-                            List<IntSeq> positiveSamples) {
+    static <S, I> double score(UniversalDeterministicAutomaton<S, I, ?, Boolean, ?> merged,
+                               Alphabet<I> alphabet,
+                               List<Word<I>> positiveSamples) {
         double sampleScore = 0;
 
-        for (IntSeq w : positiveSamples) {
-            sampleScore += countWordChoices(merged, alphabetSize, w);
+        for (Word<I> w : positiveSamples) {
+            sampleScore += countWordChoices(merged, alphabet, w);
         }
 
-        return merged.size() * alphabetSize + sampleScore;
+        return merged.size() * alphabet.size() + sampleScore;
     }
 
-    private static <S> double countWordChoices(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> merged,
-                                               int alphabetSize,
-                                               IntSeq word) {
+    private static <S, I> double countWordChoices(UniversalDeterministicAutomaton<S, I, ?, Boolean, ?> merged,
+                                                  Alphabet<I> alphabet,
+                                                  Word<I> word) {
         S currentState = merged.getInitialState();
         assert currentState != null;
-        double result = Math.log(countStateChoices(merged, alphabetSize, currentState)) /
+        double result = Math.log(countStateChoices(merged, alphabet, currentState)) /
                         Math.log(2); // log_2 x = log_e x / log_e 2
 
-        for (int i : word) {
+        for (I i : word) {
             currentState = merged.getSuccessor(currentState, i);
             assert currentState != null;
-            result += Math.log(countStateChoices(merged, alphabetSize, currentState)) / Math.log(2);
+            result += Math.log(countStateChoices(merged, alphabet, currentState)) / Math.log(2);
         }
 
         return result;
     }
 
-    private static <S> int countStateChoices(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> pta,
-                                             int alphabetSize,
-                                             S state) {
+    private static <S, I> int countStateChoices(UniversalDeterministicAutomaton<S, I, ?, Boolean, ?> pta,
+                                                Alphabet<I> alphabet,
+                                                S state) {
         int choices = Boolean.TRUE.equals(pta.getStateProperty(state)) ? 1 : 0;
 
-        for (int i = 0; i < alphabetSize; i++) {
+        for (I i : alphabet) {
             if (pta.getSuccessor(state, i) != null) {
                 choices++;
             }

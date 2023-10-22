@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.io.CharStreams;
-import de.learnlib.datastructure.pta.pta.BlueFringePTA;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.impl.compact.CompactMoore;
@@ -36,7 +35,7 @@ import org.testng.annotations.Test;
 public class PTAVisualizationTest {
 
     private final Alphabet<Character> alphabet;
-    private final BlueFringePTA<Character, Void> moorePTA;
+    private final BlueFringePTA<Character, Character, Void> pta;
 
     public PTAVisualizationTest() {
         this.alphabet = Alphabets.characters('x', 'z');
@@ -60,17 +59,17 @@ public class PTAVisualizationTest {
         final List<Word<Character>> traces = new ArrayList<>();
         Covers.transitionCover(moore, alphabet, traces);
 
-        this.moorePTA = new BlueFringePTA<>(alphabet.size());
+        this.pta = new BlueFringePTA<>(alphabet);
 
         for (Word<Character> trace : traces) {
-            this.moorePTA.addSampleWithStateProperties(trace.toIntArray(alphabet), moore.computeOutput(trace).asList());
+            this.pta.addSampleWithStateProperties(trace, moore.computeOutput(trace).asList());
         }
     }
 
     @Test
     public void testVisualization() throws IOException {
         final StringWriter actualPTA = new StringWriter();
-        GraphDOT.write(this.moorePTA.graphView(alphabet), actualPTA);
+        GraphDOT.write(this.pta.transitionGraphView(alphabet), actualPTA);
 
         final String expectedPTA =
                 CharStreams.toString(IOUtil.asBufferedUTF8Reader(PTAVisualizationTest.class.getResourceAsStream(

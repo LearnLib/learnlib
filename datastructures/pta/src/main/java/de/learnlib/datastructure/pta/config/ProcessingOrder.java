@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.datastructure.pta.bluefringe;
+package de.learnlib.datastructure.pta.config;
 
 import java.util.Comparator;
 import java.util.Queue;
 
-import de.learnlib.datastructure.pta.pta.AbstractBlueFringePTAState;
-import de.learnlib.datastructure.pta.pta.PTATransition;
+import de.learnlib.datastructure.pta.AbstractBlueFringePTAState;
+import de.learnlib.datastructure.pta.PTATransition;
 
 /**
  * Interface for entities that specify the order in which blue states are processed (i.e., considered for merges). This
@@ -39,5 +39,5 @@ public interface ProcessingOrder {
      *
      * @return a worklist with some specific ordering constraints
      */
-    <S extends AbstractBlueFringePTAState<?, ?, S>> Queue<PTATransition<S>> createWorklist();
+    <S extends AbstractBlueFringePTAState<S, ?, ?>> Queue<PTATransition<S>> createWorklist();
 }

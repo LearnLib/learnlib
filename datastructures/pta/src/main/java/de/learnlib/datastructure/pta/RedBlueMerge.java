@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.datastructure.pta.pta;
+package de.learnlib.datastructure.pta;
 
 import java.awt.Color;
 import java.util.ArrayDeque;
@@ -26,23 +26,25 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.common.smartcollection.ArrayStorage;
 import net.automatalib.common.util.Pair;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S>> {
+public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, I, SP, TP> {
 
-    private final AbstractBlueFringePTA<SP, TP, S> pta;
+    private final AbstractBlueFringePTA<S, I, SP, TP> pta;
     private final ArrayStorage<ArrayStorage<S>> succMod;
     private final ArrayStorage<ArrayStorage<TP>> transPropMod;
     private final ArrayStorage<SP> propMod;
+    private final Alphabet<I> alphabet;
     private final int alphabetSize;
     private final S qr;
     private final S qb;
     private boolean merged;
 
-    public RedBlueMerge(AbstractBlueFringePTA<SP, TP, S> pta, S qr, S qb) {
+    public RedBlueMerge(AbstractBlueFringePTA<S, I, SP, TP> pta, S qr, S qb) {
         if (!qr.isRed()) {
             throw new IllegalArgumentException("Merge target must be a red state");
         }
@@ -56,7 +58,8 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         this.succMod = new ArrayStorage<>(numRedStates);
         this.transPropMod = new ArrayStorage<>(numRedStates);
         this.propMod = new ArrayStorage<>(numRedStates);
-        this.alphabetSize = pta.alphabetSize;
+        this.alphabet = pta.getInputAlphabet();
+        this.alphabetSize = alphabet.size();
 
         this.qr = qr;
         this.qb = qb;
@@ -357,8 +360,8 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         return tps1OrCopy;
     }
 
-    public void apply(AbstractBlueFringePTA<SP, TP, S> pta, Consumer<? super PTATransition<S>> newFrontierConsumer) {
-        int alphabetSize = pta.alphabetSize;
+    public void apply(AbstractBlueFringePTA<S, I, SP, TP> pta, Consumer<? super PTATransition<S>> newFrontierConsumer) {
+        int alphabetSize = pta.getInputAlphabet().size();
 
         for (int i = 0; i < succMod.size(); i++) {
             S redState = pta.redStates.get(i);
@@ -423,22 +426,22 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         }
     }
 
-    public UniversalDeterministicAutomaton<S, Integer, ?, SP, TP> toMergedAutomaton() {
+    public UniversalDeterministicAutomaton<S, I, ?, SP, TP> toMergedAutomaton() {
         if (!this.merged) {
             throw new IllegalStateException("#merge has not been called yet");
         }
 
-        return new UniversalDeterministicAutomaton<S, Integer, Pair<S, Integer>, SP, TP>() {
+        return new UniversalDeterministicAutomaton<S, I, Pair<S, I>, SP, TP>() {
 
             private Set<S> states;
 
             @Override
-            public @Nullable S getSuccessor(Pair<S, Integer> transition) {
+            public @Nullable S getSuccessor(Pair<S, I> transition) {
                 final S source = transition.getFirst();
-                final Integer input = transition.getSecond();
+                final I input = transition.getSecond();
 
                 if (source.isRed() && succMod.get(source.id) != null) {
-                    return succMod.get(source.id).get(input);
+                    return succMod.get(source.id).get(alphabet.getSymbolIndex(input));
                 }
 
                 return pta.getSuccessor(source, input);
@@ -454,20 +457,20 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
             }
 
             @Override
-            public TP getTransitionProperty(Pair<S, Integer> transition) {
+            public TP getTransitionProperty(Pair<S, I> transition) {
                 final S source = transition.getFirst();
-                final Integer input = transition.getSecond();
+                final I input = transition.getSecond();
 
                 if (source.isRed() && transPropMod.get(source.id) != null) {
-                    return transPropMod.get(source.id).get(input);
+                    return transPropMod.get(source.id).get(alphabet.getSymbolIndex(input));
                 }
 
                 assert source.transProperties != null;
-                return source.transProperties.get(input);
+                return source.transProperties.get(alphabet.getSymbolIndex(input));
             }
 
             @Override
-            public Pair<S, Integer> getTransition(S state, Integer input) {
+            public Pair<S, I> getTransition(S state, I input) {
                 return Pair.of(state, input);
             }
 
@@ -490,7 +493,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
                 while ((iter = discoverQueue.poll()) != null) {
                     states.add(iter);
 
-                    for (int i = 0; i < alphabetSize; i++) {
+                    for (I i : alphabet) {
                         final S succ = getSuccessor(iter, i);
 
                         if (succ != null && !states.contains(succ)) {
@@ -509,7 +512,7 @@ public class RedBlueMerge<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S
         };
     }
 
-    static final class FoldRecord<S extends AbstractBlueFringePTAState<?, ?, S>> {
+    static final class FoldRecord<S extends AbstractBlueFringePTAState<S, ?, ?>> {
 
         public final S r;
         public S q;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.datastructure.pta.pta;
+package de.learnlib.datastructure.pta;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -21,16 +21,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+import net.automatalib.alphabet.Alphabet;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractBlueFringePTA<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S>>
-        extends BasePTA<SP, TP, S> {
+public abstract class AbstractBlueFringePTA<S extends AbstractBlueFringePTAState<S, SP, TP>, I, SP, TP>
+        extends BasePTA<S, I, SP, TP> {
 
     protected final List<S> redStates = new ArrayList<>();
 
-    public AbstractBlueFringePTA(@NonNegative int alphabetSize, S root) {
-        super(alphabetSize, root);
+    public AbstractBlueFringePTA(Alphabet<I> alphabet, S root) {
+        super(alphabet, root);
     }
 
     public S getRedState(@NonNegative int id) {
@@ -46,6 +47,7 @@ public abstract class AbstractBlueFringePTA<SP, TP, S extends AbstractBlueFringe
     }
 
     public void init(Consumer<? super PTATransition<S>> newBlue) {
+        S root = getRoot();
         root.color = Color.BLUE;
         promote(root, newBlue);
     }
@@ -63,8 +65,8 @@ public abstract class AbstractBlueFringePTA<SP, TP, S extends AbstractBlueFringe
         redStates.add(qb);
     }
 
-    public @Nullable RedBlueMerge<SP, TP, S> tryMerge(S qr, S qb) {
-        RedBlueMerge<SP, TP, S> merge = new RedBlueMerge<>(this, qr, qb);
+    public @Nullable RedBlueMerge<S, I, SP, TP> tryMerge(S qr, S qb) {
+        RedBlueMerge<S, I, SP, TP> merge = new RedBlueMerge<>(this, qr, qb);
         if (!merge.merge()) {
             return null;
         }

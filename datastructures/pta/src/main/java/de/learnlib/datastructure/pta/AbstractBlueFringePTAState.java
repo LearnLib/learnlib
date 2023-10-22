@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.datastructure.pta.pta;
+package de.learnlib.datastructure.pta;
 
 import java.awt.Color;
 
 import net.automatalib.common.util.comparison.CmpUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractBlueFringePTAState<SP, TP, S extends AbstractBlueFringePTAState<SP, TP, S>>
-        extends AbstractBasePTAState<SP, TP, S> implements Comparable<S> {
+public abstract class AbstractBlueFringePTAState<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, TP>
+        extends AbstractBasePTAState<S, SP, TP> implements Comparable<S> {
 
     protected boolean isCopy;
     protected Color color = Color.WHITE;

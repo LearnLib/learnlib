@@ -23,13 +23,12 @@ import java.util.stream.Stream;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.datastructure.pta.PTAUtil;
-import de.learnlib.datastructure.pta.pta.BlueFringePTA;
-import de.learnlib.datastructure.pta.pta.BlueFringePTAState;
-import de.learnlib.datastructure.pta.pta.RedBlueMerge;
+import de.learnlib.datastructure.pta.BlueFringePTADFA;
+import de.learnlib.datastructure.pta.BlueFringePTAState;
+import de.learnlib.datastructure.pta.RedBlueMerge;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.common.smartcollection.IntSeq;
+import net.automatalib.word.Word;
 
 /**
  * A state-merging learning algorithm based on the minimal description length principle. On an operational level this
@@ -46,10 +45,11 @@ import net.automatalib.common.smartcollection.IntSeq;
  * @param <I>
  *         input symbol type
  */
-public class BlueFringeMDLDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>>
+public class BlueFringeMDLDFA<I>
+        extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>, BlueFringePTADFA<I>>
         implements PassiveDFALearner<I> {
 
-    private final List<IntSeq> positive = new ArrayList<>();
+    private final List<Word<I>> positive = new ArrayList<>();
 
     private double currentScore = Double.POSITIVE_INFINITY;
 
@@ -69,7 +69,7 @@ public class BlueFringeMDLDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Bool
             if (!query.getOutput()) {
                 throw new IllegalArgumentException("Only positive examples are allowed");
             }
-            positive.add(query.getInput().asIntSeq(alphabet));
+            positive.add(query.getInput());
         }
     }
 
@@ -82,10 +82,10 @@ public class BlueFringeMDLDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Bool
     }
 
     @Override
-    protected BlueFringePTA<Boolean, Void> fetchPTA() {
-        final BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(alphabetSize);
+    protected BlueFringePTADFA<I> fetchPTA() {
+        final BlueFringePTADFA<I> pta = new BlueFringePTADFA<>(alphabet);
 
-        for (IntSeq pos : positive) {
+        for (Word<I> pos : positive) {
             pta.addSample(pos, true);
         }
 
@@ -93,12 +93,12 @@ public class BlueFringeMDLDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Bool
     }
 
     @Override
-    protected Stream<RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>>> selectMerges(Stream<RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>>> merges) {
+    protected Stream<RedBlueMerge<BlueFringePTAState<Boolean, Void>, I, Boolean, Void>> selectMerges(Stream<RedBlueMerge<BlueFringePTAState<Boolean, Void>, I, Boolean, Void>> merges) {
         return merges.filter(this::decideOnValidMerge);
     }
 
-    private boolean decideOnValidMerge(RedBlueMerge<Boolean, Void, BlueFringePTAState<Boolean, Void>> merge) {
-        final double score = MDLUtil.score(merge.toMergedAutomaton(), super.alphabetSize, positive);
+    private boolean decideOnValidMerge(RedBlueMerge<BlueFringePTAState<Boolean, Void>, I, Boolean, Void> merge) {
+        final double score = MDLUtil.score(merge.toMergedAutomaton(), super.alphabet, positive);
         if (score < currentScore) {
             currentScore = score;
             return true;
@@ -108,7 +108,7 @@ public class BlueFringeMDLDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Bool
     }
 
     @Override
-    protected DFA<?, I> ptaToModel(BlueFringePTA<Boolean, Void> pta) {
-        return PTAUtil.toDFA(pta, alphabet);
+    protected DFA<?, I> ptaToModel(BlueFringePTADFA<I> pta) {
+        return pta.asDFA();
     }
 }

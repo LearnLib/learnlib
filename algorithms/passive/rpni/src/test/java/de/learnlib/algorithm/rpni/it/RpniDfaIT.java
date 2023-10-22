@@ -16,6 +16,8 @@
 package de.learnlib.algorithm.rpni.it;
 
 import de.learnlib.algorithm.rpni.BlueFringeRPNIDFA;
+import de.learnlib.datastructure.pta.config.DefaultProcessingOrders;
+import de.learnlib.datastructure.pta.config.ProcessingOrder;
 import de.learnlib.testsupport.it.learner.AbstractDFAPassiveLearnerIT;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
@@ -29,13 +31,18 @@ public class RpniDfaIT extends AbstractDFAPassiveLearnerIT {
 
         final boolean[] determinism = {true, false};
         final boolean[] parallelism = {true, false};
+        final ProcessingOrder[] orders = DefaultProcessingOrders.values();
 
         for (boolean d : determinism) {
             for (boolean p : parallelism) {
-                final BlueFringeRPNIDFA<I> learner = new BlueFringeRPNIDFA<>(alphabet);
-                learner.setParallel(p);
-                learner.setDeterministic(d);
-                variants.addLearnerVariant(String.format("BlueFringeRPNIDFA, det=%b, par=%b", d, p), learner);
+                for (ProcessingOrder o : orders) {
+                    final BlueFringeRPNIDFA<I> learner = new BlueFringeRPNIDFA<>(alphabet);
+                    learner.setParallel(p);
+                    learner.setDeterministic(d);
+                    learner.setProcessingOrder(o);
+                    variants.addLearnerVariant(String.format("BlueFringeRPNIDFA, det=%b, par=%b, ord=%s", d, p, o),
+                                               learner);
+                }
             }
         }
     }

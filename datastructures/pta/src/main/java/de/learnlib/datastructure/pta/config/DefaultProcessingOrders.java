@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.datastructure.pta.bluefringe;
+package de.learnlib.datastructure.pta.config;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
@@ -22,8 +22,8 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.function.Function;
 
-import de.learnlib.datastructure.pta.pta.AbstractBlueFringePTAState;
-import de.learnlib.datastructure.pta.pta.PTATransition;
+import de.learnlib.datastructure.pta.AbstractBlueFringePTAState;
+import de.learnlib.datastructure.pta.PTATransition;
 import net.automatalib.common.util.comparison.CmpUtil;
 
 /**
@@ -38,7 +38,7 @@ public enum DefaultProcessingOrders implements ProcessingOrder {
      */
     CANONICAL_ORDER {
         @Override
-        public <S extends AbstractBlueFringePTAState<?, ?, S>> Queue<PTATransition<S>> createWorklist() {
+        public <S extends AbstractBlueFringePTAState<S, ?, ?>> Queue<PTATransition<S>> createWorklist() {
             return new PriorityQueue<>(Comparator.comparing((Function<PTATransition<S>, S>) PTATransition::getSource)
                                                  .thenComparingInt(PTATransition::getIndex));
         }
@@ -51,7 +51,7 @@ public enum DefaultProcessingOrders implements ProcessingOrder {
      */
     LEX_ORDER {
         @Override
-        public <S extends AbstractBlueFringePTAState<?, ?, S>> Queue<PTATransition<S>> createWorklist() {
+        public <S extends AbstractBlueFringePTAState<S, ?, ?>> Queue<PTATransition<S>> createWorklist() {
             return new PriorityQueue<>(Comparator.comparing((Function<PTATransition<S>, S>) PTATransition::getSource,
                                                             AbstractBlueFringePTAState::lexCompareTo)
                                                  .thenComparingInt(PTATransition::getIndex));
@@ -62,7 +62,7 @@ public enum DefaultProcessingOrders implements ProcessingOrder {
      */
     FIFO_ORDER {
         @Override
-        public <S extends AbstractBlueFringePTAState<?, ?, S>> Queue<PTATransition<S>> createWorklist() {
+        public <S extends AbstractBlueFringePTAState<S, ?, ?>> Queue<PTATransition<S>> createWorklist() {
             return new ArrayDeque<>();
         }
     },
@@ -71,7 +71,7 @@ public enum DefaultProcessingOrders implements ProcessingOrder {
      */
     LIFO_ORDER {
         @Override
-        public <S extends AbstractBlueFringePTAState<?, ?, S>> Queue<PTATransition<S>> createWorklist() {
+        public <S extends AbstractBlueFringePTAState<S, ?, ?>> Queue<PTATransition<S>> createWorklist() {
             return Collections.asLifoQueue(new ArrayDeque<>());
         }
     }
