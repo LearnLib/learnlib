@@ -175,9 +175,7 @@ public abstract class AbstractAbstractionTree<AI, CI, D>
 
             @Override
             public boolean getNodeProperties(Node node, Map<String, String> properties) {
-                if (!super.getNodeProperties(node, properties)) {
-                    return false;
-                }
+                super.getNodeProperties(node, properties);
 
                 if (node instanceof InnerNode) {
                     final InnerNode<?, ?> n = (InnerNode<?, ?>) node;
@@ -192,9 +190,7 @@ public abstract class AbstractAbstractionTree<AI, CI, D>
 
             @Override
             public boolean getEdgeProperties(Node src, Node edge, Node tgt, Map<String, String> properties) {
-                if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-                    return false;
-                }
+                super.getEdgeProperties(src, edge, tgt, properties);
 
                 if (src instanceof InnerNode) {
                     final InnerNode<?, ?> n = (InnerNode<?, ?>) src;

@@ -248,7 +248,8 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, SP, TP>
     }
 
     @Override
-    public UniversalGraph<S, TransitionEdge<Integer, PTATransition<S>>, SP, Property<Integer, TP>> transitionGraphView(Collection<? extends Integer> inputs) {
+    public UniversalGraph<S, TransitionEdge<Integer, PTATransition<S>>, SP, Property<Integer, TP>> transitionGraphView(
+            Collection<? extends Integer> inputs) {
         return new UniversalAutomatonGraphView<S, Integer, PTATransition<S>, SP, TP, BasePTA<S, SP, TP>>(this, inputs) {
 
             @Override
@@ -260,18 +261,21 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, SP, TP>
                                                      TransitionEdge<Integer, PTATransition<S>> edge,
                                                      S tgt,
                                                      Map<String, String> properties) {
-                        if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-                            return false;
-                        }
+                        super.getEdgeProperties(src, edge, tgt, properties);
+
                         final Integer input = edge.getInput();
                         properties.put(EdgeAttrs.LABEL, input + " / " + src.getTransProperty(input));
+
                         return true;
                     }
 
                     @Override
                     public boolean getNodeProperties(S node, Map<String, String> properties) {
+                        super.getNodeProperties(node, properties);
+
                         properties.put(NodeAttrs.LABEL, Objects.toString(node.getProperty()));
-                        return super.getNodeProperties(node, properties);
+
+                        return true;
                     }
                 };
             }

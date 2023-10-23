@@ -217,17 +217,16 @@ public class OPLearnerHypothesis<I, O, SP, TP>
                                                  HTransition<I, O, SP, TP> edge,
                                                  HState<I, O, SP, TP> tgt,
                                                  Map<String, String> properties) {
-                    if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-                        return false;
-                    }
+                    super.getEdgeProperties(src, edge, tgt, properties);
+
                     properties.put(EdgeAttrs.LABEL, String.valueOf(edge.getSymbol()));
                     if (edge.isTree()) {
                         properties.put(EdgeAttrs.STYLE, EdgeStyles.BOLD);
                     }
+
                     return true;
                 }
             };
         }
     }
-
 }

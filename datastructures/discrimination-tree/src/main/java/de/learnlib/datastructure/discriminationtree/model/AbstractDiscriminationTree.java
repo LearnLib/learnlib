@@ -257,9 +257,8 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
 
             @Override
             public boolean getNodeProperties(N node, Map<String, String> properties) {
-                if (!super.getNodeProperties(node, properties)) {
-                    return false;
-                }
+                super.getNodeProperties(node, properties);
+
                 if (node.isLeaf()) {
                     properties.put(NodeAttrs.SHAPE, NodeShapes.BOX);
                     properties.put(NodeAttrs.LABEL, String.valueOf(node.getData()));
@@ -268,15 +267,16 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
                     properties.put(NodeAttrs.SHAPE, NodeShapes.OVAL);
                     properties.put(NodeAttrs.LABEL, d.toString());
                 }
+
                 return true;
             }
 
             @Override
             public boolean getEdgeProperties(N src, Entry<O, N> edge, N tgt, Map<String, String> properties) {
-                if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-                    return false;
-                }
+                super.getEdgeProperties(src, edge, tgt, properties);
+
                 properties.put(EdgeAttrs.LABEL, String.valueOf(edge.getKey()));
+
                 return true;
             }
         };

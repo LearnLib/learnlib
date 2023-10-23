@@ -247,17 +247,18 @@ public abstract class AbstractTTTHypothesis<S extends TTTState<I, D>, I, D, T>
                                                  TTTEdge<I, D> edge,
                                                  TTTState<I, D> tgt,
                                                  Map<String, String> properties) {
+                    super.getEdgeProperties(src, edge, tgt, properties);
+
                     properties.put(EdgeAttrs.LABEL, String.valueOf(edge.transition.getInput()));
                     if (edge.transition.isTree()) {
                         properties.put(EdgeAttrs.STYLE, EdgeStyles.BOLD);
                     } else if (edge.transition.getDTTarget().isInner()) {
                         properties.put(EdgeAttrs.STYLE, EdgeStyles.DOTTED);
                     }
+
                     return true;
                 }
-
             };
         }
-
     }
 }

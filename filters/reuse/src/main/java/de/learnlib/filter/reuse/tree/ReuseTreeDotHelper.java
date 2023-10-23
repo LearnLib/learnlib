@@ -43,6 +43,7 @@ class ReuseTreeDotHelper<S, I, O>
         }
 
         super.getNodeProperties(node, properties);
+
         if (node.hasSystemStates()) {
             properties.put(NodeAttrs.COLOR, "black");
             properties.put(NodeAttrs.STYLE, "filled");
@@ -50,6 +51,7 @@ class ReuseTreeDotHelper<S, I, O>
             properties.put("fontcolor", "white");
         }
         properties.put(NodeAttrs.LABEL, String.valueOf(node.getId()));
+
         return true;
     }
 
@@ -72,6 +74,7 @@ class ReuseTreeDotHelper<S, I, O>
             labelBuilder.append(output);
         }
         properties.put(EdgeAttrs.LABEL, labelBuilder.toString());
+
         return true;
     }
 }
