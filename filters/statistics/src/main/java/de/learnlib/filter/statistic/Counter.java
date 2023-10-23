@@ -42,11 +42,6 @@ public class Counter extends AbstractStatisticData {
     }
 
     @Override
-    public String toString() {
-        return getDetails();
-    }
-
-    @Override
     public String getSummary() {
         return getName() + " [" + getUnit() + "]: " + count;
     }
