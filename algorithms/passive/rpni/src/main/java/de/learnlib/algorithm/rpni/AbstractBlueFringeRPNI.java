@@ -50,11 +50,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         transition property type
  * @param <M>
  *         model type
- * @param <PTA>
- *         prefix tree acceptor type
  */
-public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M, PTA extends BlueFringePTA<I, SP, TP>>
-        implements PassiveLearningAlgorithm<M, I, D> {
+public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M> implements PassiveLearningAlgorithm<M, I, D> {
 
     protected final Alphabet<I> alphabet;
     protected final int alphabetSize;
@@ -115,7 +112,7 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M, PTA extends BlueFr
 
     @Override
     public M computeModel() {
-        final PTA pta = fetchPTA();
+        final BlueFringePTA<SP, TP> pta = fetchPTA();
         final Queue<PTATransition<BlueFringePTAState<SP, TP>>> blue = order.createWorklist();
 
         pta.init(blue::offer);
@@ -130,15 +127,15 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M, PTA extends BlueFr
                     parallel ? redStates.parallelStream() : redStates.stream();
 
             @SuppressWarnings("nullness") // we filter the null merges
-            final Stream<RedBlueMerge<BlueFringePTAState<SP, TP>, I, SP, TP>> possibleMerges =
+            final Stream<RedBlueMerge<BlueFringePTAState<SP, TP>, SP, TP>> possibleMerges =
                     stream.map(qr -> tryMerge(pta, qr, qb)).filter(Objects::nonNull);
-            final Stream<RedBlueMerge<BlueFringePTAState<SP, TP>, I, SP, TP>> filteredMerges =
+            final Stream<RedBlueMerge<BlueFringePTAState<SP, TP>, SP, TP>> filteredMerges =
                     selectMerges(possibleMerges);
-            final Optional<RedBlueMerge<BlueFringePTAState<SP, TP>, I, SP, TP>> result =
+            final Optional<RedBlueMerge<BlueFringePTAState<SP, TP>, SP, TP>> result =
                     deterministic ? filteredMerges.findFirst() : filteredMerges.findAny();
 
             if (result.isPresent()) {
-                RedBlueMerge<BlueFringePTAState<SP, TP>, I, SP, TP> mod = result.get();
+                RedBlueMerge<BlueFringePTAState<SP, TP>, SP, TP> mod = result.get();
                 mod.apply(pta, blue::offer);
             } else {
                 pta.promote(qb, blue::offer);
@@ -155,7 +152,7 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M, PTA extends BlueFr
      *
      * @return the {@link BlueFringePTA PTA} for model construction.
      */
-    protected abstract PTA fetchPTA();
+    protected abstract BlueFringePTA<SP, TP> fetchPTA();
 
     /**
      * Attempts to merge a blue state into a red state.
@@ -170,9 +167,9 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M, PTA extends BlueFr
      * @return a valid {@link RedBlueMerge} object representing a possible merge of {@code qb} into {@code qr}, or
      * {@code null} if the merge is impossible
      */
-    protected @Nullable RedBlueMerge<BlueFringePTAState<SP, TP>, I, SP, TP> tryMerge(BlueFringePTA<I, SP, TP> pta,
-                                                                                     BlueFringePTAState<SP, TP> qr,
-                                                                                     BlueFringePTAState<SP, TP> qb) {
+    protected @Nullable RedBlueMerge<BlueFringePTAState<SP, TP>, SP, TP> tryMerge(BlueFringePTA<SP, TP> pta,
+                                                                                  BlueFringePTAState<SP, TP> qr,
+                                                                                  BlueFringePTAState<SP, TP> qb) {
         return pta.tryMerge(qr, qb);
     }
 
@@ -184,7 +181,7 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M, PTA extends BlueFr
      *
      * @return a model built from the final PTA
      */
-    protected abstract M ptaToModel(PTA pta);
+    protected abstract M ptaToModel(BlueFringePTA<SP, TP> pta);
 
     /**
      * Implementing the method allows subclasses to decide on (and possibly reject) valid merges.
@@ -194,7 +191,7 @@ public abstract class AbstractBlueFringeRPNI<I, D, SP, TP, M, PTA extends BlueFr
      *
      * @return the merges that should be considered for selecting a merge.
      */
-    protected Stream<RedBlueMerge<BlueFringePTAState<SP, TP>, I, SP, TP>> selectMerges(Stream<RedBlueMerge<BlueFringePTAState<SP, TP>, I, SP, TP>> merges) {
+    protected Stream<RedBlueMerge<BlueFringePTAState<SP, TP>, SP, TP>> selectMerges(Stream<RedBlueMerge<BlueFringePTAState<SP, TP>, SP, TP>> merges) {
         // by default, we are greedy and try to merge the first merge
         return merges;
     }

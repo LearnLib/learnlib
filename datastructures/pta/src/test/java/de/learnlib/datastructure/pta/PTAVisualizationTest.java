@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
 public class PTAVisualizationTest {
 
     private final Alphabet<Character> alphabet;
-    private final BlueFringePTA<Character, Character, Void> pta;
+    private final BlueFringePTA<Character, Void> pta;
 
     public PTAVisualizationTest() {
         this.alphabet = Alphabets.characters('x', 'z');
@@ -59,17 +59,17 @@ public class PTAVisualizationTest {
         final List<Word<Character>> traces = new ArrayList<>();
         Covers.transitionCover(moore, alphabet, traces);
 
-        this.pta = new BlueFringePTA<>(alphabet);
+        this.pta = new BlueFringePTA<>(alphabet.size());
 
         for (Word<Character> trace : traces) {
-            this.pta.addSampleWithStateProperties(trace, moore.computeOutput(trace).asList());
+            this.pta.addSampleWithStateProperties(trace.asIntSeq(alphabet), moore.computeOutput(trace).asList());
         }
     }
 
     @Test
     public void testVisualization() throws IOException {
         final StringWriter actualPTA = new StringWriter();
-        GraphDOT.write(this.pta.transitionGraphView(alphabet), actualPTA);
+        GraphDOT.write(this.pta, actualPTA);
 
         final String expectedPTA =
                 CharStreams.toString(IOUtil.asBufferedUTF8Reader(PTAVisualizationTest.class.getResourceAsStream(

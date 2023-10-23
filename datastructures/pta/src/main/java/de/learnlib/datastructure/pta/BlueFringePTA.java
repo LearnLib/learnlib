@@ -15,11 +15,9 @@
  */
 package de.learnlib.datastructure.pta;
 
-import net.automatalib.alphabet.Alphabet;
+public class BlueFringePTA<SP, TP> extends AbstractBlueFringePTA<BlueFringePTAState<SP, TP>, SP, TP> {
 
-public class BlueFringePTA<I, SP, TP> extends AbstractBlueFringePTA<BlueFringePTAState<SP, TP>, I, SP, TP> {
-
-    public BlueFringePTA(Alphabet<I> alphabet) {
-        super(alphabet, new BlueFringePTAState<>());
+    public BlueFringePTA(int alphabetSize) {
+        super(alphabetSize, new BlueFringePTAState<>());
     }
 }

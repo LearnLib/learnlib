@@ -25,12 +25,14 @@ import java.util.stream.Stream;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.datastructure.pta.BlueFringePTADFA;
+import de.learnlib.datastructure.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.BlueFringePTAState;
 import de.learnlib.datastructure.pta.RedBlueMerge;
+import de.learnlib.datastructure.pta.wrapper.DFAWrapper;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.common.smartcollection.IntSeq;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 
@@ -49,12 +51,11 @@ import net.automatalib.word.Word;
  * @param <I>
  *         input symbol type
  */
-public class BlueFringeEDSMDFA<I>
-        extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>, BlueFringePTADFA<I>>
+public class BlueFringeEDSMDFA<I> extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>>
         implements PassiveDFALearner<I> {
 
-    private final List<Word<I>> positive = new ArrayList<>();
-    private final List<Word<I>> negative = new ArrayList<>();
+    private final List<IntSeq> positive = new ArrayList<>();
+    private final List<IntSeq> negative = new ArrayList<>();
 
     /**
      * Constructor.
@@ -71,22 +72,22 @@ public class BlueFringeEDSMDFA<I>
         for (DefaultQuery<I, Boolean> query : samples) {
             final Word<I> input = query.getInput();
             if (query.getOutput()) {
-                positive.add(input);
+                positive.add(input.asIntSeq(alphabet));
             } else {
-                negative.add(input);
+                negative.add(input.asIntSeq(alphabet));
             }
         }
     }
 
     @Override
-    protected BlueFringePTADFA<I> fetchPTA() {
-        final BlueFringePTADFA<I> pta = new BlueFringePTADFA<>(alphabet);
+    protected BlueFringePTA<Boolean, Void> fetchPTA() {
+        final BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(alphabet.size());
 
-        for (Word<I> pos : positive) {
+        for (IntSeq pos : positive) {
             pta.addSample(pos, true);
         }
 
-        for (Word<I> neg : negative) {
+        for (IntSeq neg : negative) {
             pta.addSample(neg, false);
         }
 
@@ -94,14 +95,14 @@ public class BlueFringeEDSMDFA<I>
     }
 
     @Override
-    protected Stream<RedBlueMerge<BlueFringePTAState<Boolean, Void>, I, Boolean, Void>> selectMerges(Stream<RedBlueMerge<BlueFringePTAState<Boolean, Void>, I, Boolean, Void>> merges) {
+    protected Stream<RedBlueMerge<BlueFringePTAState<Boolean, Void>, Boolean, Void>> selectMerges(Stream<RedBlueMerge<BlueFringePTAState<Boolean, Void>, Boolean, Void>> merges) {
         return merges.map(merge -> Pair.of(merge, EDSMUtil.score(merge.toMergedAutomaton(), positive, negative)))
                      .sorted(Collections.reverseOrder(Comparator.comparingLong(Pair::getSecond)))
                      .map(Pair::getFirst);
     }
 
     @Override
-    protected DFA<?, I> ptaToModel(BlueFringePTADFA<I> pta) {
-        return pta.asDFA();
+    protected DFA<?, I> ptaToModel(BlueFringePTA<Boolean, Void> pta) {
+        return new DFAWrapper<>(alphabet, pta);
     }
 }

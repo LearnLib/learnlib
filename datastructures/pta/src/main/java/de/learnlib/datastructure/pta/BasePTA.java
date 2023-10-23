@@ -28,15 +28,16 @@ import java.util.Set;
 
 import com.google.common.collect.AbstractIterator;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.FiniteAlphabetAutomaton;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.automaton.visualization.AutomatonVisualizationHelper;
+import net.automatalib.common.smartcollection.IntSeq;
 import net.automatalib.graph.UniversalGraph;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -44,31 +45,28 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <S>
  *         state type
- * @param <I>
- *         input symbol type
  * @param <SP>
  *         state property type
  * @param <TP>
  *         transition property type
  */
-public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, I, SP, TP>
-        implements UniversalDeterministicAutomaton<S, I, PTATransition<S>, SP, TP>, InputAlphabetHolder<I> {
+public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, SP, TP>
+        implements UniversalDeterministicAutomaton<S, Integer, PTATransition<S>, SP, TP>,
+                   FiniteAlphabetAutomaton<S, Integer, PTATransition<S>> {
 
-    private final Alphabet<I> alphabet;
     private final int alphabetSize;
     private final S root;
 
     /**
      * Constructor.
      *
-     * @param alphabet
-     *         the input alphabet
+     * @param alphabetSize
+     *         the size of the input alphabet
      * @param root
      *         the root state
      */
-    public BasePTA(Alphabet<I> alphabet, S root) {
-        this.alphabet = alphabet;
-        this.alphabetSize = alphabet.size();
+    public BasePTA(int alphabetSize, S root) {
+        this.alphabetSize = alphabetSize;
         this.root = Objects.requireNonNull(root);
     }
 
@@ -82,8 +80,8 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, I, SP, TP>
     }
 
     @Override
-    public Alphabet<I> getInputAlphabet() {
-        return alphabet;
+    public Alphabet<Integer> getInputAlphabet() {
+        return Alphabets.integers(0, alphabetSize - 1);
     }
 
     /**
@@ -94,7 +92,7 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, I, SP, TP>
      * @param lastProperty
      *         the property of the last state to set
      */
-    public void addSample(Word<I> sample, SP lastProperty) {
+    public void addSample(IntSeq sample, SP lastProperty) {
         S target = getOrCreateState(sample);
         target.mergeStateProperty(lastProperty);
     }
@@ -109,16 +107,16 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, I, SP, TP>
      * @return the state reached by this word, which might have been newly created (along with all required predecessor
      * states)
      */
-    public S getOrCreateState(Word<I> word) {
+    public S getOrCreateState(IntSeq word) {
         S curr = root;
-        for (I sym : word) {
-            curr = curr.getOrCreateSuccessor(alphabet.getSymbolIndex(sym), alphabetSize);
+        for (int sym : word) {
+            curr = curr.getOrCreateSuccessor(sym, alphabetSize);
         }
 
         return curr;
     }
 
-    public void addSampleWithStateProperties(Word<I> sample, List<? extends SP> lastStateProperties) {
+    public void addSampleWithStateProperties(IntSeq sample, List<? extends SP> lastStateProperties) {
         int sampleLen = sample.size();
         int skip = sampleLen + 1 - lastStateProperties.size();
         if (skip < 0) {
@@ -128,22 +126,22 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, I, SP, TP>
         S curr = getRoot();
         int i = 0;
         while (i < skip) {
-            I sym = sample.getSymbol(i++);
-            curr = curr.getOrCreateSuccessor(alphabet.getSymbolIndex(sym), alphabetSize);
+            int sym = sample.get(i++);
+            curr = curr.getOrCreateSuccessor(sym, alphabetSize);
         }
 
         Iterator<? extends SP> spIt = lastStateProperties.iterator();
 
         while (i < sampleLen) {
             curr.mergeStateProperty(spIt.next());
-            I sym = sample.getSymbol(i++);
-            curr = curr.getOrCreateSuccessor(alphabet.getSymbolIndex(sym), alphabetSize);
+            int sym = sample.get(i++);
+            curr = curr.getOrCreateSuccessor(sym, alphabetSize);
         }
 
         curr.mergeStateProperty(spIt.next());
     }
 
-    public void addSampleWithTransitionProperties(Word<I> sample, List<? extends TP> lastTransitionProperties) {
+    public void addSampleWithTransitionProperties(IntSeq sample, List<? extends TP> lastTransitionProperties) {
         int sampleLen = sample.size();
         int skip = sampleLen - lastTransitionProperties.size();
         if (skip < 0) {
@@ -153,16 +151,15 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, I, SP, TP>
         S curr = getRoot();
         int i = 0;
         while (i < skip) {
-            I sym = sample.getSymbol(i++);
-            curr = curr.getOrCreateSuccessor(alphabet.getSymbolIndex(sym), alphabetSize);
+            int sym = sample.get(i++);
+            curr = curr.getOrCreateSuccessor(sym, alphabetSize);
         }
 
         Iterator<? extends TP> tpIt = lastTransitionProperties.iterator();
         while (i < sampleLen) {
-            I sym = sample.getSymbol(i++);
-            int idx = alphabet.getSymbolIndex(sym);
-            curr.mergeTransitionProperty(idx, alphabetSize, tpIt.next());
-            curr = curr.getOrCreateSuccessor(idx, alphabetSize);
+            int sym = sample.get(i++);
+            curr.mergeTransitionProperty(sym, alphabetSize, tpIt.next());
+            curr = curr.getOrCreateSuccessor(sym, alphabetSize);
         }
     }
 
@@ -172,8 +169,8 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, I, SP, TP>
     }
 
     @Override
-    public @Nullable S getSuccessor(S state, I input) {
-        return state.getSuccessor(alphabet.getSymbolIndex(input));
+    public @Nullable S getSuccessor(S state, Integer input) {
+        return state.getSuccessor(input);
     }
 
     @Override
@@ -191,7 +188,7 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, I, SP, TP>
                 if (next == null) {
                     return endOfData();
                 }
-                for (int i = 0; i < alphabet.size(); i++) {
+                for (int i = 0; i < alphabetSize; i++) {
                     S child = next.getSuccessor(i);
                     if (child != null && visited.add(child)) {
                         bfsQueue.offer(child);
@@ -232,12 +229,12 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, I, SP, TP>
     }
 
     @Override
-    public @Nullable PTATransition<S> getTransition(S state, I input) {
-        if (state.getSuccessor(alphabet.getSymbolIndex(input)) == null) {
+    public @Nullable PTATransition<S> getTransition(S state, Integer input) {
+        if (state.getSuccessor(input) == null) {
             return null;
         }
 
-        return new PTATransition<>(state, alphabet.getSymbolIndex(input));
+        return new PTATransition<>(state, input);
     }
 
     @Override
@@ -251,17 +248,29 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, I, SP, TP>
     }
 
     @Override
-    public UniversalGraph<S, TransitionEdge<I, PTATransition<S>>, SP, Property<I, TP>> transitionGraphView(Collection<? extends I> inputs) {
-        return new UniversalAutomatonGraphView<S, I, PTATransition<S>, SP, TP, BasePTA<S, I, SP, TP>>(this, inputs) {
+    public UniversalGraph<S, TransitionEdge<Integer, PTATransition<S>>, SP, Property<Integer, TP>> transitionGraphView(Collection<? extends Integer> inputs) {
+        return new UniversalAutomatonGraphView<S, Integer, PTATransition<S>, SP, TP, BasePTA<S, SP, TP>>(this, inputs) {
 
             @Override
-            public VisualizationHelper<S, TransitionEdge<I, PTATransition<S>>> getVisualizationHelper() {
-                return new AutomatonVisualizationHelper<S, I, PTATransition<S>, BasePTA<S, I, SP, TP>>(BasePTA.this) {
+            public VisualizationHelper<S, TransitionEdge<Integer, PTATransition<S>>> getVisualizationHelper() {
+                return new AutomatonVisualizationHelper<S, Integer, PTATransition<S>, BasePTA<S, SP, TP>>(BasePTA.this) {
+
+                    @Override
+                    public boolean getEdgeProperties(S src,
+                                                     TransitionEdge<Integer, PTATransition<S>> edge,
+                                                     S tgt,
+                                                     Map<String, String> properties) {
+                        if (!super.getEdgeProperties(src, edge, tgt, properties)) {
+                            return false;
+                        }
+                        final Integer input = edge.getInput();
+                        properties.put(EdgeAttrs.LABEL, input + " / " + src.getTransProperty(input));
+                        return true;
+                    }
 
                     @Override
                     public boolean getNodeProperties(S node, Map<String, String> properties) {
-                        final SP property = node.getProperty();
-                        properties.put(NodeAttrs.LABEL, property == null ? "" : property.toString());
+                        properties.put(NodeAttrs.LABEL, Objects.toString(node.getProperty()));
                         return super.getNodeProperties(node, properties);
                     }
                 };

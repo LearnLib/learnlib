@@ -20,7 +20,8 @@ import java.util.Collection;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveMealyLearner;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.datastructure.pta.BlueFringePTAMealy;
+import de.learnlib.datastructure.pta.BlueFringePTA;
+import de.learnlib.datastructure.pta.wrapper.MealyWrapper;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
@@ -36,28 +37,27 @@ import net.automatalib.word.Word;
  * @param <O>
  *         output symbol type
  */
-public class BlueFringeRPNIMealy<I, O>
-        extends AbstractBlueFringeRPNI<I, Word<O>, Void, O, MealyMachine<?, I, ?, O>, BlueFringePTAMealy<I, O>>
+public class BlueFringeRPNIMealy<I, O> extends AbstractBlueFringeRPNI<I, Word<O>, Void, O, MealyMachine<?, I, ?, O>>
         implements PassiveMealyLearner<I, O> {
 
-    private final BlueFringePTAMealy<I, O> pta;
+    private final BlueFringePTA<Void, O> pta;
     private boolean merged;
 
     public BlueFringeRPNIMealy(Alphabet<I> alphabet) {
         super(alphabet);
-        this.pta = new BlueFringePTAMealy<>(alphabet);
+        this.pta = new BlueFringePTA<>(alphabet.size());
         this.merged = false;
     }
 
     @Override
     public void addSamples(Collection<? extends DefaultQuery<I, Word<O>>> samples) {
         for (DefaultQuery<I, Word<O>> qry : samples) {
-            pta.addSampleWithTransitionProperties(qry.getInput(), qry.getOutput().asList());
+            pta.addSampleWithTransitionProperties(qry.getInput().asIntSeq(alphabet), qry.getOutput().asList());
         }
     }
 
     @Override
-    protected BlueFringePTAMealy<I, O> fetchPTA() {
+    protected BlueFringePTA<Void, O> fetchPTA() {
         if (merged) {
             throw new IllegalStateException(
                     "A model has already been computed once. This learner does not support repeated model constructions");
@@ -68,8 +68,8 @@ public class BlueFringeRPNIMealy<I, O>
     }
 
     @Override
-    protected MealyMachine<?, I, ?, O> ptaToModel(BlueFringePTAMealy<I, O> pta) {
-        return pta;
+    protected MealyMachine<?, I, ?, O> ptaToModel(BlueFringePTA<Void, O> pta) {
+        return new MealyWrapper<>(alphabet, pta);
     }
 
 }

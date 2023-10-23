@@ -10,15 +10,15 @@ digraph g {
 	s7 [shape="circle" label="a"];
 	s8 [shape="circle" label="c"];
 	s9 [shape="circle" label="c"];
-	s0 -> s1 [label="x"];
-	s0 -> s2 [label="y"];
-	s0 -> s3 [label="z"];
-	s1 -> s4 [label="x"];
-	s1 -> s5 [label="z"];
-	s3 -> s6 [label="x"];
-	s3 -> s7 [label="y"];
-	s3 -> s8 [label="z"];
-	s5 -> s9 [label="y"];
+	s0 -> s1 [label="0 / null"];
+	s0 -> s2 [label="1 / null"];
+	s0 -> s3 [label="2 / null"];
+	s1 -> s4 [label="0 / null"];
+	s1 -> s5 [label="2 / null"];
+	s3 -> s6 [label="0 / null"];
+	s3 -> s7 [label="1 / null"];
+	s3 -> s8 [label="2 / null"];
+	s5 -> s9 [label="1 / null"];
 
 __start0 [label="" shape="none" width="0" height="0"];
 __start0 -> s0;

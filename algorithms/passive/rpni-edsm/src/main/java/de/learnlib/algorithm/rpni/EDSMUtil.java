@@ -21,15 +21,15 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.word.Word;
+import net.automatalib.common.smartcollection.IntSeq;
 
 final class EDSMUtil {
 
     private EDSMUtil() {}
 
-    static <S, I> long score(UniversalDeterministicAutomaton<S, I, ?, Boolean, ?> merge,
-                             List<Word<I>> positiveSamples,
-                             List<Word<I>> negativeSamples) {
+    static <S> long score(UniversalDeterministicAutomaton<S, Integer, ?, Boolean, ?> merge,
+                          List<IntSeq> positiveSamples,
+                          List<IntSeq> negativeSamples) {
 
         final Collection<S> states = merge.getStates();
         final int numStates = states.size();
@@ -44,12 +44,12 @@ final class EDSMUtil {
         final int[] tp = new int[numStates];
         final int[] tn = new int[numStates];
 
-        for (Word<I> w : positiveSamples) {
+        for (IntSeq w : positiveSamples) {
             int index = stateIDs.get(merge.getState(w));
             tp[index]++;
         }
 
-        for (Word<I> w : negativeSamples) {
+        for (IntSeq w : negativeSamples) {
             int index = stateIDs.get(merge.getState(w));
             tn[index]++;
         }

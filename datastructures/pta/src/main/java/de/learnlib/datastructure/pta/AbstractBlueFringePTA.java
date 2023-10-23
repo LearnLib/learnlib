@@ -21,17 +21,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-import net.automatalib.alphabet.Alphabet;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractBlueFringePTA<S extends AbstractBlueFringePTAState<S, SP, TP>, I, SP, TP>
-        extends BasePTA<S, I, SP, TP> {
+public abstract class AbstractBlueFringePTA<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, TP>
+        extends BasePTA<S, SP, TP> {
 
     protected final List<S> redStates = new ArrayList<>();
 
-    public AbstractBlueFringePTA(Alphabet<I> alphabet, S root) {
-        super(alphabet, root);
+    public AbstractBlueFringePTA(int alphabetSize, S root) {
+        super(alphabetSize, root);
     }
 
     public S getRedState(@NonNegative int id) {
@@ -65,8 +64,8 @@ public abstract class AbstractBlueFringePTA<S extends AbstractBlueFringePTAState
         redStates.add(qb);
     }
 
-    public @Nullable RedBlueMerge<S, I, SP, TP> tryMerge(S qr, S qb) {
-        RedBlueMerge<S, I, SP, TP> merge = new RedBlueMerge<>(this, qr, qb);
+    public @Nullable RedBlueMerge<S, SP, TP> tryMerge(S qr, S qb) {
+        RedBlueMerge<S, SP, TP> merge = new RedBlueMerge<>(this, qr, qb);
         if (!merge.merge()) {
             return null;
         }

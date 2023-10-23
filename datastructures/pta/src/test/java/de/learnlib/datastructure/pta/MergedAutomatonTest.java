@@ -44,7 +44,7 @@ public class MergedAutomatonTest {
         final Word<Character> p3 = Word.fromString("bba");
         final Word<Character> p4 = Word.fromString("bbaba");
 
-        final Word<Character> n1 = Word.fromString("a");
+        final Word<Character> n1 = Word.fromLetter('a');
         final Word<Character> n2 = Word.fromString("bb");
         final Word<Character> n3 = Word.fromString("aab");
         final Word<Character> n4 = Word.fromString("aba");
@@ -52,38 +52,40 @@ public class MergedAutomatonTest {
         final List<Word<Character>> positiveSamples = Arrays.asList(p1, p2, p3, p4);
         final List<Word<Character>> negativeSamples = Arrays.asList(n1, n2, n3, n4);
 
-        final BlueFringePTA<Character, Boolean, Void> pta = new BlueFringePTA<>(alphabet);
+        final BlueFringePTA<Boolean, Void> pta = new BlueFringePTA<>(alphabet.size());
 
         for (Word<Character> w : positiveSamples) {
-            pta.addSample(w, true);
+            pta.addSample(w.asIntSeq(alphabet), true);
         }
         for (Word<Character> w : negativeSamples) {
-            pta.addSample(w, false);
+            pta.addSample(w.asIntSeq(alphabet), false);
         }
 
-        final BlueFringePTAState<Boolean, Void> q2 = pta.getState(Word.fromSymbols('a'));
-        final BlueFringePTAState<Boolean, Void> q3 = pta.getState(Word.fromSymbols('b'));
-        final BlueFringePTAState<Boolean, Void> q4 = pta.getState(Word.fromSymbols('a', 'a'));
-        final BlueFringePTAState<Boolean, Void> q6 = pta.getState(Word.fromSymbols('a', 'a', 'a'));
+        // the PTA works on an Integer alphabet abstraction, hence a -> 0, b -> 1
+        final BlueFringePTAState<Boolean, Void> q2 = pta.getState(Word.fromLetter(0));
+        final BlueFringePTAState<Boolean, Void> q3 = pta.getState(Word.fromLetter(1));
+        final BlueFringePTAState<Boolean, Void> q4 = pta.getState(Word.fromSymbols(0, 0));
+        final BlueFringePTAState<Boolean, Void> q6 = pta.getState(Word.fromSymbols(0, 0, 0));
 
         // fast-forward algorithm
         pta.init((q) -> {});
         pta.promote(q2, (q) -> {});
         pta.promote(q3, (q) -> {});
 
-        final RedBlueMerge<BlueFringePTAState<Boolean, Void>, Character, Boolean, Void> merge = pta.tryMerge(q3, q4);
+        final RedBlueMerge<BlueFringePTAState<Boolean, Void>, Boolean, Void> merge = pta.tryMerge(q3, q4);
         Assert.assertNotNull(merge);
 
-        final UniversalDeterministicAutomaton<BlueFringePTAState<Boolean, Void>, Character, ?, Boolean, Void>
+        final UniversalDeterministicAutomaton<BlueFringePTAState<Boolean, Void>, Integer, ?, Boolean, Void>
                 mergedAutomaton = merge.toMergedAutomaton();
 
         // subtree of 3 states has been subsumed
         Assert.assertEquals(pta.size() - 3, mergedAutomaton.size());
 
-        Assert.assertEquals(mergedAutomaton.getState(Word.fromSymbols('a', 'a')), q3);
-        Assert.assertEquals(mergedAutomaton.getSuccessor(q2, 'a'), q3);
+        // the PTA works on an Integer alphabet abstraction, hence a -> 0, b -> 1
+        Assert.assertEquals(mergedAutomaton.getState(Word.fromSymbols(0, 0)), q3);
+        Assert.assertEquals(mergedAutomaton.getSuccessor(q2, 0), q3);
 
-        Assert.assertEquals(mergedAutomaton.getState(Word.fromSymbols('b', 'a')), q6);
-        Assert.assertEquals(mergedAutomaton.getSuccessor(q3, 'a'), q6);
+        Assert.assertEquals(mergedAutomaton.getState(Word.fromSymbols(1, 0)), q6);
+        Assert.assertEquals(mergedAutomaton.getSuccessor(q3, 0), q6);
     }
 }

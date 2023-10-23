@@ -20,7 +20,8 @@ import java.util.Collection;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
 import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.datastructure.pta.BlueFringePTADFA;
+import de.learnlib.datastructure.pta.BlueFringePTA;
+import de.learnlib.datastructure.pta.wrapper.DFAWrapper;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 
@@ -34,10 +35,10 @@ import net.automatalib.automaton.fsa.DFA;
  *         input symbol type
  */
 public class BlueFringeRPNIDFA<I>
-        extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>, BlueFringePTADFA<I>>
+        extends AbstractBlueFringeRPNI<I, Boolean, Boolean, Void, DFA<?, I>>
         implements PassiveDFALearner<I> {
 
-    private final BlueFringePTADFA<I> pta;
+    private final BlueFringePTA<Boolean, Void> pta;
     private boolean merged;
 
     /**
@@ -48,19 +49,19 @@ public class BlueFringeRPNIDFA<I>
      */
     public BlueFringeRPNIDFA(Alphabet<I> alphabet) {
         super(alphabet);
-        this.pta = new BlueFringePTADFA<>(alphabet);
+        this.pta = new BlueFringePTA<>(alphabet.size());
         this.merged = false;
     }
 
     @Override
     public void addSamples(Collection<? extends DefaultQuery<I, Boolean>> samples) {
         for (DefaultQuery<I, Boolean> query : samples) {
-            pta.addSample(query.getInput(), query.getOutput());
+            pta.addSample(query.getInput().asIntSeq(alphabet), query.getOutput());
         }
     }
 
     @Override
-    protected BlueFringePTADFA<I> fetchPTA() {
+    protected BlueFringePTA<Boolean, Void> fetchPTA() {
         if (merged) {
             throw new IllegalStateException(
                     "A model has already been computed once. This learner does not support repeated model constructions");
@@ -71,8 +72,8 @@ public class BlueFringeRPNIDFA<I>
     }
 
     @Override
-    protected DFA<?, I> ptaToModel(BlueFringePTADFA<I> pta) {
-        return pta.asDFA();
+    protected DFA<?, I> ptaToModel(BlueFringePTA<Boolean, Void> pta) {
+        return new DFAWrapper<>(alphabet, pta);
     }
 
 }
