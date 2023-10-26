@@ -26,11 +26,11 @@ import de.learnlib.api.logging.Category;
 import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
+import de.learnlib.filter.cache.DynamicSymbolComparator;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
+import de.learnlib.filter.cache.ReverseLexCmp;
 import de.learnlib.filter.cache.mealy.MealyCacheOracle.MealyCacheOracleState;
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.common.util.comparison.CmpUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.word.Word;
@@ -218,36 +218,6 @@ public class MealyCacheOracle<I, O>
             incMealy.insert(word, answer);
         } else {
             incMealy.insert(word.prefix(i), answer.prefix(i));
-        }
-    }
-
-    private static final class ReverseLexCmp<I> implements Comparator<Query<I, ?>> {
-
-        private final Comparator<I> comparator;
-
-        ReverseLexCmp(Comparator<I> comparator) {
-            this.comparator = comparator;
-        }
-
-        @Override
-        public int compare(Query<I, ?> o1, Query<I, ?> o2) {
-            return -CmpUtil.lexCompare(o1.getInput(), o2.getInput(), comparator);
-        }
-    }
-
-    private static final class DynamicSymbolComparator<I> implements Comparator<I> {
-
-        private final GrowingMapAlphabet<I> alphabet;
-
-        DynamicSymbolComparator() {
-            this.alphabet = new GrowingMapAlphabet<>();
-        }
-
-        @Override
-        public int compare(I i1, I i2) {
-            alphabet.addSymbol(i1);
-            alphabet.addSymbol(i2);
-            return alphabet.compare(i1, i2);
         }
     }
 
