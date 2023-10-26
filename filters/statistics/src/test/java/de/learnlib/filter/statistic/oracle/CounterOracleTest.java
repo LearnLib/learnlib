@@ -20,61 +20,60 @@ import java.util.Collections;
 
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.Query;
+import de.learnlib.api.statistic.StatisticData;
 import de.learnlib.filter.statistic.TestQueries;
+import net.automatalib.word.Word;
 import org.mockito.Mockito;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-@Test
 public class CounterOracleTest {
 
-    private static final String COUNTER_NAME = "testCounter";
-
-    private final CounterOracle<Object, Object> oracle;
+    private final CounterOracle<Integer, Word<Character>> oracle;
 
     @SuppressWarnings("unchecked")
     public CounterOracleTest() {
-        this.oracle = new CounterOracle<Object, Object>(Mockito.mock(MembershipOracle.class), COUNTER_NAME);
+        this.oracle = new CounterOracle<Integer, Word<Character>>(Mockito.mock(MembershipOracle.class));
     }
 
     @Test
     public void testInitialState() {
-        Assert.assertEquals(oracle.getCount(), 0L);
+        verifyCounts(0, 0);
     }
 
     @Test(dependsOnMethods = "testInitialState")
     public void testFirstQueryBatch() {
-        Collection<Query<Object, Object>> queries = TestQueries.createNoopQueries(2);
-        long oldCount = oracle.getCount();
+        Collection<Query<Integer, Word<Character>>> queries = TestQueries.createNoopQueries(2);
         oracle.processQueries(queries);
-        Assert.assertEquals(oracle.getCount(), oldCount + 2L);
+        verifyCounts(2, 0);
     }
 
     @Test(dependsOnMethods = "testFirstQueryBatch")
     public void testEmptyQueryBatch() {
-        Collection<Query<Object, Object>> noQueries = Collections.emptySet();
-        long oldCount = oracle.getCount();
+        Collection<Query<Integer, Word<Character>>> noQueries = Collections.emptySet();
         oracle.processQueries(noQueries);
-        Assert.assertEquals(oracle.getCount(), oldCount);
+        verifyCounts(2, 0);
     }
 
     @Test(dependsOnMethods = "testEmptyQueryBatch")
     public void testSecondQueryBatch() {
-        Collection<Query<Object, Object>> queries = TestQueries.createNoopQueries(1);
-        long oldCount = oracle.getCount();
+        Collection<Query<Integer, Word<Character>>> queries = TestQueries.createNoopQueries(2, 5, TestQueries.INPUTS);
         oracle.processQueries(queries);
-        Assert.assertEquals(oracle.getCount(), oldCount + 1L);
+        verifyCounts(4, 10);
     }
 
     @Test
-    public void testGetName() {
-        Assert.assertEquals(oracle.getCounter().getName(), COUNTER_NAME);
+    public void testStatistics() {
+        final StatisticData statisticalData = oracle.getStatisticalData();
+        Assert.assertTrue(statisticalData.getName().contains("\n"));
+        Assert.assertTrue(statisticalData.getUnit().contains("\n"));
+        Assert.assertTrue(statisticalData.getSummary().contains("\n"));
+        Assert.assertTrue(statisticalData.getDetails().contains("\n"));
     }
 
-    @AfterMethod
-    public void testInvariants() {
-        Assert.assertEquals(oracle.getCounter().getCount(), oracle.getCount());
+    private void verifyCounts(long queries, long symbols) {
+        Assert.assertEquals(oracle.getQueryCounter().getCount(), queries);
+        Assert.assertEquals(oracle.getSymbolCounter().getCount(), symbols);
     }
 
 }

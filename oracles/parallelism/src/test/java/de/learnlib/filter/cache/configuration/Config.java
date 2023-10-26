@@ -66,15 +66,15 @@ public final class Config {
     private Config() {}
 
     public static <I> DFACounterOracle<I> getCounter(DFA<?, I> delegate) {
-        return new DFACounterOracle<>(new DFASimulatorOracle<>(delegate), "Queries");
+        return new DFACounterOracle<>(new DFASimulatorOracle<>(delegate));
     }
 
     public static <I, O> MealyCounterOracle<I, O> getCounter(MealyMachine<?, I, ?, O> delegate) {
-        return new MealyCounterOracle<>(new MealySimulatorOracle<>(delegate), "Queries");
+        return new MealyCounterOracle<>(new MealySimulatorOracle<>(delegate));
     }
 
     public static <I, O> MooreCounterOracle<I, O> getCounter(MooreMachine<?, I, ?, O> delegate) {
-        return new MooreCounterOracle<>(new MooreSimulatorOracle<>(delegate), "Queries");
+        return new MooreCounterOracle<>(new MooreSimulatorOracle<>(delegate));
     }
 
     public static <I, O> ResetCounterSUL<I, O> getCounter(SUL<I, O> delegate) {

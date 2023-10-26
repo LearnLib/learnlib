@@ -44,7 +44,7 @@ public class Experiment<A extends Object> {
     private final ExperimentImpl<?, ?> impl;
     private boolean logModels;
     private boolean profile;
-    private final Counter rounds = new Counter("learning rounds", "#");
+    private final Counter rounds = new Counter("Learning rounds", "#");
     private @Nullable A finalHypothesis;
 
     public <I, D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,

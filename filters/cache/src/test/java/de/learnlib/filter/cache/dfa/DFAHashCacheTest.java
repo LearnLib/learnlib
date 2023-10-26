@@ -28,7 +28,7 @@ public class DFAHashCacheTest
     private final DFACounterOracle<Character> counter;
 
     public DFAHashCacheTest() {
-        counter = new DFACounterOracle<>(new DFASimulatorOracle<>(CacheTestUtils.DFA), "counterOracle");
+        counter = new DFACounterOracle<>(new DFASimulatorOracle<>(CacheTestUtils.DFA));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class DFAHashCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getCount();
+        return counter.getQueryCounter().getCount();
     }
 
     @Override

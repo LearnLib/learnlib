@@ -33,7 +33,7 @@ public abstract class AbstractMooreCacheTest
     protected final Mapping<Integer, @Nullable Integer> errorMapper;
 
     public AbstractMooreCacheTest() {
-        counter = new MooreCounterOracle<>(new MooreSimulatorOracle<>(CacheTestUtils.MOORE), "counterOracle");
+        counter = new MooreCounterOracle<>(new MooreSimulatorOracle<>(CacheTestUtils.MOORE));
         errorMapper = o -> o == 1 ? 10 : null;
     }
 
@@ -61,7 +61,7 @@ public abstract class AbstractMooreCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getCount();
+        return counter.getQueryCounter().getCount();
     }
 
     @Override

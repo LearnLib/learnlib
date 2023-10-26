@@ -26,7 +26,7 @@ import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.filter.cache.dfa.DFACacheOracle;
 import de.learnlib.filter.cache.dfa.DFACaches;
-import de.learnlib.filter.statistic.oracle.DFAJointCounterOracle;
+import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.equivalence.DFASimulatorEQOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
@@ -110,8 +110,7 @@ public final class ResumableExample {
 
     private static void printStats(Setup setup) {
         System.out.println("Hypothesis size: " + setup.learner.getHypothesisModel().size());
-        System.out.println("Query performance: " + setup.counter.getQueryCount() + " new queries");
-        System.out.println("Symbol performance: " + setup.counter.getSymbolCount() + " new symbols");
+        System.out.println(setup.counter.getStatisticalData().getSummary());
         System.out.println();
     }
 
@@ -126,14 +125,14 @@ public final class ResumableExample {
 
     private static class Setup {
 
-        private final DFAJointCounterOracle<Character> counter;
+        private final DFACounterOracle<Character> counter;
         private final DFACacheOracle<Character> cache;
         private final DFAEquivalenceOracle<Character> eqo;
         private final ClassicLStarDFA<Character> learner;
 
         Setup() {
             final DFAMembershipOracle<Character> mqo = new DFASimulatorOracle<>(TARGET);
-            this.counter = new DFAJointCounterOracle<>(mqo);
+            this.counter = new DFACounterOracle<>(mqo);
             this.cache = DFACaches.createCache(new GrowingMapAlphabet<>(INITIAL_ALPHABET), counter);
             this.eqo = new DFASimulatorEQOracle<>(TARGET);
             this.learner = new ClassicLStarDFA<>(new GrowingMapAlphabet<>(INITIAL_ALPHABET), cache);

@@ -13,32 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.filter.statistic;
+
+import java.util.Collection;
+import java.util.StringJoiner;
+import java.util.function.Function;
 
 import de.learnlib.api.statistic.StatisticData;
 
 /**
- * Common interface for statistical data.
+ * A collection of counters.
  */
-public abstract class AbstractStatisticData implements StatisticData {
+public class CounterCollection implements StatisticData {
 
-    private final String name;
-    private final String unit;
+    private final Collection<Counter> counters;
 
-    protected AbstractStatisticData(String name, String unit) {
-        this.name = name;
-        this.unit = unit;
+    public CounterCollection(Collection<Counter> counters) {
+        this.counters = counters;
     }
 
     @Override
     public String getName() {
-        return name;
+        return collect(Counter::getName);
     }
 
     @Override
     public String getUnit() {
-        return unit;
+        return collect(Counter::getUnit);
     }
 
+    @Override
+    public String getSummary() {
+        return collect(Counter::getSummary);
+    }
+
+    @Override
+    public String getDetails() {
+        return collect(Counter::getDetails);
+    }
+
+    private String collect(Function<Counter, String> extractor) {
+        final StringJoiner sj = new StringJoiner("\n");
+
+        for (Counter c : counters) {
+            sj.add(extractor.apply(c));
+        }
+
+        return sj.toString();
+    }
 }

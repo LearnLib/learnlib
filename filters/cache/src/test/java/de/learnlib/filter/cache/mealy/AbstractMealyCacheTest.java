@@ -33,7 +33,7 @@ public abstract class AbstractMealyCacheTest
     protected final Mapping<Integer, @Nullable Integer> errorMapper;
 
     public AbstractMealyCacheTest() {
-        counter = new MealyCounterOracle<>(new MealySimulatorOracle<>(CacheTestUtils.MEALY), "counterOracle");
+        counter = new MealyCounterOracle<>(new MealySimulatorOracle<>(CacheTestUtils.MEALY));
         errorMapper = o -> o == 1 ? 10 : null;
     }
 
@@ -61,7 +61,7 @@ public abstract class AbstractMealyCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getCount();
+        return counter.getQueryCounter().getCount();
     }
 
     @Override

@@ -76,6 +76,6 @@ public class DFAParallelCacheTest extends AbstractParallelCacheTest<DFA<?, Chara
 
     @Override
     protected long getNumberOfQueries() {
-        return this.sul.getStatisticalData().getCount();
+        return this.sul.getQueryCounter().getCount();
     }
 }

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.filter.statistic.oracle;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import de.learnlib.api.oracle.MembershipOracle;
@@ -23,16 +23,24 @@ import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.api.query.Query;
+import de.learnlib.api.statistic.StatisticData;
 import de.learnlib.api.statistic.StatisticOracle;
 import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
 import de.learnlib.buildtool.refinement.annotation.Generic;
 import de.learnlib.buildtool.refinement.annotation.Interface;
 import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.filter.statistic.Counter;
+import de.learnlib.filter.statistic.CounterCollection;
 import net.automatalib.word.Word;
 
 /**
- * Counts queries.
+ * A {@link MembershipOracle} that counts both the number of queries and the total number of symbols occurring in all
+ * those queries.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <D>
+ *         output domain type
  */
 @GenerateRefinement(name = "DFACounterOracle",
                     generics = "I",
@@ -57,30 +65,45 @@ import net.automatalib.word.Word;
                     interfaces = @Interface(clazz = MooreMembershipOracle.class, generics = {"I", "O"}))
 public class CounterOracle<I, D> implements StatisticOracle<I, D> {
 
-    private final Counter counter;
     private final MembershipOracle<I, D> delegate;
+    private final Counter queryCounter;
+    private final Counter symbolCounter;
 
-    public CounterOracle(MembershipOracle<I, D> delegate, String name) {
+    public CounterOracle(MembershipOracle<I, D> delegate) {
         this.delegate = delegate;
-        this.counter = new Counter(name, "queries");
+        this.queryCounter = new Counter("Queries", "#");
+        this.symbolCounter = new Counter("Symbols", "#");
     }
 
     @Override
     public void processQueries(Collection<? extends Query<I, D>> queries) {
-        this.counter.increment(queries.size());
-        this.delegate.processQueries(queries);
+        queryCounter.increment(queries.size());
+        for (Query<I, D> qry : queries) {
+            symbolCounter.increment(qry.getPrefix().length() + qry.getSuffix().length());
+        }
+        delegate.processQueries(queries);
+    }
+
+    /**
+     * Retrieves {@link Counter} for the number of queries posed to this oracle.
+     *
+     * @return the counter of queries
+     */
+    public Counter getQueryCounter() {
+        return queryCounter;
+    }
+
+    /**
+     * Retrieves the {@link Counter} for the number of symbols in all queries posed to this oracle.
+     *
+     * @return the counter of symbols
+     */
+    public Counter getSymbolCounter() {
+        return symbolCounter;
     }
 
     @Override
-    public Counter getStatisticalData() {
-        return this.counter;
-    }
-
-    public Counter getCounter() {
-        return this.counter;
-    }
-
-    public long getCount() {
-        return counter.getCount();
+    public StatisticData getStatisticalData() {
+        return new CounterCollection(Arrays.asList(queryCounter, symbolCounter));
     }
 }

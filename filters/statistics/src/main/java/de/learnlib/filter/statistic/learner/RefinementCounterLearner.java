@@ -78,9 +78,9 @@ public class RefinementCounterLearner<M, I, D> implements StatisticLearner<M, I,
 
     private final Counter counter;
 
-    public RefinementCounterLearner(String name, LearningAlgorithm<M, I, D> learningAlgorithm) {
-        counter = new Counter(name, "refinements");
+    public RefinementCounterLearner(LearningAlgorithm<M, I, D> learningAlgorithm) {
         this.learningAlgorithm = learningAlgorithm;
+        this.counter = new Counter("Refinements", "#");
     }
 
     @Override

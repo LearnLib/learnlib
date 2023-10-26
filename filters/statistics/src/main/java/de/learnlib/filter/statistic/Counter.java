@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.filter.statistic;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * simple counter.
+ * A simple counter.
  */
 public class Counter extends AbstractStatisticData {
 
-    private final AtomicLong count = new AtomicLong(0L);
+    private final AtomicLong count;
 
     public Counter(String name, String unit) {
         super(name, unit);
+        this.count = new AtomicLong(0L);
     }
 
     public void increment(long inc) {

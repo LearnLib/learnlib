@@ -52,11 +52,6 @@ limitations under the License.
             <artifactId>automata-commons-util</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-
         <!-- test -->
         <dependency>
             <groupId>com.google.guava</groupId>

@@ -59,7 +59,7 @@ public final class Example1 {
         DFAMembershipOracle<Character> sul = new DFASimulatorOracle<>(target);
 
         // oracle for counting queries wraps SUL
-        DFACounterOracle<Character> mqOracle = new DFACounterOracle<>(sul, "membership queries");
+        DFACounterOracle<Character> mqOracle = new DFACounterOracle<>(sul);
 
         // construct L* instance
         ClassicLStarDFA<Character> lstar =
@@ -97,8 +97,8 @@ public final class Example1 {
         SimpleProfiler.logResults();
 
         // learning statistics
-        experiment.getRounds().logData();
-        mqOracle.getStatisticalData().logData();
+        System.out.println(experiment.getRounds().getSummary());
+        System.out.println(mqOracle.getStatisticalData().getSummary());
 
         // model statistics
         System.out.println("States: " + result.size());

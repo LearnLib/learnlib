@@ -83,6 +83,6 @@ public class MealyParallelCacheTest
 
     @Override
     protected long getNumberOfQueries() {
-        return this.sul.getStatisticalData().getCount();
+        return this.sul.getQueryCounter().getCount();
     }
 }

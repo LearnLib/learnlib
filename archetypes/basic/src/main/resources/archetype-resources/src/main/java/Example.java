@@ -41,7 +41,7 @@ public final class Example {
         DFAMembershipOracle<Character> sul = new DFASimulatorOracle<>(target);
 
         // oracle for counting queries wraps SUL
-        DFACounterOracle<Character> mqOracle = new DFACounterOracle<>(sul, "membership queries");
+        DFACounterOracle<Character> mqOracle = new DFACounterOracle<>(sul);
 
         // construct L* instance
         ClassicLStarDFA<Character> lstar =
