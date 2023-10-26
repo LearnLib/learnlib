@@ -15,14 +15,14 @@
  */
 package de.learnlib.algorithm.oml.ttt.dfa;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.alphabet.Alphabet;
 
 public class OptimalTTTDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<OptimalTTTDFA<Character>> {
 
     @Override
-    protected OptimalTTTDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+    protected OptimalTTTDFA<Character> getLearner(DFAMembershipOracle<Character> oracle,
                                                   Alphabet<Character> alphabet) {
         return new OptimalTTTDFA<>(alphabet, oracle);
     }

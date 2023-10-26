@@ -17,7 +17,7 @@ package de.learnlib.algorithm.observationpack;
 
 import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
 import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFABuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
 import net.automatalib.alphabet.Alphabet;
 
@@ -25,7 +25,7 @@ public class OPLearnerDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<OPLearnerDFA<Character>, OPLearnerState<Character, Boolean, Boolean, Void>> {
 
     @Override
-    protected OPLearnerDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+    protected OPLearnerDFA<Character> getLearner(DFAMembershipOracle<Character> oracle,
                                                  Alphabet<Character> alphabet) {
         return new OPLearnerDFABuilder<Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }

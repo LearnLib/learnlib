@@ -36,7 +36,7 @@ import de.learnlib.algorithm.observationpack.vpa.hypothesis.ContextPair;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.DTNode;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.HypLoc;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.TransList;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.SplitData;
 import net.automatalib.alphabet.VPAlphabet;
@@ -54,7 +54,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
     private final BlockList<I> blockList = new BlockList<>();
 
     @GenerateBuilder
-    public TTTLearnerVPA(VPAlphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, AcexAnalyzer analyzer) {
+    public TTTLearnerVPA(VPAlphabet<I> alphabet, DFAMembershipOracle<I> oracle, AcexAnalyzer analyzer) {
         super(alphabet, oracle, analyzer);
     }
 

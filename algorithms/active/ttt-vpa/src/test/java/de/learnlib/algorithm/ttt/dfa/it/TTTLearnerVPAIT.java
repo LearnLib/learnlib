@@ -18,7 +18,7 @@ package de.learnlib.algorithm.ttt.dfa.it;
 import de.learnlib.acex.analyzer.AbstractNamedAcexAnalyzer;
 import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.vpa.TTTLearnerVPABuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractOneSEVPALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList;
 import net.automatalib.alphabet.VPAlphabet;
@@ -29,7 +29,7 @@ public class TTTLearnerVPAIT extends AbstractOneSEVPALearnerIT {
 
     @Override
     protected <I> void addLearnerVariants(VPAlphabet<I> alphabet,
-                                          MembershipOracle<I, Boolean> mqOracle,
+                                          DFAMembershipOracle<I> mqOracle,
                                           LearnerVariantList.OneSEVPALearnerVariantList<I> variants) {
 
         final TTTLearnerVPABuilder<I> builder = new TTTLearnerVPABuilder<>();

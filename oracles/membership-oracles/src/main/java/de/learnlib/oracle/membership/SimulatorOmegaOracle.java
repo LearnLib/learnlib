@@ -27,8 +27,6 @@ import de.learnlib.api.oracle.OmegaQueryAnswerer;
 import de.learnlib.api.oracle.SingleQueryOmegaOracle;
 import de.learnlib.api.query.OmegaQuery;
 import de.learnlib.api.query.Query;
-import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
-import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
 import de.learnlib.util.MQUtil;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.fsa.DFA;

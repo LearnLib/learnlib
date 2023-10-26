@@ -15,16 +15,15 @@
  */
 package de.learnlib.algorithm.oml.ttt.mealy;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 public class OptimalTTTMealyGrowingAlphabetTest
         extends AbstractGrowingAlphabetMealyTest<OptimalTTTMealy<Character, Character>> {
 
     @Override
-    protected OptimalTTTMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected OptimalTTTMealy<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
                                                                Alphabet<Character> alphabet) {
         return new OptimalTTTMealy<>(alphabet, oracle);
     }

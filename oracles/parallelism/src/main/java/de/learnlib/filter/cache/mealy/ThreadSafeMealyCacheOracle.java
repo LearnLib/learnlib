@@ -33,6 +33,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         input symbol type
+ * @param <O>
+ *         output symbol type
  */
 public class ThreadSafeMealyCacheOracle<I, O> extends MealyCacheOracle<I, O> {
 

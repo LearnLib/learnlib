@@ -19,7 +19,7 @@ import java.util.Random;
 
 import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMoore;
 import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMooreBuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMooreTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -32,7 +32,7 @@ public class ExtensibleLStarMooreResumableLearnerTest
         extends AbstractResumableLearnerMooreTest<ExtensibleLStarMoore<Character, Character>, AutomatonLStarState<Character, Word<Character>, CompactMoore<Character, Character>, Integer>> {
 
     @Override
-    protected ExtensibleLStarMoore<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected ExtensibleLStarMoore<Character, Character> getLearner(MooreMembershipOracle<Character, Character> oracle,
                                                                     Alphabet<Character> alphabet) {
         return new ExtensibleLStarMooreBuilder<Character, Character>().withAlphabet(alphabet)
                                                                       .withOracle(oracle)

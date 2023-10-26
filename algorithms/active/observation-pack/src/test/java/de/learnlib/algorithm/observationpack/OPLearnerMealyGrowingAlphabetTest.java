@@ -16,17 +16,16 @@
 package de.learnlib.algorithm.observationpack;
 
 import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealy;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 public class OPLearnerMealyGrowingAlphabetTest
         extends AbstractGrowingAlphabetMealyTest<OPLearnerMealy<Character, Character>> {
 
     @Override
-    protected OPLearnerMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected OPLearnerMealy<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
                                                               Alphabet<Character> alphabet) {
         return new OPLearnerMealy<>(alphabet, oracle, LocalSuffixFinders.RIVEST_SCHAPIRE, true);
     }

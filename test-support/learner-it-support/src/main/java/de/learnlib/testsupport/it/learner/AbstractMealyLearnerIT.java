@@ -26,7 +26,7 @@ import de.learnlib.example.LearningExample.StateLocalInputMealyLearningExample;
 import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import de.learnlib.oracle.equivalence.mealy.StateLocalInputMealySimulatorEQOracle;
-import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
+import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MealyLearnerVariantListImpl;

@@ -15,16 +15,15 @@
  */
 package de.learnlib.algorithm.kv.mealy;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 public class KearnsVaziraniMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<KearnsVaziraniMealy<Character, Character>, KearnsVaziraniMealyState<Character, Character>> {
 
     @Override
-    protected KearnsVaziraniMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected KearnsVaziraniMealy<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
                                                                    Alphabet<Character> alphabet) {
         return new KearnsVaziraniMealyBuilder<Character, Character>().withOracle(oracle)
                                                                      .withAlphabet(alphabet)

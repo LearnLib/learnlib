@@ -17,9 +17,9 @@ package de.learnlib.algorithm.observationpack.vpa;
 
 import de.learnlib.acex.analyzer.AbstractNamedAcexAnalyzer;
 import de.learnlib.acex.analyzer.AcexAnalyzers;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractOneSEVPALearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList;
+import de.learnlib.testsupport.it.learner.LearnerVariantList.OneSEVPALearnerVariantList;
 import net.automatalib.alphabet.VPAlphabet;
 import org.testng.annotations.Test;
 
@@ -28,8 +28,8 @@ public class OPLearnerVPAIT extends AbstractOneSEVPALearnerIT {
 
     @Override
     protected <I> void addLearnerVariants(VPAlphabet<I> alphabet,
-                                          MembershipOracle<I, Boolean> mqOracle,
-                                          LearnerVariantList.OneSEVPALearnerVariantList<I> variants) {
+                                          DFAMembershipOracle<I> mqOracle,
+                                          OneSEVPALearnerVariantList<I> variants) {
         final OPLearnerVPABuilder<I> builder = new OPLearnerVPABuilder<>();
         builder.setAlphabet(alphabet);
         builder.setOracle(mqOracle);

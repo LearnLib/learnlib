@@ -16,14 +16,14 @@
 package de.learnlib.algorithm.kv.dfa;
 
 import de.learnlib.acex.analyzer.AcexAnalyzers;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.alphabet.Alphabet;
 
 public class KearnsVaziraniDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<KearnsVaziraniDFA<Character>> {
 
     @Override
-    protected KearnsVaziraniDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+    protected KearnsVaziraniDFA<Character> getLearner(DFAMembershipOracle<Character> oracle,
                                                       Alphabet<Character> alphabet) {
         return new KearnsVaziraniDFA<>(alphabet, oracle, true, AcexAnalyzers.LINEAR_FWD);
     }

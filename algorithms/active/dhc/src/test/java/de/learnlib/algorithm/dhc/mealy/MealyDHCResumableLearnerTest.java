@@ -15,16 +15,15 @@
  */
 package de.learnlib.algorithm.dhc.mealy;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 public class MealyDHCResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<MealyDHC<Character, Character>, MealyDHCState<Character, Character>> {
 
     @Override
-    protected MealyDHC<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected MealyDHC<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
                                                         Alphabet<Character> alphabet) {
         return new MealyDHCBuilder<Character, Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }

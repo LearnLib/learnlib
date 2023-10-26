@@ -18,7 +18,7 @@ package de.learnlib.algorithm.ttt;
 import de.learnlib.algorithm.ttt.base.TTTLearnerState;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFABuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
 import net.automatalib.alphabet.Alphabet;
 
@@ -26,7 +26,7 @@ public class TTTLearnerDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<TTTLearnerDFA<Character>, TTTLearnerState<Character, Boolean>> {
 
     @Override
-    protected TTTLearnerDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+    protected TTTLearnerDFA<Character> getLearner(DFAMembershipOracle<Character> oracle,
                                                   Alphabet<Character> alphabet) {
 
         return new TTTLearnerDFABuilder<Character>().withAlphabet(alphabet).withOracle(oracle).create();

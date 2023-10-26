@@ -31,8 +31,7 @@ import de.learnlib.example.mealy.ExampleStack.Input;
 import de.learnlib.example.mealy.ExampleStack.Output;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.equivalence.mealy.SymbolEQOracleWrapper;
-import de.learnlib.oracle.membership.SimulatorOracle;
-import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
+import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -74,7 +73,7 @@ public class LStarMealyTest extends LearningTest {
         MealyMachine<?, Input, ?, Output> mealy = stackExample.getReferenceAutomaton();
         Alphabet<Input> alphabet = stackExample.getAlphabet();
 
-        MembershipOracle<Input, Word<Output>> oracle = new SimulatorOracle<>(mealy);
+        MealyMembershipOracle<Input, Output> oracle = new MealySimulatorOracle<>(mealy);
 
         // Empty list of suffixes => minimal compliant set
         List<Word<Input>> initSuffixes = Collections.emptyList();

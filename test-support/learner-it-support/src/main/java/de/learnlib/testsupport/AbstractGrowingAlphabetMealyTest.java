@@ -21,10 +21,10 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.QueryAnswerer;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.filter.cache.mealy.MealyCacheOracle;
 import de.learnlib.filter.cache.mealy.MealyCaches;
+import de.learnlib.oracle.membership.MealySimulatorOracle;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -33,7 +33,7 @@ import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 
 public abstract class AbstractGrowingAlphabetMealyTest<L extends SupportsGrowingAlphabet<Character> & LearningAlgorithm<MealyMachine<?, Character, ?, Character>, Character, Word<Character>>>
-        extends AbstractGrowingAlphabetTest<L, MealyMachine<?, Character, ?, Character>, MembershipOracle<Character, Word<Character>>, Character, Word<Character>> {
+        extends AbstractGrowingAlphabetTest<L, MealyMachine<?, Character, ?, Character>, MealyMembershipOracle<Character, Character>, Character, Word<Character>> {
 
     @Override
     protected Alphabet<Character> getInitialAlphabet() {
@@ -54,14 +54,14 @@ public abstract class AbstractGrowingAlphabetMealyTest<L extends SupportsGrowing
     }
 
     @Override
-    protected MembershipOracle<Character, Word<Character>> getOracle(MealyMachine<?, Character, ?, Character> target) {
-        return ((QueryAnswerer<Character, Word<Character>>) target::computeSuffixOutput).asOracle();
+    protected MealyMembershipOracle<Character, Character> getOracle(MealyMachine<?, Character, ?, Character> target) {
+        return new MealySimulatorOracle<>(target);
     }
 
     @Override
-    protected MembershipOracle<Character, Word<Character>> getCachedOracle(Alphabet<Character> alphabet,
-                                                                           MembershipOracle<Character, Word<Character>> source,
-                                                                           List<Consumer<Character>> symbolListener) {
+    protected MealyMembershipOracle<Character, Character> getCachedOracle(Alphabet<Character> alphabet,
+                                                                          MealyMembershipOracle<Character, Character> source,
+                                                                          List<Consumer<Character>> symbolListener) {
         final MealyCacheOracle<Character, Character> cache = MealyCaches.createDAGCache(alphabet, source);
         symbolListener.add(cache::addAlphabetSymbol);
         return cache;

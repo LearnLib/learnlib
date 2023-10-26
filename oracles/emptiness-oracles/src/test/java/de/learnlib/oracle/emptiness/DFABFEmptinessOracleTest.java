@@ -17,7 +17,7 @@ package de.learnlib.oracle.emptiness;
 
 import java.util.Objects;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
@@ -31,7 +31,7 @@ import org.testng.annotations.BeforeMethod;
 public class DFABFEmptinessOracleTest extends AbstractBFEmptinessOracleTest<DFA<?, Character>, Boolean> {
 
     @Mock
-    private MembershipOracle.DFAMembershipOracle<Character> mo;
+    private DFAMembershipOracle<Character> mo;
 
     @Override
     protected AbstractBFEmptinessOracle<DFA<?, Character>, Character, Boolean> createBreadthFirstEmptinessOracle() {

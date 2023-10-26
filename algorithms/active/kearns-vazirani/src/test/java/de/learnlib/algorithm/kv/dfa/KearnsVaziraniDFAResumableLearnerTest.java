@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.kv.dfa;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
 import net.automatalib.alphabet.Alphabet;
 
@@ -23,7 +23,7 @@ public class KearnsVaziraniDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<KearnsVaziraniDFA<Character>, KearnsVaziraniDFAState<Character>> {
 
     @Override
-    protected KearnsVaziraniDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+    protected KearnsVaziraniDFA<Character> getLearner(DFAMembershipOracle<Character> oracle,
                                                       Alphabet<Character> alphabet) {
         return new KearnsVaziraniDFABuilder<Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }

@@ -18,16 +18,15 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.example.LearningExample.SPMMLearningExample;
 import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.equivalence.spmm.SimulatorEQOracle;
-import de.learnlib.oracle.membership.SimulatorOracle;
+import de.learnlib.oracle.membership.SPMMSimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPMMLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPMMLearnerVariantListImpl;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SPMM;
-import net.automatalib.word.Word;
 import org.testng.annotations.Factory;
 
 /**
@@ -50,7 +49,7 @@ public abstract class AbstractSPMMLearnerIT {
     private <I, O> List<SPMMLearnerITCase<I, O>> createAllVariantsITCase(SPMMLearningExample<I, O> example) {
 
         final SPMM<?, I, ?, O> reference = example.getReferenceAutomaton();
-        final MembershipOracle<I, Word<O>> mqOracle = new SimulatorOracle<>(reference);
+        final MealyMembershipOracle<I, O> mqOracle = new SPMMSimulatorOracle<>(reference);
         final SPMMLearnerVariantListImpl<I, O> variants = new SPMMLearnerVariantListImpl<>();
         addLearnerVariants(example.getAlphabet(), reference.getErrorOutput(), mqOracle, variants);
 
@@ -72,6 +71,6 @@ public abstract class AbstractSPMMLearnerIT {
      */
     protected abstract <I, O> void addLearnerVariants(ProceduralInputAlphabet<I> alphabet,
                                                       O errorOutput,
-                                                      MembershipOracle<I, Word<O>> mqOracle,
+                                                      MealyMembershipOracle<I, O> mqOracle,
                                                       SPMMLearnerVariantList<I, O> variants);
 }

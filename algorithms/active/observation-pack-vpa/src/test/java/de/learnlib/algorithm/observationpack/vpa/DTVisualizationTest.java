@@ -22,8 +22,9 @@ import java.util.Random;
 
 import com.google.common.io.CharStreams;
 import de.learnlib.acex.analyzer.AcexAnalyzers;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.vpa.SimulatorEQOracle;
-import de.learnlib.oracle.membership.SimulatorOracle;
+import de.learnlib.oracle.membership.SEVPASimulatorOracle;
 import de.learnlib.util.Experiment;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.alphabet.impl.DefaultVPAlphabet;
@@ -46,7 +47,7 @@ public class DTVisualizationTest {
         final DefaultOneSEVPA<Character> vpa =
                 RandomAutomata.randomOneSEVPA(new Random(42), 10, alphabet, 0.5, 0.5, true);
 
-        final SimulatorOracle<Character, Boolean> mqo = new SimulatorOracle<>(vpa);
+        final DFAMembershipOracle<Character> mqo = new SEVPASimulatorOracle<>(vpa);
         final SimulatorEQOracle<Character> eqo = new SimulatorEQOracle<>(vpa);
         this.learner = new OPLearnerVPA<>(alphabet, mqo, AcexAnalyzers.BINARY_SEARCH_FWD);
 

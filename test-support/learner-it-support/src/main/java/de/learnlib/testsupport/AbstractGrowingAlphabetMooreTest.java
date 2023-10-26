@@ -21,8 +21,8 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.QueryAnswerer;
+import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.oracle.membership.MooreSimulatorOracle;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -31,7 +31,7 @@ import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 
 public abstract class AbstractGrowingAlphabetMooreTest<L extends SupportsGrowingAlphabet<Character> & LearningAlgorithm<MooreMachine<?, Character, ?, Character>, Character, Word<Character>>>
-        extends AbstractGrowingAlphabetTest<L, MooreMachine<?, Character, ?, Character>, MembershipOracle<Character, Word<Character>>, Character, Word<Character>> {
+        extends AbstractGrowingAlphabetTest<L, MooreMachine<?, Character, ?, Character>, MooreMembershipOracle<Character, Character>, Character, Word<Character>> {
 
     @Override
     protected Alphabet<Character> getInitialAlphabet() {
@@ -52,14 +52,14 @@ public abstract class AbstractGrowingAlphabetMooreTest<L extends SupportsGrowing
     }
 
     @Override
-    protected MembershipOracle<Character, Word<Character>> getOracle(MooreMachine<?, Character, ?, Character> target) {
-        return ((QueryAnswerer<Character, Word<Character>>) target::computeSuffixOutput).asOracle();
+    protected MooreMembershipOracle<Character, Character> getOracle(MooreMachine<?, Character, ?, Character> target) {
+        return new MooreSimulatorOracle<>(target);
     }
 
     @Override
-    protected MembershipOracle<Character, Word<Character>> getCachedOracle(Alphabet<Character> alphabet,
-                                                                           MembershipOracle<Character, Word<Character>> source,
-                                                                           List<Consumer<Character>> symbolListener) {
+    protected MooreMembershipOracle<Character, Character> getCachedOracle(Alphabet<Character> alphabet,
+                                                                          MooreMembershipOracle<Character, Character> source,
+                                                                          List<Consumer<Character>> symbolListener) {
         // TODO: implement Moore caches
         return source;
     }

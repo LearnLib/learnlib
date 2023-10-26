@@ -17,7 +17,7 @@ package de.learnlib.oracle.equivalence;
 
 import java.util.Objects;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
@@ -31,7 +31,7 @@ import org.testng.annotations.BeforeMethod;
 public class MealyBFInclusionOracleTest extends AbstractBFInclusionOracleTest<MealyMachine<?, Character, ?, Character>, Word<Character>> {
 
     @Mock
-    private MembershipOracle.MealyMembershipOracle<Character, Character> mo;
+    private MealyMembershipOracle<Character, Character> mo;
 
     @BeforeMethod
     public void setUp() {

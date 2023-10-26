@@ -17,7 +17,7 @@ package de.learnlib.algorithm.observationpack;
 
 import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealy;
 import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealyBuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
@@ -26,7 +26,7 @@ public class OPLearnerMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<OPLearnerMealy<Character, Character>, OPLearnerState<Character, Word<Character>, Void, Character>> {
 
     @Override
-    protected OPLearnerMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected OPLearnerMealy<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
                                                               Alphabet<Character> alphabet) {
         return new OPLearnerMealyBuilder<Character, Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }

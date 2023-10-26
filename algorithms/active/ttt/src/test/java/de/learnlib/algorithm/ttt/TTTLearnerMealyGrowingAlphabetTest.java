@@ -17,16 +17,15 @@ package de.learnlib.algorithm.ttt;
 
 import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 public class TTTLearnerMealyGrowingAlphabetTest
         extends AbstractGrowingAlphabetMealyTest<TTTLearnerMealy<Character, Character>> {
 
     @Override
-    protected TTTLearnerMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected TTTLearnerMealy<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
                                                                Alphabet<Character> alphabet) {
         return new TTTLearnerMealy<>(alphabet, oracle, AcexAnalyzers.LINEAR_FWD);
     }

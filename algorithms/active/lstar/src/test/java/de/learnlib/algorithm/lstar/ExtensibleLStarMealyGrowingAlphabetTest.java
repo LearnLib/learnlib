@@ -20,16 +20,15 @@ import java.util.Collections;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 public class ExtensibleLStarMealyGrowingAlphabetTest
         extends AbstractGrowingAlphabetMealyTest<ExtensibleLStarMealy<Character, Character>> {
 
     @Override
-    protected ExtensibleLStarMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected ExtensibleLStarMealy<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
                                                                     Alphabet<Character> alphabet) {
         return new ExtensibleLStarMealy<>(alphabet,
                                           oracle,

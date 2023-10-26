@@ -16,17 +16,16 @@
 package de.learnlib.algorithm.observationpack;
 
 import de.learnlib.algorithm.observationpack.moore.OPLearnerMoore;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMooreTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 public class OPLearnerMooreGrowingAlphabetTest
         extends AbstractGrowingAlphabetMooreTest<OPLearnerMoore<Character, Character>> {
 
     @Override
-    protected OPLearnerMoore<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected OPLearnerMoore<Character, Character> getLearner(MooreMembershipOracle<Character, Character> oracle,
                                                               Alphabet<Character> alphabet) {
         return new OPLearnerMoore<>(alphabet, oracle, LocalSuffixFinders.RIVEST_SCHAPIRE, true);
     }

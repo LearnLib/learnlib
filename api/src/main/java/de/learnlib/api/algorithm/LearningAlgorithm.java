@@ -18,6 +18,7 @@ package de.learnlib.api.algorithm;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
@@ -76,4 +77,6 @@ public interface LearningAlgorithm<M, I, D> {
     interface MealyLearner<I, O> extends LearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 
     interface MooreLearner<I, O> extends LearningAlgorithm<MooreMachine<?, I, ?, O>, I, Word<O>> {}
+
+    interface NFALearner<I> extends LearningAlgorithm<NFA<?, I>, I, Boolean> {}
 }

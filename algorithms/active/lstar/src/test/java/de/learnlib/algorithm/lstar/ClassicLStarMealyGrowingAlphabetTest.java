@@ -26,7 +26,7 @@ import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.example.mealy.ExampleCoffeeMachine;
 import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
-import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
+import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;

@@ -17,7 +17,7 @@ package de.learnlib.algorithm.lstar;
 
 import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFA;
 import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFABuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
@@ -26,7 +26,7 @@ public class ExtensibleLStarDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<ExtensibleLStarDFA<Character>, AutomatonLStarState<Character, Boolean, CompactDFA<Character>, Integer>> {
 
     @Override
-    protected ExtensibleLStarDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+    protected ExtensibleLStarDFA<Character> getLearner(DFAMembershipOracle<Character> oracle,
                                                        Alphabet<Character> alphabet) {
         return new ExtensibleLStarDFABuilder<Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }

@@ -17,14 +17,13 @@ package de.learnlib.algorithm.malerpnueli;
 
 import de.learnlib.algorithm.lstar.ExtensibleLStarMealyResumableLearnerTest;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 public class MalerPnueliMealyResumableLearnerTest extends ExtensibleLStarMealyResumableLearnerTest {
 
     @Override
-    protected ExtensibleLStarMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected ExtensibleLStarMealy<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
                                                                     Alphabet<Character> alphabet) {
 
         return new MalerPnueliMealyBuilder<Character, Character>().withAlphabet(alphabet).withOracle(oracle).create();

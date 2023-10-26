@@ -17,19 +17,19 @@ package de.learnlib.example.aaar;
 
 import java.util.stream.StreamSupport;
 
+import de.learnlib.api.oracle.SingleQueryOracle.SingleQueryOracleMealy;
 import de.learnlib.example.aaar.Event.Msg;
 import de.learnlib.example.aaar.Event.Recv;
-import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class Protocol implements SuffixOutput<Event, Word<String>> {
+class Protocol implements SingleQueryOracleMealy<Event, String> {
 
     private int seqExp;
     private @Nullable Object buffer;
 
     @Override
-    public Word<String> computeSuffixOutput(Iterable<? extends Event> prefix, Iterable<? extends Event> suffix) {
+    public Word<String> answerQuery(Word<Event> prefix, Word<Event> suffix) {
         reset();
         prefix.forEach(this::handleEvent);
         return StreamSupport.stream(suffix.spliterator(), false).map(this::handleEvent).collect(Word.collector());

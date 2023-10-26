@@ -78,6 +78,14 @@ public interface EquivalenceOracle<A, I, D> {
      */
     interface MealyEquivalenceOracle<I, O> extends EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 
+    /**
+     * A specialization of the {@link EquivalenceOracle} interface for a Moore learning scenario.
+     *
+     * @param <I>
+     *         input symbol class
+     * @param <O>
+     *         output symbol class
+     */
     interface MooreEquivalenceOracle<I, O> extends EquivalenceOracle<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 
 }

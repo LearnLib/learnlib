@@ -18,11 +18,11 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.example.LearningExample.SBALearningExample;
 import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.equivalence.sba.SimulatorEQOracle;
-import de.learnlib.oracle.membership.SimulatorOracle;
+import de.learnlib.oracle.membership.SBASimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SBALearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SBALearnerVariantListImpl;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
@@ -49,7 +49,7 @@ public abstract class AbstractSBALearnerIT {
     private <I> List<SBALearnerITCase<I>> createAllVariantsITCase(SBALearningExample<I> example) {
 
         final ProceduralInputAlphabet<I> alphabet = example.getAlphabet();
-        final MembershipOracle<I, Boolean> mqOracle = new SimulatorOracle<>(example.getReferenceAutomaton());
+        final DFAMembershipOracle<I> mqOracle = new SBASimulatorOracle<>(example.getReferenceAutomaton());
         final SBALearnerVariantListImpl<I> variants = new SBALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, mqOracle, variants);
 
@@ -70,6 +70,6 @@ public abstract class AbstractSBALearnerIT {
      *         list to add the learner variants to
      */
     protected abstract <I> void addLearnerVariants(ProceduralInputAlphabet<I> alphabet,
-                                                   MembershipOracle<I, Boolean> mqOracle,
+                                                   DFAMembershipOracle<I> mqOracle,
                                                    SBALearnerVariantList<I> variants);
 }

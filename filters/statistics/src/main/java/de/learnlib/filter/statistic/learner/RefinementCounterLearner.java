@@ -18,10 +18,12 @@ package de.learnlib.filter.statistic.learner;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
+import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.statistic.StatisticLearner;
 import de.learnlib.api.statistic.StatisticLearner.DFAStatisticLearner;
 import de.learnlib.api.statistic.StatisticLearner.MealyStatisticLearner;
+import de.learnlib.api.statistic.StatisticLearner.MooreStatisticLearner;
 import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
 import de.learnlib.buildtool.refinement.annotation.Generic;
 import de.learnlib.buildtool.refinement.annotation.Interface;
@@ -29,6 +31,7 @@ import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.filter.statistic.Counter;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 
 /**
@@ -60,6 +63,15 @@ import net.automatalib.word.Word;
                                             to = MealyLearner.class,
                                             withGenerics = {"I", "O"}),
                     interfaces = @Interface(clazz = MealyStatisticLearner.class, generics = {"I", "O"}))
+@GenerateRefinement(name = "MooreRefinementCounterLearner",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = LearningAlgorithm.class,
+                                            to = MooreLearner.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MooreStatisticLearner.class, generics = {"I", "O"}))
 public class RefinementCounterLearner<M, I, D> implements StatisticLearner<M, I, D> {
 
     private final LearningAlgorithm<M, I, D> learningAlgorithm;

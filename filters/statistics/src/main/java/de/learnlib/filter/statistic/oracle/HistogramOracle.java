@@ -18,9 +18,17 @@ package de.learnlib.filter.statistic.oracle;
 import java.util.Collection;
 
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.api.statistic.StatisticOracle;
+import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
+import de.learnlib.buildtool.refinement.annotation.Generic;
+import de.learnlib.buildtool.refinement.annotation.Interface;
+import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.filter.statistic.HistogramDataSet;
+import net.automatalib.word.Word;
 
 /**
  * Collects a histogram of passed query lengths.
@@ -30,6 +38,27 @@ import de.learnlib.filter.statistic.HistogramDataSet;
  * @param <D>
  *         output symbol class
  */
+@GenerateRefinement(name = "DFAHistogramOracle",
+                    generics = "I",
+                    parentGenerics = {@Generic("I"), @Generic(clazz = Boolean.class)},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = DFAMembershipOracle.class,
+                                            withGenerics = "I"),
+                    interfaces = @Interface(clazz = DFAMembershipOracle.class, generics = "I"))
+@GenerateRefinement(name = "MealyHistogramOracle",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = MealyMembershipOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MealyMembershipOracle.class, generics = {"I", "O"}))
+@GenerateRefinement(name = "MooreOutputHistogramOracle",
+                    generics = {"I", "O"},
+                    parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
+                    parameterMapping = @Map(from = MembershipOracle.class,
+                                            to = MooreMembershipOracle.class,
+                                            withGenerics = {"I", "O"}),
+                    interfaces = @Interface(clazz = MooreMembershipOracle.class, generics = {"I", "O"}))
 public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
 
     /**

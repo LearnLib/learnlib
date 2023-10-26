@@ -20,16 +20,16 @@ import java.util.Random;
 import de.learnlib.api.Resumable;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.QueryAnswerer;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.DFASimulatorEQOracle;
+import de.learnlib.oracle.membership.DFASimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.util.automaton.random.RandomAutomata;
 
 public abstract class AbstractResumableLearnerDFATest<L extends Resumable<T> & LearningAlgorithm<DFA<?, Character>, Character, Boolean>, T>
-        extends AbstractResumableLearnerTest<L, DFA<?, Character>, MembershipOracle<Character, Boolean>, Character, Boolean, T> {
+        extends AbstractResumableLearnerTest<L, DFA<?, Character>, DFAMembershipOracle<Character>, Character, Boolean, T> {
 
     private static final int AUTOMATON_SIZE = 50;
 
@@ -44,8 +44,8 @@ public abstract class AbstractResumableLearnerDFATest<L extends Resumable<T> & L
     }
 
     @Override
-    protected MembershipOracle<Character, Boolean> getOracle(DFA<?, Character> target) {
-        return ((QueryAnswerer<Character, Boolean>) target::computeSuffixOutput).asOracle();
+    protected DFAMembershipOracle<Character> getOracle(DFA<?, Character> target) {
+        return new DFASimulatorOracle<>(target);
     }
 
     @Override

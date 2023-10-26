@@ -23,7 +23,7 @@ import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.example.LearningExample.MooreLearningExample;
 import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
-import de.learnlib.oracle.membership.SimulatorOracle.MooreSimulatorOracle;
+import de.learnlib.oracle.membership.MooreSimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreSymLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MooreSymLearnerVariantListImpl;
 import de.learnlib.util.moore.MooreUtil;

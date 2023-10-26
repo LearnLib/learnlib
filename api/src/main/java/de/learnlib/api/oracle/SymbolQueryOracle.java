@@ -17,20 +17,21 @@ package de.learnlib.api.oracle;
 
 import java.util.Collection;
 
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
 /**
- * Symbol query interface. Semantically similar to {@link MembershipOracle.MealyMembershipOracle}, but allows to pose
- * queries symbol-wise.
+ * Symbol query interface. Semantically similar to {@link MealyMembershipOracle}, but allows to pose queries
+ * symbol-wise.
  *
  * @param <I>
  *         input alphabet type
  * @param <O>
  *         output alphabet type
  */
-public interface SymbolQueryOracle<I, O> extends MembershipOracle.MealyMembershipOracle<I, O> {
+public interface SymbolQueryOracle<I, O> extends MealyMembershipOracle<I, O> {
 
     /**
      * Query the system under learning for a new symbol. <b>This is a stateful operation.</b>

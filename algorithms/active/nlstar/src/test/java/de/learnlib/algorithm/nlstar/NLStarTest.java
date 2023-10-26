@@ -15,8 +15,9 @@
  */
 package de.learnlib.algorithm.nlstar;
 
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.SampleSetEQOracle;
-import de.learnlib.oracle.membership.SimulatorOracle;
+import de.learnlib.oracle.membership.NFASimulatorOracle;
 import de.learnlib.util.Experiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -50,7 +51,7 @@ public class NLStarTest {
                                                            .create();
         // @formatter:on
 
-        final SimulatorOracle<Character, Boolean> mqOracle = new SimulatorOracle<>(nfa);
+        final DFAMembershipOracle<Character> mqOracle = new NFASimulatorOracle<>(nfa);
 
         final SampleSetEQOracle<Character, Boolean> eqOracle = new SampleSetEQOracle<>(false);
         eqOracle.addAll(mqOracle,

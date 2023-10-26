@@ -17,7 +17,7 @@ package de.learnlib.oracle.emptiness;
 
 import java.util.Objects;
 
-import de.learnlib.api.oracle.OmegaMembershipOracle;
+import de.learnlib.api.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -35,7 +35,7 @@ public class MealyLassoEmptinessOracleImplTest
         extends AbstractLassoEmptinessOracleImplTest<Lasso.MealyLasso<Character, Character>, Word<Character>> {
 
     @Mock
-    private OmegaMembershipOracle.MealyOmegaMembershipOracle<Integer, Character, Character> omo;
+    private MealyOmegaMembershipOracle<Integer, Character, Character> omo;
 
     @BeforeMethod
     public void setUp() {

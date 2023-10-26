@@ -18,6 +18,7 @@ package de.learnlib.api.statistic;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 
 /**
@@ -35,4 +36,6 @@ public interface StatisticLearner<M, I, D> extends LearningAlgorithm<M, I, D>, S
     interface DFAStatisticLearner<I> extends StatisticLearner<DFA<?, I>, I, Boolean> {}
 
     interface MealyStatisticLearner<I, O> extends StatisticLearner<MealyMachine<?, I, ?, O>, I, Word<O>> {}
+
+    interface MooreStatisticLearner<I, O> extends StatisticLearner<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 }

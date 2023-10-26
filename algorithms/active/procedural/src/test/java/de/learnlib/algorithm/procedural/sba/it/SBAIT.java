@@ -36,6 +36,7 @@ import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractSBALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SBALearnerVariantList;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -45,7 +46,7 @@ public class SBAIT extends AbstractSBALearnerIT {
 
     @Override
     protected <I> void addLearnerVariants(ProceduralInputAlphabet<I> alphabet,
-                                          MembershipOracle<I, Boolean> mqOracle,
+                                          DFAMembershipOracle<I> mqOracle,
                                           SBALearnerVariantList<I> variants) {
 
         final Builder<I> builder = new Builder<>(alphabet, mqOracle, variants);

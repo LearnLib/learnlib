@@ -20,7 +20,7 @@ import java.util.Collections;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFA;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.alphabet.Alphabet;
 
@@ -28,7 +28,7 @@ public class ExtensibleLStarDFAGrowingAlphabetTest
         extends AbstractGrowingAlphabetDFATest<ExtensibleLStarDFA<Character>> {
 
     @Override
-    protected ExtensibleLStarDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+    protected ExtensibleLStarDFA<Character> getLearner(DFAMembershipOracle<Character> oracle,
                                                        Alphabet<Character> alphabet) {
         return new ExtensibleLStarDFA<>(alphabet,
                                         oracle,

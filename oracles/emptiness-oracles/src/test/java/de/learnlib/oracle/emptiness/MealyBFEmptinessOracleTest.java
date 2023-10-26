@@ -17,7 +17,7 @@ package de.learnlib.oracle.emptiness;
 
 import java.util.Objects;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
@@ -32,7 +32,7 @@ public class MealyBFEmptinessOracleTest
         extends AbstractBFEmptinessOracleTest<MealyMachine<?, Character, ?, Character>, Word<Character>> {
 
     @Mock
-    private MembershipOracle.MealyMembershipOracle<Character, Character> mo;
+    private MealyMembershipOracle<Character, Character> mo;
 
     @Override
     protected AbstractBFEmptinessOracle<MealyMachine<?, Character, ?, Character>, Character, Word<Character>>

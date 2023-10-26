@@ -8,7 +8,7 @@ import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.equivalence.DFAWMethodEQOracle;
-import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
+import de.learnlib.oracle.membership.DFASimulatorOracle;
 import de.learnlib.util.Experiment.DFAExperiment;
 import de.learnlib.util.statistic.SimpleProfiler;
 import net.automatalib.alphabet.Alphabet;

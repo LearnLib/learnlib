@@ -17,7 +17,7 @@ package de.learnlib.algorithm.observationpack;
 
 import de.learnlib.algorithm.observationpack.moore.OPLearnerMoore;
 import de.learnlib.algorithm.observationpack.moore.OPLearnerMooreBuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMooreTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
@@ -26,7 +26,7 @@ public class OPLearnerMooreResumableLearnerTest
         extends AbstractResumableLearnerMooreTest<OPLearnerMoore<Character, Character>, OPLearnerState<Character, Word<Character>, Character, Void>> {
 
     @Override
-    protected OPLearnerMoore<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected OPLearnerMoore<Character, Character> getLearner(MooreMembershipOracle<Character, Character> oracle,
                                                               Alphabet<Character> alphabet) {
         return new OPLearnerMooreBuilder<Character, Character>().withAlphabet(alphabet).withOracle(oracle).create();
     }

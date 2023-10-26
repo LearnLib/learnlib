@@ -19,7 +19,7 @@ import java.util.Random;
 
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -32,7 +32,7 @@ public class ExtensibleLStarMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<ExtensibleLStarMealy<Character, Character>, AutomatonLStarState<Character, Word<Character>, CompactMealy<Character, Character>, Integer>> {
 
     @Override
-    protected ExtensibleLStarMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected ExtensibleLStarMealy<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
                                                                     Alphabet<Character> alphabet) {
         return new ExtensibleLStarMealyBuilder<Character, Character>().withAlphabet(alphabet)
                                                                       .withOracle(oracle)

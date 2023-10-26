@@ -15,16 +15,15 @@
  */
 package de.learnlib.algorithm.malerpnueli;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 public class MalerPnueliMealyGrowingAlphabetTest
         extends AbstractGrowingAlphabetMealyTest<MalerPnueliMealy<Character, Character>> {
 
     @Override
-    protected MalerPnueliMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected MalerPnueliMealy<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
                                                                 Alphabet<Character> alphabet) {
         return new MalerPnueliMealy<>(alphabet, oracle);
     }

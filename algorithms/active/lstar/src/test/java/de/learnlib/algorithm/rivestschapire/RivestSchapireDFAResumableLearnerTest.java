@@ -17,13 +17,13 @@ package de.learnlib.algorithm.rivestschapire;
 
 import de.learnlib.algorithm.lstar.ExtensibleLStarDFAResumableLearnerTest;
 import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFA;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 
 public class RivestSchapireDFAResumableLearnerTest extends ExtensibleLStarDFAResumableLearnerTest {
 
     @Override
-    protected ExtensibleLStarDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+    protected ExtensibleLStarDFA<Character> getLearner(DFAMembershipOracle<Character> oracle,
                                                        Alphabet<Character> alphabet) {
 
         return new RivestSchapireDFABuilder<Character>().withAlphabet(alphabet).withOracle(oracle).create();

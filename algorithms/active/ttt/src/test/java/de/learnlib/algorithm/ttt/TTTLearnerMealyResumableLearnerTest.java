@@ -18,7 +18,7 @@ package de.learnlib.algorithm.ttt;
 import de.learnlib.algorithm.ttt.base.TTTLearnerState;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealyBuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
@@ -27,7 +27,7 @@ public class TTTLearnerMealyResumableLearnerTest
         extends AbstractResumableLearnerMealyTest<TTTLearnerMealy<Character, Character>, TTTLearnerState<Character, Word<Character>>> {
 
     @Override
-    protected TTTLearnerMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected TTTLearnerMealy<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
                                                                Alphabet<Character> alphabet) {
 
         return new TTTLearnerMealyBuilder<Character, Character>().withAlphabet(alphabet).withOracle(oracle).create();

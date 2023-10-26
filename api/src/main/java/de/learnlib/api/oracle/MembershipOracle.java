@@ -21,6 +21,9 @@ import java.util.Collections;
 import de.learnlib.api.oracle.parallelism.BatchProcessor;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.Query;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 
 /**
@@ -82,12 +85,21 @@ public interface MembershipOracle<I, D> extends QueryAnswerer<I, D>, BatchProces
         processQueries(batch);
     }
 
+    /**
+     * A specialization of the {@link MembershipOracle} that binds the output domain to {@link Boolean}s. Queries should
+     * be answered according to the semantics of acceptors such as {@link DFA}s. This means an input sequence of length
+     * {@code n} results in a single boolean output.
+     *
+     * @param <I>
+     *         input symbol type
+     */
     interface DFAMembershipOracle<I> extends MembershipOracle<I, Boolean> {}
 
     /**
      * A specialization of the {@link MembershipOracle} that binds the output domain to {@link Word}s of the specified
-     * output type. Queries should be answered according to the Mealy output semantics (transition-based). This means an
-     * input sequence of length {@code n} results in an output word of length {@code n}.
+     * output type. Queries should be answered according to the semantics of transition-output systems such as
+     * {@link MealyMachine}s. This means an input sequence of length {@code n} results in an output word of length
+     * {@code n}.
      *
      * @param <I>
      *         input symbol type
@@ -96,6 +108,17 @@ public interface MembershipOracle<I, D> extends QueryAnswerer<I, D>, BatchProces
      */
     interface MealyMembershipOracle<I, O> extends MembershipOracle<I, Word<O>> {}
 
+    /**
+     * A specialization of the {@link MembershipOracle} that binds the output domain to {@link Word}s of the specified
+     * output type. Queries should be answered according to the semantics of state-output systems such as
+     * {@link MooreMachine}s. This means an input sequence of length {@code n} results in an output word of length
+     * {@code n+1}.
+     *
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     */
     interface MooreMembershipOracle<I, O> extends MembershipOracle<I, Word<O>> {}
 
 }

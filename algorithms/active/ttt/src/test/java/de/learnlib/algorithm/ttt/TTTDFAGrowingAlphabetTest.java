@@ -17,14 +17,14 @@ package de.learnlib.algorithm.ttt;
 
 import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.alphabet.Alphabet;
 
 public class TTTDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<TTTLearnerDFA<Character>> {
 
     @Override
-    protected TTTLearnerDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+    protected TTTLearnerDFA<Character> getLearner(DFAMembershipOracle<Character> oracle,
                                                   Alphabet<Character> alphabet) {
         return new TTTLearnerDFA<>(alphabet, oracle, AcexAnalyzers.LINEAR_FWD);
     }

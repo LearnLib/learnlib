@@ -16,7 +16,7 @@
 package de.learnlib.algorithm.observationpack;
 
 import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.alphabet.Alphabet;
@@ -24,7 +24,7 @@ import net.automatalib.alphabet.Alphabet;
 public class OPLearnerDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<OPLearnerDFA<Character>> {
 
     @Override
-    protected OPLearnerDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+    protected OPLearnerDFA<Character> getLearner(DFAMembershipOracle<Character> oracle,
                                                  Alphabet<Character> alphabet) {
         return new OPLearnerDFA<>(alphabet, oracle, LocalSuffixFinders.RIVEST_SCHAPIRE, true, false);
     }

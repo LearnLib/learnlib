@@ -23,7 +23,7 @@ import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.example.LearningExample.MealyLearningExample;
 import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
-import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
+import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealySymLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MealySymLearnerVariantListImpl;
 import de.learnlib.util.mealy.MealyUtil;

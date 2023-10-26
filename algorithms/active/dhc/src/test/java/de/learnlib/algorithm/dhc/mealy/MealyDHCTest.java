@@ -20,13 +20,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.example.mealy.ExampleCoffeeMachine;
+import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.example.mealy.ExampleGrid;
 import de.learnlib.example.mealy.ExampleStack;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
-import de.learnlib.oracle.membership.SimulatorOracle;
-import de.learnlib.oracle.membership.SimulatorOracle.MealySimulatorOracle;
+import de.learnlib.oracle.membership.MealySimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -121,7 +122,7 @@ public class MealyDHCTest {
         MealyMachine<?, ExampleCoffeeMachine.Input, ?, String> fm = cmExample.getReferenceAutomaton();
         Alphabet<ExampleCoffeeMachine.Input> alphabet = cmExample.getAlphabet();
 
-        SimulatorOracle<ExampleCoffeeMachine.Input, Word<String>> simoracle = new SimulatorOracle<>(fm);
+        MealyMembershipOracle<Input, String> simoracle = new MealySimulatorOracle<>(fm);
         MealySimulatorEQOracle<ExampleCoffeeMachine.Input, String> eqoracle = new MealySimulatorEQOracle<>(fm);
 
         MealyDHC<ExampleCoffeeMachine.Input, String> dhc = new MealyDHC<>(alphabet, simoracle);

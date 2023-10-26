@@ -28,7 +28,7 @@ import de.learnlib.filter.cache.dfa.DFACacheOracle;
 import de.learnlib.filter.cache.dfa.DFACaches;
 import de.learnlib.filter.statistic.oracle.DFAJointCounterOracle;
 import de.learnlib.oracle.equivalence.DFASimulatorEQOracle;
-import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
+import de.learnlib.oracle.membership.DFASimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;

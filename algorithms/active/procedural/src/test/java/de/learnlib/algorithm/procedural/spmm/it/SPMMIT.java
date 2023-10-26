@@ -35,6 +35,7 @@ import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractSPMMLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPMMLearnerVariantList;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -46,7 +47,7 @@ public class SPMMIT extends AbstractSPMMLearnerIT {
     @Override
     protected <I, O> void addLearnerVariants(ProceduralInputAlphabet<I> alphabet,
                                              O errorOutput,
-                                             MembershipOracle<I, Word<O>> mqOracle,
+                                             MealyMembershipOracle<I, O> mqOracle,
                                              SPMMLearnerVariantList<I, O> variants) {
 
         final Builder<I, O> builder = new Builder<>(alphabet, errorOutput, mqOracle, variants);

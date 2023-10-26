@@ -35,6 +35,7 @@ import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractSPALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPALearnerVariantList;
 import net.automatalib.SupportsGrowingAlphabet;
@@ -44,7 +45,7 @@ public class SPAIT extends AbstractSPALearnerIT {
 
     @Override
     protected <I> void addLearnerVariants(ProceduralInputAlphabet<I> alphabet,
-                                          MembershipOracle<I, Boolean> mqOracle,
+                                          DFAMembershipOracle<I> mqOracle,
                                           SPALearnerVariantList<I> variants) {
 
         final Builder<I> builder = new Builder<>(alphabet, mqOracle, variants);

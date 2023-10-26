@@ -17,7 +17,7 @@ package de.learnlib.oracle.emptiness;
 
 import java.util.Objects;
 
-import de.learnlib.api.oracle.OmegaMembershipOracle;
+import de.learnlib.api.oracle.OmegaMembershipOracle.DFAOmegaMembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.api.query.OmegaQuery;
 import net.automatalib.automaton.fsa.DFA;
@@ -35,7 +35,7 @@ public class DFALassoEmptinessOracleImplTest
         extends AbstractLassoEmptinessOracleImplTest<Lasso.DFALasso<Character>, Boolean> {
 
     @Mock
-    private OmegaMembershipOracle.DFAOmegaMembershipOracle<Integer, Character> omo;
+    private DFAOmegaMembershipOracle<Integer, Character> omo;
 
     @BeforeMethod
     public void setUp() {

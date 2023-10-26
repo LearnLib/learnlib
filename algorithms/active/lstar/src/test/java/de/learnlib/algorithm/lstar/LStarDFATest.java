@@ -29,7 +29,7 @@ import de.learnlib.example.dfa.ExamplePaulAndMary;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.equivalence.WMethodEQOracle;
 import de.learnlib.oracle.equivalence.WpMethodEQOracle;
-import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
+import de.learnlib.oracle.membership.DFASimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;

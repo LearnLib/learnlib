@@ -30,13 +30,11 @@ import de.learnlib.algorithm.aaar.explicit.ExplicitAAARLearnerMealy;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.algorithm.LearnerConstructor;
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerMealy;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.example.aaar.Event.Msg;
 import de.learnlib.example.aaar.Event.Recv;
-import de.learnlib.oracle.membership.SimulatorOracle;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.graph.Graph;
@@ -60,8 +58,7 @@ public final class AlternatingBitExampleExplicit {
 
     public static void main(String[] args) throws IOException {
 
-        final Protocol sul = new Protocol();
-        final MembershipOracle<Event, Word<String>> mqo = new SimulatorOracle<>(sul);
+        final Protocol mqo = new Protocol();
 
         final LearnerConstructor<ExtensibleLStarMealy<Event, String>, Event, Word<String>> lstar =
                 (alph, mq) -> new ExtensibleLStarMealyBuilder<Event, String>().withAlphabet(alph)

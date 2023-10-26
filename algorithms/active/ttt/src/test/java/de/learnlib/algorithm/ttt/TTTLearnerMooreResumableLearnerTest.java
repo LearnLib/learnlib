@@ -18,7 +18,7 @@ package de.learnlib.algorithm.ttt;
 import de.learnlib.algorithm.ttt.base.TTTLearnerState;
 import de.learnlib.algorithm.ttt.moore.TTTLearnerMoore;
 import de.learnlib.algorithm.ttt.moore.TTTLearnerMooreBuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMooreTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
@@ -27,7 +27,7 @@ public class TTTLearnerMooreResumableLearnerTest
         extends AbstractResumableLearnerMooreTest<TTTLearnerMoore<Character, Character>, TTTLearnerState<Character, Word<Character>>> {
 
     @Override
-    protected TTTLearnerMoore<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected TTTLearnerMoore<Character, Character> getLearner(MooreMembershipOracle<Character, Character> oracle,
                                                                Alphabet<Character> alphabet) {
 
         return new TTTLearnerMooreBuilder<Character, Character>().withAlphabet(alphabet).withOracle(oracle).create();

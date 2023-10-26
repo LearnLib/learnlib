@@ -15,14 +15,14 @@
  */
 package de.learnlib.algorithm.malerpnueli;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.alphabet.Alphabet;
 
 public class MalerPnueliDFAGrowingAlphabetTest extends AbstractGrowingAlphabetDFATest<MalerPnueliDFA<Character>> {
 
     @Override
-    protected MalerPnueliDFA<Character> getLearner(MembershipOracle<Character, Boolean> oracle,
+    protected MalerPnueliDFA<Character> getLearner(DFAMembershipOracle<Character> oracle,
                                                    Alphabet<Character> alphabet) {
         return new MalerPnueliDFA<>(alphabet, oracle);
     }

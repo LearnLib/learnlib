@@ -17,16 +17,15 @@ package de.learnlib.algorithm.ttt;
 
 import de.learnlib.acex.analyzer.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.moore.TTTLearnerMoore;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMooreTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 public class TTTLearnerMooreGrowingAlphabetTest
         extends AbstractGrowingAlphabetMooreTest<TTTLearnerMoore<Character, Character>> {
 
     @Override
-    protected TTTLearnerMoore<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected TTTLearnerMoore<Character, Character> getLearner(MooreMembershipOracle<Character, Character> oracle,
                                                                Alphabet<Character> alphabet) {
         return new TTTLearnerMoore<>(alphabet, oracle, AcexAnalyzers.LINEAR_FWD);
     }

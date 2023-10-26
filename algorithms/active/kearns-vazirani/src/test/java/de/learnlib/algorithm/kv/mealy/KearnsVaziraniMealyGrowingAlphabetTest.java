@@ -16,16 +16,15 @@
 package de.learnlib.algorithm.kv.mealy;
 
 import de.learnlib.acex.analyzer.AcexAnalyzers;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 public class KearnsVaziraniMealyGrowingAlphabetTest
         extends AbstractGrowingAlphabetMealyTest<KearnsVaziraniMealy<Character, Character>> {
 
     @Override
-    protected KearnsVaziraniMealy<Character, Character> getLearner(MembershipOracle<Character, Word<Character>> oracle,
+    protected KearnsVaziraniMealy<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
                                                                    Alphabet<Character> alphabet) {
         return new KearnsVaziraniMealy<>(alphabet, oracle, true, AcexAnalyzers.LINEAR_FWD);
     }

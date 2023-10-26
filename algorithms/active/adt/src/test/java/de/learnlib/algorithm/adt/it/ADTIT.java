@@ -26,7 +26,7 @@ import de.learnlib.algorithm.adt.config.ADTExtenders;
 import de.learnlib.algorithm.adt.config.LeafSplitters;
 import de.learnlib.algorithm.adt.config.SubtreeReplacers;
 import de.learnlib.algorithm.adt.learner.ADTLearnerBuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
@@ -36,7 +36,7 @@ public class ADTIT extends AbstractMealyLearnerIT {
     @Override
     protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,
                                              int targetSize,
-                                             MembershipOracle.MealyMembershipOracle<I, O> mqOracle,
+                                             MealyMembershipOracle<I, O> mqOracle,
                                              LearnerVariantList.MealyLearnerVariantList<I, O> variants) {
 
         final ADTLearnerBuilder<I, O> builder = new ADTLearnerBuilder<>();
