@@ -30,8 +30,10 @@ import de.learnlib.filter.cache.LearningCache.MealyLearningCache;
 import de.learnlib.filter.cache.LearningCacheOracle;
 import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
+import de.learnlib.filter.cache.LearningCacheOracle.MooreLearningCacheOracle;
 import de.learnlib.filter.cache.configuration.CacheCreator.DFACacheCreator;
 import de.learnlib.filter.cache.configuration.CacheCreator.MealyCacheCreator;
+import de.learnlib.filter.cache.configuration.CacheCreator.MooreCacheCreator;
 import de.learnlib.filter.cache.configuration.CacheCreator.SLISULCacheCreator;
 import de.learnlib.filter.cache.configuration.CacheCreator.SULCacheCreator;
 import de.learnlib.oracle.parallelism.AbstractStaticBatchProcessor;
@@ -92,6 +94,14 @@ public interface CacheConfig<I, D, C extends LearningCache<?, I, D>> {
             extends SupplierConfig<I, Word<O>, MembershipOracle<I, Word<O>>, C> implements MealyCacheCreator<I, O, C> {
 
         public MealySupplierConfig(BiFunction<Alphabet<I>, Supplier<? extends MembershipOracle<I, Word<O>>>, Supplier<C>> provider) {
+            super(provider);
+        }
+    }
+
+    class MooreSupplierConfig<I, O, C extends MooreLearningCacheOracle<I, O>>
+            extends SupplierConfig<I, Word<O>, MembershipOracle<I, Word<O>>, C> implements MooreCacheCreator<I, O, C> {
+
+        public MooreSupplierConfig(BiFunction<Alphabet<I>, Supplier<? extends MembershipOracle<I, Word<O>>>, Supplier<C>> provider) {
             super(provider);
         }
     }
@@ -214,6 +224,15 @@ public interface CacheConfig<I, D, C extends LearningCache<?, I, D>> {
             implements MealyCacheCreator<I, O, C> {
 
         public MealyCollectionConfig(BiFunction<Alphabet<I>, Collection<? extends MembershipOracle<I, Word<O>>>, Collection<C>> provider) {
+            super(provider);
+        }
+    }
+
+    class MooreCollectionConfig<I, O, C extends MooreLearningCacheOracle<I, O>>
+            extends CollectionConfig<I, Word<O>, MembershipOracle<I, Word<O>>, C>
+            implements MooreCacheCreator<I, O, C> {
+
+        public MooreCollectionConfig(BiFunction<Alphabet<I>, Collection<? extends MembershipOracle<I, Word<O>>>, Collection<C>> provider) {
             super(provider);
         }
     }

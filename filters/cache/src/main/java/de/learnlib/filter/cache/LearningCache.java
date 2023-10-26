@@ -18,6 +18,7 @@ package de.learnlib.filter.cache;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 
 /**
@@ -69,4 +70,14 @@ public interface LearningCache<A, I, O> {
      *         output symbol type
      */
     interface MealyLearningCache<I, O> extends LearningCache<MealyMachine<?, I, ?, O>, I, Word<O>> {}
+
+    /**
+     * Specialization of the {@link LearningCache} interface for Moore machine learning.
+     *
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     */
+    interface MooreLearningCache<I, O> extends LearningCache<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 }

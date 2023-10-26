@@ -18,6 +18,7 @@ package de.learnlib.filter.cache;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 
 /**
@@ -52,4 +53,16 @@ public interface LearningCacheOracle<A, I, D> extends LearningCache<A, I, D>, Me
     interface MealyLearningCacheOracle<I, O> extends LearningCacheOracle<MealyMachine<?, I, ?, O>, I, Word<O>>,
                                                      MealyLearningCache<I, O>,
                                                      MealyMembershipOracle<I, O> {}
+
+    /**
+     * Specialization of the {@link LearningCacheOracle} interface for Moore machine learning.
+     *
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     */
+    interface MooreLearningCacheOracle<I, O> extends LearningCacheOracle<MooreMachine<?, I, ?, O>, I, Word<O>>,
+                                                     MooreLearningCache<I, O>,
+                                                     MooreMembershipOracle<I, O> {}
 }

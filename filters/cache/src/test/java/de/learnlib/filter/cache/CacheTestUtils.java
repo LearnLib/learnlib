@@ -21,6 +21,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.automaton.transducer.impl.compact.CompactMoore;
 import net.automatalib.util.automaton.random.RandomAutomata;
 
 public final class CacheTestUtils {
@@ -32,6 +33,8 @@ public final class CacheTestUtils {
     public static final CompactDFA<Character> DFA_INVALID;
     public static final CompactMealy<Character, Integer> MEALY;
     public static final CompactMealy<Character, Integer> MEALY_INVALID;
+    public static final CompactMoore<Character, Integer> MOORE;
+    public static final CompactMoore<Character, Integer> MOORE_INVALID;
 
     static {
         INPUT_ALPHABET = Alphabets.characters('a', 'c');
@@ -41,12 +44,14 @@ public final class CacheTestUtils {
         final int size = 20;
         DFA = RandomAutomata.randomDFA(random, size, INPUT_ALPHABET);
         MEALY = RandomAutomata.randomMealy(random, size, INPUT_ALPHABET, OUTPUT_ALPHABET);
+        MOORE = RandomAutomata.randomMoore(random, size, INPUT_ALPHABET, OUTPUT_ALPHABET);
 
         DFA_INVALID = new CompactDFA<>(DFA);
         DFA_INVALID.flipAcceptance();
 
         // we rely on two generations not producing the same automaton
         MEALY_INVALID = RandomAutomata.randomMealy(random, size, INPUT_ALPHABET, OUTPUT_ALPHABET);
+        MOORE_INVALID = RandomAutomata.randomMoore(random, size, INPUT_ALPHABET, OUTPUT_ALPHABET);
     }
 
     private CacheTestUtils() {}
