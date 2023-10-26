@@ -18,6 +18,7 @@ package de.learnlib.testsupport.it.learner;
 import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.automaton.transducer.SubsequentialTransducer;
 import net.automatalib.word.Word;
 
@@ -39,6 +40,8 @@ public interface PassiveLearnerVariantList<M, I, D> {
     interface DFALearnerVariantList<I> extends PassiveLearnerVariantList<DFA<?, I>, I, Boolean> {}
 
     interface MealyLearnerVariantList<I, O> extends PassiveLearnerVariantList<MealyMachine<?, I, ?, O>, I, Word<O>> {}
+
+    interface MooreLearnerVariantList<I, O> extends PassiveLearnerVariantList<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 
     interface SSTLearnerVariantList<I, O>
             extends PassiveLearnerVariantList<SubsequentialTransducer<?, I, ?, O>, I, Word<O>> {}

@@ -20,7 +20,7 @@ Currently, the following learning algorithms with respective target models are s
 Algorithm (active)  | Target models               || Algorithm (passive) | Models
 --- | --- | --- | --- | ---
 AAAR                | `DFA` `Mealy` `Moore`       || OSTIA               | `SST`
-ADT                 | `Mealy`                     || RPNI                | `DFA` `Mealy`
+ADT                 | `Mealy`                     || RPNI                | `DFA` `Mealy` `Moore`
 DHC                 | `Mealy`                     || RPNI (EDSM)         | `DFA`
 Kearns & Vazirani   | `DFA` `Mealy`               || RPNI (MDL)          | `DFA`
 L* (incl. variants) | `DFA` `Mealy` `Moore`

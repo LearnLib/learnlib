@@ -26,6 +26,7 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.FiniteStateAcceptor;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 
 public interface PassiveLearningAlgorithm<M, I, D> {
@@ -87,6 +88,16 @@ public interface PassiveLearningAlgorithm<M, I, D> {
      *         output symbol type
      */
     interface PassiveMealyLearner<I, O> extends PassiveLearningAlgorithm<MealyMachine<?, I, ?, O>, I, Word<O>> {}
+
+    /**
+     * Basic interface for passive learning algorithms that infer {@link MooreMachine Moore machines}.
+     *
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     */
+    interface PassiveMooreLearner<I, O> extends PassiveLearningAlgorithm<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 
     /**
      * Basic interface for passive learning algorithms that infer finite-state acceptors ({@link DFA}s or {@link

@@ -28,5 +28,7 @@ public interface PassiveLearningExample<I, D> {
 
     interface MealyPassiveLearningExample<I, O> extends PassiveLearningExample<I, Word<O>> {}
 
+    interface MoorePassiveLearningExample<I, O> extends PassiveLearningExample<I, Word<O>> {}
+
     interface SSTPassiveLearningExample<I, O> extends PassiveLearningExample<I, Word<O>> {}
 }

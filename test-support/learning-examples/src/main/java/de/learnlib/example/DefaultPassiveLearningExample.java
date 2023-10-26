@@ -59,6 +59,14 @@ public class DefaultPassiveLearningExample<I, D> implements PassiveLearningExamp
         }
     }
 
+    public static class DefaultMoorePassiveLearningExample<I, O> extends DefaultPassiveLearningExample<I, Word<O>>
+            implements MoorePassiveLearningExample<I, O> {
+
+        public DefaultMoorePassiveLearningExample(Collection<DefaultQuery<I, Word<O>>> samples) {
+            super(samples);
+        }
+    }
+
     public static class DefaultSSTPassiveLearningExample<I, O> extends DefaultPassiveLearningExample<I, Word<O>>
             implements SSTPassiveLearningExample<I, O> {
 

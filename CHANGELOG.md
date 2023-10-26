@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Added new learning algorithms for procedural systems such as SPAs, SBAs, and SPMMs (thanks to [Markus Frohme](https://github.com/mtf90)).
 * Added Moore versions of the `OP`, `TTT`, and `LStar` learners (thanks to [Mohamad Bayram](https://github.com/mohbayram)).
 * Migrated the AAAR algorithm from the old closed-source LearnLib (thanks to [Markus Frohme](https://github.com/mtf90)).
+* The `RPNI` learner now supports `MooreMachine`s (thanks to [Markus Frohme](https://github.com/mtf90)).
 
 ### Changed
 
