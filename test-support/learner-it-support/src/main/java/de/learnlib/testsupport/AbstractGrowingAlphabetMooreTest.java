@@ -22,6 +22,8 @@ import java.util.function.Consumer;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.filter.cache.moore.MooreCacheOracle;
+import de.learnlib.filter.cache.moore.MooreCaches;
 import de.learnlib.oracle.membership.MooreSimulatorOracle;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.Alphabet;
@@ -60,7 +62,8 @@ public abstract class AbstractGrowingAlphabetMooreTest<L extends SupportsGrowing
     protected MooreMembershipOracle<Character, Character> getCachedOracle(Alphabet<Character> alphabet,
                                                                           MooreMembershipOracle<Character, Character> source,
                                                                           List<Consumer<Character>> symbolListener) {
-        // TODO: implement Moore caches
-        return source;
+        final MooreCacheOracle<Character, Character> cache = MooreCaches.createCache(alphabet, source);
+        symbolListener.add(cache::addAlphabetSymbol);
+        return cache;
     }
 }
