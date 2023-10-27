@@ -833,7 +833,7 @@ limitations under the License.
                         <preparationProfiles>integration-tests,code-analysis</preparationProfiles>
                         <!-- Perform an install into the local repository, otherwise the javadoc plugin and archetype integration tests will fail -->
                         <preparationGoals>clean install site</preparationGoals>
-                        <releaseProfiles>release,sign-artifacts,bundles,!examples</releaseProfiles>
+                        <releaseProfiles>release,bundles,!examples</releaseProfiles>
                         <goals>deploy site site:stage scm-publish:publish-scm</goals>
                         <!-- Automatically use the parent version for all submodules, do not prompt for each one -->
                         <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -1155,8 +1155,8 @@ limitations under the License.
             </build>
         </profile>
         <profile>
-            <!-- enables the signing of artifacts using gpg -->
-            <id>sign-artifacts</id>
+            <!-- set certain configurations when performing a release -->
+            <id>release</id>
             <build>
                 <plugins>
                     <plugin>
@@ -1192,14 +1192,6 @@ limitations under the License.
                             </execution>
                         </executions>
                     </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <!-- set certain configurations when performing a release -->
-            <id>release</id>
-            <build>
-                <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-site-plugin</artifactId>
