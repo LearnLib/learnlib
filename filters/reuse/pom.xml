@@ -33,7 +33,7 @@ limitations under the License.
     <dependencies>
         <!-- internal -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
         </dependency>
 
