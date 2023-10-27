@@ -204,7 +204,8 @@ limitations under the License.
         <argLine/> <!-- compatibility for property expansion in surefire-plugin -->
 
         <!-- custom properties -->
-        <javadoc-plugin.conf.release>8</javadoc-plugin.conf.release>
+        <learnlib.java9OrNewer>true</learnlib.java9OrNewer>
+        <learnlib.targetVersion>8</learnlib.targetVersion>
 
         <!-- plugin versions -->
         <antrun-plugin.version>3.1.0</antrun-plugin.version>
@@ -1265,7 +1266,14 @@ limitations under the License.
                             <artifactId>maven-javadoc-plugin</artifactId>
                             <version>${javadoc-plugin.version}</version>
                             <configuration>
-                                <release>${javadoc-plugin.conf.release}</release>
+                                <release>${learnlib.targetVersion}</release>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <configuration>
+                                <release>${learnlib.targetVersion}</release>
                             </configuration>
                         </plugin>
                     </plugins>
