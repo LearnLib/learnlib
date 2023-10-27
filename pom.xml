@@ -162,14 +162,14 @@ limitations under the License.
     ===============================	SCM =======================
     -->
     <scm>
-        <connection>scm:git:git@github.com:LearnLib/learnlib.git</connection>
+        <connection>scm:git:https://github.com:LearnLib/learnlib.git</connection>
         <developerConnection>scm:git:git@github.com:LearnLib/learnlib.git</developerConnection>
         <url>https://github.com/LearnLib/learnlib/tree/develop</url>
         <tag>HEAD</tag>
     </scm>
     <issueManagement>
-        <url>https://github.com/LearnLib/learnlib/issues</url>
         <system>GitHub Issues</system>
+        <url>https://github.com/LearnLib/learnlib/issues</url>
     </issueManagement>
     <ciManagement>
         <system>GitHub Actions</system>
@@ -948,7 +948,6 @@ limitations under the License.
                             <report>index</report>
                             <report>licenses</report>
                             <report>team</report>
-                            <report>mailing-lists</report>
                             <report>scm</report>
                             <report>issue-management</report>
                             <report>ci-management</report>
