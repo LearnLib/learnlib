@@ -274,13 +274,6 @@ limitations under the License.
         </profile>
         <profile>
             <id>bundles</id>
-            <activation>
-                <property>
-                    <name>learnlib.release</name>
-                    <value>true</value>
-                </property>
-            </activation>
-
             <!--
             Additionally specify source-classified dependencies for building source assemblies.
             Again, sorted alphabetically/hierarchical to allow for a better check for completeness using a file explorer.

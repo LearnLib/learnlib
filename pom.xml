@@ -830,18 +830,14 @@ limitations under the License.
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${release-plugin.version}</version>
                     <configuration>
-                        <!--
-                        We use a property rather than a profile such that several different profiles
-                        can be activated upon a release, without us having to add them here
-                        -->
-                        <arguments>-Dlearnlib.release=true</arguments>
+                        <preparationProfiles>integration-tests,code-analysis</preparationProfiles>
+                        <!-- Perform an install into the local repository, otherwise the javadoc plugin and archetype integration tests will fail -->
+                        <preparationGoals>clean install site</preparationGoals>
+                        <releaseProfiles>release,sign-artifacts,bundles,!examples</releaseProfiles>
                         <goals>deploy site site:stage scm-publish:publish-scm</goals>
                         <!-- Automatically use the parent version for all submodules, do not prompt for each one -->
                         <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <!-- Use prefix learnlib, not learnlib-parent -->
                         <tagNameFormat>learnlib-@{version}</tagNameFormat>
-                        <!-- The default "clean verify" causes javadoc and archetype integration tests to fail -->
-                        <preparationGoals>clean install site -Pcode-analysis -Pintegration-tests</preparationGoals>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -1129,12 +1125,6 @@ limitations under the License.
         <profile>
             <!-- enables building of JavaDoc- and source JARs as well as bundled artifacts in 'distribution' module -->
             <id>bundles</id>
-            <activation>
-                <property>
-                    <name>learnlib.release</name>
-                    <value>true</value>
-                </property>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -1167,12 +1157,6 @@ limitations under the License.
         <profile>
             <!-- enables the signing of artifacts using gpg -->
             <id>sign-artifacts</id>
-            <activation>
-                <property>
-                    <name>learnlib.release</name>
-                    <value>true</value>
-                </property>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -1214,12 +1198,6 @@ limitations under the License.
         <profile>
             <!-- set certain configurations when performing a release -->
             <id>release</id>
-            <activation>
-                <property>
-                    <name>learnlib.release</name>
-                    <value>true</value>
-                </property>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -1308,12 +1286,9 @@ limitations under the License.
         </profile>
         <profile>
             <id>examples</id>
-            <!-- don't include examples in a release -->
+            <!-- define in a module so that we can disable the profile during a release -->
             <activation>
-                <property>
-                    <name>learnlib.release</name>
-                    <value>!true</value>
-                </property>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
                 <module>examples</module>
