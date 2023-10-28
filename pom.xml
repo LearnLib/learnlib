@@ -830,14 +830,14 @@ limitations under the License.
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${release-plugin.version}</version>
                     <configuration>
-                        <preparationProfiles>integration-tests,code-analysis</preparationProfiles>
-                        <!-- Perform an install into the local repository, otherwise the javadoc plugin and archetype integration tests will fail -->
-                        <preparationGoals>clean install site</preparationGoals>
-                        <releaseProfiles>release,bundles,!examples</releaseProfiles>
-                        <goals>deploy site site:stage scm-publish:publish-scm</goals>
                         <!-- Automatically use the parent version for all submodules, do not prompt for each one -->
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <tagNameFormat>learnlib-@{version}</tagNameFormat>
+                        <!-- Perform an install into the local repository, otherwise the javadoc plugin and archetype integration tests will fail -->
+                        <preparationGoals>clean install site</preparationGoals>
+                        <preparationProfiles>integration-tests,code-analysis</preparationProfiles>
+                        <goals>deploy site site:stage scm-publish:publish-scm</goals>
+                        <releaseProfiles>release,bundles,!examples</releaseProfiles>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -1277,12 +1277,12 @@ limitations under the License.
             </properties>
         </profile>
         <profile>
+            <!-- define module in a profile so that we can disable it during a release -->
             <id>examples</id>
-            <!-- define in a module so that we can disable the profile during a release -->
             <activation>
+                <!-- see https://stackoverflow.com/a/7481347 -->
                 <property>
-                    <name>learnlib.release</name>
-                    <value>!true</value>
+                    <name>!learnlib.release</name>
                 </property>
             </activation>
             <modules>
