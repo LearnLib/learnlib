@@ -8,38 +8,42 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-* Added the OSTIA passive learning algorithm (thanks to [Aleksander Mendoza-Drosik](https://github.com/aleksander-mendoza)).
-* Added the OML (optimal-MAT-learner) active learning algorithm (thanks to [Falk Howar](https://github.com/fhowar)).
-* Added new learning algorithms for procedural systems such as SPAs, SBAs, and SPMMs (thanks to [Markus Frohme](https://github.com/mtf90)).
-* Added Moore versions of the `OP`, `TTT`, and `LStar` learners (thanks to [Mohamad Bayram](https://github.com/mohbayram)).
 * Migrated the AAAR algorithm from the old closed-source LearnLib (thanks to [Markus Frohme](https://github.com/mtf90)).
+* Added Moore versions of the `OP`, `TTT`, and `LStar` learners (thanks to [Mohamad Bayram](https://github.com/mohbayram)).
+* Added the OML (optimal-MAT-learner) active learning algorithm (thanks to [Falk Howar](https://github.com/fhowar)).
+* Added the OSTIA passive learning algorithm (thanks to [Aleksander Mendoza-Drosik](https://github.com/aleksander-mendoza)).
 * The `RPNI` learner now supports `MooreMachine`s (thanks to [Markus Frohme](https://github.com/mtf90)).
+* Added new learning algorithms for procedural systems such as SPAs, SBAs, and SPMMs (thanks to [Markus Frohme](https://github.com/mtf90)).
 
 ### Changed
 
-* Refactored
-  * All code concerning visibly push-down automata now uses the "vpa" acronym (previously "vpda"). This includes package names, class names and (Maven) module names.
-  * The "discrimination-tree" learner has been renamed to "observation-pack". This includes classes (`DTLearnerDFA` -> `OPLearnerDFA`, etc), package names, and Maven modules. The same refactoring happened for the VPA-based version of the learner.
-  * Refactored the package `de.learnlib.acex.analyzers.*` to `de.learnlib.acex.analyzer.*`.
-  * Refactored the packages of all learning algorithms from `de.learnlib.algorithms.*` to `de.learnlib.algorithm.*`.
-  * Refactored the package `de.learnlib.counterexamples.*` to `de.learnlib.counterexample.*`.
-  * Refactored the package `de.learnlib.datastructure.pta.pta.*` to `de.learnlib.datastructure.pta.*`.
-  * Refactored the package `de.learnlib.drivers.*` to `de.learnlib.driver.*`.
-  * Refactored the package `de.learnlib.driver.util.*` to `de.learnlib.driver.simulator.*`.
-  * Refactored the package `de.learnlib.examples.*` to `de.learnlib.example.*`.
-  * Refactored the package `de.learnlib.util.statistics.*` to `de.learnlib.util.statistic.*`.
-  * Moved classes from the package `de.learnlib.mapper.api.*` to `de.learnlib.api.*`.
-  * Renamed `PassiveLearnerVariantTICase` to `PassiveLearnerVariantITCase`
+* Refactorings
+  * Many LearnLib packages have been refactored from plural-based keywords to singular-based keywords. Some examples are
+    * renamed all learning algorithm packages from `de.learnlib.algorithms.*` to `de.learnlib.algorithm.*`.
+    * renamed `de.learnlib.acex.analyzers.*` to `de.learnlib.acex.analyzer.*`.
+    * renamed `de.learnlib.counterexamples.*` to `de.learnlib.counterexample.*`.
+    * renamed `de.learnlib.drivers.*` to `de.learnlib.driver.*`.
+    * renamed `de.learnlib.util.statistics.*` to `de.learnlib.util.statistic.*`.
+    * etc.
+    
+    While this may cause some refactoring, it should only affect import statements as the names of most classes remain identical.
+  * Some actual re-namings concern
+    * All code concerning visibly push-down automata now uses the "vpa" acronym (previously "vpda"). This includes package names, class names and (Maven) module names.
+    * The "discrimination-tree" learner has been renamed to "observation-pack". This includes classes (`DTLearnerDFA` -> `OPLearnerDFA`, etc), package names, and Maven modules. The same refactoring happened for the VPA-based version of the learner.
+    * Refactored the package `de.learnlib.datastructure.pta.pta.*` to `de.learnlib.datastructure.pta.*`.
+    * Refactored the package `de.learnlib.driver.util.*` to `de.learnlib.driver.simulator.*`.
+    * Moved classes from the package `de.learnlib.mapper.api.*` to `de.learnlib.api.*`.
+    * Renamed `PassiveLearnerVariantTICase` to `PassiveLearnerVariantITCase`
 * `AbstractTTTHypothesis` has received an additional type parameter for its state type.
 * `AutomatonOracle#accepts` no longer has a `length` parameter. Provide a correctly sized `input` iterable instead.
 * Classes revolving around the `ContextExecutableInputSUL` have been moved from the `learnlib-mapper` module to the `learnlib-drivers-basic` module.
-* The `CounterOracle` and `JointCounterOracle` have been merged. Now there only exists a single `CounterOracle` that counts both the number queries and the number of symbols therein.
-* The `{DFA,Mealy}CacheOracle`s and the `SULCache` are no longer thread-safe because the intended pipeline of a parallel setup (as suggested by the LearnLib factory methods) consists of a single-threaded cache that delegates to parallel (non-cached) oracles. Here, the synchronization logic only adds unnecessary overhead. In case you want a shared, thread-safe cache (which was currently not conveniently possible to set up) the `learnlib-parallelism` module now contains the `ThreadSafe{DFA,Mealy,SUL}Caches` factories which allow one to construct parallel oracles (whose parameters and return types are tailored towards using our `ParallelOracleBuilders` factory) with a shared cache. See the in-tree `ParallelismExample2` for reference.
+* The `CounterOracle` and `JointCounterOracle` have been merged. Now there only exists a single `CounterOracle` that counts both the number of queries and the number of symbols therein.
+* The `{DFA,Mealy}CacheOracle`s and the `SULCache` are no longer thread-safe because the intended pipeline of a parallel setup (as suggested by the LearnLib factory methods) consists of a single-threaded cache that delegates to parallel (non-cached) oracles. Here, the synchronization logic only adds unnecessary overhead. In case you want a shared, thread-safe cache (which was currently not possible to set up conveniently) the `learnlib-parallelism` module now contains the `ThreadSafe{DFA,Mealy,SUL}Caches` factories which allow one to construct parallel oracles (whose parameters and return types are tailored towards using our `ParallelOracleBuilders` factory) with a shared cache. See the in-tree `ParallelismExample2` for reference.
 * `PTA`s now read their sample inputs as `IntSeq`s.
-* `PassiveLearningAlgorithm#comuteModel` did not specify whether repeated calls to the method should yield identical models. It is now explicitly left open to the respective implementation to support this behavior. `BlueFringeRPNI{DFA,Mealy}` explicitly does not support this behavior, as the internal prefix-tree acceptor is now constructed on-the-fly as samples are added via the `addSample` methods. This allows to drop the previously redundant caching of samples and reduce memory pressure. `BlueFringeEDSMDFA` and `BlueFringeMDLDFA` still have to cache the samples internally and therefore still support repeated model construction.
+* `PassiveLearningAlgorithm#comuteModel` did not specify whether repeated calls to the method should yield identical models. It is now explicitly left open to the respective implementation to support this behavior. `BlueFringeRPNI{DFA,Mealy,Moore}` explicitly does not support this behavior, as the internal prefix-tree acceptor is now constructed on-the-fly as samples are added via the `addSample` methods. This allows to drop the previously redundant caching of samples and reduce memory pressure. `BlueFringeEDSMDFA` and `BlueFringeMDLDFA` still have to cache the samples internally and therefore still support repeated model construction.
 * The `Resumable` semantics have changed: the returned state object no longer implements `Serializable`. We never fully supported the semantics of the interface and never intended to do so. In fact, the old approach failed miserably if any class was involved where we missed an "implements Serializable" statement. In order to prevent confusion by promising false contracts, implementing this markup interface has been removed. Serialization should now be done in user-land via one of the many external (and more optimizable) serialization frameworks such as FST, XStream, etc. See the in-tree `ResumableExample` for reference.
 * The `ADT` class is no longer initialized with a `leafSplitter` but the `extendLeaf` and `splitLeaf` methods take an additional argument. This allows for a more customizable behavior.
-* The automaton-specific `SimulatorOracle`s are now generated and therefore reside in the package `de.learnlib.oracle.membership` rather that being a inner-class of the `SimulatorOracle`.
+* The automaton-specific `SimulatorOracle`s are now generated automatically and therefore reside in the package `de.learnlib.oracle.membership` rather that being an inner-class of the `SimulatorOracle`.
 * `SymbolQueryCache` now needs to be created via the `MealyCaches` factory.
 * `SimplePOJOTestDriver` no longer uses a mapper to suppress `SULException`s but instead operates directly on the POJO with simplified inputs/outputs and propagates any exceptions thrown. To complement this change, the old `SimplePOJODataMapper` has been renamed to `SimplePOJOExceptionMapper` and only deals with mapping exceptions now. The old behavior can be restored by combining the two classes manually via `SULMappers#apply`.
 
