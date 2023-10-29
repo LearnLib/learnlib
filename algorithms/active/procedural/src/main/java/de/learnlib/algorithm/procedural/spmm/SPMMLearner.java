@@ -36,9 +36,9 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
+import net.automatalib.alphabet.GrowingMapAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.procedural.EmptySPMM;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.procedural.StackSPMM;
@@ -46,7 +46,7 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.util.automaton.Automata;
-import net.automatalib.util.automaton.procedural.SPMMUtil;
+import net.automatalib.util.automaton.procedural.SPMMs;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
@@ -127,7 +127,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
 
         ensureReturnClosure();
 
-        assert SPMMUtil.isValid(getHypothesisModel());
+        assert SPMMs.isValid(getHypothesisModel());
 
         return changed;
     }

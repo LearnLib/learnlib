@@ -25,8 +25,8 @@ import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
-import net.automatalib.automaton.fsa.impl.compact.CompactNFA;
+import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.automaton.fsa.CompactNFA;
 import net.automatalib.util.automaton.fsa.NFAs;
 import net.automatalib.word.Word;
 

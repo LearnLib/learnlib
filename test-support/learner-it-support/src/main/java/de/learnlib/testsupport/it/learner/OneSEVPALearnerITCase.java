@@ -18,7 +18,7 @@ package de.learnlib.testsupport.it.learner;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.example.LearningExample.OneSEVPALearningExample;
 import net.automatalib.automaton.vpa.OneSEVPA;
-import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.vpa.OneSEVPAs;
 import net.automatalib.word.Word;
 
 public class OneSEVPALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Boolean, OneSEVPA<?, I>> {
@@ -34,8 +34,8 @@ public class OneSEVPALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Bo
 
     @Override
     protected Word<I> checkEquivalence(OneSEVPA<?, I> hypothesis) {
-        return Automata.findSeparatingWord(this.example.getReferenceAutomaton(),
-                                           hypothesis,
-                                           this.example.getAlphabet());
+        return OneSEVPAs.findSeparatingWord(this.example.getReferenceAutomaton(),
+                                            hypothesis,
+                                            this.example.getAlphabet());
     }
 }

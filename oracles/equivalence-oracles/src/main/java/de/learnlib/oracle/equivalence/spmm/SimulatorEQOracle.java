@@ -21,7 +21,7 @@ import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SPMM;
-import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.procedural.SPMMs;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -43,7 +43,7 @@ public class SimulatorEQOracle<I, O> implements EquivalenceOracle<SPMM<?, I, ?, 
         @SuppressWarnings("unchecked")
         final ProceduralInputAlphabet<I> alphabet = (ProceduralInputAlphabet<I>) inputs;
 
-        final Word<I> sep = Automata.findSeparatingWord(spmm, hypothesis, alphabet);
+        final Word<I> sep = SPMMs.findSeparatingWord(spmm, hypothesis, alphabet);
 
         if (sep == null) {
             return null;

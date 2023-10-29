@@ -29,7 +29,7 @@ import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.GrowingMapAlphabet;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.word.Word;

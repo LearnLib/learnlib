@@ -20,14 +20,14 @@ import java.util.Map;
 
 import de.learnlib.example.DefaultLearningExample.DefaultSPMMLearningExample;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.procedural.StackSPMM;
+import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.transducer.FastMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.automaton.transducer.impl.FastMealy;
-import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.transducer.MutableMealyMachines;
 

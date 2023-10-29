@@ -18,7 +18,7 @@ package de.learnlib.testsupport.it.learner;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.example.LearningExample.SPALearningExample;
 import net.automatalib.automaton.procedural.SPA;
-import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.procedural.SPAs;
 import net.automatalib.word.Word;
 
 public class SPALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Boolean, SPA<?, I>> {
@@ -34,8 +34,8 @@ public class SPALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Boolean
 
     @Override
     protected Word<I> checkEquivalence(SPA<?, I> hypothesis) {
-        return Automata.findSeparatingWord(this.example.getReferenceAutomaton(),
-                                           hypothesis,
-                                           this.example.getAlphabet());
+        return SPAs.findSeparatingWord(this.example.getReferenceAutomaton(),
+                                       hypothesis,
+                                       this.example.getAlphabet());
     }
 }

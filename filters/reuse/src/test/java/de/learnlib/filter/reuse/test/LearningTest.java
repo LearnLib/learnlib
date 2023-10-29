@@ -25,7 +25,7 @@ import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseOracle;
 import de.learnlib.filter.reuse.tree.ReuseTree;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;

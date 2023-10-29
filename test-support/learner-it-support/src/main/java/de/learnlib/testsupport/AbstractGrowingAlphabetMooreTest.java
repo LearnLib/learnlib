@@ -27,7 +27,7 @@ import de.learnlib.filter.cache.moore.MooreCaches;
 import de.learnlib.oracle.membership.MooreSimulatorOracle;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;

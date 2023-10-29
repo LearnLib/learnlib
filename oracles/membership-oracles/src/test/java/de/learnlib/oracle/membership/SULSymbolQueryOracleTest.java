@@ -21,7 +21,7 @@ import de.learnlib.api.SUL;
 import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.example.mealy.ExampleRandomMealy;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.word.Word;
 import org.mockito.Mockito;
 import org.testng.Assert;

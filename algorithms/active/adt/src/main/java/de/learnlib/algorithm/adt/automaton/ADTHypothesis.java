@@ -18,7 +18,7 @@ package de.learnlib.algorithm.adt.automaton;
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.base.fast.AbstractFastMutableDet;
+import net.automatalib.automaton.base.AbstractFastMutableDet;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.word.Word;
 

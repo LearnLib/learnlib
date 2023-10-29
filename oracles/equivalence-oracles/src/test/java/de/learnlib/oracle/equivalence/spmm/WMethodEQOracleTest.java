@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Streams;
 import de.learnlib.oracle.membership.SimulatorOracle;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
+import net.automatalib.alphabet.DefaultProceduralOutputAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralOutputAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
-import net.automatalib.alphabet.impl.DefaultProceduralOutputAlphabet;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.util.automaton.conformance.SPMMWMethodTestsIterator;
 import net.automatalib.util.automaton.random.RandomAutomata;

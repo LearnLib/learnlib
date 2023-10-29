@@ -26,8 +26,8 @@ import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.automaton.transducer.CompactMoore;
 import net.automatalib.automaton.transducer.MooreMachine;
-import net.automatalib.automaton.transducer.impl.compact.CompactMoore;
 import net.automatalib.word.Word;
 
 /**

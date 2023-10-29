@@ -29,8 +29,8 @@ import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.word.Word;
 
 /**

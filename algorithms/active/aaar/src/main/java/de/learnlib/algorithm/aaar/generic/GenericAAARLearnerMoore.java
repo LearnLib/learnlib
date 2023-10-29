@@ -22,8 +22,8 @@ import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.SupportsGrowingAlphabet;
+import net.automatalib.automaton.transducer.CompactMoore;
 import net.automatalib.automaton.transducer.MooreMachine;
-import net.automatalib.automaton.transducer.impl.compact.CompactMoore;
 import net.automatalib.word.Word;
 
 /**

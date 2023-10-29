@@ -22,9 +22,9 @@ import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMooreBuilder;
 import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMooreTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.automaton.transducer.CompactMoore;
 import net.automatalib.automaton.transducer.MooreMachine;
-import net.automatalib.automaton.transducer.impl.compact.CompactMoore;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 

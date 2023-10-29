@@ -31,7 +31,7 @@ import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.example.moore.ExampleRandomMoore;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;

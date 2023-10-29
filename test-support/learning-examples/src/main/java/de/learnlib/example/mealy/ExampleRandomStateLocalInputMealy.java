@@ -24,9 +24,9 @@ import java.util.Random;
 
 import de.learnlib.example.LearningExample.StateLocalInputMealyLearningExample;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
-import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.common.util.random.RandomUtil;

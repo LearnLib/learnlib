@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
-import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
 

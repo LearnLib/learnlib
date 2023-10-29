@@ -19,7 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import de.learnlib.api.AccessSequenceProvider;
-import net.automatalib.automaton.base.fast.AbstractFastState;
+import net.automatalib.automaton.base.AbstractFastState;
 import net.automatalib.word.Word;
 
 /**

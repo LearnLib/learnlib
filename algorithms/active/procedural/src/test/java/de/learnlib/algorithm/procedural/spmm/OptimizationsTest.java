@@ -29,7 +29,7 @@ import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.util.Experiment;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SPMM;
-import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.procedural.SPMMs;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -65,6 +65,6 @@ public class OptimizationsTest {
 
         experiment.run();
 
-        Assert.assertTrue(Automata.testEquivalence(spmm, experiment.getFinalHypothesis(), alphabet));
+        Assert.assertTrue(SPMMs.testEquivalence(spmm, experiment.getFinalHypothesis(), alphabet));
     }
 }

@@ -22,7 +22,7 @@ import de.learnlib.filter.reuse.ReuseException;
 import de.learnlib.filter.reuse.ReuseOracle;
 import de.learnlib.filter.reuse.tree.ReuseNode.NodeResult;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;

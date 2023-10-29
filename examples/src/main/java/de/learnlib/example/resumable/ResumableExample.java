@@ -30,9 +30,9 @@ import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.equivalence.DFASimulatorEQOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.GrowingMapAlphabet;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.util.automaton.random.RandomAutomata;
 
 /**

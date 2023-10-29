@@ -27,7 +27,7 @@ import de.learnlib.filter.cache.dfa.DFACaches;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.util.automaton.random.RandomAutomata;
 

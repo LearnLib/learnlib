@@ -19,7 +19,7 @@ import java.util.List;
 
 import de.learnlib.algorithm.kv.StateInfo;
 import de.learnlib.datastructure.discriminationtree.BinaryDTree;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.fsa.CompactDFA;
 
 /**
  * Class that contains all data that represent the internal state of the {@link KearnsVaziraniDFA} learner.

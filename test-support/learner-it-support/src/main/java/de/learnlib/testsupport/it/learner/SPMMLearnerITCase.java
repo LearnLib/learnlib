@@ -18,7 +18,7 @@ package de.learnlib.testsupport.it.learner;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.example.LearningExample.SPMMLearningExample;
 import net.automatalib.automaton.procedural.SPMM;
-import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.procedural.SPMMs;
 import net.automatalib.word.Word;
 
 public class SPMMLearnerITCase<I, O> extends AbstractLearnerVariantITCase<I, Word<O>, SPMM<?, I, ?, O>> {
@@ -34,8 +34,8 @@ public class SPMMLearnerITCase<I, O> extends AbstractLearnerVariantITCase<I, Wor
 
     @Override
     protected Word<I> checkEquivalence(SPMM<?, I, ?, O> hypothesis) {
-        return Automata.findSeparatingWord(this.example.getReferenceAutomaton(),
-                                           hypothesis,
-                                           this.example.getAlphabet());
+        return SPMMs.findSeparatingWord(this.example.getReferenceAutomaton(),
+                                        hypothesis,
+                                        this.example.getAlphabet());
     }
 }

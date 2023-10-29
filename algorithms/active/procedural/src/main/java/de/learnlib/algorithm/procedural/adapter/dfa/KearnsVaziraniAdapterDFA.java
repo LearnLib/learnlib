@@ -20,7 +20,7 @@ import de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFA;
 import de.learnlib.api.AccessSequenceTransformer;
 import de.learnlib.api.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.word.Word;
 
 /**

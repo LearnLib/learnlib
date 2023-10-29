@@ -39,9 +39,9 @@ import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
+import net.automatalib.alphabet.GrowingMapAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.EmptySBA;
 import net.automatalib.automaton.procedural.SBA;
@@ -49,7 +49,7 @@ import net.automatalib.automaton.procedural.StackSBA;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.util.automaton.Automata;
-import net.automatalib.util.automaton.procedural.SBAUtil;
+import net.automatalib.util.automaton.procedural.SBAs;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
@@ -126,7 +126,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
 
         ensureCallAndReturnClosure();
 
-        assert SBAUtil.isValid(this.getHypothesisModel());
+        assert SBAs.isValid(this.getHypothesisModel());
 
         return changed;
     }

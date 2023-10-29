@@ -21,7 +21,7 @@ import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.OneSEVPA;
-import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.vpa.OneSEVPAs;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -47,7 +47,7 @@ public class SimulatorEQOracle<I> implements EquivalenceOracle<OneSEVPA<?, I>, I
         @SuppressWarnings("unchecked")
         final VPAlphabet<I> alphabet = (VPAlphabet<I>) inputs;
 
-        final Word<I> sep = Automata.findSeparatingWord(reference, hypothesis, alphabet);
+        final Word<I> sep = OneSEVPAs.findSeparatingWord(reference, hypothesis, alphabet);
 
         if (sep == null) {
             return null;

@@ -42,7 +42,7 @@ import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
 import de.learnlib.util.Experiment.MealyExperiment;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
 
 /**
