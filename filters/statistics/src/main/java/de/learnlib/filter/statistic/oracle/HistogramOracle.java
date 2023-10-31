@@ -85,7 +85,7 @@ public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
     @Override
     public final void processQueries(Collection<? extends Query<I, D>> queries) {
         for (Query<I, D> q : queries) {
-            this.dataSet.addDataPoint((long) q.getInput().size());
+            this.dataSet.addDataPoint((long) q.getPrefix().size() + q.getSuffix().size());
         }
         this.delegate.processQueries(queries);
     }
