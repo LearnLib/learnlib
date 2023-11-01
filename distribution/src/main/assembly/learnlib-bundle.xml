@@ -48,7 +48,7 @@ limitations under the License.
                 <include>de.learnlib:*:jar</include>
             </includes>
             <excludes>
-                <exclude>*:sources</exclude>
+                <exclude>de.learnlib:*:sources</exclude>
             </excludes>
             <outputDirectory/>
             <useProjectArtifact>false</useProjectArtifact>

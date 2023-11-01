@@ -45,11 +45,7 @@ limitations under the License.
     <dependencySets>
         <dependencySet>
             <includes>
-                <!--
-                Caution: changing this to something more correct such as
-                "de.learnlib:*:sources" will NOT work (for whatever reason)
-                -->
-                <include>*:sources</include>
+                <include>de.learnlib:*:sources</include>
             </includes>
             <outputDirectory/>
             <useProjectArtifact>false</useProjectArtifact>
