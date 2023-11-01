@@ -42,7 +42,7 @@ limitations under the License.
             <id>mtf90</id>
             <name>Markus Frohme</name>
             <email>markus.frohme@udo.edu</email>
-            <organization>TU Dortmund University, Chair for Programming Systems</organization>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
@@ -53,7 +53,7 @@ limitations under the License.
             <id>fhowar</id>
             <name>Falk Howar</name>
             <email>falk.howar@gmail.com</email>
-            <organization>TU Dortmund University, Chair for Software Engineering</organization>
+            <organization>TU Dortmund University, Chair of Software Engineering</organization>
             <organizationUrl>http://ls14-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
@@ -63,7 +63,7 @@ limitations under the License.
             <id>misberner</id>
             <name>Malte Isberner</name>
             <email>malte.isberner@gmail.com</email>
-            <organization>TU Dortmund University, Chair for Programming Systems</organization>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer (inactive)</role>
@@ -74,7 +74,7 @@ limitations under the License.
         <contributor>
             <name>Oliver Bauer</name>
             <email>oliver.bauer@tu-dortmund.de</email>
-            <organization>TU Dortmund University, Chair for Programming Systems</organization>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
@@ -82,7 +82,7 @@ limitations under the License.
         </contributor>
         <contributor>
             <name>Mohamad Bayram</name>
-            <organization>TU Dortmund University, Chair for Programming Systems</organization>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer (Graduate)</role>
@@ -90,7 +90,7 @@ limitations under the License.
         </contributor>
         <contributor>
             <name>Maren Geske</name>
-            <organization>TU Dortmund University, Chair for Programming Systems</organization>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
@@ -115,7 +115,7 @@ limitations under the License.
         <contributor>
             <name>Maik Merten</name>
             <email>maikmerten@googlemail.com</email>
-            <organization>TU Dortmund University, Chair for Programming Systems</organization>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
@@ -132,7 +132,7 @@ limitations under the License.
         <contributor>
             <name>Stephan Windmüller</name>
             <email>stephan.windmueller@tu-dortmund.de</email>
-            <organization>TU Dortmund University, Chair for Programming Systems</organization>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
