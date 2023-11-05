@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.learnlib.api.StateLocalInputSUL;
+import de.learnlib.filter.cache.sul.AbstractSULCache.SULCacheState;
 import de.learnlib.filter.cache.sul.StateLocalInputSULCache.StateLocalInputSULCacheState;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
