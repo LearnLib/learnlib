@@ -62,7 +62,7 @@ public class SampleSetEQOracleTest extends AbstractEQOracleTest<SuffixOutput<Cha
     }
 
     private <I> Word<I> generateTestWord(List<I> alphabet) {
-        return Word.fromList(RandomUtil.sample(alphabet, TEST_WORD_LENGTH, random));
+        return Word.fromList(RandomUtil.sample(random, alphabet, TEST_WORD_LENGTH));
     }
 
     @Test(dependsOnMethods = "testGeneratedEQQueries")

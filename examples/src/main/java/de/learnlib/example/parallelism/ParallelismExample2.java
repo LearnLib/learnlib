@@ -74,9 +74,9 @@ public class ParallelismExample2 {
         this.queries = new ArrayList<>(NUM_QUERIES);
 
         for (int i = 0; i < NUM_QUERIES; i++) {
-            queries.add(new DefaultQuery<>(Word.fromList(RandomUtil.sample(sampleList,
-                                                                           random.nextInt(MAX_QUERY_LENGTH),
-                                                                           random))));
+            queries.add(new DefaultQuery<>(Word.fromList(RandomUtil.sample(random,
+                                                                           sampleList,
+                                                                           random.nextInt(MAX_QUERY_LENGTH)))));
         }
     }
 

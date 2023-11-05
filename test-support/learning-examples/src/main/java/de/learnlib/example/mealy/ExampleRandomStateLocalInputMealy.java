@@ -61,7 +61,7 @@ public class ExampleRandomStateLocalInputMealy<I, O> implements StateLocalInputM
 
         for (Integer s : oldStates) {
             // randomly remove (redirect to sink) transitions
-            for (int idx : RandomUtil.distinctIntegers(random.nextInt(alphabetSize), alphabetSize, random)) {
+            for (int idx : RandomUtil.distinctIntegers(random, random.nextInt(alphabetSize), alphabetSize)) {
                 source.setTransition(s, idx, sink, undefinedOutput);
             }
         }

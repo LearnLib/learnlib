@@ -64,7 +64,7 @@ public final class TestQueries {
 
         List<Query<I, D>> result = new ArrayList<>(numQueries);
         for (int i = 0; i < numQueries; i++) {
-            result.add(new NoopQuery<>(Word.fromList(RandomUtil.sample(inputsAsList, numInputs, r))));
+            result.add(new NoopQuery<>(Word.fromList(RandomUtil.sample(r, inputsAsList, numInputs))));
         }
         return result;
     }
