@@ -30,7 +30,7 @@ import de.learnlib.filter.cache.DynamicSymbolComparator;
 import de.learnlib.filter.cache.LearningCacheOracle.MooreLearningCacheOracle;
 import de.learnlib.filter.cache.ReverseLexCmp;
 import de.learnlib.filter.cache.moore.MooreCacheOracle.MooreCacheOracleState;
-import net.automatalib.SupportsGrowingAlphabet;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.incremental.moore.IncrementalMooreBuilder;
 import net.automatalib.word.Word;

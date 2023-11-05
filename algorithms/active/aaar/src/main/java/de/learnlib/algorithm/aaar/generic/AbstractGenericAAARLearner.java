@@ -26,9 +26,9 @@ import de.learnlib.algorithm.aaar.explicit.AbstractExplicitAAARLearner;
 import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 
 /**
  * A "generic" refinement of the {@link AbstractAAARLearner}. This implementation uses a single

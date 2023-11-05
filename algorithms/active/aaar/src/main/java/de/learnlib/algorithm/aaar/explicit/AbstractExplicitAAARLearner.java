@@ -31,9 +31,9 @@ import de.learnlib.algorithm.aaar.generic.AbstractGenericAAARLearner;
 import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
-import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 
 /**
  * An "explicit" refinement of the {@link AbstractAAARLearner}. This implementation requires a prior partition of (all)

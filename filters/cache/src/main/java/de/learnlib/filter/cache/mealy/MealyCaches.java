@@ -20,8 +20,8 @@ import de.learnlib.api.oracle.SymbolQueryOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
+import net.automatalib.incremental.mealy.tree.DynamicIncrementalMealyTreeBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
-import net.automatalib.incremental.mealy.tree.dynamic.DynamicIncrementalMealyTreeBuilder;
 import net.automatalib.word.Word;
 
 /**

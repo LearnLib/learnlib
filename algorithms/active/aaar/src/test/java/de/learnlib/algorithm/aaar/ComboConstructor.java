@@ -17,7 +17,7 @@ package de.learnlib.algorithm.aaar;
 
 import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import net.automatalib.SupportsGrowingAlphabet;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 
 /**
  * Utility interface to establish the combined learner constraints on {@link LearningAlgorithm} and

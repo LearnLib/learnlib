@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.learnlib.api.AccessSequenceTransformer;
-import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.graph.Graph;
