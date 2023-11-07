@@ -46,7 +46,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The automaton-specific `SimulatorOracle`s are now generated automatically and therefore reside in the package `de.learnlib.oracle.membership` rather that being an inner-class of the `SimulatorOracle`.
 * `SymbolQueryCache` now needs to be created via the `MealyCaches` factory.
 * `SimplePOJOTestDriver` no longer uses a mapper to suppress `SULException`s but instead operates directly on the POJO with simplified inputs/outputs and propagates any exceptions thrown. To complement this change, the old `SimplePOJODataMapper` has been renamed to `SimplePOJOExceptionMapper` and only deals with mapping exceptions now. The old behavior can be restored by combining the two classes manually via `SULMappers#apply`.
-
+* Switched to [AutomataLib 0.11.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.11.0).
 
 ### Removed
 
