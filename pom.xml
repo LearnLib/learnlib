@@ -221,7 +221,7 @@ limitations under the License.
         <gpg-plugin.version>3.1.0</gpg-plugin.version>
         <info-reports-plugin.version>3.4.5</info-reports-plugin.version>
         <jacoco-plugin.version>0.8.8</jacoco-plugin.version>
-        <javadoc-plugin.version>3.1.1</javadoc-plugin.version>
+        <javadoc-plugin.version>3.6.0</javadoc-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <pmd-plugin.version>3.14.0</pmd-plugin.version>
         <release-plugin.version>3.0.1</release-plugin.version>
@@ -965,6 +965,9 @@ limitations under the License.
                         <reports>
                             <report>aggregate</report>
                         </reports>
+                        <configuration>
+                            <skippedModules>learnlib-annotation-processor,learnlib-learner-it-support,learnlib-learning-examples,learnlib-test-support</skippedModules>
+                        </configuration>
                     </reportSet>
                 </reportSets>
             </plugin>
