@@ -15,6 +15,6 @@
  */
 
 /**
- * This package contains collection of standard algorithms for handling counterexamples in automata learning.
+ * This package contains a collection of standard algorithms for handling counterexamples in automata learning.
  */
 package de.learnlib.counterexample;
