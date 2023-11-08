@@ -204,7 +204,7 @@ limitations under the License.
         <argLine/> <!-- compatibility for property expansion in surefire-plugin -->
 
         <!-- custom properties -->
-        <learnlib.java9OrNewer>true</learnlib.java9OrNewer>
+        <learnlib.java9OrNewer>false</learnlib.java9OrNewer>
         <learnlib.targetVersion>8</learnlib.targetVersion>
 
         <!-- plugin versions -->
