@@ -82,7 +82,7 @@ public class SimpleObservationTable<I, @Nullable D> implements ObservationTable<
     }
 
     @Override
-    public D cellContents(Row<I> row, int columnId) {
+    public @Nullable D cellContents(Row<I> row, int columnId) {
         return null;
     }
 

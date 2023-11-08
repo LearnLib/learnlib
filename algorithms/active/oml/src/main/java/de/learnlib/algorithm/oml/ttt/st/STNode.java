@@ -21,6 +21,6 @@ public interface STNode<I> {
 
     Word<I> word();
 
-    STNodeImpl<I> prepend(I a);
+    STNode<I> prepend(I a);
 
 }

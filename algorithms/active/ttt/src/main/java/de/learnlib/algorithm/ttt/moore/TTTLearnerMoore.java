@@ -65,7 +65,9 @@ public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I,
     protected Word<O> predictSuccOutcome(TTTTransition<I, Word<O>> trans,
                                          AbstractBaseDTNode<I, Word<O>> succSeparator) {
         TTTStateMoore<I, O> curr = (TTTStateMoore<I, O>) trans.getSource();
-        return succSeparator.subtreeLabel(trans.getDTTarget()).prepend(curr.getOutput());
+        final Word<O> label = succSeparator.subtreeLabel(trans.getDTTarget());
+        assert label != null;
+        return label.prepend(curr.getOutput());
     }
 
     @Override
@@ -73,9 +75,9 @@ public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I,
         super.initializeState(state);
 
         TTTStateMoore<I, O> mooreState = (TTTStateMoore<I, O>) state;
-        O output = dtree.getRoot().subtreeLabel(mooreState.getDTLeaf()).firstSymbol();
-        assert output != null;
-        mooreState.setOutput(output);
+        final Word<O> label = dtree.getRoot().subtreeLabel(mooreState.getDTLeaf());
+        assert label != null && !label.isEmpty();
+        mooreState.setOutput(label.firstSymbol());
     }
 
     @Override
@@ -112,10 +114,10 @@ public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I,
         WordBuilder<O> wb = new WordBuilder<>(suffix.length());
 
         wb.append(curr.output);
-        if (suffix.length() == 0) {
-
+        if (suffix.isEmpty()) {
             return wb.toWord();
         }
+
         for (I sym : suffix) {
             curr = (TTTStateMoore<I, O>) getAnySuccessor(curr, sym);
             wb.append(curr.output);

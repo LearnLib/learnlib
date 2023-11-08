@@ -23,6 +23,7 @@ import net.automatalib.automaton.vpa.AbstractSEVPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.StackContents;
 import net.automatalib.automaton.vpa.State;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @param <I>
@@ -38,7 +39,7 @@ public class OneSEVPAHypothesis<I> extends AbstractSEVPA<HypLoc<I>, I> implement
         super(alphabet);
     }
 
-    public AbstractHypTrans<I> getInternalTransition(State<HypLoc<I>> state, I sym) {
+    public @Nullable AbstractHypTrans<I> getInternalTransition(State<HypLoc<I>> state, I sym) {
         switch (alphabet.getSymbolType(sym)) {
             case INTERNAL:
                 return state.getLocation().getInternalTransition(alphabet.getInternalSymbolIndex(sym));

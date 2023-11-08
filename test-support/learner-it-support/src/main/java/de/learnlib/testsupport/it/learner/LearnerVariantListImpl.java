@@ -30,7 +30,7 @@ import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.word.Word;
 
-class LearnerVariantListImpl<M, I, D> implements LearnerVariantList<M, I, D> {
+public class LearnerVariantListImpl<M, I, D> implements LearnerVariantList<M, I, D> {
 
     private final List<LearnerVariant<M, I, D>> learnerVariants = new ArrayList<>();
 

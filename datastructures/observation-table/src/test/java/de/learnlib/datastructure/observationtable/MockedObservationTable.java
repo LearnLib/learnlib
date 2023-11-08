@@ -88,7 +88,7 @@ public class MockedObservationTable<I, D> extends SimpleObservationTable<I, D> {
     }
 
     @Override
-    public RowImpl<I> getRow(int idx) {
+    public Row<I> getRow(int idx) {
         return rows.get(idx);
     }
 

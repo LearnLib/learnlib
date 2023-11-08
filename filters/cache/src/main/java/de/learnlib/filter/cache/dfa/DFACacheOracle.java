@@ -110,7 +110,7 @@ public class DFACacheOracle<I>
         this.incDfa = state.getBuilder();
     }
 
-    protected Pair<Collection<ProxyQuery<I>>, Collection<Query<I, Boolean>>> queryCache(Collection<? extends Query<I, Boolean>> queries) {
+    Pair<Collection<ProxyQuery<I>>, Collection<Query<I, Boolean>>> queryCache(Collection<? extends Query<I, Boolean>> queries) {
         final List<ProxyQuery<I>> unanswered = new ArrayList<>();
         final List<Query<I, Boolean>> duplicates = new ArrayList<>();
         final Set<Word<I>> cache = new HashSet<>();
@@ -132,7 +132,7 @@ public class DFACacheOracle<I>
         return Pair.of(unanswered, duplicates);
     }
 
-    protected void updateCache(Collection<? extends ProxyQuery<I>> queries) {
+    void updateCache(Collection<? extends ProxyQuery<I>> queries) {
         for (ProxyQuery<I> q : queries) {
             incDfa.insert(q.getInput(), q.getAnswer());
         }

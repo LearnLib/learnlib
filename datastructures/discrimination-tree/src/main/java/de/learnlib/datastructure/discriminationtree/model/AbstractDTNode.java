@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * An abstract super class (DAO) for aggregating some information stored in a node of a discrimination tree.
  *
@@ -157,7 +159,7 @@ public abstract class AbstractDTNode<DSCR, O, D, N extends AbstractDTNode<DSCR, 
         this.data = data;
     }
 
-    public O subtreeLabel(N descendant) {
+    public @Nullable O subtreeLabel(N descendant) {
         N curr = descendant;
 
         while (curr.depth > this.depth + 1) {

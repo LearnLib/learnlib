@@ -20,7 +20,7 @@ import net.automatalib.automaton.transducer.MealyMachine;
 
 public class ObservableMealySimulatorSUL<S, I, O> extends MealySimulatorSUL<I, O> implements ObservableSUL<S, I, O> {
 
-    protected final ObservableMealySimulatorSULImpl<S, I, ?, O> impl;
+    private final ObservableMealySimulatorSULImpl<S, I, ?, O> impl;
 
     public ObservableMealySimulatorSUL(MealyMachine<S, I, ?, O> mealy) {
         this(mealy, null);
@@ -41,7 +41,7 @@ public class ObservableMealySimulatorSUL<S, I, O> extends MealySimulatorSUL<I, O
     }
 
     @Override
-    public ObservableMealySimulatorSULImpl<S, I, ?, O> fork() {
+    public ObservableSUL<S, I, O> fork() {
         return impl.fork();
     }
 

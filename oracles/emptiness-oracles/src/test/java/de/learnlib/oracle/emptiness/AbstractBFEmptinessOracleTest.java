@@ -36,7 +36,7 @@ public abstract class AbstractBFEmptinessOracleTest<A extends DetOutputAutomaton
 
     private DefaultQuery<Character, D> query;
 
-    protected abstract AbstractBFEmptinessOracle<A, Character, D> createBreadthFirstEmptinessOracle();
+    protected abstract AbstractBFEmptinessOracle<A, Character, D> createBreadthFirstEmptinessOracle(double multiplier);
 
     protected abstract A createAutomaton();
 
@@ -45,14 +45,14 @@ public abstract class AbstractBFEmptinessOracleTest<A extends DetOutputAutomaton
     @BeforeMethod
     public void setUp() {
         super.setUp();
-        bfeo = createBreadthFirstEmptinessOracle();
+        bfeo = createBreadthFirstEmptinessOracle(MULTIPLIER);
         automaton = createAutomaton();
         query = createQuery();
     }
 
     @Override
     protected AbstractBFOracle<? extends SimpleDTS<?, Character>, Character, D> createBreadthFirstOracle(double multiplier) {
-        return createBreadthFirstEmptinessOracle();
+        return createBreadthFirstEmptinessOracle(multiplier);
     }
 
     @Test

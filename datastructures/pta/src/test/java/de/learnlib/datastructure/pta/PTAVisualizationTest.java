@@ -34,11 +34,10 @@ import org.testng.annotations.Test;
 
 public class PTAVisualizationTest {
 
-    private final Alphabet<Character> alphabet;
     private final BlueFringePTA<Character, Void> pta;
 
     public PTAVisualizationTest() {
-        this.alphabet = Alphabets.characters('x', 'z');
+        final Alphabet<Character> alphabet = Alphabets.characters('x', 'z');
         //@formatter:off
         final CompactMoore<Character, Character> moore =
                 AutomatonBuilders.<Character, Character>newMoore(alphabet).withInitial(0)

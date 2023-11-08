@@ -247,7 +247,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         }
     }
 
-    protected PrefixTransformAcex deriveAcex(OutputInconsistency<I> outIncons) {
+    private PrefixTransformAcex deriveAcex(OutputInconsistency<I> outIncons) {
         PrefixTransformAcex acex =
                 new PrefixTransformAcex(outIncons.location.getAccessSequence(), outIncons.discriminator);
         acex.setEffect(0, outIncons.expectedOut);

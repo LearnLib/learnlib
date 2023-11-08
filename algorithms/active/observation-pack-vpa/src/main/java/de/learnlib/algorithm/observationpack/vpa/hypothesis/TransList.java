@@ -16,6 +16,7 @@
 package de.learnlib.algorithm.observationpack.vpa.hypothesis;
 
 import de.learnlib.datastructure.list.IntrusiveList;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @param <I>
@@ -69,7 +70,7 @@ public class TransList<I> extends IntrusiveList<AbstractHypTrans<I>> {
         return shortest;
     }
 
-    public AbstractHypTrans<I> poll() {
+    public @Nullable AbstractHypTrans<I> poll() {
         if (next == null) {
             return null;
         }

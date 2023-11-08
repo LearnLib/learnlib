@@ -58,7 +58,7 @@ public class ThreadSafeMealyCacheOracle<I, O> extends MealyCacheOracle<I, O> {
     }
 
     @Override
-    protected List<MasterQuery<I, O>> queryCache(Collection<? extends Query<I, Word<O>>> queries) {
+    List<MasterQuery<I, O>> queryCache(Collection<? extends Query<I, Word<O>>> queries) {
         this.lock.readLock().lock();
         try {
             return super.queryCache(queries);
@@ -68,7 +68,7 @@ public class ThreadSafeMealyCacheOracle<I, O> extends MealyCacheOracle<I, O> {
     }
 
     @Override
-    protected void updateCache(Collection<? extends MasterQuery<I, O>> masterQueries) {
+    void updateCache(Collection<? extends MasterQuery<I, O>> masterQueries) {
         this.lock.writeLock().lock();
         try {
             super.updateCache(masterQueries);

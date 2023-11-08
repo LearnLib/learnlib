@@ -20,6 +20,7 @@ import de.learnlib.datastructure.list.IntrusiveListElem;
 import de.learnlib.datastructure.list.IntrusiveListElemImpl;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A transition in a {@link AbstractTTTHypothesis}.
@@ -91,7 +92,7 @@ public class TTTTransition<I, D> extends IntrusiveListElemImpl<TTTTransition<I, 
         return input;
     }
 
-    protected Object getProperty() {
+    protected @Nullable Object getProperty() {
         return null;
     }
 

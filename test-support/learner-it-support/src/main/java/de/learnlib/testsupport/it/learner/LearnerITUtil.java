@@ -115,8 +115,8 @@ public final class LearnerITUtil {
      * @return the list of test cases, one for each example
      */
     public static <I, O> List<SPMMLearnerITCase<I, O>> createExampleITCases(SPMMLearningExample<I, O> example,
-                                                                     SPMMLearnerVariantListImpl<I, O> variants,
-                                                                     EquivalenceOracle<SPMM<?, I, ?, O>, I, Word<O>> eqOracle) {
+                                                                            SPMMLearnerVariantListImpl<I, O> variants,
+                                                                            EquivalenceOracle<SPMM<?, I, ?, O>, I, Word<O>> eqOracle) {
         // explicit generics are required for correct type-inference
         return LearnerITUtil.<I, Word<O>, SPMM<?, I, ?, O>, SPMMLearningExample<I, O>, SPMMLearnerITCase<I, O>>createExampleITCasesInternal(
                 example,

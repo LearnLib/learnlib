@@ -62,7 +62,7 @@ public class MealySimulatorSUL<I, O> implements SUL<I, O> {
         this(new MealySimulatorSULImpl<>(mealy, noTransOut));
     }
 
-    protected MealySimulatorSUL(MealySimulatorSULImpl<?, I, ?, O> impl) {
+    MealySimulatorSUL(MealySimulatorSULImpl<?, I, ?, O> impl) {
         this.impl = impl;
     }
 

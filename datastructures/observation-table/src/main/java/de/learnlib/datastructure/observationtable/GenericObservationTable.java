@@ -468,7 +468,7 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
     }
 
     @Override
-    public RowImpl<I> getRow(int rowId) {
+    public Row<I> getRow(int rowId) {
         return allRows.get(rowId);
     }
 

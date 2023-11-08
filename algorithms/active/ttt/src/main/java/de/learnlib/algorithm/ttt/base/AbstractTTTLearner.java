@@ -46,6 +46,7 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.common.smartcollection.ElementReference;
 import net.automatalib.common.smartcollection.UnorderedCollection;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -389,7 +390,7 @@ public abstract class AbstractTTTLearner<A, I, D>
      *
      * @return a splitter for any of the blocks
      */
-    private GlobalSplitter<I, D> findSplitterGlobal() {
+    private @Nullable GlobalSplitter<I, D> findSplitterGlobal() {
         // TODO: Make global option
         boolean optimizeGlobal = true;
 
@@ -428,7 +429,7 @@ public abstract class AbstractTTTLearner<A, I, D>
      *
      * @return a splitter for this block, or {@code null} if no such splitter could be found.
      */
-    private Splitter<I, D> findSplitter(AbstractBaseDTNode<I, D> blockRoot) {
+    private @Nullable Splitter<I, D> findSplitter(AbstractBaseDTNode<I, D> blockRoot) {
         int alphabetSize = alphabet.size();
 
         Object[] properties = new Object[alphabetSize];

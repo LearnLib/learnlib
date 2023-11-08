@@ -134,7 +134,7 @@ public class MooreCacheOracle<I, O>
         this.incMoore = state.getBuilder();
     }
 
-    protected List<MasterQuery<I, O>> queryCache(Collection<? extends Query<I, Word<O>>> queries) {
+    List<MasterQuery<I, O>> queryCache(Collection<? extends Query<I, Word<O>>> queries) {
         List<MasterQuery<I, O>> masterQueries = new ArrayList<>();
 
         Iterator<? extends Query<I, Word<O>>> it = queries.iterator();
@@ -191,7 +191,7 @@ public class MooreCacheOracle<I, O>
         return new MasterQuery<>(word, wb.toWord());
     }
 
-    protected void updateCache(Collection<? extends MasterQuery<I, O>> queries) {
+    void updateCache(Collection<? extends MasterQuery<I, O>> queries) {
         for (MasterQuery<I, O> m : queries) {
             postProcess(m);
         }

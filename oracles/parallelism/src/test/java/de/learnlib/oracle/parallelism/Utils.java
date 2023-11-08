@@ -70,7 +70,7 @@ final class Utils {
     }
 
     static TestOutput extractSULOutput(Word<TestSULOutput> output) {
-        assert output.size() > 0;
+        assert !output.isEmpty();
 
         final TestSULOutput lastSym = output.lastSymbol();
         final int oracleId = lastSym.oracleId;

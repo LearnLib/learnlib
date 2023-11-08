@@ -47,7 +47,7 @@ public class ThreadSafeDFACacheOracle<I> extends DFACacheOracle<I> {
     }
 
     @Override
-    protected Pair<Collection<ProxyQuery<I>>, Collection<Query<I, Boolean>>> queryCache(Collection<? extends Query<I, Boolean>> queries) {
+    Pair<Collection<ProxyQuery<I>>, Collection<Query<I, Boolean>>> queryCache(Collection<? extends Query<I, Boolean>> queries) {
         lock.readLock().lock();
         try {
             return super.queryCache(queries);
@@ -57,7 +57,7 @@ public class ThreadSafeDFACacheOracle<I> extends DFACacheOracle<I> {
     }
 
     @Override
-    protected void updateCache(Collection<? extends ProxyQuery<I>> proxyQueries) {
+    void updateCache(Collection<? extends ProxyQuery<I>> proxyQueries) {
         lock.writeLock().lock();
         try {
             super.updateCache(proxyQueries);

@@ -30,7 +30,7 @@ public class StaticParallelObservableSULTest extends AbstractStaticParallelOmega
 
     @Override
     protected TestOutput extractTestOutput(Word<TestSULOutput> output) {
-        assert output.size() > 0;
+        assert !output.isEmpty();
 
         final TestSULOutput lastSym = output.lastSymbol();
         final int oracleId = lastSym.oracleId;

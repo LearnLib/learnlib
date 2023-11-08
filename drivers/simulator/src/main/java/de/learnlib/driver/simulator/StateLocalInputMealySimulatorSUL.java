@@ -23,7 +23,7 @@ import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
 public class StateLocalInputMealySimulatorSUL<I, O> extends MealySimulatorSUL<I, O>
         implements StateLocalInputSUL<I, O> {
 
-    protected final SLIMealySimulatorSULImpl<?, I, ?, O> impl;
+    private final SLIMealySimulatorSULImpl<?, I, ?, O> impl;
 
     public StateLocalInputMealySimulatorSUL(StateLocalInputMealyMachine<?, I, ?, O> mealy) {
         this(new SLIMealySimulatorSULImpl<>(mealy));

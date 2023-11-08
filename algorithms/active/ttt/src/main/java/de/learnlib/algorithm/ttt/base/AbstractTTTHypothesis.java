@@ -31,6 +31,7 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.graph.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Hypothesis DFA for the {@link AbstractTTTLearner TTT algorithm}.
@@ -81,7 +82,7 @@ public abstract class AbstractTTTHypothesis<S extends TTTState<I, D>, I, D, T>
     }
 
     @Override
-    public T getTransition(S state, I input) {
+    public @Nullable T getTransition(S state, I input) {
         TTTTransition<I, D> trans = getInternalTransition(state, input);
         return trans == null ? null : mapTransition(trans);
     }

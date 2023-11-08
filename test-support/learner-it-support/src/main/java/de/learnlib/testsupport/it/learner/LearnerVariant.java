@@ -17,7 +17,7 @@ package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.api.algorithm.LearningAlgorithm;
 
-class LearnerVariant<M, I, D> {
+public class LearnerVariant<M, I, D> {
 
     private final String name;
     private final LearningAlgorithm<? extends M, I, D> learner;

@@ -36,8 +36,8 @@ public class MealyBFEmptinessOracleTest
 
     @Override
     protected AbstractBFEmptinessOracle<MealyMachine<?, Character, ?, Character>, Character, Word<Character>>
-            createBreadthFirstEmptinessOracle() {
-        return new MealyBFEmptinessOracle<>(mo, MULTIPLIER);
+            createBreadthFirstEmptinessOracle(double multiplier) {
+        return new MealyBFEmptinessOracle<>(mo, multiplier);
     }
 
     @Override

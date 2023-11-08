@@ -34,8 +34,8 @@ public class DFABFEmptinessOracleTest extends AbstractBFEmptinessOracleTest<DFA<
     private DFAMembershipOracle<Character> mo;
 
     @Override
-    protected AbstractBFEmptinessOracle<DFA<?, Character>, Character, Boolean> createBreadthFirstEmptinessOracle() {
-        return new DFABFEmptinessOracle<>(mo, MULTIPLIER);
+    protected AbstractBFEmptinessOracle<DFA<?, Character>, Character, Boolean> createBreadthFirstEmptinessOracle(double multiplier) {
+        return new DFABFEmptinessOracle<>(mo, multiplier);
     }
 
     @Override

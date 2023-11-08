@@ -18,7 +18,7 @@ package de.learnlib.api;
 /**
  * Facility for creating and disposing of contexts on which {@link ContextExecutableInput}s operate.
  * <p>
- * If used in a multi-threaded environment (e.g., {@link SUL#fork()}, an implementation of this interface must be
+ * If used in a multi-threaded environment (e.g., {@link SUL#fork()}), an implementation of this interface must be
  * thread-safe, i.e., both the {@link #createContext()} and {@link #disposeContext(Object)} methods must be reentrant.
  * Furthermore, it must not make any assumptions as to the particular sequence in which these methods are called.
  *

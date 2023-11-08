@@ -89,11 +89,8 @@ public class HypLoc<I> implements AccessSequenceProvider<I> {
     }
 
     public HypRetTrans<I> getReturnTransition(int retSymId, int stackSym) {
-        List<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
-        if (succList != null && stackSym < succList.size()) {
-            return succList.get(stackSym);
-        }
-        return null;
+        final List<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
+        return succList.get(stackSym);
     }
 
     public void setReturnTransition(int retSymId, int stackSym, HypRetTrans<I> trans) {

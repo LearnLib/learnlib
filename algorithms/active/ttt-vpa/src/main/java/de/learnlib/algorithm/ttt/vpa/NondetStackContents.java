@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import net.automatalib.automaton.vpa.StackContents;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class NondetStackContents {
 
@@ -39,14 +40,14 @@ final class NondetStackContents {
         return new NondetStackContents(syms, rest);
     }
 
-    public static NondetStackContents fromDet(StackContents sc) {
+    public static @Nullable NondetStackContents fromDet(@Nullable StackContents sc) {
         if (sc == null) {
             return null;
         }
         return push(Collections.singleton(sc.peek()), fromDet(sc.pop()));
     }
 
-    public static StackContents toDet(NondetStackContents nsc) {
+    public static @Nullable StackContents toDet(@Nullable NondetStackContents nsc) {
         if (nsc == null) {
             return null;
         }
