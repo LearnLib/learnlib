@@ -25,7 +25,7 @@ import de.learnlib.algorithm.oml.ttt.dt.Children;
 import de.learnlib.algorithm.oml.ttt.dt.DTLeaf;
 import de.learnlib.algorithm.oml.ttt.pt.PTNode;
 import de.learnlib.algorithm.oml.ttt.st.STNode;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 

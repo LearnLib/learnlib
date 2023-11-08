@@ -23,13 +23,13 @@ import java.util.Random;
 import java.util.function.Function;
 
 import com.google.common.io.CharStreams;
+import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.algorithm.aaar.AAARTestUtil;
 import de.learnlib.algorithm.aaar.AbstractAAARTest;
 import de.learnlib.algorithm.aaar.ComboConstructor;
 import de.learnlib.algorithm.aaar.abstraction.AbstractAbstractionTree;
-import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.example.moore.ExampleRandomMoore;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.transducer.MooreMachine;

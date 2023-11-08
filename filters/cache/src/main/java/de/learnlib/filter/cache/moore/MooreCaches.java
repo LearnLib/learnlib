@@ -15,7 +15,7 @@
  */
 package de.learnlib.filter.cache.moore;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;

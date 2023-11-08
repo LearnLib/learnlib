@@ -18,8 +18,8 @@ package de.learnlib.filter.cache.dfa;
 import java.util.Collection;
 import java.util.Map;
 
-import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;

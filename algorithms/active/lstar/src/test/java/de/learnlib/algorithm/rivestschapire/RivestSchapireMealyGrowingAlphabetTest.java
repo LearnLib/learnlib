@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.rivestschapire;
 
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.alphabet.Alphabet;
 

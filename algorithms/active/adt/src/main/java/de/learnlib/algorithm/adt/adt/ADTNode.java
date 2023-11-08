@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import de.learnlib.algorithm.adt.util.ADTUtil;
-import de.learnlib.api.oracle.SymbolQueryOracle;
+import de.learnlib.oracle.SymbolQueryOracle;
 import net.automatalib.graph.ads.RecursiveADSNode;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;

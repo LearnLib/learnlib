@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.learnlib.api.Resumable;
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
+import de.learnlib.Resumable;
 import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
 import de.learnlib.filter.cache.dfa.DFAHashCacheOracle.DFAHashCacheOracleState;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.Query;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;
 

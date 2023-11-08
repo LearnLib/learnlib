@@ -18,10 +18,10 @@ package de.learnlib.util.mealy;
 import java.util.Iterator;
 import java.util.Objects;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;

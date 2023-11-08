@@ -17,7 +17,7 @@ package de.learnlib.algorithm.observationpack;
 
 import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealy;
 import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealyBuilder;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;

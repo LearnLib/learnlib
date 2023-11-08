@@ -15,10 +15,10 @@
  */
 package de.learnlib.algorithm.procedural.adapter.dfa;
 
-import de.learnlib.acex.analyzer.AcexAnalyzers;
+import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFA;
-import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.word.Word;

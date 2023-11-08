@@ -18,8 +18,8 @@ package de.learnlib.util.statistic;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.learnlib.api.logging.Category;
 import de.learnlib.filter.statistic.Counter;
+import de.learnlib.logging.Category;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

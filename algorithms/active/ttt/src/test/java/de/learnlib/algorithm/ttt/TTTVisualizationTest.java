@@ -20,9 +20,9 @@ import java.io.StringWriter;
 
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealyBuilder;
-import de.learnlib.api.SUL;
 import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.oracle.membership.SULOracle;
+import de.learnlib.sul.SUL;
 import de.learnlib.testsupport.AbstractVisualizationTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.serialization.dot.GraphDOT;

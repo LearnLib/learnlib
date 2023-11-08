@@ -21,15 +21,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import de.learnlib.algorithm.GlobalSuffixLearner;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
-import de.learnlib.api.algorithm.feature.GlobalSuffixLearner;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.GenericObservationTable;
 import de.learnlib.datastructure.observationtable.Inconsistency;
 import de.learnlib.datastructure.observationtable.OTLearner;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;

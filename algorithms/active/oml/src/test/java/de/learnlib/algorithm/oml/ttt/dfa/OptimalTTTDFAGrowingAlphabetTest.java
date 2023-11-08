@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.oml.ttt.dfa;
 
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.alphabet.Alphabet;
 

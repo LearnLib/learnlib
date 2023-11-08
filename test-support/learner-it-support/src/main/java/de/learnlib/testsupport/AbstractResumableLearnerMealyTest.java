@@ -17,10 +17,10 @@ package de.learnlib.testsupport;
 
 import java.util.Random;
 
-import de.learnlib.api.Resumable;
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.Resumable;
+import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import net.automatalib.alphabet.Alphabet;

@@ -15,10 +15,10 @@
  */
 package de.learnlib.filter.cache.mealy;
 
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.MealyCounterOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;

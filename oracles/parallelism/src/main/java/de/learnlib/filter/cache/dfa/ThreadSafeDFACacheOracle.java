@@ -18,9 +18,9 @@ package de.learnlib.filter.cache.dfa;
 import java.util.Collection;
 import java.util.concurrent.locks.ReadWriteLock;
 
-import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
+import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.Query;
 import net.automatalib.common.util.Pair;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 

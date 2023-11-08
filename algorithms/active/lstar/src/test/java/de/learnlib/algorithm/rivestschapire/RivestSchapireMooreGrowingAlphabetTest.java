@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.rivestschapire;
 
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMooreTest;
 import net.automatalib.alphabet.Alphabet;
 

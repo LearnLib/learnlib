@@ -19,7 +19,7 @@ limitations under the License.
     <Match>
         <!-- Could be refactored ... -->
         <Bug pattern="NM_CLASS_NOT_EXCEPTION"/>
-        <Class name="de.learnlib.api.exception.MappedException"/>
+        <Class name="de.learnlib.exception.MappedException"/>
     </Match>
     <Match>
         <!-- Passing references is mostly fine for performance reasons. Since we do not deal with security-related code,
@@ -37,11 +37,11 @@ limitations under the License.
         <Or>
             <!-- SpotBugs doesn't detect that only the inner type is nullable -->
             <And>
-                <Class name="de.learnlib.api.oracle.LassoOracle"/>
+                <Class name="de.learnlib.oracle.LassoOracle"/>
                 <Method name="findCounterExample"/>
             </And>
             <And>
-                <Class name="de.learnlib.api.oracle.SingleQueryOmegaOracle"/>
+                <Class name="de.learnlib.oracle.SingleQueryOmegaOracle"/>
                 <Method name="processQuery"/>
             </And>
             <And>

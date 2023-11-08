@@ -20,9 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
-import de.learnlib.api.algorithm.LearningAlgorithm.NFALearner;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.LearningAlgorithm.NFALearner;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.CompactDFA;

@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.filter.cache.moore.MooreCacheOracle;
 import de.learnlib.filter.cache.moore.MooreCaches;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.oracle.membership.MooreSimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;

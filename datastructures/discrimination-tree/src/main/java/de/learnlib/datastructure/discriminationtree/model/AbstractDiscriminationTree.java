@@ -27,8 +27,8 @@ import java.util.RandomAccess;
 import java.util.function.Predicate;
 
 import com.google.common.collect.Iterables;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.common.smartcollection.ArrayStorage;
 import net.automatalib.common.util.collection.BitSetIterator;
 import net.automatalib.graph.Graph;

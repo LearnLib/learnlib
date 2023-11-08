@@ -15,7 +15,7 @@
  */
 package de.learnlib.driver.simulator;
 
-import de.learnlib.api.SUL;
+import de.learnlib.sul.SUL;
 import net.automatalib.automaton.transducer.MealyMachine;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

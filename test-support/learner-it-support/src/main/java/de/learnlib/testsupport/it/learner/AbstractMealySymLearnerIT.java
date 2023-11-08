@@ -18,10 +18,10 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.example.LearningExample.MealyLearningExample;
 import de.learnlib.example.LearningExamples;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealySymLearnerVariantList;

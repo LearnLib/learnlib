@@ -15,8 +15,8 @@
  */
 package de.learnlib.testsupport.it.learner;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.example.LearningExample.SPMMLearningExample;
+import de.learnlib.oracle.EquivalenceOracle;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.util.automaton.procedural.SPMMs;
 import net.automatalib.word.Word;

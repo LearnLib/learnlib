@@ -18,8 +18,8 @@ package de.learnlib.filter.cache.moore;
 import java.util.Collection;
 import java.util.concurrent.locks.ReadWriteLock;
 
-import de.learnlib.api.oracle.EquivalenceOracle.MooreEquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.EquivalenceOracle.MooreEquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;

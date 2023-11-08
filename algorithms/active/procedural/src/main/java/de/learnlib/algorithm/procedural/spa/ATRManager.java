@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import de.learnlib.api.AccessSequenceTransformer;
+import de.learnlib.AccessSequenceTransformer;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.word.Word;

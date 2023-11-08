@@ -17,8 +17,8 @@ package de.learnlib.oracle.property;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
-import de.learnlib.api.oracle.PropertyOracle.MealyPropertyOracle;
+import de.learnlib.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
+import de.learnlib.oracle.PropertyOracle.MealyPropertyOracle;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;

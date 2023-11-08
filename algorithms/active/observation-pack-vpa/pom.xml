@@ -38,11 +38,11 @@ limitations under the License.
         <!-- internal -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-acex</artifactId>
+            <artifactId>learnlib-api</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-api</artifactId>
+            <artifactId>learnlib-counterexamples</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>

@@ -18,7 +18,7 @@ package de.learnlib.mapper;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.learnlib.api.SULMapper;
+import de.learnlib.sul.SULMapper;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingMapAlphabet;
 

@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.StringJoiner;
 import java.util.function.Function;
 
-import de.learnlib.api.statistic.StatisticData;
+import de.learnlib.statistic.StatisticData;
 
 /**
  * A collection of counters.

@@ -16,8 +16,8 @@
 package de.learnlib.algorithm.observationpack;
 
 import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.counterexample.LocalSuffixFinders;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.alphabet.Alphabet;
 

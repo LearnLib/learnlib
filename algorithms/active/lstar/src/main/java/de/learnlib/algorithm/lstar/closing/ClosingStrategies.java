@@ -18,9 +18,9 @@ package de.learnlib.algorithm.lstar.closing;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.common.util.comparison.CmpUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;

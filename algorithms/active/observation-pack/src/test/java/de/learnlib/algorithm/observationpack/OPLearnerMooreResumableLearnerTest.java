@@ -17,7 +17,7 @@ package de.learnlib.algorithm.observationpack;
 
 import de.learnlib.algorithm.observationpack.moore.OPLearnerMoore;
 import de.learnlib.algorithm.observationpack.moore.OPLearnerMooreBuilder;
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMooreTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;

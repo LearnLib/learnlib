@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.learnlib.api.AccessSequenceProvider;
+import de.learnlib.AccessSequenceProvider;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.common.smartcollection.ArrayStorage;
 import net.automatalib.word.Word;

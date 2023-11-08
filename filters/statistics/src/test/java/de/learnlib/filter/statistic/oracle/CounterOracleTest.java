@@ -18,10 +18,10 @@ package de.learnlib.filter.statistic.oracle;
 import java.util.Collection;
 import java.util.Collections;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
-import de.learnlib.api.statistic.StatisticData;
 import de.learnlib.filter.statistic.TestQueries;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.Query;
+import de.learnlib.statistic.StatisticData;
 import net.automatalib.word.Word;
 import org.mockito.Mockito;
 import org.testng.Assert;

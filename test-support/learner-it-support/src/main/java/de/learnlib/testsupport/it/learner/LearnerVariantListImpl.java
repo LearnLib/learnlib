@@ -18,7 +18,7 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.util.mealy.MealyUtil;
 import de.learnlib.util.moore.MooreUtil;
 import net.automatalib.automaton.fsa.DFA;

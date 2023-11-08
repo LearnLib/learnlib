@@ -17,7 +17,7 @@ package de.learnlib.algorithm.aaar.abstraction;
 
 import java.util.function.Function;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 
 public class ExplicitAbstractionTree<AI, CI, D> extends AbstractAbstractionTree<AI, CI, D> {
 

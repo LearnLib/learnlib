@@ -15,9 +15,9 @@
  */
 package de.learnlib.algorithm.ttt;
 
-import de.learnlib.acex.analyzer.AcexAnalyzers;
+import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.moore.TTTLearnerMoore;
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMooreTest;
 import net.automatalib.alphabet.Alphabet;
 

@@ -22,7 +22,7 @@ import java.util.Set;
 import de.learnlib.algorithm.adt.api.LeafSplitter;
 import de.learnlib.algorithm.adt.config.LeafSplitters;
 import de.learnlib.algorithm.adt.util.ADTUtil;
-import de.learnlib.api.oracle.SymbolQueryOracle;
+import de.learnlib.oracle.SymbolQueryOracle;
 import net.automatalib.word.Word;
 
 /**

@@ -18,8 +18,8 @@ package de.learnlib.driver.reflect;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-import de.learnlib.api.SUL;
 import de.learnlib.driver.ContextExecutableInputSUL;
+import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.GrowingMapAlphabet;

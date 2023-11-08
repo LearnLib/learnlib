@@ -15,12 +15,12 @@
  */
 package de.learnlib.counterexample;
 
+import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.acex.AbstractNamedAcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.acex.analyzer.AbstractNamedAcexAnalyzer;
-import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
-import de.learnlib.counterexample.acex.ClassicPrefixTransformAcex;
+import de.learnlib.acex.ClassicPrefixTransformAcex;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.Query;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;

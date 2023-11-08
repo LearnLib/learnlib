@@ -15,10 +15,10 @@
  */
 package de.learnlib.counterexample;
 
-import de.learnlib.acex.analyzer.AcexAnalyzers;
-import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
+import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.acex.AcexAnalyzers;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.Query;
 import net.automatalib.automaton.concept.SuffixOutput;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

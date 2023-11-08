@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import de.learnlib.algorithm.rpni.BlueFringeMDLDFA;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.it.learner.AbstractDFAPassiveLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerITUtil;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantList;

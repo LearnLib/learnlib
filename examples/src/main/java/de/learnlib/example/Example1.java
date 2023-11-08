@@ -19,10 +19,10 @@ import java.io.IOException;
 
 import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFA;
 import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFABuilder;
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.DFAWMethodEQOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
 import de.learnlib.util.Experiment.DFAExperiment;

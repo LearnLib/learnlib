@@ -26,7 +26,7 @@ import de.learnlib.algorithm.adt.config.ADTExtenders;
 import de.learnlib.algorithm.adt.config.LeafSplitters;
 import de.learnlib.algorithm.adt.config.SubtreeReplacers;
 import de.learnlib.algorithm.adt.learner.ADTLearnerBuilder;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList;
 import net.automatalib.alphabet.Alphabet;

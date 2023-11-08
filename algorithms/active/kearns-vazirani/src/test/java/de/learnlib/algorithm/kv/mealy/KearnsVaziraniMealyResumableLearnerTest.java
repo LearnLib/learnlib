@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.kv.mealy;
 
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
 import net.automatalib.alphabet.Alphabet;
 

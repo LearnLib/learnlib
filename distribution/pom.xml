@@ -136,11 +136,6 @@ limitations under the License.
         <!-- commons -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-acex</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-counterexamples</artifactId>
         </dependency>
 
@@ -394,13 +389,6 @@ limitations under the License.
                 </dependency>
 
                 <!-- commons -->
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-acex</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-counterexamples</artifactId>

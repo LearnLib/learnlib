@@ -15,11 +15,11 @@
  */
 package de.learnlib.algorithm.oml.ttt.mealy;
 
+import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.oml.ttt.AbstractOptimalTTT;
 import de.learnlib.algorithm.oml.ttt.dt.AbstractDecisionTree;
 import de.learnlib.algorithm.oml.ttt.dt.DTLeaf;
-import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;

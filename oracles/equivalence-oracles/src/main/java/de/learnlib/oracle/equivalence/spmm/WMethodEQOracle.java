@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Streams;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;

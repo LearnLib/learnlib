@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.filter.cache.dfa.DFACacheOracle;
 import de.learnlib.filter.cache.dfa.DFACaches;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;

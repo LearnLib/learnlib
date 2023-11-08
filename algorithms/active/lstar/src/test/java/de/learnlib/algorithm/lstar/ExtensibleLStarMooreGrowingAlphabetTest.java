@@ -20,7 +20,7 @@ import java.util.Collections;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMoore;
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMooreTest;
 import net.automatalib.alphabet.Alphabet;
 

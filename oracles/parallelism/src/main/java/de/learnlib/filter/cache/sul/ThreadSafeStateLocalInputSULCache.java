@@ -21,9 +21,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import de.learnlib.api.StateLocalInputSUL;
-import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.filter.cache.mealy.ThreadSafeMealyCacheConsistencyTest;
+import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.word.WordBuilder;

@@ -20,9 +20,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import de.learnlib.api.oracle.parallelism.ParallelOmegaOracle;
-import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
-import de.learnlib.api.query.OmegaQuery;
+import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
+import de.learnlib.query.OmegaQuery;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

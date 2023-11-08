@@ -20,10 +20,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 
-import de.learnlib.api.oracle.EquivalenceOracle.MooreEquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
 import de.learnlib.filter.cache.mealy.MealyCacheOracle;
+import de.learnlib.oracle.EquivalenceOracle.MooreEquivalenceOracle;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.Query;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.incremental.moore.IncrementalMooreBuilder;
 import net.automatalib.word.Word;

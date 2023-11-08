@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.api.query.Query;
+import de.learnlib.query.Query;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.transducer.CompactMealy;

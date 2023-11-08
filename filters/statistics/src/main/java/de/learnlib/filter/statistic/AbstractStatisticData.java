@@ -16,7 +16,7 @@
 
 package de.learnlib.filter.statistic;
 
-import de.learnlib.api.statistic.StatisticData;
+import de.learnlib.statistic.StatisticData;
 
 /**
  * Common interface for statistical data.

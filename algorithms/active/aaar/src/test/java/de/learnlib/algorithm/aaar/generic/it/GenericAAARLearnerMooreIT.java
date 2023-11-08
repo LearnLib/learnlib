@@ -17,12 +17,12 @@ package de.learnlib.algorithm.aaar.generic.it;
 
 import java.util.function.Function;
 
+import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.algorithm.aaar.AAARTestUtil;
 import de.learnlib.algorithm.aaar.ComboConstructor;
 import de.learnlib.algorithm.aaar.TranslatingLearnerWrapper;
 import de.learnlib.algorithm.aaar.generic.GenericAAARLearnerMoore;
-import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMooreLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;

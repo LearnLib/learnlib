@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;

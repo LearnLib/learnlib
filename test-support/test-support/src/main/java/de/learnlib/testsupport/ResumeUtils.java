@@ -18,7 +18,7 @@ package de.learnlib.testsupport;
 import java.nio.charset.StandardCharsets;
 
 import com.thoughtworks.xstream.XStream;
-import de.learnlib.api.Resumable;
+import de.learnlib.Resumable;
 
 /**
  * Utility functions for {@link Resumable} features.

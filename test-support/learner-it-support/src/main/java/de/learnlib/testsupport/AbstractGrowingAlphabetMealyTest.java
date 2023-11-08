@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.filter.cache.mealy.MealyCacheOracle;
 import de.learnlib.filter.cache.mealy.MealyCaches;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;

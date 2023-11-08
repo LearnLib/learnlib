@@ -17,8 +17,8 @@ package de.learnlib.oracle.property;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.LassoEmptinessOracle.DFALassoEmptinessOracle;
-import de.learnlib.api.oracle.PropertyOracle.DFAPropertyOracle;
+import de.learnlib.oracle.LassoEmptinessOracle.DFALassoEmptinessOracle;
+import de.learnlib.oracle.PropertyOracle.DFAPropertyOracle;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;

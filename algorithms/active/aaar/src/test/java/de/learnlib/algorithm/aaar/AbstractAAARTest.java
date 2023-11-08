@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.google.common.collect.Lists;
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.example.LearningExample;
+import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.SampleSetEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.util.Experiment;

@@ -17,8 +17,6 @@ package de.learnlib.filter.cache.configuration;
 
 import java.util.Random;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.StateLocalInputSUL;
 import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
@@ -29,6 +27,8 @@ import de.learnlib.filter.statistic.sul.ResetCounterStateLocalInputSUL;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.oracle.membership.MooreSimulatorOracle;
+import de.learnlib.sul.SUL;
+import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.fsa.DFA;

@@ -17,10 +17,11 @@ package de.learnlib.counterexample;
 
 import java.util.List;
 
-import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.api.query.Query;
+import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
+import de.learnlib.query.Query;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 
@@ -52,7 +53,7 @@ public interface GlobalSuffixFinder<I, D> {
      *         real output domain type used for *this* counterexample analysis
      * @param ceQuery
      *         the counterexample query that triggered the refinement. Note that the same restrictions as in {@link
-     *         de.learnlib.api.algorithm.LearningAlgorithm#refineHypothesis(DefaultQuery)} apply.
+     *         LearningAlgorithm#refineHypothesis(DefaultQuery)} apply.
      * @param asTransformer
      *         an {@link AccessSequenceTransformer} used for access sequence transformation, if applicable.
      * @param hypOutput

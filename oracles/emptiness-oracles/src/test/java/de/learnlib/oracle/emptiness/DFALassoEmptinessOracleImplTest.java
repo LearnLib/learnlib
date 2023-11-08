@@ -17,9 +17,9 @@ package de.learnlib.oracle.emptiness;
 
 import java.util.Objects;
 
-import de.learnlib.api.oracle.OmegaMembershipOracle.DFAOmegaMembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.api.query.OmegaQuery;
+import de.learnlib.oracle.OmegaMembershipOracle.DFAOmegaMembershipOracle;
+import de.learnlib.query.DefaultQuery;
+import de.learnlib.query.OmegaQuery;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecking.DFALassoImpl;

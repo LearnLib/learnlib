@@ -17,7 +17,6 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Arrays;
 
-import de.learnlib.api.oracle.parallelism.ParallelOmegaOracle;
 import de.learnlib.oracle.parallelism.AbstractStaticParallelOmegaOracleTest.TestOutput;
 import org.testng.Assert;
 import org.testng.annotations.Test;

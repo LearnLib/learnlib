@@ -18,12 +18,12 @@ package de.learnlib.oracle.membership;
 import java.util.Arrays;
 import java.util.List;
 
-import de.learnlib.api.ObservableSUL;
-import de.learnlib.api.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
-import de.learnlib.api.query.OmegaQuery;
 import de.learnlib.driver.simulator.ObservableMealySimulatorSUL;
 import de.learnlib.example.mealy.ExampleCoffeeMachine;
 import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
+import de.learnlib.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
+import de.learnlib.query.OmegaQuery;
+import de.learnlib.sul.ObservableSUL;
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.word.Word;
 import org.mockito.Mockito;

@@ -31,14 +31,14 @@ import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import com.google.common.collect.Sets;
-import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.Resumable;
-import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.api.algorithm.feature.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.Resumable;
+import de.learnlib.algorithm.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
+import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.counterexample.GlobalSuffixFinder;
 import de.learnlib.counterexample.GlobalSuffixFinders;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
@@ -288,7 +288,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
         return assembleAccessSequence(accessSequences.get(state));
     }
 
-    public static final class BuilderDefaults {
+    static final class BuilderDefaults {
 
         private BuilderDefaults() {
             // prevent instantiation

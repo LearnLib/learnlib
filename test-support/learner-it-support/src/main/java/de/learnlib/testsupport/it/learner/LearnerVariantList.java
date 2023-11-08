@@ -15,7 +15,7 @@
  */
 package de.learnlib.testsupport.it.learner;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.LearningAlgorithm;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;

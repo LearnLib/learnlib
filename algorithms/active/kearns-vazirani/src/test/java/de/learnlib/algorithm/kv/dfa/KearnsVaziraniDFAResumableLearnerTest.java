@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.kv.dfa;
 
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
 import net.automatalib.alphabet.Alphabet;
 

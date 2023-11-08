@@ -17,7 +17,7 @@ package de.learnlib.driver.simulator;
 
 import java.util.Collection;
 
-import de.learnlib.api.StateLocalInputSUL;
+import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
 
 public class StateLocalInputMealySimulatorSUL<I, O> extends MealySimulatorSUL<I, O>

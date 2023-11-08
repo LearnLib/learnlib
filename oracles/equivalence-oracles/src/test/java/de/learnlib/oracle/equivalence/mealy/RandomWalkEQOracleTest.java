@@ -17,9 +17,9 @@ package de.learnlib.oracle.equivalence.mealy;
 
 import java.util.Random;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
+import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.transducer.CompactMealy;

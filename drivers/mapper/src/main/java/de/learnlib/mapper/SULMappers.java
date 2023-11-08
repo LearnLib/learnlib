@@ -15,8 +15,8 @@
  */
 package de.learnlib.mapper;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.SULMapper;
+import de.learnlib.sul.SUL;
+import de.learnlib.sul.SULMapper;
 
 /**
  * Utility methods for manipulating mappers.

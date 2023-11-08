@@ -15,12 +15,12 @@
  */
 package de.learnlib.algorithm.oml.ttt.dfa;
 
+import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.oml.ttt.AbstractOptimalTTT;
 import de.learnlib.algorithm.oml.ttt.dt.AbstractDecisionTree;
 import de.learnlib.algorithm.oml.ttt.dt.DTInnerNode;
 import de.learnlib.algorithm.oml.ttt.dt.DTLeaf;
-import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;

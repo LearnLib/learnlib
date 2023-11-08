@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.nlstar;
 
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.SampleSetEQOracle;
 import de.learnlib.oracle.membership.NFASimulatorOracle;
 import de.learnlib.util.Experiment;

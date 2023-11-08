@@ -20,7 +20,7 @@ import java.util.Collections;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMealyTest;
 import net.automatalib.alphabet.Alphabet;
 

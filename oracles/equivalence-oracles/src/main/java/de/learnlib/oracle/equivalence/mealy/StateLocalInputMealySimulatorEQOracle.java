@@ -15,7 +15,7 @@
  */
 package de.learnlib.oracle.equivalence.mealy;
 
-import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;

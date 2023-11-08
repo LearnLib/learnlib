@@ -21,10 +21,6 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.StateLocalInputSUL;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.parallelism.ParallelOracle;
 import de.learnlib.filter.cache.LearningCache;
 import de.learnlib.filter.cache.LearningCache.MealyLearningCache;
 import de.learnlib.filter.cache.LearningCacheOracle;
@@ -36,8 +32,12 @@ import de.learnlib.filter.cache.configuration.CacheCreator.MealyCacheCreator;
 import de.learnlib.filter.cache.configuration.CacheCreator.MooreCacheCreator;
 import de.learnlib.filter.cache.configuration.CacheCreator.SLISULCacheCreator;
 import de.learnlib.filter.cache.configuration.CacheCreator.SULCacheCreator;
+import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.parallelism.AbstractStaticBatchProcessor;
+import de.learnlib.oracle.parallelism.ParallelOracle;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
+import de.learnlib.sul.SUL;
+import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 

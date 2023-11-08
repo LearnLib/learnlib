@@ -15,8 +15,8 @@
  */
 package de.learnlib.filter.cache.sul;
 
-import de.learnlib.api.SUL;
 import de.learnlib.filter.cache.sul.AbstractSULCache.SULCacheState;
+import de.learnlib.sul.SUL;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 

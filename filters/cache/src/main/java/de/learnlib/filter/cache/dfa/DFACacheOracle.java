@@ -21,13 +21,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.learnlib.api.Resumable;
-import de.learnlib.api.logging.Category;
-import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
+import de.learnlib.Resumable;
 import de.learnlib.filter.cache.LearningCacheOracle.DFALearningCacheOracle;
 import de.learnlib.filter.cache.dfa.DFACacheOracle.DFACacheOracleState;
+import de.learnlib.logging.Category;
+import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.Query;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.common.util.Pair;
 import net.automatalib.incremental.dfa.Acceptance;

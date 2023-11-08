@@ -18,9 +18,9 @@ package de.learnlib.oracle.membership;
 import java.util.Collections;
 import java.util.Random;
 
-import de.learnlib.api.StateLocalInputSUL;
 import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
 import de.learnlib.example.mealy.ExampleRandomStateLocalInputMealy;
+import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.word.Word;

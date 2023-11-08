@@ -15,8 +15,8 @@
  */
 package de.learnlib.filter.cache.sul;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.StateLocalInputSUL;
+import de.learnlib.sul.SUL;
+import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;

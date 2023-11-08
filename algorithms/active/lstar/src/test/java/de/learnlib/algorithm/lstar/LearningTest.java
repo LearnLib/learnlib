@@ -15,13 +15,13 @@
  */
 package de.learnlib.algorithm.lstar;
 
+import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import org.testng.Assert;

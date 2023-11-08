@@ -16,7 +16,7 @@
 package de.learnlib.algorithm.oml.lstar.mealy.it;
 
 import de.learnlib.algorithm.oml.lstar.OptimalLStarMealy;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;

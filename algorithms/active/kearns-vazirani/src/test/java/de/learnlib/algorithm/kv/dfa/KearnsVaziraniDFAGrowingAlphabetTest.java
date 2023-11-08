@@ -15,8 +15,8 @@
  */
 package de.learnlib.algorithm.kv.dfa;
 
-import de.learnlib.acex.analyzer.AcexAnalyzers;
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.acex.AcexAnalyzers;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.alphabet.Alphabet;
 

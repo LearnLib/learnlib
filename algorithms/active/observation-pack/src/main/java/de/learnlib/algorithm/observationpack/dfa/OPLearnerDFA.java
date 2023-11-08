@@ -16,16 +16,16 @@
 package de.learnlib.algorithm.observationpack.dfa;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.observationpack.AbstractOPLearner;
 import de.learnlib.algorithm.observationpack.hypothesis.HState;
 import de.learnlib.algorithm.observationpack.hypothesis.HTransition;
-import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.AbstractQuery;
-import de.learnlib.api.query.Query;
 import de.learnlib.counterexample.LocalSuffixFinder;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.datastructure.discriminationtree.BinaryDTree;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.AbstractQuery;
+import de.learnlib.query.Query;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;
@@ -81,7 +81,7 @@ public class OPLearnerDFA<I> extends AbstractOPLearner<DFA<?, I>, I, Boolean, Bo
         return null;
     }
 
-    public static final class BuilderDefaults {
+    static final class BuilderDefaults {
 
         private BuilderDefaults() {
             // prevent instantiation

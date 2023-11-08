@@ -18,7 +18,7 @@ package de.learnlib.driver.reflect;
 import java.lang.reflect.Constructor;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import de.learnlib.api.exception.SULException;
+import de.learnlib.exception.SULException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

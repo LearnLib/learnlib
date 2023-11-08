@@ -28,14 +28,10 @@ limitations under the License.
     <artifactId>learnlib-counterexamples</artifactId>
 
     <name>LearnLib :: Commons :: Counterexamples</name>
-    <description>A collection of standard algorithms for handling counterexamples in automata learning</description>
+    <description>A collection of algorithms for handling counterexamples in automata learning</description>
 
     <dependencies>
         <!-- internal -->
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-acex</artifactId>
-        </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
@@ -45,6 +41,10 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-smartcollections</artifactId>
         </dependency>
 
         <dependency>

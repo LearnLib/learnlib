@@ -17,7 +17,7 @@ package de.learnlib.example;
 
 import java.util.Collection;
 
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.word.Word;
 
 /**

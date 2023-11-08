@@ -21,11 +21,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import de.learnlib.algorithm.LearnerConstructor;
+import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.aaar.abstraction.AbstractAbstractionTree;
-import de.learnlib.api.algorithm.LearnerConstructor;
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.GrowingMapAlphabet;

@@ -17,10 +17,10 @@ package de.learnlib.oracle.property;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.EmptinessOracle;
-import de.learnlib.api.oracle.InclusionOracle;
-import de.learnlib.api.oracle.PropertyOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.EmptinessOracle;
+import de.learnlib.oracle.InclusionOracle;
+import de.learnlib.oracle.PropertyOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.concept.Output;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

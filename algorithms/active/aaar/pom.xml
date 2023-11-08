@@ -68,11 +68,6 @@ limitations under the License.
         <!-- test -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-acex</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-counterexamples</artifactId>
             <scope>test</scope>
         </dependency>

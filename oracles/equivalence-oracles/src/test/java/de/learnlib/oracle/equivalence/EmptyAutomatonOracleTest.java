@@ -15,13 +15,13 @@
  */
 package de.learnlib.oracle.equivalence;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.example.LearningExample;
 import de.learnlib.example.dfa.ExamplePaulAndMary;
 import de.learnlib.example.mealy.ExampleStack;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;

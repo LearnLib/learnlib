@@ -29,6 +29,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import de.learnlib.Resumable;
+import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.adt.adt.ADT;
 import de.learnlib.algorithm.adt.adt.ADT.LCAInfo;
 import de.learnlib.algorithm.adt.adt.ADTLeafNode;
@@ -49,12 +51,10 @@ import de.learnlib.algorithm.adt.model.ObservationTree;
 import de.learnlib.algorithm.adt.model.ReplacementResult;
 import de.learnlib.algorithm.adt.util.ADTUtil;
 import de.learnlib.algorithm.adt.util.SQOOTBridge;
-import de.learnlib.api.Resumable;
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.logging.Category;
-import de.learnlib.api.oracle.SymbolQueryOracle;
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.counterexample.LocalSuffixFinders;
+import de.learnlib.logging.Category;
+import de.learnlib.oracle.SymbolQueryOracle;
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
@@ -833,7 +833,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         return adt;
     }
 
-    public static final class BuilderDefaults {
+    static final class BuilderDefaults {
 
         private BuilderDefaults() {
             // prevent instantiation

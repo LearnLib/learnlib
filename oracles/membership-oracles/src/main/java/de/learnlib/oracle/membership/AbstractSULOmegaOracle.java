@@ -19,12 +19,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.learnlib.api.ObservableSUL;
-import de.learnlib.api.SUL;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.api.oracle.OmegaMembershipOracle;
-import de.learnlib.api.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
-import de.learnlib.api.query.OmegaQuery;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.OmegaMembershipOracle;
+import de.learnlib.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
+import de.learnlib.query.OmegaQuery;
+import de.learnlib.sul.ObservableSUL;
+import de.learnlib.sul.SUL;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;

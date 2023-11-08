@@ -20,15 +20,15 @@ import java.util.Collections;
 import java.util.List;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import de.learnlib.algorithm.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
 import de.learnlib.algorithm.lstar.AbstractExtensibleAutomatonLStar;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
-import de.learnlib.api.algorithm.feature.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerMealy;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.CompactTransition;
 import net.automatalib.automaton.concept.SuffixOutput;

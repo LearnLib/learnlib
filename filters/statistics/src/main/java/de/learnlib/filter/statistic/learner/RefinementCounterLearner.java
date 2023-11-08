@@ -15,20 +15,20 @@
  */
 package de.learnlib.filter.statistic.learner;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
-import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.api.statistic.StatisticLearner;
-import de.learnlib.api.statistic.StatisticLearner.DFAStatisticLearner;
-import de.learnlib.api.statistic.StatisticLearner.MealyStatisticLearner;
-import de.learnlib.api.statistic.StatisticLearner.MooreStatisticLearner;
+import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
+import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
+import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
 import de.learnlib.buildtool.refinement.annotation.Generic;
 import de.learnlib.buildtool.refinement.annotation.Interface;
 import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.filter.statistic.Counter;
+import de.learnlib.query.DefaultQuery;
+import de.learnlib.statistic.StatisticLearner;
+import de.learnlib.statistic.StatisticLearner.DFAStatisticLearner;
+import de.learnlib.statistic.StatisticLearner.MealyStatisticLearner;
+import de.learnlib.statistic.StatisticLearner.MooreStatisticLearner;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;

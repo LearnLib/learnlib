@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.google.common.io.CharStreams;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
 import de.learnlib.filter.statistic.TestQueries;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.Query;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.word.Word;
 import org.mockito.Mockito;

@@ -15,9 +15,9 @@
  */
 package de.learnlib.mapper;
 
-import de.learnlib.api.Mapper;
-import de.learnlib.api.Mapper.AsynchronousMapper;
-import de.learnlib.api.Mapper.SynchronousMapper;
+import de.learnlib.Mapper;
+import de.learnlib.Mapper.AsynchronousMapper;
+import de.learnlib.Mapper.SynchronousMapper;
 
 /**
  * Utility methods for manipulating mappers.

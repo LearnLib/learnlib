@@ -26,9 +26,9 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.word.Word;

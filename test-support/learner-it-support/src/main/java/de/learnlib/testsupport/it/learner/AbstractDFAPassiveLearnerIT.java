@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.example.DefaultPassiveLearningExample.DefaultDFAPassiveLearningExample;
 import de.learnlib.example.LearningExample.DFALearningExample;
 import de.learnlib.example.LearningExamples;
 import de.learnlib.example.PassiveLearningExample.DFAPassiveLearningExample;
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantListImpl.DFAPassiveLearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;

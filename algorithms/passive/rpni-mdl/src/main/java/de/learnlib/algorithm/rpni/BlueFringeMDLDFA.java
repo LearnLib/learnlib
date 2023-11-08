@@ -20,13 +20,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
-import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.PassiveLearningAlgorithm;
+import de.learnlib.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
 import de.learnlib.datastructure.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.BlueFringePTAState;
 import de.learnlib.datastructure.pta.RedBlueMerge;
 import de.learnlib.datastructure.pta.wrapper.DFAWrapper;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.common.smartcollection.IntSeq;

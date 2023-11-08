@@ -20,7 +20,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Refactorings
   * Many LearnLib packages have been refactored from plural-based keywords to singular-based keywords. Some examples are
     * renamed all learning algorithm packages from `de.learnlib.algorithms.*` to `de.learnlib.algorithm.*`.
-    * renamed `de.learnlib.acex.analyzers.*` to `de.learnlib.acex.analyzer.*`.
     * renamed `de.learnlib.counterexamples.*` to `de.learnlib.counterexample.*`.
     * renamed `de.learnlib.drivers.*` to `de.learnlib.driver.*`.
     * renamed `de.learnlib.util.statistics.*` to `de.learnlib.util.statistic.*`.
@@ -29,11 +28,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     While this may cause some refactoring, it should only affect import statements as the names of most classes remain identical.
   * Some actual re-namings concern
     * All code concerning visibly push-down automata now uses the "vpa" acronym (previously "vpda"). This includes package names, class names and (Maven) module names.
-    * The "discrimination-tree" learner has been renamed to "observation-pack". This includes classes (`DTLearnerDFA` -> `OPLearnerDFA`, etc), package names, and Maven modules. The same refactoring happened for the VPA-based version of the learner.
+    * The "discrimination-tree" learner has been renamed to "observation-pack". This includes classes (`DTLearnerDFA` -> `OPLearnerDFA`, etc.), package names, and Maven modules. The same refactoring happened for the VPA-based version of the learner.
+    * The `learnlib-acex` Maven module has been merged with the `learnlib-counterexamples` module and the respecitve interfaces have been move to the `learnlib-api` module.
+    * Classes in the  `learnlib-api` have been moved from `de.learnlib.api` to `de.learnlib`.
     * Refactored the package `de.learnlib.datastructure.pta.pta.*` to `de.learnlib.datastructure.pta.*`.
     * Refactored the package `de.learnlib.driver.util.*` to `de.learnlib.driver.simulator.*`.
     * Moved classes from the package `de.learnlib.mapper.api.*` to `de.learnlib.api.*`.
-    * Renamed `PassiveLearnerVariantTICase` to `PassiveLearnerVariantITCase`
+    * Renamed `PassiveLearnerVariantTICase` to `PassiveLearnerVariantITCase`.
 * `AbstractTTTHypothesis` has received an additional type parameter for its state type.
 * `AutomatonOracle#accepts` no longer has a `length` parameter. Provide a correctly sized `input` iterable instead.
 * Classes revolving around the `ContextExecutableInputSUL` have been moved from the `learnlib-mapper` module to the `learnlib-drivers-basic` module.

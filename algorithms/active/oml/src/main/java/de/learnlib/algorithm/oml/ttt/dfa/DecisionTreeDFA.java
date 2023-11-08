@@ -22,7 +22,7 @@ import de.learnlib.algorithm.oml.ttt.dt.DTInnerNode;
 import de.learnlib.algorithm.oml.ttt.dt.DTLeaf;
 import de.learnlib.algorithm.oml.ttt.pt.PTNode;
 import de.learnlib.algorithm.oml.ttt.st.STNode;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 
 class DecisionTreeDFA<I> extends AbstractDecisionTree<I, Boolean> {

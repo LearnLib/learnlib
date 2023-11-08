@@ -20,10 +20,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.api.Resumable;
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.api.query.Query;
+import de.learnlib.Resumable;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
+import de.learnlib.query.Query;
 import de.learnlib.testsupport.ResumeUtils;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.Output;

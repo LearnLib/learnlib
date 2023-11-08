@@ -428,11 +428,6 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-acex</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-counterexamples</artifactId>
                 <version>${project.version}</version>
             </dependency>

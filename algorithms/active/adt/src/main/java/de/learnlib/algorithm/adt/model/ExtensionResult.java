@@ -17,7 +17,7 @@ package de.learnlib.algorithm.adt.model;
 
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.api.ADTExtender;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

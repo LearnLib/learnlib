@@ -15,8 +15,8 @@
  */
 package de.learnlib.algorithm.aaar;
 
-import de.learnlib.api.algorithm.LearnerConstructor;
-import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.LearnerConstructor;
+import de.learnlib.algorithm.LearningAlgorithm;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 
 /**

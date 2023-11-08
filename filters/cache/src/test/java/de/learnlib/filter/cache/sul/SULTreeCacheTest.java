@@ -15,7 +15,7 @@
  */
 package de.learnlib.filter.cache.sul;
 
-import de.learnlib.api.SUL;
+import de.learnlib.sul.SUL;
 
 public class SULTreeCacheTest extends AbstractSULCacheTest {
 

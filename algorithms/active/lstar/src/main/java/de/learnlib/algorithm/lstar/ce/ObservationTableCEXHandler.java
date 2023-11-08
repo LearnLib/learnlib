@@ -17,10 +17,10 @@ package de.learnlib.algorithm.lstar.ce;
 
 import java.util.List;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.MutableObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.concept.SuffixOutput;
 
 public interface ObservationTableCEXHandler<I, D> {

@@ -18,8 +18,8 @@ package de.learnlib.filter.cache.moore;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.api.query.AbstractQuery;
-import de.learnlib.api.query.Query;
+import de.learnlib.query.AbstractQuery;
+import de.learnlib.query.Query;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;

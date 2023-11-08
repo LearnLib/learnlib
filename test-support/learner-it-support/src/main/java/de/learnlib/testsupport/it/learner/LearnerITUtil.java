@@ -20,8 +20,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.example.LearningExample;
 import de.learnlib.example.LearningExample.OneSEVPALearningExample;
 import de.learnlib.example.LearningExample.SBALearningExample;
@@ -29,6 +27,8 @@ import de.learnlib.example.LearningExample.SPALearningExample;
 import de.learnlib.example.LearningExample.SPMMLearningExample;
 import de.learnlib.example.LearningExample.UniversalDeterministicLearningExample;
 import de.learnlib.example.PassiveLearningExample;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.OneSEVPALearnerVariantListImpl;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SBALearnerVariantListImpl;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPALearnerVariantListImpl;

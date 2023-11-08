@@ -26,10 +26,10 @@ import java.util.Set;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.spmm.ATManager;
-import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;

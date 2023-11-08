@@ -17,8 +17,8 @@ package de.learnlib.oracle.equivalence.vpa;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.util.automaton.vpa.OneSEVPAs;

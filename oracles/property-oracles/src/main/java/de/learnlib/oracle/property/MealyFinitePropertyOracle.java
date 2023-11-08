@@ -17,8 +17,8 @@ package de.learnlib.oracle.property;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.EmptinessOracle.MealyEmptinessOracle;
-import de.learnlib.api.oracle.PropertyOracle.MealyPropertyOracle;
+import de.learnlib.oracle.EmptinessOracle.MealyEmptinessOracle;
+import de.learnlib.oracle.PropertyOracle.MealyPropertyOracle;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecking.ModelChecker.MealyModelChecker;
 import net.automatalib.word.Word;

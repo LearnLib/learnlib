@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import de.learnlib.api.StateLocalInputSUL;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
-import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.api.query.Query;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
 import de.learnlib.oracle.parallelism.Utils.Analysis;
 import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
+import de.learnlib.query.DefaultQuery;
+import de.learnlib.query.Query;
+import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.mockito.Mockito;

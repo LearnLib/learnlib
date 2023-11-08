@@ -15,8 +15,8 @@
  */
 package de.learnlib.datastructure.discriminationtree.model;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.word.Word;
 
 /**

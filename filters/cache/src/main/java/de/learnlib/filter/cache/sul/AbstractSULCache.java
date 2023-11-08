@@ -15,13 +15,13 @@
  */
 package de.learnlib.filter.cache.sul;
 
-import de.learnlib.api.Resumable;
-import de.learnlib.api.SUL;
-import de.learnlib.api.logging.Category;
-import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.Resumable;
 import de.learnlib.filter.cache.LearningCache.MealyLearningCache;
 import de.learnlib.filter.cache.mealy.MealyCacheConsistencyTest;
 import de.learnlib.filter.cache.sul.AbstractSULCache.SULCacheState;
+import de.learnlib.logging.Category;
+import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;

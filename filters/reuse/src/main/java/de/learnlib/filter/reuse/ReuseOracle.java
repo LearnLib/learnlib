@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import de.learnlib.api.oracle.SingleQueryOracle.SingleQueryOracleMealy;
 import de.learnlib.filter.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filter.reuse.tree.BoundedDeque.AccessPolicy;
 import de.learnlib.filter.reuse.tree.BoundedDeque.EvictPolicy;
@@ -30,6 +29,7 @@ import de.learnlib.filter.reuse.tree.ReuseNode.NodeResult;
 import de.learnlib.filter.reuse.tree.ReuseTree;
 import de.learnlib.filter.reuse.tree.ReuseTree.ReuseTreeBuilder;
 import de.learnlib.filter.reuse.tree.SystemStateHandler;
+import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMealy;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;

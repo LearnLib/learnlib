@@ -20,12 +20,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import de.learnlib.api.Resumable;
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.SymbolQueryOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.Resumable;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.cache.mealy.SymbolQueryCache.SymbolQueryCacheState;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.SymbolQueryOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;

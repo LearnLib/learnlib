@@ -19,14 +19,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.api.oracle.OmegaMembershipOracle;
-import de.learnlib.api.oracle.OmegaQueryAnswerer;
-import de.learnlib.api.oracle.SingleQueryOmegaOracle;
-import de.learnlib.api.query.OmegaQuery;
-import de.learnlib.api.query.Query;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.OmegaMembershipOracle;
+import de.learnlib.oracle.OmegaQueryAnswerer;
+import de.learnlib.oracle.SingleQueryOmegaOracle;
+import de.learnlib.query.OmegaQuery;
+import de.learnlib.query.Query;
 import de.learnlib.util.MQUtil;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.fsa.DFA;
@@ -74,7 +74,7 @@ public class SimulatorOmegaOracle<S extends Object, I, D> implements SingleQuery
     }
 
     /**
-     * Gets the {@link SimulatorOracle} used to answer {@link de.learnlib.api.query.Query}s.
+     * Gets the {@link SimulatorOracle} used to answer {@link Query}s.
      *
      * @return the SimulatorOracle.
      */

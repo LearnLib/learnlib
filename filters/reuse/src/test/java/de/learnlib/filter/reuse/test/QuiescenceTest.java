@@ -17,8 +17,8 @@ package de.learnlib.filter.reuse.test;
 
 import java.util.function.Supplier;
 
+import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
-import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseOracle;
 import net.automatalib.alphabet.Alphabet;

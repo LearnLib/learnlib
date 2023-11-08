@@ -18,8 +18,6 @@ package de.learnlib.mapper;
 import java.lang.reflect.Constructor;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.exception.SULException;
 import de.learnlib.driver.reflect.Error;
 import de.learnlib.driver.reflect.MethodInput;
 import de.learnlib.driver.reflect.MethodOutput;
@@ -28,6 +26,8 @@ import de.learnlib.driver.reflect.SimplePOJOExceptionMapper;
 import de.learnlib.driver.reflect.SimplePOJOTestDriver;
 import de.learnlib.driver.reflect.Unobserved;
 import de.learnlib.driver.reflect.VoidOutput;
+import de.learnlib.exception.SULException;
+import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;

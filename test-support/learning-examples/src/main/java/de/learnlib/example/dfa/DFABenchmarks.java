@@ -18,9 +18,9 @@ package de.learnlib.example.dfa;
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.learnlib.api.logging.Category;
 import de.learnlib.example.DefaultLearningExample.DefaultDFALearningExample;
 import de.learnlib.example.LearningExample.DFALearningExample;
+import de.learnlib.logging.Category;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.serialization.learnlibv2.LearnLibV2Serialization;
 import org.checkerframework.checker.nullness.qual.Nullable;

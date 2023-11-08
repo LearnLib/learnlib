@@ -17,11 +17,11 @@ package de.learnlib.algorithm.rpni;
 
 import java.util.Collection;
 
-import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
-import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveMealyLearner;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.PassiveLearningAlgorithm;
+import de.learnlib.algorithm.PassiveLearningAlgorithm.PassiveMealyLearner;
 import de.learnlib.datastructure.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.wrapper.MealyWrapper;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;

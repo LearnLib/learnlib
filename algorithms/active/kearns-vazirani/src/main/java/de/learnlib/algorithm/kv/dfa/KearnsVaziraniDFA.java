@@ -24,18 +24,18 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import de.learnlib.Resumable;
+import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.acex.analyzer.AcexAnalyzers;
-import de.learnlib.acex.impl.AbstractBaseCounterexample;
+import de.learnlib.acex.AcexAnalyzers;
+import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.kv.StateInfo;
-import de.learnlib.api.Resumable;
-import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.logging.Category;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.BinaryDTree;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
 import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
+import de.learnlib.logging.Category;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
@@ -354,7 +354,7 @@ public class KearnsVaziraniDFA<I>
         }
     }
 
-    public static final class BuilderDefaults {
+    static final class BuilderDefaults {
 
         private BuilderDefaults() {
             // prevent instantiation

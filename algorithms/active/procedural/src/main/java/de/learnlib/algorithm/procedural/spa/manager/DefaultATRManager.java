@@ -21,8 +21,8 @@ import java.util.Set;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.procedural.spa.ATRManager;
-import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;

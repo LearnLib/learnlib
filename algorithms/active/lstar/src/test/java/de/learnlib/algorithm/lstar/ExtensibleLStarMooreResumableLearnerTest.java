@@ -19,7 +19,7 @@ import java.util.Random;
 
 import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMoore;
 import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMooreBuilder;
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMooreTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;

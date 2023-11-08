@@ -15,8 +15,8 @@
  */
 package de.learnlib.driver;
 
-import de.learnlib.api.ExecutableInput;
-import de.learnlib.api.SUL;
+import de.learnlib.sul.ExecutableInput;
+import de.learnlib.sul.SUL;
 
 /**
  * A {@link SUL} that executes {@link ExecutableInput} symbols.

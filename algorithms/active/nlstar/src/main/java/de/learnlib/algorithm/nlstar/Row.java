@@ -20,7 +20,7 @@ import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
 
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.word.Word;
 
 /**

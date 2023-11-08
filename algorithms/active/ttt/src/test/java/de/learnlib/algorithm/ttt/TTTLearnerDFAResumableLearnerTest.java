@@ -18,7 +18,7 @@ package de.learnlib.algorithm.ttt;
 import de.learnlib.algorithm.ttt.base.TTTLearnerState;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFABuilder;
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
 import net.automatalib.alphabet.Alphabet;
 

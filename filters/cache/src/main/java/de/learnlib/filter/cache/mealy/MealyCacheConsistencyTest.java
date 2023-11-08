@@ -17,9 +17,9 @@ package de.learnlib.filter.cache.mealy;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.word.Word;

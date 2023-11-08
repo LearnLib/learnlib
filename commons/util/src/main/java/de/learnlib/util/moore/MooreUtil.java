@@ -17,10 +17,10 @@ package de.learnlib.util.moore;
 
 import java.util.Objects;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;

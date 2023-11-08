@@ -19,15 +19,15 @@ import java.util.function.Supplier;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.acex.AcexAnalyzer;
+import de.learnlib.acex.OutInconsPrefixTransformAcex;
+import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.ttt.base.AbstractBaseDTNode;
 import de.learnlib.algorithm.ttt.base.AbstractTTTLearner;
 import de.learnlib.algorithm.ttt.base.BaseTTTDiscriminationTree;
 import de.learnlib.algorithm.ttt.base.OutputInconsistency;
 import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
-import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.counterexample.acex.OutInconsPrefixTransformAcex;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;

@@ -18,9 +18,9 @@ package de.learnlib.algorithm.observationpack.vpa.hypothesis;
 import java.util.List;
 import java.util.function.Predicate;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.model.AbstractDiscriminationTree;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.word.Word;
 
 /**

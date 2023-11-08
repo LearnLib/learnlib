@@ -15,7 +15,7 @@
  */
 package de.learnlib.testsupport.it.learner;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.LearningAlgorithm;
 
 public class LearnerVariant<M, I, D> {
 

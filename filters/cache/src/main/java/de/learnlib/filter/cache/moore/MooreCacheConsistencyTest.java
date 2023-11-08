@@ -17,9 +17,9 @@ package de.learnlib.filter.cache.moore;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.EquivalenceOracle.MooreEquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.MooreEquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.incremental.moore.IncrementalMooreBuilder;
 import net.automatalib.word.Word;

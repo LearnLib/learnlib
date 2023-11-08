@@ -15,10 +15,10 @@
  */
 package de.learnlib.testsupport;
 
-import de.learnlib.api.Resumable;
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.Resumable;
+import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.util.automaton.Automata;

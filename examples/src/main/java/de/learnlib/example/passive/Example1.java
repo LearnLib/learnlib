@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import de.learnlib.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
 import de.learnlib.algorithm.rpni.BlueFringeRPNIDFA;
-import de.learnlib.api.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.fsa.DFA;

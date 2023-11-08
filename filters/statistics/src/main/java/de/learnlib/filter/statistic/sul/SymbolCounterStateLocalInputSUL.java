@@ -17,8 +17,8 @@ package de.learnlib.filter.statistic.sul;
 
 import java.util.Collection;
 
-import de.learnlib.api.StateLocalInputSUL;
 import de.learnlib.filter.statistic.Counter;
+import de.learnlib.sul.StateLocalInputSUL;
 
 public class SymbolCounterStateLocalInputSUL<I, O> extends SymbolCounterSUL<I, O> implements StateLocalInputSUL<I, O> {
 

@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.parallelism.ParallelOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.parallelism.ParallelOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.word.Word;

@@ -17,8 +17,8 @@ package de.learnlib.oracle.equivalence.vpa;
 
 import java.util.Random;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractEQOracleTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;

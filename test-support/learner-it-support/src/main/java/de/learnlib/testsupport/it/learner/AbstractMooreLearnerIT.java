@@ -18,10 +18,10 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.api.oracle.EquivalenceOracle.MooreEquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.example.LearningExample.MooreLearningExample;
 import de.learnlib.example.LearningExamples;
+import de.learnlib.oracle.EquivalenceOracle.MooreEquivalenceOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.oracle.equivalence.MooreSimulatorEQOracle;
 import de.learnlib.oracle.membership.MooreSimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreLearnerVariantList;

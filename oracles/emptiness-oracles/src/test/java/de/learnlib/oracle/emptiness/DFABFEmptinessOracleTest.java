@@ -17,8 +17,8 @@ package de.learnlib.oracle.emptiness;
 
 import java.util.Objects;
 
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;

@@ -20,7 +20,7 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 import com.google.common.base.Preconditions;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.concept.Output;

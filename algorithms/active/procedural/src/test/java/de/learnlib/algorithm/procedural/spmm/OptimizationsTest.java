@@ -17,10 +17,10 @@ package de.learnlib.algorithm.procedural.spmm;
 
 import java.util.Arrays;
 
+import de.learnlib.algorithm.LearnerConstructor;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.adapter.mealy.TTTAdapterMealy;
 import de.learnlib.algorithm.procedural.spmm.manager.OptimizingATManager;
-import de.learnlib.api.algorithm.LearnerConstructor;
 import de.learnlib.example.spmm.ExamplePalindrome;
 import de.learnlib.oracle.equivalence.EQOracleChain;
 import de.learnlib.oracle.equivalence.SampleSetEQOracle;

@@ -15,12 +15,12 @@
  */
 package de.learnlib.filter.cache.sul;
 
-import de.learnlib.api.SUL;
 import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.cache.SULLearningCacheOracle;
 import de.learnlib.filter.statistic.sul.ResetCounterSUL;
+import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;

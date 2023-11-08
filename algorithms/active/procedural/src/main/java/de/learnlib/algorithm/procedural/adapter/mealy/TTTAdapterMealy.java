@@ -15,11 +15,11 @@
  */
 package de.learnlib.algorithm.procedural.adapter.mealy;
 
-import de.learnlib.acex.analyzer.AcexAnalyzers;
+import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
-import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 

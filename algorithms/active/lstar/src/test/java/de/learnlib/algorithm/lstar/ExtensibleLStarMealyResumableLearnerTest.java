@@ -19,7 +19,7 @@ import java.util.Random;
 
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;

@@ -17,8 +17,6 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.parallelism.BatchProcessor;
-
 /**
  * Abstract base class for jobs (i.e., {@link Runnable}s) that process queries.
  * <p>

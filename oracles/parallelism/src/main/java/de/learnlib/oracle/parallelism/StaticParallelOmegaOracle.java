@@ -17,10 +17,9 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.OmegaMembershipOracle;
-import de.learnlib.api.oracle.parallelism.ParallelOmegaOracle;
-import de.learnlib.api.query.OmegaQuery;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.OmegaMembershipOracle;
+import de.learnlib.query.OmegaQuery;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.index.qual.NonNegative;
 

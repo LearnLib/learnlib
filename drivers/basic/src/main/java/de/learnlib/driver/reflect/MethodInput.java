@@ -18,8 +18,8 @@ package de.learnlib.driver.reflect;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import de.learnlib.api.ContextExecutableInput;
-import de.learnlib.api.exception.SULException;
+import de.learnlib.exception.SULException;
+import de.learnlib.sul.ContextExecutableInput;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

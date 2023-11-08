@@ -17,15 +17,15 @@ package de.learnlib.oracle.equivalence;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
-import de.learnlib.api.oracle.EquivalenceOracle.MealyEquivalenceOracle;
-import de.learnlib.api.oracle.EquivalenceOracle.MooreEquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
 import de.learnlib.buildtool.refinement.annotation.Generic;
 import de.learnlib.buildtool.refinement.annotation.Interface;
 import de.learnlib.buildtool.refinement.annotation.Map;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.MooreEquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;

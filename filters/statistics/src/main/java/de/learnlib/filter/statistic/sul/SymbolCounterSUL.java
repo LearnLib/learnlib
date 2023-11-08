@@ -15,9 +15,9 @@
  */
 package de.learnlib.filter.statistic.sul;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.statistic.StatisticSUL;
 import de.learnlib.filter.statistic.Counter;
+import de.learnlib.statistic.StatisticSUL;
+import de.learnlib.sul.SUL;
 
 public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
 

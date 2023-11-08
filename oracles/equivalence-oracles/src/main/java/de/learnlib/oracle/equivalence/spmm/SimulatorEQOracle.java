@@ -17,8 +17,8 @@ package de.learnlib.oracle.equivalence.spmm;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.util.automaton.procedural.SPMMs;

@@ -18,7 +18,7 @@ package de.learnlib.algorithm.ttt;
 import de.learnlib.algorithm.ttt.base.TTTLearnerState;
 import de.learnlib.algorithm.ttt.moore.TTTLearnerMoore;
 import de.learnlib.algorithm.ttt.moore.TTTLearnerMooreBuilder;
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMooreTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;

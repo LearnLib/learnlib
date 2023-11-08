@@ -15,9 +15,9 @@
  */
 package de.learnlib.util.moore;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 

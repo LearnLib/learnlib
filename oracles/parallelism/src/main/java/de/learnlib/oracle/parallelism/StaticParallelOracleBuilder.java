@@ -18,9 +18,9 @@ package de.learnlib.oracle.parallelism;
 import java.util.Collection;
 import java.util.function.Supplier;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
-import de.learnlib.api.query.Query;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
+import de.learnlib.query.Query;
 
 /**
  * A specialized {@link AbstractStaticBatchProcessorBuilder} for {@link MembershipOracle}s.

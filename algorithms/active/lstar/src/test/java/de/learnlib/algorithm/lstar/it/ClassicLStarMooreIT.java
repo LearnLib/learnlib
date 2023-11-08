@@ -20,7 +20,7 @@ import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.algorithm.lstar.moore.ClassicLStarMooreBuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMooreSymLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreSymLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;

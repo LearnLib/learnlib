@@ -19,8 +19,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.function.Function;
 
-import de.learnlib.api.logging.Category;
-import de.learnlib.api.setting.LearnLibSettingsSource;
+import de.learnlib.logging.Category;
 import net.automatalib.common.util.WrapperUtil;
 import net.automatalib.common.util.setting.SettingsSource;
 import org.checkerframework.checker.nullness.qual.Nullable;

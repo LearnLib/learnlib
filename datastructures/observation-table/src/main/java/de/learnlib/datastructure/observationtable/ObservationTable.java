@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import de.learnlib.api.AccessSequenceTransformer;
+import de.learnlib.AccessSequenceTransformer;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;

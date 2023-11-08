@@ -20,7 +20,7 @@ import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.algorithm.lstar.mealy.ClassicLStarMealyBuilder;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMealySymLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealySymLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;

@@ -17,7 +17,7 @@ package de.learnlib.filter.cache.dfa;
 
 import java.util.Map;
 
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;

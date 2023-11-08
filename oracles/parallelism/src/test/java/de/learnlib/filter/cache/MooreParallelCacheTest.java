@@ -15,13 +15,13 @@
  */
 package de.learnlib.filter.cache;
 
-import de.learnlib.api.oracle.parallelism.ParallelOracle;
 import de.learnlib.filter.cache.configuration.CacheConfig;
 import de.learnlib.filter.cache.configuration.CacheCreator.MooreCacheCreator;
 import de.learnlib.filter.cache.configuration.Config;
 import de.learnlib.filter.cache.moore.ThreadSafeMooreCacheOracle;
 import de.learnlib.filter.cache.moore.ThreadSafeMooreCaches;
 import de.learnlib.filter.statistic.oracle.MooreCounterOracle;
+import de.learnlib.oracle.parallelism.ParallelOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;

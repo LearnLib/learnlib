@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
+import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.util.ADTUtil;
 import net.automatalib.alphabet.Alphabet;
@@ -65,7 +66,7 @@ public class ObservationTree<S, I, O> {
 
     /**
      * Initialize the observation tree with initial hypothesis state. Usually used during {@link
-     * de.learnlib.api.algorithm.LearningAlgorithm#startLearning()}
+     * LearningAlgorithm#startLearning()}
      *
      * @param state
      *         the initial state of the hypothesis

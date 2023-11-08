@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 import de.learnlib.algorithm.adt.model.ObservationTree;
-import de.learnlib.api.oracle.SymbolQueryOracle;
+import de.learnlib.oracle.SymbolQueryOracle;
 import net.automatalib.automaton.transducer.FastMealy;
 import net.automatalib.automaton.transducer.FastMealyState;
 

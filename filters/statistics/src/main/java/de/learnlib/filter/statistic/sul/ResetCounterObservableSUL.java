@@ -15,8 +15,8 @@
  */
 package de.learnlib.filter.statistic.sul;
 
-import de.learnlib.api.ObservableSUL;
 import de.learnlib.filter.statistic.Counter;
+import de.learnlib.sul.ObservableSUL;
 
 public class ResetCounterObservableSUL<S, I, O> extends ResetCounterSUL<I, O> implements ObservableSUL<S, I, O> {
 

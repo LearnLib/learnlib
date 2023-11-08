@@ -15,9 +15,9 @@
  */
 package de.learnlib.driver;
 
-import de.learnlib.api.ContextExecutableInput;
-import de.learnlib.api.ContextHandler;
-import de.learnlib.api.SUL;
+import de.learnlib.sul.ContextExecutableInput;
+import de.learnlib.sul.ContextHandler;
+import de.learnlib.sul.SUL;
 
 /**
  * A {@link SUL} that executes {@link ContextExecutableInput} symbols.

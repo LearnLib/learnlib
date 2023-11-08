@@ -18,13 +18,13 @@ package de.learnlib.filter.statistic.sul;
 import java.util.Collection;
 import java.util.Collections;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.api.oracle.SingleQueryOracle.SingleQueryOracleMealy;
-import de.learnlib.api.query.Query;
-import de.learnlib.api.statistic.StatisticSUL;
 import de.learnlib.filter.statistic.Counter;
 import de.learnlib.filter.statistic.TestQueries;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMealy;
+import de.learnlib.query.Query;
+import de.learnlib.statistic.StatisticSUL;
+import de.learnlib.sul.SUL;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

@@ -17,8 +17,8 @@ package de.learnlib.filter.statistic.sul;
 
 import java.util.Collection;
 
-import de.learnlib.api.query.Query;
 import de.learnlib.filter.statistic.TestQueries;
+import de.learnlib.query.Query;
 import net.automatalib.word.Word;
 
 public abstract class AbstractSymbolCounterSULTest extends AbstractCounterSULTest {

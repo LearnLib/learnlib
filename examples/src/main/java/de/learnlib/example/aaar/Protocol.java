@@ -17,9 +17,9 @@ package de.learnlib.example.aaar;
 
 import java.util.stream.StreamSupport;
 
-import de.learnlib.api.oracle.SingleQueryOracle.SingleQueryOracleMealy;
 import de.learnlib.example.aaar.Event.Msg;
 import de.learnlib.example.aaar.Event.Recv;
+import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMealy;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

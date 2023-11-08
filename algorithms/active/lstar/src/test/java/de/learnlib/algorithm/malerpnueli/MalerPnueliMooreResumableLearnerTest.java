@@ -17,7 +17,7 @@ package de.learnlib.algorithm.malerpnueli;
 
 import de.learnlib.algorithm.lstar.ExtensibleLStarMooreResumableLearnerTest;
 import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMoore;
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 
 public class MalerPnueliMooreResumableLearnerTest extends ExtensibleLStarMooreResumableLearnerTest {

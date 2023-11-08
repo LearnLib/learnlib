@@ -17,15 +17,15 @@ package de.learnlib.filter.cache;
 
 import java.util.Collection;
 
-import de.learnlib.api.Resumable;
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.query.Query;
+import de.learnlib.Resumable;
 import de.learnlib.filter.cache.LearningCache.MealyLearningCache;
 import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.cache.sul.SULCache;
 import de.learnlib.filter.cache.sul.StateLocalInputSULCache;
+import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
+import de.learnlib.query.Query;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 

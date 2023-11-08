@@ -17,7 +17,7 @@ package de.learnlib.algorithm.lstar;
 
 import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFA;
 import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFABuilder;
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.CompactDFA;

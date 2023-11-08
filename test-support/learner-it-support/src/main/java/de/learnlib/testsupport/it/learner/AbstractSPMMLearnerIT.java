@@ -18,9 +18,9 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.example.LearningExample.SPMMLearningExample;
 import de.learnlib.example.LearningExamples;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.equivalence.spmm.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SPMMSimulatorOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SPMMLearnerVariantList;

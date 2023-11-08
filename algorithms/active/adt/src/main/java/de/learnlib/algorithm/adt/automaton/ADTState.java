@@ -18,7 +18,7 @@ package de.learnlib.algorithm.adt.automaton;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import de.learnlib.api.AccessSequenceProvider;
+import de.learnlib.AccessSequenceProvider;
 import net.automatalib.automaton.base.AbstractFastState;
 import net.automatalib.word.Word;
 

@@ -15,14 +15,14 @@
  */
 package de.learnlib.algorithm.aaar.explicit.it;
 
+import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.algorithm.aaar.AAARTestUtil;
 import de.learnlib.algorithm.aaar.ComboConstructor;
 import de.learnlib.algorithm.aaar.TranslatingLearnerWrapper;
 import de.learnlib.algorithm.aaar.explicit.ExplicitAAARLearnerMoore;
 import de.learnlib.algorithm.aaar.explicit.IdentityInitialAbstraction;
 import de.learnlib.algorithm.aaar.explicit.NoopIncrementor;
-import de.learnlib.api.algorithm.LearningAlgorithm.MooreLearner;
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMooreLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;

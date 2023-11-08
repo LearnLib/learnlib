@@ -15,8 +15,8 @@
  */
 package de.learnlib.algorithm.aaar;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 
 public class TranslatingLearnerWrapper<L extends LearningAlgorithm<CM, CI, D> & SupportsGrowingAlphabet<CI>, CM, CI, D>

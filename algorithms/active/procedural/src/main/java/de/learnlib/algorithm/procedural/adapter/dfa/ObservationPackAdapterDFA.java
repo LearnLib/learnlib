@@ -15,10 +15,10 @@
  */
 package de.learnlib.algorithm.procedural.adapter.dfa;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
-import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.counterexample.LocalSuffixFinders;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 

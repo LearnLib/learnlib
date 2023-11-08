@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.Query;
 
 /**
  * A specialized {@link AbstractDynamicBatchProcessorBuilder} for {@link MembershipOracle}s.

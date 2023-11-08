@@ -15,10 +15,10 @@
  */
 package de.learnlib.filter.cache.moore;
 
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.MooreCounterOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.oracle.membership.MooreSimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MooreMachine;

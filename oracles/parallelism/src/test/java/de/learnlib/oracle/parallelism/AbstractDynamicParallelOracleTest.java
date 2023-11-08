@@ -21,11 +21,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import de.learnlib.api.StateLocalInputSUL;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.parallelism.ParallelOracle;
-import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
-import de.learnlib.api.query.Query;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
+import de.learnlib.query.Query;
+import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;

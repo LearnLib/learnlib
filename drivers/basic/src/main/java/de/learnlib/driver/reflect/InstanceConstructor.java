@@ -18,8 +18,8 @@ package de.learnlib.driver.reflect;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import de.learnlib.api.ContextHandler;
-import de.learnlib.api.exception.SULException;
+import de.learnlib.exception.SULException;
+import de.learnlib.sul.ContextHandler;
 
 final class InstanceConstructor implements ContextHandler<Object> {
 

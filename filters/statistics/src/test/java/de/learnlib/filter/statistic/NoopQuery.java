@@ -15,7 +15,7 @@
  */
 package de.learnlib.filter.statistic;
 
-import de.learnlib.api.query.AbstractQuery;
+import de.learnlib.query.AbstractQuery;
 import net.automatalib.word.Word;
 
 public class NoopQuery<I, D> extends AbstractQuery<I, D> {

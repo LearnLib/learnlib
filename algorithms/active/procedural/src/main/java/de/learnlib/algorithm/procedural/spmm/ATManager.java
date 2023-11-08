@@ -19,9 +19,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
-import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;

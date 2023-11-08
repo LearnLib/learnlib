@@ -17,19 +17,19 @@ package de.learnlib.oracle.property;
 
 import java.util.function.Function;
 
-import de.learnlib.api.oracle.EmptinessOracle.MealyEmptinessOracle;
-import de.learnlib.api.oracle.InclusionOracle.MealyInclusionOracle;
-import de.learnlib.api.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.api.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
-import de.learnlib.api.oracle.PropertyOracle.MealyPropertyOracle;
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.example.mealy.ExampleTinyMealy;
+import de.learnlib.oracle.EmptinessOracle.MealyEmptinessOracle;
+import de.learnlib.oracle.InclusionOracle.MealyInclusionOracle;
+import de.learnlib.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
+import de.learnlib.oracle.PropertyOracle.MealyPropertyOracle;
 import de.learnlib.oracle.emptiness.MealyBFEmptinessOracle;
 import de.learnlib.oracle.emptiness.MealyLassoEmptinessOracleImpl;
 import de.learnlib.oracle.equivalence.MealyBFInclusionOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.transducer.CompactMealy;

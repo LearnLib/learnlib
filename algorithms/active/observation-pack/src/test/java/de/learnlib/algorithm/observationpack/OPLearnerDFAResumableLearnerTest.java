@@ -17,7 +17,7 @@ package de.learnlib.algorithm.observationpack;
 
 import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
 import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFABuilder;
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
 import net.automatalib.alphabet.Alphabet;
 

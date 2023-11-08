@@ -15,14 +15,14 @@
  */
 package de.learnlib.algorithm.aaar.explicit.it;
 
+import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.aaar.AAARTestUtil;
 import de.learnlib.algorithm.aaar.ComboConstructor;
 import de.learnlib.algorithm.aaar.TranslatingLearnerWrapper;
 import de.learnlib.algorithm.aaar.explicit.ExplicitAAARLearnerMealy;
 import de.learnlib.algorithm.aaar.explicit.IdentityInitialAbstraction;
 import de.learnlib.algorithm.aaar.explicit.NoopIncrementor;
-import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;

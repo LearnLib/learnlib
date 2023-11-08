@@ -17,9 +17,9 @@ package de.learnlib.oracle.equivalence;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.SingleQueryOracle;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.SingleQueryOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;

@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
-import de.learnlib.api.AccessSequenceTransformer;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.common.util.Pair;

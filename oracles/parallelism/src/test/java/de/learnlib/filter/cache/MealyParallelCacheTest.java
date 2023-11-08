@@ -19,14 +19,14 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.parallelism.ParallelOracle;
 import de.learnlib.filter.cache.configuration.CacheConfig;
 import de.learnlib.filter.cache.configuration.CacheCreator.MealyCacheCreator;
 import de.learnlib.filter.cache.configuration.Config;
 import de.learnlib.filter.cache.mealy.ThreadSafeMealyCacheOracle;
 import de.learnlib.filter.cache.mealy.ThreadSafeMealyCaches;
 import de.learnlib.filter.statistic.oracle.MealyCounterOracle;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.parallelism.ParallelOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;

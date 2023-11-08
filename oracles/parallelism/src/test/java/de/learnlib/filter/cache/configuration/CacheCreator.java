@@ -20,9 +20,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.StateLocalInputSUL;
-import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.filter.cache.LearningCache;
 import de.learnlib.filter.cache.LearningCache.DFALearningCache;
 import de.learnlib.filter.cache.LearningCache.MealyLearningCache;
@@ -38,6 +35,9 @@ import de.learnlib.filter.cache.configuration.CacheConfig.MooreCollectionConfig;
 import de.learnlib.filter.cache.configuration.CacheConfig.MooreSupplierConfig;
 import de.learnlib.filter.cache.configuration.CacheConfig.SLISULConfig;
 import de.learnlib.filter.cache.configuration.CacheConfig.SULConfig;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.sul.SUL;
+import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 

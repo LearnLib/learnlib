@@ -30,8 +30,8 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 
-import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.PassiveLearningAlgorithm;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.GrowingMapAlphabet;

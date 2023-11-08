@@ -18,9 +18,9 @@ package de.learnlib.oracle.membership;
 import java.util.Collection;
 import java.util.Collections;
 
-import de.learnlib.api.StateLocalInputSUL;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.api.query.Query;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.query.Query;
+import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 

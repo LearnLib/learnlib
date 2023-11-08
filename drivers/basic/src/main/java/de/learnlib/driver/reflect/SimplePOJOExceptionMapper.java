@@ -15,9 +15,9 @@
  */
 package de.learnlib.driver.reflect;
 
-import de.learnlib.api.ContextExecutableInput;
-import de.learnlib.api.SULMapper;
-import de.learnlib.api.exception.MappedException;
+import de.learnlib.exception.MappedException;
+import de.learnlib.sul.ContextExecutableInput;
+import de.learnlib.sul.SULMapper;
 
 /**
  * A mapper that wraps any kind of {@link RuntimeException} that occurs during

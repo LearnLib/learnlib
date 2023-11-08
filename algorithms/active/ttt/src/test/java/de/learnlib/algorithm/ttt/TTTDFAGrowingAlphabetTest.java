@@ -15,9 +15,9 @@
  */
 package de.learnlib.algorithm.ttt;
 
-import de.learnlib.acex.analyzer.AcexAnalyzers;
+import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetDFATest;
 import net.automatalib.alphabet.Alphabet;
 

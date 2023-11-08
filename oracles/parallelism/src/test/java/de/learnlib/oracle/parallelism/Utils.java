@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
 import de.learnlib.oracle.parallelism.AbstractStaticParallelOracleTest.TestOutput;
+import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;

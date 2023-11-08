@@ -15,7 +15,7 @@
  */
 package de.learnlib.filter.cache.dfa;
 
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 
 public class DFATreeCacheTest extends AbstractDFACacheTest {
 

@@ -17,7 +17,7 @@ package de.learnlib.filter.cache;
 
 import java.util.Comparator;
 
-import de.learnlib.api.query.Query;
+import de.learnlib.query.Query;
 import net.automatalib.common.util.comparison.CmpUtil;
 
 public final class ReverseLexCmp<I> implements Comparator<Query<I, ?>> {

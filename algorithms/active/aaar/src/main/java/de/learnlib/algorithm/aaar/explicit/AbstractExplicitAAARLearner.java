@@ -23,14 +23,14 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.google.common.collect.Maps;
+import de.learnlib.algorithm.LearnerConstructor;
+import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.aaar.AbstractAAARLearner;
 import de.learnlib.algorithm.aaar.ExplicitInitialAbstraction;
 import de.learnlib.algorithm.aaar.abstraction.AbstractAbstractionTree;
 import de.learnlib.algorithm.aaar.abstraction.ExplicitAbstractionTree;
 import de.learnlib.algorithm.aaar.generic.AbstractGenericAAARLearner;
-import de.learnlib.api.algorithm.LearnerConstructor;
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;

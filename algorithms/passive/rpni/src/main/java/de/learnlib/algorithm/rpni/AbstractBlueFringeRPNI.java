@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.stream.Stream;
 
-import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
+import de.learnlib.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.datastructure.pta.BlueFringePTA;
 import de.learnlib.datastructure.pta.BlueFringePTAState;
 import de.learnlib.datastructure.pta.PTATransition;

@@ -16,7 +16,7 @@
 package de.learnlib.algorithm.oml.lstar.dfa.it;
 
 import de.learnlib.algorithm.oml.lstar.OptimalLStarDFA;
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
 import net.automatalib.alphabet.Alphabet;

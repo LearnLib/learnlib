@@ -18,7 +18,7 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.api.algorithm.PassiveLearningAlgorithm;
+import de.learnlib.algorithm.PassiveLearningAlgorithm;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;

@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import de.learnlib.api.ObservableSUL;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.OmegaMembershipOracle;
-import de.learnlib.api.oracle.parallelism.ThreadPool.PoolPolicy;
-import de.learnlib.api.query.OmegaQuery;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.OmegaMembershipOracle;
+import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
 import de.learnlib.oracle.parallelism.Utils.Analysis;
 import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
+import de.learnlib.query.OmegaQuery;
+import de.learnlib.sul.ObservableSUL;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.testng.Assert;

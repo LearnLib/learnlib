@@ -18,9 +18,9 @@ package de.learnlib.util;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import de.learnlib.api.oracle.AutomatonOracle;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.AutomatonOracle;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;

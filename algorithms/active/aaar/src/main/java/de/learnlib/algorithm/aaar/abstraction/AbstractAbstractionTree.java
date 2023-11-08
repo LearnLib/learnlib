@@ -29,7 +29,7 @@ import java.util.Queue;
 import de.learnlib.algorithm.aaar.Abstraction;
 import de.learnlib.algorithm.aaar.abstraction.Node.InnerNode;
 import de.learnlib.algorithm.aaar.abstraction.Node.Leaf;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.visualization.DefaultVisualizationHelper;

@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.GrowingAlphabet;

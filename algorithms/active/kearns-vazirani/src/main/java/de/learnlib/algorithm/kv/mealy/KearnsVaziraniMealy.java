@@ -24,18 +24,18 @@ import java.util.List;
 import java.util.Objects;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import de.learnlib.Resumable;
+import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.acex.analyzer.AcexAnalyzers;
-import de.learnlib.acex.impl.AbstractBaseCounterexample;
+import de.learnlib.acex.AcexAnalyzers;
+import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.kv.StateInfo;
-import de.learnlib.api.Resumable;
-import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.api.logging.Category;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.datastructure.discriminationtree.MultiDTree;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
 import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
+import de.learnlib.logging.Category;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
@@ -373,7 +373,7 @@ public class KearnsVaziraniMealy<I, O>
         }
     }
 
-    public static final class BuilderDefaults {
+    static final class BuilderDefaults {
 
         private BuilderDefaults() {
             // prevent instantiation

@@ -19,8 +19,8 @@ package de.learnlib.oracle.membership;
 import java.util.Collection;
 import java.util.Collections;
 
-import de.learnlib.api.StateLocalInputSUL;
-import de.learnlib.api.oracle.SymbolQueryOracle;
+import de.learnlib.oracle.SymbolQueryOracle;
+import de.learnlib.sul.StateLocalInputSUL;
 
 /**
  * A {@link SymbolQueryOracle} wrapper for {@link StateLocalInputSUL}s. See {@link SULSymbolQueryOracle}.

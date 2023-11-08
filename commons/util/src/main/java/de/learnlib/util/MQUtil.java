@@ -18,12 +18,12 @@ package de.learnlib.util;
 import java.util.Collection;
 import java.util.Objects;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.OmegaQueryAnswerer;
-import de.learnlib.api.oracle.QueryAnswerer;
-import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.api.query.OmegaQuery;
-import de.learnlib.api.query.Query;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.OmegaQueryAnswerer;
+import de.learnlib.oracle.QueryAnswerer;
+import de.learnlib.query.DefaultQuery;
+import de.learnlib.query.OmegaQuery;
+import de.learnlib.query.Query;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;

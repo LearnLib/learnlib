@@ -20,14 +20,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.oml.ttt.dt.AbstractDecisionTree;
 import de.learnlib.algorithm.oml.ttt.dt.DTLeaf;
 import de.learnlib.algorithm.oml.ttt.pt.PTNode;
 import de.learnlib.algorithm.oml.ttt.pt.PrefixTree;
 import de.learnlib.algorithm.oml.ttt.st.SuffixTrie;
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;

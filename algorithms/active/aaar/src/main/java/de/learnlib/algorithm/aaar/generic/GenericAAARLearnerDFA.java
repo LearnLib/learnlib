@@ -17,10 +17,10 @@ package de.learnlib.algorithm.aaar.generic;
 
 import java.util.function.Function;
 
+import de.learnlib.algorithm.LearnerConstructor;
+import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.aaar.TranslatingDFA;
-import de.learnlib.api.algorithm.LearnerConstructor;
-import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;

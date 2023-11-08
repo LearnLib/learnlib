@@ -15,7 +15,7 @@
  */
 package de.learnlib.oracle.equivalence;
 
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.AbstractBFOracleTest;
 import de.learnlib.util.AbstractBFOracle;
 import net.automatalib.automaton.concept.DetOutputAutomaton;

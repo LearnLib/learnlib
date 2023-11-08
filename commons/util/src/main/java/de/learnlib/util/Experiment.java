@@ -15,11 +15,11 @@
  */
 package de.learnlib.util;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.logging.Category;
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.filter.statistic.Counter;
+import de.learnlib.logging.Category;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.statistic.SimpleProfiler;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;

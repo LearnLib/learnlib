@@ -17,17 +17,17 @@ package de.learnlib.filter.statistic.oracle;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
-import de.learnlib.api.query.Query;
-import de.learnlib.api.statistic.StatisticOracle;
 import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
 import de.learnlib.buildtool.refinement.annotation.Generic;
 import de.learnlib.buildtool.refinement.annotation.Interface;
 import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.filter.statistic.HistogramDataSet;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.query.Query;
+import de.learnlib.statistic.StatisticOracle;
 import net.automatalib.word.Word;
 
 /**

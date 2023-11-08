@@ -15,7 +15,7 @@
  */
 package de.learnlib.filter.cache.mealy;
 
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 
 public class MealyDAGMapperCacheTest extends AbstractMealyCacheTest {
 

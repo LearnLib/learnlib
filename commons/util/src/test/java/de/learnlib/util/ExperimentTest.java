@@ -18,9 +18,9 @@ package de.learnlib.util;
 import java.util.Collection;
 import java.util.Random;
 
-import de.learnlib.api.algorithm.LearningAlgorithm.DFALearner;
-import de.learnlib.api.oracle.EquivalenceOracle.DFAEquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
+import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.Experiment.DFAExperiment;
 import de.learnlib.util.statistic.SimpleProfiler;
 import net.automatalib.alphabet.Alphabet;

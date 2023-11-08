@@ -18,9 +18,9 @@ package de.learnlib.counterexample;
 import java.util.Collections;
 import java.util.List;
 
-import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
+import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.Query;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;

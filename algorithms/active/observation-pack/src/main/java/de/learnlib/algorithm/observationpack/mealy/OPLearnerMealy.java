@@ -16,15 +16,15 @@
 package de.learnlib.algorithm.observationpack.mealy;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.observationpack.AbstractOPLearner;
 import de.learnlib.algorithm.observationpack.hypothesis.HState;
 import de.learnlib.algorithm.observationpack.hypothesis.HTransition;
-import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.AbstractQuery;
-import de.learnlib.api.query.Query;
 import de.learnlib.counterexample.LocalSuffixFinder;
 import de.learnlib.datastructure.discriminationtree.MultiDTree;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.AbstractQuery;
+import de.learnlib.query.Query;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;

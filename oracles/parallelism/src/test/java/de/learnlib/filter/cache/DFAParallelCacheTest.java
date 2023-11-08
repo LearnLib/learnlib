@@ -15,13 +15,13 @@
  */
 package de.learnlib.filter.cache;
 
-import de.learnlib.api.oracle.parallelism.ParallelOracle;
 import de.learnlib.filter.cache.configuration.CacheConfig;
 import de.learnlib.filter.cache.configuration.CacheCreator.DFACacheCreator;
 import de.learnlib.filter.cache.configuration.Config;
 import de.learnlib.filter.cache.dfa.ThreadSafeDFACacheOracle;
 import de.learnlib.filter.cache.dfa.ThreadSafeDFACaches;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
+import de.learnlib.oracle.parallelism.ParallelOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import org.testng.annotations.DataProvider;

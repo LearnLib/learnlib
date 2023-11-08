@@ -47,15 +47,15 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-acex</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-counterexamples</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>

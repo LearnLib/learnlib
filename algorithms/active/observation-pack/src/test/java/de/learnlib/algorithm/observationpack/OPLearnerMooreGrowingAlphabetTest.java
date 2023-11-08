@@ -16,8 +16,8 @@
 package de.learnlib.algorithm.observationpack;
 
 import de.learnlib.algorithm.observationpack.moore.OPLearnerMoore;
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.counterexample.LocalSuffixFinders;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetMooreTest;
 import net.automatalib.alphabet.Alphabet;
 

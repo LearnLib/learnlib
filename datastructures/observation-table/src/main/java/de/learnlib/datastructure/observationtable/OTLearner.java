@@ -15,7 +15,7 @@
  */
 package de.learnlib.datastructure.observationtable;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.LearningAlgorithm;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;

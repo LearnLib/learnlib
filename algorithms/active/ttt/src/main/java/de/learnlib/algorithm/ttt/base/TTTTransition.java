@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.ttt.base;
 
-import de.learnlib.api.AccessSequenceProvider;
+import de.learnlib.AccessSequenceProvider;
 import de.learnlib.datastructure.list.IntrusiveListElem;
 import de.learnlib.datastructure.list.IntrusiveListElemImpl;
 import net.automatalib.word.Word;

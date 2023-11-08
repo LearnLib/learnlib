@@ -15,8 +15,8 @@
  */
 package de.learnlib.oracle.membership;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.oracle.SymbolQueryOracle;
+import de.learnlib.oracle.SymbolQueryOracle;
+import de.learnlib.sul.SUL;
 
 /**
  * A wrapper that allows to use a {@link SUL} where a {@link SymbolQueryOracle} is expected.

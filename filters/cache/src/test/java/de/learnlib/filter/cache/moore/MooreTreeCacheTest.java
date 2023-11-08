@@ -15,7 +15,7 @@
  */
 package de.learnlib.filter.cache.moore;
 
-import de.learnlib.api.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 
 public class MooreTreeCacheTest extends AbstractMooreCacheTest {
 

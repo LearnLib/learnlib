@@ -17,7 +17,7 @@ package de.learnlib.algorithm.rivestschapire;
 
 import de.learnlib.algorithm.lstar.ExtensibleLStarMealyResumableLearnerTest;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 
 public class RivestSchapireMealyResumableLearnerTest extends ExtensibleLStarMealyResumableLearnerTest {

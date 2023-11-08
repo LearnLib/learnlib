@@ -15,13 +15,13 @@
  */
 package de.learnlib.filter.cache;
 
-import de.learnlib.api.oracle.parallelism.ParallelOracle;
 import de.learnlib.filter.cache.configuration.CacheConfig;
 import de.learnlib.filter.cache.configuration.CacheCreator.SLISULCacheCreator;
 import de.learnlib.filter.cache.configuration.Config;
 import de.learnlib.filter.cache.sul.ThreadSafeSULCaches;
 import de.learnlib.filter.cache.sul.ThreadSafeStateLocalInputSULCache;
 import de.learnlib.filter.statistic.sul.ResetCounterStateLocalInputSUL;
+import de.learnlib.oracle.parallelism.ParallelOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;

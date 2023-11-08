@@ -15,8 +15,8 @@
  */
 package de.learnlib.driver;
 
-import de.learnlib.api.ContextExecutableInput;
-import de.learnlib.api.SUL;
+import de.learnlib.sul.ContextExecutableInput;
+import de.learnlib.sul.SUL;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

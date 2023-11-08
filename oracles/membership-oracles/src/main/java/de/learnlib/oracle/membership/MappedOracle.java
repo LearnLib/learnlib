@@ -15,9 +15,9 @@
  */
 package de.learnlib.oracle.membership;
 
-import de.learnlib.api.Mapper.AsynchronousMapper;
-import de.learnlib.api.oracle.QueryAnswerer;
-import de.learnlib.api.oracle.SingleQueryOracle;
+import de.learnlib.Mapper.AsynchronousMapper;
+import de.learnlib.oracle.QueryAnswerer;
+import de.learnlib.oracle.SingleQueryOracle;
 import net.automatalib.word.Word;
 
 /**

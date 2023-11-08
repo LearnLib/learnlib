@@ -17,7 +17,7 @@ package de.learnlib.filter.statistic.oracle;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import de.learnlib.api.oracle.SymbolQueryOracle;
+import de.learnlib.oracle.SymbolQueryOracle;
 
 /**
  * A simple wrapper for counting the number of {@link SymbolQueryOracle#reset() resets} and

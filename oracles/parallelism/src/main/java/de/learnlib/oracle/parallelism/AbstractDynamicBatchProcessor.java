@@ -24,9 +24,6 @@ import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 import com.google.common.base.Throwables;
-import de.learnlib.api.oracle.parallelism.BatchInterruptedException;
-import de.learnlib.api.oracle.parallelism.BatchProcessor;
-import de.learnlib.api.oracle.parallelism.ThreadPool;
 import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
 import org.checkerframework.checker.index.qual.NonNegative;

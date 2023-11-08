@@ -17,8 +17,8 @@ package de.learnlib.oracle.property;
 
 import java.util.Collection;
 
-import de.learnlib.api.oracle.EmptinessOracle.DFAEmptinessOracle;
-import de.learnlib.api.oracle.PropertyOracle.DFAPropertyOracle;
+import de.learnlib.oracle.EmptinessOracle.DFAEmptinessOracle;
+import de.learnlib.oracle.PropertyOracle.DFAPropertyOracle;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecking.ModelChecker.DFAModelChecker;
 

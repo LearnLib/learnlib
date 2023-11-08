@@ -17,10 +17,10 @@ package de.learnlib.algorithm.procedural.adapter.mealy;
 
 import java.util.List;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.oml.ttt.mealy.OptimalTTTMealy;
 import de.learnlib.algorithm.oml.ttt.pt.PTNode;
-import de.learnlib.api.AccessSequenceTransformer;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 

@@ -15,8 +15,8 @@
  */
 package de.learnlib.algorithm.adt.it;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.oracle.SymbolQueryOracle;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.SymbolQueryOracle;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 

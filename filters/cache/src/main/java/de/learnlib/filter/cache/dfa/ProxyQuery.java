@@ -15,7 +15,7 @@
  */
 package de.learnlib.filter.cache.dfa;
 
-import de.learnlib.api.query.Query;
+import de.learnlib.query.Query;
 import net.automatalib.word.Word;
 
 /**

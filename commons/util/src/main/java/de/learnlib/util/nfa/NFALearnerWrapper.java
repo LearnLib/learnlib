@@ -15,8 +15,8 @@
  */
 package de.learnlib.util.nfa;
 
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.NFA;

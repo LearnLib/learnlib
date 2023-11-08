@@ -17,7 +17,7 @@ package de.learnlib.algorithm.procedural.spmm;
 
 import de.learnlib.algorithm.procedural.spmm.manager.DefaultATManager;
 import de.learnlib.algorithm.procedural.spmm.manager.OptimizingATManager;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.DefaultProceduralInputAlphabet;

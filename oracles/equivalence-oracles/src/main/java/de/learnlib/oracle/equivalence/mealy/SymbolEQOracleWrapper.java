@@ -18,8 +18,8 @@ package de.learnlib.oracle.equivalence.mealy;
 import java.util.Collection;
 import java.util.Objects;
 
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.concept.DetSuffixOutputAutomaton;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
