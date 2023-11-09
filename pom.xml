@@ -832,7 +832,8 @@ limitations under the License.
                         <preparationGoals>clean install site</preparationGoals>
                         <preparationProfiles>integration-tests,code-analysis</preparationProfiles>
                         <goals>deploy site site:stage scm-publish:publish-scm</goals>
-                        <releaseProfiles>release,bundles,!examples</releaseProfiles>
+                        <!-- explicitly disable preparationProfiles until https://issues.apache.org/jira/browse/MRELEASE-1124 is fixed-->
+                        <releaseProfiles>release,bundles,!examples,!integration-tests,!code-analysis</releaseProfiles>
                     </configuration>
                 </plugin>
                 <plugin>
