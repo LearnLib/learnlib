@@ -29,7 +29,7 @@ limitations under the License.
     <name>LearnLib :: Algorithms :: NL*</name>
     <description>
         This artifact provides the implementation of the NL* learning algorithm as described in the paper "Angluin-Style
-        Learning of NFA" (http://ijcai.org/Proceedings/09/Papers/170.pdf) by by Benedikt Bollig, Peter Habermehl,
+        Learning of NFA" (http://ijcai.org/Proceedings/09/Papers/170.pdf) by Benedikt Bollig, Peter Habermehl,
         Carsten Kern, and Martin Leucker.
     </description>
 
