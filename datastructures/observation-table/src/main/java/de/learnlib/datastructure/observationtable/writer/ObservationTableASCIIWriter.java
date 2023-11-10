@@ -25,7 +25,7 @@ import net.automatalib.word.Word;
 
 public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableWriter<I, D> {
 
-    private boolean rowSeparators;
+    private final boolean rowSeparators;
 
     public ObservationTableASCIIWriter(Function<? super Word<? extends I>, ? extends String> wordToString,
                                        Function<? super D, ? extends String> outputToString,
@@ -39,10 +39,6 @@ public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableW
     }
 
     public ObservationTableASCIIWriter(boolean rowSeparators) {
-        this.rowSeparators = rowSeparators;
-    }
-
-    public void setRowSeparators(boolean rowSeparators) {
         this.rowSeparators = rowSeparators;
     }
 
