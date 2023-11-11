@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
@@ -33,8 +34,10 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.word.Word;
 
-abstract class AbstractOptimalLStar<M, I, D>
-        implements LearningAlgorithm<M, I, D>, Hypothesis<I, D>, InputAlphabetHolder<I> {
+abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, D>,
+                                                        Hypothesis<I, D>,
+                                                        InputAlphabetHolder<I>,
+                                                        Resumable<OptimalLStarState<I, D>> {
 
     private final Alphabet<I> alphabet;
     final MembershipOracle<I, D> mqs;
@@ -42,7 +45,7 @@ abstract class AbstractOptimalLStar<M, I, D>
 
     private final Set<Word<I>> shortPrefixes;
     private final Map<Word<I>, List<D>> rows;
-    final List<Word<I>> suffixes;
+    private final List<Word<I>> suffixes;
 
     AbstractOptimalLStar(Alphabet<I> alphabet,
                          MembershipOracle<I, D> mqs,
@@ -237,6 +240,10 @@ abstract class AbstractOptimalLStar<M, I, D>
         return row;
     }
 
+    void addSuffix(Word<I> suffix) {
+        this.suffixes.add(suffix);
+    }
+
     private boolean findUnclosedness() {
         for (Word<I> prefix : rows.keySet()) {
             List<Word<I>> shortReps = getShortPrefixes(prefix);
@@ -286,5 +293,22 @@ abstract class AbstractOptimalLStar<M, I, D>
             List<D> rowData = initRow(newPrefix);
             rows.put(newPrefix, rowData);
         }
+    }
+
+    @Override
+    public OptimalLStarState<I, D> suspend() {
+        return new OptimalLStarState<>(shortPrefixes, rows, suffixes);
+    }
+
+    @Override
+    public void resume(OptimalLStarState<I, D> state) {
+        this.shortPrefixes.clear();
+        this.rows.clear();
+        this.suffixes.clear();
+
+        this.shortPrefixes.addAll(state.getShortPrefixes());
+        this.rows.putAll(state.getRows());
+        this.suffixes.addAll(state.getSuffixes());
+        automatonFromTable();
     }
 }

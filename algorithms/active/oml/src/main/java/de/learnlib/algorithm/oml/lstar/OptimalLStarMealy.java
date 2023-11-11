@@ -77,7 +77,7 @@ public class OptimalLStarMealy<I, O> extends AbstractOptimalLStar<MealyMachine<?
         final O o1 = mqs.answerQuery(u1, suff).lastSymbol();
         final O o2 = mqs.answerQuery(u2, suff).lastSymbol();
         if (!Objects.equals(o1, o2)) {
-            suffixes.add(suff);
+            addSuffix(suff);
             return true;
         }
         return false;
