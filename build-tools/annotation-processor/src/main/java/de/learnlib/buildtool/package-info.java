@@ -15,8 +15,6 @@
  */
 
 /**
- * This package (and sub-packages) provides the implementation of the {@link de.learnlib.algorithm.lstar L* variation}
- * based on the paper <a href="http://dx.doi.org/10.1006/inco.1993.1021">Inference of finite automata using homing
- * sequences</a> by Ronald L.&nbsp;Rivest and Robert E.&nbsp;Schapire.
+ * This package (including sub-packages) contains utility code for the build process of LearnLib.
  */
-package de.learnlib.algorithm.rivestschapire;
+package de.learnlib.buildtool;
