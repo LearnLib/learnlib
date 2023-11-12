@@ -17,7 +17,8 @@ package de.learnlib.buildtool.refinement.processor;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -69,23 +70,32 @@ public class RefinementProcessor extends AbstractProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(GenerateRefinements.class.getName());
+        return new HashSet<>(Arrays.asList(GenerateRefinement.class.getName(), GenerateRefinements.class.getName()));
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-        final Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(GenerateRefinements.class);
+        final Set<Element> elements = new HashSet<>();
+        elements.addAll(roundEnv.getElementsAnnotatedWith(GenerateRefinements.class));
+        elements.addAll(roundEnv.getElementsAnnotatedWith(GenerateRefinement.class));
 
         for (Element elem : elements) {
 
             validateAnnotation(elem);
 
+            final GenerateRefinement[] refinements;
             final GenerateRefinements generateRefinements = elem.getAnnotation(GenerateRefinements.class);
+
+            if (generateRefinements != null) {
+                refinements = generateRefinements.value();
+            } else {
+                refinements = new GenerateRefinement[] {elem.getAnnotation(GenerateRefinement.class)};
+            }
 
             int idx = 0;
 
-            for (GenerateRefinement annotation : generateRefinements.value()) {
+            for (GenerateRefinement annotation : refinements) {
 
                 final TypeElement annotatedClass = (TypeElement) elem;
 
@@ -161,13 +171,18 @@ public class RefinementProcessor extends AbstractProcessor {
                                  GenerateRefinement annotation,
                                  int idx) {
 
+        final AnnotationMirror mirror;
         final AnnotationMirror generateRefinementsMirror =
                 AnnotationUtils.findAnnotationMirror(annotatedClass, GenerateRefinements.class);
 
-        final List<? extends AnnotationValue> values = find(generateRefinementsMirror, "value");
-        final AnnotationMirror generateRefinementMirror = (AnnotationMirror) values.get(idx).getValue();
+        if (generateRefinementsMirror != null) {
+            final List<? extends AnnotationValue> values = find(generateRefinementsMirror, "value");
+            mirror = (AnnotationMirror) values.get(idx).getValue();
+        } else {
+            mirror = AnnotationUtils.findAnnotationMirror(annotatedClass, GenerateRefinement.class);
+        }
 
-        final List<? extends AnnotationValue> parameterMapping = find(generateRefinementMirror, "parameterMapping");
+        final List<? extends AnnotationValue> parameterMapping = find(mirror, "parameterMapping");
 
         for (ExecutableElement constructor : TypeUtils.getConstructors(annotatedClass)) {
 
