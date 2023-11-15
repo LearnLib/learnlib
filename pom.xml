@@ -1200,7 +1200,7 @@ limitations under the License.
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-scm-publish-plugin</artifactId>
                         <configuration>
-                            <pubScmUrl>${project.scm.connection}</pubScmUrl>
+                            <pubScmUrl>${project.scm.developerConnection}</pubScmUrl>
                             <scmBranch>gh-pages</scmBranch>
                             <tryUpdate>true</tryUpdate>
                             <!--
