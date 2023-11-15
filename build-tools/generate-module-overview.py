@@ -5,6 +5,8 @@ import sys
 import xml.etree.ElementTree as ET
 
 XPATH_ARTIFACT_ID = "./mvn:artifactId"
+XPATH_GROUP_ID = "./mvn:groupId"
+XPATH_PARENT_GROUP_ID = "./mvn:parent/mvn:groupId"
 XPATH_DESCRIPTION = "./mvn:description"
 XPATH_SUBMODULES = "./mvn:modules/mvn:module"
 MAVEN_NAMESPACE = {'mvn': 'http://maven.apache.org/POM/4.0.0'}
@@ -40,9 +42,14 @@ def generate_entry(indent, project_folder):
         padding = ('{:' + str(indent * 2) + '}').format(' ')
 
     artifact = pom.find(XPATH_ARTIFACT_ID, namespaces=MAVEN_NAMESPACE)
+    group = pom.find(XPATH_GROUP_ID, namespaces=MAVEN_NAMESPACE)
+    parentGroup = pom.find(XPATH_PARENT_GROUP_ID, namespaces=MAVEN_NAMESPACE)
     description = pom.find(XPATH_DESCRIPTION, namespaces=MAVEN_NAMESPACE)
 
-    print('{}* **{}**: {}'.format(padding, artifact.text, description.text))
+    if group is not None:
+        print('{}* **{}**:**{}**: {}'.format(padding, group.text, artifact.text, description.text))
+    else:
+        print('{}* **{}**:**{}**: {}'.format(padding, parentGroup.text, artifact.text, description.text))
 
     for module in pom.findall(XPATH_SUBMODULES, namespaces=MAVEN_NAMESPACE):
         generate_entry(indent + 1, os.path.join(project_folder, module.text))
