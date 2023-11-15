@@ -1,0 +1,5 @@
+de.learnlib.algorithm.observationpack
+de.learnlib.algorithm.observationpack.dfa
+de.learnlib.algorithm.observationpack.hypothesis
+de.learnlib.algorithm.observationpack.mealy
+de.learnlib.algorithm.observationpack.moore

@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"de.learnlib.oracle.equivalence"},{"l":"de.learnlib.oracle.equivalence.mealy"},{"l":"de.learnlib.oracle.equivalence.sba"},{"l":"de.learnlib.oracle.equivalence.spa"},{"l":"de.learnlib.oracle.equivalence.spmm"},{"l":"de.learnlib.oracle.equivalence.vpa"}]

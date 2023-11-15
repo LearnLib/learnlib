@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"de.learnlib.algorithm.rpni","l":"AbstractBlueFringeRPNI"},{"l":"All Classes","url":"allclasses-index.html"},{"p":"de.learnlib.algorithm.rpni","l":"BlueFringeRPNIDFA"},{"p":"de.learnlib.algorithm.rpni","l":"BlueFringeRPNIMealy"},{"p":"de.learnlib.algorithm.rpni","l":"BlueFringeRPNIMoore"}]

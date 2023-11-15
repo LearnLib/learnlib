@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"de.learnlib.example"},{"l":"de.learnlib.example.dfa"},{"l":"de.learnlib.example.mealy"},{"l":"de.learnlib.example.moore"},{"l":"de.learnlib.example.sba"},{"l":"de.learnlib.example.spa"},{"l":"de.learnlib.example.spmm"},{"l":"de.learnlib.example.sst"},{"l":"de.learnlib.example.vpa"}]

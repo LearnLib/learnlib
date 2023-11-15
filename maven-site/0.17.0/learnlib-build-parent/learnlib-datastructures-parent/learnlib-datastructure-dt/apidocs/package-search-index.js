@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"de.learnlib.datastructure.discriminationtree"},{"l":"de.learnlib.datastructure.discriminationtree.iterators"},{"l":"de.learnlib.datastructure.discriminationtree.model"}]

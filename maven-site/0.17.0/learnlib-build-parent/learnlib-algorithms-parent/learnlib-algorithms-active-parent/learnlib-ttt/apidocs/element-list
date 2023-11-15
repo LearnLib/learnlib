@@ -1,0 +1,5 @@
+de.learnlib.algorithm.ttt
+de.learnlib.algorithm.ttt.base
+de.learnlib.algorithm.ttt.dfa
+de.learnlib.algorithm.ttt.mealy
+de.learnlib.algorithm.ttt.moore

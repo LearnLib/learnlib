@@ -1,0 +1,13 @@
+de.learnlib.algorithm.adt
+de.learnlib.algorithm.adt.ads
+de.learnlib.algorithm.adt.adt
+de.learnlib.algorithm.adt.api
+de.learnlib.algorithm.adt.automaton
+de.learnlib.algorithm.adt.config
+de.learnlib.algorithm.adt.config.model
+de.learnlib.algorithm.adt.config.model.calculator
+de.learnlib.algorithm.adt.config.model.extender
+de.learnlib.algorithm.adt.config.model.replacer
+de.learnlib.algorithm.adt.learner
+de.learnlib.algorithm.adt.model
+de.learnlib.algorithm.adt.util

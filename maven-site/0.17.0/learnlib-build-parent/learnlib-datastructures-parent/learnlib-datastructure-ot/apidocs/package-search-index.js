@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"de.learnlib.datastructure.observationtable"},{"l":"de.learnlib.datastructure.observationtable.reader"},{"l":"de.learnlib.datastructure.observationtable.writer"}]

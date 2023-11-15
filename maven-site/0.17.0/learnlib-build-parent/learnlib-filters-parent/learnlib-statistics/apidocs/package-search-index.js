@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"de.learnlib.filter.statistic"},{"l":"de.learnlib.filter.statistic.learner"},{"l":"de.learnlib.filter.statistic.oracle"},{"l":"de.learnlib.filter.statistic.sul"}]

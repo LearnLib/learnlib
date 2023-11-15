@@ -1,0 +1,5 @@
+de.learnlib.util
+de.learnlib.util.mealy
+de.learnlib.util.moore
+de.learnlib.util.nfa
+de.learnlib.util.statistic

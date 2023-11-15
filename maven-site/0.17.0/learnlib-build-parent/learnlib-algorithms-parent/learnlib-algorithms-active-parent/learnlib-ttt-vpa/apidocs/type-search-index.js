@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"de.learnlib.algorithm.ttt.vpa","l":"Splitter"},{"p":"de.learnlib.algorithm.ttt.vpa","l":"Splitter.SplitType"},{"p":"de.learnlib.algorithm.ttt.vpa","l":"TTTLearnerVPA"},{"p":"de.learnlib.algorithm.ttt.vpa","l":"TTTLearnerVPABuilder"}]

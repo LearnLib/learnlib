@@ -1,0 +1,9 @@
+de.learnlib.algorithm.procedural
+de.learnlib.algorithm.procedural.adapter.dfa
+de.learnlib.algorithm.procedural.adapter.mealy
+de.learnlib.algorithm.procedural.sba
+de.learnlib.algorithm.procedural.sba.manager
+de.learnlib.algorithm.procedural.spa
+de.learnlib.algorithm.procedural.spa.manager
+de.learnlib.algorithm.procedural.spmm
+de.learnlib.algorithm.procedural.spmm.manager
