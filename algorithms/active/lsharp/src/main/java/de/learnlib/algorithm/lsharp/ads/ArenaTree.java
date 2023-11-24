@@ -1,12 +1,13 @@
 package de.learnlib.algorithm.lsharp.ads;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Function;
 
 import net.automatalib.common.util.Pair;
 
 public class ArenaTree<T, P> {
-    public LinkedList<ArenaNode<T, P>> arena;
+    public List<ArenaNode<T, P>> arena;
 
     public ArenaTree() {
         this.arena = new LinkedList<>();

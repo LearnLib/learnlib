@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -16,7 +17,7 @@ public class PartitionInfo<S, I, O> {
         SEP_INJ, SEP_NON_INJ, XFER_INJ, XFER_NON_INJ, USELESS;
     }
 
-    public HashMap<O, HashMap<S, HashSet<S>>> splitMap = new HashMap<>();
+    public Map<O, HashMap<S, HashSet<S>>> splitMap = new HashMap<>();
 
     public PartitionInfo(MealyMachine<S, I, ?, O> fsm, I i, List<S> block) {
         block.stream().map(s -> Triple.of(s, fsm.getOutput(s, i), fsm.getSuccessor(s, i))).forEach(triple -> {
@@ -89,7 +90,7 @@ public class PartitionInfo<S, I, O> {
             numOuts.add(o);
         }
 
-        return ((!numOuts.isEmpty()) && inj);
+        return !numOuts.isEmpty() && inj;
 
     }
 }

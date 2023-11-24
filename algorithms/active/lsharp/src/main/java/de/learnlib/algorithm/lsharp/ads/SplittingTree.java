@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -17,7 +18,7 @@ import net.automatalib.word.Word;
 public class SplittingTree<S extends Comparable<S>, I, O> {
     public ArenaTree<SplittingNode<S, I, O>, Void> tree = new ArenaTree<>();
     public SeparatingNodes<S, Integer> sepLCA = new SeparatingNodes<>();
-    public HashSet<Integer> analysed = new HashSet<>();
+    public Set<Integer> analysed = new HashSet<>();
 
     public SplittingTree(MealyMachine<S, I, ?, O> fsm, Alphabet<I> inputAlphabet, List<S> rootLabel) {
         Helpers<I> helpers = new Helpers<>();
@@ -107,7 +108,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         for (S x : new LinkedList<>(block)) {
             for (S y : new LinkedList<>(block)) {
                 if (x.compareTo(y) < 0) {
-                    Integer lca = this.LCAOfTwo(x, y);
+                    Integer lca = this.lcaOfTwo(x, y);
                     assert lca != null;
                     separatingNodes.add(Triple.of(x, y, lca));
                 }
@@ -139,7 +140,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
     }
 
     public void scoreAndUpdate(Integer r, I input, Integer rx, MealyMachine<S, I, ?, O> fsm, BestNode<I> bestR) {
-        Integer score = Scoring.scoreXfer(get(r), input, get(rx), fsm);
+        Integer score = ScoringUtil.scoreXfer(get(r), input, get(rx), fsm);
         if (score < bestR.score) {
             bestR.update(input, rx, score);
         }
@@ -224,8 +225,8 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
             sepSeqBase.add(xferInput);
             sepSeqBase.addAll(seq);
 
-            boolean IWIsSepInj = PartitionInfo.inputWordIsSepInj(fsm, Word.fromList(sepSeqBase), get(r).label);
-            SepSeq<I> sepSeq = new SepSeq<I>(IWIsSepInj ? SepSeq.Status.INJ : SepSeq.Status.NONINJ, sepSeqBase);
+            boolean iwIsSepInj = PartitionInfo.inputWordIsSepInj(fsm, Word.fromList(sepSeqBase), get(r).label);
+            SepSeq<I> sepSeq = new SepSeq<I>(iwIsSepInj ? SepSeq.Status.INJ : SepSeq.Status.NONINJ, sepSeqBase);
             this.tree.arena.get(r).value.sepSeq = sepSeq;
             this.separate(r, fsm, helpers);
 
@@ -236,7 +237,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
                         continue;
                     }
 
-                    Integer scoreP = Scoring.scoreXfer(get(pair.getFirst()), pair.getSecond(), get(r), fsm);
+                    Integer scoreP = ScoringUtil.scoreXfer(get(pair.getFirst()), pair.getSecond(), get(r), fsm);
                     Integer bestPScore = helpers.scoreOf(pair.getFirst());
                     if (scoreP < bestPScore) {
                         BestNode<I> bestP = new BestNode<>(pair.getSecond(), r, scoreP);
@@ -250,7 +251,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
     }
 
     private boolean inputNonInjSeparating(MealyMachine<S, I, ?, O> fsm, I i, List<S> label) {
-        return (new PartitionInfo<>(fsm, i, label)).nonInjSepInput();
+        return new PartitionInfo<>(fsm, i, label).nonInjSepInput();
     }
 
     public boolean initTransOnNonInjInputs(MealyMachine<S, I, ?, O> fsm, Alphabet<I> inpuAlphabet, Integer r,
@@ -259,7 +260,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         BestNode<I> bestR = helpers.bestNode.computeIfAbsent(r, k -> new BestNode<>());
         Pair<I, Integer> bestNonInjSepInput = inpuAlphabet.stream()
                 .filter(x -> inputNonInjSeparating(fsm, x, get(r).label))
-                .map(x -> Pair.of(x, Scoring.scoreSep(get(r), x, fsm))).filter(p -> p.getSecond() < bestR.score)
+                .map(x -> Pair.of(x, ScoringUtil.scoreSep(get(r), x, fsm))).filter(p -> p.getSecond() < bestR.score)
                 .min((p1, p2) -> p1.getSecond().compareTo(p2.getSecond())).orElse(null);
 
         if (bestNonInjSepInput != null) {
@@ -277,7 +278,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
                 Integer rx = maybeRX;
                 nextR = rx;
                 if (get(rx).sepSeq.isSet()) {
-                    Integer newScore = Scoring.scoreXfer(get(r), input, get(rx), fsm);
+                    Integer newScore = ScoringUtil.scoreXfer(get(r), input, get(rx), fsm);
                     if (newScore < bestR.score) {
                         bestR.update(input, rx, newScore);
                     }
@@ -294,7 +295,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
                         analyse(rx, fsm, inpuAlphabet, helpers.analysedIndices);
                     }
                     if (get(rx).sepSeq.isSet()) {
-                        Integer score = Scoring.scoreXfer(get(r), input, get(rx), fsm);
+                        Integer score = ScoringUtil.scoreXfer(get(r), input, get(rx), fsm);
                         if (score < bestR.score) {
                             bestR.update(input, rx, score);
                         }
@@ -306,7 +307,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
                 }
             }
             if (get(nextR).sepSeq.isSet()) {
-                Integer score = Scoring.scoreXfer(get(r), input, get(nextR), fsm);
+                Integer score = ScoringUtil.scoreXfer(get(r), input, get(nextR), fsm);
                 if (score < bestR.score) {
                     bestR.update(input, nextR, score);
                 }
@@ -319,7 +320,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         return stable;
     }
 
-    public Integer maybeLCA(List<S> block, HashSet<Integer> nodesInTree) {
+    public Integer maybeLCA(List<S> block, Set<Integer> nodesInTree) {
         if (nodesInTree.size() == 1) {
             return 0;
         }
@@ -333,7 +334,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
             }
         }
 
-        return prod.stream().map(p -> LCAOfTwo(p.getFirst(), p.getSecond())).filter(i -> i != null)
+        return prod.stream().map(p -> lcaOfTwo(p.getFirst(), p.getSecond())).filter(i -> i != null)
                 .max((a, b) -> Integer.compare(get(a).size(), get(b).size())).orElse(null);
     }
 
@@ -372,7 +373,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         return null;
     }
 
-    public Integer LCAOfTwo(S s1, S s2) {
+    public Integer lcaOfTwo(S s1, S s2) {
         Integer cand = 0;
 
         while (cand != null) {
@@ -392,7 +393,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
     }
 
     public void analyse(Integer rIndex, MealyMachine<S, I, ?, O> fsm, Alphabet<I> inputAlphabet,
-            HashSet<Integer> analysed) {
+            Set<Integer> analysed) {
         this.tree.arena.get(rIndex).value.analyse(fsm, inputAlphabet);
         analysed.add(rIndex);
     }

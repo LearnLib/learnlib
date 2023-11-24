@@ -1,13 +1,14 @@
 package de.learnlib.algorithm.lsharp.ads;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import net.automatalib.common.util.Pair;
 
 public class SeparatingNodes<K extends Comparable<K>, V> {
-    public HashMap<Pair<K, K>, V> inner;
+    public Map<Pair<K, K>, V> inner;
 
     public SeparatingNodes() {
         this.inner = new HashMap<>();

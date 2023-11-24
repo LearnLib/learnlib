@@ -3,6 +3,7 @@ package de.learnlib.algorithm.lsharp.ads;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,7 @@ public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         return Pair.of(lA, lB);
     }
 
-    private <A, B> HashMap<A, B> toMap(List<Pair<A, B>> list) {
+    private <A, B> Map<A, B> toMap(List<Pair<A, B>> list) {
         HashMap<A, B> map = new HashMap<>();
         for (Pair<A, B> pair : list) {
             map.put(pair.getFirst(), pair.getSecond());
@@ -57,14 +58,14 @@ public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         HashMap<I, Pair<Integer, Integer>> splitScore = new HashMap<>();
         I maxInput = this.maximalBaseInput(tree, currentBlock, splitScore).getFirst();
 
-        HashMap<O, List<S>> oPartitions = this.partitionOnOutput(tree, currentBlock, maxInput);
+        Map<O, List<S>> oPartitions = this.partitionOnOutput(tree, currentBlock, maxInput);
         Integer ui = oPartitions.values().stream().map(p -> p.size()).collect(Collectors.summingInt(x -> x));
         Integer maxRec = oPartitions.entrySet().stream().map(e -> {
             O o = e.getKey();
             List<S> oPart = e.getValue();
             Integer uIO = oPart.size();
             Integer childScore = o.equals(sinkOut) ? Integer.valueOf(0)
-                    : (this.constructADS(tree, oPart, sinkOut)).getScore();
+                    : this.constructADS(tree, oPart, sinkOut).getScore();
             return (Integer) this.computeRegScore(uIO, ui, childScore);
         }).collect(Collectors.summingInt(x -> x));
 
@@ -76,7 +77,7 @@ public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         assert !inputsToKeep.isEmpty();
 
         ADSNode<I, O> subtreeInfo = inputsToKeep.parallelStream().map(i -> {
-            HashMap<O, List<S>> innerOPartitions = this.partitionOnOutput(tree, currentBlock, i);
+            Map<O, List<S>> innerOPartitions = this.partitionOnOutput(tree, currentBlock, i);
             Integer innerUI = innerOPartitions.values().stream().map(p -> p.size())
                     .collect(Collectors.summingInt(x -> x));
 
@@ -91,8 +92,8 @@ public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
             Integer iScore = oScores.stream().collect(Collectors.summingInt(x -> x));
             return (Triple<I, Integer, List<Pair<O, ADSNode<I, O>>>>) Triple.of(i, iScore, data);
         }).filter(triple -> triple.getSecond() >= maxInputScore)
-                .max((a, b) -> (Integer.compare(a.getSecond(), b.getSecond()))).map(t -> {
-                    HashMap<O, ADSNode<I, O>> children = toMap(t.getThird());
+                .max((a, b) -> Integer.compare(a.getSecond(), b.getSecond())).map(t -> {
+                    Map<O, ADSNode<I, O>> children = toMap(t.getThird());
                     return new ADSNode<I, O>(t.getFirst(), children, t.getSecond());
                 }).orElse(null);
 
@@ -115,7 +116,7 @@ public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         return uio * (ui - uio) + childScore;
     }
 
-    private HashMap<O, List<S>> partitionOnOutput(ObservationTree<S, I, O> tree, List<S> block, I input) {
+    private Map<O, List<S>> partitionOnOutput(ObservationTree<S, I, O> tree, List<S> block, I input) {
         HashMap<O, List<S>> map = new HashMap<>();
         block.stream().map(s -> tree.getOutSucc(s, input)).filter(s -> s != null)
                 .forEach(p -> map.computeIfAbsent(p.getFirst(), k -> new LinkedList<>()).add(p.getSecond()));
@@ -123,7 +124,7 @@ public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
     }
 
     public Pair<I, Integer> maximalBaseInput(ObservationTree<S, I, O> tree, List<S> currentBlock,
-            HashMap<I, Pair<Integer, Integer>> splitScore) {
+            Map<I, Pair<Integer, Integer>> splitScore) {
         I retInput = tree.getInputAlphabet().getSymbol(0);
         Integer retPairs = 0;
         for (I i : tree.getInputAlphabet()) {

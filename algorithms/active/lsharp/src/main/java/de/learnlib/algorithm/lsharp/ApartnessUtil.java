@@ -11,7 +11,11 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.Triple;
 import net.automatalib.word.Word;
 
-public class Apartness {
+public final class ApartnessUtil {
+
+    private ApartnessUtil() {
+        // prevent instantiation
+    }
 
     public static <S extends Comparable<S>, I, O> @Nullable Word<I> computeWitness(ObservationTree<S, I, O> tree, S s1,
             S s2) {

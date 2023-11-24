@@ -9,22 +9,24 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 
-public interface ObservationTree<ST extends Comparable<ST>, I, O> {
-    public ST defaultState();
+public interface ObservationTree<S extends Comparable<S>, I, O> {
+    S defaultState();
 
-    public ST insertObservation(@Nullable ST start, Word<I> input, Word<O> output);
+    S insertObservation(@Nullable S start, Word<I> input, Word<O> output);
 
-    public Word<I> getAccessSeq(ST state);
+    Word<I> getAccessSeq(S state);
 
-    public Word<I> getTransferSeq(ST toState, ST fromState);
+    Word<I> getTransferSeq(S toState, S fromState);
 
-    public @Nullable Word<O> getObservation(@Nullable ST start, Word<I> input);
+    @Nullable
+    Word<O> getObservation(@Nullable S start, Word<I> input);
 
-    public @Nullable Pair<O, ST> getOutSucc(ST src, I input);
+    @Nullable
+    Pair<O, S> getOutSucc(S src, I input);
 
-    public default @Nullable O getOut(ST src, I input) {
+    default @Nullable O getOut(S src, I input) {
         @Nullable
-        Pair<O, ST> out = this.getOutSucc(src, input);
+        Pair<O, S> out = this.getOutSucc(src, input);
         if (out == null) {
             return null;
         }
@@ -32,15 +34,16 @@ public interface ObservationTree<ST extends Comparable<ST>, I, O> {
         return out.getFirst();
     }
 
-    public @Nullable ST getSucc(ST src, Word<I> input);
+    @Nullable
+    S getSucc(S src, Word<I> input);
 
-    public List<Pair<ST, I>> noSuccDefined(List<ST> basis, boolean sort);
+    List<Pair<S, I>> noSuccDefined(List<S> basis, boolean sort);
 
-    public Integer size();
+    Integer size();
 
-    public boolean treeAndHypStatesApartSink(ST st, LSState sh, MealyMachine<LSState, I, ?, O> fsm, O sinkOutput,
+    boolean treeAndHypStatesApartSink(S st, LSState sh, MealyMachine<LSState, I, ?, O> fsm, O sinkOutput,
             Integer depth);
 
-    public Alphabet<I> getInputAlphabet();
+    Alphabet<I> getInputAlphabet();
 
 }

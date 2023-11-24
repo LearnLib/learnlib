@@ -1,13 +1,14 @@
 package de.learnlib.algorithm.lsharp;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import net.automatalib.common.util.Pair;
 
 public class MapTransitions<I, O> implements TransitionInformation<I, O> {
-    private HashMap<I, Pair<O, LSState>> trans;
+    private Map<I, Pair<O, LSState>> trans;
 
     public MapTransitions(Integer inSize) {
         trans = new HashMap<>(inSize);

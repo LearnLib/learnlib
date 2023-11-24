@@ -1,12 +1,13 @@
 package de.learnlib.algorithm.lsharp.ads;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ADSNode<I, O> {
     private @Nullable I input;
-    private HashMap<O, ADSNode<I, O>> children;
+    private Map<O, ADSNode<I, O>> children;
     private Integer score;
 
     public ADSNode() {
@@ -15,7 +16,7 @@ public class ADSNode<I, O> {
         this.score = 0;
     }
 
-    public ADSNode(I input, HashMap<O, ADSNode<I, O>> children, Integer score) {
+    public ADSNode(I input, Map<O, ADSNode<I, O>> children, Integer score) {
         this.input = input;
         this.children = children;
         this.score = score;

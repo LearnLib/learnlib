@@ -18,11 +18,13 @@ import net.automatalib.word.WordBuilder;
 
 public class NormalObservationTreeTest {
 
+    @SuppressWarnings("PMD.CloseResource")
     private LSMealyMachine<String, String> readMealy(String filename) throws IOException {
         InputModelDeserializer<String, CompactMealy<String, String>> parser = DOTParsers
                 .mealy(new CompactMealy.Creator<String, String>(), DOTParsers.DEFAULT_MEALY_EDGE_PARSER);
         InputStream res = this.getClass().getResourceAsStream(filename);
         CompactMealy<String, String> target = parser.readModel(res).model;
+        res.close();
         return new LSMealyMachine<>(target.getInputAlphabet(), target);
     }
 

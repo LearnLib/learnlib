@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -16,10 +17,10 @@ import net.automatalib.common.util.Pair;
 
 public class SplittingNode<S, I, O> {
     public List<S> label;
-    public HashMap<O, Integer> children = new HashMap<>();
-    public HashMap<I, List<S>> successors = new HashMap<>();
+    public Map<O, Integer> children = new HashMap<>();
+    public Map<I, List<S>> successors = new HashMap<>();
     public SepSeq<I> sepSeq = new SepSeq<>(null, new LinkedList<>());
-    public HashMap<I, PartitionInfo.Type> splitMap = new HashMap<>();
+    public Map<I, PartitionInfo.Type> splitMap = new HashMap<>();
 
     public SplittingNode(List<S> block) {
         this.label = new LinkedList<>(new HashSet<>(block));
@@ -79,13 +80,7 @@ public class SplittingNode<S, I, O> {
 
             Set<O> selfOuts = this.children.keySet();
             Set<?> otherOuts = casted.children.keySet();
-            boolean outsEq = selfOuts.equals(otherOuts);
-
-            if (!outsEq) {
-                return false;
-            }
-
-            return true;
+            return selfOuts.equals(otherOuts);
         }
 
         return false;

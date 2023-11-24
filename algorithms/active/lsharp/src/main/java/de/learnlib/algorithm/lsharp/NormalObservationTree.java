@@ -115,7 +115,7 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
         return this.tree.get(src.raw()).getOutSucc(input);
     }
 
-    LSState _getSucc(LSState state, I input) {
+    LSState getSucc(LSState state, I input) {
         @Nullable
         Pair<O, LSState> pair = getOutSucc(state, input);
         return pair == null ? null : pair.getSecond();
@@ -125,7 +125,7 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
     public @Nullable LSState getSucc(LSState s, Word<I> input) {
         LSState src = s;
         for (I i : input) {
-            src = _getSucc(src, i);
+            src = getSucc(src, i);
             if (src == null) {
                 return null;
             }
@@ -169,7 +169,7 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
     @Override
     public boolean treeAndHypStatesApartSink(LSState st, LSState sh, MealyMachine<LSState, I, ?, O> fsm, O sinkOutput,
             Integer depth) {
-        return Apartness.treeAndHypStatesApartSunkBounded(this, st, sh, fsm, sinkOutput, depth);
+        return ApartnessUtil.treeAndHypStatesApartSunkBounded(this, st, sh, fsm, sinkOutput, depth);
     }
 
 }

@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
@@ -25,9 +27,9 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
     private LSOracle<I, O> oqOracle;
     private Alphabet<I> inputAlphabet;
     private List<Word<I>> basis;
-    private HashMap<Word<I>, List<Word<I>>> frontierToBasisMap;
+    private Map<Word<I>, List<Word<I>>> frontierToBasisMap;
     private Integer consistentCECount;
-    private HashSet<Word<I>> frontierTransitionsSet;
+    private Set<Word<I>> frontierTransitionsSet;
     private HashBiMap<Word<I>, LSState> basisMap;
     private Integer round;
 
@@ -97,7 +99,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         Word<I> accQPt = basisMap.inverse().get(qp);
         assert accQPt != null;
 
-        Word<I> eta = Apartness.computeWitness(oTree, r, qt);
+        Word<I> eta = ApartnessUtil.computeWitness(oTree, r, qt);
         assert eta != null;
 
         Word<I> outputQuery = accQPt.concat(sigma2).concat(eta);
@@ -109,7 +111,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         assert rp != null;
 
         @Nullable
-        Word<I> wit = Apartness.computeWitness(oTree, qpt, rp);
+        Word<I> wit = ApartnessUtil.computeWitness(oTree, qpt, rp);
         if (wit != null) {
             processBinarySearch(sigma1, ceOutput.prefix(sigma1.length()), mealy);
         } else {
@@ -151,7 +153,8 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         basis.add(bs);
         frontierToBasisMap.remove(bs);
         NormalObservationTree<I, O> oTree = oqOracle.getTree();
-        frontierToBasisMap.entrySet().parallelStream().filter(e -> !Apartness.accStatesAreApart(oTree, e.getKey(), bs))
+        frontierToBasisMap.entrySet().parallelStream()
+                .filter(e -> !ApartnessUtil.accStatesAreApart(oTree, e.getKey(), bs))
                 .forEach(e -> {
                     frontierToBasisMap.get(e.getKey()).add(bs);
                 });
@@ -171,28 +174,22 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
             }
         }
 
-        boolean check = basisIpPairs.stream().anyMatch(p -> {
+        return !basisIpPairs.stream().anyMatch(p -> {
             LSState q = oTree.getSucc(oTree.defaultState(), p.getFirst());
             return oTree.getOut(q, p.getSecond()) == null;
         });
-
-        if (check) {
-            return false;
-        }
-
-        return true;
     }
 
     public void updateFrontierAndBasis() {
         NormalObservationTree<I, O> oTree = oqOracle.getTree();
         frontierToBasisMap.entrySet().parallelStream()
-                .forEach(e -> e.getValue().removeIf(bs -> Apartness.accStatesAreApart(oTree, e.getKey(), bs)));
+                .forEach(e -> e.getValue().removeIf(bs -> ApartnessUtil.accStatesAreApart(oTree, e.getKey(), bs)));
 
         this.promoteFrontierState();
         this.checkFrontierConsistency();
 
         frontierToBasisMap.entrySet().parallelStream()
-                .forEach(e -> e.getValue().removeIf(bs -> Apartness.accStatesAreApart(oTree, e.getKey(), bs)));
+                .forEach(e -> e.getValue().removeIf(bs -> ApartnessUtil.accStatesAreApart(oTree, e.getKey(), bs)));
     }
 
     public LSMealyMachine<I, O> buildHypothesis() {
@@ -280,7 +277,8 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
             }
         }).filter(s -> s != null).filter(x -> !basis.contains(x)).filter(x -> !frontierToBasisMap.containsKey(x))
                 .map(fs -> {
-                    List<Word<I>> cands = basis.parallelStream().filter(s -> !Apartness.accStatesAreApart(oTree, fs, s))
+                    List<Word<I>> cands = basis.parallelStream()
+                            .filter(s -> !ApartnessUtil.accStatesAreApart(oTree, fs, s))
                             .collect(Collectors.toList());
                     return Pair.of(fs, cands);
                 }).forEach(p -> {
@@ -291,7 +289,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
     public DefaultQuery<I, Word<O>> checkConsistency(LSMealyMachine<I, O> mealy) {
         NormalObservationTree<I, O> oTree = oqOracle.getTree();
         @Nullable
-        Word<I> wit = Apartness.treeAndHypComputeWitness(oTree, oTree.defaultState(), mealy, new LSState(0));
+        Word<I> wit = ApartnessUtil.treeAndHypComputeWitness(oTree, oTree.defaultState(), mealy, new LSState(0));
         if (wit == null) {
             return null;
         }

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -17,10 +18,10 @@ public class LSMealyMachine<I, O> implements InputAlphabetHolder<I>, MealyMachin
     private Set<LSState> states;
     private LSState initialState;
     private Alphabet<I> inputAlphabet;
-    private HashMap<Pair<LSState, I>, Pair<LSState, O>> transFunction;
+    private Map<Pair<LSState, I>, Pair<LSState, O>> transFunction;
 
     public LSMealyMachine(Alphabet<I> inputAlphabet, Collection<LSState> states, LSState initialState,
-            HashMap<Pair<LSState, I>, Pair<LSState, O>> transFunction) {
+            Map<Pair<LSState, I>, Pair<LSState, O>> transFunction) {
         this.states = new HashSet<>(states);
         this.initialState = initialState;
         this.inputAlphabet = inputAlphabet;

@@ -13,14 +13,17 @@ public class LSState implements Comparable<LSState> {
 
     public int compareTo(LSState to) {
         return Integer.compare(this.base, to.raw());
-    };
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (!(o instanceof LSState))
+        }
+
+        if (!(o instanceof LSState)) {
             return false;
+        }
 
         LSState state = (LSState) o;
 

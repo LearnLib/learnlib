@@ -10,7 +10,11 @@ import java.util.stream.Collectors;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
-public class Scoring {
+public final class ScoringUtil {
+
+    private ScoringUtil() {
+
+    }
 
     public static <S, I, O> Integer scoreSep(SplittingNode<S, I, O> r, I x, MealyMachine<S, I, ?, O> fsm) {
         return score(r, x, null, fsm);

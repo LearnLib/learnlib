@@ -58,41 +58,42 @@ public class LSOracle<I, O> {
 
     private Pair<Word<I>, Word<O>> rule3IO(List<Word<I>> candidates, Word<I> prefix) {
         switch (this.rule3) {
-        case ADS:
-            if (candidates.size() == 2) {
-                Word<I> q1Acc = candidates.get(0);
-                Word<I> q2Acc = candidates.get(1);
-                LSState q1 = obsTree.getSucc(obsTree.defaultState(), q1Acc);
-                LSState q2 = obsTree.getSucc(obsTree.defaultState(), q2Acc);
-                assert q1 != null;
-                assert q2 != null;
+            case ADS:
+                if (candidates.size() == 2) {
+                    Word<I> q1Acc = candidates.get(0);
+                    Word<I> q2Acc = candidates.get(1);
+                    LSState q1 = obsTree.getSucc(obsTree.defaultState(), q1Acc);
+                    LSState q2 = obsTree.getSucc(obsTree.defaultState(), q2Acc);
+                    assert q1 != null;
+                    assert q2 != null;
 
-                Word<I> wit = Apartness.computeWitness(obsTree, q1, q2);
-                assert wit != null;
+                    Word<I> wit = ApartnessUtil.computeWitness(obsTree, q1, q2);
+                    assert wit != null;
 
-                WordBuilder<I> inputSeq = new WordBuilder<>(prefix);
-                assert !(Apartness.accStatesAreApart(obsTree, prefix, q1Acc)
-                        || Apartness.accStatesAreApart(obsTree, prefix, q2Acc));
-                inputSeq.append(wit);
-                Word<O> outputSeq = this.outputQuery(inputSeq.toWord());
+                    WordBuilder<I> inputSeq = new WordBuilder<>(prefix);
+                    assert !(ApartnessUtil.accStatesAreApart(obsTree, prefix, q1Acc)
+                            || ApartnessUtil.accStatesAreApart(obsTree, prefix, q2Acc));
+                    inputSeq.append(wit);
+                    Word<O> outputSeq = this.outputQuery(inputSeq.toWord());
 
-                return Pair.of(inputSeq.toWord(), outputSeq);
+                    return Pair.of(inputSeq.toWord(), outputSeq);
 
-            } else {
-                List<LSState> candss = candidates.stream().map(acc -> obsTree.getSucc(obsTree.defaultState(), acc))
-                        .collect(Collectors.toList());
-                ADSTree<LSState, I, O> suffix = new ADSTree<>(obsTree, candss, sinkOutput);
-                return this.adaptiveOutputQuery(prefix, null, suffix);
-            }
-        case SEPSEQ:
-            List<LSState> withS = randomN(candidates, 2).stream()
-                    .map(acc -> obsTree.getSucc(obsTree.defaultState(), acc)).collect(Collectors.toList());
-            Word<I> wit = Apartness.computeWitness(obsTree, withS.get(0), withS.get(1));
+                } else {
+                    List<LSState> candss = candidates.stream().map(acc -> obsTree.getSucc(obsTree.defaultState(), acc))
+                            .collect(Collectors.toList());
+                    ADSTree<LSState, I, O> suffix = new ADSTree<>(obsTree, candss, sinkOutput);
+                    return this.adaptiveOutputQuery(prefix, null, suffix);
+                }
+            case SEPSEQ:
+                List<LSState> withS = randomN(candidates, 2).stream()
+                        .map(acc -> obsTree.getSucc(obsTree.defaultState(), acc)).collect(Collectors.toList());
+                Word<I> wit = ApartnessUtil.computeWitness(obsTree, withS.get(0), withS.get(1));
 
-            Word<I> inputSeq = prefix.concat(wit);
-            return Pair.of(inputSeq, this.outputQuery(inputSeq));
+                Word<I> inputSeq = prefix.concat(wit);
+                return Pair.of(inputSeq, this.outputQuery(inputSeq));
+            default:
+                throw new RuntimeException("Shouldnt get here!");
         }
-        throw new RuntimeException("Shouldnt get here!");
     }
 
     public List<Word<I>> identifyFrontier(Word<I> fsAcc, List<Word<I>> candidates) {
@@ -101,7 +102,7 @@ public class LSOracle<I, O> {
         candidates.removeIf(b -> {
             LSState bs = obsTree.getSucc(obsTree.defaultState(), b);
             assert bs != null;
-            return Apartness.statesAreApart(obsTree, fs, bs);
+            return ApartnessUtil.statesAreApart(obsTree, fs, bs);
         });
 
         Integer orgCandLen = candidates.size();
@@ -111,7 +112,7 @@ public class LSOracle<I, O> {
 
         Pair<Word<I>, Word<O>> pair = rule3IO(candidates, fsAcc);
         obsTree.insertObservation(null, pair.getFirst(), pair.getSecond());
-        candidates.removeIf(b -> Apartness.accStatesAreApart(obsTree, fsAcc, b));
+        candidates.removeIf(b -> ApartnessUtil.accStatesAreApart(obsTree, fsAcc, b));
         assert candidates.size() != orgCandLen;
         return candidates;
     }
@@ -133,27 +134,28 @@ public class LSOracle<I, O> {
 
     private Pair<Word<I>, Word<O>> rule2IO(Word<I> accessQ, I i, List<LSState> bss, List<Word<I>> basis) {
         switch (this.rule2) {
-        case ADS:
-            ADSTree<LSState, I, O> suffix = new ADSTree<>(obsTree, bss, sinkOutput);
-            return this.adaptiveOutputQuery(accessQ, i, suffix);
-        case NOTHING:
-            Word<I> prefix = accessQ.append(i);
-            Word<O> oSeq = this.outputQuery(prefix);
-            return Pair.of(prefix, oSeq);
-        case SEPSEQ:
-            Word<I> wit = Word.epsilon();
-            if (basis.size() >= 2) {
-                List<LSState> ran = randomN(basis, 2).stream().map(b -> obsTree.getSucc(obsTree.defaultState(), b))
-                        .collect(Collectors.toList());
-                assert ran.get(0) != null;
-                assert ran.get(1) != null;
-                wit = Apartness.computeWitness(obsTree, ran.get(0), ran.get(1));
-            }
-            Word<I> inputSeq = accessQ.append(i).concat(wit);
-            Word<O> outputSeq = this.outputQuery(inputSeq);
-            return Pair.of(inputSeq, outputSeq);
+            case ADS:
+                ADSTree<LSState, I, O> suffix = new ADSTree<>(obsTree, bss, sinkOutput);
+                return this.adaptiveOutputQuery(accessQ, i, suffix);
+            case NOTHING:
+                Word<I> prefix = accessQ.append(i);
+                Word<O> oSeq = this.outputQuery(prefix);
+                return Pair.of(prefix, oSeq);
+            case SEPSEQ:
+                Word<I> wit = Word.epsilon();
+                if (basis.size() >= 2) {
+                    List<LSState> ran = randomN(basis, 2).stream().map(b -> obsTree.getSucc(obsTree.defaultState(), b))
+                            .collect(Collectors.toList());
+                    assert ran.get(0) != null;
+                    assert ran.get(1) != null;
+                    wit = ApartnessUtil.computeWitness(obsTree, ran.get(0), ran.get(1));
+                }
+                Word<I> inputSeq = accessQ.append(i).concat(wit);
+                Word<O> outputSeq = this.outputQuery(inputSeq);
+                return Pair.of(inputSeq, outputSeq);
+            default:
+                throw new RuntimeException("Shouldnt get here!");
         }
-        throw new RuntimeException("Shouldnt get here!");
     }
 
     public Pair<Word<I>, List<Word<I>>> exploreFrontier(Word<I> accQ, I i, List<Word<I>> basis) {
@@ -172,7 +174,7 @@ public class LSOracle<I, O> {
         List<Word<I>> bsNotSep = basis.parallelStream().filter(b -> {
             LSState bs = obsTree.getSucc(obsTree.defaultState(), b);
             assert bs != null;
-            return !Apartness.statesAreApart(obsTree, fs, bs);
+            return !ApartnessUtil.statesAreApart(obsTree, fs, bs);
         }).collect(Collectors.toList());
         return Pair.of(accQ.append(i), bsNotSep);
     }
@@ -230,6 +232,7 @@ public class LSOracle<I, O> {
         return Pair.of(inputSeq, outputSeq);
     }
 
+    @SuppressWarnings("PMD.EmptyCatchBlock")
     public Pair<Word<I>, Word<O>> sulAdaptiveQuery(Word<I> prefix, ADSTree<LSState, I, O> ads) {
         WordBuilder<I> inputsSent = new WordBuilder<>();
         WordBuilder<O> outputsReceived = new WordBuilder<>();
@@ -246,11 +249,13 @@ public class LSOracle<I, O> {
                 nextInput = ads.nextInput(lastOutput);
             }
         } catch (ADSStatus e) {
+            // Purely used as control flow.
         }
 
         return Pair.of(inputsSent.toWord(), outputsReceived.toWord());
     }
 
+    @SuppressWarnings("PMD.EmptyCatchBlock")
     public @Nullable Pair<Word<I>, Word<O>> answerADSFromTree(ADSTree<LSState, I, O> ads, LSState fromState) {
         O prevOutput = null;
         WordBuilder<I> inputsSent = new WordBuilder<>();
@@ -273,6 +278,7 @@ public class LSOracle<I, O> {
                 nextInput = ads.nextInput(prevOutput);
             }
         } catch (ADSStatus e) {
+            // Purely used as control flow.
         }
 
         ads.resetToRoot();
