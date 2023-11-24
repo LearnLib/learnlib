@@ -146,7 +146,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         }
     }
 
-    public boolean initTransOnInjInputs(MealyMachine<S, I, ?, O> fsm, Alphabet<I> inputAlphabet, Integer r,
+    public final boolean initTransOnInjInputs(MealyMachine<S, I, ?, O> fsm, Alphabet<I> inputAlphabet, Integer r,
             Helpers<I> helpers) {
         boolean stable = true;
         BestNode<I> bestR = helpers.bestNode.computeIfAbsent(r, k -> new BestNode<>());
@@ -203,7 +203,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         return stable;
     }
 
-    public void processDependent(MealyMachine<S, I, ?, O> fsm, Helpers<I> helpers) {
+    public final void processDependent(MealyMachine<S, I, ?, O> fsm, Helpers<I> helpers) {
         while (!helpers.dependentPrioQueue.isEmpty()) {
             Integer r = helpers.dependentPrioQueue.poll().getFirst();
             if (get(r).isSeparated()) {
@@ -254,7 +254,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         return new PartitionInfo<>(fsm, i, label).nonInjSepInput();
     }
 
-    public boolean initTransOnNonInjInputs(MealyMachine<S, I, ?, O> fsm, Alphabet<I> inpuAlphabet, Integer r,
+    public final boolean initTransOnNonInjInputs(MealyMachine<S, I, ?, O> fsm, Alphabet<I> inpuAlphabet, Integer r,
             Helpers<I> helpers) {
         boolean stable = true;
         BestNode<I> bestR = helpers.bestNode.computeIfAbsent(r, k -> new BestNode<>());
@@ -371,7 +371,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         return null;
     }
 
-    public Integer lcaOfTwo(S s1, S s2) {
+    public final Integer lcaOfTwo(S s1, S s2) {
         Integer cand = 0;
 
         while (cand != null) {
@@ -390,13 +390,13 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         return out == -1 ? null : out;
     }
 
-    public void analyse(Integer rIndex, MealyMachine<S, I, ?, O> fsm, Alphabet<I> inputAlphabet,
+    public final void analyse(Integer rIndex, MealyMachine<S, I, ?, O> fsm, Alphabet<I> inputAlphabet,
             Set<Integer> analysed) {
         this.tree.arena.get(rIndex).value.analyse(fsm, inputAlphabet);
         analysed.add(rIndex);
     }
 
-    public void separate(Integer rIndex, MealyMachine<S, I, ?, O> fsm, Helpers<I> helpers) {
+    public final void separate(Integer rIndex, MealyMachine<S, I, ?, O> fsm, Helpers<I> helpers) {
         if (!helpers.nodesInTree.contains(rIndex)) {
             return;
         }
@@ -427,7 +427,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         });
     }
 
-    public SplittingNode<S, I, O> get(Integer index) {
+    public final SplittingNode<S, I, O> get(Integer index) {
         return this.tree.get(index);
     }
 }
