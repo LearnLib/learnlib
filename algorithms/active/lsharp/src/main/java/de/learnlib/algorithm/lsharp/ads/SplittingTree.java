@@ -139,7 +139,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         }).orElse(null);
     }
 
-    public void scoreAndUpdate(Integer r, I input, Integer rx, MealyMachine<S, I, ?, O> fsm, BestNode<I> bestR) {
+    public final void scoreAndUpdate(Integer r, I input, Integer rx, MealyMachine<S, I, ?, O> fsm, BestNode<I> bestR) {
         Integer score = ScoringUtil.scoreXfer(get(r), input, get(rx), fsm);
         if (score < bestR.score) {
             bestR.update(input, rx, score);
@@ -320,7 +320,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         return stable;
     }
 
-    public Integer maybeLCA(List<S> block, Set<Integer> nodesInTree) {
+    public final Integer maybeLCA(List<S> block, Set<Integer> nodesInTree) {
         if (nodesInTree.size() == 1) {
             return 0;
         }
