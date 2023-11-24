@@ -36,6 +36,7 @@ limitations under the License.
         <module>adt</module>
         <module>dhc</module>
         <module>kearns-vazirani</module>
+        <module>lsharp</module>
         <module>lstar</module>
         <module>nlstar</module>
         <module>observation-pack</module>
