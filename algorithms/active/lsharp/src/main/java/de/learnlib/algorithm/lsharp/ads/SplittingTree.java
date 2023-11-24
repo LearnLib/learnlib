@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -109,7 +108,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
             for (S y : new LinkedList<>(block)) {
                 if (x.compareTo(y) < 0) {
                     Integer lca = this.LCAOfTwo(x, y);
-                    Objects.requireNonNull(lca);
+                    assert lca != null;
                     separatingNodes.add(Triple.of(x, y, lca));
                 }
             }
@@ -154,7 +153,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
 
         for (I input : injectiveXferInputs) {
             List<S> destBlock = get(r).successors.get(input);
-            Objects.requireNonNull(destBlock);
+            assert destBlock != null;
             Integer rx = maybeLCA(destBlock, helpers.nodesInTree);
             if (rx != null) {
                 if (helpers.dependent.contains(rx)) {
@@ -189,7 +188,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         helpers.bestNode.put(r, bestR);
 
         bestR = helpers.bestNode.get(r);
-        Objects.requireNonNull(bestR);
+        assert bestR != null;
 
         boolean nextHasInjSeq = false;
         if (bestR.next != null) {
@@ -211,10 +210,10 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
             }
 
             BestNode<I> bestR = helpers.bestNode.get(r);
-            Objects.requireNonNull(bestR);
+            assert bestR != null;
 
             I xferInput = bestR.input;
-            Objects.requireNonNull(xferInput);
+            assert xferInput != null;
 
             List<I> seq = null;
             if (bestR.next != null) {
@@ -270,7 +269,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         List<I> invalidXferInputs = get(r).inputsOfType(Type.XFER_NON_INJ);
         for (I input : invalidXferInputs) {
             List<S> succ = get(r).successors.get(input);
-            Objects.requireNonNull(succ);
+            assert succ != null;
 
             Integer maybeRX = maybeLCA(succ, helpers.nodesInTree);
             Integer nextR;

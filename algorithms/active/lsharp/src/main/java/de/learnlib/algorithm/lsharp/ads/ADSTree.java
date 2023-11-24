@@ -3,7 +3,6 @@ package de.learnlib.algorithm.lsharp.ads;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -20,7 +19,7 @@ public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
 
     public ADSTree(ObservationTree<S, I, O> tree, List<S> currentBlock, @Nullable O sinkOut) {
         ADSNode<I, O> initialNode = this.constructADS(tree, currentBlock, sinkOut);
-        Objects.requireNonNull(initialNode);
+        assert initialNode != null;
         this.initialNode = initialNode;
         this.currentNode = initialNode;
     }
@@ -96,7 +95,7 @@ public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
                     return new ADSNode<I, O>(t.getFirst(), children, t.getSecond());
                 }).orElse(null);
 
-        Objects.requireNonNull(subtreeInfo);
+        assert subtreeInfo != null;
         return subtreeInfo;
     }
 

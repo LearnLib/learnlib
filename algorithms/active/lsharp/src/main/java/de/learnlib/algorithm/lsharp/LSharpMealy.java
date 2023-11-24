@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -56,7 +55,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
     }
 
     public boolean processCex(DefaultQuery<I, Word<O>> cex, LSMealyMachine<I, O> mealy) {
-        Objects.requireNonNull(cex);
+        assert cex != null;
         Word<I> ceInput = cex.getInput();
         Word<O> ceOutput = cex.getOutput();
         oqOracle.addObservation(ceInput, ceOutput);
@@ -71,7 +70,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
     public void processBinarySearch(Word<I> ceInput, Word<O> ceOutput, LSMealyMachine<I, O> mealy) {
         LSState r = oqOracle.getTree().getSucc(oqOracle.getTree().defaultState(), ceInput);
-        Objects.requireNonNull(r);
+        assert r != null;
         this.updateFrontierAndBasis();
         if (this.frontierToBasisMap.containsKey(ceInput) || basis.contains(ceInput)) {
             return;
@@ -79,11 +78,11 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
         LSState q = mealy.getSuccessor(mealy.getInitialState(), ceInput);
         Word<I> accQT = basisMap.inverse().get(q);
-        Objects.requireNonNull(accQT);
+        assert accQT != null;
 
         NormalObservationTree<I, O> oTree = oqOracle.getTree();
         LSState qt = oTree.getSucc(oTree.defaultState(), accQT);
-        Objects.requireNonNull(qt);
+        assert qt != null;
 
         Integer x = ceInput.prefixes(false).stream().filter(seq -> seq.length() != 0)
                 .filter(seq -> frontierToBasisMap.containsKey(seq)).findFirst().get().length();
@@ -94,20 +93,20 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         Word<I> sigma1 = ceInput.prefix(h);
         Word<I> sigma2 = ceInput.suffix(ceInput.size() - h);
         LSState qp = mealy.getSuccessor(mealy.getInitialState(), sigma1);
-        Objects.requireNonNull(qp);
+        assert qp != null;
         Word<I> accQPt = basisMap.inverse().get(qp);
-        Objects.requireNonNull(accQPt);
+        assert accQPt != null;
 
         Word<I> eta = Apartness.computeWitness(oTree, r, qt);
-        Objects.requireNonNull(eta);
+        assert eta != null;
 
         Word<I> outputQuery = accQPt.concat(sigma2).concat(eta);
         Word<O> sulResponse = oqOracle.outputQuery(outputQuery);
         LSState qpt = oTree.getSucc(oTree.defaultState(), accQPt);
-        Objects.requireNonNull(qpt);
+        assert qpt != null;
 
         LSState rp = oTree.getSucc(oTree.defaultState(), sigma1);
-        Objects.requireNonNull(rp);
+        assert rp != null;
 
         @Nullable
         Word<I> wit = Apartness.computeWitness(oTree, qpt, rp);
@@ -227,9 +226,9 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         for (Word<I> q : basisCopy) {
             for (I i : inputAlphabet) {
                 LSState bs = oTree.getSucc(oTree.defaultState(), q);
-                Objects.requireNonNull(bs);
+                assert bs != null;
                 O output = oTree.getOut(bs, i);
-                Objects.requireNonNull(output);
+                assert output != null;
                 Word<I> fAcc = q.append(i);
 
                 Pair<Word<I>, Boolean> pair = this.identifyFrontierOrBasis(fAcc);
@@ -241,9 +240,9 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
                 }
 
                 LSState hypBS = basisMap.get(q);
-                Objects.requireNonNull(hypBS);
+                assert hypBS != null;
                 LSState hypDest = basisMap.get(dest);
-                Objects.requireNonNull(hypDest);
+                assert hypDest != null;
                 transFunction.put(Pair.of(hypBS, i), Pair.of(hypDest, output));
             }
         }
@@ -304,7 +303,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         }
 
         Word<O> os = oTree.getObservation(null, wit);
-        Objects.requireNonNull(os);
+        assert os != null;
         return new DefaultQuery<>(wit, os);
     }
 
