@@ -83,7 +83,7 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
             I i = pair.getFirst();
             Integer parentIndex = pair.getSecond();
             accessSeq.add(i);
-            if (parentIndex == destParentIndex) {
+            if (parentIndex.equals(destParentIndex)) {
                 break;
             }
             currState = parentIndex;

@@ -174,7 +174,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
 
                 if (!helpers.analysedIndices.contains(rx2) || !get(rx2).sepSeq.isSet()) {
                     if (!helpers.analysedIndices.contains(rx2)) {
-                        this.analyse(rx, fsm, inputAlphabet, helpers.analysedIndices);
+                        this.analyse(rx2, fsm, inputAlphabet, helpers.analysedIndices);
                     }
                     if (get(rx2).sepSeq.isSet()) {
                         scoreAndUpdate(r, input, rx2, fsm, bestR);
@@ -215,9 +215,9 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
             I xferInput = bestR.input;
             assert xferInput != null;
 
-            List<I> seq = null;
+            List<I> seq = new LinkedList<>();
             if (bestR.next != null) {
-                seq = get(bestR.next).sepSeq.seq;
+                seq.addAll(get(bestR.next).sepSeq.seq);
             }
 
             LinkedList<I> sepSeqBase = new LinkedList<>();

@@ -63,7 +63,8 @@ public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
             O o = e.getKey();
             List<S> oPart = e.getValue();
             Integer uIO = oPart.size();
-            Integer childScore = o.equals(sinkOut) ? 0 : (this.constructADS(tree, oPart, sinkOut)).getScore();
+            Integer childScore = o.equals(sinkOut) ? Integer.valueOf(0)
+                    : (this.constructADS(tree, oPart, sinkOut)).getScore();
             return (Integer) this.computeRegScore(uIO, ui, childScore);
         }).collect(Collectors.summingInt(x -> x));
 

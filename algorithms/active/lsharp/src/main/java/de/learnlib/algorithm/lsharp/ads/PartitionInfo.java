@@ -41,13 +41,12 @@ public class PartitionInfo<S, I, O> {
                 return Type.SEP_INJ;
             }
             return Type.SEP_NON_INJ;
-        }
-
-        if (!separating) {
+        } else {
             if (injective) {
                 return Type.XFER_INJ;
+            } else if (!this.mergesAllStates()) {
+                return Type.XFER_NON_INJ;
             }
-            return Type.XFER_NON_INJ;
         }
 
         return Type.USELESS;

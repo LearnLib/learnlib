@@ -221,7 +221,6 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
         NormalObservationTree<I, O> oTree = oqOracle.getTree();
         LinkedList<Word<I>> basisCopy = new LinkedList<>(basis);
-        HashSet<Word<I>> loopbacks = new HashSet<>();
         HashMap<Pair<LSState, I>, Pair<LSState, O>> transFunction = new HashMap<>();
         for (Word<I> q : basisCopy) {
             for (I i : inputAlphabet) {
@@ -233,11 +232,6 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
                 Pair<Word<I>, Boolean> pair = this.identifyFrontierOrBasis(fAcc);
                 Word<I> dest = pair.getFirst();
-                Boolean isLoopback = pair.getSecond();
-
-                if (isLoopback) {
-                    loopbacks.add(fAcc);
-                }
 
                 LSState hypBS = basisMap.get(q);
                 assert hypBS != null;

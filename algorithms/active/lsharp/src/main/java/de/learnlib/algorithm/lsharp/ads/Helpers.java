@@ -1,5 +1,6 @@
 package de.learnlib.algorithm.lsharp.ads;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,7 +8,7 @@ import java.util.PriorityQueue;
 
 import net.automatalib.common.util.Pair;
 
-class PairComparator implements Comparator<Pair<Integer, Integer>> {
+class PairComparator implements Comparator<Pair<Integer, Integer>>, Serializable {
     public int compare(Pair<Integer, Integer> p1, Pair<Integer, Integer> p2) {
         if (p1.getSecond() < p2.getSecond())
             return 1;
