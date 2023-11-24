@@ -90,7 +90,7 @@ public class LSOracle<I, O> {
                     .map(acc -> obsTree.getSucc(obsTree.defaultState(), acc)).collect(Collectors.toList());
             Word<I> wit = Apartness.computeWitness(obsTree, withS.get(0), withS.get(1));
 
-            Word<I> inputSeq = Word.fromWords(wit);
+            Word<I> inputSeq = prefix.concat(wit);
             return Pair.of(inputSeq, this.outputQuery(inputSeq));
         }
         throw new RuntimeException("Shouldnt get here!");
