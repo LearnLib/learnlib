@@ -31,9 +31,9 @@ public class Apartness {
     public static <S extends Comparable<S>, I, O> boolean accStatesAreApart(ObservationTree<S, I, O> tree, Word<I> s1a,
             Word<I> s2a) {
         S s1 = tree.getSucc(tree.defaultState(), s1a);
-        Objects.requireNonNull(s1);
+        assert s1 != null;
         S s2 = tree.getSucc(tree.defaultState(), s2a);
-        Objects.requireNonNull(s2);
+        assert s2 != null;
         return statesAreApart(tree, s1, s2);
     }
 
@@ -63,9 +63,9 @@ public class Apartness {
                 Pair<O, S> stepFree = tree.getOutSucc(q, i);
                 if (stepFree != null) {
                     LSState dh = fsm.getSuccessor(r, i);
-                    Objects.requireNonNull(dh);
+                    assert dh != null;
                     O outHyp = fsm.getOutput(r, i);
-                    Objects.requireNonNull(outHyp);
+                    assert outHyp != null;
 
                     if (outHyp.equals(stepFree.getFirst())) {
                         if (stepFree.getFirst().equals(sinkOutput)) {
@@ -103,9 +103,9 @@ public class Apartness {
                 Pair<O, S> stepFree = tree.getOutSucc(q, i);
                 if (stepFree != null) {
                     LSState dh = fsm.getSuccessor(r, i);
-                    Objects.requireNonNull(dh);
+                    assert dh != null;
                     O outHyp = fsm.getOutput(r, i);
-                    Objects.requireNonNull(outHyp);
+                    assert outHyp != null;
 
                     if (outHyp.equals(stepFree.getFirst())) {
                         if (stepFree.getFirst().equals(sinkOutput)) {
@@ -145,9 +145,9 @@ public class Apartness {
                 Pair<O, S> stepFree = tree.getOutSucc(q, i);
                 if (stepFree != null) {
                     LSState dh = fsm.getSuccessor(r, i);
-                    Objects.requireNonNull(dh);
+                    assert dh != null;
                     O outHyp = fsm.getOutput(r, i);
-                    Objects.requireNonNull(outHyp);
+                    assert outHyp != null;
 
                     if (outHyp.equals(stepFree.getFirst())) {
                         queue.push(Pair.of(stepFree.getSecond(), dh));
