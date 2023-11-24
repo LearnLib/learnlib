@@ -10,8 +10,8 @@ public class SepSeq<T> {
         INJ, NONINJ;
     }
 
-    public List<T> seq;
-    public @Nullable Status status;
+    public final List<T> seq;
+    public final @Nullable Status status;
 
     public SepSeq(Status status, List<T> seq) {
         this.seq = seq;

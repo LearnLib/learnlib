@@ -22,13 +22,13 @@ class PairComparator implements Comparator<Pair<Integer, Integer>>, Serializable
 }
 
 public class Helpers<I> {
-    public Set<Integer> nodesInTree = new HashSet<>();
-    public PriorityQueue<Pair<Integer, Integer>> partition = new PriorityQueue<>(new PairComparator());
-    public Set<Integer> dependent = new HashSet<>();
-    public PriorityQueue<Pair<Integer, Integer>> dependentPrioQueue = new PriorityQueue<>(new PairComparator());
-    public Map<Integer, HashSet<Pair<Integer, I>>> transitionsTo = new HashMap<>();
-    public Set<Integer> analysedIndices = new HashSet<>();
-    public Map<Integer, BestNode<I>> bestNode = new HashMap<>();
+    public final Set<Integer> nodesInTree = new HashSet<>();
+    public final PriorityQueue<Pair<Integer, Integer>> partition = new PriorityQueue<>(new PairComparator());
+    public final Set<Integer> dependent = new HashSet<>();
+    public final PriorityQueue<Pair<Integer, Integer>> dependentPrioQueue = new PriorityQueue<>(new PairComparator());
+    public final Map<Integer, HashSet<Pair<Integer, I>>> transitionsTo = new HashMap<>();
+    public final Set<Integer> analysedIndices = new HashSet<>();
+    public final Map<Integer, BestNode<I>> bestNode = new HashMap<>();
 
     public void addTransitionFromToVia(Integer src, Integer dst, I via) {
         this.transitionsTo.computeIfAbsent(dst, k -> new HashSet<>()).add(Pair.of(src, via));

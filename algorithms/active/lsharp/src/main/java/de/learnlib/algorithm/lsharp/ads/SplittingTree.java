@@ -16,9 +16,9 @@ import net.automatalib.common.util.Triple;
 import net.automatalib.word.Word;
 
 public class SplittingTree<S extends Comparable<S>, I, O> {
-    public ArenaTree<SplittingNode<S, I, O>, Void> tree = new ArenaTree<>();
-    public SeparatingNodes<S, Integer> sepLCA = new SeparatingNodes<>();
-    public Set<Integer> analysed = new HashSet<>();
+    public final ArenaTree<SplittingNode<S, I, O>, Void> tree = new ArenaTree<>();
+    public final SeparatingNodes<S, Integer> sepLCA = new SeparatingNodes<>();
+    public final Set<Integer> analysed = new HashSet<>();
 
     public SplittingTree(MealyMachine<S, I, ?, O> fsm, Alphabet<I> inputAlphabet, List<S> rootLabel) {
         Helpers<I> helpers = new Helpers<>();
@@ -364,10 +364,8 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
 
     private Integer nextNode(SplittingNode<S, I, O> node, S s1, S s2) {
         Pair<Integer, Integer> pair = findChildrenAtNode(node, s1, s2);
-        if (pair != null) {
-            if (pair.getFirst().compareTo(pair.getSecond()) == 0) {
-                return pair.getFirst();
-            }
+        if (pair != null && pair.getFirst().compareTo(pair.getSecond()) == 0) {
+            return pair.getFirst();
         }
 
         return null;

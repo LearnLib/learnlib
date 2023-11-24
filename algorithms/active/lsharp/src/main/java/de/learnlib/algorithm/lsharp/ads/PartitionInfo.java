@@ -17,7 +17,7 @@ public class PartitionInfo<S, I, O> {
         SEP_INJ, SEP_NON_INJ, XFER_INJ, XFER_NON_INJ, USELESS;
     }
 
-    public Map<O, HashMap<S, HashSet<S>>> splitMap = new HashMap<>();
+    public final Map<O, HashMap<S, HashSet<S>>> splitMap = new HashMap<>();
 
     public PartitionInfo(MealyMachine<S, I, ?, O> fsm, I i, List<S> block) {
         block.stream().map(s -> Triple.of(s, fsm.getOutput(s, i), fsm.getSuccessor(s, i))).forEach(triple -> {

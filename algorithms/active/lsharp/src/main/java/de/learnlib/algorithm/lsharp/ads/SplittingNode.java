@@ -16,11 +16,11 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 
 public class SplittingNode<S, I, O> {
-    public List<S> label;
-    public Map<O, Integer> children = new HashMap<>();
-    public Map<I, List<S>> successors = new HashMap<>();
+    public final List<S> label;
+    public final Map<O, Integer> children = new HashMap<>();
+    public final Map<I, List<S>> successors = new HashMap<>();
     public SepSeq<I> sepSeq = new SepSeq<>(null, new LinkedList<>());
-    public Map<I, PartitionInfo.Type> splitMap = new HashMap<>();
+    public final Map<I, PartitionInfo.Type> splitMap = new HashMap<>();
 
     public SplittingNode(List<S> block) {
         this.label = new LinkedList<>(new HashSet<>(block));

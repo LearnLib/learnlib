@@ -6,9 +6,9 @@ import java.util.Map;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ADSNode<I, O> {
-    private @Nullable I input;
-    private Map<O, ADSNode<I, O>> children;
-    private Integer score;
+    private final @Nullable I input;
+    private final Map<O, ADSNode<I, O>> children;
+    private final Integer score;
 
     public ADSNode() {
         this.input = null;

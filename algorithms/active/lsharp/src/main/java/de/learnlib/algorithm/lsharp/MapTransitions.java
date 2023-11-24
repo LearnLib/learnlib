@@ -8,7 +8,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import net.automatalib.common.util.Pair;
 
 public class MapTransitions<I, O> implements TransitionInformation<I, O> {
-    private Map<I, Pair<O, LSState>> trans;
+    private final Map<I, Pair<O, LSState>> trans;
 
     public MapTransitions(Integer inSize) {
         trans = new HashMap<>(inSize);

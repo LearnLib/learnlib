@@ -15,7 +15,7 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.Triple;
 
 public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
-    private ADSNode<I, O> initialNode;
+    private final ADSNode<I, O> initialNode;
     private ADSNode<I, O> currentNode;
 
     public ADSTree(ObservationTree<S, I, O> tree, List<S> currentBlock, @Nullable O sinkOut) {

@@ -7,7 +7,7 @@ import java.util.function.Function;
 import net.automatalib.common.util.Pair;
 
 public class ArenaTree<T, P> {
-    public List<ArenaNode<T, P>> arena;
+    public final List<ArenaNode<T, P>> arena;
 
     public ArenaTree() {
         this.arena = new LinkedList<>();

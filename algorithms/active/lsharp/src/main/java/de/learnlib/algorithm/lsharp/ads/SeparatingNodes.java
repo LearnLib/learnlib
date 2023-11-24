@@ -8,7 +8,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import net.automatalib.common.util.Pair;
 
 public class SeparatingNodes<K extends Comparable<K>, V> {
-    public Map<Pair<K, K>, V> inner;
+    public final Map<Pair<K, K>, V> inner;
 
     public SeparatingNodes() {
         this.inner = new HashMap<>();

@@ -16,14 +16,13 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
 public class LSOracle<I, O> {
-
-    private MembershipOracle<I, Word<O>> sul;
-    private NormalObservationTree<I, O> obsTree;
-    private Rule2 rule2;
-    private Rule3 rule3;
+    private final MembershipOracle<I, Word<O>> sul;
+    private final NormalObservationTree<I, O> obsTree;
+    private final Rule2 rule2;
+    private final Rule3 rule3;
     private Word<I> sinkState;
-    private O sinkOutput;
-    private Random random;
+    private final O sinkOutput;
+    private final Random random;
 
     protected LSOracle(MembershipOracle<I, Word<O>> sul, NormalObservationTree<I, O> obsTree, Rule2 rule2, Rule3 rule3,
             Word<I> sinkState, O sinkOutput, Random random) {
@@ -196,11 +195,7 @@ public class LSOracle<I, O> {
     }
 
     public Pair<Word<I>, Word<O>> adaptiveOutputQuery(Word<I> prefix, I infix, ADSTree<LSState, I, O> suffix) {
-        if (infix != null) {
-            prefix = prefix.append(infix);
-        }
-
-        return this.adaptiveOutputQuery(prefix, suffix);
+        return this.adaptiveOutputQuery(infix != null ? prefix.append(infix) : prefix, suffix);
     }
 
     public Pair<Word<I>, Word<O>> adaptiveOutputQuery(Word<I> prefix, ADSTree<LSState, I, O> suffix) {

@@ -24,13 +24,13 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 
 public class LSharpMealy<I, O> implements MealyLearner<I, O> {
-    private LSOracle<I, O> oqOracle;
-    private Alphabet<I> inputAlphabet;
-    private List<Word<I>> basis;
-    private Map<Word<I>, List<Word<I>>> frontierToBasisMap;
+    private final LSOracle<I, O> oqOracle;
+    private final Alphabet<I> inputAlphabet;
+    private final List<Word<I>> basis;
+    private final Map<Word<I>, List<Word<I>>> frontierToBasisMap;
     private Integer consistentCECount;
-    private Set<Word<I>> frontierTransitionsSet;
-    private HashBiMap<Word<I>, LSState> basisMap;
+    private final Set<Word<I>> frontierTransitionsSet;
+    private final HashBiMap<Word<I>, LSState> basisMap;
     private Integer round;
 
     public LSharpMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle, Rule2 rule2, Rule3 rule3) {

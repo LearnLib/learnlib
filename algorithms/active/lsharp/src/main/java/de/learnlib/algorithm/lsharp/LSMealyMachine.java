@@ -15,10 +15,10 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 
 public class LSMealyMachine<I, O> implements InputAlphabetHolder<I>, MealyMachine<LSState, I, Pair<LSState, I>, O> {
-    private Set<LSState> states;
-    private LSState initialState;
-    private Alphabet<I> inputAlphabet;
-    private Map<Pair<LSState, I>, Pair<LSState, O>> transFunction;
+    private final Set<LSState> states;
+    private final LSState initialState;
+    private final Alphabet<I> inputAlphabet;
+    private final Map<Pair<LSState, I>, Pair<LSState, O>> transFunction;
 
     public LSMealyMachine(Alphabet<I> inputAlphabet, Collection<LSState> states, LSState initialState,
             Map<Pair<LSState, I>, Pair<LSState, O>> transFunction) {

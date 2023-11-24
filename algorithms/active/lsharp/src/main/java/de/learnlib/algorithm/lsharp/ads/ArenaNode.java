@@ -5,7 +5,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import net.automatalib.common.util.Pair;
 
 public class ArenaNode<T, P> {
-    public @Nullable Pair<P, Integer> parent;
+    public final @Nullable Pair<P, Integer> parent;
     public T value;
 
     public ArenaNode(Pair<P, Integer> parent, T value) {

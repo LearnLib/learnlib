@@ -15,8 +15,8 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
 public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, O> {
-    private ArenaTree<MapTransitions<I, O>, I> tree;
-    private Alphabet<I> inputAlphabet;
+    private final ArenaTree<MapTransitions<I, O>, I> tree;
+    private final Alphabet<I> inputAlphabet;
 
     public NormalObservationTree(Alphabet<I> inputAlphabet) {
         MapTransitions<I, O> node = new MapTransitions<>(inputAlphabet.size());
