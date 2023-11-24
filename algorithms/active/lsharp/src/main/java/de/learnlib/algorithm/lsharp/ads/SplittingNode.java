@@ -55,7 +55,7 @@ public class SplittingNode<S, I, O> {
         if (injSepInput.isPresent()) {
             List<I> sepSeq = new LinkedList<>();
             sepSeq.add(injSepInput.get());
-            this.sepSeq = new SepSeq<I>(Status.INJ, sepSeq);
+            this.sepSeq = new SepSeq<>(Status.INJ, sepSeq);
         }
 
         for (Pair<I, PartitionInfo<S, I, O>> pair : infos) {

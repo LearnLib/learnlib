@@ -25,10 +25,12 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
         this.inputAlphabet = inputAlphabet;
     }
 
+    @Override
     public Alphabet<I> getInputAlphabet() {
         return this.inputAlphabet;
     }
 
+    @Override
     public LSState defaultState() {
         return new LSState(0);
     }

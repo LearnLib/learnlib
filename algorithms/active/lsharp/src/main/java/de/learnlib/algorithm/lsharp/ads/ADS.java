@@ -19,7 +19,7 @@ package de.learnlib.algorithm.lsharp.ads;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface ADS<I, O> {
-    I nextInput(@Nullable O previousOutput) throws ADSStatus;
+    I nextInput(@Nullable O previousOutput);
 
     Float identificationPower();
 

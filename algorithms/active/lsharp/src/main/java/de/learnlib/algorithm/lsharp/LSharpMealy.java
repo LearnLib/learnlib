@@ -44,7 +44,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
     public LSharpMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle, Rule2 rule2, Rule3 rule3,
             Word<I> sinkState, O sinkOutput, Random random) {
-        this.oqOracle = new LSOracle<I, O>(oracle, new NormalObservationTree<>(alphabet), rule2, rule3, sinkState,
+        this.oqOracle = new LSOracle<>(oracle, new NormalObservationTree<>(alphabet), rule2, rule3, sinkState,
                 sinkOutput, random);
         this.inputAlphabet = alphabet;
         this.basis = new LinkedList<>();

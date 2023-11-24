@@ -91,7 +91,7 @@ public class LSOracle<I, O> {
                 Word<I> inputSeq = prefix.concat(wit);
                 return Pair.of(inputSeq, this.outputQuery(inputSeq));
             default:
-                throw new RuntimeException("Shouldnt get here!");
+                throw new IllegalStateException("Shouldnt get here!");
         }
     }
 
@@ -153,7 +153,7 @@ public class LSOracle<I, O> {
                 Word<O> outputSeq = this.outputQuery(inputSeq);
                 return Pair.of(inputSeq, outputSeq);
             default:
-                throw new RuntimeException("Shouldnt get here!");
+                throw new IllegalStateException("Shouldnt get here!");
         }
     }
 
@@ -208,7 +208,7 @@ public class LSOracle<I, O> {
 
         suffix.resetToRoot();
         if (treeReply != null) {
-            throw new RuntimeException("ADS is not increasing the norm, we already knew this information.");
+            throw new IllegalStateException("ADS is not increasing the norm, we already knew this information.");
         }
 
         Word<O> prefixOut = sul.answerQuery(prefix);

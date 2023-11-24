@@ -34,7 +34,7 @@ public final class ScoringUtil {
             w.concat(Word.fromList(seq));
         }
 
-        HashMap<Word<O>, HashMap<S, HashSet<S>>> outputdestMap = new HashMap<Word<O>, HashMap<S, HashSet<S>>>();
+        HashMap<Word<O>, HashMap<S, HashSet<S>>> outputdestMap = new HashMap<>();
         for (S s : r.label) {
             Word<O> o = fsm.computeStateOutput(s, w);
             S d = fsm.getSuccessor(s, w);

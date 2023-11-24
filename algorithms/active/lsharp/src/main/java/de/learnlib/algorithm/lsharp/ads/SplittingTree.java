@@ -26,7 +26,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         this.analysed.addAll(helpers.analysedIndices);
     }
 
-    public void construct(MealyMachine<S, I, ?, O> fsm, Alphabet<I> inputAlphabet, List<S> initialLabel,
+    public final void construct(MealyMachine<S, I, ?, O> fsm, Alphabet<I> inputAlphabet, List<S> initialLabel,
             Helpers<I> helpers) {
         helpers.analysedIndices.addAll(this.analysed);
         SplittingNode<S, I, O> rootNode = new SplittingNode<>(initialLabel);
@@ -226,7 +226,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
             sepSeqBase.addAll(seq);
 
             boolean iwIsSepInj = PartitionInfo.inputWordIsSepInj(fsm, Word.fromList(sepSeqBase), get(r).label);
-            SepSeq<I> sepSeq = new SepSeq<I>(iwIsSepInj ? SepSeq.Status.INJ : SepSeq.Status.NONINJ, sepSeqBase);
+            SepSeq<I> sepSeq = new SepSeq<>(iwIsSepInj ? SepSeq.Status.INJ : SepSeq.Status.NONINJ, sepSeqBase);
             this.tree.arena.get(r).value.sepSeq = sepSeq;
             this.separate(r, fsm, helpers);
 

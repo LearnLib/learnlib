@@ -48,7 +48,7 @@ public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         return map;
     }
 
-    public ADSNode<I, O> constructADS(ObservationTree<S, I, O> tree, List<S> currentBlock, O sinkOut) {
+    public final ADSNode<I, O> constructADS(ObservationTree<S, I, O> tree, List<S> currentBlock, O sinkOut) {
         Integer blockSize = currentBlock.size();
 
         if (blockSize == 1) {
@@ -149,7 +149,8 @@ public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         return Pair.of(retInput, retPairs);
     }
 
-    public I nextInput(@Nullable O previousSymbol) throws ADSStatus {
+    @Override
+    public I nextInput(@Nullable O previousSymbol) {
         if (previousSymbol != null) {
             @Nullable
             ADSNode<I, O> childNode = currentNode.getChildNode(previousSymbol);
@@ -167,10 +168,12 @@ public class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         return outSymbol;
     }
 
+    @Override
     public void resetToRoot() {
         this.currentNode = initialNode;
     }
 
+    @Override
     public Float identificationPower() {
         return this.getScore().floatValue();
     }

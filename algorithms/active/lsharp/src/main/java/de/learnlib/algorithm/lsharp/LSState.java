@@ -11,6 +11,7 @@ public class LSState implements Comparable<LSState> {
         return this.base;
     }
 
+    @Override
     public int compareTo(LSState to) {
         return Integer.compare(this.base, to.raw());
     }
