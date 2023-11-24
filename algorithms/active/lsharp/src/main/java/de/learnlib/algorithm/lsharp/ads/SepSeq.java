@@ -1,6 +1,7 @@
 package de.learnlib.algorithm.lsharp.ads;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -41,5 +42,10 @@ public class SepSeq<T> {
         }
 
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(seq, status);
     }
 }
