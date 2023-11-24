@@ -65,11 +65,11 @@ public class LSOracle<I, O> {
                 Word<I> q2Acc = candidates.get(1);
                 LSState q1 = obsTree.getSucc(obsTree.defaultState(), q1Acc);
                 LSState q2 = obsTree.getSucc(obsTree.defaultState(), q2Acc);
-                Objects.requireNonNull(q1);
-                Objects.requireNonNull(q2);
+                assert q1 != null;
+                assert q2 != null;
 
                 Word<I> wit = Apartness.computeWitness(obsTree, q1, q2);
-                Objects.requireNonNull(wit);
+                assert wit != null;
 
                 WordBuilder<I> inputSeq = new WordBuilder<>(prefix);
                 assert !(Apartness.accStatesAreApart(obsTree, prefix, q1Acc)
@@ -98,10 +98,10 @@ public class LSOracle<I, O> {
 
     public List<Word<I>> identifyFrontier(Word<I> fsAcc, List<Word<I>> candidates) {
         LSState fs = obsTree.getSucc(obsTree.defaultState(), fsAcc);
-        Objects.requireNonNull(fs);
+        assert fs != null;
         candidates.removeIf(b -> {
             LSState bs = obsTree.getSucc(obsTree.defaultState(), b);
-            Objects.requireNonNull(bs);
+            assert bs != null;
             return Apartness.statesAreApart(obsTree, fs, bs);
         });
 
@@ -122,7 +122,7 @@ public class LSOracle<I, O> {
         for (Word<I> b : basis) {
             for (I i : obsTree.getInputAlphabet()) {
                 LSState bs = obsTree.getSucc(obsTree.defaultState(), b);
-                Objects.requireNonNull(bs);
+                assert bs != null;
                 if (obsTree.getSucc(bs, Word.fromLetter(i)) == null) {
                     toExplore.add(Pair.of(b, i));
                 }
@@ -146,8 +146,8 @@ public class LSOracle<I, O> {
             if (basis.size() >= 2) {
                 List<LSState> ran = randomN(basis, 2).stream().map(b -> obsTree.getSucc(obsTree.defaultState(), b))
                         .collect(Collectors.toList());
-                Objects.requireNonNull(ran.get(0));
-                Objects.requireNonNull(ran.get(1));
+                assert ran.get(0) != null;
+                assert ran.get(1) != null;
                 wit = Apartness.computeWitness(obsTree, ran.get(0), ran.get(1));
             }
             Word<I> inputSeq = accessQ.append(i).concat(wit);
@@ -160,7 +160,7 @@ public class LSOracle<I, O> {
     public Pair<Word<I>, List<Word<I>>> exploreFrontier(Word<I> accQ, I i, List<Word<I>> basis) {
         Word<I> accessQ = Word.fromWords(accQ);
         LSState q = obsTree.getSucc(obsTree.defaultState(), accQ);
-        Objects.requireNonNull(q);
+        assert q != null;
         List<LSState> bss = basis.stream().map(bAcc -> obsTree.getSucc(obsTree.defaultState(), bAcc))
                 .collect(Collectors.toList());
         Pair<Word<I>, Word<O>> query = rule2IO(accessQ, i, bss, basis);
@@ -169,10 +169,10 @@ public class LSOracle<I, O> {
 
         obsTree.insertObservation(null, inputSeq, outputSeq);
         LSState fs = obsTree.getSucc(q, Word.fromLetter(i));
-        Objects.requireNonNull(fs);
+        assert fs != null;
         List<Word<I>> bsNotSep = basis.parallelStream().filter(b -> {
             LSState bs = obsTree.getSucc(obsTree.defaultState(), b);
-            Objects.requireNonNull(bs);
+            assert bs != null;
             return !Apartness.statesAreApart(obsTree, fs, bs);
         }).collect(Collectors.toList());
         return Pair.of(accQ.append(i), bsNotSep);
