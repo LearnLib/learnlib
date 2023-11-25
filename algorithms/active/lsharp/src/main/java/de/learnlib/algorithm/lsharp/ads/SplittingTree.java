@@ -384,7 +384,7 @@ public class SplittingTree<S extends Comparable<S>, I, O> {
         return null;
     }
 
-    public Integer findNodeExact(List<S> block) {
+    public final Integer findNodeExact(List<S> block) {
         Integer out = IntStream.range(0, this.tree.size() + 1).filter(i -> block.size() == get(i).size())
                 .filter(i -> block.stream().allMatch(s -> get(i).hasState(s))).findFirst().orElse(-1);
         return out == -1 ? null : out;
