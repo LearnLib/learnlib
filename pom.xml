@@ -59,16 +59,6 @@ limitations under the License.
                 <role>Developer</role>
             </roles>
         </developer>
-        <developer>
-            <id>misberner</id>
-            <name>Malte Isberner</name>
-            <email>malte.isberner@gmail.com</email>
-            <organization>TU Dortmund University, Chair of Programming Systems</organization>
-            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
-            <roles>
-                <role>Developer (inactive)</role>
-            </roles>
-        </developer>
     </developers>
     <contributors>
         <contributor>
@@ -90,6 +80,15 @@ limitations under the License.
         </contributor>
         <contributor>
             <name>Maren Geske</name>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>Malte Isberner</name>
+            <email>malte.isberner@gmail.com</email>
             <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
