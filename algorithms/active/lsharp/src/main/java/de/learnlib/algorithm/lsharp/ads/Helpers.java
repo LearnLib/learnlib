@@ -26,7 +26,7 @@ import java.util.Set;
 
 import net.automatalib.common.util.Pair;
 
-public class Helpers<I> {
+public class Helpers<I> implements Serializable {
     public final Set<Integer> nodesInTree = new HashSet<>();
     public final PriorityQueue<Pair<Integer, Integer>> partition = new PriorityQueue<>(new PairComparator());
     public final Set<Integer> dependent = new HashSet<>();
