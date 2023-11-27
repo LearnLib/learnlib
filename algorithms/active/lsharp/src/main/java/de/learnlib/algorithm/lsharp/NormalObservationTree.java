@@ -1,3 +1,19 @@
+/* Copyright (C) 2013-2023 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package de.learnlib.algorithm.lsharp;
 
 import java.util.Collections;
@@ -5,14 +21,13 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 import de.learnlib.algorithm.lsharp.ads.ArenaTree;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, O> {
     private final ArenaTree<MapTransitions<I, O>, I> tree;
@@ -135,16 +150,6 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
         return src;
     }
 
-    private class SuccComparator implements Comparator<Pair<LSState, I>> {
-        @Override
-        public int compare(Pair<LSState, I> p1, Pair<LSState, I> p2) {
-            int len1 = getAccessSeq(p1.getFirst()).length();
-            int len2 = getAccessSeq(p2.getFirst()).length();
-            return Integer.compare(len1, len2);
-        }
-
-    }
-
     @Override
     public List<Pair<LSState, I>> noSuccDefined(List<LSState> basis, boolean sort) {
         LinkedList<Pair<LSState, I>> ret = new LinkedList<>();
@@ -174,4 +179,13 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
         return ApartnessUtil.treeAndHypStatesApartSunkBounded(this, st, sh, fsm, sinkOutput, depth);
     }
 
+    private class SuccComparator implements Comparator<Pair<LSState, I>> {
+        @Override
+        public int compare(Pair<LSState, I> p1, Pair<LSState, I> p2) {
+            int len1 = getAccessSeq(p1.getFirst()).length();
+            int len2 = getAccessSeq(p2.getFirst()).length();
+            return Integer.compare(len1, len2);
+        }
+
+    }
 }

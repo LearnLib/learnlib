@@ -1,3 +1,19 @@
+/* Copyright (C) 2013-2023 TU Dortmund
+ * This file is part of LearnLib, http://www.learnlib.de/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package de.learnlib.algorithm.lsharp;
 
 import java.io.IOException;
@@ -6,17 +22,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.common.util.Pair;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class NormalObservationTreeTest {
+
+    private static final int RAND = 42;
+    private static final int LOW_INPUTS = 20;
+    private static final int HIGH_INPUTS = 100;
 
     @SuppressWarnings("PMD.CloseResource")
     private LSMealyMachine<String, String> readMealy(String filename) throws IOException {
@@ -29,7 +48,7 @@ public class NormalObservationTreeTest {
     }
 
     private List<Pair<Word<String>, Word<String>>> tryGenInputs(LSMealyMachine<String, String> mealy, Integer count) {
-        Random random = new Random(42);
+        Random random = new Random(RAND);
         List<Pair<Word<String>, Word<String>>> pairs = new LinkedList<>();
 
         for (int pair = 0; pair < count; pair++) {
@@ -53,7 +72,7 @@ public class NormalObservationTreeTest {
     @Test
     public void xferSeqMantained() throws IOException {
         LSMealyMachine<String, String> fsm = readMealy("/BitVise.dot");
-        List<Pair<Word<String>, Word<String>>> tests = tryGenInputs(fsm, 20);
+        List<Pair<Word<String>, Word<String>>> tests = tryGenInputs(fsm, LOW_INPUTS);
         NormalObservationTree<String, String> ret = new NormalObservationTree<>(fsm.getInputAlphabet());
 
         for (int testIndex = 0; testIndex < tests.size(); testIndex++) {
@@ -85,7 +104,7 @@ public class NormalObservationTreeTest {
     @Test
     public void accessSeqMantained() throws IOException {
         LSMealyMachine<String, String> fsm = readMealy("/BitVise.dot");
-        List<Pair<Word<String>, Word<String>>> tests = tryGenInputs(fsm, 100);
+        List<Pair<Word<String>, Word<String>>> tests = tryGenInputs(fsm, HIGH_INPUTS);
         NormalObservationTree<String, String> ret = new NormalObservationTree<>(fsm.getInputAlphabet());
 
         for (int testIndex = 0; testIndex < tests.size(); testIndex++) {
