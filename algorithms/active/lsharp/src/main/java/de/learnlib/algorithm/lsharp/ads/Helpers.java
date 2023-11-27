@@ -20,20 +20,20 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.Set;
 
 import net.automatalib.common.util.Pair;
 
+// We specify the implementations to guarantee they are Serializable.
+@SuppressWarnings("PMD.LooseCoupling")
 public class Helpers<I> implements Serializable {
-    public final Set<Integer> nodesInTree = new HashSet<>();
+    public final HashSet<Integer> nodesInTree = new HashSet<>();
     public final PriorityQueue<Pair<Integer, Integer>> partition = new PriorityQueue<>(new PairComparator());
-    public final Set<Integer> dependent = new HashSet<>();
+    public final HashSet<Integer> dependent = new HashSet<>();
     public final PriorityQueue<Pair<Integer, Integer>> dependentPrioQueue = new PriorityQueue<>(new PairComparator());
-    public final Map<Integer, HashSet<Pair<Integer, I>>> transitionsTo = new HashMap<>();
-    public final Set<Integer> analysedIndices = new HashSet<>();
-    public final Map<Integer, BestNode<I>> bestNode = new HashMap<>();
+    public final HashMap<Integer, HashSet<Pair<Integer, I>>> transitionsTo = new HashMap<>();
+    public final HashSet<Integer> analysedIndices = new HashSet<>();
+    public final HashMap<Integer, BestNode<I>> bestNode = new HashMap<>();
 
     public void addTransitionFromToVia(Integer src, Integer dst, I via) {
         this.transitionsTo.computeIfAbsent(dst, k -> new HashSet<>()).add(Pair.of(src, via));
