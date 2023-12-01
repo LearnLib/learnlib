@@ -11,7 +11,7 @@ jobs:
     name: "Tests and Analysis (JDK: ${{ matrix.jdk }})"
     strategy:
       matrix:
-        jdk: [ 8, 11, 17, 21 ]
+        jdk: [ 11, 17, 21 ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -55,7 +55,7 @@ jobs:
     needs: [ tests-and-analysis ]
     strategy:
       matrix:
-        jdk: [ 8, 11, 17, 21 ]
+        jdk: [ 11, 17, 21 ]
         os: [ ubuntu-latest, windows-latest, macOS-latest ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -98,7 +98,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 8
+          java-version: 11
       - name: Set up cache
         uses: actions/cache@v3
         with:
@@ -149,7 +149,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 8
+          java-version: 11
       - name: Set up cache
         uses: actions/cache@v3
         with:
