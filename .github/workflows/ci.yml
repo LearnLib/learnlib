@@ -86,7 +86,7 @@ jobs:
           mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' '-Dautomatalib.targetVersion=${{ matrix.jdk }}' install -DskipTests
           cd $GITHUB_WORKSPACE
       - name: Run Maven
-        run: mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' '-Dlearnlib.targetVersion=${{ matrix.jdk }}' install
+        run: mvn -B install
   coverage:
     name: "Coverage"
     needs: [ platform-integration ]
