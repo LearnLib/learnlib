@@ -244,7 +244,7 @@ limitations under the License.
         <javapoet.version>1.13.0</javapoet.version>
         <jmockit.version>1.49</jmockit.version>
         <jsr305.version>3.0.2</jsr305.version>
-        <logback.version>1.3.11</logback.version>
+        <logback.version>1.3.12</logback.version>
         <metainf-services.version>1.8</metainf-services.version>
         <mockito.version>4.11.0</mockito.version>
         <slf4j.version>2.0.9</slf4j.version>
