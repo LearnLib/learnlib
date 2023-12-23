@@ -28,7 +28,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.adt.adt.ADT;
@@ -55,6 +54,7 @@ import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.SymbolQueryOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;

@@ -583,14 +583,9 @@ limitations under the License.
                             </dependencySourceIncludes>
                             <additionalDependencies>
                                 <additionalDependency>
-                                    <groupId>com.github.misberner.buildergen</groupId>
-                                    <artifactId>buildergen</artifactId>
-                                    <version>${buildergen.version}</version>
-                                </additionalDependency>
-                                <additionalDependency>
                                     <groupId>de.learnlib.tooling</groupId>
-                                    <artifactId>learnlib-annotation-processor</artifactId>
-                                    <version>${project.version}</version>
+                                    <artifactId>annotation-processor</artifactId>
+                                    <version>${annotation-processor.version}</version>
                                 </additionalDependency>
                                 <additionalDependency>
                                     <groupId>org.kohsuke.metainf-services</groupId>

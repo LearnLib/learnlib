@@ -37,11 +37,6 @@ limitations under the License.
             <artifactId>learnlib-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>de.learnlib.tooling</groupId>
-            <artifactId>learnlib-annotation-processor</artifactId>
-        </dependency>
-
         <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -50,6 +45,12 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-util</artifactId>
+        </dependency>
+
+        <!-- build -->
+        <dependency>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotation-processor</artifactId>
         </dependency>
 
         <!-- test -->

@@ -18,7 +18,6 @@ package de.learnlib.algorithm.observationpack.vpa;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import com.google.common.collect.Iterables;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
@@ -28,6 +27,7 @@ import de.learnlib.algorithm.observationpack.vpa.hypothesis.DTNode;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.HypLoc;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.StackContents;
 import net.automatalib.automaton.vpa.State;

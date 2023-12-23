@@ -25,11 +25,6 @@
             <artifactId>learnlib-util</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>de.learnlib.tooling</groupId>
-            <artifactId>learnlib-annotation-processor</artifactId>
-        </dependency>
-
         <!-- external -->
         <dependency>
             <groupId>org.checkerframework</groupId>
@@ -39,6 +34,12 @@
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
+        </dependency>
+
+        <!-- build -->
+        <dependency>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotation-processor</artifactId>
         </dependency>
 
         <!-- test -->

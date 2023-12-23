@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.Resumable;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
@@ -36,6 +35,7 @@ import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
@@ -69,7 +69,7 @@ public class KearnsVaziraniMealy<I, O>
     protected List<StateInfo<I, Word<O>>> stateInfos = new ArrayList<>();
     private CompactMealy<I, O> hypothesis;
 
-    @GenerateBuilder
+    @GenerateBuilder(defaults = BuilderDefaults.class)
     public KearnsVaziraniMealy(Alphabet<I> alphabet,
                                MembershipOracle<I, Word<O>> oracle,
                                boolean repeatedCounterexampleEvaluation,

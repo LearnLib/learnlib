@@ -146,8 +146,8 @@ limitations under the License.
         <module>algorithms</module>
         <module>api</module>
         <module>archetypes</module>
+        <module>build-config</module>
         <module>build-parent</module>
-        <module>build-tools</module>
         <module>commons</module>
         <module>datastructures</module>
         <module>distribution</module>
@@ -229,9 +229,8 @@ limitations under the License.
         <tidy-pom.version>1.2.0</tidy-pom.version>
 
         <!-- dependency versions -->
-        <ap-commons.version>0.0.2</ap-commons.version>
+        <annotation-processor.version>0.1-SNAPSHOT</annotation-processor.version>
         <automatalib.version>0.11.0</automatalib.version>
-        <buildergen.version>0.1</buildergen.version>
         <cacio.version>1.11.1</cacio.version>
         <checkerframework.version>3.40.0</checkerframework.version>
         <checkstyle.version>9.3</checkstyle.version>
@@ -386,32 +385,19 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- build-config -->
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-build-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- build-parent -->
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-build-parent</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
-            </dependency>
-
-            <!-- build-tools -->
-            <dependency>
-                <groupId>de.learnlib.tooling</groupId>
-                <artifactId>learnlib-build-tools-parent</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib.tooling</groupId>
-                <artifactId>learnlib-build-config</artifactId>
-                <version>${project.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib.tooling</groupId>
-                <artifactId>learnlib-annotation-processor</artifactId>
-                <version>${project.version}</version>
-                <scope>provided</scope>
             </dependency>
 
             <!-- commons -->
@@ -653,19 +639,11 @@ limitations under the License.
                 <version>${checkerframework.version}</version>
             </dependency>
 
-            <!-- BuilderGen -->
             <dependency>
-                <groupId>com.github.misberner.buildergen</groupId>
-                <artifactId>buildergen</artifactId>
-                <version>${buildergen.version}</version>
-                <!-- Compile-time only -->
+                <groupId>de.learnlib.tooling</groupId>
+                <artifactId>annotation-processor</artifactId>
+                <version>${annotation-processor.version}</version>
                 <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.misberner.ap-commons</groupId>
-                <artifactId>ap-commons</artifactId>
-                <version>${ap-commons.version}</version>
             </dependency>
 
             <dependency>

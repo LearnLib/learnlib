@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import com.google.common.collect.Sets;
@@ -39,6 +38,7 @@ import de.learnlib.counterexample.GlobalSuffixFinder;
 import de.learnlib.counterexample.GlobalSuffixFinders;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;

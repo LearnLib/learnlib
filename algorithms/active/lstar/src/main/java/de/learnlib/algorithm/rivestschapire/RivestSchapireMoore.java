@@ -18,12 +18,12 @@ package de.learnlib.algorithm.rivestschapire;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMoore;
 import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 

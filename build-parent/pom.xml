@@ -34,46 +34,6 @@ limitations under the License.
         dependencies on the "build-tools" artifact without introducing cyclic dependencies with the general parent.
     </description>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <!-- If we run coverage analysis, skip generated sources -->
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <configuration>
-                        <excludes>
-                            <!-- generated builders for learning algorithms -->
-                            <exclude>**/ADTLearnerBuilder.class</exclude>
-                            <exclude>**/ClassicLStar*Builder.class</exclude>
-                            <exclude>**/ExtensibleLStar*Builder.class</exclude>
-                            <exclude>**/KearnsVazirani*Builder.class</exclude>
-                            <exclude>**/MalerPnueli*Builder.class</exclude>
-                            <exclude>**/MealyDHCBuilder.class</exclude>
-                            <exclude>**/NLStarLearnerBuilder.class</exclude>
-                            <exclude>**/OPLearner*Builder.class</exclude>
-                            <exclude>**/RivestSchapire*Builder.class</exclude>
-                            <exclude>**/TTTLearner*Builder.class</exclude>
-
-                            <!-- generated refinements for oracles -->
-                            <exclude>de/learnlib/filter/statistic/**/DFA*.class</exclude>
-                            <exclude>de/learnlib/filter/statistic/**/Mealy*.class</exclude>
-                            <exclude>de/learnlib/filter/statistic/**/Moore*.class</exclude>
-                            <exclude>de/learnlib/oracle/emptiness/DFA*.class</exclude>
-                            <exclude>de/learnlib/oracle/emptiness/Mealy*.class</exclude>
-                            <exclude>de/learnlib/oracle/equivalence/DFA*.class</exclude>
-                            <exclude>de/learnlib/oracle/equivalence/Mealy*.class</exclude>
-                            <exclude>de/learnlib/oracle/equivalence/Moore*.class</exclude>
-                            <exclude>de/learnlib/oracle/membership/*SimulatorOracle.class</exclude>
-                            <exclude>de/learnlib/oracle/property/DFA*Chain.class</exclude>
-                            <exclude>de/learnlib/oracle/property/Mealy*Chain.class</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
     <profiles>
         <profile>
             <id>code-analysis</id>
@@ -89,7 +49,7 @@ limitations under the License.
                             </configuration>
                             <dependencies>
                                 <dependency>
-                                    <groupId>de.learnlib.tooling</groupId>
+                                    <groupId>de.learnlib</groupId>
                                     <artifactId>learnlib-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
@@ -105,7 +65,7 @@ limitations under the License.
                             </configuration>
                             <dependencies>
                                 <dependency>
-                                    <groupId>de.learnlib.tooling</groupId>
+                                    <groupId>de.learnlib</groupId>
                                     <artifactId>learnlib-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
@@ -128,7 +88,7 @@ limitations under the License.
                                     <version>${checkstyle.version}</version>
                                 </dependency>
                                 <dependency>
-                                    <groupId>de.learnlib.tooling</groupId>
+                                    <groupId>de.learnlib</groupId>
                                     <artifactId>learnlib-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>

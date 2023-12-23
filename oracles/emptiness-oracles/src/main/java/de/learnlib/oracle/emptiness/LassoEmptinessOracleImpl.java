@@ -17,10 +17,6 @@ package de.learnlib.oracle.emptiness;
 
 import java.util.Collection;
 
-import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
-import de.learnlib.buildtool.refinement.annotation.Generic;
-import de.learnlib.buildtool.refinement.annotation.Interface;
-import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.oracle.LassoEmptinessOracle;
 import de.learnlib.oracle.LassoEmptinessOracle.DFALassoEmptinessOracle;
 import de.learnlib.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
@@ -32,6 +28,10 @@ import de.learnlib.oracle.OmegaMembershipOracle.DFAOmegaMembershipOracle;
 import de.learnlib.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.query.OmegaQuery;
+import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
+import de.learnlib.tooling.annotation.refinement.Generic;
+import de.learnlib.tooling.annotation.refinement.Interface;
+import de.learnlib.tooling.annotation.refinement.Map;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.Lasso.DFALasso;

@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithm.observationpack.mealy;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.observationpack.AbstractOPLearner;
 import de.learnlib.algorithm.observationpack.hypothesis.HState;
@@ -25,6 +24,7 @@ import de.learnlib.datastructure.discriminationtree.MultiDTree;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.AbstractQuery;
 import de.learnlib.query.Query;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;

@@ -18,7 +18,6 @@ package de.learnlib.algorithm.lstar.dfa;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithm.GlobalSuffixLearner.GlobalSuffixLearnerDFA;
 import de.learnlib.algorithm.lstar.AbstractExtensibleAutomatonLStar;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandler;
@@ -27,6 +26,7 @@ import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerDFA;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.fsa.CompactDFA;

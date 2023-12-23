@@ -15,14 +15,14 @@
  */
 package de.learnlib.oracle.membership;
 
-import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
-import de.learnlib.buildtool.refinement.annotation.Generic;
-import de.learnlib.buildtool.refinement.annotation.Interface;
-import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.oracle.SingleQueryOracle;
 import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleDFA;
 import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMealy;
 import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMoore;
+import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
+import de.learnlib.tooling.annotation.refinement.Generic;
+import de.learnlib.tooling.annotation.refinement.Interface;
+import de.learnlib.tooling.annotation.refinement.Map;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.NFA;

@@ -96,13 +96,6 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
         </dependency>
-
-        <!-- build -->
-        <dependency>
-            <groupId>com.github.misberner.buildergen</groupId>
-            <artifactId>buildergen</artifactId>
-        </dependency>
-
         <dependency>
             <groupId> org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>

@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import com.google.common.collect.Iterables;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithm.observationpack.vpa.OPLearnerVPA;
@@ -39,6 +38,7 @@ import de.learnlib.algorithm.observationpack.vpa.hypothesis.TransList;
 import de.learnlib.datastructure.discriminationtree.SplitData;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.StackContents;
 import net.automatalib.automaton.vpa.State;

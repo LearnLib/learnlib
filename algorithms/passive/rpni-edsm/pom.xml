@@ -76,12 +76,6 @@ limitations under the License.
             <artifactId>automata-core</artifactId>
         </dependency>
 
-        <!-- build -->
-        <dependency>
-            <groupId>com.github.misberner.buildergen</groupId>
-            <artifactId>buildergen</artifactId>
-        </dependency>
-
         <!-- test -->
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>

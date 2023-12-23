@@ -17,10 +17,6 @@ package de.learnlib.oracle.equivalence;
 
 import java.util.Collection;
 
-import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
-import de.learnlib.buildtool.refinement.annotation.Generic;
-import de.learnlib.buildtool.refinement.annotation.Interface;
-import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.oracle.AutomatonOracle.DFAOracle;
 import de.learnlib.oracle.AutomatonOracle.MealyOracle;
 import de.learnlib.oracle.InclusionOracle;
@@ -30,6 +26,10 @@ import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
+import de.learnlib.tooling.annotation.refinement.Generic;
+import de.learnlib.tooling.annotation.refinement.Interface;
+import de.learnlib.tooling.annotation.refinement.Map;
 import de.learnlib.util.AbstractBFOracle;
 import net.automatalib.automaton.concept.DetOutputAutomaton;
 import net.automatalib.automaton.fsa.DFA;

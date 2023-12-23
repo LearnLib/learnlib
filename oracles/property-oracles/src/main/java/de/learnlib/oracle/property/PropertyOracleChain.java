@@ -20,14 +20,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
-import de.learnlib.buildtool.refinement.annotation.Generic;
-import de.learnlib.buildtool.refinement.annotation.Interface;
-import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.oracle.PropertyOracle;
 import de.learnlib.oracle.PropertyOracle.DFAPropertyOracle;
 import de.learnlib.oracle.PropertyOracle.MealyPropertyOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
+import de.learnlib.tooling.annotation.refinement.Generic;
+import de.learnlib.tooling.annotation.refinement.Interface;
+import de.learnlib.tooling.annotation.refinement.Map;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
