@@ -182,13 +182,11 @@ public class ExamplesTest {
 
 
     private static boolean isJVMCompatible() {
-        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
-        return canonicalSpecVersion <= 8 || canonicalSpecVersion == 11;
+        return JVMUtil.getCanonicalSpecVersion() == 11;
     }
 
     private static void requireJVMCompatibility() {
-        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
-        if (!(canonicalSpecVersion <= 8 || canonicalSpecVersion == 11)) {
+        if (JVMUtil.getCanonicalSpecVersion() != 11) {
             throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
         }
     }

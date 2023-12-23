@@ -179,34 +179,8 @@ limitations under the License.
         </profile>
         <profile>
             <id>cf</id>
-            <dependencies>
-                <!-- utility dependency so that the classloader can correctly resolve annotations -->
-                <dependency>
-                    <groupId>com.google.code.findbugs</groupId>
-                    <artifactId>jsr305</artifactId>
-                    <version>${jsr305.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>com.google.errorprone</groupId>
-                    <artifactId>javac</artifactId>
-                    <version>${error-prone.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-            </dependencies>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>properties</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <artifactId>maven-compiler-plugin</artifactId>
                         <executions>
@@ -217,7 +191,6 @@ limitations under the License.
                                     <goal>compile</goal>
                                 </goals>
                                 <configuration>
-                                    <skipMain>${learnlib.java9OrNewer}</skipMain>
                                     <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
                                     <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
@@ -232,7 +205,15 @@ limitations under the License.
                                         <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
                                     </annotationProcessors>
                                     <compilerArgs>
-                                        <arg>-J-Xbootclasspath/p:${com.google.errorprone:javac:jar}</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
                                         <arg>-AskipDefs=^de.learnlib.algorithm.adt.*|\
                                             ^de.learnlib.algorithm.observationpack.*.vpa.*|\
                                             ^de.learnlib.algorithm.ttt.*|\
@@ -258,7 +239,6 @@ limitations under the License.
                                     <goal>testCompile</goal>
                                 </goals>
                                 <configuration>
-                                    <skip>${learnlib.java9OrNewer}</skip>
                                     <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
                                     <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
@@ -273,7 +253,15 @@ limitations under the License.
                                         <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
                                     </annotationProcessors>
                                     <compilerArgs>
-                                        <arg>-J-Xbootclasspath/p:${com.google.errorprone:javac:jar}</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
                                         <arg>-AonlyDefs=^de\.learnlib</arg>
                                         <arg>-AskipUses=.*</arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>

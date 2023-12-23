@@ -42,7 +42,7 @@ Contributions -- whether it is in the form of new features, better documentation
 
 For simply using LearnLib you may use the Maven artifacts which are available in the [Maven Central repository][maven-central].
 It is also possible to download a bundled [distribution artifact][maven-central-distr] if you want to use LearnLib without Maven support.
-Note that LearnLib requires Java 8 or newer.
+Note that LearnLib requires Java 11 (or newer) to build but still supports Java 8 at runtime.
 
 #### Building development versions
 
