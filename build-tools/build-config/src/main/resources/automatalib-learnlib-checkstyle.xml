@@ -37,7 +37,7 @@ limitations under the License.
         <property name="format" value="^\s*\*\s*@author" />
         <property name="minimum" value="0" />
         <property name="maximum" value="0" />
-        <property name="message" value="Do not use the @author tag directly. Accredit contributions either via the changelog or as &lt;contributor&gt;s in the pom.xml." />
+        <property name="message" value="Do not use the @author tag directly. Attribute contributions either via the changelog or as &lt;contributor&gt;s in the pom.xml." />
     </module>
 
     <module name="Header">
