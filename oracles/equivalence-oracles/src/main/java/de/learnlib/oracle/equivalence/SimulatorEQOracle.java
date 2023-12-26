@@ -25,7 +25,7 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
-import de.learnlib.tooling.annotation.refinement.Map;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
@@ -40,37 +40,37 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = UniversalDeterministicAutomaton.class,
-                                            to = DFA.class,
-                                            withGenerics = {"?", "I"}),
-                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = "I"))
+                    typeMapping = @Mapping(from = UniversalDeterministicAutomaton.class,
+                                           to = DFA.class,
+                                           generics = {@Generic("?"), @Generic("I")}),
+                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = @Generic("I")))
 @GenerateRefinement(name = "MealySimulatorEQOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = UniversalDeterministicAutomaton.class,
-                                            to = MealyMachine.class,
-                                            withGenerics = {"?", "I", "?", "O"}),
-                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
+                    typeMapping = @Mapping(from = UniversalDeterministicAutomaton.class,
+                                           to = MealyMachine.class,
+                                           generics = {@Generic("?"), @Generic("I"), @Generic("?"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "MooreSimulatorEQOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = UniversalDeterministicAutomaton.class,
-                                            to = MooreMachine.class,
-                                            withGenerics = {"?", "I", "?", "O"}),
-                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
-public class SimulatorEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>, I, D>
+                    typeMapping = @Mapping(from = UniversalDeterministicAutomaton.class,
+                                           to = MooreMachine.class,
+                                           generics = {@Generic("?"), @Generic("I"), @Generic("?"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
+public class SimulatorEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         implements EquivalenceOracle<A, I, D> {
 
-    private final UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference;
-    private final Output<I, D> output;
+    private final A reference;
 
-    public <R extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>> SimulatorEQOracle(R reference) {
+    public SimulatorEQOracle(A reference) {
         this.reference = reference;
-        this.output = reference;
     }
 
     @Override
@@ -81,6 +81,6 @@ public class SimulatorEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?
             return null;
         }
 
-        return new DefaultQuery<>(sep, output.computeOutput(sep));
+        return new DefaultQuery<>(sep, reference.computeOutput(sep));
     }
 }

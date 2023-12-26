@@ -29,7 +29,7 @@ import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
-import de.learnlib.tooling.annotation.refinement.Map;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.Output;
@@ -44,28 +44,30 @@ import net.automatalib.word.Word;
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = MembershipOracle.class,
-                                            to = DFAMembershipOracle.class,
-                                            withGenerics = "I"),
-                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = "I"))
+                    typeMapping = @Mapping(from = MembershipOracle.class,
+                                           to = DFAMembershipOracle.class,
+                                           generics = @Generic("I")),
+                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = @Generic("I")))
 @GenerateRefinement(name = "MealyIncrementalWMethodEQOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = MembershipOracle.class,
-                                            to = MealyMembershipOracle.class,
-                                            withGenerics = {"I", "O"}),
-                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
+                    typeMapping = @Mapping(from = MembershipOracle.class,
+                                           to = MealyMembershipOracle.class,
+                                           generics = {@Generic("I"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "MooreIncrementalWMethodEQOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = MembershipOracle.class,
-                                            to = MooreMembershipOracle.class,
-                                            withGenerics = {"I", "O"}),
-                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
+                    typeMapping = @Mapping(from = MembershipOracle.class,
+                                           to = MooreMembershipOracle.class,
+                                           generics = {@Generic("I"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 

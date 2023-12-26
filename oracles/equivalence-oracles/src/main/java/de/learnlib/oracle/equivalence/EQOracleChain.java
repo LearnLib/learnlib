@@ -28,7 +28,7 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
-import de.learnlib.tooling.annotation.refinement.Map;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
@@ -40,28 +40,30 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = EquivalenceOracle.class,
-                                            to = DFAEquivalenceOracle.class,
-                                            withGenerics = "I"),
-                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = "I"))
+                    typeMapping = @Mapping(from = EquivalenceOracle.class,
+                                           to = DFAEquivalenceOracle.class,
+                                           generics = @Generic("I")),
+                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = @Generic("I")))
 @GenerateRefinement(name = "MealyEQOracleChain",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = EquivalenceOracle.class,
-                                            to = MealyEquivalenceOracle.class,
-                                            withGenerics = {"I", "O"}),
-                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
+                    typeMapping = @Mapping(from = EquivalenceOracle.class,
+                                           to = MealyEquivalenceOracle.class,
+                                           generics = {@Generic("I"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "MooreEQOracleChain",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = EquivalenceOracle.class,
-                                            to = MooreEquivalenceOracle.class,
-                                            withGenerics = {"I", "O"}),
-                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
+                    typeMapping = @Mapping(from = EquivalenceOracle.class,
+                                           to = MooreEquivalenceOracle.class,
+                                           generics = {@Generic("I"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 public class EQOracleChain<A, I, D> implements EquivalenceOracle<A, I, D> {
 
     private final List<EquivalenceOracle<? super A, I, D>> oracles;

@@ -31,7 +31,7 @@ import de.learnlib.query.OmegaQuery;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
-import de.learnlib.tooling.annotation.refinement.Map;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.Lasso.DFALasso;
@@ -45,22 +45,24 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                       @Generic("S"),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = OmegaMembershipOracle.class,
-                                            to = DFAOmegaMembershipOracle.class,
-                                            withGenerics = {"S", "I"}),
-                    interfaces = {@Interface(clazz = DFALassoEmptinessOracle.class, generics = "I"),
-                                  @Interface(clazz = DFALassoOracle.class, generics = "I")})
+                    typeMapping = @Mapping(from = OmegaMembershipOracle.class,
+                                           to = DFAOmegaMembershipOracle.class,
+                                           generics = {@Generic("S"), @Generic("I")}),
+                    interfaces = {@Interface(clazz = DFALassoEmptinessOracle.class, generics = @Generic("I")),
+                                  @Interface(clazz = DFALassoOracle.class, generics = @Generic("I"))})
 @GenerateRefinement(name = "MealyLassoEmptinessOracleImpl",
                     generics = {"S", "I", "O"},
                     parentGenerics = {@Generic(clazz = MealyLasso.class, generics = {"I", "O"}),
                                       @Generic("S"),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = OmegaMembershipOracle.class,
-                                            to = MealyOmegaMembershipOracle.class,
-                                            withGenerics = {"S", "I", "O"}),
-                    interfaces = {@Interface(clazz = MealyLassoEmptinessOracle.class, generics = {"I", "O"}),
-                                  @Interface(clazz = MealyLassoOracle.class, generics = {"I", "O"})})
+                    typeMapping = @Mapping(from = OmegaMembershipOracle.class,
+                                           to = MealyOmegaMembershipOracle.class,
+                                           generics = {@Generic("S"), @Generic("I"), @Generic("O")}),
+                    interfaces = {@Interface(clazz = MealyLassoEmptinessOracle.class,
+                                             generics = {@Generic("I"), @Generic("O")}),
+                                  @Interface(clazz = MealyLassoOracle.class,
+                                             generics = {@Generic("I"), @Generic("O")})})
 public class LassoEmptinessOracleImpl<L extends Lasso<I, D>, S, I, D>
         implements LassoEmptinessOracle<L, I, D>, LassoOracle<L, I, D> {
 

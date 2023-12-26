@@ -22,7 +22,7 @@ import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMoore;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
-import de.learnlib.tooling.annotation.refinement.Map;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.NFA;
@@ -49,49 +49,62 @@ import net.automatalib.word.Word;
 @GenerateRefinement(name = "DFASimulatorOracle",
                     generics = "I",
                     parentGenerics = {@Generic("I"), @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = SuffixOutput.class, to = DFA.class, withGenerics = {"?", "I"}),
-                    interfaces = @Interface(clazz = SingleQueryOracleDFA.class, generics = "I"))
+                    typeMapping = @Mapping(from = SuffixOutput.class,
+                                           to = DFA.class,
+                                           generics = {@Generic("?"), @Generic("I")}),
+                    interfaces = @Interface(clazz = SingleQueryOracleDFA.class, generics = @Generic("I")))
 @GenerateRefinement(name = "MealySimulatorOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = SuffixOutput.class,
-                                            to = MealyMachine.class,
-                                            withGenerics = {"?", "I", "?", "O"}),
-                    interfaces = @Interface(clazz = SingleQueryOracleMealy.class, generics = {"I", "O"}))
+                    typeMapping = @Mapping(from = SuffixOutput.class,
+                                           to = MealyMachine.class,
+                                           generics = {@Generic("?"), @Generic("I"), @Generic("?"), @Generic("O")}),
+                    interfaces = @Interface(clazz = SingleQueryOracleMealy.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "MooreSimulatorOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = SuffixOutput.class,
-                                            to = MooreMachine.class,
-                                            withGenerics = {"?", "I", "?", "O"}),
-                    interfaces = @Interface(clazz = SingleQueryOracleMoore.class, generics = {"I", "O"}))
+                    typeMapping = @Mapping(from = SuffixOutput.class,
+                                           to = MooreMachine.class,
+                                           generics = {@Generic("?"), @Generic("I"), @Generic("?"), @Generic("O")}),
+                    interfaces = @Interface(clazz = SingleQueryOracleMoore.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "NFASimulatorOracle",
                     generics = "I",
                     parentGenerics = {@Generic("I"), @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = SuffixOutput.class, to = NFA.class, withGenerics = {"?", "I"}),
-                    interfaces = @Interface(clazz = SingleQueryOracleDFA.class, generics = "I"))
+                    typeMapping = @Mapping(from = SuffixOutput.class,
+                                           to = NFA.class,
+                                           generics = {@Generic("?"), @Generic("I")}),
+                    interfaces = @Interface(clazz = SingleQueryOracleDFA.class, generics = @Generic("I")))
 @GenerateRefinement(name = "SBASimulatorOracle",
                     generics = "I",
                     parentGenerics = {@Generic("I"), @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = SuffixOutput.class, to = SBA.class, withGenerics = {"?", "I"}),
-                    interfaces = @Interface(clazz = SingleQueryOracleDFA.class, generics = "I"))
+                    typeMapping = @Mapping(from = SuffixOutput.class,
+                                           to = SBA.class,
+                                           generics = {@Generic("?"), @Generic("I")}),
+                    interfaces = @Interface(clazz = SingleQueryOracleDFA.class, generics = @Generic("I")))
 @GenerateRefinement(name = "SEVPASimulatorOracle",
                     generics = "I",
                     parentGenerics = {@Generic("I"), @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = SuffixOutput.class, to = SEVPA.class, withGenerics = {"?", "I"}),
-                    interfaces = @Interface(clazz = SingleQueryOracleDFA.class, generics = "I"))
+                    typeMapping = @Mapping(from = SuffixOutput.class,
+                                           to = SEVPA.class,
+                                           generics = {@Generic("?"), @Generic("I")}),
+                    interfaces = @Interface(clazz = SingleQueryOracleDFA.class, generics = @Generic("I")))
 @GenerateRefinement(name = "SPASimulatorOracle",
                     generics = "I",
                     parentGenerics = {@Generic("I"), @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = SuffixOutput.class, to = SPA.class, withGenerics = {"?", "I"}),
-                    interfaces = @Interface(clazz = SingleQueryOracleDFA.class, generics = "I"))
+                    typeMapping = @Mapping(from = SuffixOutput.class,
+                                           to = SPA.class,
+                                           generics = {@Generic("?"), @Generic("I")}),
+                    interfaces = @Interface(clazz = SingleQueryOracleDFA.class, generics = @Generic("I")))
 @GenerateRefinement(name = "SPMMSimulatorOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = SuffixOutput.class,
-                                            to = SPMM.class,
-                                            withGenerics = {"?", "I", "?", "O"}),
-                    interfaces = @Interface(clazz = SingleQueryOracleMealy.class, generics = {"I", "O"}))
+                    typeMapping = @Mapping(from = SuffixOutput.class,
+                                           to = SPMM.class,
+                                           generics = {@Generic("?"), @Generic("I"), @Generic("?"), @Generic("O")}),
+                    interfaces = @Interface(clazz = SingleQueryOracleMealy.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 public class SimulatorOracle<I, D> implements SingleQueryOracle<I, D> {
 
     private final SuffixOutput<I, D> automaton;

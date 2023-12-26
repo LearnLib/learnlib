@@ -28,7 +28,7 @@ import de.learnlib.statistic.StatisticLearner.MooreStatisticLearner;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
-import de.learnlib.tooling.annotation.refinement.Map;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
@@ -52,26 +52,30 @@ import net.automatalib.word.Word;
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = LearningAlgorithm.class, to = DFALearner.class, withGenerics = "I"),
-                    interfaces = @Interface(clazz = DFAStatisticLearner.class, generics = "I"))
+                    typeMapping = @Mapping(from = LearningAlgorithm.class,
+                                           to = DFALearner.class,
+                                           generics = @Generic("I")),
+                    interfaces = @Interface(clazz = DFAStatisticLearner.class, generics = @Generic("I")))
 @GenerateRefinement(name = "MealyRefinementCounterLearner",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = LearningAlgorithm.class,
-                                            to = MealyLearner.class,
-                                            withGenerics = {"I", "O"}),
-                    interfaces = @Interface(clazz = MealyStatisticLearner.class, generics = {"I", "O"}))
+                    typeMapping = @Mapping(from = LearningAlgorithm.class,
+                                           to = MealyLearner.class,
+                                           generics = {@Generic("I"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MealyStatisticLearner.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "MooreRefinementCounterLearner",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = LearningAlgorithm.class,
-                                            to = MooreLearner.class,
-                                            withGenerics = {"I", "O"}),
-                    interfaces = @Interface(clazz = MooreStatisticLearner.class, generics = {"I", "O"}))
+                    typeMapping = @Mapping(from = LearningAlgorithm.class,
+                                           to = MooreLearner.class,
+                                           generics = {@Generic("I"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MooreStatisticLearner.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 public class RefinementCounterLearner<M, I, D> implements StatisticLearner<M, I, D> {
 
     private final LearningAlgorithm<M, I, D> learningAlgorithm;

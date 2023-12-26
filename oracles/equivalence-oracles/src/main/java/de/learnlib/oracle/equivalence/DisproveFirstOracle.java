@@ -30,7 +30,7 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
-import de.learnlib.tooling.annotation.refinement.Map;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -57,19 +57,20 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = PropertyOracle.class,
-                                            to = DFAPropertyOracle.class,
-                                            withGenerics = {"I", "?"}),
-                    interfaces = @Interface(clazz = DFABlackBoxOracle.class, generics = "I"))
+                    typeMapping = @Mapping(from = PropertyOracle.class,
+                                           to = DFAPropertyOracle.class,
+                                           generics = {@Generic("I"), @Generic("?")}),
+                    interfaces = @Interface(clazz = DFABlackBoxOracle.class, generics = @Generic("I")))
 @GenerateRefinement(name = "MealyDisproveFirstOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = PropertyOracle.class,
-                                            to = MealyPropertyOracle.class,
-                                            withGenerics = {"I", "O", "?"}),
-                    interfaces = @Interface(clazz = MealyBlackBoxOracle.class, generics = {"I", "O"}))
+                    typeMapping = @Mapping(from = PropertyOracle.class,
+                                           to = MealyPropertyOracle.class,
+                                           generics = {@Generic("I"), @Generic("O"), @Generic("?")}),
+                    interfaces = @Interface(clazz = MealyBlackBoxOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 public class DisproveFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOracle<A, I, D> {
 
     private final List<PropertyOracle<I, ? super A, ?, D>> propertyOracles;
