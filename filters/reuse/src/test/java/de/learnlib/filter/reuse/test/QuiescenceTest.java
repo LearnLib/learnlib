@@ -21,6 +21,7 @@ import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseOracle;
+import de.learnlib.filter.reuse.ReuseOracleBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.word.Word;
@@ -40,7 +41,7 @@ public class QuiescenceTest {
     @BeforeClass
     protected void setUp() {
         sigma = Alphabets.integers(0, 3);
-        reuseOracle = new ReuseOracle.ReuseOracleBuilder<>(sigma, new TestOracleFactory()).build();
+        reuseOracle = new ReuseOracleBuilder<>(sigma, new TestOracleFactory()).build();
     }
 
     @Test

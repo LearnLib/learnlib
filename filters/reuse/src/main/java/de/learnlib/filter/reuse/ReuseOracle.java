@@ -27,9 +27,10 @@ import de.learnlib.filter.reuse.tree.BoundedDeque.EvictPolicy;
 import de.learnlib.filter.reuse.tree.ReuseNode;
 import de.learnlib.filter.reuse.tree.ReuseNode.NodeResult;
 import de.learnlib.filter.reuse.tree.ReuseTree;
-import de.learnlib.filter.reuse.tree.ReuseTree.ReuseTreeBuilder;
 import de.learnlib.filter.reuse.tree.SystemStateHandler;
 import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMealy;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
+import de.learnlib.tooling.annotation.builder.Option;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -66,16 +67,28 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
     /**
      * Default constructor.
      */
-    ReuseOracle(ReuseOracleBuilder<S, I, O> builder) {
-        this.executableOracles = ThreadLocal.withInitial(builder.oracleSupplier);
-        this.tree = new ReuseTreeBuilder<S, I, O>(builder.alphabet).withSystemStateHandler(builder.systemStateHandler)
-                                                                   .withFailureOutputs(builder.failureOutputSymbols)
-                                                                   .withInvariantInputs(builder.invariantInputSymbols)
-                                                                   .withEnabledSystemstateInvalidation(builder.invalidateSystemStates)
-                                                                   .withMaxSystemStates(builder.maxSystemStates)
-                                                                   .withAccessPolicy(builder.accessPolicy)
-                                                                   .withEvictPolicy(builder.evictPolicy)
-                                                                   .build();
+    @GenerateBuilder(defaults = BuilderDefaults.class,
+                     getterPrefix = GenerateBuilder.SUPPRESS,
+                     setterPrefix = GenerateBuilder.SUPPRESS,
+                     createName = "build")
+    public ReuseOracle(@Option(requiredOnInstantiation = true) Alphabet<I> alphabet,
+                       @Option(requiredOnInstantiation = true) Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier,
+                       boolean enabledSystemStateInvalidation,
+                       SystemStateHandler<S> systemStateHandler,
+                       Set<I> invariantInputs,
+                       Set<O> failureOutputs,
+                       int maxSystemStates,
+                       AccessPolicy accessPolicy,
+                       EvictPolicy evictPolicy) {
+        this.executableOracles = ThreadLocal.withInitial(oracleSupplier);
+        this.tree = new ReuseTree<>(alphabet,
+                                    enabledSystemStateInvalidation,
+                                    systemStateHandler,
+                                    invariantInputs,
+                                    failureOutputs,
+                                    maxSystemStates,
+                                    accessPolicy,
+                                    evictPolicy);
     }
 
     @Override
@@ -200,64 +213,4 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
     public ReuseTree<S, I, O> getReuseTree() {
         return this.tree;
     }
-
-    public static class ReuseOracleBuilder<S, I, O> {
-
-        private final Alphabet<I> alphabet;
-        private final Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier;
-
-        private boolean invalidateSystemStates = true;
-        private SystemStateHandler<S> systemStateHandler;
-        private Set<I> invariantInputSymbols;
-        private Set<O> failureOutputSymbols;
-        private int maxSystemStates = -1;
-        private AccessPolicy accessPolicy = AccessPolicy.LIFO;
-        private EvictPolicy evictPolicy = EvictPolicy.EVICT_OLDEST;
-
-        public ReuseOracleBuilder(Alphabet<I> alphabet,
-                                  Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier) {
-            this.alphabet = alphabet;
-            this.oracleSupplier = oracleSupplier;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withSystemStateHandler(SystemStateHandler<S> systemStateHandler) {
-            this.systemStateHandler = systemStateHandler;
-            return this;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withEnabledSystemStateInvalidation(boolean invalidate) {
-            this.invalidateSystemStates = invalidate;
-            return this;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withInvariantInputs(Set<I> inputs) {
-            this.invariantInputSymbols = inputs;
-            return this;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withFailureOutputs(Set<O> outputs) {
-            this.failureOutputSymbols = outputs;
-            return this;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withMaxSystemStates(int maxSystemStates) {
-            this.maxSystemStates = maxSystemStates;
-            return this;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withAccessPolicy(AccessPolicy accessPolicy) {
-            this.accessPolicy = accessPolicy;
-            return this;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withEvictPolicy(EvictPolicy evictPolicy) {
-            this.evictPolicy = evictPolicy;
-            return this;
-        }
-
-        public ReuseOracle<S, I, O> build() {
-            return new ReuseOracle<>(this);
-        }
-    }
-
 }
