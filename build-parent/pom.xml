@@ -34,6 +34,53 @@ limitations under the License.
         dependencies on the "build-tools" artifact without introducing cyclic dependencies with the general parent.
     </description>
 
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <!-- Since jacoco's agent instrumentation is a separate step from its report generation, we need
+                             to explicitly exclude generated classes here and cannot rely on things such as a @Generated
+                             annotation. Otherwise, tools such as the coveralls-plugin (which scans the agent's output)
+                             fail on "unknown" classes.
+                         -->
+                        <excludes>
+                            <!-- generated builders for learning algorithms -->
+                            <exclude>**/ADTLearnerBuilder.class</exclude>
+                            <exclude>**/ClassicLStar*Builder.class</exclude>
+                            <exclude>**/ExtensibleLStar*Builder.class</exclude>
+                            <exclude>**/KearnsVazirani*Builder.class</exclude>
+                            <exclude>**/MalerPnueli*Builder.class</exclude>
+                            <exclude>**/MealyDHCBuilder.class</exclude>
+                            <exclude>**/NLStarLearnerBuilder.class</exclude>
+                            <exclude>**/OPLearner*Builder.class</exclude>
+                            <exclude>**/RivestSchapire*Builder.class</exclude>
+                            <exclude>**/TTTLearner*Builder.class</exclude>
+
+                            <!-- generated builders for reuse trees/oracles -->
+                            <exclude>de/learnlib/filter/reuse/Reuse*Builder.class</exclude>
+
+                            <!-- generated refinements for oracles -->
+                            <exclude>de/learnlib/filter/statistic/**/DFA*.class</exclude>
+                            <exclude>de/learnlib/filter/statistic/**/Mealy*.class</exclude>
+                            <exclude>de/learnlib/filter/statistic/**/Moore*.class</exclude>
+                            <exclude>de/learnlib/oracle/emptiness/DFA*.class</exclude>
+                            <exclude>de/learnlib/oracle/emptiness/Mealy*.class</exclude>
+                            <exclude>de/learnlib/oracle/equivalence/DFA*.class</exclude>
+                            <exclude>de/learnlib/oracle/equivalence/Mealy*.class</exclude>
+                            <exclude>de/learnlib/oracle/equivalence/Moore*.class</exclude>
+                            <exclude>de/learnlib/oracle/membership/*SimulatorOracle.class</exclude>
+                            <exclude>de/learnlib/oracle/property/DFA*Chain.class</exclude>
+                            <exclude>de/learnlib/oracle/property/Mealy*Chain.class</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
     <profiles>
         <profile>
             <id>code-analysis</id>
