@@ -60,7 +60,7 @@ limitations under the License.
                             <exclude>**/TTTLearner*Builder.class</exclude>
 
                             <!-- generated builders for reuse trees/oracles -->
-                            <exclude>de/learnlib/filter/reuse/Reuse*Builder.class</exclude>
+                            <exclude>de/learnlib/filter/reuse/**/Reuse*Builder.class</exclude>
 
                             <!-- generated refinements for oracles -->
                             <exclude>de/learnlib/filter/statistic/**/DFA*.class</exclude>
