@@ -40,6 +40,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * An {@link InclusionOracle} that generates words in a breadth-first manner.
  *
+ * @param <A>
+ *         automaton type
+ * @param <I>
+ *         input symbol type
+ * @param <D>
+ *         output domain type
+ *
  * @see InclusionOracle
  * @see AbstractBFOracle
  */
@@ -52,7 +59,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                            to = DFAMembershipOracle.class,
                                            generics = @Generic("I")),
                     interfaces = {@Interface(clazz = DFAInclusionOracle.class, generics = @Generic("I")),
-                                  @Interface(clazz = DFAOracle.class, generics = @Generic("I"))})
+                                  @Interface(clazz = DFAOracle.class, generics = @Generic("I"))},
+                    classDoc = "A {@link DFA}-specific refinement of {@link AbstractBFInclusionOracle}.\n" +
+                               "@param <I> input symbol type\n")
 @GenerateRefinement(name = "MealyBFInclusionOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
@@ -63,7 +72,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                            generics = {@Generic("I"), @Generic("O")}),
                     interfaces = {@Interface(clazz = MealyInclusionOracle.class,
                                              generics = {@Generic("I"), @Generic("O")}),
-                                  @Interface(clazz = MealyOracle.class, generics = {@Generic("I"), @Generic("O")})})
+                                  @Interface(clazz = MealyOracle.class, generics = {@Generic("I"), @Generic("O")})},
+                    classDoc = "A {@link MealyMachine}-specific refinement of {@link AbstractBFInclusionOracle}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <O> output symbol type\n")
 public abstract class AbstractBFInclusionOracle<A extends DetOutputAutomaton<?, I, ?, D>, I, D>
         extends AbstractBFOracle<A, I, D> implements InclusionOracle<A, I, D> {
 

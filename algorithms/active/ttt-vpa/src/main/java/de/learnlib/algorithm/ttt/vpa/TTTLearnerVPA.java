@@ -45,15 +45,11 @@ import net.automatalib.automaton.vpa.State;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @param <I>
- *         input symbol type
- */
 public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
 
     private final BlockList<I> blockList = new BlockList<>();
 
-    @GenerateBuilder
+    @GenerateBuilder(defaults = OPLearnerVPA.BuilderDefaults.class)
     public TTTLearnerVPA(VPAlphabet<I> alphabet, DFAMembershipOracle<I> oracle, AcexAnalyzer analyzer) {
         super(alphabet, oracle, analyzer);
     }

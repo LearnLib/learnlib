@@ -35,7 +35,7 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
 /**
- * A {@link MooreMachine}-based specialization of the TTT learner.
+ * A {@link MooreMachine}-based specialization of {@link AbstractTTTLearner}.
  *
  * @param <I>
  *         input symbol type
@@ -45,7 +45,10 @@ import net.automatalib.word.WordBuilder;
 public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I, ?, O>, I, Word<O>>
         implements MooreLearner<I, O> {
 
-    @GenerateBuilder(defaults = AbstractTTTLearner.BuilderDefaults.class)
+    @GenerateBuilder(defaults = AbstractTTTLearner.BuilderDefaults.class,
+                     classDoc = "A builder for {@link TTTLearnerMoore}.\n" +
+                                "@param <I> input symbol type\n" +
+                                "@param <O> output symbol type\n")
     public TTTLearnerMoore(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle, AcexAnalyzer analyzer) {
         super(alphabet,
               oracle,

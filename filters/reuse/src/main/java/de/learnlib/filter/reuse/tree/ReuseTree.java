@@ -50,11 +50,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * ReuseTreeBuilder#withInvariantInputs(Set)} is set).
  *
  * @param <S>
- *         system state class
+ *         system state type
  * @param <I>
- *         input symbol class
+ *         input symbol type
  * @param <O>
- *         output symbol class
+ *         output symbol type
  */
 public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I, O>, @Nullable ReuseEdge<S, I, O>> {
 
@@ -74,7 +74,11 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
     @GenerateBuilder(defaults = BuilderDefaults.class,
                      getterPrefix = GenerateBuilder.SUPPRESS,
                      setterPrefix = GenerateBuilder.SUPPRESS,
-                     createName = "build")
+                     createName = "build",
+                     classDoc = "A builder for {@link ReuseTree}.\n" +
+                                "@param <S> system state type\n" +
+                                "@param <I> input symbol type\n" +
+                                "@param <O> output symbol type\n")
     public ReuseTree(@Option(requiredOnInstantiation = true) Alphabet<I> alphabet,
                      boolean enabledSystemStateInvalidation,
                      SystemStateHandler<S> systemStateHandler,

@@ -69,7 +69,10 @@ public class KearnsVaziraniMealy<I, O>
     protected List<StateInfo<I, Word<O>>> stateInfos = new ArrayList<>();
     private CompactMealy<I, O> hypothesis;
 
-    @GenerateBuilder(defaults = BuilderDefaults.class)
+    @GenerateBuilder(defaults = BuilderDefaults.class,
+                     classDoc = "A builder for {@link KearnsVaziraniMealy}.\n" +
+                                "@param <I> input symbol type\n" +
+                                "@param <O> output symbol type\n")
     public KearnsVaziraniMealy(Alphabet<I> alphabet,
                                MembershipOracle<I, Word<O>> oracle,
                                boolean repeatedCounterexampleEvaluation,

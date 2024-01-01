@@ -28,11 +28,12 @@ import net.automatalib.word.Word;
  * Implementation of the L* algorithm by Dana Angluin.
  *
  * @param <I>
- *         input symbol class.
+ *         input symbol type.
  */
 public class ClassicLStarDFA<I> extends ExtensibleLStarDFA<I> {
 
-    @GenerateBuilder
+    @GenerateBuilder(classDoc = "A builder for {@link ClassicLStarDFA}.\n" +
+                                "@param <I> input symbol type\n")
     public ClassicLStarDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
         super(alphabet,
               oracle,

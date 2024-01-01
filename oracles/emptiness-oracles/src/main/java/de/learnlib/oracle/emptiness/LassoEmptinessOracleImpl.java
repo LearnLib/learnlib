@@ -66,9 +66,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class LassoEmptinessOracleImpl<L extends Lasso<I, D>, S, I, D>
         implements LassoEmptinessOracle<L, I, D>, LassoOracle<L, I, D> {
 
-    /**
-     * The {@link OmegaMembershipOracle} used to answer {@link OmegaQuery}s.
-     */
     private final OmegaMembershipOracle<S, I, D> omegaMembershipOracle;
 
     public LassoEmptinessOracleImpl(OmegaMembershipOracle<S, I, D> omegaMembershipOracle) {

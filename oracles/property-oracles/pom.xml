@@ -40,7 +40,7 @@
         <!-- build -->
         <dependency>
             <groupId>de.learnlib.tooling</groupId>
-            <artifactId>annotation-processor</artifactId>
+            <artifactId>annotations</artifactId>
         </dependency>
 
         <!-- test -->

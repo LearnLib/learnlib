@@ -70,9 +70,9 @@ import org.slf4j.LoggerFactory;
  * The main learning algorithm.
  *
  * @param <I>
- *         input alphabet type
+ *         input symbol type
  * @param <O>
- *         output alphabet type
+ *         output symbol type
  */
 public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                                          PartialTransitionAnalyzer<ADTState<I, O>, I>,
@@ -101,7 +101,10 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         this(alphabet, oracle, leafSplitter, adtExtender, subtreeReplacer, true);
     }
 
-    @GenerateBuilder(defaults = BuilderDefaults.class)
+    @GenerateBuilder(defaults = BuilderDefaults.class,
+                     classDoc = "A builder for {@link ADTLearner}.\n" +
+                                "@param <I> input symbol type\n" +
+                                "@param <O> output symbol type\n")
     public ADTLearner(Alphabet<I> alphabet,
                       SymbolQueryOracle<I, O> oracle,
                       LeafSplitter leafSplitter,

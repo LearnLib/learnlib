@@ -36,6 +36,14 @@ import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
+/**
+ * A {@link MealyMachine}-based specialization of the extensible L* learner.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 public class ExtensibleLStarMealy<I, O>
         extends AbstractExtensibleAutomatonLStar<MealyMachine<?, I, ?, O>, I, Word<O>, Integer, CompactTransition<O>, Void, O, CompactMealy<I, O>>
         implements OTLearnerMealy<I, O>, GlobalSuffixLearnerMealy<I, O> {
@@ -50,7 +58,10 @@ public class ExtensibleLStarMealy<I, O>
         this(alphabet, oracle, Collections.singletonList(Word.epsilon()), initialSuffixes, cexHandler, closingStrategy);
     }
 
-    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
+    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class,
+                     classDoc = "A builder for {@link ExtensibleLStarMealy}.\n" +
+                                "@param <I> input symbol type\n" +
+                                "@param <O> output symbol type\n")
     public ExtensibleLStarMealy(Alphabet<I> alphabet,
                                 MembershipOracle<I, Word<O>> oracle,
                                 List<Word<I>> initialPrefixes,

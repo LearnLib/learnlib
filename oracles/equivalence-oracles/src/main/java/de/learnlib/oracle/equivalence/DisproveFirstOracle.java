@@ -44,11 +44,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * One may favor this implementation if refining a hypothesis is expensive compared to trying to disprove properties.
  *
  * @param <A>
- *         the automaton type
+ *         automaton type
  * @param <I>
- *         the input type
+ *         input symbol type
  * @param <D>
- *         the output type
+ *         output domain type
  *
  * @see CExFirstOracle
  */
@@ -60,7 +60,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                     typeMapping = @Mapping(from = PropertyOracle.class,
                                            to = DFAPropertyOracle.class,
                                            generics = {@Generic("I"), @Generic("?")}),
-                    interfaces = @Interface(clazz = DFABlackBoxOracle.class, generics = @Generic("I")))
+                    interfaces = @Interface(clazz = DFABlackBoxOracle.class, generics = @Generic("I")),
+                    classDoc = "A {@link DFA}-specific refinement of {@link DisproveFirstOracle}.\n" +
+                               "@param <I> input symbol type\n")
 @GenerateRefinement(name = "MealyDisproveFirstOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
@@ -70,7 +72,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                            to = MealyPropertyOracle.class,
                                            generics = {@Generic("I"), @Generic("O"), @Generic("?")}),
                     interfaces = @Interface(clazz = MealyBlackBoxOracle.class,
-                                            generics = {@Generic("I"), @Generic("O")}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    classDoc = "A {@link MealyMachine}-specific refinement of {@link DisproveFirstOracle}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <O> output symbol type\n")
 public class DisproveFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOracle<A, I, D> {
 
     private final List<PropertyOracle<I, ? super A, ?, D>> propertyOracles;

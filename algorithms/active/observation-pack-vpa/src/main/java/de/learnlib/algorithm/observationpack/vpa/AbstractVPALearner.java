@@ -39,10 +39,6 @@ import net.automatalib.common.smartcollection.ElementReference;
 import net.automatalib.common.smartcollection.UnorderedCollection;
 import net.automatalib.word.Word;
 
-/**
- * @param <I>
- *         input alphabet type
- */
 public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVPA<?, I>, I, Boolean> {
 
     protected final VPAlphabet<I> alphabet;

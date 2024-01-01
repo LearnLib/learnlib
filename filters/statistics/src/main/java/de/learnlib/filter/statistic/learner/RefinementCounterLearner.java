@@ -41,11 +41,11 @@ import net.automatalib.word.Word;
  * Experiment.getRounds().
  *
  * @param <M>
- *         the automaton type.
+ *         automaton type
  * @param <I>
- *         the input type.
+ *         input symbol type
  * @param <D>
- *         the output type.
+ *         output domain type
  */
 @GenerateRefinement(name = "DFARefinementCounterLearner",
                     generics = "I",
@@ -55,7 +55,9 @@ import net.automatalib.word.Word;
                     typeMapping = @Mapping(from = LearningAlgorithm.class,
                                            to = DFALearner.class,
                                            generics = @Generic("I")),
-                    interfaces = @Interface(clazz = DFAStatisticLearner.class, generics = @Generic("I")))
+                    interfaces = @Interface(clazz = DFAStatisticLearner.class, generics = @Generic("I")),
+                    classDoc = "A {@link DFA}-specific refinement of {@link RefinementCounterLearner}.\n" +
+                               "@param <I> input symbol type\n")
 @GenerateRefinement(name = "MealyRefinementCounterLearner",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
@@ -65,7 +67,10 @@ import net.automatalib.word.Word;
                                            to = MealyLearner.class,
                                            generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MealyStatisticLearner.class,
-                                            generics = {@Generic("I"), @Generic("O")}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    classDoc = "A {@link MealyMachine}-specific refinement of {@link RefinementCounterLearner}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <O> output symbol type\n")
 @GenerateRefinement(name = "MooreRefinementCounterLearner",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
@@ -75,7 +80,10 @@ import net.automatalib.word.Word;
                                            to = MooreLearner.class,
                                            generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MooreStatisticLearner.class,
-                                            generics = {@Generic("I"), @Generic("O")}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    classDoc = "A {@link MooreMachine}-specific refinement of {@link RefinementCounterLearner}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <O> output symbol type\n")
 public class RefinementCounterLearner<M, I, D> implements StatisticLearner<M, I, D> {
 
     private final LearningAlgorithm<M, I, D> learningAlgorithm;

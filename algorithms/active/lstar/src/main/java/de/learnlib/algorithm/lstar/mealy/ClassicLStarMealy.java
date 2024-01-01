@@ -39,9 +39,9 @@ import net.automatalib.word.Word;
  * thesis.
  *
  * @param <I>
- *         input symbol class
+ *         input symbol type
  * @param <O>
- *         output symbol class
+ *         output symbol type
  */
 public class ClassicLStarMealy<I, O>
         extends AbstractExtensibleAutomatonLStar<MealyMachine<?, I, ?, O>, I, O, Integer, CompactTransition<O>, Void, O, CompactMealy<I, O>> {
@@ -84,7 +84,10 @@ public class ClassicLStarMealy<I, O>
              closingStrategy);
     }
 
-    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
+    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class,
+                     classDoc = "A builder for {@link ClassicLStarMealy}.\n" +
+                                "@param <I> input symbol type\n" +
+                                "@param <O> output symbol type\n")
     public ClassicLStarMealy(Alphabet<I> alphabet,
                              MembershipOracle<I, O> oracle,
                              List<Word<I>> initialPrefixes,

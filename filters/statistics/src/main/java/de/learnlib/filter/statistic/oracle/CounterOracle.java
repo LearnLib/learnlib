@@ -48,7 +48,9 @@ import net.automatalib.word.Word;
                     typeMapping = @Mapping(from = MembershipOracle.class,
                                            to = DFAMembershipOracle.class,
                                            generics = @Generic("I")),
-                    interfaces = @Interface(clazz = DFAMembershipOracle.class, generics = @Generic("I")))
+                    interfaces = @Interface(clazz = DFAMembershipOracle.class, generics = @Generic("I")),
+                    classDoc = "A {@link net.automatalib.automaton.fsa.DFA}-specific refinement of {@link CounterOracle}.\n" +
+                               "@param <I> input symbol type\n")
 @GenerateRefinement(name = "MealyCounterOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
@@ -56,7 +58,10 @@ import net.automatalib.word.Word;
                                            to = MealyMembershipOracle.class,
                                            generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MealyMembershipOracle.class,
-                                            generics = {@Generic("I"), @Generic("O")}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    classDoc = "A {@link net.automatalib.automaton.transducer.MealyMachine}-specific refinement of {@link CounterOracle}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <O> output symbol type\n")
 @GenerateRefinement(name = "MooreCounterOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
@@ -64,7 +69,10 @@ import net.automatalib.word.Word;
                                            to = MooreMembershipOracle.class,
                                            generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MooreMembershipOracle.class,
-                                            generics = {@Generic("I"), @Generic("O")}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    classDoc = "A {@link net.automatalib.automaton.transducer.MooreMachine}-specific refinement of {@link CounterOracle}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <O> output symbol type\n")
 public class CounterOracle<I, D> implements StatisticOracle<I, D> {
 
     private final MembershipOracle<I, D> delegate;

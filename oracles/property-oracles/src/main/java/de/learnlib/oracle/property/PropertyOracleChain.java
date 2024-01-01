@@ -43,13 +43,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * examples can be found more quickly (as in smaller hypothesis size and less learning queries).
  *
  * @param <I>
- *         the input type.
+ *         input symbol type
  * @param <A>
- *         the automaton type.
+ *         automaton type
  * @param <P>
- *         the property type.
+ *         property type
  * @param <D>
- *         the output type.
+ *         output domain type
  */
 @GenerateRefinement(name = "DFAPropertyOracleChain",
                     generics = {"I", "P"},
@@ -60,18 +60,25 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                     typeMapping = @Mapping(from = PropertyOracle.class,
                                            to = DFAPropertyOracle.class,
                                            generics = {@Generic("I"), @Generic("P")}),
-                    interfaces = @Interface(clazz = DFAPropertyOracle.class, generics = {@Generic("I"), @Generic("P")}))
+                    interfaces = @Interface(clazz = DFAPropertyOracle.class, generics = {@Generic("I"), @Generic("P")}),
+                    classDoc = "A {@link DFA}-specific refinement of {@link PropertyOracleChain}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <P> property type\n")
 @GenerateRefinement(name = "MealyPropertyOracleChain",
                     generics = {"I", "O", "P"},
                     parentGenerics = {@Generic("I"),
                                       @Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("P"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    typeMapping = @Mapping(from = PropertyOracle[].class,
-                                           to = MealyPropertyOracle[].class,
+                    typeMapping = @Mapping(from = PropertyOracle.class,
+                                           to = MealyPropertyOracle.class,
                                            generics = {@Generic("I"), @Generic("O"), @Generic("P")}),
                     interfaces = @Interface(clazz = MealyPropertyOracle.class,
-                                            generics = {@Generic("I"), @Generic("O"), @Generic("P")}))
+                                            generics = {@Generic("I"), @Generic("O"), @Generic("P")}),
+                    classDoc = "A {@link MealyMachine}-specific refinement of {@link PropertyOracleChain}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <O> output symbol type\n" +
+                               "@param <P> property type\n")
 public class PropertyOracleChain<I, A extends Output<I, D>, @Nullable P, D> implements PropertyOracle<I, A, P, D> {
 
     private P property;

@@ -52,11 +52,11 @@ import net.automatalib.word.WordBuilder;
  * ReuseOracleBuilder#withInvariantInputs(Set)}).
  *
  * @param <S>
- *         system state class
+ *         system state type
  * @param <I>
- *         input symbol class
+ *         input symbol type
  * @param <O>
- *         output symbol class
+ *         output symbol type
  */
 public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> {
 
@@ -70,7 +70,11 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
     @GenerateBuilder(defaults = BuilderDefaults.class,
                      getterPrefix = GenerateBuilder.SUPPRESS,
                      setterPrefix = GenerateBuilder.SUPPRESS,
-                     createName = "build")
+                     createName = "build",
+                     classDoc = "A builder for {@link ReuseOracle}.\n" +
+                                "@param <S> system state type\n" +
+                                "@param <I> input symbol type\n" +
+                                "@param <O> output symbol type\n")
     public ReuseOracle(@Option(requiredOnInstantiation = true) Alphabet<I> alphabet,
                        @Option(requiredOnInstantiation = true) Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier,
                        boolean enabledSystemStateInvalidation,

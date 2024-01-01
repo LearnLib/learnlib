@@ -21,6 +21,7 @@ import java.util.List;
 import com.google.common.collect.Iterables;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
+import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.AbstractHypTrans;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.ContextPair;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.DTNode;
@@ -35,15 +36,11 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @param <I>
- *         input alphabet type
- */
 public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
 
     protected final AcexAnalyzer analyzer;
 
-    @GenerateBuilder
+    @GenerateBuilder(defaults = BuilderDefaults.class)
     public OPLearnerVPA(VPAlphabet<I> alphabet, DFAMembershipOracle<I> oracle, AcexAnalyzer analyzer) {
         super(alphabet, oracle);
         this.analyzer = analyzer;
@@ -155,7 +152,17 @@ public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
 
             return oracle.answerQuery(transformAccessSequence(state), suffSuff);
         }
+    }
 
+    public static final class BuilderDefaults {
+
+        private BuilderDefaults() {
+            // prevent instantiation
+        }
+
+        public static AcexAnalyzer analyzer() {
+            return AcexAnalyzers.BINARY_SEARCH_BWD;
+        }
     }
 
 }

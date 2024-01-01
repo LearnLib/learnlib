@@ -584,8 +584,8 @@ limitations under the License.
                             <additionalDependencies>
                                 <additionalDependency>
                                     <groupId>de.learnlib.tooling</groupId>
-                                    <artifactId>annotation-processor</artifactId>
-                                    <version>${annotation-processor.version}</version>
+                                    <artifactId>annotations</artifactId>
+                                    <version>${build-tools.version}</version>
                                 </additionalDependency>
                                 <additionalDependency>
                                     <groupId>org.kohsuke.metainf-services</groupId>

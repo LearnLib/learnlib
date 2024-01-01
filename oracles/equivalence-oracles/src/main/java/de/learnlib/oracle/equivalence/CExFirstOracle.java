@@ -47,11 +47,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * This implementation may be used when refining a hypothesis is inexpensive compared to disproving propertyOracles.
  *
  * @param <A>
- *         the automaton type
+ *         automaton type
  * @param <I>
- *         the input type
+ *         input symbol type
  * @param <D>
- *         the output type
+ *         output domain type
  *
  * @see DisproveFirstOracle
  */
@@ -64,7 +64,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                            to = DFAPropertyOracle.class,
                                            generics = {@Generic("I"), @Generic("?")}),
                     interfaces = {@Interface(clazz = DFABlackBoxOracle.class, generics = @Generic("I")),
-                                  @Interface(clazz = DFAEquivalenceOracle.class, generics = @Generic("I"))})
+                                  @Interface(clazz = DFAEquivalenceOracle.class, generics = @Generic("I"))},
+                    classDoc = "A {@link DFA}-specific refinement of {@link CExFirstOracle}.\n" +
+                               "@param <I> input symbol type\n")
 @GenerateRefinement(name = "MealyCExFirstOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
@@ -76,7 +78,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                     interfaces = {@Interface(clazz = MealyBlackBoxOracle.class,
                                              generics = {@Generic("I"), @Generic("O")}),
                                   @Interface(clazz = MealyEquivalenceOracle.class,
-                                             generics = {@Generic("I"), @Generic("O")})})
+                                             generics = {@Generic("I"), @Generic("O")})},
+                    classDoc = "A {@link MealyMachine}-specific refinement of {@link CExFirstOracle}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <O> output symbol type\n")
 public class CExFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOracle<A, I, D> {
 
     private final List<PropertyOracle<I, ? super A, ?, D>> propertyOracles;

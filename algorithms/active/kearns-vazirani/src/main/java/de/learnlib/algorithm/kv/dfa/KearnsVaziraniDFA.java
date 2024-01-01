@@ -74,7 +74,9 @@ public class KearnsVaziraniDFA<I>
      * @param oracle
      *         the membership oracle
      */
-    @GenerateBuilder(defaults = BuilderDefaults.class)
+    @GenerateBuilder(defaults = BuilderDefaults.class,
+                     classDoc = "A builder for {@link KearnsVaziraniDFA}.\n" +
+                                "@param <I> input symbol type\n")
     public KearnsVaziraniDFA(Alphabet<I> alphabet,
                              MembershipOracle<I, Boolean> oracle,
                              boolean repeatedCounterexampleEvaluation,

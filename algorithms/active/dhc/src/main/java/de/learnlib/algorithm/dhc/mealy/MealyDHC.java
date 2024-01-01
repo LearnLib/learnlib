@@ -49,6 +49,14 @@ import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * The main DHC learner.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 public class MealyDHC<I, O> implements MealyLearner<I, O>,
                                        AccessSequenceTransformer<I>,
                                        GlobalSuffixLearnerMealy<I, O>,
@@ -87,7 +95,10 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
      *         the initial set of splitters, {@code null} or an empty collection will result in the set of splitters
      *         being initialized as the set of alphabet symbols (interpreted as {@link Word}s)
      */
-    @GenerateBuilder(defaults = BuilderDefaults.class, builderFinal = false)
+    @GenerateBuilder(defaults = BuilderDefaults.class,
+                     classDoc = "A builder for {@link MealyDHC}.\n" +
+                                "@param <I> input symbol type\n" +
+                                "@param <O> output symbol type\n")
     public MealyDHC(Alphabet<I> alphabet,
                     MembershipOracle<I, Word<O>> oracle,
                     GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder,

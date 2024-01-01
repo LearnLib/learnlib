@@ -34,9 +34,9 @@ import net.automatalib.word.Word;
  * Collects a histogram of passed query lengths.
  *
  * @param <I>
- *         input symbol class
+ *         input symbol type
  * @param <D>
- *         output symbol class
+ *         output symbol type
  */
 @GenerateRefinement(name = "DFAHistogramOracle",
                     generics = "I",
@@ -44,7 +44,9 @@ import net.automatalib.word.Word;
                     typeMapping = @Mapping(from = MembershipOracle.class,
                                            to = DFAMembershipOracle.class,
                                            generics = @Generic("I")),
-                    interfaces = @Interface(clazz = DFAMembershipOracle.class, generics = @Generic("I")))
+                    interfaces = @Interface(clazz = DFAMembershipOracle.class, generics = @Generic("I")),
+                    classDoc = "A {@link net.automatalib.automaton.fsa.DFA}-specific refinement of {@link HistogramOracle}.\n" +
+                               "@param <I> input symbol type\n")
 @GenerateRefinement(name = "MealyHistogramOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
@@ -52,7 +54,10 @@ import net.automatalib.word.Word;
                                            to = MealyMembershipOracle.class,
                                            generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MealyMembershipOracle.class,
-                                            generics = {@Generic("I"), @Generic("O")}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    classDoc = "A {@link MealyMachine}-specific refinement of {@link HistogramOracle}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <O> output symbol type\n")
 @GenerateRefinement(name = "MooreOutputHistogramOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
@@ -60,7 +65,10 @@ import net.automatalib.word.Word;
                                            to = MooreMembershipOracle.class,
                                            generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MooreMembershipOracle.class,
-                                            generics = {@Generic("I"), @Generic("O")}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    classDoc = "A {@link net.automatalib.automaton.transducer.MooreMachine}-specific refinement of {@link HistogramOracle}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <O> output symbol type\n")
 public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
 
     /**

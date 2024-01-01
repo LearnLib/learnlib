@@ -31,6 +31,8 @@ import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
+ * A {@link MealyMachine}-based specialization of the {@link AbstractOPLearner}.
+ *
  * @param <I>
  *         input symbol type
  * @param <O>
@@ -49,7 +51,10 @@ public class OPLearnerMealy<I, O> extends AbstractOPLearner<MealyMachine<?, I, ?
      * @param suffixFinder
      *         method to use for analyzing counterexamples
      */
-    @GenerateBuilder(defaults = AbstractOPLearner.BuilderDefaults.class)
+    @GenerateBuilder(defaults = AbstractOPLearner.BuilderDefaults.class,
+                     classDoc = "A builder for {@link OPLearnerMealy}.\n" +
+                                "@param <I> input symbol type\n" +
+                                "@param <O> output symbol type\n")
     public OPLearnerMealy(Alphabet<I> alphabet,
                           MembershipOracle<I, Word<O>> oracle,
                           LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder,

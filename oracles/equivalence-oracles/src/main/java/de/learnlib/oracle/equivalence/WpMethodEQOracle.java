@@ -57,7 +57,9 @@ import net.automatalib.word.Word;
                     typeMapping = @Mapping(from = MembershipOracle.class,
                                            to = DFAMembershipOracle.class,
                                            generics = @Generic("I")),
-                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = @Generic("I")))
+                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = @Generic("I")),
+                    classDoc = "A {@link DFA}-specific refinement of {@link WpMethodEQOracle}.\n" +
+                               "@param <I> input symbol type\n")
 @GenerateRefinement(name = "MealyWpMethodEQOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
@@ -67,7 +69,10 @@ import net.automatalib.word.Word;
                                            to = MealyMembershipOracle.class,
                                            generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MealyEquivalenceOracle.class,
-                                            generics = {@Generic("I"), @Generic("O")}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    classDoc = "A {@link MealyMachine}-specific refinement of {@link WpMethodEQOracle}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <O> output symbol type\n")
 @GenerateRefinement(name = "MooreWpMethodEQOracle",
                     generics = {"I", "O"},
                     parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
@@ -77,7 +82,10 @@ import net.automatalib.word.Word;
                                            to = MooreMembershipOracle.class,
                                            generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MooreEquivalenceOracle.class,
-                                            generics = {@Generic("I"), @Generic("O")}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    classDoc = "A {@link MooreMachine}-specific refinement of {@link WpMethodEQOracle}.\n" +
+                               "@param <I> input symbol type\n" +
+                               "@param <O> output symbol type\n")
 public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 

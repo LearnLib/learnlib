@@ -32,9 +32,17 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;
 
+/**
+ * A {@link DFA}-based specialization of {@link AbstractTTTLearner}.
+ *
+ * @param <I>
+ *         input symbol type
+ */
 public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> implements DFALearner<I> {
 
-    @GenerateBuilder(defaults = AbstractTTTLearner.BuilderDefaults.class)
+    @GenerateBuilder(defaults = AbstractTTTLearner.BuilderDefaults.class,
+                     classDoc = "A builder for {@link TTTLearnerDFA}.\n" +
+                                "@param <I> input symbol type\n")
     public TTTLearnerDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, AcexAnalyzer analyzer) {
         this(alphabet, oracle, analyzer, TTTDTNodeDFA::new);
     }
