@@ -48,42 +48,36 @@ import net.automatalib.word.Word;
  *         output domain type
  */
 @GenerateRefinement(name = "DFARefinementCounterLearner",
-                    generics = "I",
+                    generics = @Generic(value = "I", desc = "input symbol type"),
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    typeMapping = @Mapping(from = LearningAlgorithm.class,
-                                           to = DFALearner.class,
-                                           generics = @Generic("I")),
-                    interfaces = @Interface(clazz = DFAStatisticLearner.class, generics = @Generic("I")),
-                    classDoc = "A {@link DFA}-specific refinement of {@link RefinementCounterLearner}.\n" +
-                               "@param <I> input symbol type\n")
+                    typeMappings = @Mapping(from = LearningAlgorithm.class,
+                                            to = DFALearner.class,
+                                            generics = @Generic("I")),
+                    interfaces = @Interface(clazz = DFAStatisticLearner.class, generics = @Generic("I")))
 @GenerateRefinement(name = "MealyRefinementCounterLearner",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    typeMapping = @Mapping(from = LearningAlgorithm.class,
-                                           to = MealyLearner.class,
-                                           generics = {@Generic("I"), @Generic("O")}),
-                    interfaces = @Interface(clazz = MealyStatisticLearner.class,
+                    typeMappings = @Mapping(from = LearningAlgorithm.class,
+                                            to = MealyLearner.class,
                                             generics = {@Generic("I"), @Generic("O")}),
-                    classDoc = "A {@link MealyMachine}-specific refinement of {@link RefinementCounterLearner}.\n" +
-                               "@param <I> input symbol type\n" +
-                               "@param <O> output symbol type\n")
+                    interfaces = @Interface(clazz = MealyStatisticLearner.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "MooreRefinementCounterLearner",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    typeMapping = @Mapping(from = LearningAlgorithm.class,
-                                           to = MooreLearner.class,
-                                           generics = {@Generic("I"), @Generic("O")}),
-                    interfaces = @Interface(clazz = MooreStatisticLearner.class,
+                    typeMappings = @Mapping(from = LearningAlgorithm.class,
+                                            to = MooreLearner.class,
                                             generics = {@Generic("I"), @Generic("O")}),
-                    classDoc = "A {@link MooreMachine}-specific refinement of {@link RefinementCounterLearner}.\n" +
-                               "@param <I> input symbol type\n" +
-                               "@param <O> output symbol type\n")
+                    interfaces = @Interface(clazz = MooreStatisticLearner.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 public class RefinementCounterLearner<M, I, D> implements StatisticLearner<M, I, D> {
 
     private final LearningAlgorithm<M, I, D> learningAlgorithm;

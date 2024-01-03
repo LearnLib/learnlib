@@ -32,8 +32,7 @@ import net.automatalib.word.Word;
  */
 public class ClassicLStarDFA<I> extends ExtensibleLStarDFA<I> {
 
-    @GenerateBuilder(classDoc = "A builder for {@link ClassicLStarDFA}.\n" +
-                                "@param <I> input symbol type\n")
+    @GenerateBuilder
     public ClassicLStarDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
         super(alphabet,
               oracle,

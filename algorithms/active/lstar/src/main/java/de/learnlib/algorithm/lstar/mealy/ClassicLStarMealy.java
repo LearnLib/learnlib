@@ -84,10 +84,7 @@ public class ClassicLStarMealy<I, O>
              closingStrategy);
     }
 
-    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class,
-                     classDoc = "A builder for {@link ClassicLStarMealy}.\n" +
-                                "@param <I> input symbol type\n" +
-                                "@param <O> output symbol type\n")
+    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
     public ClassicLStarMealy(Alphabet<I> alphabet,
                              MembershipOracle<I, O> oracle,
                              List<Word<I>> initialPrefixes,

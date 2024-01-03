@@ -60,9 +60,7 @@ public class ExtensibleLStarDFA<I>
         this(alphabet, oracle, Collections.singletonList(Word.epsilon()), initialSuffixes, cexHandler, closingStrategy);
     }
 
-    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class,
-                     classDoc = "A builder for {@link ExtensibleLStarDFA}.\n" +
-                                "@param <I> input symbol type\n")
+    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
     public ExtensibleLStarDFA(Alphabet<I> alphabet,
                               MembershipOracle<I, Boolean> oracle,
                               List<Word<I>> initialPrefixes,

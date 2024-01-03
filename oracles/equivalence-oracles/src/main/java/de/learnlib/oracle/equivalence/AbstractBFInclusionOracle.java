@@ -51,31 +51,27 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @see AbstractBFOracle
  */
 @GenerateRefinement(name = "DFABFInclusionOracle",
-                    generics = "I",
+                    generics = @Generic(value = "I", desc = "input symbol type"),
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    typeMapping = @Mapping(from = MembershipOracle.class,
-                                           to = DFAMembershipOracle.class,
-                                           generics = @Generic("I")),
+                    typeMappings = @Mapping(from = MembershipOracle.class,
+                                            to = DFAMembershipOracle.class,
+                                            generics = @Generic("I")),
                     interfaces = {@Interface(clazz = DFAInclusionOracle.class, generics = @Generic("I")),
-                                  @Interface(clazz = DFAOracle.class, generics = @Generic("I"))},
-                    classDoc = "A {@link DFA}-specific refinement of {@link AbstractBFInclusionOracle}.\n" +
-                               "@param <I> input symbol type\n")
+                                  @Interface(clazz = DFAOracle.class, generics = @Generic("I"))})
 @GenerateRefinement(name = "MealyBFInclusionOracle",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    typeMapping = @Mapping(from = MembershipOracle.class,
-                                           to = MealyMembershipOracle.class,
-                                           generics = {@Generic("I"), @Generic("O")}),
+                    typeMappings = @Mapping(from = MembershipOracle.class,
+                                            to = MealyMembershipOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}),
                     interfaces = {@Interface(clazz = MealyInclusionOracle.class,
                                              generics = {@Generic("I"), @Generic("O")}),
-                                  @Interface(clazz = MealyOracle.class, generics = {@Generic("I"), @Generic("O")})},
-                    classDoc = "A {@link MealyMachine}-specific refinement of {@link AbstractBFInclusionOracle}.\n" +
-                               "@param <I> input symbol type\n" +
-                               "@param <O> output symbol type\n")
+                                  @Interface(clazz = MealyOracle.class, generics = {@Generic("I"), @Generic("O")})})
 public abstract class AbstractBFInclusionOracle<A extends DetOutputAutomaton<?, I, ?, D>, I, D>
         extends AbstractBFOracle<A, I, D> implements InclusionOracle<A, I, D> {
 

@@ -41,10 +41,7 @@ import net.automatalib.word.Word;
 public class ClassicLStarMoore<I, O>
         extends AbstractExtensibleAutomatonLStar<MooreMachine<?, I, ?, O>, I, O, Integer, Integer, O, Void, CompactMoore<I, O>> {
 
-    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class,
-                     classDoc = "A builder for {@link ClassicLStarMoore}.\n" +
-                                "@param <I> input symbol type\n" +
-                                "@param <O> output symbol type\n")
+    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
     public ClassicLStarMoore(Alphabet<I> alphabet,
                              MembershipOracle<I, O> oracle,
                              List<Word<I>> initialPrefixes,

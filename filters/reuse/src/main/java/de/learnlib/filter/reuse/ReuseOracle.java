@@ -30,7 +30,7 @@ import de.learnlib.filter.reuse.tree.ReuseTree;
 import de.learnlib.filter.reuse.tree.SystemStateHandler;
 import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMealy;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
-import de.learnlib.tooling.annotation.builder.Option;
+import de.learnlib.tooling.annotation.builder.Param;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -70,13 +70,9 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
     @GenerateBuilder(defaults = BuilderDefaults.class,
                      getterPrefix = GenerateBuilder.SUPPRESS,
                      setterPrefix = GenerateBuilder.SUPPRESS,
-                     createName = "build",
-                     classDoc = "A builder for {@link ReuseOracle}.\n" +
-                                "@param <S> system state type\n" +
-                                "@param <I> input symbol type\n" +
-                                "@param <O> output symbol type\n")
-    public ReuseOracle(@Option(requiredOnInstantiation = true) Alphabet<I> alphabet,
-                       @Option(requiredOnInstantiation = true) Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier,
+                     createName = "build")
+    public ReuseOracle(@Param(requiredOnInstantiation = true) Alphabet<I> alphabet,
+                       @Param(requiredOnInstantiation = true) Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier,
                        boolean enabledSystemStateInvalidation,
                        SystemStateHandler<S> systemStateHandler,
                        Set<I> invariantInputs,

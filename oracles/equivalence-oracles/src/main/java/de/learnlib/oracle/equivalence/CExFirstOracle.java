@@ -56,32 +56,28 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @see DisproveFirstOracle
  */
 @GenerateRefinement(name = "DFACExFirstOracle",
-                    generics = "I",
+                    generics = @Generic(value = "I", desc = "input symbol type"),
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    typeMapping = @Mapping(from = PropertyOracle.class,
-                                           to = DFAPropertyOracle.class,
-                                           generics = {@Generic("I"), @Generic("?")}),
+                    typeMappings = @Mapping(from = PropertyOracle.class,
+                                            to = DFAPropertyOracle.class,
+                                            generics = {@Generic("I"), @Generic("?")}),
                     interfaces = {@Interface(clazz = DFABlackBoxOracle.class, generics = @Generic("I")),
-                                  @Interface(clazz = DFAEquivalenceOracle.class, generics = @Generic("I"))},
-                    classDoc = "A {@link DFA}-specific refinement of {@link CExFirstOracle}.\n" +
-                               "@param <I> input symbol type\n")
+                                  @Interface(clazz = DFAEquivalenceOracle.class, generics = @Generic("I"))})
 @GenerateRefinement(name = "MealyCExFirstOracle",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    typeMapping = @Mapping(from = PropertyOracle.class,
-                                           to = MealyPropertyOracle.class,
-                                           generics = {@Generic("I"), @Generic("O"), @Generic("?")}),
+                    typeMappings = @Mapping(from = PropertyOracle.class,
+                                            to = MealyPropertyOracle.class,
+                                            generics = {@Generic("I"), @Generic("O"), @Generic("?")}),
                     interfaces = {@Interface(clazz = MealyBlackBoxOracle.class,
                                              generics = {@Generic("I"), @Generic("O")}),
                                   @Interface(clazz = MealyEquivalenceOracle.class,
-                                             generics = {@Generic("I"), @Generic("O")})},
-                    classDoc = "A {@link MealyMachine}-specific refinement of {@link CExFirstOracle}.\n" +
-                               "@param <I> input symbol type\n" +
-                               "@param <O> output symbol type\n")
+                                             generics = {@Generic("I"), @Generic("O")})})
 public class CExFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOracle<A, I, D> {
 
     private final List<PropertyOracle<I, ? super A, ?, D>> propertyOracles;

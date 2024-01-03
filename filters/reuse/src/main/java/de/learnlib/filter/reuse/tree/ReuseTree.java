@@ -31,7 +31,7 @@ import de.learnlib.filter.reuse.ReuseOracle;
 import de.learnlib.filter.reuse.tree.BoundedDeque.AccessPolicy;
 import de.learnlib.filter.reuse.tree.BoundedDeque.EvictPolicy;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
-import de.learnlib.tooling.annotation.builder.Option;
+import de.learnlib.tooling.annotation.builder.Param;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.graph.Graph;
 import net.automatalib.visualization.VisualizationHelper;
@@ -74,12 +74,8 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
     @GenerateBuilder(defaults = BuilderDefaults.class,
                      getterPrefix = GenerateBuilder.SUPPRESS,
                      setterPrefix = GenerateBuilder.SUPPRESS,
-                     createName = "build",
-                     classDoc = "A builder for {@link ReuseTree}.\n" +
-                                "@param <S> system state type\n" +
-                                "@param <I> input symbol type\n" +
-                                "@param <O> output symbol type\n")
-    public ReuseTree(@Option(requiredOnInstantiation = true) Alphabet<I> alphabet,
+                     createName = "build")
+    public ReuseTree(@Param(requiredOnInstantiation = true) Alphabet<I> alphabet,
                      boolean enabledSystemStateInvalidation,
                      SystemStateHandler<S> systemStateHandler,
                      Set<I> invariantInputs,

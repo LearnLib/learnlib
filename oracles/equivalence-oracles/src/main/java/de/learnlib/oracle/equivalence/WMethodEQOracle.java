@@ -50,42 +50,36 @@ import net.automatalib.word.Word;
  *         output domain type
  */
 @GenerateRefinement(name = "DFAWMethodEQOracle",
-                    generics = "I",
+                    generics = @Generic(value = "I", desc = "input symbol type"),
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    typeMapping = @Mapping(from = MembershipOracle.class,
-                                           to = DFAMembershipOracle.class,
-                                           generics = @Generic("I")),
-                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = @Generic("I")),
-                    classDoc = "A {@link DFA}-specific refinement of {@link WMethodEQOracle}.\n" +
-                               "@param <I> input symbol type\n")
+                    typeMappings = @Mapping(from = MembershipOracle.class,
+                                            to = DFAMembershipOracle.class,
+                                            generics = @Generic("I")),
+                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = @Generic("I")))
 @GenerateRefinement(name = "MealyWMethodEQOracle",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    typeMapping = @Mapping(from = MembershipOracle.class,
-                                           to = MealyMembershipOracle.class,
-                                           generics = {@Generic("I"), @Generic("O")}),
-                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class,
+                    typeMappings = @Mapping(from = MembershipOracle.class,
+                                            to = MealyMembershipOracle.class,
                                             generics = {@Generic("I"), @Generic("O")}),
-                    classDoc = "A {@link MealyMachine}-specific refinement of {@link WMethodEQOracle}.\n" +
-                               "@param <I> input symbol type\n" +
-                               "@param <O> output symbol type\n")
+                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "MooreWMethodEQOracle",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    typeMapping = @Mapping(from = MembershipOracle.class,
-                                           to = MooreMembershipOracle.class,
-                                           generics = {@Generic("I"), @Generic("O")}),
-                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class,
+                    typeMappings = @Mapping(from = MembershipOracle.class,
+                                            to = MooreMembershipOracle.class,
                                             generics = {@Generic("I"), @Generic("O")}),
-                    classDoc = "A {@link MooreMachine}-specific refinement of {@link WMethodEQOracle}.\n" +
-                               "@param <I> input symbol type\n" +
-                               "@param <O> output symbol type\n")
+                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 
@@ -93,8 +87,8 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
     private final int expectedSize;
 
     /**
-     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int)} that sets {@code
-     * expectedSize} to 0.
+     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int)} that sets
+     * {@code expectedSize} to 0.
      *
      * @param sulOracle
      *         interface to the system under learning
@@ -106,8 +100,8 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
     }
 
     /**
-     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int, int)} that sets {@code
-     * batchSize} to 1.
+     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int, int)} that sets
+     * {@code batchSize} to 1.
      *
      * @param sulOracle
      *         interface to the system under learning
@@ -121,7 +115,8 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
     }
 
     /**
-     * Constructor. Uses {@link Math#max(int, int) Math.max}{@code (lookahead, expectedSize - }{@link
+     * Constructor. Uses
+     * {@link Math#max(int, int) Math.max}{@code (lookahead, expectedSize - }{@link
      * UniversalDeterministicAutomaton#size() hypothesis.size()}{@code )} to determine the maximum length of sequences,
      * that should be appended to the transition-cover part of the test sequence to account for the fact that the system
      * under learning may have more states than the current hypothesis.

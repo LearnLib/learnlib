@@ -43,36 +43,30 @@ import net.automatalib.word.Word;
  *         output domain type
  */
 @GenerateRefinement(name = "DFACounterOracle",
-                    generics = "I",
+                    generics = @Generic(value = "I", desc = "input symbol type"),
                     parentGenerics = {@Generic("I"), @Generic(clazz = Boolean.class)},
-                    typeMapping = @Mapping(from = MembershipOracle.class,
-                                           to = DFAMembershipOracle.class,
-                                           generics = @Generic("I")),
-                    interfaces = @Interface(clazz = DFAMembershipOracle.class, generics = @Generic("I")),
-                    classDoc = "A {@link net.automatalib.automaton.fsa.DFA}-specific refinement of {@link CounterOracle}.\n" +
-                               "@param <I> input symbol type\n")
+                    typeMappings = @Mapping(from = MembershipOracle.class,
+                                            to = DFAMembershipOracle.class,
+                                            generics = @Generic("I")),
+                    interfaces = @Interface(clazz = DFAMembershipOracle.class, generics = @Generic("I")))
 @GenerateRefinement(name = "MealyCounterOracle",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
-                    typeMapping = @Mapping(from = MembershipOracle.class,
-                                           to = MealyMembershipOracle.class,
-                                           generics = {@Generic("I"), @Generic("O")}),
+                    typeMappings = @Mapping(from = MembershipOracle.class,
+                                            to = MealyMembershipOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MealyMembershipOracle.class,
-                                            generics = {@Generic("I"), @Generic("O")}),
-                    classDoc = "A {@link net.automatalib.automaton.transducer.MealyMachine}-specific refinement of {@link CounterOracle}.\n" +
-                               "@param <I> input symbol type\n" +
-                               "@param <O> output symbol type\n")
+                                            generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "MooreCounterOracle",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
-                    typeMapping = @Mapping(from = MembershipOracle.class,
-                                           to = MooreMembershipOracle.class,
-                                           generics = {@Generic("I"), @Generic("O")}),
-                    interfaces = @Interface(clazz = MooreMembershipOracle.class,
+                    typeMappings = @Mapping(from = MembershipOracle.class,
+                                            to = MooreMembershipOracle.class,
                                             generics = {@Generic("I"), @Generic("O")}),
-                    classDoc = "A {@link net.automatalib.automaton.transducer.MooreMachine}-specific refinement of {@link CounterOracle}.\n" +
-                               "@param <I> input symbol type\n" +
-                               "@param <O> output symbol type\n")
+                    interfaces = @Interface(clazz = MooreMembershipOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 public class CounterOracle<I, D> implements StatisticOracle<I, D> {
 
     private final MembershipOracle<I, D> delegate;

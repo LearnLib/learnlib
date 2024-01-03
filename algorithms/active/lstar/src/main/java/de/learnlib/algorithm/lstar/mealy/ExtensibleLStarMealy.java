@@ -58,10 +58,7 @@ public class ExtensibleLStarMealy<I, O>
         this(alphabet, oracle, Collections.singletonList(Word.epsilon()), initialSuffixes, cexHandler, closingStrategy);
     }
 
-    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class,
-                     classDoc = "A builder for {@link ExtensibleLStarMealy}.\n" +
-                                "@param <I> input symbol type\n" +
-                                "@param <O> output symbol type\n")
+    @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
     public ExtensibleLStarMealy(Alphabet<I> alphabet,
                                 MembershipOracle<I, Word<O>> oracle,
                                 List<Word<I>> initialPrefixes,

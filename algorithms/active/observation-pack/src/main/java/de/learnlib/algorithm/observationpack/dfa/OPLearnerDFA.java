@@ -51,9 +51,7 @@ public class OPLearnerDFA<I> extends AbstractOPLearner<DFA<?, I>, I, Boolean, Bo
      * @param epsilonRoot
      *         whether to ensure the root of the discrimination tree is always labeled using the empty word.
      */
-    @GenerateBuilder(defaults = AbstractOPLearner.BuilderDefaults.class,
-                     classDoc = "A builder for {@link OPLearnerDFA}.\n" +
-                                "@param <I> input symbol type\n")
+    @GenerateBuilder(defaults = AbstractOPLearner.BuilderDefaults.class)
     public OPLearnerDFA(Alphabet<I> alphabet,
                         MembershipOracle<I, Boolean> oracle,
                         LocalSuffixFinder<? super I, ? super Boolean> suffixFinder,
