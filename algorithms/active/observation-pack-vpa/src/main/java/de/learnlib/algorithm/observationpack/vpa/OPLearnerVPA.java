@@ -30,12 +30,19 @@ import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.vpa.SEVPA;
 import net.automatalib.automaton.vpa.StackContents;
 import net.automatalib.automaton.vpa.State;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * A {@link SEVPA}-based adoption of the "observation pack" algorithm.
+ *
+ * @param <I>
+ *         input symbol type
+ */
 public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
 
     protected final AcexAnalyzer analyzer;

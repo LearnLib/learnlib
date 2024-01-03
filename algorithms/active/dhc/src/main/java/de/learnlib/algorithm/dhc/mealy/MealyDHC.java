@@ -50,7 +50,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * The main DHC learner.
+ * The DHC learner.
  *
  * @param <I>
  *         input symbol type

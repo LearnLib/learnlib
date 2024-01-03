@@ -25,8 +25,16 @@ import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFA;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;
 
+/**
+ * A {@link DFA}-based specialization of the L* learner which uses the counterexample analysis strategy proposed by
+ * Rivest &amp; Schapire.
+ *
+ * @param <I>
+ *         input symbol type
+ */
 public class RivestSchapireDFA<I> extends ExtensibleLStarDFA<I> {
 
     public RivestSchapireDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {

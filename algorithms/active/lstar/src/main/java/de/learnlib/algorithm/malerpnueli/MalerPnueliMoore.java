@@ -25,8 +25,18 @@ import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMoore;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 
+/**
+ * A {@link MooreMachine}-based specialization of the L* learner which uses the counterexample analysis strategy
+ * proposed by Maler &amp; Pnueli.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 public class MalerPnueliMoore<I, O> extends ExtensibleLStarMoore<I, O> {
 
     public MalerPnueliMoore(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {

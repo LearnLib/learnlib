@@ -25,8 +25,18 @@ import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
+/**
+ * A {@link MealyMachine}-based specialization of the L* learner which uses the counterexample analysis strategy
+ * proposed by Rivest &amp; Schapire.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 public class RivestSchapireMealy<I, O> extends ExtensibleLStarMealy<I, O> {
 
     public RivestSchapireMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {

@@ -40,11 +40,18 @@ import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.vpa.SEVPA;
 import net.automatalib.automaton.vpa.StackContents;
 import net.automatalib.automaton.vpa.State;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * A {@link SEVPA}-based adoption of the "TTT" algorithm.
+ *
+ * @param <I>
+ *         input symbol type
+ */
 public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
 
     private final BlockList<I> blockList = new BlockList<>();
