@@ -34,7 +34,7 @@ import de.learnlib.algorithm.PassiveLearningAlgorithm;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
-import net.automatalib.alphabet.GrowingMapAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.SubsequentialTransducer;
 import net.automatalib.common.smartcollection.IntSeq;
 import net.automatalib.common.util.Pair;

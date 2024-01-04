@@ -31,7 +31,7 @@ import de.learnlib.algorithm.aaar.abstraction.AbstractAbstractionTree;
 import de.learnlib.example.moore.ExampleRandomMoore;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;

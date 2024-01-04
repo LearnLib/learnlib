@@ -31,7 +31,6 @@ import de.learnlib.oracle.membership.StateLocalInputSULOracle;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MealyLearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
 import net.automatalib.util.automaton.transducer.MealyFilter;
@@ -85,7 +84,7 @@ public abstract class AbstractMealyLearnerIT {
         final O undefinedOutput = example.getUndefinedOutput();
 
         // make sure, our oracle actually receives a partial mealy
-        final CompactMealy<I, O> partialRef =
+        final StateLocalInputMealyMachine<?, I, ?, O> partialRef =
                 MealyFilter.pruneTransitionsWithOutput(reference, alphabet, undefinedOutput);
 
         final MealyMembershipOracle<I, O> mqOracle =

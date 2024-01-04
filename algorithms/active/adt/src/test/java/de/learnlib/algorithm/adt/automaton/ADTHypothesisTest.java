@@ -16,7 +16,7 @@
 package de.learnlib.algorithm.adt.automaton;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.StateIDs;
 import org.testng.Assert;
 import org.testng.annotations.Test;

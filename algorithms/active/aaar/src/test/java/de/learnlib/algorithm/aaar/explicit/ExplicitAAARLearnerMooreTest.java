@@ -24,7 +24,7 @@ import de.learnlib.algorithm.aaar.ComboConstructor;
 import de.learnlib.example.moore.ExampleRandomMoore;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;

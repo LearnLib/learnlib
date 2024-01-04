@@ -25,7 +25,7 @@ import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.AbstractResumableLearnerTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;

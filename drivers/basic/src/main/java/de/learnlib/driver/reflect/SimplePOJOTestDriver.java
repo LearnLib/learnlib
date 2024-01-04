@@ -22,7 +22,7 @@ import de.learnlib.driver.ContextExecutableInputSUL;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
-import net.automatalib.alphabet.GrowingMapAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.common.util.ReflectUtil;
 
 /**

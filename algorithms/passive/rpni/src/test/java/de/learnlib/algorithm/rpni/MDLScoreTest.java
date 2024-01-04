@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import de.learnlib.datastructure.pta.BlueFringePTA;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.common.smartcollection.IntSeq;
 import net.automatalib.word.Word;

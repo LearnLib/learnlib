@@ -24,7 +24,7 @@ import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
 import de.learnlib.query.OmegaQuery;
 import de.learnlib.sul.ObservableSUL;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.word.Word;
 import org.mockito.Mockito;
 import org.testng.Assert;

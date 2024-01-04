@@ -16,8 +16,8 @@
 package de.learnlib.example.dfa;
 
 import de.learnlib.example.DefaultLearningExample.DefaultDFALearningExample;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 
 /**

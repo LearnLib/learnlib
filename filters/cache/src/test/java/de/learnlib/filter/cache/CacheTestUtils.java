@@ -18,10 +18,10 @@ package de.learnlib.filter.cache;
 import java.util.Random;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.fsa.CompactDFA;
-import net.automatalib.automaton.transducer.CompactMealy;
-import net.automatalib.automaton.transducer.CompactMoore;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.util.automaton.random.RandomAutomata;
 
 public final class CacheTestUtils {

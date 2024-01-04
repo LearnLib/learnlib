@@ -17,7 +17,7 @@ package de.learnlib.testsupport;
 
 import de.learnlib.util.AbstractBFOracle;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.word.Word;
 import org.mockito.MockitoAnnotations;

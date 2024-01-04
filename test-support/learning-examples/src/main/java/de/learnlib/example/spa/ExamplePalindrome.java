@@ -20,14 +20,14 @@ import java.util.Map;
 
 import de.learnlib.example.DefaultLearningExample.DefaultSPALearningExample;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.FastDFA;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.fsa.impl.FastDFA;
 import net.automatalib.automaton.procedural.SPA;
-import net.automatalib.automaton.procedural.StackSPA;
+import net.automatalib.automaton.procedural.impl.StackSPA;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 

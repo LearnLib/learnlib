@@ -28,7 +28,7 @@ import de.learnlib.oracle.SymbolQueryOracle;
 import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;

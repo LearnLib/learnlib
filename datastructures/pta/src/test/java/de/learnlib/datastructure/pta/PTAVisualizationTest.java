@@ -22,8 +22,8 @@ import java.util.List;
 
 import com.google.common.io.CharStreams;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.transducer.CompactMoore;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;

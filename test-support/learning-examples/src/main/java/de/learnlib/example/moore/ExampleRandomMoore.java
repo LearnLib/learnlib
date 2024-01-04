@@ -21,7 +21,7 @@ import java.util.Random;
 
 import de.learnlib.example.DefaultLearningExample.DefaultMooreLearningExample;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.CompactMoore;
+import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.util.automaton.random.RandomAutomata;
 
 public class ExampleRandomMoore<I, O> extends DefaultMooreLearningExample<I, O> {

@@ -20,7 +20,7 @@ import java.util.Random;
 
 import de.learnlib.example.DefaultLearningExample.DefaultSSTLearningExample;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.CompactSST;
+import net.automatalib.automaton.transducer.impl.CompactSST;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 

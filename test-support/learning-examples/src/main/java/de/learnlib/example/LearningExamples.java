@@ -49,13 +49,13 @@ import de.learnlib.example.spmm.ExampleRandomSPMM;
 import de.learnlib.example.sst.ExampleRandomSST;
 import de.learnlib.example.vpa.ExampleRandomOneSEVPA;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
-import net.automatalib.alphabet.DefaultProceduralOutputAlphabet;
-import net.automatalib.alphabet.DefaultVPAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralOutputAlphabet;
 import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.DefaultProceduralOutputAlphabet;
+import net.automatalib.alphabet.impl.DefaultVPAlphabet;
 import net.automatalib.word.Word;
 
 public final class LearningExamples {

@@ -30,7 +30,7 @@ import de.learnlib.filter.reuse.tree.SystemStateHandler;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.query.Query;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.GrowingMapAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;

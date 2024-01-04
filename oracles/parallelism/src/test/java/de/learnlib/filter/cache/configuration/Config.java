@@ -30,12 +30,12 @@ import de.learnlib.oracle.membership.MooreSimulatorOracle;
 import de.learnlib.sul.SUL;
 import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.transducer.CompactMealy;
-import net.automatalib.automaton.transducer.CompactMoore;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.util.automaton.random.RandomAutomata;
 
 public final class Config {

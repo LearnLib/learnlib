@@ -42,7 +42,7 @@ import de.learnlib.sul.SUL;
 import de.learnlib.sul.StateLocalInputSUL;
 import de.learnlib.util.Experiment.MealyExperiment;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
 
 /**

@@ -28,8 +28,8 @@ import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.SuffixOutput;
-import net.automatalib.automaton.transducer.CompactMoore;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.word.Word;
 
 /**

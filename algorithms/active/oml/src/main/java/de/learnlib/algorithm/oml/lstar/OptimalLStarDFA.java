@@ -23,8 +23,8 @@ import java.util.Map;
 import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
 

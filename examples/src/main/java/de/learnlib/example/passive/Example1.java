@@ -22,7 +22,7 @@ import java.util.Collections;
 import de.learnlib.algorithm.PassiveLearningAlgorithm.PassiveDFALearner;
 import de.learnlib.algorithm.rpni.BlueFringeRPNIDFA;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.word.Word;
