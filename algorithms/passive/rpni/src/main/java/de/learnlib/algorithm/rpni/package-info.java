@@ -15,12 +15,12 @@
  */
 
 /**
- * This package (and sub-packages) provides the implementation of (a blue-fringe version of) the "regular positive
- * negative inference" (RPNI) learning algorithm as presented in the paper <a
- * href="https://dx.doi.org/10.1142/9789812797902_0004">Inferring regular languages in polynomial update time</a> by
- * Jose Oncina and Pedro García.
+ * This package provides the implementation of (a blue-fringe version of) the "regular positive negative inference"
+ * (RPNI) learning algorithm as presented in the paper <a href="https://dx.doi.org/10.1142/9789812797902_0004">Inferring
+ * regular languages in polynomial update time</a> by Jose Oncina and Pedro García, including merging heuristics such as
+ * the "evidence-driven state merging" (EDSM) and "minimum description length" (MDL) strategies.
  * <p>
- * More details on the blue-fringe version of this algorithm can be found in the book <a
+ * More details on these implementations can be found in the book <a
  * href="https://doi.org/10.1017/CBO9781139194655">Grammatical Inference</a> by Colin de la Higuera.
  */
 package de.learnlib.algorithm.rpni;

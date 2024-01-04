@@ -117,16 +117,6 @@ limitations under the License.
             <artifactId>learnlib-rpni</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-rpni-edsm</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-rpni-mdl</artifactId>
-        </dependency>
-
         <!-- api -->
         <dependency>
             <groupId>de.learnlib</groupId>
@@ -362,20 +352,6 @@ limitations under the License.
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-rpni</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-rpni-edsm</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-rpni-mdl</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

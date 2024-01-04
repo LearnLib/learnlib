@@ -34,7 +34,5 @@ limitations under the License.
     <modules>
         <module>ostia</module>
         <module>rpni</module>
-        <module>rpni-edsm</module>
-        <module>rpni-mdl</module>
     </modules>
 </project>
