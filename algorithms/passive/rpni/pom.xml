@@ -31,9 +31,10 @@ limitations under the License.
     <description>
         This artifact provides the implementation of (a blue-fringe version of) the "regular positive negative
         inference" (RPNI) learning algorithm as presented in the paper "Inferring regular languages in polynomial update
-        time" (https://dx.doi.org/10.1142/9789812797902_0004) by Jose Oncina and Pedro García.
+        time" (https://dx.doi.org/10.1142/9789812797902_0004) by Jose Oncina and Pedro García, including merging
+        heuristics such as the "evidence-driven state merging" (EDSM) and "minimum description length" (MDL) strategies.
 
-        More details on the blue-fringe version of this algorithm can be found in the book "Grammatical Inference"
+        More details on these implementations can be found in the book "Grammatical Inference"
         (https://doi.org/10.1017/CBO9781139194655) by Colin de la Higuera.
     </description>
 
@@ -50,12 +51,21 @@ limitations under the License.
 
         <!-- external -->
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-smartcollections</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
         </dependency>
 
         <dependency>
@@ -71,6 +81,17 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-membership-oracles</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
             <scope>test</scope>
         </dependency>
 

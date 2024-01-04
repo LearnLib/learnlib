@@ -349,16 +349,6 @@ limitations under the License.
                 <artifactId>learnlib-rpni</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-rpni-edsm</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-rpni-mdl</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <!-- api -->
             <dependency>

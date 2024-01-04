@@ -17,19 +17,18 @@ While certain features have been stripped for improved modularity, development h
 Currently, the following learning algorithms with respective target models are supported:
 
 
-Algorithm (active)  | Target models               || Algorithm (passive) | Models
---- | --- | --- | --- | ---
-AAAR                | `DFA` `Mealy` `Moore`       || OSTIA               | `SST`
-ADT                 | `Mealy`                     || RPNI                | `DFA` `Mealy` `Moore`
-DHC                 | `Mealy`                     || RPNI (EDSM)         | `DFA`
-Kearns & Vazirani   | `DFA` `Mealy`               || RPNI (MDL)          | `DFA`
-L* (incl. variants) | `DFA` `Mealy` `Moore`
-NL*                 | `NFA`
-Observation Pack    | `DFA` `Mealy` `Moore` `VPA`
-OML                 | `DFA` `Mealy`
-Procedural          | `SPA` `SBA` `SPMM`
-TTT                 | `DFA` `Mealy` `Moore` `VPA`
-
+| Algorithm (active)  | Target models               |     | Algorithm (passive)   | Models                |
+|---------------------|-----------------------------|-----|-----------------------|-----------------------|
+| AAAR                | `DFA` `Mealy` `Moore`       |     | OSTIA                 | `SST`                 |
+| ADT                 | `Mealy`                     |     | RPNI (incl. variants) | `DFA` `Mealy` `Moore` |
+| DHC                 | `Mealy`                     |     |                       |                       |
+| Kearns & Vazirani   | `DFA` `Mealy`               |     |                       |                       |
+| L* (incl. variants) | `DFA` `Mealy` `Moore`       |     |                       |                       |
+| NL*                 | `NFA`                       |     |                       |                       |
+| Observation Pack    | `DFA` `Mealy` `Moore` `VPA` |     |                       |                       |
+| OML                 | `DFA` `Mealy`               |     |                       |                       |
+| Procedural          | `SPA` `SBA` `SPMM`          |     |                       |                       |
+| TTT                 | `DFA` `Mealy` `Moore` `VPA` |     |                       |                       |
 
 Additionally, LearnLib offers a variety of tools to ease the practical application of automata learning on real-world systems.
 This includes drivers and mappers for interfacing software systems with the LearnLib API as well as caches and parallelization for improving the overall performance of the learning setup.

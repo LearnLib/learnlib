@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The `de.learnlib.tooling:learnlib-annotation-processor` module has been outsourced to a [standalone project](https://github.com/LearnLib/build-tools). As a result, the `learnlib-build-config` module is now part of the `de.learnlib` group again.
 * The `ReuseOracleBuilder` and `ReuseTreeBuilder` classes are now auto-generated and therefore reside in the respective packages of their previously enclosing classes.
 
+### Removed
+
+* Remove the `de.learnlib:learnlib-rpni-edsm` and `de.learnlib:learnlib-rpni-mdl` artifacts. The code has been merged with the `de.learnlib:learnlib-rpni` artifact.
+
 
 ## [0.17.0] - 2023-11-15
 
