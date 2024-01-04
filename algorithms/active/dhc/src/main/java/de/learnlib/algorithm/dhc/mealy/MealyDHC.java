@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import com.google.common.collect.Sets;
@@ -39,6 +38,7 @@ import de.learnlib.counterexample.GlobalSuffixFinder;
 import de.learnlib.counterexample.GlobalSuffixFinders;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
@@ -49,6 +49,14 @@ import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * The DHC learner.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 public class MealyDHC<I, O> implements MealyLearner<I, O>,
                                        AccessSequenceTransformer<I>,
                                        GlobalSuffixLearnerMealy<I, O>,
@@ -87,7 +95,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
      *         the initial set of splitters, {@code null} or an empty collection will result in the set of splitters
      *         being initialized as the set of alphabet symbols (interpreted as {@link Word}s)
      */
-    @GenerateBuilder(defaults = BuilderDefaults.class, builderFinal = false)
+    @GenerateBuilder(defaults = BuilderDefaults.class)
     public MealyDHC(Alphabet<I> alphabet,
                     MembershipOracle<I, Word<O>> oracle,
                     GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder,

@@ -21,11 +21,6 @@
             <artifactId>learnlib-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>de.learnlib.tooling</groupId>
-            <artifactId>learnlib-annotation-processor</artifactId>
-        </dependency>
-
         <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -40,6 +35,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- build -->
+        <dependency>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotations</artifactId>
         </dependency>
 
         <!-- test -->

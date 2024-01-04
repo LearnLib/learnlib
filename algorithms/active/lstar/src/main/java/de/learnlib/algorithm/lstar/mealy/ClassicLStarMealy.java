@@ -18,7 +18,6 @@ package de.learnlib.algorithm.lstar.mealy;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithm.lstar.AbstractExtensibleAutomatonLStar;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
@@ -27,6 +26,7 @@ import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.CompactTransition;
 import net.automatalib.automaton.concept.SuffixOutput;
@@ -39,9 +39,9 @@ import net.automatalib.word.Word;
  * thesis.
  *
  * @param <I>
- *         input symbol class
+ *         input symbol type
  * @param <O>
- *         output symbol class
+ *         output symbol type
  */
 public class ClassicLStarMealy<I, O>
         extends AbstractExtensibleAutomatonLStar<MealyMachine<?, I, ?, O>, I, O, Integer, CompactTransition<O>, Void, O, CompactMealy<I, O>> {

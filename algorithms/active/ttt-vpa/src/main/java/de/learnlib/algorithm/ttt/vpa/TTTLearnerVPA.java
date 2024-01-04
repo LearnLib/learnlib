@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import com.google.common.collect.Iterables;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithm.observationpack.vpa.OPLearnerVPA;
@@ -39,13 +38,17 @@ import de.learnlib.algorithm.observationpack.vpa.hypothesis.TransList;
 import de.learnlib.datastructure.discriminationtree.SplitData;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.vpa.SEVPA;
 import net.automatalib.automaton.vpa.StackContents;
 import net.automatalib.automaton.vpa.State;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
+ * A {@link SEVPA}-based adoption of the "TTT" algorithm.
+ *
  * @param <I>
  *         input symbol type
  */
@@ -53,7 +56,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
 
     private final BlockList<I> blockList = new BlockList<>();
 
-    @GenerateBuilder
+    @GenerateBuilder(defaults = BuilderDefaults.class)
     public TTTLearnerVPA(VPAlphabet<I> alphabet, DFAMembershipOracle<I> oracle, AcexAnalyzer analyzer) {
         super(alphabet, oracle, analyzer);
     }

@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithm.ttt.moore;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.MooreOutInconsPrefixTransformAcex;
 import de.learnlib.acex.OutInconsPrefixTransformAcex;
@@ -28,6 +27,7 @@ import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.moore.MooreUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MooreMachine;
@@ -35,7 +35,7 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
 /**
- * A {@link MooreMachine}-based specialization of the TTT learner.
+ * A {@link MooreMachine}-based specialization of {@link AbstractTTTLearner}.
  *
  * @param <I>
  *         input symbol type

@@ -18,10 +18,6 @@ package de.learnlib.filter.statistic.oracle;
 import java.util.Arrays;
 import java.util.Collection;
 
-import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
-import de.learnlib.buildtool.refinement.annotation.Generic;
-import de.learnlib.buildtool.refinement.annotation.Interface;
-import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.filter.statistic.Counter;
 import de.learnlib.filter.statistic.CounterCollection;
 import de.learnlib.oracle.MembershipOracle;
@@ -31,6 +27,10 @@ import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.query.Query;
 import de.learnlib.statistic.StatisticData;
 import de.learnlib.statistic.StatisticOracle;
+import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
+import de.learnlib.tooling.annotation.refinement.Generic;
+import de.learnlib.tooling.annotation.refinement.Interface;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.word.Word;
 
 /**
@@ -43,26 +43,30 @@ import net.automatalib.word.Word;
  *         output domain type
  */
 @GenerateRefinement(name = "DFACounterOracle",
-                    generics = "I",
+                    generics = @Generic(value = "I", desc = "input symbol type"),
                     parentGenerics = {@Generic("I"), @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = MembershipOracle.class,
+                    typeMappings = @Mapping(from = MembershipOracle.class,
                                             to = DFAMembershipOracle.class,
-                                            withGenerics = "I"),
-                    interfaces = @Interface(clazz = DFAMembershipOracle.class, generics = "I"))
+                                            generics = @Generic("I")),
+                    interfaces = @Interface(clazz = DFAMembershipOracle.class, generics = @Generic("I")))
 @GenerateRefinement(name = "MealyCounterOracle",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = MembershipOracle.class,
+                    typeMappings = @Mapping(from = MembershipOracle.class,
                                             to = MealyMembershipOracle.class,
-                                            withGenerics = {"I", "O"}),
-                    interfaces = @Interface(clazz = MealyMembershipOracle.class, generics = {"I", "O"}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MealyMembershipOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "MooreCounterOracle",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic("I"), @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = MembershipOracle.class,
+                    typeMappings = @Mapping(from = MembershipOracle.class,
                                             to = MooreMembershipOracle.class,
-                                            withGenerics = {"I", "O"}),
-                    interfaces = @Interface(clazz = MooreMembershipOracle.class, generics = {"I", "O"}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MooreMembershipOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 public class CounterOracle<I, D> implements StatisticOracle<I, D> {
 
     private final MembershipOracle<I, D> delegate;

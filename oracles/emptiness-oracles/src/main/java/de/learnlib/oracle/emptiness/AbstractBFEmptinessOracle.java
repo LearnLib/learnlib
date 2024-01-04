@@ -17,10 +17,6 @@ package de.learnlib.oracle.emptiness;
 
 import java.util.Collection;
 
-import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
-import de.learnlib.buildtool.refinement.annotation.Generic;
-import de.learnlib.buildtool.refinement.annotation.Interface;
-import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.oracle.AutomatonOracle.DFAOracle;
 import de.learnlib.oracle.AutomatonOracle.MealyOracle;
 import de.learnlib.oracle.EmptinessOracle;
@@ -30,6 +26,10 @@ import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
+import de.learnlib.tooling.annotation.refinement.Generic;
+import de.learnlib.tooling.annotation.refinement.Interface;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import de.learnlib.util.AbstractBFOracle;
 import net.automatalib.automaton.concept.DetOutputAutomaton;
 import net.automatalib.automaton.fsa.DFA;
@@ -41,33 +41,35 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * An {@link EmptinessOracle} that tries words in a breadth-first manner.
  *
  * @param <A>
- *         the automaton type
+ *         automaton type
  * @param <I>
- *         the input type
+ *         input symbol type
  * @param <D>
- *         the output type
+ *         output domain type
  */
 @GenerateRefinement(name = "DFABFEmptinessOracle",
-                    generics = "I",
+                    generics = @Generic(value = "I", desc = "input symbol type"),
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = MembershipOracle.class,
+                    typeMappings = @Mapping(from = MembershipOracle.class,
                                             to = DFAMembershipOracle.class,
-                                            withGenerics = "I"),
-                    interfaces = {@Interface(clazz = DFAEmptinessOracle.class, generics = "I"),
-                                  @Interface(clazz = DFAOracle.class, generics = "I")})
+                                            generics = @Generic("I")),
+                    interfaces = {@Interface(clazz = DFAEmptinessOracle.class, generics = @Generic("I")),
+                                  @Interface(clazz = DFAOracle.class, generics = @Generic("I"))})
 @GenerateRefinement(name = "MealyBFEmptinessOracle",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = MembershipOracle.class,
+                    typeMappings = @Mapping(from = MembershipOracle.class,
                                             to = MealyMembershipOracle.class,
-                                            withGenerics = {"I", "O"}),
-                    interfaces = {@Interface(clazz = MealyEmptinessOracle.class, generics = {"I", "O"}),
-                                  @Interface(clazz = MealyOracle.class, generics = {"I", "O"})})
-abstract class AbstractBFEmptinessOracle<A extends DetOutputAutomaton<?, I, ?, D>, I, D>
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    interfaces = {@Interface(clazz = MealyEmptinessOracle.class,
+                                             generics = {@Generic("I"), @Generic("O")}),
+                                  @Interface(clazz = MealyOracle.class, generics = {@Generic("I"), @Generic("O")})})
+public abstract class AbstractBFEmptinessOracle<A extends DetOutputAutomaton<?, I, ?, D>, I, D>
         extends AbstractBFOracle<A, I, D> implements EmptinessOracle<A, I, D> {
 
     protected AbstractBFEmptinessOracle(MembershipOracle<I, D> membershipOracle, double multiplier) {

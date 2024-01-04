@@ -23,6 +23,7 @@ import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseOracle;
+import de.learnlib.filter.reuse.ReuseOracleBuilder;
 import de.learnlib.filter.reuse.tree.ReuseTree;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
@@ -45,8 +46,8 @@ public class LearningTest {
     protected void setUp() {
         sigma = Alphabets.integers(0, 3);
 
-        reuseOracle = new ReuseOracle.ReuseOracleBuilder<>(sigma,
-                                                           new TestOracleFactory()).withFailureOutputs(Collections.singleton(
+        reuseOracle = new ReuseOracleBuilder<>(sigma,
+                                               new TestOracleFactory()).withFailureOutputs(Collections.singleton(
                 "error")).withInvariantInputs(Collections.singleton(0)).build();
     }
 

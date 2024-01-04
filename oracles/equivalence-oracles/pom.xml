@@ -77,7 +77,7 @@ limitations under the License.
         <!-- build -->
         <dependency>
             <groupId>de.learnlib.tooling</groupId>
-            <artifactId>learnlib-annotation-processor</artifactId>
+            <artifactId>annotations</artifactId>
         </dependency>
 
         <!-- test -->

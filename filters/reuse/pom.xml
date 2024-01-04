@@ -48,6 +48,12 @@ limitations under the License.
             <artifactId>checker-qual</artifactId>
         </dependency>
 
+        <!-- build -->
+        <dependency>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotations</artifactId>
+        </dependency>
+
         <!-- test -->
         <dependency>
             <groupId>de.learnlib</groupId>

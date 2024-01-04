@@ -24,11 +24,14 @@ import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import de.learnlib.filter.reuse.BuilderDefaults;
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseException;
 import de.learnlib.filter.reuse.ReuseOracle;
 import de.learnlib.filter.reuse.tree.BoundedDeque.AccessPolicy;
 import de.learnlib.filter.reuse.tree.BoundedDeque.EvictPolicy;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
+import de.learnlib.tooling.annotation.builder.Param;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.graph.Graph;
 import net.automatalib.visualization.VisualizationHelper;
@@ -47,11 +50,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * ReuseTreeBuilder#withInvariantInputs(Set)} is set).
  *
  * @param <S>
- *         system state class
+ *         system state type
  * @param <I>
- *         input symbol class
+ *         input symbol type
  * @param <O>
- *         output symbol class
+ *         output symbol type
  */
 public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I, O>, @Nullable ReuseEdge<S, I, O>> {
 
@@ -64,29 +67,31 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
     private final int maxSystemStates;
     private final AccessPolicy accessPolicy;
     private final EvictPolicy evictPolicy;
-    /** May be reset to zero, see {@link ReuseTree#clearTree()}. */
     private int nodeCount;
-    /** May be reinitialized, see {@link ReuseTree#clearTree()}. */
     private ReuseNode<S, I, O> root;
     private final ReadWriteLock lock;
 
-    ReuseTree(ReuseTreeBuilder<S, I, O> builder) {
-        this.alphabet = builder.alphabet;
-        this.invalidateSystemstates = builder.invalidateSystemstates;
-        SystemStateHandler<S> handler = builder.systemStateHandler;
-        // If the specified handler is null, no action is required
-        if (handler == null) {
-            handler = state -> {};
-        }
-        this.systemStateHandler = handler;
-        this.invariantInputSymbols =
-                (builder.invariantInputSymbols != null) ? builder.invariantInputSymbols : Collections.emptySet();
-        this.failureOutputSymbols =
-                (builder.failureOutputSymbols != null) ? builder.failureOutputSymbols : Collections.emptySet();
+    @GenerateBuilder(defaults = BuilderDefaults.class,
+                     getterPrefix = GenerateBuilder.SUPPRESS,
+                     setterPrefix = GenerateBuilder.SUPPRESS,
+                     createName = "build")
+    public ReuseTree(@Param(requiredOnInstantiation = true) Alphabet<I> alphabet,
+                     boolean enabledSystemStateInvalidation,
+                     SystemStateHandler<S> systemStateHandler,
+                     Set<I> invariantInputs,
+                     Set<O> failureOutputs,
+                     int maxSystemStates,
+                     AccessPolicy accessPolicy,
+                     EvictPolicy evictPolicy) {
+        this.alphabet = alphabet;
+        this.invalidateSystemstates = enabledSystemStateInvalidation;
+        this.systemStateHandler = systemStateHandler;
+        this.invariantInputSymbols = invariantInputs;
+        this.failureOutputSymbols = failureOutputs;
 
-        this.maxSystemStates = builder.maxSystemStates;
-        this.accessPolicy = builder.accessPolicy;
-        this.evictPolicy = builder.evictPolicy;
+        this.maxSystemStates = maxSystemStates;
+        this.accessPolicy = accessPolicy;
+        this.evictPolicy = evictPolicy;
 
         // local and not configurable
         this.alphabetSize = alphabet.size();
@@ -414,66 +419,5 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
     @Override
     public VisualizationHelper<@Nullable ReuseNode<S, I, O>, @Nullable ReuseEdge<S, I, O>> getVisualizationHelper() {
         return new ReuseTreeDotHelper<>();
-    }
-
-    public static class ReuseTreeBuilder<S, I, O> {
-
-        // mandatory
-        private final Alphabet<I> alphabet;
-
-        // optional
-        private boolean invalidateSystemstates = true;
-        private @Nullable SystemStateHandler<S> systemStateHandler;
-        private Set<I> invariantInputSymbols;
-        private Set<O> failureOutputSymbols;
-        private int maxSystemStates = -1;
-        private AccessPolicy accessPolicy = AccessPolicy.LIFO;
-        private EvictPolicy evictPolicy = EvictPolicy.EVICT_OLDEST;
-
-        public ReuseTreeBuilder(Alphabet<I> alphabet) {
-            this.alphabet = alphabet;
-            this.systemStateHandler = null;
-            this.invariantInputSymbols = Collections.emptySet();
-            this.failureOutputSymbols = Collections.emptySet();
-        }
-
-        public ReuseTreeBuilder<S, I, O> withSystemStateHandler(SystemStateHandler<S> systemStateHandler) {
-            this.systemStateHandler = systemStateHandler;
-            return this;
-        }
-
-        public ReuseTreeBuilder<S, I, O> withEnabledSystemstateInvalidation(boolean invalidate) {
-            this.invalidateSystemstates = invalidate;
-            return this;
-        }
-
-        public ReuseTreeBuilder<S, I, O> withInvariantInputs(Set<I> inputs) {
-            this.invariantInputSymbols = inputs;
-            return this;
-        }
-
-        public ReuseTreeBuilder<S, I, O> withFailureOutputs(Set<O> outputs) {
-            this.failureOutputSymbols = outputs;
-            return this;
-        }
-
-        public ReuseTreeBuilder<S, I, O> withMaxSystemStates(int maxSystemStates) {
-            this.maxSystemStates = maxSystemStates;
-            return this;
-        }
-
-        public ReuseTreeBuilder<S, I, O> withAccessPolicy(AccessPolicy accessPolicy) {
-            this.accessPolicy = accessPolicy;
-            return this;
-        }
-
-        public ReuseTreeBuilder<S, I, O> withEvictPolicy(EvictPolicy evictPolicy) {
-            this.evictPolicy = evictPolicy;
-            return this;
-        }
-
-        public ReuseTree<S, I, O> build() {
-            return new ReuseTree<>(this);
-        }
     }
 }

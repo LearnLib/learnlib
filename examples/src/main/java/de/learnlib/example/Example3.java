@@ -25,7 +25,7 @@ import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.example.Example2.BoundedStringQueue;
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseOracle;
-import de.learnlib.filter.reuse.ReuseOracle.ReuseOracleBuilder;
+import de.learnlib.filter.reuse.ReuseOracleBuilder;
 import de.learnlib.filter.reuse.tree.SystemStateHandler;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.query.Query;

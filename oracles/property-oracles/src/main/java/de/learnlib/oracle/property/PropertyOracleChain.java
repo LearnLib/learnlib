@@ -20,14 +20,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
-import de.learnlib.buildtool.refinement.annotation.Generic;
-import de.learnlib.buildtool.refinement.annotation.Interface;
-import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.oracle.PropertyOracle;
 import de.learnlib.oracle.PropertyOracle.DFAPropertyOracle;
 import de.learnlib.oracle.PropertyOracle.MealyPropertyOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
+import de.learnlib.tooling.annotation.refinement.Generic;
+import de.learnlib.tooling.annotation.refinement.Interface;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -43,34 +43,38 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * examples can be found more quickly (as in smaller hypothesis size and less learning queries).
  *
  * @param <I>
- *         the input type.
+ *         input symbol type
  * @param <A>
- *         the automaton type.
+ *         automaton type
  * @param <P>
- *         the property type.
+ *         property type
  * @param <D>
- *         the output type.
+ *         output domain type
  */
 @GenerateRefinement(name = "DFAPropertyOracleChain",
-                    generics = {"I", "P"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "P", desc = "property type")},
                     parentGenerics = {@Generic("I"),
                                       @Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("P"),
                                       @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = PropertyOracle.class,
+                    typeMappings = @Mapping(from = PropertyOracle.class,
                                             to = DFAPropertyOracle.class,
-                                            withGenerics = {"I", "P"}),
-                    interfaces = @Interface(clazz = DFAPropertyOracle.class, generics = {"I", "P"}))
+                                            generics = {@Generic("I"), @Generic("P")}),
+                    interfaces = @Interface(clazz = DFAPropertyOracle.class, generics = {@Generic("I"), @Generic("P")}))
 @GenerateRefinement(name = "MealyPropertyOracleChain",
-                    generics = {"I", "O", "P"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type"),
+                                @Generic(value = "P", desc = "property type")},
                     parentGenerics = {@Generic("I"),
                                       @Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("P"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = PropertyOracle.class,
+                    typeMappings = @Mapping(from = PropertyOracle.class,
                                             to = MealyPropertyOracle.class,
-                                            withGenerics = {"I", "O", "P"}),
-                    interfaces = @Interface(clazz = MealyPropertyOracle.class, generics = {"I", "O", "P"}))
+                                            generics = {@Generic("I"), @Generic("O"), @Generic("P")}),
+                    interfaces = @Interface(clazz = MealyPropertyOracle.class,
+                                            generics = {@Generic("I"), @Generic("O"), @Generic("P")}))
 public class PropertyOracleChain<I, A extends Output<I, D>, @Nullable P, D> implements PropertyOracle<I, A, P, D> {
 
     private P property;

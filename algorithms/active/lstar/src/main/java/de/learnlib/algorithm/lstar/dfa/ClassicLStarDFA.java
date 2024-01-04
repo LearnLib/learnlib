@@ -17,10 +17,10 @@ package de.learnlib.algorithm.lstar.dfa;
 
 import java.util.Collections;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 
@@ -28,7 +28,7 @@ import net.automatalib.word.Word;
  * Implementation of the L* algorithm by Dana Angluin.
  *
  * @param <I>
- *         input symbol class.
+ *         input symbol type.
  */
 public class ClassicLStarDFA<I> extends ExtensibleLStarDFA<I> {
 

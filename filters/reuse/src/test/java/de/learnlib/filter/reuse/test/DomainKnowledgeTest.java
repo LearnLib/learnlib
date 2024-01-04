@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filter.reuse.ReuseOracle;
+import de.learnlib.filter.reuse.ReuseOracleBuilder;
 import de.learnlib.filter.reuse.tree.ReuseNode.NodeResult;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
@@ -41,7 +42,7 @@ public class DomainKnowledgeTest {
         // We don't use this oracle, we directly test against the reuse tree!
         Alphabet<Integer> alphabet = Alphabets.integers(0, 10);
 
-        reuseOracle = new ReuseOracle.ReuseOracleBuilder<>(alphabet, new NullReuseCapableFactory()).withInvariantInputs(
+        reuseOracle = new ReuseOracleBuilder<>(alphabet, new NullReuseCapableFactory()).withInvariantInputs(
                 Collections.singleton(0)).build();
     }
 

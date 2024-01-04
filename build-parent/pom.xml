@@ -37,11 +37,15 @@ limitations under the License.
     <build>
         <pluginManagement>
             <plugins>
-                <!-- If we run coverage analysis, skip generated sources -->
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <configuration>
+                        <!-- Since jacoco's agent instrumentation is a separate step from its report generation, we need
+                             to explicitly exclude generated classes here and cannot rely on things such as a @Generated
+                             annotation. Otherwise, tools such as the coveralls-plugin (which scans the agent's output)
+                             fail on "unknown" classes.
+                         -->
                         <excludes>
                             <!-- generated builders for learning algorithms -->
                             <exclude>**/ADTLearnerBuilder.class</exclude>
@@ -54,6 +58,9 @@ limitations under the License.
                             <exclude>**/OPLearner*Builder.class</exclude>
                             <exclude>**/RivestSchapire*Builder.class</exclude>
                             <exclude>**/TTTLearner*Builder.class</exclude>
+
+                            <!-- generated builders for reuse trees/oracles -->
+                            <exclude>de/learnlib/filter/reuse/**/Reuse*Builder.class</exclude>
 
                             <!-- generated refinements for oracles -->
                             <exclude>de/learnlib/filter/statistic/**/DFA*.class</exclude>
@@ -89,7 +96,7 @@ limitations under the License.
                             </configuration>
                             <dependencies>
                                 <dependency>
-                                    <groupId>de.learnlib.tooling</groupId>
+                                    <groupId>de.learnlib</groupId>
                                     <artifactId>learnlib-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
@@ -105,7 +112,7 @@ limitations under the License.
                             </configuration>
                             <dependencies>
                                 <dependency>
-                                    <groupId>de.learnlib.tooling</groupId>
+                                    <groupId>de.learnlib</groupId>
                                     <artifactId>learnlib-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
@@ -128,7 +135,7 @@ limitations under the License.
                                     <version>${checkstyle.version}</version>
                                 </dependency>
                                 <dependency>
-                                    <groupId>de.learnlib.tooling</groupId>
+                                    <groupId>de.learnlib</groupId>
                                     <artifactId>learnlib-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
