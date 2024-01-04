@@ -24,7 +24,7 @@ import de.learnlib.filter.reuse.tree.ReuseTreeBuilder;
 import de.learnlib.filter.reuse.tree.SystemStateHandler;
 
 /**
- * Builder-Defaults for {@link ReuseTreeBuilder} and {@link ReuseOracleBuilder}.
+ * Default values for {@link ReuseTreeBuilder} and {@link ReuseOracleBuilder}.
  */
 public final class BuilderDefaults {
 
