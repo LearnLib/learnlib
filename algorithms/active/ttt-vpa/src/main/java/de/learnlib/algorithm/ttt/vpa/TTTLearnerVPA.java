@@ -56,7 +56,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
 
     private final BlockList<I> blockList = new BlockList<>();
 
-    @GenerateBuilder(defaults = OPLearnerVPA.BuilderDefaults.class)
+    @GenerateBuilder(defaults = BuilderDefaults.class)
     public TTTLearnerVPA(VPAlphabet<I> alphabet, DFAMembershipOracle<I> oracle, AcexAnalyzer analyzer) {
         super(alphabet, oracle, analyzer);
     }

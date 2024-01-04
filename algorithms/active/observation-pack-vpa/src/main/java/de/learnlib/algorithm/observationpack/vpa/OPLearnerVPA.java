@@ -21,7 +21,6 @@ import java.util.List;
 import com.google.common.collect.Iterables;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.AbstractHypTrans;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.ContextPair;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.DTNode;
@@ -160,16 +159,4 @@ public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
             return oracle.answerQuery(transformAccessSequence(state), suffSuff);
         }
     }
-
-    public static final class BuilderDefaults {
-
-        private BuilderDefaults() {
-            // prevent instantiation
-        }
-
-        public static AcexAnalyzer analyzer() {
-            return AcexAnalyzers.BINARY_SEARCH_BWD;
-        }
-    }
-
 }
