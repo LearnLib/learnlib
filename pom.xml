@@ -230,7 +230,7 @@ limitations under the License.
 
         <!-- dependency versions -->
         <automatalib.version>0.11.0</automatalib.version>
-        <build-tools.version>0.1-SNAPSHOT</build-tools.version>
+        <build-tools.version>0.1</build-tools.version>
         <cacio.version>1.11.1</cacio.version>
         <checkerframework.version>3.40.0</checkerframework.version>
         <checkstyle.version>9.3</checkstyle.version>
@@ -679,20 +679,6 @@ limitations under the License.
 
         </dependencies>
     </dependencyManagement>
-
-    <repositories>
-        <!-- explicitly name maven-central, so it is queried first -->
-        <repository>
-            <id>maven-central</id>
-            <name>Maven Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-    </repositories>
 
     <!--
     ================================= BUILD PLUGINS =============================
