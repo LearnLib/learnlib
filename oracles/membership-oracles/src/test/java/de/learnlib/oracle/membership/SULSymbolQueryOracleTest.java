@@ -18,8 +18,8 @@ package de.learnlib.oracle.membership;
 import java.util.Random;
 
 import de.learnlib.driver.simulator.MealySimulatorSUL;
-import de.learnlib.example.mealy.ExampleRandomMealy;
 import de.learnlib.sul.SUL;
+import de.learnlib.testsupport.example.mealy.ExampleRandomMealy;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.word.Word;

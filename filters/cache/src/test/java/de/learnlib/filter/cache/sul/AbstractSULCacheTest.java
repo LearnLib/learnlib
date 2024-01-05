@@ -22,6 +22,7 @@ import de.learnlib.filter.cache.SULLearningCacheOracle;
 import de.learnlib.filter.statistic.sul.ResetCounterSUL;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
@@ -69,7 +70,17 @@ public abstract class AbstractSULCacheTest
 
     @Override
     protected Alphabet<Character> getAlphabet() {
-        return CacheTestUtils.INPUT_ALPHABET;
+        return new GrowingMapAlphabet<>(CacheTestUtils.INPUT_ALPHABET);
+    }
+
+    @Override
+    protected Alphabet<Character> getExtensionAlphabet() {
+        return CacheTestUtils.EXTENSION_ALPHABET;
+    }
+
+    @Override
+    protected boolean supportsGrowing() {
+        return true;
     }
 
     protected abstract SULCache<Character, Integer> getCache(SUL<Character, Integer> delegate);

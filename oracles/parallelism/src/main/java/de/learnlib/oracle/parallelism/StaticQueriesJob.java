@@ -17,6 +17,8 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
 
+import de.learnlib.oracle.BatchProcessor;
+
 /**
  * A queries job that maintains a fixed reference to a {@link BatchProcessor}, executes queries using this oracle
  * regardless of the executing thread.

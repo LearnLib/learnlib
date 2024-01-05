@@ -39,7 +39,7 @@ public enum LearnLibProperty {
      * <p>
      * Pool policy for threads of parallel oracles.
      * <p>
-     * See de.learnlib.oracle.parallelism.ParallelOracle#PoolPolicy
+     * See de.learnlib.oracle.ParallelOracle#PoolPolicy
      */
     PARALLEL_POOL_POLICY("parallel.pool_policy"),
 

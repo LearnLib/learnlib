@@ -21,6 +21,7 @@ import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.CounterSymbolQueryOracle;
 import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
@@ -36,7 +37,7 @@ public class SymbolQueryCacheTest
 
     @Override
     protected Alphabet<Character> getAlphabet() {
-        return CacheTestUtils.INPUT_ALPHABET;
+        return new GrowingMapAlphabet<>(CacheTestUtils.INPUT_ALPHABET);
     }
 
     @Override
@@ -68,6 +69,16 @@ public class SymbolQueryCacheTest
 
     @Override
     protected boolean supportsPrefixes() {
+        return true;
+    }
+
+    @Override
+    protected Alphabet<Character> getExtensionAlphabet() {
+        return CacheTestUtils.EXTENSION_ALPHABET;
+    }
+
+    @Override
+    protected boolean supportsGrowing() {
         return true;
     }
 }

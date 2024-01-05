@@ -20,7 +20,6 @@ import java.util.Collections;
 
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.oracle.parallelism.BatchProcessor;
 import de.learnlib.query.OmegaQuery;
 import de.learnlib.sul.ObservableSUL;
 import net.automatalib.common.util.Pair;

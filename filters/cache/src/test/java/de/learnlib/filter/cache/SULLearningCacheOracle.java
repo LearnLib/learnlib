@@ -26,11 +26,12 @@ import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
 import de.learnlib.query.Query;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
-public class SULLearningCacheOracle<I, O, C extends MealyLearningCache<I, O> & Resumable<?>>
-        implements MealyLearningCacheOracle<I, O> {
+public class SULLearningCacheOracle<I, O, C extends MealyLearningCache<I, O> & SupportsGrowingAlphabet<I> & Resumable<?>>
+        implements MealyLearningCacheOracle<I, O>, SupportsGrowingAlphabet<I> {
 
     private final C cache;
     private final MealyMembershipOracle<I, O> oracle;
@@ -66,5 +67,10 @@ public class SULLearningCacheOracle<I, O, C extends MealyLearningCache<I, O> & R
             StateLocalInputSULCache<I, O> cache,
             O undefinedInput) {
         return new SULLearningCacheOracle<>(cache, new StateLocalInputSULOracle<>(cache, undefinedInput));
+    }
+
+    @Override
+    public void addAlphabetSymbol(I symbol) {
+        cache.addAlphabetSymbol(symbol);
     }
 }

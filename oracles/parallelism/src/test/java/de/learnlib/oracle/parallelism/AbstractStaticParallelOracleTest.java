@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
+import de.learnlib.oracle.ThreadPool.PoolPolicy;
 import de.learnlib.oracle.parallelism.Utils.Analysis;
 import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
 import de.learnlib.query.DefaultQuery;

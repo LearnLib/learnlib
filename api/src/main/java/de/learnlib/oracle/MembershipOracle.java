@@ -18,7 +18,6 @@ package de.learnlib.oracle;
 import java.util.Collection;
 import java.util.Collections;
 
-import de.learnlib.oracle.parallelism.BatchProcessor;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.query.Query;
 import net.automatalib.automaton.fsa.DFA;

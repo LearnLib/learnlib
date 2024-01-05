@@ -20,14 +20,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.example.mealy.ExampleCoffeeMachine;
-import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
-import de.learnlib.example.mealy.ExampleGrid;
-import de.learnlib.example.mealy.ExampleStack;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine.Input;
+import de.learnlib.testsupport.example.mealy.ExampleGrid;
+import de.learnlib.testsupport.example.mealy.ExampleStack;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;

@@ -20,10 +20,10 @@ import java.io.StringWriter;
 
 import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealy;
 import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealyBuilder;
-import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.sul.SUL;
 import de.learnlib.testsupport.AbstractVisualizationTest;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine.Input;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.serialization.dot.GraphDOT;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;

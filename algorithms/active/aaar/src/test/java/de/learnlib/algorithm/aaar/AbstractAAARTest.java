@@ -20,10 +20,10 @@ import java.util.HashSet;
 
 import com.google.common.collect.Lists;
 import de.learnlib.algorithm.LearningAlgorithm;
-import de.learnlib.example.LearningExample;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.SampleSetEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
+import de.learnlib.testsupport.example.LearningExample;
 import de.learnlib.util.Experiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;

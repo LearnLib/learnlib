@@ -27,7 +27,7 @@ import de.learnlib.filter.cache.sul.ThreadSafeSULCaches;
 import de.learnlib.filter.statistic.sul.ResetCounterSUL;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.oracle.parallelism.ParallelOracle;
+import de.learnlib.oracle.ParallelOracle;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.sul.SUL;

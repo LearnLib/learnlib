@@ -34,7 +34,7 @@ public final class LearnLibSettings {
     private final Properties properties;
 
     private LearnLibSettings() {
-        properties = SettingsSource.readSettings(LearnLibSettingsSource.class);
+        properties = SettingsSource.readSettings(SettingsSource.class);
     }
 
     public static LearnLibSettings getInstance() {

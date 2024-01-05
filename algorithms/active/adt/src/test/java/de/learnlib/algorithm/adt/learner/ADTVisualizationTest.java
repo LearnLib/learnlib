@@ -18,10 +18,10 @@ package de.learnlib.algorithm.adt.learner;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import de.learnlib.sul.SUL;
 import de.learnlib.testsupport.AbstractVisualizationTest;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine.Input;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.serialization.dot.GraphDOT;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;

@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.OmegaMembershipOracle;
+import de.learnlib.oracle.ParallelOmegaOracle;
 import de.learnlib.query.OmegaQuery;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.index.qual.NonNegative;

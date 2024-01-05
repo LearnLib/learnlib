@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
 import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.ParallelOracle;
 import de.learnlib.query.Query;
 import org.checkerframework.checker.index.qual.NonNegative;
 

@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.learnlib.example.DefaultPassiveLearningExample.DefaultMoorePassiveLearningExample;
-import de.learnlib.example.LearningExample.MooreLearningExample;
-import de.learnlib.example.LearningExamples;
-import de.learnlib.example.PassiveLearningExample.MoorePassiveLearningExample;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.DefaultPassiveLearningExample.DefaultMoorePassiveLearningExample;
+import de.learnlib.testsupport.example.LearningExample.MooreLearningExample;
+import de.learnlib.testsupport.example.LearningExamples;
+import de.learnlib.testsupport.example.PassiveLearningExample.MoorePassiveLearningExample;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantListImpl.MooreLearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MooreMachine;

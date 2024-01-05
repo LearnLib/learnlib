@@ -36,8 +36,7 @@ import net.automatalib.word.Word;
  * A {@link DFALearningCacheOracle} that uses a {@link Map} for internal cache organization.
  * <p>
  * <b>Note:</b> this implementation is <b>not</b> thread-safe. If you require a cache that is usable in a parallel
- * environment. consider using the alternatives offered by the {@code ThreadSafeDFACaches} factory from the {@code
- * learnlib-parallelism} artifact.
+ * environment. consider using the alternatives offered by the {@link ThreadSafeDFACaches} factory.
  *
  * @param <I>
  *         input symbol type

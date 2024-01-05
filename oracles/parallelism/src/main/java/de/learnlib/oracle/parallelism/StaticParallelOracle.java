@@ -18,6 +18,7 @@ package de.learnlib.oracle.parallelism;
 import java.util.Collection;
 
 import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.ParallelOracle;
 import de.learnlib.query.Query;
 import org.checkerframework.checker.index.qual.NonNegative;
 

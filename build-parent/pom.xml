@@ -109,6 +109,7 @@ limitations under the License.
                                 <rulesets>
                                     <ruleset>/learnlib-pmd-ruleset.xml</ruleset>
                                 </rulesets>
+                                <excludes>**/module-info.java</excludes>
                             </configuration>
                             <dependencies>
                                 <dependency>
@@ -127,6 +128,7 @@ limitations under the License.
                                 <suppressionsLocation>/learnlib-checkstyle-suppressions.xml</suppressionsLocation>
                                 <includeTestSourceDirectory>true</includeTestSourceDirectory>
                                 <linkXRef>false</linkXRef>
+                                <excludes>**/module-info.java</excludes>
                             </configuration>
                             <dependencies>
                                 <dependency>

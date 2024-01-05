@@ -69,6 +69,10 @@ limitations under the License.
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learning-examples</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-test-support</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>net.automatalib</groupId>

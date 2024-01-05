@@ -19,11 +19,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.learnlib.driver.simulator.ObservableMealySimulatorSUL;
-import de.learnlib.example.mealy.ExampleCoffeeMachine;
-import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
 import de.learnlib.query.OmegaQuery;
 import de.learnlib.sul.ObservableSUL;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine.Input;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.word.Word;
 import org.mockito.Mockito;

@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
+import de.learnlib.oracle.ParallelOracle;
+import de.learnlib.oracle.ThreadPool.PoolPolicy;
 import de.learnlib.query.Query;
 import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.word.Word;

@@ -21,6 +21,7 @@ import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 
 public abstract class AbstractDFACacheTest
@@ -66,7 +67,17 @@ public abstract class AbstractDFACacheTest
 
     @Override
     protected Alphabet<Character> getAlphabet() {
-        return CacheTestUtils.INPUT_ALPHABET;
+        return new GrowingMapAlphabet<>(CacheTestUtils.INPUT_ALPHABET);
+    }
+
+    @Override
+    protected Alphabet<Character> getExtensionAlphabet() {
+        return CacheTestUtils.EXTENSION_ALPHABET;
+    }
+
+    @Override
+    protected boolean supportsGrowing() {
+        return true;
     }
 
     protected abstract DFACacheOracle<Character> getCache(DFAMembershipOracle<Character> delegate);

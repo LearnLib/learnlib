@@ -19,8 +19,8 @@ package de.learnlib.oracle.membership;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.example.dfa.ExamplePaulAndMary;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.dfa.ExamplePaulAndMary;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;
 import org.testng.Assert;

@@ -23,7 +23,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.OmegaMembershipOracle;
-import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
+import de.learnlib.oracle.ParallelOmegaOracle;
+import de.learnlib.oracle.ThreadPool.PoolPolicy;
 import de.learnlib.query.OmegaQuery;
 import de.learnlib.sul.ObservableSUL;
 import net.automatalib.word.Word;

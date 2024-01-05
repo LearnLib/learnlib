@@ -18,9 +18,9 @@ package de.learnlib.testsupport.it.learner;
 import java.util.Collection;
 
 import de.learnlib.algorithm.PassiveLearningAlgorithm;
-import de.learnlib.example.PassiveLearningExample;
 import de.learnlib.logging.Category;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.PassiveLearningExample;
 import net.automatalib.automaton.concept.SuffixOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

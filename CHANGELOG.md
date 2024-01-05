@@ -6,8 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.17.0...HEAD)
 
+### Added
+
+* LearnLib now supports JPMS modules. All artifacts now provide a `module-info` descriptor except of the distribution artifacts (for Maven-less environments) which only provide an `Automatic-Module-Name` due to non-modular dependencies. Note that while this is a Java 9+ feature, AutomataLib still supports Java 8 byte code for the remaining class files.
+
 ### Changed
 
+* The JPMS support introduces several changes:
+  * You now require at least a JDK 11 to build AutomataLib.
+  * We use modules to better structure the aggregated JavaDoc. Since there exist breaking changes between Java 8 and Java 9 regarding documentation (see package-list vs. element-list), you can no longer link against the AutomataLib documentation on JDK 8 builds.
+  * Split packages had to be refactored.
+    * The `de.learnlib.oracle.parallelism` interfaces in the `learnlib-api` artifact have been moved to the `de.learnlib.oracle` package.
+    * The `ThreadSafe` caches have been moved from the `learnlib-parallelism` artifact to the `learnlib-cache` artifact.
+    * The `GrowingAlphabet` and `Resumable` tests from the `learnlib-learner-it-support` artifact been moved to the `learnlib-test-support` artifact.
+    * The classes in the `learnlib-learning-examples` artifact have their package renamed to `de.learnlib.testsupport.example`.
 * With the removal of the `learnlib-annotation-processor` artifact (see below), the `learnlib-build-config` artifact is now part of the `de.learnlib` group again.
 * The `ReuseOracleBuilder` and `ReuseTreeBuilder` classes are now auto-generated and therefore reside in the respective packages of their previously enclosing classes.
 
