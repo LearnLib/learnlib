@@ -822,7 +822,9 @@ limitations under the License.
                         <linksource>false</linksource>
                         <links>
                             <link>${guava.apidocs}</link>
-                            <link>${automatalib.apidocs}</link>
+                            <!-- TODO -->
+                            <!-- JDK 17+ seems to fail on missing (SNAPSHOT) docs. reactivate before release -->
+                            <!--link>${automatalib.apidocs}</link-->
                         </links>
                     </configuration>
                 </plugin>
