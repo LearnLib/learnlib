@@ -53,5 +53,4 @@ open module de.learnlib.algorithm.lstar {
     exports de.learnlib.algorithm.lstar.moore;
     exports de.learnlib.algorithm.malerpnueli;
     exports de.learnlib.algorithm.rivestschapire;
-
 }

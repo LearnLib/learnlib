@@ -15,6 +15,8 @@
  */
 package de.learnlib.setting;
 
+import de.learnlib.oracle.ThreadPool.PoolPolicy;
+
 /**
  * An enum of all the system properties currently used by LearnLib.
  */
@@ -38,8 +40,8 @@ public enum LearnLibProperty {
      * {@code learnlib.parallel.pool_policy}.
      * <p>
      * Pool policy for threads of parallel oracles.
-     * <p>
-     * See de.learnlib.oracle.ParallelOracle#PoolPolicy
+     *
+     * @see PoolPolicy
      */
     PARALLEL_POOL_POLICY("parallel.pool_policy"),
 

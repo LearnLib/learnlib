@@ -13,8 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 
 * The JPMS support introduces several changes:
-  * You now require at least a JDK 11 to build AutomataLib.
-  * We use modules to better structure the aggregated JavaDoc. Since there exist breaking changes between Java 8 and Java 9 regarding documentation (see package-list vs. element-list), you can no longer link against the AutomataLib documentation on JDK 8 builds.
+  * You now require at least a JDK 11 to build LearnLib.
+  * We use modules to better structure the aggregated JavaDoc. Since there exist breaking changes between Java 8 and Java 9 regarding documentation (see package-list vs. element-list), you can no longer link against the LearnLib documentation on JDK 8 builds.
   * Split packages had to be refactored.
     * The `de.learnlib.oracle.parallelism` interfaces in the `learnlib-api` artifact have been moved to the `de.learnlib.oracle` package.
     * The `ThreadSafe` caches have been moved from the `learnlib-parallelism` artifact to the `learnlib-cache` artifact.
@@ -26,7 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Removed
 
 * The `de.learnlib.tooling:learnlib-annotation-processor` artifact has been dropped. The functionality has been moved to a [standalone project](https://github.com/LearnLib/build-tools).
-* The the `de.learnlib:learnlib-rpni-edsm` and `de.learnlib:learnlib-rpni-mdl` artifacts have been dropped. The code has been merged with the `de.learnlib:learnlib-rpni` artifact.
+* The `de.learnlib:learnlib-rpni-edsm` and `de.learnlib:learnlib-rpni-mdl` artifacts have been dropped. The code has been merged with the `de.learnlib:learnlib-rpni` artifact.
 
 
 ## [0.17.0] - 2023-11-15

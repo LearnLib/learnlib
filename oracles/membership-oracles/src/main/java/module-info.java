@@ -37,5 +37,4 @@ open module de.learnlib.oracle.membership {
     requires static de.learnlib.tooling.annotation;
 
     exports de.learnlib.oracle.membership;
-
 }
