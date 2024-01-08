@@ -18,11 +18,11 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.example.LearningExample.DFALearningExample;
-import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
+import de.learnlib.testsupport.example.LearningExample.DFALearningExample;
+import de.learnlib.testsupport.example.LearningExamples;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.DFALearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;

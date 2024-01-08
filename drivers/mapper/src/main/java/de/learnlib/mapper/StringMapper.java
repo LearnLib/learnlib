@@ -20,7 +20,7 @@ import java.util.Map;
 
 import de.learnlib.sul.SULMapper;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.GrowingMapAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 
 public class StringMapper<CI> implements SULMapper<String, String, CI, Object> {
 

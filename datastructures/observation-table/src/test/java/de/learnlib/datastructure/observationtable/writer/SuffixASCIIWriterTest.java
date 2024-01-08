@@ -20,7 +20,7 @@ import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.ObservationTableSource;
 import de.learnlib.datastructure.observationtable.reader.SuffixASCIIReader;
 import net.automatalib.alphabet.GrowingAlphabet;
-import net.automatalib.alphabet.GrowingMapAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -209,7 +209,7 @@ limitations under the License.
         <assembly-plugin.version>3.6.0</assembly-plugin.version>
         <checkstyle-plugin.version>3.3.0</checkstyle-plugin.version>
         <clean-plugin.version>3.3.2</clean-plugin.version>
-        <compiler-plugin.version>3.10.1</compiler-plugin.version>
+        <compiler-plugin.version>3.11.0</compiler-plugin.version>
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
         <dependency-plugin.version>3.6.0</dependency-plugin.version>
         <deploy-plugin.version>3.1.1</deploy-plugin.version>
@@ -229,11 +229,11 @@ limitations under the License.
         <site-plugin.version>3.12.1</site-plugin.version>
         <source-plugin.version>3.3.0</source-plugin.version>
         <spotbugs-plugin.version>4.7.3.6</spotbugs-plugin.version>
-        <surefire-plugin.version>3.1.2</surefire-plugin.version>
+        <surefire-plugin.version>3.2.2</surefire-plugin.version>
         <tidy-pom.version>1.2.0</tidy-pom.version>
 
         <!-- dependency versions -->
-        <automatalib.version>0.11.0</automatalib.version>
+        <automatalib.version>0.12.0-SNAPSHOT</automatalib.version>
         <build-tools.version>0.1</build-tools.version>
         <cacio.version>1.11.1</cacio.version>
         <checkerframework.version>3.40.0</checkerframework.version>
@@ -241,16 +241,14 @@ limitations under the License.
         <guava.version>32.1.2-jre</guava.version>
         <javapoet.version>1.13.0</javapoet.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
-        <jmockit.version>1.49</jmockit.version>
         <logback.version>1.3.12</logback.version>
-        <metainf-services.version>1.8</metainf-services.version>
+        <metainf-services.version>1.11</metainf-services.version>
         <mockito.version>5.6.0</mockito.version>
         <slf4j.version>2.0.9</slf4j.version>
         <testng.version>7.5.1</testng.version>
         <xstream.version>1.4.20</xstream.version>
 
         <!-- Javadoc links -->
-        <java.apidocs>http://docs.oracle.com/javase/8/docs/api/</java.apidocs>
         <automatalib.apidocs>http://learnlib.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
         <checkerframework.apidocs>https://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
         <guava.apidocs>http://google.github.io/guava/releases/${guava.version}/api/docs/</guava.apidocs>
@@ -590,14 +588,6 @@ limitations under the License.
                 <scope>test</scope>
             </dependency>
 
-            <!-- JMockit -->
-            <dependency>
-                <groupId>org.jmockit</groupId>
-                <artifactId>jmockit</artifactId>
-                <version>${jmockit.version}</version>
-                <scope>test</scope>
-            </dependency>
-
             <!-- Caciocavallo -->
             <dependency>
                 <groupId>com.github.caciocavallosilano</groupId>
@@ -822,9 +812,10 @@ limitations under the License.
                         <detectLinks>true</detectLinks>
                         <linksource>false</linksource>
                         <links>
-                            <link>${java.apidocs}</link>
                             <link>${guava.apidocs}</link>
-                            <link>${automatalib.apidocs}</link>
+                            <!-- TODO -->
+                            <!-- JDK 17+ seems to fail on missing (SNAPSHOT) docs. reactivate before release -->
+                            <!--link>${automatalib.apidocs}</link-->
                         </links>
                     </configuration>
                 </plugin>
@@ -898,6 +889,37 @@ limitations under the License.
                             </path>
                         </annotationProcessorPaths>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>default-compile</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <configuration>
+                                <!-- compile everything in module-aware mode to check for errors -->
+                                <release>9</release>
+                                <createMissingPackageInfoClass>false</createMissingPackageInfoClass>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>java-8-compile</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <configuration>
+                                <!-- recompile generated sources as well -->
+                                <compileSourceRoots>
+                                    <compileSourceRoot>${project.build.sourceDirectory}</compileSourceRoot>
+                                    <compileSourceRoot>${project.build.directory}/generated-sources</compileSourceRoot>
+                                </compileSourceRoots>
+                                <proc>none</proc>
+                                <!-- re-compile everything for target VM except the module-info.java -->
+                                <excludes>
+                                    <exclude>module-info.java</exclude>
+                                </excludes>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -960,12 +982,13 @@ limitations under the License.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <release>11</release>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <id>non-aggregate</id>
-                        <reports>
-                            <report>javadoc</report>
-                        </reports>
+                        <reports/>
                     </reportSet>
                     <reportSet>
                         <id>aggregate</id>

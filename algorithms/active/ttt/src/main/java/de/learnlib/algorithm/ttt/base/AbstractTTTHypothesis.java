@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.automaton.FiniteAlphabetAutomaton;
 import net.automatalib.automaton.fsa.DFA;

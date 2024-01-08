@@ -19,19 +19,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
-import de.learnlib.example.LearningExample.MealyLearningExample;
-import de.learnlib.example.LearningExample.StateLocalInputMealyLearningExample;
-import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import de.learnlib.oracle.equivalence.mealy.StateLocalInputMealySimulatorEQOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
+import de.learnlib.testsupport.example.LearningExample.MealyLearningExample;
+import de.learnlib.testsupport.example.LearningExample.StateLocalInputMealyLearningExample;
+import de.learnlib.testsupport.example.LearningExamples;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MealyLearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
 import net.automatalib.util.automaton.transducer.MealyFilter;
@@ -85,7 +84,7 @@ public abstract class AbstractMealyLearnerIT {
         final O undefinedOutput = example.getUndefinedOutput();
 
         // make sure, our oracle actually receives a partial mealy
-        final CompactMealy<I, O> partialRef =
+        final StateLocalInputMealyMachine<?, I, ?, O> partialRef =
                 MealyFilter.pruneTransitionsWithOutput(reference, alphabet, undefinedOutput);
 
         final MealyMembershipOracle<I, O> mqOracle =

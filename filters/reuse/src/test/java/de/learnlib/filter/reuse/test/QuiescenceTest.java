@@ -23,7 +23,7 @@ import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseOracle;
 import de.learnlib.filter.reuse.ReuseOracleBuilder;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.testng.annotations.BeforeClass;

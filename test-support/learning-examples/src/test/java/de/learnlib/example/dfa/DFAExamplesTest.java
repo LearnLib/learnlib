@@ -15,6 +15,7 @@
  */
 package de.learnlib.example.dfa;
 
+import de.learnlib.testsupport.example.dfa.DFABenchmarks;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

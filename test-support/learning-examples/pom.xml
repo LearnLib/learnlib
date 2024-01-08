@@ -29,7 +29,7 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <name>LearnLib :: Test Support :: Learning Examples</name>
-    <description>Example learning setups, to be used for integration testing</description>
+    <description>Example learning setups to be used for integration testing</description>
 
     <dependencies>
         <!-- internal -->

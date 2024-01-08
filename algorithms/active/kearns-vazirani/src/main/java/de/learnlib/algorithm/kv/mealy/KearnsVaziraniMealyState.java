@@ -19,7 +19,7 @@ import java.util.List;
 
 import de.learnlib.algorithm.kv.StateInfo;
 import de.learnlib.datastructure.discriminationtree.MultiDTree;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.word.Word;
 
 /**

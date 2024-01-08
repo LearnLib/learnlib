@@ -15,7 +15,6 @@
  */
 package de.learnlib.datastructure.pta;
 
-import java.awt.Color;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;

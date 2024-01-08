@@ -17,7 +17,6 @@ package de.learnlib.oracle.property;
 
 import java.util.function.Function;
 
-import de.learnlib.example.mealy.ExampleTinyMealy;
 import de.learnlib.oracle.EmptinessOracle.MealyEmptinessOracle;
 import de.learnlib.oracle.InclusionOracle.MealyInclusionOracle;
 import de.learnlib.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
@@ -30,10 +29,11 @@ import de.learnlib.oracle.equivalence.MealyBFInclusionOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.mealy.ExampleTinyMealy;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
 import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLIOBuilder;

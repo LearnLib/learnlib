@@ -15,6 +15,6 @@
  */
 
 /**
- * This package (including sub-packages) contains the basic interfaces and classes of learning algorithms of LearnLib.
+ * This package contains the basic interfaces and classes of learning algorithms of LearnLib.
  */
 package de.learnlib.algorithm;

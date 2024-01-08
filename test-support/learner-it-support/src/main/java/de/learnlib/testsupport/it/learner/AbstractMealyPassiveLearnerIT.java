@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.learnlib.example.DefaultPassiveLearningExample.DefaultMealyPassiveLearningExample;
-import de.learnlib.example.LearningExample.MealyLearningExample;
-import de.learnlib.example.LearningExamples;
-import de.learnlib.example.PassiveLearningExample.MealyPassiveLearningExample;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.DefaultPassiveLearningExample.DefaultMealyPassiveLearningExample;
+import de.learnlib.testsupport.example.LearningExample.MealyLearningExample;
+import de.learnlib.testsupport.example.LearningExamples;
+import de.learnlib.testsupport.example.PassiveLearningExample.MealyPassiveLearningExample;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantListImpl.MealyLearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;

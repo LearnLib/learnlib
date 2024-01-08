@@ -17,7 +17,7 @@ package de.learnlib.filter.cache;
 
 import java.util.Comparator;
 
-import net.automatalib.alphabet.GrowingMapAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 
 public final class DynamicSymbolComparator<I> implements Comparator<I> {
 

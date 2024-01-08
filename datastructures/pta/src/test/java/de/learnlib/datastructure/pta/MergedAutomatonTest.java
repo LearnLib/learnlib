@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.word.Word;
 import org.testng.Assert;

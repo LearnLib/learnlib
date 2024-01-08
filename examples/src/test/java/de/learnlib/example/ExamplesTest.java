@@ -16,25 +16,22 @@
 package de.learnlib.example;
 
 import java.awt.AWTEvent;
+import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.function.Function;
 
 import javax.swing.SwingUtilities;
 
-import de.learnlib.datastructure.observationtable.OTUtils;
-import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.example.aaar.AlternatingBitExampleExplicit;
 import de.learnlib.example.aaar.AlternatingBitExampleGeneric;
-import mockit.Mock;
-import mockit.MockUp;
 import net.automatalib.common.util.system.JVMUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
-import net.automatalib.word.Word;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -142,20 +139,16 @@ public class ExamplesTest {
     public void testExample1() throws Exception {
         requireJVMCompatibility();
 
-        // Mock OTUtils class, so we don't actually open a browser during the test
-        new MockUp<OTUtils>() {
-
-            @Mock
-            public <I, D> void displayHTMLInBrowser(ObservationTable<I, D> table,
-                                                    Function<? super Word<? extends I>, ? extends String> wordToString,
-                                                    Function<? super D, ? extends String> outputToString) {
-                // do nothing
-            }
-        };
-
         SwingUtilities.invokeAndWait(() -> {
             try {
-                Example1.main(new String[0]);
+                final Desktop mock = Mockito.mock(Desktop.class);
+                Mockito.doNothing().when(mock).browse(Mockito.any());
+
+                try (MockedStatic<Desktop> desktop = Mockito.mockStatic(Desktop.class)) {
+                    desktop.when(Desktop::getDesktop).thenReturn(mock);
+
+                    Example1.main(new String[0]);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -179,7 +172,6 @@ public class ExamplesTest {
         requireJVMCompatibility();
         SwingUtilities.invokeAndWait(() -> Example3.main(new String[0]));
     }
-
 
     private static boolean isJVMCompatible() {
         return JVMUtil.getCanonicalSpecVersion() == 11;

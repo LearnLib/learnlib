@@ -28,7 +28,7 @@ limitations under the License.
     <artifactId>learnlib-drivers-basic</artifactId>
 
     <name>LearnLib :: Drivers :: Basic</name>
-    <description>Basic Test Driver Generation Support</description>
+    <description>Basic support for test driver creation</description>
 
     <dependencies>
         <!-- internal -->

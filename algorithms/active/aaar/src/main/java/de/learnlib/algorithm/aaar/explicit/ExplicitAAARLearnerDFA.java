@@ -23,8 +23,8 @@ import de.learnlib.algorithm.aaar.ExplicitInitialAbstraction;
 import de.learnlib.algorithm.aaar.TranslatingDFA;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
 
 /**
  * A {@link DFA}-specific refinement of {@link AbstractExplicitAAARLearner}.

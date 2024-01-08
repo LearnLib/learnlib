@@ -17,8 +17,8 @@ package de.learnlib.algorithm.aaar.explicit;
 
 import de.learnlib.algorithm.aaar.AAARTestUtil;
 import de.learnlib.algorithm.aaar.AbstractAAARTest;
-import de.learnlib.example.dfa.ExamplePaulAndMary;
 import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.testsupport.example.dfa.ExamplePaulAndMary;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 

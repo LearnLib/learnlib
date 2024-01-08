@@ -23,8 +23,8 @@ import de.learnlib.algorithm.aaar.ExplicitInitialAbstraction;
 import de.learnlib.algorithm.aaar.TranslatingMealyMachine;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.word.Word;
 
 /**

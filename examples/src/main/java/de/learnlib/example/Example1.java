@@ -15,6 +15,7 @@
  */
 package de.learnlib.example;
 
+import java.awt.Desktop;
 import java.io.IOException;
 
 import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFA;
@@ -28,9 +29,9 @@ import de.learnlib.oracle.membership.DFASimulatorOracle;
 import de.learnlib.util.Experiment.DFAExperiment;
 import de.learnlib.util.statistic.SimpleProfiler;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.visualization.Visualization;
@@ -116,7 +117,7 @@ public final class Example1 {
         System.out.println("Final observation table:");
         new ObservationTableASCIIWriter<>().write(lstar.getObservationTable(), System.out);
 
-        OTUtils.displayHTMLInBrowser(lstar.getObservationTable());
+        Desktop.getDesktop().browse(OTUtils.writeHTMLToFile(lstar.getObservationTable()).toURI());
     }
 
     /**

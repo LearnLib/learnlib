@@ -15,8 +15,8 @@
  */
 package de.learnlib.testsupport.it.learner;
 
-import de.learnlib.example.LearningExample.SBALearningExample;
 import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.testsupport.example.LearningExample.SBALearningExample;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.util.automaton.procedural.SBAs;
 import net.automatalib.word.Word;

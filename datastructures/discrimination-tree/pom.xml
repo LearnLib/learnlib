@@ -28,7 +28,7 @@ limitations under the License.
     <artifactId>learnlib-datastructure-dt</artifactId>
 
     <name>LearnLib :: Datastructures :: Discrimination Tree</name>
-    <description>Data- and utility classes for Discrimination Trees</description>
+    <description>Data and utility classes for discrimination trees</description>
 
     <dependencies>
         <!-- internal -->

@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Streams;
 import de.learnlib.oracle.membership.SimulatorOracle;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.util.automaton.conformance.SPATestsIterator;
 import net.automatalib.util.automaton.conformance.WMethodTestsIterator;

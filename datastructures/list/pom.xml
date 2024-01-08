@@ -28,7 +28,7 @@ limitations under the License.
     <artifactId>learnlib-datastructure-list</artifactId>
 
     <name>LearnLib :: Datastructures :: List</name>
-    <description>Data- and utility classes for Lists</description>
+    <description>Data and utility classes for lists</description>
 
     <dependencies>
         <!-- external -->

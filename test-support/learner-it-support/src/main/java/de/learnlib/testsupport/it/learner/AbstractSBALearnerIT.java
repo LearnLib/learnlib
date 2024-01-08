@@ -18,11 +18,11 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.example.LearningExample.SBALearningExample;
-import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.sba.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SBASimulatorOracle;
+import de.learnlib.testsupport.example.LearningExample.SBALearningExample;
+import de.learnlib.testsupport.example.LearningExamples;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.SBALearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SBALearnerVariantListImpl;
 import net.automatalib.alphabet.ProceduralInputAlphabet;

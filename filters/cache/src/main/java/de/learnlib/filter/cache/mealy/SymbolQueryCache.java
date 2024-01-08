@@ -27,8 +27,9 @@ import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.SymbolQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -46,7 +47,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         output alphabet type
  */
 public class SymbolQueryCache<I, O>
-        implements SymbolQueryOracle<I, O>, MealyLearningCacheOracle<I, O>, Resumable<SymbolQueryCacheState<I, O>> {
+        implements SymbolQueryOracle<I, O>, MealyLearningCacheOracle<I, O>, SupportsGrowingAlphabet<I>, Resumable<SymbolQueryCacheState<I, O>> {
 
     private CompactMealy<I, O> cache;
     private final SymbolQueryOracle<I, O> delegate;
@@ -140,6 +141,11 @@ public class SymbolQueryCache<I, O>
     @Override
     public void resume(SymbolQueryCacheState<I, O> state) {
         this.cache = state.getCache();
+    }
+
+    @Override
+    public void addAlphabetSymbol(I symbol) {
+        this.cache.addAlphabetSymbol(symbol);
     }
 
     public static class SymbolQueryCacheState<I, O> {

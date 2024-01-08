@@ -23,7 +23,7 @@ import java.util.Random;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.word.Word;

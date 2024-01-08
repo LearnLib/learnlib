@@ -25,6 +25,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import com.google.common.base.Throwables;
+import de.learnlib.exception.BatchInterruptedException;
+import de.learnlib.oracle.BatchProcessor;
+import de.learnlib.oracle.ThreadPool;
 import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
 import net.automatalib.common.smartcollection.ArrayStorage;

@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
+import de.learnlib.oracle.ThreadPool.PoolPolicy;
 import de.learnlib.query.Query;
 
 /**

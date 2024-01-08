@@ -176,8 +176,8 @@ limitations under the License.
             <artifactId>cacio-tta</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jmockit</groupId>
-            <artifactId>jmockit</artifactId>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
         </dependency>
     </dependencies>
 
@@ -201,49 +201,10 @@ limitations under the License.
                             <java.awt.headless>false</java.awt.headless>
                         </systemPropertyVariables>
                         <!-- append to existing argLine to nicely work together with jacoco plugin -->
-                        <argLine>@{argLine} -javaagent:${org.jmockit:jmockit:jar}</argLine>
+                        <argLine>@{argLine} --add-opens=java.base/java.util=xstream</argLine>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
-        <plugins>
-            <!-- set properties, so we can easily resolve the file path to the JMockit jar in the surefire-plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>properties</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>fix-xstream</id>
-            <activation>
-                <jdk>[16,)</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <configuration>
-                                <!-- merge argLines -->
-                                <argLine>@{argLine}
-                                    -javaagent:${org.jmockit:jmockit:jar}
-                                    --add-opens=java.base/java.util=ALL-UNNAMED</argLine>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-    </profiles>
 </project>

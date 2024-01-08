@@ -111,6 +111,10 @@ limitations under the License.
             <artifactId>learnlib-membership-oracles</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-test-support</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>net.automatalib</groupId>

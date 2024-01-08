@@ -19,10 +19,10 @@ import java.util.Collections;
 import java.util.Random;
 
 import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
-import de.learnlib.example.mealy.ExampleRandomStateLocalInputMealy;
 import de.learnlib.sul.StateLocalInputSUL;
+import de.learnlib.testsupport.example.mealy.ExampleRandomStateLocalInputMealy;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.word.Word;
 import org.mockito.Mockito;
 import org.testng.Assert;

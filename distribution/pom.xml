@@ -505,6 +505,11 @@ limitations under the License.
                             <outputDirectory>${project.build.directory}/bundles</outputDirectory>
                             <appendAssemblyId>true</appendAssemblyId>
                             <finalName>learnlib-${project.version}</finalName>
+                            <archive>
+                                <manifestEntries>
+                                    <Automatic-Module-Name>de.learnlib.distribution</Automatic-Module-Name>
+                                </manifestEntries>
+                            </archive>
                         </configuration>
                         <executions>
                             <execution>

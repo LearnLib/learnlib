@@ -17,6 +17,8 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
 
+import de.learnlib.oracle.BatchProcessor;
+
 /**
  * A queries job that maintains a thread-local reference to a {@link BatchProcessor}, and dynamically selects that
  * oracle depending on the executing thread.

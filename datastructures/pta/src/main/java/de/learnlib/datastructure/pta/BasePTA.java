@@ -28,7 +28,7 @@ import java.util.Set;
 
 import com.google.common.collect.AbstractIterator;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.FiniteAlphabetAutomaton;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.graph.TransitionEdge;

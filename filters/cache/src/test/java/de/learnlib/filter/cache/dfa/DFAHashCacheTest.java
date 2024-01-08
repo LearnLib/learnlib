@@ -67,4 +67,14 @@ public class DFAHashCacheTest
     protected Alphabet<Character> getAlphabet() {
         return CacheTestUtils.INPUT_ALPHABET;
     }
+
+    @Override
+    protected Alphabet<Character> getExtensionAlphabet() {
+        return CacheTestUtils.EXTENSION_ALPHABET;
+    }
+
+    @Override
+    protected boolean supportsGrowing() {
+        return false;
+    }
 }

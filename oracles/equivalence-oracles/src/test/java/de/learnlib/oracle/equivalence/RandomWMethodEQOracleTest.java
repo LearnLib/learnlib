@@ -18,9 +18,9 @@ package de.learnlib.oracle.equivalence;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.learnlib.example.dfa.ExamplePaulAndMary;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.testsupport.example.dfa.ExamplePaulAndMary;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.util.automaton.Automata;

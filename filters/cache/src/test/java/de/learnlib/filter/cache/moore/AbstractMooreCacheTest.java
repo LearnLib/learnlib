@@ -21,6 +21,7 @@ import de.learnlib.filter.statistic.oracle.MooreCounterOracle;
 import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.oracle.membership.MooreSimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.word.Word;
@@ -71,7 +72,17 @@ public abstract class AbstractMooreCacheTest
 
     @Override
     protected Alphabet<Character> getAlphabet() {
-        return CacheTestUtils.INPUT_ALPHABET;
+        return new GrowingMapAlphabet<>(CacheTestUtils.INPUT_ALPHABET);
+    }
+
+    @Override
+    protected Alphabet<Character> getExtensionAlphabet() {
+        return CacheTestUtils.EXTENSION_ALPHABET;
+    }
+
+    @Override
+    protected boolean supportsGrowing() {
+        return true;
     }
 
     protected abstract MooreCacheOracle<Character, Integer> getCache(MooreMembershipOracle<Character, Integer> delegate);

@@ -19,15 +19,12 @@ import java.util.Random;
 
 import de.learnlib.algorithm.adt.automaton.ADTState;
 import de.learnlib.driver.simulator.MealySimulatorSUL;
-import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.SymbolQueryOracle;
 import de.learnlib.oracle.membership.SULSymbolQueryOracle;
-import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.AbstractResumableLearnerTest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 
@@ -47,17 +44,6 @@ public class ADTResumableLearnerTest
     @Override
     protected SymbolQueryOracle<Integer, Character> getOracle(MealyMachine<?, Integer, ?, Character> target) {
         return new SULSymbolQueryOracle<>(new MealySimulatorSUL<>(target));
-    }
-
-    @Override
-    protected MealyEquivalenceOracle<Integer, Character> getEquivalenceOracle(MealyMachine<?, Integer, ?, Character> target) {
-        return (mealy, inputs) -> {
-            final Word<Integer> separatingWord = Automata.findSeparatingWord(target, mealy, inputs);
-            if (separatingWord == null) {
-                return null;
-            }
-            return new DefaultQuery<>(Word.epsilon(), separatingWord, target.computeOutput(separatingWord));
-        };
     }
 
     @Override

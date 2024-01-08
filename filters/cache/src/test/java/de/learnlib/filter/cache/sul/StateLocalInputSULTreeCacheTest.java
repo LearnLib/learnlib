@@ -106,7 +106,7 @@ public class StateLocalInputSULTreeCacheTest
         final long oldCount = getNumberOfPosedQueries();
 
         final Word<Character> oldQuery = getQuery(0).getInput();
-        final Word<Integer> answer = super.oracle.answerQuery(oldQuery.concat(Word.fromString("dcba")));
+        final Word<Integer> answer = super.oracle.answerQuery(oldQuery.concat(Word.fromString("fcba")));
 
         Assert.assertEquals(getNumberOfPosedQueries(), oldCount);
 
@@ -157,6 +157,16 @@ public class StateLocalInputSULTreeCacheTest
     @Override
     protected Alphabet<Character> getAlphabet() {
         return CacheTestUtils.INPUT_ALPHABET;
+    }
+
+    @Override
+    protected Alphabet<Character> getExtensionAlphabet() {
+        return CacheTestUtils.EXTENSION_ALPHABET;
+    }
+
+    @Override
+    protected boolean supportsGrowing() {
+        return false;
     }
 
     private StateLocalInputSULCache<Character, Integer> getCache() {

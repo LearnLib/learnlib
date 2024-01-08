@@ -15,8 +15,8 @@
  */
 package de.learnlib.testsupport.it.learner;
 
-import de.learnlib.example.LearningExample.UniversalDeterministicLearningExample;
 import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.testsupport.example.LearningExample.UniversalDeterministicLearningExample;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
