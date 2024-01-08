@@ -15,8 +15,6 @@
  */
 package de.learnlib.datastructure.observationtable;
 
-import java.awt.Desktop;
-import java.awt.HeadlessException;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -65,10 +63,69 @@ public final class OTUtils {
         return reader.read(source, alphabet);
     }
 
+    /**
+     * Convenience method for {@link #writeHTMLToFile(ObservationTable, File)} that automatically creates (and returns)
+     * a temporary file to write to. Note that the file is {@link File#deleteOnExit() deleted} upon VM termination.
+     *
+     * @param table
+     *         the observation table to write to the file
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @return the temporary file with the observation table's contents written to
+     *
+     * @throws IOException
+     *         when writing to the file fails
+     */
+    public static <I, D> File writeHTMLToFile(ObservationTable<I, D> table) throws IOException {
+        final File file = File.createTempFile("learnlib-ot", ".html");
+        file.deleteOnExit();
+        writeHTMLToFile(table, file);
+        return file;
+    }
+
+    /**
+     * Convenience method for {@link #writeHTMLToFile(ObservationTable, File, Function, Function)} that uses
+     * {@link Object#toString()} to render words and outputs of the observation table.
+     *
+     * @param table
+     *         the observation table to write to the file
+     * @param file
+     *         the file to write to
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @throws IOException
+     *         when writing to the file fails
+     */
     public static <I, D> void writeHTMLToFile(ObservationTable<I, D> table, File file) throws IOException {
         writeHTMLToFile(table, file, Objects::toString, Objects::toString);
     }
 
+    /**
+     * Writes the contents of a given observation table into a file using HTML as a (markup) language and the given
+     * functions to display inputs and outputs.
+     *
+     * @param table
+     *         the observation table to write to the file
+     * @param file
+     *         the file to write to
+     * @param wordToString
+     *         the input word renderer
+     * @param outputToString
+     *         the output value renderer
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @throws IOException
+     *         when writing to the file fails
+     */
     public static <I, D> void writeHTMLToFile(ObservationTable<I, D> table,
                                               File file,
                                               Function<? super Word<? extends I>, ? extends String> wordToString,
@@ -80,57 +137,5 @@ public final class OTUtils {
             otWriter.write(table, w);
             w.write(HTML_FILE_FOOTER);
         }
-    }
-
-    /**
-     * Convenience method for {@link #displayHTMLInBrowser(ObservationTable, Function, Function)} that uses {@link
-     * Object#toString()} to render words and outputs of the observation table.
-     */
-    public static <I, D> void displayHTMLInBrowser(ObservationTable<I, D> table) throws IOException {
-        displayHTMLInBrowser(table, Objects::toString, Objects::toString);
-    }
-
-    /**
-     * Displays the observation table as an HTML document in the default browser.
-     * <p>
-     * This method internally relies on {@link Desktop#browse(java.net.URI)}, hence it will not work if {@link Desktop}
-     * is not supported, or if the application is running in headless mode.
-     * <p>
-     * <b>IMPORTANT NOTE:</b> Calling this method may delay the termination of the JVM by up to 5 seconds. This is due
-     * to the fact that the temporary file created in this method is marked for deletion upon JVM termination. If the
-     * JVM terminates too early, it might be deleted before it was loaded by the browser.
-     *
-     * @param table
-     *         the observation table to display
-     * @param wordToString
-     *         the transformation from words to strings. This transformation is <b>not</b> required nor expected to
-     *         escape HTML entities
-     * @param outputToString
-     *         the transformation from outputs to strings. This transformation is <b>not</b> required nor expected to
-     *         escape HTML entities
-     *
-     * @throws IOException
-     *         if creating or writing to the temporary file fails
-     * @throws HeadlessException
-     *         if the JVM is running in headless mode
-     * @throws UnsupportedOperationException
-     *         if {@link Desktop#getDesktop()} is not supported by the system
-     */
-    public static <I, D> void displayHTMLInBrowser(ObservationTable<I, D> table,
-                                                   Function<? super Word<? extends I>, ? extends String> wordToString,
-                                                   Function<? super D, ? extends String> outputToString)
-            throws IOException {
-        File tempFile = File.createTempFile("learnlib-ot", ".html");
-
-        // Doing this might cause problems if the startup delay of the browser
-        // causes it to start only after the JVM has exited.
-        // Temp directory should be wiped regularly anyway.
-        // tempFile.deleteOnExit();
-        writeHTMLToFile(table, tempFile, wordToString, outputToString);
-
-        Desktop desktop = Desktop.getDesktop();
-        // We use browse() instead of open() because, e.g., web developers may have
-        // an HTML editor set up as their default application to open HTML files
-        desktop.browse(tempFile.toURI());
     }
 }

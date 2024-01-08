@@ -15,8 +15,6 @@
  */
 package de.learnlib.datastructure.pta;
 
-import java.awt.Color;
-
 import net.automatalib.common.util.comparison.CmpUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

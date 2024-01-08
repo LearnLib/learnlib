@@ -28,7 +28,6 @@
  */
 open module de.learnlib.datastructure.observationtable {
 
-    requires java.desktop;
     requires com.google.common;
     requires de.learnlib.api;
     requires net.automatalib.api;

@@ -15,6 +15,7 @@
  */
 package de.learnlib.example;
 
+import java.awt.Desktop;
 import java.io.IOException;
 
 import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFA;
@@ -116,7 +117,7 @@ public final class Example1 {
         System.out.println("Final observation table:");
         new ObservationTableASCIIWriter<>().write(lstar.getObservationTable(), System.out);
 
-        OTUtils.displayHTMLInBrowser(lstar.getObservationTable());
+        Desktop.getDesktop().browse(OTUtils.writeHTMLToFile(lstar.getObservationTable()).toURI());
     }
 
     /**

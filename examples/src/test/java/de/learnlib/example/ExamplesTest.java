@@ -16,17 +16,17 @@
 package de.learnlib.example;
 
 import java.awt.AWTEvent;
+import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.function.Function;
+import java.net.URI;
 
 import javax.swing.SwingUtilities;
 
-import de.learnlib.datastructure.observationtable.OTUtils;
-import de.learnlib.datastructure.observationtable.ObservationTable;
+import com.github.caciocavallosilano.cacio.ctc.CTCToolkit;
 import de.learnlib.example.aaar.AlternatingBitExampleExplicit;
 import de.learnlib.example.aaar.AlternatingBitExampleGeneric;
 import mockit.Mock;
@@ -34,7 +34,6 @@ import mockit.MockUp;
 import net.automatalib.common.util.system.JVMUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
-import net.automatalib.word.Word;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -142,13 +141,16 @@ public class ExamplesTest {
     public void testExample1() throws Exception {
         requireJVMCompatibility();
 
-        // Mock OTUtils class, so we don't actually open a browser during the test
-        new MockUp<OTUtils>() {
-
+        // Mock Desktop classes, so we don't actually open a browser during the test
+        new MockUp<CTCToolkit>() {
             @Mock
-            public <I, D> void displayHTMLInBrowser(ObservationTable<I, D> table,
-                                                    Function<? super Word<? extends I>, ? extends String> wordToString,
-                                                    Function<? super D, ? extends String> outputToString) {
+            public boolean isDesktopSupported() {
+                return true;
+            }
+        };
+        new MockUp<Desktop>() {
+            @Mock
+            public void browse(URI uri) throws IOException {
                 // do nothing
             }
         };
