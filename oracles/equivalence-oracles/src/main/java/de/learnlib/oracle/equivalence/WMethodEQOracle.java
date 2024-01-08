@@ -40,7 +40,8 @@ import net.automatalib.word.Word;
 
 /**
  * Implements an equivalence test by applying the W-method test on the given hypothesis automaton, as described in
- * "Testing software design modeled by finite state machines" by T.S. Chow.
+ * <a href="https://doi.org/10.1109/TSE.1978.231496">Testing Software Design Modeled by Finite-State Machines</a> by
+ * T.&nbsp;S.&nbsp;Chow.
  *
  * @param <A>
  *         automaton type
@@ -87,8 +88,8 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
     private final int expectedSize;
 
     /**
-     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int)} that sets {@code
-     * expectedSize} to 0.
+     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int)} that sets
+     * {@code expectedSize} to 0.
      *
      * @param sulOracle
      *         interface to the system under learning
@@ -100,8 +101,8 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
     }
 
     /**
-     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int, int)} that sets {@code
-     * batchSize} to 1.
+     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int, int)} that sets
+     * {@code batchSize} to 1.
      *
      * @param sulOracle
      *         interface to the system under learning
@@ -115,7 +116,8 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
     }
 
     /**
-     * Constructor. Uses {@link Math#max(int, int) Math.max}{@code (lookahead, expectedSize - }{@link
+     * Constructor. Uses
+     * {@link Math#max(int, int) Math.max}{@code (lookahead, expectedSize - }{@link
      * UniversalDeterministicAutomaton#size() hypothesis.size()}{@code )} to determine the maximum length of sequences,
      * that should be appended to the transition-cover part of the test sequence to account for the fact that the system
      * under learning may have more states than the current hypothesis.

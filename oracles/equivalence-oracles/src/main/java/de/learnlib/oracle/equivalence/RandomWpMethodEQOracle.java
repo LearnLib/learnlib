@@ -44,9 +44,9 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
 /**
- * Implements an equivalence test by applying the Wp-method test on the given hypothesis automaton, as described in
- * "Test Selection Based on Finite State Models" by S. Fujiwara et al. Instead of enumerating the test suite in order,
- * this is a sampling implementation:
+ * Implements an equivalence test by applying the Wp-method test on the given hypothesis automaton, as described in <a
+ * href="https://doi.org/10.1109/32.87284">Test selection based on finite state models</a> by S.&nbsp;Fujiwara et al.
+ * Instead of enumerating the test suite in order, this is a sampling implementation:
  * <ul>
  * <li>1. sample uniformly from the states for a prefix</li>
  * <li>2. sample geometrically a random word</li>

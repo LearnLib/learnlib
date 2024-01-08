@@ -43,9 +43,9 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
 /**
- * Implements an equivalence test by applying the W-method test on the given hypothesis automaton. Generally the
- * Wp-method performs better in finding counter examples. Instead of enumerating the test suite in order, this is a
- * sampling implementation:
+ * Implements an equivalence test by applying the W-method test on the given hypothesis automaton, as described in
+ * <a href="https://doi.org/10.1109/TSE.1978.231496">Testing Software Design Modeled by Finite-State Machines</a> by
+ * T.&nbsp;S.&nbsp;Chow. Instead of enumerating the test suite in order, this is a sampling implementation:
  * <ul>
  * <li>1. sample uniformly from the transitions for a prefix</li>
  * <li>2. sample geometrically a random word</li>

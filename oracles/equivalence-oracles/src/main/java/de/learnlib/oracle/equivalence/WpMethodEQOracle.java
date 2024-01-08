@@ -39,8 +39,8 @@ import net.automatalib.util.automaton.conformance.WpMethodTestsIterator;
 import net.automatalib.word.Word;
 
 /**
- * Implements an equivalence test by applying the Wp-method test on the given hypothesis automaton, as described in
- * "Test Selection Based on Finite State Models" by S. Fujiwara et al.
+ * Implements an equivalence test by applying the Wp-method test on the given hypothesis automaton, as described in <a
+ * href="https://doi.org/10.1109/32.87284">Test selection based on finite state models</a> by S.&nbsp;Fujiwara et al.
  *
  * @param <A>
  *         automaton type
