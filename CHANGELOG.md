@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-* LearnLib now supports JPMS modules. All artifacts now provide a `module-info` descriptor except of the distribution artifacts (for Maven-less environments) which only provide an `Automatic-Module-Name` due to non-modular dependencies. Note that while this is a Java 9+ feature, AutomataLib still supports Java 8 byte code for the remaining class files.
+* LearnLib now supports JPMS modules. All artifacts now provide a `module-info` descriptor except of the distribution artifacts (for Maven-less environments) which only provide an `Automatic-Module-Name` due to non-modular dependencies. Note that while this is a Java 9+ feature, LearnLib still supports Java 8 byte code for the remaining class files.
 
 ### Changed
 
