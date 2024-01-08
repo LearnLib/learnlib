@@ -28,7 +28,7 @@ limitations under the License.
     <artifactId>learnlib-datastructure-pta</artifactId>
 
     <name>LearnLib :: Datastructures :: PTA</name>
-    <description>Data- and utility classes for Prefix-Tree-Acceptors</description>
+    <description>Data and utility classes for prefix tree acceptors</description>
 
     <dependencies>
         <!-- external -->

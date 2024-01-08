@@ -27,8 +27,8 @@ limitations under the License.
 
     <artifactId>learnlib-datastructure-ot</artifactId>
 
-    <name>LearnLib :: Datastructures :: Observationtable</name>
-    <description>Data- and utility classes for Observation Tables</description>
+    <name>LearnLib :: Datastructures :: Observation Table</name>
+    <description>Data and utility classes for observation tables</description>
 
     <dependencies>
         <!-- internal -->

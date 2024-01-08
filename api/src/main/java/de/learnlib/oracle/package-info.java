@@ -15,7 +15,7 @@
  */
 
 /**
- * This package (including sub-packages) contains the basic interfaces and classes for describing and implementing
- * various types of oracles used throughout LearnLib.
+ * This package contains the basic interfaces and classes for describing and implementing various types of oracles used
+ * throughout LearnLib.
  */
 package de.learnlib.oracle;

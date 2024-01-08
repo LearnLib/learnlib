@@ -28,7 +28,7 @@ limitations under the License.
     <artifactId>learnlib-parallelism</artifactId>
 
     <name>LearnLib :: Oracles :: Parallelism</name>
-    <description>Support for parallel membership queries and thread-safe caches</description>
+    <description>Support for posing membership queries in parallel</description>
 
     <dependencies>
         <!-- internal -->

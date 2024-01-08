@@ -133,11 +133,7 @@ limitations under the License.
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
                         <!-- append to existing argLine to nicely work together with jacoco plugin -->
-                        <argLine>
-                            @{argLine}
-                            --add-reads=de.learnlib.algorithm.observationpack.vpa=net.automatalib.common.util
-                            --add-reads=de.learnlib.algorithm.observationpack.vpa=net.automatalib.util
-                        </argLine>
+                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.observationpack.vpa=net.automatalib.util</argLine>
                     </configuration>
                 </plugin>
             </plugins>
