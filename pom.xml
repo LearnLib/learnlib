@@ -244,13 +244,14 @@ limitations under the License.
         <cacio.version>1.11.1</cacio.version>
         <checkerframework.version>3.40.0</checkerframework.version>
         <checkstyle.version>9.3</checkstyle.version>
+        <fury.version>0.4.1</fury.version>
+        <javapoet.version>1.13.0</javapoet.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <logback.version>1.3.12</logback.version>
         <metainf-services.version>1.11</metainf-services.version>
         <mockito.version>5.6.0</mockito.version>
         <slf4j.version>2.0.9</slf4j.version>
-        <testng.version>7.5.1</testng.version>
-        <xstream.version>1.4.20</xstream.version>
+        <testng.version>7.9.0</testng.version>
 
         <!-- Javadoc links -->
         <automatalib.apidocs>http://learnlib.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
@@ -615,9 +616,9 @@ limitations under the License.
             </dependency>
 
             <dependency>
-                <groupId>com.thoughtworks.xstream</groupId>
-                <artifactId>xstream</artifactId>
-                <version>${xstream.version}</version>
+                <groupId>org.furyio</groupId>
+                <artifactId>fury-core</artifactId>
+                <version>${fury.version}</version>
             </dependency>
 
             <dependency>

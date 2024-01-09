@@ -35,13 +35,13 @@ open module de.learnlib.testsupport {
     requires de.learnlib.driver.simulator;
     requires de.learnlib.oracle.membership;
     requires de.learnlib.testsupport.example;
+    requires fury.core;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
     requires net.automatalib.core;
     requires net.automatalib.util;
     requires org.mockito;
     requires org.testng;
-    requires xstream;
 
     // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
     requires static org.checkerframework.checker.qual;

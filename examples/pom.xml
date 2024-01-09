@@ -112,6 +112,12 @@ limitations under the License.
             <artifactId>learnlib-statistics</artifactId>
         </dependency>
         <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-test-support</artifactId>
+            <scope>compile</scope>
+            <!-- Override! -->
+        </dependency>
+        <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-ttt</artifactId>
         </dependency>
@@ -125,11 +131,6 @@ limitations under the License.
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
         </dependency>
 
         <dependency>
@@ -200,8 +201,6 @@ limitations under the License.
                             <java.awt.graphicsenv>com.github.caciocavallosilano.cacio.ctc.CTCGraphicsEnvironment</java.awt.graphicsenv>
                             <java.awt.headless>false</java.awt.headless>
                         </systemPropertyVariables>
-                        <!-- append to existing argLine to nicely work together with jacoco plugin -->
-                        <argLine>@{argLine} --add-opens=java.base/java.util=xstream</argLine>
                     </configuration>
                 </plugin>
             </plugins>

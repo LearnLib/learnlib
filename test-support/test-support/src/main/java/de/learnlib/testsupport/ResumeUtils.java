@@ -15,21 +15,18 @@
  */
 package de.learnlib.testsupport;
 
-import java.nio.charset.StandardCharsets;
-
-import com.thoughtworks.xstream.XStream;
 import de.learnlib.Resumable;
+import io.fury.Fury;
 
 /**
  * Utility functions for {@link Resumable} features.
  */
 public final class ResumeUtils {
 
-    private static final XStream X_STREAM;
+    private static final Fury FURY;
 
     static {
-        X_STREAM = new XStream();
-        X_STREAM.allowTypesByRegExp(new String[] {"net.automatalib.*", "de.learnlib.*"});
+        FURY = Fury.builder().withRefTracking(true).requireClassRegistration(false).build();
     }
 
     private ResumeUtils() {
@@ -37,12 +34,12 @@ public final class ResumeUtils {
     }
 
     public static <T extends Object> byte[] toBytes(T state) {
-        return X_STREAM.toXML(state).getBytes(StandardCharsets.UTF_8);
+        return FURY.serialize(state);
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T fromBytes(byte[] bytes) {
-        return (T) X_STREAM.fromXML(new String(bytes, StandardCharsets.UTF_8));
+        return (T) FURY.deserialize(bytes);
     }
 
 }
