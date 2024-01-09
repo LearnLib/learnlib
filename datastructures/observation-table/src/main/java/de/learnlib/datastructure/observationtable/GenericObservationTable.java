@@ -28,7 +28,6 @@ import java.util.Set;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -532,7 +531,7 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
     public List<List<Row<I>>> addAlphabetSymbol(I symbol, MembershipOracle<I, D> oracle) {
 
         if (!alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(alphabet).addSymbol(symbol);
+            alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         final int newAlphabetSize = alphabet.size();

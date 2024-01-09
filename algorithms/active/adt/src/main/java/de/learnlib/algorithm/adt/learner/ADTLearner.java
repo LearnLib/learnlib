@@ -58,7 +58,6 @@ import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
@@ -383,7 +382,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         this.hypothesis.addAlphabetSymbol(symbol);

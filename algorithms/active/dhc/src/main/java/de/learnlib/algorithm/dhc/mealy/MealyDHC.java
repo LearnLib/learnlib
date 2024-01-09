@@ -41,7 +41,6 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.mapping.MapMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
@@ -252,7 +251,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         if (!this.splitters.contains(Word.fromLetter(symbol))) {

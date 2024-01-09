@@ -41,7 +41,6 @@ import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.common.smartcollection.ElementReference;
 import net.automatalib.common.smartcollection.UnorderedCollection;
 import net.automatalib.word.Word;
@@ -940,7 +939,7 @@ public abstract class AbstractTTTLearner<A, I, D>
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         this.hypothesis.addAlphabetSymbol(symbol);

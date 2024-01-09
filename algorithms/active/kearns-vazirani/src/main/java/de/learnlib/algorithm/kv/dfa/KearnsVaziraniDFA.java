@@ -38,7 +38,6 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.smartcollection.ArrayStorage;
@@ -299,7 +298,7 @@ public class KearnsVaziraniDFA<I>
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         this.hypothesis.addAlphabetSymbol(symbol);

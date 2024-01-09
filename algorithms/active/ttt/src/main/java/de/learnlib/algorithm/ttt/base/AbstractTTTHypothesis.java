@@ -22,9 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.automaton.FiniteAlphabetAutomaton;
 import net.automatalib.automaton.fsa.DFA;
@@ -178,13 +176,11 @@ public abstract class AbstractTTTHypothesis<S extends TTTState<I, D>, I, D, T>
 
     @Override
     public void addAlphabetSymbol(I symbol) {
-        final GrowingAlphabet<I> growingAlphabet = Alphabets.toGrowingAlphabetOrThrowException(this.alphabet);
-
-        if (!growingAlphabet.containsSymbol(symbol)) {
-            growingAlphabet.addSymbol(symbol);
+        if (!this.alphabet.containsSymbol(symbol)) {
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
-        final int newAlphabetSize = growingAlphabet.size();
+        final int newAlphabetSize = this.alphabet.size();
 
         if (alphabetSize < newAlphabetSize) {
             for (TTTState<I, D> s : this.getStates()) {

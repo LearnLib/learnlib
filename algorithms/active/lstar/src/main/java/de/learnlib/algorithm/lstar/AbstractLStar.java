@@ -33,7 +33,6 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 
@@ -227,7 +226,7 @@ public abstract class AbstractLStar<A, I, D>
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         final List<List<Row<I>>> unclosed = this.table.addAlphabetSymbol(symbol, oracle);

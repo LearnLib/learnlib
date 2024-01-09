@@ -38,7 +38,6 @@ open module de.learnlib.algorithm.ttt {
     requires de.learnlib.datastructure.list;
     requires net.automatalib.api;
     requires net.automatalib.common.smartcollection;
-    requires net.automatalib.core;
     requires org.checkerframework.checker.qual;
     requires org.slf4j;
 

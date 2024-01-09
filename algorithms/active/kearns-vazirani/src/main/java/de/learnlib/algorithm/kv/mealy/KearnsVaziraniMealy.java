@@ -39,7 +39,6 @@ import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.impl.CompactTransition;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
@@ -317,7 +316,7 @@ public class KearnsVaziraniMealy<I, O>
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         this.hypothesis.addAlphabetSymbol(symbol);
