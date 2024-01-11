@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.google.common.base.Preconditions;
 import de.learnlib.oracle.BatchProcessor;
 import de.learnlib.oracle.ThreadPool.PoolPolicy;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -45,7 +44,9 @@ public abstract class AbstractStaticBatchProcessorBuilder<Q, P extends BatchProc
     private PoolPolicy poolPolicy = AbstractStaticBatchProcessor.POOL_POLICY;
 
     public AbstractStaticBatchProcessorBuilder(Collection<? extends P> oracles) {
-        Preconditions.checkArgument(!oracles.isEmpty(), "No oracles specified");
+        if (oracles.isEmpty()) {
+            throw new IllegalArgumentException("No oracles specified");
+        }
         this.oracles = oracles;
         this.oracleSupplier = null;
     }

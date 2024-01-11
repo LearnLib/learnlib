@@ -30,7 +30,6 @@
  */
 open module de.learnlib.algorithm.aaar {
 
-    requires com.google.common;
     requires de.learnlib.api;
     requires net.automatalib.api;
     requires net.automatalib.common.util;

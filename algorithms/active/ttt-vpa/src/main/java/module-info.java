@@ -30,7 +30,6 @@
  */
 open module de.learnlib.algorithm.ttt.vpa {
 
-    requires com.google.common;
     requires de.learnlib.api;
     requires de.learnlib.algorithm.observationpack.vpa;
     requires de.learnlib.common.counterexample;

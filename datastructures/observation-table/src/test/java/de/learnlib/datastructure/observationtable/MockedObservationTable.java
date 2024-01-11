@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Preconditions;
 import de.learnlib.datastructure.observationtable.reader.SimpleObservationTable;
 import net.automatalib.word.Word;
 
@@ -62,7 +61,7 @@ public class MockedObservationTable<I, D> extends SimpleObservationTable<I, D> {
     }
 
     private RowImpl<I> addPrefix(Word<I> prefix, List<D> contents) {
-        Preconditions.checkArgument(getSuffixes().size() == contents.size());
+        assert getSuffixes().size() == contents.size();
 
         final RowImpl<I> row = new RowImpl<>(prefix, rows.size());
 

@@ -18,7 +18,6 @@ package de.learnlib.datastructure.discriminationtree;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import com.google.common.io.CharStreams;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.dot.GraphDOT;
 import org.testng.Assert;
@@ -32,7 +31,7 @@ public class VisualizationTest {
         GraphDOT.write(DummyDT.DT, actualDT);
 
         final String expectedDT =
-                CharStreams.toString(IOUtil.asBufferedUTF8Reader(VisualizationTest.class.getResourceAsStream("/dt.dot")));
+                IOUtil.toString(IOUtil.asBufferedUTF8Reader(VisualizationTest.class.getResourceAsStream("/dt.dot")));
 
         Assert.assertEquals(actualDT.toString(), expectedDT);
     }

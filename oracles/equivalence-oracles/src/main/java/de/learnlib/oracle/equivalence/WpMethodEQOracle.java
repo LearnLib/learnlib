@@ -18,7 +18,6 @@ package de.learnlib.oracle.equivalence;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import com.google.common.collect.Streams;
 import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.EquivalenceOracle.MooreEquivalenceOracle;
@@ -35,6 +34,7 @@ import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.conformance.WpMethodTestsIterator;
 import net.automatalib.word.Word;
 
@@ -140,8 +140,9 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
 
     @Override
     protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
-        return Streams.stream(new WpMethodTestsIterator<>(hypothesis,
-                                                          inputs,
-                                                          Math.max(lookahead, expectedSize - hypothesis.size())));
+        return IteratorUtil.stream(new WpMethodTestsIterator<>(hypothesis,
+                                                               inputs,
+                                                               Math.max(lookahead,
+                                                                           expectedSize - hypothesis.size())));
     }
 }

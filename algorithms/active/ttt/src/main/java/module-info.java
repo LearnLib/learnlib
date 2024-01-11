@@ -30,7 +30,6 @@
  */
 open module de.learnlib.algorithm.ttt {
 
-    requires com.google.common;
     requires de.learnlib.api;
     requires de.learnlib.common.counterexample;
     requires de.learnlib.common.util;
@@ -38,6 +37,7 @@ open module de.learnlib.algorithm.ttt {
     requires de.learnlib.datastructure.list;
     requires net.automatalib.api;
     requires net.automatalib.common.smartcollection;
+    requires net.automatalib.common.util;
     requires org.checkerframework.checker.qual;
     requires org.slf4j;
 

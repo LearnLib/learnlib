@@ -18,7 +18,6 @@ package de.learnlib.oracle.equivalence;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import com.google.common.collect.Streams;
 import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.EquivalenceOracle.MooreEquivalenceOracle;
@@ -35,6 +34,7 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.word.Word;
 
 /**
@@ -128,6 +128,6 @@ public class CompleteExplorationEQOracle<A extends Output<I, D>, I, D> extends A
 
     @Override
     protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
-        return Streams.stream(CollectionsUtil.allTuples(inputs, minDepth, maxDepth)).map(Word::fromList);
+        return IterableUtil.stream(CollectionsUtil.allTuples(inputs, minDepth, maxDepth)).map(Word::fromList);
     }
 }

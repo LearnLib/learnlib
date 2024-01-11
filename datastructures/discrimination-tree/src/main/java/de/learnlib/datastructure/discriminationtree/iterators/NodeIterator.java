@@ -17,8 +17,9 @@ package de.learnlib.datastructure.discriminationtree.iterators;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-import com.google.common.collect.AbstractIterator;
 import de.learnlib.datastructure.discriminationtree.model.AbstractDTNode;
 
 /**
@@ -27,7 +28,7 @@ import de.learnlib.datastructure.discriminationtree.model.AbstractDTNode;
  * @param <N>
  *         node type
  */
-class NodeIterator<N extends AbstractDTNode<?, ?, ?, N>> extends AbstractIterator<N> {
+class NodeIterator<N extends AbstractDTNode<?, ?, ?, N>> implements Iterator<N> {
 
     private final Deque<N> stack = new ArrayDeque<>();
 
@@ -36,18 +37,24 @@ class NodeIterator<N extends AbstractDTNode<?, ?, ?, N>> extends AbstractIterato
     }
 
     @Override
-    protected N computeNext() {
-        if (!stack.isEmpty()) {
-            N curr = stack.pop();
+    public boolean hasNext() {
+        return !stack.isEmpty();
+    }
 
-            if (!curr.isLeaf()) {
-                for (N child : curr.getChildren()) {
-                    stack.push(child);
-                }
-            }
-
-            return curr;
+    @Override
+    public N next() {
+        if (stack.isEmpty()) {
+            throw new NoSuchElementException();
         }
-        return endOfData();
+
+        final N curr = stack.pop();
+
+        if (!curr.isLeaf()) {
+            for (N child : curr.getChildren()) {
+                stack.push(child);
+            }
+        }
+
+        return curr;
     }
 }

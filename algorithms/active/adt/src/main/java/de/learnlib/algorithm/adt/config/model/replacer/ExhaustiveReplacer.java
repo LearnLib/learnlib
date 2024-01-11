@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import de.learnlib.algorithm.adt.adt.ADT;
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.api.SubtreeReplacer;
@@ -31,6 +30,7 @@ import de.learnlib.algorithm.adt.model.ReplacementResult;
 import de.learnlib.algorithm.adt.util.ADTUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.HashUtil;
 
 public class ExhaustiveReplacer implements SubtreeReplacer {
 
@@ -62,7 +62,7 @@ public class ExhaustiveReplacer implements SubtreeReplacer {
         final PriorityQueue<Set<S>> queue = new PriorityQueue<>(candidates.size(), Comparator.comparingInt(Set::size));
         for (ADTNode<S, I, O> node : candidates) {
             final Set<ADTNode<S, I, O>> leaves = ADTUtil.collectLeaves(node);
-            final Set<S> set = Sets.newHashSetWithExpectedSize(leaves.size());
+            final Set<S> set = new HashSet<>(HashUtil.capacity(leaves.size()));
 
             for (ADTNode<S, I, O> l : leaves) {
                 set.add(l.getHypothesisState());

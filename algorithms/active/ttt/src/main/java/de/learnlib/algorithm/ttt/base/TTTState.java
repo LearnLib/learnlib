@@ -16,7 +16,7 @@
 package de.learnlib.algorithm.ttt.base;
 
 import de.learnlib.AccessSequenceProvider;
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import net.automatalib.word.Word;
 
 /**

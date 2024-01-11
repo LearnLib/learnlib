@@ -23,12 +23,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
-import com.google.common.base.Throwables;
 import de.learnlib.exception.BatchInterruptedException;
 import de.learnlib.oracle.BatchProcessor;
 import de.learnlib.oracle.ThreadPool;
 import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
+import net.automatalib.common.util.exception.ExceptionUtil;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -115,7 +115,7 @@ public abstract class AbstractDynamicBatchProcessor<Q, P extends BatchProcessor<
                 future.get();
             }
         } catch (ExecutionException e) {
-            Throwables.throwIfUnchecked(e.getCause());
+            ExceptionUtil.throwIfUnchecked(e.getCause());
             throw new AssertionError("Runnables must not throw checked exceptions", e);
         } catch (InterruptedException e) {
             Thread.interrupted();

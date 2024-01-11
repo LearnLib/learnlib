@@ -16,15 +16,16 @@
 package de.learnlib.algorithm.procedural.spa.manager;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.procedural.spa.ATRManager;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.word.Word;
 
 /**
@@ -45,9 +46,9 @@ public class DefaultATRManager<I> implements ATRManager<I> {
     public DefaultATRManager(ProceduralInputAlphabet<I> alphabet) {
         this.alphabet = alphabet;
 
-        this.accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-        this.returnSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-        this.terminatingSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
+        this.accessSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
+        this.returnSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
+        this.terminatingSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
     }
 
     @Override
@@ -70,7 +71,7 @@ public class DefaultATRManager<I> implements ATRManager<I> {
 
     @Override
     public Set<I> scanPositiveCounterexample(Word<I> input) {
-        final Set<I> result = Sets.newHashSetWithExpectedSize(alphabet.getNumCalls() - accessSequences.size());
+        final Set<I> result = new HashSet<>(HashUtil.capacity(alphabet.getNumCalls() - accessSequences.size()));
 
         for (int i = 0; i < input.size(); i++) {
             final I sym = input.getSymbol(i);

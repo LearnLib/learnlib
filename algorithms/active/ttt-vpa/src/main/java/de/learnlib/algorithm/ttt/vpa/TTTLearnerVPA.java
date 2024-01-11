@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.google.common.collect.Iterables;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithm.observationpack.vpa.OPLearnerVPA;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.AbstractHypTrans;
@@ -84,7 +83,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
                         if (trans.isTree()) {
                             succs.add(trans.getTreeTarget());
                         } else {
-                            Iterables.addAll(succs, trans.getNonTreeTarget().subtreeLocations());
+                            trans.getNonTreeTarget().subtreeLocations().forEach(succs::add);
                         }
                     }
                 }
@@ -96,7 +95,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
                     if (trans.isTree()) {
                         succs.add(trans.getTreeTarget());
                     } else {
-                        Iterables.addAll(succs, trans.getNonTreeTarget().subtreeLocations());
+                        trans.getNonTreeTarget().subtreeLocations().forEach(succs::add);
                     }
                 }
                 curr = new NonDetState<>(succs, curr.getStack());

@@ -28,7 +28,6 @@
  */
 open module de.learnlib.oracle.equivalence {
 
-    requires com.google.common;
     requires de.learnlib.api;
     requires de.learnlib.common.util;
     requires net.automatalib.api;

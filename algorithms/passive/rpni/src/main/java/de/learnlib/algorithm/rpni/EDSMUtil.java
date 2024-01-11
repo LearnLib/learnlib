@@ -16,12 +16,13 @@
 package de.learnlib.algorithm.rpni;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.common.smartcollection.IntSeq;
+import net.automatalib.common.util.HashUtil;
 
 final class EDSMUtil {
 
@@ -34,7 +35,7 @@ final class EDSMUtil {
         final Collection<S> states = merge.getStates();
         final int numStates = states.size();
         // we don't use the regular stateIDs because we only want to collect all states once.
-        final Map<S, Integer> stateIDs = Maps.newHashMapWithExpectedSize(numStates);
+        final Map<S, Integer> stateIDs = new HashMap<>(HashUtil.capacity(numStates));
 
         int counter = 0;
         for (S s : states) {

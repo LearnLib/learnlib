@@ -17,6 +17,7 @@ package de.learnlib.algorithm.procedural.sba;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,7 +25,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.google.common.collect.Maps;
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
@@ -46,6 +46,7 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.impl.EmptySBA;
 import net.automatalib.automaton.procedural.impl.StackSBA;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.util.automaton.Automata;
@@ -96,8 +97,8 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
         this.analyzer = analyzer;
         this.atManager = atManager;
 
-        this.learners = Maps.newHashMapWithExpectedSize(this.alphabet.getNumCalls());
-        this.mapping = Maps.newHashMapWithExpectedSize(this.alphabet.size());
+        this.learners = new HashMap<>(HashUtil.capacity(this.alphabet.getNumCalls()));
+        this.mapping = new HashMap<>(HashUtil.capacity(this.alphabet.size()));
 
         for (I i : this.alphabet.getInternalAlphabet()) {
             final SymbolWrapper<I> wrapper = new SymbolWrapper<>(i, true);
@@ -172,7 +173,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
 
         final Map<I, DFA<?, SymbolWrapper<I>>> procedures = getSubModels();
         final Map<SymbolWrapper<I>, DFA<?, SymbolWrapper<I>>> mappedProcedures =
-                Maps.newHashMapWithExpectedSize(procedures.size());
+                new HashMap<>(HashUtil.capacity(procedures.size()));
 
         for (Entry<I, DFA<?, SymbolWrapper<I>>> e : procedures.entrySet()) {
             final SymbolWrapper<I> w = this.mapping.get(e.getKey());
@@ -266,7 +267,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
     }
 
     private Map<I, DFA<?, SymbolWrapper<I>>> getSubModels() {
-        final Map<I, DFA<?, SymbolWrapper<I>>> subModels = Maps.newHashMapWithExpectedSize(this.learners.size());
+        final Map<I, DFA<?, SymbolWrapper<I>>> subModels = new HashMap<>(HashUtil.capacity(this.learners.size()));
 
         for (Map.Entry<I, L> entry : this.learners.entrySet()) {
             subModels.put(entry.getKey(), entry.getValue().getHypothesisModel());

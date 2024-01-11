@@ -26,8 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import com.google.common.collect.Iterables;
-import com.google.common.io.CharStreams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.SubsequentialTransducer;
@@ -104,11 +102,11 @@ public class OSTIATest {
 
         final WordBuilder<Integer> wb = new WordBuilder<>();
         for (Pair<IntSeq, IntSeq> p : getExampleSamples()) {
-            Iterables.addAll(wb, p.getFirst());
+            CollectionsUtil.add(wb, p.getFirst());
             final Word<Integer> input = wb.toWord();
             wb.clear();
 
-            Iterables.addAll(wb, p.getSecond());
+            CollectionsUtil.add(wb, p.getSecond());
             final Word<Integer> output = wb.toWord();
             wb.clear();
 
@@ -120,7 +118,7 @@ public class OSTIATest {
 
         try (InputStream is = getClass().getResourceAsStream("/hyp.dot")) {
             assert is != null;
-            expectedHyp = CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
+            expectedHyp = IOUtil.toString(IOUtil.asBufferedUTF8Reader(is));
         }
 
         final StringWriter actualHyp = new StringWriter();

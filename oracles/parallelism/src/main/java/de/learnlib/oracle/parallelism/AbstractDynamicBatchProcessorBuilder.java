@@ -21,7 +21,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import com.google.common.base.Preconditions;
 import de.learnlib.oracle.BatchProcessor;
 import de.learnlib.oracle.ThreadPool.PoolPolicy;
 import net.automatalib.common.util.concurrent.ScalingThreadPoolExecutor;
@@ -55,7 +54,9 @@ public abstract class AbstractDynamicBatchProcessorBuilder<Q, P extends BatchPro
     }
 
     public AbstractDynamicBatchProcessorBuilder(Collection<? extends P> oracles) {
-        Preconditions.checkArgument(!oracles.isEmpty(), "No oracles specified");
+        if (oracles.isEmpty()) {
+            throw new IllegalArgumentException("No oracles specified");
+        }
         this.oracles = oracles;
         this.oracleSupplier = null;
     }

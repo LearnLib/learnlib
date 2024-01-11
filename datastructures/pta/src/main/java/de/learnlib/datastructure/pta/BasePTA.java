@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.google.common.collect.AbstractIterator;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.FiniteAlphabetAutomaton;
@@ -36,6 +35,7 @@ import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.automaton.visualization.AutomatonVisualizationHelper;
 import net.automatalib.common.smartcollection.IntSeq;
+import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.graph.UniversalGraph;
 import net.automatalib.visualization.VisualizationHelper;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -180,21 +180,21 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, SP, TP>
         bfsQueue.add(root);
         visited.add(root);
 
-        return new AbstractIterator<S>() {
+        return new AbstractSimplifiedIterator<S>() {
 
             @Override
-            protected S computeNext() {
-                S next = bfsQueue.poll();
-                if (next == null) {
-                    return endOfData();
+            protected boolean calculateNext() {
+                super.nextValue = bfsQueue.poll();
+                if (super.nextValue == null) {
+                    return false;
                 }
                 for (int i = 0; i < alphabetSize; i++) {
-                    S child = next.getSuccessor(i);
+                    S child = super.nextValue.getSuccessor(i);
                     if (child != null && visited.add(child)) {
                         bfsQueue.offer(child);
                     }
                 }
-                return next;
+                return true;
             }
         };
     }

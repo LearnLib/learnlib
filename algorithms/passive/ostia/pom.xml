@@ -63,12 +63,6 @@ limitations under the License.
 
         <!-- test -->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learner-it-support</artifactId>
         </dependency>

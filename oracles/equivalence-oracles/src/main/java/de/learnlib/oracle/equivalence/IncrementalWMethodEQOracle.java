@@ -18,7 +18,6 @@ package de.learnlib.oracle.equivalence;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import com.google.common.collect.Streams;
 import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.EquivalenceOracle.MooreEquivalenceOracle;
@@ -36,6 +35,7 @@ import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.conformance.IncrementalWMethodTestsIterator;
 import net.automatalib.word.Word;
 
@@ -106,6 +106,6 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
         // FIXME: warn about inputs being ignored?
         incrementalWMethodIt.update(hypothesis);
 
-        return Streams.stream(incrementalWMethodIt);
+        return IteratorUtil.stream(incrementalWMethodIt);
     }
 }

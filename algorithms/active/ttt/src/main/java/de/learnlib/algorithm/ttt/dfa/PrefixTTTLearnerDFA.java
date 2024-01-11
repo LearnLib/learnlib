@@ -17,7 +17,6 @@ package de.learnlib.algorithm.ttt.dfa;
 
 import java.util.Iterator;
 
-import com.google.common.collect.AbstractIterator;
 import de.learnlib.acex.AbstractCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithm.ttt.base.TTTState;
@@ -25,7 +24,8 @@ import de.learnlib.algorithm.ttt.base.TTTTransition;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
+import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.word.Word;
 
 public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
@@ -150,7 +150,7 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             return new UnlabeledIterator<>(this);
         }
 
-        private static class UnlabeledIterator<I> extends AbstractIterator<ExtDTNode<I>> {
+        private static class UnlabeledIterator<I> extends AbstractSimplifiedIterator<ExtDTNode<I>> {
 
             private ExtDTNode<I> curr;
 
@@ -159,12 +159,13 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             }
 
             @Override
-            protected ExtDTNode<I> computeNext() {
+            protected boolean calculateNext() {
                 curr = curr.nextUnlabeled;
                 if (curr == null) {
-                    return endOfData();
+                    return false;
                 }
-                return curr;
+                super.nextValue = curr;
+                return true;
             }
         }
     }

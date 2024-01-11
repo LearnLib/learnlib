@@ -16,13 +16,14 @@
 package de.learnlib.datastructure.observationtable.reader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.google.common.collect.Maps;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.word.Word;
 
 public class SuffixASCIIReader<I, D> implements ObservationTableReader<I, D> {
@@ -52,7 +53,7 @@ public class SuffixASCIIReader<I, D> implements ObservationTableReader<I, D> {
     }
 
     private Map<String, I> generateNameToSymbolMap(Alphabet<I> alphabet) {
-        Map<String, I> nameToSymbol = Maps.newHashMapWithExpectedSize(alphabet.size());
+        Map<String, I> nameToSymbol = new HashMap<>(HashUtil.capacity(alphabet.size()));
 
         for (I symbol : alphabet) {
             String symbolName = Objects.toString(symbol);

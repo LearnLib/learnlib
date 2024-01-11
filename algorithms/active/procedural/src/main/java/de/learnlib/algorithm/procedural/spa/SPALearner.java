@@ -19,14 +19,14 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
@@ -45,6 +45,7 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.impl.EmptySPA;
 import net.automatalib.automaton.procedural.impl.StackSPA;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -92,8 +93,8 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         this.analyzer = analyzer;
         this.atrManager = atrManager;
 
-        this.subLearners = Maps.newHashMapWithExpectedSize(this.alphabet.getNumCalls());
-        this.activeAlphabet = Sets.newHashSetWithExpectedSize(alphabet.getNumCalls() + alphabet.getNumInternals());
+        this.subLearners = new HashMap<>(HashUtil.capacity(this.alphabet.getNumCalls()));
+        this.activeAlphabet = new HashSet<>(HashUtil.capacity(alphabet.getNumCalls() + alphabet.getNumInternals()));
         this.activeAlphabet.addAll(alphabet.getInternalAlphabet());
     }
 
@@ -214,7 +215,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
     }
 
     private Map<I, DFA<?, I>> getSubModels() {
-        final Map<I, DFA<?, I>> subModels = Maps.newHashMapWithExpectedSize(this.subLearners.size());
+        final Map<I, DFA<?, I>> subModels = new HashMap<>(HashUtil.capacity(this.subLearners.size()));
 
         for (Map.Entry<I, L> entry : this.subLearners.entrySet()) {
             subModels.put(entry.getKey(), entry.getValue().getHypothesisModel());

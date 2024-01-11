@@ -18,7 +18,7 @@ package de.learnlib.datastructure.pta;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

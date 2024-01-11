@@ -24,13 +24,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import com.google.common.base.Throwables;
 import de.learnlib.exception.BatchInterruptedException;
 import de.learnlib.oracle.BatchProcessor;
 import de.learnlib.oracle.ThreadPool;
 import de.learnlib.setting.LearnLibProperty;
 import de.learnlib.setting.LearnLibSettings;
-import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
+import net.automatalib.common.util.exception.ExceptionUtil;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -144,9 +144,9 @@ public abstract class AbstractStaticBatchProcessor<Q, P extends BatchProcessor<Q
             for (Future<?> f : futures) {
                 f.get();
             }
-        } catch (ExecutionException ex) {
-            Throwables.throwIfUnchecked(ex.getCause());
-            throw new AssertionError("Runnable must not throw checked exceptions", ex);
+        } catch (ExecutionException e) {
+            ExceptionUtil.throwIfUnchecked(e.getCause());
+            throw new AssertionError("Runnable must not throw checked exceptions", e);
         } catch (InterruptedException ex) {
             Thread.interrupted();
             throw new BatchInterruptedException(ex);

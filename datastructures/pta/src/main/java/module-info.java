@@ -28,7 +28,6 @@
  */
 open module de.learnlib.datastructure.pta {
 
-    requires com.google.common;
     requires net.automatalib.api;
     requires net.automatalib.common.smartcollection;
     requires net.automatalib.common.util;

@@ -18,7 +18,6 @@ package de.learnlib.algorithm.observationpack.vpa;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Iterables;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.AbstractHypTrans;
@@ -32,6 +31,7 @@ import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.SEVPA;
 import net.automatalib.automaton.vpa.StackContents;
 import net.automatalib.automaton.vpa.State;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -134,7 +134,7 @@ public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
         public PrefixTransformAcex(Word<I> word, ContextPair<I> context) {
             super(context.getSuffix().length() + 1);
             this.suffix = context.getSuffix();
-            this.baseState = hypothesis.getState(Iterables.concat(context.getPrefix(), word));
+            this.baseState = hypothesis.getState(IterableUtil.concat(context.getPrefix(), word));
         }
 
         public State<HypLoc<I>> getBaseState() {

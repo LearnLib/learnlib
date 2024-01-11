@@ -18,8 +18,8 @@ package de.learnlib.datastructure.discriminationtree.iterators;
 import java.util.Iterator;
 import java.util.function.Function;
 
-import com.google.common.collect.Iterators;
 import de.learnlib.datastructure.discriminationtree.model.AbstractDTNode;
+import net.automatalib.common.util.collection.IteratorUtil;
 
 /**
  * Factory methods for several kinds of discrimination tree node iterators.
@@ -52,7 +52,7 @@ public final class DiscriminationTreeIterators {
      */
     @SuppressWarnings("nullness") // lambda is only called with our non-null nodes as argument
     public static <N extends AbstractDTNode<?, ?, ?, N>> Iterator<N> innerNodeIterator(N root) {
-        return Iterators.filter(nodeIterator(root), n -> !n.isLeaf());
+        return IteratorUtil.filter(nodeIterator(root), n -> !n.isLeaf());
     }
 
     /**
@@ -64,7 +64,7 @@ public final class DiscriminationTreeIterators {
      *         node type
      */
     public static <N extends AbstractDTNode<?, ?, ?, N>> Iterator<N> leafIterator(N root) {
-        return Iterators.filter(nodeIterator(root), AbstractDTNode::isLeaf);
+        return IteratorUtil.filter(nodeIterator(root), AbstractDTNode::isLeaf);
     }
 
     /**
@@ -80,6 +80,6 @@ public final class DiscriminationTreeIterators {
      */
     public static <N extends AbstractDTNode<?, ?, ?, N>, D> Iterator<D> transformingLeafIterator(N root,
                                                                                                  Function<? super N, D> transformer) {
-        return Iterators.transform(leafIterator(root), transformer::apply);
+        return IteratorUtil.map(leafIterator(root), transformer::apply);
     }
 }

@@ -18,12 +18,12 @@ package de.learnlib.oracle.equivalence.sba;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import com.google.common.collect.Streams;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.conformance.SBAWMethodTestsIterator;
 import net.automatalib.util.automaton.conformance.WMethodTestsIterator;
 import net.automatalib.word.Word;
@@ -101,8 +101,9 @@ public class WMethodEQOracle<I> extends AbstractTestWordEQOracle<SBA<?, I>, I, B
         @SuppressWarnings("unchecked")
         final ProceduralInputAlphabet<I> alphabet = (ProceduralInputAlphabet<I>) inputs;
 
-        return Streams.stream(new SBAWMethodTestsIterator<>(hypothesis,
-                                                            alphabet,
-                                                            Math.max(lookahead, expectedSize - hypothesis.size())));
+        return IteratorUtil.stream(new SBAWMethodTestsIterator<>(hypothesis,
+                                                                 alphabet,
+                                                                 Math.max(lookahead,
+                                                                             expectedSize - hypothesis.size())));
     }
 }
