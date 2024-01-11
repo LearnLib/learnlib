@@ -16,7 +16,7 @@
 package de.learnlib.testsupport;
 
 import de.learnlib.Resumable;
-import io.fury.Fury;
+import org.apache.fury.Fury;
 
 /**
  * Utility functions for {@link Resumable} features.
