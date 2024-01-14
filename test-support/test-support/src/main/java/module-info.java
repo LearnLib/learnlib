@@ -35,11 +35,11 @@ open module de.learnlib.testsupport {
     requires de.learnlib.driver.simulator;
     requires de.learnlib.oracle.membership;
     requires de.learnlib.testsupport.example;
-    requires fury.core;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
     requires net.automatalib.core;
     requires net.automatalib.util;
+    requires org.apache.fury.core;
     requires org.mockito;
     requires org.testng;
 
