@@ -42,7 +42,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.common.smartcollection.ElementReference;
 import net.automatalib.common.smartcollection.UnorderedCollection;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
@@ -344,7 +344,7 @@ public abstract class AbstractTTTLearner<A, I, D>
                 result.add(trans.getTreeTarget());
             } else {
                 AbstractBaseDTNode<I, D> tgtNode = trans.getNonTreeTarget();
-                CollectionsUtil.add(result, tgtNode.subtreeStatesIterator());
+                CollectionUtil.add(result, tgtNode.subtreeStatesIterator());
             }
         }
         return result;

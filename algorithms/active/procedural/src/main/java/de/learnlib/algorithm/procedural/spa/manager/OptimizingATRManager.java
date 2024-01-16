@@ -23,14 +23,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Spliterators;
-import java.util.stream.StreamSupport;
 
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.procedural.spa.ATRManager;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.common.util.HashUtil;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -125,13 +124,12 @@ public class OptimizingATRManager<I> implements ATRManager<I> {
     private <S> @Nullable Word<I> getShortestHypothesisTS(DFA<S, I> hyp,
                                                           AccessSequenceTransformer<I> asTransformer,
                                                           Collection<I> inputs) {
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(Covers.stateCoverIterator(hyp, inputs), 0),
-                                    false)
-                            .filter(hyp::accepts)
-                            .map(asTransformer::transformAccessSequence)
-                            .map(as -> this.alphabet.expand(as, terminatingSequences::get))
-                            .min(Comparator.comparingInt(Word::size))
-                            .orElse(null);
+        return IteratorUtil.stream(Covers.stateCoverIterator(hyp, inputs))
+                           .filter(hyp::accepts)
+                           .map(asTransformer::transformAccessSequence)
+                           .map(as -> this.alphabet.expand(as, terminatingSequences::get))
+                           .min(Comparator.comparingInt(Word::size))
+                           .orElse(null);
     }
 
     private void optimizeSequences(Map<I, Word<I>> sequences) {

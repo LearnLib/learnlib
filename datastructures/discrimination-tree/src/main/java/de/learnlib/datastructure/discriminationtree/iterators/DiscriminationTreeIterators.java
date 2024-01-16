@@ -80,6 +80,6 @@ public final class DiscriminationTreeIterators {
      */
     public static <N extends AbstractDTNode<?, ?, ?, N>, D> Iterator<D> transformingLeafIterator(N root,
                                                                                                  Function<? super N, D> transformer) {
-        return IteratorUtil.map(leafIterator(root), transformer::apply);
+        return IteratorUtil.map(leafIterator(root), transformer);
     }
 }

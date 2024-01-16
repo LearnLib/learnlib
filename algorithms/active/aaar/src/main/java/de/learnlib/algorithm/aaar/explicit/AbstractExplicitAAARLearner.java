@@ -84,8 +84,7 @@ public abstract class AbstractExplicitAAARLearner<L extends LearningAlgorithm<CM
         super(learnerConstructor, oracle);
 
         this.explicitInitialAbstraction = explicitInitialAbstraction;
-        this.trees =
-                new HashMap<>(HashUtil.capacity(explicitInitialAbstraction.getInitialAbstracts().size()));
+        this.trees = new HashMap<>(HashUtil.capacity(explicitInitialAbstraction.getInitialAbstracts().size()));
 
         for (AI a : explicitInitialAbstraction.getInitialAbstracts()) {
             final CI rep = explicitInitialAbstraction.getRepresentative(a);

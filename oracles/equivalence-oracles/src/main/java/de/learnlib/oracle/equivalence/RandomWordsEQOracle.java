@@ -35,7 +35,7 @@ import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
@@ -105,7 +105,7 @@ public class RandomWordsEQOracle<A extends Output<I, D>, I, D> extends AbstractT
     @Override
     protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
 
-        final List<? extends I> symbolList = CollectionsUtil.randomAccessList(inputs);
+        final List<? extends I> symbolList = CollectionUtil.randomAccessList(inputs);
 
         return Stream.generate(() -> generateTestWord(symbolList, symbolList.size())).limit(maxTests);
     }

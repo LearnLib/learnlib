@@ -42,6 +42,7 @@ import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.SEVPA;
 import net.automatalib.automaton.vpa.StackContents;
 import net.automatalib.automaton.vpa.State;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -83,7 +84,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
                         if (trans.isTree()) {
                             succs.add(trans.getTreeTarget());
                         } else {
-                            trans.getNonTreeTarget().subtreeLocations().forEach(succs::add);
+                            CollectionUtil.add(succs, trans.getNonTreeTarget().subtreeLocsIterator());
                         }
                     }
                 }
@@ -95,7 +96,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
                     if (trans.isTree()) {
                         succs.add(trans.getTreeTarget());
                     } else {
-                        trans.getNonTreeTarget().subtreeLocations().forEach(succs::add);
+                        CollectionUtil.add(succs, trans.getNonTreeTarget().subtreeLocsIterator());
                     }
                 }
                 curr = new NonDetState<>(succs, curr.getStack());

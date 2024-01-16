@@ -62,6 +62,10 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.checkerframework</groupId>

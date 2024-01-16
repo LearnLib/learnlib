@@ -104,9 +104,9 @@ public class WMethodEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, I, B
         return IteratorUtil.stream(new SPATestsIterator<>(hypothesis,
                                                           alphabet,
                                                           (dfa, alph) -> new WMethodTestsIterator<>(dfa,
-                                                                                               alph,
-                                                                                               Math.max(lookahead,
-                                                                                                        expectedSize -
-                                                                                                        dfa.size()))));
+                                                                                                    alph,
+                                                                                                    Math.max(lookahead,
+                                                                                                             expectedSize -
+                                                                                                             dfa.size()))));
     }
 }

@@ -142,7 +142,6 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
     protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
         return IteratorUtil.stream(new WpMethodTestsIterator<>(hypothesis,
                                                                inputs,
-                                                               Math.max(lookahead,
-                                                                           expectedSize - hypothesis.size())));
+                                                               Math.max(lookahead, expectedSize - hypothesis.size())));
     }
 }

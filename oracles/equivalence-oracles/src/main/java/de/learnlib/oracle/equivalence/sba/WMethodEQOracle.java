@@ -104,6 +104,6 @@ public class WMethodEQOracle<I> extends AbstractTestWordEQOracle<SBA<?, I>, I, B
         return IteratorUtil.stream(new SBAWMethodTestsIterator<>(hypothesis,
                                                                  alphabet,
                                                                  Math.max(lookahead,
-                                                                             expectedSize - hypothesis.size())));
+                                                                          expectedSize - hypothesis.size())));
     }
 }

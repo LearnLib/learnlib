@@ -32,7 +32,7 @@ import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 
@@ -60,7 +60,7 @@ public class ParallelismExample1 {
 
         // generate 1 million (10^6) input words
         this.queries = new ArrayList<>((int) Math.pow(inputs.size(), QUERIES_EXP));
-        for (List<Integer> input : CollectionsUtil.allTuples(inputs, QUERIES_EXP)) {
+        for (List<Integer> input : IterableUtil.allTuples(inputs, QUERIES_EXP)) {
             queries.add(new DefaultQuery<>(Word.fromList(input)));
         }
     }

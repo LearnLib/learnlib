@@ -38,6 +38,7 @@ open module de.learnlib.algorithm.ttt.vpa {
     requires org.checkerframework.checker.qual;
 
     requires static de.learnlib.tooling.annotation;
+    requires net.automatalib.common.util;
 
     exports de.learnlib.algorithm.ttt.vpa;
 }

@@ -105,6 +105,6 @@ public class WMethodEQOracle<I, O> extends AbstractTestWordEQOracle<SPMM<?, I, ?
         return IteratorUtil.stream(new SPMMWMethodTestsIterator<>(hypothesis,
                                                                   alphabet,
                                                                   Math.max(lookahead,
-                                                                              expectedSize - hypothesis.size())));
+                                                                           expectedSize - hypothesis.size())));
     }
 }

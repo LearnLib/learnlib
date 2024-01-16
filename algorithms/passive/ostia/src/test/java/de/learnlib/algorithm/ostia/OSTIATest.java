@@ -33,7 +33,8 @@ import net.automatalib.automaton.transducer.impl.CompactSST;
 import net.automatalib.common.smartcollection.IntSeq;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.conformance.WMethodTestsIterator;
@@ -102,11 +103,11 @@ public class OSTIATest {
 
         final WordBuilder<Integer> wb = new WordBuilder<>();
         for (Pair<IntSeq, IntSeq> p : getExampleSamples()) {
-            CollectionsUtil.add(wb, p.getFirst());
+            CollectionUtil.add(wb, p.getFirst().iterator());
             final Word<Integer> input = wb.toWord();
             wb.clear();
 
-            CollectionsUtil.add(wb, p.getSecond());
+            CollectionUtil.add(wb, p.getSecond().iterator());
             final Word<Integer> output = wb.toWord();
             wb.clear();
 
@@ -134,7 +135,7 @@ public class OSTIATest {
         final CompactSST<Character, String> sst = new CompactSST<>(INPUTS);
 
         final List<Word<String>> words = new ArrayList<>();
-        for (List<String> t : CollectionsUtil.allTuples(OUTPUTS, 0, 3)) {
+        for (List<String> t : IterableUtil.allTuples(OUTPUTS, 0, 3)) {
             words.add(Word.fromList(t));
         }
 

@@ -27,7 +27,7 @@ import de.learnlib.oracle.membership.StateLocalInputSULOracle;
 import de.learnlib.sul.ObservableSUL;
 import de.learnlib.sul.SUL;
 import de.learnlib.sul.StateLocalInputSUL;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.word.Word;
 
 /**
@@ -143,7 +143,7 @@ public final class ParallelOracleBuilders {
     @SafeVarargs
     public static <I, D> DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(MembershipOracle<I, D> firstOracle,
                                                                                      MembershipOracle<I, D>... otherOracles) {
-        return newDynamicParallelOracle(CollectionsUtil.list(firstOracle, otherOracles));
+        return newDynamicParallelOracle(CollectionUtil.list(firstOracle, otherOracles));
     }
 
     /**
@@ -221,7 +221,7 @@ public final class ParallelOracleBuilders {
     public static <S, I, D> DynamicParallelOmegaOracleBuilder<S, I, D> newDynamicParallelOmegaOracle(
             OmegaMembershipOracle<S, I, D> firstOracle,
             OmegaMembershipOracle<S, I, D>... otherOracles) {
-        return newDynamicParallelOmegaOracle(CollectionsUtil.list(firstOracle, otherOracles));
+        return newDynamicParallelOmegaOracle(CollectionUtil.list(firstOracle, otherOracles));
     }
 
     /**
@@ -320,7 +320,7 @@ public final class ParallelOracleBuilders {
     @SafeVarargs
     public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(MembershipOracle<I, D> firstOracle,
                                                                                    MembershipOracle<I, D>... otherOracles) {
-        return newStaticParallelOracle(CollectionsUtil.list(firstOracle, otherOracles));
+        return newStaticParallelOracle(CollectionUtil.list(firstOracle, otherOracles));
     }
 
     /**
@@ -397,7 +397,7 @@ public final class ParallelOracleBuilders {
     @SafeVarargs
     public static <S, I, D> StaticParallelOmegaOracleBuilder<S, I, D> newStaticParallelOmegaOracle(OmegaMembershipOracle<S, I, D> firstOracle,
                                                                                                    OmegaMembershipOracle<S, I, D>... otherOracles) {
-        return newStaticParallelOmegaOracle(CollectionsUtil.list(firstOracle, otherOracles));
+        return newStaticParallelOmegaOracle(CollectionUtil.list(firstOracle, otherOracles));
     }
 
     /**
