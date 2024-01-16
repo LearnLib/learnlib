@@ -26,11 +26,11 @@ import java.util.Map.Entry;
 import java.util.RandomAccess;
 import java.util.function.Predicate;
 
-import com.google.common.collect.Iterables;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
-import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.common.util.collection.BitSetIterator;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.graph.Graph;
 import net.automatalib.util.graph.traversal.GraphTraversal;
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -233,9 +233,7 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
      */
     @Override
     public Collection<N> getNodes() {
-        List<N> nodes = new ArrayList<>();
-        Iterables.addAll(nodes, GraphTraversal.breadthFirstOrder(this, Collections.singleton(root)));
-        return nodes;
+        return IteratorUtil.list(GraphTraversal.breadthFirstIterator(this, Collections.singleton(root)));
     }
 
     @Override

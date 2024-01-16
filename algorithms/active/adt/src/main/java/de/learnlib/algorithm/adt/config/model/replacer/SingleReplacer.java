@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
 import de.learnlib.algorithm.adt.adt.ADT;
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.api.SubtreeReplacer;
@@ -34,6 +33,7 @@ import de.learnlib.algorithm.adt.util.ADTUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.smartcollection.ReflexiveMapView;
+import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -52,17 +52,18 @@ public class SingleReplacer implements SubtreeReplacer {
 
         final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot());
         candidates.remove(adt.getRoot());
-        final Map<ADTNode<S, I, O>, Double> candidatesScore = Maps.toMap(candidates, node -> {
-            final int resets = 1 + ADTUtil.collectResetNodes(node).size();
-            final int finals = ADTUtil.collectLeaves(node).size();
 
-            return resets / (double) finals;
-        });
+        // cache scores to prevent expensive recalculations during sorting
+        final List<Pair<ADTNode<S, I, O>, Double>> sortedCandidates = new ArrayList<>(candidates.size());
+        for (ADTNode<S, I, O> candidate : candidates) {
+            final int resets = 1 + ADTUtil.collectResetNodes(candidate).size();
+            final int leaves = ADTUtil.collectLeaves(candidate).size();
+            sortedCandidates.add(Pair.of(candidate, resets / (double) leaves));
+        }
+        sortedCandidates.sort(Comparator.comparingDouble(Pair::getSecond));
 
-        final List<ADTNode<S, I, O>> sortedCandidates = new ArrayList<>(candidates);
-        sortedCandidates.sort(Comparator.comparingDouble(candidatesScore::get));
-
-        for (ADTNode<S, I, O> node : sortedCandidates) {
+        for (Pair<ADTNode<S, I, O>, Double> candidate : sortedCandidates) {
+            final ADTNode<S, I, O> node = candidate.getFirst();
             final Set<S> targetStates = ADTUtil.collectHypothesisStates(node);
 
             // check if we can extendLeaf the parent ADS

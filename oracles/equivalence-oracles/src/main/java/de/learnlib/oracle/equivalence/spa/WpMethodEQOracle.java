@@ -18,12 +18,12 @@ package de.learnlib.oracle.equivalence.spa;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import com.google.common.collect.Streams;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.conformance.SPATestsIterator;
 import net.automatalib.util.automaton.conformance.WMethodTestsIterator;
 import net.automatalib.util.automaton.conformance.WpMethodTestsIterator;
@@ -102,12 +102,12 @@ public class WpMethodEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, I, 
         @SuppressWarnings("unchecked")
         final ProceduralInputAlphabet<I> alphabet = (ProceduralInputAlphabet<I>) inputs;
 
-        return Streams.stream(new SPATestsIterator<>(hypothesis,
-                                                     alphabet,
-                                                     (dfa, alph) -> new WpMethodTestsIterator<>(dfa,
-                                                                                                alph,
-                                                                                                Math.max(lookahead,
-                                                                                                         expectedSize -
-                                                                                                         dfa.size()))));
+        return IteratorUtil.stream(new SPATestsIterator<>(hypothesis,
+                                                          alphabet,
+                                                          (dfa, alph) -> new WpMethodTestsIterator<>(dfa,
+                                                                                                     alph,
+                                                                                                     Math.max(lookahead,
+                                                                                                              expectedSize -
+                                                                                                              dfa.size()))));
     }
 }

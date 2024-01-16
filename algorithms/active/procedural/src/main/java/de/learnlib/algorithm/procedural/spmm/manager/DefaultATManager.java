@@ -17,18 +17,19 @@ package de.learnlib.algorithm.procedural.spmm.manager;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.spmm.ATManager;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 
@@ -53,8 +54,8 @@ public class DefaultATManager<I, O> implements ATManager<I, O> {
         this.inputAlphabet = inputAlphabet;
         this.errorOutput = errorOutput;
 
-        this.accessSequences = Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls());
-        this.terminatingSequences = Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls());
+        this.accessSequences = new HashMap<>(HashUtil.capacity(inputAlphabet.getNumCalls()));
+        this.terminatingSequences = new HashMap<>(HashUtil.capacity(inputAlphabet.getNumCalls()));
     }
 
     @Override
@@ -71,9 +72,9 @@ public class DefaultATManager<I, O> implements ATManager<I, O> {
 
     @Override
     public Pair<Set<I>, Set<I>> scanCounterexample(DefaultQuery<I, Word<O>> counterexample) {
-        final Set<I> newCalls = Sets.newHashSetWithExpectedSize(inputAlphabet.getNumCalls() - accessSequences.size());
+        final Set<I> newCalls = new HashSet<>(HashUtil.capacity(inputAlphabet.getNumCalls() - accessSequences.size()));
         final Set<I> newTerms =
-                Sets.newHashSetWithExpectedSize(inputAlphabet.getNumCalls() - terminatingSequences.size());
+                new HashSet<>(HashUtil.capacity(inputAlphabet.getNumCalls() - terminatingSequences.size()));
 
         final Word<I> input = counterexample.getInput();
         final Word<O> output = counterexample.getOutput();

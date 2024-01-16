@@ -15,10 +15,9 @@
  */
 package de.learnlib.algorithm.aaar;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
-import com.google.common.collect.Lists;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.SampleSetEQOracle;
@@ -28,6 +27,7 @@ import de.learnlib.util.Experiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.conformance.WpMethodTestsIterator;
 import net.automatalib.word.Word;
@@ -50,7 +50,7 @@ public abstract class AbstractAAARTest<L extends AbstractAAARLearner<?, A, A, I,
     public void testAbstractHypothesisEquivalence() {
 
         final WpMethodTestsIterator<I> iter = new WpMethodTestsIterator<>(automaton, alphabet);
-        final ArrayList<Word<I>> testCases = Lists.newArrayList(iter);
+        final List<Word<I>> testCases = IteratorUtil.list(iter);
 
         final SampleSetEQOracle<I, D> eqo = new SampleSetEQOracle<>(false);
         eqo.addAll(new SimulatorOracle<>(automaton), testCases);

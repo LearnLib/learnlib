@@ -26,8 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import com.google.common.collect.Iterables;
-import com.google.common.io.CharStreams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.SubsequentialTransducer;
@@ -35,7 +33,8 @@ import net.automatalib.automaton.transducer.impl.CompactSST;
 import net.automatalib.common.smartcollection.IntSeq;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.conformance.WMethodTestsIterator;
@@ -104,11 +103,11 @@ public class OSTIATest {
 
         final WordBuilder<Integer> wb = new WordBuilder<>();
         for (Pair<IntSeq, IntSeq> p : getExampleSamples()) {
-            Iterables.addAll(wb, p.getFirst());
+            CollectionUtil.add(wb, p.getFirst().iterator());
             final Word<Integer> input = wb.toWord();
             wb.clear();
 
-            Iterables.addAll(wb, p.getSecond());
+            CollectionUtil.add(wb, p.getSecond().iterator());
             final Word<Integer> output = wb.toWord();
             wb.clear();
 
@@ -120,7 +119,7 @@ public class OSTIATest {
 
         try (InputStream is = getClass().getResourceAsStream("/hyp.dot")) {
             assert is != null;
-            expectedHyp = CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
+            expectedHyp = IOUtil.toString(IOUtil.asBufferedUTF8Reader(is));
         }
 
         final StringWriter actualHyp = new StringWriter();
@@ -136,7 +135,7 @@ public class OSTIATest {
         final CompactSST<Character, String> sst = new CompactSST<>(INPUTS);
 
         final List<Word<String>> words = new ArrayList<>();
-        for (List<String> t : CollectionsUtil.allTuples(OUTPUTS, 0, 3)) {
+        for (List<String> t : IterableUtil.allTuples(OUTPUTS, 0, 3)) {
             words.add(Word.fromList(t));
         }
 

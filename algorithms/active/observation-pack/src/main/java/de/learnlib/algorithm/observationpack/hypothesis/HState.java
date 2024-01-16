@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;

@@ -34,7 +34,6 @@
  */
 open module de.learnlib.algorithm.rpni {
 
-    requires com.google.common;
     requires de.learnlib.api;
     requires de.learnlib.datastructure.pta;
     requires net.automatalib.api;

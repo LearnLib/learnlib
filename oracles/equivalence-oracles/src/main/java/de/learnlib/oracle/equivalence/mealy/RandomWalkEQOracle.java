@@ -25,7 +25,7 @@ import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.sul.SUL;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -107,7 +107,7 @@ public class RandomWalkEQOracle<I, O> implements MealyEquivalenceOracle<I, O> {
             return null;
         }
 
-        List<? extends I> choices = CollectionsUtil.randomAccessList(inputs);
+        List<? extends I> choices = CollectionUtil.randomAccessList(inputs);
         int bound = choices.size();
         S cur = hypothesis.getInitialState();
         WordBuilder<I> wbIn = new WordBuilder<>();

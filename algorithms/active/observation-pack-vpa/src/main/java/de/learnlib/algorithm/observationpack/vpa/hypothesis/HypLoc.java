@@ -21,7 +21,7 @@ import java.util.List;
 
 import de.learnlib.AccessSequenceProvider;
 import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.word.Word;
 
 /**

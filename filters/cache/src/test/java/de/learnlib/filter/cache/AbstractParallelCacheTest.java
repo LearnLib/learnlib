@@ -23,7 +23,7 @@ import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.ParallelOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -81,7 +81,7 @@ public abstract class AbstractParallelCacheTest<A, I, D> {
 
         final List<CountingQuery<I, D>> queries = new ArrayList<>(numQueries);
 
-        for (List<I> word : CollectionsUtil.allTuples(alphabet, 0, MAXIMUM_LENGTH_OF_QUERIES)) {
+        for (List<I> word : IterableUtil.allTuples(alphabet, 0, MAXIMUM_LENGTH_OF_QUERIES)) {
             queries.add(new CountingQuery<>(Word.fromList(word)));
         }
 
@@ -111,9 +111,9 @@ public abstract class AbstractParallelCacheTest<A, I, D> {
         final List<DefaultQuery<I, D>> queries =
                 new ArrayList<>((int) Math.pow(alphabet.size(), MAXIMUM_LENGTH_OF_QUERIES));
 
-        for (List<I> word : CollectionsUtil.allTuples(alphabet,
-                                                            MAXIMUM_LENGTH_OF_QUERIES + 1,
-                                                            MAXIMUM_LENGTH_OF_QUERIES + 1)) {
+        for (List<I> word : IterableUtil.allTuples(alphabet,
+                                                   MAXIMUM_LENGTH_OF_QUERIES + 1,
+                                                   MAXIMUM_LENGTH_OF_QUERIES + 1)) {
             queries.add(new DefaultQuery<>(Word.fromList(word)));
         }
 

@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Random;
 
-import com.google.common.io.CharStreams;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.vpa.SimulatorEQOracle;
@@ -78,7 +77,7 @@ public class DTVisualizationTest {
     private String resourceAsString(String resourceName) throws IOException {
         try (InputStream is = getClass().getResourceAsStream(resourceName)) {
             assert is != null;
-            return CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
+            return IOUtil.toString(IOUtil.asBufferedUTF8Reader(is));
         }
     }
 }

@@ -39,11 +39,6 @@ limitations under the License.
 
         <!-- external -->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
@@ -54,10 +49,6 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-smartcollections</artifactId>
         </dependency>
 
         <dependency>

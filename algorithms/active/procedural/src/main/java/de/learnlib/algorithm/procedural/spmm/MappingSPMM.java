@@ -16,14 +16,15 @@
 package de.learnlib.algorithm.procedural.spmm;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Maps;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.HashUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 class MappingSPMM<S, I, T, O> implements SPMM<S, I, T, O> {
@@ -45,7 +46,7 @@ class MappingSPMM<S, I, T, O> implements SPMM<S, I, T, O> {
         this.delegate = delegate;
 
         final Map<SymbolWrapper<I>, MealyMachine<?, SymbolWrapper<I>, ?, O>> p = delegate.getProcedures();
-        this.procedures = Maps.newHashMapWithExpectedSize(p.size());
+        this.procedures = new HashMap<>(HashUtil.capacity(p.size()));
 
         for (Entry<SymbolWrapper<I>, MealyMachine<?, SymbolWrapper<I>, ?, O>> e : p.entrySet()) {
             procedures.put(e.getKey().getDelegate(), new MealyView<>(e.getValue()));

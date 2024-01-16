@@ -18,8 +18,6 @@ package de.learnlib.oracle.parallelism;
 import java.util.Collection;
 import java.util.function.Supplier;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.OmegaMembershipOracle;
 import de.learnlib.oracle.ThreadPool.PoolPolicy;
@@ -29,6 +27,7 @@ import de.learnlib.oracle.membership.StateLocalInputSULOracle;
 import de.learnlib.sul.ObservableSUL;
 import de.learnlib.sul.SUL;
 import de.learnlib.sul.StateLocalInputSUL;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.word.Word;
 
 /**
@@ -67,8 +66,6 @@ import net.automatalib.word.Word;
  */
 public final class ParallelOracleBuilders {
 
-    private static final String FORKABLE_SUL_ERR = "SUL must be forkable for parallel processing";
-
     private ParallelOracleBuilders() {
         // prevent instantiation
     }
@@ -87,7 +84,7 @@ public final class ParallelOracleBuilders {
      * @return a preconfigured oracle builder
      */
     public static <I, O> DynamicParallelOracleBuilder<I, Word<O>> newDynamicParallelOracle(SUL<I, O> sul) {
-        Preconditions.checkArgument(sul.canFork(), FORKABLE_SUL_ERR);
+        checkFork(sul);
         return new DynamicParallelOracleBuilder<>(toSupplier(sul));
     }
 
@@ -109,7 +106,7 @@ public final class ParallelOracleBuilders {
      */
     public static <I, O> DynamicParallelOracleBuilder<I, Word<O>> newDynamicParallelOracle(StateLocalInputSUL<I, O> sul,
                                                                                            O undefinedInput) {
-        Preconditions.checkArgument(sul.canFork(), FORKABLE_SUL_ERR);
+        checkFork(sul);
         return new DynamicParallelOracleBuilder<>(toSupplier(sul, undefinedInput));
     }
 
@@ -146,7 +143,7 @@ public final class ParallelOracleBuilders {
     @SafeVarargs
     public static <I, D> DynamicParallelOracleBuilder<I, D> newDynamicParallelOracle(MembershipOracle<I, D> firstOracle,
                                                                                      MembershipOracle<I, D>... otherOracles) {
-        return newDynamicParallelOracle(Lists.asList(firstOracle, otherOracles));
+        return newDynamicParallelOracle(CollectionUtil.list(firstOracle, otherOracles));
     }
 
     /**
@@ -181,7 +178,7 @@ public final class ParallelOracleBuilders {
      * @return a preconfigured oracle builder
      */
     public static <I, O> DynamicParallelOmegaOracleBuilder<?, I, Word<O>> newDynamicParallelOmegaOracle(ObservableSUL<?, I, O> sul) {
-        Preconditions.checkArgument(sul.canFork(), FORKABLE_SUL_ERR);
+        checkFork(sul);
         // instantiate inner supplier to resolve generics
         return new DynamicParallelOmegaOracleBuilder<>(toSupplier(sul)::get);
     }
@@ -224,7 +221,7 @@ public final class ParallelOracleBuilders {
     public static <S, I, D> DynamicParallelOmegaOracleBuilder<S, I, D> newDynamicParallelOmegaOracle(
             OmegaMembershipOracle<S, I, D> firstOracle,
             OmegaMembershipOracle<S, I, D>... otherOracles) {
-        return newDynamicParallelOmegaOracle(Lists.asList(firstOracle, otherOracles));
+        return newDynamicParallelOmegaOracle(CollectionUtil.list(firstOracle, otherOracles));
     }
 
     /**
@@ -262,7 +259,7 @@ public final class ParallelOracleBuilders {
      * @return a preconfigured oracle builder
      */
     public static <I, O> StaticParallelOracleBuilder<I, Word<O>> newStaticParallelOracle(SUL<I, O> sul) {
-        Preconditions.checkArgument(sul.canFork(), FORKABLE_SUL_ERR);
+        checkFork(sul);
         return new StaticParallelOracleBuilder<>(toSupplier(sul));
     }
 
@@ -284,7 +281,7 @@ public final class ParallelOracleBuilders {
      */
     public static <I, O> StaticParallelOracleBuilder<I, Word<O>> newStaticParallelOracle(StateLocalInputSUL<I, O> sul,
                                                                                          O undefinedInput) {
-        Preconditions.checkArgument(sul.canFork(), FORKABLE_SUL_ERR);
+        checkFork(sul);
         return new StaticParallelOracleBuilder<>(toSupplier(sul, undefinedInput));
     }
 
@@ -323,7 +320,7 @@ public final class ParallelOracleBuilders {
     @SafeVarargs
     public static <I, D> StaticParallelOracleBuilder<I, D> newStaticParallelOracle(MembershipOracle<I, D> firstOracle,
                                                                                    MembershipOracle<I, D>... otherOracles) {
-        return newStaticParallelOracle(Lists.asList(firstOracle, otherOracles));
+        return newStaticParallelOracle(CollectionUtil.list(firstOracle, otherOracles));
     }
 
     /**
@@ -358,7 +355,7 @@ public final class ParallelOracleBuilders {
      * @return a preconfigured oracle builder
      */
     public static <I, O> StaticParallelOmegaOracleBuilder<?, I, Word<O>> newStaticParallelOmegaOracle(ObservableSUL<?, I, O> sul) {
-        Preconditions.checkArgument(sul.canFork(), FORKABLE_SUL_ERR);
+        checkFork(sul);
         // instantiate inner supplier to resolve generics
         return new StaticParallelOmegaOracleBuilder<>(toSupplier(sul)::get);
     }
@@ -400,7 +397,7 @@ public final class ParallelOracleBuilders {
     @SafeVarargs
     public static <S, I, D> StaticParallelOmegaOracleBuilder<S, I, D> newStaticParallelOmegaOracle(OmegaMembershipOracle<S, I, D> firstOracle,
                                                                                                    OmegaMembershipOracle<S, I, D>... otherOracles) {
-        return newStaticParallelOmegaOracle(Lists.asList(firstOracle, otherOracles));
+        return newStaticParallelOmegaOracle(CollectionUtil.list(firstOracle, otherOracles));
     }
 
     /**
@@ -435,5 +432,11 @@ public final class ParallelOracleBuilders {
 
     private static <S, I, O> Supplier<OmegaMembershipOracle<?, I, Word<O>>> toSupplier(ObservableSUL<S, I, O> sul) {
         return () -> AbstractSULOmegaOracle.newOracle(sul.fork());
+    }
+
+    private static <I, O> void checkFork(SUL<I, O> sul) {
+        if (!sul.canFork()) {
+            throw new IllegalArgumentException("SUL must be forkable for parallel processing");
+        }
     }
 }

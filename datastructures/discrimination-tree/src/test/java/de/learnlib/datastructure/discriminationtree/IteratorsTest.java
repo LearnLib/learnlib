@@ -15,13 +15,11 @@
  */
 package de.learnlib.datastructure.discriminationtree;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import de.learnlib.datastructure.discriminationtree.iterators.DiscriminationTreeIterators;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
+import net.automatalib.common.util.collection.IteratorUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -30,38 +28,34 @@ public class IteratorsTest {
     @Test
     public void testNodeIterator() {
         final Set<AbstractWordBasedDTNode<Integer, Boolean, Character>> nodes =
-                Sets.newHashSet(DiscriminationTreeIterators.nodeIterator(DummyDT.DT.getRoot()));
+                IteratorUtil.set(DiscriminationTreeIterators.nodeIterator(DummyDT.DT.getRoot()));
 
         Assert.assertEquals(nodes,
-                            new HashSet<>(Arrays.asList(DummyDT.INNER_1,
-                                                        DummyDT.INNER_2,
-                                                        DummyDT.LEAF_1,
-                                                        DummyDT.LEAF_2,
-                                                        DummyDT.LEAF_3)));
+                            Set.of(DummyDT.INNER_1, DummyDT.INNER_2, DummyDT.LEAF_1, DummyDT.LEAF_2, DummyDT.LEAF_3));
     }
 
     @Test
     public void testLeafIterator() {
         final Set<AbstractWordBasedDTNode<Integer, Boolean, Character>> nodes =
-                Sets.newHashSet(DiscriminationTreeIterators.leafIterator(DummyDT.DT.getRoot()));
+                IteratorUtil.set(DiscriminationTreeIterators.leafIterator(DummyDT.DT.getRoot()));
 
-        Assert.assertEquals(nodes, new HashSet<>(Arrays.asList(DummyDT.LEAF_1, DummyDT.LEAF_2, DummyDT.LEAF_3)));
+        Assert.assertEquals(nodes, Set.of(DummyDT.LEAF_1, DummyDT.LEAF_2, DummyDT.LEAF_3));
     }
 
     @Test
     public void testInnerNodeIterator() {
         final Set<AbstractWordBasedDTNode<Integer, Boolean, Character>> nodes =
-                Sets.newHashSet(DiscriminationTreeIterators.innerNodeIterator(DummyDT.DT.getRoot()));
+                IteratorUtil.set(DiscriminationTreeIterators.innerNodeIterator(DummyDT.DT.getRoot()));
 
-        Assert.assertEquals(nodes, new HashSet<>(Arrays.asList(DummyDT.INNER_1, DummyDT.INNER_2)));
+        Assert.assertEquals(nodes, Set.of(DummyDT.INNER_1, DummyDT.INNER_2));
     }
 
     @Test
     public void testTransformingLeafIterator() {
         final Set<String> nodes =
-                Sets.newHashSet(DiscriminationTreeIterators.transformingLeafIterator(DummyDT.DT.getRoot(),
-                                                                                     n -> String.valueOf(n.getData())));
+                IteratorUtil.set(DiscriminationTreeIterators.transformingLeafIterator(DummyDT.DT.getRoot(),
+                                                                                      n -> String.valueOf(n.getData())));
 
-        Assert.assertEquals(nodes, Sets.newHashSet("a", "b", "c"));
+        Assert.assertEquals(nodes, Set.of("a", "b", "c"));
     }
 }

@@ -17,16 +17,17 @@ package de.learnlib.algorithm.procedural.sba.manager;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.sba.ATManager;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 
@@ -47,8 +48,8 @@ public class DefaultATManager<I> implements ATManager<I> {
     public DefaultATManager(ProceduralInputAlphabet<I> alphabet) {
         this.alphabet = alphabet;
 
-        this.accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-        this.terminatingSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
+        this.accessSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
+        this.terminatingSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
     }
 
     @Override
@@ -65,8 +66,8 @@ public class DefaultATManager<I> implements ATManager<I> {
 
     @Override
     public Pair<Set<I>, Set<I>> scanPositiveCounterexample(Word<I> input) {
-        final Set<I> newCalls = Sets.newHashSetWithExpectedSize(alphabet.getNumCalls() - accessSequences.size());
-        final Set<I> newTerms = Sets.newHashSetWithExpectedSize(alphabet.getNumCalls() - terminatingSequences.size());
+        final Set<I> newCalls = new HashSet<>(HashUtil.capacity(alphabet.getNumCalls() - accessSequences.size()));
+        final Set<I> newTerms = new HashSet<>(HashUtil.capacity(alphabet.getNumCalls() - terminatingSequences.size()));
 
         for (int i = 0; i < input.size(); i++) {
             final I sym = input.getSymbol(i);

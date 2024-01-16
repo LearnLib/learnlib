@@ -20,7 +20,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.io.CharStreams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.impl.CompactMoore;
@@ -71,7 +70,7 @@ public class PTAVisualizationTest {
         GraphDOT.write(this.pta, actualPTA);
 
         final String expectedPTA =
-                CharStreams.toString(IOUtil.asBufferedUTF8Reader(PTAVisualizationTest.class.getResourceAsStream(
+                IOUtil.toString(IOUtil.asBufferedUTF8Reader(PTAVisualizationTest.class.getResourceAsStream(
                         "/pta.dot")));
 
         Assert.assertEquals(actualPTA.toString(), expectedPTA);

@@ -24,7 +24,7 @@ import de.learnlib.query.Query;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
@@ -60,7 +60,7 @@ public final class TestQueries {
                                                                    Collection<I> inputs) {
 
         final Random r = new Random(42);
-        final List<? extends I> inputsAsList = CollectionsUtil.randomAccessList(inputs);
+        final List<? extends I> inputsAsList = CollectionUtil.randomAccessList(inputs);
 
         List<Query<I, D>> result = new ArrayList<>(numQueries);
         for (int i = 0; i < numQueries; i++) {

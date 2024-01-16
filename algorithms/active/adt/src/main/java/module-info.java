@@ -30,7 +30,6 @@
  */
 open module de.learnlib.algorithm.adt {
 
-    requires com.google.common;
     requires de.learnlib.api;
     requires de.learnlib.common.counterexample;
     requires de.learnlib.common.util;

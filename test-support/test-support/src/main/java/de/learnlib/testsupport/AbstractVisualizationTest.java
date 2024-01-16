@@ -18,7 +18,6 @@ package de.learnlib.testsupport;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.google.common.io.CharStreams;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.query.DefaultQuery;
@@ -66,7 +65,7 @@ public abstract class AbstractVisualizationTest<L extends LearningAlgorithm<? ex
     protected String resourceAsString(String resourceName) throws IOException {
         try (InputStream is = getClass().getResourceAsStream(resourceName)) {
             assert is != null;
-            return CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
+            return IOUtil.toString(IOUtil.asBufferedUTF8Reader(is));
         }
     }
 

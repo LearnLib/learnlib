@@ -18,17 +18,18 @@ package de.learnlib.algorithm.procedural.spa.manager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Streams;
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.procedural.spa.ATRManager;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.common.util.HashUtil;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -52,9 +53,9 @@ public class OptimizingATRManager<I> implements ATRManager<I> {
     public OptimizingATRManager(ProceduralInputAlphabet<I> alphabet) {
         this.alphabet = alphabet;
 
-        this.accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-        this.returnSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-        this.terminatingSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
+        this.accessSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
+        this.returnSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
+        this.terminatingSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
     }
 
     @Override
@@ -78,7 +79,7 @@ public class OptimizingATRManager<I> implements ATRManager<I> {
     @Override
     public Set<I> scanPositiveCounterexample(Word<I> input) {
         final Set<I> newProcedures =
-                Sets.newHashSetWithExpectedSize(this.alphabet.getNumCalls() - this.terminatingSequences.size());
+                new HashSet<>(HashUtil.capacity(this.alphabet.getNumCalls() - this.terminatingSequences.size()));
 
         this.extractPotentialTerminatingSequences(input, newProcedures);
         this.extractPotentialAccessAndReturnSequences(input);
@@ -123,12 +124,12 @@ public class OptimizingATRManager<I> implements ATRManager<I> {
     private <S> @Nullable Word<I> getShortestHypothesisTS(DFA<S, I> hyp,
                                                           AccessSequenceTransformer<I> asTransformer,
                                                           Collection<I> inputs) {
-        return Streams.stream(Covers.stateCoverIterator(hyp, inputs))
-                      .filter(hyp::accepts)
-                      .map(asTransformer::transformAccessSequence)
-                      .map(as -> this.alphabet.expand(as, terminatingSequences::get))
-                      .min(Comparator.comparingInt(Word::size))
-                      .orElse(null);
+        return IteratorUtil.stream(Covers.stateCoverIterator(hyp, inputs))
+                           .filter(hyp::accepts)
+                           .map(asTransformer::transformAccessSequence)
+                           .map(as -> this.alphabet.expand(as, terminatingSequences::get))
+                           .min(Comparator.comparingInt(Word::size))
+                           .orElse(null);
     }
 
     private void optimizeSequences(Map<I, Word<I>> sequences) {

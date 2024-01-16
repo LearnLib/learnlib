@@ -17,6 +17,7 @@ package de.learnlib.algorithm.procedural.spmm;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,7 +25,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.LearnerConstructor;
 import de.learnlib.algorithm.LearningAlgorithm;
@@ -43,6 +43,7 @@ import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.procedural.impl.EmptySPMM;
 import net.automatalib.automaton.procedural.impl.StackSPMM;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.util.automaton.Automata;
@@ -97,8 +98,8 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
         this.learnerConstructors = learnerConstructors;
         this.atManager = atManager;
 
-        this.learners = Maps.newHashMapWithExpectedSize(this.alphabet.getNumCalls());
-        this.mapping = Maps.newHashMapWithExpectedSize(this.alphabet.size());
+        this.learners = new HashMap<>(HashUtil.capacity(this.alphabet.getNumCalls()));
+        this.mapping = new HashMap<>(HashUtil.capacity(this.alphabet.size()));
 
         for (I i : this.alphabet.getInternalAlphabet()) {
             final SymbolWrapper<I> wrapper = new SymbolWrapper<>(i, true);
@@ -173,7 +174,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
 
         final Map<I, MealyMachine<?, SymbolWrapper<I>, ?, O>> procedures = getSubModels();
         final Map<SymbolWrapper<I>, MealyMachine<?, SymbolWrapper<I>, ?, O>> mappedProcedures =
-                Maps.newHashMapWithExpectedSize(procedures.size());
+                new HashMap<>(HashUtil.capacity(procedures.size()));
 
         for (Entry<I, MealyMachine<?, SymbolWrapper<I>, ?, O>> e : procedures.entrySet()) {
             final SymbolWrapper<I> w = this.mapping.get(e.getKey());
@@ -271,7 +272,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
 
     private Map<I, MealyMachine<?, SymbolWrapper<I>, ?, O>> getSubModels() {
         final Map<I, MealyMachine<?, SymbolWrapper<I>, ?, O>> subModels =
-                Maps.newHashMapWithExpectedSize(this.learners.size());
+                new HashMap<>(HashUtil.capacity(this.learners.size()));
 
         for (Map.Entry<I, L> entry : this.learners.entrySet()) {
             subModels.put(entry.getKey(), entry.getValue().getHypothesisModel());

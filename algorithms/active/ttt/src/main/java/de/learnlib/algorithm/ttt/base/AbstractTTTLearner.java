@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.google.common.collect.Iterators;
 import de.learnlib.AccessSequenceProvider;
 import de.learnlib.Resumable;
 import de.learnlib.acex.AcexAnalyzer;
@@ -43,6 +42,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.common.smartcollection.ElementReference;
 import net.automatalib.common.smartcollection.UnorderedCollection;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
@@ -344,7 +344,7 @@ public abstract class AbstractTTTLearner<A, I, D>
                 result.add(trans.getTreeTarget());
             } else {
                 AbstractBaseDTNode<I, D> tgtNode = trans.getNonTreeTarget();
-                Iterators.addAll(result, tgtNode.subtreeStatesIterator());
+                CollectionUtil.add(result, tgtNode.subtreeStatesIterator());
             }
         }
         return result;

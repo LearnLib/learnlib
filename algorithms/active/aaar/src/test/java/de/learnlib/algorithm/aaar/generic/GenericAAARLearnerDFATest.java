@@ -21,7 +21,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.function.Function;
 
-import com.google.common.io.CharStreams;
 import de.learnlib.algorithm.aaar.AAARTestUtil;
 import de.learnlib.algorithm.aaar.AbstractAAARTest;
 import de.learnlib.algorithm.aaar.abstraction.AbstractAbstractionTree;
@@ -59,7 +58,7 @@ public class GenericAAARLearnerDFATest
         try (Reader r = IOUtil.asBufferedUTF8Reader(GenericAAARLearnerDFATest.class.getResourceAsStream("/tree_dfa.dot"));
              Writer w = new StringWriter()) {
 
-            final String expected = CharStreams.toString(r);
+            final String expected = IOUtil.toString(r);
             GraphDOT.write((GraphViewable) tree, w);
 
             Assert.assertEquals(w.toString(), expected);

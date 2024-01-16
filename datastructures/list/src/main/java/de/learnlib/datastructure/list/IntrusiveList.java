@@ -16,8 +16,8 @@
 package de.learnlib.datastructure.list;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-import com.google.common.collect.AbstractIterator;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -59,7 +59,7 @@ public class IntrusiveList<T extends IntrusiveListElem<T>> extends IntrusiveList
         return new ListIterator(next);
     }
 
-    private class ListIterator extends AbstractIterator<T> {
+    private class ListIterator implements Iterator<T> {
 
         private @Nullable T cursor;
 
@@ -68,9 +68,14 @@ public class IntrusiveList<T extends IntrusiveListElem<T>> extends IntrusiveList
         }
 
         @Override
-        protected @Nullable T computeNext() {
+        public boolean hasNext() {
+            return cursor != null;
+        }
+
+        @Override
+        public T next() {
             if (cursor == null) {
-                return endOfData();
+                throw new NoSuchElementException();
             }
 
             final T result = cursor;

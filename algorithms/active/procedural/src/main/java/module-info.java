@@ -31,7 +31,6 @@
  */
 open module de.learnlib.algorithm.procedural {
 
-    requires com.google.common;
     requires de.learnlib.algorithm.kv;
     requires de.learnlib.algorithm.lstar;
     requires de.learnlib.algorithm.observationpack;

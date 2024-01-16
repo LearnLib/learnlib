@@ -30,7 +30,6 @@
  */
 open module de.learnlib.testsupport {
 
-    requires com.google.common;
     requires de.learnlib.api;
     requires de.learnlib.common.util;
     requires de.learnlib.driver.simulator;
