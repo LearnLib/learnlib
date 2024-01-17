@@ -106,10 +106,6 @@ If you have any questions regarding the usage of LearnLib or if you want to disc
 [6]: https://github.com/mtf90
 [7]: https://github.com/LearnLib/automatalib
 
-[learnlib-qa]: https://groups.google.com/d/forum/learnlib-qa
-[learnlib-discussion]: https://groups.google.com/d/forum/learnlib-discussion
-[learnlib-internal]: https://groups.google.com/d/forum/learnlib-internal
-
 [maven-central]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib%22
 [maven-central-distr]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib.distribution%22
 [intellij]: https://www.jetbrains.com/idea/
