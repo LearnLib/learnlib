@@ -63,6 +63,7 @@ limitations under the License.
                             <exclude>de/learnlib/filter/reuse/**/Reuse*Builder.class</exclude>
 
                             <!-- generated refinements for oracles -->
+                            <exclude>de/learnlib/filter/cache/**/*Interning*.class</exclude>
                             <exclude>de/learnlib/filter/statistic/**/DFA*.class</exclude>
                             <exclude>de/learnlib/filter/statistic/**/Mealy*.class</exclude>
                             <exclude>de/learnlib/filter/statistic/**/Moore*.class</exclude>

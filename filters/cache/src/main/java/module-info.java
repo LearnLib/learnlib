@@ -39,6 +39,7 @@ open module de.learnlib.filter.cache {
 
     // only required by documentation
     requires static de.learnlib.oracle.parallelism;
+    requires static de.learnlib.tooling.annotation;
 
     exports de.learnlib.filter.cache;
     exports de.learnlib.filter.cache.dfa;

@@ -69,6 +69,12 @@ limitations under the License.
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
+        <!-- build -->
+        <dependency>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotations</artifactId>
+        </dependency>
+
         <!-- only required in java doc and tests -->
         <dependency>
             <groupId>de.learnlib</groupId>
