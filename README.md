@@ -67,9 +67,7 @@ For developing the code base of LearnLib it is suggested to use one of the major
 
 * For [IntelliJ IDEA][intellij]:
   1. Select `File` -> `New` -> `Project from existing sources` and select the folder containing the development checkout.
-  1. Choose "Import Project from external model", select "Maven" and click `Next`.
-  1. Configure the project to your liking but make sure to check "Import Maven projects automatically" and have "Generated sources folders" set to "Detect automatically".
-  1. Click `Next` until the project is imported (no Maven profile needs to be selected).
+  1. Choose "Import Project from external model", select "Maven" and click `Create`.
   1. In order to have both development versions of AutomataLib and LearnLib available at once, continue to import AutomataLib as documented in the project's README, but choose `File` -> `New` -> `Module from existing sources` as the first step.
 
 * For [Eclipse][eclipse]:

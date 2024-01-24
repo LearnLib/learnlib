@@ -44,15 +44,16 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
 /**
- * Implements an equivalence test by applying the Wp-method test on the given hypothesis automaton, as described in <a
- * href="https://doi.org/10.1109/32.87284">Test selection based on finite state models</a> by S.&nbsp;Fujiwara et al.
- * Instead of enumerating the test suite in order, this is a sampling implementation:
- * <ul>
- * <li>1. sample uniformly from the states for a prefix</li>
- * <li>2. sample geometrically a random word</li>
- * <li>3. sample a word from the set of suffixes / state identifiers</li>
- * </ul>
- * There are two parameters:minimalSize determines the minimal size of the random word, this is useful when one first
+ * Implements an equivalence test based on a randomized version of the W(p)-method as described in <a
+ * href="https://arxiv.org/abs/1611.02429">Complementing Model Learning with Mutation-Based Fuzzing</a> by Rick
+ * Smetsers, Joshua Moerman, Mark Janssen, Sicco Verwer. Instead of enumerating the test suite in order, this is a
+ * sampling implementation:
+ * <ol>
+ * <li>sample uniformly from the states for a prefix</li>
+ * <li>sample geometrically a random word</li>
+ * <li>sample a word from the set of suffixes / state identifiers</li>
+ * </ol>
+ * There are two parameters: minimalSize determines the minimal size of the random word, this is useful when one first
  * performs a W(p)-method with some depth and continue with this randomized tester from that depth onward. The second
  * parameter rndLength determines the expected length of the random word. (The expected length in effect is minimalSize
  * + rndLength.) In the unbounded case it will not terminate for a correct hypothesis.
