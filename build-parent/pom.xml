@@ -201,6 +201,7 @@ limitations under the License.
                                     <goal>compile</goal>
                                 </goals>
                                 <configuration>
+                                    <release>11</release>
                                     <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
                                     <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
@@ -238,7 +239,7 @@ limitations under the License.
                                         </arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>
                                         <arg>-AassumeAssertionsAreEnabled</arg>
-                                        <arg>-Astubs=jdk8.astub:collection-object-parameters-may-be-null.astub</arg>
+                                        <arg>-Astubs=collection-object-parameters-may-be-null.astub</arg>
                                     </compilerArgs>
                                 </configuration>
                             </execution>
