@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 * LearnLib now supports JPMS modules. All artifacts now provide a `module-info` descriptor except of the distribution artifacts (for Maven-less environments) which only provide an `Automatic-Module-Name` due to non-modular dependencies. Note that while this is a Java 9+ feature, LearnLib still supports Java 8 byte code for the remaining class files.
+* Added an `InterningMembershipOracle` (including refinements) to the `learnlib-cache` artifact that interns query responses to reduce memory consumption of large data structures. This exports the internal concepts of the DHC learner (which no longer interns query responses automatically).
 
 ### Changed
 
