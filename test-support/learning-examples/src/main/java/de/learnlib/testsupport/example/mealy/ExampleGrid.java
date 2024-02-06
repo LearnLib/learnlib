@@ -38,10 +38,16 @@ public class ExampleGrid extends DefaultMealyLearningExample<Character, Integer>
     /**
      * Construct and return a machine representation of this example.
      *
+     * @param fm
+     *         the output object to write the contents to
      * @param xsize
      *         number of states in x direction
      * @param ysize
      *         number of states in y direction
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return a Mealy machine with (xsize * ysize) states
      */

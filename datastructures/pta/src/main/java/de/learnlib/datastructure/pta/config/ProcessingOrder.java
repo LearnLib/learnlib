@@ -37,6 +37,9 @@ public interface ProcessingOrder {
     /**
      * Creates a worklist for managing the set of blue states in the RPNI algorithm.
      *
+     * @param <S>
+     *         the (concrete) state type
+     *
      * @return a worklist with some specific ordering constraints
      */
     <S extends AbstractBlueFringePTAState<S, ?, ?>> Queue<PTATransition<S>> createWorklist();

@@ -110,6 +110,10 @@ public abstract class AbstractMealyLearnerIT {
      *         the membership oracle
      * @param variants
      *         list to add the learner variants to
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      */
     protected abstract <I, O> void addLearnerVariants(Alphabet<I> alphabet,
                                                       int targetSize,

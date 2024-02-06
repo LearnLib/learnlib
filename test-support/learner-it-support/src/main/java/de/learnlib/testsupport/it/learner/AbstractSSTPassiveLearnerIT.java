@@ -81,6 +81,10 @@ public abstract class AbstractSSTPassiveLearnerIT {
      *         the input alphabet
      * @param variants
      *         list to add the learner variants to
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      */
     protected abstract <I, O> void addLearnerVariants(Alphabet<I> alphabet,
                                                       PassiveLearnerVariantList<SubsequentialTransducer<?, I, ?, O>, I, Word<O>> variants);

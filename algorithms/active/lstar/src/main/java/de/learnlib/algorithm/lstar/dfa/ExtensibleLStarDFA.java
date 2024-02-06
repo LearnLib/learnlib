@@ -38,7 +38,7 @@ import net.automatalib.word.Word;
  * Queries and Counterexamples".
  *
  * @param <I>
- *         input symbol class.
+ *         input symbol type
  */
 public class ExtensibleLStarDFA<I>
         extends AbstractExtensibleAutomatonLStar<DFA<?, I>, I, Boolean, Integer, Integer, Boolean, Void, CompactDFA<I>>
@@ -48,9 +48,15 @@ public class ExtensibleLStarDFA<I>
      * Constructor.
      *
      * @param alphabet
-     *         the learning alphabet.
+     *         the learning alphabet
      * @param oracle
-     *         the DFA oracle.
+     *         the DFA oracle
+     * @param initialSuffixes
+     *         the list of initial suffixes used in the observation table
+     * @param cexHandler
+     *         the strategy for handling counterexamples
+     * @param closingStrategy
+     *         the strategy for closing open rows of the observation table
      */
     public ExtensibleLStarDFA(Alphabet<I> alphabet,
                               MembershipOracle<I, Boolean> oracle,

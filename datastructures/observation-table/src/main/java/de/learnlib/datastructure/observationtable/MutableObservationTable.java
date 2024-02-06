@@ -27,8 +27,10 @@ public interface MutableObservationTable<I, D> extends ObservationTable<I, D> {
     /**
      * Initializes an observation table using a specified set of suffixes.
      *
+     * @param initialShortPrefixes
+     *         the set of initial row labels
      * @param initialSuffixes
-     *         the set of initial column labels.
+     *         the set of initial column labels
      * @param oracle
      *         the {@link MembershipOracle} to use for performing queries
      *

@@ -51,8 +51,12 @@ import org.slf4j.LoggerFactory;
 /**
  * The TTT learning algorithm for generic automata.
  *
+ * @param <A>
+ *         hypothesis automaton type
  * @param <I>
  *         input symbol type
+ * @param <D>
+ *         output domain type
  */
 @SuppressWarnings("PMD.ExcessiveClassLength")
 public abstract class AbstractTTTLearner<A, I, D>
@@ -116,6 +120,10 @@ public abstract class AbstractTTTLearner<A, I, D>
      *         the old node
      * @param label
      *         the label to consider
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      */
     private static <I, D> void moveIncoming(AbstractBaseDTNode<I, D> newNode,
                                             AbstractBaseDTNode<I, D> oldNode,
@@ -130,6 +138,10 @@ public abstract class AbstractTTTLearner<A, I, D>
      *         the node in the discrimination tree
      * @param state
      *         the state in the hypothesis
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      */
     protected static <I, D> void link(AbstractBaseDTNode<I, D> dtNode, TTTState<I, D> state) {
         assert dtNode.isLeaf();

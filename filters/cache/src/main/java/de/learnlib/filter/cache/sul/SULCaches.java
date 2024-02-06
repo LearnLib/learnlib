@@ -40,6 +40,10 @@ public final class SULCaches {
      *         the input alphabet
      * @param sul
      *         the sul
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a {@link SULCache} with a default implementation
      */
@@ -54,6 +58,10 @@ public final class SULCaches {
      *         the input alphabet
      * @param sul
      *         the sul
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a {@link SULCache} with a DAG-based implementation
      *
@@ -70,6 +78,10 @@ public final class SULCaches {
      *         the input alphabet
      * @param sul
      *         the sul
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a {@link SULCache} with a tree-based implementation
      *
@@ -89,6 +101,10 @@ public final class SULCaches {
      *         the input alphabet
      * @param sul
      *         the sul
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a {@link StateLocalInputSULCache} with a default implementation
      */
@@ -105,6 +121,10 @@ public final class SULCaches {
      *         the input alphabet
      * @param sul
      *         the sul
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a {@link StateLocalInputSULCache} with a tree-based implementation
      *

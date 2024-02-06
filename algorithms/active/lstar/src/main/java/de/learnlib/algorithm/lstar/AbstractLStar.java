@@ -122,11 +122,16 @@ public abstract class AbstractLStar<A, I, D>
     protected abstract List<Word<I>> initialSuffixes();
 
     /**
-     * Iteratedly checks for unclosedness and inconsistencies in the table, and fixes any occurrences thereof. This
+     * Iteratively checks for unclosedness and inconsistencies in the table, and fixes any occurrences thereof. This
      * process is repeated until the observation table is both closed and consistent.
      *
      * @param unclosed
      *         the unclosed rows (equivalence classes) to start with.
+     * @param checkConsistency
+     *         a flag indicating whether consistency should be checked as well. If {@code false}, only closedness is
+     *         ensured.
+     *
+     * @return {@code true} if unclosed rows have been closed, {@code false} otherwise
      */
     protected boolean completeConsistentTable(List<List<Row<I>>> unclosed, boolean checkConsistency) {
         boolean refined = false;

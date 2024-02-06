@@ -44,6 +44,15 @@ public class ExampleCoffeeMachine extends DefaultMealyLearningExample<Input, Str
     /**
      * Construct and return a machine representation of this example.
      *
+     * @param machine
+     *         the output object to write the contents to
+     * @param <S>
+     *         state type
+     * @param <T>
+     *         transition type
+     * @param <A>
+     *         automaton type
+     *
      * @return a Mealy machine representing the coffee machine example
      */
     public static <S, T, A extends MutableMealyMachine<S, ? super Input, T, ? super String>> A constructMachine(A machine) {

@@ -22,8 +22,8 @@ import de.learnlib.filter.reuse.ReuseOracleBuilder;
  * {@link ReuseOracleBuilder#withSystemStateHandler(SystemStateHandler)}) will be informed about all removed system
  * states whenever {@link ReuseTree#disposeSystemStates()} gets called.
  * <p>
- * The objective of this handler is that clearing system states from the reuse tree may also be resulting in cleaning up
- * the SUL by e.g. perform tasks like removing persisted entities from a database.
+ * The objective of this handler is that clearing system states from the reuse tree may also result in cleaning up the
+ * SUL by e.g. perform tasks like removing persisted entities from a database.
  * <p>
  * Please note that the normal removal of system states (by sifting them down in the reuse tree by executing only
  * suffixes of a query) is not be seen as a disposing.

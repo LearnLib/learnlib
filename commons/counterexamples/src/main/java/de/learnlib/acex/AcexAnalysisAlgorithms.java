@@ -30,6 +30,8 @@ public final class AcexAnalysisAlgorithms {
      *         the lower bound of the search range
      * @param high
      *         the upper bound of the search range
+     * @param <E>
+     *         the effect type
      *
      * @return an index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
      */
@@ -56,6 +58,8 @@ public final class AcexAnalysisAlgorithms {
      *         the lower bound of the search range
      * @param high
      *         the upper bound of the search range
+     * @param <E>
+     *         the effect type
      *
      * @return an index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
      */
@@ -82,6 +86,8 @@ public final class AcexAnalysisAlgorithms {
      *         the lower bound of the search range
      * @param high
      *         the upper bound of the search range
+     * @param <E>
+     *         the effect type
      *
      * @return an index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
      */
@@ -117,6 +123,8 @@ public final class AcexAnalysisAlgorithms {
      *         the lower bound of the search range
      * @param high
      *         the upper bound of the search range
+     * @param <E>
+     *         the effect type
      *
      * @return an index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
      */

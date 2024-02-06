@@ -208,12 +208,15 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
     }
 
     /**
+     * Returns a distinguishing suffix that distinguishes the two access sequences represented by the labels of the
+     * given rows.
+     *
      * @param row1
      *         the first row
      * @param row2
      *         the second row
      *
-     * @return the suffix distinguishing the contents of the two rows
+     * @return the suffix that distinguishes the two rows. {@code null} if no such suffix can be found.
      */
     default @Nullable Word<I> findDistinguishingSuffix(Row<I> row1, Row<I> row2) {
         int suffixIndex = findDistinguishingSuffixIndex(row1, row2);
@@ -224,8 +227,13 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
     }
 
     /**
-     * @return the suffix (column) index where the contents of the rows differ, or {@code #NO_DISTINGUISHING_SUFFIX} if
-     * the contents of the rows are equal.
+     * Returns a suffix (column) index which uncovers an observation discrepancy described by a given inconsistency.
+     *
+     * @param inconsistency
+     *         the inconsistency
+     *
+     * @return the suffix (column) index which exhibits the observation discrepancy described by a given inconsistency,
+     * or {@link #NO_DISTINGUISHING_SUFFIX} if no such index can be found.
      */
     default @Signed int findDistinguishingSuffixIndex(Inconsistency<I> inconsistency) {
         Row<I> row1 = inconsistency.getFirstRow();
@@ -236,13 +244,16 @@ public interface ObservationTable<I, D> extends AccessSequenceTransformer<I> {
     }
 
     /**
+     * Returns a suffix (column) index which uncovers an observation discrepancy between the two access sequences
+     * represented by the labels of the given rows.
+     *
      * @param row1
      *         the first row
      * @param row2
      *         the second row
      *
-     * @return the suffix (column) index where the contents of the rows differ, or {@code #NO_DISTINGUISHING_SUFFIX} if
-     * the contents of the rows are equal.
+     * @return the suffix (column) index which exhibits an observation discrepancy between the two given rows, or
+     * {@link #NO_DISTINGUISHING_SUFFIX} if no such index can be found.
      */
     default @Signed int findDistinguishingSuffixIndex(Row<I> row1, Row<I> row2) {
         for (int i = 0; i < getSuffixes().size(); i++) {

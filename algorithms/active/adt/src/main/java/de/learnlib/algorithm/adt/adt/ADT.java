@@ -96,6 +96,8 @@ public class ADT<S, I, O> {
     /**
      * Successively sifts a word through the ADT induced by the given node. Stops when reaching a leaf.
      *
+     * @param oracle
+     *         the oracle to query with inner node symbols
      * @param word
      *         the word to sift
      * @param subtree

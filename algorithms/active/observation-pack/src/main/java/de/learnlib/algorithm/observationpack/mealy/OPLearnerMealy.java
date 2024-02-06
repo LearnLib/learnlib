@@ -50,6 +50,8 @@ public class OPLearnerMealy<I, O> extends AbstractOPLearner<MealyMachine<?, I, ?
      *         the membership oracle
      * @param suffixFinder
      *         method to use for analyzing counterexamples
+     * @param repeatedCounterexampleEvaluation
+     *         a flag whether counterexamples should be analyzed exhaustively
      */
     @GenerateBuilder(defaults = AbstractOPLearner.BuilderDefaults.class)
     public OPLearnerMealy(Alphabet<I> alphabet,
