@@ -24,7 +24,7 @@ import de.learnlib.filter.reuse.tree.BoundedDeque.EvictPolicy;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A {@link ReuseNode} is a vertex in the {@link ReuseTree} that contains (a possible empty) set of outgoing {@link
+ * A {@link ReuseNode} is a vertex in the {@link ReuseTree} that contains (a possibly empty) set of outgoing {@link
  * ReuseEdge}s. Each {@link ReuseNode} may contain a system state holding relevant information (e.g. database
  * identifiers or an object) that belongs to the system state that 'represents' the system state after executing a
  * membership query.
@@ -54,7 +54,12 @@ public class ReuseNode<S, I, O> {
     }
 
     /**
-     * The system state, may be {@code null}.
+     * Retrieve a system state.
+     *
+     * @param remove
+     *         a flag whether the system state should be removed from the internal storage after retrieval
+     *
+     * @return a system state, May be {@code null}.
      */
     public S fetchSystemState(boolean remove) {
         if (remove) {
@@ -80,8 +85,9 @@ public class ReuseNode<S, I, O> {
     }
 
     /**
-     * Returns all outgoing {@link ReuseEdge}s from this {@link ReuseNode}. If there are none the returned {@link
-     * java.util.Collection} will be empty (but never {@code null}).
+     * Returns all outgoing {@link ReuseEdge}s from this {@link ReuseNode}.
+     *
+     * @return the outgoing edges of this node
      */
     public Collection<@Nullable ReuseEdge<S, I, O>> getEdges() {
         return Arrays.asList(edges);
@@ -89,6 +95,11 @@ public class ReuseNode<S, I, O> {
 
     /**
      * Adds an outgoing {@link ReuseEdge} to this {@link ReuseNode}.
+     *
+     * @param index
+     *         the position (index) of the edge to add
+     * @param edge
+     *         the edge to add
      */
     public void addEdge(int index, ReuseEdge<S, I, O> edge) {
         this.edges[index] = edge;
@@ -103,7 +114,12 @@ public class ReuseNode<S, I, O> {
     }
 
     /**
-     * May be {@code null}.
+     * Return the edge with the given index.
+     *
+     * @param index
+     *         the index of the edge
+     *
+     * @return the edge with the given index. May be {@code null}.
      */
     public @Nullable ReuseEdge<S, I, O> getEdgeWithInput(int index) {
         return this.edges[index];

@@ -72,6 +72,10 @@ public final class LocalSuffixFinders {
      *         interface to the hypothesis output, for checking whether the oracle output contradicts the hypothesis
      * @param oracle
      *         interface to the SUL
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return the index of the respective suffix, or {@code -1} if no counterexample could be found
      *
@@ -102,6 +106,10 @@ public final class LocalSuffixFinders {
      *         interface to the hypothesis output, for checking whether the oracle output contradicts the hypothesis
      * @param oracle
      *         interface to the SUL
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return the index of the respective suffix, or {@code -1} if no counterexample could be found
      *
@@ -132,6 +140,10 @@ public final class LocalSuffixFinders {
      *         interface to the hypothesis output, for checking whether the oracle output contradicts the hypothesis
      * @param oracle
      *         interface to the SUL
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return the index of the respective suffix, or {@code -1} if no counterexample could be found
      *

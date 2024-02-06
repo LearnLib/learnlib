@@ -93,6 +93,8 @@ public abstract class AbstractDFAPassiveLearnerIT {
      *         the input alphabet
      * @param variants
      *         list to add the learner variants to
+     * @param <I>
+     *         input symbol type
      */
     protected abstract <I> void addLearnerVariants(Alphabet<I> alphabet,
                                                    PassiveLearnerVariantList<DFA<?, I>, I, Boolean> variants);

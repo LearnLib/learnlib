@@ -72,6 +72,10 @@ public class KearnsVaziraniDFA<I>
      *         the learning alphabet
      * @param oracle
      *         the membership oracle
+     * @param repeatedCounterexampleEvaluation
+     *         a flag whether counterexamples should be analyzed exhaustively
+     * @param counterexampleAnalyzer
+     *         the counterexample analyzer
      */
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public KearnsVaziraniDFA(Alphabet<I> alphabet,

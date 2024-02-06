@@ -114,9 +114,6 @@ public class HState<I, O, SP, TP> {
         nonTreeIncoming.clear();
     }
 
-    /**
-     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
-     */
     public boolean ensureInputCapacity(int capacity) {
         return this.transitions.ensureCapacity(capacity);
     }

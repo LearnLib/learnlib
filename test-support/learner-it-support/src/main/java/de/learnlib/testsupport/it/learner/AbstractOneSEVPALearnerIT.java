@@ -67,6 +67,8 @@ public abstract class AbstractOneSEVPALearnerIT {
      *         the membership oracle
      * @param variants
      *         list to add the learner variants to
+     * @param <I>
+     *         input symbol type
      */
     protected abstract <I> void addLearnerVariants(VPAlphabet<I> alphabet,
                                                    DFAMembershipOracle<I> mqOracle,

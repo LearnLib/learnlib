@@ -43,6 +43,10 @@ public final class MealyCaches {
      *         the input alphabet
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a default implementation
      */
@@ -58,6 +62,10 @@ public final class MealyCaches {
      *         the input alphabet
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a DAG-based implementation
      *
@@ -77,6 +85,10 @@ public final class MealyCaches {
      *         a mapping for the prefix-closure filter
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a DAG-based implementation
      *
@@ -95,6 +107,10 @@ public final class MealyCaches {
      *         the input alphabet
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a tree-based implementation
      *
@@ -114,6 +130,10 @@ public final class MealyCaches {
      *         a mapping for the prefix-closure filter
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a tree-based implementation
      *
@@ -135,6 +155,10 @@ public final class MealyCaches {
      *
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a tree-based implementation
      *
@@ -156,6 +180,10 @@ public final class MealyCaches {
      *         a mapping for the prefix-closure filter
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a tree-based implementation
      *
@@ -174,6 +202,10 @@ public final class MealyCaches {
      *         the input alphabet
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a symbol-based Mealy learning cache with a tree-based implementation
      */

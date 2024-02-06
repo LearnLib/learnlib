@@ -66,6 +66,25 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
 
     /**
      * Default constructor.
+     *
+     * @param alphabet
+     *         the input alphabet of the system
+     * @param oracleSupplier
+     *         a supplier for reusable oracles
+     * @param enabledSystemStateInvalidation
+     *         a flag whether system states should be invalidated after retrieval
+     * @param systemStateHandler
+     *         the handler for notification about system state removals
+     * @param invariantInputs
+     *         the set of symbols that behave invariant
+     * @param failureOutputs
+     *         the set of symbols of failed system outputs
+     * @param maxSystemStates
+     *         the maximum number of stored system states
+     * @param accessPolicy
+     *         the strategy for accessing elements
+     * @param evictPolicy
+     *         the strategy for evicting elements of the capacity is reached
      */
     @GenerateBuilder(defaults = BuilderDefaults.class,
                      getterPrefix = GenerateBuilder.SUPPRESS,
@@ -156,6 +175,8 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
 
     /**
      * Returns the {@link ReuseCapableOracle} used by this instance.
+     *
+     * @return the oracle used by this instance
      */
     public ReuseCapableOracle<S, I, O> getReuseCapableOracle() {
         return executableOracles.get();
@@ -209,6 +230,8 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
 
     /**
      * Returns the {@link ReuseTree} used by this instance.
+     *
+     * @return the reuse tree used by this instance
      */
     public ReuseTree<S, I, O> getReuseTree() {
         return this.tree;

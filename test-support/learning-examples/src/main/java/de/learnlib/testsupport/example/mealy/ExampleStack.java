@@ -41,6 +41,15 @@ public class ExampleStack extends DefaultMealyLearningExample<Input, Output> {
     /**
      * Construct and return a machine representation of this example.
      *
+     * @param fm
+     *         the output object to write the contents to
+     * @param <S>
+     *         state type
+     * @param <T>
+     *         transition type
+     * @param <A>
+     *         automaton type
+     *
      * @return machine instance of the example
      */
     public static <S, T, A extends MutableMealyMachine<S, ? super Input, T, ? super Output>> A constructMachine(A fm) {

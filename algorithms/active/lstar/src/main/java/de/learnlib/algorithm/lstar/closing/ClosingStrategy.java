@@ -44,6 +44,10 @@ public interface ClosingStrategy<I, D> {
      *         the observation table
      * @param oracle
      *         the membership oracle
+     * @param <RI>
+     *         the (concrete) row input type
+     * @param <RO>
+     *         the (concrete) row output type
      *
      * @return a selection of representative rows to be closed.
      */

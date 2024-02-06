@@ -63,6 +63,8 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
      *         the learning alphabet
      * @param oracle
      *         the learning oracle
+     * @param internalHyp
+     *         the internal hypothesis object to write data to
      */
     protected AbstractAutomatonLStar(Alphabet<I> alphabet, MembershipOracle<I, D> oracle, AI internalHyp) {
         super(alphabet, oracle);
@@ -159,9 +161,11 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     /**
      * Derives a transition property from the corresponding transition.
      * <p>
-     * N.B.: Not the transition row is passed to this method, but the row for the outgoing state. The transition row can
-     * be retrieved using {@link Row#getSuccessor(int)}.
+     * Note that not the transition row is passed to this method, but the row for the outgoing state. The transition row
+     * can be retrieved using {@link Row#getSuccessor(int)}.
      *
+     * @param table
+     *         the observation table
      * @param stateRow
      *         the row for the source state
      * @param inputIdx

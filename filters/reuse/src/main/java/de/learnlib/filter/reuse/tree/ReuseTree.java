@@ -242,12 +242,13 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
     }
 
     /**
-     * Returns a reuseable {@link ReuseNode.NodeResult} with system state or {@code null} if none such exists. If
-     * ''oldInvalidated'' was set to {@code true} (in the {@link ReuseOracle}) the system state is already removed from
-     * the tree whenever one was available.
+     * Returns a reusable {@link ReuseNode.NodeResult} with system state accessed by the given access sequence. or
+     * {@code null} if none such exists.
      *
      * @param query
-     *         Not allowed to be {@code null}.
+     *         the access sequence to the node
+     *
+     * @return the node accessed by the given query, {@code null} if no such node exists
      */
     public ReuseNode.@Nullable NodeResult<S, I, O> fetchSystemState(Word<I> query) {
         if (query == null) {
@@ -305,6 +306,11 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * This method should only be invoked internally from the {@link ReuseOracle} unless you know exactly what you are
      * doing (you may want to create a predefined reuse tree before start learning).
      *
+     * @param query
+     *         the query determining a path in the tree
+     * @param queryResult
+     *         the output that should be associated with the given path
+     *
      * @throws ReuseException
      *         if non-deterministic behavior is detected
      */
@@ -324,6 +330,13 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * <p>
      * This method should only be invoked internally from the {@link ReuseOracle} unless you know exactly what you are
      * doing (you may want to create a predefined reuse tree before start learning).
+     *
+     * @param query
+     *         the query determining a path in the tree
+     * @param sink
+     *         the starting node of the path
+     * @param queryResult
+     *         the output that should be associated with the given path
      *
      * @throws ReuseException
      *         if non-deterministic behavior is detected

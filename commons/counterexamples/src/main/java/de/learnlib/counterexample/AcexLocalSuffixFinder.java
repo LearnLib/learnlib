@@ -43,6 +43,8 @@ public class AcexLocalSuffixFinder implements LocalSuffixFinder<@Nullable Object
      *         the analyzer to be wrapped
      * @param reduce
      *         whether to reduce counterexamples
+     * @param name
+     *         the display name of the suffix finder
      */
     public AcexLocalSuffixFinder(AcexAnalyzer analyzer, boolean reduce, String name) {
         this.analyzer = analyzer;

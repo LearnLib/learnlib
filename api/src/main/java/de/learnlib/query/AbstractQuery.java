@@ -49,6 +49,9 @@ public abstract class AbstractQuery<I, D> extends Query<I, D> {
      * Returns the string representation of this query, including a possible answer. This method should be used by
      * classes extending {@link AbstractQuery} for their toString method to ensure output consistency.
      *
+     * @param answer
+     *         the output object to render as answer
+     *
      * @return A string of the form {@code "Query[<prefix>|<suffix> / <answer>]"}. If the query has not been answered
      * yet, {@code <answer>} will be null.
      */

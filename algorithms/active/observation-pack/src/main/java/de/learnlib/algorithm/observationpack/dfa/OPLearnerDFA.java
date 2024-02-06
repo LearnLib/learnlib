@@ -48,6 +48,8 @@ public class OPLearnerDFA<I> extends AbstractOPLearner<DFA<?, I>, I, Boolean, Bo
      *         the membership oracle
      * @param suffixFinder
      *         method to use for analyzing counterexamples
+     * @param repeatedCounterexampleEvaluation
+     *         a flag whether counterexamples should be analyzed exhaustively
      * @param epsilonRoot
      *         whether to ensure the root of the discrimination tree is always labeled using the empty word.
      */

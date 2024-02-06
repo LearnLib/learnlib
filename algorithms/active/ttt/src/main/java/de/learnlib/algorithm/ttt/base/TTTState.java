@@ -87,9 +87,6 @@ public class TTTState<I, D> implements AccessSequenceProvider<I> {
         return transitions.array;
     }
 
-    /**
-     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
-     */
     public boolean ensureInputCapacity(int capacity) {
         return this.transitions.ensureCapacity(capacity);
     }
