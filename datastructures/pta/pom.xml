@@ -48,10 +48,6 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-smartcollections</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.checkerframework</groupId>
@@ -62,6 +58,11 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-dot</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
             <scope>test</scope>
         </dependency>
 
