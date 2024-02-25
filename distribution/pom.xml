@@ -242,8 +242,8 @@ limitations under the License.
                         <executions>
                             <execution>
                                 <goals>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
+                                    <goal>install</goal>
+                                    <goal>run</goal>
                                 </goals>
                             </execution>
                         </executions>

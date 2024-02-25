@@ -49,7 +49,7 @@ jobs:
           mvn -B install -DskipTests
           cd $GITHUB_WORKSPACE
       - name: Run Maven
-        run: mvn -B install site -Pintegration-tests,code-analysis,bundles,jlink -Dinvoker.streamLogs=true
+        run: mvn -B install site -Pintegration-tests,code-analysis,bundles,jlink
   platform-integration:
     name: "Platform Integration (JDK: ${{ matrix.jdk }}, OS: ${{ matrix.os }})"
     needs: [ tests-and-analysis ]
@@ -86,7 +86,7 @@ jobs:
           mvn -B install -DskipTests
           cd $GITHUB_WORKSPACE
       - name: Run Maven
-        run: mvn -B install -Pjlink -Dinvoker.streamLogs=true
+        run: mvn -B install -Pjlink
   coverage:
     name: "Coverage"
     needs: [ platform-integration ]
