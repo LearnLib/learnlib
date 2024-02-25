@@ -30,9 +30,10 @@ open module de.learnlib.filter.reuse {
 
     requires de.learnlib.api;
     requires net.automatalib.api;
-    requires org.checkerframework.checker.qual;
 
     requires static de.learnlib.tooling.annotation;
+    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.filter.reuse;
     exports de.learnlib.filter.reuse.tree;

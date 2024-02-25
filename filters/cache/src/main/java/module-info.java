@@ -34,12 +34,13 @@ open module de.learnlib.filter.cache {
     requires net.automatalib.core;
     requires net.automatalib.incremental;
     requires net.automatalib.util;
-    requires org.checkerframework.checker.qual;
     requires org.slf4j;
 
     // only required by documentation
     requires static de.learnlib.oracle.parallelism;
     requires static de.learnlib.tooling.annotation;
+    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.filter.cache;
     exports de.learnlib.filter.cache.dfa;

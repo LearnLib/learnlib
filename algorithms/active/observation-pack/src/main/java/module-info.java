@@ -35,9 +35,10 @@ open module de.learnlib.algorithm.observationpack {
     requires de.learnlib.datastructure.discriminationtree;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
-    requires org.checkerframework.checker.qual;
 
     requires static de.learnlib.tooling.annotation;
+    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.algorithm.observationpack;
     exports de.learnlib.algorithm.observationpack.dfa;
