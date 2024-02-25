@@ -35,7 +35,9 @@ open module de.learnlib.algorithm.ostia {
     requires net.automatalib.common.smartcollection;
     requires net.automatalib.common.util;
     requires net.automatalib.core;
-    requires org.checkerframework.checker.qual;
+
+    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.algorithm.ostia;
 }

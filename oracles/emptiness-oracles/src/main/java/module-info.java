@@ -31,9 +31,10 @@ open module de.learnlib.oracle.emptiness {
     requires de.learnlib.api;
     requires de.learnlib.common.util;
     requires net.automatalib.api;
-    requires org.checkerframework.checker.qual;
 
     requires static de.learnlib.tooling.annotation;
+    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.oracle.emptiness;
 }

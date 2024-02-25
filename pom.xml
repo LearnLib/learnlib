@@ -223,6 +223,7 @@ limitations under the License.
         <gpg-plugin.version>3.1.0</gpg-plugin.version>
         <info-reports-plugin.version>3.4.5</info-reports-plugin.version>
         <install-plugin.version>3.1.1</install-plugin.version>
+        <invoker-plugin.version>3.6.0</invoker-plugin.version>
         <jacoco-plugin.version>0.8.8</jacoco-plugin.version>
         <jar-plugin.version>3.3.0</jar-plugin.version>
         <javadoc-plugin.version>3.6.0</javadoc-plugin.version>
@@ -603,6 +604,8 @@ limitations under the License.
                 <groupId>org.checkerframework</groupId>
                 <artifactId>checker-qual</artifactId>
                 <version>${checkerframework.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
             </dependency>
 
             <dependency>
@@ -911,6 +914,11 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
                     <version>${install-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-invoker-plugin</artifactId>
+                    <version>${invoker-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>

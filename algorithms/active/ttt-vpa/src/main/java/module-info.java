@@ -35,10 +35,11 @@ open module de.learnlib.algorithm.ttt.vpa {
     requires de.learnlib.common.counterexample;
     requires de.learnlib.datastructure.discriminationtree;
     requires net.automatalib.api;
-    requires org.checkerframework.checker.qual;
+    requires net.automatalib.common.util;
 
     requires static de.learnlib.tooling.annotation;
-    requires net.automatalib.common.util;
+    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.algorithm.ttt.vpa;
 }
