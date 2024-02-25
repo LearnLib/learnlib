@@ -277,7 +277,6 @@ limitations under the License.
                     <artifactId>learnlib-examples</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
-                    <optional>true</optional>
                 </dependency>
             </dependencies>
         </profile>
