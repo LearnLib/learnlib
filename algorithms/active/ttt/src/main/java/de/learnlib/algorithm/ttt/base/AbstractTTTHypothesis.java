@@ -25,6 +25,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.automaton.FiniteAlphabetAutomaton;
+import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.graph.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -47,6 +48,7 @@ public abstract class AbstractTTTHypothesis<S extends TTTState<I, D>, I, D, T>
         implements DeterministicAutomaton<S, I, T>,
                    FiniteAlphabetAutomaton<S, I, T>,
                    DeterministicAutomaton.FullIntAbstraction<T>,
+                   StateIDs<S>,
                    SupportsGrowingAlphabet<I> {
 
     protected final List<S> states = new ArrayList<>();
@@ -199,6 +201,21 @@ public abstract class AbstractTTTHypothesis<S extends TTTState<I, D>, I, D, T>
     @Override
     public int size() {
         return states.size();
+    }
+
+    @Override
+    public int getStateId(S state) {
+        return state.id;
+    }
+
+    @Override
+    public S getState(int id) {
+        return this.states.get(id);
+    }
+
+    @Override
+    public StateIDs<S> stateIDs() {
+        return this;
     }
 
     public static final class TTTEdge<I, D> {
