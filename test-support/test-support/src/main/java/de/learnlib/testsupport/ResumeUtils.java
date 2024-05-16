@@ -17,6 +17,7 @@ package de.learnlib.testsupport;
 
 import de.learnlib.Resumable;
 import org.apache.fury.Fury;
+import org.apache.fury.logging.LoggerFactory;
 
 /**
  * Utility functions for {@link Resumable} features.
@@ -26,6 +27,7 @@ public final class ResumeUtils {
     private static final Fury FURY;
 
     static {
+        LoggerFactory.useSlf4jLogging(true);
         FURY = Fury.builder().withRefTracking(true).requireClassRegistration(false).build();
     }
 
