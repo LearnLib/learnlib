@@ -140,30 +140,4 @@ limitations under the License.
             </plugins>
         </pluginManagement>
     </build>
-
-    <profiles>
-        <profile>
-            <id>fix-xstream</id>
-            <activation>
-                <jdk>[16,)</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <configuration>
-                                <argLine>
-                                    @{argLine}
-                                    --add-reads=de.learnlib.algorithm.lstar=net.automatalib.util
-                                    --add-opens=java.base/java.util=ALL-UNNAMED
-                                </argLine>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-    </profiles>
 </project>

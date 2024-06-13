@@ -41,6 +41,7 @@ open module de.learnlib.example {
     requires de.learnlib.oracle.membership;
     requires de.learnlib.oracle.parallelism;
     requires de.learnlib.oracle.property;
+    requires de.learnlib.testsupport;
     requires de.learnlib.testsupport.example;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
@@ -49,7 +50,6 @@ open module de.learnlib.example {
     requires net.automatalib.util;
     requires net.automatalib.serialization.dot;
     requires net.automatalib.visualization.dot;
-    requires xstream;
 
     // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
     requires static org.checkerframework.checker.qual;

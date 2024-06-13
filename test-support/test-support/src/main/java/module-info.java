@@ -39,9 +39,9 @@ open module de.learnlib.testsupport {
     requires net.automatalib.common.util;
     requires net.automatalib.core;
     requires net.automatalib.util;
+    requires org.apache.fury.core;
     requires org.mockito;
     requires org.testng;
-    requires xstream;
 
     // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
     requires static org.checkerframework.checker.qual;
