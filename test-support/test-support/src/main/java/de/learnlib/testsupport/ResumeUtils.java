@@ -35,7 +35,7 @@ public final class ResumeUtils {
         // prevent instantiation
     }
 
-    public static <T extends Object> byte[] toBytes(T state) {
+    public static byte[] toBytes(Object state) {
         return FURY.serialize(state);
     }
 
