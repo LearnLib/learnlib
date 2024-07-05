@@ -77,7 +77,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                             generics = {@Generic("I"), @Generic("O"), @Generic("P")}))
 public class PropertyOracleChain<I, A extends Output<I, D>, @Nullable P, D> implements PropertyOracle<I, A, P, D> {
 
-    private P property;
+    private final P property;
 
     private @Nullable DefaultQuery<I, D> counterExample;
 
@@ -95,12 +95,6 @@ public class PropertyOracleChain<I, A extends Output<I, D>, @Nullable P, D> impl
         } else {
             property = null;
         }
-    }
-
-    public void addOracle(PropertyOracle<I, ? super A, P, D> oracle) {
-        assert oracle.getProperty() == null || oracle.getProperty().equals(property);
-        oracle.setProperty(property);
-        oracles.add(oracle);
     }
 
     @Override
@@ -126,12 +120,6 @@ public class PropertyOracleChain<I, A extends Output<I, D>, @Nullable P, D> impl
         }
 
         return null;
-    }
-
-    @Override
-    public void setProperty(P property) {
-        oracles.forEach(o -> o.setProperty(property));
-        this.property = property;
     }
 
     @Override

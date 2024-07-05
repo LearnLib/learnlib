@@ -54,14 +54,6 @@ public interface PropertyOracle<I, A extends Output<I, D>, P, D> extends Inclusi
     }
 
     /**
-     * Set the property.
-     *
-     * @param property
-     *         the property to set
-     */
-    void setProperty(P property);
-
-    /**
      * Returns the property.
      *
      * @return the property.

@@ -44,7 +44,7 @@ abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends
 
     private final InclusionOracle<A, I, D> inclusionOracle;
     private final EmptinessOracle<R, I, D> emptinessOracle;
-    private P property;
+    private final P property;
     private @Nullable DefaultQuery<I, D> counterExample;
 
     protected AbstractPropertyOracle(P property,
@@ -58,11 +58,6 @@ abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends
     protected @Nullable DefaultQuery<I, D> setCounterExample(@Nullable DefaultQuery<I, D> counterExample) {
         this.counterExample = counterExample;
         return counterExample;
-    }
-
-    @Override
-    public void setProperty(P property) {
-        this.property = property;
     }
 
     @Override

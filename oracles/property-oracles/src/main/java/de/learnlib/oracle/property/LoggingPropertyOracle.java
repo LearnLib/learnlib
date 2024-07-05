@@ -63,11 +63,6 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
     }
 
     @Override
-    public void setProperty(P property) {
-        this.propertyOracle.setProperty(property);
-    }
-
-    @Override
     public P getProperty() {
         return propertyOracle.getProperty();
     }
