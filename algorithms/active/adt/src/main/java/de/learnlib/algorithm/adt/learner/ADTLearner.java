@@ -15,21 +15,12 @@
  */
 package de.learnlib.algorithm.adt.learner;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.adt.Adaptive.Adaptive_ADT_Query;
 import de.learnlib.algorithm.adt.adt.ADT;
 import de.learnlib.algorithm.adt.adt.ADT.LCAInfo;
 import de.learnlib.algorithm.adt.adt.ADTLeafNode;
@@ -52,6 +43,7 @@ import de.learnlib.algorithm.adt.util.ADTUtil;
 import de.learnlib.algorithm.adt.util.SQOOTBridge;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.logging.Category;
+import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.SymbolQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
@@ -92,6 +84,8 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     private ADTHypothesis<I, O> hypothesis;
     private ADT<ADTState<I, O>, I, O> adt;
 
+    private AdaptiveMembershipOracle<I,O> adaptiveMembershipOracle;
+
     public ADTLearner(Alphabet<I> alphabet,
                       SymbolQueryOracle<I, O> oracle,
                       LeafSplitter leafSplitter,
@@ -123,6 +117,35 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         this.adt = new ADT<>();
     }
 
+    /*
+     For Integration tests:
+     - for now you have to give a SQO and an AdaptiveOracle so the stuff does not break.
+  */
+    public ADTLearner(Alphabet<I> alphabet,
+                      SymbolQueryOracle<I, O> oracle,
+                      AdaptiveMembershipOracle<I,O> adaptiveMembershipOracle,
+                      LeafSplitter leafSplitter,
+                      ADTExtender adtExtender,
+                      SubtreeReplacer subtreeReplacer,
+                      boolean useObservationTree) {
+
+        this.alphabet = alphabet;
+        this.observationTree = new ObservationTree<>(this.alphabet);
+
+        this.oracle = new SQOOTBridge<>(this.observationTree, oracle, useObservationTree);
+        this.adaptiveMembershipOracle = adaptiveMembershipOracle;
+
+        this.leafSplitter = leafSplitter;
+        this.adtExtender = adtExtender;
+        this.subtreeReplacer = subtreeReplacer;
+
+        this.hypothesis = new ADTHypothesis<>(this.alphabet);
+        this.openTransitions = new ArrayDeque<>();
+        this.openCounterExamples = new ArrayDeque<>();
+        this.allCounterExamples = new LinkedHashSet<>();
+        this.adt = new ADT<>();
+    }
+
     @Override
     public void startLearning() {
 
@@ -136,7 +159,12 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             this.openTransitions.add(this.hypothesis.createOpenTransition(initialState, i, this.adt.getRoot()));
         }
 
-        this.closeTransitions();
+        //if a parallelOracle is specified, use it to close transitions, otherwise use the old symbolQueryOracle.
+        if(this.adaptiveMembershipOracle == null ) {
+            this.closeTransitions();
+        } else {
+            this.closeTransitionsLeon();
+        }
     }
 
     @Override
@@ -298,6 +326,106 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     private void closeTransitions() {
         while (!this.openTransitions.isEmpty()) {
             this.closeTransition(this.openTransitions.poll());
+        }
+    }
+
+    private void closeTransitionsLeon() {
+
+        while (!this.openTransitions.isEmpty()) {
+
+            Collection<Adaptive_ADT_Query<I,O>> qs = new ArrayList<>();
+
+            //create a query object for every transition
+            for( ADTTransition<I,O> transition : this.openTransitions ) {
+
+                if(!transition.needsSifting()) {continue;}
+
+                ADTNode<ADTState<I,O>,I,O> siftNode = transition.getSiftNode();
+
+                Adaptive_ADT_Query<I,O> AAQ = new Adaptive_ADT_Query<>(
+                        transition,
+                        siftNode
+                );
+
+                qs.add(AAQ);
+            }
+            this.openTransitions.clear();
+
+            //decide which oracles are active and have to answer the queries
+            if (this.adaptiveMembershipOracle != null){
+//                this.adaptiveMembershipOracle.processQueries(queries);
+                this.adaptiveMembershipOracle.processQueries(qs);
+
+            } else {
+                throw new IllegalStateException("alle Orakeltypen sind null");
+            }
+
+            //fix the ADT Holes by inserting the new nodes here to avoid concurrent writing operations
+//            for( AdaptiveADTQuery<I,O> query : queries ) {
+
+            for( Adaptive_ADT_Query<I,O> query : qs ) {
+
+                if(!query.needsPostProcessing()) {
+                    ADTTransition<I,O> transition = query.getTransition();
+                    final ADTState<I, O> targetState = query.getCurrentADTNode().getHypothesisState();
+                    transition.setTarget(targetState);
+                } else {
+
+                    ADTNode<ADTState<I,O>,I,O> node = query.getCurrentADTNode();
+                    O out = query.getTempOut();
+
+                    //container for the target state
+                    final ADTState<I, O> targetState;
+
+                    /*
+                        this will be true if this is the first time this pair of ADTNode
+                        and output symbol is seen. Subsequent processing of this pair should
+                        fail since the new ADT node already exists.
+                    */
+                    if( node.getChildren().get(out) == null ) {
+
+                        //create new leaf node
+                        final ADTNode<ADTState<I,O>, I, O> result =
+                                new ADTLeafNode<>(node, null);
+
+                        //put the new leaf node as child to the parent
+                        node.getChildren().put(out, result);
+
+                        //add new state to the hypothesis and set the accessSequence
+                        targetState = this.hypothesis.addState();
+                        Word<I> longPrefix = query.getLongPrefix();
+                        targetState.setAccessSequence(longPrefix);
+
+                        //set the transition target to the newly created hypothesis state
+                        ADTTransition<I,O> transition = query.getTransition();
+                        transition.setTarget(targetState);
+
+                        //tell the transition that it is important
+                        transition.setIsSpanningTreeEdge(true);
+
+                        //set the hypothesis state of the newly created leaf node to the newly created
+                        //hypothesis state
+                        result.setHypothesisState(targetState);
+
+                        //add the observations to the observation tree
+                        O transitionOutput = query.getTransition().getOutput();
+                        this.observationTree.addState(targetState, longPrefix, transitionOutput);
+
+                        for (I i : this.alphabet) {
+                            this.openTransitions.add(this.hypothesis.createOpenTransition(targetState, i, this.adt.getRoot()));
+                        }
+                    } else {
+
+                        /* set the transition target to the newly created hypothesis state
+                        this means, that a previous attempt at fixing the ADT holes already
+                        processed this pair of node and output */
+
+                        ADTTransition<I,O> transition = query.getTransition();
+                        targetState = node.getChildren().get(out).getHypothesisState();
+                        transition.setTarget(targetState);
+                    }
+                }
+            }
         }
     }
 
