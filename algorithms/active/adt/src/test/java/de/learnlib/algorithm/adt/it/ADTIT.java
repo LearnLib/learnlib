@@ -41,7 +41,7 @@ public class ADTIT extends AbstractMealyLearnerIT {
 
         final ADTLearnerBuilder<I, O> builder = new ADTLearnerBuilder<>();
         builder.setAlphabet(alphabet);
-        builder.setOracle(new MQ2SQWrapper<>(mqOracle));
+        builder.setOracle(new MQ2AQWrapper<>(mqOracle));
 
         final List<LeafSplitter> leafSplitters =
                 Arrays.asList(LeafSplitters.DEFAULT_SPLITTER, LeafSplitters.EXTEND_PARENT);

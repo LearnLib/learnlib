@@ -1,9 +1,14 @@
 package de.learnlib.query;
 
-public abstract  class AdaptiveQuery<I,O> {
+public interface AdaptiveQuery<I, O> {
 
-    public Boolean getIsFinished (){return false; } ;
-    public I getInput(){return null;}
+    I getInput();
 
-    public void processOutput( O out ) {}
+    Response processOutput(O out);
+
+    enum Response {
+        FINISHED,
+        RESET,
+        SYMBOL
+    }
 }

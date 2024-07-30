@@ -16,12 +16,14 @@
 package de.learnlib.algorithm.adt.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import de.learnlib.algorithm.adt.model.ObservationTree;
-import de.learnlib.oracle.SymbolQueryOracle;
+import de.learnlib.oracle.AdaptiveMembershipOracle;
+import de.learnlib.query.AdaptiveQuery;
 import net.automatalib.automaton.transducer.impl.FastMealy;
 import net.automatalib.automaton.transducer.impl.FastMealyState;
 
@@ -35,11 +37,11 @@ import net.automatalib.automaton.transducer.impl.FastMealyState;
  * @param <O>
  *         output alphabet type
  */
-public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
+public class AQOOTBridge<I, O> implements AdaptiveMembershipOracle<I, O> {
 
     private final FastMealy<I, O> observationTree;
 
-    private final SymbolQueryOracle<I, O> delegate;
+    private final AdaptiveMembershipOracle<I, O> delegate;
 
     private final boolean enableCache;
 
@@ -49,8 +51,8 @@ public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
 
     private boolean currentTraceValid;
 
-    public SQOOTBridge(ObservationTree<?, I, O> observationTree,
-                       SymbolQueryOracle<I, O> delegate,
+    public AQOOTBridge(ObservationTree<?, I, O> observationTree,
+                       AdaptiveMembershipOracle<I, O> delegate,
                        boolean enableCache) {
         this.observationTree = observationTree.getObservationTree();
         this.delegate = delegate;
@@ -63,8 +65,7 @@ public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
         this.currentTraceValid = enableCache;
     }
 
-    @Override
-    public O query(I i) {
+    private O query(I i) {
 
         if (this.currentTraceValid) {
             final FastMealyState<O> succ = this.observationTree.getSuccessor(this.currentState, i);
@@ -106,8 +107,7 @@ public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
         return output;
     }
 
-    @Override
-    public void reset() {
+    private void reset() {
         this.currentState = this.observationTree.getInitialState();
 
         if (this.enableCache) {
@@ -115,6 +115,24 @@ public class SQOOTBridge<I, O> implements SymbolQueryOracle<I, O> {
             this.currentTraceValid = true;
         } else {
             this.delegate.reset();
+        }
+    }
+
+    @Override
+    public void processQueries(Collection<? extends AdaptiveQuery<I, O>> adaptiveQueries) {
+
+    }
+
+    private static class Query<I, O> implements AdaptiveQuery<I, O> {
+
+        @Override
+        public I getInput() {
+            return null;
+        }
+
+        @Override
+        public Response processOutput(O out) {
+            return null;
         }
     }
 }

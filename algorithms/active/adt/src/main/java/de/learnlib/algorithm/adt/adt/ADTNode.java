@@ -19,10 +19,8 @@ import java.util.Collection;
 import java.util.Map;
 
 import de.learnlib.algorithm.adt.util.ADTUtil;
-import de.learnlib.oracle.SymbolQueryOracle;
 import net.automatalib.graph.ads.RecursiveADSNode;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.word.Word;
 
 /**
  * The ADT equivalent of {@link net.automatalib.graph.ads.ADSNode}. In contrast to regular adaptive distinguishing
@@ -36,25 +34,6 @@ import net.automatalib.word.Word;
  *         output alphabet type
  */
 public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I, O>> {
-
-    /**
-     * Utility method, that sifts a given word through {@code this} ADTNode. If {@code this} node is a <ul> <li>symbol
-     * node, the symbol is applied to the system under learning and the corresponding child node (based on the observed
-     * output) is returned. If no matching child node is found, a new leaf node is returned instead </li> <li> reset
-     * node, the system under learning is reset and the provided prefix is reapplied to the system </li> <li> leaf node,
-     * an exception is thrown </li> </ul>
-     *
-     * @param oracle
-     *         the oracle used to query the system under learning
-     * @param prefix
-     *         the prefix to be re-applied after encountering a reset node
-     *
-     * @return the corresponding child node
-     *
-     * @throws UnsupportedOperationException
-     *         when invoked on a leaf node (see {@link #getNodeType()}).
-     */
-    ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> prefix);
 
     // default methods for graph interface
     @Override

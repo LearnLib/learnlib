@@ -15,29 +15,45 @@
  */
 package de.learnlib.algorithm.adt.it;
 
+import java.util.Collection;
+
+import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.oracle.SymbolQueryOracle;
+import de.learnlib.query.AdaptiveQuery;
+import de.learnlib.query.AdaptiveQuery.Response;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
-public class MQ2SQWrapper<I, O> implements SymbolQueryOracle<I, O> {
+public class MQ2AQWrapper<I, O> implements AdaptiveMembershipOracle<I, O> {
 
     final WordBuilder<I> wb;
     final MembershipOracle<I, Word<O>> oracle;
 
-    public MQ2SQWrapper(MembershipOracle<I, Word<O>> oracle) {
+    public MQ2AQWrapper(MembershipOracle<I, Word<O>> oracle) {
         this.oracle = oracle;
         this.wb = new WordBuilder<>();
     }
 
     @Override
-    public O query(I i) {
-        this.wb.append(i);
-        return this.oracle.answerQuery(wb.toWord()).lastSymbol();
+    public void processQueries(Collection<? extends AdaptiveQuery<I, O>> adaptiveQueries) {
+        for (AdaptiveQuery<I, O> q : adaptiveQueries) {
+            processQuery(q);
+        }
     }
 
-    @Override
-    public void reset() {
-        this.wb.clear();
+    public void processQuery(AdaptiveQuery<I, O> query) {
+        final WordBuilder<I> wb = new WordBuilder<>();
+        Response response;
+
+        do {
+            wb.append(query.getInput());
+            final O out = this.oracle.answerQuery(wb.toWord()).lastSymbol();
+
+            response = query.processOutput(out);
+
+            if (response == Response.RESET) {
+                wb.clear();
+            }
+        } while (response != Response.FINISHED);
     }
 }

@@ -18,8 +18,6 @@ package de.learnlib.algorithm.adt.adt;
 import java.util.Collections;
 import java.util.Map;
 
-import de.learnlib.oracle.SymbolQueryOracle;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -74,17 +72,6 @@ public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
     @Override
     public void setHypothesisState(S state) {
         throw new UnsupportedOperationException("Reset nodes cannot reference a hypothesis state");
-    }
-
-    @Override
-    public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> prefix) {
-        oracle.reset();
-
-        for (I i : prefix) {
-            oracle.query(i);
-        }
-
-        return successor;
     }
 
     @Override
