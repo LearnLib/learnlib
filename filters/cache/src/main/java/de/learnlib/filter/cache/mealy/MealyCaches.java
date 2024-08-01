@@ -15,6 +15,7 @@
  */
 package de.learnlib.filter.cache.mealy;
 
+import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.SymbolQueryOracle;
 import net.automatalib.alphabet.Alphabet;
@@ -212,5 +213,25 @@ public final class MealyCaches {
     public static <I, O> SymbolQueryCache<I, O> createSymbolQueryCache(Alphabet<I> alphabet,
                                                                        SymbolQueryOracle<I, O> mqOracle) {
         return new SymbolQueryCache<>(mqOracle, alphabet);
+    }
+
+    /**
+     * Creates a cache oracle for an adaptive Mealy machine learning setup, using a tree for internal cache
+     * organization.
+     *
+     * @param alphabet
+     *         the input alphabet
+     * @param mqOracle
+     *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return a symbol-based Mealy learning cache with a tree-based implementation
+     */
+    public static <I, O> AdaptiveQueryCache<I, O> createAdaptiveQueryCache(Alphabet<I> alphabet,
+                                                                           AdaptiveMembershipOracle<I, O> mqOracle) {
+        return new AdaptiveQueryCache<>(mqOracle, alphabet);
     }
 }

@@ -52,7 +52,6 @@ import de.learnlib.algorithm.adt.model.ExtensionResult;
 import de.learnlib.algorithm.adt.model.ObservationTree;
 import de.learnlib.algorithm.adt.model.ReplacementResult;
 import de.learnlib.algorithm.adt.util.ADTUtil;
-import de.learnlib.algorithm.adt.util.AQOOTBridge;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
@@ -85,7 +84,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     private static final Logger LOGGER = LoggerFactory.getLogger(ADTLearner.class);
 
     private final Alphabet<I> alphabet;
-    private final AQOOTBridge<I, O> oracle;
+    private final AdaptiveMembershipOracle<I, O> oracle;
     private final SymbolQueryOracle<I, O> sqo;
     private final LeafSplitter leafSplitter;
     private final ADTExtender adtExtender;
@@ -114,8 +113,8 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                       boolean useObservationTree) {
 
         this.alphabet = alphabet;
-        this.observationTree = new ObservationTree<>(this.alphabet);
-        this.oracle = new AQOOTBridge<>(this.observationTree, oracle, useObservationTree);
+        this.observationTree = new ObservationTree<>(this.alphabet, oracle, useObservationTree);
+        this.oracle = this.observationTree;
         this.sqo = new A2S_Oracle<>(oracle);
 
         this.leafSplitter = leafSplitter;
@@ -135,7 +134,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         final ADTState<I, O> initialState = this.hypothesis.addInitialState();
         initialState.setAccessSequence(Word.epsilon());
         this.observationTree.initialize(initialState);
-        this.oracle.initialize();
         this.adt.initialize(initialState);
 
         for (I i : this.alphabet) {
@@ -401,7 +399,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         }
 
         this.hypothesis.addAlphabetSymbol(symbol);
-        this.observationTree.getObservationTree().addAlphabetSymbol(symbol);
+        this.observationTree.addAlphabetSymbol(symbol);
 
         // check if we already have information about the symbol (then the transition is defined) so we don't post
         // redundant queries
@@ -438,7 +436,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             this.observationTree.initialize(this.hypothesis.getStates(),
                                             ADTState::getAccessSequence,
                                             this.hypothesis::computeOutput);
-            this.oracle.initialize();
         }
     }
 
