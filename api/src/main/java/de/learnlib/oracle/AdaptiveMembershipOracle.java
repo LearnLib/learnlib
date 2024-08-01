@@ -5,9 +5,9 @@ import de.learnlib.query.AdaptiveQuery;
 import java.util.Collection;
 import java.util.Collections;
 
-public interface AdaptiveMembershipOracle<I,O> extends BatchProcessor<AdaptiveQuery<I,O>> {
+public interface AdaptiveMembershipOracle<I, O> extends BatchProcessor<AdaptiveQuery<I, O>> {
 
-    void processQueries(Collection<? extends AdaptiveQuery<I,O>> queries );
+    void processQueries(Collection<? extends AdaptiveQuery<I, O>> queries);
 
     default void processQuery(AdaptiveQuery<I, O> query) {
         processQueries(Collections.singleton(query));

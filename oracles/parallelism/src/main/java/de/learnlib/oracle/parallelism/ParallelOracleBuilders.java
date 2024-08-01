@@ -87,7 +87,7 @@ public final class ParallelOracleBuilders {
      */
     public static <I, O> DynamicParallelOracleBuilder<I, Word<O>> newDynamicParallelOracle(SUL<I, O> sul) {
         checkFork(sul);
-        return new DynamicParallelOracleBuilder<>(toSupplier(sul));
+        return newDynamicParallelOracle(toSupplier(sul));
     }
 
     /**
@@ -97,8 +97,8 @@ public final class ParallelOracleBuilders {
      * @param sul
      *         the sul instance for spawning new thread-specific membership oracle instances
      * @param undefinedInput
-     *         the input symbol used for responding to inputs that are not {@link StateLocalInputSUL#currentlyEnabledInputs()
-     *         enabled}.
+     *         the input symbol used for responding to inputs that are not
+     *         {@link StateLocalInputSUL#currentlyEnabledInputs() enabled}.
      * @param <I>
      *         input symbol type
      * @param <O>
@@ -181,8 +181,7 @@ public final class ParallelOracleBuilders {
      */
     public static <I, O> DynamicParallelOmegaOracleBuilder<?, I, Word<O>> newDynamicParallelOmegaOracle(ObservableSUL<?, I, O> sul) {
         checkFork(sul);
-        // instantiate inner supplier to resolve generics
-        return new DynamicParallelOmegaOracleBuilder<>(toSupplier(sul)::get);
+        return newDynamicParallelOmegaOracle(toSupplier(sul)::get);
     }
 
     /**
@@ -248,25 +247,6 @@ public final class ParallelOracleBuilders {
     }
 
     /**
-     * Creates a {@link DynamicParallelAdaptiveOracleBuilder} using the provided collection of membership oracles. The
-     * resulting parallel oracle will always use a {@link PoolPolicy#FIXED} pool policy and spawn a separate thread for
-     * each of the provided oracles (so that the oracles do not need to care about synchronization if they don't share
-     * state).
-     *
-     * @param oracles
-     *         the oracle instances to distribute the queries to
-     * @param <I>
-     *         input symbol type
-     * @param <O>
-     *         output symbol type
-     *
-     * @return the preconfigured oracle builder
-     */
-    public static <I, O> DynamicParallelAdaptiveOracleBuilder<I, O> newDynamicParallelAdaptiveOracle(Collection<? extends AdaptiveMembershipOracle<I, O>> oracles) {
-        return new DynamicParallelAdaptiveOracleBuilder<>(oracles);
-    }
-
-    /**
      * Creates a {@link DynamicParallelAdaptiveOracleBuilder} using the provided {@code sul} as a supplier. This
      * requires that the sul is {@link SUL#canFork() forkable}.
      *
@@ -281,8 +261,7 @@ public final class ParallelOracleBuilders {
      */
     public static <I, O> DynamicParallelAdaptiveOracleBuilder<I, O> newDynamicParallelAdaptiveOracle(SUL<I, O> sul) {
         checkFork(sul);
-        // instantiate inner supplier to resolve generics
-        return new DynamicParallelAdaptiveOracleBuilder<>(toAdaptiveSupplier(sul));
+        return newDynamicParallelAdaptiveOracle(toAdaptiveSupplier(sul));
     }
 
     /**
@@ -323,6 +302,25 @@ public final class ParallelOracleBuilders {
     }
 
     /**
+     * Creates a {@link DynamicParallelAdaptiveOracleBuilder} using the provided collection of membership oracles. The
+     * resulting parallel oracle will always use a {@link PoolPolicy#FIXED} pool policy and spawn a separate thread for
+     * each of the provided oracles (so that the oracles do not need to care about synchronization if they don't share
+     * state).
+     *
+     * @param oracles
+     *         the oracle instances to distribute the queries to
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return the preconfigured oracle builder
+     */
+    public static <I, O> DynamicParallelAdaptiveOracleBuilder<I, O> newDynamicParallelAdaptiveOracle(Collection<? extends AdaptiveMembershipOracle<I, O>> oracles) {
+        return new DynamicParallelAdaptiveOracleBuilder<>(oracles);
+    }
+
+    /**
      * Creates a {@link StaticParallelOracleBuilder} using the provided {@code sul} as a supplier. This requires that
      * the sul is {@link SUL#canFork() forkable}.
      *
@@ -337,7 +335,7 @@ public final class ParallelOracleBuilders {
      */
     public static <I, O> StaticParallelOracleBuilder<I, Word<O>> newStaticParallelOracle(SUL<I, O> sul) {
         checkFork(sul);
-        return new StaticParallelOracleBuilder<>(toSupplier(sul));
+        return newStaticParallelOracle(toSupplier(sul));
     }
 
     /**
@@ -433,8 +431,7 @@ public final class ParallelOracleBuilders {
      */
     public static <I, O> StaticParallelOmegaOracleBuilder<?, I, Word<O>> newStaticParallelOmegaOracle(ObservableSUL<?, I, O> sul) {
         checkFork(sul);
-        // instantiate inner supplier to resolve generics
-        return new StaticParallelOmegaOracleBuilder<>(toSupplier(sul)::get);
+        return newStaticParallelOmegaOracle(toSupplier(sul)::get);
     }
 
     /**
@@ -478,22 +475,24 @@ public final class ParallelOracleBuilders {
     }
 
     /**
-     * Creates a {@link StaticParallelAdaptiveOracleBuilder} using the provided collection of membership oracles. The
+     * Creates a {@link StaticParallelOmegaOracleBuilder} using the provided collection of membership oracles. The
      * resulting parallel oracle will always use a {@link PoolPolicy#FIXED} pool policy and spawn a separate thread for
      * each of the provided oracles (so that the oracles do not need to care about synchronization if they don't share
      * state).
      *
      * @param oracles
      *         the oracle instances to distribute the queries to
+     * @param <S>
+     *         oracle state type
      * @param <I>
      *         input symbol type
-     * @param <O>
-     *         output symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return the preconfigured oracle builder
      */
-    public static <I, O> StaticParallelAdaptiveOracleBuilder<I, O> newStaticParallelAdaptiveOracle(Collection<? extends AdaptiveMembershipOracle<I, O>> oracles) {
-        return new StaticParallelAdaptiveOracleBuilder<>(oracles);
+    public static <S, I, D> StaticParallelOmegaOracleBuilder<S, I, D> newStaticParallelOmegaOracle(Collection<? extends OmegaMembershipOracle<S, I, D>> oracles) {
+        return new StaticParallelOmegaOracleBuilder<>(oracles);
     }
 
     /**
@@ -509,10 +508,9 @@ public final class ParallelOracleBuilders {
      *
      * @return a preconfigured oracle builder
      */
-    public static <I, O> StaticParallelAdaptiveOracleBuilder<I, O> newStaticParallelOmegaOracle(SUL<I, O> sul) {
+    public static <I, O> StaticParallelAdaptiveOracleBuilder<I, O> newStaticParallelAdaptiveOracle(SUL<I, O> sul) {
         checkFork(sul);
-        // instantiate inner supplier to resolve generics
-        return new StaticParallelAdaptiveOracleBuilder<>(toAdaptiveSupplier(sul));
+        return newStaticParallelAdaptiveOracle(toAdaptiveSupplier(sul));
     }
 
     /**
@@ -549,28 +547,26 @@ public final class ParallelOracleBuilders {
     public static <I, O> StaticParallelAdaptiveOracleBuilder<I, O> newStaticParallelAdaptiveOracle(
             AdaptiveMembershipOracle<I, O> firstOracle,
             AdaptiveMembershipOracle<I, O>... otherOracles) {
-        return new StaticParallelAdaptiveOracleBuilder<>(CollectionUtil.list(firstOracle, otherOracles));
+        return newStaticParallelAdaptiveOracle(CollectionUtil.list(firstOracle, otherOracles));
     }
 
     /**
-     * Creates a {@link StaticParallelOmegaOracleBuilder} using the provided collection of membership oracles. The
+     * Creates a {@link StaticParallelAdaptiveOracleBuilder} using the provided collection of membership oracles. The
      * resulting parallel oracle will always use a {@link PoolPolicy#FIXED} pool policy and spawn a separate thread for
      * each of the provided oracles (so that the oracles do not need to care about synchronization if they don't share
      * state).
      *
      * @param oracles
      *         the oracle instances to distribute the queries to
-     * @param <S>
-     *         oracle state type
      * @param <I>
      *         input symbol type
-     * @param <D>
-     *         output domain type
+     * @param <O>
+     *         output symbol type
      *
      * @return the preconfigured oracle builder
      */
-    public static <S, I, D> StaticParallelOmegaOracleBuilder<S, I, D> newStaticParallelOmegaOracle(Collection<? extends OmegaMembershipOracle<S, I, D>> oracles) {
-        return new StaticParallelOmegaOracleBuilder<>(oracles);
+    public static <I, O> StaticParallelAdaptiveOracleBuilder<I, O> newStaticParallelAdaptiveOracle(Collection<? extends AdaptiveMembershipOracle<I, O>> oracles) {
+        return new StaticParallelAdaptiveOracleBuilder<>(oracles);
     }
 
     private static <I, O> Supplier<SULOracle<I, O>> toSupplier(SUL<I, O> sul) {

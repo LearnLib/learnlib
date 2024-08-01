@@ -20,7 +20,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
 import de.learnlib.oracle.AdaptiveMembershipOracle;
-import de.learnlib.oracle.OmegaMembershipOracle;
 import de.learnlib.query.AdaptiveQuery;
 
 /**
