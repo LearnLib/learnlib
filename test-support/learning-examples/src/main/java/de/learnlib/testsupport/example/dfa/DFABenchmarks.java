@@ -22,6 +22,7 @@ import de.learnlib.logging.Category;
 import de.learnlib.testsupport.example.DefaultLearningExample.DefaultDFALearningExample;
 import de.learnlib.testsupport.example.LearningExample.DFALearningExample;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.learnlibv2.LearnLibV2Serialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public final class DFABenchmarks {
         if (resourceStream == null) {
             LOGGER.info(Category.SYSTEM, "Couldn't find resource '{}'", resourceName);
         } else {
-            try (InputStream is = resourceStream) {
+            try (InputStream is = IOUtil.asUncompressedBufferedInputStream(resourceStream)) {
                 CompactDFA<Integer> dfa = LearnLibV2Serialization.getInstance().readGenericDFA(is);
                 return new DefaultDFALearningExample<>(dfa);
             } catch (IOException ex) {
