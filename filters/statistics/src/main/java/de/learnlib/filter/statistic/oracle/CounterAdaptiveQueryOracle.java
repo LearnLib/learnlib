@@ -81,7 +81,7 @@ public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracl
 
             final Response response = delegate.processOutput(out);
 
-            if (response == Response.RESET) {
+            if (response != Response.SYMBOL) {
                 resetCounter.incrementAndGet();
             }
 

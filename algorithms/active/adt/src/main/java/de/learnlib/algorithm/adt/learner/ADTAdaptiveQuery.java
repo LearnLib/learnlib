@@ -54,6 +54,11 @@ class ADTAdaptiveQuery<I, O> implements AdaptiveQuery<I, O> {
                 this.transition.setOutput(out);
             }
 
+            // if the ADT only consists of a leaf, we just set the transition output
+            if (ADTUtil.isLeafNode(this.currentADTNode)) {
+                return Response.FINISHED;
+            }
+
             asIndex++;
             return Response.SYMBOL;
         } else {
@@ -64,14 +69,15 @@ class ADTAdaptiveQuery<I, O> implements AdaptiveQuery<I, O> {
                 this.tempADTNode = currentADTNode;
                 return Response.FINISHED;
             } else if (ADTUtil.isResetNode(succ)) {
-                final ADTResetNode<ADTState<I, O>, I, O> asResetNode =
-                        (ADTResetNode<ADTState<I, O>, I, O>) currentADTNode;
+                final ADTResetNode<ADTState<I, O>, I, O> asResetNode = (ADTResetNode<ADTState<I, O>, I, O>) succ;
                 this.currentADTNode = asResetNode.getSuccessor();
+                this.asIndex = 0;
                 return Response.RESET;
             } else if (ADTUtil.isSymbolNode(succ)) {
                 this.currentADTNode = succ;
                 return Response.SYMBOL;
             } else {
+                this.currentADTNode = succ;
                 return Response.FINISHED;
             }
         }

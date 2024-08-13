@@ -25,7 +25,6 @@ import de.learnlib.filter.cache.LearningCache;
 import de.learnlib.filter.cache.mealy.AdaptiveQueryCache.AdaptiveQueryCacheState;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.EquivalenceOracle;
-import de.learnlib.oracle.SymbolQueryOracle;
 import de.learnlib.query.AdaptiveQuery;
 import de.learnlib.query.AdaptiveQuery.Response;
 import de.learnlib.query.DefaultQuery;
@@ -182,6 +181,7 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
                 curr = next;
             } else {
                 assert Objects.equals(out, this.cache.getTransitionOutput(trans)) : "Inconsistent observations";
+                curr = this.cache.getSuccessor(trans);
             }
         }
 
@@ -197,6 +197,7 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
         private final List<Word<I>> inputTraces;
         private final List<Word<O>> outputTraces;
 
+        private final int prefixLength;
         private int prefixIdx;
 
         private TrackingQuery(AdaptiveQuery<I, O> delegate, WordBuilder<I> inputBuilder) {
@@ -205,13 +206,14 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
             this.outputBuilder = new WordBuilder<>();
             this.inputTraces = new ArrayList<>();
             this.outputTraces = new ArrayList<>();
+            this.prefixLength = inputBuilder.size();
             this.prefixIdx = 0;
         }
 
         @Override
         public I getInput() {
             // we are still processing the backlog
-            if (prefixIdx < inputBuilder.size()) {
+            if (prefixIdx < prefixLength) {
                 return inputBuilder.getSymbol(prefixIdx++);
             }
 
@@ -225,7 +227,7 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
             outputBuilder.append(out);
 
             // in case of backlog, the last but one input hasn't been processed yet
-            if (prefixIdx < inputBuilder.size() - 1) {
+            if (prefixIdx < prefixLength) {
                 return Response.SYMBOL;
             }
 

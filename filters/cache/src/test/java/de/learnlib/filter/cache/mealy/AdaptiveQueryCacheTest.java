@@ -15,20 +15,29 @@
  */
 package de.learnlib.filter.cache.mealy;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
+import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
+import de.learnlib.filter.cache.mealy.AdaptiveQueryCacheTest.Wrapper;
 import de.learnlib.filter.statistic.oracle.CounterAdaptiveQueryOracle;
-import de.learnlib.filter.statistic.oracle.CounterSymbolQueryOracle;
+import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.membership.SULAdaptiveOracle;
-import de.learnlib.oracle.membership.SULSymbolQueryOracle;
+import de.learnlib.query.AdaptiveQuery;
+import de.learnlib.query.PresetAdaptiveQuery;
+import de.learnlib.query.Query;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
 public class AdaptiveQueryCacheTest
-        extends AbstractCacheTest<AdaptiveQueryCache<Character, Integer>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
+        extends AbstractCacheTest<Wrapper<Character, Integer>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 
     private final CounterAdaptiveQueryOracle<Character, Integer> counter;
 
@@ -53,16 +62,16 @@ public class AdaptiveQueryCacheTest
     }
 
     @Override
-    protected AdaptiveQueryCache<Character, Integer> getCachedOracle() {
-        return MealyCaches.createAdaptiveQueryCache(getAlphabet(), counter);
+    protected Wrapper<Character, Integer> getCachedOracle() {
+        return new Wrapper<>(MealyCaches.createAdaptiveQueryCache(getAlphabet(), counter));
     }
 
     @Override
-    protected AdaptiveQueryCache<Character, Integer> getResumedOracle(AdaptiveQueryCache<Character, Integer> original) {
+    protected Wrapper<Character, Integer> getResumedOracle(Wrapper<Character, Integer> original) {
         final AdaptiveQueryCache<Character, Integer> fresh =
                 MealyCaches.createAdaptiveQueryCache(getAlphabet(), counter);
-        serializeResumable(original, fresh);
-        return fresh;
+        serializeResumable(original.delegate, fresh);
+        return new Wrapper<>(fresh);
     }
 
     @Override
@@ -83,5 +92,35 @@ public class AdaptiveQueryCacheTest
     @Override
     protected boolean supportsGrowing() {
         return true;
+    }
+
+    protected static class Wrapper<I, O> implements MealyLearningCacheOracle<I, O>, SupportsGrowingAlphabet<I> {
+
+        private final AdaptiveQueryCache<I, O> delegate;
+
+        private Wrapper(AdaptiveQueryCache<I, O> delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createCacheConsistencyTest() {
+            return delegate.createCacheConsistencyTest();
+        }
+
+        @Override
+        public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
+            final List<AdaptiveQuery<I, O>> mapped = new ArrayList<>(queries.size());
+
+            for (Query<I, Word<O>> q : queries) {
+                mapped.add(new PresetAdaptiveQuery<>(q));
+            }
+
+            this.delegate.processQueries(mapped);
+        }
+
+        @Override
+        public void addAlphabetSymbol(I i) {
+            this.delegate.addAlphabetSymbol(i);
+        }
     }
 }

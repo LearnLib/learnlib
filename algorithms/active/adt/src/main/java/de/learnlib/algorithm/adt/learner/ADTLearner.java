@@ -307,9 +307,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             //create a query object for every transition
             for (ADTTransition<I, O> transition : this.openTransitions) {
                 if (transition.needsSifting()) {
-                    final ADTNode<ADTState<I, O>, I, O> root = transition.getSiftNode();
-                    final ADTAdaptiveQuery<I, O> query = new ADTAdaptiveQuery<>(transition, root);
-                    queries.add(query);
+                    queries.add(buildQuery(transition));
                 }
             }
 
@@ -317,48 +315,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             this.oracle.processQueries(queries);
 
             for (ADTAdaptiveQuery<I, O> query : queries) {
-                if (query.needsPostProcessing()) {
-                    final ADTNode<ADTState<I, O>, I, O> parent = query.getCurrentADTNode();
-                    final O out = query.getTempOut();
-                    final ADTNode<ADTState<I, O>, I, O> succ = parent.getChildren().get(out);
-
-                    // first time we process the successor
-                    if (succ == null) {
-                        // add new state to the hypothesis and set the accessSequence
-                        final ADTState<I, O> newState = this.hypothesis.addState();
-                        final Word<I> longPrefix = query.getAccessSequence();
-                        newState.setAccessSequence(longPrefix);
-
-                        // configure the transition
-                        final ADTTransition<I, O> transition = query.getTransition();
-                        transition.setTarget(newState);
-                        transition.setIsSpanningTreeEdge(true);
-
-                        // add new leaf node to ADT
-                        final ADTNode<ADTState<I, O>, I, O> result = new ADTLeafNode<>(parent, newState);
-                        parent.getChildren().put(out, result);
-
-                        // add the observations to the observation tree
-                        O transitionOutput = query.getTransition().getOutput();
-                        this.observationTree.addState(newState, longPrefix, transitionOutput);
-
-                        // query successors
-                        for (I i : this.alphabet) {
-                            this.openTransitions.add(this.hypothesis.createOpenTransition(newState,
-                                                                                          i,
-                                                                                          this.adt.getRoot()));
-                        }
-                    } else {
-                        assert ADTUtil.isLeafNode(succ);
-                        // state has been created before, just update target
-                        query.getTransition().setTarget(succ.getHypothesisState());
-                    }
-                } else {
-                    // update target
-                    final ADTTransition<I, O> transition = query.getTransition();
-                    final ADTState<I, O> targetState = query.getCurrentADTNode().getHypothesisState();
-                    transition.setTarget(targetState);
-                }
+                processAnsweredQuery(query);
             }
         }
     }
@@ -373,14 +330,66 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             final ADTNode<ADTState<I, O>, I, O> ads = transition.getSiftNode();
             final int oldNumberOfFinalStates = ADTUtil.collectLeaves(ads).size();
 
-            this.openTransitions.add(transition);
-            this.closeTransitions();
+            final ADTAdaptiveQuery<I, O> query = buildQuery(transition);
+            this.oracle.processQueries(Collections.singleton(query));
+            processAnsweredQuery(query);
 
             final int newNumberOfFinalStates = ADTUtil.collectLeaves(ads).size();
 
             if (oldNumberOfFinalStates < newNumberOfFinalStates) {
                 throw PartialTransitionAnalyzer.HYPOTHESIS_MODIFICATION_EXCEPTION;
             }
+        }
+    }
+
+    private ADTAdaptiveQuery<I, O> buildQuery(ADTTransition<I, O> transition) {
+        final ADTNode<ADTState<I, O>, I, O> root = transition.getSiftNode();
+        return new ADTAdaptiveQuery<>(transition, transition.getSiftNode());
+    }
+
+    private void processAnsweredQuery(ADTAdaptiveQuery<I, O> query) {
+        if (query.needsPostProcessing()) {
+            final ADTNode<ADTState<I, O>, I, O> parent = query.getCurrentADTNode();
+            final O out = query.getTempOut();
+            final ADTNode<ADTState<I, O>, I, O> succ = parent.getChildren().get(out);
+
+            // first time we process the successor
+            if (succ == null) {
+                // add new state to the hypothesis and set the accessSequence
+                final ADTState<I, O> newState = this.hypothesis.addState();
+                final Word<I> longPrefix = query.getAccessSequence();
+                newState.setAccessSequence(longPrefix);
+
+                // configure the transition
+                final ADTTransition<I, O> transition = query.getTransition();
+                transition.setTarget(newState);
+                transition.setIsSpanningTreeEdge(true);
+
+                // add new leaf node to ADT
+                final ADTNode<ADTState<I, O>, I, O> result = new ADTLeafNode<>(parent, newState);
+                parent.getChildren().put(out, result);
+
+                // add the observations to the observation tree
+                O transitionOutput = query.getTransition().getOutput();
+                this.observationTree.addState(newState, longPrefix, transitionOutput);
+
+                // query successors
+                for (I i : this.alphabet) {
+                    this.openTransitions.add(this.hypothesis.createOpenTransition(newState,
+                                                                                  i,
+                                                                                  this.adt.getRoot()));
+                }
+            } else {
+                assert ADTUtil.isLeafNode(succ);
+                // state has been created before, just update target
+                query.getTransition().setTarget(succ.getHypothesisState());
+            }
+        } else {
+            // update target
+            final ADTTransition<I, O> transition = query.getTransition();
+            final ADTNode<ADTState<I, O>, I, O> adtNode = query.getCurrentADTNode();
+            assert ADTUtil.isLeafNode(adtNode);
+            transition.setTarget(adtNode.getHypothesisState());
         }
     }
 
