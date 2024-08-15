@@ -19,11 +19,11 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
@@ -64,7 +64,6 @@ import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -343,7 +342,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     }
 
     private ADTAdaptiveQuery<I, O> buildQuery(ADTTransition<I, O> transition) {
-        final ADTNode<ADTState<I, O>, I, O> root = transition.getSiftNode();
         return new ADTAdaptiveQuery<>(transition, transition.getSiftNode());
     }
 
@@ -357,7 +355,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             if (succ == null) {
                 // add new state to the hypothesis and set the accessSequence
                 final ADTState<I, O> newState = this.hypothesis.addState();
-                final Word<I> longPrefix = query.getAccessSequence();
+                final Word<I> longPrefix = query.getAccessSequence().append(query.getTransition().getInput());
                 newState.setAccessSequence(longPrefix);
 
                 // configure the transition
@@ -375,9 +373,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
                 // query successors
                 for (I i : this.alphabet) {
-                    this.openTransitions.add(this.hypothesis.createOpenTransition(newState,
-                                                                                  i,
-                                                                                  this.adt.getRoot()));
+                    this.openTransitions.add(this.hypothesis.createOpenTransition(newState, i, this.adt.getRoot()));
                 }
             } else {
                 assert ADTUtil.isLeafNode(succ);
@@ -669,59 +665,38 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                .forEach(x -> traces.put(x.getHypothesisState(), ADTUtil.buildTraceForNode(x)));
 
         final Pair<Word<I>, Word<O>> parentTrace = ADTUtil.buildTraceForNode(nodeToReplace);
-        final Word<I> parentInput = parentTrace.getFirst();
-        final Word<O> parentOutput = parentTrace.getSecond();
 
         ADTNode<ADTState<I, O>, I, O> result = null;
 
-        // validate
-        for (Map.Entry<ADTState<I, O>, Pair<Word<I>, Word<O>>> entry : traces.entrySet()) {
-            final ADTState<I, O> state = entry.getKey();
-            final Word<I> accessSequence = state.getAccessSequence();
+        final List<ADSVerificationQuery<I, O>> queries = new ArrayList<>(traces.size());
 
-            this.sqo.reset();
-            accessSequence.forEach(this.sqo::query);
-            parentInput.forEach(this.sqo::query);
+        for (Entry<ADTState<I, O>, Pair<Word<I>, Word<O>>> e : traces.entrySet()) {
+            final ADTState<I, O> state = e.getKey();
+            final Pair<Word<I>, Word<O>> ads = e.getValue();
+            queries.add(new ADSVerificationQuery<>(state.getAccessSequence().concat(parentTrace.getFirst()),
+                                                   ads.getFirst(),
+                                                   ads.getSecond(),
+                                                   state));
+        }
 
-            final Word<I> adsInput = entry.getValue().getFirst();
-            final Word<O> adsOutput = entry.getValue().getSecond();
+        this.oracle.processQueries(queries);
 
-            final WordBuilder<I> inputWb = new WordBuilder<>(adsInput.size());
-            final WordBuilder<O> outputWb = new WordBuilder<>(adsInput.size());
+        for (ADSVerificationQuery<I, O> query : queries) {
+            final ADTNode<ADTState<I, O>, I, O> trace;
+            final DefaultQuery<I, Word<O>> ce = query.getCounterexample();
 
-            final Iterator<I> inputIter = adsInput.iterator();
-            final Iterator<O> outputIter = adsOutput.iterator();
-
-            boolean equal = true;
-            while (equal && inputIter.hasNext()) {
-                final I in = inputIter.next();
-                final O realOut = this.sqo.query(in);
-                final O expectedOut = outputIter.next();
-
-                inputWb.append(in);
-                outputWb.append(realOut);
-
-                if (!expectedOut.equals(realOut)) {
-                    equal = false;
-                }
+            if (ce != null) {
+                this.openCounterExamples.add(ce);
+                trace = ADTUtil.buildADSFromObservation(ce.getSuffix(), ce.getOutput(), query.getState());
+            } else {
+                trace = ADTUtil.buildADSFromObservation(query.getSuffix(), query.getExpectedOutput(), query.getState());
             }
-
-            final Word<I> traceInput = inputWb.toWord();
-            final Word<O> traceOutput = outputWb.toWord();
-
-            if (!equal) {
-                this.openCounterExamples.add(new DefaultQuery<>(accessSequence.concat(parentInput, traceInput),
-                                                                this.hypothesis.computeOutput(state.getAccessSequence())
-                                                                               .concat(parentOutput, traceOutput)));
-            }
-
-            final ADTNode<ADTState<I, O>, I, O> trace = ADTUtil.buildADSFromObservation(traceInput, traceOutput, state);
 
             if (result == null) {
                 result = trace;
             } else {
                 if (!ADTUtil.mergeADS(result, trace)) {
-                    this.resolveAmbiguities(nodeToReplace, result, state, cachedLeaves);
+                    this.resolveAmbiguities(nodeToReplace, result, query.getState(), cachedLeaves);
                 }
             }
         }

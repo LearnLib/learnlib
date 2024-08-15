@@ -20,12 +20,12 @@ public class A2S_Oracle<I, O> implements SymbolQueryOracle<I, O> {
 
     @Override
     public O query(I i) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void reset() {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
