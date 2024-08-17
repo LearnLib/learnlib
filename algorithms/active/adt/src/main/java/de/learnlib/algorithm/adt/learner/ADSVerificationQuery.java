@@ -52,9 +52,10 @@ class ADSVerificationQuery<I, O> implements AdaptiveQuery<I, O> {
             outputBuilder.append(out);
 
             if (!Objects.equals(out, expectedOutput.getSymbol(idx - prefixLength))) {
-                counterexample = new DefaultQuery<>(prefix, suffix.prefix(idx), outputBuilder.toWord());
+                counterexample =
+                        new DefaultQuery<>(prefix, suffix.prefix(outputBuilder.size()), outputBuilder.toWord());
                 return Response.FINISHED;
-            } else if (suffixLength < outputBuilder.size()) {
+            } else if (outputBuilder.size() < suffixLength) {
                 idx++;
                 return Response.SYMBOL;
             } else {

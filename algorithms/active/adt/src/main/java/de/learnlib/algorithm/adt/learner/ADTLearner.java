@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
-import de.learnlib.algorithm.adt.Adaptive.A2M_Oracle;
-import de.learnlib.algorithm.adt.Adaptive.A2S_Oracle;
 import de.learnlib.algorithm.adt.adt.ADT;
 import de.learnlib.algorithm.adt.adt.ADT.LCAInfo;
 import de.learnlib.algorithm.adt.adt.ADTLeafNode;
@@ -55,7 +53,7 @@ import de.learnlib.algorithm.adt.util.ADTUtil;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
-import de.learnlib.oracle.SymbolQueryOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.MQUtil;
@@ -84,7 +82,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
     private final Alphabet<I> alphabet;
     private final AdaptiveMembershipOracle<I, O> oracle;
-    private final SymbolQueryOracle<I, O> sqo;
+    private final MealyMembershipOracle<I, O> mqo;
     private final LeafSplitter leafSplitter;
     private final ADTExtender adtExtender;
     private final SubtreeReplacer subtreeReplacer;
@@ -114,7 +112,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         this.alphabet = alphabet;
         this.observationTree = new ObservationTree<>(this.alphabet, oracle, useObservationTree);
         this.oracle = this.observationTree;
-        this.sqo = new A2S_Oracle<>(oracle);
+        this.mqo = new Adaptive2MembershipWrapper<>(oracle);
 
         this.leafSplitter = leafSplitter;
         this.adtExtender = adtExtender;
@@ -149,6 +147,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             return false;
         }
 
+        cnt++;
         this.evaluateSubtreeReplacement();
 
         this.openCounterExamples.add(ce);
@@ -166,7 +165,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
             // subtree replacements may reactivate old CEs
             for (DefaultQuery<I, Word<O>> oldCE : this.allCounterExamples) {
-                if (!this.hypothesis.computeOutput(oldCE.getInput()).equals(oldCE.getOutput())) {
+                if (MQUtil.isCounterexample(oldCE, this.hypothesis)) {
                     this.openCounterExamples.add(oldCE);
                 }
             }
@@ -177,6 +176,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         return true;
     }
 
+    int cnt = 0;
     public boolean refineHypothesisInternal(DefaultQuery<I, Word<O>> ceQuery) {
 
         if (!MQUtil.isCounterexample(ceQuery, this.hypothesis)) {
@@ -184,10 +184,8 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         }
 
         // Determine a counterexample decomposition (u, a, v)
-        final int suffixIdx = LocalSuffixFinders.RIVEST_SCHAPIRE.findSuffixIndex(ceQuery,
-                                                                                 this.hypothesis,
-                                                                                 this.hypothesis,
-                                                                                 new A2M_Oracle<>(this.oracle));
+        final int suffixIdx =
+                LocalSuffixFinders.RIVEST_SCHAPIRE.findSuffixIndex(ceQuery, this.hypothesis, this.hypothesis, this.mqo);
 
         if (suffixIdx == -1) {
             throw new IllegalStateException();
@@ -241,8 +239,8 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             newNode = this.adt.extendLeaf(nodeToSplit, completeSplitter, oldOutput, newOutput, this.leafSplitter);
         } else {
             // directly insert into observation tree, because we use it for finding a splitter
-            this.observationTree.addTrace(uaState, v, this.sqo.answerQuery(uaAccessSequence, v));
-            this.observationTree.addTrace(newState, v, this.sqo.answerQuery(uAccessSequenceWithA, v));
+            this.observationTree.addTrace(uaState, v, this.mqo.answerQuery(uaAccessSequence, v));
+            this.observationTree.addTrace(newState, v, this.mqo.answerQuery(uAccessSequenceWithA, v));
 
             // in doubt, we will always find v
             final Word<I> otSepWord = this.observationTree.findSeparatingWord(uaState, newState);
@@ -728,39 +726,26 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                                     Set<ADTNode<ADTState<I, O>, I, O>> cachedLeaves) {
 
         final Pair<Word<I>, Word<O>> parentTrace = ADTUtil.buildTraceForNode(nodeToReplace);
-        final Word<I> parentInput = parentTrace.getFirst();
-        final Word<I> effectiveAccessSequence = state.getAccessSequence().concat(parentInput);
+        final ADSAmbiguityQuery<I, O> query =
+                new ADSAmbiguityQuery<>(state.getAccessSequence(), parentTrace.getFirst(), newADS);
 
-        this.sqo.reset();
-        effectiveAccessSequence.forEach(this.sqo::query);
+        this.oracle.processQuery(query);
 
-        ADTNode<ADTState<I, O>, I, O> iter = newADS;
-        while (!ADTUtil.isLeafNode(iter)) {
-
-            if (ADTUtil.isResetNode(iter)) {
-                this.sqo.reset();
-                state.getAccessSequence().forEach(this.sqo::query);
-                iter = iter.getChildren().values().iterator().next();
-            } else {
-                final O output = this.sqo.query(iter.getSymbol());
-                final ADTNode<ADTState<I, O>, I, O> succ = iter.getChildren().get(output);
-
-                if (succ == null) {
-                    final ADTNode<ADTState<I, O>, I, O> newFinal = new ADTLeafNode<>(iter, state);
-                    iter.getChildren().put(output, newFinal);
-                    return;
-                }
-
-                iter = succ;
-            }
+        if (query.needsPostProcessing()) {
+            final ADTNode<ADTState<I, O>, I, O> prev = query.getCurrentADTNode();
+            final ADTNode<ADTState<I, O>, I, O> newFinal = new ADTLeafNode<>(prev, state);
+            prev.getChildren().put(query.getTempOut(), newFinal);
+            return;
         }
 
+        final ADTNode<ADTState<I, O>, I, O> finalNode = query.getCurrentADTNode();
         ADTNode<ADTState<I, O>, I, O> oldReference = null, newReference = null;
+
         for (ADTNode<ADTState<I, O>, I, O> leaf : cachedLeaves) {
             final ADTState<I, O> hypState = leaf.getHypothesisState();
             assert hypState != null;
 
-            if (hypState.equals(iter.getHypothesisState())) {
+            if (hypState.equals(finalNode.getHypothesisState())) {
                 oldReference = leaf;
             } else if (hypState.equals(state)) {
                 newReference = leaf;
@@ -780,7 +765,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         final Word<O> newOutputTrace = lcaTrace.getSecond().append(lcaResult.secondOutput);
 
         final ADTNode<ADTState<I, O>, I, O> oldTrace =
-                ADTUtil.buildADSFromObservation(sepWord, oldOutputTrace, iter.getHypothesisState());
+                ADTUtil.buildADSFromObservation(sepWord, oldOutputTrace, finalNode.getHypothesisState());
         final ADTNode<ADTState<I, O>, I, O> newTrace = ADTUtil.buildADSFromObservation(sepWord, newOutputTrace, state);
 
         if (!ADTUtil.mergeADS(oldTrace, newTrace)) {
@@ -788,9 +773,9 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         }
 
         final ADTNode<ADTState<I, O>, I, O> reset = new ADTResetNode<>(oldTrace);
-        final ADTNode<ADTState<I, O>, I, O> parent = iter.getParent();
+        final ADTNode<ADTState<I, O>, I, O> parent = finalNode.getParent();
         assert parent != null;
-        final O parentOutput = ADTUtil.getOutputForSuccessor(parent, iter);
+        final O parentOutput = ADTUtil.getOutputForSuccessor(parent, finalNode);
 
         parent.getChildren().put(parentOutput, reset);
         reset.setParent(parent);

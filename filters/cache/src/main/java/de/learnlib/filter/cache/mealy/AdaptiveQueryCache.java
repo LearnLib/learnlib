@@ -15,8 +15,10 @@
  */
 package de.learnlib.filter.cache.mealy;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,59 +69,61 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
     @Override
     public void processQueries(Collection<? extends AdaptiveQuery<I, O>> queries) {
 
-        final List<TrackingQuery> unanswered = new ArrayList<>(queries.size());
+        final Deque<AdaptiveQuery<I, O>> queue = new ArrayDeque<>(queries);
+        final List<TrackingQuery> unanswered = new ArrayList<>(queue.size());
 
-        // try to answer queries from cache
-        queryLoop:
-        for (AdaptiveQuery<I, O> query : queries) {
+        while (!queue.isEmpty()) {
 
-            final WordBuilder<I> trace = new WordBuilder<>();
-            Integer curr = this.cache.getInitialState();
-            Response response;
+            // try to answer queries from cache
+            cacheLoop:
+            while (!queue.isEmpty()) {
+                final AdaptiveQuery<I, O> query = queue.poll();
+                final WordBuilder<I> trace = new WordBuilder<>();
+                Integer curr = this.cache.getInitialState();
+                Response response;
 
-            do {
-                final I input = query.getInput();
-                final CompactTransition<O> trans = this.cache.getTransition(curr, input);
+                do {
+                    final I input = query.getInput();
+                    final CompactTransition<O> trans = this.cache.getTransition(curr, input);
 
-                trace.add(input);
+                    trace.add(input);
 
-                if (trans == null) {
-                    unanswered.add(new TrackingQuery(query, trace));
-                    continue queryLoop;
-                }
+                    if (trans == null) {
+                        unanswered.add(new TrackingQuery(query, trace));
+                        continue cacheLoop;
+                    }
 
-                final O output = this.cache.getTransitionOutput(trans);
-                response = query.processOutput(output);
+                    final O output = this.cache.getTransitionOutput(trans);
+                    response = query.processOutput(output);
 
-                if (response == Response.RESET) {
-                    curr = this.cache.getInitialState();
-                    trace.clear();
-                } else {
-                    curr = this.cache.getSuccessor(trans);
-                }
-            } while (response != Response.FINISHED);
-        }
+                    if (response == Response.RESET) {
+                        curr = this.cache.getInitialState();
+                        trace.clear();
+                    } else {
+                        curr = this.cache.getSuccessor(trans);
+                    }
+                } while (response != Response.FINISHED);
+            }
 
-        // delegate non-answered queries
-        this.delegate.processQueries(unanswered);
+            // delegate non-answered queries
+            this.delegate.processQueries(unanswered);
 
-        // feed back information into observation tree
-        for (TrackingQuery query : unanswered) {
-            final List<Word<I>> inputs = query.inputTraces;
-            final List<Word<O>> outputs = query.outputTraces;
-
-            assert inputs.size() == outputs.size();
-
-            for (int i = 0; i < inputs.size(); i++) {
-                final Word<I> input = inputs.get(i);
-                final Word<O> output = outputs.get(i);
+            // feed back information into cache
+            for (TrackingQuery query : unanswered) {
+                final Word<I> input = query.inputBuilder.toWord();
+                final Word<O> output = query.outputBuilder.toWord();
 
                 assert input.length() == output.length();
 
                 insert(input, output);
-            }
-        }
 
+                if (!query.isFinished) { // re-queue reset successor
+                    queue.add(query.delegate);
+                }
+            }
+
+            unanswered.clear();
+        }
     }
 
     @Override
@@ -194,27 +198,24 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
         private final WordBuilder<I> inputBuilder;
         private final WordBuilder<O> outputBuilder;
 
-        private final List<Word<I>> inputTraces;
-        private final List<Word<O>> outputTraces;
-
         private final int prefixLength;
         private int prefixIdx;
+        private boolean isFinished;
 
         private TrackingQuery(AdaptiveQuery<I, O> delegate, WordBuilder<I> inputBuilder) {
             this.delegate = delegate;
             this.inputBuilder = inputBuilder;
             this.outputBuilder = new WordBuilder<>();
-            this.inputTraces = new ArrayList<>();
-            this.outputTraces = new ArrayList<>();
             this.prefixLength = inputBuilder.size();
             this.prefixIdx = 0;
+            this.isFinished = false;
         }
 
         @Override
         public I getInput() {
             // we are still processing the backlog
             if (prefixIdx < prefixLength) {
-                return inputBuilder.getSymbol(prefixIdx++);
+                return inputBuilder.getSymbol(prefixIdx);
             }
 
             final I input = delegate.getInput();
@@ -225,6 +226,7 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
         @Override
         public Response processOutput(O out) {
             outputBuilder.append(out);
+            prefixIdx++;
 
             // in case of backlog, the last but one input hasn't been processed yet
             if (prefixIdx < prefixLength) {
@@ -233,45 +235,13 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
 
             final Response response = delegate.processOutput(out);
 
-            // try to answer the subsequent trace from cache again
-            if (response == Response.RESET) {
-                inputTraces.add(inputBuilder.toWord());
-                outputTraces.add(outputBuilder.toWord());
-
-                prefixIdx = 0;
-                inputBuilder.clear();
-                outputBuilder.clear();
-
-                Integer curr = cache.getInitialState();
-                Response res;
-
-                do {
-                    final I input = delegate.getInput();
-                    final CompactTransition<O> trans = cache.getTransition(curr, input);
-
-                    inputBuilder.add(input);
-
-                    if (trans == null) {
-                        return Response.RESET;
-                    }
-
-                    final O output = cache.getTransitionOutput(trans);
-                    res = delegate.processOutput(output);
-
-                    if (res == Response.RESET) {
-                        curr = cache.getInitialState();
-                        inputBuilder.clear();
-                    } else {
-                        curr = cache.getSuccessor(trans);
-                    }
-                } while (res != Response.FINISHED);
-                return Response.FINISHED;
-            } else if (response == Response.FINISHED) {
-                inputTraces.add(inputBuilder.toWord());
-                outputTraces.add(outputBuilder.toWord());
-                return Response.FINISHED;
-            } else {
-                return response;
+            switch (response) {
+                case FINISHED:
+                    isFinished = true;
+                case RESET:
+                    return Response.FINISHED;
+                default:
+                    return response;
             }
         }
     }
