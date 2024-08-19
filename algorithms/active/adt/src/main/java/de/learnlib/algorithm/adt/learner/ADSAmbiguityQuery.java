@@ -19,7 +19,6 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import de.learnlib.algorithm.adt.adt.ADTNode;
-import de.learnlib.algorithm.adt.adt.ADTResetNode;
 import de.learnlib.algorithm.adt.automaton.ADTState;
 import de.learnlib.algorithm.adt.util.ADTUtil;
 import de.learnlib.query.AdaptiveQuery;
@@ -68,26 +67,19 @@ class ADSAmbiguityQuery<I, O> implements AdaptiveQuery<I, O> {
     public Response processOutput(O out) {
 
         if (this.asIndex < this.accessSequence.length()) {
-
-            // if the ADT only consists of a leaf, we just set the transition output
-            if (ADTUtil.isLeafNode(this.currentADTNode)) {
-                return Response.FINISHED;
-            }
-
             asIndex++;
             return Response.SYMBOL;
         } else if (this.inOneShot) {
             return Response.SYMBOL;
         } else {
-            final ADTNode<ADTState<I, O>, I, O> succ = currentADTNode.getChildren().get(out);
+            final ADTNode<ADTState<I, O>, I, O> succ = currentADTNode.getChild(out);
 
             if (succ == null) {
                 this.tempOut = out;
                 this.tempADTNode = currentADTNode;
                 return Response.FINISHED;
             } else if (ADTUtil.isResetNode(succ)) {
-                final ADTResetNode<ADTState<I, O>, I, O> asResetNode = (ADTResetNode<ADTState<I, O>, I, O>) succ;
-                this.currentADTNode = asResetNode.getSuccessor();
+                this.currentADTNode = succ.getChild(null);
                 this.asIndex = 0;
                 return Response.RESET;
             } else if (ADTUtil.isSymbolNode(succ)) {

@@ -35,6 +35,18 @@ import net.automatalib.visualization.VisualizationHelper;
  */
 public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I, O>> {
 
+    /**
+     * Convenience method for directly accessing this node's {@link #getChildren() children}.
+     *
+     * @param output
+     *         the output symbol to determine the child to returned
+     *
+     * @return the child node that is mapped to given output. May be {@code null},
+     */
+    default ADTNode<S, I, O> getChild(O output) {
+        return getChildren().get(output);
+    }
+
     // default methods for graph interface
     @Override
     default Collection<ADTNode<S, I, O>> getNodes() {

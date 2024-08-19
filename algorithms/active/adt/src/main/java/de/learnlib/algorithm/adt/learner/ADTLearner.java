@@ -345,7 +345,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         if (query.needsPostProcessing()) {
             final ADTNode<ADTState<I, O>, I, O> parent = query.getCurrentADTNode();
             final O out = query.getTempOut();
-            final ADTNode<ADTState<I, O>, I, O> succ = parent.getChildren().get(out);
+            final ADTNode<ADTState<I, O>, I, O> succ = parent.getChild(out);
 
             // first time we process the successor
             if (succ == null) {
