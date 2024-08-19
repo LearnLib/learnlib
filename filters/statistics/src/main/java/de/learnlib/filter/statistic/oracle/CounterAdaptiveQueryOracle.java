@@ -66,7 +66,7 @@ public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracl
 
         private final AdaptiveQuery<I, O> delegate;
 
-        private CountingQuery(AdaptiveQuery<I, O> delegate) {
+        CountingQuery(AdaptiveQuery<I, O> delegate) {
             this.delegate = delegate;
         }
 

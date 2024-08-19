@@ -35,6 +35,7 @@ import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
+import org.testng.annotations.Test;
 
 public class AdaptiveQueryCacheTest
         extends AbstractCacheTest<Wrapper<Character, Integer>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
@@ -44,6 +45,12 @@ public class AdaptiveQueryCacheTest
     public AdaptiveQueryCacheTest() {
         counter =
                 new CounterAdaptiveQueryOracle<>(new SULAdaptiveOracle<>(new MealySimulatorSUL<>(CacheTestUtils.MEALY)));
+    }
+
+    @Test(enabled = false)
+    @Override
+    public void testDuplicatesInBatch() {
+        // adaptive queries don't support duplicate detection in batches
     }
 
     @Override
@@ -94,7 +101,7 @@ public class AdaptiveQueryCacheTest
         return true;
     }
 
-    protected static class Wrapper<I, O> implements MealyLearningCacheOracle<I, O>, SupportsGrowingAlphabet<I> {
+    protected static final class Wrapper<I, O> implements MealyLearningCacheOracle<I, O>, SupportsGrowingAlphabet<I> {
 
         private final AdaptiveQueryCache<I, O> delegate;
 

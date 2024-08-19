@@ -26,6 +26,7 @@ import de.learnlib.Resumable;
 import de.learnlib.filter.cache.LearningCache;
 import de.learnlib.filter.cache.mealy.AdaptiveQueryCache.AdaptiveQueryCacheState;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
+import de.learnlib.oracle.BatchProcessor;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.AdaptiveQuery;
 import de.learnlib.query.AdaptiveQuery.Response;
@@ -46,6 +47,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * symbols that have to be delegated are incorporated into the cache directly.
  * <p>
  * Internally, an incrementally growing tree (in form of a mealy automaton) is used for caching.
+ * <p>
+ * Note that due to the step-wise processing of {@link AdaptiveQuery adaptive queries}, duplicates within a single
+ * {@link BatchProcessor#processBatch(Collection) batch} cannot be cached. If you want to maximize cache efficiency, you
+ * would have to give up potential parallelization and pose queries one by one.
  *
  * @param <I>
  *         input symbol type
@@ -202,7 +207,7 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
         private int prefixIdx;
         private boolean isFinished;
 
-        private TrackingQuery(AdaptiveQuery<I, O> delegate, WordBuilder<I> inputBuilder) {
+        TrackingQuery(AdaptiveQuery<I, O> delegate, WordBuilder<I> inputBuilder) {
             this.delegate = delegate;
             this.inputBuilder = inputBuilder;
             this.outputBuilder = new WordBuilder<>();
@@ -238,6 +243,7 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
             switch (response) {
                 case FINISHED:
                     isFinished = true;
+                    return Response.FINISHED;
                 case RESET:
                     return Response.FINISHED;
                 default:

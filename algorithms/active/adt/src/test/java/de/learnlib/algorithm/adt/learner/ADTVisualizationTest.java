@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import de.learnlib.oracle.membership.SULAdaptiveOracle;
-import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import de.learnlib.sul.SUL;
 import de.learnlib.testsupport.AbstractVisualizationTest;
 import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine.Input;

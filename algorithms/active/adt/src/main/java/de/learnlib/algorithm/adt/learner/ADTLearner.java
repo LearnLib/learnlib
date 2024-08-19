@@ -147,7 +147,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             return false;
         }
 
-        cnt++;
         this.evaluateSubtreeReplacement();
 
         this.openCounterExamples.add(ce);
@@ -176,7 +175,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         return true;
     }
 
-    int cnt = 0;
     public boolean refineHypothesisInternal(DefaultQuery<I, Word<O>> ceQuery) {
 
         if (!MQUtil.isCounterexample(ceQuery, this.hypothesis)) {
