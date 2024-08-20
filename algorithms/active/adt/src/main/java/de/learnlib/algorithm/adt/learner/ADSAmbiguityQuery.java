@@ -20,33 +20,22 @@ import java.util.Deque;
 
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.automaton.ADTState;
-import de.learnlib.algorithm.adt.util.ADTUtil;
-import de.learnlib.query.AdaptiveQuery;
 import net.automatalib.word.Word;
 
-class ADSAmbiguityQuery<I, O> implements AdaptiveQuery<I, O> {
+class ADSAmbiguityQuery<I, O> extends AbstractAdaptiveQuery<I, O> {
 
-    private ADTNode<ADTState<I, O>, I, O> currentADTNode;
-
-    /**
-     * The index of the access sequence of the transition. If equal to the length of the access sequence the actual
-     * transition input symbol is the current symbol. If larger than the length of the access sequence, the symbol
-     * should be fetched from the ADT nodes.
-     */
-    private int asIndex;
     private final Word<I> accessSequence;
     private final Deque<I> oneShotPrefix;
 
+    private int asIndex;
     private boolean inOneShot;
-    private ADTNode<ADTState<I, O>, I, O> tempADTNode;
-    private O tempOut;
 
     ADSAmbiguityQuery(Word<I> accessSequence, Word<I> oneShotPrefix, ADTNode<ADTState<I, O>, I, O> root) {
-        this.currentADTNode = root;
+        super(root);
         this.accessSequence = accessSequence;
         this.oneShotPrefix = new ArrayDeque<>(oneShotPrefix.asList());
-        this.inOneShot = false;
         this.asIndex = 0;
+        this.inOneShot = false;
     }
 
     @Override
@@ -65,43 +54,19 @@ class ADSAmbiguityQuery<I, O> implements AdaptiveQuery<I, O> {
 
     @Override
     public Response processOutput(O out) {
-
         if (this.asIndex < this.accessSequence.length()) {
             asIndex++;
             return Response.SYMBOL;
         } else if (this.inOneShot) {
             return Response.SYMBOL;
         } else {
-            final ADTNode<ADTState<I, O>, I, O> succ = currentADTNode.getChild(out);
-
-            if (succ == null) {
-                this.tempOut = out;
-                this.tempADTNode = currentADTNode;
-                return Response.FINISHED;
-            } else if (ADTUtil.isResetNode(succ)) {
-                this.currentADTNode = succ.getChild(null);
-                this.asIndex = 0;
-                return Response.RESET;
-            } else if (ADTUtil.isSymbolNode(succ)) {
-                this.currentADTNode = succ;
-                return Response.SYMBOL;
-            } else {
-                this.currentADTNode = succ;
-                return Response.FINISHED;
-            }
+            return super.processOutput(out);
         }
     }
 
-    boolean needsPostProcessing() {
-        return this.tempOut != null && this.tempADTNode != null;
-    }
-
-    ADTNode<ADTState<I, O>, I, O> getCurrentADTNode() {
-        return this.currentADTNode;
-    }
-
-    O getTempOut() {
-        return this.tempOut;
+    @Override
+    protected void resetProgress() {
+        this.asIndex = 0;
     }
 }
 
