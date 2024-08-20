@@ -13,11 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.query;
+package de.learnlib.util.mealy;
 
+import de.learnlib.oracle.AdaptiveMembershipOracle;
+import de.learnlib.query.AdaptiveQuery;
+import de.learnlib.query.Query;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
+/**
+ * Wraps a given (non-empty) {@link Query} as an {@link AdaptiveQuery} so that it can be answered by an
+ * {@link AdaptiveMembershipOracle}.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 public class PresetAdaptiveQuery<I, O> implements AdaptiveQuery<I, O> {
 
     private final WordBuilder<O> builder;
@@ -41,25 +53,23 @@ public class PresetAdaptiveQuery<I, O> implements AdaptiveQuery<I, O> {
     @Override
     public I getInput() {
         if (prefixIdx < prefix.size()) {
-            return prefix.getSymbol(prefixIdx++);
-        } else if (suffixIdx < suffix.size()) {
-            return suffix.getSymbol(suffixIdx++);
+            return prefix.getSymbol(prefixIdx);
         } else {
-            throw new IllegalStateException("Indices out of bounds for query");
+            return suffix.getSymbol(suffixIdx);
         }
     }
 
     @Override
     public Response processOutput(O out) {
-
-        if (suffixIdx > 0) {
+        if (prefixIdx < prefix.size()) {
+            prefixIdx++;
+        } else {
+            suffixIdx++;
             builder.add(out);
 
             if (suffixIdx >= suffix.size()) {
                 query.answer(builder.toWord());
                 return Response.FINISHED;
-            } else {
-                return Response.SYMBOL;
             }
         }
 

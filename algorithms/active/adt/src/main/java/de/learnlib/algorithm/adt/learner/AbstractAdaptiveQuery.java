@@ -20,6 +20,14 @@ import de.learnlib.algorithm.adt.automaton.ADTState;
 import de.learnlib.algorithm.adt.util.ADTUtil;
 import de.learnlib.query.AdaptiveQuery;
 
+/**
+ * Utility class to share common implementations.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 abstract class AbstractAdaptiveQuery<I, O> implements AdaptiveQuery<I, O> {
 
     protected ADTNode<ADTState<I, O>, I, O> currentADTNode;

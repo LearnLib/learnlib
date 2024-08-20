@@ -302,7 +302,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             //create a query object for every transition
             for (ADTTransition<I, O> transition : this.openTransitions) {
                 if (transition.needsSifting()) {
-                    queries.add(buildQuery(transition));
+                    queries.add(new ADTAdaptiveQuery<>(transition, transition.getSiftNode()));
                 }
             }
 
@@ -325,7 +325,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             final ADTNode<ADTState<I, O>, I, O> ads = transition.getSiftNode();
             final int oldNumberOfFinalStates = ADTUtil.collectLeaves(ads).size();
 
-            final ADTAdaptiveQuery<I, O> query = buildQuery(transition);
+            final ADTAdaptiveQuery<I, O> query = new ADTAdaptiveQuery<>(transition, transition.getSiftNode());
             this.oracle.processQueries(Collections.singleton(query));
             processAnsweredQuery(query);
 
@@ -335,10 +335,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                 throw PartialTransitionAnalyzer.HYPOTHESIS_MODIFICATION_EXCEPTION;
             }
         }
-    }
-
-    private ADTAdaptiveQuery<I, O> buildQuery(ADTTransition<I, O> transition) {
-        return new ADTAdaptiveQuery<>(transition, transition.getSiftNode());
     }
 
     private void processAnsweredQuery(ADTAdaptiveQuery<I, O> query) {

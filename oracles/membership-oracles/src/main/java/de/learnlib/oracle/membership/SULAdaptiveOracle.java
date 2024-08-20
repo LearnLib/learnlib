@@ -15,11 +15,22 @@
  */
 package de.learnlib.oracle.membership;
 
+import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.SingleAdaptiveMembershipOracle;
 import de.learnlib.query.AdaptiveQuery;
 import de.learnlib.query.AdaptiveQuery.Response;
 import de.learnlib.sul.SUL;
 
+/**
+ * A wrapper that allows to use a {@link SUL} where a {@link AdaptiveMembershipOracle} is expected.
+ * <p>
+ * This oracle is <b>not</b> thread-safe.
+ *
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
+ */
 public class SULAdaptiveOracle<I, O> implements SingleAdaptiveMembershipOracle<I, O> {
 
     private final SUL<I, O> sul;

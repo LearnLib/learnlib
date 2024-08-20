@@ -21,6 +21,15 @@ import de.learnlib.algorithm.adt.automaton.ADTTransition;
 import de.learnlib.algorithm.adt.util.ADTUtil;
 import net.automatalib.word.Word;
 
+/**
+ * Utility class to close transitions. This query simply tracks the current ADT node for the access sequence of the
+ * given transition and sets its output if the respective input symbol is traversed.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 class ADTAdaptiveQuery<I, O> extends AbstractAdaptiveQuery<I, O> {
 
     private final ADTTransition<I, O> transition;

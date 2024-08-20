@@ -21,13 +21,12 @@ import java.util.function.Supplier;
 
 import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.ParallelAdaptiveOracle;
-import de.learnlib.oracle.ParallelOracle;
 import de.learnlib.query.AdaptiveQuery;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * A specialized {@link AbstractDynamicBatchProcessor} for {@link AdaptiveMembershipOracle}s that implements
- * {@link ParallelOracle}.
+ * {@link ParallelAdaptiveOracle}.
  *
  * @param <I>
  *         input symbol type

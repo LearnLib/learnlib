@@ -182,17 +182,16 @@ public class ObservationTree<S, I, O> implements AdaptiveMembershipOracle<I, O>,
      */
     public Optional<Word<I>> findSeparatingWord(S s1, S s2, Word<I> prefix) {
 
-        final MealyMachine<Integer, I, ?, O> machine = this.cache.getCache();
+        final MealyMachine<Integer, I, ?, O> cache = this.cache.getCache();
 
         final Integer n1 = this.nodeToObservationMap.get(s1);
         final Integer n2 = this.nodeToObservationMap.get(s2);
 
-        final Integer s1Succ = machine.getSuccessor(n1, prefix);
-        final Integer s2Succ = machine.getSuccessor(n2, prefix);
+        final Integer s1Succ = cache.getSuccessor(n1, prefix);
+        final Integer s2Succ = cache.getSuccessor(n2, prefix);
 
         if (s1Succ != null && s2Succ != null) {
-            final Word<I> sepWord =
-                    NearLinearEquivalenceTest.findSeparatingWord(machine, s1Succ, s2Succ, alphabet, true);
+            final Word<I> sepWord = NearLinearEquivalenceTest.findSeparatingWord(cache, s1Succ, s2Succ, alphabet, true);
 
             if (sepWord != null) {
                 return Optional.of(sepWord);

@@ -16,7 +16,7 @@
 package de.learnlib.oracle;
 
 /**
- * {@link ParallelOracle} equivalent for {@link OmegaMembershipOracle}.
+ * {@link ParallelOracle} equivalent for {@link OmegaMembershipOracle}s.
  *
  * @param <S>
  *         oracle state type

@@ -42,7 +42,7 @@ public class MQ2AQWrapper<I, O> implements AdaptiveMembershipOracle<I, O> {
     }
 
     public void processQuery(AdaptiveQuery<I, O> query) {
-        final WordBuilder<I> wb = new WordBuilder<>();
+        wb.clear();
         Response response;
 
         do {

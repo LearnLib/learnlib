@@ -15,4 +15,12 @@
  */
 package de.learnlib.oracle;
 
+/**
+ * {@link ParallelOracle} equivalent for {@link AdaptiveMembershipOracle}s.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 public interface ParallelAdaptiveOracle<I, O> extends ThreadPool, AdaptiveMembershipOracle<I, O> {}

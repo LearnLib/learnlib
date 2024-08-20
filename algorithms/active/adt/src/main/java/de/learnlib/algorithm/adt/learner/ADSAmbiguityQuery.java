@@ -22,6 +22,14 @@ import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.automaton.ADTState;
 import net.automatalib.word.Word;
 
+/**
+ * Utility class to resolve ADS ambiguities. This query simply tracks the current ADT node for the given inputs.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 class ADSAmbiguityQuery<I, O> extends AbstractAdaptiveQuery<I, O> {
 
     private final Word<I> accessSequence;

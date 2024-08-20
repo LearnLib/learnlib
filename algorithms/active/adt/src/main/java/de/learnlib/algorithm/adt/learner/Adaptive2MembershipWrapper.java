@@ -19,13 +19,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import de.learnlib.oracle.AdaptiveMembershipOracle;
-import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.query.AdaptiveQuery;
-import de.learnlib.query.PresetAdaptiveQuery;
 import de.learnlib.query.Query;
+import de.learnlib.util.mealy.PresetAdaptiveQuery;
 import net.automatalib.word.Word;
 
-class Adaptive2MembershipWrapper<I, O> implements MembershipOracle.MealyMembershipOracle<I, O> {
+/**
+ * Utility class to answer regular {@link Query queries} with an {@link AdaptiveMembershipOracle}.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
+class Adaptive2MembershipWrapper<I, O> implements MealyMembershipOracle<I, O> {
 
     private final AdaptiveMembershipOracle<I, O> oracle;
 

@@ -24,6 +24,15 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Utility class to verify ADSs. This query tracks the current ADT node for the given inputs and compares it with an
+ * expected output, potentially constructing a counterexample from the observed data.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 class ADSVerificationQuery<I, O> implements AdaptiveQuery<I, O> {
 
     private final Word<I> prefix;

@@ -19,14 +19,45 @@ import java.util.Collection;
 import java.util.Collections;
 
 import de.learnlib.query.AdaptiveQuery;
+import de.learnlib.query.AdaptiveQuery.Response;
 
+/**
+ * An adaptive variation of the {@link MembershipOracle} that is tailored towards answering
+ * {@link AdaptiveQuery adaptive queries}.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 public interface AdaptiveMembershipOracle<I, O> extends BatchProcessor<AdaptiveQuery<I, O>> {
 
-    void processQueries(Collection<? extends AdaptiveQuery<I, O>> queries);
-
+    /**
+     * Processes a single query. When this method returns, the provided inputs of the {@link AdaptiveQuery#getInput()}
+     * method will have been evaluated on the system under learning and its responses will have been forwarded to the
+     * {@link AdaptiveQuery#processOutput(Object)} method until the method has returned {@link Response#FINISHED}.
+     * <p>
+     * The default implementation of this method will simply wrap the provided {@link AdaptiveQuery} in a singleton
+     * {@link Collection} using {@link Collections#singleton(Object)}. Implementations in subclasses should override
+     * this method to circumvent the Collection object creation, if possible.
+     *
+     * @param query
+     *         the query to process
+     */
     default void processQuery(AdaptiveQuery<I, O> query) {
         processQueries(Collections.singleton(query));
     }
+
+    /**
+     * Processes the specified collection of queries. When this method returns, the provided inputs of the
+     * {@link AdaptiveQuery#getInput()} method will have been evaluated on the system under learning and its responses
+     * will have been forwarded to the {@link AdaptiveQuery#processOutput(Object)} method until the method has returned
+     * {@link Response#FINISHED}.
+     *
+     * @param queries
+     *         the queries to process
+     */
+    void processQueries(Collection<? extends AdaptiveQuery<I, O>> queries);
 
     @Override
     default void processBatch(Collection<? extends AdaptiveQuery<I, O>> batch) {

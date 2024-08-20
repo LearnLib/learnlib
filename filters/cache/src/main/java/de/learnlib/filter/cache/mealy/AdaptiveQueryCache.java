@@ -39,7 +39,6 @@ import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A cache for an {@link AdaptiveMembershipOracle}. Upon construction, it is provided with a delegate oracle. Queries
@@ -50,7 +49,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <p>
  * Note that due to the step-wise processing of {@link AdaptiveQuery adaptive queries}, duplicates within a single
  * {@link BatchProcessor#processBatch(Collection) batch} cannot be cached. If you want to maximize cache efficiency, you
- * would have to give up potential parallelization and pose queries one by one.
+ * would have to give up on potential parallelization and pose queries one by one.
  *
  * @param <I>
  *         input symbol type
@@ -133,22 +132,16 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
 
     @Override
     public EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createCacheConsistencyTest() {
-        return this::findCounterexample;
-    }
+        return (hypothesis, alphabet) -> {
+            //TODO: If the hypothesis has undefined transitions, but the cache doesn't, it is a clear counterexample!
+            final Word<I> sepWord = NearLinearEquivalenceTest.findSeparatingWord(cache, hypothesis, alphabet, true);
 
-    private @Nullable DefaultQuery<I, Word<O>> findCounterexample(MealyMachine<?, I, ?, O> hypothesis,
-                                                                  Collection<? extends I> alphabet) {
-        /*
-        TODO: potential optimization: If the hypothesis has undefined transitions, but the cache doesn't, it is a clear
-        counterexample!
-         */
-        final Word<I> sepWord = NearLinearEquivalenceTest.findSeparatingWord(cache, hypothesis, alphabet, true);
+            if (sepWord != null) {
+                return new DefaultQuery<>(sepWord, cache.computeOutput(sepWord));
+            }
 
-        if (sepWord != null) {
-            return new DefaultQuery<>(sepWord, cache.computeOutput(sepWord));
-        }
-
-        return null;
+            return null;
+        };
     }
 
     @Override
@@ -166,14 +159,42 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
         this.cache.addAlphabetSymbol(symbol);
     }
 
+    /**
+     * Returns a (structural) view of the cache in form of a {@link MealyMachine}.
+     *
+     * @return a view of the cache
+     */
     public MealyMachine<Integer, I, ?, O> getCache() {
         return this.cache;
     }
 
+    /**
+     * Inserts the given trace of input symbols and associates the trace of given output symbols with it.
+     *
+     * @param input
+     *         the sequence of input symbols
+     * @param output
+     *         the sequence of output symbols
+     *
+     * @return the identifier of the state reached by the input sequence
+     */
     public Integer insert(Word<I> input, Word<O> output) {
         return insert(this.cache.getInitialState(), input, output);
     }
 
+    /**
+     * Inserts the given trace of input symbols at the given cache state and associates the trace of given output
+     * symbols with it.
+     *
+     * @param state
+     *         the (cache) state at which the traces should be inserted
+     * @param input
+     *         the sequence of input symbols
+     * @param output
+     *         the sequence of output symbols
+     *
+     * @return the identifier of the state reached by the input sequence
+     */
     public Integer insert(Integer state, Word<I> input, Word<O> output) {
         assert input.length() == output.length();
 

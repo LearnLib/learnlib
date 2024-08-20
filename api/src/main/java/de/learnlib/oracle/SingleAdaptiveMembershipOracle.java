@@ -19,6 +19,12 @@ import java.util.Collection;
 
 import de.learnlib.query.AdaptiveQuery;
 
+/**
+ * An {@link AdaptiveMembershipOracle} that answers single queries.
+ *
+ * @see AdaptiveMembershipOracle
+ * @see SingleQueryOracle
+ */
 public interface SingleAdaptiveMembershipOracle<I, O> extends AdaptiveMembershipOracle<I, O> {
 
     @Override
@@ -30,10 +36,4 @@ public interface SingleAdaptiveMembershipOracle<I, O> extends AdaptiveMembership
 
     @Override
     void processQuery(AdaptiveQuery<I, O> query);
-
-    @Override
-    default void processBatch(Collection<? extends AdaptiveQuery<I, O>> batch) {
-        processQueries(batch);
-    }
 }
-

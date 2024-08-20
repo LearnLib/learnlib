@@ -103,6 +103,11 @@ limitations under the License.
             <artifactId>learnlib-test-support</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-util</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.testng</groupId>
@@ -120,6 +125,7 @@ limitations under the License.
                         <!-- append to existing argLine to nicely work together with jacoco plugin -->
                         <argLine>
                             @{argLine}
+                            --add-reads=de.learnlib.filter.cache=de.learnlib.common.util
                             --add-reads=de.learnlib.filter.cache=de.learnlib.filter.statistic
                             --add-reads=de.learnlib.filter.cache=de.learnlib.oracle.membership
                             --add-reads=de.learnlib.filter.cache=de.learnlib.oracle.parallelism
