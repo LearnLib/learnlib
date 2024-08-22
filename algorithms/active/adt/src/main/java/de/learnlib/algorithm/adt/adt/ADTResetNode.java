@@ -83,8 +83,4 @@ public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
     public String toString() {
         return "reset";
     }
-
-    public ADTNode<S, I, O> getSuccessor() {
-        return this.successor;
-    }
 }
