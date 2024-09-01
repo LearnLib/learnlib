@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * LearnLib now supports JPMS modules. All artifacts now provide a `module-info` descriptor except of the distribution artifacts (for Maven-less environments) which only provide an `Automatic-Module-Name` due to non-modular dependencies. Note that while this is a Java 9+ feature, LearnLib still supports Java 8 byte code for the remaining class files.
 * Added an `InterningMembershipOracle` (including refinements) to the `learnlib-cache` artifact that interns query responses to reduce memory consumption of large data structures. This exports the internal concepts of the DHC learner (which no longer interns query responses automatically).
+* The `ADTLearner` has been refactored to longer use the (now-removed) `SymbolQueryOracle` but a new `AdaptiveMembershipOracle` instead which supports answering queries in parallel (thanks to [Leon Vitorovic](https://github.com/leonthalee)).
 
 ### Changed
 
@@ -30,6 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The `de.learnlib.tooling:learnlib-annotation-processor` artifact has been dropped. The functionality has been moved to a [standalone project](https://github.com/LearnLib/build-tools).
 * The `de.learnlib:learnlib-rpni-edsm` and `de.learnlib:learnlib-rpni-mdl` artifacts have been dropped. The code has been merged with the `de.learnlib:learnlib-rpni` artifact.
 * `PropertyOracle`s can no longer set a property. This value is now immutable and must be provided during instantiation. Previously, the internal state wasn't updated accordingly if a property was overridden.
+* `SymbolQueryOracle`s (and related code such as the respective caches, counters, etc.) have been removed without replacement. Equivalent functionality on the basis of the new `AdaptiveMembershipOracle`s is available instead.
 
 
 ## [0.17.0] - 2023-11-15

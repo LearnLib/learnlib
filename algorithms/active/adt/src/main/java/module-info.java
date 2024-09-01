@@ -33,6 +33,7 @@ open module de.learnlib.algorithm.adt {
     requires de.learnlib.api;
     requires de.learnlib.common.counterexample;
     requires de.learnlib.common.util;
+    requires de.learnlib.filter.cache;
     requires net.automatalib.api;
     requires net.automatalib.common.smartcollection;
     requires net.automatalib.common.util;

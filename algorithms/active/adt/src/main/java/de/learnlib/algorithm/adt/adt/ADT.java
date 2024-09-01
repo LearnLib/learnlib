@@ -22,7 +22,6 @@ import java.util.Set;
 import de.learnlib.algorithm.adt.api.LeafSplitter;
 import de.learnlib.algorithm.adt.config.LeafSplitters;
 import de.learnlib.algorithm.adt.util.ADTUtil;
-import de.learnlib.oracle.SymbolQueryOracle;
 import net.automatalib.word.Word;
 
 /**
@@ -91,29 +90,6 @@ public class ADT<S, I, O> {
             newNode.setParent(newResetNode);
             endOfPreviousADS.getChildren().put(outputToReset, newResetNode);
         }
-    }
-
-    /**
-     * Successively sifts a word through the ADT induced by the given node. Stops when reaching a leaf.
-     *
-     * @param oracle
-     *         the oracle to query with inner node symbols
-     * @param word
-     *         the word to sift
-     * @param subtree
-     *         the node whose subtree is considered
-     *
-     * @return the leaf (see {@link ADTNode#sift(SymbolQueryOracle, Word)})
-     */
-    public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> word, ADTNode<S, I, O> subtree) {
-
-        ADTNode<S, I, O> current = subtree;
-
-        while (!ADTUtil.isLeafNode(current)) {
-            current = current.sift(oracle, word);
-        }
-
-        return current;
     }
 
     /**

@@ -129,6 +129,14 @@ limitations under the License.
             </roles>
         </contributor>
         <contributor>
+            <name>Leon Vitorovic</name>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
+            <email>leon.vitorovic@tu-dortmund.de</email>
+            <roles>
+                <role>Developer (Graduate)</role>
+            </roles>
+        </contributor>
+        <contributor>
             <name>Stephan Windmüller</name>
             <email>stephan.windmueller@tu-dortmund.de</email>
             <organization>TU Dortmund University, Chair of Programming Systems</organization>

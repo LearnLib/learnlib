@@ -22,8 +22,8 @@ import de.learnlib.algorithm.adt.config.ADTExtenders;
 import de.learnlib.algorithm.adt.config.LeafSplitters;
 import de.learnlib.algorithm.adt.config.SubtreeReplacers;
 import de.learnlib.driver.simulator.MealySimulatorSUL;
-import de.learnlib.oracle.SymbolQueryOracle;
-import de.learnlib.oracle.membership.SULSymbolQueryOracle;
+import de.learnlib.oracle.AdaptiveMembershipOracle;
+import de.learnlib.oracle.membership.SULAdaptiveOracle;
 import de.learnlib.testsupport.AbstractGrowingAlphabetTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -32,7 +32,7 @@ import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 
 public class ADTGrowingAlphabetTest
-        extends AbstractGrowingAlphabetTest<ADTLearner<Integer, Character>, MealyMachine<?, Integer, ?, Character>, SymbolQueryOracle<Integer, Character>, Integer, Word<Character>> {
+        extends AbstractGrowingAlphabetTest<ADTLearner<Integer, Character>, MealyMachine<?, Integer, ?, Character>, AdaptiveMembershipOracle<Integer, Character>, Integer, Word<Character>> {
 
     @Override
     protected Alphabet<Integer> getInitialAlphabet() {
@@ -50,12 +50,12 @@ public class ADTGrowingAlphabetTest
     }
 
     @Override
-    protected SymbolQueryOracle<Integer, Character> getOracle(MealyMachine<?, Integer, ?, Character> target) {
-        return new SULSymbolQueryOracle<>(new MealySimulatorSUL<>(target));
+    protected AdaptiveMembershipOracle<Integer, Character> getOracle(MealyMachine<?, Integer, ?, Character> target) {
+        return new SULAdaptiveOracle<>(new MealySimulatorSUL<>(target));
     }
 
     @Override
-    protected ADTLearner<Integer, Character> getLearner(SymbolQueryOracle<Integer, Character> oracle,
+    protected ADTLearner<Integer, Character> getLearner(AdaptiveMembershipOracle<Integer, Character> oracle,
                                                         Alphabet<Integer> alphabet) {
         return new ADTLearner<>(alphabet,
                                 oracle,

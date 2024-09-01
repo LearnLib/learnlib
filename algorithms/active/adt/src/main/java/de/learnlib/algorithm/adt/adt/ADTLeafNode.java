@@ -15,9 +15,7 @@
  */
 package de.learnlib.algorithm.adt.adt;
 
-import de.learnlib.oracle.SymbolQueryOracle;
 import net.automatalib.graph.ads.impl.AbstractRecursiveADSLeafNode;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -35,11 +33,6 @@ public class ADTLeafNode<S, I, O> extends AbstractRecursiveADSLeafNode<S, I, O, 
 
     public ADTLeafNode(@Nullable ADTNode<S, I, O> parent, @Nullable S hypothesisState) {
         super(parent, hypothesisState);
-    }
-
-    @Override
-    public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> prefix) {
-        throw new UnsupportedOperationException("Final nodes cannot sift words");
     }
 
     @Override

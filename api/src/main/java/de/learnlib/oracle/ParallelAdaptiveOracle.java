@@ -16,13 +16,11 @@
 package de.learnlib.oracle;
 
 /**
- * {@link ParallelOracle} equivalent for {@link OmegaMembershipOracle}s.
+ * {@link ParallelOracle} equivalent for {@link AdaptiveMembershipOracle}s.
  *
- * @param <S>
- *         oracle state type
  * @param <I>
  *         input symbol type
- * @param <D>
- *         output domain type
+ * @param <O>
+ *         output symbol type
  */
-public interface ParallelOmegaOracle<S, I, D> extends ThreadPool, OmegaMembershipOracle<S, I, D> {}
+public interface ParallelAdaptiveOracle<I, O> extends ThreadPool, AdaptiveMembershipOracle<I, O> {}

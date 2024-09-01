@@ -15,6 +15,8 @@
  */
 package de.learnlib.oracle.membership;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import de.learnlib.driver.simulator.MealySimulatorSUL;
@@ -23,12 +25,13 @@ import de.learnlib.testsupport.example.mealy.ExampleRandomMealy;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class SULSymbolQueryOracleTest {
+public class SULAdaptiveOracleTest {
 
     private ExampleRandomMealy<Character, Integer> example;
     private SUL<Character, Integer> sul;
@@ -42,45 +45,45 @@ public class SULSymbolQueryOracleTest {
     }
 
     @Test
-    public void testResetIdempotency() {
+    public void testNoopIdempotency() {
         final SUL<Character, Integer> mock = Mockito.spy(sul);
 
-        final SULSymbolQueryOracle<Character, Integer> oracle = new SULSymbolQueryOracle<>(mock);
+        final SULAdaptiveOracle<Character, Integer> oracle = new SULAdaptiveOracle<>(mock);
 
         Mockito.verify(mock, Mockito.times(0)).pre();
         Mockito.verify(mock, Mockito.times(0)).post();
 
-        oracle.reset();
-        oracle.reset();
-        oracle.reset();
+        oracle.processQueries(Collections.emptyList());
+        oracle.processQueries(Collections.emptyList());
+        oracle.processQueries(Collections.emptyList());
 
         Mockito.verify(mock, Mockito.times(0)).pre();
         Mockito.verify(mock, Mockito.times(0)).post();
     }
 
     @Test
-    public void testQueriesAndCleanUp() {
+    public void testQueries() {
         final SUL<Character, Integer> mock = Mockito.spy(sul);
 
-        final SULSymbolQueryOracle<Character, Integer> oracle = new SULSymbolQueryOracle<>(mock);
+        final SULAdaptiveOracle<Character, Integer> oracle = new SULAdaptiveOracle<>(mock);
 
         Mockito.verify(mock, Mockito.times(0)).pre();
         Mockito.verify(mock, Mockito.times(0)).post();
+        Mockito.verify(mock, Mockito.times(0)).step(Mockito.anyChar());
 
         final Word<Character> i1 = Word.fromString("abcabcabc");
-        final Word<Integer> o1 = oracle.answerQuery(i1);
-        oracle.reset(); // cleanup
+        final Word<Character> i2 = Word.fromString("cba");
+        final AdaptiveTestQuery<Character, Integer> query = new AdaptiveTestQuery<>(i1, i2);
+
+        oracle.processQuery(query);
+
+        final List<WordBuilder<Integer>> outputs = query.getOutputs();
+        Assert.assertEquals(outputs.size(), 2);
+
+        final Word<Integer> o1 = outputs.get(0).toWord();
+        final Word<Integer> o2 = outputs.get(1).toWord();
 
         Assert.assertEquals(o1, example.getReferenceAutomaton().computeOutput(i1));
-        Mockito.verify(mock, Mockito.times(1)).pre();
-        Mockito.verify(mock, Mockito.times(1)).post();
-        Mockito.verify(mock, Mockito.times(i1.size())).step(Mockito.anyChar());
-
-        final Word<Character> i2 = Word.fromString("cba");
-        final Word<Integer> o2 = oracle.answerQuery(i2);
-        oracle.reset(); // cleanup
-        oracle.reset(); // twice
-
         Assert.assertEquals(o2, example.getReferenceAutomaton().computeOutput(i2));
         Mockito.verify(mock, Mockito.times(2)).pre();
         Mockito.verify(mock, Mockito.times(2)).post();

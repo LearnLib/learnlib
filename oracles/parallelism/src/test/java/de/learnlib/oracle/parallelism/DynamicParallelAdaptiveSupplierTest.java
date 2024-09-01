@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.oracle;
+package de.learnlib.oracle.parallelism;
 
-/**
- * {@link ParallelOracle} equivalent for {@link OmegaMembershipOracle}s.
- *
- * @param <S>
- *         oracle state type
- * @param <I>
- *         input symbol type
- * @param <D>
- *         output domain type
- */
-public interface ParallelOmegaOracle<S, I, D> extends ThreadPool, OmegaMembershipOracle<S, I, D> {}
+public class DynamicParallelAdaptiveSupplierTest extends AbstractDynamicParallelAdaptiveOracleTest<Void> {
+
+    @Override
+    protected DynamicParallelAdaptiveOracleBuilder<Void, Void> getBuilder() {
+        return ParallelOracleBuilders.newDynamicParallelAdaptiveOracle(NullOracle::new);
+    }
+}

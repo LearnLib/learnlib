@@ -17,18 +17,19 @@ package de.learnlib.algorithm.adt.model;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.util.ADTUtil;
+import de.learnlib.filter.cache.mealy.AdaptiveQueryCache;
+import de.learnlib.oracle.AdaptiveMembershipOracle;
+import de.learnlib.query.AdaptiveQuery;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.impl.FastMealy;
-import net.automatalib.automaton.transducer.impl.FastMealyState;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.word.Word;
@@ -46,22 +47,27 @@ import net.automatalib.word.Word;
  * @param <O>
  *         output alphabet type
  */
-public class ObservationTree<S, I, O> {
+public class ObservationTree<S, I, O> implements AdaptiveMembershipOracle<I, O>, SupportsGrowingAlphabet<I> {
 
     private final Alphabet<I> alphabet;
 
-    private final FastMealy<I, O> observationTree;
+    private final AdaptiveMembershipOracle<I, O> delegate;
 
-    private final Map<S, FastMealyState<O>> nodeToObservationMap;
+    private final AdaptiveQueryCache<I, O> cache;
 
-    public ObservationTree(Alphabet<I> alphabet) {
+    private final Map<S, Integer> nodeToObservationMap;
+
+    public ObservationTree(Alphabet<I> alphabet, AdaptiveMembershipOracle<I, O> delegate, boolean useCache) {
+        this.cache = new AdaptiveQueryCache<>(delegate, alphabet);
+
+        if (useCache) {
+            this.delegate = this.cache;
+        } else {
+            this.delegate = delegate;
+        }
+
         this.alphabet = alphabet;
-        this.observationTree = new FastMealy<>(alphabet);
         this.nodeToObservationMap = new HashMap<>();
-    }
-
-    public FastMealy<I, O> getObservationTree() {
-        return observationTree;
     }
 
     /**
@@ -72,7 +78,7 @@ public class ObservationTree<S, I, O> {
      *         the initial state of the hypothesis
      */
     public void initialize(S state) {
-        final FastMealyState<O> init = this.observationTree.addInitialState();
+        final Integer init = this.cache.getCache().getInitialState();
         this.nodeToObservationMap.put(state, init);
     }
 
@@ -89,11 +95,11 @@ public class ObservationTree<S, I, O> {
     public void initialize(Collection<S> states,
                            Function<S, Word<I>> asFunction,
                            Function<Word<I>, Word<O>> outputFunction) {
-        final FastMealyState<O> init = this.observationTree.addInitialState();
+        final Integer init = this.cache.getCache().getInitialState();
 
         for (S s : states) {
             final Word<I> as = asFunction.apply(s);
-            final FastMealyState<O> treeNode = this.addTrace(init, as, outputFunction.apply(as));
+            final Integer treeNode = this.addTrace(init, as, outputFunction.apply(as));
             this.nodeToObservationMap.put(s, treeNode);
         }
     }
@@ -112,32 +118,8 @@ public class ObservationTree<S, I, O> {
         this.addTrace(this.nodeToObservationMap.get(state), input, output);
     }
 
-    private FastMealyState<O> addTrace(FastMealyState<O> state, Word<I> input, Word<O> output) {
-
-        assert input.length() == output.length() : "Traces differ in length";
-
-        final Iterator<I> inputIter = input.iterator();
-        final Iterator<O> outputIter = output.iterator();
-        FastMealyState<O> iter = state;
-
-        while (inputIter.hasNext()) {
-
-            final I nextInput = inputIter.next();
-            final O nextOuput = outputIter.next();
-            final FastMealyState<O> nextState;
-
-            if (this.observationTree.getTransition(iter, nextInput) == null) {
-                nextState = this.observationTree.addState();
-                this.observationTree.addTransition(iter, nextInput, nextState, nextOuput);
-            } else {
-                assert Objects.equals(nextOuput, this.observationTree.getOutput(iter, nextInput)) : "Inconsistent observations";
-                nextState = this.observationTree.getSuccessor(iter, nextInput);
-            }
-
-            iter = nextState;
-        }
-
-        return iter;
+    private Integer addTrace(Integer state, Word<I> input, Word<O> output) {
+        return this.cache.insert(state, input, output);
     }
 
     /**
@@ -151,7 +133,7 @@ public class ObservationTree<S, I, O> {
      */
     public void addTrace(S state, ADTNode<S, I, O> adtNode) {
 
-        final FastMealyState<O> internalState = this.nodeToObservationMap.get(state);
+        final Integer internalState = this.nodeToObservationMap.get(state);
 
         ADTNode<S, I, O> adsIter = adtNode;
 
@@ -179,17 +161,8 @@ public class ObservationTree<S, I, O> {
         final Word<I> prefix = accessSequence.prefix(accessSequence.length() - 1);
         final I sym = accessSequence.lastSymbol();
 
-        final FastMealyState<O> pred =
-                this.observationTree.getSuccessor(this.observationTree.getInitialState(), prefix);
-        final FastMealyState<O> target;
-
-        assert pred != null;
-        if (pred.getTransitionObject(alphabet.getSymbolIndex(sym)) == null) {
-            target = this.observationTree.addState();
-            this.observationTree.addTransition(pred, sym, target, output);
-        } else {
-            target = this.observationTree.getSuccessor(pred, sym);
-        }
+        final Integer pred = this.cache.getCache().getState(prefix);
+        final Integer target = this.cache.insert(pred, Word.fromLetter(sym), Word.fromLetter(output));
 
         this.nodeToObservationMap.put(newState, target);
     }
@@ -209,15 +182,16 @@ public class ObservationTree<S, I, O> {
      */
     public Optional<Word<I>> findSeparatingWord(S s1, S s2, Word<I> prefix) {
 
-        final FastMealyState<O> n1 = this.nodeToObservationMap.get(s1);
-        final FastMealyState<O> n2 = this.nodeToObservationMap.get(s2);
+        final MealyMachine<Integer, I, ?, O> cache = this.cache.getCache();
 
-        final FastMealyState<O> s1Succ = this.observationTree.getSuccessor(n1, prefix);
-        final FastMealyState<O> s2Succ = this.observationTree.getSuccessor(n2, prefix);
+        final Integer n1 = this.nodeToObservationMap.get(s1);
+        final Integer n2 = this.nodeToObservationMap.get(s2);
+
+        final Integer s1Succ = cache.getSuccessor(n1, prefix);
+        final Integer s2Succ = cache.getSuccessor(n2, prefix);
 
         if (s1Succ != null && s2Succ != null) {
-            final Word<I> sepWord =
-                    NearLinearEquivalenceTest.findSeparatingWord(this.observationTree, s1Succ, s2Succ, alphabet, true);
+            final Word<I> sepWord = NearLinearEquivalenceTest.findSeparatingWord(cache, s1Succ, s2Succ, alphabet, true);
 
             if (sepWord != null) {
                 return Optional.of(sepWord);
@@ -239,10 +213,10 @@ public class ObservationTree<S, I, O> {
      */
     public Word<I> findSeparatingWord(S s1, S s2) {
 
-        final FastMealyState<O> n1 = this.nodeToObservationMap.get(s1);
-        final FastMealyState<O> n2 = this.nodeToObservationMap.get(s2);
+        final Integer n1 = this.nodeToObservationMap.get(s1);
+        final Integer n2 = this.nodeToObservationMap.get(s2);
 
-        return NearLinearEquivalenceTest.findSeparatingWord(this.observationTree, n1, n2, this.alphabet, true);
+        return NearLinearEquivalenceTest.findSeparatingWord(this.cache.getCache(), n1, n2, this.alphabet, true);
     }
 
     /**
@@ -257,8 +231,18 @@ public class ObservationTree<S, I, O> {
      * @return the previously stored output behavior of the system under learning
      */
     public Word<O> trace(S s, Word<I> input) {
-        final FastMealyState<O> q = this.nodeToObservationMap.get(s);
-        return this.observationTree.computeStateOutput(q, input);
+        final Integer q = this.nodeToObservationMap.get(s);
+        return this.cache.getCache().computeStateOutput(q, input);
     }
 
+    @Override
+    public void processQueries(Collection<? extends AdaptiveQuery<I, O>> queries) {
+        this.delegate.processQueries(queries);
+    }
+
+    @Override
+    public void addAlphabetSymbol(I i) {
+        this.alphabet.asGrowingAlphabetOrThrowException().add(i);
+        this.cache.addAlphabetSymbol(i);
+    }
 }

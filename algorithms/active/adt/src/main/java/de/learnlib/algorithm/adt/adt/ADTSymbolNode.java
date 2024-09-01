@@ -15,9 +15,7 @@
  */
 package de.learnlib.algorithm.adt.adt;
 
-import de.learnlib.oracle.SymbolQueryOracle;
 import net.automatalib.graph.ads.impl.AbstractRecursiveADSSymbolNode;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -35,21 +33,6 @@ public class ADTSymbolNode<S, I, O> extends AbstractRecursiveADSSymbolNode<S, I,
 
     public ADTSymbolNode(@Nullable ADTNode<S, I, O> parent, I symbol) {
         super(parent, symbol);
-    }
-
-    @Override
-    public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> prefix) {
-        final O o = oracle.query(super.getSymbol());
-
-        final ADTNode<S, I, O> successor = super.getChildren().get(o);
-
-        if (successor == null) {
-            final ADTNode<S, I, O> result = new ADTLeafNode<>(this, null);
-            super.getChildren().put(o, result);
-            return result;
-        }
-
-        return successor;
     }
 
     @Override

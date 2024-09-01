@@ -13,31 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithm.adt.it;
+package de.learnlib.oracle.parallelism;
 
-import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.oracle.SymbolQueryOracle;
-import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
+import java.util.Arrays;
 
-public class MQ2SQWrapper<I, O> implements SymbolQueryOracle<I, O> {
+import de.learnlib.oracle.parallelism.AbstractStaticParallelAdaptiveOracleTest.TestOutput;
 
-    final WordBuilder<I> wb;
-    final MembershipOracle<I, Word<O>> oracle;
+public class StaticParallelAdaptiveOracleTest extends AbstractStaticParallelAdaptiveOracleTest<TestOutput> {
 
-    public MQ2SQWrapper(MembershipOracle<I, Word<O>> oracle) {
-        this.oracle = oracle;
-        this.wb = new WordBuilder<>();
+    @Override
+    protected StaticParallelAdaptiveOracleBuilder<Void, TestOutput> getBuilder() {
+        TestMembershipOracle[] oracles = getOracles();
+        return ParallelOracleBuilders.newStaticParallelAdaptiveOracle(oracles[0],
+                                                                      Arrays.copyOfRange(oracles, 1, oracles.length));
     }
 
     @Override
-    public O query(I i) {
-        this.wb.append(i);
-        return this.oracle.answerQuery(wb.toWord()).lastSymbol();
-    }
-
-    @Override
-    public void reset() {
-        this.wb.clear();
+    protected TestOutput extractTestOutput(TestOutput output) {
+        return output;
     }
 }

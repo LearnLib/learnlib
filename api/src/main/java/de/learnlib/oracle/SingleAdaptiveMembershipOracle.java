@@ -15,14 +15,25 @@
  */
 package de.learnlib.oracle;
 
+import java.util.Collection;
+
+import de.learnlib.query.AdaptiveQuery;
+
 /**
- * {@link ParallelOracle} equivalent for {@link OmegaMembershipOracle}s.
+ * An {@link AdaptiveMembershipOracle} that answers single queries.
  *
- * @param <S>
- *         oracle state type
- * @param <I>
- *         input symbol type
- * @param <D>
- *         output domain type
+ * @see AdaptiveMembershipOracle
+ * @see SingleQueryOracle
  */
-public interface ParallelOmegaOracle<S, I, D> extends ThreadPool, OmegaMembershipOracle<S, I, D> {}
+public interface SingleAdaptiveMembershipOracle<I, O> extends AdaptiveMembershipOracle<I, O> {
+
+    @Override
+    default void processQueries(Collection<? extends AdaptiveQuery<I, O>> queries) {
+        for (AdaptiveQuery<I, O> query : queries) {
+            processQuery(query);
+        }
+    }
+
+    @Override
+    void processQuery(AdaptiveQuery<I, O> query);
+}

@@ -159,7 +159,7 @@ public final class LeafSplitters {
             newIter.next();
             newSuffixOutput = oldIter.next();
 
-            adsIter = adsIter.getChildren().get(newSuffixOutput);
+            adsIter = adsIter.getChild(newSuffixOutput);
         }
 
         final ADTNode<S, I, O> continuedADS = new ADTSymbolNode<>(adsIter.getParent(), suffixIter.next());
