@@ -45,7 +45,7 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O, StateL
         this(new StateLocalInputSULCacheImpl<>(incMealy, incMealy.asTransitionSystem(), sul));
     }
 
-    <S, T> StateLocalInputSULCache(StateLocalInputSULCacheImpl<S, I, T, O> cacheImpl) {
+    StateLocalInputSULCache(StateLocalInputSULCacheImpl<?, I, ?, O> cacheImpl) {
         super(cacheImpl);
         this.impl = cacheImpl;
     }

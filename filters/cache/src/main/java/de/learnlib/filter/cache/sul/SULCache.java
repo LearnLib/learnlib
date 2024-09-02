@@ -45,7 +45,7 @@ public class SULCache<I, O> extends AbstractSULCache<I, O, SULCacheState<I, O>> 
         this(new SULCacheImpl<>(incMealy, incMealy.asTransitionSystem(), sul));
     }
 
-    <S, T> SULCache(SULCacheImpl<S, I, T, O> cacheImpl) {
+    SULCache(SULCacheImpl<?, I, ?, O> cacheImpl) {
         super(cacheImpl);
     }
 

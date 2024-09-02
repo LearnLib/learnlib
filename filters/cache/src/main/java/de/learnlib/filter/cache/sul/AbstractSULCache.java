@@ -37,7 +37,7 @@ abstract class AbstractSULCache<I, O, C extends SULCacheState<I, O>>
 
     private final AbstractSULCacheImpl<?, I, ?, O, C> impl;
 
-    <S, T> AbstractSULCache(AbstractSULCacheImpl<S, I, T, O, C> cacheImpl) {
+    AbstractSULCache(AbstractSULCacheImpl<?, I, ?, O, C> cacheImpl) {
         this.impl = cacheImpl;
     }
 

@@ -45,7 +45,7 @@ public class ThreadSafeStateLocalInputSULCache<I, O> extends StateLocalInputSULC
                                                          sul));
     }
 
-    <S, T> ThreadSafeStateLocalInputSULCache(ThreadSafeStateLocalInputSULCacheImpl<S, I, T, O> cacheImpl) {
+    ThreadSafeStateLocalInputSULCache(ThreadSafeStateLocalInputSULCacheImpl<?, I, ?, O> cacheImpl) {
         super(cacheImpl);
     }
 

@@ -39,7 +39,7 @@ public class ThreadSafeSULCache<I, O> extends SULCache<I, O> {
         this(new ThreadSafeSULCacheImpl<>(incMealy, new ReentrantReadWriteLock(), incMealy.asTransitionSystem(), sul));
     }
 
-    private <S, T> ThreadSafeSULCache(ThreadSafeSULCacheImpl<S, I, T, O> cacheImpl) {
+    private ThreadSafeSULCache(ThreadSafeSULCacheImpl<?, I, ?, O> cacheImpl) {
         super(cacheImpl);
     }
 
