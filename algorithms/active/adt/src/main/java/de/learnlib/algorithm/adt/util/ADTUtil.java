@@ -232,7 +232,13 @@ public final class ADTUtil {
 
         final int nextCosts = ADTUtil.isResetNode(ads) ? accumulatedResets + 1 : accumulatedResets;
 
-        return ads.getChildren().values().stream().mapToInt(x -> computeEffectiveResetsInternal(x, nextCosts)).sum();
+        int resets = 0;
+
+        for (ADTNode<S, I, O> value : ads.getChildren().values()) {
+            resets += computeEffectiveResetsInternal(value, nextCosts);
+        }
+
+        return resets;
     }
 
     public static <S, I, O> Pair<ADTNode<S, I, O>, ADTNode<S, I, O>> buildADSFromTrace(MealyMachine<S, I, ?, O> automaton,

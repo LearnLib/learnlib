@@ -20,10 +20,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import de.learnlib.algorithm.adt.adt.ADTLeafNode;
 import de.learnlib.algorithm.adt.adt.ADTNode;
@@ -33,6 +33,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.smartcollection.ReflexiveMapView;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.ads.ADSUtil;
 import net.automatalib.word.Word;
@@ -144,11 +145,12 @@ public final class DefensiveADS<S, I, O> {
 
             @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
             final @NonNull Word<I> prefix = splittingWordCandidates.poll();
-            final Map<S, S> currentToInitialMapping = mapping.keySet()
-                                                             .stream()
-                                                             .collect(Collectors.toMap(x -> automaton.getSuccessor(x,
-                                                                                                                   prefix),
-                                                                                       mapping::get));
+            final Map<S, S> currentToInitialMapping = new HashMap<>(HashUtil.capacity(mapping.size()));
+
+            for (Entry<S, S> e : mapping.entrySet()) {
+                currentToInitialMapping.put(automaton.getSuccessor(e.getKey(), prefix), e.getValue());
+            }
+
             final BitSet currentSetAsBitSet = new BitSet();
             for (S s : currentToInitialMapping.keySet()) {
                 currentSetAsBitSet.set(stateIds.getStateId(s));
