@@ -31,6 +31,7 @@
 open module de.learnlib.algorithm.oml {
 
     requires de.learnlib.api;
+    requires de.learnlib.common.util;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
     requires net.automatalib.core;

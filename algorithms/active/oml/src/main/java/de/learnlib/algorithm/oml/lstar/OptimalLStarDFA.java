@@ -88,11 +88,6 @@ public class OptimalLStarDFA<I> extends AbstractOptimalLStar<DFA<?, I>, I, Boole
     }
 
     @Override
-    Boolean suffix(Boolean output, int length) {
-        return output;
-    }
-
-    @Override
     public int size() {
         return hypothesis.size();
     }
@@ -100,11 +95,6 @@ public class OptimalLStarDFA<I> extends AbstractOptimalLStar<DFA<?, I>, I, Boole
     @Override
     public List<Boolean> rowForState(Word<I> input) {
         return hypStateMap.get(hypothesis.getState(input));
-    }
-
-    @Override
-    public Boolean getOutput(Word<I> input, int length) {
-        return hypothesis.accepts(input);
     }
 
     @Override

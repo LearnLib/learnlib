@@ -56,12 +56,6 @@ public class OptimalLStarMealy<I, O> extends AbstractOptimalLStar<MealyMachine<?
     }
 
     @Override
-    public Word<O> getOutput(Word<I> input, int length) {
-        assert !input.isEmpty();
-        return hypothesis.computeOutput(input).suffix(length);
-    }
-
-    @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
         return hypothesis;
     }
@@ -119,11 +113,6 @@ public class OptimalLStarMealy<I, O> extends AbstractOptimalLStar<MealyMachine<?
                 this.hypothesis.setTransition(state, a, dst, o);
             }
         }
-    }
-
-    @Override
-    Word<O> suffix(Word<O> output, int length) {
-        return output.suffix(length);
     }
 
 }

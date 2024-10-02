@@ -31,14 +31,17 @@ import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 
-abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, D>,
-                                                        Hypothesis<I, D>,
-                                                        InputAlphabetHolder<I>,
-                                                        Resumable<OptimalLStarState<I, D>> {
+abstract class AbstractOptimalLStar<M extends SuffixOutput<I, D>, I, D> implements LearningAlgorithm<M, I, D>,
+                                                                                   InputAlphabetHolder<I>,
+                                                                                   Resumable<OptimalLStarState<I, D>>,
+                                                                                   FiniteRepresentation {
 
     private final Alphabet<I> alphabet;
     final MembershipOracle<I, D> mqs;
@@ -65,9 +68,9 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
 
     abstract void automatonFromTable();
 
-    abstract D suffix(D output, int length);
-
     abstract boolean symbolInconsistency(Word<I> u1, Word<I> u2, I a);
+
+    abstract List<D> rowForState(Word<I> input);
 
     @Override
     public void startLearning() {
@@ -81,14 +84,14 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
         witnesses.add(counterexample);
         boolean refined = false;
 
-        while (counterExampleValid(counterexample)) {
+        while (MQUtil.isCounterexample(counterexample, getHypothesisModel())) {
             final DefaultQuery<I, D> witness = witnesses.getFirst();
 
             if (witness.getOutput() == null) {
                 witness.answer(ceqs.answerQuery(witness.getPrefix(), witness.getSuffix()));
             }
 
-            final boolean valid = counterExampleValid(witness);
+            final boolean valid = MQUtil.isCounterexample(witness, getHypothesisModel());
 
             if (valid) {
                 analyzeCounterexample(witness, witnesses);
@@ -117,11 +120,11 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
     }
 
     private void analyzeCounterexample(DefaultQuery<I, D> counterexample, Deque<DefaultQuery<I, D>> witnesses) {
+        M hyp = getHypothesisModel();
         Word<I> ceInput = counterexample.getInput();
         Word<I> ua = null;
         int upper = maxSearchIndex(ceInput.length());
         int lower = 0;
-        D hypOut = getOutput(ceInput, ceInput.length());
         while (upper - lower > 1) {
             int mid = (upper + lower) / 2;
 
@@ -130,8 +133,9 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
             List<D> rowData = rowForState(prefix);
             boolean stillCe = false;
             for (Word<I> u : getShortPrefixes(rowData)) {
-                D sysOut = suffix(ceqs.answerQuery(u, suffix), suffix.length());
-                if (!Objects.equals(sysOut, suffix(hypOut, suffix.size()))) {
+                D sysOut = ceqs.answerQuery(u, suffix);
+                D hypOut = hyp.computeSuffixOutput(u, suffix);
+                if (!Objects.equals(sysOut, hypOut)) {
                     ua = u.append(suffix.firstSymbol());
                     lower = mid;
                     stillCe = true;
@@ -159,12 +163,6 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
         witnesses.push(new DefaultQuery<>(ua, sprime));
 
         addShortPrefix(ua);
-    }
-
-    private boolean counterExampleValid(DefaultQuery<I, D> counterexample) {
-        assert !counterexample.getSuffix().isEmpty();
-        D hypOut = getOutput(counterexample.getInput(), counterexample.getSuffix().length());
-        return !Objects.equals(hypOut, counterexample.getOutput());
     }
 
     private void learnLoop() {
@@ -263,7 +261,7 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
     private List<D> initRow(Word<I> prefix) {
         List<D> rowData = new ArrayList<>(suffixes.size());
         for (Word<I> suffix : suffixes) {
-            rowData.add(suffix(mqs.answerQuery(prefix, suffix), suffix.size()));
+            rowData.add(mqs.answerQuery(prefix, suffix));
 
         }
         return rowData;
@@ -277,7 +275,7 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
         List<D> rowData = new ArrayList<>(suffixes.size());
         rowData.addAll(oldData);
         for (int i = oldData.size(); i < suffixes.size(); i++) {
-            rowData.add(suffix(mqs.answerQuery(prefix, suffixes.get(i)), suffixes.get(i).size()));
+            rowData.add(mqs.answerQuery(prefix, suffixes.get(i)));
         }
         return rowData;
     }

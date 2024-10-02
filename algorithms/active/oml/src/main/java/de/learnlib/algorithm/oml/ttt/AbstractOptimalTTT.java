@@ -28,12 +28,14 @@ import de.learnlib.algorithm.oml.ttt.pt.PrefixTree;
 import de.learnlib.algorithm.oml.ttt.st.SuffixTrie;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 
-public abstract class AbstractOptimalTTT<M, I, D>
+public abstract class AbstractOptimalTTT<M extends SuffixOutput<I, D>, I, D>
         implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, InputAlphabetHolder<I> {
 
     private final MembershipOracle<I, D> ceqs;
@@ -51,13 +53,9 @@ public abstract class AbstractOptimalTTT<M, I, D>
 
     protected abstract int maxSearchIndex(int ceLength);
 
-    protected abstract D hypOutput(Word<I> word, int length);
-
     protected abstract DTLeaf<I, D> getState(Word<I> prefix);
 
     protected abstract AbstractDecisionTree<I, D> dtree();
-
-    protected abstract D suffix(D output, int length);
 
     @Override
     public void startLearning() {
@@ -72,14 +70,14 @@ public abstract class AbstractOptimalTTT<M, I, D>
         witnesses.add(counterexample);
         boolean refined = false;
 
-        while (counterExampleValid(counterexample)) {
+        while (MQUtil.isCounterexample(counterexample, getHypothesisModel())) {
             final DefaultQuery<I, D> witness = witnesses.getFirst();
 
             if (witness.getOutput() == null) {
                 witness.answer(ceqs.answerQuery(witness.getPrefix(), witness.getSuffix()));
             }
 
-            final boolean valid = counterExampleValid(witness);
+            final boolean valid = MQUtil.isCounterexample(witness, getHypothesisModel());
 
             if (valid) {
                 analyzeCounterexample(witness, witnesses);
@@ -128,12 +126,6 @@ public abstract class AbstractOptimalTTT<M, I, D>
         }
     }
 
-    private boolean counterExampleValid(DefaultQuery<I, D> counterexample) {
-        assert !counterexample.getSuffix().isEmpty();
-        D hypOut = hypOutput(counterexample.getInput(), counterexample.getSuffix().length());
-        return !Objects.equals(hypOut, counterexample.getOutput());
-    }
-
     private PTNode<I, D> longestShortPrefixOf(Word<I> ce) {
         PTNode<I, D> cur = ptree.root();
         int i = 0;
@@ -147,12 +139,12 @@ public abstract class AbstractOptimalTTT<M, I, D>
     }
 
     private void analyzeCounterexample(DefaultQuery<I, D> counterexample, Deque<DefaultQuery<I, D>> witnesses) {
+        M hyp = getHypothesisModel();
         Word<I> ce = counterexample.getInput();
         PTNode<I, D> ua = null;
         PTNode<I, D> lsp = longestShortPrefixOf(ce);
         int upper = maxSearchIndex(ce.length());
         int lower = lsp.word().length() - 1;
-        D hypOut = hypOutput(ce, ce.length());
         while (upper - lower > 1) {
             int mid = (upper + lower) / 2;
             Word<I> prefix = ce.prefix(mid);
@@ -163,8 +155,9 @@ public abstract class AbstractOptimalTTT<M, I, D>
 
             boolean stillCe = false;
             for (PTNode<I, D> u : q.getShortPrefixes()) {
-                D sysOut = suffix(ceqs.answerQuery(u.word(), suffix), suffix.size());
-                if (!Objects.equals(sysOut, suffix(hypOut, suffix.size()))) {
+                D sysOut = ceqs.answerQuery(u.word(), suffix);
+                D hypOut = hyp.computeSuffixOutput(u.word(), suffix);
+                if (!Objects.equals(sysOut, hypOut)) {
                     ua = u.succ(suffix.firstSymbol());
                     lower = mid;
                     stillCe = true;

@@ -52,11 +52,6 @@ public class OptimalTTTMealy<I, O> extends AbstractOptimalTTT<MealyMachine<?, I,
     }
 
     @Override
-    protected Word<O> hypOutput(Word<I> word, int length) {
-        return hypothesis.computeOutput(word).suffix(length);
-    }
-
-    @Override
     protected DTLeaf<I, Word<O>> getState(Word<I> prefix) {
         return hypothesis.getState(prefix);
     }
@@ -70,10 +65,4 @@ public class OptimalTTTMealy<I, O> extends AbstractOptimalTTT<MealyMachine<?, I,
     protected AbstractDecisionTree<I, Word<O>> dtree() {
         return dtree;
     }
-
-    @Override
-    protected Word<O> suffix(Word<O> output, int length) {
-        return output.suffix(length);
-    }
-
 }

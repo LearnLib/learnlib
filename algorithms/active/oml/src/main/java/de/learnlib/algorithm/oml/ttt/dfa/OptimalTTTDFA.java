@@ -61,19 +61,4 @@ public class OptimalTTTDFA<I> extends AbstractOptimalTTT<DFA<?, I>, I, Boolean> 
     protected AbstractDecisionTree<I, Boolean> dtree() {
         return dtree;
     }
-
-    @Override
-    protected Boolean suffix(Boolean output, int length) {
-        return output;
-    }
-
-    @Override
-    protected Boolean hypOutput(Word<I> word, int length) {
-        return hypOutput(word);
-    }
-
-    protected Boolean hypOutput(Word<I> word) {
-        DTLeaf<I, Boolean> s = getState(word);
-        return dtree.isAccepting(s);
-    }
 }
