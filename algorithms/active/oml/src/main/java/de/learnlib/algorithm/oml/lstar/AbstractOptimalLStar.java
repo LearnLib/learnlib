@@ -15,11 +15,12 @@
  */
 package de.learnlib.algorithm.oml.lstar;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -76,39 +77,36 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, D> counterexample) {
-        Set<DefaultQuery<I, D>> witnesses = new LinkedHashSet<>();
+        final Deque<DefaultQuery<I, D>> witnesses = new ArrayDeque<>();
         witnesses.add(counterexample);
-        boolean refined = refineWithWitness(counterexample, witnesses);
-        if (!refined) {
-            return false;
-        }
-        do {
-            for (DefaultQuery<I, D> w : witnesses) {
-                refined = refineWithWitness(w, witnesses);
-                if (refined) {
-                    break;
-                }
+        boolean refined = false;
+
+        while (counterExampleValid(counterexample)) {
+            final DefaultQuery<I, D> witness = witnesses.getFirst();
+
+            if (witness.getOutput() == null) {
+                witness.answer(ceqs.answerQuery(witness.getPrefix(), witness.getSuffix()));
             }
 
-        } while (refined);
+            final boolean valid = counterExampleValid(witness);
+
+            if (valid) {
+                analyzeCounterexample(witness, witnesses);
+                learnLoop();
+            } else {
+                witnesses.pop();
+            }
+
+            refined = true;
+        }
+
         assert size() == shortPrefixes.size();
-        return true;
+        return refined;
     }
 
     @Override
     public Alphabet<I> getInputAlphabet() {
         return alphabet;
-    }
-
-    private boolean refineWithWitness(DefaultQuery<I, D> counterexample, Set<DefaultQuery<I, D>> witnesses) {
-        boolean valid = false;
-        while (counterExampleValid(counterexample)) {
-            valid = true;
-            analyzeCounterexample(counterexample, witnesses);
-            learnLoop();
-        }
-
-        return valid;
     }
 
     private void initTable() {
@@ -118,7 +116,7 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
         addShortPrefix(epsilon);
     }
 
-    private void analyzeCounterexample(DefaultQuery<I, D> counterexample, Set<DefaultQuery<I, D>> witnesses) {
+    private void analyzeCounterexample(DefaultQuery<I, D> counterexample, Deque<DefaultQuery<I, D>> witnesses) {
         Word<I> ceInput = counterexample.getInput();
         Word<I> ua = null;
         int upper = maxSearchIndex(ceInput.length());
@@ -156,9 +154,9 @@ abstract class AbstractOptimalLStar<M, I, D> implements LearningAlgorithm<M, I, 
         Word<I> sprime = ceInput.suffix(ceInput.length() - (mid + 1));
         List<D> rnext = getRow(ua);
         for (Word<I> uprime : getShortPrefixes(rnext)) {
-            witnesses.add(new DefaultQuery<>(uprime, sprime, ceqs.answerQuery(uprime, sprime)));
+            witnesses.push(new DefaultQuery<>(uprime, sprime));
         }
-        witnesses.add(new DefaultQuery<>(ua, sprime, ceqs.answerQuery(ua, sprime)));
+        witnesses.push(new DefaultQuery<>(ua, sprime));
 
         addShortPrefix(ua);
     }

@@ -76,9 +76,4 @@ public class OptimalTTTMealy<I, O> extends AbstractOptimalTTT<MealyMachine<?, I,
         return output.suffix(length);
     }
 
-    @Override
-    protected boolean isCanonical() {
-        return hypothesis.getStates().stream().noneMatch(it -> it.getShortPrefixes().size() > 1);
-    }
-
 }
