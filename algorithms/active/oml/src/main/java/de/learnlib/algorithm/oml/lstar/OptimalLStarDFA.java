@@ -53,9 +53,7 @@ public class OptimalLStarDFA<I> extends AbstractOptimalLStar<DFA<?, I>, I, Boole
 
     @Override
     void automatonFromTable() {
-        Alphabet<I> alphabet = getInputAlphabet();
-
-        this.hypothesis = new CompactDFA<>(alphabet);
+        this.hypothesis = new CompactDFA<>(super.alphabet);
         Map<List<Boolean>, Integer> stateMap = new HashMap<>();
         List<Boolean> rowData = getRow(Word.epsilon());
         Integer q = this.hypothesis.addInitialState(rowData.get(0));
@@ -78,7 +76,7 @@ public class OptimalLStarDFA<I> extends AbstractOptimalLStar<DFA<?, I>, I, Boole
 
             hypStateMap.put(state, sig);
             Word<I> u = getShortPrefixes(sig).get(0);
-            for (I a : alphabet) {
+            for (I a : super.alphabet) {
                 List<Boolean> dstData = getRow(u.append(a));
                 assert dstData != null;
                 Integer dst = stateMap.get(dstData);

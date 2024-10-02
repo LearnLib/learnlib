@@ -31,12 +31,11 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 
 public abstract class AbstractOptimalTTT<M extends SuffixOutput<I, D>, I, D>
-        implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, InputAlphabetHolder<I> {
+        implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I> {
 
     private final MembershipOracle<I, D> ceqs;
     private final Alphabet<I> alphabet;
@@ -113,11 +112,6 @@ public abstract class AbstractOptimalTTT<M extends SuffixOutput<I, D>, I, D>
 
             makeConsistent();
         }
-    }
-
-    @Override
-    public Alphabet<I> getInputAlphabet() {
-        return this.alphabet;
     }
 
     private void makeConsistent() {

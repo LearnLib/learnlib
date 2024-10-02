@@ -35,17 +35,15 @@ import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
-import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 
 abstract class AbstractOptimalLStar<M extends SuffixOutput<I, D>, I, D> implements LearningAlgorithm<M, I, D>,
-                                                                                   InputAlphabetHolder<I>,
                                                                                    SupportsGrowingAlphabet<I>,
                                                                                    Resumable<OptimalLStarState<I, D>>,
                                                                                    FiniteRepresentation {
 
-    private final Alphabet<I> alphabet;
+    final Alphabet<I> alphabet;
     final MembershipOracle<I, D> mqs;
     final MembershipOracle<I, D> ceqs;
 
@@ -107,11 +105,6 @@ abstract class AbstractOptimalLStar<M extends SuffixOutput<I, D>, I, D> implemen
 
         assert size() == shortPrefixes.size();
         return refined;
-    }
-
-    @Override
-    public Alphabet<I> getInputAlphabet() {
-        return alphabet;
     }
 
     private void initTable() {

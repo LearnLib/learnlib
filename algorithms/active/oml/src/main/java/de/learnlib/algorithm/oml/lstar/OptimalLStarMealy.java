@@ -79,9 +79,7 @@ public class OptimalLStarMealy<I, O> extends AbstractOptimalLStar<MealyMachine<?
 
     @Override
     void automatonFromTable() {
-        Alphabet<I> alphabet = getInputAlphabet();
-
-        this.hypothesis = new CompactMealy<>(alphabet);
+        this.hypothesis = new CompactMealy<>(super.alphabet);
         Map<List<Word<O>>, Integer> stateMap = new HashMap<>();
         List<Word<O>> rowData = getRow(Word.epsilon());
         Integer q = this.hypothesis.addInitialState();
@@ -104,7 +102,7 @@ public class OptimalLStarMealy<I, O> extends AbstractOptimalLStar<MealyMachine<?
 
             hypStateMap.put(state, sig);
             Word<I> u = getShortPrefixes(sig).get(0);
-            for (I a : alphabet) {
+            for (I a : super.alphabet) {
                 Word<I> ua = u.append(a);
                 List<Word<O>> destData = getRow(ua);
                 assert destData != null;
