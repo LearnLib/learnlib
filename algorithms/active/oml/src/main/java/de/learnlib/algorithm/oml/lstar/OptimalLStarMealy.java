@@ -51,7 +51,7 @@ public class OptimalLStarMealy<I, O> extends AbstractOptimalLStar<MealyMachine<?
     }
 
     @Override
-    public List<Word<O>> rowForState(Word<I> input) {
+    protected List<Word<O>> rowForState(Word<I> input) {
         return hypStateMap.get(hypothesis.getState(input));
     }
 

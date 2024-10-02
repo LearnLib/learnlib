@@ -93,7 +93,7 @@ public class OptimalLStarDFA<I> extends AbstractOptimalLStar<DFA<?, I>, I, Boole
     }
 
     @Override
-    public List<Boolean> rowForState(Word<I> input) {
+    protected List<Boolean> rowForState(Word<I> input) {
         return hypStateMap.get(hypothesis.getState(input));
     }
 

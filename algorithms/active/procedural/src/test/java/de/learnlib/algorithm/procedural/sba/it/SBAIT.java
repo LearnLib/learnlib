@@ -28,6 +28,7 @@ import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.adapter.dfa.KearnsVaziraniAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.LStarBaseAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.ObservationPackAdapterDFA;
+import de.learnlib.algorithm.procedural.adapter.dfa.OptimalLStarAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.OptimalTTTAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.RivestSchapireAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.TTTAdapterDFA;
@@ -54,6 +55,7 @@ public class SBAIT extends AbstractSBALearnerIT {
         builder.addLearnerVariant(KearnsVaziraniAdapterDFA::new);
         builder.addLearnerVariant(LStarBaseAdapterDFA::new);
         builder.addLearnerVariant(ObservationPackAdapterDFA::new);
+        builder.addLearnerVariant(OptimalLStarAdapterDFA::new);
         builder.addLearnerVariant(OptimalTTTAdapterDFA::new);
         builder.addLearnerVariant(RivestSchapireAdapterDFA::new);
         builder.addLearnerVariant(TTTAdapterDFA::new);

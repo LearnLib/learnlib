@@ -27,6 +27,7 @@ import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.adapter.mealy.KearnsVaziraniAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.LStarBaseAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.ObservationPackAdapterMealy;
+import de.learnlib.algorithm.procedural.adapter.mealy.OptimalLStarAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.OptimalTTTAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.RivestSchapireAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.TTTAdapterMealy;
@@ -56,6 +57,7 @@ public class SPMMIT extends AbstractSPMMLearnerIT {
         builder.addLearnerVariant(LStarBaseAdapterMealy::new);
         builder.addLearnerVariant(MealyDHC::new);
         builder.addLearnerVariant(ObservationPackAdapterMealy::new);
+        builder.addLearnerVariant(OptimalLStarAdapterMealy::new);
         builder.addLearnerVariant(OptimalTTTAdapterMealy::new);
         builder.addLearnerVariant(RivestSchapireAdapterMealy::new);
         builder.addLearnerVariant(TTTAdapterMealy::new);

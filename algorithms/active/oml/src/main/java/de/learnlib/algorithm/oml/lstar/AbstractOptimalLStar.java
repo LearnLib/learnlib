@@ -72,7 +72,7 @@ abstract class AbstractOptimalLStar<M extends SuffixOutput<I, D>, I, D> implemen
 
     abstract boolean symbolInconsistency(Word<I> u1, Word<I> u2, I a);
 
-    abstract List<D> rowForState(Word<I> input);
+    protected abstract List<D> rowForState(Word<I> input);
 
     @Override
     public void startLearning() {
@@ -218,7 +218,7 @@ abstract class AbstractOptimalLStar<M extends SuffixOutput<I, D>, I, D> implemen
         return getShortPrefixes(rowData);
     }
 
-    List<Word<I>> getShortPrefixes(List<D> rowData) {
+    protected List<Word<I>> getShortPrefixes(List<D> rowData) {
         List<Word<I>> shortReps = new ArrayList<>();
         for (Entry<Word<I>, List<D>> e : rows.entrySet()) {
             if (shortPrefixes.contains(e.getKey()) && rowData.equals(e.getValue())) {
