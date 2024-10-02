@@ -33,6 +33,7 @@ import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.SuffixOutput;
@@ -40,6 +41,7 @@ import net.automatalib.word.Word;
 
 abstract class AbstractOptimalLStar<M extends SuffixOutput<I, D>, I, D> implements LearningAlgorithm<M, I, D>,
                                                                                    InputAlphabetHolder<I>,
+                                                                                   SupportsGrowingAlphabet<I>,
                                                                                    Resumable<OptimalLStarState<I, D>>,
                                                                                    FiniteRepresentation {
 
@@ -288,6 +290,24 @@ abstract class AbstractOptimalLStar<M extends SuffixOutput<I, D>, I, D> implemen
             Word<I> newPrefix = shortPrefix.append(a);
             List<D> rowData = initRow(newPrefix);
             rows.put(newPrefix, rowData);
+        }
+    }
+
+    @Override
+    public void addAlphabetSymbol(I symbol) {
+        if (!this.alphabet.containsSymbol(symbol)) {
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
+        }
+
+        if (!this.rows.isEmpty()) {
+            for (Word<I> as : new ArrayList<>(this.rows.keySet())) {
+                if (this.shortPrefixes.contains(as)) {
+                    Word<I> lp = as.append(symbol);
+                    this.rows.put(lp, initRow(lp));
+                }
+            }
+
+            learnLoop();
         }
     }
 

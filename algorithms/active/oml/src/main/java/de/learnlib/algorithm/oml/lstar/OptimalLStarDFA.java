@@ -101,4 +101,12 @@ public class OptimalLStarDFA<I> extends AbstractOptimalLStar<DFA<?, I>, I, Boole
     public DFA<?, I> getHypothesisModel() {
         return hypothesis;
     }
+
+    @Override
+    public void addAlphabetSymbol(I symbol) {
+        if (this.hypothesis != null) {
+            this.hypothesis.addAlphabetSymbol(symbol);
+        }
+        super.addAlphabetSymbol(symbol);
+    }
 }

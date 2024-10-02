@@ -115,4 +115,12 @@ public class OptimalLStarMealy<I, O> extends AbstractOptimalLStar<MealyMachine<?
         }
     }
 
+    @Override
+    public void addAlphabetSymbol(I symbol) {
+        if (this.hypothesis != null) {
+            this.hypothesis.addAlphabetSymbol(symbol);
+        }
+        super.addAlphabetSymbol(symbol);
+    }
+
 }
