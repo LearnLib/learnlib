@@ -30,7 +30,7 @@ limitations under the License.
     <name>LearnLib :: Algorithms :: Observation Pack</name>
     <description>
         This artifact provides the implementation of the Observation-Pack learning algorithm as described in the PhD
-        thesis "Active learning of interface programs" (http://dx.doi.org/10.17877/DE290R-4817) by Falk Howar.
+        thesis "Active learning of interface programs" (http://doi.org/10.17877/DE290R-4817) by Falk Howar.
     </description>
 
     <dependencies>

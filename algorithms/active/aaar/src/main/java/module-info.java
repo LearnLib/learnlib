@@ -16,7 +16,7 @@
 
 /**
  * This module provides the implementation of the AAAR learning algorithm as described in the paper
- * <a href="https://dx.doi.org/10.1007/978-3-642-18275-4_19">Automata Learning with Automated Alphabet Abstraction
+ * <a href="https://doi.org/10.1007/978-3-642-18275-4_19">Automata Learning with Automated Alphabet Abstraction
  * Refinement</a> by Falk Howar, Bernhard Steffen, and Maik Merten.
  * <p>
  * This module is provided by the following Maven dependency:

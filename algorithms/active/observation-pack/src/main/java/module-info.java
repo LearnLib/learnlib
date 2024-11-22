@@ -16,7 +16,7 @@
 
 /**
  * This module provides the implementation of the Observation-Pack learning algorithm as described in the PhD thesis <a
- * href="http://dx.doi.org/10.17877/DE290R-4817">Active learning of interface programs</a> by Falk Howar.
+ * href="http://doi.org/10.17877/DE290R-4817">Active learning of interface programs</a> by Falk Howar.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

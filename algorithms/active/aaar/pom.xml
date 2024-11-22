@@ -30,7 +30,7 @@ limitations under the License.
     <name>LearnLib :: Algorithms :: AAAR</name>
     <description>
         This artifact provides the implementation of the AAAR learning algorithm as described in the paper "Automata
-        Learning with Automated Alphabet Abstraction Refinement" (https://dx.doi.org/10.1007/978-3-642-18275-4_19) by
+        Learning with Automated Alphabet Abstraction Refinement" (https://doi.org/10.1007/978-3-642-18275-4_19) by
         Falk Howar, Bernhard Steffen, and Maik Merten.
     </description>
 

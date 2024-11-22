@@ -18,8 +18,8 @@
  * This module provides the implementation of the L* learning algorithm described in the paper
  * <a href="https://doi.org/10.1016/0890-5401(87)90052-6">Learning Regular Sets from Queries and Counterexamples</a> by
  * Dana Angluin including variations and optimizations thereof such as the versions based on <a
- * href="https://dx.doi.org/10.1006/inco.1995.1070">"On the Learnability of Infinitary Regular Sets</a> by Oded Maler
- * and Amir Pnueli or <a href="http://dx.doi.org/10.1006/inco.1993.1021">Inference of finite automata using homing
+ * href="https://doi.org/10.1006/inco.1995.1070">"On the Learnability of Infinitary Regular Sets</a> by Oded Maler and
+ * Amir Pnueli or <a href="http://doi.org/10.1006/inco.1993.1021">Inference of finite automata using homing
  * sequences</a>) by Ronald L.&nbsp;Rivest and Robert E.&nbsp;Schapire.
  * <p>
  * This module is provided by the following Maven dependency:

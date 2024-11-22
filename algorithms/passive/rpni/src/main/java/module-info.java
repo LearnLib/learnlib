@@ -16,7 +16,7 @@
 
 /**
  * This module provides the implementation of (a blue-fringe version of) the "regular positive negative inference"
- * (RPNI) learning algorithm as presented in the paper <a href="https://dx.doi.org/10.1142/9789812797902_0004">Inferring
+ * (RPNI) learning algorithm as presented in the paper <a href="https://doi.org/10.1142/9789812797902_0004">Inferring
  * regular languages in polynomial update time</a> by Jose Oncina and Pedro García, including merging heuristics such as
  * the "evidence-driven state merging" (EDSM) and "minimum description length" (MDL) strategies.
  * <p>

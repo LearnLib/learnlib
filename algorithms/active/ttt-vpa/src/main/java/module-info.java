@@ -15,9 +15,9 @@
  */
 
 /**
- * This module provides the implementation of the VPA adaption of the TTT learning algorithm as
- * presented in the PhD thesis <a href="https://dx.doi.org/10.17877/DE290R-16359">Foundations of Active Automata
- * Learning: An Algorithmic Perspective</a> by Malte Isberner.
+ * This module provides the implementation of the VPA adaption of the TTT learning algorithm as presented in the PhD
+ * thesis <a href="https://doi.org/10.17877/DE290R-16359">Foundations of Active Automata Learning: An Algorithmic
+ * Perspective</a> by Malte Isberner.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>
