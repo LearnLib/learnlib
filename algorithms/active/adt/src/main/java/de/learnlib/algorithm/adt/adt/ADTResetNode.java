@@ -65,12 +65,12 @@ public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
     }
 
     @Override
-    public @Nullable S getHypothesisState() {
+    public @Nullable S getState() {
         return null;
     }
 
     @Override
-    public void setHypothesisState(S state) {
+    public void setState(S state) {
         throw new UnsupportedOperationException("Reset nodes cannot reference a hypothesis state");
     }
 

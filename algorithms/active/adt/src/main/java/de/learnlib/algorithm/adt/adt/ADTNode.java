@@ -64,7 +64,7 @@ public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I
                     properties.put(NodeAttrs.LABEL, "reset");
                 } else if (ADTUtil.isLeafNode(node)) {
                     properties.put(NodeAttrs.SHAPE, NodeShapes.BOX);
-                    properties.put(NodeAttrs.LABEL, String.valueOf(node.getHypothesisState()));
+                    properties.put(NodeAttrs.LABEL, String.valueOf(node.getState()));
                 } else {
                     properties.put(NodeAttrs.LABEL, node.toString());
                     properties.put(NodeAttrs.SHAPE, NodeShapes.OVAL);

@@ -65,7 +65,7 @@ public final class ADTUtil {
 
     public static <S, I, O> Set<S> collectHypothesisStates(ADTNode<S, I, O> root) {
         final Set<S> result = new LinkedHashSet<>();
-        collectTransformedLeavesRecursively(result, root, ADTNode::getHypothesisState);
+        collectTransformedLeavesRecursively(result, root, ADTNode::getState);
         return result;
     }
 
@@ -189,7 +189,7 @@ public final class ADTUtil {
     public static <S, I, O> ADTNode<S, I, O> buildFromADS(ADSNode<S, I, O> node) {
 
         if (node.isLeaf()) {
-            return new ADTLeafNode<>(null, node.getHypothesisState());
+            return new ADTLeafNode<>(null, node.getState());
         }
 
         final ADTNode<S, I, O> result = new ADTSymbolNode<>(null, node.getSymbol());

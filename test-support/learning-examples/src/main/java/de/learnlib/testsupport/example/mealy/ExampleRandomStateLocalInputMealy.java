@@ -30,7 +30,7 @@ import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.common.util.random.RandomUtil;
-import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -70,7 +70,7 @@ public class ExampleRandomStateLocalInputMealy<I, O> implements StateLocalInputM
             source.addTransition(sink, i, sink, undefinedOutput);
         }
 
-        final CompactMealy<I, O> minimized = Automata.invasiveMinimize(source, alphabet);
+        final CompactMealy<I, O> minimized = HopcroftMinimizer.minimizeMealyInvasive(source, alphabet);
         final MutableMapping<Integer, @Nullable Collection<I>> enabledInputs = source.createStaticStateMapping();
 
         for (Integer s : minimized) {

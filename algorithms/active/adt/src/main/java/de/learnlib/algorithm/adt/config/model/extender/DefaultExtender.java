@@ -123,7 +123,7 @@ public class DefaultExtender implements ADTExtender {
 
                 // set the original initial states
                 for (ADTNode<ADTState<I, O>, I, O> finalNode : ADTUtil.collectLeaves(extension)) {
-                    finalNode.setHypothesisState(currentToInitialMapping.get(finalNode.getHypothesisState()));
+                    finalNode.setState(currentToInitialMapping.get(finalNode.getState()));
                 }
 
                 return new ExtensionResult<>(extension);

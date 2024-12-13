@@ -149,7 +149,7 @@ public class SingleReplacer implements SubtreeReplacer {
             final ADTNode<S, I, O> extension = potentialExtension.get();
 
             for (ADTNode<S, I, O> finalNode : ADTUtil.collectLeaves(extension)) {
-                finalNode.setHypothesisState(currentToInitialMapping.get(finalNode.getHypothesisState()));
+                finalNode.setState(currentToInitialMapping.get(finalNode.getState()));
             }
 
             return new ReplacementResult<>(parentReset, potentialExtension.get());

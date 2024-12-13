@@ -219,7 +219,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
         final Set<ADTNode<ADTState<I, O>, I, O>> finalNodes = ADTUtil.collectLeaves(this.adt.getRoot());
         final ADTNode<ADTState<I, O>, I, O> nodeToSplit = finalNodes.stream()
-                                                                    .filter(n -> uaState.equals(n.getHypothesisState()))
+                                                                    .filter(n -> uaState.equals(n.getState()))
                                                                     .findFirst()
                                                                     .orElseThrow(IllegalStateException::new);
 
@@ -258,7 +258,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
             newNode = this.adt.splitLeaf(nodeToSplit, splitter, oldOutput, newOutput, this.leafSplitter);
         }
-        newNode.setHypothesisState(newState);
+        newNode.setState(newState);
 
         final ADTNode<ADTState<I, O>, I, O> temporarySplitter = ADTUtil.getStartOfADS(nodeToSplit);
         final List<ADTTransition<I, O>> newTransitions = new ArrayList<>(alphabet.size());
@@ -267,7 +267,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             newTransitions.add(this.hypothesis.createOpenTransition(newState, i, this.adt.getRoot()));
         }
 
-        final List<ADTTransition<I, O>> transitionsToRefine = nodeToSplit.getHypothesisState()
+        final List<ADTTransition<I, O>> transitionsToRefine = nodeToSplit.getState()
                                                                          .getIncomingTransitions()
                                                                          .stream()
                                                                          .filter(x -> !x.isSpanningTreeEdge())
@@ -381,14 +381,14 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             } else {
                 assert ADTUtil.isLeafNode(succ);
                 // state has been created before, just update target
-                query.getTransition().setTarget(succ.getHypothesisState());
+                query.getTransition().setTarget(succ.getState());
             }
         } else {
             // update target
             final ADTTransition<I, O> transition = query.getTransition();
             final ADTNode<ADTState<I, O>, I, O> adtNode = query.getCurrentADTNode();
             assert ADTUtil.isLeafNode(adtNode);
-            transition.setTarget(adtNode.getHypothesisState());
+            transition.setTarget(adtNode.getState());
         }
     }
 
@@ -456,7 +456,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
      */
     private void ensureConsistency(ADTNode<ADTState<I, O>, I, O> leaf) {
 
-        final ADTState<I, O> state = leaf.getHypothesisState();
+        final ADTState<I, O> state = leaf.getState();
         final Word<I> as = state.getAccessSequence();
         final Word<O> asOut = this.hypothesis.computeOutput(as);
 
@@ -612,7 +612,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                 new HashMap<>(HashUtil.capacity(newFinalNodes.size()));
 
         for (ADTNode<ADTState<I, O>, I, O> n : newFinalNodes) {
-            traces.put(n.getHypothesisState(), ADTUtil.buildTraceForNode(n));
+            traces.put(n.getState(), ADTUtil.buildTraceForNode(n));
         }
 
         final Set<ADTState<I, O>> oldFinalStates = ADTUtil.collectHypothesisStates(oldADS);
@@ -667,7 +667,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
         final Map<ADTState<I, O>, Pair<Word<I>, Word<O>>> traces = new LinkedHashMap<>();
         ADTUtil.collectLeaves(replacement)
-               .forEach(x -> traces.put(x.getHypothesisState(), ADTUtil.buildTraceForNode(x)));
+               .forEach(x -> traces.put(x.getState(), ADTUtil.buildTraceForNode(x)));
 
         final Pair<Word<I>, Word<O>> parentTrace = ADTUtil.buildTraceForNode(nodeToReplace);
 
@@ -749,10 +749,10 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         ADTNode<ADTState<I, O>, I, O> oldReference = null, newReference = null;
 
         for (ADTNode<ADTState<I, O>, I, O> leaf : cachedLeaves) {
-            final ADTState<I, O> hypState = leaf.getHypothesisState();
+            final ADTState<I, O> hypState = leaf.getState();
             assert hypState != null;
 
-            if (hypState.equals(finalNode.getHypothesisState())) {
+            if (hypState.equals(finalNode.getState())) {
                 oldReference = leaf;
             } else if (hypState.equals(state)) {
                 newReference = leaf;
@@ -772,7 +772,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         final Word<O> newOutputTrace = lcaTrace.getSecond().append(lcaResult.secondOutput);
 
         final ADTNode<ADTState<I, O>, I, O> oldTrace =
-                ADTUtil.buildADSFromObservation(sepWord, oldOutputTrace, finalNode.getHypothesisState());
+                ADTUtil.buildADSFromObservation(sepWord, oldOutputTrace, finalNode.getState());
         final ADTNode<ADTState<I, O>, I, O> newTrace = ADTUtil.buildADSFromObservation(sepWord, newOutputTrace, state);
 
         if (!ADTUtil.mergeADS(oldTrace, newTrace)) {
@@ -802,7 +802,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
         for (ADTNode<ADTState<I, O>, I, O> state : states) {
 
-            final List<ADTTransition<I, O>> transitionsToRefine = state.getHypothesisState()
+            final List<ADTTransition<I, O>> transitionsToRefine = state.getState()
                                                                        .getIncomingTransitions()
                                                                        .stream()
                                                                        .filter(x -> !x.isSpanningTreeEdge())

@@ -65,7 +65,7 @@ public class ExhaustiveReplacer implements SubtreeReplacer {
             final Set<S> set = new HashSet<>(HashUtil.capacity(leaves.size()));
 
             for (ADTNode<S, I, O> l : leaves) {
-                set.add(l.getHypothesisState());
+                set.add(l.getState());
             }
 
             queue.add(set);
