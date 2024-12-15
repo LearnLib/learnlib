@@ -664,10 +664,13 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                                                     ADTNode<ADTState<I, O>, I, O> replacement,
                                                     Set<ADTNode<ADTState<I, O>, I, O>> cachedLeaves,
                                                     Set<ADTState<I, O>> cutout) {
+        final Set<ADTNode<ADTState<I, O>, I, O>> leaves = ADTUtil.collectLeaves(replacement);
+        final Map<ADTState<I, O>, Pair<Word<I>, Word<O>>> traces =
+                new LinkedHashMap<>(HashUtil.capacity(leaves.size()));
 
-        final Map<ADTState<I, O>, Pair<Word<I>, Word<O>>> traces = new LinkedHashMap<>();
-        ADTUtil.collectLeaves(replacement)
-               .forEach(x -> traces.put(x.getState(), ADTUtil.buildTraceForNode(x)));
+        for (ADTNode<ADTState<I, O>, I, O> leaf : leaves) {
+            traces.put(leaf.getState(), ADTUtil.buildTraceForNode(leaf));
+        }
 
         final Pair<Word<I>, Word<O>> parentTrace = ADTUtil.buildTraceForNode(nodeToReplace);
 
