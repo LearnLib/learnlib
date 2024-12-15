@@ -98,6 +98,11 @@ limitations under the License.
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-equivalence-oracles</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learner-it-support</artifactId>
         </dependency>
@@ -108,6 +113,11 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-membership-oracles</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-statistics</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -126,4 +136,19 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <!-- append to existing argLine to nicely work together with jacoco plugin -->
+                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.adt=de.learnlib.filter.statistic</argLine>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

@@ -15,10 +15,12 @@
  */
 package de.learnlib.algorithm.adt.ads;
 
+import java.util.ArrayDeque;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -135,7 +137,7 @@ public final class DefensiveADS<S, I, O> {
 
         final long maximumSplittingWordLength =
                 ADSUtil.computeMaximumSplittingWordLength(automaton.size(), mapping.size(), this.states.size());
-        final Queue<Word<I>> splittingWordCandidates = new LinkedList<>();
+        final Queue<Word<I>> splittingWordCandidates = new ArrayDeque<>();
         final StateIDs<S> stateIds = automaton.stateIDs();
         final Set<BitSet> cache = new HashSet<>();
 
@@ -145,7 +147,7 @@ public final class DefensiveADS<S, I, O> {
 
             @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
             final @NonNull Word<I> prefix = splittingWordCandidates.poll();
-            final Map<S, S> currentToInitialMapping = new HashMap<>(HashUtil.capacity(mapping.size()));
+            final Map<S, S> currentToInitialMapping = new LinkedHashMap<>(HashUtil.capacity(mapping.size()));
 
             for (Entry<S, S> e : mapping.entrySet()) {
                 currentToInitialMapping.put(automaton.getSuccessor(e.getKey(), prefix), e.getValue());
@@ -164,7 +166,7 @@ public final class DefensiveADS<S, I, O> {
             for (I i : this.alphabet) {
 
                 //check for missing transitions
-                final Set<S> statesWithMissingTransitions = new HashSet<>();
+                final Set<S> statesWithMissingTransitions = new LinkedHashSet<>();
                 for (S s : currentToInitialMapping.keySet()) {
                     if (!this.partialTransitionAnalyzer.isTransitionDefined(s, i)) {
                         statesWithMissingTransitions.add(s);

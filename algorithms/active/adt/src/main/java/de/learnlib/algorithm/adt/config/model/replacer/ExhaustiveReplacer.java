@@ -18,6 +18,7 @@ package de.learnlib.algorithm.adt.config.model.replacer;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
@@ -62,7 +63,7 @@ public class ExhaustiveReplacer implements SubtreeReplacer {
         final PriorityQueue<Set<S>> queue = new PriorityQueue<>(candidates.size(), Comparator.comparingInt(Set::size));
         for (ADTNode<S, I, O> node : candidates) {
             final Set<ADTNode<S, I, O>> leaves = ADTUtil.collectLeaves(node);
-            final Set<S> set = new HashSet<>(HashUtil.capacity(leaves.size()));
+            final Set<S> set = new LinkedHashSet<>(HashUtil.capacity(leaves.size()));
 
             for (ADTNode<S, I, O> l : leaves) {
                 set.add(l.getState());

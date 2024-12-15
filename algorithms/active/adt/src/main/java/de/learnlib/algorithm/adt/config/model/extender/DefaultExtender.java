@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.adt.config.model.extender;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -73,7 +73,7 @@ public class DefaultExtender implements ADTExtender {
                 // apply parent trace
                 for (int idx = 0; idx < inputTrace.length(); idx++) {
 
-                    final Map<ADTState<I, O>, ADTState<I, O>> nextCurrentToInitialMapping = new HashMap<>();
+                    final Map<ADTState<I, O>, ADTState<I, O>> nextCurrentToInitialMapping = new LinkedHashMap<>();
                     final I input = inputTrace.getSymbol(idx);
                     final O output = outputTrace.getSymbol(idx);
 
