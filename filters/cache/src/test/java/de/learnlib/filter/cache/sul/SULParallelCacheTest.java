@@ -19,7 +19,7 @@ import de.learnlib.filter.cache.AbstractParallelCacheTest;
 import de.learnlib.filter.cache.CacheConfig;
 import de.learnlib.filter.cache.CacheCreator.SULCacheCreator;
 import de.learnlib.filter.cache.CacheTestUtils;
-import de.learnlib.filter.statistic.sul.ResetCounterSUL;
+import de.learnlib.filter.statistic.sul.CounterSUL;
 import de.learnlib.oracle.ParallelOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -30,7 +30,7 @@ import org.testng.annotations.Factory;
 public class SULParallelCacheTest
         extends AbstractParallelCacheTest<MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 
-    private final ResetCounterSUL<Character, Integer> sul;
+    private final CounterSUL<Character, Integer> sul;
     private final ThreadSafeSULCache<Character, Integer> cacheRepresentative;
     private final ParallelOracle<Character, Word<Integer>> parallelOracle;
 
@@ -74,6 +74,6 @@ public class SULParallelCacheTest
 
     @Override
     protected long getNumberOfQueries() {
-        return this.sul.getStatisticalData().getCount();
+        return this.sul.getResetCounter().getCount();
     }
 }

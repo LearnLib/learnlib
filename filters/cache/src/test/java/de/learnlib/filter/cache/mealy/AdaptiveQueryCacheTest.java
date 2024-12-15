@@ -83,7 +83,7 @@ public class AdaptiveQueryCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getResetCount();
+        return counter.getResetCounter().getCount();
     }
 
     @Override

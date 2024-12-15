@@ -142,7 +142,7 @@ public class ADTIT extends AbstractMealyLearnerIT {
 
                             exp.run();
 
-                            final long count = counter.getResetCount();
+                            final long count = counter.getResetCounter().getCount();
 
                             if (iter == 0) {
                                 last = count;

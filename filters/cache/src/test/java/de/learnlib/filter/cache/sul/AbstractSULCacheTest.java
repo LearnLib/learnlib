@@ -19,7 +19,7 @@ import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.cache.SULLearningCacheOracle;
-import de.learnlib.filter.statistic.sul.ResetCounterSUL;
+import de.learnlib.filter.statistic.sul.CounterSUL;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
@@ -29,10 +29,10 @@ import net.automatalib.word.Word;
 public abstract class AbstractSULCacheTest
         extends AbstractCacheTest<SULLearningCacheOracle<Character, Integer, SULCache<Character, Integer>>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 
-    private final ResetCounterSUL<Character, Integer> counter;
+    private final CounterSUL<Character, Integer> counter;
 
     public AbstractSULCacheTest() {
-        counter = new ResetCounterSUL<>("counterOracle", new MealySimulatorSUL<>(CacheTestUtils.MEALY));
+        counter = new CounterSUL<>(new MealySimulatorSUL<>(CacheTestUtils.MEALY));
     }
 
     @Override
@@ -60,7 +60,7 @@ public abstract class AbstractSULCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getStatisticalData().getCount();
+        return counter.getResetCounter().getCount();
     }
 
     @Override

@@ -15,38 +15,42 @@
  */
 package de.learnlib.filter.statistic.sul;
 
-import java.util.Collection;
-
 import de.learnlib.filter.statistic.Counter;
+import de.learnlib.filter.statistic.CounterCollection;
+import de.learnlib.statistic.StatisticData;
 import de.learnlib.statistic.StatisticSUL;
-import de.learnlib.sul.StateLocalInputSUL;
+import de.learnlib.sul.SUL;
 
-public class SLICounterStateLocalInputSUL<I, O> implements StateLocalInputSUL<I, O>, StatisticSUL<I, O> {
+public class CounterSUL<I, O> implements StatisticSUL<I, O> {
 
-    private final StateLocalInputSUL<I, O> sul;
-    private final Counter counter;
+    private final SUL<I, O> sul;
+    protected final Counter resetCounter;
+    protected final Counter symbolCounter;
 
-    public SLICounterStateLocalInputSUL(String name, StateLocalInputSUL<I, O> sul) {
-        this(new Counter(name, "State Local Inputs"), sul);
+    public CounterSUL(SUL<I, O> sul) {
+        this(sul, new Counter("Resets", "#"), new Counter("Symbols", "#"));
     }
 
-    private SLICounterStateLocalInputSUL(Counter counter, StateLocalInputSUL<I, O> sul) {
-        this.counter = counter;
+    protected CounterSUL(SUL<I, O> sul, Counter resetCounter, Counter symbolCounter) {
         this.sul = sul;
+        this.resetCounter = resetCounter;
+        this.symbolCounter = symbolCounter;
     }
 
     @Override
     public void pre() {
-        sul.pre();
+        this.resetCounter.increment();
+        this.sul.pre();
     }
 
     @Override
     public void post() {
-        sul.post();
+        this.sul.post();
     }
 
     @Override
     public O step(I in) {
+        this.symbolCounter.increment();
         return sul.step(in);
     }
 
@@ -56,18 +60,20 @@ public class SLICounterStateLocalInputSUL<I, O> implements StateLocalInputSUL<I,
     }
 
     @Override
-    public Collection<I> currentlyEnabledInputs() {
-        counter.increment();
-        return sul.currentlyEnabledInputs();
+    public SUL<I, O> fork() {
+        return new CounterSUL<>(this.sul.fork(), this.resetCounter, this.symbolCounter);
     }
 
     @Override
-    public StateLocalInputSUL<I, O> fork() {
-        return new SLICounterStateLocalInputSUL<>(counter, sul.fork());
+    public StatisticData getStatisticalData() {
+        return new CounterCollection(this.resetCounter, this.symbolCounter);
     }
 
-    @Override
-    public Counter getStatisticalData() {
-        return counter;
+    public Counter getResetCounter() {
+        return this.resetCounter;
+    }
+
+    public Counter getSymbolCounter() {
+        return this.symbolCounter;
     }
 }

@@ -29,7 +29,7 @@ import de.learnlib.driver.reflect.MethodInput;
 import de.learnlib.driver.reflect.MethodOutput;
 import de.learnlib.driver.reflect.SimplePOJOTestDriver;
 import de.learnlib.filter.cache.sul.SULCaches;
-import de.learnlib.filter.statistic.sul.ResetCounterSUL;
+import de.learnlib.filter.statistic.sul.CounterSUL;
 import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.equivalence.mealy.RandomWalkEQOracle;
 import de.learnlib.oracle.membership.SULOracle;
@@ -75,8 +75,7 @@ public final class Example2 {
         MethodInput poll = driver.addInput("poll", mPoll);
 
         // oracle for counting queries wraps sul
-        StatisticSUL<MethodInput, MethodOutput> statisticSul =
-                new ResetCounterSUL<>("membership queries", driver);
+        StatisticSUL<MethodInput, MethodOutput> statisticSul = new CounterSUL<>(driver);
 
         SUL<MethodInput, MethodOutput> effectiveSul = statisticSul;
         // use caching in order to avoid duplicate queries

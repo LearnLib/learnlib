@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.statistic;
 
-import java.util.Collection;
 import java.util.StringJoiner;
 import java.util.function.Function;
 
@@ -26,9 +25,9 @@ import de.learnlib.statistic.StatisticData;
  */
 public class CounterCollection implements StatisticData {
 
-    private final Collection<Counter> counters;
+    private final Counter[] counters;
 
-    public CounterCollection(Collection<Counter> counters) {
+    public CounterCollection(Counter... counters) {
         this.counters = counters;
     }
 

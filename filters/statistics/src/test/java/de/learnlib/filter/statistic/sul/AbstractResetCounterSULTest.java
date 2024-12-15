@@ -19,9 +19,11 @@ import java.util.Collection;
 
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.query.Query;
+import de.learnlib.statistic.StatisticSUL;
 import net.automatalib.word.Word;
 
-public abstract class AbstractResetCounterSULTest extends AbstractCounterSULTest {
+public abstract class AbstractResetCounterSULTest<S extends StatisticSUL<Integer, Character>>
+        extends AbstractCounterSULTest<S> {
 
     @Override
     protected int getCountIncreasePerQuery() {

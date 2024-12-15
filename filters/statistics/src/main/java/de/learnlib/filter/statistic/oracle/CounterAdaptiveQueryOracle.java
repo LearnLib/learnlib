@@ -18,11 +18,14 @@ package de.learnlib.filter.statistic.oracle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
+import de.learnlib.filter.statistic.Counter;
+import de.learnlib.filter.statistic.CounterCollection;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.query.AdaptiveQuery;
 import de.learnlib.query.AdaptiveQuery.Response;
+import de.learnlib.statistic.StatisticCollector;
+import de.learnlib.statistic.StatisticData;
 
 /**
  * A simple wrapper for counting the number of {@link Response#RESET resets} and {@link Response#SYMBOL symbols} of an
@@ -33,22 +36,24 @@ import de.learnlib.query.AdaptiveQuery.Response;
  * @param <O>
  *         output symbol type
  */
-public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracle<I, O> {
+public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracle<I, O>, StatisticCollector {
 
     private final AdaptiveMembershipOracle<I, O> delegate;
-    private final AtomicLong resetCounter = new AtomicLong();
-    private final AtomicLong symbolCounter = new AtomicLong();
+    private final Counter resetCounter;
+    private final Counter symbolCounter;
 
     public CounterAdaptiveQueryOracle(AdaptiveMembershipOracle<I, O> delegate) {
         this.delegate = delegate;
+        this.resetCounter = new Counter("Resets", "#");
+        this.symbolCounter = new Counter("Symbols", "#");
     }
 
-    public long getResetCount() {
-        return resetCounter.get();
+    public Counter getResetCounter() {
+        return resetCounter;
     }
 
-    public long getSymbolCount() {
-        return symbolCounter.get();
+    public Counter getSymbolCounter() {
+        return symbolCounter;
     }
 
     @Override
@@ -60,6 +65,11 @@ public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracl
 
         this.delegate.processQueries(wrappers);
 
+    }
+
+    @Override
+    public StatisticData getStatisticalData() {
+        return new CounterCollection(this.resetCounter, this.symbolCounter);
     }
 
     private class CountingQuery implements AdaptiveQuery<I, O> {
@@ -77,12 +87,12 @@ public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracl
 
         @Override
         public Response processOutput(O out) {
-            symbolCounter.incrementAndGet();
+            symbolCounter.increment();
 
             final Response response = delegate.processOutput(out);
 
             if (response != Response.SYMBOL) {
-                resetCounter.incrementAndGet();
+                resetCounter.increment();
             }
 
             return response;

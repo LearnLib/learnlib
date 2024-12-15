@@ -31,8 +31,6 @@ import net.automatalib.word.Word;
 
 public final class TestQueries {
 
-    public static final String COUNTER_NAME = "testCounter";
-
     public static final Alphabet<Integer> INPUTS;
     public static final Alphabet<Character> OUTPUTS;
     public static final CompactMealy<Integer, Character> DELEGATE;

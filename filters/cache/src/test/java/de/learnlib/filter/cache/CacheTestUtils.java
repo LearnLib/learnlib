@@ -22,8 +22,8 @@ import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.filter.statistic.oracle.MealyCounterOracle;
 import de.learnlib.filter.statistic.oracle.MooreCounterOracle;
-import de.learnlib.filter.statistic.sul.ResetCounterSUL;
-import de.learnlib.filter.statistic.sul.ResetCounterStateLocalInputSUL;
+import de.learnlib.filter.statistic.sul.CounterSUL;
+import de.learnlib.filter.statistic.sul.CounterStateLocalInputSUL;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.oracle.membership.MooreSimulatorOracle;
@@ -91,11 +91,11 @@ public final class CacheTestUtils {
         return new MooreCounterOracle<>(new MooreSimulatorOracle<>(delegate));
     }
 
-    public static <I, O> ResetCounterSUL<I, O> getCounter(SUL<I, O> delegate) {
-        return new ResetCounterSUL<>("Queries", delegate);
+    public static <I, O> CounterSUL<I, O> getCounter(SUL<I, O> delegate) {
+        return new CounterSUL<>(delegate);
     }
 
-    public static <I, O> ResetCounterStateLocalInputSUL<I, O> getCounter(StateLocalInputSUL<I, O> delegate) {
-        return new ResetCounterStateLocalInputSUL<>("Queries", delegate);
+    public static <I, O> CounterStateLocalInputSUL<I, O> getCounter(StateLocalInputSUL<I, O> delegate) {
+        return new CounterStateLocalInputSUL<>(delegate);
     }
 }

@@ -24,7 +24,7 @@ import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.filter.cache.mealy.MealyCaches;
 import de.learnlib.filter.cache.sul.SULCache;
 import de.learnlib.filter.cache.sul.ThreadSafeSULCaches;
-import de.learnlib.filter.statistic.sul.ResetCounterSUL;
+import de.learnlib.filter.statistic.sul.CounterSUL;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.ParallelOracle;
@@ -95,7 +95,7 @@ public class ParallelismExample2 {
      */
     private void runSingleCache() {
         // create a counter to count the effective number of queries executed on the SUL
-        final ResetCounterSUL<Integer, Character> counter = new ResetCounterSUL<>("#Queries", automatonAsSUL);
+        final CounterSUL<Integer, Character> counter = new CounterSUL<>(automatonAsSUL);
 
         // create the parallel oracle
         // use a dynamic oracle because a static oracle splits queries into static chunks that will be delegated to the
@@ -127,7 +127,7 @@ public class ParallelismExample2 {
      */
     private void runThreadSafeCache() {
         // create a counter to count the effective number of queries executed on the SUL
-        final ResetCounterSUL<Integer, Character> counter = new ResetCounterSUL<>("#Queries", automatonAsSUL);
+        final CounterSUL<Integer, Character> counter = new CounterSUL<>(automatonAsSUL);
 
         // create a thread-safe cache for the SUL
         final SULCache<Integer, Character> cache = ThreadSafeSULCaches.createCache(alphabet, counter);

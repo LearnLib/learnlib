@@ -26,11 +26,8 @@ import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
 import de.learnlib.filter.cache.sul.SULCache;
 import de.learnlib.filter.cache.sul.SULCaches;
 import de.learnlib.filter.cache.sul.StateLocalInputSULCache;
-import de.learnlib.filter.statistic.sul.ResetCounterSUL;
-import de.learnlib.filter.statistic.sul.ResetCounterStateLocalInputSUL;
-import de.learnlib.filter.statistic.sul.SLICounterStateLocalInputSUL;
-import de.learnlib.filter.statistic.sul.SymbolCounterSUL;
-import de.learnlib.filter.statistic.sul.SymbolCounterStateLocalInputSUL;
+import de.learnlib.filter.statistic.sul.CounterSUL;
+import de.learnlib.filter.statistic.sul.CounterStateLocalInputSUL;
 import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.equivalence.MealyEQOracleChain;
@@ -87,13 +84,7 @@ public final class Example2 {
 
         // setup SULs and counters
         final StateLocalInputSUL<Integer, Character> target = new StateLocalInputMealySimulatorSUL<>(TARGET);
-
-        final ResetCounterStateLocalInputSUL<Integer, Character> resetCounter =
-                new ResetCounterStateLocalInputSUL<>("Resets", target);
-        final SymbolCounterStateLocalInputSUL<Integer, Character> symbolCounter =
-                new SymbolCounterStateLocalInputSUL<>("Symbols", resetCounter);
-        final SLICounterStateLocalInputSUL<Integer, Character> sliCounter =
-                new SLICounterStateLocalInputSUL<>("State Local Inputs", symbolCounter);
+        final CounterStateLocalInputSUL<Integer, Character> counterSUL = new CounterStateLocalInputSUL<>(target);
 
         // construct storage for EquivalenceOracle chain, because we want to use the potential cache as well
         final List<MealyEquivalenceOracle<Integer, Character>> eqOracles = new ArrayList<>(2);
@@ -102,11 +93,11 @@ public final class Example2 {
 
         if (withCache) {
             final StateLocalInputSULCache<Integer, Character> cache =
-                    SULCaches.createStateLocalInputCache(INPUTS, sliCounter);
+                    SULCaches.createStateLocalInputCache(INPUTS, counterSUL);
             eqOracles.add(cache.createCacheConsistencyTest());
             sul = cache;
         } else {
-            sul = sliCounter;
+            sul = counterSUL;
         }
 
         // construct a (state local input) SUL oracle which answers undefined transitions with the undefined symbol
@@ -136,9 +127,7 @@ public final class Example2 {
         System.out.println("State Local Input SUL" + (withCache ? ", with cache" : ""));
         System.out.println("-------------------------------------------------------");
 
-        System.out.println(resetCounter.getStatisticalData().getSummary());
-        System.out.println(symbolCounter.getStatisticalData().getSummary());
-        System.out.println(sliCounter.getStatisticalData().getSummary());
+        System.out.println(counterSUL.getStatisticalData().getSummary());
 
         System.out.println("-------------------------------------------------------");
     }
@@ -150,9 +139,7 @@ public final class Example2 {
 
         // setup SULs and counters
         final SUL<Integer, Character> target = new MealySimulatorSUL<>(TARGET, UNDEFINED);
-
-        final ResetCounterSUL<Integer, Character> resetCounter = new ResetCounterSUL<>("Resets", target);
-        final SymbolCounterSUL<Integer, Character> symbolCounter = new SymbolCounterSUL<>("Symbols", resetCounter);
+        final CounterSUL<Integer, Character> counterSUL = new CounterSUL<>(target);
 
         // construct storage for EquivalenceOracle chain, because we want to use the potential cache as well
         final List<MealyEquivalenceOracle<Integer, Character>> eqOracles = new ArrayList<>(2);
@@ -160,11 +147,11 @@ public final class Example2 {
         final SUL<Integer, Character> sul;
 
         if (withCache) {
-            final SULCache<Integer, Character> cache = SULCaches.createCache(INPUTS, symbolCounter);
+            final SULCache<Integer, Character> cache = SULCaches.createCache(INPUTS, counterSUL);
             eqOracles.add(cache.createCacheConsistencyTest());
             sul = cache;
         } else {
-            sul = symbolCounter;
+            sul = counterSUL;
         }
 
         // construct a (regular) simulator membership query oracle
@@ -194,8 +181,7 @@ public final class Example2 {
         System.out.println("Regular SUL" + (withCache ? ", with cache" : ""));
         System.out.println("-------------------------------------------------------");
 
-        System.out.println(resetCounter.getStatisticalData().getSummary());
-        System.out.println(symbolCounter.getStatisticalData().getSummary());
+        System.out.println(counterSUL.getStatisticalData().getSummary());
 
         System.out.println("-------------------------------------------------------");
     }

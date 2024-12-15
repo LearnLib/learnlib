@@ -16,14 +16,19 @@
 package de.learnlib.filter.statistic.sul;
 
 import de.learnlib.driver.simulator.ObservableMealySimulatorSUL;
+import de.learnlib.filter.statistic.Counter;
 import de.learnlib.filter.statistic.TestQueries;
-import de.learnlib.statistic.StatisticSUL;
 
-public class ResetCounterObservableSULTest extends AbstractResetCounterSULTest {
+public class ResetCounterObservableSULTest
+        extends AbstractResetCounterSULTest<CounterObservableSUL<?, Integer, Character>> {
 
     @Override
-    protected StatisticSUL<Integer, Character> getStatisticSUL() {
-        return new ResetCounterObservableSUL<>(TestQueries.COUNTER_NAME,
-                                               new ObservableMealySimulatorSUL<>(TestQueries.DELEGATE));
+    protected CounterObservableSUL<?, Integer, Character> getStatisticSUL() {
+        return new CounterObservableSUL<>(new ObservableMealySimulatorSUL<>(TestQueries.DELEGATE));
+    }
+
+    @Override
+    protected Counter getCounter(CounterObservableSUL<?, Integer, Character> sul) {
+        return sul.getResetCounter();
     }
 }

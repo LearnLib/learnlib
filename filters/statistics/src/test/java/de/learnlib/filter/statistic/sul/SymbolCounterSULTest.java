@@ -16,14 +16,19 @@
 package de.learnlib.filter.statistic.sul;
 
 import de.learnlib.driver.simulator.MealySimulatorSUL;
+import de.learnlib.filter.statistic.Counter;
 import de.learnlib.filter.statistic.TestQueries;
-import de.learnlib.statistic.StatisticSUL;
 
-public class SymbolCounterSULTest extends AbstractSymbolCounterSULTest {
+public class SymbolCounterSULTest extends AbstractSymbolCounterSULTest<CounterSUL<Integer, Character>> {
 
     @Override
-    protected StatisticSUL<Integer, Character> getStatisticSUL() {
-        return new SymbolCounterSUL<>(TestQueries.COUNTER_NAME, new MealySimulatorSUL<>(TestQueries.DELEGATE));
+    protected CounterSUL<Integer, Character> getStatisticSUL() {
+        return new CounterSUL<>(new MealySimulatorSUL<>(TestQueries.DELEGATE));
+    }
+
+    @Override
+    protected Counter getCounter(CounterSUL<Integer, Character> sul) {
+        return sul.getSymbolCounter();
     }
 }
 

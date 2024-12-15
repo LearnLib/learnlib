@@ -16,51 +16,34 @@
 package de.learnlib.filter.statistic.sul;
 
 import de.learnlib.filter.statistic.Counter;
-import de.learnlib.statistic.StatisticSUL;
-import de.learnlib.sul.SUL;
+import de.learnlib.sul.ObservableSUL;
 
-public class SymbolCounterSUL<I, O> implements StatisticSUL<I, O> {
+public class CounterObservableSUL<S, I, O> extends CounterSUL<I, O> implements ObservableSUL<S, I, O> {
 
-    private final SUL<I, O> sul;
-    private final Counter counter;
+    private final ObservableSUL<S, I, O> sul;
 
-    public SymbolCounterSUL(String name, SUL<I, O> sul) {
-        this(new Counter(name, "Symbols"), sul);
+    public CounterObservableSUL(ObservableSUL<S, I, O> sul) {
+        super(sul);
+        this.sul = sul;
     }
 
-    protected SymbolCounterSUL(Counter counter, SUL<I, O> sul) {
-        this.counter = counter;
+    private CounterObservableSUL(ObservableSUL<S, I, O> sul, Counter resetCounter, Counter symbolCounter) {
+        super(sul, resetCounter, symbolCounter);
         this.sul = sul;
     }
 
     @Override
-    public void pre() {
-        sul.pre();
+    public ObservableSUL<S, I, O> fork() {
+        return new CounterObservableSUL<>(this.sul.fork(), super.resetCounter, super.symbolCounter);
     }
 
     @Override
-    public void post() {
-        sul.post();
+    public S getState() {
+        return this.sul.getState();
     }
 
     @Override
-    public O step(I in) {
-        counter.increment();
-        return sul.step(in);
-    }
-
-    @Override
-    public boolean canFork() {
-        return sul.canFork();
-    }
-
-    @Override
-    public SUL<I, O> fork() {
-        return new SymbolCounterSUL<>(counter, sul.fork());
-    }
-
-    @Override
-    public Counter getStatisticalData() {
-        return counter;
+    public boolean deepCopies() {
+        return this.sul.deepCopies();
     }
 }

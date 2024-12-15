@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.statistic.oracle;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 import de.learnlib.filter.statistic.Counter;
@@ -108,6 +107,6 @@ public class CounterOracle<I, D> implements StatisticOracle<I, D> {
 
     @Override
     public StatisticData getStatisticalData() {
-        return new CounterCollection(Arrays.asList(queryCounter, symbolCounter));
+        return new CounterCollection(queryCounter, symbolCounter);
     }
 }

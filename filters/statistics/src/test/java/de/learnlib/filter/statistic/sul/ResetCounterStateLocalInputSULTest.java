@@ -16,14 +16,19 @@
 package de.learnlib.filter.statistic.sul;
 
 import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
+import de.learnlib.filter.statistic.Counter;
 import de.learnlib.filter.statistic.TestQueries;
-import de.learnlib.statistic.StatisticSUL;
 
-public class ResetCounterStateLocalInputSULTest extends AbstractResetCounterSULTest {
+public class ResetCounterStateLocalInputSULTest
+        extends AbstractResetCounterSULTest<CounterStateLocalInputSUL<Integer, Character>> {
 
     @Override
-    protected StatisticSUL<Integer, Character> getStatisticSUL() {
-        return new ResetCounterStateLocalInputSUL<>(TestQueries.COUNTER_NAME,
-                                                    new StateLocalInputMealySimulatorSUL<>(TestQueries.DELEGATE));
+    protected CounterStateLocalInputSUL<Integer, Character> getStatisticSUL() {
+        return new CounterStateLocalInputSUL<>(new StateLocalInputMealySimulatorSUL<>(TestQueries.DELEGATE));
+    }
+
+    @Override
+    protected Counter getCounter(CounterStateLocalInputSUL<Integer, Character> sul) {
+        return sul.getResetCounter();
     }
 }

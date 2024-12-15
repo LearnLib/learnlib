@@ -19,8 +19,7 @@ import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.cache.SULLearningCacheOracle;
-import de.learnlib.filter.statistic.sul.ResetCounterStateLocalInputSUL;
-import de.learnlib.filter.statistic.sul.SLICounterStateLocalInputSUL;
+import de.learnlib.filter.statistic.sul.CounterStateLocalInputSUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
@@ -30,57 +29,54 @@ import org.testng.annotations.Test;
 public class StateLocalInputSULTreeCacheTest
         extends AbstractCacheTest<SULLearningCacheOracle<Character, Integer, StateLocalInputSULCache<Character, Integer>>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 
-    private final ResetCounterStateLocalInputSUL<Character, Integer> resetCounter;
-    private final SLICounterStateLocalInputSUL<Character, Integer> sliCounter;
+    private final CounterStateLocalInputSUL<Character, Integer> counter;
     private final Integer undefined;
 
     public StateLocalInputSULTreeCacheTest() {
         undefined = -1;
-        resetCounter = new ResetCounterStateLocalInputSUL<>("counterOracle",
-                                                            new StateLocalInputMealySimulatorSUL<>(CacheTestUtils.MEALY));
-        sliCounter = new SLICounterStateLocalInputSUL<>("sliCounter", resetCounter);
+        counter = new CounterStateLocalInputSUL<>(new StateLocalInputMealySimulatorSUL<>(CacheTestUtils.MEALY));
     }
 
     @Test
     @Override
     public void testNoQueriesReceived() {
         super.testNoQueriesReceived();
-        Assert.assertEquals(sliCounter.getStatisticalData().getCount(), 0);
+        Assert.assertEquals(counter.getInputCounter().getCount(), 0);
     }
 
     @Test(dependsOnMethods = "testNoQueriesReceived")
     @Override
     public void testFirstQuery() {
         super.testFirstQuery();
-        Assert.assertEquals(sliCounter.getStatisticalData().getCount(), oracle.getCache().size());
+        Assert.assertEquals(counter.getInputCounter().getCount(), oracle.getCache().size());
     }
 
     @Test(dependsOnMethods = "testFirstQuery")
     @Override
     public void testFirstDuplicate() {
         super.testFirstDuplicate();
-        Assert.assertEquals(sliCounter.getStatisticalData().getCount(), oracle.getCache().size());
+        Assert.assertEquals(counter.getInputCounter().getCount(), oracle.getCache().size());
     }
 
     @Test(dependsOnMethods = "testFirstDuplicate")
     @Override
     public void testTwoQueriesOneDuplicate() {
         super.testTwoQueriesOneDuplicate();
-        Assert.assertEquals(sliCounter.getStatisticalData().getCount(), oracle.getCache().size());
+        Assert.assertEquals(counter.getInputCounter().getCount(), oracle.getCache().size());
     }
 
     @Test(dependsOnMethods = "testTwoQueriesOneDuplicate")
     @Override
     public void testOneNewQuery() {
         super.testOneNewQuery();
-        Assert.assertEquals(sliCounter.getStatisticalData().getCount(), oracle.getCache().size());
+        Assert.assertEquals(counter.getInputCounter().getCount(), oracle.getCache().size());
     }
 
     @Test(dependsOnMethods = "testOneNewQuery")
     @Override
     public void testPrefix() {
         super.testPrefix();
-        Assert.assertEquals(sliCounter.getStatisticalData().getCount(), oracle.getCache().size());
+        Assert.assertEquals(counter.getInputCounter().getCount(), oracle.getCache().size());
     }
 
     @Test(dependsOnMethods = "testPrefix")
@@ -146,7 +142,7 @@ public class StateLocalInputSULTreeCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return resetCounter.getStatisticalData().getCount();
+        return counter.getResetCounter().getCount();
     }
 
     @Override
@@ -170,7 +166,7 @@ public class StateLocalInputSULTreeCacheTest
     }
 
     private StateLocalInputSULCache<Character, Integer> getCache() {
-        return SULCaches.createStateLocalInputCache(CacheTestUtils.INPUT_ALPHABET, sliCounter);
+        return SULCaches.createStateLocalInputCache(CacheTestUtils.INPUT_ALPHABET, counter);
     }
 }
 
