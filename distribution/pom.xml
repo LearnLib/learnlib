@@ -69,6 +69,11 @@ limitations under the License.
 
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-lambda</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-lstar</artifactId>
         </dependency>
 
@@ -85,11 +90,6 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-observation-pack-vpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-oml</artifactId>
         </dependency>
 
         <dependency>
@@ -318,6 +318,13 @@ limitations under the License.
 
                 <dependency>
                     <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-lambda</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-lstar</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
@@ -340,13 +347,6 @@ limitations under the License.
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-observation-pack-vpa</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-oml</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

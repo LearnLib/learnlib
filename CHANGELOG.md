@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     * The `OTUtils` class no longer provides the `displayHTMLInBrowser` methods in order to not depend on `java.desktop`. If you relied on this functionality, use the `writeHTMLToFile` methods instead and call `Desktop.getDesktop().open(file.toURI())` yourself.
     * The classes in the `learnlib-learning-examples` artifact have their package renamed to `de.learnlib.testsupport.example`.
 * Some other refactorings include:
+  * The `learnlib-oml` artifact (including its packages and class names) has been renamed to `learnlib-lambda`.
   * Various counters (especially `*Counter*SUL`s) have been streamlined. In most cases there now exists a single counter that tracks multiple properties.
 * With the removal of the `learnlib-annotation-processor` artifact (see below), the `learnlib-build-config` artifact is now part of the `de.learnlib` group again.
 * The `ReuseOracleBuilder` and `ReuseTreeBuilder` classes are now auto-generated and therefore reside in the respective packages of their previously enclosing classes.

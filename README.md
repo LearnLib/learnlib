@@ -23,10 +23,10 @@ Currently, the following learning algorithms with respective target models are s
 | ADT                 | `Mealy`                     |     | RPNI (incl. variants) | `DFA` `Mealy` `Moore` |
 | DHC                 | `Mealy`                     |     |                       |                       |
 | Kearns & Vazirani   | `DFA` `Mealy`               |     |                       |                       |
+| Lambda              | `DFA` `Mealy`               |     |                       |                       |
 | L* (incl. variants) | `DFA` `Mealy` `Moore`       |     |                       |                       |
 | NL*                 | `NFA`                       |     |                       |                       |
 | Observation Pack    | `DFA` `Mealy` `Moore` `VPA` |     |                       |                       |
-| OML                 | `DFA` `Mealy`               |     |                       |                       |
 | Procedural          | `SPA` `SBA` `SPMM`          |     |                       |                       |
 | TTT                 | `DFA` `Mealy` `Moore` `VPA` |     |                       |                       |
 

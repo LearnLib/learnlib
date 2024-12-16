@@ -32,9 +32,9 @@
 open module de.learnlib.algorithm.procedural {
 
     requires de.learnlib.algorithm.kv;
+    requires de.learnlib.algorithm.lambda;
     requires de.learnlib.algorithm.lstar;
     requires de.learnlib.algorithm.observationpack;
-    requires de.learnlib.algorithm.oml;
     requires de.learnlib.algorithm.ttt;
     requires de.learnlib.api;
     requires de.learnlib.common.util;

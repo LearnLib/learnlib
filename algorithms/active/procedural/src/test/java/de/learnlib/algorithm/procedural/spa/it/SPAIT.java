@@ -25,12 +25,12 @@ import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.LearnerConstructor;
 import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.procedural.adapter.dfa.KearnsVaziraniAdapterDFA;
+import de.learnlib.algorithm.procedural.adapter.dfa.LLambdaAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.LStarBaseAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.ObservationPackAdapterDFA;
-import de.learnlib.algorithm.procedural.adapter.dfa.OptimalLStarAdapterDFA;
-import de.learnlib.algorithm.procedural.adapter.dfa.OptimalTTTAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.RivestSchapireAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.TTTAdapterDFA;
+import de.learnlib.algorithm.procedural.adapter.dfa.TTTLambdaAdapterDFA;
 import de.learnlib.algorithm.procedural.spa.ATRManager;
 import de.learnlib.algorithm.procedural.spa.SPALearner;
 import de.learnlib.algorithm.procedural.spa.manager.DefaultATRManager;
@@ -54,8 +54,8 @@ public class SPAIT extends AbstractSPALearnerIT {
         builder.addLearnerVariant(KearnsVaziraniAdapterDFA::new);
         builder.addLearnerVariant(LStarBaseAdapterDFA::new);
         builder.addLearnerVariant(ObservationPackAdapterDFA::new);
-        builder.addLearnerVariant(OptimalLStarAdapterDFA::new);
-        builder.addLearnerVariant(OptimalTTTAdapterDFA::new);
+        builder.addLearnerVariant(LLambdaAdapterDFA::new);
+        builder.addLearnerVariant(TTTLambdaAdapterDFA::new);
         builder.addLearnerVariant(RivestSchapireAdapterDFA::new);
         builder.addLearnerVariant(TTTAdapterDFA::new);
     }

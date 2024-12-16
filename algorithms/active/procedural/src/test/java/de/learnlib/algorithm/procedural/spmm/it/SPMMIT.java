@@ -25,12 +25,12 @@ import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.dhc.mealy.MealyDHC;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.adapter.mealy.KearnsVaziraniAdapterMealy;
+import de.learnlib.algorithm.procedural.adapter.mealy.LLambdaAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.LStarBaseAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.ObservationPackAdapterMealy;
-import de.learnlib.algorithm.procedural.adapter.mealy.OptimalLStarAdapterMealy;
-import de.learnlib.algorithm.procedural.adapter.mealy.OptimalTTTAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.RivestSchapireAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.TTTAdapterMealy;
+import de.learnlib.algorithm.procedural.adapter.mealy.TTTLambdaAdapterMealy;
 import de.learnlib.algorithm.procedural.spmm.ATManager;
 import de.learnlib.algorithm.procedural.spmm.SPMMLearner;
 import de.learnlib.algorithm.procedural.spmm.manager.DefaultATManager;
@@ -57,8 +57,8 @@ public class SPMMIT extends AbstractSPMMLearnerIT {
         builder.addLearnerVariant(LStarBaseAdapterMealy::new);
         builder.addLearnerVariant(MealyDHC::new);
         builder.addLearnerVariant(ObservationPackAdapterMealy::new);
-        builder.addLearnerVariant(OptimalLStarAdapterMealy::new);
-        builder.addLearnerVariant(OptimalTTTAdapterMealy::new);
+        builder.addLearnerVariant(LLambdaAdapterMealy::new);
+        builder.addLearnerVariant(TTTLambdaAdapterMealy::new);
         builder.addLearnerVariant(RivestSchapireAdapterMealy::new);
         builder.addLearnerVariant(TTTAdapterMealy::new);
     }

@@ -36,11 +36,11 @@ limitations under the License.
         <module>adt</module>
         <module>dhc</module>
         <module>kearns-vazirani</module>
+        <module>lambda</module>
         <module>lstar</module>
         <module>nlstar</module>
         <module>observation-pack</module>
         <module>observation-pack-vpa</module>
-        <module>oml</module>
         <module>procedural</module>
         <module>ttt</module>
         <module>ttt-vpa</module>

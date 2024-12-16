@@ -25,13 +25,13 @@ limitations under the License.
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>learnlib-aaar</artifactId>
+    <artifactId>learnlib-lambda</artifactId>
 
-    <name>LearnLib :: Algorithms :: AAAR</name>
+    <name>LearnLib :: Algorithms :: Lambda</name>
     <description>
-        This artifact provides the implementation of the AAAR learning algorithm as described in the paper "Automata
-        Learning with Automated Alphabet Abstraction Refinement" (https://doi.org/10.1007/978-3-642-18275-4_19) by
-        Falk Howar, Bernhard Steffen, and Maik Merten.
+        This artifact provides the implementations of various learning algorithms based on the "lazy partition refinement"
+        concept as described in the paper "Active Automata Learning as Black-Box Search and Lazy Partition Refinement"
+        (https://doi.org/10.1007/978-3-031-15629-8_17) by Falk Howar and Bernhard Steffen.
     </description>
 
     <dependencies>
@@ -39,6 +39,10 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-util</artifactId>
         </dependency>
 
         <!-- external -->
@@ -63,27 +67,7 @@ limitations under the License.
         <!-- test -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-counterexamples</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-equivalence-oracles</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-kearns-vazirani</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-lambda</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-lstar</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -92,28 +76,16 @@ limitations under the License.
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-observation-pack</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-ttt</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-util</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learner-it-support</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learning-examples</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-test-support</artifactId>
         </dependency>
 
         <dependency>
@@ -132,4 +104,19 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <!-- append to existing argLine to nicely work together with jacoco plugin -->
+                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.lambda=net.automatalib.util</argLine>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

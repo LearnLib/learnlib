@@ -25,6 +25,8 @@ import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFA;
 import de.learnlib.algorithm.kv.mealy.KearnsVaziraniMealy;
+import de.learnlib.algorithm.lambda.ttt.dfa.TTTLambdaDFA;
+import de.learnlib.algorithm.lambda.ttt.mealy.TTTLambdaMealy;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFA;
@@ -33,8 +35,6 @@ import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMoore;
 import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
 import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealy;
 import de.learnlib.algorithm.observationpack.moore.OPLearnerMoore;
-import de.learnlib.algorithm.oml.ttt.dfa.OptimalTTTDFA;
-import de.learnlib.algorithm.oml.ttt.mealy.OptimalTTTMealy;
 import de.learnlib.algorithm.rivestschapire.RivestSchapireDFA;
 import de.learnlib.algorithm.rivestschapire.RivestSchapireMealy;
 import de.learnlib.algorithm.rivestschapire.RivestSchapireMoore;
@@ -61,14 +61,14 @@ public final class AAARTestUtil {
                 (alph, mqo) -> new OPLearnerDFA<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true, true);
         final ComboConstructor<TTTLearnerDFA<I>, I, Boolean> ttt =
                 (alph, mqo) -> new TTTLearnerDFA<>(alph, mqo, AcexAnalyzers.BINARY_SEARCH_FWD);
-        final ComboConstructor<OptimalTTTDFA<I>, I, Boolean> oml = (alph, mqo) -> new OptimalTTTDFA<>(alph, mqo, mqo);
+        final ComboConstructor<TTTLambdaDFA<I>, I, Boolean> lambda = (alph, mqo) -> new TTTLambdaDFA<>(alph, mqo, mqo);
 
         return Arrays.asList(Pair.of("L*", lstar),
                              Pair.of("RS", rs),
                              Pair.of("KV", kv),
                              Pair.of("DT", dt),
                              Pair.of("TTT", ttt),
-                             Pair.of("OML", oml));
+                             Pair.of("TTTLambda", lambda));
     }
 
     public static <I, O> List<Pair<String, ComboConstructor<? extends MealyLearner<I, O>, I, Word<O>>>> getMealyLearners() {
@@ -86,15 +86,15 @@ public final class AAARTestUtil {
                 (alph, mqo) -> new OPLearnerMealy<>(alph, mqo, LocalSuffixFinders.RIVEST_SCHAPIRE, true);
         final ComboConstructor<TTTLearnerMealy<I, O>, I, Word<O>> ttt =
                 (alph, mqo) -> new TTTLearnerMealy<>(alph, mqo, AcexAnalyzers.BINARY_SEARCH_FWD);
-        final ComboConstructor<OptimalTTTMealy<I, O>, I, Word<O>> oml =
-                (alph, mqo) -> new OptimalTTTMealy<>(alph, mqo, mqo);
+        final ComboConstructor<TTTLambdaMealy<I, O>, I, Word<O>> lambda =
+                (alph, mqo) -> new TTTLambdaMealy<>(alph, mqo, mqo);
 
         return Arrays.asList(Pair.of("L*", lstar),
                              Pair.of("RS", rs),
                              Pair.of("KV", kv),
                              Pair.of("DT", dt),
                              Pair.of("TTT", ttt),
-                             Pair.of("OML", oml));
+                             Pair.of("TTTLambda", lambda));
     }
 
     public static <I, O> List<Pair<String, ComboConstructor<? extends MooreLearner<I, O>, I, Word<O>>>> getMooreLearners() {
