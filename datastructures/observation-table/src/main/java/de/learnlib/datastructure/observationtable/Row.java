@@ -70,7 +70,7 @@ public interface Row<I> {
      * @param pos
      *         the index of the alphabet symbol.
      *
-     * @return the successor row (may be <code>null</code>)
+     * @return the successor row (may be {@code null})
      */
     Row<I> getSuccessor(int pos);
 }

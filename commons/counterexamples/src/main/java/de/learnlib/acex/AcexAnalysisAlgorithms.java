@@ -33,7 +33,7 @@ public final class AcexAnalysisAlgorithms {
      * @param <E>
      *         the effect type
      *
-     * @return an index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
+     * @return an index {@code i} such that {@code acex.testEffect(i) != acex.testEffect(i+1)}
      */
     public static <E> int linearSearchFwd(AbstractCounterexample<E> acex, int low, int high) {
         assert !acex.testEffects(low, high);
@@ -61,7 +61,7 @@ public final class AcexAnalysisAlgorithms {
      * @param <E>
      *         the effect type
      *
-     * @return an index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
+     * @return an index {@code i} such that {@code acex.testEffect(i) != acex.testEffect(i+1)}
      */
     public static <E> int linearSearchBwd(AbstractCounterexample<E> acex, int low, int high) {
         assert !acex.testEffects(low, high);
@@ -89,7 +89,7 @@ public final class AcexAnalysisAlgorithms {
      * @param <E>
      *         the effect type
      *
-     * @return an index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
+     * @return an index {@code i} such that {@code acex.testEffect(i) != acex.testEffect(i+1)}
      */
     public static <E> int exponentialSearchBwd(AbstractCounterexample<E> acex, int low, int high) {
         assert !acex.testEffects(low, high);
@@ -126,7 +126,7 @@ public final class AcexAnalysisAlgorithms {
      * @param <E>
      *         the effect type
      *
-     * @return an index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
+     * @return an index {@code i} such that {@code acex.testEffect(i) != acex.testEffect(i+1)}
      */
     public static <E> int binarySearchRight(AbstractCounterexample<E> acex, int low, int high) {
         E effLow = acex.effect(low);
