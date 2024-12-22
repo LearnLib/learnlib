@@ -17,6 +17,7 @@ package de.learnlib.setting;
 
 import java.util.Locale;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.function.Function;
 
 import de.learnlib.logging.Category;
@@ -34,7 +35,7 @@ public final class LearnLibSettings {
     private final Properties properties;
 
     private LearnLibSettings() {
-        properties = SettingsSource.readSettings(SettingsSource.class);
+        properties = SettingsSource.readSettings(ServiceLoader.load(LearnLibSettingsSource.class));
     }
 
     public static LearnLibSettings getInstance() {

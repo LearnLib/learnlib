@@ -15,16 +15,15 @@
  */
 package de.learnlib.setting.sources;
 
-import net.automatalib.AutomataLibSettingsSource;
+import net.automatalib.common.setting.AutomataLibSettingsSource;
 import net.automatalib.common.util.setting.AbstractClassPathFileSource;
-import net.automatalib.common.util.setting.SettingsSource;
 import org.kohsuke.MetaInfServices;
 
-@MetaInfServices(SettingsSource.class)
+@MetaInfServices(AutomataLibSettingsSource.class)
 public class LearnLibPropertiesAutomataLibSettingsSource extends AbstractClassPathFileSource
         implements AutomataLibSettingsSource {
 
-    private static final int DEFAULT_PRIORITY = -10;
+    private static final int PRIORITY_DECREASE = 10;
 
     public LearnLibPropertiesAutomataLibSettingsSource() {
         super("learnlib.properties");
@@ -32,6 +31,6 @@ public class LearnLibPropertiesAutomataLibSettingsSource extends AbstractClassPa
 
     @Override
     public int getPriority() {
-        return DEFAULT_PRIORITY;
+        return super.getPriority() - PRIORITY_DECREASE; // bump prio down a bit
     }
 }

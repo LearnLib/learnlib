@@ -17,6 +17,4 @@ package de.learnlib.setting;
 
 import net.automatalib.common.util.setting.SettingsSource;
 
-public interface LearnLibSettingsSource extends SettingsSource {
-
-}
+public interface LearnLibSettingsSource extends SettingsSource {}

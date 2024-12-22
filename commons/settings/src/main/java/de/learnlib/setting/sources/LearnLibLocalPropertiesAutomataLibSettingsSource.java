@@ -15,19 +15,18 @@
  */
 package de.learnlib.setting.sources;
 
-import net.automatalib.AutomataLibSettingsSource;
+import net.automatalib.common.setting.AutomataLibSettingsSource;
 import net.automatalib.common.util.setting.LocalFileSource;
-import net.automatalib.common.util.setting.SettingsSource;
 import org.kohsuke.MetaInfServices;
 
-@MetaInfServices(SettingsSource.class)
+@MetaInfServices(AutomataLibSettingsSource.class)
 public class LearnLibLocalPropertiesAutomataLibSettingsSource extends LocalFileSource
         implements AutomataLibSettingsSource {
 
     private static final int PRIORITY_DECREASE = 10;
 
     public LearnLibLocalPropertiesAutomataLibSettingsSource() {
-        super("learnlib.properties");
+        super("./learnlib.properties");
     }
 
     @Override

@@ -17,13 +17,12 @@ package de.learnlib.setting.sources;
 
 import de.learnlib.setting.LearnLibSettingsSource;
 import net.automatalib.common.util.setting.LocalFileSource;
-import net.automatalib.common.util.setting.SettingsSource;
 import org.kohsuke.MetaInfServices;
 
-@MetaInfServices(SettingsSource.class)
+@MetaInfServices(LearnLibSettingsSource.class)
 public class LearnLibLocalPropertiesSource extends LocalFileSource implements LearnLibSettingsSource {
 
     public LearnLibLocalPropertiesSource() {
-        super("learnlib.properties");
+        super("./learnlib.properties");
     }
 }

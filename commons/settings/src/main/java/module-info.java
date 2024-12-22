@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+import de.learnlib.setting.LearnLibSettingsSource;
 import de.learnlib.setting.sources.LearnLibLocalPropertiesAutomataLibSettingsSource;
 import de.learnlib.setting.sources.LearnLibLocalPropertiesSource;
 import de.learnlib.setting.sources.LearnLibPropertiesAutomataLibSettingsSource;
 import de.learnlib.setting.sources.LearnLibPropertiesSource;
 import de.learnlib.setting.sources.LearnLibSystemPropertiesAutomataLibSettingsSource;
 import de.learnlib.setting.sources.LearnLibSystemPropertiesSource;
-import net.automatalib.common.util.setting.SettingsSource;
+import net.automatalib.common.setting.AutomataLibSettingsSource;
 
 /**
  * This module provides a collection of utility methods to parse LearnLib specific settings.
@@ -37,8 +38,8 @@ import net.automatalib.common.util.setting.SettingsSource;
 open module de.learnlib.setting {
 
     requires de.learnlib.api;
+    requires net.automatalib.common.setting;
     requires net.automatalib.common.util;
-    requires net.automatalib.api;
     requires org.slf4j;
 
     // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
@@ -48,5 +49,8 @@ open module de.learnlib.setting {
     exports de.learnlib.setting;
     exports de.learnlib.setting.sources;
 
-    provides SettingsSource with LearnLibLocalPropertiesAutomataLibSettingsSource, LearnLibPropertiesAutomataLibSettingsSource, LearnLibSystemPropertiesAutomataLibSettingsSource, LearnLibLocalPropertiesSource, LearnLibPropertiesSource, LearnLibSystemPropertiesSource;
+    uses LearnLibSettingsSource;
+
+    provides LearnLibSettingsSource with LearnLibLocalPropertiesSource, LearnLibPropertiesSource, LearnLibSystemPropertiesSource;
+    provides AutomataLibSettingsSource with LearnLibLocalPropertiesAutomataLibSettingsSource, LearnLibPropertiesAutomataLibSettingsSource, LearnLibSystemPropertiesAutomataLibSettingsSource;
 }

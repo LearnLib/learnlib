@@ -28,7 +28,7 @@ limitations under the License.
     <artifactId>learnlib-settings</artifactId>
 
     <name>LearnLib :: Commons :: Settings</name>
-    <description>A collection of utility methods to parse LearnLib specific settings</description>
+    <description>A collection of utility methods to parse LearnLib specific settings.</description>
 
     <dependencies>
         <!-- internal -->
@@ -40,8 +40,9 @@ limitations under the License.
         <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-api</artifactId>
+            <artifactId>automata-commons-settings</artifactId>
         </dependency>
+
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-util</artifactId>
