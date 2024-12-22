@@ -24,10 +24,9 @@ import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.MQUtil;
+import de.learnlib.util.nfa.NFALearnerWrapper;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
-import net.automatalib.util.automaton.fsa.NFAs;
 import net.automatalib.word.Word;
 
 /**
@@ -74,46 +73,9 @@ public class NLStarLearner<I> implements NFALearner<I> {
      * hypothesis.
      *
      * @return a DFA learner view of this learner
-     *
-     * @see #getDeterminizedHypothesis()
      */
     public DFALearner<I> asDFALearner() {
-        return new DFALearner<I>() {
-
-            @Override
-            public String toString() {
-                return NLStarLearner.this.toString();
-            }
-
-            @Override
-            public void startLearning() {
-                NLStarLearner.this.startLearning();
-            }
-
-            @Override
-            public boolean refineHypothesis(DefaultQuery<I, Boolean> ceQuery) {
-                return NLStarLearner.this.refineHypothesis(ceQuery);
-            }
-
-            @Override
-            public CompactDFA<I> getHypothesisModel() {
-                return NLStarLearner.this.getDeterminizedHypothesis();
-            }
-
-        };
-    }
-
-    /**
-     * Retrieves a deterministic version of the hypothesis. The DFA is obtained through
-     * {@link NFAs#determinize(net.automatalib.automaton.fsa.NFA)}.
-     *
-     * @return a deterministic version of the hypothesis
-     */
-    public CompactDFA<I> getDeterminizedHypothesis() {
-        if (hypothesis == null) {
-            throw new IllegalStateException();
-        }
-        return NFAs.determinize(hypothesis);
+        return new NFALearnerWrapper<>(this.alphabet, this);
     }
 
     private void completeConsistentTable(List<List<Row<I>>> initialUnclosed) {

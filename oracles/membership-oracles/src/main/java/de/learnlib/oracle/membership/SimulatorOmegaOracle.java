@@ -16,7 +16,6 @@
 package de.learnlib.oracle.membership;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import de.learnlib.oracle.MembershipOracle;
@@ -27,7 +26,6 @@ import de.learnlib.oracle.OmegaQueryAnswerer;
 import de.learnlib.oracle.SingleQueryOmegaOracle;
 import de.learnlib.query.OmegaQuery;
 import de.learnlib.query.Query;
-import de.learnlib.util.MQUtil;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -91,11 +89,6 @@ public class SimulatorOmegaOracle<S extends Object, I, D> implements SingleQuery
     @Override
     public boolean isSameState(Word<I> input1, S s1, Word<I> input2, S s2) {
         return s1.equals(s2);
-    }
-
-    @Override
-    public void processQueries(Collection<? extends OmegaQuery<I, D>> queries) {
-        MQUtil.answerOmegaQueries(this, queries);
     }
 
     /**

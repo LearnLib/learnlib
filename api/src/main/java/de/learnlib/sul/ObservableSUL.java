@@ -52,7 +52,7 @@ public interface ObservableSUL<S, I, O> extends SUL<I, O> {
      * {@code Object o = getState(); int hc = o.hashCode(); [step(...)|pre()|post()]; assert o.hashCode() == hc;}
      *
      * Furthermore, if states can be retrieved, but each state is not a deep copy, then this SUL <b>must</b> be
-     * forkable, i.e. if !{@link #deepCopies()} then {@link #canFork()} must hold.
+     * forkable, i.e. if {@code !deepCopies()} then {@code canFork()} must hold.
      *
      * @return whether each state is a deep copy.
      */

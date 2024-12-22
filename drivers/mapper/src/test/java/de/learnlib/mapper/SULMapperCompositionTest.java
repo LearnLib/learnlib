@@ -106,11 +106,11 @@ public class SULMapperCompositionTest {
         mappedSUL.pre();
         mappedSUL.pre();
 
-        Assert.assertEquals(4, this.innerUnwrappedMapper.getPreCounter());
-        Assert.assertEquals(4, this.outerWrappedMapper.getPreCounter());
+        Assert.assertEquals(this.innerUnwrappedMapper.getPreCounter(), 4);
+        Assert.assertEquals(this.outerWrappedMapper.getPreCounter(), 4);
 
-        Assert.assertEquals(2, this.innerUnwrappedMapper.getPostCounter());
-        Assert.assertEquals(2, this.outerWrappedMapper.getPostCounter());
+        Assert.assertEquals(this.innerUnwrappedMapper.getPostCounter(), 2);
+        Assert.assertEquals(this.outerWrappedMapper.getPostCounter(), 2);
 
         Assert.assertFalse(mappedSUL.canFork());
         Assert.assertThrows(mappedSUL::fork);

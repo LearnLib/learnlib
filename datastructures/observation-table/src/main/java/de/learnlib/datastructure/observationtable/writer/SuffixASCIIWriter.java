@@ -62,7 +62,7 @@ public class SuffixASCIIWriter<I, D> extends AbstractObservationTableWriter<I, D
     };
 
     public SuffixASCIIWriter() {
-        super.setWordToString(WORD_TO_STRING);
+        super(WORD_TO_STRING, Objects::toString);
     }
 
     @Override

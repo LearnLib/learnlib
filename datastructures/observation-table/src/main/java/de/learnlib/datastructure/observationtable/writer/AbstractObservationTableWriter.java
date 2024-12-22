@@ -19,12 +19,11 @@ import java.util.Objects;
 import java.util.function.Function;
 
 import net.automatalib.word.Word;
-import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 public abstract class AbstractObservationTableWriter<I, D> implements ObservationTableWriter<I, D> {
 
-    protected Function<? super Word<? extends I>, ? extends String> wordToString;
-    protected Function<? super D, ? extends String> outputToString;
+    private final Function<? super Word<? extends I>, ? extends String> wordToString;
+    private final Function<? super D, ? extends String> outputToString;
 
     public AbstractObservationTableWriter() {
         this(Objects::toString, Objects::toString);
@@ -41,15 +40,6 @@ public abstract class AbstractObservationTableWriter<I, D> implements Observatio
             return toStringFunction;
         }
         return Objects::toString;
-    }
-
-    public void setWordToString(@UnknownInitialization(AbstractObservationTableWriter.class) AbstractObservationTableWriter<I, D> this,
-                                Function<? super Word<? extends I>, ? extends String> wordToString) {
-        this.wordToString = safeToStringFunction(wordToString);
-    }
-
-    public void setOutputToString(Function<? super D, ? extends String> outputToString) {
-        this.outputToString = safeToStringFunction(outputToString);
     }
 
     protected String wordToString(Word<? extends I> word) {

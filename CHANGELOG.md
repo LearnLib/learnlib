@@ -33,6 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * The `de.learnlib.tooling:learnlib-annotation-processor` artifact has been dropped. The functionality has been moved to a [standalone project](https://github.com/LearnLib/build-tools).
 * The `de.learnlib:learnlib-rpni-edsm` and `de.learnlib:learnlib-rpni-mdl` artifacts have been dropped. The code has been merged with the `de.learnlib:learnlib-rpni` artifact.
+* `MQUtil` has been stripped of unused methods. Especially the `query` method can be simulated by the respective oracles themselves.
 * `PropertyOracle`s can no longer set a property. This value is now immutable and must be provided during instantiation. Previously, the internal state wasn't updated accordingly if a property was overridden.
 * `SymbolQueryOracle`s (and related code such as the respective caches, counters, etc.) have been removed without replacement. Equivalent functionality on the basis of the new `AdaptiveMembershipOracle`s is available instead.
 

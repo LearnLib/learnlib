@@ -76,12 +76,12 @@ public class EDSMScoreTest {
 
         final RedBlueMerge<BlueFringePTAState<Boolean, Void>, Boolean, Void> merge1 = pta.tryMerge(qEpsilon, qB);
         Assert.assertNotNull(merge1);
-        Assert.assertEquals(2L, EDSMUtil.score(merge1.toMergedAutomaton(), positiveSamples, negativeSamples));
+        Assert.assertEquals(EDSMUtil.score(merge1.toMergedAutomaton(), positiveSamples, negativeSamples), 2L);
 
         final RedBlueMerge<BlueFringePTAState<Boolean, Void>, Boolean, Void> merge2 = pta.tryMerge(qA, qB);
         Assert.assertNotNull(merge2);
         // book is wrong, should be 2
-        Assert.assertEquals(2L, EDSMUtil.score(merge2.toMergedAutomaton(), positiveSamples, negativeSamples));
+        Assert.assertEquals(EDSMUtil.score(merge2.toMergedAutomaton(), positiveSamples, negativeSamples), 2L);
     }
 
     @SuppressWarnings("unchecked")

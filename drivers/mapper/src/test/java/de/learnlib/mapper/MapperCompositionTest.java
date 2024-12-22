@@ -63,8 +63,8 @@ public class MapperCompositionTest {
         mapper.pre();
         mapper.pre();
 
-        Assert.assertEquals(3, this.toUpperCaseMapper.getPreCounter());
-        Assert.assertEquals(2, this.toUpperCaseMapper.getPostCounter());
+        Assert.assertEquals(this.toUpperCaseMapper.getPreCounter(), 3);
+        Assert.assertEquals(this.toUpperCaseMapper.getPostCounter(), 2);
     }
 
     private static final class ToUpperCaseMapper implements Mapper<Character, Character, Character, Character> {

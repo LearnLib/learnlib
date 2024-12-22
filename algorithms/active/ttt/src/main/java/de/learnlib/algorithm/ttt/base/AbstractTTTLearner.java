@@ -221,10 +221,9 @@ public abstract class AbstractTTTLearner<A, I, D>
 
         do {
             splitState(outIncons);
-            closeTransitions();
-            while (finalizeAny()) {
+            do {
                 closeTransitions();
-            }
+            } while (finalizeAny());
 
             outIncons = findOutputInconsistency();
         } while (outIncons != null);

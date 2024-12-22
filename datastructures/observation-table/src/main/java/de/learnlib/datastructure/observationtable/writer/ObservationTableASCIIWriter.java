@@ -44,7 +44,7 @@ public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableW
 
     @Override
     public void write(ObservationTable<? extends I, ? extends D> table, Appendable out) throws IOException {
-        writeInternal(table, super.wordToString, super.outputToString, out);
+        writeInternal(table, out);
     }
 
     /**
@@ -52,29 +52,27 @@ public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableW
      *
      * @see #write(ObservationTable, Appendable)
      */
-    private <I, D> void writeInternal(ObservationTable<I, D> table,
-                                      Function<? super Word<? extends I>, ? extends String> wordToString,
-                                      Function<? super D, ? extends String> outputToString,
-                                      Appendable out) throws IOException {
-        List<Word<I>> suffixes = table.getSuffixes();
+    private <I2 extends I, D2 extends D> void writeInternal(ObservationTable<I2, D2> table, Appendable out)
+            throws IOException {
+        List<Word<I2>> suffixes = table.getSuffixes();
         int numSuffixes = suffixes.size();
 
         int[] colWidth = new int[numSuffixes + 1];
 
         int i = 1;
-        for (Word<I> suffix : suffixes) {
-            colWidth[i++] = wordToString.apply(suffix).length();
+        for (Word<I2> suffix : suffixes) {
+            colWidth[i++] = wordToString(suffix).length();
         }
 
-        for (Row<I> row : table.getAllRows()) {
-            int thisWidth = wordToString.apply(row.getLabel()).length();
+        for (Row<I2> row : table.getAllRows()) {
+            int thisWidth = wordToString(row.getLabel()).length();
             if (thisWidth > colWidth[0]) {
                 colWidth[0] = thisWidth;
             }
 
             i = 1;
             for (D value : table.rowContents(row)) {
-                thisWidth = outputToString.apply(value).length();
+                thisWidth = outputToString(value).length();
                 if (thisWidth > colWidth[i]) {
                     colWidth[i] = thisWidth;
                 }
@@ -88,23 +86,23 @@ public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableW
         // Header
         content[0] = "";
         i = 1;
-        for (Word<I> suffix : suffixes) {
-            content[i++] = wordToString.apply(suffix);
+        for (Word<I2> suffix : suffixes) {
+            content[i++] = wordToString(suffix);
         }
         appendContentRow(out, content, colWidth);
         appendSeparatorRow(out, '=', colWidth);
 
         boolean first = true;
-        for (Row<I> spRow : table.getShortPrefixRows()) {
+        for (Row<I2> spRow : table.getShortPrefixRows()) {
             if (first) {
                 first = false;
             } else if (rowSeparators) {
                 appendSeparatorRow(out, '-', colWidth);
             }
-            content[0] = wordToString.apply(spRow.getLabel());
+            content[0] = wordToString(spRow.getLabel());
             i = 1;
             for (D value : table.rowContents(spRow)) {
-                content[i++] = outputToString.apply(value);
+                content[i++] = outputToString(value);
             }
             appendContentRow(out, content, colWidth);
         }
@@ -112,16 +110,16 @@ public class ObservationTableASCIIWriter<I, D> extends AbstractObservationTableW
         appendSeparatorRow(out, '=', colWidth);
 
         first = true;
-        for (Row<I> lpRow : table.getLongPrefixRows()) {
+        for (Row<I2> lpRow : table.getLongPrefixRows()) {
             if (first) {
                 first = false;
             } else if (rowSeparators) {
                 appendSeparatorRow(out, '-', colWidth);
             }
-            content[0] = wordToString.apply(lpRow.getLabel());
+            content[0] = wordToString(lpRow.getLabel());
             i = 1;
             for (D value : table.rowContents(lpRow)) {
-                content[i++] = outputToString.apply(value);
+                content[i++] = outputToString(value);
             }
             appendContentRow(out, content, colWidth);
         }

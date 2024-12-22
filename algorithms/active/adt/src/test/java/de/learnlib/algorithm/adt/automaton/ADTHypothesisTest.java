@@ -39,7 +39,7 @@ public class ADTHypothesisTest {
             automaton.addState();
         }
 
-        Assert.assertEquals(states, automaton.size());
+        Assert.assertEquals(automaton.size(), states);
         automaton.getStates().forEach(x -> Assert.assertTrue(x.getIncomingTransitions().isEmpty()));
 
         final StateIDs<ADTState<Character, Integer>> stateIds = automaton.stateIDs();

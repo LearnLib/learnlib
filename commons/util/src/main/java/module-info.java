@@ -31,7 +31,6 @@ open module de.learnlib.common.util {
     requires de.learnlib.api;
     requires de.learnlib.filter.statistic;
     requires net.automatalib.api;
-    requires net.automatalib.common.util;
     requires net.automatalib.core;
     requires net.automatalib.util;
     requires org.slf4j;

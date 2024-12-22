@@ -47,12 +47,7 @@ class STNodeImpl<I> implements STNode<I> {
 
     @Override
     public STNodeImpl<I> prepend(I a) {
-        STNodeImpl<I> n = children.get(a);
-        if (n == null) {
-            n = new STNodeImpl<>(this, a);
-            children.put(a, n);
-        }
-        return n;
+        return children.computeIfAbsent(a, a1 -> new STNodeImpl<>(this, a1));
     }
 }
 

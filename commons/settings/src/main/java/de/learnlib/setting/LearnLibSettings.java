@@ -63,14 +63,6 @@ public final class LearnLibSettings {
         return getTypedValue(property, p -> Enum.valueOf(enumClazz, p.toUpperCase(Locale.ROOT)));
     }
 
-    public boolean getBool(LearnLibProperty property, boolean defaultValue) {
-        return WrapperUtil.booleanValue(getBoolean(property), defaultValue);
-    }
-
-    public @Nullable Boolean getBoolean(LearnLibProperty property) {
-        return getTypedValue(property, Boolean::parseBoolean);
-    }
-
     public int getInt(LearnLibProperty property, int defaultValue) {
         return WrapperUtil.intValue(getInteger(property), defaultValue);
     }
@@ -89,7 +81,7 @@ public final class LearnLibSettings {
         try {
             return valueExtractor.apply(prop);
         } catch (IllegalArgumentException ex) {
-            LOG.warn(Category.CONFIG, "Could not parse LearnLib property '" + property + "'.", ex);
+            LOG.warn(Category.CONFIG, String.format("Could not parse LearnLib property '%s'.", property), ex);
             return null;
         }
     }
