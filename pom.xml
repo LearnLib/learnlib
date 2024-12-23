@@ -254,7 +254,7 @@ limitations under the License.
         <checkstyle.version>9.3</checkstyle.version>
         <fury.version>0.5.1</fury.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
-        <logback.version>1.3.12</logback.version>
+        <logback.version>1.5.13</logback.version>
         <metainf-services.version>1.11</metainf-services.version>
         <mockito.version>5.6.0</mockito.version>
         <slf4j.version>2.0.9</slf4j.version>
