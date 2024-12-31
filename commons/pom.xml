@@ -33,6 +33,7 @@ limitations under the License.
 
     <modules>
         <module>counterexamples</module>
+        <module>datastructures</module>
         <module>settings</module>
         <module>util</module>
     </modules>

@@ -30,7 +30,7 @@ open module de.learnlib.example {
     requires de.learnlib.algorithm.rpni;
     requires de.learnlib.common.counterexample;
     requires de.learnlib.common.util;
-    requires de.learnlib.datastructure.observationtable;
+    requires de.learnlib.datastructure;
     requires de.learnlib.driver;
     requires de.learnlib.driver.simulator;
     requires de.learnlib.filter.cache;

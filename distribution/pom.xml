@@ -131,33 +131,17 @@ limitations under the License.
 
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-datastructures</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-settings</artifactId>
         </dependency>
 
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-util</artifactId>
-        </dependency>
-
-        <!-- data-structures -->
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-dt</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-list</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-ot</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-pta</artifactId>
         </dependency>
 
         <!-- drivers -->
@@ -397,6 +381,13 @@ limitations under the License.
 
                 <dependency>
                     <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-datastructures</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-settings</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
@@ -405,35 +396,6 @@ limitations under the License.
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-util</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <!-- data-structures -->
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-datastructure-dt</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-datastructure-list</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-datastructure-ot</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-datastructure-pta</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

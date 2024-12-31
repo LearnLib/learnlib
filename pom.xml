@@ -157,7 +157,6 @@ limitations under the License.
         <module>build-config</module>
         <module>build-parent</module>
         <module>commons</module>
-        <module>datastructures</module>
         <module>distribution</module>
         <module>drivers</module>
         <module>filters</module>
@@ -417,40 +416,17 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-datastructures</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-settings</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-util</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <!-- data-structures -->
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-datastructures-parent</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-datastructure-dt</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-datastructure-list</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-datastructure-ot</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-datastructure-pta</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

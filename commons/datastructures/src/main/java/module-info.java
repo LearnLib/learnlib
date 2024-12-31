@@ -15,34 +15,36 @@
  */
 
 /**
- * This module provides the implementation of the Observation-Pack learning algorithm as described in the PhD thesis <a
- * href="http://doi.org/10.17877/DE290R-4817">Active learning of interface programs</a> by Falk Howar.
+ * This module provides data structures shared by multiple learning algorithms of LearnLib.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>
  * &lt;dependency&gt;
  *   &lt;groupId&gt;de.learnlib&lt;/groupId&gt;
- *   &lt;artifactId&gt;learnlib-observation-pack&lt;/artifactId&gt;
+ *   &lt;artifactId&gt;learnlib-datastructures&lt;/artifactId&gt;
  *   &lt;version&gt;${version}&lt;/version&gt;
  * &lt;/dependency&gt;
  * </pre>
  */
-open module de.learnlib.algorithm.observationpack {
+open module de.learnlib.datastructure {
 
     requires de.learnlib.api;
-    requires de.learnlib.common.counterexample;
-    requires de.learnlib.common.util;
-    requires de.learnlib.datastructure;
     requires net.automatalib.api;
+    requires net.automatalib.common.smartcollection;
     requires net.automatalib.common.util;
+    requires net.automatalib.core;
 
-    requires static de.learnlib.tooling.annotation;
     // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
     requires static org.checkerframework.checker.qual;
 
-    exports de.learnlib.algorithm.observationpack;
-    exports de.learnlib.algorithm.observationpack.dfa;
-    exports de.learnlib.algorithm.observationpack.hypothesis;
-    exports de.learnlib.algorithm.observationpack.mealy;
-    exports de.learnlib.algorithm.observationpack.moore;
+    exports de.learnlib.datastructure.discriminationtree;
+    exports de.learnlib.datastructure.discriminationtree.iterators;
+    exports de.learnlib.datastructure.discriminationtree.model;
+    exports de.learnlib.datastructure.list;
+    exports de.learnlib.datastructure.observationtable;
+    exports de.learnlib.datastructure.observationtable.reader;
+    exports de.learnlib.datastructure.observationtable.writer;
+    exports de.learnlib.datastructure.pta;
+    exports de.learnlib.datastructure.pta.config;
+    exports de.learnlib.datastructure.pta.wrapper;
 }

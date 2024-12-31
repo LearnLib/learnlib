@@ -46,7 +46,7 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-pta</artifactId>
+            <artifactId>learnlib-datastructures</artifactId>
         </dependency>
 
         <!-- external -->
@@ -104,7 +104,11 @@ limitations under the License.
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
                         <!-- append to existing argLine to nicely work together with jacoco plugin -->
-                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.rpni=net.automatalib.core</argLine>
+                        <argLine>
+                            @{argLine}
+                            --add-reads=de.learnlib.algorithm.rpni=net.automatalib.core
+                            --add-reads=de.learnlib.algorithm.rpni=net.automatalib.util
+                        </argLine>
                     </configuration>
                 </plugin>
             </plugins>

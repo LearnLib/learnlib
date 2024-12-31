@@ -39,7 +39,7 @@ open module de.learnlib.algorithm.procedural {
     requires de.learnlib.api;
     requires de.learnlib.common.util;
     requires de.learnlib.common.counterexample;
-    requires de.learnlib.datastructure.observationtable;
+    requires de.learnlib.datastructure;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
     requires net.automatalib.core;

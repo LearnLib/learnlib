@@ -59,7 +59,7 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-ot</artifactId>
+            <artifactId>learnlib-datastructures</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
