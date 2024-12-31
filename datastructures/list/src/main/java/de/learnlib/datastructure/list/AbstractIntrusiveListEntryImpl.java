@@ -15,21 +15,18 @@
  */
 package de.learnlib.datastructure.list;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import net.automatalib.common.smartcollection.AbstractBasicLinkedListEntry;
 
 /**
- * Interface for objects that may occur in a {@link IntrusiveList}, either as a value element or the head of the list
- * (which represents the list itself, but does not carry any value).
- * <p>
- * The purpose of this class is to enable managing block lists <i>intrusively</i>.
+ * A utility class to connect {@link AbstractBasicLinkedListEntry}s with {@link IntrusiveListEntry}s.
  *
  * @param <T>
- *         input symbol type
+ *         element type
  */
-public interface IntrusiveListElem<T> {
+public abstract class AbstractIntrusiveListEntryImpl<T> extends AbstractBasicLinkedListEntry<T, IntrusiveListEntry<T>>
+        implements IntrusiveListEntry<T> {
 
-    @Nullable T getNextElement();
-
-    void setNextElement(@Nullable T nextBlock);
-
+    protected AbstractIntrusiveListEntryImpl() {
+        // indicate that no direct instantiation is intended
+    }
 }

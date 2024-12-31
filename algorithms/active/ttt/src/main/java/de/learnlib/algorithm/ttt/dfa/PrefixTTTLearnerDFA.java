@@ -70,7 +70,7 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             ExtDTNode<I> succHyp = acex.getHypNode(breakpoint + 1);
             Boolean hypOut = lca.subtreeLabel(succHyp);
             assert hypOut != null;
-            openTransitions.insertAllIncoming(toSplit.getIncoming());
+            openTransitions.concat(toSplit.getIncoming());
             ExtDTNode<I>.SplitResult splitResult = toSplit.split(newDiscr, hypOut, !hypOut);
             link(splitResult.nodeOld, splitState);
             ExtDTNode<I> extUnlabeled = (ExtDTNode<I>) splitResult.nodeNew;

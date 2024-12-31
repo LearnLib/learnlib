@@ -34,6 +34,7 @@ open module de.learnlib.algorithm.ttt.vpa {
     requires de.learnlib.algorithm.observationpack.vpa;
     requires de.learnlib.common.counterexample;
     requires de.learnlib.datastructure.discriminationtree;
+    requires de.learnlib.datastructure.list;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
 

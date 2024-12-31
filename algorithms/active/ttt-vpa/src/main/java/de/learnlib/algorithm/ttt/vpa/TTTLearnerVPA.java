@@ -29,12 +29,12 @@ import java.util.Set;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithm.observationpack.vpa.OPLearnerVPA;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.AbstractHypTrans;
-import de.learnlib.algorithm.observationpack.vpa.hypothesis.BlockList;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.ContextPair;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.DTNode;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.HypLoc;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.TransList;
 import de.learnlib.datastructure.discriminationtree.SplitData;
+import de.learnlib.datastructure.list.IntrusiveList;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
@@ -54,7 +54,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
 
-    private final BlockList<I> blockList = new BlockList<>();
+    private final IntrusiveList<DTNode<I>> blockList = new IntrusiveList<>();
 
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public TTTLearnerVPA(VPAlphabet<I> alphabet, DFAMembershipOracle<I> oracle, AcexAnalyzer analyzer) {
@@ -169,7 +169,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
 
         HypLoc<I> newLoc = makeTree(trans);
         DTNode<I> oldDtNode = succState.getLocation().getLeaf();
-        openTransitions.addAll(oldDtNode.getIncoming());
+        openTransitions.concat(oldDtNode.getIncoming());
         DTNode<I>.SplitResult children = oldDtNode.split(context, acex.effect(breakpoint), acex.effect(breakpoint + 1));
         oldDtNode.setTemp(true);
         if (!oldDtNode.getParent().isTemp()) {
@@ -547,7 +547,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         blockRoot.setTemp(false);
         blockRoot.setSplitData(null);
 
-        blockRoot.removeFromBlockList();
+        blockRoot.removeFromList();
 
         for (DTNode<I> subtree : blockRoot.getChildren()) {
             assert subtree.getSplitData() == null;
@@ -558,7 +558,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
             }
         }
 
-        openTransitions.addAll(blockRoot.getIncoming());
+        openTransitions.concat(blockRoot.getIncoming());
     }
 
     /**
@@ -594,7 +594,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
     }
 
     private static <I> void moveIncoming(DTNode<I> newNode, DTNode<I> oldNode, Boolean label) {
-        newNode.getIncoming().addAll(oldNode.getSplitData().getIncoming(label));
+        newNode.getIncoming().concat(oldNode.getSplitData().getIncoming(label));
     }
 
     /**

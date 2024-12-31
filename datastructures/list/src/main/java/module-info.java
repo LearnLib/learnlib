@@ -28,6 +28,8 @@
  */
 open module de.learnlib.datastructure.list {
 
+    requires net.automatalib.common.smartcollection;
+
     // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
     requires static org.checkerframework.checker.qual;
 

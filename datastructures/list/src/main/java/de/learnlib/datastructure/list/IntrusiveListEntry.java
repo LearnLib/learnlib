@@ -15,25 +15,29 @@
  */
 package de.learnlib.datastructure.list;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import net.automatalib.common.smartcollection.LinkedListEntry;
 
 /**
- * An element in an {@link IntrusiveList}.
+ * A {@link LinkedListEntry} refinement specialized for the use in {@link IntrusiveList}s.
  *
  * @param <T>
  *         element type
  */
-public class IntrusiveListElemImpl<T> implements IntrusiveListElem<T> {
+public interface IntrusiveListEntry<T> extends LinkedListEntry<T, IntrusiveListEntry<T>> {
 
-    protected @Nullable T next;
-
-    @Override
-    public @Nullable T getNextElement() {
-        return next;
-    }
-
-    @Override
-    public void setNextElement(@Nullable T next) {
-        this.next = next;
+    /**
+     * Removes {@code this} element from the list it is currently contained in.
+     */
+    default void removeFromList() {
+        final IntrusiveListEntry<T> prev = getPrev();
+        final IntrusiveListEntry<T> next = getNext();
+        if (prev != null) {
+            prev.setNext(next);
+            if (next != null) {
+                next.setPrev(prev);
+            }
+            setPrev(null);
+            setNext(null);
+        }
     }
 }

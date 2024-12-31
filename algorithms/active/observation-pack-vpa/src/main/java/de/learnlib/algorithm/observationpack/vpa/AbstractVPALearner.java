@@ -177,7 +177,7 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
 
         for (AbstractHypTrans<I> transition : transToSift) {
             final DTNode<I> node = leavesIter.next();
-            if (node.isLeaf() && node.getData() == null && transition.getNextElement() == null) {
+            if (node.isLeaf() && node.getData() == null && transition.getNext() == null) {
                 result.add(node);
             }
         }

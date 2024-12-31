@@ -18,8 +18,7 @@ package de.learnlib.datastructure.discriminationtree.model;
 import java.util.Objects;
 
 import de.learnlib.datastructure.discriminationtree.SplitData;
-import de.learnlib.datastructure.list.IntrusiveList;
-import de.learnlib.datastructure.list.IntrusiveListElem;
+import de.learnlib.datastructure.list.IntrusiveListEntry;
 
 /**
  * An extension of the {@link AbstractDTNode} that adds the concept of temporary splitters as well as linking
@@ -37,13 +36,13 @@ import de.learnlib.datastructure.list.IntrusiveListElem;
  * @param <N>
  *         node type
  */
-public abstract class AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T extends IntrusiveList<?>, N extends AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T, N>>
-        extends AbstractDTNode<DSCR, O, D, N> implements IntrusiveListElem<N> {
+public abstract class AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T, N extends AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T, N>>
+        extends AbstractDTNode<DSCR, O, D, N> implements IntrusiveListEntry<N> {
 
-    protected SplitData<O, T> splitData;
+    private IntrusiveListEntry<N> prevElement;
+    private IntrusiveListEntry<N> nextElement;
 
-    protected IntrusiveListElem<N> prevElement;
-    protected N nextElement;
+    private SplitData<O, T> splitData;
 
     // LEAF NODE DATA
     private boolean temp;
@@ -88,32 +87,23 @@ public abstract class AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T extends Int
         return prevElement != null;
     }
 
-    public void removeFromBlockList() {
-        if (prevElement != null) {
-            prevElement.setNextElement(nextElement);
-            if (nextElement != null) {
-                nextElement.prevElement = prevElement;
-            }
-            nextElement = null;
-            prevElement = null;
-        }
-    }
-
     @Override
-    public N getNextElement() {
+    public IntrusiveListEntry<N> getNext() {
         return nextElement;
     }
 
     @Override
-    public void setNextElement(N nextBlock) {
+    public void setNext(IntrusiveListEntry<N> nextBlock) {
         this.nextElement = nextBlock;
     }
 
-    public IntrusiveListElem<N> getPrevElement() {
+    @Override
+    public IntrusiveListEntry<N> getPrev() {
         return prevElement;
     }
 
-    public void setPrevElement(IntrusiveListElem<N> prevElement) {
+    @Override
+    public void setPrev(IntrusiveListEntry<N> prevElement) {
         this.prevElement = prevElement;
     }
 }

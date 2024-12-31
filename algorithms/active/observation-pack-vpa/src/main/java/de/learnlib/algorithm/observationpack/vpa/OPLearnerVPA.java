@@ -114,7 +114,7 @@ public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
 
         HypLoc<I> newLoc = makeTree(trans);
         DTNode<I> oldDtNode = succState.getLocation().getLeaf();
-        openTransitions.addAll(oldDtNode.getIncoming());
+        openTransitions.concat(oldDtNode.getIncoming());
         DTNode<I>.SplitResult children = oldDtNode.split(context, acex.effect(breakpoint), acex.effect(breakpoint + 1));
         link(children.nodeOld, newLoc);
         link(children.nodeNew, succState.getLocation());

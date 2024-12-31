@@ -35,6 +35,7 @@ import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.acex.OutInconsPrefixTransformAcex;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.datastructure.discriminationtree.SplitData;
+import de.learnlib.datastructure.list.IntrusiveList;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
@@ -70,12 +71,12 @@ public abstract class AbstractTTTLearner<A, I, D>
     /**
      * Open transitions, i.e., transitions that possibly point to a non-leaf node in the discrimination tree.
      */
-    protected final IncomingList<I, D> openTransitions = new IncomingList<>();
+    protected final IntrusiveList<TTTTransition<I, D>> openTransitions = new IntrusiveList<>();
     /**
      * The blocks during a split operation. A block is a maximal subtree of the discrimination tree containing temporary
      * discriminators at its root.
      */
-    protected final BlockList<I, D> blockList = new BlockList<>();
+    protected final IntrusiveList<AbstractBaseDTNode<I, D>> blockList = new IntrusiveList<>();
     protected AbstractTTTHypothesis<?, I, D, ?> hypothesis;
     protected BaseTTTDiscriminationTree<I, D> dtree;
 
@@ -128,7 +129,7 @@ public abstract class AbstractTTTLearner<A, I, D>
     private static <I, D> void moveIncoming(AbstractBaseDTNode<I, D> newNode,
                                             AbstractBaseDTNode<I, D> oldNode,
                                             D label) {
-        newNode.getIncoming().insertAllIncoming(oldNode.getSplitData().getIncoming(label));
+        newNode.getIncoming().concat(oldNode.getSplitData().getIncoming(label));
     }
 
     /**
@@ -191,7 +192,7 @@ public abstract class AbstractTTTLearner<A, I, D>
             TTTTransition<I, D> trans = createTransition(state, sym);
             trans.setNonTreeTarget(dtree.getRoot());
             state.setTransition(i, trans);
-            openTransitions.insertIncoming(trans);
+            openTransitions.add(trans);
         }
     }
 
@@ -258,7 +259,7 @@ public abstract class AbstractTTTLearner<A, I, D>
         link(children.nodeNew, newState);
 
         if (dtNode.getParent() == null || !dtNode.getParent().isTemp()) {
-            blockList.insertBlock(dtNode);
+            blockList.add(dtNode);
         }
     }
 
@@ -586,17 +587,17 @@ public abstract class AbstractTTTLearner<A, I, D>
         blockRoot.setTemp(false);
         blockRoot.setSplitData(null);
 
-        blockRoot.removeFromBlockList();
+        blockRoot.removeFromList();
 
         for (AbstractBaseDTNode<I, D> subtree : blockRoot.getChildren()) {
             assert subtree.getSplitData() == null;
             blockRoot.setChild(subtree.getParentOutcome(), subtree);
             // Register as blocks, if they are non-trivial subtrees
             if (subtree.isInner()) {
-                blockList.insertBlock(subtree);
+                blockList.add(subtree);
             }
         }
-        openTransitions.insertAllIncoming(blockRoot.getIncoming());
+        openTransitions.concat(blockRoot.getIncoming());
     }
 
     /**
@@ -626,11 +627,11 @@ public abstract class AbstractTTTLearner<A, I, D>
             AbstractBaseDTNode<I, D> curr = dfsStack.pop();
             assert curr.getSplitData() == null;
 
-            curr.setSplitData(new SplitData<>(IncomingList::new));
+            curr.setSplitData(new SplitData<>(IntrusiveList::new));
 
             for (TTTTransition<I, D> trans : curr.getIncoming()) {
                 D outcome = query(trans, discriminator);
-                curr.getSplitData().getIncoming(outcome).insertIncoming(trans);
+                curr.getSplitData().getIncoming(outcome).add(trans);
                 markAndPropagate(curr, outcome);
             }
 
@@ -779,7 +780,8 @@ public abstract class AbstractTTTLearner<A, I, D>
      *
      * @return a collection containing the reached leaves of transitions that needed sifting
      */
-    private List<AbstractBaseDTNode<I, D>> closeTransitions(IncomingList<I, D> transList, boolean hard) {
+    private List<AbstractBaseDTNode<I, D>> closeTransitions(IntrusiveList<TTTTransition<I, D>> transList,
+                                                            boolean hard) {
 
         final List<TTTTransition<I, D>> transToSift = new ArrayList<>(transList.size());
 
@@ -799,7 +801,7 @@ public abstract class AbstractTTTLearner<A, I, D>
 
         for (TTTTransition<I, D> transition : transToSift) {
             final AbstractBaseDTNode<I, D> node = leavesIter.next();
-            if (node.isLeaf() && node.getData() == null && transition.getNextElement() == null) {
+            if (node.isLeaf() && node.getData() == null && transition.getNext() == null) {
                 result.add(node);
             }
         }
@@ -965,7 +967,7 @@ public abstract class AbstractTTTLearner<A, I, D>
                 final TTTTransition<I, D> trans = createTransition(s, symbol);
                 trans.setNonTreeTarget(dtree.getRoot());
                 s.setTransition(newSymbolIdx, trans);
-                openTransitions.insertIncoming(trans);
+                openTransitions.add(trans);
             }
 
             this.closeTransitions();

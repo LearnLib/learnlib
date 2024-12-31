@@ -21,8 +21,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import de.learnlib.datastructure.list.IntrusiveList;
-
 /**
  * Data associated with a discrimination tree node while an enclosing subtree is being split.
  *
@@ -31,16 +29,16 @@ import de.learnlib.datastructure.list.IntrusiveList;
  * @param <T>
  *         transition type
  */
-public class SplitData<O, T extends IntrusiveList<?>> {
+public class SplitData<O, T> {
 
     // TODO: HashSets/Maps are quite an overkill for booleans
     private final Set<O> marks = new HashSet<>();
     private final Map<O, T> incomingTransitions = new HashMap<>();
-    private final Supplier<T> listSuppllier;
+    private final Supplier<T> listSupplier;
     private O stateLabel;
 
-    public SplitData(Supplier<T> listSuppllier) {
-        this.listSuppllier = listSuppllier;
+    public SplitData(Supplier<T> listSupplier) {
+        this.listSupplier = listSupplier;
     }
 
     /**
@@ -107,7 +105,7 @@ public class SplitData<O, T extends IntrusiveList<?>> {
      * @return the (possibly empty) list associated with the given state label
      */
     public T getIncoming(O label) {
-        return incomingTransitions.computeIfAbsent(label, k -> listSuppllier.get());
+        return incomingTransitions.computeIfAbsent(label, k -> listSupplier.get());
     }
 
     /**

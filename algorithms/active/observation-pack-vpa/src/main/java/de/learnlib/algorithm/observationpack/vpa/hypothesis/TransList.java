@@ -16,7 +16,7 @@
 package de.learnlib.algorithm.observationpack.vpa.hypothesis;
 
 import de.learnlib.datastructure.list.IntrusiveList;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import de.learnlib.datastructure.list.IntrusiveListEntry;
 
 /**
  * @param <I>
@@ -24,66 +24,24 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class TransList<I> extends IntrusiveList<AbstractHypTrans<I>> {
 
-    public void add(AbstractHypTrans<I> trans) {
-        assert !trans.isTree();
-        trans.removeFromList();
-
-        if (next != null) {
-            trans.setNextElement(next);
-            next.prev = trans;
-        }
-        trans.prev = this;
-        next = trans;
-    }
-
-    public void addAll(TransList<I> list) {
-        if (list.next != null) {
-            AbstractHypTrans<I> last = list.next;
-            while (last.getNextElement() != null) {
-                last = last.getNextElement();
-            }
-            if (next != null) {
-                next.prev = last;
-            }
-            last.setNextElement(next);
-            list.next.prev = this;
-            next = list.next;
-        }
-        list.next = null;
-    }
-
     public AbstractHypTrans<I> chooseMinimal() {
-        AbstractHypTrans<I> curr = next;
-        AbstractHypTrans<I> shortest = curr;
-        int shortestLen = shortest.getAccessSequence().length();
+        IntrusiveListEntry<AbstractHypTrans<I>> curr = getNext();
+        assert curr != null;
 
-        curr = curr.getNextElement();
+        IntrusiveListEntry<AbstractHypTrans<I>> shortest = curr;
+        int shortestLen = shortest.getElement().getAccessSequence().length();
+
+        curr = curr.getNext();
         while (curr != null) {
-            int transLen = curr.getAccessSequence().length();
+            int transLen = curr.getElement().getAccessSequence().length();
             if (transLen < shortestLen) {
                 shortestLen = transLen;
                 shortest = curr;
             }
-            curr = curr.getNextElement();
+            curr = curr.getNext();
         }
 
-        return shortest;
-    }
-
-    public @Nullable AbstractHypTrans<I> poll() {
-        if (next == null) {
-            return null;
-        }
-        AbstractHypTrans<I> result = next;
-        next = result.getNextElement();
-        if (result.getNextElement() != null) {
-            result.getNextElement().prev = this;
-        }
-
-        result.prev = null;
-        result.setNextElement(null);
-
-        return result;
+        return shortest.getElement();
     }
 
 }
