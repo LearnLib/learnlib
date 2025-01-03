@@ -41,7 +41,7 @@ public abstract class AbstractBasePTAState<S extends AbstractBasePTAState<S, SP,
     }
 
     public S copy() {
-        return copy((transProperties != null) ? transProperties.clone() : null);
+        return copy((transProperties != null) ? new ArrayStorage<>(transProperties) : null);
     }
 
     public S copy(@Nullable ArrayStorage<TP> newTPs) {
@@ -50,7 +50,7 @@ public abstract class AbstractBasePTAState<S extends AbstractBasePTAState<S, SP,
             S copy = (S) clone();
             copy.transProperties = newTPs;
             if (successors != null) {
-                copy.successors = successors.clone();
+                copy.successors = new ArrayStorage<>(successors);
             }
             return copy;
         } catch (CloneNotSupportedException ex) {

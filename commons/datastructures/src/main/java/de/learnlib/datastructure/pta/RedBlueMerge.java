@@ -122,7 +122,7 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
                                     newTPs = mergedTPs;
                                 }
                             } else {
-                                newTPs = rSuccTPs.clone();
+                                newTPs = new ArrayStorage<>(rSuccTPs);
                             }
                         }
 
@@ -252,7 +252,7 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
             if (redSrc.successors == null) {
                 newSuccs = new ArrayStorage<>(alphabetSize);
             } else {
-                newSuccs = redSrc.successors.clone();
+                newSuccs = new ArrayStorage<>(redSrc.successors);
             }
             succMod.set(id, newSuccs);
         }
@@ -263,7 +263,7 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
                 if (redSrc.transProperties == null) {
                     newTransProps = new ArrayStorage<>(alphabetSize);
                 } else {
-                    newTransProps = redSrc.transProperties.clone();
+                    newTransProps = new ArrayStorage<>(redSrc.transProperties);
                 }
                 transPropMod.set(id, newTransProps);
             }
@@ -332,7 +332,7 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
                         return null;
                     }
                 } else {
-                    tps1OrCopy = tps1.clone();
+                    tps1OrCopy = new ArrayStorage<>(tps1);
                     tps1OrCopy.set(i++, tp2);
                     break;
                 }
