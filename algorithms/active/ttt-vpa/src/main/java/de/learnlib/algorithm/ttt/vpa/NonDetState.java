@@ -20,10 +20,6 @@ import java.util.Set;
 
 import net.automatalib.automaton.vpa.State;
 
-/**
- * @param <L>
- *         location type
- */
 final class NonDetState<L> {
 
     private final NondetStackContents stack;
@@ -44,9 +40,8 @@ final class NonDetState<L> {
         return new State<>(locations.iterator().next(), NondetStackContents.toDet(stack));
     }
 
-    @SuppressWarnings("PMD.UselessParentheses") // to make it explicit which binary operator has higher precedence
     public boolean isNonDet() {
-        return locations.size() > 1 || (stack != null && stack.isTrueNondet());
+        return stack != null && stack.isTrueNondet() || locations.size() > 1;
     }
 
     public NondetStackContents getStack() {

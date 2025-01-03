@@ -68,9 +68,9 @@ public class MergedAutomatonTest {
         final BlueFringePTAState<Boolean, Void> q6 = pta.getState(Word.fromSymbols(0, 0, 0));
 
         // fast-forward algorithm
-        pta.init((q) -> {});
-        pta.promote(q2, (q) -> {});
-        pta.promote(q3, (q) -> {});
+        pta.init(q -> {});
+        pta.promote(q2, q -> {});
+        pta.promote(q3, q -> {});
 
         final RedBlueMerge<BlueFringePTAState<Boolean, Void>, Boolean, Void> merge = pta.tryMerge(q3, q4);
         Assert.assertNotNull(merge);

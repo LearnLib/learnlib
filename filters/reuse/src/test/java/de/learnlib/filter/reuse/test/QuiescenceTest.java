@@ -52,7 +52,7 @@ public class QuiescenceTest {
         learner.startLearning();
     }
 
-    private static class TestOracleFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
+    private static final class TestOracleFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
 
         @Override
         public ReuseCapableOracle<Integer, Integer, String> get() {
@@ -61,7 +61,7 @@ public class QuiescenceTest {
 
     }
 
-    static class TestOracle implements ReuseCapableOracle<Integer, Integer, String> {
+    static final class TestOracle implements ReuseCapableOracle<Integer, Integer, String> {
 
         private final int threshold = 3;
 

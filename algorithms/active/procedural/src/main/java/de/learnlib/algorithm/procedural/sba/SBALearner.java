@@ -81,7 +81,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
                       LearnerConstructor<L, SymbolWrapper<I>, Boolean> learnerConstructor) {
         this(alphabet,
              oracle,
-             (i) -> learnerConstructor,
+             i -> learnerConstructor,
              AcexAnalyzers.BINARY_SEARCH_BWD,
              new OptimizingATManager<>(alphabet));
     }

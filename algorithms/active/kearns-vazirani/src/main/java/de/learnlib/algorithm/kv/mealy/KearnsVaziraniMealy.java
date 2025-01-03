@@ -200,7 +200,7 @@ public class KearnsVaziraniMealy<I, O>
             long encodedTrans = transList.get(i);
 
             int sourceState = (int) (encodedTrans >> Integer.SIZE);
-            int transIdx = (int) (encodedTrans);
+            int transIdx = (int) encodedTrans;
 
             StateInfo<I, Word<O>> sourceInfo = stateInfos.get(sourceState);
             I symbol = alphabet.getSymbol(transIdx);
@@ -214,7 +214,7 @@ public class KearnsVaziraniMealy<I, O>
             long encodedTrans = transList.get(i);
 
             int sourceState = (int) (encodedTrans >> Integer.SIZE);
-            int transIdx = (int) (encodedTrans);
+            int transIdx = (int) encodedTrans;
 
             CompactTransition<O> trans = hypothesis.getTransition(sourceState, transIdx);
             assert trans != null;

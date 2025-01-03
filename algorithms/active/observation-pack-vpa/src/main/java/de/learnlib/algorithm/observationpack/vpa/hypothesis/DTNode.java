@@ -24,6 +24,8 @@ import de.learnlib.datastructure.discriminationtree.model.BooleanMap;
 import de.learnlib.datastructure.list.IntrusiveListEntry;
 
 /**
+ * Specific discrimination tree node implementation.
+ *
  * @param <I>
  *         input symbol type
  */

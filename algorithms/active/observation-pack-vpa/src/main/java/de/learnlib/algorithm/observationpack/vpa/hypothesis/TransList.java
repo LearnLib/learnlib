@@ -19,6 +19,8 @@ import de.learnlib.datastructure.list.IntrusiveList;
 import de.learnlib.datastructure.list.IntrusiveListEntry;
 
 /**
+ * A list of transitions.
+ *
  * @param <I>
  *         input symbol type
  */

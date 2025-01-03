@@ -25,6 +25,8 @@ import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.word.Word;
 
 /**
+ * Hypothesis location.
+ *
  * @param <I>
  *         input symbol type
  */

@@ -75,9 +75,9 @@ public abstract class AbstractParallelCacheTest<A, I, D> {
     public void testConcurrentMembershipQueries() {
         Assert.assertEquals(getNumberOfQueries(), 0);
 
-        final int numQueries = ((int) IntStream.rangeClosed(0, MAXIMUM_LENGTH_OF_QUERIES)
-                                               .mapToDouble(i -> Math.pow(alphabet.size(), i))
-                                               .sum());
+        final int numQueries = (int) IntStream.rangeClosed(0, MAXIMUM_LENGTH_OF_QUERIES)
+                                              .mapToDouble(i -> Math.pow(alphabet.size(), i))
+                                              .sum();
 
         final List<CountingQuery<I, D>> queries = new ArrayList<>(numQueries);
 

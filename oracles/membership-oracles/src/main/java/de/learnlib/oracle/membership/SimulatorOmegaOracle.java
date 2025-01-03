@@ -55,7 +55,7 @@ public class SimulatorOmegaOracle<S extends Object, I, D> implements SingleQuery
     private final SimpleDTS<S, I> simpleDTS;
 
     /**
-     * @see #getMembershipOracle()
+     * The oracle to answer queries.
      */
     private final SimulatorOracle<I, D> simulatorOracle;
 

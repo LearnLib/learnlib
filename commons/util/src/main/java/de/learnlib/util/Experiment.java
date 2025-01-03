@@ -31,9 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * runs a learning experiment.
+ * Runs a learning experiment.
  *
- * @param <A> the automaton type
+ * @param <A>
+ *         the automaton type
  */
 public class Experiment<A extends Object> {
 
@@ -53,6 +54,14 @@ public class Experiment<A extends Object> {
         this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs);
     }
 
+    /**
+     * Run the experiment, once.
+     *
+     * @return the final hypothesis
+     *
+     * @throws IllegalStateException
+     *         if invoked more than once
+     */
     public A run() {
         if (this.finalHypothesis != null) {
             throw new IllegalStateException("Experiment has already been run");
@@ -62,6 +71,14 @@ public class Experiment<A extends Object> {
         return finalHypothesis;
     }
 
+    /**
+     * Returns the final hypothesis model.
+     *
+     * @return the final hypothesis model
+     *
+     * @throws IllegalStateException
+     *         if the experiment has not been run yet
+     */
     public A getFinalHypothesis() {
         if (finalHypothesis == null) {
             throw new IllegalStateException("Experiment has not yet been run");
@@ -83,6 +100,8 @@ public class Experiment<A extends Object> {
     }
 
     /**
+     * Decides whether intermediate hypothesis models should be logged.
+     *
      * @param logModels
      *         flag whether models should be logged
      */
@@ -91,6 +110,8 @@ public class Experiment<A extends Object> {
     }
 
     /**
+     * Decides whether the experiment runtime should be profiled.
+     *
      * @param profile
      *         flag whether learning process should be profiled
      */
@@ -99,6 +120,8 @@ public class Experiment<A extends Object> {
     }
 
     /**
+     * Returns the counter for the number of refinement rounds the experiment took.
+     *
      * @return the rounds
      */
     public Counter getRounds() {
@@ -162,6 +185,7 @@ public class Experiment<A extends Object> {
     }
 
     public static class DFAExperiment<I> extends Experiment<DFA<?, I>> {
+
         public DFAExperiment(LearningAlgorithm<? extends DFA<?, I>, I, Boolean> learningAlgorithm,
                              EquivalenceOracle<? super DFA<?, I>, I, Boolean> equivalenceAlgorithm,
                              Alphabet<I> inputs) {

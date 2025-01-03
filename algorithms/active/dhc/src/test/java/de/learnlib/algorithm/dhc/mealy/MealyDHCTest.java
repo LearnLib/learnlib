@@ -69,7 +69,7 @@ public class MealyDHCTest {
         dhc.startLearning();
         MealyMachine<?, Character, ?, Integer> hypo = dhc.getHypothesisModel();
 
-        Assert.assertEquals(hypo.size(), (xsize * ysize), "Mismatch in size of learned hypothesis");
+        Assert.assertEquals(hypo.size(), xsize * ysize, "Mismatch in size of learned hypothesis");
 
     }
 

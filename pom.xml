@@ -219,7 +219,7 @@ limitations under the License.
         <antrun-plugin.version>3.1.0</antrun-plugin.version>
         <archetype-plugin.version>3.3.1</archetype-plugin.version>
         <assembly-plugin.version>3.7.1</assembly-plugin.version>
-        <checkstyle-plugin.version>3.3.0</checkstyle-plugin.version>
+        <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
         <clean-plugin.version>3.4.0</clean-plugin.version>
         <compiler-plugin.version>3.11.0</compiler-plugin.version> <!-- changes to incremental compilation causes issues with our two compile phases. bump, once we completely switch to Java 11 -->
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
@@ -250,7 +250,7 @@ limitations under the License.
         <build-tools.version>0.1.1</build-tools.version>
         <cacio.version>1.11.1</cacio.version>
         <checkerframework.version>3.40.0</checkerframework.version>
-        <checkstyle.version>9.3</checkstyle.version>
+        <checkstyle.version>10.21.1</checkstyle.version>
         <extra-enforcer-rules.version>1.7.0</extra-enforcer-rules.version>
         <fury.version>0.9.0</fury.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>

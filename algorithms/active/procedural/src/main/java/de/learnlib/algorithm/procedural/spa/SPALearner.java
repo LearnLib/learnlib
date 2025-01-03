@@ -77,7 +77,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
                       LearnerConstructor<L, I, Boolean> learnerConstructor) {
         this(alphabet,
              oracle,
-             (i) -> learnerConstructor,
+             i -> learnerConstructor,
              AcexAnalyzers.BINARY_SEARCH_FWD,
              new OptimizingATRManager<>(alphabet));
     }

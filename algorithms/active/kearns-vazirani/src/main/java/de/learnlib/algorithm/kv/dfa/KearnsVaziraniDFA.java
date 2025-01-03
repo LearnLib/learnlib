@@ -188,7 +188,7 @@ public class KearnsVaziraniDFA<I>
             long encodedTrans = transList.get(i);
 
             int sourceState = (int) (encodedTrans >> Integer.SIZE);
-            int transIdx = (int) (encodedTrans);
+            int transIdx = (int) encodedTrans;
 
             StateInfo<I, Boolean> sourceInfo = stateInfos.get(sourceState);
             I symbol = alphabet.getSymbol(transIdx);
@@ -202,7 +202,7 @@ public class KearnsVaziraniDFA<I>
             long encodedTrans = transList.get(i);
 
             int sourceState = (int) (encodedTrans >> Integer.SIZE);
-            int transIdx = (int) (encodedTrans);
+            int transIdx = (int) encodedTrans;
 
             setTransition(sourceState, transIdx, succs.get(i));
         }

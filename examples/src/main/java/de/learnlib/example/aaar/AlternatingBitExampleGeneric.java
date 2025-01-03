@@ -99,7 +99,7 @@ public final class AlternatingBitExampleGeneric {
         }
     }
 
-    private static class EventAbstractor implements Function<Event, String> {
+    private static final class EventAbstractor implements Function<Event, String> {
 
         private int cnt;
 

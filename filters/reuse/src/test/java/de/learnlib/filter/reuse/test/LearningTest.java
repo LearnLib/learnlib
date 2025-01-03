@@ -66,7 +66,7 @@ public class LearningTest {
         Assert.assertTrue(sb.toString().startsWith("digraph g"));
     }
 
-    private static class TestOracleFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
+    private static final class TestOracleFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
 
         @Override
         public ReuseCapableOracle<Integer, Integer, String> get() {

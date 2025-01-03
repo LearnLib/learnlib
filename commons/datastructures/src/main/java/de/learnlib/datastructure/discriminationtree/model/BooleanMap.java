@@ -147,7 +147,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
         return entries;
     }
 
-    private static class BooleanSet extends AbstractSet<Boolean> {
+    private static final class BooleanSet extends AbstractSet<Boolean> {
 
         private static final List<Boolean> VALUES = Arrays.asList(false, true);
 

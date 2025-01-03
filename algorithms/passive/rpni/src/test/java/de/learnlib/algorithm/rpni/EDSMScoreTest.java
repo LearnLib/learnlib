@@ -129,12 +129,12 @@ public class EDSMScoreTest {
         final BlueFringePTAState<Boolean, Void> qA = pta.getState(Word.fromLetter(0));
         final BlueFringePTAState<Boolean, Void> qAA = pta.getState(Word.fromSymbols(0, 0));
 
-        pta.init((q) -> {});
-        pta.promote(qA, (q) -> {});
+        pta.init(q -> {});
+        pta.promote(qA, q -> {});
         final RedBlueMerge<BlueFringePTAState<Boolean, Void>, Boolean, Void> merge = pta.tryMerge(qEpsilon, qAA);
         Assert.assertNotNull(merge);
 
-        merge.apply(pta, (q) -> {});
+        merge.apply(pta, q -> {});
 
         return pta;
     }

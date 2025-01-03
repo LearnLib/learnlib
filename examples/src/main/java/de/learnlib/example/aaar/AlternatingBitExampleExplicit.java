@@ -112,7 +112,7 @@ public final class AlternatingBitExampleExplicit {
         }
     }
 
-    private static class InitialAbstraction implements ExplicitInitialAbstraction<String, Event> {
+    private static final class InitialAbstraction implements ExplicitInitialAbstraction<String, Event> {
 
         @Override
         public String getAbstractSymbol(Event c) {
@@ -143,7 +143,7 @@ public final class AlternatingBitExampleExplicit {
         }
     }
 
-    private static class Incrementor implements Function<String, String> {
+    private static final class Incrementor implements Function<String, String> {
 
         private int cnt;
 

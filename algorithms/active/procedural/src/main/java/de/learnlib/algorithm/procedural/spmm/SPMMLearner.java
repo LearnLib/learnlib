@@ -83,7 +83,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
         this(alphabet,
              errorOutput,
              oracle,
-             (i) -> learnerConstructor,
+             i -> learnerConstructor,
              new OptimizingATManager<>(alphabet, errorOutput));
     }
 

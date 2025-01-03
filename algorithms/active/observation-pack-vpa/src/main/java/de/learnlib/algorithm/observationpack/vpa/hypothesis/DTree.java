@@ -24,6 +24,8 @@ import de.learnlib.query.DefaultQuery;
 import net.automatalib.word.Word;
 
 /**
+ * Specific discrimination tree implementation.
+ *
  * @param <I>
  *         input symbol type
  */
