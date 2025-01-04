@@ -194,11 +194,11 @@ public final class DefensiveADS<S, I, O> {
                     final O nextOutput = automaton.getOutput(current, i);
 
                     final Map<S, S> nextMapping;
-                    if (!successors.containsKey(nextOutput)) {
+                    if (successors.containsKey(nextOutput)) {
+                        nextMapping = successors.get(nextOutput);
+                    } else {
                         nextMapping = new HashMap<>();
                         successors.put(nextOutput, nextMapping);
-                    } else {
-                        nextMapping = successors.get(nextOutput);
                     }
 
                     // invalid input

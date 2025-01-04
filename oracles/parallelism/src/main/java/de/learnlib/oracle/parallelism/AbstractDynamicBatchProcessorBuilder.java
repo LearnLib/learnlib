@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
 import de.learnlib.oracle.BatchProcessor;
@@ -91,7 +93,6 @@ public abstract class AbstractDynamicBatchProcessorBuilder<Q, P extends BatchPro
         return this;
     }
 
-    @SuppressWarnings("PMD.CloseResource") // false positive on JDK21 builds
     public OR create() {
 
         final Supplier<? extends P> supplier;
@@ -125,23 +126,28 @@ public abstract class AbstractDynamicBatchProcessorBuilder<Q, P extends BatchPro
     static class StaticOracleProvider<P extends BatchProcessor<?>> implements Supplier<P> {
 
         private final P[] oracles;
+        private final Lock lock;
         private int idx;
-
-        StaticOracleProvider(P[] oracles) {
-            this.oracles = oracles;
-        }
 
         @SuppressWarnings("unchecked")
         StaticOracleProvider(Collection<? extends P> oracles) {
-            this.oracles = oracles.toArray((P[]) new BatchProcessor[oracles.size()]);
+            this(oracles.toArray((P[]) new BatchProcessor[oracles.size()]));
+        }
+
+        StaticOracleProvider(P[] oracles) {
+            this.oracles = oracles;
+            this.lock = new ReentrantLock();
         }
 
         @Override
         public P get() {
-            synchronized (this) {
+            try {
+                lock.lock();
                 if (idx < oracles.length) {
                     return oracles[idx++];
                 }
+            } finally {
+                lock.unlock();
             }
 
             throw new IllegalStateException(

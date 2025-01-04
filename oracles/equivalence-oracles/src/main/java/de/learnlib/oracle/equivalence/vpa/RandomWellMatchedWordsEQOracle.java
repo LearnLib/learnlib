@@ -80,7 +80,7 @@ public final class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQO
         @SuppressWarnings("unchecked")
         final VPAlphabet<I> alphabet = (VPAlphabet<I>) inputs;
 
-        final int lengthRange = (maxLength - minLength) + 1;
+        final int lengthRange = maxLength - minLength + 1;
         return Stream.generate(() -> generateWellMatched(alphabet, minLength + random.nextInt(lengthRange)))
                      .limit(maxTests);
     }

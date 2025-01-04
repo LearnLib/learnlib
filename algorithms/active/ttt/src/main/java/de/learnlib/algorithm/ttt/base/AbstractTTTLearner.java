@@ -59,7 +59,6 @@ import org.slf4j.LoggerFactory;
  * @param <D>
  *         output domain type
  */
-@SuppressWarnings("PMD.ExcessiveClassLength")
 public abstract class AbstractTTTLearner<A, I, D>
         implements LearningAlgorithm<A, I, D>, SupportsGrowingAlphabet<I>, Resumable<TTTLearnerState<I, D>> {
 
@@ -175,7 +174,9 @@ public abstract class AbstractTTTLearner<A, I, D>
             return false;
         }
 
-        while (refineHypothesisSingle(ceQuery)) {}
+        while (refineHypothesisSingle(ceQuery)) {
+            // refine exhaustively
+        }
 
         return true;
     }

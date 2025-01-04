@@ -16,36 +16,36 @@
 package de.learnlib.algorithm.adt.learner;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 
 import de.learnlib.oracle.membership.SULAdaptiveOracle;
-import de.learnlib.sul.SUL;
-import de.learnlib.testsupport.AbstractVisualizationTest;
+import de.learnlib.testsupport.VisualizationUtils;
 import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine.Input;
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.dot.GraphDOT;
-import org.checkerframework.checker.initialization.qual.UnderInitialization;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class ADTVisualizationTest extends AbstractVisualizationTest<ADTLearner<Input, String>> {
+public class ADTVisualizationTest {
 
-    @Override
-    protected ADTLearner<Input, String> getLearnerBuilder(@UnderInitialization ADTVisualizationTest this,
-                                                          Alphabet<Input> alphabet,
-                                                          SUL<Input, String> sul) {
-        return new ADTLearnerBuilder<Input, String>().withAlphabet(alphabet)
-                                                     .withOracle(new SULAdaptiveOracle<>(sul))
-                                                     .create();
+    private final ADTLearner<Input, String> learner;
+
+    public ADTVisualizationTest() {
+        this.learner =
+                VisualizationUtils.runExperiment((alphabet, sul) -> new ADTLearnerBuilder<Input, String>().withAlphabet(
+                        alphabet).withOracle(new SULAdaptiveOracle<>(sul)).create());
     }
 
     @Test
     public void testVisualization() throws IOException {
-        final String expectedADT = resourceAsString("/adt.dot");
+        try (InputStream is = ADTVisualizationTest.class.getResourceAsStream("/adt.dot")) {
+            final String expectedADT = IOUtil.toString(IOUtil.asBufferedUTF8Reader(is));
+            final StringWriter actualADT = new StringWriter();
 
-        final StringWriter actualADT = new StringWriter();
-        GraphDOT.write(super.learner.getADT().getRoot(), actualADT);
+            GraphDOT.write(this.learner.getADT().getRoot(), actualADT);
 
-        Assert.assertEquals(actualADT.toString(), expectedADT);
+            Assert.assertEquals(actualADT.toString(), expectedADT);
+        }
     }
 }

@@ -34,14 +34,14 @@ public class BinaryDTree<I, D> extends AbstractWordBasedDiscriminationTree<I, Bo
     }
 
     public BinaryDTree(MembershipOracle<I, Boolean> oracle, boolean epsilonRoot) {
-        this(null, oracle);
-        if (epsilonRoot) {
-            getRoot().split(Word.epsilon(), false, true);
-        }
+        this(new BinaryDTNode<>(null), oracle, epsilonRoot);
     }
 
-    public BinaryDTree(D rootData, MembershipOracle<I, Boolean> oracle) {
-        super(new BinaryDTNode<>(rootData), oracle);
+    public BinaryDTree(BinaryDTNode<I, D> root, MembershipOracle<I, Boolean> oracle, boolean epsilonRoot) {
+        super(root, oracle);
+        if (epsilonRoot) {
+            root.split(Word.epsilon(), false, true);
+        }
     }
 
 }

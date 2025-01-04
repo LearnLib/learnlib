@@ -112,7 +112,7 @@ public class RandomWordsEQOracle<A extends Output<I, D>, I, D> extends AbstractT
 
     private Word<I> generateTestWord(List<? extends I> symbolList, int numSyms) {
 
-        final int length = minLength + random.nextInt((maxLength - minLength) + 1);
+        final int length = minLength + random.nextInt(maxLength - minLength + 1);
         final WordBuilder<I> result = new WordBuilder<>(length);
 
         for (int j = 0; j < length; ++j) {

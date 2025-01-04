@@ -60,12 +60,8 @@ final class ProxyQuery<I> extends Query<I, Boolean> {
         return origQuery.toString();
     }
 
-    /**
-     * Retrieves the answer that this oracle received.
-     *
-     * @return the answer that was received
-     */
-    public Boolean getAnswer() {
+    @SuppressWarnings("PMD.BooleanGetMethodName") // answer doesn't really describe the state of the object
+    Boolean getAnswer() {
         return answer;
     }
 

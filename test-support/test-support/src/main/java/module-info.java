@@ -36,7 +36,6 @@ open module de.learnlib.testsupport {
     requires de.learnlib.oracle.membership;
     requires de.learnlib.testsupport.example;
     requires net.automatalib.api;
-    requires net.automatalib.common.util;
     requires net.automatalib.core;
     requires net.automatalib.util;
     requires org.apache.fury.core;

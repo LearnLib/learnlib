@@ -215,11 +215,9 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
         node.clearSystemStates();
 
         for (ReuseEdge<S, I, O> edge : node.getEdges()) {
-            if (edge != null) {
-                if (!edge.getTarget().equals(node)) {
-                    // only for non-reflexive edges, there are no circles in a tree
-                    disposeSystemStates(edge.getTarget());
-                }
+            if (edge != null && !edge.getTarget().equals(node)) {
+                // only for non-reflexive edges, there are no circles in a tree
+                disposeSystemStates(edge.getTarget());
             }
         }
     }

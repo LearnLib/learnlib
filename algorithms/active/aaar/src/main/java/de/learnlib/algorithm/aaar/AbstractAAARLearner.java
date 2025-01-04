@@ -116,15 +116,15 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
             final D outOld = oracle.answerQuery(testOld);
             final D outNew = oracle.answerQuery(testNew);
 
-            if (!Objects.equals(outOld, outNew)) { // add new abstraction
+            if (Objects.equals(outOld, outNew)) {
+                prefix = prefix.append(r);
+                wb.append(r);
+            } else { // add new abstraction
                 final AI newA = tree.splitLeaf(r, cur, prefix, suffix, outOld);
                 abs.addSymbol(newA);
                 rep.addSymbol(cur);
                 learner.addAlphabetSymbol(cur);
                 return true;
-            } else {
-                prefix = prefix.append(r);
-                wb.append(r);
             }
         }
 

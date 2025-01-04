@@ -45,7 +45,7 @@ public class HistogramDataSet extends AbstractStatisticData {
         histogram.put(value, i + 1);
         sum += value;
         size++;
-        mean = mean + ((((double) value) - mean) / size);
+        mean = mean + ((value - mean) / size);
     }
 
     public SortedMap<Long, Integer> getHistogram() {

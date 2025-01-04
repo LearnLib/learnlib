@@ -77,7 +77,9 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
             return false;
         }
 
-        while (refineHypothesisSingle(ceQuery)) {}
+        while (refineHypothesisSingle(ceQuery)) {
+            // refine exhaustively
+        }
 
         return true;
     }

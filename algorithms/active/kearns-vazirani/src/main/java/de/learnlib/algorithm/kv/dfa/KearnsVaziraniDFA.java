@@ -106,7 +106,9 @@ public class KearnsVaziraniDFA<I>
             return false;
         }
         if (repeatedCounterexampleEvaluation) {
-            while (refineHypothesisSingle(input, output)) {}
+            while (refineHypothesisSingle(input, output)) {
+                // refine exhaustively
+            }
         }
         return true;
     }

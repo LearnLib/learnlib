@@ -326,6 +326,7 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
      * can be merged, a new {@link ArrayStorage} containing the result of the merge is returned. <li>otherwise
      * (i.e., if no merge is possible), {@code null} is returned. </ul>
      */
+    @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull") // null is semantically different from an empty list
     private @Nullable ArrayStorage<TP> mergeTransProperties(ArrayStorage<TP> tps1, ArrayStorage<TP> tps2) {
         int len = tps1.size();
         int i;

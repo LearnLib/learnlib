@@ -32,6 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <O>
  *         output symbol type
  */
+@SuppressWarnings("PMD.TestClassWithoutTestCases") // not a traditional test class
 public final class ThreadSafeMealyCacheConsistencyTest<I, O> implements MealyEquivalenceOracle<I, O> {
 
     private final MealyEquivalenceOracle<I, O> delegate;

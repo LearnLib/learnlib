@@ -29,6 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         input symbol type
  */
+@SuppressWarnings("PMD.TestClassWithoutTestCases") // not a traditional test class
 final class ThreadSafeDFACacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {
 
     private final DFAEquivalenceOracle<I> delegate;

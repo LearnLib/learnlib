@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 
 import de.learnlib.exception.SULException;
 import de.learnlib.sul.ContextExecutableInput;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An input symbol that represents a call to a method with a specific set of parameters.
@@ -45,7 +44,7 @@ public class MethodInput implements ContextExecutableInput<MethodOutput, Object>
             if (Void.TYPE.equals(this.method.getReturnType())) {
                 return VoidOutput.INSTANCE;
             } else {
-                return new ReturnValue<@Nullable Object>(ret);
+                return new ReturnValue<>(ret);
             }
         } catch (IllegalAccessException | IllegalArgumentException e) {
             throw new SULException(e);

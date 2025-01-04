@@ -235,7 +235,7 @@ limitations under the License.
         <jar-plugin.version>3.4.2</jar-plugin.version>
         <javadoc-plugin.version>3.11.2</javadoc-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
-        <pmd-plugin.version>3.14.0</pmd-plugin.version>
+        <pmd-plugin.version>3.26.0</pmd-plugin.version>
         <release-plugin.version>3.1.0</release-plugin.version>
         <resources-plugin.version>3.3.1</resources-plugin.version>
         <scm-publish-plugin.version>3.3.0</scm-publish-plugin.version>
