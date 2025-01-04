@@ -33,33 +33,21 @@ limitations under the License.
         <Bug pattern="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE"/>
     </Match>
     <Match>
+        <!-- false-positive? checked by PMD anyway -->
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+        <Or>
+            <Class name="de.learnlib.oracle.parallelism.AbstractDynamicBatchProcessorBuilder"/>
+            <Class name="de.learnlib.oracle.parallelism.AbstractStaticBatchProcessorBuilder"/>
+        </Or>
+    </Match>
+    <Match>
+        <!-- not a singleton but a cached reference -->
+        <Bug pattern="SING_SINGLETON_HAS_NONPRIVATE_CONSTRUCTOR"/>
+        <Class name="de.learnlib.algorithm.adt.model.ExtensionResult"/>
+    </Match>
+    <Match>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
         <Or>
-            <!-- SpotBugs doesn't detect that only the inner type is nullable -->
-            <And>
-                <Class name="de.learnlib.oracle.LassoOracle"/>
-                <Method name="findCounterExample"/>
-            </And>
-            <And>
-                <Class name="de.learnlib.oracle.SingleQueryOmegaOracle"/>
-                <Method name="processQuery"/>
-            </And>
-            <And>
-                <Class name="de.learnlib.oracle.membership.AbstractSULOmegaOracle"/>
-                <Method name="processQueries"/>
-            </And>
-            <And>
-                <Class name="de.learnlib.util.MQUtil"/>
-                <Method name="answerOmegaQueries"/>
-            </And>
-            <And>
-                <Class name="de.learnlib.filter.reuse.tree.ReuseTree"/>
-                <Method name="disposeSystemStates"/>
-            </And>
-            <And>
-                <Class name="de.learnlib.example.Example3"/>
-                <Method name="main"/>
-            </And>
             <!-- SpotBugs doesn't understand pure functions -->
             <And>
                 <Class name="de.learnlib.algorithm.adt.adt.ADT"/>
@@ -69,12 +57,12 @@ limitations under the License.
                 </Or>
             </And>
             <And>
-                <Class name="de.learnlib.datastructure.list.IntrusiveList"/>
-                <Method name="concat"/>
-            </And>
-            <And>
                 <Class name="de.learnlib.algorithm.adt.util.ADTUtil"/>
                 <Method name="getStartOfADS"/>
+            </And>
+            <And>
+                <Class name="de.learnlib.datastructure.list.IntrusiveList"/>
+                <Method name="concat"/>
             </And>
             <And>
                 <!-- SpotBugs doesn't understand conditional non-nulls -->

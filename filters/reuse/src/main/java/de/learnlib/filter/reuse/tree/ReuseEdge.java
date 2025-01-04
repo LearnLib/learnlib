@@ -47,15 +47,6 @@ public class ReuseEdge<S, I, O> {
      *         in case of quiescence maybe {@code null}.
      */
     public ReuseEdge(ReuseNode<S, I, O> source, ReuseNode<S, I, O> target, I input, O output) {
-        if (source == null) {
-            throw new IllegalArgumentException("Source not allowed to be null.");
-        }
-        if (target == null) {
-            throw new IllegalArgumentException("Target not allowed to be null.");
-        }
-        if (input == null) {
-            throw new IllegalArgumentException("Input not allowed to be null.");
-        }
         this.source = source;
         this.target = target;
         this.input = input;
@@ -65,41 +56,41 @@ public class ReuseEdge<S, I, O> {
     /**
      * The source node from this edge.
      *
-     * @return source, never {@code null}.
+     * @return the source
      */
-    public final ReuseNode<S, I, O> getSource() {
+    public ReuseNode<S, I, O> getSource() {
         return source;
     }
 
     /**
      * The target node from this edge.
      *
-     * @return target, never {@code null}.
+     * @return the target
      */
-    public final ReuseNode<S, I, O> getTarget() {
+    public ReuseNode<S, I, O> getTarget() {
         return target;
     }
 
     /**
-     * The respective input on this edge, never {@code null}.
+     * The respective input on this edge.
      *
-     * @return input, not {@code null}
+     * @return the input
      */
-    public final I getInput() {
+    public I getInput() {
         return input;
     }
 
     /**
-     * The respective output on this edge. In case of quiescence the output is {@code null}.
+     * The respective output on this edge.
      *
-     * @return output
+     * @return the output
      */
-    public final O getOutput() {
+    public O getOutput() {
         return output;
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return source + " -> " + target + " i/o " + input + "/" + output;
     }
 }

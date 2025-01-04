@@ -32,7 +32,7 @@ import net.automatalib.word.WordBuilder;
  * @param <I>
  *         input symbol type
  */
-public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<Output<I, Boolean>, I, Boolean> {
+public final class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<Output<I, Boolean>, I, Boolean> {
 
     private final Random random;
 

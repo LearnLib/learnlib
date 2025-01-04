@@ -32,7 +32,6 @@ public class MooreWrapper<S extends AbstractBasePTAState<S, O, Void>, I, O>
     private final BasePTA<S, O, Void> pta;
 
     public MooreWrapper(Alphabet<I> alphabet, BasePTA<S, O, Void> pta) {
-        assert alphabet.size() == pta.getInputAlphabet().size();
         this.alphabet = alphabet;
         this.pta = pta;
     }

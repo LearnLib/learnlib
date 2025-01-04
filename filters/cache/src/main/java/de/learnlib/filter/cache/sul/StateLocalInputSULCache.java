@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.learnlib.filter.cache.sul.StateLocalInputSULCache.StateLocalInputSULCacheState;
 import de.learnlib.sul.StateLocalInputSUL;
@@ -82,9 +83,7 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O, StateL
                                     StateLocalInputSUL<I, O> sul) {
             super(incMealy, mealyTs, sul);
             this.delegate = sul;
-            S init = mealyTs.getInitialState();
-            assert init != null;
-            this.initialState = init;
+            this.initialState = Objects.requireNonNull(mealyTs.getInitialState());
             this.enabledInputCache = enabledInputCache;
             this.inputsTrace = new ArrayList<>();
         }

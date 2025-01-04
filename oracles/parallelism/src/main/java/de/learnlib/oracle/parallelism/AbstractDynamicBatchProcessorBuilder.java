@@ -54,11 +54,21 @@ public abstract class AbstractDynamicBatchProcessorBuilder<Q, P extends BatchPro
     }
 
     public AbstractDynamicBatchProcessorBuilder(Collection<? extends P> oracles) {
+        this(validateInputs(oracles), oracles);
+    }
+
+    // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    private AbstractDynamicBatchProcessorBuilder(boolean valid, Collection<? extends P> oracles) {
+        this.oracles = oracles;
+        this.oracleSupplier = null;
+    }
+
+    private static boolean validateInputs(Collection<?> oracles) {
         if (oracles.isEmpty()) {
             throw new IllegalArgumentException("No oracles specified");
         }
-        this.oracles = oracles;
-        this.oracleSupplier = null;
+        return true;
     }
 
     public AbstractDynamicBatchProcessorBuilder<Q, P, OR> withCustomExecutor(ExecutorService executor) {

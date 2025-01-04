@@ -42,16 +42,12 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
     private boolean merged;
 
     public RedBlueMerge(AbstractBlueFringePTA<S, SP, TP> pta, S qr, S qb) {
-        if (!qr.isRed()) {
-            throw new IllegalArgumentException("Merge target must be a red state");
-        }
-        if (!qb.isBlue()) {
-            throw new IllegalArgumentException("Merge source must be a blue state");
-        }
+        this(pta, qr, qb, validateInputs(pta, qr, qb));
+    }
 
+    // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
+    private RedBlueMerge(AbstractBlueFringePTA<S, SP, TP> pta, S qr, S qb, int numRedStates) {
         this.pta = pta;
-
-        int numRedStates = pta.getNumRedStates();
         this.succMod = new ArrayStorage<>(numRedStates);
         this.transPropMod = new ArrayStorage<>(numRedStates);
         this.propMod = new ArrayStorage<>(numRedStates);
@@ -59,6 +55,19 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
 
         this.qr = qr;
         this.qb = qb;
+    }
+
+    private static <S extends AbstractBlueFringePTAState<S, SP, TP>, SP, TP> int validateInputs(AbstractBlueFringePTA<S, SP, TP> pta,
+                                                                                                S qr,
+                                                                                                S qb) {
+        if (!qr.isRed()) {
+            throw new IllegalArgumentException("Merge target must be a red state");
+        }
+        if (!qb.isBlue()) {
+            throw new IllegalArgumentException("Merge source must be a blue state");
+        }
+
+        return pta.getNumRedStates();
     }
 
     public S getRedState() {

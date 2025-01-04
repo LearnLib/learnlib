@@ -33,7 +33,6 @@ public class DFAWrapper<S extends AbstractBasePTAState<S, Boolean, Void>, I>
     private final BasePTA<S, Boolean, Void> pta;
 
     public DFAWrapper(Alphabet<I> alphabet, BasePTA<S, Boolean, Void> pta) {
-        assert alphabet.size() == pta.getInputAlphabet().size();
         this.alphabet = alphabet;
         this.pta = pta;
     }
