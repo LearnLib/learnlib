@@ -93,17 +93,14 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
         for (Row<I> sp : table.getShortPrefixRows()) {
             int id = sp.getRowContentId();
             StateInfo<S, I> info = stateInfos.array[id];
-            if (info != null) {
-                // State from previous hypothesis, property might have changed
-                if (info.getRow() == sp) {
-                    internalHyp.setStateProperty(info.getState(), stateProperty(table, sp));
-                }
-                continue;
+
+            if (info == null) {
+                S state = createState(id == 0, sp);
+                stateInfos.array[id] = new StateInfo<>(sp, state);
+            } else if (info.getRow() == sp) { // State from previous hypothesis, property might have changed
+                internalHyp.setStateProperty(info.getState(), stateProperty(table, sp));
             }
 
-            S state = createState(id == 0, sp);
-
-            stateInfos.array[id] = new StateInfo<>(sp, state);
         }
 
         // SECOND PASS: Create hypothesis transitions
