@@ -42,7 +42,7 @@ open module de.learnlib.testsupport {
     requires org.mockito;
     requires org.testng;
 
-    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.testsupport;

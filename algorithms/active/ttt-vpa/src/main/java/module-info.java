@@ -37,8 +37,8 @@ open module de.learnlib.algorithm.ttt.vpa {
     requires net.automatalib.api;
     requires net.automatalib.common.util;
 
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static de.learnlib.tooling.annotation;
-    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
     requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.algorithm.ttt.vpa;

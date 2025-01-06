@@ -38,7 +38,7 @@ open module de.learnlib.testsupport.example {
     requires net.automatalib.util;
     requires org.slf4j;
 
-    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.testsupport.example;

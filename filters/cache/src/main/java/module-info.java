@@ -38,8 +38,8 @@ open module de.learnlib.filter.cache {
 
     // only required by documentation
     requires static de.learnlib.oracle.parallelism;
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static de.learnlib.tooling.annotation;
-    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
     requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.filter.cache;
