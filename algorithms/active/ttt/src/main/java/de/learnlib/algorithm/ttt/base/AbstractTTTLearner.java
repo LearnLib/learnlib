@@ -253,7 +253,7 @@ public abstract class AbstractTTTLearner<A, I, D>
 
         TTTState<I, D> newState = makeTree(transition);
 
-        AbstractBaseDTNode<I, D>.SplitResult children = split(dtNode, tempDiscriminator, oldOut, newOut);
+        AbstractBaseDTNode<I, D>.SplitResult children = dtNode.split(tempDiscriminator, oldOut, newOut);
         dtNode.setTemp(true);
 
         link(children.nodeOld, oldState);
@@ -443,7 +443,7 @@ public abstract class AbstractTTTLearner<A, I, D>
     private @Nullable Splitter<I, D> findSplitter(AbstractBaseDTNode<I, D> blockRoot) {
         int alphabetSize = alphabet.size();
 
-        Object[] properties = new Object[alphabetSize];
+        @Nullable Object[] properties = new Object[alphabetSize];
         @SuppressWarnings("unchecked")
         AbstractBaseDTNode<I, D>[] lcas = new AbstractBaseDTNode[alphabetSize];
         boolean first = true;
@@ -940,13 +940,6 @@ public abstract class AbstractTTTLearner<A, I, D>
      */
     public BaseTTTDiscriminationTree<I, D> getDiscriminationTree() {
         return dtree;
-    }
-
-    protected final AbstractBaseDTNode<I, D>.SplitResult split(AbstractBaseDTNode<I, D> node,
-                                                               Word<I> discriminator,
-                                                               D oldOutput,
-                                                               D newOutput) {
-        return node.split(discriminator, oldOutput, newOutput);
     }
 
     @Override

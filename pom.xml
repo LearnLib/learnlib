@@ -249,7 +249,7 @@ limitations under the License.
         <automatalib.version>0.12.0-SNAPSHOT</automatalib.version>
         <build-tools.version>0.1.1</build-tools.version>
         <cacio.version>1.11.1</cacio.version>
-        <checkerframework.version>3.40.0</checkerframework.version>
+        <checkerframework.version>3.48.3</checkerframework.version>
         <checkstyle.version>10.21.1</checkstyle.version>
         <extra-enforcer-rules.version>1.7.0</extra-enforcer-rules.version>
         <fury.version>0.9.0</fury.version>

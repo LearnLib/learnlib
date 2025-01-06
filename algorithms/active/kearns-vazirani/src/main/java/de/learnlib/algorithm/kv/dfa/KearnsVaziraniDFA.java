@@ -311,8 +311,8 @@ public class KearnsVaziraniDFA<I>
 
         // check if we already have information about the symbol (then the transition is defined) so we don't post
         // redundant queries
-        if (this.hypothesis.getInitialState() != null &&
-            this.hypothesis.getSuccessor(this.hypothesis.getInitialState(), symbol) == null) {
+        final Integer init = this.hypothesis.getInitialState();
+        if (init != null && this.hypothesis.getSuccessor(init, symbol) == null) {
             // use new list to prevent concurrent modification exception
             final List<Word<I>> transAs = new ArrayList<>(this.stateInfos.size());
             for (StateInfo<I, Boolean> si : this.stateInfos) {

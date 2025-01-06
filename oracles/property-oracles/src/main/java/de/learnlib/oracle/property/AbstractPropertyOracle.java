@@ -70,7 +70,7 @@ abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends
         return counterExample;
     }
 
-    protected abstract R modelCheck(A hypothesis, Collection<? extends I> inputs);
+    protected abstract @Nullable R modelCheck(A hypothesis, Collection<? extends I> inputs);
 
     @Override
     public @Nullable DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {

@@ -97,9 +97,9 @@ public class BoundedDeque<E> extends AbstractCollection<E> {
     /**
      * Evicts an element, depending on the configured {@link EvictPolicy}.
      *
-     * @return the evicted element
+     * @return the evicted element, may be {@code null} if the queue was empty
      */
-    private E evict() {
+    private @Nullable E evict() {
         switch (evictPolicy) {
             case EVICT_OLDEST:
                 return deque.pollFirst();
@@ -114,9 +114,9 @@ public class BoundedDeque<E> extends AbstractCollection<E> {
      * Retrieves and remove the top-most element, i.e., the element that is either the top of the stack or the head of
      * the queue, depending on the configured {@link AccessPolicy}.
      *
-     * @return the top-most element of the container
+     * @return the evicted element, may be {@code null} if the queue was empty
      */
-    public E retrieve() {
+    public @Nullable E retrieve() {
         switch (accessPolicy) {
             case LIFO:
                 return deque.pollLast();
@@ -129,11 +129,11 @@ public class BoundedDeque<E> extends AbstractCollection<E> {
 
     /**
      * Retrieves, but does not remove the top-most element, i.e., the element that is either the top of the stack or the
-     * head of the queue, depending on the configured {@link AccessPolicy}.
+     * head of the queue, depending on the configured {@link AccessPolicy}. May be {@code null} if the stack is empty.
      *
      * @return the top-most element of the container
      */
-    public E peek() {
+    public @Nullable E peek() {
         switch (accessPolicy) {
             case LIFO:
                 return deque.peekLast();

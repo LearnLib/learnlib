@@ -15,10 +15,6 @@
  */
 package de.learnlib.algorithm.lstar;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import de.learnlib.Resumable;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
@@ -28,6 +24,7 @@ import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +51,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAutomatonLStar.class);
 
     protected AI internalHyp;
-    protected List<StateInfo<S, I>> stateInfos = new ArrayList<>();
+    protected ResizingArrayStorage<StateInfo<S, I>> stateInfos = new ResizingArrayStorage<>(StateInfo.class);
 
     /**
      * Constructor.
@@ -83,25 +80,19 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
      * #stateProperty(ObservationTable, Row)} and {@link #transitionProperty(ObservationTable, Row, int)} methods are
      * used to derive the respective properties.
      */
-    @SuppressWarnings("argument.type.incompatible")
-    // all added nulls to stateInfos will be correctly set to non-null values
     protected void updateInternalHypothesis() {
         if (!table.isInitialized()) {
             throw new IllegalStateException("Cannot update internal hypothesis: not initialized");
         }
 
-        int oldStates = internalHyp.size();
         int numDistinct = table.numberOfDistinctRows();
-
-        int newStates = numDistinct - oldStates;
-
-        stateInfos.addAll(Collections.nCopies(newStates, null));
+        stateInfos.ensureCapacity(numDistinct);
 
         // TODO: Is there a quicker way than iterating over *all* rows?
         // FIRST PASS: Create new hypothesis states
         for (Row<I> sp : table.getShortPrefixRows()) {
             int id = sp.getRowContentId();
-            StateInfo<S, I> info = stateInfos.get(id);
+            StateInfo<S, I> info = stateInfos.array[id];
             if (info != null) {
                 // State from previous hypothesis, property might have changed
                 if (info.getRow() == sp) {
@@ -112,11 +103,12 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
 
             S state = createState(id == 0, sp);
 
-            stateInfos.set(id, new StateInfo<>(sp, state));
+            stateInfos.array[id] = new StateInfo<>(sp, state);
         }
 
         // SECOND PASS: Create hypothesis transitions
-        for (StateInfo<S, I> info : stateInfos) {
+        for (int r = 0; r < numDistinct; r++) {
+            StateInfo<S, I> info = stateInfos.array[r];
             Row<I> sp = info.getRow();
             S state = info.getState();
 
@@ -126,7 +118,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
                 Row<I> succ = sp.getSuccessor(i);
                 int succId = succ.getRowContentId();
 
-                S succState = stateInfos.get(succId).getState();
+                S succState = stateInfos.array[succId].getState();
 
                 setTransition(state, input, succState, sp, i);
             }

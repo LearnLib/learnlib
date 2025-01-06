@@ -15,10 +15,9 @@
  */
 package de.learnlib.algorithm.lstar;
 
-import java.util.List;
-
 import de.learnlib.algorithm.lstar.AbstractAutomatonLStar.StateInfo;
 import de.learnlib.datastructure.observationtable.GenericObservationTable;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 
 /**
  * Class that contains all data that represent the internal state of the {@link AbstractAutomatonLStar} learner and its
@@ -37,11 +36,11 @@ public class AutomatonLStarState<I, D, AI, S> {
 
     private final GenericObservationTable<I, D> observationTable;
     private final AI hypothesis;
-    private final List<StateInfo<S, I>> stateInfos;
+    private final ResizingArrayStorage<StateInfo<S, I>> stateInfos;
 
     AutomatonLStarState(GenericObservationTable<I, D> observationTable,
                         AI hypothesis,
-                        List<StateInfo<S, I>> stateInfos) {
+                        ResizingArrayStorage<StateInfo<S, I>> stateInfos) {
         this.observationTable = observationTable;
         this.hypothesis = hypothesis;
         this.stateInfos = stateInfos;
@@ -55,7 +54,7 @@ public class AutomatonLStarState<I, D, AI, S> {
         return hypothesis;
     }
 
-    List<AbstractAutomatonLStar.StateInfo<S, I>> getStateInfos() {
+    ResizingArrayStorage<AbstractAutomatonLStar.StateInfo<S, I>> getStateInfos() {
         return stateInfos;
     }
 }

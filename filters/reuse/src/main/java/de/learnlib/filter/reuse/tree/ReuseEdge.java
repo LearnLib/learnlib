@@ -38,13 +38,13 @@ public class ReuseEdge<S, I, O> {
      * Default constructor.
      *
      * @param source
-     *         not allowed to be {@code null}.
+     *         the source node
      * @param target
-     *         not allowed to be {@code null}.
+     *         the target node
      * @param input
-     *         not allowed to be {@code null}.
+     *         the input symbol
      * @param output
-     *         in case of quiescence maybe {@code null}.
+     *         the output symbol
      */
     public ReuseEdge(ReuseNode<S, I, O> source, ReuseNode<S, I, O> target, I input, O output) {
         this.source = source;

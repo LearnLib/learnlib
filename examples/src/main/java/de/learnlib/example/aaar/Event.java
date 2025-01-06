@@ -17,6 +17,8 @@ package de.learnlib.example.aaar;
 
 import java.util.Objects;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 class Event {
 
     static final class Msg<D> extends Event {
@@ -35,7 +37,7 @@ class Event {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (!(o instanceof Msg)) {
                 return false;
             }
@@ -63,7 +65,7 @@ class Event {
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(@Nullable Object obj) {
             return obj instanceof Recv;
         }
     }

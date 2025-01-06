@@ -34,6 +34,7 @@ import de.learnlib.tooling.annotation.builder.Param;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The reuse oracle is a {@link MealyMembershipOracle} that is able to <ul> <li>Cache queries: Each processed query will
@@ -153,8 +154,8 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
             final int suffixLen = query.size() - nodeResult.prefixLength;
             final Word<I> suffix = query.suffix(suffixLen);
 
-            final Word<O> partialOutput = tree.getPartialOutput(query);
-            final Word<O> partialSuffixOutput = partialOutput.suffix(suffixLen);
+            final Word<@Nullable O> partialOutput = tree.getPartialOutput(query);
+            final Word<@Nullable O> partialSuffixOutput = partialOutput.suffix(suffixLen);
 
             final ReuseNode<S, I, O> reuseNode = nodeResult.reuseNode;
             final S systemState = nodeResult.systemState;
@@ -168,6 +169,7 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
             this.tree.insert(suffix, reuseNode, suffixQueryResult);
 
             final Word<O> prefixOutput = tree.getOutput(query.prefix(nodeResult.prefixLength));
+            assert prefixOutput != null;
             output = new WordBuilder<>(prefixOutput).append(suffixQueryResult.output).toWord();
         }
         return output;
@@ -197,7 +199,7 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
      * @return the query result including the outputs of the "reflexive" symbol executions.
      */
     private QueryResult<S, O> filterAndProcessQuery(Word<I> query,
-                                                    Word<O> partialOutput,
+                                                    Word<@Nullable O> partialOutput,
                                                     Function<Word<I>, QueryResult<S, O>> processQuery) {
         final LinkedList<I> filteredQueryList = new LinkedList<>(query.asList());
         final Iterator<I> queryIterator = filteredQueryList.iterator();

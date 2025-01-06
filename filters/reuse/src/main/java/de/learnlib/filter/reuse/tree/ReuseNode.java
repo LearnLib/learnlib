@@ -15,9 +15,10 @@
  */
 package de.learnlib.filter.reuse.tree;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import de.learnlib.filter.reuse.tree.BoundedDeque.AccessPolicy;
 import de.learnlib.filter.reuse.tree.BoundedDeque.EvictPolicy;
@@ -61,7 +62,7 @@ public class ReuseNode<S, I, O> {
      *
      * @return a system state, May be {@code null}.
      */
-    public S fetchSystemState(boolean remove) {
+    public @Nullable S fetchSystemState(boolean remove) {
         if (remove) {
             return systemStates.retrieve();
         }
@@ -89,8 +90,14 @@ public class ReuseNode<S, I, O> {
      *
      * @return the outgoing edges of this node
      */
-    public Collection<@Nullable ReuseEdge<S, I, O>> getEdges() {
-        return Arrays.asList(edges);
+    public Collection<ReuseEdge<S, I, O>> getEdges() {
+        final List<ReuseEdge<S, I, O>> result = new ArrayList<>(edges.length);
+        for (ReuseEdge<S, I, O> edge : edges) {
+            if (edge != null) {
+                result.add(edge);
+            }
+        }
+        return result;
     }
 
     /**

@@ -61,10 +61,6 @@ limitations under the License.
                 <Method name="getStartOfADS"/>
             </And>
             <And>
-                <Class name="de.learnlib.datastructure.list.IntrusiveList"/>
-                <Method name="concat"/>
-            </And>
-            <And>
                 <!-- SpotBugs doesn't understand conditional non-nulls -->
                 <Class name="de.learnlib.algorithm.adt.config.LeafSplitters"/>
                 <Method name="splitParent"/>

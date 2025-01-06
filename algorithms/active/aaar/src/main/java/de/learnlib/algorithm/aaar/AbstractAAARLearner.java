@@ -182,8 +182,8 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
         return this.learner;
     }
 
-    protected <S1, S2, SP, TP> void copyAbstract(UniversalDeterministicAutomaton<S1, CI, ?, SP, TP> src,
-                                                 MutableDeterministic<S2, AI, ?, SP, TP> tgt) {
+    protected <S1, S2, T, SP, TP> void copyAbstract(UniversalDeterministicAutomaton<S1, CI, T, SP, TP> src,
+                                                    MutableDeterministic<S2, AI, ?, SP, TP> tgt) {
         // states
         final Map<S2, S1> states = new HashMap<>();
         final Map<S1, S2> statesRev = new HashMap<>();
@@ -200,12 +200,15 @@ public abstract class AbstractAAARLearner<L extends LearningAlgorithm<CM, CI, D>
         // transitions
         for (Entry<S2, S1> e : states.entrySet()) {
             for (CI r : rep) {
-                final AbstractAbstractionTree<AI, CI, D> tree = getTreeForRepresentative(r);
-                final AI a = tree.getAbstractSymbol(r);
-                tgt.setTransition(e.getKey(),
-                                  a,
-                                  statesRev.get(src.getSuccessor(e.getValue(), r)),
-                                  src.getTransitionProperty(e.getValue(), r));
+                final T trans = src.getTransition(e.getValue(), r);
+                if (trans != null) {
+                    final AbstractAbstractionTree<AI, CI, D> tree = getTreeForRepresentative(r);
+                    final AI a = tree.getAbstractSymbol(r);
+                    tgt.setTransition(e.getKey(),
+                                      a,
+                                      statesRev.get(src.getSuccessor(trans)),
+                                      src.getTransitionProperty(trans));
+                }
             }
         }
     }

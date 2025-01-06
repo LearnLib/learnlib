@@ -41,7 +41,7 @@ public abstract class AbstractMealyPassiveLearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<MealyLearningExample<?, ?>> examples = LearningExamples.createMealyExamples();
-        final List<PassiveLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
+        final List<PassiveLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
 
         for (MealyLearningExample<?, ?> example : examples) {
             result.addAll(createAllVariantsITCase(example));

@@ -17,7 +17,6 @@ package de.learnlib.filter.reuse.tree;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
@@ -56,13 +55,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <O>
  *         output symbol type
  */
-public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I, O>, @Nullable ReuseEdge<S, I, O>> {
+public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
 
     private final Alphabet<I> alphabet;
     private final int alphabetSize;
     private final Set<I> invariantInputSymbols;
     private final Set<O> failureOutputSymbols;
-    private final boolean invalidateSystemstates;
+    private final boolean invalidateSystemStates;
     private final SystemStateHandler<S> systemStateHandler;
     private final int maxSystemStates;
     private final AccessPolicy accessPolicy;
@@ -84,7 +83,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
                      AccessPolicy accessPolicy,
                      EvictPolicy evictPolicy) {
         this.alphabet = alphabet;
-        this.invalidateSystemstates = enabledSystemStateInvalidation;
+        this.invalidateSystemStates = enabledSystemStateInvalidation;
         this.systemStateHandler = systemStateHandler;
         this.invariantInputSymbols = invariantInputs;
         this.failureOutputSymbols = failureOutputs;
@@ -95,7 +94,7 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
 
         // local and not configurable
         this.alphabetSize = alphabet.size();
-        this.root = createNode();
+        this.root = new ReuseNode<>(nodeCount++, alphabetSize, maxSystemStates, accessPolicy, evictPolicy);
 
         this.lock = new ReentrantReadWriteLock();
     }
@@ -108,16 +107,11 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * Returns the known output for the given query or {@code null} if not known.
      *
      * @param query
-     *         Not allowed to be {@code null}.
+     *         the query
      *
      * @return The output for {@code query} if already known from the {@link ReuseTree} or {@code null} if unknown.
      */
     public @Nullable Word<O> getOutput(Word<I> query) {
-        if (query == null) {
-            String msg = "Query is not allowed to be null.";
-            throw new IllegalArgumentException(msg);
-        }
-
         final WordBuilder<O> output = new WordBuilder<>();
 
         this.lock.readLock().lock();
@@ -152,18 +146,13 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * {@code null}.
      *
      * @param query
-     *         Not allowed to be {@code null}.
+     *         the query
      *
      * @return The partial output for {@code query} from the {@link ReuseTree} with outputs for "reflexive" edges filled
      * with {@code null} for "non-reflexive" and not-known parts of the input word.
      */
-    public Word<O> getPartialOutput(Word<I> query) {
-        if (query == null) {
-            String msg = "Query is not allowed to be null.";
-            throw new IllegalArgumentException(msg);
-        }
-
-        final WordBuilder<O> output = new WordBuilder<>();
+    public Word<@Nullable O> getPartialOutput(Word<I> query) {
+        final WordBuilder<@Nullable O> output = new WordBuilder<>();
 
         this.lock.readLock().lock();
         try {
@@ -249,11 +238,6 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * @return the node accessed by the given query, {@code null} if no such node exists
      */
     public ReuseNode.@Nullable NodeResult<S, I, O> fetchSystemState(Word<I> query) {
-        if (query == null) {
-            String msg = "Query is not allowed to be null.";
-            throw new IllegalArgumentException(msg);
-        }
-
         int length = 0;
 
         this.lock.readLock().lock();
@@ -284,7 +268,8 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
                 return null;
             }
 
-            S systemState = lastState.fetchSystemState(invalidateSystemstates);
+            S systemState = lastState.fetchSystemState(invalidateSystemStates);
+            assert systemState != null;
 
             return new ReuseNode.NodeResult<>(lastState, systemState, length);
         } finally {
@@ -340,14 +325,6 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      *         if non-deterministic behavior is detected
      */
     public void insert(Word<I> query, ReuseNode<S, I, O> sink, ReuseCapableOracle.QueryResult<S, O> queryResult) {
-        if (queryResult == null) {
-            String msg = "The queryResult is not allowed to be null.";
-            throw new IllegalArgumentException(msg);
-        }
-        if (sink == null) {
-            String msg = "Node is not allowed to be null, called wrong method?";
-            throw new IllegalArgumentException(msg);
-        }
         if (query.size() != queryResult.output.size()) {
             String msg = "Size mismatch: " + query + "/" + queryResult.output;
             throw new IllegalArgumentException(msg);
@@ -418,17 +395,17 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
     }
 
     @Override
-    public Collection<@Nullable ReuseEdge<S, I, O>> getOutgoingEdges(@Nullable ReuseNode<S, I, O> node) {
-        return node == null ? Collections.emptyList() : node.getEdges();
+    public Collection<ReuseEdge<S, I, O>> getOutgoingEdges(ReuseNode<S, I, O> node) {
+        return node.getEdges();
     }
 
     @Override
-    public @Nullable ReuseNode<S, I, O> getTarget(@Nullable ReuseEdge<S, I, O> edge) {
-        return edge == null ? null : edge.getTarget();
+    public ReuseNode<S, I, O> getTarget(ReuseEdge<S, I, O> edge) {
+        return edge.getTarget();
     }
 
     @Override
-    public VisualizationHelper<@Nullable ReuseNode<S, I, O>, @Nullable ReuseEdge<S, I, O>> getVisualizationHelper() {
+    public VisualizationHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> getVisualizationHelper() {
         return new ReuseTreeDotHelper<>();
     }
 }

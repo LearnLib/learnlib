@@ -22,6 +22,7 @@ import de.learnlib.oracle.PropertyOracle.DFAPropertyOracle;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A property oracle for DFAs that can check lassos from the model checker.
@@ -45,7 +46,7 @@ public class DFALassoPropertyOracle<I, P> extends AbstractPropertyOracle<I, DFA<
     }
 
     @Override
-    protected DFALasso<I> modelCheck(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
+    protected @Nullable DFALasso<I> modelCheck(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
         return modelChecker.findCounterExample(hypothesis, inputs, getProperty());
     }
 }

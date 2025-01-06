@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import net.automatalib.common.util.HashUtil;
+import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -57,17 +59,17 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
     }
 
     @Override
-    public boolean containsValue(Object value) {
+    public boolean containsValue(@Nullable Object value) {
         return Objects.equals(falseValue, value) || Objects.equals(trueValue, value);
     }
 
     @Override
-    public boolean containsKey(Object key) {
+    public boolean containsKey(@Nullable Object key) {
         return key != null && key.getClass() == Boolean.class;
     }
 
     @Override
-    public @Nullable V get(Object key) {
+    public @Nullable V get(@Nullable Object key) {
         if (key == null || key.getClass() != Boolean.class) {
             return null;
         }
@@ -76,14 +78,11 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
     }
 
     public V get(boolean key) {
-        if (key) {
-            return trueValue;
-        }
-        return falseValue;
+        return key ? trueValue : falseValue;
     }
 
     @Override
-    public V put(Boolean key, V value) {
+    public V put(@Nullable Boolean key, V value) {
         if (key == null) {
             throw new IllegalArgumentException("BooleanMap disallows null keys");
         }
@@ -104,7 +103,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
     }
 
     @Override
-    public @Nullable V remove(Object key) {
+    public @Nullable V remove(@Nullable Object key) {
         if (key == null || key.getClass() != Boolean.class) {
             return null;
         }
@@ -116,11 +115,11 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
         if (m.containsKey(null)) {
             throw new IllegalArgumentException("BooleanMap disallows null keys");
         }
-        if (m.containsKey(false)) {
-            this.falseValue = m.get(false);
+        if (m.containsKey(Boolean.FALSE)) {
+            this.falseValue = m.get(Boolean.FALSE);
         }
-        if (m.containsKey(true)) {
-            this.trueValue = m.get(true);
+        if (m.containsKey(Boolean.TRUE)) {
+            this.trueValue = m.get(Boolean.TRUE);
         }
     }
 
@@ -130,7 +129,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
     }
 
     @Override
-    public Set<Boolean> keySet() {
+    public Set<@KeyFor("this") Boolean> keySet() {
         return BooleanSet.INSTANCE;
     }
 
@@ -140,8 +139,8 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
     }
 
     @Override
-    public Set<Map.Entry<Boolean, V>> entrySet() {
-        Set<Map.Entry<Boolean, V>> entries = new HashSet<>(2);
+    public Set<Map.Entry<@KeyFor("this") Boolean, V>> entrySet() {
+        Set<Map.Entry<Boolean, V>> entries = new HashSet<>(HashUtil.capacity(2));
         entries.add(new Entry(false));
         entries.add(new Entry(true));
         return entries;
@@ -149,7 +148,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
 
     private static final class BooleanSet extends AbstractSet<Boolean> {
 
-        private static final List<Boolean> VALUES = Arrays.asList(false, true);
+        private static final List<Boolean> VALUES = Arrays.asList(Boolean.FALSE, Boolean.TRUE);
 
         private static final BooleanSet INSTANCE = new BooleanSet();
 
@@ -169,10 +168,9 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
         }
 
         @Override
-        public boolean contains(Object o) {
-            return o.getClass() == Boolean.class;
+        public boolean contains(@Nullable Object o) {
+            return o != null && o.getClass() == Boolean.class;
         }
-
     }
 
     private final class Entry implements Map.Entry<Boolean, V> {
@@ -204,7 +202,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -216,5 +214,4 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
             return Objects.equals(key, that.key);
         }
     }
-
 }

@@ -55,7 +55,7 @@ public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> 
               new BaseTTTDiscriminationTree<>(oracle, rootSupplier),
               analyzer);
 
-        split(dtree.getRoot(), Word.epsilon(), false, true);
+        dtree.getRoot().split(Word.epsilon(), false, true);
     }
 
     @Override

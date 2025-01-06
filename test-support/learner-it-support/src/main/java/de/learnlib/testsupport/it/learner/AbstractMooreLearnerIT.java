@@ -42,7 +42,7 @@ public abstract class AbstractMooreLearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<MooreLearningExample<?, ?>> examples = LearningExamples.createMooreExamples();
-        final List<UniversalDeterministicLearnerITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
+        final List<UniversalDeterministicLearnerITCase<?, ?, ?>> result = new ArrayList<>();
 
         for (MooreLearningExample<?, ?> example : examples) {
             result.addAll(createAllVariantsITCase(example));
