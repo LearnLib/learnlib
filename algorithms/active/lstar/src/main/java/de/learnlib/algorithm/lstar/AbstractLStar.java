@@ -216,7 +216,7 @@ public abstract class AbstractLStar<A, I, D>
     @Override
     public boolean addGlobalSuffixes(Collection<? extends Word<I>> newGlobalSuffixes) {
         List<List<Row<I>>> unclosed = table.addSuffixes(newGlobalSuffixes, oracle);
-        return !unclosed.isEmpty() || completeConsistentTable(unclosed, false);
+        return !unclosed.isEmpty() && completeConsistentTable(unclosed, false);
     }
 
     @Override
