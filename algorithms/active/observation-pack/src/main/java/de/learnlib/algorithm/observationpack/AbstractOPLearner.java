@@ -85,7 +85,9 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
             return false;
         }
         if (repeatedCounterexampleEvaluation) {
-            while (refineHypothesisSingle(ceQuery)) {}
+            while (refineHypothesisSingle(ceQuery)) {
+                // refine exhaustively
+            }
         }
         return true;
     }

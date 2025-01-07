@@ -34,6 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <O>
  *         output symbol class
  */
+@SuppressWarnings("PMD.TestClassWithoutTestCases") // not a traditional test class
 public class MooreCacheConsistencyTest<I, O> implements MooreEquivalenceOracle<I, O> {
 
     private final IncrementalMooreBuilder<I, O> incMoore;

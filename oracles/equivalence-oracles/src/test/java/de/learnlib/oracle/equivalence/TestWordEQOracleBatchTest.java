@@ -51,7 +51,7 @@ public class TestWordEQOracleBatchTest {
         Assert.assertEquals(hyp.getQueryCounter(), THRESHOLD);
     }
 
-    private static class DummyHypothesis<I> implements Output<I, Boolean> {
+    private static final class DummyHypothesis<I> implements Output<I, Boolean> {
 
         private int queryCounter;
 
@@ -67,7 +67,7 @@ public class TestWordEQOracleBatchTest {
         }
     }
 
-    private static class DummyMQOracle<I> implements DFAMembershipOracle<I> {
+    private static final class DummyMQOracle<I> implements DFAMembershipOracle<I> {
 
         private int queryCounter;
 
@@ -81,7 +81,7 @@ public class TestWordEQOracleBatchTest {
         }
     }
 
-    private static class DummyEQOracle<I> extends AbstractTestWordEQOracle<Output<I, Boolean>, I, Boolean> {
+    private static final class DummyEQOracle<I> extends AbstractTestWordEQOracle<Output<I, Boolean>, I, Boolean> {
 
         private int generatedWordsCounter;
 
@@ -96,7 +96,7 @@ public class TestWordEQOracleBatchTest {
         @Override
         protected Stream<Word<I>> generateTestWords(Output<I, Boolean> hypothesis, Collection<? extends I> inputs) {
             final I sym = inputs.iterator().next();
-            return Stream.generate(() -> Word.fromLetter(sym)).peek((w) -> generatedWordsCounter++).limit(MAX_QUERIES);
+            return Stream.generate(() -> Word.fromLetter(sym)).peek(w-> generatedWordsCounter++).limit(MAX_QUERIES);
         }
     }
 

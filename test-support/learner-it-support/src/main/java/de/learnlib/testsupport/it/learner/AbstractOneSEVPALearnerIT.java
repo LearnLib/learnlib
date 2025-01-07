@@ -36,7 +36,7 @@ public abstract class AbstractOneSEVPALearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<OneSEVPALearningExample<?>> examples = LearningExamples.createOneSEVPAExamples();
-        final List<OneSEVPALearnerITCase<?>> result = new ArrayList<>(examples.size());
+        final List<OneSEVPALearnerITCase<?>> result = new ArrayList<>();
 
         for (OneSEVPALearningExample<?> example : examples) {
             result.addAll(createAllVariantsITCase(example));

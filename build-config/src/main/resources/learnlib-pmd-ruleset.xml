@@ -15,30 +15,27 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<ruleset name="LearnLib PMD rules"
+<ruleset name="LearnLib PMD ruleset"
          xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
 
     <description>LearnLib PMD ruleset</description>
 
+    <!-- EXCLUSIONS -->
+
     <rule ref="category/java/bestpractices.xml">
-        <exclude name="AccessorMethodGeneration"/>
+        <exclude name="AccessorMethodGeneration"/> <!-- irrelevant once we target Java 11 -->
         <exclude name="ArrayIsStoredDirectly"/>
+        <exclude name="LooseCoupling"/> <!-- may be enabled once calls on sub-type methods are filtered again -->
         <exclude name="GuardLogStatement"/>
         <exclude name="MethodReturnsInternalArray"/>
         <exclude name="OneDeclarationPerLine"/>
-        <exclude name="UnusedImports"/>
         <exclude name="UseVarargs"/>
 
-        <exclude name="JUnit4SuitesShouldUseSuiteAnnotation"/>
-        <exclude name="JUnit4TestShouldUseAfterAnnotation"/>
-        <exclude name="JUnit4TestShouldUseBeforeAnnotation"/>
-        <exclude name="JUnit4TestShouldUseTestAnnotation"/>
-        <exclude name="JUnitAssertionsShouldIncludeMessage"/>
-        <exclude name="JUnitTestContainsTooManyAsserts"/>
-        <exclude name="JUnitTestsShouldIncludeAssert"/>
-        <exclude name="JUnitUseExpected"/>
+        <exclude name="UnitTestAssertionsShouldIncludeMessage"/>
+        <exclude name="UnitTestContainsTooManyAsserts"/>
+        <exclude name="UnitTestShouldIncludeAssert"/>
     </rule>
 
     <rule ref="category/java/codestyle.xml">
@@ -46,8 +43,6 @@ limitations under the License.
         <exclude name="CallSuperInConstructor"/>
         <exclude name="ClassNamingConventions"/>
         <exclude name="CommentDefaultAccessModifier"/>
-        <exclude name="ConfusingTernary"/>
-        <exclude name="DefaultPackage"/>
         <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
         <exclude name="FormalParameterNamingConventions"/>
         <exclude name="GenericsNaming"/>
@@ -60,14 +55,16 @@ limitations under the License.
         <exclude name="ShortClassName"/>
         <exclude name="ShortMethodName"/>
         <exclude name="ShortVariable"/>
+        <exclude name="UnnecessaryImport"/> <!-- flags imports required by JavaDoc -->
     </rule>
 
     <rule ref="category/java/design.xml">
         <exclude name="AvoidDeeplyNestedIfStmts"/>
+        <exclude name="CognitiveComplexity"/>
+        <exclude name="CouplingBetweenObjects"/>
         <exclude name="CyclomaticComplexity"/>
         <exclude name="DataClass"/>
         <exclude name="ExcessiveImports"/>
-        <exclude name="ExcessiveMethodLength"/>
         <exclude name="ExcessiveParameterList"/>
         <exclude name="ExcessivePublicCount"/>
         <exclude name="GodClass"/>
@@ -86,14 +83,10 @@ limitations under the License.
         <exclude name="AvoidFieldNameMatchingMethodName"/>
         <exclude name="AvoidFieldNameMatchingTypeName"/>
         <exclude name="AvoidLiteralsInIfCondition"/>
-        <exclude name="BeanMembersShouldSerialize"/>
         <exclude name="CompareObjectsWithEquals"/>
-        <exclude name="DataflowAnomalyAnalysis"/>
-        <exclude name="EmptyWhileStmt"/>
         <exclude name="MissingSerialVersionUID"/>
+        <exclude name="NonSerializableClass"/>
         <exclude name="NullAssignment"/>
-
-        <exclude name="JUnitSpelling"/>
     </rule>
 
     <rule ref="category/java/multithreading.xml">
@@ -106,5 +99,27 @@ limitations under the License.
     </rule>
 
     <!--<rule ref="category/java/security.xml"/>-->
+
+    <!-- CONFIGS -->
+
+    <rule ref="category/java/codestyle.xml/EmptyControlStatement">
+        <properties>
+            <property name="allowCommentedBlocks" value="true" />
+        </properties>
+    </rule>
+
+    <rule ref="category/java/codestyle.xml/UnnecessaryFullyQualifiedName">
+        <properties>
+            <property name="reportStaticMethods" value="false" />
+            <property name="reportStaticFields" value="false" />
+        </properties>
+    </rule>
+
+    <rule ref="category/java/codestyle.xml/ConfusingTernary">
+        <properties>
+            <property name="ignoreElseIf" value="true" />
+        </properties>
+    </rule>
+
 
 </ruleset>

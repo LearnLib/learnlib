@@ -20,6 +20,8 @@ import de.learnlib.datastructure.list.AbstractIntrusiveListEntryImpl;
 import net.automatalib.word.Word;
 
 /**
+ * Abstract hypothesis transition.
+ *
  * @param <I>
  *         input symbol type
  */

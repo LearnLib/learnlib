@@ -40,7 +40,6 @@ public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
     @Override
     public void pre() {
         this.inError = false;
-        this.repeatedErrorOutput = null;
         mapper.pre();
         sul.pre();
     }
@@ -49,6 +48,7 @@ public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
     public void post() {
         sul.post();
         mapper.post();
+        this.repeatedErrorOutput = null;
     }
 
     @SuppressWarnings("PMD.AvoidCatchingGenericException") //  we want to allow mapping generic RuntimeExceptions

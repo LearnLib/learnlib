@@ -15,16 +15,15 @@
  */
 package de.learnlib.algorithm.observationpack.vpa.hypothesis;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import de.learnlib.AccessSequenceProvider;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.common.util.array.ArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import net.automatalib.word.Word;
 
 /**
+ * Hypothesis location.
+ *
  * @param <I>
  *         input symbol type
  */
@@ -33,7 +32,7 @@ public class HypLoc<I> implements AccessSequenceProvider<I> {
     private final AbstractHypTrans<I> treeIncoming;
     private final Word<I> aseq;
     private final ArrayStorage<HypIntTrans<I>> intSuccessors;
-    private final ArrayStorage<List<HypRetTrans<I>>> returnSuccessors;
+    private final ArrayStorage<ResizingArrayStorage<HypRetTrans<I>>> returnSuccessors;
     private final int index;
     private boolean accepting;
     private DTNode<I> leaf;
@@ -42,19 +41,19 @@ public class HypLoc<I> implements AccessSequenceProvider<I> {
         this.index = index;
         this.accepting = accepting;
         this.intSuccessors = new ArrayStorage<>(alphabet.getNumInternals());
-        this.returnSuccessors = new ArrayStorage<>(alphabet.getNumReturns(), ArrayList::new);
+        this.returnSuccessors = new ArrayStorage<>(alphabet.getNumReturns());
         this.treeIncoming = treeIncoming;
         this.aseq = (treeIncoming != null) ? treeIncoming.getAccessSequence() : Word.epsilon();
     }
 
     public void updateStackAlphabetSize(int newStackAlphaSize) {
         for (int i = 0; i < returnSuccessors.size(); i++) {
-            List<HypRetTrans<I>> transList = returnSuccessors.get(i);
+            ResizingArrayStorage<HypRetTrans<I>> transList = returnSuccessors.get(i);
             if (transList == null) {
-                transList = new ArrayList<>(Collections.nCopies(newStackAlphaSize, null));
+                transList = new ResizingArrayStorage<>(HypRetTrans.class, newStackAlphaSize);
                 returnSuccessors.set(i, transList);
-            } else if (transList.size() < newStackAlphaSize) {
-                transList.addAll(Collections.nCopies(newStackAlphaSize - transList.size(), null));
+            } else if (transList.array.length < newStackAlphaSize) {
+                transList.ensureCapacity(newStackAlphaSize);
             }
         }
     }
@@ -89,21 +88,18 @@ public class HypLoc<I> implements AccessSequenceProvider<I> {
     }
 
     public HypRetTrans<I> getReturnTransition(int retSymId, int stackSym) {
-        final List<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
-        return succList.get(stackSym);
+        final ResizingArrayStorage<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
+        return succList.array[stackSym];
     }
 
     public void setReturnTransition(int retSymId, int stackSym, HypRetTrans<I> trans) {
-        List<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
+        ResizingArrayStorage<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
         if (succList == null) {
-            succList = new ArrayList<>(stackSym + 1);
+            succList = new ResizingArrayStorage<>(HypRetTrans.class, stackSym + 1);
             returnSuccessors.set(retSymId, succList);
         }
-        int numSuccs = succList.size();
-        if (numSuccs <= stackSym) {
-            succList.addAll(Collections.nCopies(stackSym + 1 - numSuccs, null));
-        }
-        succList.set(stackSym, trans);
+        succList.ensureCapacity(stackSym);
+        succList.array[stackSym] = trans;
     }
 
     public HypIntTrans<I> getInternalTransition(int intSymId) {

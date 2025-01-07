@@ -90,10 +90,10 @@ public class PropertyOracleChain<I, A extends Output<I, D>, @Nullable P, D> impl
 
     public PropertyOracleChain(Collection<? extends PropertyOracle<I, ? super A, P, D>> oracles) {
         this.oracles = new ArrayList<>(oracles);
-        if (!this.oracles.isEmpty()) {
-            property = this.oracles.get(0).getProperty();
-        } else {
+        if (this.oracles.isEmpty()) {
             property = null;
+        } else {
+            property = this.oracles.get(0).getProperty();
         }
     }
 

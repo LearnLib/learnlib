@@ -32,6 +32,7 @@ open module de.learnlib.filter.statistic {
     requires net.automatalib.api;
     requires net.automatalib.common.util;
 
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static de.learnlib.tooling.annotation;
 
     exports de.learnlib.filter.statistic;

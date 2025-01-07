@@ -140,16 +140,16 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
                                                                                         boolean deepCopies) {
         final AbstractSULOmegaOracle<S, I, O, ?> abstractSulOmegaOracle;
         if (deepCopies) {
-            if (!sul.deepCopies()) {
-                throw new IllegalArgumentException("SUL can not make deep copies of states.");
-            } else {
+            if (sul.deepCopies()) {
                 abstractSulOmegaOracle = new DeepCopySULOmegaOracle<>(sul);
+            } else {
+                throw new IllegalArgumentException("SUL can not make deep copies of states.");
             }
         } else {
-            if (!sul.canFork()) {
-                throw new IllegalArgumentException("SUL must be forkable.");
-            } else {
+            if (sul.canFork()) {
                 abstractSulOmegaOracle = new ShallowCopySULOmegaOracle<>(sul);
+            } else {
+                throw new IllegalArgumentException("SUL must be forkable.");
             }
         }
 
@@ -239,9 +239,7 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
          */
         @Override
         public boolean isSameState(Word<I> input1, Integer s1, Word<I> input2, Integer s2) {
-            if (!s1.equals(s2)) {
-                return false;
-            } else {
+            if (s1.equals(s2)) {
                 // in this case the hash codes are equal, now we must check if we accidentally had a hash-collision.
                 final ObservableSUL<S, I, O> sul1 = getSul();
                 final ObservableSUL<S, I, O> sul2 = forkedSUL;
@@ -264,6 +262,8 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
                 } finally {
                     sul2.post();
                 }
+            } else {
+                return false;
             }
         }
     }

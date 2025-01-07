@@ -39,6 +39,7 @@ import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A cache for an {@link AdaptiveMembershipOracle}. Upon construction, it is provided with a delegate oracle. Queries
@@ -63,11 +64,12 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
 
     private final AdaptiveMembershipOracle<I, O> delegate;
     private CompactMealy<I, O> cache;
+    private Integer init;
 
     public AdaptiveQueryCache(AdaptiveMembershipOracle<I, O> delegate, Alphabet<I> alphabet) {
         this.delegate = delegate;
         this.cache = new CompactMealy<>(alphabet);
-        this.cache.addInitialState();
+        this.init = this.cache.addInitialState();
     }
 
     @Override
@@ -81,9 +83,10 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
             // try to answer queries from cache
             cacheLoop:
             while (!queue.isEmpty()) {
-                final AdaptiveQuery<I, O> query = queue.poll();
+                @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+                final @NonNull AdaptiveQuery<I, O> query = queue.poll();
                 final WordBuilder<I> trace = new WordBuilder<>();
-                Integer curr = this.cache.getInitialState();
+                Integer curr = this.init;
                 Response response;
 
                 do {
@@ -101,7 +104,7 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
                     response = query.processOutput(output);
 
                     if (response == Response.RESET) {
-                        curr = this.cache.getInitialState();
+                        curr = this.init;
                         trace.clear();
                     } else {
                         curr = this.cache.getSuccessor(trans);
@@ -152,6 +155,7 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
     @Override
     public void resume(AdaptiveQueryCacheState<I, O> state) {
         this.cache = state.getCache();
+        this.init = Objects.requireNonNull(this.cache.getInitialState());
     }
 
     @Override
@@ -179,7 +183,7 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
      * @return the identifier of the state reached by the input sequence
      */
     public Integer insert(Word<I> input, Word<O> output) {
-        return insert(this.cache.getInitialState(), input, output);
+        return insert(this.init, input, output);
     }
 
     /**

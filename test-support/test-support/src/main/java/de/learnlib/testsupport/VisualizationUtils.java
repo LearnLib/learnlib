@@ -15,8 +15,7 @@
  */
 package de.learnlib.testsupport;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.function.BiFunction;
 
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.driver.simulator.MealySimulatorSUL;
@@ -27,49 +26,39 @@ import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine.Input;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.common.util.IOUtil;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
-import org.checkerframework.checker.initialization.qual.UnderInitialization;
 
 /**
- * Abstract class for tests that check the visualization of hypotheses or other internal data structure. This class'
- * constructor runs a simple learning setup (cf. {@link ExampleCoffeeMachine}) to initialize the provided learner
+ * Utility class for running a simple learning setup (cf. {@link ExampleCoffeeMachine}) to initialize a provided learner
  * instance.
- *
- * @param <L>
- *         type of the learner
  */
-public abstract class AbstractVisualizationTest<L extends LearningAlgorithm<? extends MealyMachine<?, Input, ?, String>, Input, Word<String>>> {
+public final class VisualizationUtils {
 
-    protected final L learner;
+    private VisualizationUtils() {
+        // prevent initialization
+    }
 
-    public AbstractVisualizationTest() {
+    public static <L extends LearningAlgorithm<? extends MealyMachine<?, Input, ?, String>, Input, Word<String>>> L runExperiment(
+            BiFunction<Alphabet<Input>, SUL<Input, String>, L> builder) {
         final CompactMealy<Input, String> target = ExampleCoffeeMachine.constructMachine();
         final Alphabet<Input> alphabet = target.getInputAlphabet();
         final SUL<Input, String> sul = new MealySimulatorSUL<>(target);
 
-        this.learner = getLearnerBuilder(alphabet, sul);
-        this.learner.startLearning();
+        final L learner = builder.apply(alphabet, sul);
+        learner.startLearning();
 
-        MealyMachine<?, Input, ?, String> hyp = this.learner.getHypothesisModel();
+        MealyMachine<?, Input, ?, String> hyp = learner.getHypothesisModel();
         Word<Input> ce;
 
         while ((ce = Automata.findSeparatingWord(target, hyp, alphabet)) != null) {
             final DefaultQuery<Input, Word<String>> q = new DefaultQuery<>(ce, target.computeOutput(ce));
-            while (this.learner.refineHypothesis(q)) {}
-            hyp = this.learner.getHypothesisModel();
+            while (learner.refineHypothesis(q)) {
+                // refine exhaustively
+            }
+            hyp = learner.getHypothesisModel();
         }
-    }
 
-    protected String resourceAsString(String resourceName) throws IOException {
-        try (InputStream is = getClass().getResourceAsStream(resourceName)) {
-            assert is != null;
-            return IOUtil.toString(IOUtil.asBufferedUTF8Reader(is));
-        }
+        return learner;
     }
-
-    protected abstract L getLearnerBuilder(@UnderInitialization AbstractVisualizationTest<L> this,
-                                           Alphabet<Input> alphabet,
-                                           SUL<Input, String> sul);
 }

@@ -184,12 +184,13 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, SP, TP>
 
             @Override
             protected boolean calculateNext() {
-                super.nextValue = bfsQueue.poll();
-                if (super.nextValue == null) {
+                final S next = bfsQueue.poll();
+                if (next == null) {
                     return false;
                 }
+                super.nextValue = next;
                 for (int i = 0; i < alphabetSize; i++) {
-                    S child = super.nextValue.getSuccessor(i);
+                    final S child = next.getSuccessor(i);
                     if (child != null && visited.add(child)) {
                         bfsQueue.offer(child);
                     }

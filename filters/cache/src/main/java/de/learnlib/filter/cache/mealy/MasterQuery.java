@@ -106,9 +106,6 @@ final class MasterQuery<I, O> extends AbstractQuery<I, Word<O>> {
         slave.answer(answer.subWord(start, end));
     }
 
-    /**
-     * @see AbstractQuery#toStringWithAnswer(Object)
-     */
     @Override
     public String toString() {
         return toStringWithAnswer(answer);

@@ -204,7 +204,13 @@ limitations under the License.
                                     <release>11</release>
                                     <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
-                                    <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
+                                    <!--
+                                     Setting a different output directly can fail the build when using other annotation
+                                     processors as well. However, with using the same output directory, we pack Java 11
+                                     code in the jars which will fail other analysis tools. Currently, checkerframework
+                                     cannot be run with our other analysis steps...
+                                     -->
+                                    <!--outputDirectory>${project.build.directory}/checkerframework</outputDirectory-->
                                     <annotationProcessorPaths>
                                         <path>
                                             <groupId>org.checkerframework</groupId>
@@ -225,18 +231,7 @@ limitations under the License.
                                         <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
                                         <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
                                         <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
-                                        <arg>-AskipDefs=^de.learnlib.algorithm.adt.*|\
-                                            ^de.learnlib.algorithm.observationpack.*.vpa.*|\
-                                            ^de.learnlib.algorithm.ttt.*|\
-                                            ^de.learnlib.datastructure.discriminationtree.*|\
-                                        </arg>
-                                        <arg>-AskipUses=^de.learnlib.algorithm.adt.*|\
-                                                        ^de.learnlib.algorithm.ttt.*|\
-                                                        ^de.learnlib.datastructure.discriminationtree.*|\
-                                                        ^java.lang.ThreadLocal|\
-                                                        ^net.automatalib.*|\
-                                                        ^org.testng.*|\
-                                        </arg>
+                                        <arg>-AskipUses=^java.lang.ThreadLocal|^org.testng.*</arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>
                                         <arg>-AassumeAssertionsAreEnabled</arg>
                                         <arg>-Astubs=collection-object-parameters-may-be-null.astub</arg>
@@ -252,7 +247,13 @@ limitations under the License.
                                 <configuration>
                                     <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
-                                    <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
+                                    <!--
+                                     Setting a different output directly can fail the build when using other annotation
+                                     processors as well. However, with using the same output directory, we pack Java 11
+                                     code in the jars which will fail other analysis tools. Currently, checkerframework
+                                     cannot be run with our other analysis steps...
+                                     -->
+                                    <!--outputDirectory>${project.build.directory}/checkerframework</outputDirectory-->
                                     <annotationProcessorPaths>
                                         <path>
                                             <groupId>org.checkerframework</groupId>
@@ -277,6 +278,7 @@ limitations under the License.
                                         <arg>-AskipUses=.*</arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>
                                         <arg>-AassumeAssertionsAreEnabled</arg>
+                                        <arg>-Astubs=collection-object-parameters-may-be-null.astub</arg>
                                     </compilerArgs>
                                 </configuration>
                             </execution>

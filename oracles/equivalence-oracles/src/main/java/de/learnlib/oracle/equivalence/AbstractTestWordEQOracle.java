@@ -57,8 +57,6 @@ public abstract class AbstractTestWordEQOracle<A extends Output<I, D>, I, D> imp
     }
 
     public AbstractTestWordEQOracle(MembershipOracle<I, D> membershipOracle, int batchSize) {
-        assert batchSize > 0;
-
         this.membershipOracle = membershipOracle;
         this.batchSize = batchSize;
     }

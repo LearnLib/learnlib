@@ -73,15 +73,10 @@ public abstract class AbstractStaticBatchProcessor<Q, P extends BatchProcessor<Q
 
         this.oracles = new ArrayStorage<>(oracles);
 
-        switch (policy) {
-            case FIXED:
-                this.executor = Executors.newFixedThreadPool(this.oracles.size() - 1);
-                break;
-            case CACHED:
-                this.executor = Executors.newCachedThreadPool();
-                break;
-            default:
-                throw new IllegalArgumentException("Illegal pool policy: " + policy);
+        if (policy == PoolPolicy.FIXED) {
+            this.executor = Executors.newFixedThreadPool(this.oracles.size() - 1);
+        } else { // default is cached
+            this.executor = Executors.newCachedThreadPool();
         }
         this.minBatchSize = minBatchSize;
     }

@@ -116,7 +116,7 @@ public class SULMapperCompositionTest {
         Assert.assertThrows(mappedSUL::fork);
     }
 
-    private static class MockSUL implements SUL<Character, Character> {
+    private static final class MockSUL implements SUL<Character, Character> {
 
         @Override
         public void pre() {}

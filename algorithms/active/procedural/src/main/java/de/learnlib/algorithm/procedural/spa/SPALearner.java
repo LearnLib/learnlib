@@ -77,7 +77,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
                       LearnerConstructor<L, I, Boolean> learnerConstructor) {
         this(alphabet,
              oracle,
-             (i) -> learnerConstructor,
+             i -> learnerConstructor,
              AcexAnalyzers.BINARY_SEARCH_FWD,
              new OptimizingATRManager<>(alphabet));
     }
@@ -206,11 +206,11 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
             }
         }
 
-        if (!newProcedures.isEmpty()) {
+        if (newProcedures.isEmpty()) {
+            return false;
+        } else {
             this.atrManager.scanProcedures(getSubModels(), subLearners, activeAlphabet);
             return true;
-        } else {
-            return false;
         }
     }
 
@@ -289,7 +289,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         return refinement;
     }
 
-    private class Acex extends AbstractBaseCounterexample<Boolean> {
+    private final class Acex extends AbstractBaseCounterexample<Boolean> {
 
         private final Word<I> input;
         private final Predicate<? super Word<I>> oracle;

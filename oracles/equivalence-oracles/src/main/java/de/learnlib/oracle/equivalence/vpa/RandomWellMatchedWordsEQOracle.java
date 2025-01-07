@@ -32,7 +32,7 @@ import net.automatalib.word.WordBuilder;
  * @param <I>
  *         input symbol type
  */
-public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<Output<I, Boolean>, I, Boolean> {
+public final class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<Output<I, Boolean>, I, Boolean> {
 
     private final Random random;
 
@@ -80,7 +80,7 @@ public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<
         @SuppressWarnings("unchecked")
         final VPAlphabet<I> alphabet = (VPAlphabet<I>) inputs;
 
-        final int lengthRange = (maxLength - minLength) + 1;
+        final int lengthRange = maxLength - minLength + 1;
         return Stream.generate(() -> generateWellMatched(alphabet, minLength + random.nextInt(lengthRange)))
                      .limit(maxTests);
     }

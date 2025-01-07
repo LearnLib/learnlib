@@ -41,7 +41,7 @@ public abstract class AbstractDFALearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<DFALearningExample<?>> examples = LearningExamples.createDFAExamples();
-        final List<UniversalDeterministicLearnerITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
+        final List<UniversalDeterministicLearnerITCase<?, ?, ?>> result = new ArrayList<>();
 
         for (DFALearningExample<?> example : examples) {
             result.addAll(createAllVariantsITCase(example));

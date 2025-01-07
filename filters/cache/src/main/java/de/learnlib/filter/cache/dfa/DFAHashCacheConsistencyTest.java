@@ -24,6 +24,7 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+@SuppressWarnings("PMD.TestClassWithoutTestCases") // not a traditional test class
 final class DFAHashCacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {
 
     private final Map<Word<I>, Boolean> cache;

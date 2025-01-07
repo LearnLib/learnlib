@@ -54,7 +54,7 @@ public class SampleSetEQOracleTest extends AbstractEQOracleTest<SuffixOutput<Cha
         this.oracle.add(generateTestWord(alphabet), Boolean.TRUE);
         this.oracle.add(generateTestWord(alphabet), Boolean.TRUE);
         // check if unsuccessful queries will be removed
-        this.oracle.findCounterExample(((prefix, suffix) -> Boolean.TRUE), ALPHABET);
+        this.oracle.findCounterExample((prefix, suffix) -> Boolean.TRUE, ALPHABET);
 
         this.expectedTestWords =
                 Arrays.asList(generateTestWord(alphabet), generateTestWord(alphabet), generateTestWord(alphabet));

@@ -53,7 +53,7 @@ public class RandomWalkEQOracleTest {
         Assert.assertTrue(dummySUL.isCalledPost());
     }
 
-    private static class DummySUL implements SUL<Character, Character> {
+    private static final class DummySUL implements SUL<Character, Character> {
 
         private boolean calledPre;
         private boolean calledPost;
@@ -94,7 +94,7 @@ public class RandomWalkEQOracleTest {
         }
     }
 
-    private static class DummyMealy extends CompactMealy<Character, Character> {
+    private static final class DummyMealy extends CompactMealy<Character, Character> {
 
         DummyMealy(Alphabet<Character> alphabet) {
             super(alphabet);

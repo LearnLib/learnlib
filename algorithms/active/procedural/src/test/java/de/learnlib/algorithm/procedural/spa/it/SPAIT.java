@@ -67,7 +67,9 @@ public class SPAIT extends AbstractSPALearnerIT {
         private final SPALearnerVariantList<I> variants;
         private final List<Function<ProceduralInputAlphabet<I>, ATRManager<I>>> atrProviders;
 
-        Builder(ProceduralInputAlphabet<I> alphabet, MembershipOracle<I, Boolean> mqOracle, SPALearnerVariantList<I> variants) {
+        Builder(ProceduralInputAlphabet<I> alphabet,
+                MembershipOracle<I, Boolean> mqOracle,
+                SPALearnerVariantList<I> variants) {
             this.alphabet = alphabet;
             this.mqOracle = mqOracle;
             this.variants = variants;
@@ -79,11 +81,8 @@ public class SPAIT extends AbstractSPALearnerIT {
 
             for (AbstractNamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
                 for (Function<ProceduralInputAlphabet<I>, ATRManager<I>> atrProvider : atrProviders) {
-                    final SPALearner<I, L> learner = new SPALearner<>(alphabet,
-                                                                      mqOracle,
-                                                                      (i) -> provider,
-                                                                      analyzer,
-                                                                      atrProvider.apply(alphabet));
+                    final SPALearner<I, L> learner =
+                            new SPALearner<>(alphabet, mqOracle, i -> provider, analyzer, atrProvider.apply(alphabet));
                     final String name =
                             String.format("adapter=%s,analyzer=%s,manager=%s", provider, analyzer, atrProvider);
                     variants.addLearnerVariant(name, learner);

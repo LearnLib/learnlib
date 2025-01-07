@@ -18,6 +18,8 @@ package de.learnlib.algorithm.observationpack.vpa.hypothesis;
 import net.automatalib.word.Word;
 
 /**
+ * A context pair of prefix and suffix to discriminate a hypothesis state.
+ *
  * @param <I>
  *         input symbol type
  */

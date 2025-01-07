@@ -41,7 +41,7 @@ public abstract class AbstractMoorePassiveLearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<MooreLearningExample<?, ?>> examples = LearningExamples.createMooreExamples();
-        final List<PassiveLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
+        final List<PassiveLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
 
         for (MooreLearningExample<?, ?> example : examples) {
             result.addAll(createAllVariantsITCase(example));

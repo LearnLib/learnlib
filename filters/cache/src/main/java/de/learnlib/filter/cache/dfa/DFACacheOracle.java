@@ -118,14 +118,14 @@ public class DFACacheOracle<I>
         for (Query<I, Boolean> q : queries) {
             final Word<I> input = q.getInput();
             final Acceptance acc = incDfa.lookup(input);
-            if (acc != Acceptance.DONT_KNOW) {
-                q.answer(acc.toBoolean());
-            } else {
+            if (acc == Acceptance.DONT_KNOW) {
                 if (cache.add(input)) { // never seen before
                     unanswered.add(new ProxyQuery<>(q));
                 } else {
                     duplicates.add(q);
                 }
+            } else {
+                q.answer(acc.toBoolean());
             }
         }
 

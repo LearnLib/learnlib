@@ -94,7 +94,7 @@ public class CounterAdaptiveOracleTest {
     /**
      * We can't mock this implementation because queries actually need to get delegated.
      */
-    private static class DummyOracle implements AdaptiveMembershipOracle<Integer, Character> {
+    private static final class DummyOracle implements AdaptiveMembershipOracle<Integer, Character> {
 
         @Override
         public void processQueries(Collection<? extends AdaptiveQuery<Integer, Character>> adaptiveQueries) {
@@ -109,7 +109,7 @@ public class CounterAdaptiveOracleTest {
     }
 
     /**
-     * Copied from learnlib-util because a dependency would introtduce a cycle.
+     * Copied from learnlib-util because a dependency would introduce a cycle.
      */
     private static class PresetAdaptiveQuery implements AdaptiveQuery<Integer, Character> {
 

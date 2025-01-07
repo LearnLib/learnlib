@@ -29,11 +29,10 @@ final class NondetStackContents {
 
     private final boolean isTrueNondet;
 
-    @SuppressWarnings("PMD.UselessParentheses") // to make it explicit which binary operator has higher precedence
     NondetStackContents(Set<Integer> syms, NondetStackContents rest) {
         this.syms = syms;
         this.rest = rest;
-        this.isTrueNondet = syms.size() > 1 || (rest != null && rest.isTrueNondet);
+        this.isTrueNondet = rest != null && rest.isTrueNondet || syms.size() > 1;
     }
 
     public static NondetStackContents push(Set<Integer> syms, NondetStackContents rest) {

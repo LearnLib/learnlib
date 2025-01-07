@@ -89,7 +89,7 @@ public class SPMMIT extends AbstractSPMMLearnerIT {
                 final SPMMLearner<I, O, L> learner = new SPMMLearner<>(alphabet,
                                                                        errorOutput,
                                                                        mqOracle,
-                                                                       (i) -> provider,
+                                                                       i -> provider,
                                                                        atProvider.apply(alphabet, errorOutput));
                 final String name = String.format("adapter=%s,manager=%s", provider, atProvider);
                 variants.addLearnerVariant(name, learner);

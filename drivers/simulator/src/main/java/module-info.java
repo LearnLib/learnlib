@@ -33,7 +33,7 @@ open module de.learnlib.driver.simulator {
     requires de.learnlib.api;
     requires net.automatalib.api;
 
-    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.driver.simulator;

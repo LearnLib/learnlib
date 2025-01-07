@@ -26,6 +26,8 @@ import net.automatalib.automaton.vpa.impl.AbstractSEVPA;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
+ * Hypothesis model.
+ *
  * @param <I>
  *         input symbol type
  */

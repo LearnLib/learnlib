@@ -51,4 +51,35 @@ limitations under the License.
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>code-analysis</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>enforce-bytecode-version</id>
+                                <configuration>
+                                    <rules>
+                                        <enforceBytecodeVersion>
+                                            <!--
+                                            while we somewhat break our contract, this module is only intended for
+                                            testing, so we are a little less restrictive for (JDK) compatibility reasons
+                                            -->
+                                            <maxJdkVersion>${maven.compiler.testTarget}</maxJdkVersion>
+                                        </enforceBytecodeVersion>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

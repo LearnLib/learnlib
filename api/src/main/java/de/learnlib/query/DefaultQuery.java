@@ -71,9 +71,6 @@ public class DefaultQuery<I, D> extends AbstractQuery<I, D> {
         this.output = output;
     }
 
-    /**
-     * @see AbstractQuery#toStringWithAnswer(Object)
-     */
     @Override
     public String toString() {
         return toStringWithAnswer(output);

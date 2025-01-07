@@ -16,6 +16,8 @@
 package de.learnlib.algorithm.observationpack.vpa.hypothesis;
 
 /**
+ * Internal transition.
+ *
  * @param <I>
  *         input symbol type
  */

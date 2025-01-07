@@ -76,6 +76,8 @@ public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
     private final MembershipOracle<I, D> delegate;
 
     /**
+     * Default constructor.
+     *
      * @param next
      *         real oracle
      * @param name
@@ -94,9 +96,6 @@ public class HistogramOracle<I, D> implements StatisticOracle<I, D> {
         this.delegate.processQueries(queries);
     }
 
-    /**
-     * @return the data set collected by this oracle.
-     */
     @Override
     public final HistogramDataSet getStatisticalData() {
         return this.dataSet;

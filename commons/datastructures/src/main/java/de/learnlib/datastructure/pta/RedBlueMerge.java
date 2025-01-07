@@ -42,16 +42,12 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
     private boolean merged;
 
     public RedBlueMerge(AbstractBlueFringePTA<S, SP, TP> pta, S qr, S qb) {
-        if (!qr.isRed()) {
-            throw new IllegalArgumentException("Merge target must be a red state");
-        }
-        if (!qb.isBlue()) {
-            throw new IllegalArgumentException("Merge source must be a blue state");
-        }
+        this(pta, qr, qb, validateInputs(pta, qr, qb));
+    }
 
+    // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
+    private RedBlueMerge(AbstractBlueFringePTA<S, SP, TP> pta, S qr, S qb, int numRedStates) {
         this.pta = pta;
-
-        int numRedStates = pta.getNumRedStates();
         this.succMod = new ArrayStorage<>(numRedStates);
         this.transPropMod = new ArrayStorage<>(numRedStates);
         this.propMod = new ArrayStorage<>(numRedStates);
@@ -59,6 +55,19 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
 
         this.qr = qr;
         this.qb = qb;
+    }
+
+    private static <S extends AbstractBlueFringePTAState<S, SP, TP>, SP, TP> int validateInputs(AbstractBlueFringePTA<S, SP, TP> pta,
+                                                                                                S qr,
+                                                                                                S qb) {
+        if (!qr.isRed()) {
+            throw new IllegalArgumentException("Merge target must be a red state");
+        }
+        if (!qb.isBlue()) {
+            throw new IllegalArgumentException("Merge source must be a blue state");
+        }
+
+        return pta.getNumRedStates();
     }
 
     public S getRedState() {
@@ -122,7 +131,7 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
                                     newTPs = mergedTPs;
                                 }
                             } else {
-                                newTPs = rSuccTPs.clone();
+                                newTPs = new ArrayStorage<>(rSuccTPs);
                             }
                         }
 
@@ -252,7 +261,7 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
             if (redSrc.successors == null) {
                 newSuccs = new ArrayStorage<>(alphabetSize);
             } else {
-                newSuccs = redSrc.successors.clone();
+                newSuccs = new ArrayStorage<>(redSrc.successors);
             }
             succMod.set(id, newSuccs);
         }
@@ -263,7 +272,7 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
                 if (redSrc.transProperties == null) {
                     newTransProps = new ArrayStorage<>(alphabetSize);
                 } else {
-                    newTransProps = redSrc.transProperties.clone();
+                    newTransProps = new ArrayStorage<>(redSrc.transProperties);
                 }
                 transPropMod.set(id, newTransProps);
             }
@@ -317,6 +326,7 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
      * can be merged, a new {@link ArrayStorage} containing the result of the merge is returned. <li>otherwise
      * (i.e., if no merge is possible), {@code null} is returned. </ul>
      */
+    @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull") // null is semantically different from an empty list
     private @Nullable ArrayStorage<TP> mergeTransProperties(ArrayStorage<TP> tps1, ArrayStorage<TP> tps2) {
         int len = tps1.size();
         int i;
@@ -332,7 +342,7 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
                         return null;
                     }
                 } else {
-                    tps1OrCopy = tps1.clone();
+                    tps1OrCopy = new ArrayStorage<>(tps1);
                     tps1OrCopy.set(i++, tp2);
                     break;
                 }

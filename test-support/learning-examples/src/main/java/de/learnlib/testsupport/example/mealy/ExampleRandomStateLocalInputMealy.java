@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -46,13 +47,17 @@ public class ExampleRandomStateLocalInputMealy<I, O> implements StateLocalInputM
                                              int size,
                                              O undefinedOutput,
                                              O... outputs) {
-        if (Arrays.asList(outputs).contains(undefinedOutput)) {
-            throw new IllegalArgumentException("The special undefined input should not be contained in regular outputs");
-        }
+        this(random, alphabet, size, undefinedOutput, validateOutputs(undefinedOutput, outputs));
+    }
 
+    private ExampleRandomStateLocalInputMealy(Random random,
+                                              Alphabet<I> alphabet,
+                                              int size,
+                                              O undefinedOutput,
+                                              List<O> outputs) {
         this.alphabet = alphabet;
         this.undefinedOutput = undefinedOutput;
-        CompactMealy<I, O> source = RandomAutomata.randomMealy(random, size, alphabet, Arrays.asList(outputs));
+        CompactMealy<I, O> source = RandomAutomata.randomMealy(random, size, alphabet, outputs);
 
         final int alphabetSize = alphabet.size();
 
@@ -110,6 +115,17 @@ public class ExampleRandomStateLocalInputMealy<I, O> implements StateLocalInputM
     @Override
     public O getUndefinedOutput() {
         return this.undefinedOutput;
+    }
+
+    @SafeVarargs
+    private static <O> List<O> validateOutputs(O undefinedOutput, O... outputs) {
+        final List<O> result = Arrays.asList(outputs);
+
+        if (result.contains(undefinedOutput)) {
+            throw new IllegalArgumentException("The special undefined input should not be contained in regular outputs");
+        }
+
+        return result;
     }
 
     private static class MockedSLIMealy<S, I, T, O> implements StateLocalInputMealyMachine<S, I, T, O> {

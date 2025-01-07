@@ -18,6 +18,8 @@ package de.learnlib.oracle;
 import net.automatalib.word.Word;
 
 /**
+ * A simple interface for answering {@link Word}-based queries.
+ *
  * @param <I>
  *         input symbol type
  * @param <D>

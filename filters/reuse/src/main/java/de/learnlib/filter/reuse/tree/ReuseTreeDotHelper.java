@@ -19,7 +19,6 @@ import java.util.Map;
 
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * {@link VisualizationHelper} implementation for the {@link ReuseTree} that renders nodes as white circles (if no
@@ -33,15 +32,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <O>
  *         output symbol class
  */
-class ReuseTreeDotHelper<S, I, O>
-        extends DefaultVisualizationHelper<@Nullable ReuseNode<S, I, O>, @Nullable ReuseEdge<S, I, O>> {
+class ReuseTreeDotHelper<S, I, O> extends DefaultVisualizationHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
 
     @Override
-    public boolean getNodeProperties(@Nullable ReuseNode<S, I, O> node, Map<String, String> properties) {
-        if (node == null) {
-            return false;
-        }
-
+    public boolean getNodeProperties(ReuseNode<S, I, O> node, Map<String, String> properties) {
         super.getNodeProperties(node, properties);
 
         if (node.hasSystemStates()) {
@@ -56,15 +50,10 @@ class ReuseTreeDotHelper<S, I, O>
     }
 
     @Override
-    public boolean getEdgeProperties(@Nullable ReuseNode<S, I, O> src,
-                                     @Nullable ReuseEdge<S, I, O> edge,
-                                     @Nullable ReuseNode<S, I, O> tgt,
+    public boolean getEdgeProperties(ReuseNode<S, I, O> src,
+                                     ReuseEdge<S, I, O> edge,
+                                     ReuseNode<S, I, O> tgt,
                                      Map<String, String> properties) {
-
-        if (src == null || edge == null || tgt == null) {
-            return false;
-        }
-
         super.getEdgeProperties(src, edge, tgt, properties);
 
         final StringBuilder labelBuilder = new StringBuilder();

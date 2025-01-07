@@ -95,12 +95,14 @@ public abstract class AbstractResumableLearnerTest<L extends Resumable<T> & Lear
 
             if (roundsPre == rounds) {
                 // serialize the state
-                data = ResumeUtils.toBytes(learner.suspend());
+                final T state = learner.suspend();
+                Assert.assertNotNull(state);
+                data = ResumeUtils.toBytes(state);
             }
         }
 
         // deserialize the state
-        assert data != null;
+        Assert.assertNotNull(data);
 
         // create the learner from the state
         final L learner2 = getLearner(getOracle(target), inputAlphabet);

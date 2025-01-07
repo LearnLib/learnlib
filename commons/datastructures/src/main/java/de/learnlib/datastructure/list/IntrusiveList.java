@@ -67,8 +67,9 @@ public class IntrusiveList<T extends IntrusiveListEntry<T>> extends AbstractIntr
 
         if (lNext != null) {
             IntrusiveListEntry<T> last = lNext;
-            while (last.getNext() != null) {
-                last = last.getNext();
+            IntrusiveListEntry<T> tmp;
+            while ((tmp = last.getNext()) != null) {
+                last = tmp;
             }
             if (next != null) {
                 next.setPrev(last);

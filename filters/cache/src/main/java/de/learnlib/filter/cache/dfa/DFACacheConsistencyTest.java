@@ -32,6 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         input symbol class
  */
+@SuppressWarnings("PMD.TestClassWithoutTestCases") // not a traditional test class
 final class DFACacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {
 
     private final IncrementalDFABuilder<I> incDfa;

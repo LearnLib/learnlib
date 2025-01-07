@@ -32,8 +32,8 @@ open module de.learnlib.oracle.emptiness {
     requires de.learnlib.common.util;
     requires net.automatalib.api;
 
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static de.learnlib.tooling.annotation;
-    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
     requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.oracle.emptiness;

@@ -37,7 +37,7 @@ public abstract class AbstractSBALearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<SBALearningExample<?>> examples = LearningExamples.createSBAExamples();
-        final List<AbstractLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
+        final List<AbstractLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
 
         for (SBALearningExample<?> example : examples) {
             result.addAll(createAllVariantsITCase(example));

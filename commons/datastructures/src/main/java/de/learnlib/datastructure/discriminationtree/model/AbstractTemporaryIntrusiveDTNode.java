@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import de.learnlib.datastructure.discriminationtree.SplitData;
 import de.learnlib.datastructure.list.IntrusiveListEntry;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An extension of the {@link AbstractDTNode} that adds the concept of temporary splitters as well as linking
@@ -88,22 +89,22 @@ public abstract class AbstractTemporaryIntrusiveDTNode<DSCR, O, D, T, N extends 
     }
 
     @Override
-    public IntrusiveListEntry<N> getNext() {
+    public @Nullable IntrusiveListEntry<N> getNext() {
         return nextElement;
     }
 
     @Override
-    public void setNext(IntrusiveListEntry<N> nextBlock) {
+    public void setNext(@Nullable IntrusiveListEntry<N> nextBlock) {
         this.nextElement = nextBlock;
     }
 
     @Override
-    public IntrusiveListEntry<N> getPrev() {
+    public @Nullable IntrusiveListEntry<N> getPrev() {
         return prevElement;
     }
 
     @Override
-    public void setPrev(IntrusiveListEntry<N> prevElement) {
+    public void setPrev(@Nullable IntrusiveListEntry<N> prevElement) {
         this.prevElement = prevElement;
     }
 }

@@ -43,7 +43,11 @@ public class AdaptiveTestQuery<I, O> implements AdaptiveQuery<I, O> {
 
     @Override
     public I getInput() {
-        return inputs.peek().peek();
+        final Deque<I> peek = inputs.peek();
+        assert peek != null;
+        final I result = peek.peek();
+        assert result != null;
+        return result;
     }
 
     @Override
@@ -51,6 +55,7 @@ public class AdaptiveTestQuery<I, O> implements AdaptiveQuery<I, O> {
         final Deque<I> input = this.inputs.peekFirst();
         final WordBuilder<O> output = this.outputs.get(this.outputs.size() - 1);
 
+        assert input != null;
         input.removeFirst();
         output.add(out);
 
@@ -60,7 +65,9 @@ public class AdaptiveTestQuery<I, O> implements AdaptiveQuery<I, O> {
             if (this.inputs.isEmpty()) {
                 return Response.FINISHED;
             } else {
-                this.outputs.add(new WordBuilder<>(this.inputs.peekFirst().size()));
+                final Deque<I> peek = this.inputs.peek();
+                assert peek != null;
+                this.outputs.add(new WordBuilder<>(peek.size()));
                 return Response.RESET;
             }
         }

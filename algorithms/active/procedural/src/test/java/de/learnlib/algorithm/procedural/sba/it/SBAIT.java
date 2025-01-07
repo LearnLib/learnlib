@@ -68,7 +68,9 @@ public class SBAIT extends AbstractSBALearnerIT {
         private final SBALearnerVariantList<I> variants;
         private final List<Function<ProceduralInputAlphabet<I>, ATManager<I>>> atProviders;
 
-        Builder(ProceduralInputAlphabet<I> alphabet, MembershipOracle<I, Boolean> mqOracle, SBALearnerVariantList<I> variants) {
+        Builder(ProceduralInputAlphabet<I> alphabet,
+                MembershipOracle<I, Boolean> mqOracle,
+                SBALearnerVariantList<I> variants) {
             this.alphabet = alphabet;
             this.mqOracle = mqOracle;
             this.variants = variants;
@@ -81,7 +83,7 @@ public class SBAIT extends AbstractSBALearnerIT {
             for (AbstractNamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
                 for (Function<ProceduralInputAlphabet<I>, ATManager<I>> atProvider : atProviders) {
                     final SBALearner<I, L> learner =
-                            new SBALearner<>(alphabet, mqOracle, (i) -> provider, analyzer, atProvider.apply(alphabet));
+                            new SBALearner<>(alphabet, mqOracle, i -> provider, analyzer, atProvider.apply(alphabet));
                     final String name =
                             String.format("adapter=%s,analyzer=%s,manager=%s", provider, analyzer, atProvider);
                     variants.addLearnerVariant(name, learner);

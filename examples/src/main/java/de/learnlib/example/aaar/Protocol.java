@@ -44,7 +44,7 @@ class Protocol implements SingleQueryOracleMealy<Event, String> {
         if (event instanceof Msg<?>) {
             Msg<?> msg = (Msg<?>) event;
 
-            if (buffer == null && (msg.seq % 2 == seqExp % 2)) {
+            if (buffer == null && msg.seq % 2 == seqExp % 2) {
                 buffer = msg.data;
                 seqExp++;
                 return "ind";

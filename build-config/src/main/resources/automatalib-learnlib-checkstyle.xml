@@ -46,12 +46,14 @@ limitations under the License.
     </module>
 
     <module name="FileTabCharacter"/>
+    <module name="OrderedProperties"/>
     <module name="UniqueProperties"/>
     <module name="NewlineAtEndOfFile"/>
 
     <module name="TreeWalker">
 
         <!-- https://checkstyle.org/checks/annotation/index.html -->
+        <module name="AnnotationLocation"/>
         <module name="AnnotationUseStyle"/>
         <module name="MissingDeprecated"/>
         <module name="MissingOverride"/>
@@ -81,10 +83,12 @@ limitations under the License.
         <module name="InterfaceIsType"/>
         <module name="MutableException"/>
         <module name="OneTopLevelClass"/>
+        <module name="SealedShouldHavePermitsList"/>
 
         <!-- https://checkstyle.org/checks/coding/index.html -->
         <module name="AvoidDoubleBraceInitialization"/>
         <module name="AvoidNoArgumentSuperConstructorCall"/>
+        <module name="ConstructorsDeclarationGrouping"/>
         <module name="CovariantEquals"/>
         <module name="DeclarationOrder">
             <property name="ignoreModifiers" value="true"/>
@@ -107,6 +111,8 @@ limitations under the License.
         </module>
         <module name="MissingSwitchDefault"/>
         <module name="NoArrayTrailingComma"/>
+        <module name="NoClone"/>
+        <module name="NoFinalizer"/>
         <module name="OneStatementPerLine"/>
         <module name="OverloadMethodsDeclarationOrder"/>
         <module name="PackageDeclaration"/>
@@ -115,6 +121,7 @@ limitations under the License.
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <module name="StringLiteralEquality"/>
+        <module name="UnnecessaryParentheses"/>
         <module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/>
         <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
         <module name="UnnecessarySemicolonInEnumeration"/>
@@ -138,12 +145,18 @@ limitations under the License.
             <property name="tagOrder" value="@param, @return, @throws, @deprecated"/>
         </module>
         <module name="InvalidJavadocPosition"/>
+        <module name="JavadocBlockTagLocation"/>
         <module name="JavadocContentLocation"/>
+        <module name="JavadocLeadingAsteriskAlign"/>
+        <module name="JavadocMethod">
+            <property name="accessModifiers" value="public,protected"/>
+        </module>
         <module name="JavadocMissingLeadingAsterisk"/>
         <module name="JavadocMissingWhitespaceAfterAsterisk"/>
         <module name="JavadocStyle"/>
         <module name="NonEmptyAtclauseDescription"/>
         <module name="RequireEmptyLineBeforeBlockTagGroup"/>
+        <module name="SummaryJavadoc"/>
 
         <!-- https://checkstyle.org/checks/misc/index.html -->
         <module name="ArrayTypeStyle"/>
@@ -152,6 +165,7 @@ limitations under the License.
             <property name="allowNonPrintableEscapes" value="true"/>
         </module>
         <module name="CommentsIndentation"/>
+        <module name="NoCodeInFile"/>
         <module name="OuterTypeFilename"/>
         <module name="UpperEll"/>
 
@@ -178,15 +192,15 @@ limitations under the License.
         </module>
         <module name="PackageName"/>
         <module name="ParameterName"/>
+        <module name="PatternVariableName"/>
+        <module name="RecordComponentName"/>
+        <module name="RecordTypeParameterName"/>
         <module name="StaticVariableName">
             <property name="format" value="^[a-zA-Z][a-zA-Z0-9]*$"/>
         </module>
         <module name="TypeName"/>
 
         <!-- https://checkstyle.org/checks/sizes/index.html -->
-        <module name="AnonInnerLength">
-            <property name="max" value="100"/>
-        </module>
         <module name="OuterTypeNumber"/>
 
         <!-- https://checkstyle.org/checks/whitespace/index.html -->
@@ -196,6 +210,7 @@ limitations under the License.
         <module name="MethodParamPad"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBefore"/>
+        <module name="NoWhitespaceBeforeCaseDefaultColon"/>
         <module name="SingleSpaceSeparator">
             <property name="validateComments" value="true"/>
         </module>

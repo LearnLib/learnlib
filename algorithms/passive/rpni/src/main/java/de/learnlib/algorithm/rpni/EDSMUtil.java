@@ -15,14 +15,11 @@
  */
 package de.learnlib.algorithm.rpni;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.common.smartcollection.IntSeq;
-import net.automatalib.common.util.HashUtil;
 
 final class EDSMUtil {
 
@@ -32,26 +29,19 @@ final class EDSMUtil {
                           List<IntSeq> positiveSamples,
                           List<IntSeq> negativeSamples) {
 
-        final Collection<S> states = merge.getStates();
-        final int numStates = states.size();
-        // we don't use the regular stateIDs because we only want to collect all states once.
-        final Map<S, Integer> stateIDs = new HashMap<>(HashUtil.capacity(numStates));
-
-        int counter = 0;
-        for (S s : states) {
-            stateIDs.put(s, counter++);
-        }
+        final int numStates = merge.size();
+        final StateIDs<S> stateIDs = merge.stateIDs();
 
         final int[] tp = new int[numStates];
         final int[] tn = new int[numStates];
 
         for (IntSeq w : positiveSamples) {
-            int index = stateIDs.get(merge.getState(w));
+            int index = stateIDs.getStateId(merge.getState(w));
             tp[index]++;
         }
 
         for (IntSeq w : negativeSamples) {
-            int index = stateIDs.get(merge.getState(w));
+            int index = stateIDs.getStateId(merge.getState(w));
             tn[index]++;
         }
 

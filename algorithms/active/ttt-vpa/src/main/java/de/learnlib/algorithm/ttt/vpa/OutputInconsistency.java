@@ -18,10 +18,6 @@ package de.learnlib.algorithm.ttt.vpa;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.ContextPair;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.HypLoc;
 
-/**
- * @param <I>
- *         input symbol type
- */
 final class OutputInconsistency<I> {
 
     public final HypLoc<I> location;

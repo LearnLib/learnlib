@@ -60,6 +60,8 @@ public class OSTIATest {
     /**
      * Returns the examples from Section 18.3.4 of Colin de la Higuera's book "Grammatical Inference" with a's encoded
      * as 0 and b's encoded as 1.
+     *
+     * @return the encoded traces
      */
     public List<Pair<IntSeq, IntSeq>> getExampleSamples() {
         return Arrays.asList(Pair.of(IntSeq.of(0), IntSeq.of(1)),

@@ -32,7 +32,6 @@ public class MealyWrapper<S extends AbstractBasePTAState<S, Void, O>, I, O>
     private final BasePTA<S, Void, O> pta;
 
     public MealyWrapper(Alphabet<I> alphabet, BasePTA<S, Void, O> pta) {
-        assert alphabet.size() == pta.getInputAlphabet().size();
         this.alphabet = alphabet;
         this.pta = pta;
     }

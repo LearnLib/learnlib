@@ -79,7 +79,7 @@ public interface PropertyOracle<I, A extends Output<I, D>, P, D> extends Inclusi
      * @param inputs
      *         the inputs
      *
-     * @return the {@link DefaultQuery} that is a counterexample the property, or {@code null}, if the property could
+     * @return the {@link DefaultQuery} that is a counterexample to the property, or {@code null}, if the property could
      * not be disproved.
      */
     @Nullable DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs);

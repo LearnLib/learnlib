@@ -43,17 +43,27 @@ public abstract class AbstractStaticBatchProcessorBuilder<Q, P extends BatchProc
     private @NonNegative int numInstances = AbstractStaticBatchProcessor.NUM_INSTANCES;
     private PoolPolicy poolPolicy = AbstractStaticBatchProcessor.POOL_POLICY;
 
+    public AbstractStaticBatchProcessorBuilder(Supplier<? extends P> oracleSupplier) {
+        this.oracles = null;
+        this.oracleSupplier = oracleSupplier;
+    }
+
     public AbstractStaticBatchProcessorBuilder(Collection<? extends P> oracles) {
-        if (oracles.isEmpty()) {
-            throw new IllegalArgumentException("No oracles specified");
-        }
+        this(validateInputs(oracles), oracles);
+    }
+
+    // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    private AbstractStaticBatchProcessorBuilder(boolean valid, Collection<? extends P> oracles) {
         this.oracles = oracles;
         this.oracleSupplier = null;
     }
 
-    public AbstractStaticBatchProcessorBuilder(Supplier<? extends P> oracleSupplier) {
-        this.oracles = null;
-        this.oracleSupplier = oracleSupplier;
+    private static boolean validateInputs(Collection<?> oracles) {
+        if (oracles.isEmpty()) {
+            throw new IllegalArgumentException("No oracles specified");
+        }
+        return true;
     }
 
     public AbstractStaticBatchProcessorBuilder<Q, P, OR> withMinBatchSize(@NonNegative int minBatchSize) {

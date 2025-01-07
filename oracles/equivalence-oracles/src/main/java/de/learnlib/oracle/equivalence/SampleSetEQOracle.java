@@ -63,10 +63,10 @@ public class SampleSetEQOracle<I, D> implements EquivalenceOracle<SuffixOutput<I
      */
     public SampleSetEQOracle(boolean removeUnsuccessful) {
         this.removeUnsuccessful = removeUnsuccessful;
-        if (!removeUnsuccessful) {
-            testQueries = new ArrayList<>();
-        } else {
+        if (removeUnsuccessful) {
             testQueries = new LinkedList<>(); // for O(1) removal of elements
+        } else {
+            testQueries = new ArrayList<>();
         }
     }
 
