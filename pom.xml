@@ -43,7 +43,7 @@ limitations under the License.
             <name>Markus Frohme</name>
             <email>markus.frohme@udo.edu</email>
             <organization>TU Dortmund University, Chair of Programming Systems</organization>
-            <organizationUrl>https://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
                 <role>Maintainer</role>
@@ -54,7 +54,7 @@ limitations under the License.
             <name>Falk Howar</name>
             <email>falk.howar@gmail.com</email>
             <organization>TU Dortmund University, Chair of Software Engineering</organization>
-            <organizationUrl>https://ls14-www.cs.tu-dortmund.de/</organizationUrl>
+            <organizationUrl>http://ls14-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
             </roles>
