@@ -81,8 +81,8 @@ For developing the code base of LearnLib it is suggested to use one of the major
 
 ## Documentation
 
-* **Maven Project Site:** [latest release](http://learnlib.github.io/learnlib/maven-site/latest/) | [older versions](http://learnlib.github.io/learnlib/maven-site/)
-* **API Documentation:** [latest release](http://learnlib.github.io/learnlib/maven-site/latest/apidocs/) | [older versions](http://learnlib.github.io/learnlib/maven-site/)
+* **Maven Project Site:** [latest release](https://learnlib.github.io/learnlib/maven-site/latest/) | [older versions](https://learnlib.github.io/learnlib/maven-site/)
+* **API Documentation:** [latest release](https://learnlib.github.io/learnlib/maven-site/latest/apidocs/) | [older versions](https://learnlib.github.io/learnlib/maven-site/)
 
 
 ## Questions?
@@ -98,15 +98,15 @@ If you have any questions regarding the usage of LearnLib or if you want to disc
 
 
 [1]: http://www.apache.org/licenses/LICENSE-2.0
-[2]: http://www.cs.tu-dortmund.de
-[3]: http://www.learnlib.de
+[2]: https://cs.tu-dortmund.de
+[3]: https://learnlib.de
 [4]: https://github.com/misberner
 [5]: https://github.com/fhowar
 [6]: https://github.com/mtf90
 [7]: https://github.com/LearnLib/automatalib
 
-[maven-central]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib%22
-[maven-central-distr]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib.distribution%22
+[maven-central]: https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib%22
+[maven-central-distr]: https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib.distribution%22
 [intellij]: https://www.jetbrains.com/idea/
 [eclipse]: https://www.eclipse.org/
 [ltsmin]: https://ltsmin.utwente.nl/

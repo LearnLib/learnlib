@@ -29,7 +29,7 @@ limitations under the License.
 
     <name>LearnLib</name>
     <description>A framework for active automata learning and experimentation</description>
-    <url>http://learnlib.github.io/learnlib/maven-site/${project.version}</url>
+    <url>https://learnlib.github.io/learnlib/maven-site/${project.version}</url>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -43,7 +43,7 @@ limitations under the License.
             <name>Markus Frohme</name>
             <email>markus.frohme@udo.edu</email>
             <organization>TU Dortmund University, Chair of Programming Systems</organization>
-            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <organizationUrl>https://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
                 <role>Maintainer</role>
@@ -54,7 +54,7 @@ limitations under the License.
             <name>Falk Howar</name>
             <email>falk.howar@gmail.com</email>
             <organization>TU Dortmund University, Chair of Software Engineering</organization>
-            <organizationUrl>http://ls14-www.cs.tu-dortmund.de/</organizationUrl>
+            <organizationUrl>https://ls14-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
             </roles>
@@ -259,7 +259,7 @@ limitations under the License.
         <testng.version>7.10.2</testng.version>
 
         <!-- Javadoc links -->
-        <automatalib.apidocs>http://learnlib.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
+        <automatalib.apidocs>https://learnlib.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
         <checkerframework.apidocs>https://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
     </properties>
 
