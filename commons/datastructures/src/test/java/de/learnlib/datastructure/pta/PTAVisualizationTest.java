@@ -16,7 +16,9 @@
 package de.learnlib.datastructure.pta;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,14 +67,26 @@ public class PTAVisualizationTest {
     }
 
     @Test
-    public void testVisualization() throws IOException {
-        final StringWriter actualPTA = new StringWriter();
-        GraphDOT.write(this.pta, actualPTA);
+    public void testBasePTA() throws IOException {
+        try (Reader in = IOUtil.asBufferedUTF8Reader(PTAVisualizationTest.class.getResourceAsStream("/pta.dot"));
+             Writer out = new StringWriter()) {
 
-        final String expectedPTA =
-                IOUtil.toString(IOUtil.asBufferedUTF8Reader(PTAVisualizationTest.class.getResourceAsStream(
-                        "/pta.dot")));
+            GraphDOT.write(this.pta, out);
+            Assert.assertEquals(out.toString(), IOUtil.toString(in));
+        }
+    }
 
-        Assert.assertEquals(actualPTA.toString(), expectedPTA);
+    @Test(dependsOnMethods = "testBasePTA") // we don't really depend on it, but we should get invoked after it
+    public void testPromotedPTA() throws IOException {
+        final List<PTATransition<BlueFringePTAState<Character, Void>>> promotions = new ArrayList<>();
+        this.pta.init(promotions::add);
+        this.pta.promote(promotions.get(0).getTarget(), b -> {});
+
+        try (Reader in = IOUtil.asBufferedUTF8Reader(PTAVisualizationTest.class.getResourceAsStream("/promoted.dot"));
+             Writer out = new StringWriter()) {
+
+            GraphDOT.write(this.pta, out);
+            Assert.assertEquals(out.toString(), IOUtil.toString(in));
+        }
     }
 }

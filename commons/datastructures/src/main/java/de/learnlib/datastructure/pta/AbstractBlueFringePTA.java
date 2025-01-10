@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+import de.learnlib.datastructure.pta.visualization.BlueFringeVisualizationHelper;
+import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.visualization.VisualizationHelper;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -71,4 +74,8 @@ public abstract class AbstractBlueFringePTA<S extends AbstractBlueFringePTAState
         return merge;
     }
 
+    @Override
+    protected VisualizationHelper<S, TransitionEdge<Integer, PTATransition<S>>> getVisualizationHelper() {
+        return new BlueFringeVisualizationHelper<>(this);
+    }
 }

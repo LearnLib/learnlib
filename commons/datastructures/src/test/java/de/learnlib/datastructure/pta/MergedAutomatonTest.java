@@ -15,12 +15,20 @@
  */
 package de.learnlib.datastructure.pta;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
 
+import de.learnlib.datastructure.pta.visualization.PTAVisualizationHelper;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.common.smartcollection.IntSeq;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -87,5 +95,38 @@ public class MergedAutomatonTest {
 
         Assert.assertEquals(mergedAutomaton.getState(Word.fromSymbols(1, 0)), q6);
         Assert.assertEquals(mergedAutomaton.getSuccessor(q3, 0), q6);
+    }
+
+    @Test
+    public void testTraversalWithProperties() throws IOException {
+
+        final BlueFringePTA<Boolean, Character> pta = new BlueFringePTA<>(2);
+
+        pta.addSampleWithStateProperties(IntSeq.of(0, 1), Arrays.asList(true, null, null));
+        pta.addSampleWithStateProperties(IntSeq.of(1, 0, 1), Arrays.asList(true, true, false, true));
+
+        pta.addSampleWithTransitionProperties(IntSeq.of(0, 1), Arrays.asList('a', null));
+        pta.addSampleWithTransitionProperties(IntSeq.of(1, 0, 1), Arrays.asList('b', 'a', 'c'));
+
+        BlueFringePTAState<Boolean, Character> root = pta.getRoot();
+        pta.init(b -> {});
+        pta.promote(root.getSuccessor(0), b -> {});
+
+        RedBlueMerge<BlueFringePTAState<Boolean, Character>, Boolean, Character> merge =
+                pta.tryMerge(root, root.getSuccessor(1));
+
+        Assert.assertNotNull(merge);
+        assertMergedAutomaton(merge.toMergedAutomaton());
+    }
+
+    private static <S, T, SP, TP> void assertMergedAutomaton(UniversalDeterministicAutomaton<S, Integer, T, SP, TP> automaton)
+            throws IOException {
+
+        try (Reader in = IOUtil.asBufferedUTF8Reader(PTAVisualizationTest.class.getResourceAsStream("/merged.dot"));
+             Writer out = new StringWriter()) {
+
+            GraphDOT.write(automaton, Alphabets.integers(0, 1), out, new PTAVisualizationHelper<>(automaton));
+            Assert.assertEquals(out.toString(), IOUtil.toString(in));
+        }
     }
 }

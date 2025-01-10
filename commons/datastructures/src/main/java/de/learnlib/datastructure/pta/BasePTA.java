@@ -22,10 +22,10 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import de.learnlib.datastructure.pta.visualization.PTAVisualizationHelper;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.FiniteAlphabetAutomaton;
@@ -33,7 +33,6 @@ import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
-import net.automatalib.automaton.visualization.AutomatonVisualizationHelper;
 import net.automatalib.common.smartcollection.IntSeq;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.graph.UniversalGraph;
@@ -255,31 +254,12 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, SP, TP>
 
             @Override
             public VisualizationHelper<S, TransitionEdge<Integer, PTATransition<S>>> getVisualizationHelper() {
-                return new AutomatonVisualizationHelper<S, Integer, PTATransition<S>, BasePTA<S, SP, TP>>(BasePTA.this) {
-
-                    @Override
-                    public boolean getEdgeProperties(S src,
-                                                     TransitionEdge<Integer, PTATransition<S>> edge,
-                                                     S tgt,
-                                                     Map<String, String> properties) {
-                        super.getEdgeProperties(src, edge, tgt, properties);
-
-                        final Integer input = edge.getInput();
-                        properties.put(EdgeAttrs.LABEL, input + " / " + src.getTransProperty(input));
-
-                        return true;
-                    }
-
-                    @Override
-                    public boolean getNodeProperties(S node, Map<String, String> properties) {
-                        super.getNodeProperties(node, properties);
-
-                        properties.put(NodeAttrs.LABEL, Objects.toString(node.getProperty()));
-
-                        return true;
-                    }
-                };
+                return BasePTA.this.getVisualizationHelper();
             }
         };
+    }
+
+    protected VisualizationHelper<S, TransitionEdge<Integer, PTATransition<S>>> getVisualizationHelper() {
+        return new PTAVisualizationHelper<>(this);
     }
 }

@@ -18,16 +18,16 @@ package de.learnlib.datastructure.pta;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.array.ArrayStorage;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, TP> {
@@ -39,7 +39,6 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
     private final int alphabetSize;
     private final S qr;
     private final S qb;
-    private boolean merged;
 
     public RedBlueMerge(AbstractBlueFringePTA<S, SP, TP> pta, S qr, S qb) {
         this(pta, qr, qb, validateInputs(pta, qr, qb));
@@ -79,7 +78,6 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
     }
 
     public boolean merge() {
-        this.merged = true;
         if (!mergeRedProperties(qr, qb)) {
             return false;
         }
@@ -161,9 +159,6 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
 
     private S cloneTopSucc(S succ, int i, Deque<FoldRecord<S>> stack, @Nullable ArrayStorage<TP> newTPs) {
         S succClone = (newTPs != null) ? succ.copy(newTPs) : succ.copy();
-        if (succClone == succ) {
-            return succ;
-        }
         FoldRecord<S> peek = stack.peek();
         assert peek != null;
         S top = peek.q;
@@ -180,9 +175,6 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
         assert !topState.isRed();
 
         S topClone = topState.copy();
-        if (topClone == topState) {
-            return topState;
-        }
         S currTgt = topClone;
 
         Iterator<FoldRecord<S>> it = stack.iterator();
@@ -198,9 +190,6 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
             S currSrcClone = currSrc.copy();
             assert currSrcClone.successors != null;
             currSrcClone.successors.set(currRec.i, currTgt);
-            if (currSrcClone == currSrc) {
-                return topClone; // we're done
-            }
             currRec.q = currSrcClone;
             currTgt = currSrcClone;
 
@@ -321,10 +310,12 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
     }
 
     /**
-     * Merges two non-null transition property arrays. The behavior of this method is as follows: <ul> <li>if {@code
-     * tps1} subsumes {@code tps2}, then {@code tps1} is returned.</li> <li>otherwise, if {@code tps1} and {@code tps2}
-     * can be merged, a new {@link ArrayStorage} containing the result of the merge is returned. <li>otherwise
-     * (i.e., if no merge is possible), {@code null} is returned. </ul>
+     * Merges two non-null transition property arrays. The behavior of this method is as follows:
+     * <ul>
+     *     <li>if {@code tps1} subsumes {@code tps2}, then {@code tps1} is returned.</li>
+     *     <li>otherwise, if {@code tps1} and {@code tps2} can be merged, a new {@link ArrayStorage} containing the result of the merge is returned.</li>
+     *     <li>otherwise (i.e., if no merge is possible), {@code null} is returned.</li>
+     * </ul>
      */
     @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull") // null is semantically different from an empty list
     private @Nullable ArrayStorage<TP> mergeTransProperties(ArrayStorage<TP> tps1, ArrayStorage<TP> tps2) {
@@ -432,52 +423,42 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
         }
     }
 
+    /**
+     * Returns an automaton-based view of the merge. If the merge was not yet {@link #merge() tried}, this view is equal
+     * to the unmodified PTA.
+     *
+     * @return the automaton-based view of this merge
+     */
     public UniversalDeterministicAutomaton<S, Integer, ?, SP, TP> toMergedAutomaton() {
-        if (!this.merged) {
-            throw new IllegalStateException("#merge has not been called yet");
-        }
+        return new UniversalDeterministicAutomaton<S, Integer, PTATransition<S>, SP, TP>() {
 
-        return new UniversalDeterministicAutomaton<S, Integer, Pair<S, Integer>, SP, TP>() {
-
-            private Set<S> states;
+            private @MonotonicNonNull Set<S> states;
 
             @Override
-            public @Nullable S getSuccessor(Pair<S, Integer> transition) {
-                final S source = transition.getFirst();
-                final Integer input = transition.getSecond();
-
-                if (source.isRed() && succMod.get(source.id) != null) {
-                    return succMod.get(source.id).get(input);
-                }
-
-                return pta.getSuccessor(source, input);
+            public S getSuccessor(PTATransition<S> transition) {
+                return Objects.requireNonNull(RedBlueMerge.this.getSucc(transition.getSource(), transition.getIndex()));
             }
 
             @Override
             public SP getStateProperty(S state) {
-                if (state.isRed() && propMod.get(state.id) != null) {
-                    return propMod.get(state.id);
-                }
-
-                return state.getStateProperty();
+                return RedBlueMerge.this.getStateProperty(state);
             }
 
             @Override
-            public TP getTransitionProperty(Pair<S, Integer> transition) {
-                final S source = transition.getFirst();
-                final Integer input = transition.getSecond();
+            public TP getTransitionProperty(PTATransition<S> transition) {
+                ArrayStorage<TP> properties = RedBlueMerge.this.getTransProperties(transition.getSource());
 
-                if (source.isRed() && transPropMod.get(source.id) != null) {
-                    return transPropMod.get(source.id).get(input);
+                if (properties != null) {
+                    return properties.get(transition.getIndex());
                 }
 
-                assert source.transProperties != null;
-                return source.transProperties.get(input);
+                return null;
             }
 
             @Override
-            public Pair<S, Integer> getTransition(S state, Integer input) {
-                return Pair.of(state, input);
+            public @Nullable PTATransition<S> getTransition(S state, Integer input) {
+                final S succ = RedBlueMerge.this.getSucc(state, input);
+                return succ == null ? null : new PTATransition<>(state, input);
             }
 
             @Override
@@ -487,22 +468,21 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
                     return states;
                 }
 
-                states = new HashSet<>();
+                states = new LinkedHashSet<>();
                 final Queue<S> discoverQueue = new ArrayDeque<>();
 
                 S initialState = getInitialState();
                 assert initialState != null;
                 discoverQueue.add(initialState);
+                states.add(initialState);
 
                 S iter;
 
                 while ((iter = discoverQueue.poll()) != null) {
-                    states.add(iter);
-
                     for (int i = 0; i < alphabetSize; i++) {
                         final S succ = getSuccessor(iter, i);
 
-                        if (succ != null && !states.contains(succ)) {
+                        if (succ != null && states.add(succ)) {
                             discoverQueue.add(succ);
                         }
                     }

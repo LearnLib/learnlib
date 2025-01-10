@@ -46,6 +46,7 @@ public abstract class AbstractBasePTAState<S extends AbstractBasePTAState<S, SP,
 
     public S copy(@Nullable ArrayStorage<TP> newTPs) {
         try {
+            // we need to clone here, because we want to copy (unknown at this point) sub-class attributes like coloring
             @SuppressWarnings("unchecked")
             S copy = (S) clone();
             copy.transProperties = newTPs;

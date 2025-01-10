@@ -47,4 +47,5 @@ open module de.learnlib.datastructure {
     exports de.learnlib.datastructure.pta;
     exports de.learnlib.datastructure.pta.config;
     exports de.learnlib.datastructure.pta.wrapper;
+    exports de.learnlib.datastructure.pta.visualization;
 }
