@@ -1,4 +1,5 @@
 name: CI
+permissions: read-all
 
 on: [ push, pull_request ]
 
@@ -11,7 +12,7 @@ jobs:
     name: "Tests and Analysis (JDK: ${{ matrix.jdk }})"
     strategy:
       matrix:
-        jdk: [ 8, 11, 17, 21 ]
+        jdk: [ 11, 17, 21 ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -49,13 +50,13 @@ jobs:
           mvn -B install -DskipTests
           cd $GITHUB_WORKSPACE
       - name: Run Maven
-        run: mvn -B install site -Pintegration-tests,code-analysis,bundles
+        run: mvn -B install site -Pintegration-tests,code-analysis,bundles,jlink
   platform-integration:
     name: "Platform Integration (JDK: ${{ matrix.jdk }}, OS: ${{ matrix.os }})"
     needs: [ tests-and-analysis ]
     strategy:
       matrix:
-        jdk: [ 8, 11, 17, 21 ]
+        jdk: [ 11, 17, 21 ]
         os: [ ubuntu-latest, windows-latest, macOS-latest ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -83,10 +84,10 @@ jobs:
         run: |
           git clone -b ${AUTOMATALIB_BRANCH:-develop} --single-branch https://github.com/${AUTOMATALIB_FORK:-LearnLib}/automatalib.git ${HOME}/automatalib-git
           cd ${HOME}/automatalib-git
-          mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' '-Dautomatalib.targetVersion=${{ matrix.jdk }}' install -DskipTests
+          mvn -B install -DskipTests
           cd $GITHUB_WORKSPACE
       - name: Run Maven
-        run: mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' '-Dlearnlib.targetVersion=${{ matrix.jdk }}' install
+        run: mvn -B install -Pjlink
   coverage:
     name: "Coverage"
     needs: [ platform-integration ]
@@ -98,7 +99,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 8
+          java-version: 11
       - name: Set up cache
         uses: actions/cache@v3
         with:
@@ -149,7 +150,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 8
+          java-version: 11
       - name: Set up cache
         uses: actions/cache@v3
         with:
