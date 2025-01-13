@@ -30,6 +30,7 @@ import de.learnlib.algorithm.adt.model.ReplacementResult;
 import de.learnlib.algorithm.adt.util.ADTUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class LevelOrderReplacer implements SubtreeReplacer {
 
@@ -55,7 +56,8 @@ public class LevelOrderReplacer implements SubtreeReplacer {
         queue.add(adt.getRoot());
 
         while (!queue.isEmpty()) {
-            final ADTNode<S, I, O> node = queue.poll();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            final @NonNull ADTNode<S, I, O> node = queue.poll();
             final Set<S> targetStates = ADTUtil.collectHypothesisStates(node);
 
             // try to extendLeaf the parent ADS

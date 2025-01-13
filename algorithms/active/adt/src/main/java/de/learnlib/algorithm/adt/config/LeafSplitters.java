@@ -162,9 +162,11 @@ public final class LeafSplitters {
             adsIter = adsIter.getChild(newSuffixOutput);
         }
 
-        final ADTNode<S, I, O> continuedADS = new ADTSymbolNode<>(adsIter.getParent(), suffixIter.next());
+        final ADTNode<S, I, O> parent = adsIter.getParent();
+        final ADTNode<S, I, O> continuedADS = new ADTSymbolNode<>(parent, suffixIter.next());
 
-        adsIter.getParent().getChildren().put(newSuffixOutput, continuedADS);
+        assert parent != null;
+        parent.getChildren().put(newSuffixOutput, continuedADS);
 
         return finalizeSplit(nodeToSplit, continuedADS, suffixIter, oldIter, newIter);
     }

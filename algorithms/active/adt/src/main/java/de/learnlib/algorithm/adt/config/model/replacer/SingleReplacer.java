@@ -50,8 +50,7 @@ public class SingleReplacer implements SubtreeReplacer {
                                                                          Alphabet<I> inputs,
                                                                          ADT<S, I, O> adt) {
 
-        final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot());
-        candidates.remove(adt.getRoot());
+        final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot(), false);
 
         // cache scores to prevent expensive recalculations during sorting
         final List<Pair<ADTNode<S, I, O>, Double>> sortedCandidates = new ArrayList<>(candidates.size());
@@ -111,12 +110,11 @@ public class SingleReplacer implements SubtreeReplacer {
      *
      * @return a ReplacementResult for the parent (reset) node, if a valid replacement is found. {@code null} otherwise.
      */
-    @Nullable
-    static <S, I, O> ReplacementResult<S, I, O> computeParentExtension(MealyMachine<S, I, ?, O> hypothesis,
-                                                                       Alphabet<I> inputs,
-                                                                       ADTNode<S, I, O> node,
-                                                                       Set<S> targetStates,
-                                                                       ADSCalculator adsCalculator) {
+    static <S, I, O> @Nullable ReplacementResult<S, I, O> computeParentExtension(MealyMachine<S, I, ?, O> hypothesis,
+                                                                                 Alphabet<I> inputs,
+                                                                                 ADTNode<S, I, O> node,
+                                                                                 Set<S> targetStates,
+                                                                                 ADSCalculator adsCalculator) {
         final ADTNode<S, I, O> parentReset = node.getParent();
         assert ADTUtil.isResetNode(parentReset) : "should not happen";
 

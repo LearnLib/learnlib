@@ -57,8 +57,7 @@ public class ExhaustiveReplacer implements SubtreeReplacer {
             return Collections.singleton(new ReplacementResult<>(adt.getRoot(), potentialResult.get()));
         }
 
-        final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot());
-        candidates.remove(adt.getRoot());
+        final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot(), false);
 
         final PriorityQueue<Set<S>> queue = new PriorityQueue<>(candidates.size(), Comparator.comparingInt(Set::size));
         for (ADTNode<S, I, O> node : candidates) {

@@ -18,8 +18,6 @@ package de.learnlib.algorithm.adt.adt;
 import java.util.Collections;
 import java.util.Map;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 /**
  * Reset node implementation.
  *
@@ -40,8 +38,8 @@ public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
     }
 
     @Override
-    public @Nullable I getSymbol() {
-        return null;
+    public I getSymbol() {
+        throw new UnsupportedOperationException("Reset nodes do not have a symbol");
     }
 
     @Override
@@ -65,8 +63,8 @@ public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
     }
 
     @Override
-    public @Nullable S getState() {
-        return null;
+    public S getState() {
+        throw new UnsupportedOperationException("Reset nodes cannot reference a hypothesis state");
     }
 
     @Override

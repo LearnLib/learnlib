@@ -73,6 +73,7 @@ public class ADT<S, I, O> {
             this.root = newNode;
         } else if (ADTUtil.isResetNode(oldNode)) {
             final ADTNode<S, I, O> endOfPreviousADS = oldNode.getParent();
+            assert endOfPreviousADS != null;
             final O outputToReset = ADTUtil.getOutputForSuccessor(endOfPreviousADS, oldNode);
 
             newNode.setParent(endOfPreviousADS);
@@ -83,6 +84,8 @@ public class ADT<S, I, O> {
             assert ADTUtil.isResetNode(oldNodeParent);
 
             final ADTNode<S, I, O> endOfPreviousADS = oldNodeParent.getParent();
+            assert endOfPreviousADS != null;
+
             final O outputToReset = ADTUtil.getOutputForSuccessor(endOfPreviousADS, oldNodeParent);
             final ADTNode<S, I, O> newResetNode = new ADTResetNode<>(newNode);
 
@@ -191,30 +194,35 @@ public class ADT<S, I, O> {
         final Map<ADTNode<S, I, O>, ADTNode<S, I, O>> s1ParentsToS1 = new HashMap<>();
 
         ADTNode<S, I, O> s1Iter = s1;
-        ADTNode<S, I, O> s2Iter = s2;
+        ADTNode<S, I, O> s1ParentIter = s1.getParent();
 
-        while (s1Iter.getParent() != null) {
-            s1ParentsToS1.put(s1Iter.getParent(), s1Iter);
-            s1Iter = s1Iter.getParent();
+        while (s1ParentIter != null) {
+            s1ParentsToS1.put(s1ParentIter, s1Iter);
+            s1Iter = s1ParentIter;
+            s1ParentIter = s1ParentIter.getParent();
         }
 
         final Set<ADTNode<S, I, O>> s1Parents = s1ParentsToS1.keySet();
 
-        while (s2Iter.getParent() != null) {
+        ADTNode<S, I, O> s2Iter = s2;
+        ADTNode<S, I, O> s2ParentIter = s2.getParent();
 
-            if (s1Parents.contains(s2Iter.getParent())) {
-                if (!ADTUtil.isSymbolNode(s2Iter.getParent())) {
+        while (s2ParentIter != null) {
+
+            if (s1Parents.contains(s2ParentIter)) {
+                if (!ADTUtil.isSymbolNode(s2ParentIter)) {
                     throw new IllegalStateException("Only Symbol Nodes should be LCAs");
                 }
 
-                final ADTNode<S, I, O> lca = s2Iter.getParent();
+                final ADTNode<S, I, O> lca = s2ParentIter;
                 final O s1Out = ADTUtil.getOutputForSuccessor(lca, s1ParentsToS1.get(lca));
                 final O s2Out = ADTUtil.getOutputForSuccessor(lca, s2Iter);
 
                 return new LCAInfo<>(lca, s1Out, s2Out);
             }
 
-            s2Iter = s2Iter.getParent();
+            s2Iter = s2ParentIter;
+            s2ParentIter = s2ParentIter.getParent();
         }
 
         throw new IllegalStateException("Nodes do not share a parent node");

@@ -18,7 +18,6 @@ package de.learnlib.algorithm.adt.model;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 
 import de.learnlib.algorithm.LearningAlgorithm;
@@ -33,6 +32,7 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A class, that stores observations of the system under learning in a tree-like structure. Can be used to <ul> <li>
@@ -54,11 +54,13 @@ public class ObservationTree<S, I, O> implements AdaptiveMembershipOracle<I, O>,
     private final AdaptiveMembershipOracle<I, O> delegate;
 
     private final AdaptiveQueryCache<I, O> cache;
+    private final Integer init;
 
     private final Map<S, Integer> nodeToObservationMap;
 
     public ObservationTree(Alphabet<I> alphabet, AdaptiveMembershipOracle<I, O> delegate, boolean useCache) {
         this.cache = new AdaptiveQueryCache<>(delegate, alphabet);
+        this.init = this.cache.getInit();
 
         if (useCache) {
             this.delegate = this.cache;
@@ -71,15 +73,14 @@ public class ObservationTree<S, I, O> implements AdaptiveMembershipOracle<I, O>,
     }
 
     /**
-     * Initialize the observation tree with initial hypothesis state. Usually used during {@link
-     * LearningAlgorithm#startLearning()}
+     * Initialize the observation tree with initial hypothesis state. Usually used during
+     * {@link LearningAlgorithm#startLearning()}
      *
      * @param state
      *         the initial state of the hypothesis
      */
     public void initialize(S state) {
-        final Integer init = this.cache.getCache().getInitialState();
-        this.nodeToObservationMap.put(state, init);
+        this.nodeToObservationMap.put(state, this.init);
     }
 
     /**
@@ -95,11 +96,9 @@ public class ObservationTree<S, I, O> implements AdaptiveMembershipOracle<I, O>,
     public void initialize(Collection<S> states,
                            Function<S, Word<I>> asFunction,
                            Function<Word<I>, Word<O>> outputFunction) {
-        final Integer init = this.cache.getCache().getInitialState();
-
         for (S s : states) {
             final Word<I> as = asFunction.apply(s);
-            final Integer treeNode = this.addTrace(init, as, outputFunction.apply(as));
+            final Integer treeNode = this.addTrace(this.init, as, outputFunction.apply(as));
             this.nodeToObservationMap.put(s, treeNode);
         }
     }
@@ -177,10 +176,10 @@ public class ObservationTree<S, I, O> implements AdaptiveMembershipOracle<I, O>,
      * @param prefix
      *         input sequence
      *
-     * @return A {@link Word} separating the two states reached after applying the prefix to s1 and s2. {@code
-     * Optional.empty()} if not separating word exists.
+     * @return A {@link Word} separating the two states reached after applying the prefix to s1 and s2, or {@code null}
+     * if no separating word exists.
      */
-    public Optional<Word<I>> findSeparatingWord(S s1, S s2, Word<I> prefix) {
+    public @Nullable Word<I> findSeparatingWord(S s1, S s2, Word<I> prefix) {
 
         final MealyMachine<Integer, I, ?, O> cache = this.cache.getCache();
 
@@ -191,14 +190,10 @@ public class ObservationTree<S, I, O> implements AdaptiveMembershipOracle<I, O>,
         final Integer s2Succ = cache.getSuccessor(n2, prefix);
 
         if (s1Succ != null && s2Succ != null) {
-            final Word<I> sepWord = NearLinearEquivalenceTest.findSeparatingWord(cache, s1Succ, s2Succ, alphabet, true);
-
-            if (sepWord != null) {
-                return Optional.of(sepWord);
-            }
+            return NearLinearEquivalenceTest.findSeparatingWord(cache, s1Succ, s2Succ, alphabet, true);
         }
 
-        return Optional.empty();
+        return null;
     }
 
     /**
@@ -211,7 +206,7 @@ public class ObservationTree<S, I, O> implements AdaptiveMembershipOracle<I, O>,
      *
      * @return A {@link Word} separating the two words. {@code null} if no such word is found.
      */
-    public Word<I> findSeparatingWord(S s1, S s2) {
+    public @Nullable Word<I> findSeparatingWord(S s1, S s2) {
 
         final Integer n1 = this.nodeToObservationMap.get(s1);
         final Integer n2 = this.nodeToObservationMap.get(s2);

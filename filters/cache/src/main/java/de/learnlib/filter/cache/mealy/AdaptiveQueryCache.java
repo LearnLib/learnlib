@@ -173,6 +173,17 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
     }
 
     /**
+     * Returns the initial state of the structural view of the cache.
+     *
+     * @return the initial state of the cache
+     *
+     * @see #getCache()
+     */
+    public Integer getInit() {
+        return this.init;
+    }
+
+    /**
      * Inserts the given trace of input symbols and associates the trace of given output symbols with it.
      *
      * @param input
