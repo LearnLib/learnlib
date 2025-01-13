@@ -24,14 +24,14 @@ import java.util.stream.Collectors;
 
 import de.learnlib.algorithm.lsharp.ads.ADSStatus;
 import de.learnlib.algorithm.lsharp.ads.ADSTree;
-import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.SymbolQueryOracle;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class LSOracle<I, O> {
-    private final MembershipOracle<I, Word<O>> sul;
+    private final SymbolQueryOracle<I, O> sul;
     private final NormalObservationTree<I, O> obsTree;
     private final Rule2 rule2;
     private final Rule3 rule3;
@@ -39,7 +39,7 @@ public class LSOracle<I, O> {
     private final O sinkOutput;
     private final Random random;
 
-    protected LSOracle(MembershipOracle<I, Word<O>> sul, NormalObservationTree<I, O> obsTree, Rule2 rule2, Rule3 rule3,
+    protected LSOracle(SymbolQueryOracle<I, O> sul, NormalObservationTree<I, O> obsTree, Rule2 rule2, Rule3 rule3,
             Word<I> sinkState, O sinkOutput, Random random) {
         this.sul = sul;
         this.obsTree = obsTree;
@@ -226,18 +226,22 @@ public class LSOracle<I, O> {
             throw new IllegalStateException("ADS is not increasing the norm, we already knew this information.");
         }
 
-        Word<O> prefixOut = sul.answerQuery(prefix);
-        if (prefixOut.lastSymbol().equals(sinkOutput)) {
-            LSState sink = this.addObservation(prefix, prefixOut);
+        sul.reset();
+        final WordBuilder<O> os = new WordBuilder<>();
+        for (I i : prefix) {
+            os.append(sul.query(i));
+        }
+        if (os.toWord().lastSymbol().equals(sinkOutput)) {
+            LSState sink = this.addObservation(prefix, os.toWord());
             if (sinkState == null) {
                 sinkState = prefix;
             }
             this.makeSink(sink);
-            return Pair.of(prefix, prefixOut);
+            return Pair.of(prefix, os.toWord());
         }
         Pair<Word<I>, Word<O>> pair = this.sulAdaptiveQuery(prefix, suffix);
         Word<I> inputSeq = prefix.concat(pair.getFirst());
-        Word<O> outputSeq = prefixOut.concat(pair.getSecond());
+        Word<O> outputSeq = os.toWord().concat(pair.getSecond());
         this.addObservation(inputSeq, outputSeq);
         return Pair.of(inputSeq, outputSeq);
     }
@@ -251,10 +255,10 @@ public class LSOracle<I, O> {
         try {
             I nextInput = ads.nextInput(lastOutput);
             while (nextInput != null) {
-                inputsSent.add(nextInput);
-                O out = sul.answerQuery(prefix.concat(inputsSent.toWord())).lastSymbol();
+                inputsSent.append(nextInput);
+                final O out = sul.query(nextInput);
                 lastOutput = out;
-                outputsReceived.add(out);
+                outputsReceived.append(out);
 
                 nextInput = ads.nextInput(lastOutput);
             }
