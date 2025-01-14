@@ -18,7 +18,6 @@ package de.learnlib.algorithm.observationpack.vpa.hypothesis;
 import de.learnlib.AccessSequenceProvider;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.common.util.array.ArrayStorage;
-import net.automatalib.common.util.array.ResizingArrayStorage;
 import net.automatalib.word.Word;
 
 /**
@@ -32,7 +31,7 @@ public class HypLoc<I> implements AccessSequenceProvider<I> {
     private final AbstractHypTrans<I> treeIncoming;
     private final Word<I> aseq;
     private final ArrayStorage<HypIntTrans<I>> intSuccessors;
-    private final ArrayStorage<ResizingArrayStorage<HypRetTrans<I>>> returnSuccessors;
+    private final ArrayStorage<ArrayStorage<HypRetTrans<I>>> returnSuccessors;
     private final int index;
     private boolean accepting;
     private DTNode<I> leaf;
@@ -48,11 +47,11 @@ public class HypLoc<I> implements AccessSequenceProvider<I> {
 
     public void updateStackAlphabetSize(int newStackAlphaSize) {
         for (int i = 0; i < returnSuccessors.size(); i++) {
-            ResizingArrayStorage<HypRetTrans<I>> transList = returnSuccessors.get(i);
+            ArrayStorage<HypRetTrans<I>> transList = returnSuccessors.get(i);
             if (transList == null) {
-                transList = new ResizingArrayStorage<>(HypRetTrans.class, newStackAlphaSize);
+                transList = new ArrayStorage<>(newStackAlphaSize);
                 returnSuccessors.set(i, transList);
-            } else if (transList.array.length < newStackAlphaSize) {
+            } else if (transList.size() < newStackAlphaSize) {
                 transList.ensureCapacity(newStackAlphaSize);
             }
         }
@@ -88,18 +87,18 @@ public class HypLoc<I> implements AccessSequenceProvider<I> {
     }
 
     public HypRetTrans<I> getReturnTransition(int retSymId, int stackSym) {
-        final ResizingArrayStorage<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
-        return succList.array[stackSym];
+        final ArrayStorage<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
+        return succList.get(stackSym);
     }
 
     public void setReturnTransition(int retSymId, int stackSym, HypRetTrans<I> trans) {
-        ResizingArrayStorage<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
+        ArrayStorage<HypRetTrans<I>> succList = returnSuccessors.get(retSymId);
         if (succList == null) {
-            succList = new ResizingArrayStorage<>(HypRetTrans.class, stackSym + 1);
+            succList = new ArrayStorage<>(stackSym + 1);
             returnSuccessors.set(retSymId, succList);
         }
         succList.ensureCapacity(stackSym);
-        succList.array[stackSym] = trans;
+        succList.set(stackSym, trans);
     }
 
     public HypIntTrans<I> getInternalTransition(int intSymId) {

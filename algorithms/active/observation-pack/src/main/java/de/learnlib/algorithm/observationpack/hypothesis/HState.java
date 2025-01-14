@@ -16,13 +16,12 @@
 package de.learnlib.algorithm.observationpack.hypothesis;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -32,7 +31,7 @@ public class HState<I, O, SP, TP> {
     private final @Nullable HTransition<I, O, SP, TP> treeIncoming;
     private final int id;
     private final int depth;
-    private final ResizingArrayStorage<HTransition<I, O, SP, TP>> transitions;
+    private final ArrayStorage<HTransition<I, O, SP, TP>> transitions;
     private final List<HTransition<I, O, SP, TP>> nonTreeIncoming = new ArrayList<>();
     private AbstractWordBasedDTNode<I, O, HState<I, O, SP, TP>> dtLeaf;
     private SP property;
@@ -45,7 +44,7 @@ public class HState<I, O, SP, TP> {
         this.id = id;
         this.treeIncoming = treeIncoming;
         this.depth = (treeIncoming == null) ? 0 : treeIncoming.getSource().depth + 1;
-        this.transitions = new ResizingArrayStorage<>(HTransition.class, initialAlphabetSize);
+        this.transitions = new ArrayStorage<>(initialAlphabetSize);
     }
 
     public AbstractWordBasedDTNode<I, O, HState<I, O, SP, TP>> getDTLeaf() {
@@ -90,15 +89,15 @@ public class HState<I, O, SP, TP> {
     }
 
     public HTransition<I, O, SP, TP> getTransition(int transIdx) {
-        return transitions.array[transIdx];
+        return transitions.get(transIdx);
     }
 
     public void setTransition(int transIdx, HTransition<I, O, SP, TP> transition) {
-        transitions.array[transIdx] = transition;
+        transitions.set(transIdx, transition);
     }
 
     public Collection<HTransition<I, O, SP, TP>> getOutgoingTransitions() {
-        return Collections.unmodifiableList(Arrays.asList(transitions.array));
+        return Collections.unmodifiableList(transitions);
     }
 
     public int getDepth() {

@@ -16,7 +16,7 @@
 package de.learnlib.algorithm.ttt.base;
 
 import de.learnlib.AccessSequenceProvider;
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.word.Word;
 
 /**
@@ -29,7 +29,7 @@ public class TTTState<I, D> implements AccessSequenceProvider<I> {
 
     final int id;
 
-    private final ResizingArrayStorage<TTTTransition<I, D>> transitions;
+    private final ArrayStorage<TTTTransition<I, D>> transitions;
     private final TTTTransition<I, D> parentTransition;
 
     AbstractBaseDTNode<I, D> dtLeaf;
@@ -37,7 +37,7 @@ public class TTTState<I, D> implements AccessSequenceProvider<I> {
     public TTTState(int initialAlphabetSize, TTTTransition<I, D> parentTransition, int id) {
         this.id = id;
         this.parentTransition = parentTransition;
-        this.transitions = new ResizingArrayStorage<>(TTTTransition.class, initialAlphabetSize);
+        this.transitions = new ArrayStorage<>(initialAlphabetSize);
     }
 
     /**
@@ -76,15 +76,15 @@ public class TTTState<I, D> implements AccessSequenceProvider<I> {
     }
 
     public void setTransition(int idx, TTTTransition<I, D> transition) {
-        transitions.array[idx] = transition;
+        transitions.set(idx, transition);
     }
 
     public TTTTransition<I, D> getTransition(int idx) {
-        return transitions.array[idx];
+        return transitions.get(idx);
     }
 
-    public TTTTransition<I, D>[] getTransitions() {
-        return transitions.array;
+    public Iterable<TTTTransition<I, D>> getTransitions() {
+        return transitions;
     }
 
     public boolean ensureInputCapacity(int capacity) {

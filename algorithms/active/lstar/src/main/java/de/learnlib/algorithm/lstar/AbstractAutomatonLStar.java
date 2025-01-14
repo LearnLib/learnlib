@@ -24,7 +24,7 @@ import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAutomatonLStar.class);
 
     protected AI internalHyp;
-    protected ResizingArrayStorage<StateInfo<S, I>> stateInfos = new ResizingArrayStorage<>(StateInfo.class);
+    protected ArrayStorage<StateInfo<S, I>> stateInfos = new ArrayStorage<>();
 
     /**
      * Constructor.
@@ -92,11 +92,11 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
         // FIRST PASS: Create new hypothesis states
         for (Row<I> sp : table.getShortPrefixRows()) {
             int id = sp.getRowContentId();
-            StateInfo<S, I> info = stateInfos.array[id];
+            StateInfo<S, I> info = stateInfos.get(id);
 
             if (info == null) {
                 S state = createState(id == 0, sp);
-                stateInfos.array[id] = new StateInfo<>(sp, state);
+                stateInfos.set(id, new StateInfo<>(sp, state));
             } else if (info.getRow() == sp) { // State from previous hypothesis, property might have changed
                 internalHyp.setStateProperty(info.getState(), stateProperty(table, sp));
             }
@@ -105,7 +105,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
 
         // SECOND PASS: Create hypothesis transitions
         for (int r = 0; r < numDistinct; r++) {
-            StateInfo<S, I> info = stateInfos.array[r];
+            StateInfo<S, I> info = stateInfos.get(r);
             Row<I> sp = info.getRow();
             S state = info.getState();
 
@@ -115,7 +115,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
                 Row<I> succ = sp.getSuccessor(i);
                 int succId = succ.getRowContentId();
 
-                S succState = stateInfos.array[succId].getState();
+                S succState = stateInfos.get(succId).getState();
 
                 setTransition(state, input, succState, sp, i);
             }

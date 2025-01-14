@@ -15,7 +15,7 @@
  */
 package de.learnlib.datastructure.observationtable;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.word.Word;
 
 final class RowImpl<I> implements Row<I> {
@@ -25,7 +25,7 @@ final class RowImpl<I> implements Row<I> {
 
     private int rowContentId = -1;
     private int lpIndex;
-    private ResizingArrayStorage<RowImpl<I>> successors;
+    private ArrayStorage<RowImpl<I>> successors;
 
     /**
      * Constructor for short label rows.
@@ -68,12 +68,12 @@ final class RowImpl<I> implements Row<I> {
             return;
         }
         lpIndex = -1;
-        this.successors = new ResizingArrayStorage<>(RowImpl.class, initialAlphabetSize);
+        this.successors = new ArrayStorage<>(initialAlphabetSize);
     }
 
     @Override
     public RowImpl<I> getSuccessor(int inputIdx) {
-        return successors.array[inputIdx];
+        return successors.get(inputIdx);
     }
 
     /**
@@ -86,7 +86,7 @@ final class RowImpl<I> implements Row<I> {
      *         the successor row
      */
     void setSuccessor(int inputIdx, RowImpl<I> succ) {
-        successors.array[inputIdx] = succ;
+        successors.set(inputIdx, succ);
     }
 
     @Override
@@ -131,9 +131,6 @@ final class RowImpl<I> implements Row<I> {
         this.lpIndex = lpIndex;
     }
 
-    /**
-     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
-     */
     void ensureInputCapacity(int capacity) {
         this.successors.ensureCapacity(capacity);
     }
