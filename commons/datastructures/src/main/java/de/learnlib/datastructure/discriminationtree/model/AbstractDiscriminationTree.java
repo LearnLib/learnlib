@@ -23,13 +23,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.RandomAccess;
 import java.util.function.Predicate;
 
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.common.util.collection.BitSetIterator;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.graph.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
@@ -102,12 +102,7 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
             activeVector.set(i, continueExploring.test(result.get(i)));
         }
 
-        final List<Word<I>> prefixStorage;
-        if (prefixes instanceof RandomAccess) {
-            prefixStorage = prefixes;
-        } else {
-            prefixStorage = new ArrayStorage<>(prefixes);
-        }
+        final List<Word<I>> prefixStorage = CollectionUtil.randomAccessList(prefixes);
 
         while (!activeVector.isEmpty()) {
 
