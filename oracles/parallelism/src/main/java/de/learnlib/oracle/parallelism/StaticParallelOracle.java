@@ -16,6 +16,7 @@
 package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
 
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.ParallelOracle;
@@ -36,8 +37,8 @@ public class StaticParallelOracle<I, D> extends AbstractStaticBatchProcessor<Que
 
     public StaticParallelOracle(Collection<? extends MembershipOracle<I, D>> oracles,
                                 @NonNegative int minBatchSize,
-                                PoolPolicy policy) {
-        super(oracles, minBatchSize, policy);
+                                ExecutorService executorService) {
+        super(oracles, minBatchSize, executorService);
     }
 
     @Override

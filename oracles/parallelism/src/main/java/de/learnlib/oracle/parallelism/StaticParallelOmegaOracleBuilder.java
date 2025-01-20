@@ -16,10 +16,10 @@
 package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
 import de.learnlib.oracle.OmegaMembershipOracle;
-import de.learnlib.oracle.ThreadPool.PoolPolicy;
 import de.learnlib.query.OmegaQuery;
 
 /**
@@ -44,7 +44,7 @@ public class StaticParallelOmegaOracleBuilder<S, I, D>
     @Override
     protected StaticParallelOmegaOracle<S, I, D> buildOracle(Collection<? extends OmegaMembershipOracle<S, I, D>> oracleInstances,
                                                              int minBatchSize,
-                                                             PoolPolicy poolPolicy) {
-        return new StaticParallelOmegaOracle<>(oracleInstances, minBatchSize, poolPolicy);
+                                                             ExecutorService executorService) {
+        return new StaticParallelOmegaOracle<>(oracleInstances, minBatchSize, executorService);
     }
 }

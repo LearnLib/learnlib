@@ -127,7 +127,7 @@ public abstract class AbstractStaticParallelOracleTest<D> {
         return 0;
     }
 
-    private List<DefaultQuery<Integer, D>> createQueries(int num) {
+    protected List<DefaultQuery<Integer, D>> createQueries(int num) {
         List<DefaultQuery<Integer, D>> result = new ArrayList<>(num);
         for (int i = 0; i < num; i++) {
             DefaultQuery<Integer, D> qry =

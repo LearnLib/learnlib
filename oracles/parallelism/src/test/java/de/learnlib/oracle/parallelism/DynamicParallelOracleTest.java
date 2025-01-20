@@ -15,10 +15,12 @@
  */
 package de.learnlib.oracle.parallelism;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
 
 import de.learnlib.oracle.ParallelOracle;
 import de.learnlib.oracle.ThreadPool.PoolPolicy;
@@ -113,6 +115,18 @@ public class DynamicParallelOracleTest extends AbstractDynamicParallelOracleTest
 
         try {
             // this method only returns, if the countDownOracle was scheduled 9 times to unblock the awaitingOracle
+            oracle.processQueries(queries);
+        } finally {
+            oracle.shutdown();
+        }
+    }
+
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testCustomExecutorTooManyThreads() {
+        // this tests provides a list of 3 oracles
+        ParallelOracle<Void, Void> oracle = getBuilder().withCustomExecutor(Executors.newFixedThreadPool(5)).create();
+        try {
+            List<AnswerOnceQuery<Void>> queries = new ArrayList<>(createQueries(10));
             oracle.processQueries(queries);
         } finally {
             oracle.shutdown();

@@ -21,17 +21,12 @@ import org.testng.annotations.Test;
 public class SettingsTest {
 
     @Test
-    public void testDynamicProcessor() {
+    public void testDefaults() {
         // best-case would be to test a non-default value but that somehow slows down the tests a lot
-        Assert.assertEquals(AbstractDynamicBatchProcessor.BATCH_SIZE, 1);
-        Assert.assertEquals(AbstractDynamicBatchProcessor.POOL_POLICY.name(), "FIXED");
-        Assert.assertEquals(AbstractDynamicBatchProcessor.POOL_SIZE, 5);
+        Assert.assertEquals(BatchProcessorDefaults.BATCH_SIZE, 1);
+        Assert.assertEquals(BatchProcessorDefaults.MIN_BATCH_SIZE, 4);
+        Assert.assertEquals(BatchProcessorDefaults.POOL_POLICY.name(), "FIXED");
+        Assert.assertEquals(BatchProcessorDefaults.POOL_SIZE, 5);
     }
 
-    @Test
-    public void testStaticProcessor() {
-        Assert.assertEquals(AbstractStaticBatchProcessor.MIN_BATCH_SIZE, 4);
-        Assert.assertEquals(AbstractStaticBatchProcessor.POOL_POLICY.name(), "FIXED");
-        Assert.assertEquals(AbstractStaticBatchProcessor.NUM_INSTANCES, 5);
-    }
 }

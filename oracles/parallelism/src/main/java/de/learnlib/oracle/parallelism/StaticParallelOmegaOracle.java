@@ -16,6 +16,7 @@
 package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
 
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.OmegaMembershipOracle;
@@ -39,8 +40,8 @@ public class StaticParallelOmegaOracle<S, I, D>
 
     public StaticParallelOmegaOracle(Collection<? extends OmegaMembershipOracle<S, I, D>> oracles,
                                      @NonNegative int minBatchSize,
-                                     PoolPolicy policy) {
-        super(oracles, minBatchSize, policy);
+                                     ExecutorService executorService) {
+        super(oracles, minBatchSize, executorService);
     }
 
     @Override

@@ -32,7 +32,7 @@ import de.learnlib.filter.cache.LearningCacheOracle.MealyLearningCacheOracle;
 import de.learnlib.filter.cache.LearningCacheOracle.MooreLearningCacheOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.ParallelOracle;
-import de.learnlib.oracle.parallelism.AbstractStaticBatchProcessor;
+import de.learnlib.oracle.parallelism.BatchProcessorDefaults;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
 import de.learnlib.sul.SUL;
 import de.learnlib.sul.StateLocalInputSUL;
@@ -188,9 +188,9 @@ public interface CacheConfig<I, D, C extends LearningCache<?, I, D>> {
                 final List<C> oracles;
 
                 {
-                    List<M> suls = new ArrayList<>(AbstractStaticBatchProcessor.NUM_INSTANCES);
+                    List<M> suls = new ArrayList<>(BatchProcessorDefaults.POOL_SIZE);
 
-                    for (int i = 0; i < AbstractStaticBatchProcessor.NUM_INSTANCES; i++) {
+                    for (int i = 0; i < BatchProcessorDefaults.POOL_SIZE; i++) {
                         suls.add(oracle);
                     }
                     this.oracles = new ArrayList<>(provider.apply(alphabet, suls));

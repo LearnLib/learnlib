@@ -16,6 +16,7 @@
 package de.learnlib.oracle.parallelism;
 
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
 
 import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.ParallelAdaptiveOracle;
@@ -37,8 +38,8 @@ public class StaticParallelAdaptiveOracle<I, O>
 
     public StaticParallelAdaptiveOracle(Collection<? extends AdaptiveMembershipOracle<I, O>> oracles,
                                         @NonNegative int minBatchSize,
-                                        PoolPolicy policy) {
-        super(oracles, minBatchSize, policy);
+                                        ExecutorService executorService) {
+        super(oracles, minBatchSize, executorService);
     }
 
     @Override

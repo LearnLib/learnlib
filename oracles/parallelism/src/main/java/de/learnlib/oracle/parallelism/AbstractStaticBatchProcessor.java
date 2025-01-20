@@ -21,15 +21,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import de.learnlib.exception.BatchInterruptedException;
 import de.learnlib.oracle.BatchProcessor;
 import de.learnlib.oracle.ThreadPool;
-import de.learnlib.setting.LearnLibProperty;
-import de.learnlib.setting.LearnLibSettings;
-import net.automatalib.common.util.array.ArrayStorage;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.exception.ExceptionUtil;
 import org.checkerframework.checker.index.qual.NonNegative;
 
@@ -48,37 +45,16 @@ import org.checkerframework.checker.index.qual.NonNegative;
 public abstract class AbstractStaticBatchProcessor<Q, P extends BatchProcessor<Q>>
         implements ThreadPool, BatchProcessor<Q> {
 
-    private static final int DEFAULT_MIN_BATCH_SIZE = 10;
-    public static final int MIN_BATCH_SIZE;
-    public static final int NUM_INSTANCES;
-    public static final PoolPolicy POOL_POLICY;
-
-    static {
-        LearnLibSettings settings = LearnLibSettings.getInstance();
-
-        int numCores = Runtime.getRuntime().availableProcessors();
-
-        MIN_BATCH_SIZE = settings.getInt(LearnLibProperty.PARALLEL_BATCH_SIZE_STATIC, DEFAULT_MIN_BATCH_SIZE);
-        NUM_INSTANCES = settings.getInt(LearnLibProperty.PARALLEL_POOL_SIZE, numCores);
-        POOL_POLICY = settings.getEnumValue(LearnLibProperty.PARALLEL_POOL_POLICY, PoolPolicy.class, PoolPolicy.CACHED);
-    }
-
     private final @NonNegative int minBatchSize;
-    private final ArrayStorage<P> oracles;
+    private final List<? extends P> oracles;
     private final ExecutorService executor;
 
     public AbstractStaticBatchProcessor(Collection<? extends P> oracles,
                                         @NonNegative int minBatchSize,
-                                        PoolPolicy policy) {
-
-        this.oracles = new ArrayStorage<>(oracles);
-
-        if (policy == PoolPolicy.FIXED) {
-            this.executor = Executors.newFixedThreadPool(this.oracles.size() - 1);
-        } else { // default is cached
-            this.executor = Executors.newCachedThreadPool();
-        }
+                                        ExecutorService executor) {
+        this.oracles = CollectionUtil.randomAccessList(oracles);
         this.minBatchSize = minBatchSize;
+        this.executor = executor;
     }
 
     @Override
