@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.algorithm.lsharp;
 
 public class LSState implements Comparable<LSState> {
-    private final Integer base;
+    private final int base;
 
-    public LSState(Integer base) {
+    public LSState(int base) {
         this.base = base;
     }
 
-    public Integer raw() {
+    public int raw() {
         return this.base;
     }
 
@@ -44,11 +43,11 @@ public class LSState implements Comparable<LSState> {
 
         LSState state = (LSState) o;
 
-        return raw() != null ? raw().equals(state.raw()) : state.raw() == null;
+        return this.base == state.base;
     }
 
     @Override
     public int hashCode() {
-        return base != null ? base.hashCode() : 0;
+        return Integer.hashCode(base);
     }
 }

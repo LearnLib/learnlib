@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.algorithm.lsharp;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 
 import de.learnlib.algorithm.lsharp.ads.ArenaTree;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, O> {
+
     private final ArenaTree<MapTransitions<I, O>, I> tree;
     private final Alphabet<I> inputAlphabet;
 
@@ -51,15 +45,13 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
     }
 
     private LSState addTransitionGetDestination(LSState src, I i, O o) {
-        Integer srcRaw = src.raw();
-        @Nullable
+        int srcRaw = src.raw();
         Pair<O, LSState> pair = this.tree.get(srcRaw).getOutSucc(i);
 
         if (pair != null) {
             return pair.getSecond();
         } else {
-            Integer destNodeIndex = this.tree.nodeWithParent(new MapTransitions<>(this.inputAlphabet.size()), srcRaw,
-                    i);
+            int destNodeIndex = this.tree.nodeWithParent(new MapTransitions<>(this.inputAlphabet.size()), srcRaw, i);
             LSState destState = new LSState(destNodeIndex);
             this.tree.arena.get(srcRaw).value.addTrans(i, o, destState);
             return destState;
@@ -68,8 +60,7 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
 
     @Override
     public LSState insertObservation(@Nullable LSState s, Word<I> input, Word<O> output) {
-        LSState start = s == null ? defaultState() : s;
-        LSState curr = start;
+        LSState curr = s == null ? defaultState() : s;
 
         int max = Math.min(input.length(), output.length());
         for (int i = 0; i < max; i++) {
@@ -91,11 +82,10 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
         }
 
         WordBuilder<I> accessSeq = new WordBuilder<>();
-        Integer destParentIndex = fromState.raw();
-        Integer currState = toState.raw();
+        int destParentIndex = fromState.raw();
+        int currState = toState.raw();
 
         while (true) {
-            @Nullable
             Pair<I, Integer> pair = this.tree.arena.get(currState).parent;
             I i = pair.getFirst();
             Integer parentIndex = pair.getSecond();
@@ -115,7 +105,6 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
         LSState s = start == null ? defaultState() : start;
         WordBuilder<O> outWord = new WordBuilder<>();
         for (I i : input) {
-            @Nullable
             Pair<O, LSState> pair = this.getOutSucc(s, i);
             if (pair == null) {
                 return null;
@@ -133,7 +122,6 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
     }
 
     LSState getSucc(LSState state, I input) {
-        @Nullable
         Pair<O, LSState> pair = getOutSucc(state, input);
         return pair == null ? null : pair.getSecond();
     }
@@ -148,44 +136,5 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
             }
         }
         return src;
-    }
-
-    @Override
-    public List<Pair<LSState, I>> noSuccDefined(List<LSState> basis, boolean sort) {
-        LinkedList<Pair<LSState, I>> ret = new LinkedList<>();
-        for (I input : inputAlphabet) {
-            for (LSState state : basis) {
-                if (this.getSucc(state, Word.fromLetter(input)) == null) {
-                    ret.add(Pair.of(state, input));
-                }
-            }
-        }
-
-        if (sort) {
-            Collections.sort(ret, new SuccComparator());
-        }
-
-        return ret;
-    }
-
-    @Override
-    public Integer size() {
-        return this.tree.size();
-    }
-
-    @Override
-    public boolean treeAndHypStatesApartSink(LSState st, LSState sh, MealyMachine<LSState, I, ?, O> fsm, O sinkOutput,
-            Integer depth) {
-        return ApartnessUtil.treeAndHypStatesApartSunkBounded(this, st, sh, fsm, sinkOutput, depth);
-    }
-
-    private class SuccComparator implements Comparator<Pair<LSState, I>> {
-        @Override
-        public int compare(Pair<LSState, I> p1, Pair<LSState, I> p2) {
-            int len1 = getAccessSeq(p1.getFirst()).length();
-            int len2 = getAccessSeq(p2.getFirst()).length();
-            return Integer.compare(len1, len2);
-        }
-
     }
 }

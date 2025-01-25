@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.algorithm.lsharp;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -38,19 +37,18 @@ public class NormalObservationTreeTest {
     private static final int LOW_INPUTS = 20;
     private static final int HIGH_INPUTS = 100;
 
-    @SuppressWarnings("PMD.CloseResource")
     private LSMealyMachine<String, String> readMealy(String filename) throws IOException, FormatException {
-        InputModelDeserializer<String, CompactMealy<String, String>> parser = DOTParsers
-                .mealy(new CompactMealy.Creator<String, String>(), DOTParsers.DEFAULT_MEALY_EDGE_PARSER);
-        InputStream res = this.getClass().getResourceAsStream(filename);
-        CompactMealy<String, String> target = parser.readModel(res).model;
-        res.close();
-        return new LSMealyMachine<>(target.getInputAlphabet(), target);
+        final InputModelDeserializer<String, CompactMealy<String, String>> parser = DOTParsers.mealy();
+
+        try (InputStream res = NormalObservationTreeTest.class.getResourceAsStream(filename)) {
+            CompactMealy<String, String> target = parser.readModel(res).model;
+            return new LSMealyMachine<>(target.getInputAlphabet(), target);
+        }
     }
 
     private List<Pair<Word<String>, Word<String>>> tryGenInputs(LSMealyMachine<String, String> mealy, Integer count) {
         Random random = new Random(RAND);
-        List<Pair<Word<String>, Word<String>>> pairs = new LinkedList<>();
+        List<Pair<Word<String>, Word<String>>> pairs = new ArrayList<>();
 
         for (int pair = 0; pair < count; pair++) {
             final int length = random.nextInt(101);
@@ -87,8 +85,10 @@ public class NormalObservationTreeTest {
                 LSState ds = ret.getSucc(ret.defaultState(), iis);
                 Assert.assertNotNull(ds);
                 Word<String> rxAcc = ret.getAccessSeq(ds);
-                Assert.assertTrue(iis.equals(rxAcc), "Failed at testIndex " + testIndex + "and inINdex " + inIndex
-                        + ", \n after inserting" + is.toString());
+                Assert.assertEquals(rxAcc,
+                                    iis,
+                                    "Failed at testIndex " + testIndex + "and inINdex " + inIndex +
+                                    ", after inserting" + is);
                 for (int i = 0; i < iis.length(); i++) {
                     Word<String> pref = iis.prefix(i);
                     Word<String> suff = iis.suffix(iis.length() - i);
@@ -96,7 +96,7 @@ public class NormalObservationTreeTest {
                     LSState prefDest = ret.getSucc(ret.defaultState(), pref);
                     Assert.assertNotNull(prefDest);
                     Word<String> xferSeq = ret.getTransferSeq(ds, prefDest);
-                    Assert.assertTrue(suff.equals(xferSeq));
+                    Assert.assertEquals(xferSeq, suff);
                 }
             }
         }
@@ -119,8 +119,10 @@ public class NormalObservationTreeTest {
                 LSState ds = ret.getSucc(ret.defaultState(), iis);
                 Assert.assertNotNull(ds);
                 Word<String> rxAcc = ret.getAccessSeq(ds);
-                Assert.assertTrue(iis.equals(rxAcc), "Failed at testIndex " + testIndex + "and inINdex " + inIndex
-                        + ", \n after inserting" + is.toString());
+                Assert.assertEquals(rxAcc,
+                                    iis,
+                                    "Failed at testIndex " + testIndex + "and inINdex " + inIndex +
+                                    ", after inserting" + is);
             }
         }
 
@@ -129,7 +131,7 @@ public class NormalObservationTreeTest {
             LSState dest = ret.getSucc(ret.defaultState(), is);
             Assert.assertNotNull(dest, "Seq number " + testIndex + " : " + is + " is not in tree?!");
             Word<String> accSeq = ret.getAccessSeq(dest);
-            Assert.assertTrue(is.equals(accSeq));
+            Assert.assertEquals(accSeq, is);
         }
 
     }

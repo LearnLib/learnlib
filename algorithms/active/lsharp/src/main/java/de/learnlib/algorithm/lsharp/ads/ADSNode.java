@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.algorithm.lsharp.ads;
 
 import java.util.HashMap;
@@ -22,9 +21,10 @@ import java.util.Map;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ADSNode<I, O> {
+
     private final @Nullable I input;
     private final Map<O, ADSNode<I, O>> children;
-    private final Integer score;
+    private final int score;
 
     public ADSNode() {
         this.input = null;
@@ -32,13 +32,13 @@ public class ADSNode<I, O> {
         this.score = 0;
     }
 
-    public ADSNode(I input, Map<O, ADSNode<I, O>> children, Integer score) {
+    public ADSNode(I input, Map<O, ADSNode<I, O>> children, int score) {
         this.input = input;
         this.children = children;
         this.score = score;
     }
 
-    public Integer getScore() {
+    public int getScore() {
         return score;
     }
 
@@ -47,6 +47,6 @@ public class ADSNode<I, O> {
     }
 
     public @Nullable ADSNode<I, O> getChildNode(O lastOutput) {
-        return this.children.getOrDefault(lastOutput, null);
+        return this.children.get(lastOutput);
     }
 }

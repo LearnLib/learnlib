@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.algorithm.lsharp;
 
-import java.util.List;
-
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface ObservationTree<S extends Comparable<S>, I, O> {
+
     S defaultState();
 
     S insertObservation(@Nullable S start, Word<I> input, Word<O> output);
@@ -40,7 +37,6 @@ public interface ObservationTree<S extends Comparable<S>, I, O> {
     Pair<O, S> getOutSucc(S src, I input);
 
     default @Nullable O getOut(S src, I input) {
-        @Nullable
         Pair<O, S> out = this.getOutSucc(src, input);
         if (out == null) {
             return null;
@@ -51,13 +47,6 @@ public interface ObservationTree<S extends Comparable<S>, I, O> {
 
     @Nullable
     S getSucc(S src, Word<I> input);
-
-    List<Pair<S, I>> noSuccDefined(List<S> basis, boolean sort);
-
-    Integer size();
-
-    boolean treeAndHypStatesApartSink(S st, LSState sh, MealyMachine<LSState, I, ?, O> fsm, O sinkOutput,
-            Integer depth);
 
     Alphabet<I> getInputAlphabet();
 

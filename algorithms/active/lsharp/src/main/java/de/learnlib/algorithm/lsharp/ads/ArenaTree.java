@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,44 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.algorithm.lsharp.ads;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import net.automatalib.common.util.Pair;
 
 public class ArenaTree<T, P> {
+
     public final List<ArenaNode<T, P>> arena;
 
     public ArenaTree() {
-        this.arena = new LinkedList<>();
+        this.arena = new ArrayList<>();
     }
 
-    public Integer size() {
+    public int size() {
         return this.arena.size();
     }
 
-    public Integer node(T value) {
-        Integer idx = this.size();
-        this.arena.add(new ArenaNode<T, P>(value));
+    public int node(T value) {
+        int idx = this.size();
+        this.arena.add(new ArenaNode<>(value));
         return idx;
     }
 
-    public Integer nodeWithParent(T value, Integer pIndex, P input) {
-        Integer idx = this.arena.size();
-        this.arena.add(new ArenaNode<T, P>(Pair.of(input, pIndex), value));
+    public int nodeWithParent(T value, int pIndex, P input) {
+        int idx = this.arena.size();
+        this.arena.add(new ArenaNode<>(Pair.of(input, pIndex), value));
         return idx;
     }
 
-    public T get(Integer index) {
+    public T get(int index) {
         return this.arena.get(index).value;
-    }
-
-    public <X> X apply(Integer index, Function<T, X> func) {
-        return func.apply(this.get(index));
     }
 
 }

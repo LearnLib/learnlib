@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.algorithm.lsharp;
 
 import java.util.Collection;
@@ -30,13 +29,16 @@ import net.automatalib.common.util.Pair;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class LSMealyMachine<I, O> implements InputAlphabetHolder<I>, MealyMachine<LSState, I, Pair<LSState, I>, O> {
+
     private final Set<LSState> states;
     private final LSState initialState;
     private final Alphabet<I> inputAlphabet;
     private final Map<Pair<LSState, I>, Pair<LSState, O>> transFunction;
 
-    public LSMealyMachine(Alphabet<I> inputAlphabet, Collection<LSState> states, LSState initialState,
-            Map<Pair<LSState, I>, Pair<LSState, O>> transFunction) {
+    public LSMealyMachine(Alphabet<I> inputAlphabet,
+                          Collection<LSState> states,
+                          LSState initialState,
+                          Map<Pair<LSState, I>, Pair<LSState, O>> transFunction) {
         this.states = new HashSet<>(states);
         this.initialState = initialState;
         this.inputAlphabet = inputAlphabet;
@@ -47,9 +49,9 @@ public class LSMealyMachine<I, O> implements InputAlphabetHolder<I>, MealyMachin
         this.inputAlphabet = inputAlphabet;
         this.transFunction = new HashMap<>();
 
-        HashMap<S, LSState> toState = new HashMap<>();
+        Map<S, LSState> toState = new HashMap<>();
         toState.put(mealy.getInitialState(), new LSState(0));
-        mealy.getStates().stream().forEach(s -> toState.computeIfAbsent(s, k -> new LSState(toState.size())));
+        mealy.getStates().forEach(s -> toState.computeIfAbsent(s, k -> new LSState(toState.size())));
         states = new HashSet<>(toState.values());
 
         for (S s : mealy.getStates()) {

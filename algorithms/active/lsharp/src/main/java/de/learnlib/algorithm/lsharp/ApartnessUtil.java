@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.learnlib.algorithm.lsharp;
 
 import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
-import net.automatalib.common.util.Triple;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -32,8 +32,9 @@ public final class ApartnessUtil {
         // prevent instantiation
     }
 
-    public static <S extends Comparable<S>, I, O> @Nullable Word<I> computeWitness(ObservationTree<S, I, O> tree, S s1,
-            S s2) {
+    public static <S extends Comparable<S>, I, O> @Nullable Word<I> computeWitness(ObservationTree<S, I, O> tree,
+                                                                                   S s1,
+                                                                                   S s2) {
         S t = showsStatesAreApart(tree, s1, s2);
         if (t == null) {
             return null;
@@ -46,8 +47,9 @@ public final class ApartnessUtil {
         return showsStatesAreApart(tree, s1, s2) != null;
     }
 
-    public static <S extends Comparable<S>, I, O> boolean accStatesAreApart(ObservationTree<S, I, O> tree, Word<I> s1a,
-            Word<I> s2a) {
+    public static <S extends Comparable<S>, I, O> boolean accStatesAreApart(ObservationTree<S, I, O> tree,
+                                                                            Word<I> s1a,
+                                                                            Word<I> s2a) {
         S s1 = tree.getSucc(tree.defaultState(), s1a);
         assert s1 != null;
         S s2 = tree.getSucc(tree.defaultState(), s2a);
@@ -55,93 +57,10 @@ public final class ApartnessUtil {
         return statesAreApart(tree, s1, s2);
     }
 
-    public static <S extends Comparable<S>, I, O> boolean treeAndHypStatesApart(ObservationTree<S, I, O> tree, S st,
-            LSState sh, MealyMachine<LSState, I, ?, O> fsm) {
-        return treeAndHypShowsStatesAreApart(tree, st, sh, fsm) != null;
-    }
-
-    public static <S extends Comparable<S>, I, O> boolean treeAndHypStatesApartSunkBounded(
-            ObservationTree<S, I, O> tree, S st, LSState sh, MealyMachine<LSState, I, ?, O> fsm, O sinkOutput,
-            Integer depth) {
-        return treeAndHypShowsStatesAreApartSunkDepth(tree, st, sh, fsm, sinkOutput, depth) != null;
-    }
-
-    public static <S extends Comparable<S>, I, O> @Nullable S treeAndHypShowsStatesAreApartSunkDepth(
-            ObservationTree<S, I, O> tree, S st, LSState sh, MealyMachine<LSState, I, ?, O> fsm, O sinkOutput,
-            Integer depth) {
-        ArrayDeque<Triple<S, LSState, Integer>> queue = new ArrayDeque<>();
-        queue.push(Triple.of(st, sh, 0));
-        while (!queue.isEmpty()) {
-            Triple<S, LSState, Integer> triple = queue.pop();
-            S q = triple.getFirst();
-            LSState r = triple.getSecond();
-            Integer d = triple.getThird();
-
-            for (I i : tree.getInputAlphabet()) {
-                Pair<O, S> stepFree = tree.getOutSucc(q, i);
-                if (stepFree != null) {
-                    LSState dh = fsm.getSuccessor(r, i);
-                    assert dh != null;
-                    O outHyp = fsm.getOutput(r, i);
-                    assert outHyp != null;
-
-                    if (outHyp.equals(stepFree.getFirst())) {
-                        if (stepFree.getFirst().equals(sinkOutput)) {
-                            continue;
-                        }
-                        if (d + 1 == depth) {
-                            continue;
-                        }
-                        queue.push(Triple.of(stepFree.getSecond(), dh, d + 1));
-                    } else {
-                        return stepFree.getSecond();
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public static <S extends Comparable<S>, I, O> boolean treeAndHypStatesApartSunk(ObservationTree<S, I, O> tree, S st,
-            LSState sh, MealyMachine<LSState, I, ?, O> fsm, O sinkOutput) {
-        return treeAndHypShowsStatesAreApartSunk(tree, st, sh, fsm, sinkOutput) != null;
-    }
-
-    public static <S extends Comparable<S>, I, O> @Nullable S treeAndHypShowsStatesAreApartSunk(
-            ObservationTree<S, I, O> tree, S st, LSState sh, MealyMachine<LSState, I, ?, O> fsm, O sinkOutput) {
-        ArrayDeque<Pair<S, LSState>> queue = new ArrayDeque<>();
-        queue.push(Pair.of(st, sh));
-        while (!queue.isEmpty()) {
-            Pair<S, LSState> pair = queue.pop();
-            S q = pair.getFirst();
-            LSState r = pair.getSecond();
-
-            for (I i : tree.getInputAlphabet()) {
-                Pair<O, S> stepFree = tree.getOutSucc(q, i);
-                if (stepFree != null) {
-                    LSState dh = fsm.getSuccessor(r, i);
-                    assert dh != null;
-                    O outHyp = fsm.getOutput(r, i);
-                    assert outHyp != null;
-
-                    if (outHyp.equals(stepFree.getFirst())) {
-                        if (stepFree.getFirst().equals(sinkOutput)) {
-                            continue;
-                        }
-                        queue.push(Pair.of(stepFree.getSecond(), dh));
-                    } else {
-                        return stepFree.getSecond();
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public static <S extends Comparable<S>, I, O> @Nullable Word<I> treeAndHypComputeWitness(
-            ObservationTree<S, I, O> tree, S st, MealyMachine<LSState, I, ?, O> fsm, LSState sh) {
+    public static <S extends Comparable<S>, I, O> @Nullable Word<I> treeAndHypComputeWitness(ObservationTree<S, I, O> tree,
+                                                                                             S st,
+                                                                                             MealyMachine<LSState, I, ?, O> fsm,
+                                                                                             LSState sh) {
         S s = treeAndHypShowsStatesAreApart(tree, st, sh, fsm);
         if (s == null) {
             return null;
@@ -150,9 +69,11 @@ public final class ApartnessUtil {
         return tree.getTransferSeq(s, st);
     }
 
-    public static <S extends Comparable<S>, I, O> @Nullable S treeAndHypShowsStatesAreApart(
-            ObservationTree<S, I, O> tree, S st, LSState sh, MealyMachine<LSState, I, ?, O> fsm) {
-        ArrayDeque<Pair<S, LSState>> queue = new ArrayDeque<>();
+    public static <S extends Comparable<S>, I, O> @Nullable S treeAndHypShowsStatesAreApart(ObservationTree<S, I, O> tree,
+                                                                                            S st,
+                                                                                            LSState sh,
+                                                                                            MealyMachine<LSState, I, ?, O> fsm) {
+        Deque<Pair<S, LSState>> queue = new ArrayDeque<>();
         queue.push(Pair.of(st, sh));
         while (!queue.isEmpty()) {
             Pair<S, LSState> pair = queue.pop();
@@ -184,7 +105,10 @@ public final class ApartnessUtil {
     }
 
     private static <S extends Comparable<S>, I, O> @Nullable Pair<Pair<O, S>, Pair<O, S>> treeRespPairInput(
-            ObservationTree<S, I, O> tree, S x, S y, I i) {
+            ObservationTree<S, I, O> tree,
+            S x,
+            S y,
+            I i) {
         Pair<O, S> s1 = step(tree, x, i);
         Pair<O, S> s2 = step(tree, y, i);
 
@@ -196,16 +120,20 @@ public final class ApartnessUtil {
 
     }
 
-    public static <S extends Comparable<S>, I, O> @Nullable S showsStatesAreApart(ObservationTree<S, I, O> tree, S s1,
-            S s2) {
-        ArrayDeque<Pair<S, S>> workList = new ArrayDeque<>();
+    public static <S extends Comparable<S>, I, O> @Nullable S showsStatesAreApart(ObservationTree<S, I, O> tree,
+                                                                                  S s1,
+                                                                                  S s2) {
+        Deque<Pair<S, S>> workList = new ArrayDeque<>();
         workList.add(Pair.of(s1, s2));
         while (!workList.isEmpty()) {
             Pair<S, S> pair = workList.pop();
             S fst = pair.getFirst();
             S snd = pair.getSecond();
-            List<Pair<Pair<O, S>, Pair<O, S>>> iter = tree.getInputAlphabet().stream()
-                    .map(i -> treeRespPairInput(tree, fst, snd, i)).filter(i -> i != null).collect(Collectors.toList());
+            List<Pair<Pair<O, S>, Pair<O, S>>> iter = tree.getInputAlphabet()
+                                                          .stream()
+                                                          .map(i -> treeRespPairInput(tree, fst, snd, i))
+                                                          .filter(Objects::nonNull)
+                                                          .collect(Collectors.toList());
             for (Pair<Pair<O, S>, Pair<O, S>> iterPair : iter) {
                 Pair<O, S> fstOD = iterPair.getFirst();
                 Pair<O, S> sndOD = iterPair.getSecond();
