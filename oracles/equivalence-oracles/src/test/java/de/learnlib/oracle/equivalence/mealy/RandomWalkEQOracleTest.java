@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
@@ -53,7 +53,7 @@ public class RandomWalkEQOracleTest {
         Assert.assertTrue(dummySUL.isCalledPost());
     }
 
-    private static class DummySUL implements SUL<Character, Character> {
+    private static final class DummySUL implements SUL<Character, Character> {
 
         private boolean calledPre;
         private boolean calledPost;
@@ -94,7 +94,7 @@ public class RandomWalkEQOracleTest {
         }
     }
 
-    private static class DummyMealy extends CompactMealy<Character, Character> {
+    private static final class DummyMealy extends CompactMealy<Character, Character> {
 
         DummyMealy(Alphabet<Character> alphabet) {
             super(alphabet);

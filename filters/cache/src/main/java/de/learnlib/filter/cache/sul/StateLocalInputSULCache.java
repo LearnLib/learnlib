@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import de.learnlib.filter.cache.sul.AbstractSULCache.SULCacheState;
 import de.learnlib.filter.cache.sul.StateLocalInputSULCache.StateLocalInputSULCacheState;
 import de.learnlib.sul.StateLocalInputSUL;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
@@ -46,7 +46,7 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O, StateL
         this(new StateLocalInputSULCacheImpl<>(incMealy, incMealy.asTransitionSystem(), sul));
     }
 
-    <S, T> StateLocalInputSULCache(StateLocalInputSULCacheImpl<S, I, T, O> cacheImpl) {
+    StateLocalInputSULCache(StateLocalInputSULCacheImpl<?, I, ?, O> cacheImpl) {
         super(cacheImpl);
         this.impl = cacheImpl;
     }
@@ -83,9 +83,7 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O, StateL
                                     StateLocalInputSUL<I, O> sul) {
             super(incMealy, mealyTs, sul);
             this.delegate = sul;
-            S init = mealyTs.getInitialState();
-            assert init != null;
-            this.initialState = init;
+            this.initialState = Objects.requireNonNull(mealyTs.getInitialState());
             this.enabledInputCache = enabledInputCache;
             this.inputsTrace = new ArrayList<>();
         }

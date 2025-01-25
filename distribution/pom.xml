@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--
-Copyright (C) 2013-2023 TU Dortmund
-This file is part of LearnLib, http://www.learnlib.de/.
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -69,6 +69,11 @@ limitations under the License.
 
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-lambda</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-lstar</artifactId>
         </dependency>
 
@@ -85,11 +90,6 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-observation-pack-vpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-oml</artifactId>
         </dependency>
 
         <dependency>
@@ -117,16 +117,6 @@ limitations under the License.
             <artifactId>learnlib-rpni</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-rpni-edsm</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-rpni-mdl</artifactId>
-        </dependency>
-
         <!-- api -->
         <dependency>
             <groupId>de.learnlib</groupId>
@@ -141,33 +131,17 @@ limitations under the License.
 
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-datastructures</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-settings</artifactId>
         </dependency>
 
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-util</artifactId>
-        </dependency>
-
-        <!-- data-structures -->
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-dt</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-list</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-ot</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-pta</artifactId>
         </dependency>
 
         <!-- drivers -->
@@ -238,6 +212,30 @@ limitations under the License.
 
     <profiles>
         <profile>
+            <id>jlink</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-invoker-plugin</artifactId>
+                        <configuration>
+                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+                            <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+                            <settingsFile>${project.basedir}/src/it/settings.xml</settingsFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>install</goal>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>code-coverage</id>
             <build>
                 <plugins>
@@ -263,7 +261,6 @@ limitations under the License.
                     <artifactId>learnlib-examples</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
-                    <optional>true</optional>
                 </dependency>
             </dependencies>
         </profile>
@@ -305,6 +302,13 @@ limitations under the License.
 
                 <dependency>
                     <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-lambda</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-lstar</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
@@ -327,13 +331,6 @@ limitations under the License.
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-observation-pack-vpa</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-oml</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
@@ -366,20 +363,6 @@ limitations under the License.
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-rpni-edsm</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-rpni-mdl</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
                 <!-- api -->
                 <dependency>
                     <groupId>de.learnlib</groupId>
@@ -398,6 +381,13 @@ limitations under the License.
 
                 <dependency>
                     <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-datastructures</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-settings</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
@@ -406,35 +396,6 @@ limitations under the License.
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-util</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <!-- data-structures -->
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-datastructure-dt</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-datastructure-list</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-datastructure-ot</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>de.learnlib</groupId>
-                    <artifactId>learnlib-datastructure-pta</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
@@ -529,6 +490,11 @@ limitations under the License.
                             <outputDirectory>${project.build.directory}/bundles</outputDirectory>
                             <appendAssemblyId>true</appendAssemblyId>
                             <finalName>learnlib-${project.version}</finalName>
+                            <archive>
+                                <manifestEntries>
+                                    <Automatic-Module-Name>de.learnlib.distribution</Automatic-Module-Name>
+                                </manifestEntries>
+                            </archive>
                         </configuration>
                         <executions>
                             <execution>
@@ -583,14 +549,9 @@ limitations under the License.
                             </dependencySourceIncludes>
                             <additionalDependencies>
                                 <additionalDependency>
-                                    <groupId>com.github.misberner.buildergen</groupId>
-                                    <artifactId>buildergen</artifactId>
-                                    <version>${buildergen.version}</version>
-                                </additionalDependency>
-                                <additionalDependency>
                                     <groupId>de.learnlib.tooling</groupId>
-                                    <artifactId>learnlib-annotation-processor</artifactId>
-                                    <version>${project.version}</version>
+                                    <artifactId>annotations</artifactId>
+                                    <version>${build-tools.version}</version>
                                 </additionalDependency>
                                 <additionalDependency>
                                     <groupId>org.kohsuke.metainf-services</groupId>

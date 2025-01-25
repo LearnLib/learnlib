@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.query.Query;
 import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
@@ -86,7 +85,9 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
             return false;
         }
         if (repeatedCounterexampleEvaluation) {
-            while (refineHypothesisSingle(ceQuery)) {}
+            while (refineHypothesisSingle(ceQuery)) {
+                // refine exhaustively
+            }
         }
         return true;
     }
@@ -231,7 +232,7 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         this.hypothesis.addAlphabetSymbol(symbol);

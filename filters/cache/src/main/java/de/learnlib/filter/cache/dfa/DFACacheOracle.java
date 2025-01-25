@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,14 +118,14 @@ public class DFACacheOracle<I>
         for (Query<I, Boolean> q : queries) {
             final Word<I> input = q.getInput();
             final Acceptance acc = incDfa.lookup(input);
-            if (acc != Acceptance.DONT_KNOW) {
-                q.answer(acc.toBoolean());
-            } else {
+            if (acc == Acceptance.DONT_KNOW) {
                 if (cache.add(input)) { // never seen before
                     unanswered.add(new ProxyQuery<>(q));
                 } else {
                     duplicates.add(q);
                 }
+            } else {
+                q.answer(acc.toBoolean());
             }
         }
 

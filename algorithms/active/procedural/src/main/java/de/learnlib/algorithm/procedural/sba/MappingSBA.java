@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,15 @@
 package de.learnlib.algorithm.procedural.sba;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Maps;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.common.util.HashUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 class MappingSBA<S, I> implements SBA<S, I> {
@@ -40,7 +41,7 @@ class MappingSBA<S, I> implements SBA<S, I> {
         this.delegate = delegate;
 
         final Map<SymbolWrapper<I>, DFA<?, SymbolWrapper<I>>> p = delegate.getProcedures();
-        this.procedures = Maps.newHashMapWithExpectedSize(p.size());
+        this.procedures = new HashMap<>(HashUtil.capacity(p.size()));
 
         for (Entry<SymbolWrapper<I>, DFA<?, SymbolWrapper<I>>> e : p.entrySet()) {
             procedures.put(e.getKey().getDelegate(), new DFAView<>(e.getValue()));

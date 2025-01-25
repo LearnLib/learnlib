@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package de.learnlib.setting;
 
 import java.util.Locale;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.function.Function;
 
 import de.learnlib.logging.Category;
@@ -34,7 +35,7 @@ public final class LearnLibSettings {
     private final Properties properties;
 
     private LearnLibSettings() {
-        properties = SettingsSource.readSettings(LearnLibSettingsSource.class);
+        properties = SettingsSource.readSettings(ServiceLoader.load(LearnLibSettingsSource.class));
     }
 
     public static LearnLibSettings getInstance() {
@@ -62,14 +63,6 @@ public final class LearnLibSettings {
         return getTypedValue(property, p -> Enum.valueOf(enumClazz, p.toUpperCase(Locale.ROOT)));
     }
 
-    public boolean getBool(LearnLibProperty property, boolean defaultValue) {
-        return WrapperUtil.booleanValue(getBoolean(property), defaultValue);
-    }
-
-    public @Nullable Boolean getBoolean(LearnLibProperty property) {
-        return getTypedValue(property, Boolean::parseBoolean);
-    }
-
     public int getInt(LearnLibProperty property, int defaultValue) {
         return WrapperUtil.intValue(getInteger(property), defaultValue);
     }
@@ -88,7 +81,7 @@ public final class LearnLibSettings {
         try {
             return valueExtractor.apply(prop);
         } catch (IllegalArgumentException ex) {
-            LOG.warn(Category.CONFIG, "Could not parse LearnLib property '" + property + "'.", ex);
+            LOG.warn(Category.CONFIG, String.format("Could not parse LearnLib property '%s'.", property), ex);
             return null;
         }
     }

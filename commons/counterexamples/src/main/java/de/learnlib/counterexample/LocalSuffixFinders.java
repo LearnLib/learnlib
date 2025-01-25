@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,6 +72,10 @@ public final class LocalSuffixFinders {
      *         interface to the hypothesis output, for checking whether the oracle output contradicts the hypothesis
      * @param oracle
      *         interface to the SUL
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return the index of the respective suffix, or {@code -1} if no counterexample could be found
      *
@@ -102,6 +106,10 @@ public final class LocalSuffixFinders {
      *         interface to the hypothesis output, for checking whether the oracle output contradicts the hypothesis
      * @param oracle
      *         interface to the SUL
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return the index of the respective suffix, or {@code -1} if no counterexample could be found
      *
@@ -132,6 +140,10 @@ public final class LocalSuffixFinders {
      *         interface to the hypothesis output, for checking whether the oracle output contradicts the hypothesis
      * @param oracle
      *         interface to the SUL
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return the index of the respective suffix, or {@code -1} if no counterexample could be found
      *

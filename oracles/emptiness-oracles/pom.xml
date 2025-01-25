@@ -25,11 +25,6 @@
             <artifactId>learnlib-util</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>de.learnlib.tooling</groupId>
-            <artifactId>learnlib-annotation-processor</artifactId>
-        </dependency>
-
         <!-- external -->
         <dependency>
             <groupId>org.checkerframework</groupId>
@@ -39,6 +34,12 @@
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
+        </dependency>
+
+        <!-- build -->
+        <dependency>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotations</artifactId>
         </dependency>
 
         <!-- test -->
@@ -67,4 +68,23 @@
             <artifactId>mockito-core</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <!-- append to existing argLine to nicely work together with jacoco plugin -->
+                        <argLine>
+                            @{argLine}
+                            --add-reads=de.learnlib.oracle.emptiness=net.automatalib.core
+                            --add-reads=de.learnlib.oracle.emptiness=net.automatalib.util
+                        </argLine>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

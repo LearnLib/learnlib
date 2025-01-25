@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,7 @@
  */
 package de.learnlib.algorithm.adt.adt;
 
-import de.learnlib.oracle.SymbolQueryOracle;
-import net.automatalib.graph.ads.AbstractRecursiveADSLeafNode;
-import net.automatalib.word.Word;
+import net.automatalib.graph.ads.impl.AbstractRecursiveADSLeafNode;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -35,11 +33,6 @@ public class ADTLeafNode<S, I, O> extends AbstractRecursiveADSLeafNode<S, I, O, 
 
     public ADTLeafNode(@Nullable ADTNode<S, I, O> parent, @Nullable S hypothesisState) {
         super(parent, hypothesisState);
-    }
-
-    @Override
-    public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> prefix) {
-        throw new UnsupportedOperationException("Final nodes cannot sift words");
     }
 
     @Override

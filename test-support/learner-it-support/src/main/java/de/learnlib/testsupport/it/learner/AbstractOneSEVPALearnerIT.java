@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.example.LearningExample.OneSEVPALearningExample;
-import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.vpa.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SEVPASimulatorOracle;
+import de.learnlib.testsupport.example.LearningExample.OneSEVPALearningExample;
+import de.learnlib.testsupport.example.LearningExamples;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.OneSEVPALearnerVariantListImpl;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.OneSEVPA;
@@ -36,7 +36,7 @@ public abstract class AbstractOneSEVPALearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<OneSEVPALearningExample<?>> examples = LearningExamples.createOneSEVPAExamples();
-        final List<OneSEVPALearnerITCase<?>> result = new ArrayList<>(examples.size());
+        final List<OneSEVPALearnerITCase<?>> result = new ArrayList<>();
 
         for (OneSEVPALearningExample<?> example : examples) {
             result.addAll(createAllVariantsITCase(example));
@@ -67,6 +67,8 @@ public abstract class AbstractOneSEVPALearnerIT {
      *         the membership oracle
      * @param variants
      *         list to add the learner variants to
+     * @param <I>
+     *         input symbol type
      */
     protected abstract <I> void addLearnerVariants(VPAlphabet<I> alphabet,
                                                    DFAMembershipOracle<I> mqOracle,

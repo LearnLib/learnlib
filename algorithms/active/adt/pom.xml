@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2023 TU Dortmund
-This file is part of LearnLib, http://www.learnlib.de/.
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,6 +42,10 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-counterexamples</artifactId>
         </dependency>
         <dependency>
@@ -50,11 +54,6 @@ limitations under the License.
         </dependency>
 
         <!-- external -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -88,14 +87,19 @@ limitations under the License.
 
         <!-- build -->
         <dependency>
-            <groupId>com.github.misberner.buildergen</groupId>
-            <artifactId>buildergen</artifactId>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotations</artifactId>
         </dependency>
 
         <!-- test -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-drivers-simulator</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-equivalence-oracles</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -111,6 +115,15 @@ limitations under the License.
             <artifactId>learnlib-membership-oracles</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-statistics</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-test-support</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -123,4 +136,19 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <!-- append to existing argLine to nicely work together with jacoco plugin -->
+                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.adt=de.learnlib.filter.statistic</argLine>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

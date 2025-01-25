@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.learnlib.driver.simulator.ObservableMealySimulatorSUL;
-import de.learnlib.example.mealy.ExampleCoffeeMachine;
-import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.oracle.OmegaMembershipOracle.MealyOmegaMembershipOracle;
 import de.learnlib.query.OmegaQuery;
 import de.learnlib.sul.ObservableSUL;
-import net.automatalib.automaton.transducer.CompactMealy;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine.Input;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.word.Word;
 import org.mockito.Mockito;
 import org.testng.Assert;

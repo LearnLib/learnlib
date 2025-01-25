@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,6 +133,15 @@ public final class GlobalSuffixFinders {
      * Transforms a {@link LocalSuffixFinder} into a global one. This is a convenience method, behaving like {@link
      * #fromLocalFinder(LocalSuffixFinder, boolean)}.
      *
+     * @param localFinder
+     *         the local finder to transform
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @return the transformed global suffix finder
+     *
      * @see #fromLocalFinder(LocalSuffixFinder, boolean)
      */
     public static <I, D> GlobalSuffixFinder<I, D> fromLocalFinder(LocalSuffixFinder<I, D> localFinder) {
@@ -153,6 +162,10 @@ public final class GlobalSuffixFinders {
      *         the local suffix finder
      * @param allSuffixes
      *         whether all suffixes of the found local suffix should be added
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return a global suffix finder using the analysis method from the specified local suffix finder
      */
@@ -180,6 +193,17 @@ public final class GlobalSuffixFinders {
     /**
      * Transforms a suffix index returned by a {@link LocalSuffixFinder} into a list containing the single
      * distinguishing suffix.
+     *
+     * @param ceQuery
+     *         the counterexample
+     * @param localSuffixIdx
+     *         the (local) suffix index
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @return the (singleton) list of the distinguishing suffix
      */
     public static <I, D> List<Word<I>> suffixesForLocalOutput(Query<I, D> ceQuery, int localSuffixIdx) {
         return suffixesForLocalOutput(ceQuery, localSuffixIdx, false);
@@ -188,13 +212,29 @@ public final class GlobalSuffixFinders {
     /**
      * Transforms a suffix index returned by a {@link LocalSuffixFinder} into a list of distinguishing suffixes. This
      * list always contains the corresponding local suffix. Since local suffix finders only return a single suffix,
-     * suffix-closedness of the set of distinguishing suffixes might not be preserved. Note that for correctly
-     * implemented local suffix finders, this does not impair correctness of the learning algorithm. However, without
-     * suffix closedness, intermediate hypothesis models might be non-canonical, if no additional precautions are taken.
-     * For that reasons, the {@code allSuffixes} parameter can be specified to control whether the list returned by
+     * suffix-closedness of the set of distinguishing suffixes might not be preserved.
+     * <p>
+     * Note that for correctly implemented local suffix finders, this does not impair correctness of the learning
+     * algorithm. However, without suffix closedness, intermediate hypothesis models might be non-canonical, if no
+     * additional precautions are taken. For that reasons, the {@code allSuffixes} parameter can be specified to control
+     * whether the list returned by
      * {@link GlobalSuffixFinder#findSuffixes(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)} of the
      * returned global suffix finder should not only contain the single suffix, but also all of its suffixes, ensuring
      * suffix-closedness.
+     *
+     * @param ceQuery
+     *         the counterexample
+     * @param localSuffixIdx
+     *         the (local) suffix index
+     * @param allSuffixes
+     *         a flag indicating whether all suffixes of the distinguishing suffix should be included in the returned
+     *         list
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @return the list of distinguishing suffixes
      */
     public static <I, D> List<Word<I>> suffixesForLocalOutput(Query<I, D> ceQuery,
                                                               int localSuffixIdx,
@@ -218,6 +258,10 @@ public final class GlobalSuffixFinders {
      *
      * @param ceQuery
      *         the counterexample query
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return all suffixes of the counterexample input
      */
@@ -233,6 +277,10 @@ public final class GlobalSuffixFinders {
      *         the counterexample query
      * @param asTransformer
      *         the access sequence transformer
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return all suffixes from the counterexample after stripping a maximal one-letter extension of an access
      * sequence.
@@ -270,6 +318,10 @@ public final class GlobalSuffixFinders {
      *         interface to the SUL output
      * @param allSuffixes
      *         whether to include all suffixes of the found suffix
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return the distinguishing suffixes
      *
@@ -298,6 +350,10 @@ public final class GlobalSuffixFinders {
      *         interface to the SUL output
      * @param allSuffixes
      *         whether to include all suffixes of the found suffix
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return the distinguishing suffixes
      *
@@ -326,15 +382,19 @@ public final class GlobalSuffixFinders {
      *         interface to the SUL output
      * @param allSuffixes
      *         whether to include all suffixes of the found suffix
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      *
      * @return the distinguishing suffixes
      *
      * @see LocalSuffixFinders#findRivestSchapire(Query, AccessSequenceTransformer, SuffixOutput, MembershipOracle)
      */
-    public static <I, O> List<Word<I>> findRivestSchapire(Query<I, O> ceQuery,
+    public static <I, D> List<Word<I>> findRivestSchapire(Query<I, D> ceQuery,
                                                           AccessSequenceTransformer<I> asTransformer,
-                                                          SuffixOutput<I, O> hypOutput,
-                                                          MembershipOracle<I, O> oracle,
+                                                          SuffixOutput<I, D> hypOutput,
+                                                          MembershipOracle<I, D> oracle,
                                                           boolean allSuffixes) {
         int idx = LocalSuffixFinders.findRivestSchapire(ceQuery, asTransformer, hypOutput, oracle);
         return suffixesForLocalOutput(ceQuery, idx, allSuffixes);

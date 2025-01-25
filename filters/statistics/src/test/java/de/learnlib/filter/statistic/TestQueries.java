@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,14 @@ import java.util.Random;
 
 import de.learnlib.query.Query;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.transducer.CompactMealy;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 
 public final class TestQueries {
-
-    public static final String COUNTER_NAME = "testCounter";
 
     public static final Alphabet<Integer> INPUTS;
     public static final Alphabet<Character> OUTPUTS;
@@ -60,7 +58,7 @@ public final class TestQueries {
                                                                    Collection<I> inputs) {
 
         final Random r = new Random(42);
-        final List<? extends I> inputsAsList = CollectionsUtil.randomAccessList(inputs);
+        final List<? extends I> inputsAsList = CollectionUtil.randomAccessList(inputs);
 
         List<Query<I, D>> result = new ArrayList<>(numQueries);
         for (int i = 0; i < numQueries; i++) {

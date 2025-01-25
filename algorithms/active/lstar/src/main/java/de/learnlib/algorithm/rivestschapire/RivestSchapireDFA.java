@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,23 @@ package de.learnlib.algorithm.rivestschapire;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFA;
 import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;
 
+/**
+ * A {@link DFA}-based specialization of the L* learner which uses the counterexample analysis strategy proposed by
+ * Rivest &amp; Schapire.
+ *
+ * @param <I>
+ *         input symbol type
+ */
 public class RivestSchapireDFA<I> extends ExtensibleLStarDFA<I> {
 
     public RivestSchapireDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {

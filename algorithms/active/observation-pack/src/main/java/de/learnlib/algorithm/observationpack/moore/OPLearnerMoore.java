@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithm.observationpack.moore;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.algorithm.observationpack.AbstractOPLearner;
 import de.learnlib.algorithm.observationpack.hypothesis.HState;
@@ -25,13 +24,14 @@ import de.learnlib.datastructure.discriminationtree.MultiDTree;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.AbstractQuery;
 import de.learnlib.query.Query;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A {@link MooreMachine}-based specialization of the DT learner.
+ * A {@link MooreMachine}-based specialization of the {@link AbstractOPLearner}.
  *
  * @param <I>
  *         input symbol type

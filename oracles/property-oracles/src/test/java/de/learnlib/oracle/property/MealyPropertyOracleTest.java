@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package de.learnlib.oracle.property;
 
 import java.util.function.Function;
 
-import de.learnlib.example.mealy.ExampleTinyMealy;
 import de.learnlib.oracle.EmptinessOracle.MealyEmptinessOracle;
 import de.learnlib.oracle.InclusionOracle.MealyInclusionOracle;
 import de.learnlib.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
@@ -30,10 +29,11 @@ import de.learnlib.oracle.equivalence.MealyBFInclusionOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.mealy.ExampleTinyMealy;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
 import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLIOBuilder;

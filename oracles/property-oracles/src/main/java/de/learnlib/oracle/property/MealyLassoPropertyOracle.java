@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A property oracle for Mealy machines that can check lassos from the model checker.
@@ -49,7 +50,7 @@ public class MealyLassoPropertyOracle<I, O, P>
     }
 
     @Override
-    protected MealyLasso<I, O> modelCheck(MealyMachine<?, I, ?, O> hypothesis, Collection<? extends I> inputs) {
+    protected @Nullable MealyLasso<I, O> modelCheck(MealyMachine<?, I, ?, O> hypothesis, Collection<? extends I> inputs) {
         return modelChecker.findCounterExample(hypothesis, inputs, getProperty());
     }
 }

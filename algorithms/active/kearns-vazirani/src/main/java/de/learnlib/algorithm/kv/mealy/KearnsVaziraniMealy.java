@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.Resumable;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
@@ -36,13 +35,13 @@ import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.automaton.CompactTransition;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.impl.CompactTransition;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
@@ -69,7 +68,7 @@ public class KearnsVaziraniMealy<I, O>
     protected List<StateInfo<I, Word<O>>> stateInfos = new ArrayList<>();
     private CompactMealy<I, O> hypothesis;
 
-    @GenerateBuilder
+    @GenerateBuilder(defaults = BuilderDefaults.class)
     public KearnsVaziraniMealy(Alphabet<I> alphabet,
                                MembershipOracle<I, Word<O>> oracle,
                                boolean repeatedCounterexampleEvaluation,
@@ -98,7 +97,9 @@ public class KearnsVaziraniMealy<I, O>
             return false;
         }
         if (repeatedCounterexampleEvaluation) {
-            while (refineHypothesisSingle(input, output)) {}
+            while (refineHypothesisSingle(input, output)) {
+                // refine exhaustively
+            }
         }
         return true;
     }
@@ -201,7 +202,7 @@ public class KearnsVaziraniMealy<I, O>
             long encodedTrans = transList.get(i);
 
             int sourceState = (int) (encodedTrans >> Integer.SIZE);
-            int transIdx = (int) (encodedTrans);
+            int transIdx = (int) encodedTrans;
 
             StateInfo<I, Word<O>> sourceInfo = stateInfos.get(sourceState);
             I symbol = alphabet.getSymbol(transIdx);
@@ -215,7 +216,7 @@ public class KearnsVaziraniMealy<I, O>
             long encodedTrans = transList.get(i);
 
             int sourceState = (int) (encodedTrans >> Integer.SIZE);
-            int transIdx = (int) (encodedTrans);
+            int transIdx = (int) encodedTrans;
 
             CompactTransition<O> trans = hypothesis.getTransition(sourceState, transIdx);
             assert trans != null;
@@ -317,15 +318,15 @@ public class KearnsVaziraniMealy<I, O>
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         this.hypothesis.addAlphabetSymbol(symbol);
 
         // check if we already have information about the symbol (then the transition is defined) so we don't post
         // redundant queries
-        if (this.hypothesis.getInitialState() != null &&
-            this.hypothesis.getSuccessor(this.hypothesis.getInitialState(), symbol) == null) {
+        final Integer init = this.hypothesis.getInitialState();
+        if (init != null && this.hypothesis.getSuccessor(init, symbol) == null) {
             // use new list to prevent concurrent modification exception
             final List<Word<I>> transAs = new ArrayList<>(this.stateInfos.size());
             final List<DefaultQuery<I, Word<O>>> outputQueries = new ArrayList<>(this.stateInfos.size());

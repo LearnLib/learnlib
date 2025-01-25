@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@ import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFA;
-import de.learnlib.example.dfa.ExamplePaulAndMary;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.equivalence.WMethodEQOracle;
 import de.learnlib.oracle.equivalence.WpMethodEQOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
+import de.learnlib.testsupport.example.dfa.ExamplePaulAndMary;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;

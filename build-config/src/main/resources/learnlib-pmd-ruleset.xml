@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!--
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<ruleset name="LearnLib PMD ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+    <description>LearnLib PMD ruleset</description>
+
+    <!-- EXCLUSIONS -->
+
+    <rule ref="category/java/bestpractices.xml">
+        <exclude name="AccessorMethodGeneration"/> <!-- irrelevant once we target Java 11 -->
+        <exclude name="ArrayIsStoredDirectly"/>
+        <exclude name="LooseCoupling"/> <!-- may be enabled once calls on sub-type methods are filtered again -->
+        <exclude name="GuardLogStatement"/>
+        <exclude name="MethodReturnsInternalArray"/>
+        <exclude name="OneDeclarationPerLine"/>
+        <exclude name="UseVarargs"/>
+
+        <exclude name="UnitTestAssertionsShouldIncludeMessage"/>
+        <exclude name="UnitTestContainsTooManyAsserts"/>
+        <exclude name="UnitTestShouldIncludeAssert"/>
+    </rule>
+
+    <rule ref="category/java/codestyle.xml">
+        <exclude name="AtLeastOneConstructor"/>
+        <exclude name="CallSuperInConstructor"/>
+        <exclude name="ClassNamingConventions"/>
+        <exclude name="CommentDefaultAccessModifier"/>
+        <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
+        <exclude name="FormalParameterNamingConventions"/>
+        <exclude name="GenericsNaming"/>
+        <exclude name="LinguisticNaming"/>
+        <exclude name="LocalVariableCouldBeFinal"/>
+        <exclude name="LocalVariableNamingConventions"/>
+        <exclude name="LongVariable"/>
+        <exclude name="MethodArgumentCouldBeFinal"/>
+        <exclude name="OnlyOneReturn"/>
+        <exclude name="ShortClassName"/>
+        <exclude name="ShortMethodName"/>
+        <exclude name="ShortVariable"/>
+        <exclude name="UnnecessaryImport"/> <!-- flags imports required by JavaDoc -->
+    </rule>
+
+    <rule ref="category/java/design.xml">
+        <exclude name="AvoidDeeplyNestedIfStmts"/>
+        <exclude name="CognitiveComplexity"/>
+        <exclude name="CouplingBetweenObjects"/>
+        <exclude name="CyclomaticComplexity"/>
+        <exclude name="DataClass"/>
+        <exclude name="ExcessiveImports"/>
+        <exclude name="ExcessiveParameterList"/>
+        <exclude name="ExcessivePublicCount"/>
+        <exclude name="GodClass"/>
+        <exclude name="LawOfDemeter"/>
+        <exclude name="LoosePackageCoupling"/>
+        <exclude name="NcssCount"/>
+        <exclude name="NPathComplexity"/>
+        <exclude name="TooManyMethods"/>
+    </rule>
+
+    <!--<rule ref="category/java/documentation.xml"/>-->
+
+    <rule ref="category/java/errorprone.xml">
+        <exclude name="AssignmentInOperand"/>
+        <exclude name="AvoidDuplicateLiterals"/>
+        <exclude name="AvoidFieldNameMatchingMethodName"/>
+        <exclude name="AvoidFieldNameMatchingTypeName"/>
+        <exclude name="AvoidLiteralsInIfCondition"/>
+        <exclude name="CompareObjectsWithEquals"/>
+        <exclude name="MissingSerialVersionUID"/>
+        <exclude name="NonSerializableClass"/>
+        <exclude name="NullAssignment"/>
+    </rule>
+
+    <rule ref="category/java/multithreading.xml">
+        <exclude name="DoNotUseThreads"/>
+        <exclude name="UseConcurrentHashMap"/>
+    </rule>
+
+    <rule ref="category/java/performance.xml">
+        <exclude name="AvoidInstantiatingObjectsInLoops"/>
+    </rule>
+
+    <!--<rule ref="category/java/security.xml"/>-->
+
+    <!-- CONFIGS -->
+
+    <rule ref="category/java/codestyle.xml/EmptyControlStatement">
+        <properties>
+            <property name="allowCommentedBlocks" value="true" />
+        </properties>
+    </rule>
+
+    <rule ref="category/java/codestyle.xml/UnnecessaryFullyQualifiedName">
+        <properties>
+            <property name="reportStaticMethods" value="false" />
+            <property name="reportStaticFields" value="false" />
+        </properties>
+    </rule>
+
+    <rule ref="category/java/codestyle.xml/ConfusingTernary">
+        <properties>
+            <property name="ignoreElseIf" value="true" />
+        </properties>
+    </rule>
+
+
+</ruleset>

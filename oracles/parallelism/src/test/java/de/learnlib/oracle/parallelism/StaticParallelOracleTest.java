@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,15 @@
  */
 package de.learnlib.oracle.parallelism;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Executors;
 
+import de.learnlib.oracle.ParallelOracle;
 import de.learnlib.oracle.parallelism.AbstractStaticParallelOracleTest.TestOutput;
+import de.learnlib.query.DefaultQuery;
+import org.testng.annotations.Test;
 
 public class StaticParallelOracleTest extends AbstractStaticParallelOracleTest<TestOutput> {
 
@@ -31,5 +37,18 @@ public class StaticParallelOracleTest extends AbstractStaticParallelOracleTest<T
     @Override
     protected TestOutput extractTestOutput(TestOutput output) {
         return output;
+    }
+
+    @Test
+    public void testCustomExecutorLessThreadsAvailable() {
+        // this tests provides a list of 10 oracles
+        ParallelOracle<Integer, TestOutput> oracle = getBuilder().withCustomExecutor(Executors.newFixedThreadPool(5)).create();
+        try {
+            List<DefaultQuery<Integer, TestOutput>> queries = new ArrayList<>(createQueries(100));
+            // scheduling 10 batches on 5 threads should not cause any problems
+            oracle.processQueries(queries);
+        } finally {
+            oracle.shutdown();
+        }
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2023 TU Dortmund
-This file is part of LearnLib, http://www.learnlib.de/.
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ limitations under the License.
     <description>
         This artifact provides the implementation of the VPA adaption of the Observation-Pack learning algorithm as
         discussed in the PhD thesis "Foundations of Active Automata Learning: An Algorithmic Perspective"
-        (https://dx.doi.org/10.17877/DE290R-16359) by Malte Isberner.
+        (https://doi.org/10.17877/DE290R-16359) by Malte Isberner.
     </description>
 
     <dependencies>
@@ -46,19 +46,10 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-dt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-list</artifactId>
+            <artifactId>learnlib-datastructures</artifactId>
         </dependency>
 
         <!-- external -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
@@ -83,8 +74,8 @@ limitations under the License.
 
         <!-- build -->
         <dependency>
-            <groupId>com.github.misberner.buildergen</groupId>
-            <artifactId>buildergen</artifactId>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotations</artifactId>
         </dependency>
 
         <!-- test -->
@@ -124,4 +115,19 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <!-- append to existing argLine to nicely work together with jacoco plugin -->
+                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.observationpack.vpa=net.automatalib.util</argLine>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

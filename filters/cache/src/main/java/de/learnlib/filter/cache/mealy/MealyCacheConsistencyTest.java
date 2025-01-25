@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <O>
  *         output symbol class
  */
+@SuppressWarnings("PMD.TestClassWithoutTestCases") // not a traditional test class
 public class MealyCacheConsistencyTest<I, O> implements MealyEquivalenceOracle<I, O> {
 
     private final IncrementalMealyBuilder<I, O> incMealy;

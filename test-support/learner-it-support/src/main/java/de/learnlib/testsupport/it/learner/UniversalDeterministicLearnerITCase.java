@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package de.learnlib.testsupport.it.learner;
 
-import de.learnlib.example.LearningExample.UniversalDeterministicLearningExample;
 import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.testsupport.example.LearningExample.UniversalDeterministicLearningExample;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;

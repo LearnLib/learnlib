@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,10 @@ public interface ClosingStrategy<I, D> {
      *         the observation table
      * @param oracle
      *         the membership oracle
+     * @param <RI>
+     *         the (concrete) row input type
+     * @param <RO>
+     *         the (concrete) row output type
      *
      * @return a selection of representative rows to be closed.
      */

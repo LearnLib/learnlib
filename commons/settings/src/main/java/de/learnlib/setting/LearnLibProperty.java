@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package de.learnlib.setting;
+
+import de.learnlib.oracle.ThreadPool.PoolPolicy;
 
 /**
  * An enum of all the system properties currently used by LearnLib.
@@ -38,8 +40,8 @@ public enum LearnLibProperty {
      * {@code learnlib.parallel.pool_policy}.
      * <p>
      * Pool policy for threads of parallel oracles.
-     * <p>
-     * See de.learnlib.oracle.parallelism.ParallelOracle#PoolPolicy
+     *
+     * @see PoolPolicy
      */
     PARALLEL_POOL_POLICY("parallel.pool_policy"),
 

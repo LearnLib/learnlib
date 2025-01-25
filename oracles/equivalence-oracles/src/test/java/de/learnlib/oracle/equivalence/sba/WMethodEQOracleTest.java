@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Streams;
 import de.learnlib.oracle.membership.SimulatorOracle;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.conformance.SBAWMethodTestsIterator;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
@@ -47,7 +47,7 @@ public class WMethodEQOracleTest {
 
         final List<Word<Character>> eqWords = oracle.generateTestWords(sba, alphabet).collect(Collectors.toList());
         final List<Word<Character>> testWords =
-                Streams.stream(new SBAWMethodTestsIterator<>(sba, alphabet, lookahead)).collect(Collectors.toList());
+                IteratorUtil.list(new SBAWMethodTestsIterator<>(sba, alphabet, lookahead));
 
         Assert.assertEquals(eqWords, testWords);
     }

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,12 @@ import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.LearnerConstructor;
 import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.procedural.adapter.dfa.KearnsVaziraniAdapterDFA;
+import de.learnlib.algorithm.procedural.adapter.dfa.LLambdaAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.LStarBaseAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.ObservationPackAdapterDFA;
-import de.learnlib.algorithm.procedural.adapter.dfa.OptimalTTTAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.RivestSchapireAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.TTTAdapterDFA;
+import de.learnlib.algorithm.procedural.adapter.dfa.TTTLambdaAdapterDFA;
 import de.learnlib.algorithm.procedural.spa.ATRManager;
 import de.learnlib.algorithm.procedural.spa.SPALearner;
 import de.learnlib.algorithm.procedural.spa.manager.DefaultATRManager;
@@ -53,7 +54,8 @@ public class SPAIT extends AbstractSPALearnerIT {
         builder.addLearnerVariant(KearnsVaziraniAdapterDFA::new);
         builder.addLearnerVariant(LStarBaseAdapterDFA::new);
         builder.addLearnerVariant(ObservationPackAdapterDFA::new);
-        builder.addLearnerVariant(OptimalTTTAdapterDFA::new);
+        builder.addLearnerVariant(LLambdaAdapterDFA::new);
+        builder.addLearnerVariant(TTTLambdaAdapterDFA::new);
         builder.addLearnerVariant(RivestSchapireAdapterDFA::new);
         builder.addLearnerVariant(TTTAdapterDFA::new);
     }
@@ -65,7 +67,9 @@ public class SPAIT extends AbstractSPALearnerIT {
         private final SPALearnerVariantList<I> variants;
         private final List<Function<ProceduralInputAlphabet<I>, ATRManager<I>>> atrProviders;
 
-        Builder(ProceduralInputAlphabet<I> alphabet, MembershipOracle<I, Boolean> mqOracle, SPALearnerVariantList<I> variants) {
+        Builder(ProceduralInputAlphabet<I> alphabet,
+                MembershipOracle<I, Boolean> mqOracle,
+                SPALearnerVariantList<I> variants) {
             this.alphabet = alphabet;
             this.mqOracle = mqOracle;
             this.variants = variants;
@@ -77,11 +81,8 @@ public class SPAIT extends AbstractSPALearnerIT {
 
             for (AbstractNamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
                 for (Function<ProceduralInputAlphabet<I>, ATRManager<I>> atrProvider : atrProviders) {
-                    final SPALearner<I, L> learner = new SPALearner<>(alphabet,
-                                                                      mqOracle,
-                                                                      (i) -> provider,
-                                                                      analyzer,
-                                                                      atrProvider.apply(alphabet));
+                    final SPALearner<I, L> learner =
+                            new SPALearner<>(alphabet, mqOracle, i -> provider, analyzer, atrProvider.apply(alphabet));
                     final String name =
                             String.format("adapter=%s,analyzer=%s,manager=%s", provider, analyzer, atrProvider);
                     variants.addLearnerVariant(name, learner);

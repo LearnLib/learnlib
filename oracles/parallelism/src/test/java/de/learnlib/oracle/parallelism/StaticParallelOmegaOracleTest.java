@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Arrays;
 
+import de.learnlib.oracle.ParallelOmegaOracle;
 import de.learnlib.oracle.parallelism.AbstractStaticParallelOmegaOracleTest.TestOutput;
 import org.testng.Assert;
 import org.testng.annotations.Test;

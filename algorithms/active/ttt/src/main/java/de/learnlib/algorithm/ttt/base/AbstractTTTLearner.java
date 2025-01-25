@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.google.common.collect.Iterators;
 import de.learnlib.AccessSequenceProvider;
 import de.learnlib.Resumable;
 import de.learnlib.acex.AcexAnalyzer;
@@ -36,27 +35,30 @@ import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.acex.OutInconsPrefixTransformAcex;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.datastructure.discriminationtree.SplitData;
+import de.learnlib.datastructure.list.IntrusiveList;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.common.smartcollection.ElementReference;
 import net.automatalib.common.smartcollection.UnorderedCollection;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The TTT learning algorithm for {@link DFA}.
+ * The TTT learning algorithm for generic automata.
  *
+ * @param <A>
+ *         hypothesis automaton type
  * @param <I>
  *         input symbol type
+ * @param <D>
+ *         output domain type
  */
-@SuppressWarnings("PMD.ExcessiveClassLength")
 public abstract class AbstractTTTLearner<A, I, D>
         implements LearningAlgorithm<A, I, D>, SupportsGrowingAlphabet<I>, Resumable<TTTLearnerState<I, D>> {
 
@@ -68,12 +70,12 @@ public abstract class AbstractTTTLearner<A, I, D>
     /**
      * Open transitions, i.e., transitions that possibly point to a non-leaf node in the discrimination tree.
      */
-    protected final IncomingList<I, D> openTransitions = new IncomingList<>();
+    protected final IntrusiveList<TTTTransition<I, D>> openTransitions = new IntrusiveList<>();
     /**
      * The blocks during a split operation. A block is a maximal subtree of the discrimination tree containing temporary
      * discriminators at its root.
      */
-    protected final BlockList<I, D> blockList = new BlockList<>();
+    protected final IntrusiveList<AbstractBaseDTNode<I, D>> blockList = new IntrusiveList<>();
     protected AbstractTTTHypothesis<?, I, D, ?> hypothesis;
     protected BaseTTTDiscriminationTree<I, D> dtree;
 
@@ -118,11 +120,15 @@ public abstract class AbstractTTTLearner<A, I, D>
      *         the old node
      * @param label
      *         the label to consider
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      */
     private static <I, D> void moveIncoming(AbstractBaseDTNode<I, D> newNode,
                                             AbstractBaseDTNode<I, D> oldNode,
                                             D label) {
-        newNode.getIncoming().insertAllIncoming(oldNode.getSplitData().getIncoming(label));
+        newNode.getIncoming().concat(oldNode.getSplitData().getIncoming(label));
     }
 
     /**
@@ -132,6 +138,10 @@ public abstract class AbstractTTTLearner<A, I, D>
      *         the node in the discrimination tree
      * @param state
      *         the state in the hypothesis
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
      */
     protected static <I, D> void link(AbstractBaseDTNode<I, D> dtNode, TTTState<I, D> state) {
         assert dtNode.isLeaf();
@@ -164,7 +174,9 @@ public abstract class AbstractTTTLearner<A, I, D>
             return false;
         }
 
-        while (refineHypothesisSingle(ceQuery)) {}
+        while (refineHypothesisSingle(ceQuery)) {
+            // refine exhaustively
+        }
 
         return true;
     }
@@ -181,7 +193,7 @@ public abstract class AbstractTTTLearner<A, I, D>
             TTTTransition<I, D> trans = createTransition(state, sym);
             trans.setNonTreeTarget(dtree.getRoot());
             state.setTransition(i, trans);
-            openTransitions.insertIncoming(trans);
+            openTransitions.add(trans);
         }
     }
 
@@ -211,10 +223,9 @@ public abstract class AbstractTTTLearner<A, I, D>
 
         do {
             splitState(outIncons);
-            closeTransitions();
-            while (finalizeAny()) {
+            do {
                 closeTransitions();
-            }
+            } while (finalizeAny());
 
             outIncons = findOutputInconsistency();
         } while (outIncons != null);
@@ -242,14 +253,14 @@ public abstract class AbstractTTTLearner<A, I, D>
 
         TTTState<I, D> newState = makeTree(transition);
 
-        AbstractBaseDTNode<I, D>.SplitResult children = split(dtNode, tempDiscriminator, oldOut, newOut);
+        AbstractBaseDTNode<I, D>.SplitResult children = dtNode.split(tempDiscriminator, oldOut, newOut);
         dtNode.setTemp(true);
 
         link(children.nodeOld, oldState);
         link(children.nodeNew, newState);
 
         if (dtNode.getParent() == null || !dtNode.getParent().isTemp()) {
-            blockList.insertBlock(dtNode);
+            blockList.add(dtNode);
         }
     }
 
@@ -346,7 +357,7 @@ public abstract class AbstractTTTLearner<A, I, D>
                 result.add(trans.getTreeTarget());
             } else {
                 AbstractBaseDTNode<I, D> tgtNode = trans.getNonTreeTarget();
-                Iterators.addAll(result, tgtNode.subtreeStatesIterator());
+                CollectionUtil.add(result, tgtNode.subtreeStatesIterator());
             }
         }
         return result;
@@ -432,7 +443,7 @@ public abstract class AbstractTTTLearner<A, I, D>
     private @Nullable Splitter<I, D> findSplitter(AbstractBaseDTNode<I, D> blockRoot) {
         int alphabetSize = alphabet.size();
 
-        Object[] properties = new Object[alphabetSize];
+        @Nullable Object[] properties = new Object[alphabetSize];
         @SuppressWarnings("unchecked")
         AbstractBaseDTNode<I, D>[] lcas = new AbstractBaseDTNode[alphabetSize];
         boolean first = true;
@@ -577,17 +588,17 @@ public abstract class AbstractTTTLearner<A, I, D>
         blockRoot.setTemp(false);
         blockRoot.setSplitData(null);
 
-        blockRoot.removeFromBlockList();
+        blockRoot.removeFromList();
 
         for (AbstractBaseDTNode<I, D> subtree : blockRoot.getChildren()) {
             assert subtree.getSplitData() == null;
             blockRoot.setChild(subtree.getParentOutcome(), subtree);
             // Register as blocks, if they are non-trivial subtrees
             if (subtree.isInner()) {
-                blockList.insertBlock(subtree);
+                blockList.add(subtree);
             }
         }
-        openTransitions.insertAllIncoming(blockRoot.getIncoming());
+        openTransitions.concat(blockRoot.getIncoming());
     }
 
     /**
@@ -617,11 +628,11 @@ public abstract class AbstractTTTLearner<A, I, D>
             AbstractBaseDTNode<I, D> curr = dfsStack.pop();
             assert curr.getSplitData() == null;
 
-            curr.setSplitData(new SplitData<>(IncomingList::new));
+            curr.setSplitData(new SplitData<>(IntrusiveList::new));
 
             for (TTTTransition<I, D> trans : curr.getIncoming()) {
                 D outcome = query(trans, discriminator);
-                curr.getSplitData().getIncoming(outcome).insertIncoming(trans);
+                curr.getSplitData().getIncoming(outcome).add(trans);
                 markAndPropagate(curr, outcome);
             }
 
@@ -770,7 +781,8 @@ public abstract class AbstractTTTLearner<A, I, D>
      *
      * @return a collection containing the reached leaves of transitions that needed sifting
      */
-    private List<AbstractBaseDTNode<I, D>> closeTransitions(IncomingList<I, D> transList, boolean hard) {
+    private List<AbstractBaseDTNode<I, D>> closeTransitions(IntrusiveList<TTTTransition<I, D>> transList,
+                                                            boolean hard) {
 
         final List<TTTTransition<I, D>> transToSift = new ArrayList<>(transList.size());
 
@@ -790,7 +802,7 @@ public abstract class AbstractTTTLearner<A, I, D>
 
         for (TTTTransition<I, D> transition : transToSift) {
             final AbstractBaseDTNode<I, D> node = leavesIter.next();
-            if (node.isLeaf() && node.getData() == null && transition.getNextElement() == null) {
+            if (node.isLeaf() && node.getData() == null && transition.getNext() == null) {
                 result.add(node);
             }
         }
@@ -930,18 +942,11 @@ public abstract class AbstractTTTLearner<A, I, D>
         return dtree;
     }
 
-    protected final AbstractBaseDTNode<I, D>.SplitResult split(AbstractBaseDTNode<I, D> node,
-                                                               Word<I> discriminator,
-                                                               D oldOutput,
-                                                               D newOutput) {
-        return node.split(discriminator, oldOutput, newOutput);
-    }
-
     @Override
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         this.hypothesis.addAlphabetSymbol(symbol);
@@ -956,7 +961,7 @@ public abstract class AbstractTTTLearner<A, I, D>
                 final TTTTransition<I, D> trans = createTransition(s, symbol);
                 trans.setNonTreeTarget(dtree.getRoot());
                 s.setTransition(newSymbolIdx, trans);
-                openTransitions.insertIncoming(trans);
+                openTransitions.add(trans);
             }
 
             this.closeTransitions();

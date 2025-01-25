@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
-import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
-import de.learnlib.buildtool.refinement.annotation.Generic;
-import de.learnlib.buildtool.refinement.annotation.Interface;
-import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.EquivalenceOracle.MooreEquivalenceOracle;
@@ -31,41 +27,49 @@ import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
+import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
+import de.learnlib.tooling.annotation.refinement.Generic;
+import de.learnlib.tooling.annotation.refinement.Interface;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
 @GenerateRefinement(name = "DFARandomWordsEQOracle",
-                    generics = "I",
+                    generics = @Generic(value = "I", desc = "input symbol type"),
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = MembershipOracle.class,
+                    typeMappings = @Mapping(from = MembershipOracle.class,
                                             to = DFAMembershipOracle.class,
-                                            withGenerics = "I"),
-                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = "I"))
+                                            generics = @Generic("I")),
+                    interfaces = @Interface(clazz = DFAEquivalenceOracle.class, generics = @Generic("I")))
 @GenerateRefinement(name = "MealyRandomWordsEQOracle",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = MembershipOracle.class,
+                    typeMappings = @Mapping(from = MembershipOracle.class,
                                             to = MealyMembershipOracle.class,
-                                            withGenerics = {"I", "O"}),
-                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class, generics = {"I", "O"}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MealyEquivalenceOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "MooreRandomWordsEQOracle",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = MembershipOracle.class,
+                    typeMappings = @Mapping(from = MembershipOracle.class,
                                             to = MooreMembershipOracle.class,
-                                            withGenerics = {"I", "O"}),
-                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class, generics = {"I", "O"}))
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MooreEquivalenceOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 public class RandomWordsEQOracle<A extends Output<I, D>, I, D> extends AbstractTestWordEQOracle<A, I, D> {
 
     private final Random random;
@@ -101,14 +105,14 @@ public class RandomWordsEQOracle<A extends Output<I, D>, I, D> extends AbstractT
     @Override
     protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
 
-        final List<? extends I> symbolList = CollectionsUtil.randomAccessList(inputs);
+        final List<? extends I> symbolList = CollectionUtil.randomAccessList(inputs);
 
         return Stream.generate(() -> generateTestWord(symbolList, symbolList.size())).limit(maxTests);
     }
 
     private Word<I> generateTestWord(List<? extends I> symbolList, int numSyms) {
 
-        final int length = minLength + random.nextInt((maxLength - minLength) + 1);
+        final int length = minLength + random.nextInt(maxLength - minLength + 1);
         final WordBuilder<I> result = new WordBuilder<>(length);
 
         for (int j = 0; j < length; ++j) {

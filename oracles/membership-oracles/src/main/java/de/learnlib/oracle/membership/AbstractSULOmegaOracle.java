@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,7 +99,7 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
                 final Q nextState = getQueryState(sul);
 
                 int prefixLength = prefix.length();
-                for (Q q: states) {
+                for (Q q : states) {
                     if (isSameState(inputBuilder.toWord(), nextState, inputBuilder.toWord(0, prefixLength), q)) {
                         return Pair.of(outputBuilder.toWord(), i + 1);
                     }
@@ -123,12 +123,16 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
      * Creates a new {@link AbstractSULOmegaOracle}, while making sure the invariants of the {@link ObservableSUL} are
      * satisfied.
      *
-     * @param sul the {@link ObservableSUL} to wrap around.
-     * @param deepCopies whether to test for state equivalence directly on the retrieved state.
-     *
-     * @param <S> the state type
-     * @param <I> the input type
-     * @param <O> the output type
+     * @param sul
+     *         the {@link ObservableSUL} to wrap around.
+     * @param deepCopies
+     *         whether to test for state equivalence directly on the retrieved state.
+     * @param <S>
+     *         the state type
+     * @param <I>
+     *         the input type
+     * @param <O>
+     *         the output type
      *
      * @return the {@link AbstractSULOmegaOracle}.
      */
@@ -136,16 +140,16 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
                                                                                         boolean deepCopies) {
         final AbstractSULOmegaOracle<S, I, O, ?> abstractSulOmegaOracle;
         if (deepCopies) {
-            if (!sul.deepCopies()) {
-                throw new IllegalArgumentException("SUL can not make deep copies of states.");
-            } else {
+            if (sul.deepCopies()) {
                 abstractSulOmegaOracle = new DeepCopySULOmegaOracle<>(sul);
+            } else {
+                throw new IllegalArgumentException("SUL can not make deep copies of states.");
             }
         } else {
-            if (!sul.canFork()) {
-                throw new IllegalArgumentException("SUL must be forkable.");
-            } else {
+            if (sul.canFork()) {
                 abstractSulOmegaOracle = new ShallowCopySULOmegaOracle<>(sul);
+            } else {
+                throw new IllegalArgumentException("SUL must be forkable.");
             }
         }
 
@@ -155,11 +159,18 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
     /**
      * Creates a new {@link AbstractSULOmegaOracle} that assumes the {@link SUL} can not make deep copies.
      *
-     * @see #newOracle(ObservableSUL, boolean)
+     * @param sul
+     *         the sul to delegate queris to
+     * @param <S>
+     *         the state type
+     * @param <I>
+     *         the input type
+     * @param <O>
+     *         the output type
      *
-     * @param <S> the state type
-     * @param <I> the input type
-     * @param <O> the output type
+     * @return the new oracle
+     *
+     * @see #newOracle(ObservableSUL, boolean)
      */
     public static <S extends Object, I, O> AbstractSULOmegaOracle<S, I, O, ?> newOracle(ObservableSUL<S, I, O> sul) {
         return newOracle(sul, !sul.canFork());
@@ -173,9 +184,12 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
      * The state information used to answer {@link OmegaQuery}s is of type {@link Integer}. The values of those integers
      * are actually hash codes of states of the {@link ObservableSUL}.
      *
-     * @param <S> the state type
-     * @param <I> the input type
-     * @param <O> the output type
+     * @param <S>
+     *         the state type
+     * @param <I>
+     *         the input type
+     * @param <O>
+     *         the output type
      */
     private static final class ShallowCopySULOmegaOracle<S extends Object, I, O>
             extends AbstractSULOmegaOracle<S, I, O, Integer> {
@@ -187,10 +201,11 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
 
         /**
          * Constructs a new {@link ShallowCopySULOmegaOracle}, use {@link #newOracle(ObservableSUL)} to create an
-         * instance. This method makes sure the invariants of the {@link ObservableSUL} are satisfied (i.e., the {@link
-         * ObservableSUL} must be forkable, i.e. ({@code {@link SUL#canFork()} == true}).
+         * instance. This method makes sure the invariants of the {@link ObservableSUL} are satisfied (i.e., the
+         * {@link ObservableSUL} must be forkable, i.e. ({@code {@link SUL#canFork()} == true}).
          *
-         * @param sul the SUL
+         * @param sul
+         *         the SUL
          */
         ShallowCopySULOmegaOracle(ObservableSUL<S, I, O> sul) {
             super(sul);
@@ -201,7 +216,8 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
         /**
          * Returns the state as a hash code.
          *
-         * @param sul the {@link ObservableSUL} to retrieve the current state from.
+         * @param sul
+         *         the {@link ObservableSUL} to retrieve the current state from.
          *
          * @return the hash code of the state.
          */
@@ -213,17 +229,17 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
         /**
          * Test for state equivalence, by means of {@link Object#hashCode()}, and {@link Object#equals(Object)}.
          *
-         * @see OmegaMembershipOracle#isSameState(Word, Object, Word, Object)
-         *
          * @return whether the following conditions hold:
-         *  1. the hash codes are the same, i.e. {@code s1.equals(s2)}, and
-         *  2. the two access sequences lead to the same state.
+         * <ol>
+         *     <li>the hash codes are the same, i.e. {@code s1.equals(s2)}, and</li>
+         *     <li>the two access sequences lead to the same state.</li>
+         * </ol>
+         *
+         * @see OmegaMembershipOracle#isSameState(Word, Object, Word, Object)
          */
         @Override
         public boolean isSameState(Word<I> input1, Integer s1, Word<I> input2, Integer s2) {
-            if (!s1.equals(s2)) {
-                return false;
-            } else {
+            if (s1.equals(s2)) {
                 // in this case the hash codes are equal, now we must check if we accidentally had a hash-collision.
                 final ObservableSUL<S, I, O> sul1 = getSul();
                 final ObservableSUL<S, I, O> sul2 = forkedSUL;
@@ -246,6 +262,8 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
                 } finally {
                     sul2.post();
                 }
+            } else {
+                return false;
             }
         }
     }
@@ -256,9 +274,12 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
      * <p>
      * The state information used to answer {@link OmegaQuery}s is of type {@link S}.
      *
-     * @param <S> the state type
-     * @param <I> the input type
-     * @param <O> the output type
+     * @param <S>
+     *         the state type
+     * @param <I>
+     *         the input type
+     * @param <O>
+     *         the output type
      */
     private static final class DeepCopySULOmegaOracle<S extends Object, I, O>
             extends AbstractSULOmegaOracle<S, I, O, S> {
@@ -267,7 +288,8 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
          * Constructs a {@link DeepCopySULOmegaOracle}, use {@link #newOracle(ObservableSUL, boolean)} to create an
          * actual instance. This method will make sure the invariants of the {@link ObservableSUL} are satisfied.
          *
-         * @param sul the {@link ObservableSUL}.
+         * @param sul
+         *         the {@link ObservableSUL}.
          */
         DeepCopySULOmegaOracle(ObservableSUL<S, I, O> sul) {
             super(sul);
@@ -276,7 +298,8 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
         /**
          * Returns the current state of the {@link ObservableSUL}.
          *
-         * @param sul the {@link ObservableSUL} to retrieve the current state from.
+         * @param sul
+         *         the {@link ObservableSUL} to retrieve the current state from.
          *
          * @return the current state.
          */

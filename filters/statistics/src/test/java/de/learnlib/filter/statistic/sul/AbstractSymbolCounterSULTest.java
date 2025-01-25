@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,11 @@ import java.util.Collection;
 
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.query.Query;
+import de.learnlib.statistic.StatisticSUL;
 import net.automatalib.word.Word;
 
-public abstract class AbstractSymbolCounterSULTest extends AbstractCounterSULTest {
+public abstract class AbstractSymbolCounterSULTest<S extends StatisticSUL<Integer, Character>>
+        extends AbstractCounterSULTest<S> {
 
     private static final int QUERY_LENGTH = 5;
 

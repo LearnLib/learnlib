@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,17 @@ import java.util.Map;
 import de.learnlib.datastructure.discriminationtree.iterators.DiscriminationTreeIterators;
 import de.learnlib.datastructure.discriminationtree.model.AbstractTemporaryIntrusiveDTNode;
 import de.learnlib.datastructure.discriminationtree.model.BooleanMap;
-import de.learnlib.datastructure.list.IntrusiveListElem;
+import de.learnlib.datastructure.list.IntrusiveListEntry;
 
 /**
+ * Specific discrimination tree node implementation.
+ *
  * @param <I>
  *         input symbol type
  */
 public class DTNode<I>
         extends AbstractTemporaryIntrusiveDTNode<ContextPair<I>, Boolean, HypLoc<I>, TransList<I>, DTNode<I>>
-        implements IntrusiveListElem<DTNode<I>> {
+        implements IntrusiveListEntry<DTNode<I>> {
 
     private final TransList<I> nonTreeIncoming = new TransList<>();
 
@@ -81,5 +83,10 @@ public class DTNode<I>
     @Override
     protected DTNode<I> createChild(Boolean outcome, HypLoc<I> data) {
         return new DTNode<>(this, outcome, data);
+    }
+
+    @Override
+    public DTNode<I> getElement() {
+        return this;
     }
 }

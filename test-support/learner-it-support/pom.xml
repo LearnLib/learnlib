@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2023 TU Dortmund
-This file is part of LearnLib, http://www.learnlib.de/.
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,10 +39,6 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-cache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-drivers-simulator</artifactId>
         </dependency>
         <dependency>
@@ -60,29 +56,14 @@ limitations under the License.
             <artifactId>learnlib-membership-oracles</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-test-support</artifactId>
-            <scope>compile</scope>
-            <!-- Override! -->
-        </dependency>
-        <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-util</artifactId>
         </dependency>
 
         <!-- external -->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-util</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -91,11 +72,6 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
         </dependency>
 
         <dependency>

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,7 @@ import net.automatalib.word.Word;
  * A {@link DFALearningCacheOracle} that uses a {@link Map} for internal cache organization.
  * <p>
  * <b>Note:</b> this implementation is <b>not</b> thread-safe. If you require a cache that is usable in a parallel
- * environment. consider using the alternatives offered by the {@code ThreadSafeDFACaches} factory from the {@code
- * learnlib-parallelism} artifact.
+ * environment. consider using the alternatives offered by the {@link ThreadSafeDFACaches} factory.
  *
  * @param <I>
  *         input symbol type

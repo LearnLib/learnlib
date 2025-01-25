@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,20 @@ package de.learnlib.filter.reuse.tree;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import de.learnlib.filter.reuse.BuilderDefaults;
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseException;
 import de.learnlib.filter.reuse.ReuseOracle;
 import de.learnlib.filter.reuse.tree.BoundedDeque.AccessPolicy;
 import de.learnlib.filter.reuse.tree.BoundedDeque.EvictPolicy;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
+import de.learnlib.tooling.annotation.builder.Param;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.graph.Graph;
 import net.automatalib.visualization.VisualizationHelper;
@@ -47,50 +49,52 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * ReuseTreeBuilder#withInvariantInputs(Set)} is set).
  *
  * @param <S>
- *         system state class
+ *         system state type
  * @param <I>
- *         input symbol class
+ *         input symbol type
  * @param <O>
- *         output symbol class
+ *         output symbol type
  */
-public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I, O>, @Nullable ReuseEdge<S, I, O>> {
+public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> {
 
     private final Alphabet<I> alphabet;
     private final int alphabetSize;
     private final Set<I> invariantInputSymbols;
     private final Set<O> failureOutputSymbols;
-    private final boolean invalidateSystemstates;
+    private final boolean invalidateSystemStates;
     private final SystemStateHandler<S> systemStateHandler;
     private final int maxSystemStates;
     private final AccessPolicy accessPolicy;
     private final EvictPolicy evictPolicy;
-    /** May be reset to zero, see {@link ReuseTree#clearTree()}. */
     private int nodeCount;
-    /** May be reinitialized, see {@link ReuseTree#clearTree()}. */
     private ReuseNode<S, I, O> root;
     private final ReadWriteLock lock;
 
-    ReuseTree(ReuseTreeBuilder<S, I, O> builder) {
-        this.alphabet = builder.alphabet;
-        this.invalidateSystemstates = builder.invalidateSystemstates;
-        SystemStateHandler<S> handler = builder.systemStateHandler;
-        // If the specified handler is null, no action is required
-        if (handler == null) {
-            handler = state -> {};
-        }
-        this.systemStateHandler = handler;
-        this.invariantInputSymbols =
-                (builder.invariantInputSymbols != null) ? builder.invariantInputSymbols : Collections.emptySet();
-        this.failureOutputSymbols =
-                (builder.failureOutputSymbols != null) ? builder.failureOutputSymbols : Collections.emptySet();
+    @GenerateBuilder(defaults = BuilderDefaults.class,
+                     getterPrefix = GenerateBuilder.SUPPRESS,
+                     setterPrefix = GenerateBuilder.SUPPRESS,
+                     createName = "build")
+    public ReuseTree(@Param(requiredOnInstantiation = true) Alphabet<I> alphabet,
+                     boolean enabledSystemStateInvalidation,
+                     SystemStateHandler<S> systemStateHandler,
+                     Set<I> invariantInputs,
+                     Set<O> failureOutputs,
+                     int maxSystemStates,
+                     AccessPolicy accessPolicy,
+                     EvictPolicy evictPolicy) {
+        this.alphabet = alphabet;
+        this.invalidateSystemStates = enabledSystemStateInvalidation;
+        this.systemStateHandler = systemStateHandler;
+        this.invariantInputSymbols = invariantInputs;
+        this.failureOutputSymbols = failureOutputs;
 
-        this.maxSystemStates = builder.maxSystemStates;
-        this.accessPolicy = builder.accessPolicy;
-        this.evictPolicy = builder.evictPolicy;
+        this.maxSystemStates = maxSystemStates;
+        this.accessPolicy = accessPolicy;
+        this.evictPolicy = evictPolicy;
 
         // local and not configurable
         this.alphabetSize = alphabet.size();
-        this.root = createNode();
+        this.root = new ReuseNode<>(nodeCount++, alphabetSize, maxSystemStates, accessPolicy, evictPolicy);
 
         this.lock = new ReentrantReadWriteLock();
     }
@@ -103,16 +107,11 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * Returns the known output for the given query or {@code null} if not known.
      *
      * @param query
-     *         Not allowed to be {@code null}.
+     *         the query
      *
      * @return The output for {@code query} if already known from the {@link ReuseTree} or {@code null} if unknown.
      */
     public @Nullable Word<O> getOutput(Word<I> query) {
-        if (query == null) {
-            String msg = "Query is not allowed to be null.";
-            throw new IllegalArgumentException(msg);
-        }
-
         final WordBuilder<O> output = new WordBuilder<>();
 
         this.lock.readLock().lock();
@@ -147,18 +146,13 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * {@code null}.
      *
      * @param query
-     *         Not allowed to be {@code null}.
+     *         the query
      *
      * @return The partial output for {@code query} from the {@link ReuseTree} with outputs for "reflexive" edges filled
      * with {@code null} for "non-reflexive" and not-known parts of the input word.
      */
-    public Word<O> getPartialOutput(Word<I> query) {
-        if (query == null) {
-            String msg = "Query is not allowed to be null.";
-            throw new IllegalArgumentException(msg);
-        }
-
-        final WordBuilder<O> output = new WordBuilder<>();
+    public Word<@Nullable O> getPartialOutput(Word<I> query) {
+        final WordBuilder<@Nullable O> output = new WordBuilder<>();
 
         this.lock.readLock().lock();
         try {
@@ -210,11 +204,9 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
         node.clearSystemStates();
 
         for (ReuseEdge<S, I, O> edge : node.getEdges()) {
-            if (edge != null) {
-                if (!edge.getTarget().equals(node)) {
-                    // only for non-reflexive edges, there are no circles in a tree
-                    disposeSystemStates(edge.getTarget());
-                }
+            if (edge != null && !edge.getTarget().equals(node)) {
+                // only for non-reflexive edges, there are no circles in a tree
+                disposeSystemStates(edge.getTarget());
             }
         }
     }
@@ -237,19 +229,15 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
     }
 
     /**
-     * Returns a reuseable {@link ReuseNode.NodeResult} with system state or {@code null} if none such exists. If
-     * ''oldInvalidated'' was set to {@code true} (in the {@link ReuseOracle}) the system state is already removed from
-     * the tree whenever one was available.
+     * Returns a reusable {@link ReuseNode.NodeResult} with system state accessed by the given access sequence. or
+     * {@code null} if none such exists.
      *
      * @param query
-     *         Not allowed to be {@code null}.
+     *         the access sequence to the node
+     *
+     * @return the node accessed by the given query, {@code null} if no such node exists
      */
     public ReuseNode.@Nullable NodeResult<S, I, O> fetchSystemState(Word<I> query) {
-        if (query == null) {
-            String msg = "Query is not allowed to be null.";
-            throw new IllegalArgumentException(msg);
-        }
-
         int length = 0;
 
         this.lock.readLock().lock();
@@ -280,7 +268,8 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
                 return null;
             }
 
-            S systemState = lastState.fetchSystemState(invalidateSystemstates);
+            S systemState = lastState.fetchSystemState(invalidateSystemStates);
+            assert systemState != null;
 
             return new ReuseNode.NodeResult<>(lastState, systemState, length);
         } finally {
@@ -299,6 +288,11 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * <p>
      * This method should only be invoked internally from the {@link ReuseOracle} unless you know exactly what you are
      * doing (you may want to create a predefined reuse tree before start learning).
+     *
+     * @param query
+     *         the query determining a path in the tree
+     * @param queryResult
+     *         the output that should be associated with the given path
      *
      * @throws ReuseException
      *         if non-deterministic behavior is detected
@@ -320,18 +314,17 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
      * This method should only be invoked internally from the {@link ReuseOracle} unless you know exactly what you are
      * doing (you may want to create a predefined reuse tree before start learning).
      *
+     * @param query
+     *         the query determining a path in the tree
+     * @param sink
+     *         the starting node of the path
+     * @param queryResult
+     *         the output that should be associated with the given path
+     *
      * @throws ReuseException
      *         if non-deterministic behavior is detected
      */
     public void insert(Word<I> query, ReuseNode<S, I, O> sink, ReuseCapableOracle.QueryResult<S, O> queryResult) {
-        if (queryResult == null) {
-            String msg = "The queryResult is not allowed to be null.";
-            throw new IllegalArgumentException(msg);
-        }
-        if (sink == null) {
-            String msg = "Node is not allowed to be null, called wrong method?";
-            throw new IllegalArgumentException(msg);
-        }
         if (query.size() != queryResult.output.size()) {
             String msg = "Size mismatch: " + query + "/" + queryResult.output;
             throw new IllegalArgumentException(msg);
@@ -402,78 +395,17 @@ public final class ReuseTree<S, I, O> implements Graph<@Nullable ReuseNode<S, I,
     }
 
     @Override
-    public Collection<@Nullable ReuseEdge<S, I, O>> getOutgoingEdges(@Nullable ReuseNode<S, I, O> node) {
-        return node == null ? Collections.emptyList() : node.getEdges();
+    public Collection<ReuseEdge<S, I, O>> getOutgoingEdges(ReuseNode<S, I, O> node) {
+        return node.getEdges();
     }
 
     @Override
-    public @Nullable ReuseNode<S, I, O> getTarget(@Nullable ReuseEdge<S, I, O> edge) {
-        return edge == null ? null : edge.getTarget();
+    public ReuseNode<S, I, O> getTarget(ReuseEdge<S, I, O> edge) {
+        return edge.getTarget();
     }
 
     @Override
-    public VisualizationHelper<@Nullable ReuseNode<S, I, O>, @Nullable ReuseEdge<S, I, O>> getVisualizationHelper() {
+    public VisualizationHelper<ReuseNode<S, I, O>, ReuseEdge<S, I, O>> getVisualizationHelper() {
         return new ReuseTreeDotHelper<>();
-    }
-
-    public static class ReuseTreeBuilder<S, I, O> {
-
-        // mandatory
-        private final Alphabet<I> alphabet;
-
-        // optional
-        private boolean invalidateSystemstates = true;
-        private @Nullable SystemStateHandler<S> systemStateHandler;
-        private Set<I> invariantInputSymbols;
-        private Set<O> failureOutputSymbols;
-        private int maxSystemStates = -1;
-        private AccessPolicy accessPolicy = AccessPolicy.LIFO;
-        private EvictPolicy evictPolicy = EvictPolicy.EVICT_OLDEST;
-
-        public ReuseTreeBuilder(Alphabet<I> alphabet) {
-            this.alphabet = alphabet;
-            this.systemStateHandler = null;
-            this.invariantInputSymbols = Collections.emptySet();
-            this.failureOutputSymbols = Collections.emptySet();
-        }
-
-        public ReuseTreeBuilder<S, I, O> withSystemStateHandler(SystemStateHandler<S> systemStateHandler) {
-            this.systemStateHandler = systemStateHandler;
-            return this;
-        }
-
-        public ReuseTreeBuilder<S, I, O> withEnabledSystemstateInvalidation(boolean invalidate) {
-            this.invalidateSystemstates = invalidate;
-            return this;
-        }
-
-        public ReuseTreeBuilder<S, I, O> withInvariantInputs(Set<I> inputs) {
-            this.invariantInputSymbols = inputs;
-            return this;
-        }
-
-        public ReuseTreeBuilder<S, I, O> withFailureOutputs(Set<O> outputs) {
-            this.failureOutputSymbols = outputs;
-            return this;
-        }
-
-        public ReuseTreeBuilder<S, I, O> withMaxSystemStates(int maxSystemStates) {
-            this.maxSystemStates = maxSystemStates;
-            return this;
-        }
-
-        public ReuseTreeBuilder<S, I, O> withAccessPolicy(AccessPolicy accessPolicy) {
-            this.accessPolicy = accessPolicy;
-            return this;
-        }
-
-        public ReuseTreeBuilder<S, I, O> withEvictPolicy(EvictPolicy evictPolicy) {
-            this.evictPolicy = evictPolicy;
-            return this;
-        }
-
-        public ReuseTree<S, I, O> build() {
-            return new ReuseTree<>(this);
-        }
     }
 }

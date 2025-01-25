@@ -6,6 +6,39 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.17.0...HEAD)
 
+### Added
+
+* LearnLib now supports JPMS modules. All artifacts now provide a `module-info` descriptor except of the distribution artifacts (for Maven-less environments) which only provide an `Automatic-Module-Name` due to non-modular dependencies. Note that while this is a Java 9+ feature, LearnLib still supports Java 8 byte code for the remaining class files.
+* The `ADTLearner` has been refactored to no longer use the (now-removed) `SymbolQueryOracle` but a new `AdaptiveMembershipOracle` instead which supports answering queries in parallel (thanks to [Leon Vitorovic](https://github.com/leonthalee)).
+* Added an `InterningMembershipOracle` (including refinements) to the `learnlib-cache` artifact that interns query responses to reduce memory consumption of large data structures. This exports the internal concepts of the DHC learner (which no longer interns query responses automatically).
+* `StaticParallelOracleBuilder` now supports custom executor services.
+
+### Changed
+
+* The JPMS support introduces several changes:
+  * You now require at least a JDK 11 to build LearnLib.
+  * We use modules to better structure the aggregated JavaDoc. Since there exist breaking changes between Java 8 and Java 9 regarding documentation (see package-list vs. element-list), you can no longer link against the LearnLib documentation on JDK 8 builds.
+  * Split packages had to be refactored.
+    * The `de.learnlib.oracle.parallelism` interfaces in the `learnlib-api` artifact have been moved to the `de.learnlib.oracle` package.
+    * The `ThreadSafe` caches have been moved from the `learnlib-parallelism` artifact to the `learnlib-cache` artifact.
+    * The `GrowingAlphabet` and `Resumable` tests from the `learnlib-learner-it-support` artifact been moved to the `learnlib-test-support` artifact.
+    * The `OTUtils` class no longer provides the `displayHTMLInBrowser` methods in order to not depend on `java.desktop`. If you relied on this functionality, use the `writeHTMLToFile` methods instead and call `Desktop.getDesktop().open(file.toURI())` yourself.
+    * The classes in the `learnlib-learning-examples` artifact have their package renamed to `de.learnlib.testsupport.example`.
+* The `AbstractVisualizationTest` has been refactored into the `VisualizationUtils` factory.
+* Various counters (especially `*Counter*SUL`s) have been streamlined. In most cases there now exists a single counter that tracks multiple properties.
+* The `ReuseOracleBuilder` and `ReuseTreeBuilder` classes are now auto-generated and therefore reside in the respective packages of their previously enclosing classes.
+* With the removal of the `learnlib-annotation-processor` artifact (see below), the `learnlib-build-config` artifact is now part of the `de.learnlib` group again.
+* The `learnlib-datastructure-ot`, `learnlib-datastructure-dt`, `learnlib-datastructure-list`, and `learnlib-datastructure-pta` artifacts have been merged into a new `learnlib-datastructures` artifact.
+* The `learnlib-oml` artifact (including its packages and class names) has been renamed to `learnlib-lambda`.
+
+### Removed
+
+* The `de.learnlib.tooling:learnlib-annotation-processor` artifact has been dropped. The functionality has been moved to a [standalone project](https://github.com/LearnLib/build-tools).
+* The `de.learnlib:learnlib-rpni-edsm` and `de.learnlib:learnlib-rpni-mdl` artifacts have been dropped. The code has been merged with the `de.learnlib:learnlib-rpni` artifact.
+* `MQUtil` has been stripped of unused methods. Especially the `query` method can be simulated by the respective oracles themselves.
+* `PropertyOracle`s can no longer set a property. This value is now immutable and must be provided during instantiation. Previously, the internal state wasn't updated accordingly if a property was overridden.
+* `SymbolQueryOracle`s (and related code such as the respective caches, counters, etc.) have been removed without replacement. Equivalent functionality on the basis of the new `AdaptiveMembershipOracle`s is available instead.
+
 
 ## [0.17.0] - 2023-11-15
 

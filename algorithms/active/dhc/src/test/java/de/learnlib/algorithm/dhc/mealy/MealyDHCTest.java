@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,18 +20,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.example.mealy.ExampleCoffeeMachine;
-import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
-import de.learnlib.example.mealy.ExampleGrid;
-import de.learnlib.example.mealy.ExampleStack;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine.Input;
+import de.learnlib.testsupport.example.mealy.ExampleGrid;
+import de.learnlib.testsupport.example.mealy.ExampleStack;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -69,7 +69,7 @@ public class MealyDHCTest {
         dhc.startLearning();
         MealyMachine<?, Character, ?, Integer> hypo = dhc.getHypothesisModel();
 
-        Assert.assertEquals(hypo.size(), (xsize * ysize), "Mismatch in size of learned hypothesis");
+        Assert.assertEquals(hypo.size(), xsize * ysize, "Mismatch in size of learned hypothesis");
 
     }
 

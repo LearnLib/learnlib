@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,34 +15,33 @@
  */
 package de.learnlib.testsupport;
 
-import java.nio.charset.StandardCharsets;
-
-import com.thoughtworks.xstream.XStream;
 import de.learnlib.Resumable;
+import org.apache.fury.Fury;
+import org.apache.fury.logging.LoggerFactory;
 
 /**
  * Utility functions for {@link Resumable} features.
  */
 public final class ResumeUtils {
 
-    private static final XStream X_STREAM;
+    private static final Fury FURY;
 
     static {
-        X_STREAM = new XStream();
-        X_STREAM.allowTypesByRegExp(new String[] {"net.automatalib.*", "de.learnlib.*"});
+        LoggerFactory.useSlf4jLogging(true);
+        FURY = Fury.builder().withRefTracking(true).requireClassRegistration(false).build();
     }
 
     private ResumeUtils() {
         // prevent instantiation
     }
 
-    public static <T extends Object> byte[] toBytes(T state) {
-        return X_STREAM.toXML(state).getBytes(StandardCharsets.UTF_8);
+    public static byte[] toBytes(Object state) {
+        return FURY.serialize(state);
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T fromBytes(byte[] bytes) {
-        return (T) X_STREAM.fromXML(new String(bytes, StandardCharsets.UTF_8));
+        return (T) FURY.deserialize(bytes);
     }
 
 }

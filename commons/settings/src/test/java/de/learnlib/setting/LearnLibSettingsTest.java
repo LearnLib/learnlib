@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,44 +15,44 @@
  */
 package de.learnlib.setting;
 
-import java.io.File;
-import java.net.URL;
-
+import net.automatalib.common.setting.AutomataLibProperty;
+import net.automatalib.common.setting.AutomataLibSettings;
 import org.testng.Assert;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 public class LearnLibSettingsTest {
 
-    @BeforeSuite
-    public void setUp() {
-        final URL resource = LearnLibSettingsTest.class.getResource("/learnlib.properties");
-        assert resource != null;
-        final File properties = new File(resource.getFile());
-        System.setProperty("learnlib.properties", properties.getAbsolutePath());
-    }
-
     @Test
-    public void testProperties() {
+    public void testLearnLibProperties() {
         LearnLibSettings settings = LearnLibSettings.getInstance();
 
         for (LearnLibProperty p : LearnLibProperty.values()) {
             switch (p) {
                 case PARALLEL_BATCH_SIZE_DYNAMIC:
-                    Assert.assertEquals(1, settings.getInt(LearnLibProperty.PARALLEL_BATCH_SIZE_DYNAMIC, 0));
+                    Assert.assertEquals(settings.getInt(LearnLibProperty.PARALLEL_BATCH_SIZE_DYNAMIC, 0), 1);
                     break;
                 case PARALLEL_BATCH_SIZE_STATIC:
-                    Assert.assertEquals(2, settings.getInt(LearnLibProperty.PARALLEL_BATCH_SIZE_STATIC, 0));
+                    Assert.assertEquals(settings.getInt(LearnLibProperty.PARALLEL_BATCH_SIZE_STATIC, 0), 2);
                     break;
                 case PARALLEL_POOL_POLICY:
-                    Assert.assertEquals("CACHED", settings.getProperty(LearnLibProperty.PARALLEL_POOL_POLICY));
+                    Assert.assertEquals(settings.getProperty(LearnLibProperty.PARALLEL_POOL_POLICY), "CACHED");
                     break;
                 case PARALLEL_POOL_SIZE:
-                    Assert.assertEquals(3, settings.getInt(LearnLibProperty.PARALLEL_POOL_SIZE, 0));
+                    Assert.assertEquals(settings.getInt(LearnLibProperty.PARALLEL_POOL_SIZE, 0), 3);
                     break;
                 default:
                     throw new IllegalStateException("Unhandled property " + p);
             }
         }
+    }
+
+    @Test
+    public void testAutomataLibProperties() {
+        AutomataLibSettings settings = AutomataLibSettings.getInstance();
+
+        // LearnLib should load properties for AutomataLib from learnlib.properties files but prefer automatalib.properties
+        Assert.assertEquals(settings.getProperty(AutomataLibProperty.WORD_EMPTY_REP), "empty_rep");
+        Assert.assertEquals(settings.getProperty(AutomataLibProperty.WORD_DELIM_RIGHT), "delim_right");
+        Assert.assertEquals(settings.getProperty(AutomataLibProperty.WORD_DELIM_LEFT), "delim_left_override");
     }
 }

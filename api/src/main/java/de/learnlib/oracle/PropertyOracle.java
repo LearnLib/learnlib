@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,24 +54,18 @@ public interface PropertyOracle<I, A extends Output<I, D>, P, D> extends Inclusi
     }
 
     /**
-     * Set the property.
-     *
-     * @param property the property to set.
-     */
-    void setProperty(P property);
-
-    /**
      * Returns the property.
      *
      * @return the property.
      */
-    @Pure P getProperty();
+    @Pure
+    P getProperty();
 
     /**
      * Returns the counterexample for the property if {@link #isDisproved()}, {@code null} otherwise.
      * <p>
-     * If this method does not return {@code null}, a previous call to {@link #disprove(Output, Collection)} must
-     * have returned a {@link DefaultQuery}.
+     * If this method does not return {@code null}, a previous call to {@link #disprove(Output, Collection)} must have
+     * returned a {@link DefaultQuery}.
      *
      * @return the counterexample for the property if {@link #isDisproved()}, {@code null} otherwise.
      */
@@ -80,22 +74,26 @@ public interface PropertyOracle<I, A extends Output<I, D>, P, D> extends Inclusi
     /**
      * Try to disprove the property with the given {@code hypothesis}.
      *
-     * @param hypothesis the hypothesis.
-     * @param inputs the inputs
+     * @param hypothesis
+     *         the hypothesis
+     * @param inputs
+     *         the inputs
      *
-     * @return the {@link DefaultQuery} that is a counterexample the property, or {@code null}, if the property
-     * could not be disproved.
+     * @return the {@link DefaultQuery} that is a counterexample to the property, or {@code null}, if the property could
+     * not be disproved.
      */
     @Nullable DefaultQuery<I, D> disprove(A hypothesis, Collection<? extends I> inputs);
 
     /**
      * Try to find a counterexample to the given {@code hypothesis} if the property can not be disproved.
      *
-     * @param hypothesis the hypothesis to find a counterexample to.
-     * @param inputs the input alphabet.
+     * @param hypothesis
+     *         the hypothesis to find a counterexample to
+     * @param inputs
+     *         the input symbols to consider for finding a counterexample
      *
-     * @return the {@link DefaultQuery} that is a counterexample to the given {@code hypothesis}, or {@code
-     * null}, a counterexample could not be found or the property could be disproved.
+     * @return the {@link DefaultQuery} that is a counterexample to the given {@code hypothesis}, or {@code null}, a
+     * counterexample could not be found or the property could be disproved.
      */
     @Override
     default @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
@@ -103,8 +101,15 @@ public interface PropertyOracle<I, A extends Output<I, D>, P, D> extends Inclusi
     }
 
     /**
-     * Unconditionally find a counterexample, i.e. regardless of whether the property can be disproved. In fact,
+     * Unconditionally find a counterexample, i.e., regardless of whether the property can be disproved. In fact,
      * {@link #disprove(Output, Collection)} is not even be called.
+     *
+     * @param hypothesis
+     *         the hypothesis to find a counterexample to
+     * @param inputs
+     *         the input symbols to consider for finding a counterexample
+     *
+     * @return a counterexample for the current hypothesis. May be {@code null} of none can be found
      *
      * @see #findCounterExample(Output, Collection)
      */

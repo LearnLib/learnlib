@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.sul.SUL;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -107,7 +107,7 @@ public class RandomWalkEQOracle<I, O> implements MealyEquivalenceOracle<I, O> {
             return null;
         }
 
-        List<? extends I> choices = CollectionsUtil.randomAccessList(inputs);
+        List<? extends I> choices = CollectionUtil.randomAccessList(inputs);
         int bound = choices.size();
         S cur = hypothesis.getInitialState();
         WordBuilder<I> wbIn = new WordBuilder<>();

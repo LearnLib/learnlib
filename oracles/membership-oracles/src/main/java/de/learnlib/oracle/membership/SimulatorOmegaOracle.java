@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package de.learnlib.oracle.membership;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import de.learnlib.oracle.MembershipOracle;
@@ -27,7 +26,6 @@ import de.learnlib.oracle.OmegaQueryAnswerer;
 import de.learnlib.oracle.SingleQueryOmegaOracle;
 import de.learnlib.query.OmegaQuery;
 import de.learnlib.query.Query;
-import de.learnlib.util.MQUtil;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -57,7 +55,7 @@ public class SimulatorOmegaOracle<S extends Object, I, D> implements SingleQuery
     private final SimpleDTS<S, I> simpleDTS;
 
     /**
-     * @see #getMembershipOracle()
+     * The oracle to answer queries.
      */
     private final SimulatorOracle<I, D> simulatorOracle;
 
@@ -91,11 +89,6 @@ public class SimulatorOmegaOracle<S extends Object, I, D> implements SingleQuery
     @Override
     public boolean isSameState(Word<I> input1, S s1, Word<I> input2, S s2) {
         return s1.equals(s2);
-    }
-
-    @Override
-    public void processQueries(Collection<? extends OmegaQuery<I, D>> queries) {
-        MQUtil.answerOmegaQueries(this, queries);
     }
 
     /**

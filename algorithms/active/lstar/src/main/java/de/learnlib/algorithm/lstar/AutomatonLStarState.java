@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,9 @@
  */
 package de.learnlib.algorithm.lstar;
 
-import java.util.List;
-
 import de.learnlib.algorithm.lstar.AbstractAutomatonLStar.StateInfo;
 import de.learnlib.datastructure.observationtable.GenericObservationTable;
+import net.automatalib.common.util.array.ArrayStorage;
 
 /**
  * Class that contains all data that represent the internal state of the {@link AbstractAutomatonLStar} learner and its
@@ -37,11 +36,11 @@ public class AutomatonLStarState<I, D, AI, S> {
 
     private final GenericObservationTable<I, D> observationTable;
     private final AI hypothesis;
-    private final List<StateInfo<S, I>> stateInfos;
+    private final ArrayStorage<StateInfo<S, I>> stateInfos;
 
     AutomatonLStarState(GenericObservationTable<I, D> observationTable,
                         AI hypothesis,
-                        List<StateInfo<S, I>> stateInfos) {
+                        ArrayStorage<StateInfo<S, I>> stateInfos) {
         this.observationTable = observationTable;
         this.hypothesis = hypothesis;
         this.stateInfos = stateInfos;
@@ -55,7 +54,7 @@ public class AutomatonLStarState<I, D, AI, S> {
         return hypothesis;
     }
 
-    List<AbstractAutomatonLStar.StateInfo<S, I>> getStateInfos() {
+    ArrayStorage<StateInfo<S, I>> getStateInfos() {
         return stateInfos;
     }
 }

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.query.Query;
 import de.learnlib.testsupport.ResumeUtils;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -148,6 +149,41 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
     }
 
     @Test(dependsOnMethods = "testResuming")
+    public void testAddSymbol() {
+        if (supportsGrowing()) {
+            @SuppressWarnings("unchecked")
+            final SupportsGrowingAlphabet<I> growingCache = (SupportsGrowingAlphabet<I>) oracle;
+
+            // test that adding existing symbols does nothing;
+            final long oldCount = getNumberOfPosedQueries();
+            alphabet.forEach(growingCache::addAlphabetSymbol);
+            final long newCount = getNumberOfPosedQueries();
+            Assert.assertEquals(newCount, oldCount);
+
+            // test that adding new symbols does nothing;
+            final Alphabet<I> extensions = getExtensionAlphabet();
+            final long oldCount2 = getNumberOfPosedQueries();
+            extensions.forEach(growingCache::addAlphabetSymbol);
+            final long newCount2 = getNumberOfPosedQueries();
+            Assert.assertEquals(newCount2, oldCount2);
+
+            // test that adding new queries works
+            queries.clear();
+            queries.add(new DefaultQuery<>(generateWord()));
+            final long oldCount3 = getNumberOfPosedQueries();
+            oracle.processQueries(queries);
+            final long newCount3 = getNumberOfPosedQueries();
+            Assert.assertEquals(newCount3, oldCount3 + 1);
+
+            // test that querying new queries works
+            final long oldCount4 = getNumberOfPosedQueries();
+            oracle.processQueries(queries);
+            final long newCount4 = getNumberOfPosedQueries();
+            Assert.assertEquals(newCount4, oldCount4);
+        }
+    }
+
+    @Test(dependsOnMethods = "testAddSymbol")
     public void testDuplicatesInBatch() {
 
         final long oldCount = getNumberOfPosedQueries();
@@ -172,6 +208,10 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
     }
 
     private Word<I> generateWord() {
+        return generateWord(alphabet);
+    }
+
+    private Word<I> generateWord(Alphabet<I> alphabet) {
         final WordBuilder<I> result = new WordBuilder<>(LENGTH);
 
         for (int i = 0; i < LENGTH; ++i) {
@@ -198,6 +238,8 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
 
     protected abstract Alphabet<I> getAlphabet();
 
+    protected abstract Alphabet<I> getExtensionAlphabet();
+
     protected abstract A getTargetModel();
 
     protected abstract A getInvalidTargetModel();
@@ -209,5 +251,7 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
     protected abstract long getNumberOfPosedQueries();
 
     protected abstract boolean supportsPrefixes();
+
+    protected abstract boolean supportsGrowing();
 
 }

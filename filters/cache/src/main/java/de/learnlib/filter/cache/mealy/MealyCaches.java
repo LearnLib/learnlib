@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package de.learnlib.filter.cache.mealy;
 
+import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.oracle.SymbolQueryOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
@@ -43,6 +43,10 @@ public final class MealyCaches {
      *         the input alphabet
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a default implementation
      */
@@ -58,6 +62,10 @@ public final class MealyCaches {
      *         the input alphabet
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a DAG-based implementation
      *
@@ -77,6 +85,10 @@ public final class MealyCaches {
      *         a mapping for the prefix-closure filter
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a DAG-based implementation
      *
@@ -95,6 +107,10 @@ public final class MealyCaches {
      *         the input alphabet
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a tree-based implementation
      *
@@ -114,6 +130,10 @@ public final class MealyCaches {
      *         a mapping for the prefix-closure filter
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a tree-based implementation
      *
@@ -135,6 +155,10 @@ public final class MealyCaches {
      *
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a tree-based implementation
      *
@@ -156,6 +180,10 @@ public final class MealyCaches {
      *         a mapping for the prefix-closure filter
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy learning cache with a tree-based implementation
      *
@@ -167,18 +195,22 @@ public final class MealyCaches {
     }
 
     /**
-     * Creates a cache oracle for a symbol-based Mealy machine learning setup, using a tree for internal cache
+     * Creates a cache oracle for an adaptive Mealy machine learning setup, using a tree for internal cache
      * organization.
      *
      * @param alphabet
      *         the input alphabet
      * @param mqOracle
      *         the membership oracle
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a symbol-based Mealy learning cache with a tree-based implementation
      */
-    public static <I, O> SymbolQueryCache<I, O> createSymbolQueryCache(Alphabet<I> alphabet,
-                                                                       SymbolQueryOracle<I, O> mqOracle) {
-        return new SymbolQueryCache<>(mqOracle, alphabet);
+    public static <I, O> AdaptiveQueryCache<I, O> createAdaptiveQueryCache(Alphabet<I> alphabet,
+                                                                           AdaptiveMembershipOracle<I, O> mqOracle) {
+        return new AdaptiveQueryCache<>(mqOracle, alphabet);
     }
 }

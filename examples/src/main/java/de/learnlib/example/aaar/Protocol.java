@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class Protocol implements SingleQueryOracleMealy<Event, String> {
         if (event instanceof Msg<?>) {
             Msg<?> msg = (Msg<?>) event;
 
-            if (buffer == null && (msg.seq % 2 == seqExp % 2)) {
+            if (buffer == null && msg.seq % 2 == seqExp % 2) {
                 buffer = msg.data;
                 seqExp++;
                 return "ind";

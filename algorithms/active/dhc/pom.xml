@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2023 TU Dortmund
-This file is part of LearnLib, http://www.learnlib.de/.
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,11 +47,6 @@ limitations under the License.
 
         <!-- external -->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
@@ -71,8 +66,8 @@ limitations under the License.
 
         <!-- build -->
         <dependency>
-            <groupId>com.github.misberner.buildergen</groupId>
-            <artifactId>buildergen</artifactId>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotations</artifactId>
         </dependency>
 
         <!-- test -->
@@ -93,6 +88,10 @@ limitations under the License.
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-membership-oracles</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-test-support</artifactId>
         </dependency>
 
         <dependency>

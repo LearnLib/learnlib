@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2023 TU Dortmund
-This file is part of LearnLib, http://www.learnlib.de/.
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,11 +37,15 @@ limitations under the License.
     <build>
         <pluginManagement>
             <plugins>
-                <!-- If we run coverage analysis, skip generated sources -->
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <configuration>
+                        <!-- Since jacoco's agent instrumentation is a separate step from its report generation, we need
+                             to explicitly exclude generated classes here and cannot rely on things such as a @Generated
+                             annotation. Otherwise, tools such as the coveralls-plugin (which scans the agent's output)
+                             fail on "unknown" classes.
+                         -->
                         <excludes>
                             <!-- generated builders for learning algorithms -->
                             <exclude>**/ADTLearnerBuilder.class</exclude>
@@ -55,7 +59,11 @@ limitations under the License.
                             <exclude>**/RivestSchapire*Builder.class</exclude>
                             <exclude>**/TTTLearner*Builder.class</exclude>
 
+                            <!-- generated builders for reuse trees/oracles -->
+                            <exclude>de/learnlib/filter/reuse/**/Reuse*Builder.class</exclude>
+
                             <!-- generated refinements for oracles -->
+                            <exclude>de/learnlib/filter/cache/**/*Interning*.class</exclude>
                             <exclude>de/learnlib/filter/statistic/**/DFA*.class</exclude>
                             <exclude>de/learnlib/filter/statistic/**/Mealy*.class</exclude>
                             <exclude>de/learnlib/filter/statistic/**/Moore*.class</exclude>
@@ -89,7 +97,7 @@ limitations under the License.
                             </configuration>
                             <dependencies>
                                 <dependency>
-                                    <groupId>de.learnlib.tooling</groupId>
+                                    <groupId>de.learnlib</groupId>
                                     <artifactId>learnlib-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
@@ -102,10 +110,11 @@ limitations under the License.
                                 <rulesets>
                                     <ruleset>/learnlib-pmd-ruleset.xml</ruleset>
                                 </rulesets>
+                                <excludes>**/module-info.java</excludes>
                             </configuration>
                             <dependencies>
                                 <dependency>
-                                    <groupId>de.learnlib.tooling</groupId>
+                                    <groupId>de.learnlib</groupId>
                                     <artifactId>learnlib-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
@@ -120,6 +129,7 @@ limitations under the License.
                                 <suppressionsLocation>/learnlib-checkstyle-suppressions.xml</suppressionsLocation>
                                 <includeTestSourceDirectory>true</includeTestSourceDirectory>
                                 <linkXRef>false</linkXRef>
+                                <excludes>**/module-info.java</excludes>
                             </configuration>
                             <dependencies>
                                 <dependency>
@@ -128,7 +138,7 @@ limitations under the License.
                                     <version>${checkstyle.version}</version>
                                 </dependency>
                                 <dependency>
-                                    <groupId>de.learnlib.tooling</groupId>
+                                    <groupId>de.learnlib</groupId>
                                     <artifactId>learnlib-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
@@ -179,34 +189,8 @@ limitations under the License.
         </profile>
         <profile>
             <id>cf</id>
-            <dependencies>
-                <!-- utility dependency so that the classloader can correctly resolve annotations -->
-                <dependency>
-                    <groupId>com.google.code.findbugs</groupId>
-                    <artifactId>jsr305</artifactId>
-                    <version>${jsr305.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>com.google.errorprone</groupId>
-                    <artifactId>javac</artifactId>
-                    <version>${error-prone.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-            </dependencies>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>properties</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <artifactId>maven-compiler-plugin</artifactId>
                         <executions>
@@ -217,10 +201,16 @@ limitations under the License.
                                     <goal>compile</goal>
                                 </goals>
                                 <configuration>
-                                    <skipMain>${learnlib.java9OrNewer}</skipMain>
+                                    <release>11</release>
                                     <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
-                                    <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
+                                    <!--
+                                     Setting a different output directly can fail the build when using other annotation
+                                     processors as well. However, with using the same output directory, we pack Java 11
+                                     code in the jars which will fail other analysis tools. Currently, checkerframework
+                                     cannot be run with our other analysis steps...
+                                     -->
+                                    <!--outputDirectory>${project.build.directory}/checkerframework</outputDirectory-->
                                     <annotationProcessorPaths>
                                         <path>
                                             <groupId>org.checkerframework</groupId>
@@ -232,22 +222,19 @@ limitations under the License.
                                         <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
                                     </annotationProcessors>
                                     <compilerArgs>
-                                        <arg>-J-Xbootclasspath/p:${com.google.errorprone:javac:jar}</arg>
-                                        <arg>-AskipDefs=^de.learnlib.algorithm.adt.*|\
-                                            ^de.learnlib.algorithm.observationpack.*.vpa.*|\
-                                            ^de.learnlib.algorithm.ttt.*|\
-                                            ^de.learnlib.datastructure.discriminationtree.*|\
-                                        </arg>
-                                        <arg>-AskipUses=^de.learnlib.algorithm.adt.*|\
-                                                        ^de.learnlib.algorithm.ttt.*|\
-                                                        ^de.learnlib.datastructure.discriminationtree.*|\
-                                                        ^java.lang.ThreadLocal|\
-                                                        ^net.automatalib.*|\
-                                                        ^org.testng.*|\
-                                        </arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                                        <arg>-AskipUses=^java.lang.ThreadLocal|^org.testng.*</arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>
                                         <arg>-AassumeAssertionsAreEnabled</arg>
-                                        <arg>-Astubs=jdk8.astub:collection-object-parameters-may-be-null.astub</arg>
+                                        <arg>-Astubs=collection-object-parameters-may-be-null.astub</arg>
                                     </compilerArgs>
                                 </configuration>
                             </execution>
@@ -258,10 +245,15 @@ limitations under the License.
                                     <goal>testCompile</goal>
                                 </goals>
                                 <configuration>
-                                    <skip>${learnlib.java9OrNewer}</skip>
                                     <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
-                                    <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
+                                    <!--
+                                     Setting a different output directly can fail the build when using other annotation
+                                     processors as well. However, with using the same output directory, we pack Java 11
+                                     code in the jars which will fail other analysis tools. Currently, checkerframework
+                                     cannot be run with our other analysis steps...
+                                     -->
+                                    <!--outputDirectory>${project.build.directory}/checkerframework</outputDirectory-->
                                     <annotationProcessorPaths>
                                         <path>
                                             <groupId>org.checkerframework</groupId>
@@ -273,11 +265,20 @@ limitations under the License.
                                         <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
                                     </annotationProcessors>
                                     <compilerArgs>
-                                        <arg>-J-Xbootclasspath/p:${com.google.errorprone:javac:jar}</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                                        <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
                                         <arg>-AonlyDefs=^de\.learnlib</arg>
                                         <arg>-AskipUses=.*</arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>
                                         <arg>-AassumeAssertionsAreEnabled</arg>
+                                        <arg>-Astubs=collection-object-parameters-may-be-null.astub</arg>
                                     </compilerArgs>
                                 </configuration>
                             </execution>

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,12 @@ import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.dhc.mealy.MealyDHC;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.adapter.mealy.KearnsVaziraniAdapterMealy;
+import de.learnlib.algorithm.procedural.adapter.mealy.LLambdaAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.LStarBaseAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.ObservationPackAdapterMealy;
-import de.learnlib.algorithm.procedural.adapter.mealy.OptimalTTTAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.RivestSchapireAdapterMealy;
 import de.learnlib.algorithm.procedural.adapter.mealy.TTTAdapterMealy;
+import de.learnlib.algorithm.procedural.adapter.mealy.TTTLambdaAdapterMealy;
 import de.learnlib.algorithm.procedural.spmm.ATManager;
 import de.learnlib.algorithm.procedural.spmm.SPMMLearner;
 import de.learnlib.algorithm.procedural.spmm.manager.DefaultATManager;
@@ -56,7 +57,8 @@ public class SPMMIT extends AbstractSPMMLearnerIT {
         builder.addLearnerVariant(LStarBaseAdapterMealy::new);
         builder.addLearnerVariant(MealyDHC::new);
         builder.addLearnerVariant(ObservationPackAdapterMealy::new);
-        builder.addLearnerVariant(OptimalTTTAdapterMealy::new);
+        builder.addLearnerVariant(LLambdaAdapterMealy::new);
+        builder.addLearnerVariant(TTTLambdaAdapterMealy::new);
         builder.addLearnerVariant(RivestSchapireAdapterMealy::new);
         builder.addLearnerVariant(TTTAdapterMealy::new);
     }
@@ -87,7 +89,7 @@ public class SPMMIT extends AbstractSPMMLearnerIT {
                 final SPMMLearner<I, O, L> learner = new SPMMLearner<>(alphabet,
                                                                        errorOutput,
                                                                        mqOracle,
-                                                                       (i) -> provider,
+                                                                       i -> provider,
                                                                        atProvider.apply(alphabet, errorOutput));
                 final String name = String.format("adapter=%s,manager=%s", provider, atProvider);
                 variants.addLearnerVariant(name, learner);

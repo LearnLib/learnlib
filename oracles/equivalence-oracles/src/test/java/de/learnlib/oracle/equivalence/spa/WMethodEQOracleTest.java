@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Streams;
 import de.learnlib.oracle.membership.SimulatorOracle;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.conformance.SPATestsIterator;
 import net.automatalib.util.automaton.conformance.WMethodTestsIterator;
 import net.automatalib.util.automaton.random.RandomAutomata;
@@ -47,12 +47,12 @@ public class WMethodEQOracleTest {
         final WMethodEQOracle<Character> oracle = new WMethodEQOracle<>(new SimulatorOracle<>(spa), lookahead);
 
         final List<Word<Character>> eqWords = oracle.generateTestWords(spa, alphabet).collect(Collectors.toList());
-        final List<Word<Character>> testWords = Streams.stream(new SPATestsIterator<>(spa,
-                                                                                      (dfa, alph) -> new WMethodTestsIterator<>(
+        final List<Word<Character>> testWords = IteratorUtil.stream(new SPATestsIterator<>(spa,
+                                                                                           (dfa, alph) -> new WMethodTestsIterator<>(
                                                                                               dfa,
                                                                                               alph,
                                                                                               lookahead)))
-                                                       .collect(Collectors.toList());
+                                                            .collect(Collectors.toList());
 
         Assert.assertEquals(eqWords, testWords);
     }

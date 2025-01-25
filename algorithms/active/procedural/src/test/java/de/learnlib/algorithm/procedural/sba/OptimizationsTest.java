@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,11 @@ import de.learnlib.algorithm.LearnerConstructor;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.adapter.dfa.TTTAdapterDFA;
 import de.learnlib.algorithm.procedural.sba.manager.OptimizingATManager;
-import de.learnlib.example.sba.ExamplePalindrome;
 import de.learnlib.oracle.equivalence.EQOracleChain;
 import de.learnlib.oracle.equivalence.SampleSetEQOracle;
 import de.learnlib.oracle.equivalence.sba.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
+import de.learnlib.testsupport.example.sba.ExamplePalindrome;
 import de.learnlib.util.Experiment;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SBA;

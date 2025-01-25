@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,8 @@
  */
 package de.learnlib.example.resumable;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
-import com.thoughtworks.xstream.XStream;
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFA;
 import de.learnlib.filter.cache.dfa.DFACacheOracle;
@@ -30,10 +28,13 @@ import de.learnlib.oracle.equivalence.DFASimulatorEQOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.alphabet.GrowingMapAlphabet;
-import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.util.automaton.random.RandomAutomata;
+import org.apache.fury.Fury;
+import org.apache.fury.logging.LogLevel;
+import org.apache.fury.logging.LoggerFactory;
 
 /**
  * An example to demonstrate the {@link Resumable} feature of LearnLib to continue learning setups from previously
@@ -44,17 +45,18 @@ public final class ResumableExample {
 
     private static final CompactDFA<Character> TARGET;
     private static final Alphabet<Character> INITIAL_ALPHABET;
-    private static final XStream X_STREAM;
+    private static final Fury FURY;
 
     static {
+        LoggerFactory.useSlf4jLogging(true);
+        LoggerFactory.setLogLevel(LogLevel.ERROR_LEVEL);
+
         final int seed = 42;
         final int size = 100;
 
         TARGET = RandomAutomata.randomDFA(new Random(seed), size, Alphabets.characters('a', 'd'));
         INITIAL_ALPHABET = Alphabets.characters('a', 'b');
-
-        X_STREAM = new XStream();
-        X_STREAM.allowTypesByRegExp(new String[] {"net.automatalib.*", "de.learnlib.*"});
+        FURY = Fury.builder().withRefTracking(true).requireClassRegistration(false).build();
     }
 
     private ResumableExample() {
@@ -76,8 +78,8 @@ public final class ResumableExample {
         printStats(setup);
 
         // serialize the current state of the learning setup which may be stored somewhere external
-        final byte[] learnerData = toBytes(setup.learner);
-        final byte[] cacheData = toBytes(setup.cache);
+        final byte[] learnerData = toBytes(setup.learner.suspend());
+        final byte[] cacheData = toBytes(setup.cache.suspend());
 
         // continue exploring the previous snapshot with new input symbol 'c'
         continueExploring(learnerData, cacheData, 'c');
@@ -108,19 +110,19 @@ public final class ResumableExample {
         printStats(setup);
     }
 
-    private static void printStats(Setup setup) {
-        System.out.println("Hypothesis size: " + setup.learner.getHypothesisModel().size());
-        System.out.println(setup.counter.getStatisticalData().getSummary());
-        System.out.println();
-    }
-
-    private static <T> byte[] toBytes(Resumable<T> resumable) {
-        return X_STREAM.toXML(resumable.suspend()).getBytes(StandardCharsets.UTF_8);
+    private static byte[] toBytes(Object state) {
+        return FURY.serialize(state);
     }
 
     @SuppressWarnings("unchecked")
     private static <T> T fromBytes(byte[] bytes) {
-        return (T) X_STREAM.fromXML(new String(bytes, StandardCharsets.UTF_8));
+        return (T) FURY.deserialize(bytes);
+    }
+
+    private static void printStats(Setup setup) {
+        System.out.println("Hypothesis size: " + setup.learner.getHypothesisModel().size());
+        System.out.println(setup.counter.getStatisticalData().getSummary());
+        System.out.println();
     }
 
     private static class Setup {

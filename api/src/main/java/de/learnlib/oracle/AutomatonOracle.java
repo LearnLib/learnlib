@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,11 +43,11 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
      * Returns whether the given input and output is a counter example for the given hypothesis.
      *
      * @param hypothesis
-     *          the hypothesis
+     *         the hypothesis
      * @param inputs
-     *          the input sequence
+     *         the input sequence
      * @param output
-     *          the output corresponding to the input.
+     *         the output corresponding to the input.
      *
      * @return whether the given input and output is a counter example.
      */
@@ -79,15 +79,16 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
     void pre();
 
     /**
-     * Returns the multiplier used to compute the number of queries this automaton oracle should perform to
-     * decide whether a given hypothesis is a counter example.
+     * Returns the multiplier used to compute the number of queries this automaton oracle should perform to decide
+     * whether a given hypothesis is a counter example.
      *
      * @return the multiplier
      */
     double getMultiplier();
 
     /**
-     * @see #getMultiplier()
+     * Sets the multiplier value. See {@link #getMultiplier()}.
+     *
      * @param multiplier
      *         the multiplier
      */
@@ -97,9 +98,9 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
      * Processes the given input. Implementations could use membership oracles to process the query.
      *
      * @param hypothesis
-     *          the hypothesis.
+     *         the hypothesis.
      * @param input
-     *          the input to process.
+     *         the input to process.
      *
      * @return the processed query.
      */
@@ -109,11 +110,11 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
      * Adds words to a datastructure. The key part of the implementation is that undefined inputs will be skipped.
      *
      * @param hypothesis
-     *          the automaton to add words for.
+     *         the automaton to add words for.
      * @param inputs
-     *          the input alphabet.
+     *         the input alphabet.
      * @param prefix
-     *          the current prefix to extend.
+     *         the current prefix to extend.
      */
     default void addWords(A hypothesis, Collection<? extends I> inputs, Word<I> prefix) {
         for (I i : inputs) {
@@ -174,9 +175,9 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
      * {@code hypothesis.size() * getMultiplier()}.
      *
      * @param hypothesis
-     *          the hypothesis automaton.
+     *         the hypothesis automaton.
      * @param inputs
-     *          the input alphabet.
+     *         the input alphabet.
      *
      * @return the counter example, or {@code null} if a counter example does not exist
      */

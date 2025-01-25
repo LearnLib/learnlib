@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Random;
 import java.util.stream.Stream;
 
-import com.google.common.base.Preconditions;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.AbstractTestWordEQOracle;
 import net.automatalib.alphabet.VPAlphabet;
@@ -33,7 +32,7 @@ import net.automatalib.word.WordBuilder;
  * @param <I>
  *         input symbol type
  */
-public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<Output<I, Boolean>, I, Boolean> {
+public final class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<Output<I, Boolean>, I, Boolean> {
 
     private final Random random;
 
@@ -59,7 +58,9 @@ public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<
                                           int batchSize) {
         super(oracle, batchSize);
 
-        Preconditions.checkArgument(minLength <= maxLength, "minLength is smaller than maxLength");
+        if (minLength > maxLength) {
+            throw new IllegalArgumentException("minLength is smaller than maxLength");
+        }
 
         this.random = random;
         this.callProb = callProb;
@@ -79,7 +80,7 @@ public class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<
         @SuppressWarnings("unchecked")
         final VPAlphabet<I> alphabet = (VPAlphabet<I>) inputs;
 
-        final int lengthRange = (maxLength - minLength) + 1;
+        final int lengthRange = maxLength - minLength + 1;
         return Stream.generate(() -> generateWellMatched(alphabet, minLength + random.nextInt(lengthRange)))
                      .limit(maxTests);
     }

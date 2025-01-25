@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 <?xml version="1.0" encoding="UTF-8"?>
-Copyright (C) 2013-2023 TU Dortmund
-This file is part of LearnLib, http://www.learnlib.de/.
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ limitations under the License.
 
     <name>LearnLib</name>
     <description>A framework for active automata learning and experimentation</description>
-    <url>http://learnlib.github.io/learnlib/maven-site/${project.version}</url>
+    <url>https://learnlib.github.io/learnlib/maven-site/${project.version}</url>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -59,16 +59,6 @@ limitations under the License.
                 <role>Developer</role>
             </roles>
         </developer>
-        <developer>
-            <id>misberner</id>
-            <name>Malte Isberner</name>
-            <email>malte.isberner@gmail.com</email>
-            <organization>TU Dortmund University, Chair of Programming Systems</organization>
-            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
-            <roles>
-                <role>Developer (inactive)</role>
-            </roles>
-        </developer>
     </developers>
     <contributors>
         <contributor>
@@ -90,6 +80,15 @@ limitations under the License.
         </contributor>
         <contributor>
             <name>Maren Geske</name>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>Malte Isberner</name>
+            <email>malte.isberner@gmail.com</email>
             <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
@@ -130,6 +129,14 @@ limitations under the License.
             </roles>
         </contributor>
         <contributor>
+            <name>Leon Vitorovic</name>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
+            <email>leon.vitorovic@tu-dortmund.de</email>
+            <roles>
+                <role>Developer (Graduate)</role>
+            </roles>
+        </contributor>
+        <contributor>
             <name>Stephan Windmüller</name>
             <email>stephan.windmueller@tu-dortmund.de</email>
             <organization>TU Dortmund University, Chair of Programming Systems</organization>
@@ -147,10 +154,9 @@ limitations under the License.
         <module>algorithms</module>
         <module>api</module>
         <module>archetypes</module>
+        <module>build-config</module>
         <module>build-parent</module>
-        <module>build-tools</module>
         <module>commons</module>
-        <module>datastructures</module>
         <module>distribution</module>
         <module>drivers</module>
         <module>filters</module>
@@ -201,61 +207,60 @@ limitations under the License.
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.release>8</maven.compiler.release>
+        <maven.compiler.testSource>11</maven.compiler.testSource>
+        <maven.compiler.testTarget>11</maven.compiler.testTarget>
+        <maven.compiler.testRelease>11</maven.compiler.testRelease>
         <argLine /> <!-- compatibility for property expansion in surefire-plugin -->
-
-        <!-- custom properties -->
-        <learnlib.java9OrNewer>false</learnlib.java9OrNewer>
-        <learnlib.targetVersion>8</learnlib.targetVersion>
 
         <!-- plugin versions -->
         <antrun-plugin.version>3.1.0</antrun-plugin.version>
-        <archetype-plugin.version>3.2.1</archetype-plugin.version>
-        <assembly-plugin.version>3.6.0</assembly-plugin.version>
-        <checkstyle-plugin.version>3.3.0</checkstyle-plugin.version>
-        <compiler-plugin.version>3.10.1</compiler-plugin.version>
+        <archetype-plugin.version>3.3.1</archetype-plugin.version>
+        <assembly-plugin.version>3.7.1</assembly-plugin.version>
+        <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
+        <clean-plugin.version>3.4.0</clean-plugin.version>
+        <compiler-plugin.version>3.11.0</compiler-plugin.version> <!-- changes to incremental compilation causes issues with our two compile phases. bump, once we completely switch to Java 11 -->
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
-        <dependency-plugin.version>3.6.0</dependency-plugin.version>
-        <deploy-plugin.version>3.1.1</deploy-plugin.version>
-        <enforcer-plugin.version>3.4.1</enforcer-plugin.version>
-        <failsafe-plugin.version>3.1.2</failsafe-plugin.version>
-        <gpg-plugin.version>3.1.0</gpg-plugin.version>
-        <info-reports-plugin.version>3.4.5</info-reports-plugin.version>
-        <jacoco-plugin.version>0.8.8</jacoco-plugin.version>
-        <javadoc-plugin.version>3.6.0</javadoc-plugin.version>
+        <dependency-plugin.version>3.8.1</dependency-plugin.version>
+        <deploy-plugin.version>3.1.3</deploy-plugin.version>
+        <enforcer-plugin.version>3.5.0</enforcer-plugin.version>
+        <failsafe-plugin.version>${surefire-plugin.version}</failsafe-plugin.version>
+        <gpg-plugin.version>3.2.7</gpg-plugin.version>
+        <info-reports-plugin.version>3.8.0</info-reports-plugin.version>
+        <install-plugin.version>3.1.3</install-plugin.version>
+        <invoker-plugin.version>3.9.0</invoker-plugin.version>
+        <jacoco-plugin.version>0.8.12</jacoco-plugin.version>
+        <jar-plugin.version>3.4.2</jar-plugin.version>
+        <javadoc-plugin.version>3.11.2</javadoc-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
-        <pmd-plugin.version>3.14.0</pmd-plugin.version>
-        <release-plugin.version>3.0.1</release-plugin.version>
-        <scm-publish-plugin.version>3.2.1</scm-publish-plugin.version>
-        <site-plugin.version>3.12.1</site-plugin.version>
-        <source-plugin.version>3.3.0</source-plugin.version>
-        <spotbugs-plugin.version>4.7.3.6</spotbugs-plugin.version>
-        <surefire-plugin.version>3.1.2</surefire-plugin.version>
-        <tidy-pom.version>1.2.0</tidy-pom.version>
+        <pmd-plugin.version>3.26.0</pmd-plugin.version>
+        <release-plugin.version>3.1.0</release-plugin.version>
+        <resources-plugin.version>3.3.1</resources-plugin.version>
+        <scm-publish-plugin.version>3.3.0</scm-publish-plugin.version>
+        <site-plugin.version>3.21.0</site-plugin.version>
+        <source-plugin.version>3.3.1</source-plugin.version>
+        <spotbugs-plugin.version>4.8.6.6</spotbugs-plugin.version>
+        <surefire-plugin.version>3.5.2</surefire-plugin.version>
+        <tidy-pom.version>1.3.0</tidy-pom.version>
 
         <!-- dependency versions -->
-        <ap-commons.version>0.0.2</ap-commons.version>
-        <automatalib.version>0.11.0</automatalib.version>
-        <buildergen.version>0.1</buildergen.version>
-        <cacio.version>1.10</cacio.version>
-        <checkerframework.version>3.7.0</checkerframework.version>
-        <checkstyle.version>9.3</checkstyle.version>
-        <error-prone.version>9+181-r4173-1</error-prone.version> <!-- required by checkerframework, keep in sync -->
-        <guava.version>32.1.2-jre</guava.version>
-        <javapoet.version>1.13.0</javapoet.version>
-        <jmockit.version>1.49</jmockit.version>
-        <jsr305.version>3.0.2</jsr305.version>
-        <logback.version>1.3.11</logback.version>
-        <metainf-services.version>1.8</metainf-services.version>
-        <mockito.version>4.11.0</mockito.version>
-        <slf4j.version>2.0.9</slf4j.version>
-        <testng.version>7.5.1</testng.version>
-        <xstream.version>1.4.20</xstream.version>
+        <automatalib.version>0.12.0-SNAPSHOT</automatalib.version>
+        <build-tools.version>0.1.1</build-tools.version>
+        <cacio.version>1.11.1</cacio.version>
+        <checkerframework.version>3.48.3</checkerframework.version>
+        <checkstyle.version>10.21.1</checkstyle.version>
+        <extra-enforcer-rules.version>1.7.0</extra-enforcer-rules.version>
+        <fury.version>0.9.0</fury.version>
+        <jaxb-api.version>2.3.1</jaxb-api.version>
+        <logback.version>1.5.15</logback.version>
+        <metainf-services.version>1.11</metainf-services.version>
+        <mockito.version>5.14.2</mockito.version>
+        <slf4j.version>2.0.16</slf4j.version>
+        <testng.version>7.10.2</testng.version>
 
         <!-- Javadoc links -->
-        <java.apidocs>http://docs.oracle.com/javase/8/docs/api/</java.apidocs>
-        <automatalib.apidocs>http://learnlib.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
+        <automatalib.apidocs>https://learnlib.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
         <checkerframework.apidocs>https://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
-        <guava.apidocs>http://google.github.io/guava/releases/${guava.version}/api/docs/</guava.apidocs>
     </properties>
 
     <!--
@@ -301,6 +306,11 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-lambda</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-lstar</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -317,11 +327,6 @@ limitations under the License.
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-observation-pack-vpa</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-oml</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -355,16 +360,6 @@ limitations under the License.
                 <artifactId>learnlib-rpni</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-rpni-edsm</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-rpni-mdl</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <!-- api -->
             <dependency>
@@ -391,32 +386,19 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- build-config -->
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-build-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- build-parent -->
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-build-parent</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
-            </dependency>
-
-            <!-- build-tools -->
-            <dependency>
-                <groupId>de.learnlib.tooling</groupId>
-                <artifactId>learnlib-build-tools-parent</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib.tooling</groupId>
-                <artifactId>learnlib-build-config</artifactId>
-                <version>${project.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib.tooling</groupId>
-                <artifactId>learnlib-annotation-processor</artifactId>
-                <version>${project.version}</version>
-                <scope>provided</scope>
             </dependency>
 
             <!-- commons -->
@@ -433,40 +415,17 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-datastructures</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-settings</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-util</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <!-- data-structures -->
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-datastructures-parent</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-datastructure-dt</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-datastructure-list</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-datastructure-ot</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>learnlib-datastructure-pta</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -615,14 +574,6 @@ limitations under the License.
                 <scope>test</scope>
             </dependency>
 
-            <!-- JMockit -->
-            <dependency>
-                <groupId>org.jmockit</groupId>
-                <artifactId>jmockit</artifactId>
-                <version>${jmockit.version}</version>
-                <scope>test</scope>
-            </dependency>
-
             <!-- Caciocavallo -->
             <dependency>
                 <groupId>com.github.caciocavallosilano</groupId>
@@ -631,52 +582,25 @@ limitations under the License.
                 <scope>test</scope>
             </dependency>
 
-            <!-- Guava -->
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.google.code.findbugs</groupId>
-                        <artifactId>jsr305</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <!-- Java Poet -->
-            <dependency>
-                <groupId>com.squareup</groupId>
-                <artifactId>javapoet</artifactId>
-                <version>${javapoet.version}</version>
-            </dependency>
-
             <!-- Checker Annotations (@Nullable, @Nonnull, ...) -->
             <dependency>
                 <groupId>org.checkerframework</groupId>
                 <artifactId>checker-qual</artifactId>
                 <version>${checkerframework.version}</version>
-            </dependency>
-
-            <!-- BuilderGen -->
-            <dependency>
-                <groupId>com.github.misberner.buildergen</groupId>
-                <artifactId>buildergen</artifactId>
-                <version>${buildergen.version}</version>
-                <!-- Compile-time only -->
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
-                <groupId>com.github.misberner.ap-commons</groupId>
-                <artifactId>ap-commons</artifactId>
-                <version>${ap-commons.version}</version>
+                <groupId>de.learnlib.tooling</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${build-tools.version}</version>
+                <scope>provided</scope>
             </dependency>
 
             <dependency>
-                <groupId>com.thoughtworks.xstream</groupId>
-                <artifactId>xstream</artifactId>
-                <version>${xstream.version}</version>
+                <groupId>org.apache.fury</groupId>
+                <artifactId>fury-core</artifactId>
+                <version>${fury.version}</version>
             </dependency>
 
             <dependency>
@@ -753,6 +677,11 @@ limitations under the License.
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
                     <version>${spotbugs-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${clean-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -847,13 +776,12 @@ limitations under the License.
                     <version>${javadoc-plugin.version}</version>
                     <configuration>
                         <quiet>true</quiet>
-                        <source>${maven.compiler.source}</source>
                         <detectLinks>true</detectLinks>
                         <linksource>false</linksource>
                         <links>
-                            <link>${java.apidocs}</link>
-                            <link>${guava.apidocs}</link>
-                            <link>${automatalib.apidocs}</link>
+                            <!-- TODO -->
+                            <!-- JDK 17+ seems to fail on missing (SNAPSHOT) docs. reactivate before release -->
+                            <!--link>${automatalib.apidocs}</link-->
                         </links>
                     </configuration>
                 </plugin>
@@ -871,6 +799,13 @@ limitations under the License.
                             <jacocoReport>${basedir}/distribution/target/site/jacoco-aggregate/jacoco.xml</jacocoReport>
                         </jacocoReports>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>javax.xml.bind</groupId>
+                            <artifactId>jaxb-api</artifactId>
+                            <version>${jaxb-api.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -899,8 +834,73 @@ limitations under the License.
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${resources-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${compiler-plugin.version}</version>
+                    <configuration>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>de.learnlib.tooling</groupId>
+                                <artifactId>processors</artifactId>
+                                <version>${build-tools.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.kohsuke.metainf-services</groupId>
+                                <artifactId>metainf-services</artifactId>
+                                <version>${metainf-services.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>default-compile</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <configuration>
+                                <!-- compile everything in module-aware mode to check for errors -->
+                                <release>9</release>
+                                <createMissingPackageInfoClass>false</createMissingPackageInfoClass>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>java-8-compile</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <configuration>
+                                <!-- recompile generated sources as well -->
+                                <compileSourceRoots>
+                                    <compileSourceRoot>${project.build.sourceDirectory}</compileSourceRoot>
+                                    <compileSourceRoot>${project.build.directory}/generated-sources</compileSourceRoot>
+                                </compileSourceRoots>
+                                <proc>none</proc>
+                                <!-- re-compile everything for target VM except the module-info.java -->
+                                <excludes>
+                                    <exclude>module-info.java</exclude>
+                                </excludes>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${install-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-invoker-plugin</artifactId>
+                    <version>${invoker-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -953,12 +953,13 @@ limitations under the License.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <release>11</release>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <id>non-aggregate</id>
-                        <reports>
-                            <report>javadoc</report>
-                        </reports>
+                        <reports/>
                     </reportSet>
                     <reportSet>
                         <id>aggregate</id>
@@ -1005,6 +1006,35 @@ limitations under the License.
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>enforce-bytecode-version</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <enforceBytecodeVersion>
+                                            <maxJdkVersion>${maven.compiler.target}</maxJdkVersion>
+                                            <ignoredScopes>test,runtime</ignoredScopes>
+                                        </enforceBytecodeVersion>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>extra-enforcer-rules</artifactId>
+                                <version>${extra-enforcer-rules.version}</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -1170,26 +1200,6 @@ limitations under the License.
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>enforce-maven</id>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <requireMavenVersion>
-                                            <version>(,2.1.0),(2.1.0,2.2.0),(2.2.0,)</version>
-                                            <message>Maven 2.1.0 and 2.2.0 produce incorrect GPG signatures and checksums respectively.</message>
-                                        </requireMavenVersion>
-                                    </rules>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-site-plugin</artifactId>
                         <configuration>
                             <!-- Adjust directory structure to our gh-pages branch -->
@@ -1216,60 +1226,12 @@ limitations under the License.
             </build>
         </profile>
         <profile>
-            <id>jdk9+-compat</id>
-            <activation>
-                <jdk>[9,)</jdk>
-            </activation>
-            <properties>
-                <learnlib.java9OrNewer>true</learnlib.java9OrNewer>
-            </properties>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-javadoc-plugin</artifactId>
-                            <version>${javadoc-plugin.version}</version>
-                            <configuration>
-                                <release>${learnlib.targetVersion}</release>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-compiler-plugin</artifactId>
-                            <configuration>
-                                <release>${learnlib.targetVersion}</release>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-        <profile>
-            <id>jdk11-compat</id>
-            <activation>
-                <jdk>11</jdk>
-            </activation>
-            <properties>
-                <cacio.version>1.11.1</cacio.version>
-            </properties>
-        </profile>
-        <profile>
             <id>jdk17-compat</id>
             <activation>
                 <jdk>17</jdk>
             </activation>
             <properties>
-                <cacio.version>1.17.2</cacio.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>jdk21-compat</id>
-            <activation>
-                <jdk>[21,)</jdk>
-            </activation>
-            <properties>
-                <mockito.version>5.6.0</mockito.version>
+                <cacio.version>1.17.3</cacio.version>
             </properties>
         </profile>
         <profile>

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,20 @@
  */
 package de.learnlib.oracle.equivalence;
 
-import de.learnlib.example.LearningExample;
-import de.learnlib.example.dfa.ExamplePaulAndMary;
-import de.learnlib.example.mealy.ExampleStack;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.LearningExample;
+import de.learnlib.testsupport.example.dfa.ExamplePaulAndMary;
+import de.learnlib.testsupport.example.mealy.ExampleStack;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.DetSuffixOutputAutomaton;
 import net.automatalib.automaton.concept.Output;
-import net.automatalib.automaton.fsa.CompactDFA;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.exception.UndefinedPropertyAccessException;
 import org.testng.Assert;
 import org.testng.annotations.Test;

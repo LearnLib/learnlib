@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,12 @@
  */
 package de.learnlib.algorithm.dhc.mealy;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
 
@@ -42,7 +43,7 @@ public class MealyDHCState<I, O> {
                   MutableMapping<Integer, MealyDHC.QueueElement<I, O>> accessSequences) {
         this.splitters = splitters;
         this.hypothesis = hypothesis;
-        this.accessSequences = Maps.newHashMapWithExpectedSize(hypothesis.size());
+        this.accessSequences = new HashMap<>(HashUtil.capacity(hypothesis.size()));
 
         for (Integer s : hypothesis.getStates()) {
             final MealyDHC.QueueElement<I, O> elem = accessSequences.get(s);

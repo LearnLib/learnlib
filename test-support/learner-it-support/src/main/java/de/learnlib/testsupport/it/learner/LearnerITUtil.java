@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.example.LearningExample;
-import de.learnlib.example.LearningExample.OneSEVPALearningExample;
-import de.learnlib.example.LearningExample.SBALearningExample;
-import de.learnlib.example.LearningExample.SPALearningExample;
-import de.learnlib.example.LearningExample.SPMMLearningExample;
-import de.learnlib.example.LearningExample.UniversalDeterministicLearningExample;
-import de.learnlib.example.PassiveLearningExample;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.LearningExample;
+import de.learnlib.testsupport.example.LearningExample.OneSEVPALearningExample;
+import de.learnlib.testsupport.example.LearningExample.SBALearningExample;
+import de.learnlib.testsupport.example.LearningExample.SPALearningExample;
+import de.learnlib.testsupport.example.LearningExample.SPMMLearningExample;
+import de.learnlib.testsupport.example.LearningExample.UniversalDeterministicLearningExample;
+import de.learnlib.testsupport.example.PassiveLearningExample;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.OneSEVPALearnerVariantListImpl;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SBALearnerVariantListImpl;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPALearnerVariantListImpl;
@@ -63,6 +63,19 @@ public final class LearnerITUtil {
     /**
      * Creates a list of per-example test cases for all learner variants.
      *
+     * @param example
+     *         the example system
+     * @param variants
+     *         the list containing the various learner variants
+     * @param eqOracle
+     *         the equivalence oracle to use by the learning process
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     * @param <A>
+     *         automaton type
+     *
      * @return the list of test cases, one for each example
      */
     public static <I, D, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> List<UniversalDeterministicLearnerITCase<I, D, A>> createExampleITCases(
@@ -80,6 +93,15 @@ public final class LearnerITUtil {
     /**
      * Creates a list of per-example test cases for all learner variants.
      *
+     * @param example
+     *         the example system
+     * @param variants
+     *         the list containing the various learner variants
+     * @param eqOracle
+     *         the equivalence oracle to use by the learning process
+     * @param <I>
+     *         input symbol type
+     *
      * @return the list of test cases, one for each example
      */
     public static <I> List<SPALearnerITCase<I>> createExampleITCases(SPALearningExample<I> example,
@@ -95,6 +117,15 @@ public final class LearnerITUtil {
 
     /**
      * Creates a list of per-example test cases for all learner variants.
+     *
+     * @param example
+     *         the example system
+     * @param variants
+     *         the list containing the various learner variants
+     * @param eqOracle
+     *         the equivalence oracle to use by the learning process
+     * @param <I>
+     *         input symbol type
      *
      * @return the list of test cases, one for each example
      */
@@ -112,6 +143,17 @@ public final class LearnerITUtil {
     /**
      * Creates a list of per-example test cases for all learner variants.
      *
+     * @param example
+     *         the example system
+     * @param variants
+     *         the list containing the various learner variants
+     * @param eqOracle
+     *         the equivalence oracle to use by the learning process
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
      * @return the list of test cases, one for each example
      */
     public static <I, O> List<SPMMLearnerITCase<I, O>> createExampleITCases(SPMMLearningExample<I, O> example,
@@ -127,6 +169,15 @@ public final class LearnerITUtil {
 
     /**
      * Creates a list of per-example test cases for all learner variants.
+     *
+     * @param example
+     *         the example system
+     * @param variants
+     *         the list containing the various learner variants
+     * @param eqOracle
+     *         the equivalence oracle to use by the learning process
+     * @param <I>
+     *         input symbol type
      *
      * @return the list of test cases, one for each example
      */
@@ -159,6 +210,17 @@ public final class LearnerITUtil {
 
     /**
      * Creates a list of per-example test cases for all learner variants (passive version).
+     *
+     * @param example
+     *         the example system
+     * @param variants
+     *         the list containing the various learner variants
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     * @param <A>
+     *         automaton type
      *
      * @return the list of test cases, one for each example
      */

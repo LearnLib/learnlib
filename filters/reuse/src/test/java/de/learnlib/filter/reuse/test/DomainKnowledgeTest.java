@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,10 @@ import java.util.function.Supplier;
 import de.learnlib.filter.reuse.ReuseCapableOracle;
 import de.learnlib.filter.reuse.ReuseCapableOracle.QueryResult;
 import de.learnlib.filter.reuse.ReuseOracle;
+import de.learnlib.filter.reuse.ReuseOracleBuilder;
 import de.learnlib.filter.reuse.tree.ReuseNode.NodeResult;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -41,7 +42,7 @@ public class DomainKnowledgeTest {
         // We don't use this oracle, we directly test against the reuse tree!
         Alphabet<Integer> alphabet = Alphabets.integers(0, 10);
 
-        reuseOracle = new ReuseOracle.ReuseOracleBuilder<>(alphabet, new NullReuseCapableFactory()).withInvariantInputs(
+        reuseOracle = new ReuseOracleBuilder<>(alphabet, new NullReuseCapableFactory()).withInvariantInputs(
                 Collections.singleton(0)).build();
     }
 
@@ -110,7 +111,7 @@ public class DomainKnowledgeTest {
         Assert.assertEquals(output.size(), 7);
     }
 
-    private static class NullReuseCapableFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
+    private static final class NullReuseCapableFactory implements Supplier<ReuseCapableOracle<Integer, Integer, String>> {
 
         @Override
         public ReuseCapableOracle<Integer, Integer, String> get() {

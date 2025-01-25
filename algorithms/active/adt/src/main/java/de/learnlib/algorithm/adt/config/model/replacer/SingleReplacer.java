@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
 import de.learnlib.algorithm.adt.adt.ADT;
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.api.SubtreeReplacer;
@@ -34,6 +33,7 @@ import de.learnlib.algorithm.adt.util.ADTUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.smartcollection.ReflexiveMapView;
+import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -50,19 +50,19 @@ public class SingleReplacer implements SubtreeReplacer {
                                                                          Alphabet<I> inputs,
                                                                          ADT<S, I, O> adt) {
 
-        final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot());
-        candidates.remove(adt.getRoot());
-        final Map<ADTNode<S, I, O>, Double> candidatesScore = Maps.toMap(candidates, node -> {
-            final int resets = 1 + ADTUtil.collectResetNodes(node).size();
-            final int finals = ADTUtil.collectLeaves(node).size();
+        final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot(), false);
 
-            return resets / (double) finals;
-        });
+        // cache scores to prevent expensive recalculations during sorting
+        final List<Pair<ADTNode<S, I, O>, Double>> sortedCandidates = new ArrayList<>(candidates.size());
+        for (ADTNode<S, I, O> candidate : candidates) {
+            final int resets = 1 + ADTUtil.collectResetNodes(candidate).size();
+            final int leaves = ADTUtil.collectLeaves(candidate).size();
+            sortedCandidates.add(Pair.of(candidate, resets / (double) leaves));
+        }
+        sortedCandidates.sort(Comparator.comparingDouble(Pair::getSecond));
 
-        final List<ADTNode<S, I, O>> sortedCandidates = new ArrayList<>(candidates);
-        sortedCandidates.sort(Comparator.comparingDouble(candidatesScore::get));
-
-        for (ADTNode<S, I, O> node : sortedCandidates) {
+        for (Pair<ADTNode<S, I, O>, Double> candidate : sortedCandidates) {
+            final ADTNode<S, I, O> node = candidate.getFirst();
             final Set<S> targetStates = ADTUtil.collectHypothesisStates(node);
 
             // check if we can extendLeaf the parent ADS
@@ -110,12 +110,11 @@ public class SingleReplacer implements SubtreeReplacer {
      *
      * @return a ReplacementResult for the parent (reset) node, if a valid replacement is found. {@code null} otherwise.
      */
-    @Nullable
-    static <S, I, O> ReplacementResult<S, I, O> computeParentExtension(MealyMachine<S, I, ?, O> hypothesis,
-                                                                       Alphabet<I> inputs,
-                                                                       ADTNode<S, I, O> node,
-                                                                       Set<S> targetStates,
-                                                                       ADSCalculator adsCalculator) {
+    static <S, I, O> @Nullable ReplacementResult<S, I, O> computeParentExtension(MealyMachine<S, I, ?, O> hypothesis,
+                                                                                 Alphabet<I> inputs,
+                                                                                 ADTNode<S, I, O> node,
+                                                                                 Set<S> targetStates,
+                                                                                 ADSCalculator adsCalculator) {
         final ADTNode<S, I, O> parentReset = node.getParent();
         assert ADTUtil.isResetNode(parentReset) : "should not happen";
 
@@ -148,7 +147,7 @@ public class SingleReplacer implements SubtreeReplacer {
             final ADTNode<S, I, O> extension = potentialExtension.get();
 
             for (ADTNode<S, I, O> finalNode : ADTUtil.collectLeaves(extension)) {
-                finalNode.setHypothesisState(currentToInitialMapping.get(finalNode.getHypothesisState()));
+                finalNode.setState(currentToInitialMapping.get(finalNode.getState()));
             }
 
             return new ReplacementResult<>(parentReset, potentialExtension.get());

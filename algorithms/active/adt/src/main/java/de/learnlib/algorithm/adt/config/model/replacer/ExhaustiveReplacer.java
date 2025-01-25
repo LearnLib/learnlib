@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package de.learnlib.algorithm.adt.config.model.replacer;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import de.learnlib.algorithm.adt.adt.ADT;
 import de.learnlib.algorithm.adt.adt.ADTNode;
 import de.learnlib.algorithm.adt.api.SubtreeReplacer;
@@ -31,6 +31,7 @@ import de.learnlib.algorithm.adt.model.ReplacementResult;
 import de.learnlib.algorithm.adt.util.ADTUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.HashUtil;
 
 public class ExhaustiveReplacer implements SubtreeReplacer {
 
@@ -56,16 +57,15 @@ public class ExhaustiveReplacer implements SubtreeReplacer {
             return Collections.singleton(new ReplacementResult<>(adt.getRoot(), potentialResult.get()));
         }
 
-        final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot());
-        candidates.remove(adt.getRoot());
+        final Set<ADTNode<S, I, O>> candidates = ADTUtil.collectADSNodes(adt.getRoot(), false);
 
         final PriorityQueue<Set<S>> queue = new PriorityQueue<>(candidates.size(), Comparator.comparingInt(Set::size));
         for (ADTNode<S, I, O> node : candidates) {
             final Set<ADTNode<S, I, O>> leaves = ADTUtil.collectLeaves(node);
-            final Set<S> set = Sets.newHashSetWithExpectedSize(leaves.size());
+            final Set<S> set = new LinkedHashSet<>(HashUtil.capacity(leaves.size()));
 
             for (ADTNode<S, I, O> l : leaves) {
-                set.add(l.getHypothesisState());
+                set.add(l.getState());
             }
 
             queue.add(set);

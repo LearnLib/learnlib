@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import de.learnlib.oracle.ThreadPool.PoolPolicy;
 import de.learnlib.oracle.parallelism.AbstractStaticParallelOracleTest.TestOutput;
-import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;

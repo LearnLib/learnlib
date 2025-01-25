@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package de.learnlib.algorithm.ttt.dfa;
 
 import java.util.function.Supplier;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.OutInconsPrefixTransformAcex;
 import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
@@ -28,10 +27,17 @@ import de.learnlib.algorithm.ttt.base.OutputInconsistency;
 import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
 import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;
 
+/**
+ * A {@link DFA}-based specialization of {@link AbstractTTTLearner}.
+ *
+ * @param <I>
+ *         input symbol type
+ */
 public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> implements DFALearner<I> {
 
     @GenerateBuilder(defaults = AbstractTTTLearner.BuilderDefaults.class)
@@ -49,7 +55,7 @@ public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> 
               new BaseTTTDiscriminationTree<>(oracle, rootSupplier),
               analyzer);
 
-        split(dtree.getRoot(), Word.epsilon(), false, true);
+        dtree.getRoot().split(Word.epsilon(), false, true);
     }
 
     @Override

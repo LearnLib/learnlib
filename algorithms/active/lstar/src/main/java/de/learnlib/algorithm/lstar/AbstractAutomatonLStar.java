@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,6 @@
  */
 package de.learnlib.algorithm.lstar;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import de.learnlib.Resumable;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
@@ -28,6 +24,7 @@ import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.common.util.array.ArrayStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +51,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAutomatonLStar.class);
 
     protected AI internalHyp;
-    protected List<StateInfo<S, I>> stateInfos = new ArrayList<>();
+    protected ArrayStorage<StateInfo<S, I>> stateInfos = new ArrayStorage<>();
 
     /**
      * Constructor.
@@ -63,6 +60,8 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
      *         the learning alphabet
      * @param oracle
      *         the learning oracle
+     * @param internalHyp
+     *         the internal hypothesis object to write data to
      */
     protected AbstractAutomatonLStar(Alphabet<I> alphabet, MembershipOracle<I, D> oracle, AI internalHyp) {
         super(alphabet, oracle);
@@ -81,40 +80,32 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
      * #stateProperty(ObservationTable, Row)} and {@link #transitionProperty(ObservationTable, Row, int)} methods are
      * used to derive the respective properties.
      */
-    @SuppressWarnings("argument.type.incompatible")
-    // all added nulls to stateInfos will be correctly set to non-null values
     protected void updateInternalHypothesis() {
         if (!table.isInitialized()) {
             throw new IllegalStateException("Cannot update internal hypothesis: not initialized");
         }
 
-        int oldStates = internalHyp.size();
         int numDistinct = table.numberOfDistinctRows();
-
-        int newStates = numDistinct - oldStates;
-
-        stateInfos.addAll(Collections.nCopies(newStates, null));
+        stateInfos.ensureCapacity(numDistinct);
 
         // TODO: Is there a quicker way than iterating over *all* rows?
         // FIRST PASS: Create new hypothesis states
         for (Row<I> sp : table.getShortPrefixRows()) {
             int id = sp.getRowContentId();
             StateInfo<S, I> info = stateInfos.get(id);
-            if (info != null) {
-                // State from previous hypothesis, property might have changed
-                if (info.getRow() == sp) {
-                    internalHyp.setStateProperty(info.getState(), stateProperty(table, sp));
-                }
-                continue;
+
+            if (info == null) {
+                S state = createState(id == 0, sp);
+                stateInfos.set(id, new StateInfo<>(sp, state));
+            } else if (info.getRow() == sp) { // State from previous hypothesis, property might have changed
+                internalHyp.setStateProperty(info.getState(), stateProperty(table, sp));
             }
 
-            S state = createState(id == 0, sp);
-
-            stateInfos.set(id, new StateInfo<>(sp, state));
         }
 
         // SECOND PASS: Create hypothesis transitions
-        for (StateInfo<S, I> info : stateInfos) {
+        for (int r = 0; r < numDistinct; r++) {
+            StateInfo<S, I> info = stateInfos.get(r);
             Row<I> sp = info.getRow();
             S state = info.getState();
 
@@ -159,9 +150,11 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
     /**
      * Derives a transition property from the corresponding transition.
      * <p>
-     * N.B.: Not the transition row is passed to this method, but the row for the outgoing state. The transition row can
-     * be retrieved using {@link Row#getSuccessor(int)}.
+     * Note that not the transition row is passed to this method, but the row for the outgoing state. The transition row
+     * can be retrieved using {@link Row#getSuccessor(int)}.
      *
+     * @param table
+     *         the observation table
      * @param stateRow
      *         the row for the source state
      * @param inputIdx

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2023 TU Dortmund
-This file is part of LearnLib, http://www.learnlib.de/.
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,8 +32,8 @@ limitations under the License.
         This artifact provides the implementation of the L* learning algorithm described in the paper "Learning Regular
         Sets from Queries and Counterexamples" (https://doi.org/10.1016/0890-5401(87)90052-6) by Dana Angluin including
         variations and optimizations thereof such as the versions based on "On the Learnability of Infinitary Regular
-        Sets" (https://dx.doi.org/10.1006/inco.1995.1070) by Oded Maler and Amir Pnueli or "Inference of finite automata
-        using homing sequences" (http://dx.doi.org/10.1006/inco.1993.1021) by Ronald L. Rivest and Robert E. Schapire.
+        Sets" (https://doi.org/10.1006/inco.1995.1070) by Oded Maler and Amir Pnueli or "Inference of finite automata
+        using homing sequences" (http://doi.org/10.1006/inco.1993.1021) by Ronald L. Rivest and Robert E. Schapire.
     </description>
 
     <dependencies>
@@ -44,7 +44,7 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-ot</artifactId>
+            <artifactId>learnlib-datastructures</artifactId>
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
@@ -81,8 +81,8 @@ limitations under the License.
 
         <!-- build -->
         <dependency>
-            <groupId>com.github.misberner.buildergen</groupId>
-            <artifactId>buildergen</artifactId>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotations</artifactId>
         </dependency>
 
         <!-- test -->
@@ -109,6 +109,10 @@ limitations under the License.
             <artifactId>learnlib-membership-oracles</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-test-support</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -121,4 +125,19 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <!-- append to existing argLine to nicely work together with jacoco plugin -->
+                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.lstar=net.automatalib.util</argLine>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

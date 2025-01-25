@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,15 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Random;
 
-import com.google.common.io.CharStreams;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.vpa.SimulatorEQOracle;
 import de.learnlib.oracle.membership.SEVPASimulatorOracle;
 import de.learnlib.util.Experiment;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.alphabet.DefaultVPAlphabet;
-import net.automatalib.automaton.vpa.DefaultOneSEVPA;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultVPAlphabet;
 import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.random.RandomAutomata;
@@ -78,7 +77,7 @@ public class DTVisualizationTest {
     private String resourceAsString(String resourceName) throws IOException {
         try (InputStream is = getClass().getResourceAsStream(resourceName)) {
             assert is != null;
-            return CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
+            return IOUtil.toString(IOUtil.asBufferedUTF8Reader(is));
         }
     }
 }

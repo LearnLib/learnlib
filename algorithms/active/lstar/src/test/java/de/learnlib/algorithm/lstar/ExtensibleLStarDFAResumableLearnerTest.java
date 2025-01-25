@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFABuilder;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerDFATest;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
 
 public class ExtensibleLStarDFAResumableLearnerTest
         extends AbstractResumableLearnerDFATest<ExtensibleLStarDFA<Character>, AutomatonLStarState<Character, Boolean, CompactDFA<Character>, Integer>> {

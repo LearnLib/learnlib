@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import de.learnlib.filter.statistic.oracle.MooreCounterOracle;
 import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.oracle.membership.MooreSimulatorOracle;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.word.Word;
@@ -71,7 +72,17 @@ public abstract class AbstractMooreCacheTest
 
     @Override
     protected Alphabet<Character> getAlphabet() {
-        return CacheTestUtils.INPUT_ALPHABET;
+        return new GrowingMapAlphabet<>(CacheTestUtils.INPUT_ALPHABET);
+    }
+
+    @Override
+    protected Alphabet<Character> getExtensionAlphabet() {
+        return CacheTestUtils.EXTENSION_ALPHABET;
+    }
+
+    @Override
+    protected boolean supportsGrowing() {
+        return true;
     }
 
     protected abstract MooreCacheOracle<Character, Integer> getCache(MooreMembershipOracle<Character, Integer> delegate);

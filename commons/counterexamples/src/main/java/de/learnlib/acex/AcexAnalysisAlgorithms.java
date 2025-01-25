@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,10 @@ public final class AcexAnalysisAlgorithms {
      *         the lower bound of the search range
      * @param high
      *         the upper bound of the search range
+     * @param <E>
+     *         the effect type
      *
-     * @return an index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
+     * @return an index {@code i} such that {@code acex.testEffect(i) != acex.testEffect(i+1)}
      */
     public static <E> int linearSearchFwd(AbstractCounterexample<E> acex, int low, int high) {
         assert !acex.testEffects(low, high);
@@ -56,8 +58,10 @@ public final class AcexAnalysisAlgorithms {
      *         the lower bound of the search range
      * @param high
      *         the upper bound of the search range
+     * @param <E>
+     *         the effect type
      *
-     * @return an index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
+     * @return an index {@code i} such that {@code acex.testEffect(i) != acex.testEffect(i+1)}
      */
     public static <E> int linearSearchBwd(AbstractCounterexample<E> acex, int low, int high) {
         assert !acex.testEffects(low, high);
@@ -82,8 +86,10 @@ public final class AcexAnalysisAlgorithms {
      *         the lower bound of the search range
      * @param high
      *         the upper bound of the search range
+     * @param <E>
+     *         the effect type
      *
-     * @return an index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
+     * @return an index {@code i} such that {@code acex.testEffect(i) != acex.testEffect(i+1)}
      */
     public static <E> int exponentialSearchBwd(AbstractCounterexample<E> acex, int low, int high) {
         assert !acex.testEffects(low, high);
@@ -117,8 +123,10 @@ public final class AcexAnalysisAlgorithms {
      *         the lower bound of the search range
      * @param high
      *         the upper bound of the search range
+     * @param <E>
+     *         the effect type
      *
-     * @return an index <code>i</code> such that <code>acex.testEffect(i) != acex.testEffect(i+1)</code>
+     * @return an index {@code i} such that {@code acex.testEffect(i) != acex.testEffect(i+1)}
      */
     public static <E> int binarySearchRight(AbstractCounterexample<E> acex, int low, int high) {
         E effLow = acex.effect(low);
@@ -133,11 +141,11 @@ public final class AcexAnalysisAlgorithms {
         while (highIter - lowIter > 1) {
             int mid = lowIter + (highIter - lowIter) / 2;
             E effMid = acex.effect(mid);
-            if (!acex.checkEffects(effMid, effHigh)) {
-                lowIter = mid;
-            } else {
+            if (acex.checkEffects(effMid, effHigh)) {
                 highIter = mid;
                 effHigh = effMid;
+            } else {
+                lowIter = mid;
             }
         }
 
@@ -178,11 +186,11 @@ public final class AcexAnalysisAlgorithms {
         while (highIter - lowIter > 1) {
             int mid = lowIter + (highIter - lowIter) / 2;
             E effMid = acex.effect(mid);
-            if (!acex.checkEffects(effLow, effMid)) {
-                highIter = mid;
-            } else {
+            if (acex.checkEffects(effLow, effMid)) {
                 lowIter = mid;
                 effLow = effMid;
+            } else {
+                highIter = mid;
             }
         }
 

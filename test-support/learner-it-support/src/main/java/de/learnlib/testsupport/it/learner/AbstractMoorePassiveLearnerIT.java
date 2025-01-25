@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.learnlib.example.DefaultPassiveLearningExample.DefaultMoorePassiveLearningExample;
-import de.learnlib.example.LearningExample.MooreLearningExample;
-import de.learnlib.example.LearningExamples;
-import de.learnlib.example.PassiveLearningExample.MoorePassiveLearningExample;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.DefaultPassiveLearningExample.DefaultMoorePassiveLearningExample;
+import de.learnlib.testsupport.example.LearningExample.MooreLearningExample;
+import de.learnlib.testsupport.example.LearningExamples;
+import de.learnlib.testsupport.example.PassiveLearningExample.MoorePassiveLearningExample;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantListImpl.MooreLearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MooreMachine;
@@ -41,7 +41,7 @@ public abstract class AbstractMoorePassiveLearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<MooreLearningExample<?, ?>> examples = LearningExamples.createMooreExamples();
-        final List<PassiveLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
+        final List<PassiveLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
 
         for (MooreLearningExample<?, ?> example : examples) {
             result.addAll(createAllVariantsITCase(example));
@@ -74,6 +74,10 @@ public abstract class AbstractMoorePassiveLearnerIT {
      *         the input alphabet
      * @param variants
      *         list to add the learner variants to
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      */
     protected abstract <I, O> void addLearnerVariants(Alphabet<I> alphabet,
                                                       PassiveLearnerVariantList<MooreMachine<?, I, ?, O>, I, Word<O>> variants);

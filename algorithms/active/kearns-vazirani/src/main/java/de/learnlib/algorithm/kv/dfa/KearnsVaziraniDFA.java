@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.Resumable;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
@@ -36,12 +35,12 @@ import de.learnlib.datastructure.discriminationtree.model.LCAInfo;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.word.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,8 +72,12 @@ public class KearnsVaziraniDFA<I>
      *         the learning alphabet
      * @param oracle
      *         the membership oracle
+     * @param repeatedCounterexampleEvaluation
+     *         a flag whether counterexamples should be analyzed exhaustively
+     * @param counterexampleAnalyzer
+     *         the counterexample analyzer
      */
-    @GenerateBuilder
+    @GenerateBuilder(defaults = BuilderDefaults.class)
     public KearnsVaziraniDFA(Alphabet<I> alphabet,
                              MembershipOracle<I, Boolean> oracle,
                              boolean repeatedCounterexampleEvaluation,
@@ -103,7 +106,9 @@ public class KearnsVaziraniDFA<I>
             return false;
         }
         if (repeatedCounterexampleEvaluation) {
-            while (refineHypothesisSingle(input, output)) {}
+            while (refineHypothesisSingle(input, output)) {
+                // refine exhaustively
+            }
         }
         return true;
     }
@@ -185,7 +190,7 @@ public class KearnsVaziraniDFA<I>
             long encodedTrans = transList.get(i);
 
             int sourceState = (int) (encodedTrans >> Integer.SIZE);
-            int transIdx = (int) (encodedTrans);
+            int transIdx = (int) encodedTrans;
 
             StateInfo<I, Boolean> sourceInfo = stateInfos.get(sourceState);
             I symbol = alphabet.getSymbol(transIdx);
@@ -199,7 +204,7 @@ public class KearnsVaziraniDFA<I>
             long encodedTrans = transList.get(i);
 
             int sourceState = (int) (encodedTrans >> Integer.SIZE);
-            int transIdx = (int) (encodedTrans);
+            int transIdx = (int) encodedTrans;
 
             setTransition(sourceState, transIdx, succs.get(i));
         }
@@ -299,15 +304,15 @@ public class KearnsVaziraniDFA<I>
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         this.hypothesis.addAlphabetSymbol(symbol);
 
         // check if we already have information about the symbol (then the transition is defined) so we don't post
         // redundant queries
-        if (this.hypothesis.getInitialState() != null &&
-            this.hypothesis.getSuccessor(this.hypothesis.getInitialState(), symbol) == null) {
+        final Integer init = this.hypothesis.getInitialState();
+        if (init != null && this.hypothesis.getSuccessor(init, symbol) == null) {
             // use new list to prevent concurrent modification exception
             final List<Word<I>> transAs = new ArrayList<>(this.stateInfos.size());
             for (StateInfo<I, Boolean> si : this.stateInfos) {

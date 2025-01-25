@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,8 @@ import java.util.Collection;
 import java.util.Map;
 
 import de.learnlib.algorithm.adt.util.ADTUtil;
-import de.learnlib.oracle.SymbolQueryOracle;
 import net.automatalib.graph.ads.RecursiveADSNode;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.word.Word;
 
 /**
  * The ADT equivalent of {@link net.automatalib.graph.ads.ADSNode}. In contrast to regular adaptive distinguishing
@@ -38,23 +36,16 @@ import net.automatalib.word.Word;
 public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I, O>> {
 
     /**
-     * Utility method, that sifts a given word through {@code this} ADTNode. If {@code this} node is a <ul> <li>symbol
-     * node, the symbol is applied to the system under learning and the corresponding child node (based on the observed
-     * output) is returned. If no matching child node is found, a new leaf node is returned instead </li> <li> reset
-     * node, the system under learning is reset and the provided prefix is reapplied to the system </li> <li> leaf node,
-     * an exception is thrown </li> </ul>
+     * Convenience method for directly accessing this node's {@link #getChildren() children}.
      *
-     * @param oracle
-     *         the oracle used to query the system under learning
-     * @param prefix
-     *         the prefix to be re-applied after encountering a reset node
+     * @param output
+     *         the output symbol to determine the child to returned
      *
-     * @return the corresponding child node
-     *
-     * @throws UnsupportedOperationException
-     *         when invoked on a leaf node (see {@link #getNodeType()}).
+     * @return the child node that is mapped to given output. May be {@code null},
      */
-    ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> prefix);
+    default ADTNode<S, I, O> getChild(O output) {
+        return getChildren().get(output);
+    }
 
     // default methods for graph interface
     @Override
@@ -73,7 +64,7 @@ public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I
                     properties.put(NodeAttrs.LABEL, "reset");
                 } else if (ADTUtil.isLeafNode(node)) {
                     properties.put(NodeAttrs.SHAPE, NodeShapes.BOX);
-                    properties.put(NodeAttrs.LABEL, String.valueOf(node.getHypothesisState()));
+                    properties.put(NodeAttrs.LABEL, String.valueOf(node.getState()));
                 } else {
                     properties.put(NodeAttrs.LABEL, node.toString());
                     properties.put(NodeAttrs.SHAPE, NodeShapes.OVAL);

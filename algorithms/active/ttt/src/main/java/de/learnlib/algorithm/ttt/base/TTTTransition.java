@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 package de.learnlib.algorithm.ttt.base;
 
 import de.learnlib.AccessSequenceProvider;
-import de.learnlib.datastructure.list.IntrusiveListElem;
-import de.learnlib.datastructure.list.IntrusiveListElemImpl;
+import de.learnlib.datastructure.list.AbstractIntrusiveListEntryImpl;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -28,12 +27,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         input symbol type
  */
-public class TTTTransition<I, D> extends IntrusiveListElemImpl<TTTTransition<I, D>>
+public class TTTTransition<I, D> extends AbstractIntrusiveListEntryImpl<TTTTransition<I, D>>
         implements AccessSequenceProvider<I> {
 
     private final TTTState<I, D> source;
     private final I input;
-    protected IntrusiveListElem<TTTTransition<I, D>> prevIncoming;
     // NON-TREE TRANSITION
     AbstractBaseDTNode<I, D> nonTreeTarget;
     // TREE TRANSITION
@@ -62,7 +60,7 @@ public class TTTTransition<I, D> extends IntrusiveListElemImpl<TTTTransition<I, 
 
     void setNonTreeTarget(AbstractBaseDTNode<I, D> nonTreeTarget) {
         this.nonTreeTarget = nonTreeTarget;
-        nonTreeTarget.getIncoming().insertIncoming(this);
+        nonTreeTarget.getIncoming().add(this);
     }
 
     public AbstractBaseDTNode<I, D> getDTTarget() {
@@ -79,7 +77,7 @@ public class TTTTransition<I, D> extends IntrusiveListElemImpl<TTTTransition<I, 
 
         assert nonTreeTarget.isLeaf() :
                 "transition target is not a leaf, but is a " + (nonTreeTarget.isTemp() ? "temp" : "non-temp") +
-                " node with discr" + nonTreeTarget.getDiscriminator();
+                " node with discriminator: " + nonTreeTarget.getDiscriminator();
         assert nonTreeTarget.getData() != null;
         return nonTreeTarget.getData();
     }
@@ -116,12 +114,8 @@ public class TTTTransition<I, D> extends IntrusiveListElemImpl<TTTTransition<I, 
         this.nonTreeTarget = null;
     }
 
-    void removeFromList() {
-        if (prevIncoming != null) {
-            prevIncoming.setNextElement(next);
-        }
-        if (next != null) {
-            next.prevIncoming = prevIncoming;
-        }
+    @Override
+    public TTTTransition<I, D> getElement() {
+        return this;
     }
 }

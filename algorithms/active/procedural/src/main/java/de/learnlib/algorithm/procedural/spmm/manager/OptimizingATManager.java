@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ package de.learnlib.algorithm.procedural.spmm.manager;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -24,14 +26,13 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.spmm.ATManager;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.word.Word;
@@ -59,8 +60,8 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
         this.inputAlphabet = inputAlphabet;
         this.errorOutput = errorOutput;
 
-        this.accessSequences = Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls());
-        this.terminatingSequences = Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls());
+        this.accessSequences = new HashMap<>(HashUtil.capacity(inputAlphabet.getNumCalls()));
+        this.terminatingSequences = new HashMap<>(HashUtil.capacity(inputAlphabet.getNumCalls()));
     }
 
     @Override
@@ -78,9 +79,9 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
     @Override
     public Pair<Set<I>, Set<I>> scanCounterexample(DefaultQuery<I, Word<O>> counterexample) {
         final Set<I> newCalls =
-                Sets.newHashSetWithExpectedSize(this.inputAlphabet.getNumCalls() - this.accessSequences.size());
+                new HashSet<>(HashUtil.capacity(this.inputAlphabet.getNumCalls() - this.accessSequences.size()));
         final Set<I> newTerms =
-                Sets.newHashSetWithExpectedSize(this.inputAlphabet.getNumCalls() - this.terminatingSequences.size());
+                new HashSet<>(HashUtil.capacity(this.inputAlphabet.getNumCalls() - this.terminatingSequences.size()));
 
         this.extractPotentialTerminatingSequences(counterexample, newTerms);
         this.extractPotentialAccessSequences(counterexample, newCalls);
@@ -93,7 +94,7 @@ public class OptimizingATManager<I, O> implements ATManager<I, O> {
                                  Map<I, ? extends AccessSequenceTransformer<SymbolWrapper<I>>> providers,
                                  Collection<SymbolWrapper<I>> inputs) {
 
-        final Set<I> newTS = Sets.newHashSetWithExpectedSize(procedures.size());
+        final Set<I> newTS = new HashSet<>(HashUtil.capacity(procedures.size()));
         if (!procedures.isEmpty()) {
 
             final SymbolWrapper<I> returnSymbol = inputs.stream()

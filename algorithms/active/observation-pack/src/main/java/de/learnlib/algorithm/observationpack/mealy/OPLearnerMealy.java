@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithm.observationpack.mealy;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.observationpack.AbstractOPLearner;
 import de.learnlib.algorithm.observationpack.hypothesis.HState;
@@ -25,12 +24,15 @@ import de.learnlib.datastructure.discriminationtree.MultiDTree;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.AbstractQuery;
 import de.learnlib.query.Query;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
+ * A {@link MealyMachine}-based specialization of the {@link AbstractOPLearner}.
+ *
  * @param <I>
  *         input symbol type
  * @param <O>
@@ -48,6 +50,8 @@ public class OPLearnerMealy<I, O> extends AbstractOPLearner<MealyMachine<?, I, ?
      *         the membership oracle
      * @param suffixFinder
      *         method to use for analyzing counterexamples
+     * @param repeatedCounterexampleEvaluation
+     *         a flag whether counterexamples should be analyzed exhaustively
      */
     @GenerateBuilder(defaults = AbstractOPLearner.BuilderDefaults.class)
     public OPLearnerMealy(Alphabet<I> alphabet,

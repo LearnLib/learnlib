@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,19 @@
 package de.learnlib.algorithm.observationpack.vpa.hypothesis;
 
 import de.learnlib.AccessSequenceProvider;
-import de.learnlib.datastructure.list.IntrusiveListElemImpl;
+import de.learnlib.datastructure.list.AbstractIntrusiveListEntryImpl;
 import net.automatalib.word.Word;
 
 /**
+ * Abstract hypothesis transition.
+ *
  * @param <I>
  *         input symbol type
  */
-public abstract class AbstractHypTrans<I> extends IntrusiveListElemImpl<AbstractHypTrans<I>>
+public abstract class AbstractHypTrans<I> extends AbstractIntrusiveListEntryImpl<AbstractHypTrans<I>>
         implements AccessSequenceProvider<I> {
 
     private final Word<I> aseq;
-    protected IntrusiveListElemImpl<AbstractHypTrans<I>> prev;
     private HypLoc<I> treeTarget;
     private DTNode<I> nonTreeTarget;
 
@@ -82,14 +83,8 @@ public abstract class AbstractHypTrans<I> extends IntrusiveListElemImpl<Abstract
         removeFromList();
     }
 
-    public void removeFromList() {
-        if (next != null) {
-            next.prev = prev;
-        }
-        if (prev != null) {
-            prev.setNextElement(next);
-        }
-        prev = null;
-        next = null;
+    @Override
+    public AbstractHypTrans<I> getElement() {
+        return this;
     }
 }

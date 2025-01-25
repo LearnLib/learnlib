@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import com.google.common.base.Throwables;
-import de.learnlib.setting.LearnLibProperty;
-import de.learnlib.setting.LearnLibSettings;
-import net.automatalib.common.smartcollection.ArrayStorage;
+import de.learnlib.exception.BatchInterruptedException;
+import de.learnlib.oracle.BatchProcessor;
+import de.learnlib.oracle.ThreadPool;
+import net.automatalib.common.util.collection.CollectionUtil;
+import net.automatalib.common.util.exception.ExceptionUtil;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -45,42 +45,16 @@ import org.checkerframework.checker.index.qual.NonNegative;
 public abstract class AbstractStaticBatchProcessor<Q, P extends BatchProcessor<Q>>
         implements ThreadPool, BatchProcessor<Q> {
 
-    private static final int DEFAULT_MIN_BATCH_SIZE = 10;
-    public static final int MIN_BATCH_SIZE;
-    public static final int NUM_INSTANCES;
-    public static final PoolPolicy POOL_POLICY;
-
-    static {
-        LearnLibSettings settings = LearnLibSettings.getInstance();
-
-        int numCores = Runtime.getRuntime().availableProcessors();
-
-        MIN_BATCH_SIZE = settings.getInt(LearnLibProperty.PARALLEL_BATCH_SIZE_STATIC, DEFAULT_MIN_BATCH_SIZE);
-        NUM_INSTANCES = settings.getInt(LearnLibProperty.PARALLEL_POOL_SIZE, numCores);
-        POOL_POLICY = settings.getEnumValue(LearnLibProperty.PARALLEL_POOL_SIZE, PoolPolicy.class, PoolPolicy.CACHED);
-    }
-
     private final @NonNegative int minBatchSize;
-    private final ArrayStorage<P> oracles;
+    private final List<? extends P> oracles;
     private final ExecutorService executor;
 
     public AbstractStaticBatchProcessor(Collection<? extends P> oracles,
                                         @NonNegative int minBatchSize,
-                                        PoolPolicy policy) {
-
-        this.oracles = new ArrayStorage<>(oracles);
-
-        switch (policy) {
-            case FIXED:
-                this.executor = Executors.newFixedThreadPool(this.oracles.size() - 1);
-                break;
-            case CACHED:
-                this.executor = Executors.newCachedThreadPool();
-                break;
-            default:
-                throw new IllegalArgumentException("Illegal pool policy: " + policy);
-        }
+                                        ExecutorService executor) {
+        this.oracles = CollectionUtil.randomAccessList(oracles);
         this.minBatchSize = minBatchSize;
+        this.executor = executor;
     }
 
     @Override
@@ -141,9 +115,9 @@ public abstract class AbstractStaticBatchProcessor<Q, P extends BatchProcessor<Q
             for (Future<?> f : futures) {
                 f.get();
             }
-        } catch (ExecutionException ex) {
-            Throwables.throwIfUnchecked(ex.getCause());
-            throw new AssertionError("Runnable must not throw checked exceptions", ex);
+        } catch (ExecutionException e) {
+            ExceptionUtil.throwIfUnchecked(e.getCause());
+            throw new AssertionError("Runnable must not throw checked exceptions", e);
         } catch (InterruptedException ex) {
             Thread.interrupted();
             throw new BatchInterruptedException(ex);

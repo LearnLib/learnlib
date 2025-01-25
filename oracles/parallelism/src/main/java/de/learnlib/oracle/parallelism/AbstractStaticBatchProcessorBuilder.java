@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,16 @@
  */
 package de.learnlib.oracle.parallelism;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import com.google.common.base.Preconditions;
-import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
+import de.learnlib.oracle.BatchProcessor;
+import de.learnlib.oracle.ThreadPool.PoolPolicy;
+import net.automatalib.common.util.array.ArrayStorage;
+import net.automatalib.common.util.concurrent.ScalingThreadPoolExecutor;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -37,54 +40,125 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public abstract class AbstractStaticBatchProcessorBuilder<Q, P extends BatchProcessor<Q>, OR> {
 
+    private static final int DEFAULT_KEEP_ALIVE_TIME = 60;
+
     private final @Nullable Collection<? extends P> oracles;
     private final @Nullable Supplier<? extends P> oracleSupplier;
-    private @NonNegative int minBatchSize = AbstractStaticBatchProcessor.MIN_BATCH_SIZE;
-    private @NonNegative int numInstances = AbstractStaticBatchProcessor.NUM_INSTANCES;
-    private PoolPolicy poolPolicy = AbstractStaticBatchProcessor.POOL_POLICY;
 
-    public AbstractStaticBatchProcessorBuilder(Collection<? extends P> oracles) {
-        Preconditions.checkArgument(!oracles.isEmpty(), "No oracles specified");
-        this.oracles = oracles;
-        this.oracleSupplier = null;
-    }
+    private ExecutorService customExecutor;
+    private @NonNegative int minBatchSize = BatchProcessorDefaults.MIN_BATCH_SIZE;
+    private @NonNegative int numInstances = BatchProcessorDefaults.POOL_SIZE;
+    private PoolPolicy poolPolicy = BatchProcessorDefaults.POOL_POLICY;
 
     public AbstractStaticBatchProcessorBuilder(Supplier<? extends P> oracleSupplier) {
         this.oracles = null;
         this.oracleSupplier = oracleSupplier;
     }
 
+    public AbstractStaticBatchProcessorBuilder(Collection<? extends P> oracles) {
+        this.oracles = oracles;
+        this.oracleSupplier = null;
+    }
+
+    /**
+     * Sets the executor service to use for submitting batches.
+     *
+     * @param executor
+     *         the executor to use
+     *
+     * @return {@code this}
+     */
+    public AbstractStaticBatchProcessorBuilder<Q, P, OR> withCustomExecutor(ExecutorService executor) {
+        this.customExecutor = executor;
+        return this;
+    }
+
+    /**
+     * Sets the minimal size of batches that are submitted.
+     *
+     * @param minBatchSize
+     *         the minimal size of batches
+     *
+     * @return {@code this}
+     */
     public AbstractStaticBatchProcessorBuilder<Q, P, OR> withMinBatchSize(@NonNegative int minBatchSize) {
         this.minBatchSize = minBatchSize;
         return this;
     }
 
-    public AbstractStaticBatchProcessorBuilder<Q, P, OR> withPoolPolicy(PoolPolicy policy) {
-        this.poolPolicy = policy;
-        return this;
-    }
-
+    /**
+     * Sets the number of instances that should process batches. Note that this value is ignored if the builder has been
+     * initialized with a collection of processors in order to guarantee that no unavailable resources are accessed.
+     *
+     * @param numInstances
+     *         the number of instances to delegate batches to
+     *
+     * @return {@code this}
+     */
     public AbstractStaticBatchProcessorBuilder<Q, P, OR> withNumInstances(@NonNegative int numInstances) {
         this.numInstances = numInstances;
         return this;
     }
 
-    @SuppressWarnings("nullness") // the constructors guarantee that oracles and oracleSupplier are null exclusively
-    public OR create() {
-        Collection<? extends P> oracleInstances;
-        if (oracles != null) {
-            oracleInstances = oracles;
-        } else {
-            List<P> oracleList = new ArrayList<>(numInstances);
-            for (int i = 0; i < numInstances; i++) {
-                oracleList.add(oracleSupplier.get());
-            }
-            oracleInstances = oracleList;
-        }
-
-        return buildOracle(oracleInstances, minBatchSize, poolPolicy);
+    /**
+     * Sets the pool policy in case the builder creates its own executor for processing batches.
+     *
+     * @param policy
+     *         the policy
+     *
+     * @return {@code this}
+     */
+    public AbstractStaticBatchProcessorBuilder<Q, P, OR> withPoolPolicy(PoolPolicy policy) {
+        this.poolPolicy = policy;
+        return this;
     }
 
-    protected abstract OR buildOracle(Collection<? extends P> oracleInstances, int minBatchSize, PoolPolicy poolPolicy);
+    /**
+     * Create the batch processor.
+     *
+     * @return the batch processor
+     */
+    public OR create() {
+        final ArrayStorage<P> instances;
+        final int size;
+
+        if (oracleSupplier == null) {
+            if (oracles == null || oracles.isEmpty()) {
+                throw new IllegalArgumentException("No oracles specified");
+            }
+
+            size = oracles.size();
+            instances = new ArrayStorage<>(oracles);
+        } else {
+            size = numInstances;
+            instances = new ArrayStorage<>(size);
+            for (int i = 0; i < size; i++) {
+                instances.set(i, oracleSupplier.get());
+            }
+        }
+
+        final ExecutorService executor;
+
+        if (customExecutor != null) {
+            executor = customExecutor;
+        } else {
+            switch (poolPolicy) {
+                case FIXED:
+                    executor = Executors.newFixedThreadPool(size);
+                    break;
+                case CACHED:
+                    executor = new ScalingThreadPoolExecutor(0, size, DEFAULT_KEEP_ALIVE_TIME, TimeUnit.SECONDS);
+                    break;
+                default:
+                    throw new IllegalStateException("Unknown pool policy: " + poolPolicy);
+            }
+        }
+
+        return buildOracle(instances, minBatchSize, executor);
+    }
+
+    protected abstract OR buildOracle(Collection<? extends P> oracleInstances,
+                                      int minBatchSize,
+                                      ExecutorService executor);
 
 }

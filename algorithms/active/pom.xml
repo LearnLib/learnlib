@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (C) 2013-2023 TU Dortmund
-This file is part of LearnLib, http://www.learnlib.de/.
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,35 +37,13 @@ limitations under the License.
         <module>dhc</module>
         <module>kearns-vazirani</module>
         <module>lsharp</module>
+        <module>lambda</module>
         <module>lstar</module>
         <module>nlstar</module>
         <module>observation-pack</module>
         <module>observation-pack-vpa</module>
-        <module>oml</module>
         <module>procedural</module>
         <module>ttt</module>
         <module>ttt-vpa</module>
     </modules>
-
-    <profiles>
-        <profile>
-            <id>fix-xstream</id>
-            <activation>
-                <jdk>[16,)</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <configuration>
-                                <argLine>@{argLine} --add-opens=java.base/java.util=ALL-UNNAMED</argLine>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-    </profiles>
 </project>

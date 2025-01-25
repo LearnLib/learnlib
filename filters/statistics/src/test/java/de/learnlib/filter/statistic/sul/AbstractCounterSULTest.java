@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 import de.learnlib.filter.statistic.Counter;
-import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMealy;
 import de.learnlib.query.Query;
@@ -30,12 +29,14 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public abstract class AbstractCounterSULTest {
+public abstract class AbstractCounterSULTest<S extends StatisticSUL<Integer, Character>> {
 
-    private StatisticSUL<Integer, Character> statisticSUL;
+    private S statisticSUL;
     private MealyMembershipOracle<Integer, Character> asOracle;
 
-    protected abstract StatisticSUL<Integer, Character> getStatisticSUL();
+    protected abstract S getStatisticSUL();
+
+    protected abstract Counter getCounter(S sul);
 
     protected abstract int getCountIncreasePerQuery();
 
@@ -98,13 +99,8 @@ public abstract class AbstractCounterSULTest {
         Assert.assertEquals(getCount(), oldCount + 2L * 3 * getCountIncreasePerQuery());
     }
 
-    @Test
-    public void testGetName() {
-        Assert.assertEquals(statisticSUL.getStatisticalData().getName(), TestQueries.COUNTER_NAME);
-    }
-
     private long getCount() {
-        return ((Counter) this.statisticSUL.getStatisticalData()).getCount();
+        return getCounter(statisticSUL).getCount();
     }
 
     // use custom class to prevent cyclic dependency on learnlib-membership-oracles

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@ import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.mealy.ClassicLStarMealy;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
-import de.learnlib.example.mealy.ExampleCoffeeMachine;
-import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.util.mealy.MealyUtil;
-import net.automatalib.alphabet.GrowingMapAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 import org.testng.Assert;

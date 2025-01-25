@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
-import com.google.common.base.Throwables;
-import de.learnlib.setting.LearnLibProperty;
-import de.learnlib.setting.LearnLibSettings;
+import de.learnlib.exception.BatchInterruptedException;
+import de.learnlib.oracle.BatchProcessor;
+import de.learnlib.oracle.ThreadPool;
+import net.automatalib.common.util.exception.ExceptionUtil;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * A batch processor that dynamically distributes queries to worker threads.
+ * <p>
+ * An incoming set of queries is split into batches of the given size. The number of batches may exceed the available
+ * threads so that they are dynamically scheduled once a job finishes.
  *
  * @param <Q>
  *         query type
@@ -38,20 +42,6 @@ import org.checkerframework.checker.index.qual.NonNegative;
  */
 public abstract class AbstractDynamicBatchProcessor<Q, P extends BatchProcessor<Q>>
         implements ThreadPool, BatchProcessor<Q> {
-
-    public static final int BATCH_SIZE;
-    public static final int POOL_SIZE;
-    public static final PoolPolicy POOL_POLICY;
-
-    static {
-        LearnLibSettings settings = LearnLibSettings.getInstance();
-
-        int numProcessors = Runtime.getRuntime().availableProcessors();
-
-        BATCH_SIZE = settings.getInt(LearnLibProperty.PARALLEL_BATCH_SIZE_DYNAMIC, 1);
-        POOL_SIZE = settings.getInt(LearnLibProperty.PARALLEL_POOL_SIZE, numProcessors);
-        POOL_POLICY = settings.getEnumValue(LearnLibProperty.PARALLEL_POOL_POLICY, PoolPolicy.class, PoolPolicy.CACHED);
-    }
 
     private final ThreadLocal<P> threadLocalOracle;
     private final ExecutorService executor;
@@ -112,7 +102,7 @@ public abstract class AbstractDynamicBatchProcessor<Q, P extends BatchProcessor<
                 future.get();
             }
         } catch (ExecutionException e) {
-            Throwables.throwIfUnchecked(e.getCause());
+            ExceptionUtil.throwIfUnchecked(e.getCause());
             throw new AssertionError("Runnables must not throw checked exceptions", e);
         } catch (InterruptedException e) {
             Thread.interrupted();

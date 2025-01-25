@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2023 TU Dortmund
-This file is part of LearnLib, http://www.learnlib.de/.
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ limitations under the License.
     <artifactId>learnlib-settings</artifactId>
 
     <name>LearnLib :: Commons :: Settings</name>
-    <description>A collection of utility methods to parse LearnLib specific settings</description>
+    <description>A collection of utility methods to parse LearnLib specific settings.</description>
 
     <dependencies>
         <!-- internal -->
@@ -40,8 +40,9 @@ limitations under the License.
         <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-api</artifactId>
+            <artifactId>automata-commons-settings</artifactId>
         </dependency>
+
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-util</artifactId>
@@ -69,4 +70,28 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <executions>
+                        <!-- since we use META-INF/services, also test in classpath mode -->
+                        <execution>
+                            <id>classpath-test</id>
+                            <phase>test</phase>
+                            <goals>
+                                <goal>test</goal>
+                            </goals>
+                            <configuration>
+                                <useModulePath>false</useModulePath>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

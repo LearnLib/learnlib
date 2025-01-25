@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package de.learnlib.oracle.equivalence;
 
+import java.util.Arrays;
 import java.util.Collection;
 
-import com.google.common.collect.Lists;
 import de.learnlib.oracle.BlackBoxOracle;
 import de.learnlib.oracle.PropertyOracle;
 import de.learnlib.query.DefaultQuery;
@@ -61,7 +61,7 @@ public class DisproveFirstOracleTest {
         Mockito.when(query.getOutput()).thenReturn(Boolean.TRUE);
         Mockito.when(automaton.computeOutput(Mockito.any())).thenReturn(Boolean.FALSE);
 
-        oracle = new DisproveFirstOracle<>(Lists.newArrayList(po1, po2));
+        oracle = new DisproveFirstOracle<>(Arrays.asList(po1, po2));
         Mockito.when(po1.findCounterExample(automaton, inputs)).thenCallRealMethod();
         Mockito.when(po1.doFindCounterExample(automaton, inputs)).thenReturn(query);
         Mockito.when(po2.findCounterExample(automaton, inputs)).thenCallRealMethod();

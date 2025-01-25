@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +27,14 @@ import de.learnlib.filter.reuse.tree.BoundedDeque.EvictPolicy;
 import de.learnlib.filter.reuse.tree.ReuseNode;
 import de.learnlib.filter.reuse.tree.ReuseNode.NodeResult;
 import de.learnlib.filter.reuse.tree.ReuseTree;
-import de.learnlib.filter.reuse.tree.ReuseTree.ReuseTreeBuilder;
 import de.learnlib.filter.reuse.tree.SystemStateHandler;
 import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMealy;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
+import de.learnlib.tooling.annotation.builder.Param;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The reuse oracle is a {@link MealyMembershipOracle} that is able to <ul> <li>Cache queries: Each processed query will
@@ -51,11 +53,11 @@ import net.automatalib.word.WordBuilder;
  * ReuseOracleBuilder#withInvariantInputs(Set)}).
  *
  * @param <S>
- *         system state class
+ *         system state type
  * @param <I>
- *         input symbol class
+ *         input symbol type
  * @param <O>
- *         output symbol class
+ *         output symbol type
  */
 public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> {
 
@@ -65,17 +67,48 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
 
     /**
      * Default constructor.
+     *
+     * @param alphabet
+     *         the input alphabet of the system
+     * @param oracleSupplier
+     *         a supplier for reusable oracles
+     * @param enabledSystemStateInvalidation
+     *         a flag whether system states should be invalidated after retrieval
+     * @param systemStateHandler
+     *         the handler for notification about system state removals
+     * @param invariantInputs
+     *         the set of symbols that behave invariant
+     * @param failureOutputs
+     *         the set of symbols of failed system outputs
+     * @param maxSystemStates
+     *         the maximum number of stored system states
+     * @param accessPolicy
+     *         the strategy for accessing elements
+     * @param evictPolicy
+     *         the strategy for evicting elements of the capacity is reached
      */
-    ReuseOracle(ReuseOracleBuilder<S, I, O> builder) {
-        this.executableOracles = ThreadLocal.withInitial(builder.oracleSupplier);
-        this.tree = new ReuseTreeBuilder<S, I, O>(builder.alphabet).withSystemStateHandler(builder.systemStateHandler)
-                                                                   .withFailureOutputs(builder.failureOutputSymbols)
-                                                                   .withInvariantInputs(builder.invariantInputSymbols)
-                                                                   .withEnabledSystemstateInvalidation(builder.invalidateSystemStates)
-                                                                   .withMaxSystemStates(builder.maxSystemStates)
-                                                                   .withAccessPolicy(builder.accessPolicy)
-                                                                   .withEvictPolicy(builder.evictPolicy)
-                                                                   .build();
+    @GenerateBuilder(defaults = BuilderDefaults.class,
+                     getterPrefix = GenerateBuilder.SUPPRESS,
+                     setterPrefix = GenerateBuilder.SUPPRESS,
+                     createName = "build")
+    public ReuseOracle(@Param(requiredOnInstantiation = true) Alphabet<I> alphabet,
+                       @Param(requiredOnInstantiation = true) Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier,
+                       boolean enabledSystemStateInvalidation,
+                       SystemStateHandler<S> systemStateHandler,
+                       Set<I> invariantInputs,
+                       Set<O> failureOutputs,
+                       int maxSystemStates,
+                       AccessPolicy accessPolicy,
+                       EvictPolicy evictPolicy) {
+        this.executableOracles = ThreadLocal.withInitial(oracleSupplier);
+        this.tree = new ReuseTree<>(alphabet,
+                                    enabledSystemStateInvalidation,
+                                    systemStateHandler,
+                                    invariantInputs,
+                                    failureOutputs,
+                                    maxSystemStates,
+                                    accessPolicy,
+                                    evictPolicy);
     }
 
     @Override
@@ -121,8 +154,8 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
             final int suffixLen = query.size() - nodeResult.prefixLength;
             final Word<I> suffix = query.suffix(suffixLen);
 
-            final Word<O> partialOutput = tree.getPartialOutput(query);
-            final Word<O> partialSuffixOutput = partialOutput.suffix(suffixLen);
+            final Word<@Nullable O> partialOutput = tree.getPartialOutput(query);
+            final Word<@Nullable O> partialSuffixOutput = partialOutput.suffix(suffixLen);
 
             final ReuseNode<S, I, O> reuseNode = nodeResult.reuseNode;
             final S systemState = nodeResult.systemState;
@@ -136,6 +169,7 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
             this.tree.insert(suffix, reuseNode, suffixQueryResult);
 
             final Word<O> prefixOutput = tree.getOutput(query.prefix(nodeResult.prefixLength));
+            assert prefixOutput != null;
             output = new WordBuilder<>(prefixOutput).append(suffixQueryResult.output).toWord();
         }
         return output;
@@ -143,6 +177,8 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
 
     /**
      * Returns the {@link ReuseCapableOracle} used by this instance.
+     *
+     * @return the oracle used by this instance
      */
     public ReuseCapableOracle<S, I, O> getReuseCapableOracle() {
         return executableOracles.get();
@@ -163,7 +199,7 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
      * @return the query result including the outputs of the "reflexive" symbol executions.
      */
     private QueryResult<S, O> filterAndProcessQuery(Word<I> query,
-                                                    Word<O> partialOutput,
+                                                    Word<@Nullable O> partialOutput,
                                                     Function<Word<I>, QueryResult<S, O>> processQuery) {
         final LinkedList<I> filteredQueryList = new LinkedList<>(query.asList());
         final Iterator<I> queryIterator = filteredQueryList.iterator();
@@ -196,68 +232,10 @@ public final class ReuseOracle<S, I, O> implements SingleQueryOracleMealy<I, O> 
 
     /**
      * Returns the {@link ReuseTree} used by this instance.
+     *
+     * @return the reuse tree used by this instance
      */
     public ReuseTree<S, I, O> getReuseTree() {
         return this.tree;
     }
-
-    public static class ReuseOracleBuilder<S, I, O> {
-
-        private final Alphabet<I> alphabet;
-        private final Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier;
-
-        private boolean invalidateSystemStates = true;
-        private SystemStateHandler<S> systemStateHandler;
-        private Set<I> invariantInputSymbols;
-        private Set<O> failureOutputSymbols;
-        private int maxSystemStates = -1;
-        private AccessPolicy accessPolicy = AccessPolicy.LIFO;
-        private EvictPolicy evictPolicy = EvictPolicy.EVICT_OLDEST;
-
-        public ReuseOracleBuilder(Alphabet<I> alphabet,
-                                  Supplier<? extends ReuseCapableOracle<S, I, O>> oracleSupplier) {
-            this.alphabet = alphabet;
-            this.oracleSupplier = oracleSupplier;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withSystemStateHandler(SystemStateHandler<S> systemStateHandler) {
-            this.systemStateHandler = systemStateHandler;
-            return this;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withEnabledSystemStateInvalidation(boolean invalidate) {
-            this.invalidateSystemStates = invalidate;
-            return this;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withInvariantInputs(Set<I> inputs) {
-            this.invariantInputSymbols = inputs;
-            return this;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withFailureOutputs(Set<O> outputs) {
-            this.failureOutputSymbols = outputs;
-            return this;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withMaxSystemStates(int maxSystemStates) {
-            this.maxSystemStates = maxSystemStates;
-            return this;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withAccessPolicy(AccessPolicy accessPolicy) {
-            this.accessPolicy = accessPolicy;
-            return this;
-        }
-
-        public ReuseOracleBuilder<S, I, O> withEvictPolicy(EvictPolicy evictPolicy) {
-            this.evictPolicy = evictPolicy;
-            return this;
-        }
-
-        public ReuseOracle<S, I, O> build() {
-            return new ReuseOracle<>(this);
-        }
-    }
-
 }

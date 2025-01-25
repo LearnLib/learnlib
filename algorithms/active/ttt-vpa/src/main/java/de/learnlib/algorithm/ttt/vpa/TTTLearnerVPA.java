@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,34 +26,37 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
-import com.google.common.collect.Iterables;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithm.observationpack.vpa.OPLearnerVPA;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.AbstractHypTrans;
-import de.learnlib.algorithm.observationpack.vpa.hypothesis.BlockList;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.ContextPair;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.DTNode;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.HypLoc;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.TransList;
 import de.learnlib.datastructure.discriminationtree.SplitData;
+import de.learnlib.datastructure.list.IntrusiveList;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.vpa.SEVPA;
 import net.automatalib.automaton.vpa.StackContents;
 import net.automatalib.automaton.vpa.State;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
+ * A {@link SEVPA}-based adoption of the "TTT" algorithm.
+ *
  * @param <I>
  *         input symbol type
  */
 public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
 
-    private final BlockList<I> blockList = new BlockList<>();
+    private final IntrusiveList<DTNode<I>> blockList = new IntrusiveList<>();
 
-    @GenerateBuilder
+    @GenerateBuilder(defaults = BuilderDefaults.class)
     public TTTLearnerVPA(VPAlphabet<I> alphabet, DFAMembershipOracle<I> oracle, AcexAnalyzer analyzer) {
         super(alphabet, oracle, analyzer);
     }
@@ -81,7 +84,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
                         if (trans.isTree()) {
                             succs.add(trans.getTreeTarget());
                         } else {
-                            Iterables.addAll(succs, trans.getNonTreeTarget().subtreeLocations());
+                            CollectionUtil.add(succs, trans.getNonTreeTarget().subtreeLocsIterator());
                         }
                     }
                 }
@@ -93,7 +96,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
                     if (trans.isTree()) {
                         succs.add(trans.getTreeTarget());
                     } else {
-                        Iterables.addAll(succs, trans.getNonTreeTarget().subtreeLocations());
+                        CollectionUtil.add(succs, trans.getNonTreeTarget().subtreeLocsIterator());
                     }
                 }
                 curr = new NonDetState<>(succs, curr.getStack());
@@ -127,10 +130,9 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
 
         do {
             splitState(outIncons);
-            closeTransitions();
-            while (finalizeAny()) {
+            do {
                 closeTransitions();
-            }
+            } while (finalizeAny());
 
             outIncons = findOutputInconsistency();
         } while (outIncons != null);
@@ -167,7 +169,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
 
         HypLoc<I> newLoc = makeTree(trans);
         DTNode<I> oldDtNode = succState.getLocation().getLeaf();
-        openTransitions.addAll(oldDtNode.getIncoming());
+        openTransitions.concat(oldDtNode.getIncoming());
         DTNode<I>.SplitResult children = oldDtNode.split(context, acex.effect(breakpoint), acex.effect(breakpoint + 1));
         oldDtNode.setTemp(true);
         if (!oldDtNode.getParent().isTemp()) {
@@ -545,7 +547,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         blockRoot.setTemp(false);
         blockRoot.setSplitData(null);
 
-        blockRoot.removeFromBlockList();
+        blockRoot.removeFromList();
 
         for (DTNode<I> subtree : blockRoot.getChildren()) {
             assert subtree.getSplitData() == null;
@@ -556,7 +558,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
             }
         }
 
-        openTransitions.addAll(blockRoot.getIncoming());
+        openTransitions.concat(blockRoot.getIncoming());
     }
 
     /**
@@ -592,7 +594,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
     }
 
     private static <I> void moveIncoming(DTNode<I> newNode, DTNode<I> oldNode, Boolean label) {
-        newNode.getIncoming().addAll(oldNode.getSplitData().getIncoming(label));
+        newNode.getIncoming().concat(oldNode.getSplitData().getIncoming(label));
     }
 
     /**

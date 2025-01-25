@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.example.LearningExample.MealyLearningExample;
-import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
+import de.learnlib.testsupport.example.LearningExample.MealyLearningExample;
+import de.learnlib.testsupport.example.LearningExamples;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MealySymLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MealySymLearnerVariantListImpl;
 import de.learnlib.util.mealy.MealyUtil;
@@ -44,7 +44,7 @@ public abstract class AbstractMealySymLearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<MealyLearningExample<?, ?>> examples = LearningExamples.createMealyExamples();
-        final List<UniversalDeterministicLearnerITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
+        final List<UniversalDeterministicLearnerITCase<?, ?, ?>> result = new ArrayList<>();
 
         for (MealyLearningExample<?, ?> example : examples) {
             result.addAll(createAllVariantsITCase(example));
@@ -76,6 +76,10 @@ public abstract class AbstractMealySymLearnerIT {
      *         the membership oracle
      * @param variants
      *         list to add the learner variants to
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      */
     protected abstract <I, O> void addLearnerVariants(Alphabet<I> alphabet,
                                                       MembershipOracle<I, O> mqOracle,

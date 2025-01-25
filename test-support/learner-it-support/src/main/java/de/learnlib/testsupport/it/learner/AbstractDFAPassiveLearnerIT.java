@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.learnlib.example.DefaultPassiveLearningExample.DefaultDFAPassiveLearningExample;
-import de.learnlib.example.LearningExample.DFALearningExample;
-import de.learnlib.example.LearningExamples;
-import de.learnlib.example.PassiveLearningExample.DFAPassiveLearningExample;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.DefaultPassiveLearningExample.DefaultDFAPassiveLearningExample;
+import de.learnlib.testsupport.example.LearningExample.DFALearningExample;
+import de.learnlib.testsupport.example.LearningExamples;
+import de.learnlib.testsupport.example.PassiveLearningExample.DFAPassiveLearningExample;
 import de.learnlib.testsupport.it.learner.PassiveLearnerVariantListImpl.DFAPassiveLearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
@@ -44,7 +44,7 @@ public abstract class AbstractDFAPassiveLearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<DFALearningExample<?>> examples = LearningExamples.createDFAExamples();
-        final List<PassiveLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
+        final List<PassiveLearnerVariantITCase<?, ?, ?>> result = new ArrayList<>();
 
         for (DFALearningExample<?> example : examples) {
             result.addAll(createAllVariantsITCase(example));
@@ -93,6 +93,8 @@ public abstract class AbstractDFAPassiveLearnerIT {
      *         the input alphabet
      * @param variants
      *         list to add the learner variants to
+     * @param <I>
+     *         input symbol type
      */
     protected abstract <I> void addLearnerVariants(Alphabet<I> alphabet,
                                                    PassiveLearnerVariantList<DFA<?, I>, I, Boolean> variants);

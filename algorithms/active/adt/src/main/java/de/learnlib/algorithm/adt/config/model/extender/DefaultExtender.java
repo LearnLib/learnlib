@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.adt.config.model.extender;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -73,7 +73,7 @@ public class DefaultExtender implements ADTExtender {
                 // apply parent trace
                 for (int idx = 0; idx < inputTrace.length(); idx++) {
 
-                    final Map<ADTState<I, O>, ADTState<I, O>> nextCurrentToInitialMapping = new HashMap<>();
+                    final Map<ADTState<I, O>, ADTState<I, O>> nextCurrentToInitialMapping = new LinkedHashMap<>();
                     final I input = inputTrace.getSymbol(idx);
                     final O output = outputTrace.getSymbol(idx);
 
@@ -123,7 +123,7 @@ public class DefaultExtender implements ADTExtender {
 
                 // set the original initial states
                 for (ADTNode<ADTState<I, O>, I, O> finalNode : ADTUtil.collectLeaves(extension)) {
-                    finalNode.setHypothesisState(currentToInitialMapping.get(finalNode.getHypothesisState()));
+                    finalNode.setState(currentToInitialMapping.get(finalNode.getState()));
                 }
 
                 return new ExtensionResult<>(extension);

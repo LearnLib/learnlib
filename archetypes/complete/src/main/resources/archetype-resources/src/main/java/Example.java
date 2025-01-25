@@ -12,9 +12,9 @@ import de.learnlib.oracle.membership.DFASimulatorOracle;
 import de.learnlib.util.Experiment.DFAExperiment;
 import de.learnlib.util.statistic.SimpleProfiler;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.visualization.Visualization;
 

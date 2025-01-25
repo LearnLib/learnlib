@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,16 +24,16 @@ import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.filter.cache.mealy.MealyCaches;
 import de.learnlib.filter.cache.sul.SULCache;
 import de.learnlib.filter.cache.sul.ThreadSafeSULCaches;
-import de.learnlib.filter.statistic.sul.ResetCounterSUL;
+import de.learnlib.filter.statistic.sul.CounterSUL;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.oracle.parallelism.ParallelOracle;
+import de.learnlib.oracle.ParallelOracle;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
@@ -95,7 +95,7 @@ public class ParallelismExample2 {
      */
     private void runSingleCache() {
         // create a counter to count the effective number of queries executed on the SUL
-        final ResetCounterSUL<Integer, Character> counter = new ResetCounterSUL<>("#Queries", automatonAsSUL);
+        final CounterSUL<Integer, Character> counter = new CounterSUL<>(automatonAsSUL);
 
         // create the parallel oracle
         // use a dynamic oracle because a static oracle splits queries into static chunks that will be delegated to the
@@ -127,7 +127,7 @@ public class ParallelismExample2 {
      */
     private void runThreadSafeCache() {
         // create a counter to count the effective number of queries executed on the SUL
-        final ResetCounterSUL<Integer, Character> counter = new ResetCounterSUL<>("#Queries", automatonAsSUL);
+        final CounterSUL<Integer, Character> counter = new CounterSUL<>(automatonAsSUL);
 
         // create a thread-safe cache for the SUL
         final SULCache<Integer, Character> cache = ThreadSafeSULCaches.createCache(alphabet, counter);

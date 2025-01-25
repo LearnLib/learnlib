@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,6 @@ package de.learnlib.algorithm.adt.adt;
 
 import java.util.Collections;
 import java.util.Map;
-
-import de.learnlib.oracle.SymbolQueryOracle;
-import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Reset node implementation.
@@ -42,8 +38,8 @@ public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
     }
 
     @Override
-    public @Nullable I getSymbol() {
-        return null;
+    public I getSymbol() {
+        throw new UnsupportedOperationException("Reset nodes do not have a symbol");
     }
 
     @Override
@@ -67,24 +63,13 @@ public class ADTResetNode<S, I, O> implements ADTNode<S, I, O> {
     }
 
     @Override
-    public @Nullable S getHypothesisState() {
-        return null;
-    }
-
-    @Override
-    public void setHypothesisState(S state) {
+    public S getState() {
         throw new UnsupportedOperationException("Reset nodes cannot reference a hypothesis state");
     }
 
     @Override
-    public ADTNode<S, I, O> sift(SymbolQueryOracle<I, O> oracle, Word<I> prefix) {
-        oracle.reset();
-
-        for (I i : prefix) {
-            oracle.query(i);
-        }
-
-        return successor;
+    public void setState(S state) {
+        throw new UnsupportedOperationException("Reset nodes cannot reference a hypothesis state");
     }
 
     @Override

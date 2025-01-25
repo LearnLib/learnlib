@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+@SuppressWarnings("PMD.TestClassWithoutTestCases") // not a traditional test class
 final class DFAHashCacheConsistencyTest<I> implements DFAEquivalenceOracle<I> {
 
     private final Map<Word<I>, Boolean> cache;

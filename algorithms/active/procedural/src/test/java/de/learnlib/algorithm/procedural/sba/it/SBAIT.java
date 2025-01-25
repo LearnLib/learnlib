@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,12 @@ import de.learnlib.algorithm.LearnerConstructor;
 import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.adapter.dfa.KearnsVaziraniAdapterDFA;
+import de.learnlib.algorithm.procedural.adapter.dfa.LLambdaAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.LStarBaseAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.ObservationPackAdapterDFA;
-import de.learnlib.algorithm.procedural.adapter.dfa.OptimalTTTAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.RivestSchapireAdapterDFA;
 import de.learnlib.algorithm.procedural.adapter.dfa.TTTAdapterDFA;
+import de.learnlib.algorithm.procedural.adapter.dfa.TTTLambdaAdapterDFA;
 import de.learnlib.algorithm.procedural.sba.ATManager;
 import de.learnlib.algorithm.procedural.sba.SBALearner;
 import de.learnlib.algorithm.procedural.sba.manager.DefaultATManager;
@@ -54,7 +55,8 @@ public class SBAIT extends AbstractSBALearnerIT {
         builder.addLearnerVariant(KearnsVaziraniAdapterDFA::new);
         builder.addLearnerVariant(LStarBaseAdapterDFA::new);
         builder.addLearnerVariant(ObservationPackAdapterDFA::new);
-        builder.addLearnerVariant(OptimalTTTAdapterDFA::new);
+        builder.addLearnerVariant(LLambdaAdapterDFA::new);
+        builder.addLearnerVariant(TTTLambdaAdapterDFA::new);
         builder.addLearnerVariant(RivestSchapireAdapterDFA::new);
         builder.addLearnerVariant(TTTAdapterDFA::new);
     }
@@ -66,7 +68,9 @@ public class SBAIT extends AbstractSBALearnerIT {
         private final SBALearnerVariantList<I> variants;
         private final List<Function<ProceduralInputAlphabet<I>, ATManager<I>>> atProviders;
 
-        Builder(ProceduralInputAlphabet<I> alphabet, MembershipOracle<I, Boolean> mqOracle, SBALearnerVariantList<I> variants) {
+        Builder(ProceduralInputAlphabet<I> alphabet,
+                MembershipOracle<I, Boolean> mqOracle,
+                SBALearnerVariantList<I> variants) {
             this.alphabet = alphabet;
             this.mqOracle = mqOracle;
             this.variants = variants;
@@ -79,7 +83,7 @@ public class SBAIT extends AbstractSBALearnerIT {
             for (AbstractNamedAcexAnalyzer analyzer : AcexAnalyzers.getAllAnalyzers()) {
                 for (Function<ProceduralInputAlphabet<I>, ATManager<I>> atProvider : atProviders) {
                     final SBALearner<I, L> learner =
-                            new SBALearner<>(alphabet, mqOracle, (i) -> provider, analyzer, atProvider.apply(alphabet));
+                            new SBALearner<>(alphabet, mqOracle, i -> provider, analyzer, atProvider.apply(alphabet));
                     final String name =
                             String.format("adapter=%s,analyzer=%s,manager=%s", provider, analyzer, atProvider);
                     variants.addLearnerVariant(name, learner);

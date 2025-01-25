@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,19 +19,20 @@ import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.cache.SULLearningCacheOracle;
-import de.learnlib.filter.statistic.sul.ResetCounterSUL;
+import de.learnlib.filter.statistic.sul.CounterSUL;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
 public abstract class AbstractSULCacheTest
         extends AbstractCacheTest<SULLearningCacheOracle<Character, Integer, SULCache<Character, Integer>>, MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 
-    private final ResetCounterSUL<Character, Integer> counter;
+    private final CounterSUL<Character, Integer> counter;
 
     public AbstractSULCacheTest() {
-        counter = new ResetCounterSUL<>("counterOracle", new MealySimulatorSUL<>(CacheTestUtils.MEALY));
+        counter = new CounterSUL<>(new MealySimulatorSUL<>(CacheTestUtils.MEALY));
     }
 
     @Override
@@ -59,7 +60,7 @@ public abstract class AbstractSULCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getStatisticalData().getCount();
+        return counter.getResetCounter().getCount();
     }
 
     @Override
@@ -69,7 +70,17 @@ public abstract class AbstractSULCacheTest
 
     @Override
     protected Alphabet<Character> getAlphabet() {
-        return CacheTestUtils.INPUT_ALPHABET;
+        return new GrowingMapAlphabet<>(CacheTestUtils.INPUT_ALPHABET);
+    }
+
+    @Override
+    protected Alphabet<Character> getExtensionAlphabet() {
+        return CacheTestUtils.EXTENSION_ALPHABET;
+    }
+
+    @Override
+    protected boolean supportsGrowing() {
+        return true;
     }
 
     protected abstract SULCache<Character, Integer> getCache(SUL<Character, Integer> delegate);

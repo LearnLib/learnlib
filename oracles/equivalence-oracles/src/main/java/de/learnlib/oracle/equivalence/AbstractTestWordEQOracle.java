@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Streams;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.concept.Output;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
@@ -59,8 +57,6 @@ public abstract class AbstractTestWordEQOracle<A extends Output<I, D>, I, D> imp
     }
 
     public AbstractTestWordEQOracle(MembershipOracle<I, D> membershipOracle, int batchSize) {
-        Preconditions.checkArgument(batchSize > 0);
-
         this.membershipOracle = membershipOracle;
         this.batchSize = batchSize;
     }
@@ -102,9 +98,9 @@ public abstract class AbstractTestWordEQOracle<A extends Output<I, D>, I, D> imp
 
     private Stream<DefaultQuery<I, D>> answerQueries(Stream<DefaultQuery<I, D>> stream) {
         if (isBatched()) {
-            return Streams.stream(Iterators.partition(stream.iterator(), this.batchSize))
-                          .peek(membershipOracle::processQueries)
-                          .flatMap(List::stream);
+            return IteratorUtil.stream(IteratorUtil.batch(stream.iterator(), this.batchSize))
+                               .peek(membershipOracle::processQueries)
+                               .flatMap(List::stream);
         } else {
             return stream.peek(membershipOracle::processQuery);
         }

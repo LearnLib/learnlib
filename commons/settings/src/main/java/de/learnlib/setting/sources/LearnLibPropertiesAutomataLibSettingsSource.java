@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package de.learnlib.setting.sources;
 
-import net.automatalib.AutomataLibSettingsSource;
+import net.automatalib.common.setting.AutomataLibSettingsSource;
 import net.automatalib.common.util.setting.AbstractClassPathFileSource;
 import org.kohsuke.MetaInfServices;
 
@@ -23,7 +23,7 @@ import org.kohsuke.MetaInfServices;
 public class LearnLibPropertiesAutomataLibSettingsSource extends AbstractClassPathFileSource
         implements AutomataLibSettingsSource {
 
-    private static final int DEFAULT_PRIORITY = -10;
+    private static final int PRIORITY_DECREASE = 10;
 
     public LearnLibPropertiesAutomataLibSettingsSource() {
         super("learnlib.properties");
@@ -31,6 +31,6 @@ public class LearnLibPropertiesAutomataLibSettingsSource extends AbstractClassPa
 
     @Override
     public int getPriority() {
-        return DEFAULT_PRIORITY;
+        return super.getPriority() - PRIORITY_DECREASE; // bump prio down a bit
     }
 }

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends
 
     private final InclusionOracle<A, I, D> inclusionOracle;
     private final EmptinessOracle<R, I, D> emptinessOracle;
-    private P property;
+    private final P property;
     private @Nullable DefaultQuery<I, D> counterExample;
 
     protected AbstractPropertyOracle(P property,
@@ -61,11 +61,6 @@ abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends
     }
 
     @Override
-    public void setProperty(P property) {
-        this.property = property;
-    }
-
-    @Override
     public P getProperty() {
         return property;
     }
@@ -75,7 +70,7 @@ abstract class AbstractPropertyOracle<I, A extends Output<I, D>, P, D, R extends
         return counterExample;
     }
 
-    protected abstract R modelCheck(A hypothesis, Collection<? extends I> inputs);
+    protected abstract @Nullable R modelCheck(A hypothesis, Collection<? extends I> inputs);
 
     @Override
     public @Nullable DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {

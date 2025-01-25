@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2023 TU Dortmund
-This file is part of LearnLib, http://www.learnlib.de/.
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ limitations under the License.
     <name>LearnLib :: Algorithms :: AAAR</name>
     <description>
         This artifact provides the implementation of the AAAR learning algorithm as described in the paper "Automata
-        Learning with Automated Alphabet Abstraction Refinement" (https://dx.doi.org/10.1007/978-3-642-18275-4_19) by
+        Learning with Automated Alphabet Abstraction Refinement" (https://doi.org/10.1007/978-3-642-18275-4_19) by
         Falk Howar, Bernhard Steffen, and Maik Merten.
     </description>
 
@@ -42,11 +42,6 @@ limitations under the License.
         </dependency>
 
         <!-- external -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -83,6 +78,11 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-lambda</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-lstar</artifactId>
             <scope>test</scope>
         </dependency>
@@ -94,11 +94,6 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-observation-pack</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-oml</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

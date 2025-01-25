@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,9 @@ public abstract class AbstractQuery<I, D> extends Query<I, D> {
     /**
      * Returns the string representation of this query, including a possible answer. This method should be used by
      * classes extending {@link AbstractQuery} for their toString method to ensure output consistency.
+     *
+     * @param answer
+     *         the output object to render as answer
      *
      * @return A string of the form {@code "Query[<prefix>|<suffix> / <answer>]"}. If the query has not been answered
      * yet, {@code <answer>} will be null.

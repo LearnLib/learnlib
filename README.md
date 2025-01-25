@@ -17,19 +17,18 @@ While certain features have been stripped for improved modularity, development h
 Currently, the following learning algorithms with respective target models are supported:
 
 
-Algorithm (active)  | Target models               || Algorithm (passive) | Models
---- | --- | --- | --- | ---
-AAAR                | `DFA` `Mealy` `Moore`       || OSTIA               | `SST`
-ADT                 | `Mealy`                     || RPNI                | `DFA` `Mealy` `Moore`
-DHC                 | `Mealy`                     || RPNI (EDSM)         | `DFA`
-Kearns & Vazirani   | `DFA` `Mealy`               || RPNI (MDL)          | `DFA`
-L* (incl. variants) | `DFA` `Mealy` `Moore`
-NL*                 | `NFA`
-Observation Pack    | `DFA` `Mealy` `Moore` `VPA`
-OML                 | `DFA` `Mealy`
-Procedural          | `SPA` `SBA` `SPMM`
-TTT                 | `DFA` `Mealy` `Moore` `VPA`
-
+| Algorithm (active)  | Target models               |     | Algorithm (passive)   | Models                |
+|---------------------|-----------------------------|-----|-----------------------|-----------------------|
+| AAAR                | `DFA` `Mealy` `Moore`       |     | OSTIA                 | `SST`                 |
+| ADT                 | `Mealy`                     |     | RPNI (incl. variants) | `DFA` `Mealy` `Moore` |
+| DHC                 | `Mealy`                     |     |                       |                       |
+| Kearns & Vazirani   | `DFA` `Mealy`               |     |                       |                       |
+| Lambda              | `DFA` `Mealy`               |     |                       |                       |
+| L* (incl. variants) | `DFA` `Mealy` `Moore`       |     |                       |                       |
+| NL*                 | `NFA`                       |     |                       |                       |
+| Observation Pack    | `DFA` `Mealy` `Moore` `VPA` |     |                       |                       |
+| Procedural          | `SPA` `SBA` `SPMM`          |     |                       |                       |
+| TTT                 | `DFA` `Mealy` `Moore` `VPA` |     |                       |                       |
 
 Additionally, LearnLib offers a variety of tools to ease the practical application of automata learning on real-world systems.
 This includes drivers and mappers for interfacing software systems with the LearnLib API as well as caches and parallelization for improving the overall performance of the learning setup.
@@ -42,7 +41,7 @@ Contributions -- whether it is in the form of new features, better documentation
 
 For simply using LearnLib you may use the Maven artifacts which are available in the [Maven Central repository][maven-central].
 It is also possible to download a bundled [distribution artifact][maven-central-distr] if you want to use LearnLib without Maven support.
-Note that LearnLib requires Java 8 or newer.
+Note that LearnLib requires Java 11 (or newer) to build but still supports Java 8 at runtime.
 
 #### Building development versions
 
@@ -68,14 +67,13 @@ For developing the code base of LearnLib it is suggested to use one of the major
 
 * For [IntelliJ IDEA][intellij]:
   1. Select `File` -> `New` -> `Project from existing sources` and select the folder containing the development checkout.
-  1. Choose "Import Project from external model", select "Maven" and click `Next`.
-  1. Configure the project to your liking but make sure to check "Import Maven projects automatically" and have "Generated sources folders" set to "Detect automatically".
-  1. Click `Next` until the project is imported (no Maven profile needs to be selected).
+  1. Choose "Import Project from external model", select "Maven" and click `Create`.
   1. In order to have both development versions of AutomataLib and LearnLib available at once, continue to import AutomataLib as documented in the project's README, but choose `File` -> `New` -> `Module from existing sources` as the first step.
 
 * For [Eclipse][eclipse]:
   1. **Note**: LearnLib uses annotation processing on several occasions throughout the build process.
-  This is usually handled correctly by Maven, however, for Eclipse you need to install the [m2e-apt-plugin](https://marketplace.eclipse.org/content/m2e-apt) and activate annotation processing afterward (see the [issue #32](https://github.com/LearnLib/learnlib/issues/32)).
+  This is usually handled correctly by Maven.
+  However, for Eclipse, you may need to manually enable annotation processing under `Preferences` -> `Maven` -> `Annotation Processing`.
   1. Select `File` -> `Import...` and select "Existing Maven Projects".
   1. Select the folder containing the development checkout as the root directory and click `Finish`.
   1. In order to have both development versions of AutomataLib and LearnLib available at once, continue to import AutomataLib as documented in the project's README.
@@ -83,8 +81,8 @@ For developing the code base of LearnLib it is suggested to use one of the major
 
 ## Documentation
 
-* **Maven Project Site:** [latest release](http://learnlib.github.io/learnlib/maven-site/latest/) | [older versions](http://learnlib.github.io/learnlib/maven-site/)
-* **API Documentation:** [latest release](http://learnlib.github.io/learnlib/maven-site/latest/apidocs/) | [older versions](http://learnlib.github.io/learnlib/maven-site/)
+* **Maven Project Site:** [latest release](https://learnlib.github.io/learnlib/maven-site/latest/) | [older versions](https://learnlib.github.io/learnlib/maven-site/)
+* **API Documentation:** [latest release](https://learnlib.github.io/learnlib/maven-site/latest/apidocs/) | [older versions](https://learnlib.github.io/learnlib/maven-site/)
 
 
 ## Questions?
@@ -100,19 +98,15 @@ If you have any questions regarding the usage of LearnLib or if you want to disc
 
 
 [1]: http://www.apache.org/licenses/LICENSE-2.0
-[2]: http://www.cs.tu-dortmund.de
-[3]: http://www.learnlib.de
+[2]: https://cs.tu-dortmund.de
+[3]: https://learnlib.de
 [4]: https://github.com/misberner
 [5]: https://github.com/fhowar
 [6]: https://github.com/mtf90
 [7]: https://github.com/LearnLib/automatalib
 
-[learnlib-qa]: https://groups.google.com/d/forum/learnlib-qa
-[learnlib-discussion]: https://groups.google.com/d/forum/learnlib-discussion
-[learnlib-internal]: https://groups.google.com/d/forum/learnlib-internal
-
-[maven-central]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib%22
-[maven-central-distr]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib.distribution%22
+[maven-central]: https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib%22
+[maven-central-distr]: https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.learnlib.distribution%22
 [intellij]: https://www.jetbrains.com/idea/
 [eclipse]: https://www.eclipse.org/
 [ltsmin]: https://ltsmin.utwente.nl/

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.learnlib.AccessSequenceProvider;
+import de.learnlib.acex.AcexAnalyzer;
+import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.AbstractHypTrans;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.ContextPair;
@@ -39,10 +41,6 @@ import net.automatalib.common.smartcollection.ElementReference;
 import net.automatalib.common.smartcollection.UnorderedCollection;
 import net.automatalib.word.Word;
 
-/**
- * @param <I>
- *         input alphabet type
- */
 public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVPA<?, I>, I, Boolean> {
 
     protected final VPAlphabet<I> alphabet;
@@ -79,7 +77,9 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
             return false;
         }
 
-        while (refineHypothesisSingle(ceQuery)) {}
+        while (refineHypothesisSingle(ceQuery)) {
+            // refine exhaustively
+        }
 
         return true;
     }
@@ -179,7 +179,7 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
 
         for (AbstractHypTrans<I> transition : transToSift) {
             final DTNode<I> node = leavesIter.next();
-            if (node.isLeaf() && node.getData() == null && transition.getNextElement() == null) {
+            if (node.isLeaf() && node.getData() == null && transition.getNext() == null) {
                 result.add(node);
             }
         }
@@ -265,6 +265,17 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
 
     protected Boolean query(AccessSequenceProvider<I> asp, ContextPair<I> context) {
         return oracle.answerQuery(context.getPrefix().concat(asp.getAccessSequence()), context.getSuffix());
+    }
+
+    public static final class BuilderDefaults {
+
+        private BuilderDefaults() {
+            // prevent instantiation
+        }
+
+        public static AcexAnalyzer analyzer() {
+            return AcexAnalyzers.BINARY_SEARCH_BWD;
+        }
     }
 }
 

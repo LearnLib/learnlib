@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.statistic;
 
-import java.util.Collection;
 import java.util.StringJoiner;
 import java.util.function.Function;
 
@@ -26,9 +25,9 @@ import de.learnlib.statistic.StatisticData;
  */
 public class CounterCollection implements StatisticData {
 
-    private final Collection<Counter> counters;
+    private final Counter[] counters;
 
-    public CounterCollection(Collection<Counter> counters) {
+    public CounterCollection(Counter... counters) {
         this.counters = counters;
     }
 

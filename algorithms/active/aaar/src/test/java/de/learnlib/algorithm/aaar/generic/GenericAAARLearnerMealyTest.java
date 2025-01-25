@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,11 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.function.Function;
 
-import com.google.common.io.CharStreams;
 import de.learnlib.algorithm.aaar.AAARTestUtil;
 import de.learnlib.algorithm.aaar.AbstractAAARTest;
 import de.learnlib.algorithm.aaar.abstraction.AbstractAbstractionTree;
-import de.learnlib.example.mealy.ExampleGrid;
 import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.testsupport.example.mealy.ExampleGrid;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.IOUtil;
@@ -63,7 +62,7 @@ public class GenericAAARLearnerMealyTest
                 "/tree_mealy.dot"));
              Writer w = new StringWriter()) {
 
-            final String expected = CharStreams.toString(r);
+            final String expected = IOUtil.toString(r);
             GraphDOT.write((GraphViewable) tree, w);
 
             Assert.assertEquals(w.toString(), expected);

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 
 import de.learnlib.exception.SULException;
 import de.learnlib.sul.ContextExecutableInput;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An input symbol that represents a call to a method with a specific set of parameters.
@@ -45,7 +44,7 @@ public class MethodInput implements ContextExecutableInput<MethodOutput, Object>
             if (Void.TYPE.equals(this.method.getReturnType())) {
                 return VoidOutput.INSTANCE;
             } else {
-                return new ReturnValue<@Nullable Object>(ret);
+                return new ReturnValue<>(ret);
             }
         } catch (IllegalAccessException | IllegalArgumentException e) {
             throw new SULException(e);

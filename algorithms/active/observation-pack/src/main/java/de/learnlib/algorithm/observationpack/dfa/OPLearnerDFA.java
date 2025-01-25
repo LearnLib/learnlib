@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithm.observationpack.dfa;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.observationpack.AbstractOPLearner;
 import de.learnlib.algorithm.observationpack.hypothesis.HState;
@@ -26,16 +25,17 @@ import de.learnlib.datastructure.discriminationtree.BinaryDTree;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.AbstractQuery;
 import de.learnlib.query.Query;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Algorithm for learning DFA using the Discrimination Tree algorithm.
+ * A {@link DFA}-based specialization of the {@link AbstractOPLearner}.
  *
  * @param <I>
- *         input symbol class
+ *         input symbol type
  */
 public class OPLearnerDFA<I> extends AbstractOPLearner<DFA<?, I>, I, Boolean, Boolean, Void> implements DFALearner<I> {
 
@@ -48,10 +48,12 @@ public class OPLearnerDFA<I> extends AbstractOPLearner<DFA<?, I>, I, Boolean, Bo
      *         the membership oracle
      * @param suffixFinder
      *         method to use for analyzing counterexamples
+     * @param repeatedCounterexampleEvaluation
+     *         a flag whether counterexamples should be analyzed exhaustively
      * @param epsilonRoot
      *         whether to ensure the root of the discrimination tree is always labeled using the empty word.
      */
-    @GenerateBuilder
+    @GenerateBuilder(defaults = BuilderDefaults.class)
     public OPLearnerDFA(Alphabet<I> alphabet,
                         MembershipOracle<I, Boolean> oracle,
                         LocalSuffixFinder<? super I, ? super Boolean> suffixFinder,

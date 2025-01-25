@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ import java.util.function.Function;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
-import de.learnlib.example.LearningExample.DFALearningExample;
-import de.learnlib.example.dfa.ExampleTinyDFA;
 import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.oracle.InclusionOracle.DFAInclusionOracle;
 import de.learnlib.oracle.LassoEmptinessOracle.DFALassoEmptinessOracle;
@@ -36,6 +34,8 @@ import de.learnlib.oracle.equivalence.DFAWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.DFASimulatorOmegaOracle;
 import de.learnlib.oracle.property.DFALassoPropertyOracle;
 import de.learnlib.oracle.property.LoggingPropertyOracle.DFALoggingPropertyOracle;
+import de.learnlib.testsupport.example.LearningExample.DFALearningExample;
+import de.learnlib.testsupport.example.dfa.ExampleTinyDFA;
 import de.learnlib.util.Experiment.DFAExperiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;

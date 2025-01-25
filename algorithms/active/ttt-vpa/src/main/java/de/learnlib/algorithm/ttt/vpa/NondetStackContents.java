@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,10 @@ final class NondetStackContents {
 
     private final boolean isTrueNondet;
 
-    @SuppressWarnings("PMD.UselessParentheses") // to make it explicit which binary operator has higher precedence
     NondetStackContents(Set<Integer> syms, NondetStackContents rest) {
         this.syms = syms;
         this.rest = rest;
-        this.isTrueNondet = syms.size() > 1 || (rest != null && rest.isTrueNondet);
+        this.isTrueNondet = rest != null && rest.isTrueNondet || syms.size() > 1;
     }
 
     public static NondetStackContents push(Set<Integer> syms, NondetStackContents rest) {

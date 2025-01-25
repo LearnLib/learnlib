@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ import java.util.function.Function;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
-import de.learnlib.example.LearningExample.MealyLearningExample;
-import de.learnlib.example.mealy.ExampleTinyMealy;
 import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.InclusionOracle.MealyInclusionOracle;
 import de.learnlib.oracle.LassoEmptinessOracle.MealyLassoEmptinessOracle;
@@ -36,6 +34,8 @@ import de.learnlib.oracle.equivalence.MealyWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOracle;
 import de.learnlib.oracle.property.LoggingPropertyOracle.MealyLoggingPropertyOracle;
 import de.learnlib.oracle.property.MealyLassoPropertyOracle;
+import de.learnlib.testsupport.example.LearningExample.MealyLearningExample;
+import de.learnlib.testsupport.example.mealy.ExampleTinyMealy;
 import de.learnlib.util.Experiment.MealyExperiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;

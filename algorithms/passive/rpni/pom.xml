@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2023 TU Dortmund
-This file is part of LearnLib, http://www.learnlib.de/.
+Copyright (C) 2013-2025 TU Dortmund University
+This file is part of LearnLib <https://learnlib.de>.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,9 +31,10 @@ limitations under the License.
     <description>
         This artifact provides the implementation of (a blue-fringe version of) the "regular positive negative
         inference" (RPNI) learning algorithm as presented in the paper "Inferring regular languages in polynomial update
-        time" (https://dx.doi.org/10.1142/9789812797902_0004) by Jose Oncina and Pedro García.
+        time" (https://doi.org/10.1142/9789812797902_0004) by Jose Oncina and Pedro García, including merging
+        heuristics such as the "evidence-driven state merging" (EDSM) and "minimum description length" (MDL) strategies.
 
-        More details on the blue-fringe version of this algorithm can be found in the book "Grammatical Inference"
+        More details on these implementations can be found in the book "Grammatical Inference"
         (https://doi.org/10.1017/CBO9781139194655) by Colin de la Higuera.
     </description>
 
@@ -45,7 +46,7 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructure-pta</artifactId>
+            <artifactId>learnlib-datastructures</artifactId>
         </dependency>
 
         <!-- external -->
@@ -57,16 +58,14 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-smartcollections</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
-        </dependency>
-
-        <!-- build -->
-        <dependency>
-            <groupId>com.github.misberner.buildergen</groupId>
-            <artifactId>buildergen</artifactId>
         </dependency>
 
         <!-- test -->
@@ -81,8 +80,38 @@ limitations under the License.
         </dependency>
 
         <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <!-- append to existing argLine to nicely work together with jacoco plugin -->
+                        <argLine>
+                            @{argLine}
+                            --add-reads=de.learnlib.algorithm.rpni=net.automatalib.core
+                            --add-reads=de.learnlib.algorithm.rpni=net.automatalib.util
+                        </argLine>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

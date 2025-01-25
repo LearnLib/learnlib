@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.algorithm.aaar.TranslatingMooreMachine;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.automaton.transducer.CompactMoore;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.word.Word;
 
 /**

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,8 @@ public class AcexLocalSuffixFinder implements LocalSuffixFinder<@Nullable Object
      *         the analyzer to be wrapped
      * @param reduce
      *         whether to reduce counterexamples
+     * @param name
+     *         the display name of the suffix finder
      */
     public AcexLocalSuffixFinder(AcexAnalyzer analyzer, boolean reduce, String name) {
         this.analyzer = analyzer;

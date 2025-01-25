@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.Random;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.word.Word;
@@ -54,7 +54,7 @@ public class SampleSetEQOracleTest extends AbstractEQOracleTest<SuffixOutput<Cha
         this.oracle.add(generateTestWord(alphabet), Boolean.TRUE);
         this.oracle.add(generateTestWord(alphabet), Boolean.TRUE);
         // check if unsuccessful queries will be removed
-        this.oracle.findCounterExample(((prefix, suffix) -> Boolean.TRUE), ALPHABET);
+        this.oracle.findCounterExample((prefix, suffix) -> Boolean.TRUE, ALPHABET);
 
         this.expectedTestWords =
                 Arrays.asList(generateTestWord(alphabet), generateTestWord(alphabet), generateTestWord(alphabet));

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.oracle.parallelism.ThreadPool.PoolPolicy;
+import de.learnlib.oracle.ThreadPool.PoolPolicy;
 import de.learnlib.oracle.parallelism.Utils.Analysis;
 import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
 import de.learnlib.query.DefaultQuery;
@@ -127,7 +127,7 @@ public abstract class AbstractStaticParallelOracleTest<D> {
         return 0;
     }
 
-    private List<DefaultQuery<Integer, D>> createQueries(int num) {
+    protected List<DefaultQuery<Integer, D>> createQueries(int num) {
         List<DefaultQuery<Integer, D>> result = new ArrayList<>(num);
         for (int i = 0; i < num; i++) {
             DefaultQuery<Integer, D> qry =

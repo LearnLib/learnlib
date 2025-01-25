@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,17 @@
  */
 package de.learnlib.algorithm.adt.ads;
 
+import java.util.ArrayDeque;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import de.learnlib.algorithm.adt.adt.ADTLeafNode;
 import de.learnlib.algorithm.adt.adt.ADTNode;
@@ -33,6 +35,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.smartcollection.ReflexiveMapView;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.ads.ADSUtil;
 import net.automatalib.word.Word;
@@ -134,7 +137,7 @@ public final class DefensiveADS<S, I, O> {
 
         final long maximumSplittingWordLength =
                 ADSUtil.computeMaximumSplittingWordLength(automaton.size(), mapping.size(), this.states.size());
-        final Queue<Word<I>> splittingWordCandidates = new LinkedList<>();
+        final Queue<Word<I>> splittingWordCandidates = new ArrayDeque<>();
         final StateIDs<S> stateIds = automaton.stateIDs();
         final Set<BitSet> cache = new HashSet<>();
 
@@ -144,11 +147,12 @@ public final class DefensiveADS<S, I, O> {
 
             @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
             final @NonNull Word<I> prefix = splittingWordCandidates.poll();
-            final Map<S, S> currentToInitialMapping = mapping.keySet()
-                                                             .stream()
-                                                             .collect(Collectors.toMap(x -> automaton.getSuccessor(x,
-                                                                                                                   prefix),
-                                                                                       mapping::get));
+            final Map<S, S> currentToInitialMapping = new LinkedHashMap<>(HashUtil.capacity(mapping.size()));
+
+            for (Entry<S, S> e : mapping.entrySet()) {
+                currentToInitialMapping.put(automaton.getSuccessor(e.getKey(), prefix), e.getValue());
+            }
+
             final BitSet currentSetAsBitSet = new BitSet();
             for (S s : currentToInitialMapping.keySet()) {
                 currentSetAsBitSet.set(stateIds.getStateId(s));
@@ -162,7 +166,7 @@ public final class DefensiveADS<S, I, O> {
             for (I i : this.alphabet) {
 
                 //check for missing transitions
-                final Set<S> statesWithMissingTransitions = new HashSet<>();
+                final Set<S> statesWithMissingTransitions = new LinkedHashSet<>();
                 for (S s : currentToInitialMapping.keySet()) {
                     if (!this.partialTransitionAnalyzer.isTransitionDefined(s, i)) {
                         statesWithMissingTransitions.add(s);
@@ -190,11 +194,11 @@ public final class DefensiveADS<S, I, O> {
                     final O nextOutput = automaton.getOutput(current, i);
 
                     final Map<S, S> nextMapping;
-                    if (!successors.containsKey(nextOutput)) {
+                    if (successors.containsKey(nextOutput)) {
+                        nextMapping = successors.get(nextOutput);
+                    } else {
                         nextMapping = new HashMap<>();
                         successors.put(nextOutput, nextMapping);
-                    } else {
-                        nextMapping = successors.get(nextOutput);
                     }
 
                     // invalid input

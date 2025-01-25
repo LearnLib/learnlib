@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,45 +16,50 @@
 package de.learnlib.algorithm.ttt;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealyBuilder;
-import de.learnlib.example.mealy.ExampleCoffeeMachine.Input;
 import de.learnlib.oracle.membership.SULOracle;
-import de.learnlib.sul.SUL;
-import de.learnlib.testsupport.AbstractVisualizationTest;
-import net.automatalib.alphabet.Alphabet;
+import de.learnlib.testsupport.VisualizationUtils;
+import de.learnlib.testsupport.example.mealy.ExampleCoffeeMachine.Input;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.dot.GraphDOT;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class TTTVisualizationTest extends AbstractVisualizationTest<TTTLearnerMealy<Input, String>> {
+public class TTTVisualizationTest {
 
-    @Override
-    protected TTTLearnerMealy<Input, String> getLearnerBuilder(Alphabet<Input> alphabet, SUL<Input, String> sul) {
-        return new TTTLearnerMealyBuilder<Input, String>().withAlphabet(alphabet)
-                                                          .withOracle(new SULOracle<>(sul))
-                                                          .create();
+    private final TTTLearnerMealy<Input, String> learner;
+
+    public TTTVisualizationTest() {
+        this.learner =
+                VisualizationUtils.runExperiment((alphabet, sul) -> new TTTLearnerMealyBuilder<Input, String>().withAlphabet(
+                        alphabet).withOracle(new SULOracle<>(sul)).create());
     }
 
     @Test
     public void testVisualizeHyp() throws IOException {
-        final String expectedHyp = resourceAsString("/hyp.dot");
+        try (InputStream is = TTTVisualizationTest.class.getResourceAsStream("/hyp.dot")) {
+            final String expectedHyp = IOUtil.toString(IOUtil.asBufferedUTF8Reader(is));
 
-        final StringWriter actualHyp = new StringWriter();
-        GraphDOT.write(super.learner.getHypothesisDS(), actualHyp);
+            final StringWriter actualHyp = new StringWriter();
+            GraphDOT.write(this.learner.getHypothesisDS(), actualHyp);
 
-        Assert.assertEquals(actualHyp.toString(), expectedHyp);
+            Assert.assertEquals(actualHyp.toString(), expectedHyp);
+        }
     }
 
     @Test
     public void testVisualizeDT() throws IOException {
-        final String expectedDT = resourceAsString("/dt.dot");
+        try (InputStream is = TTTVisualizationTest.class.getResourceAsStream("/dt.dot")) {
+            final String expectedDT = IOUtil.toString(IOUtil.asBufferedUTF8Reader(is));
 
-        final StringWriter actualDT = new StringWriter();
-        GraphDOT.write(super.learner.getDiscriminationTree(), actualDT);
+            final StringWriter actualDT = new StringWriter();
+            GraphDOT.write(this.learner.getDiscriminationTree(), actualDT);
 
-        Assert.assertEquals(actualDT.toString(), expectedDT);
+            Assert.assertEquals(actualDT.toString(), expectedDT);
+        }
     }
 }

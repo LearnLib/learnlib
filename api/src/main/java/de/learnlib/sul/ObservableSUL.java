@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public interface ObservableSUL<S, I, O> extends SUL<I, O> {
      * {@code Object o = getState(); int hc = o.hashCode(); [step(...)|pre()|post()]; assert o.hashCode() == hc;}
      *
      * Furthermore, if states can be retrieved, but each state is not a deep copy, then this SUL <b>must</b> be
-     * forkable, i.e. if !{@link #deepCopies()} then {@link #canFork()} must hold.
+     * forkable, i.e. if {@code !deepCopies()} then {@code canFork()} must hold.
      *
      * @return whether each state is a deep copy.
      */

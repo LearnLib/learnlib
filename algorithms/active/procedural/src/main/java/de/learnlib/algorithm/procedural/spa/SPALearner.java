@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
@@ -38,13 +38,14 @@ import de.learnlib.algorithm.procedural.spa.manager.OptimizingATRManager;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
-import net.automatalib.alphabet.GrowingMapAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.procedural.EmptySPA;
 import net.automatalib.automaton.procedural.SPA;
-import net.automatalib.automaton.procedural.StackSPA;
+import net.automatalib.automaton.procedural.impl.EmptySPA;
+import net.automatalib.automaton.procedural.impl.StackSPA;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -76,7 +77,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
                       LearnerConstructor<L, I, Boolean> learnerConstructor) {
         this(alphabet,
              oracle,
-             (i) -> learnerConstructor,
+             i -> learnerConstructor,
              AcexAnalyzers.BINARY_SEARCH_FWD,
              new OptimizingATRManager<>(alphabet));
     }
@@ -92,8 +93,8 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         this.analyzer = analyzer;
         this.atrManager = atrManager;
 
-        this.subLearners = Maps.newHashMapWithExpectedSize(this.alphabet.getNumCalls());
-        this.activeAlphabet = Sets.newHashSetWithExpectedSize(alphabet.getNumCalls() + alphabet.getNumInternals());
+        this.subLearners = new HashMap<>(HashUtil.capacity(this.alphabet.getNumCalls()));
+        this.activeAlphabet = new HashSet<>(HashUtil.capacity(alphabet.getNumCalls() + alphabet.getNumInternals()));
         this.activeAlphabet.addAll(alphabet.getInternalAlphabet());
     }
 
@@ -205,16 +206,16 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
             }
         }
 
-        if (!newProcedures.isEmpty()) {
+        if (newProcedures.isEmpty()) {
+            return false;
+        } else {
             this.atrManager.scanProcedures(getSubModels(), subLearners, activeAlphabet);
             return true;
-        } else {
-            return false;
         }
     }
 
     private Map<I, DFA<?, I>> getSubModels() {
-        final Map<I, DFA<?, I>> subModels = Maps.newHashMapWithExpectedSize(this.subLearners.size());
+        final Map<I, DFA<?, I>> subModels = new HashMap<>(HashUtil.capacity(this.subLearners.size()));
 
         for (Map.Entry<I, L> entry : this.subLearners.entrySet()) {
             subModels.put(entry.getKey(), entry.getValue().getHypothesisModel());
@@ -288,7 +289,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         return refinement;
     }
 
-    private class Acex extends AbstractBaseCounterexample<Boolean> {
+    private final class Acex extends AbstractBaseCounterexample<Boolean> {
 
         private final Word<I> input;
         private final Predicate<? super Word<I>> oracle;

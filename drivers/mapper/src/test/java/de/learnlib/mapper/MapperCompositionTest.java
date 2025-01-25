@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package de.learnlib.mapper;
 
 import de.learnlib.Mapper;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -63,8 +63,8 @@ public class MapperCompositionTest {
         mapper.pre();
         mapper.pre();
 
-        Assert.assertEquals(3, this.toUpperCaseMapper.getPreCounter());
-        Assert.assertEquals(2, this.toUpperCaseMapper.getPostCounter());
+        Assert.assertEquals(this.toUpperCaseMapper.getPreCounter(), 3);
+        Assert.assertEquals(this.toUpperCaseMapper.getPostCounter(), 2);
     }
 
     private static final class ToUpperCaseMapper implements Mapper<Character, Character, Character, Character> {

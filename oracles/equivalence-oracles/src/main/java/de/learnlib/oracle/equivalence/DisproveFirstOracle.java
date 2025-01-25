@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import de.learnlib.buildtool.refinement.annotation.GenerateRefinement;
-import de.learnlib.buildtool.refinement.annotation.Generic;
-import de.learnlib.buildtool.refinement.annotation.Interface;
-import de.learnlib.buildtool.refinement.annotation.Map;
 import de.learnlib.oracle.BlackBoxOracle;
 import de.learnlib.oracle.BlackBoxOracle.DFABlackBoxOracle;
 import de.learnlib.oracle.BlackBoxOracle.MealyBlackBoxOracle;
@@ -31,6 +27,10 @@ import de.learnlib.oracle.PropertyOracle;
 import de.learnlib.oracle.PropertyOracle.DFAPropertyOracle;
 import de.learnlib.oracle.PropertyOracle.MealyPropertyOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
+import de.learnlib.tooling.annotation.refinement.Generic;
+import de.learnlib.tooling.annotation.refinement.Interface;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -44,32 +44,34 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * One may favor this implementation if refining a hypothesis is expensive compared to trying to disprove properties.
  *
  * @param <A>
- *         the automaton type
+ *         automaton type
  * @param <I>
- *         the input type
+ *         input symbol type
  * @param <D>
- *         the output type
+ *         output domain type
  *
  * @see CExFirstOracle
  */
 @GenerateRefinement(name = "DFADisproveFirstOracle",
-                    generics = "I",
+                    generics = @Generic(value = "I", desc = "input symbol type"),
                     parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
                                       @Generic("I"),
                                       @Generic(clazz = Boolean.class)},
-                    parameterMapping = @Map(from = PropertyOracle.class,
+                    typeMappings = @Mapping(from = PropertyOracle.class,
                                             to = DFAPropertyOracle.class,
-                                            withGenerics = {"I", "?"}),
-                    interfaces = @Interface(clazz = DFABlackBoxOracle.class, generics = "I"))
+                                            generics = {@Generic("I"), @Generic("?")}),
+                    interfaces = @Interface(clazz = DFABlackBoxOracle.class, generics = @Generic("I")))
 @GenerateRefinement(name = "MealyDisproveFirstOracle",
-                    generics = {"I", "O"},
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
                     parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
                                       @Generic("I"),
                                       @Generic(clazz = Word.class, generics = "O")},
-                    parameterMapping = @Map(from = PropertyOracle.class,
+                    typeMappings = @Mapping(from = PropertyOracle.class,
                                             to = MealyPropertyOracle.class,
-                                            withGenerics = {"I", "O", "?"}),
-                    interfaces = @Interface(clazz = MealyBlackBoxOracle.class, generics = {"I", "O"}))
+                                            generics = {@Generic("I"), @Generic("O"), @Generic("?")}),
+                    interfaces = @Interface(clazz = MealyBlackBoxOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
 public class DisproveFirstOracle<A extends Output<I, D>, I, D> implements BlackBoxOracle<A, I, D> {
 
     private final List<PropertyOracle<I, ? super A, ?, D>> propertyOracles;

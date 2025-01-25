@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,6 @@ public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
     @Override
     public void pre() {
         this.inError = false;
-        this.repeatedErrorOutput = null;
         mapper.pre();
         sul.pre();
     }
@@ -49,6 +48,7 @@ public class MappedSUL<AI, AO, CI, CO> implements SUL<AI, AO> {
     public void post() {
         sul.post();
         mapper.post();
+        this.repeatedErrorOutput = null;
     }
 
     @SuppressWarnings("PMD.AvoidCatchingGenericException") //  we want to allow mapping generic RuntimeExceptions

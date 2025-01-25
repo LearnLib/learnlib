@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithm.ttt.mealy;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.MealyOutInconsPrefixTransformAcex;
 import de.learnlib.acex.OutInconsPrefixTransformAcex;
@@ -28,12 +27,21 @@ import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
+/**
+ * A {@link MealyMachine}-based specialization of {@link AbstractTTTLearner}.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbols type
+ */
 public class TTTLearnerMealy<I, O> extends AbstractTTTLearner<MealyMachine<?, I, ?, O>, I, Word<O>>
         implements LearningAlgorithm.MealyLearner<I, O> {
 

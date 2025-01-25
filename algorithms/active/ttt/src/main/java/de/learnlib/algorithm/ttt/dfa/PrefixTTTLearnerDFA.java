@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package de.learnlib.algorithm.ttt.dfa;
 
 import java.util.Iterator;
 
-import com.google.common.collect.AbstractIterator;
 import de.learnlib.acex.AbstractCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithm.ttt.base.TTTState;
@@ -25,7 +24,8 @@ import de.learnlib.algorithm.ttt.base.TTTTransition;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
+import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.word.Word;
 
 public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
@@ -43,7 +43,9 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             return false;
         }
 
-        while (refineHypothesisSingle(ceQuery)) {}
+        while (refineHypothesisSingle(ceQuery)) {
+            // refine exhaustively
+        }
 
         return true;
     }
@@ -70,7 +72,7 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             ExtDTNode<I> succHyp = acex.getHypNode(breakpoint + 1);
             Boolean hypOut = lca.subtreeLabel(succHyp);
             assert hypOut != null;
-            openTransitions.insertAllIncoming(toSplit.getIncoming());
+            openTransitions.concat(toSplit.getIncoming());
             ExtDTNode<I>.SplitResult splitResult = toSplit.split(newDiscr, hypOut, !hypOut);
             link(splitResult.nodeOld, splitState);
             ExtDTNode<I> extUnlabeled = (ExtDTNode<I>) splitResult.nodeNew;
@@ -150,7 +152,7 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             return new UnlabeledIterator<>(this);
         }
 
-        private static class UnlabeledIterator<I> extends AbstractIterator<ExtDTNode<I>> {
+        private static class UnlabeledIterator<I> extends AbstractSimplifiedIterator<ExtDTNode<I>> {
 
             private ExtDTNode<I> curr;
 
@@ -159,12 +161,13 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             }
 
             @Override
-            protected ExtDTNode<I> computeNext() {
+            protected boolean calculateNext() {
                 curr = curr.nextUnlabeled;
                 if (curr == null) {
-                    return endOfData();
+                    return false;
                 }
-                return curr;
+                super.nextValue = curr;
+                return true;
             }
         }
     }

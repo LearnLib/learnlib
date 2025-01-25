@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
-import com.google.common.collect.Interner;
-import com.google.common.collect.Interners;
-import com.google.common.collect.Sets;
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
@@ -39,16 +35,25 @@ import de.learnlib.counterexample.GlobalSuffixFinder;
 import de.learnlib.counterexample.GlobalSuffixFinders;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.mapping.MapMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * The DHC learner.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 public class MealyDHC<I, O> implements MealyLearner<I, O>,
                                        AccessSequenceTransformer<I>,
                                        GlobalSuffixLearnerMealy<I, O>,
@@ -87,7 +92,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
      *         the initial set of splitters, {@code null} or an empty collection will result in the set of splitters
      *         being initialized as the set of alphabet symbols (interpreted as {@link Word}s)
      */
-    @GenerateBuilder(defaults = BuilderDefaults.class, builderFinal = false)
+    @GenerateBuilder(defaults = BuilderDefaults.class)
     public MealyDHC(Alphabet<I> alphabet,
                     MembershipOracle<I, Word<O>> oracle,
                     GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder,
@@ -150,8 +155,6 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
         // first element to be explored represents the initial state with no predecessor
         queue.add(new QueueElement<>(null, null, null, null));
 
-        Interner<Word<O>> deduplicator = Interners.newStrongInterner();
-
         while (!queue.isEmpty()) {
             // get element to be explored from queue
             @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
@@ -172,7 +175,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
             // assemble output signature
             List<Word<O>> sig = new ArrayList<>(splitters.size());
             for (DefaultQuery<I, Word<O>> query : queries) {
-                sig.add(deduplicator.intern(query.getOutput()));
+                sig.add(query.getOutput());
             }
 
             Integer sibling = signatures.get(sig);
@@ -244,13 +247,13 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         if (!this.splitters.contains(Word.fromLetter(symbol))) {
             final Iterator<Word<I>> splitterIterator = this.splitters.iterator();
             final LinkedHashSet<Word<I>> newSplitters =
-                    Sets.newLinkedHashSetWithExpectedSize(this.splitters.size() + 1);
+                    new LinkedHashSet<>(HashUtil.capacity(this.splitters.size() + 1));
 
             // see initial initialization of the splitters
             for (int i = 0; i < this.alphabet.size() - 1; i++) {

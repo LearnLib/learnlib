@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@ package de.learnlib.algorithm.aaar.explicit;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import com.google.common.collect.Maps;
 import de.learnlib.algorithm.LearnerConstructor;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.aaar.AbstractAAARLearner;
@@ -32,8 +32,9 @@ import de.learnlib.algorithm.aaar.abstraction.ExplicitAbstractionTree;
 import de.learnlib.algorithm.aaar.generic.AbstractGenericAAARLearner;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.common.util.HashUtil;
 
 /**
  * An "explicit" refinement of the {@link AbstractAAARLearner}. This implementation requires a prior partition of (all)
@@ -83,7 +84,7 @@ public abstract class AbstractExplicitAAARLearner<L extends LearningAlgorithm<CM
         super(learnerConstructor, oracle);
 
         this.explicitInitialAbstraction = explicitInitialAbstraction;
-        this.trees = Maps.newHashMapWithExpectedSize(explicitInitialAbstraction.getInitialAbstracts().size());
+        this.trees = new HashMap<>(HashUtil.capacity(explicitInitialAbstraction.getInitialAbstracts().size()));
 
         for (AI a : explicitInitialAbstraction.getInitialAbstracts()) {
             final CI rep = explicitInitialAbstraction.getRepresentative(a);

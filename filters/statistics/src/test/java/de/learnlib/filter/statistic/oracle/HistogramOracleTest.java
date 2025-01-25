@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.google.common.io.CharStreams;
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.Query;
@@ -76,8 +75,8 @@ public class HistogramOracleTest {
         try (InputStream detailStream = HistogramOracleTest.class.getResourceAsStream("/histogram_details.txt");
              InputStream summaryStream = HistogramOracleTest.class.getResourceAsStream("/histogram_summary.txt")) {
 
-            final String expectedDetail = CharStreams.toString(IOUtil.asBufferedUTF8Reader(detailStream));
-            final String expectedSummary = CharStreams.toString(IOUtil.asBufferedUTF8Reader(summaryStream));
+            final String expectedDetail = IOUtil.toString(IOUtil.asBufferedUTF8Reader(detailStream));
+            final String expectedSummary = IOUtil.toString(IOUtil.asBufferedUTF8Reader(summaryStream));
 
             Assert.assertEquals(details, expectedDetail);
             Assert.assertEquals(summary, expectedSummary);

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
@@ -123,11 +122,16 @@ public abstract class AbstractLStar<A, I, D>
     protected abstract List<Word<I>> initialSuffixes();
 
     /**
-     * Iteratedly checks for unclosedness and inconsistencies in the table, and fixes any occurrences thereof. This
+     * Iteratively checks for unclosedness and inconsistencies in the table, and fixes any occurrences thereof. This
      * process is repeated until the observation table is both closed and consistent.
      *
      * @param unclosed
      *         the unclosed rows (equivalence classes) to start with.
+     * @param checkConsistency
+     *         a flag indicating whether consistency should be checked as well. If {@code false}, only closedness is
+     *         ensured.
+     *
+     * @return {@code true} if unclosed rows have been closed, {@code false} otherwise
      */
     protected boolean completeConsistentTable(List<List<Row<I>>> unclosed, boolean checkConsistency) {
         boolean refined = false;
@@ -212,10 +216,7 @@ public abstract class AbstractLStar<A, I, D>
     @Override
     public boolean addGlobalSuffixes(Collection<? extends Word<I>> newGlobalSuffixes) {
         List<List<Row<I>>> unclosed = table.addSuffixes(newGlobalSuffixes, oracle);
-        if (unclosed.isEmpty()) {
-            return false;
-        }
-        return completeConsistentTable(unclosed, false);
+        return !unclosed.isEmpty() && completeConsistentTable(unclosed, false);
     }
 
     @Override
@@ -227,7 +228,7 @@ public abstract class AbstractLStar<A, I, D>
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         final List<List<Row<I>>> unclosed = this.table.addAlphabetSymbol(symbol, oracle);

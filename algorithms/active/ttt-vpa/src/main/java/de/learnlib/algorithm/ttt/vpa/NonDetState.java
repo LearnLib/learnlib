@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,6 @@ import java.util.Set;
 
 import net.automatalib.automaton.vpa.State;
 
-/**
- * @param <L>
- *         location type
- */
 final class NonDetState<L> {
 
     private final NondetStackContents stack;
@@ -44,9 +40,8 @@ final class NonDetState<L> {
         return new State<>(locations.iterator().next(), NondetStackContents.toDet(stack));
     }
 
-    @SuppressWarnings("PMD.UselessParentheses") // to make it explicit which binary operator has higher precedence
     public boolean isNonDet() {
-        return locations.size() > 1 || (stack != null && stack.isTrueNondet());
+        return stack != null && stack.isTrueNondet() || locations.size() > 1;
     }
 
     public NondetStackContents getStack() {

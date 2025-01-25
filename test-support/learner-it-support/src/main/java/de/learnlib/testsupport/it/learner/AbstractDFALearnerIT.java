@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package de.learnlib.testsupport.it.learner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.example.LearningExample.DFALearningExample;
-import de.learnlib.example.LearningExamples;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.SimulatorEQOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
+import de.learnlib.testsupport.example.LearningExample.DFALearningExample;
+import de.learnlib.testsupport.example.LearningExamples;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.DFALearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
@@ -41,7 +41,7 @@ public abstract class AbstractDFALearnerIT {
     @Factory
     public Object[] createExampleITCases() {
         final List<DFALearningExample<?>> examples = LearningExamples.createDFAExamples();
-        final List<UniversalDeterministicLearnerITCase<?, ?, ?>> result = new ArrayList<>(examples.size());
+        final List<UniversalDeterministicLearnerITCase<?, ?, ?>> result = new ArrayList<>();
 
         for (DFALearningExample<?> example : examples) {
             result.addAll(createAllVariantsITCase(example));
@@ -75,6 +75,8 @@ public abstract class AbstractDFALearnerIT {
      *         the membership oracle
      * @param variants
      *         list to add the learner variants to
+     * @param <I>
+     *         input symbol type
      */
     protected abstract <I> void addLearnerVariants(Alphabet<I> alphabet,
                                                    int targetSize,

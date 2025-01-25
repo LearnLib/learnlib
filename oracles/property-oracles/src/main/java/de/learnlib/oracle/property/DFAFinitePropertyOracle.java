@@ -1,5 +1,5 @@
-/* Copyright (C) 2013-2023 TU Dortmund
- * This file is part of LearnLib, http://www.learnlib.de/.
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import de.learnlib.oracle.EmptinessOracle.DFAEmptinessOracle;
 import de.learnlib.oracle.PropertyOracle.DFAPropertyOracle;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecking.ModelChecker.DFAModelChecker;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A property oracle for DFAs where it is fine to only check finite words from the model checker.
@@ -44,7 +45,7 @@ public class DFAFinitePropertyOracle<I, P> extends AbstractPropertyOracle<I, DFA
     }
 
     @Override
-    protected DFA<?, I> modelCheck(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
+    protected @Nullable DFA<?, I> modelCheck(DFA<?, I> hypothesis, Collection<? extends I> inputs) {
         return modelChecker.findCounterExample(hypothesis, inputs, getProperty());
     }
 }
