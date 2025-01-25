@@ -23,20 +23,20 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class MapTransitions<I, O> implements TransitionInformation<I, O> {
 
-    private final Map<I, Pair<O, LSState>> trans;
+    private final Map<I, Pair<O, Integer>> trans;
 
     public MapTransitions(Integer inSize) {
         trans = new HashMap<>(inSize);
     }
 
     @Override
-    public @Nullable Pair<O, LSState> getOutSucc(I input) {
+    public @Nullable Pair<O, Integer> getOutSucc(I input) {
         return trans.get(input);
     }
 
     @Override
-    public void addTrans(I input, O output, LSState d) {
-        Pair<O, LSState> out = trans.put(input, Pair.of(output, d));
+    public void addTrans(I input, O output, Integer d) {
+        Pair<O, Integer> out = trans.put(input, Pair.of(output, d));
         assert out == null;
     }
 

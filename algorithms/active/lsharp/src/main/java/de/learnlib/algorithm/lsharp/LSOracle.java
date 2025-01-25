@@ -42,13 +42,13 @@ public class LSOracle<I, O> {
     private final O sinkOutput;
     private final Random random;
 
-    protected LSOracle(AdaptiveMembershipOracle<I, O> sul,
-                       NormalObservationTree<I, O> obsTree,
-                       Rule2 rule2,
-                       Rule3 rule3,
-                       Word<I> sinkState,
-                       O sinkOutput,
-                       Random random) {
+    public LSOracle(AdaptiveMembershipOracle<I, O> sul,
+                    NormalObservationTree<I, O> obsTree,
+                    Rule2 rule2,
+                    Rule3 rule3,
+                    Word<I> sinkState,
+                    O sinkOutput,
+                    Random random) {
         this.sul = sul;
         this.obsTree = obsTree;
         this.rule2 = rule2;
@@ -62,13 +62,13 @@ public class LSOracle<I, O> {
         return this.obsTree;
     }
 
-    public void makeSink(LSState s) {
+    public void makeSink(Integer s) {
         for (I i : obsTree.getInputAlphabet()) {
             obsTree.insertObservation(s, Word.fromLetter(i), Word.fromLetter(sinkOutput));
         }
     }
 
-    public LSState addObservation(Word<I> i, Word<O> o) {
+    public Integer addObservation(Word<I> i, Word<O> o) {
         return obsTree.insertObservation(null, i, o);
     }
 
@@ -84,8 +84,8 @@ public class LSOracle<I, O> {
                 if (candidates.size() == 2) {
                     Word<I> q1Acc = candidates.get(0);
                     Word<I> q2Acc = candidates.get(1);
-                    LSState q1 = obsTree.getSucc(obsTree.defaultState(), q1Acc);
-                    LSState q2 = obsTree.getSucc(obsTree.defaultState(), q2Acc);
+                    Integer q1 = obsTree.getSucc(obsTree.defaultState(), q1Acc);
+                    Integer q2 = obsTree.getSucc(obsTree.defaultState(), q2Acc);
                     assert q1 != null;
                     assert q2 != null;
 
@@ -101,14 +101,14 @@ public class LSOracle<I, O> {
                     return Pair.of(inputSeq.toWord(), outputSeq);
 
                 } else {
-                    List<LSState> candss = candidates.stream()
+                    List<Integer> candss = candidates.stream()
                                                      .map(acc -> obsTree.getSucc(obsTree.defaultState(), acc))
                                                      .collect(Collectors.toList());
-                    ADSTree<LSState, I, O> suffix = new ADSTree<>(obsTree, candss, sinkOutput);
+                    ADSTree<Integer, I, O> suffix = new ADSTree<>(obsTree, candss, sinkOutput);
                     return this.adaptiveOutputQuery(prefix, null, suffix);
                 }
             case SEPSEQ:
-                List<LSState> withS = randomN(candidates, 2).stream()
+                List<Integer> withS = randomN(candidates, 2).stream()
                                                             .map(acc -> obsTree.getSucc(obsTree.defaultState(), acc))
                                                             .collect(Collectors.toList());
                 Word<I> wit = ApartnessUtil.computeWitness(obsTree, withS.get(0), withS.get(1));
@@ -121,10 +121,10 @@ public class LSOracle<I, O> {
     }
 
     public List<Word<I>> identifyFrontier(Word<I> fsAcc, List<Word<I>> candidates) {
-        LSState fs = obsTree.getSucc(obsTree.defaultState(), fsAcc);
+        Integer fs = obsTree.getSucc(obsTree.defaultState(), fsAcc);
         assert fs != null;
         candidates.removeIf(b -> {
-            LSState bs = obsTree.getSucc(obsTree.defaultState(), b);
+            Integer bs = obsTree.getSucc(obsTree.defaultState(), b);
             assert bs != null;
             return ApartnessUtil.statesAreApart(obsTree, fs, bs);
         });
@@ -141,10 +141,10 @@ public class LSOracle<I, O> {
         return candidates;
     }
 
-    private Pair<Word<I>, Word<O>> rule2IO(Word<I> accessQ, I i, List<LSState> bss, List<Word<I>> basis) {
+    private Pair<Word<I>, Word<O>> rule2IO(Word<I> accessQ, I i, List<Integer> bss, List<Word<I>> basis) {
         switch (this.rule2) {
             case ADS:
-                ADSTree<LSState, I, O> suffix = new ADSTree<>(obsTree, bss, sinkOutput);
+                ADSTree<Integer, I, O> suffix = new ADSTree<>(obsTree, bss, sinkOutput);
                 return this.adaptiveOutputQuery(accessQ, i, suffix);
             case NOTHING:
                 Word<I> prefix = accessQ.append(i);
@@ -153,7 +153,7 @@ public class LSOracle<I, O> {
             case SEPSEQ:
                 Word<I> wit = Word.epsilon();
                 if (basis.size() >= 2) {
-                    List<LSState> ran = randomN(basis, 2).stream()
+                    List<Integer> ran = randomN(basis, 2).stream()
                                                          .map(b -> obsTree.getSucc(obsTree.defaultState(), b))
                                                          .collect(Collectors.toList());
                     assert ran.get(0) != null;
@@ -172,7 +172,7 @@ public class LSOracle<I, O> {
         List<Pair<Word<I>, I>> toExplore = new ArrayList<>();
         for (Word<I> b : basis) {
             for (I i : obsTree.getInputAlphabet()) {
-                LSState bs = obsTree.getSucc(obsTree.defaultState(), b);
+                Integer bs = obsTree.getSucc(obsTree.defaultState(), b);
                 assert bs != null;
                 if (obsTree.getSucc(bs, Word.fromLetter(i)) == null) {
                     toExplore.add(Pair.of(b, i));
@@ -186,19 +186,19 @@ public class LSOracle<I, O> {
 
     public Pair<Word<I>, List<Word<I>>> exploreFrontier(Word<I> accQ, I i, List<Word<I>> basis) {
         Word<I> accessQ = Word.fromWords(accQ);
-        LSState q = obsTree.getSucc(obsTree.defaultState(), accQ);
+        Integer q = obsTree.getSucc(obsTree.defaultState(), accQ);
         assert q != null;
-        List<LSState> bss =
+        List<Integer> bss =
                 basis.stream().map(bAcc -> obsTree.getSucc(obsTree.defaultState(), bAcc)).collect(Collectors.toList());
         Pair<Word<I>, Word<O>> query = rule2IO(accessQ, i, bss, basis);
         Word<I> inputSeq = query.getFirst();
         Word<O> outputSeq = query.getSecond();
 
         obsTree.insertObservation(null, inputSeq, outputSeq);
-        LSState fs = obsTree.getSucc(q, Word.fromLetter(i));
+        Integer fs = obsTree.getSucc(q, Word.fromLetter(i));
         assert fs != null;
         List<Word<I>> bsNotSep = basis.parallelStream().filter(b -> {
-            LSState bs = obsTree.getSucc(obsTree.defaultState(), b);
+            Integer bs = obsTree.getSucc(obsTree.defaultState(), b);
             assert bs != null;
             return !ApartnessUtil.statesAreApart(obsTree, fs, bs);
         }).collect(Collectors.toList());
@@ -223,13 +223,13 @@ public class LSOracle<I, O> {
         return out;
     }
 
-    public Pair<Word<I>, Word<O>> adaptiveOutputQuery(Word<I> prefix, I infix, ADSTree<LSState, I, O> suffix) {
+    public Pair<Word<I>, Word<O>> adaptiveOutputQuery(Word<I> prefix, I infix, ADSTree<Integer, I, O> suffix) {
         return this.adaptiveOutputQuery(infix != null ? prefix.append(infix) : prefix, suffix);
     }
 
-    public Pair<Word<I>, Word<O>> adaptiveOutputQuery(Word<I> prefix, ADSTree<LSState, I, O> suffix) {
+    public Pair<Word<I>, Word<O>> adaptiveOutputQuery(Word<I> prefix, ADSTree<Integer, I, O> suffix) {
         Pair<Word<I>, Word<O>> treeReply = null;
-        LSState treeSucc = obsTree.getSucc(obsTree.defaultState(), prefix);
+        Integer treeSucc = obsTree.getSucc(obsTree.defaultState(), prefix);
         if (treeSucc != null) {
             treeReply = this.answerADSFromTree(suffix, treeSucc);
         }
@@ -244,7 +244,7 @@ public class LSOracle<I, O> {
 
         if (query.isSink()) {
             Word<O> output = query.getOutputSequence();
-            LSState sink = this.addObservation(prefix, output);
+            Integer sink = this.addObservation(prefix, output);
             if (sinkState == null) {
                 sinkState = prefix;
             }
@@ -258,18 +258,18 @@ public class LSOracle<I, O> {
     }
 
     @SuppressWarnings("PMD.EmptyCatchBlock")
-    public @Nullable Pair<Word<I>, Word<O>> answerADSFromTree(ADSTree<LSState, I, O> ads, LSState fromState) {
+    public @Nullable Pair<Word<I>, Word<O>> answerADSFromTree(ADSTree<Integer, I, O> ads, Integer fromState) {
         O prevOutput = null;
         WordBuilder<I> inputsSent = new WordBuilder<>();
         WordBuilder<O> outputsReceived = new WordBuilder<>();
-        LSState currState = fromState;
+        Integer currState = fromState;
 
         try {
             I nextInput = ads.nextInput(prevOutput);
             while (nextInput != null) {
                 inputsSent.add(nextInput);
                 @Nullable
-                Pair<O, LSState> pair = obsTree.getOutSucc(currState, nextInput);
+                Pair<O, Integer> pair = obsTree.getOutSucc(currState, nextInput);
                 if (pair == null) {
                     return null;
                 }
@@ -290,7 +290,7 @@ public class LSOracle<I, O> {
     private class ADSTreeQuery implements AdaptiveQuery<I, O> {
 
         private final Word<I> prefix;
-        private final ADSTree<LSState, I, O> ads;
+        private final ADSTree<Integer, I, O> ads;
         private final WordBuilder<I> input;
         private final WordBuilder<O> output;
 
@@ -298,7 +298,7 @@ public class LSOracle<I, O> {
         private I adsSym;
         private boolean sink;
 
-        ADSTreeQuery(Word<I> prefix, ADSTree<LSState, I, O> ads) {
+        ADSTreeQuery(Word<I> prefix, ADSTree<Integer, I, O> ads) {
             this.prefix = prefix;
             this.ads = ads;
             this.input = new WordBuilder<>();

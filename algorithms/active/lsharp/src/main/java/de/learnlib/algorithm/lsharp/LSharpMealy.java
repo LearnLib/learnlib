@@ -31,6 +31,7 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -41,7 +42,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
     private final Alphabet<I> inputAlphabet;
     private final List<Word<I>> basis;
     private final Map<Word<I>, List<Word<I>>> frontierToBasisMap;
-    private final HashBiMap<Word<I>, LSState> basisMap;
+    private final HashBiMap<Word<I>, Integer> basisMap;
 
     public LSharpMealy(Alphabet<I> alphabet, AdaptiveMembershipOracle<I, O> oracle, Rule2 rule2, Rule3 rule3) {
         this(alphabet, oracle, rule2, rule3, null, null, new Random());
@@ -77,7 +78,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         this.basisMap = HashBiMap.create();
     }
 
-    public boolean processCex(DefaultQuery<I, Word<O>> cex, LSMealyMachine<I, O> mealy) {
+    public boolean processCex(DefaultQuery<I, Word<O>> cex, MealyMachine<Integer, I, ?, O> mealy) {
         assert cex != null;
         Word<I> ceInput = cex.getInput();
         Word<O> ceOutput = cex.getOutput();
@@ -90,20 +91,20 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         return true;
     }
 
-    public void processBinarySearch(Word<I> ceInput, Word<O> ceOutput, LSMealyMachine<I, O> mealy) {
-        LSState r = oqOracle.getTree().getSucc(oqOracle.getTree().defaultState(), ceInput);
+    public void processBinarySearch(Word<I> ceInput, Word<O> ceOutput, MealyMachine<Integer, I, ?, O> mealy) {
+        Integer r = oqOracle.getTree().getSucc(oqOracle.getTree().defaultState(), ceInput);
         assert r != null;
         this.updateFrontierAndBasis();
         if (this.frontierToBasisMap.containsKey(ceInput) || basis.contains(ceInput)) {
             return;
         }
 
-        LSState q = mealy.getSuccessor(mealy.getInitialState(), ceInput);
+        Integer q = mealy.getSuccessor(mealy.getInitialState(), ceInput);
         Word<I> accQT = basisMap.inverse().get(q);
         assert accQT != null;
 
         NormalObservationTree<I, O> oTree = oqOracle.getTree();
-        LSState qt = oTree.getSucc(oTree.defaultState(), accQT);
+        Integer qt = oTree.getSucc(oTree.defaultState(), accQT);
         assert qt != null;
 
         int x = ceInput.prefixes(false)
@@ -119,7 +120,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
         Word<I> sigma1 = ceInput.prefix(h);
         Word<I> sigma2 = ceInput.suffix(ceInput.size() - h);
-        LSState qp = mealy.getSuccessor(mealy.getInitialState(), sigma1);
+        Integer qp = mealy.getSuccessor(mealy.getInitialState(), sigma1);
         assert qp != null;
         Word<I> accQPt = basisMap.inverse().get(qp);
         assert accQPt != null;
@@ -129,10 +130,10 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
         Word<I> outputQuery = accQPt.concat(sigma2).concat(eta);
         Word<O> sulResponse = oqOracle.outputQuery(outputQuery);
-        LSState qpt = oTree.getSucc(oTree.defaultState(), accQPt);
+        Integer qpt = oTree.getSucc(oTree.defaultState(), accQPt);
         assert qpt != null;
 
-        LSState rp = oTree.getSucc(oTree.defaultState(), sigma1);
+        Integer rp = oTree.getSucc(oTree.defaultState(), sigma1);
         assert rp != null;
 
         @Nullable
@@ -202,7 +203,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         }
 
         return basisIpPairs.stream().noneMatch(p -> {
-            LSState q = oTree.getSucc(oTree.defaultState(), p.getFirst());
+            Integer q = oTree.getSucc(oTree.defaultState(), p.getFirst());
             return oTree.getOut(q, p.getSecond()) == null;
         });
     }
@@ -223,34 +224,19 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
                                          .removeIf(bs -> ApartnessUtil.accStatesAreApart(oTree, e.getKey(), bs)));
     }
 
-    public LSMealyMachine<I, O> buildHypothesis() {
-        while (true) {
-            this.makeObsTreeAdequate();
-            LSMealyMachine<I, O> hyp = this.constructHypothesis();
+    public CompactMealy<I, O> constructHypothesis() {
 
-            DefaultQuery<I, Word<O>> ce = this.checkConsistency(hyp);
-            if (ce != null) {
-                this.processCex(ce, hyp);
-            } else {
-                return hyp;
-            }
-        }
-    }
-
-    public LSMealyMachine<I, O> constructHypothesis() {
+        CompactMealy<I, O> result = new CompactMealy<>(inputAlphabet, basis.size());
         basisMap.clear();
 
         for (Word<I> bAcc : basis) {
-            LSState s = new LSState(basisMap.size());
-            basisMap.put(bAcc, s);
+            basisMap.put(bAcc, result.addState());
         }
 
         NormalObservationTree<I, O> oTree = oqOracle.getTree();
-        List<Word<I>> basisCopy = new ArrayList<>(basis);
-        HashMap<Pair<LSState, I>, Pair<LSState, O>> transFunction = new HashMap<>();
-        for (Word<I> q : basisCopy) {
+        for (Word<I> q : basis) {
             for (I i : inputAlphabet) {
-                LSState bs = oTree.getSucc(oTree.defaultState(), q);
+                Integer bs = oTree.getSucc(oTree.defaultState(), q);
                 assert bs != null;
                 O output = oTree.getOut(bs, i);
                 assert output != null;
@@ -259,15 +245,16 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
                 Pair<Word<I>, Boolean> pair = this.identifyFrontierOrBasis(fAcc);
                 Word<I> dest = pair.getFirst();
 
-                LSState hypBS = basisMap.get(q);
+                Integer hypBS = basisMap.get(q);
                 assert hypBS != null;
-                LSState hypDest = basisMap.get(dest);
+                Integer hypDest = basisMap.get(dest);
                 assert hypDest != null;
-                transFunction.put(Pair.of(hypBS, i), Pair.of(hypDest, output));
+                result.addTransition(hypBS, i, hypDest, output);
             }
         }
 
-        return new LSMealyMachine<>(inputAlphabet, basisMap.values(), new LSState(0), transFunction);
+        result.setInitialState(0);
+        return result;
     }
 
     public Pair<Word<I>, Boolean> identifyFrontierOrBasis(Word<I> seq) {
@@ -320,10 +307,10 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
                           });
     }
 
-    public DefaultQuery<I, Word<O>> checkConsistency(LSMealyMachine<I, O> mealy) {
+    public DefaultQuery<I, Word<O>> checkConsistency(MealyMachine<Integer, I, ?, O> mealy) {
         NormalObservationTree<I, O> oTree = oqOracle.getTree();
         @Nullable
-        Word<I> wit = ApartnessUtil.treeAndHypComputeWitness(oTree, oTree.defaultState(), mealy, new LSState(0));
+        Word<I> wit = ApartnessUtil.treeAndHypComputeWitness(oTree, oTree.defaultState(), mealy, 0);
         if (wit == null) {
             return null;
         }
@@ -340,11 +327,21 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
-        return processCex(ceQuery, buildHypothesis());
+        return processCex(ceQuery, getHypothesisModel());
     }
 
     @Override
-    public MealyMachine<?, I, ?, O> getHypothesisModel() {
-        return buildHypothesis();
+    public CompactMealy<I, O> getHypothesisModel() {
+        while (true) {
+            this.makeObsTreeAdequate();
+            CompactMealy<I, O> hyp = this.constructHypothesis();
+
+            DefaultQuery<I, Word<O>> ce = this.checkConsistency(hyp);
+            if (ce != null) {
+                this.processCex(ce, hyp);
+            } else {
+                return hyp;
+            }
+        }
     }
 }

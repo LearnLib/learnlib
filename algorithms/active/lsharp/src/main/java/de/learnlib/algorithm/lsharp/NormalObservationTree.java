@@ -22,7 +22,7 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, O> {
+public class NormalObservationTree<I, O> implements ObservationTree<Integer, I, O> {
 
     private final ArenaTree<MapTransitions<I, O>, I> tree;
     private final Alphabet<I> inputAlphabet;
@@ -40,27 +40,26 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
     }
 
     @Override
-    public LSState defaultState() {
-        return new LSState(0);
+    public Integer defaultState() {
+        return 0;
     }
 
-    private LSState addTransitionGetDestination(LSState src, I i, O o) {
-        int srcRaw = src.raw();
-        Pair<O, LSState> pair = this.tree.get(srcRaw).getOutSucc(i);
+    private Integer addTransitionGetDestination(Integer src, I i, O o) {
+        int srcRaw = src;
+        Pair<O, Integer> pair = this.tree.get(srcRaw).getOutSucc(i);
 
         if (pair != null) {
             return pair.getSecond();
         } else {
-            int destNodeIndex = this.tree.nodeWithParent(new MapTransitions<>(this.inputAlphabet.size()), srcRaw, i);
-            LSState destState = new LSState(destNodeIndex);
+            int destState = this.tree.nodeWithParent(new MapTransitions<>(this.inputAlphabet.size()), srcRaw, i);
             this.tree.arena.get(srcRaw).value.addTrans(i, o, destState);
             return destState;
         }
     }
 
     @Override
-    public LSState insertObservation(@Nullable LSState s, Word<I> input, Word<O> output) {
-        LSState curr = s == null ? defaultState() : s;
+    public Integer insertObservation(@Nullable Integer s, Word<I> input, Word<O> output) {
+        Integer curr = s == null ? defaultState() : s;
 
         int max = Math.min(input.length(), output.length());
         for (int i = 0; i < max; i++) {
@@ -71,26 +70,25 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
     }
 
     @Override
-    public Word<I> getAccessSeq(LSState state) {
+    public Word<I> getAccessSeq(Integer state) {
         return this.getTransferSeq(state, defaultState());
     }
 
     @Override
-    public Word<I> getTransferSeq(LSState toState, LSState fromState) {
+    public Word<I> getTransferSeq(Integer toState, Integer fromState) {
         if (toState.compareTo(fromState) == 0) {
             return Word.epsilon();
         }
 
         WordBuilder<I> accessSeq = new WordBuilder<>();
-        int destParentIndex = fromState.raw();
-        int currState = toState.raw();
+        int currState = toState;
 
         while (true) {
             Pair<I, Integer> pair = this.tree.arena.get(currState).parent;
             I i = pair.getFirst();
             Integer parentIndex = pair.getSecond();
             accessSeq.add(i);
-            if (parentIndex.equals(destParentIndex)) {
+            if (parentIndex.equals(fromState)) {
                 break;
             }
             currState = parentIndex;
@@ -101,11 +99,11 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
     }
 
     @Override
-    public @Nullable Word<O> getObservation(@Nullable LSState start, Word<I> input) {
-        LSState s = start == null ? defaultState() : start;
+    public @Nullable Word<O> getObservation(@Nullable Integer start, Word<I> input) {
+        Integer s = start == null ? defaultState() : start;
         WordBuilder<O> outWord = new WordBuilder<>();
         for (I i : input) {
-            Pair<O, LSState> pair = this.getOutSucc(s, i);
+            Pair<O, Integer> pair = this.getOutSucc(s, i);
             if (pair == null) {
                 return null;
             }
@@ -117,18 +115,18 @@ public class NormalObservationTree<I, O> implements ObservationTree<LSState, I, 
     }
 
     @Override
-    public @Nullable Pair<O, LSState> getOutSucc(LSState src, I input) {
-        return this.tree.get(src.raw()).getOutSucc(input);
+    public @Nullable Pair<O, Integer> getOutSucc(Integer src, I input) {
+        return this.tree.get(src).getOutSucc(input);
     }
 
-    LSState getSucc(LSState state, I input) {
-        Pair<O, LSState> pair = getOutSucc(state, input);
+    Integer getSucc(Integer state, I input) {
+        Pair<O, Integer> pair = getOutSucc(state, input);
         return pair == null ? null : pair.getSecond();
     }
 
     @Override
-    public @Nullable LSState getSucc(LSState s, Word<I> input) {
-        LSState src = s;
+    public @Nullable Integer getSucc(Integer s, Word<I> input) {
+        Integer src = s;
         for (I i : input) {
             src = getSucc(src, i);
             if (src == null) {

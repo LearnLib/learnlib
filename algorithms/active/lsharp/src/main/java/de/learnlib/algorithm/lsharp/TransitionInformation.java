@@ -20,7 +20,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface TransitionInformation<I, O> {
 
-    @Nullable Pair<O, LSState> getOutSucc(I input);
+    @Nullable Pair<O, Integer> getOutSucc(I input);
 
-    void addTrans(I input, O output, LSState d);
+    void addTrans(I input, O output, Integer d);
 }

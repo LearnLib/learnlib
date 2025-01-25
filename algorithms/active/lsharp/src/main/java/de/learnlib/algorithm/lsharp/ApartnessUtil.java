@@ -57,11 +57,11 @@ public final class ApartnessUtil {
         return statesAreApart(tree, s1, s2);
     }
 
-    public static <S extends Comparable<S>, I, O> @Nullable Word<I> treeAndHypComputeWitness(ObservationTree<S, I, O> tree,
-                                                                                             S st,
-                                                                                             MealyMachine<LSState, I, ?, O> fsm,
-                                                                                             LSState sh) {
-        S s = treeAndHypShowsStatesAreApart(tree, st, sh, fsm);
+    public static <S1 extends Comparable<S1>, S2, I, O> @Nullable Word<I> treeAndHypComputeWitness(ObservationTree<S1, I, O> tree,
+                                                                                                   S1 st,
+                                                                                                   MealyMachine<S2, I, ?, O> fsm,
+                                                                                                   S2 sh) {
+        S1 s = treeAndHypShowsStatesAreApart(tree, st, sh, fsm);
         if (s == null) {
             return null;
         }
@@ -69,21 +69,21 @@ public final class ApartnessUtil {
         return tree.getTransferSeq(s, st);
     }
 
-    public static <S extends Comparable<S>, I, O> @Nullable S treeAndHypShowsStatesAreApart(ObservationTree<S, I, O> tree,
-                                                                                            S st,
-                                                                                            LSState sh,
-                                                                                            MealyMachine<LSState, I, ?, O> fsm) {
-        Deque<Pair<S, LSState>> queue = new ArrayDeque<>();
+    public static <S1 extends Comparable<S1>, S2, I, O> @Nullable S1 treeAndHypShowsStatesAreApart(ObservationTree<S1, I, O> tree,
+                                                                                                   S1 st,
+                                                                                                   S2 sh,
+                                                                                                   MealyMachine<S2, I, ?, O> fsm) {
+        Deque<Pair<S1, S2>> queue = new ArrayDeque<>();
         queue.push(Pair.of(st, sh));
         while (!queue.isEmpty()) {
-            Pair<S, LSState> pair = queue.pop();
-            S q = pair.getFirst();
-            LSState r = pair.getSecond();
+            Pair<S1, S2> pair = queue.pop();
+            S1 q = pair.getFirst();
+            S2 r = pair.getSecond();
 
             for (I i : tree.getInputAlphabet()) {
-                Pair<O, S> stepFree = tree.getOutSucc(q, i);
+                Pair<O, S1> stepFree = tree.getOutSucc(q, i);
                 if (stepFree != null) {
-                    LSState dh = fsm.getSuccessor(r, i);
+                    S2 dh = fsm.getSuccessor(r, i);
                     assert dh != null;
                     O outHyp = fsm.getOutput(r, i);
                     assert outHyp != null;
