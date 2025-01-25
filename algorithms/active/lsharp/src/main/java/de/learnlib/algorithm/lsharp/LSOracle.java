@@ -19,19 +19,23 @@ package de.learnlib.algorithm.lsharp;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import de.learnlib.algorithm.lsharp.ads.ADSStatus;
 import de.learnlib.algorithm.lsharp.ads.ADSTree;
-import de.learnlib.oracle.SymbolQueryOracle;
+import de.learnlib.oracle.AdaptiveMembershipOracle;
+import de.learnlib.query.AdaptiveQuery;
+import de.learnlib.util.mealy.WordAdaptiveQuery;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class LSOracle<I, O> {
-    private final SymbolQueryOracle<I, O> sul;
+
+    private final AdaptiveMembershipOracle<I, O> sul;
     private final NormalObservationTree<I, O> obsTree;
     private final Rule2 rule2;
     private final Rule3 rule3;
@@ -39,7 +43,7 @@ public class LSOracle<I, O> {
     private final O sinkOutput;
     private final Random random;
 
-    protected LSOracle(SymbolQueryOracle<I, O> sul, NormalObservationTree<I, O> obsTree, Rule2 rule2, Rule3 rule3,
+    protected LSOracle(AdaptiveMembershipOracle<I, O> sul, NormalObservationTree<I, O> obsTree, Rule2 rule2, Rule3 rule3,
             Word<I> sinkState, O sinkOutput, Random random) {
         this.sul = sul;
         this.obsTree = obsTree;
@@ -199,7 +203,9 @@ public class LSOracle<I, O> {
             return out;
         }
 
-        out = sul.answerQuery(inputSeq);
+        final WordAdaptiveQuery<I, O> query = new WordAdaptiveQuery<>(inputSeq);
+        sul.processQuery(query);
+        out = query.getOutput();
 
         if (sinkState == null && out.lastSymbol().equals(sinkOutput)) {
             sinkState = inputSeq;
@@ -226,47 +232,22 @@ public class LSOracle<I, O> {
             throw new IllegalStateException("ADS is not increasing the norm, we already knew this information.");
         }
 
-        sul.reset();
-        final WordBuilder<O> os = new WordBuilder<>();
-        for (I i : prefix) {
-            os.append(sul.query(i));
-        }
-        if (os.toWord().lastSymbol().equals(sinkOutput)) {
-            LSState sink = this.addObservation(prefix, os.toWord());
+        ADSTreeQuery query = new ADSTreeQuery(prefix, suffix);
+        sul.processQuery(query);
+
+        if (query.isSink()) {
+            Word<O> output = query.getOutputSequence();
+            LSState sink = this.addObservation(prefix, output);
             if (sinkState == null) {
                 sinkState = prefix;
             }
             this.makeSink(sink);
-            return Pair.of(prefix, os.toWord());
+            return Pair.of(prefix, output);
         }
-        Pair<Word<I>, Word<O>> pair = this.sulAdaptiveQuery(prefix, suffix);
-        Word<I> inputSeq = prefix.concat(pair.getFirst());
-        Word<O> outputSeq = os.toWord().concat(pair.getSecond());
+        Word<I> inputSeq = query.getInputSequence();
+        Word<O> outputSeq = query.getOutputSequence();
         this.addObservation(inputSeq, outputSeq);
         return Pair.of(inputSeq, outputSeq);
-    }
-
-    @SuppressWarnings("PMD.EmptyCatchBlock")
-    public Pair<Word<I>, Word<O>> sulAdaptiveQuery(Word<I> prefix, ADSTree<LSState, I, O> ads) {
-        WordBuilder<I> inputsSent = new WordBuilder<>();
-        WordBuilder<O> outputsReceived = new WordBuilder<>();
-        O lastOutput = null;
-
-        try {
-            I nextInput = ads.nextInput(lastOutput);
-            while (nextInput != null) {
-                inputsSent.append(nextInput);
-                final O out = sul.query(nextInput);
-                lastOutput = out;
-                outputsReceived.append(out);
-
-                nextInput = ads.nextInput(lastOutput);
-            }
-        } catch (ADSStatus e) {
-            // Purely used as control flow.
-        }
-
-        return Pair.of(inputsSent.toWord(), outputsReceived.toWord());
     }
 
     @SuppressWarnings("PMD.EmptyCatchBlock")
@@ -297,6 +278,80 @@ public class LSOracle<I, O> {
 
         ads.resetToRoot();
         return Pair.of(inputsSent.toWord(), outputsReceived.toWord());
+    }
+
+    private class ADSTreeQuery implements AdaptiveQuery<I, O> {
+
+        private final Word<I> prefix;
+        private final ADSTree<LSState, I, O> ads;
+        private final WordBuilder<I> input;
+        private final WordBuilder<O> output;
+
+        private int idx;
+        private I adsSym;
+        private boolean sink;
+
+        ADSTreeQuery(Word<I> prefix, ADSTree<LSState, I, O> ads) {
+            this.prefix = prefix;
+            this.ads = ads;
+            this.input = new WordBuilder<>();
+            this.output = new WordBuilder<>();
+        }
+
+        @Override
+        public I getInput() {
+            if (idx < prefix.length()) {
+                return prefix.getSymbol(idx);
+            } else {
+                return adsSym;
+            }
+        }
+
+        @Override
+        public Response processOutput(O out) {
+            idx++;
+            output.append(out);
+
+            if (idx < prefix.length()) {
+                return Response.SYMBOL;
+            } else if (idx == prefix.length()) {
+                if (Objects.equals(out, sinkOutput)) {
+                    sink = true;
+                    return Response.FINISHED;
+                } else {
+                    input.append(prefix);
+                    return computeNext(null);
+                }
+            } else {
+                return computeNext(out);
+            }
+        }
+
+        private Response computeNext(O out) {
+            try {
+                final I next = ads.nextInput(out);
+                if (next == null) {
+                    return Response.FINISHED;
+                }
+                input.append(next);
+                adsSym = next;
+                return Response.SYMBOL;
+            } catch (ADSStatus s) {
+                return Response.FINISHED;
+            }
+        }
+
+        boolean isSink() {
+            return sink;
+        }
+
+        Word<I> getInputSequence() {
+            return input.toWord();
+        }
+
+        Word<O> getOutputSequence() {
+            return output.toWord();
+        }
     }
 
 }

@@ -22,8 +22,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.Pair;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.word.Word;
@@ -38,7 +39,7 @@ public class NormalObservationTreeTest {
     private static final int HIGH_INPUTS = 100;
 
     @SuppressWarnings("PMD.CloseResource")
-    private LSMealyMachine<String, String> readMealy(String filename) throws IOException {
+    private LSMealyMachine<String, String> readMealy(String filename) throws IOException, FormatException {
         InputModelDeserializer<String, CompactMealy<String, String>> parser = DOTParsers
                 .mealy(new CompactMealy.Creator<String, String>(), DOTParsers.DEFAULT_MEALY_EDGE_PARSER);
         InputStream res = this.getClass().getResourceAsStream(filename);
@@ -70,7 +71,7 @@ public class NormalObservationTreeTest {
     }
 
     @Test
-    public void xferSeqMantained() throws IOException {
+    public void xferSeqMantained() throws IOException, FormatException {
         LSMealyMachine<String, String> fsm = readMealy("/BitVise.dot");
         List<Pair<Word<String>, Word<String>>> tests = tryGenInputs(fsm, LOW_INPUTS);
         NormalObservationTree<String, String> ret = new NormalObservationTree<>(fsm.getInputAlphabet());
@@ -102,7 +103,7 @@ public class NormalObservationTreeTest {
     }
 
     @Test
-    public void accessSeqMantained() throws IOException {
+    public void accessSeqMantained() throws IOException, FormatException {
         LSMealyMachine<String, String> fsm = readMealy("/BitVise.dot");
         List<Pair<Word<String>, Word<String>>> tests = tryGenInputs(fsm, HIGH_INPUTS);
         NormalObservationTree<String, String> ret = new NormalObservationTree<>(fsm.getInputAlphabet());

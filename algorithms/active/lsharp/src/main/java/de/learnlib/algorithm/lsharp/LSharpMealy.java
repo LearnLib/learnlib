@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.HashBiMap;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.oracle.SymbolQueryOracle;
+import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
@@ -47,16 +47,16 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
     private final HashBiMap<Word<I>, LSState> basisMap;
     private Integer round;
 
-    public LSharpMealy(Alphabet<I> alphabet, SymbolQueryOracle<I, O> oracle, Rule2 rule2, Rule3 rule3) {
+    public LSharpMealy(Alphabet<I> alphabet, AdaptiveMembershipOracle<I, O> oracle, Rule2 rule2, Rule3 rule3) {
         this(alphabet, oracle, rule2, rule3, null, null, new Random());
     }
 
-    public LSharpMealy(Alphabet<I> alphabet, SymbolQueryOracle<I, O> oracle, Rule2 rule2, Rule3 rule3,
+    public LSharpMealy(Alphabet<I> alphabet, AdaptiveMembershipOracle<I, O> oracle, Rule2 rule2, Rule3 rule3,
             Word<I> sinkState, O sinkOutput) {
         this(alphabet, oracle, rule2, rule3, sinkState, sinkOutput, new Random());
     }
 
-    public LSharpMealy(Alphabet<I> alphabet, SymbolQueryOracle<I, O> oracle, Rule2 rule2, Rule3 rule3,
+    public LSharpMealy(Alphabet<I> alphabet, AdaptiveMembershipOracle<I, O> oracle, Rule2 rule2, Rule3 rule3,
             Word<I> sinkState, O sinkOutput, Random random) {
         this.oqOracle = new LSOracle<>(oracle, new NormalObservationTree<>(alphabet), rule2, rule3, sinkState,
                 sinkOutput, random);

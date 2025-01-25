@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import de.learnlib.algorithm.lsharp.LSState;
 import de.learnlib.algorithm.lsharp.NormalObservationTree;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
