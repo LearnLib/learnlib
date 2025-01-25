@@ -15,7 +15,10 @@
  */
 package de.learnlib.algorithm.lsharp.it;
 
+import java.util.Random;
+
 import de.learnlib.algorithm.lsharp.LSharpMealy;
+import de.learnlib.algorithm.lsharp.LSharpMealyBuilder;
 import de.learnlib.algorithm.lsharp.Rule2;
 import de.learnlib.algorithm.lsharp.Rule3;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
@@ -31,9 +34,16 @@ public class LSharpMealyIT extends AbstractMealyLearnerIT {
     protected <I, O> void addLearnerVariants(Alphabet<I> alphabet, int targetSize, MealyMembershipOracle<I, O> mqOracle,
                                              MealyLearnerVariantList<I, O> variants) {
 
+        final LSharpMealyBuilder<I, O> builder = new LSharpMealyBuilder<>();
+        builder.setAlphabet(alphabet);
+        builder.setOracle(new MQ2AQWrapper<>(mqOracle));
+
         for (Rule2 r2 : Rule2.values()) {
+            builder.setRule2(r2);
             for (Rule3 r3 : Rule3.values()) {
-                LSharpMealy<I, O> learner = new LSharpMealy<>(alphabet, new MQ2AQWrapper<>(mqOracle), r2, r3);
+                builder.setRule3(r3);
+                builder.setRandom(new Random(42)); // we like our tests deterministic
+                LSharpMealy<I, O> learner = builder.create();
                 String name = String.format("rule2=%s,rule3=%s", r2, r3);
                 variants.addLearnerVariant(name, learner);
             }
