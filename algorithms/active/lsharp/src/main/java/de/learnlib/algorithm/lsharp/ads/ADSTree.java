@@ -16,20 +16,16 @@
 package de.learnlib.algorithm.lsharp.ads;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 import de.learnlib.algorithm.lsharp.ObservationTree;
 import de.learnlib.algorithm.lsharp.ads.ADSStatus.Code;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
-import net.automatalib.common.util.Triple;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
@@ -39,24 +35,12 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
 
     public ADSTree(ObservationTree<S, I, O> tree, List<S> currentBlock, @Nullable O sinkOut) {
         ADSNode<I, O> initialNode = this.constructADS(tree, currentBlock, sinkOut);
-        assert initialNode != null;
         this.initialNode = initialNode;
         this.currentNode = initialNode;
     }
 
     public int getScore() {
         return this.initialNode.getScore();
-    }
-
-    private <A, B> Pair<List<A>, List<B>> unzip(List<Pair<A, B>> list) {
-        List<A> lA = new ArrayList<>(list.size());
-        List<B> lB = new ArrayList<>(list.size());
-        for (Pair<A, B> pair : list) {
-            lA.add(pair.getFirst());
-            lB.add(pair.getSecond());
-        }
-
-        return Pair.of(lA, lB);
     }
 
     private <A, B> Map<A, B> toMap(List<Pair<A, B>> list) {
@@ -78,58 +62,55 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         I maxInput = this.maximalBaseInput(tree, currentBlock, splitScore).getFirst();
 
         Map<O, List<S>> oPartitions = this.partitionOnOutput(tree, currentBlock, maxInput);
-        int ui = oPartitions.values().stream().map(List::size).mapToInt(x -> x).sum();
-        int maxInputScore = oPartitions.entrySet().stream().map(e -> {
+        int ui = computeUI(oPartitions);
+
+        int maxInputScore = 0;
+        for (Entry<O, List<S>> e : oPartitions.entrySet()) {
             O o = e.getKey();
             List<S> oPart = e.getValue();
             int uIO = oPart.size();
-            int childScore = o.equals(sinkOut) ? 0 : this.constructADS(tree, oPart, sinkOut).getScore();
-            return this.computeRegScore(uIO, ui, childScore);
-        }).mapToInt(x -> x).sum();
+            int childScore = Objects.equals(o, sinkOut) ? 0 : this.constructADS(tree, oPart, sinkOut).getScore();
+            maxInputScore += this.computeRegScore(uIO, ui, childScore);
+        }
 
-        List<I> inputsToKeep = splitScore.entrySet()
-                                         .parallelStream()
-                                         .filter(e -> e.getValue().getFirst() + e.getValue().getSecond() >=
-                                                      maxInputScore)
-                                         .map(Entry::getKey)
-                                         .collect(Collectors.toList());
+        List<I> inputsToKeep = new ArrayList<>(splitScore.size());
+        for (Entry<I, Pair<Integer, Integer>> e : splitScore.entrySet()) {
+            I key = e.getKey();
+            Pair<Integer, Integer> value = e.getValue();
+            if (value.getFirst() + value.getSecond() >= maxInputScore) {
+                inputsToKeep.add(key);
+            }
+        }
 
         assert !inputsToKeep.isEmpty();
 
-        ADSNode<I, O> subtreeInfo = inputsToKeep.parallelStream()
-                                                .map(i -> {
-                                                    Map<O, List<S>> innerOPartitions =
-                                                            this.partitionOnOutput(tree, currentBlock, i);
-                                                    int innerUI = innerOPartitions.values()
-                                                                                  .stream()
-                                                                                  .mapToInt(List::size)
-                                                                                  .sum();
+        int bestIScore = -1;
+        I bestInput = null;
+        List<Pair<O, ADSNode<I, O>>> bestChildren = null;
 
-                                                    Pair<List<Integer>, List<Pair<O, ADSNode<I, O>>>> pair =
-                                                            unzip(innerOPartitions.entrySet()
-                                                                                  .stream()
-                                                                                  .map(e -> this.computeOSubtree(tree,
-                                                                                                                 e.getKey(),
-                                                                                                                 e.getValue(),
-                                                                                                                 sinkOut,
-                                                                                                                 innerUI))
-                                                                                  .collect(Collectors.toList()));
+        for (I i : inputsToKeep) {
+            Map<O, List<S>> innerOPartitions = this.partitionOnOutput(tree, currentBlock, i);
+            int innerUI = computeUI(innerOPartitions);
+            int iScore = 0;
+            List<Pair<O, ADSNode<I, O>>> children = new ArrayList<>(innerOPartitions.size());
 
-                                                    List<Integer> oScores = pair.getFirst();
-                                                    List<Pair<O, ADSNode<I, O>>> data = pair.getSecond();
-                                                    int iScore = oScores.stream().mapToInt(x -> x).sum();
-                                                    return Triple.of(i, iScore, data);
-                                                })
-                                                .filter(triple -> triple.getSecond() >= maxInputScore)
-                                                .max(Comparator.comparingInt(Triple::getSecond))
-                                                .map(t -> {
-                                                    Map<O, ADSNode<I, O>> children = toMap(t.getThird());
-                                                    return new ADSNode<>(t.getFirst(), children, t.getSecond());
-                                                })
-                                                .orElse(null);
+            for (Entry<O, List<S>> e : innerOPartitions.entrySet()) {
+                Pair<Integer, Pair<O, ADSNode<I, O>>> pair =
+                        this.computeOSubtree(tree, e.getKey(), e.getValue(), sinkOut, innerUI);
+                iScore += pair.getFirst();
+                children.add(pair.getSecond());
+            }
 
-        assert subtreeInfo != null;
-        return subtreeInfo;
+            if (iScore >= maxInputScore && iScore >= bestIScore) {
+                bestIScore = iScore;
+                bestInput = i;
+                bestChildren = children;
+            }
+        }
+
+        assert bestInput != null && bestChildren != null;
+
+        return new ADSNode<>(bestInput, toMap(bestChildren), bestIScore);
     }
 
     public Pair<Integer, Pair<O, ADSNode<I, O>>> computeOSubtree(ObservationTree<S, I, O> tree,
@@ -150,12 +131,22 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         return uio * (ui - uio) + childScore;
     }
 
+    private int computeUI(Map<O, List<S>> oPartitions) {
+        int ui = 0;
+        for (List<S> value : oPartitions.values()) {
+            ui += value.size();
+        }
+        return ui;
+    }
+
     private Map<O, List<S>> partitionOnOutput(ObservationTree<S, I, O> tree, List<S> block, I input) {
         Map<O, List<S>> map = new HashMap<>();
-        block.stream()
-             .map(s -> tree.getOutSucc(s, input))
-             .filter(Objects::nonNull)
-             .forEach(p -> map.computeIfAbsent(p.getFirst(), k -> new ArrayList<>()).add(p.getSecond()));
+        for (S s : block) {
+            Pair<O, S> succ = tree.getOutSucc(s, input);
+            if (succ != null) {
+                map.computeIfAbsent(succ.getFirst(), k -> new ArrayList<>()).add(succ.getSecond());
+            }
+        }
         return map;
     }
 
@@ -165,16 +156,23 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         I retInput = tree.getInputAlphabet().getSymbol(0);
         int retPairs = 0;
         for (I i : tree.getInputAlphabet()) {
-            AtomicReference<Pair<List<Integer>, Integer>> pair = new AtomicReference<>(Pair.of(new ArrayList<>(), 0));
-            partitionOnOutput(tree, currentBlock, i).values().stream().map(List::size).forEach(in -> {
-                pair.get().getFirst().add(in);
-                pair.set(Pair.of(pair.get().getFirst(), pair.get().getSecond() + (in * (in - 1))));
-            });
-            List<Integer> stateNums = pair.get().getFirst();
-            int maxRec = pair.get().getSecond();
+            Map<O, List<S>> oPartition = partitionOnOutput(tree, currentBlock, i);
+            List<Integer> stateNums = new ArrayList<>(oPartition.size());
+            int maxRec = 0;
+            int ui = 0;
 
-            int ui = stateNums.stream().mapToInt(x -> x).sum();
-            int numApartPairs = stateNums.stream().mapToInt(uio -> uio * (ui - uio)).sum();
+            for (List<S> value : oPartition.values()) {
+                int size = value.size();
+                stateNums.add(size);
+                maxRec += size * (size - 1);
+                ui += size;
+            }
+
+            int numApartPairs = 0;
+            for (Integer uio : stateNums) {
+                numApartPairs += uio * (ui - uio);
+            }
+
             splitScore.put(i, Pair.of(numApartPairs, maxRec));
 
             if (numApartPairs > retPairs) {

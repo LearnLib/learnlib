@@ -17,9 +17,6 @@ package de.learnlib.algorithm.lsharp;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
@@ -129,23 +126,22 @@ public final class ApartnessUtil {
             Pair<S, S> pair = workList.pop();
             S fst = pair.getFirst();
             S snd = pair.getSecond();
-            List<Pair<Pair<O, S>, Pair<O, S>>> iter = tree.getInputAlphabet()
-                                                          .stream()
-                                                          .map(i -> treeRespPairInput(tree, fst, snd, i))
-                                                          .filter(Objects::nonNull)
-                                                          .collect(Collectors.toList());
-            for (Pair<Pair<O, S>, Pair<O, S>> iterPair : iter) {
-                Pair<O, S> fstOD = iterPair.getFirst();
-                Pair<O, S> sndOD = iterPair.getSecond();
 
-                O fstO = fstOD.getFirst();
-                S fstD = fstOD.getSecond();
-                O sndO = sndOD.getFirst();
-                S sndD = sndOD.getSecond();
-                if (fstO.equals(sndO)) {
-                    workList.push(Pair.of(fstD, sndD));
-                } else {
-                    return fstD;
+            for (I i : tree.getInputAlphabet()) {
+                Pair<Pair<O, S>, Pair<O, S>> p = treeRespPairInput(tree, fst, snd, i);
+                if (p != null) {
+                    Pair<O, S> fstOD = p.getFirst();
+                    Pair<O, S> sndOD = p.getSecond();
+
+                    O fstO = fstOD.getFirst();
+                    S fstD = fstOD.getSecond();
+                    O sndO = sndOD.getFirst();
+                    S sndD = sndOD.getSecond();
+                    if (fstO.equals(sndO)) {
+                        workList.push(Pair.of(fstD, sndD));
+                    } else {
+                        return fstD;
+                    }
                 }
             }
         }
