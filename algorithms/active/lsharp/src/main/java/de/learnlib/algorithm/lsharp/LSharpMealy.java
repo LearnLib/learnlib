@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import com.google.common.collect.HashBiMap;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.query.DefaultQuery;
@@ -32,6 +31,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.Pair;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -41,7 +41,8 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
     private final Alphabet<I> inputAlphabet;
     private final List<Word<I>> basis;
     private final Map<Word<I>, List<Word<I>>> frontierToBasisMap;
-    private final HashBiMap<Word<I>, Integer> basisMap;
+    private final Map<Word<I>, Integer> basisMap;
+    private final ArrayStorage<Word<I>> accessMap;
 
     public LSharpMealy(Alphabet<I> alphabet, AdaptiveMembershipOracle<I, O> oracle, Rule2 rule2, Rule3 rule3) {
         this(alphabet, oracle, rule2, rule3, null, null);
@@ -75,7 +76,8 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         this.basis = new ArrayList<>();
         basis.add(Word.epsilon());
         this.frontierToBasisMap = new HashMap<>();
-        this.basisMap = HashBiMap.create();
+        this.basisMap = new HashMap<>();
+        this.accessMap = new ArrayStorage<>();
     }
 
     public boolean processCex(DefaultQuery<I, Word<O>> cex, MealyMachine<Integer, I, ?, O> mealy) {
@@ -100,7 +102,8 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         }
 
         Integer q = mealy.getSuccessor(mealy.getInitialState(), ceInput);
-        Word<I> accQT = basisMap.inverse().get(q);
+        assert q != null;
+        Word<I> accQT = accessMap.get(q);
         assert accQT != null;
 
         NormalObservationTree<I, O> oTree = oqOracle.getTree();
@@ -123,7 +126,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         Word<I> sigma2 = ceInput.suffix(ceInput.size() - h);
         Integer qp = mealy.getSuccessor(mealy.getInitialState(), sigma1);
         assert qp != null;
-        Word<I> accQPt = basisMap.inverse().get(qp);
+        Word<I> accQPt = accessMap.get(qp);
         assert accQPt != null;
 
         Word<I> eta = ApartnessUtil.computeWitness(oTree, r, qt);
@@ -236,9 +239,12 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
         CompactMealy<I, O> result = new CompactMealy<>(inputAlphabet, basis.size());
         basisMap.clear();
+        accessMap.ensureCapacity(basis.size());
 
         for (Word<I> bAcc : basis) {
-            basisMap.put(bAcc, result.addState());
+            Integer state = result.addState();
+            basisMap.put(bAcc, state);
+            accessMap.set(state, bAcc);
         }
 
         NormalObservationTree<I, O> oTree = oqOracle.getTree();
