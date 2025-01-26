@@ -17,10 +17,12 @@ package de.learnlib.algorithm.lsharp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
@@ -39,7 +41,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
     private final LSOracle<I, O> oqOracle;
     private final Alphabet<I> inputAlphabet;
-    private final List<Word<I>> basis;
+    private final Set<Word<I>> basis;
     private final Map<Word<I>, List<Word<I>>> frontierToBasisMap;
     private final Map<Word<I>, Integer> basisMap;
     private final ArrayStorage<Word<I>> accessMap;
@@ -60,7 +62,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
                                        sinkOutput,
                                        random);
         this.inputAlphabet = alphabet;
-        this.basis = new ArrayList<>();
+        this.basis = new LinkedHashSet<>();
         basis.add(Word.epsilon());
         this.frontierToBasisMap = new HashMap<>();
         this.basisMap = new HashMap<>();
@@ -145,11 +147,10 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
             }
 
             for (Entry<Word<I>, List<Word<I>>> entry : frontierToBasisMap.entrySet()) {
-                if (entry.getValue().size() <= 1) {
-                    continue;
+                if (entry.getValue().size() > 1) {
+                    List<Word<I>> newCands = oqOracle.identifyFrontier(entry.getKey(), entry.getValue());
+                    frontierToBasisMap.put(entry.getKey(), newCands);
                 }
-                List<Word<I>> newCands = oqOracle.identifyFrontier(entry.getKey(), entry.getValue());
-                frontierToBasisMap.put(entry.getKey(), newCands);
             }
 
             this.promoteFrontierState();
@@ -190,17 +191,12 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         }
 
         NormalObservationTree<I, O> oTree = oqOracle.getTree();
-        List<Pair<Word<I>, I>> basisIpPairs = new ArrayList<>(basis.size() * inputAlphabet.size());
         for (Word<I> b : basis) {
             for (I i : inputAlphabet) {
-                basisIpPairs.add(Pair.of(b, i));
-            }
-        }
-
-        for (Pair<Word<I>, I> p : basisIpPairs) {
-            Integer q = oTree.getSucc(oTree.defaultState(), p.getFirst());
-            if (q == null || oTree.getOut(q, p.getSecond()) == null) {
-                return false;
+                Integer q = oTree.getSucc(oTree.defaultState(), b);
+                if (q == null || oTree.getOut(q, i) == null) {
+                    return false;
+                }
             }
         }
 

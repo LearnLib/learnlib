@@ -16,12 +16,12 @@
 package de.learnlib.algorithm.lsharp.ads;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Optional;
 
 import de.learnlib.algorithm.lsharp.ObservationTree;
 import net.automatalib.common.util.HashUtil;
@@ -33,7 +33,7 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
     private final ADSNode<I, O> initialNode;
     private ADSNode<I, O> currentNode;
 
-    public ADSTree(ObservationTree<S, I, O> tree, List<S> currentBlock, @Nullable O sinkOut) {
+    public ADSTree(ObservationTree<S, I, O> tree, Collection<S> currentBlock, @Nullable O sinkOut) {
         ADSNode<I, O> initialNode = constructADS(tree, currentBlock, sinkOut);
         this.initialNode = initialNode;
         this.currentNode = initialNode;
@@ -52,7 +52,7 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
     }
 
     public static <S extends Comparable<S>, I, O> ADSNode<I, O> constructADS(ObservationTree<S, I, O> tree,
-                                                                             List<S> currentBlock,
+                                                                             Collection<S> currentBlock,
                                                                              @Nullable O sinkOut) {
         int blockSize = currentBlock.size();
 
@@ -141,7 +141,7 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
     }
 
     private static <S extends Comparable<S>, I, O> Map<O, List<S>> partitionOnOutput(ObservationTree<S, I, O> tree,
-                                                                                     List<S> block,
+                                                                                     Collection<S> block,
                                                                                      I input) {
         Map<O, List<S>> map = new HashMap<>();
         for (S s : block) {
@@ -154,7 +154,7 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
     }
 
     public static <S extends Comparable<S>, I, O> Pair<I, Integer> maximalBaseInput(ObservationTree<S, I, O> tree,
-                                                                                    List<S> currentBlock,
+                                                                                    Collection<S> currentBlock,
                                                                                     Map<I, Pair<Integer, Integer>> splitScore) {
         I retInput = tree.getInputAlphabet().getSymbol(0);
         int retPairs = 0;
@@ -188,20 +188,16 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
     }
 
     @Override
-    public Optional<I> nextInput(@Nullable O previousSymbol) {
+    public @Nullable I nextInput(@Nullable O previousSymbol) {
         if (previousSymbol != null) {
             ADSNode<I, O> childNode = currentNode.getChildNode(previousSymbol);
             if (childNode == null) {
-                return Optional.empty();
+                return null;
             }
             this.currentNode = childNode;
         }
 
-        I outSymbol = this.currentNode.getInput();
-        if (outSymbol == null) {
-            return Optional.empty();
-        }
-        return Optional.of(outSymbol);
+        return this.currentNode.getInput();
     }
 
     @Override

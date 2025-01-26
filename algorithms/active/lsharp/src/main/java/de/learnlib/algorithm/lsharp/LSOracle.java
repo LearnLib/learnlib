@@ -16,10 +16,10 @@
 package de.learnlib.algorithm.lsharp;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
 
 import de.learnlib.algorithm.lsharp.ads.ADSTree;
@@ -72,10 +72,10 @@ public class LSOracle<I, O> {
         return obsTree.insertObservation(null, i, o);
     }
 
-    private <T> List<T> randomN(List<T> list, int n) {
-        List<T> shuffled = new ArrayList<>(list);
+    private <T> List<T> sample2(Collection<T> collection) {
+        List<T> shuffled = new ArrayList<>(collection);
         Collections.shuffle(shuffled, random);
-        return shuffled.subList(0, n);
+        return shuffled.subList(0, 2);
     }
 
     private Pair<Word<I>, Word<O>> rule3IO(List<Word<I>> candidates, Word<I> prefix) {
@@ -106,7 +106,7 @@ public class LSOracle<I, O> {
                     return this.adaptiveOutputQuery(prefix, null, suffix);
                 }
             case SEPSEQ:
-                List<Integer> withS = getSuccs(randomN(candidates, 2));
+                List<Integer> withS = getSuccs(sample2(candidates));
                 Word<I> wit = ApartnessUtil.computeWitness(obsTree, withS.get(0), withS.get(1));
                 assert wit != null;
                 Word<I> inputSeq = prefix.concat(wit);
@@ -116,7 +116,7 @@ public class LSOracle<I, O> {
         }
     }
 
-    private List<Integer> getSuccs(List<Word<I>> candidates) {
+    private List<Integer> getSuccs(Collection<Word<I>> candidates) {
         List<Integer> result = new ArrayList<>(candidates.size());
         for (Word<I> c : candidates) {
             Integer succ = obsTree.getSucc(obsTree.defaultState(), c);
@@ -147,7 +147,7 @@ public class LSOracle<I, O> {
         return candidates;
     }
 
-    private Pair<Word<I>, Word<O>> rule2IO(Word<I> accessQ, I i, List<Integer> bss, List<Word<I>> basis) {
+    private Pair<Word<I>, Word<O>> rule2IO(Word<I> accessQ, I i, List<Integer> bss, Collection<Word<I>> basis) {
         switch (this.rule2) {
             case ADS:
                 ADSTree<Integer, I, O> suffix = new ADSTree<>(obsTree, bss, sinkOutput);
@@ -159,11 +159,11 @@ public class LSOracle<I, O> {
             case SEPSEQ:
                 Word<I> wit;
                 if (basis.size() >= 2) {
-                    List<Integer> ran = getSuccs(randomN(basis, 2));
+                    List<Integer> ran = getSuccs(sample2(basis));
                     wit = ApartnessUtil.computeWitness(obsTree, ran.get(0), ran.get(1));
                     assert wit != null;
                 } else {
-                     wit = Word.epsilon();
+                    wit = Word.epsilon();
                 }
                 Word<I> inputSeq = accessQ.append(i).concat(wit);
                 Word<O> outputSeq = this.outputQuery(inputSeq);
@@ -173,7 +173,7 @@ public class LSOracle<I, O> {
         }
     }
 
-    public List<Pair<Word<I>, List<Word<I>>>> exploreFrontier(List<Word<I>> basis) {
+    public List<Pair<Word<I>, List<Word<I>>>> exploreFrontier(Collection<Word<I>> basis) {
         List<Pair<Word<I>, List<Word<I>>>> frontier = new ArrayList<>();
         for (Word<I> b : basis) {
             for (I i : obsTree.getInputAlphabet()) {
@@ -187,7 +187,7 @@ public class LSOracle<I, O> {
         return frontier;
     }
 
-    public Pair<Word<I>, List<Word<I>>> exploreFrontier(Word<I> accQ, I i, List<Word<I>> basis) {
+    public Pair<Word<I>, List<Word<I>>> exploreFrontier(Word<I> accQ, I i, Collection<Word<I>> basis) {
         Word<I> accessQ = Word.fromWords(accQ);
         Integer q = obsTree.getSucc(obsTree.defaultState(), accQ);
         assert q != null;
@@ -228,7 +228,9 @@ public class LSOracle<I, O> {
         return out;
     }
 
-    public Pair<Word<I>, Word<O>> adaptiveOutputQuery(Word<I> prefix, @Nullable I infix, ADSTree<Integer, I, O> suffix) {
+    public Pair<Word<I>, Word<O>> adaptiveOutputQuery(Word<I> prefix,
+                                                      @Nullable I infix,
+                                                      ADSTree<Integer, I, O> suffix) {
         return this.adaptiveOutputQuery(infix != null ? prefix.append(infix) : prefix, suffix);
     }
 
@@ -268,11 +270,10 @@ public class LSOracle<I, O> {
         Integer currState = fromState;
 
         O prevOutput;
-        Optional<I> nextInput = ads.nextInput(null);
-        while (nextInput.isPresent()) {
-            I i = nextInput.get();
-            inputsSent.add(i);
-            Pair<O, Integer> pair = obsTree.getOutSucc(currState, i);
+        I nextInput = ads.nextInput(null);
+        while (nextInput != null) {
+            inputsSent.add(nextInput);
+            Pair<O, Integer> pair = obsTree.getOutSucc(currState, nextInput);
             if (pair == null) {
                 return null;
             }
@@ -335,13 +336,13 @@ public class LSOracle<I, O> {
         }
 
         private Response computeNext(@Nullable O out) {
-            final Optional<I> next = ads.nextInput(out);
-            if (next.isPresent()) {
-                adsSym = next.get();
-                input.append(adsSym);
-                return Response.SYMBOL;
-            } else {
+            final I next = ads.nextInput(out);
+            if (next == null) {
                 return Response.FINISHED;
+            } else {
+                adsSym = next;
+                input.append(next);
+                return Response.SYMBOL;
             }
         }
 

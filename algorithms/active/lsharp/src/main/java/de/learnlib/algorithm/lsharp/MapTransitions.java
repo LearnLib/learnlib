@@ -18,6 +18,7 @@ package de.learnlib.algorithm.lsharp;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -26,7 +27,7 @@ public class MapTransitions<I, O> implements TransitionInformation<I, O> {
     private final Map<I, Pair<O, Integer>> trans;
 
     public MapTransitions(int inSize) {
-        trans = new HashMap<>(inSize);
+        trans = new HashMap<>(HashUtil.capacity(inSize));
     }
 
     @Override

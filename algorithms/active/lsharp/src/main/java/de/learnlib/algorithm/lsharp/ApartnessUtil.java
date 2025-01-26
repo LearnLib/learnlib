@@ -22,6 +22,7 @@ import java.util.Objects;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class ApartnessUtil {
@@ -74,7 +75,8 @@ public final class ApartnessUtil {
         Deque<Pair<S1, S2>> queue = new ArrayDeque<>();
         queue.push(Pair.of(st, sh));
         while (!queue.isEmpty()) {
-            Pair<S1, S2> pair = queue.pop();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            @NonNull Pair<S1, S2> pair = queue.poll();
             S1 q = pair.getFirst();
             S2 r = pair.getSecond();
 
