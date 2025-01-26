@@ -29,6 +29,7 @@ import de.learnlib.util.mealy.WordAdaptiveQuery;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class LSOracle<I, O> {
@@ -37,7 +38,7 @@ public class LSOracle<I, O> {
     private final NormalObservationTree<I, O> obsTree;
     private final Rule2 rule2;
     private final Rule3 rule3;
-    private Word<I> sinkState;
+    private @MonotonicNonNull Word<I> sinkState;
     private final O sinkOutput;
     private final Random random;
 
@@ -45,7 +46,7 @@ public class LSOracle<I, O> {
                     NormalObservationTree<I, O> obsTree,
                     Rule2 rule2,
                     Rule3 rule3,
-                    Word<I> sinkState,
+                    @Nullable Word<I> sinkState,
                     O sinkOutput,
                     Random random) {
         this.sul = sul;
@@ -107,7 +108,7 @@ public class LSOracle<I, O> {
             case SEPSEQ:
                 List<Integer> withS = getSuccs(randomN(candidates, 2));
                 Word<I> wit = ApartnessUtil.computeWitness(obsTree, withS.get(0), withS.get(1));
-
+                assert wit != null;
                 Word<I> inputSeq = prefix.concat(wit);
                 return Pair.of(inputSeq, this.outputQuery(inputSeq));
             default:
@@ -118,7 +119,9 @@ public class LSOracle<I, O> {
     private List<Integer> getSuccs(List<Word<I>> candidates) {
         List<Integer> result = new ArrayList<>(candidates.size());
         for (Word<I> c : candidates) {
-            result.add(obsTree.getSucc(obsTree.defaultState(), c));
+            Integer succ = obsTree.getSucc(obsTree.defaultState(), c);
+            assert succ != null;
+            result.add(succ);
         }
         return result;
     }
@@ -154,12 +157,13 @@ public class LSOracle<I, O> {
                 Word<O> oSeq = this.outputQuery(prefix);
                 return Pair.of(prefix, oSeq);
             case SEPSEQ:
-                Word<I> wit = Word.epsilon();
+                Word<I> wit;
                 if (basis.size() >= 2) {
                     List<Integer> ran = getSuccs(randomN(basis, 2));
-                    assert ran.get(0) != null;
-                    assert ran.get(1) != null;
                     wit = ApartnessUtil.computeWitness(obsTree, ran.get(0), ran.get(1));
+                    assert wit != null;
+                } else {
+                     wit = Word.epsilon();
                 }
                 Word<I> inputSeq = accessQ.append(i).concat(wit);
                 Word<O> outputSeq = this.outputQuery(inputSeq);
@@ -216,7 +220,7 @@ public class LSOracle<I, O> {
         sul.processQuery(query);
         out = query.getOutput();
 
-        if (sinkState == null && out.lastSymbol().equals(sinkOutput)) {
+        if (sinkState == null && Objects.equals(out.lastSymbol(), sinkOutput)) {
             sinkState = inputSeq;
         }
 
@@ -224,7 +228,7 @@ public class LSOracle<I, O> {
         return out;
     }
 
-    public Pair<Word<I>, Word<O>> adaptiveOutputQuery(Word<I> prefix, I infix, ADSTree<Integer, I, O> suffix) {
+    public Pair<Word<I>, Word<O>> adaptiveOutputQuery(Word<I> prefix, @Nullable I infix, ADSTree<Integer, I, O> suffix) {
         return this.adaptiveOutputQuery(infix != null ? prefix.append(infix) : prefix, suffix);
     }
 
@@ -268,7 +272,6 @@ public class LSOracle<I, O> {
         while (nextInput.isPresent()) {
             I i = nextInput.get();
             inputsSent.add(i);
-            @Nullable
             Pair<O, Integer> pair = obsTree.getOutSucc(currState, i);
             if (pair == null) {
                 return null;
@@ -331,7 +334,7 @@ public class LSOracle<I, O> {
             }
         }
 
-        private Response computeNext(O out) {
+        private Response computeNext(@Nullable O out) {
             final Optional<I> next = ads.nextInput(out);
             if (next.isPresent()) {
                 adsSym = next.get();

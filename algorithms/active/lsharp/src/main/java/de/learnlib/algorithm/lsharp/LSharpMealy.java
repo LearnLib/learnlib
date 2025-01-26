@@ -44,25 +44,12 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
     private final Map<Word<I>, Integer> basisMap;
     private final ArrayStorage<Word<I>> accessMap;
 
-    public LSharpMealy(Alphabet<I> alphabet, AdaptiveMembershipOracle<I, O> oracle, Rule2 rule2, Rule3 rule3) {
-        this(alphabet, oracle, rule2, rule3, null, null);
-    }
-
-    public LSharpMealy(Alphabet<I> alphabet,
-                       AdaptiveMembershipOracle<I, O> oracle,
-                       Rule2 rule2,
-                       Rule3 rule3,
-                       Word<I> sinkState,
-                       O sinkOutput) {
-        this(alphabet, oracle, rule2, rule3, sinkState, sinkOutput, new Random());
-    }
-
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public LSharpMealy(Alphabet<I> alphabet,
                        AdaptiveMembershipOracle<I, O> oracle,
                        Rule2 rule2,
                        Rule3 rule3,
-                       Word<I> sinkState,
+                       @Nullable Word<I> sinkState,
                        O sinkOutput,
                        Random random) {
         this.oqOracle = new LSOracle<>(oracle,
@@ -97,11 +84,12 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         Integer r = oqOracle.getTree().getSucc(oqOracle.getTree().defaultState(), ceInput);
         assert r != null;
         this.updateFrontierAndBasis();
-        if (this.frontierToBasisMap.containsKey(ceInput) || basis.contains(ceInput)) {
+        Integer init = mealy.getInitialState();
+        if (this.frontierToBasisMap.containsKey(ceInput) || basis.contains(ceInput) || init == null) {
             return;
         }
 
-        Integer q = mealy.getSuccessor(mealy.getInitialState(), ceInput);
+        Integer q = mealy.getSuccessor(init, ceInput);
         assert q != null;
         Word<I> accQT = accessMap.get(q);
         assert accQT != null;
@@ -124,7 +112,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
         Word<I> sigma1 = ceInput.prefix(h);
         Word<I> sigma2 = ceInput.suffix(ceInput.size() - h);
-        Integer qp = mealy.getSuccessor(mealy.getInitialState(), sigma1);
+        Integer qp = mealy.getSuccessor(init, sigma1);
         assert qp != null;
         Word<I> accQPt = accessMap.get(qp);
         assert accQPt != null;
@@ -140,7 +128,6 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         Integer rp = oTree.getSucc(oTree.defaultState(), sigma1);
         assert rp != null;
 
-        @Nullable
         Word<I> wit = ApartnessUtil.computeWitness(oTree, qpt, rp);
         if (wit != null) {
             processBinarySearch(sigma1, ceOutput.prefix(sigma1.length()), mealy);
@@ -212,7 +199,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
         for (Pair<Word<I>, I> p : basisIpPairs) {
             Integer q = oTree.getSucc(oTree.defaultState(), p.getFirst());
-            if (oTree.getOut(q, p.getSecond()) == null) {
+            if (q == null || oTree.getOut(q, p.getSecond()) == null) {
                 return false;
             }
         }
@@ -276,8 +263,9 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
             return Pair.of(seq, false);
         }
 
-        Word<I> bs = frontierToBasisMap.get(seq).get(0);
-        return Pair.of(bs, true);
+        List<Word<I>> frontier = frontierToBasisMap.get(seq);
+        assert frontier != null;
+        return Pair.of(frontier.get(0), true);
     }
 
     public void initObsTree(@Nullable List<Pair<Word<I>, Word<O>>> logs) {
@@ -309,9 +297,8 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         }
     }
 
-    public DefaultQuery<I, Word<O>> checkConsistency(MealyMachine<Integer, I, ?, O> mealy) {
+    public @Nullable DefaultQuery<I, Word<O>> checkConsistency(MealyMachine<Integer, I, ?, O> mealy) {
         NormalObservationTree<I, O> oTree = oqOracle.getTree();
-        @Nullable
         Word<I> wit = ApartnessUtil.treeAndHypComputeWitness(oTree, oTree.defaultState(), mealy, 0);
         if (wit == null) {
             return null;
@@ -353,11 +340,19 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
             // prevent instantiation
         }
 
-        public static <I> Word<I> sinkState() {
+        public static Rule2 rule2() {
+            return Rule2.ADS;
+        }
+
+        public static Rule3 rule3() {
+            return Rule3.ADS;
+        }
+
+        public static <I> @Nullable Word<I> sinkState() {
             return null;
         }
 
-        public static <O> O sinkOutput() {
+        public static <O> @Nullable O sinkOutput() {
             return null;
         }
 

@@ -34,7 +34,7 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
     private ADSNode<I, O> currentNode;
 
     public ADSTree(ObservationTree<S, I, O> tree, List<S> currentBlock, @Nullable O sinkOut) {
-        ADSNode<I, O> initialNode = this.constructADS(tree, currentBlock, sinkOut);
+        ADSNode<I, O> initialNode = constructADS(tree, currentBlock, sinkOut);
         this.initialNode = initialNode;
         this.currentNode = initialNode;
     }
@@ -43,7 +43,7 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         return this.initialNode.getScore();
     }
 
-    private <A, B> Map<A, B> toMap(List<Pair<A, B>> list) {
+    private static <A, B> Map<A, B> toMap(List<Pair<A, B>> list) {
         Map<A, B> map = new HashMap<>(HashUtil.capacity(list.size()));
         for (Pair<A, B> pair : list) {
             map.put(pair.getFirst(), pair.getSecond());
@@ -51,7 +51,9 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         return map;
     }
 
-    public ADSNode<I, O> constructADS(ObservationTree<S, I, O> tree, List<S> currentBlock, O sinkOut) {
+    public static <S extends Comparable<S>, I, O> ADSNode<I, O> constructADS(ObservationTree<S, I, O> tree,
+                                                                             List<S> currentBlock,
+                                                                             @Nullable O sinkOut) {
         int blockSize = currentBlock.size();
 
         if (blockSize == 1) {
@@ -59,9 +61,9 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         }
 
         Map<I, Pair<Integer, Integer>> splitScore = new HashMap<>();
-        I maxInput = this.maximalBaseInput(tree, currentBlock, splitScore).getFirst();
+        I maxInput = maximalBaseInput(tree, currentBlock, splitScore).getFirst();
 
-        Map<O, List<S>> oPartitions = this.partitionOnOutput(tree, currentBlock, maxInput);
+        Map<O, List<S>> oPartitions = partitionOnOutput(tree, currentBlock, maxInput);
         int ui = computeUI(oPartitions);
 
         int maxInputScore = 0;
@@ -69,8 +71,8 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
             O o = e.getKey();
             List<S> oPart = e.getValue();
             int uIO = oPart.size();
-            int childScore = Objects.equals(o, sinkOut) ? 0 : this.constructADS(tree, oPart, sinkOut).getScore();
-            maxInputScore += this.computeRegScore(uIO, ui, childScore);
+            int childScore = Objects.equals(o, sinkOut) ? 0 : constructADS(tree, oPart, sinkOut).getScore();
+            maxInputScore += computeRegScore(uIO, ui, childScore);
         }
 
         List<I> inputsToKeep = new ArrayList<>(splitScore.size());
@@ -89,14 +91,14 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         List<Pair<O, ADSNode<I, O>>> bestChildren = null;
 
         for (I i : inputsToKeep) {
-            Map<O, List<S>> innerOPartitions = this.partitionOnOutput(tree, currentBlock, i);
+            Map<O, List<S>> innerOPartitions = partitionOnOutput(tree, currentBlock, i);
             int innerUI = computeUI(innerOPartitions);
             int iScore = 0;
             List<Pair<O, ADSNode<I, O>>> children = new ArrayList<>(innerOPartitions.size());
 
             for (Entry<O, List<S>> e : innerOPartitions.entrySet()) {
                 Pair<Integer, Pair<O, ADSNode<I, O>>> pair =
-                        this.computeOSubtree(tree, e.getKey(), e.getValue(), sinkOut, innerUI);
+                        computeOSubtree(tree, e.getKey(), e.getValue(), sinkOut, innerUI);
                 iScore += pair.getFirst();
                 children.add(pair.getSecond());
             }
@@ -113,25 +115,24 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         return new ADSNode<>(bestInput, toMap(bestChildren), bestIScore);
     }
 
-    public Pair<Integer, Pair<O, ADSNode<I, O>>> computeOSubtree(ObservationTree<S, I, O> tree,
-                                                                 O o,
-                                                                 List<S> oPart,
-                                                                 O sinkOut,
-                                                                 int ui) {
-        ADSNode<I, O> oSubtree =
-                o.equals(sinkOut) ? new ADSNode<>(null, new HashMap<>(), 0) : this.constructADS(tree, oPart, sinkOut);
+    public static <S extends Comparable<S>, I, O> Pair<Integer, Pair<O, ADSNode<I, O>>> computeOSubtree(ObservationTree<S, I, O> tree,
+                                                                                                        O o,
+                                                                                                        List<S> oPart,
+                                                                                                        @Nullable O sinkOut,
+                                                                                                        int ui) {
+        ADSNode<I, O> oSubtree = Objects.equals(o, sinkOut) ? new ADSNode<>() : constructADS(tree, oPart, sinkOut);
         int oChildScore = oSubtree.getScore();
         int uio = oPart.size();
         Pair<O, ADSNode<I, O>> oChild = Pair.of(o, oSubtree);
-        int oScore = this.computeRegScore(uio, ui, oChildScore);
+        int oScore = computeRegScore(uio, ui, oChildScore);
         return Pair.of(oScore, oChild);
     }
 
-    private int computeRegScore(int uio, int ui, int childScore) {
+    private static int computeRegScore(int uio, int ui, int childScore) {
         return uio * (ui - uio) + childScore;
     }
 
-    private int computeUI(Map<O, List<S>> oPartitions) {
+    private static <S, O> int computeUI(Map<O, List<S>> oPartitions) {
         int ui = 0;
         for (List<S> value : oPartitions.values()) {
             ui += value.size();
@@ -139,7 +140,9 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         return ui;
     }
 
-    private Map<O, List<S>> partitionOnOutput(ObservationTree<S, I, O> tree, List<S> block, I input) {
+    private static <S extends Comparable<S>, I, O> Map<O, List<S>> partitionOnOutput(ObservationTree<S, I, O> tree,
+                                                                                     List<S> block,
+                                                                                     I input) {
         Map<O, List<S>> map = new HashMap<>();
         for (S s : block) {
             Pair<O, S> succ = tree.getOutSucc(s, input);
@@ -150,9 +153,9 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
         return map;
     }
 
-    public Pair<I, Integer> maximalBaseInput(ObservationTree<S, I, O> tree,
-                                             List<S> currentBlock,
-                                             Map<I, Pair<Integer, Integer>> splitScore) {
+    public static <S extends Comparable<S>, I, O> Pair<I, Integer> maximalBaseInput(ObservationTree<S, I, O> tree,
+                                                                                    List<S> currentBlock,
+                                                                                    Map<I, Pair<Integer, Integer>> splitScore) {
         I retInput = tree.getInputAlphabet().getSymbol(0);
         int retPairs = 0;
         for (I i : tree.getInputAlphabet()) {

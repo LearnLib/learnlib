@@ -23,7 +23,7 @@ public class ArenaNode<T, P> {
     public final @Nullable Pair<P, Integer> parent;
     public T value;
 
-    public ArenaNode(Pair<P, Integer> parent, T value) {
+    public ArenaNode(@Nullable Pair<P, Integer> parent, T value) {
         this.parent = parent;
         this.value = value;
     }

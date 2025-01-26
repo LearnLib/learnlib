@@ -17,6 +17,7 @@ package de.learnlib.algorithm.lsharp;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Objects;
 
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
@@ -137,7 +138,7 @@ public final class ApartnessUtil {
                     S fstD = fstOD.getSecond();
                     O sndO = sndOD.getFirst();
                     S sndD = sndOD.getSecond();
-                    if (fstO.equals(sndO)) {
+                    if (Objects.equals(fstO, sndO)) {
                         workList.push(Pair.of(fstD, sndD));
                     } else {
                         return fstD;

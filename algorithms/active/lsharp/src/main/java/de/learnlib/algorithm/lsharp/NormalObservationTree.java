@@ -44,22 +44,21 @@ public class NormalObservationTree<I, O> implements ObservationTree<Integer, I, 
         return 0;
     }
 
-    private Integer addTransitionGetDestination(Integer src, I i, O o) {
-        int srcRaw = src;
-        Pair<O, Integer> pair = this.tree.get(srcRaw).getOutSucc(i);
+    private int addTransitionGetDestination(int src, I i, O o) {
+        Pair<O, Integer> pair = this.tree.get(src).getOutSucc(i);
 
         if (pair != null) {
             return pair.getSecond();
         } else {
-            int destState = this.tree.nodeWithParent(new MapTransitions<>(this.inputAlphabet.size()), srcRaw, i);
-            this.tree.arena.get(srcRaw).value.addTrans(i, o, destState);
+            int destState = this.tree.nodeWithParent(new MapTransitions<>(this.inputAlphabet.size()), src, i);
+            this.tree.arena.get(src).value.addTrans(i, o, destState);
             return destState;
         }
     }
 
     @Override
     public Integer insertObservation(@Nullable Integer s, Word<I> input, Word<O> output) {
-        Integer curr = s == null ? defaultState() : s;
+        int curr = s == null ? defaultState() : s;
 
         int max = Math.min(input.length(), output.length());
         for (int i = 0; i < max; i++) {
@@ -85,6 +84,7 @@ public class NormalObservationTree<I, O> implements ObservationTree<Integer, I, 
 
         while (true) {
             Pair<I, Integer> pair = this.tree.arena.get(currState).parent;
+            assert pair != null;
             I i = pair.getFirst();
             Integer parentIndex = pair.getSecond();
             accessSeq.add(i);
@@ -119,7 +119,7 @@ public class NormalObservationTree<I, O> implements ObservationTree<Integer, I, 
         return this.tree.get(src).getOutSucc(input);
     }
 
-    Integer getSucc(Integer state, I input) {
+    private @Nullable Integer getSucc(Integer state, I input) {
         Pair<O, Integer> pair = getOutSucc(state, input);
         return pair == null ? null : pair.getSecond();
     }

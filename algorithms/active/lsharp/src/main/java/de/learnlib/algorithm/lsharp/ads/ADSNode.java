@@ -27,12 +27,10 @@ public class ADSNode<I, O> {
     private final int score;
 
     public ADSNode() {
-        this.input = null;
-        this.children = new HashMap<>();
-        this.score = 0;
+        this(null, new HashMap<>(), 0);
     }
 
-    public ADSNode(I input, Map<O, ADSNode<I, O>> children, int score) {
+    public ADSNode(@Nullable I input, Map<O, ADSNode<I, O>> children, int score) {
         this.input = input;
         this.children = children;
         this.score = score;

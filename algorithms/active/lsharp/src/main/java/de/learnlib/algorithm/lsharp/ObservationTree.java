@@ -30,11 +30,9 @@ public interface ObservationTree<S extends Comparable<S>, I, O> {
 
     Word<I> getTransferSeq(S toState, S fromState);
 
-    @Nullable
-    Word<O> getObservation(@Nullable S start, Word<I> input);
+    @Nullable Word<O> getObservation(@Nullable S start, Word<I> input);
 
-    @Nullable
-    Pair<O, S> getOutSucc(S src, I input);
+    @Nullable Pair<O, S> getOutSucc(S src, I input);
 
     default @Nullable O getOut(S src, I input) {
         Pair<O, S> out = this.getOutSucc(src, input);
@@ -45,8 +43,7 @@ public interface ObservationTree<S extends Comparable<S>, I, O> {
         return out.getFirst();
     }
 
-    @Nullable
-    S getSucc(S src, Word<I> input);
+    @Nullable S getSucc(S src, Word<I> input);
 
     Alphabet<I> getInputAlphabet();
 

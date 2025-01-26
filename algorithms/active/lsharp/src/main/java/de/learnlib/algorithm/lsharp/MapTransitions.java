@@ -25,7 +25,7 @@ public class MapTransitions<I, O> implements TransitionInformation<I, O> {
 
     private final Map<I, Pair<O, Integer>> trans;
 
-    public MapTransitions(Integer inSize) {
+    public MapTransitions(int inSize) {
         trans = new HashMap<>(inSize);
     }
 
