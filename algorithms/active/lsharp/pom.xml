@@ -28,7 +28,11 @@ limitations under the License.
     <artifactId>learnlib-lsharp</artifactId>
 
     <name>LearnLib :: Algorithms :: L#</name>
-    <description>The L# Algorithm</description>
+    <description>
+        This artifact provides the implementation of the L# algorithm as described in the paper "A New Approach for
+        Active Automata Learning Based on Apartness" (https://doi.org/10.1007/978-3-030-99524-9_12) by Frits Vaandrager,
+        Bharat Garhewal, Jurriaan Rot, and Thorsten Wißmann.
+    </description>
 
     <dependencies>
         <!-- internal -->
