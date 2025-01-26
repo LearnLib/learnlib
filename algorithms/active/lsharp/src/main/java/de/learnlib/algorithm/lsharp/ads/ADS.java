@@ -15,11 +15,13 @@
  */
 package de.learnlib.algorithm.lsharp.ads;
 
+import java.util.Optional;
+
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface ADS<I, O> {
 
-    I nextInput(@Nullable O previousOutput);
+    Optional<I> nextInput(@Nullable O previousOutput);
 
     void resetToRoot();
 }

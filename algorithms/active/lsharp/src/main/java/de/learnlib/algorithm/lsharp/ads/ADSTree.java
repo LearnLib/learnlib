@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 
 import de.learnlib.algorithm.lsharp.ObservationTree;
-import de.learnlib.algorithm.lsharp.ads.ADSStatus.Code;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -185,20 +185,20 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
     }
 
     @Override
-    public I nextInput(@Nullable O previousSymbol) {
+    public Optional<I> nextInput(@Nullable O previousSymbol) {
         if (previousSymbol != null) {
             ADSNode<I, O> childNode = currentNode.getChildNode(previousSymbol);
             if (childNode == null) {
-                throw new ADSStatus(Code.UNEXPECTED);
+                return Optional.empty();
             }
             this.currentNode = childNode;
         }
 
         I outSymbol = this.currentNode.getInput();
         if (outSymbol == null) {
-            throw new ADSStatus(Code.DONE);
+            return Optional.empty();
         }
-        return outSymbol;
+        return Optional.of(outSymbol);
     }
 
     @Override

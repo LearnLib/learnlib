@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 
-import de.learnlib.algorithm.lsharp.ads.ADSStatus;
 import de.learnlib.algorithm.lsharp.ads.ADSTree;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.query.AdaptiveQuery;
@@ -258,30 +258,26 @@ public class LSOracle<I, O> {
         return Pair.of(inputSeq, outputSeq);
     }
 
-    @SuppressWarnings("PMD.EmptyCatchBlock")
     public @Nullable Pair<Word<I>, Word<O>> answerADSFromTree(ADSTree<Integer, I, O> ads, Integer fromState) {
-        O prevOutput = null;
         WordBuilder<I> inputsSent = new WordBuilder<>();
         WordBuilder<O> outputsReceived = new WordBuilder<>();
         Integer currState = fromState;
 
-        try {
-            I nextInput = ads.nextInput(prevOutput);
-            while (nextInput != null) {
-                inputsSent.add(nextInput);
-                @Nullable
-                Pair<O, Integer> pair = obsTree.getOutSucc(currState, nextInput);
-                if (pair == null) {
-                    return null;
-                }
-                prevOutput = pair.getFirst();
-                outputsReceived.add(pair.getFirst());
-                currState = pair.getSecond();
-
-                nextInput = ads.nextInput(prevOutput);
+        O prevOutput;
+        Optional<I> nextInput = ads.nextInput(null);
+        while (nextInput.isPresent()) {
+            I i = nextInput.get();
+            inputsSent.add(i);
+            @Nullable
+            Pair<O, Integer> pair = obsTree.getOutSucc(currState, i);
+            if (pair == null) {
+                return null;
             }
-        } catch (ADSStatus e) {
-            // Purely used as control flow.
+            prevOutput = pair.getFirst();
+            outputsReceived.add(pair.getFirst());
+            currState = pair.getSecond();
+
+            nextInput = ads.nextInput(prevOutput);
         }
 
         ads.resetToRoot();
@@ -336,12 +332,12 @@ public class LSOracle<I, O> {
         }
 
         private Response computeNext(O out) {
-            try {
-                final I next = ads.nextInput(out);
-                input.append(next);
-                adsSym = next;
+            final Optional<I> next = ads.nextInput(out);
+            if (next.isPresent()) {
+                adsSym = next.get();
+                input.append(adsSym);
                 return Response.SYMBOL;
-            } catch (ADSStatus s) {
+            } else {
                 return Response.FINISHED;
             }
         }
