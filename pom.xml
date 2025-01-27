@@ -79,6 +79,14 @@ limitations under the License.
             </roles>
         </contributor>
         <contributor>
+            <name>Tiago Ferreira</name>
+            <organization>University College London, Programming Principles, Logic and Verification Group</organization>
+            <organizationUrl>http://pplv.cs.ucl.ac.uk/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+        <contributor>
             <name>Maren Geske</name>
             <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
@@ -307,6 +315,11 @@ limitations under the License.
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-lambda</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-lsharp</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -74,6 +74,11 @@ limitations under the License.
 
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-lsharp</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-lstar</artifactId>
         </dependency>
 
@@ -303,6 +308,13 @@ limitations under the License.
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-lambda</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-lsharp</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

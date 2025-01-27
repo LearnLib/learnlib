@@ -24,6 +24,7 @@ Currently, the following learning algorithms with respective target models are s
 | DHC                 | `Mealy`                     |     |                       |                       |
 | Kearns & Vazirani   | `DFA` `Mealy`               |     |                       |                       |
 | Lambda              | `DFA` `Mealy`               |     |                       |                       |
+| L#                  | `Mealy`                     |     |                       |                       |
 | L* (incl. variants) | `DFA` `Mealy` `Moore`       |     |                       |                       |
 | NL*                 | `NFA`                       |     |                       |                       |
 | Observation Pack    | `DFA` `Mealy` `Moore` `VPA` |     |                       |                       |

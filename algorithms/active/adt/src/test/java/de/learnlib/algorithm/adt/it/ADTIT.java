@@ -41,6 +41,7 @@ import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.oracle.membership.SULAdaptiveOracle;
 import de.learnlib.sul.SUL;
+import de.learnlib.testsupport.MQ2AQWrapper;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList;
 import de.learnlib.util.Experiment.MealyExperiment;
