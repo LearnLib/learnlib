@@ -37,6 +37,17 @@ import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Implementation of the L<sup>#</sup> algorithm for {@link MealyMachine}s. The implementation is based on the
+ * <a href="https://gitlab.science.ru.nl/sws/lsharp/-/tree/8526fc3a88fa18b0c408d867385bcc9a29a302a1">original
+ * implementation</a> of the authors. However, it does not support all features (such as compressed ADSs or some of the
+ * more intricate equivalence checks on observation trees).
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
     private final LSOracle<I, O> oqOracle;
