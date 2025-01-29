@@ -17,8 +17,6 @@ package de.learnlib.algorithm.procedural.spmm;
 
 import java.util.Arrays;
 
-import de.learnlib.algorithm.LearnerConstructor;
-import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.adapter.mealy.TTTAdapterMealy;
 import de.learnlib.algorithm.procedural.spmm.manager.OptimizingATManager;
 import de.learnlib.oracle.equivalence.EQOracleChain;
@@ -56,10 +54,8 @@ public class OptimizationsTest {
         final EQOracleChain<SPMM<?, Character, ?, Character>, Character, Word<Character>> eqo =
                 new EQOracleChain<>(Arrays.asList(eqo1, eqo2));
 
-        final LearnerConstructor<TTTAdapterMealy<SymbolWrapper<Character>, Character>, SymbolWrapper<Character>, Word<Character>>
-                cons = TTTAdapterMealy::new;
-        final SPMMLearner<Character, Character, TTTAdapterMealy<SymbolWrapper<Character>, Character>> learner =
-                new SPMMLearner<>(alphabet, spmm.getErrorOutput(), mqo, cons);
+        final SPMMLearner<Character, Character, ?> learner =
+                new SPMMLearner<>(alphabet, spmm.getErrorOutput(), mqo, TTTAdapterMealy::new);
 
         final Experiment<SPMM<?, Character, ?, Character>> experiment = new Experiment<>(learner, eqo, alphabet);
 

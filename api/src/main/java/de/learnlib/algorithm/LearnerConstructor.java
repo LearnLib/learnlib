@@ -19,8 +19,8 @@ import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 
 /**
- * A simplified view on the constructor of a {@link LearningAlgorithm}, that only requires an {@link Alphabet}
- * definition and a {@link MembershipOracle}.
+ * A simplified view on the constructor of a learning algorithm that only requires an {@link Alphabet} definition and a
+ * {@link MembershipOracle}.
  *
  * @param <L>
  *         learner type
@@ -29,7 +29,7 @@ import net.automatalib.alphabet.Alphabet;
  * @param <D>
  *         output domain type
  */
-public interface LearnerConstructor<L extends LearningAlgorithm<?, I, D>, I, D> {
+public interface LearnerConstructor<L, I, D> {
 
     /**
      * Construct the learner instance.

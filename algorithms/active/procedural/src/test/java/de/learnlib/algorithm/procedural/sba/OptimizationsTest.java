@@ -17,8 +17,6 @@ package de.learnlib.algorithm.procedural.sba;
 
 import java.util.Arrays;
 
-import de.learnlib.algorithm.LearnerConstructor;
-import de.learnlib.algorithm.procedural.SymbolWrapper;
 import de.learnlib.algorithm.procedural.adapter.dfa.TTTAdapterDFA;
 import de.learnlib.algorithm.procedural.sba.manager.OptimizingATManager;
 import de.learnlib.oracle.equivalence.EQOracleChain;
@@ -55,9 +53,7 @@ public class OptimizationsTest {
         final SimulatorEQOracle<Character> eqo2 = new SimulatorEQOracle<>(sba);
         final EQOracleChain<SBA<?, Character>, Character, Boolean> eqo = new EQOracleChain<>(Arrays.asList(eqo1, eqo2));
 
-        final LearnerConstructor<TTTAdapterDFA<SymbolWrapper<Character>>, SymbolWrapper<Character>, Boolean> cons =
-                TTTAdapterDFA::new;
-        final SBALearner<Character, ?> learner = new SBALearner<>(alphabet, mqo, cons);
+        final SBALearner<Character, ?> learner = new SBALearner<>(alphabet, mqo, TTTAdapterDFA::new);
 
         final Experiment<SBA<?, Character>> experiment = new Experiment<>(learner, eqo, alphabet);
 
