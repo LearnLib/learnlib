@@ -53,7 +53,7 @@ public class NLStarTest {
 
         final DFAMembershipOracle<Character> mqOracle = new NFASimulatorOracle<>(nfa);
 
-        final SampleSetEQOracle<Character, Boolean> eqOracle = new SampleSetEQOracle<>(false);
+        final SampleSetEQOracle<Character, Boolean> eqOracle = new SampleSetEQOracle<>();
         eqOracle.addAll(mqOracle,
                         Word.fromLetter('a'),
                         Word.fromString("ab"),

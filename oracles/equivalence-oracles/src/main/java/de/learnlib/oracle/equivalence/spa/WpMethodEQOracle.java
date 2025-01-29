@@ -42,6 +42,17 @@ public class WpMethodEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, I, 
     private final int expectedSize;
 
     /**
+     * Constructor. Convenience method for {@link #WpMethodEQOracle(MembershipOracle, int)} that sets {@code lookahead}
+     * to 1.
+     *
+     * @param sulOracle
+     *         interface to the system under learning
+     */
+    public WpMethodEQOracle(MembershipOracle<I, Boolean> sulOracle) {
+        this(sulOracle, 1);
+    }
+
+    /**
      * Constructor. Convenience method for {@link #WpMethodEQOracle(MembershipOracle, int, int)} that sets
      * {@code expectedSize} to 0.
      *

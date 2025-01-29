@@ -75,7 +75,7 @@ public abstract class AbstractCounterexampleQueueTest {
         final DFAMembershipOracle<Character> mqOracle = new DFASimulatorOracle<>(DFA);
         final DFALearner<Character> learner = getLearner(alphabet, mqOracle);
 
-        final SampleSetEQOracle<Character, Boolean> eqOracle = new SampleSetEQOracle<>(false);
+        final SampleSetEQOracle<Character, Boolean> eqOracle = new SampleSetEQOracle<>();
         final Word<Character> a = Word.fromLetter('a');
         final Word<Character> b = new WordBuilder<>('b', 9).toWord();
         eqOracle.addAll(mqOracle, Word.fromWords(b, a, b, a, b, a, b, a));

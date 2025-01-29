@@ -87,8 +87,19 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
     private final int expectedSize;
 
     /**
-     * Constructor. Convenience method for {@link #WpMethodEQOracle(MembershipOracle, int, int)} that sets {@code
-     * expectedSize} to 0.
+     * Constructor. Convenience method for {@link #WpMethodEQOracle(MembershipOracle, int)} that sets {@code lookahead}
+     * to 1.
+     *
+     * @param sulOracle
+     *         interface to the system under learning
+     */
+    public WpMethodEQOracle(MembershipOracle<I, D> sulOracle) {
+        this(sulOracle, 1);
+    }
+
+    /**
+     * Constructor. Convenience method for {@link #WpMethodEQOracle(MembershipOracle, int, int)} that sets
+     * {@code expectedSize} to 0.
      *
      * @param sulOracle
      *         interface to the system under learning
@@ -100,8 +111,8 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
     }
 
     /**
-     * Constructor. Convenience method for {@link #WpMethodEQOracle(MembershipOracle, int, int, int)} that sets {@code
-     * batchSize} to 1.
+     * Constructor. Convenience method for {@link #WpMethodEQOracle(MembershipOracle, int, int, int)} that sets
+     * {@code batchSize} to 1.
      *
      * @param sulOracle
      *         interface to the system under learning
@@ -115,7 +126,8 @@ public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?,
     }
 
     /**
-     * Constructor. Uses {@link Math#max(int, int) Math.max}{@code (lookahead, expectedSize - }{@link
+     * Constructor. Uses
+     * {@link Math#max(int, int) Math.max}{@code (lookahead, expectedSize - }{@link
      * UniversalDeterministicAutomaton#size() hypothesis.size()}{@code )} to determine the maximum length of sequences,
      * that should be appended to the state-cover (first phase) and remaining transition-cover (second phase) part of
      * the test sequence to account for the fact that the system under learning may have more states than the current

@@ -50,7 +50,7 @@ public class OptimizationsTest {
 
         final SimulatorOracle<Character, Boolean> mqo = new SimulatorOracle<>(sba);
 
-        final SampleSetEQOracle<Character, Boolean> eqo1 = new SampleSetEQOracle<>(false);
+        final SampleSetEQOracle<Character, Boolean> eqo1 = new SampleSetEQOracle<>();
         eqo1.addAll(mqo, Word.fromString("STcTSaSaRaRRcRR"));
         final SimulatorEQOracle<Character> eqo2 = new SimulatorEQOracle<>(sba);
         final EQOracleChain<SBA<?, Character>, Character, Boolean> eqo = new EQOracleChain<>(Arrays.asList(eqo1, eqo2));

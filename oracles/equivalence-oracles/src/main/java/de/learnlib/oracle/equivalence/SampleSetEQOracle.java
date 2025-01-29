@@ -54,6 +54,14 @@ public class SampleSetEQOracle<I, D> implements EquivalenceOracle<SuffixOutput<I
     private final List<DefaultQuery<I, D>> testQueries;
 
     /**
+     * Constructor. Convenience method for {@link #SampleSetEQOracle(boolean)} that does not remove unsuccessful
+     * samples.
+     */
+    public SampleSetEQOracle() {
+        this(false);
+    }
+
+    /**
      * Constructor. Initializes the oracle with an empty sample set.
      *
      * @param removeUnsuccessful
@@ -180,8 +188,8 @@ public class SampleSetEQOracle<I, D> implements EquivalenceOracle<SuffixOutput<I
      * @param inputs
      *         the set of allowed inputs
      *
-     * @return {@code true} if the input word of {@code query} consists entirely of symbols in {@code inputs}, {@code
-     * false} otherwise
+     * @return {@code true} if the input word of {@code query} consists entirely of symbols in {@code inputs},
+     * {@code false} otherwise
      */
     private static <I> boolean checkInputs(Query<I, ?> query, Collection<? extends I> inputs) {
         for (I sym : query.getPrefix()) {
@@ -205,8 +213,8 @@ public class SampleSetEQOracle<I, D> implements EquivalenceOracle<SuffixOutput<I
      * @param hypOutput
      *         the suffix output portion of the hypothesis
      *
-     * @return {@code true} if the suffix output by {@code hypOutput} matches the expected output stored in {@code
-     * query}, {@code false} otherwise.
+     * @return {@code true} if the suffix output by {@code hypOutput} matches the expected output stored in
+     * {@code query}, {@code false} otherwise.
      */
     private static <I, D> boolean test(DefaultQuery<I, D> query, SuffixOutput<I, D> hypOutput) {
         D hypOut = hypOutput.computeSuffixOutput(query.getPrefix(), query.getSuffix());

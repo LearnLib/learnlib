@@ -88,6 +88,17 @@ public class WMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, 
     private final int expectedSize;
 
     /**
+     * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int)} that sets {@code lookahead}
+     * to 1.
+     *
+     * @param sulOracle
+     *         interface to the system under learning
+     */
+    public WMethodEQOracle(MembershipOracle<I, D> sulOracle) {
+        this(sulOracle, 1);
+    }
+
+    /**
      * Constructor. Convenience method for {@link #WMethodEQOracle(MembershipOracle, int, int)} that sets
      * {@code expectedSize} to 0.
      *

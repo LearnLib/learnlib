@@ -50,7 +50,7 @@ public class OptimizationsTest {
 
         final SimulatorOracle<Character, Word<Character>> mqo = new SimulatorOracle<>(spmm);
 
-        final SampleSetEQOracle<Character, Word<Character>> eqo1 = new SampleSetEQOracle<>(false);
+        final SampleSetEQOracle<Character, Word<Character>> eqo1 = new SampleSetEQOracle<>();
         eqo1.addAll(mqo, Word.fromString("STcTSaSaRaRRcRR"));
         final SimulatorEQOracle<Character, Character> eqo2 = new SimulatorEQOracle<>(spmm);
         final EQOracleChain<SPMM<?, Character, ?, Character>, Character, Word<Character>> eqo =
