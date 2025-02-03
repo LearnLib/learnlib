@@ -36,7 +36,7 @@ public class SimulatorEQOracle<I> implements EquivalenceOracle<SBA<?, I>, I, Boo
     @Override
     public @Nullable DefaultQuery<I, Boolean> findCounterExample(SBA<?, I> hypothesis, Collection<? extends I> inputs) {
         if (!(inputs instanceof ProceduralInputAlphabet)) {
-            throw new IllegalArgumentException("Inputs are not an SPA alphabet");
+            throw new IllegalArgumentException("Inputs are not a procedural alphabet");
         }
 
         @SuppressWarnings("unchecked")

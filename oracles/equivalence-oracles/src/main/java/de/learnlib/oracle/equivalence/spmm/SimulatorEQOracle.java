@@ -37,7 +37,7 @@ public class SimulatorEQOracle<I, O> implements EquivalenceOracle<SPMM<?, I, ?, 
     public @Nullable DefaultQuery<I, Word<O>> findCounterExample(SPMM<?, I, ?, O> hypothesis,
                                                                  Collection<? extends I> inputs) {
         if (!(inputs instanceof ProceduralInputAlphabet)) {
-            throw new IllegalArgumentException("Inputs are not an SPA alphabet");
+            throw new IllegalArgumentException("Inputs are not a procedural alphabet");
         }
 
         @SuppressWarnings("unchecked")
