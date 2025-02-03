@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import de.learnlib.AccessSequenceProvider;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.LearningAlgorithm;
@@ -261,10 +260,6 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
 
     protected HypLoc<I> createLocation(AbstractHypTrans<I> trans) {
         return hypothesis.createLocation(false, trans);
-    }
-
-    protected Boolean query(AccessSequenceProvider<I> asp, ContextPair<I> context) {
-        return oracle.answerQuery(context.getPrefix().concat(asp.getAccessSequence()), context.getSuffix());
     }
 
     public static final class BuilderDefaults {

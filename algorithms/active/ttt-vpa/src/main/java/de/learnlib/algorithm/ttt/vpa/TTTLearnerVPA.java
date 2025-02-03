@@ -37,6 +37,7 @@ import de.learnlib.datastructure.discriminationtree.SplitData;
 import de.learnlib.datastructure.list.IntrusiveList;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.query.Query;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.SEVPA;
@@ -432,6 +433,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         ContextPair<I> discriminator = splitter.getNewDiscriminator();
 
         Deque<DTNode<I>> dfsStack = new ArrayDeque<>();
+        List<SplitQuery<I>> queries = new ArrayList<>();
 
         DTNode<I> succSeparator = splitter.succSeparator;
 
@@ -445,9 +447,18 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
             curr.setSplitData(new SplitData<>(TransList::new));
 
             for (AbstractHypTrans<I> trans : curr.getIncoming()) {
-                Boolean outcome = query(trans, discriminator);
-                curr.getSplitData().getIncoming(outcome).add(trans);
-                markAndPropagate(curr, outcome);
+                queries.add(new SplitQuery<>(trans, discriminator));
+            }
+
+            if (!queries.isEmpty()) {
+                oracle.processQueries(queries);
+
+                for (SplitQuery<I> query : queries) {
+                    curr.getSplitData().getIncoming(query.output).add(query.transition);
+                    markAndPropagate(curr, query.output);
+                }
+
+                queries.clear();
             }
 
             if (curr.isInner()) {
@@ -627,4 +638,30 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         }
     }
 
+    private static final class SplitQuery<I> extends Query<I, Boolean> {
+
+        private final AbstractHypTrans<I> transition;
+        private final ContextPair<I> discriminator;
+        private Boolean output;
+
+        SplitQuery(AbstractHypTrans<I> transition, ContextPair<I> discriminator) {
+            this.transition = transition;
+            this.discriminator = discriminator;
+        }
+
+        @Override
+        public void answer(Boolean output) {
+            this.output = output;
+        }
+
+        @Override
+        public Word<I> getPrefix() {
+            return discriminator.getPrefix().concat(transition.getAccessSequence());
+        }
+
+        @Override
+        public Word<I> getSuffix() {
+            return discriminator.getSuffix();
+        }
+    }
 }

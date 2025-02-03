@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import de.learnlib.AccessSequenceProvider;
 import de.learnlib.Resumable;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
@@ -39,6 +38,7 @@ import de.learnlib.datastructure.list.IntrusiveList;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.query.Query;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.common.smartcollection.ElementReference;
@@ -188,18 +188,33 @@ public abstract class AbstractTTTLearner<A, I, D>
      *         the state to initialize
      */
     protected void initializeState(TTTState<I, D> state) {
+        TTTTransition<I, D> head = null;
         for (int i = 0; i < alphabet.size(); i++) {
             I sym = alphabet.getSymbol(i);
             TTTTransition<I, D> trans = createTransition(state, sym);
             trans.setNonTreeTarget(dtree.getRoot());
             state.setTransition(i, trans);
             openTransitions.add(trans);
+            head = trans;
         }
+        initTransitions(head, alphabet.size());
     }
 
     protected TTTTransition<I, D> createTransition(TTTState<I, D> state, I sym) {
         return new TTTTransition<>(state, sym);
     }
+
+    /**
+     * A post-processing hook for transitions created by {@link #createTransition(TTTState, Object)}, e.g., after
+     * {@link #initializeState(TTTState)} or {@link #addAlphabetSymbol(Object)}. This is mainly useful for transition
+     * output hypotheses that want to initialize the transition outputs in a bulk operation.
+     *
+     * @param head
+     *         the head of (the list of) the created transitions
+     * @param num
+     *         the number of created transitions
+     */
+    protected void initTransitions(TTTTransition<I, D> head, int num) {}
 
     /**
      * Performs a single refinement of the hypothesis, i.e., without repeated counterexample evaluation. The parameter
@@ -618,6 +633,7 @@ public abstract class AbstractTTTLearner<A, I, D>
         Word<I> discriminator = splitter.getDiscriminator().prepend(symbol);
 
         Deque<AbstractBaseDTNode<I, D>> dfsStack = new ArrayDeque<>();
+        List<SplitQuery<I, D>> queries = new ArrayList<>();
 
         AbstractBaseDTNode<I, D> succSeparator = splitter.succSeparator;
 
@@ -631,9 +647,18 @@ public abstract class AbstractTTTLearner<A, I, D>
             curr.setSplitData(new SplitData<>(IntrusiveList::new));
 
             for (TTTTransition<I, D> trans : curr.getIncoming()) {
-                D outcome = query(trans, discriminator);
-                curr.getSplitData().getIncoming(outcome).add(trans);
-                markAndPropagate(curr, outcome);
+                queries.add(new SplitQuery<>(trans, discriminator));
+            }
+
+            if (!queries.isEmpty()) {
+                oracle.processQueries(queries);
+
+                for (SplitQuery<I, D> query : queries) {
+                    curr.getSplitData().getIncoming(query.output).add(query.transition);
+                    markAndPropagate(curr, query.output);
+                }
+
+                queries.clear();
             }
 
             if (curr.isInner()) {
@@ -906,34 +931,6 @@ public abstract class AbstractTTTLearner<A, I, D>
     }
 
     /**
-     * Performs a membership query.
-     *
-     * @param prefix
-     *         the prefix part of the query
-     * @param suffix
-     *         the suffix part of the query
-     *
-     * @return the output
-     */
-    protected D query(Word<I> prefix, Word<I> suffix) {
-        return oracle.answerQuery(prefix, suffix);
-    }
-
-    /**
-     * Performs a membership query, using an access sequence as its prefix.
-     *
-     * @param accessSeqProvider
-     *         the object from which to obtain the access sequence
-     * @param suffix
-     *         the suffix part of the query
-     *
-     * @return the output
-     */
-    protected D query(AccessSequenceProvider<I> accessSeqProvider, Word<I> suffix) {
-        return query(accessSeqProvider.getAccessSequence(), suffix);
-    }
-
-    /**
      * Returns the discrimination tree.
      *
      * @return the discrimination tree
@@ -956,14 +953,17 @@ public abstract class AbstractTTTLearner<A, I, D>
         if (this.hypothesis.getInitialState() != null && this.hypothesis.getState(Word.fromLetter(symbol)) == null) {
 
             final int newSymbolIdx = this.alphabet.getSymbolIndex(symbol);
+            TTTTransition<I, D> head = null;
 
             for (TTTState<I, D> s : this.hypothesis.getStates()) {
                 final TTTTransition<I, D> trans = createTransition(s, symbol);
                 trans.setNonTreeTarget(dtree.getRoot());
                 s.setTransition(newSymbolIdx, trans);
                 openTransitions.add(trans);
+                head = trans;
             }
 
+            this.initTransitions(head, this.hypothesis.size());
             this.closeTransitions();
         }
     }
@@ -1074,6 +1074,33 @@ public abstract class AbstractTTTLearner<A, I, D>
         ExtractRecord(AbstractBaseDTNode<I, D> original, AbstractBaseDTNode<I, D> extracted) {
             this.original = original;
             this.extracted = extracted;
+        }
+    }
+
+    private static final class SplitQuery<I, D> extends Query<I, D> {
+
+        private final TTTTransition<I, D> transition;
+        private final Word<I> discriminator;
+        private D output;
+
+        SplitQuery(TTTTransition<I, D> transition, Word<I> discriminator) {
+            this.transition = transition;
+            this.discriminator = discriminator;
+        }
+
+        @Override
+        public void answer(D output) {
+            this.output = output;
+        }
+
+        @Override
+        public Word<I> getPrefix() {
+            return transition.getAccessSequence();
+        }
+
+        @Override
+        public Word<I> getSuffix() {
+            return discriminator;
         }
     }
 }

@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The `AbstractVisualizationTest` has been refactored into the `VisualizationUtils` factory.
 * Various counters (especially `*Counter*SUL`s) have been streamlined. In most cases there now exists a single counter that tracks multiple properties.
 * The `ReuseOracleBuilder` and `ReuseTreeBuilder` classes are now auto-generated and therefore reside in the respective packages of their previously enclosing classes.
+* The `TTTLearnerMealy#createTransition` method no longer queries for its transition output directly, but instead requires a call to `initTransitions` now.
 * With the removal of the `learnlib-annotation-processor` artifact (see below), the `learnlib-build-config` artifact is now part of the `de.learnlib` group again.
 * The `learnlib-datastructure-ot`, `learnlib-datastructure-dt`, `learnlib-datastructure-list`, and `learnlib-datastructure-pta` artifacts have been merged into a new `learnlib-datastructures` artifact.
 * The `learnlib-oml` artifact (including its packages and class names) has been renamed to `learnlib-lambda`.
@@ -39,6 +40,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `MQUtil` has been stripped of unused methods. Especially the `query` method can be simulated by the respective oracles themselves.
 * `PropertyOracle`s can no longer set a property. This value is now immutable and must be provided during instantiation. Previously, the internal state wasn't updated accordingly if a property was overridden.
 * `SymbolQueryOracle`s (and related code such as the respective caches, counters, etc.) have been removed without replacement. Equivalent functionality on the basis of the new `AdaptiveMembershipOracle`s is available instead.
+
+### Fixed
+
+* Improved query batching of `TTT` learner (both the regular and visibly push-down version).
 
 
 ## [0.17.0] - 2023-11-15

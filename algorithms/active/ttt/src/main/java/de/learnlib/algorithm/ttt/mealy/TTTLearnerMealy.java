@@ -15,6 +15,9 @@
  */
 package de.learnlib.algorithm.ttt.mealy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.MealyOutInconsPrefixTransformAcex;
 import de.learnlib.acex.OutInconsPrefixTransformAcex;
@@ -25,8 +28,10 @@ import de.learnlib.algorithm.ttt.base.BaseTTTDiscriminationTree;
 import de.learnlib.algorithm.ttt.base.OutputInconsistency;
 import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
+import de.learnlib.datastructure.list.IntrusiveListEntry;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.query.Query;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
@@ -62,9 +67,21 @@ public class TTTLearnerMealy<I, O> extends AbstractTTTLearner<MealyMachine<?, I,
 
     @Override
     protected TTTTransition<I, Word<O>> createTransition(TTTState<I, Word<O>> state, I sym) {
-        TTTTransitionMealy<I, O> trans = new TTTTransitionMealy<>(state, sym);
-        trans.output = query(state, Word.fromLetter(sym)).firstSymbol();
-        return trans;
+        return new TTTTransitionMealy<>(state, sym);
+    }
+
+    @Override
+    protected void initTransitions(TTTTransition<I, Word<O>> head, int num) {
+        final List<TransitionOutputQuery<I, O>> queries = new ArrayList<>(num);
+        IntrusiveListEntry<TTTTransition<I, Word<O>>> iter = head;
+
+        for (int i = 0; i < num; i++) {
+            assert iter != null;
+            queries.add(new TransitionOutputQuery<>((TTTTransitionMealy<I, O>) iter.getElement()));
+            iter = iter.getNext();
+        }
+
+        oracle.processQueries(queries);
     }
 
     @Override
@@ -150,5 +167,29 @@ public class TTTLearnerMealy<I, O> extends AbstractTTTLearner<MealyMachine<?, I,
     protected AbstractBaseDTNode<I, Word<O>> createNewNode(AbstractBaseDTNode<I, Word<O>> parent,
                                                            Word<O> parentOutput) {
         return new TTTDTNodeMealy<>(parent, parentOutput);
+    }
+
+    private static final class TransitionOutputQuery<I, O> extends Query<I, Word<O>> {
+
+        private final TTTTransitionMealy<I, O> transition;
+
+        TransitionOutputQuery(TTTTransitionMealy<I, O> transition) {
+            this.transition = transition;
+        }
+
+        @Override
+        public void answer(Word<O> output) {
+            transition.output = output.firstSymbol();
+        }
+
+        @Override
+        public Word<I> getPrefix() {
+            return transition.getSource().getAccessSequence();
+        }
+
+        @Override
+        public Word<I> getSuffix() {
+            return Word.fromLetter(transition.getInput());
+        }
     }
 }

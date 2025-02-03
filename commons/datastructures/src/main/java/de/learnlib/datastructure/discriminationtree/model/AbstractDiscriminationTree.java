@@ -102,11 +102,11 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
             activeVector.set(i, continueExploring.test(result.get(i)));
         }
 
+        final List<DefaultQuery<I, O>> queries = new ArrayList<>(activeVector.cardinality());
         final List<Word<I>> prefixStorage = CollectionUtil.randomAccessList(prefixes);
 
         while (!activeVector.isEmpty()) {
 
-            final List<DefaultQuery<I, O>> queries = new ArrayList<>(activeVector.cardinality());
             final BitSetIterator preIter = new BitSetIterator(activeVector);
 
             while (preIter.hasNext()) {
@@ -130,6 +130,8 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
                     activeVector.clear(idx);
                 }
             }
+
+            queries.clear();
         }
 
         return result;
