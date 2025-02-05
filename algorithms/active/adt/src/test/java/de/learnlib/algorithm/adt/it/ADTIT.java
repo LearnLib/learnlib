@@ -31,6 +31,8 @@ import de.learnlib.algorithm.adt.config.LeafSplitters;
 import de.learnlib.algorithm.adt.config.SubtreeReplacers;
 import de.learnlib.algorithm.adt.learner.ADTLearner;
 import de.learnlib.algorithm.adt.learner.ADTLearnerBuilder;
+import de.learnlib.counterexample.LocalSuffixFinder;
+import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.filter.statistic.oracle.CounterAdaptiveQueryOracle;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
@@ -49,6 +51,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.dot.DOTParsers;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -88,9 +91,14 @@ public class ADTIT extends AbstractMealyLearnerIT {
                 for (int k = 0; k < SUBTREE_REPLACERS.size(); k++) {
                     final SubtreeReplacer subtreeReplacer = SUBTREE_REPLACERS.get(k);
                     builder.setSubtreeReplacer(subtreeReplacer);
-                    builder.setUseObservationTree(useCacheGenerator.nextBoolean());
 
-                    variants.addLearnerVariant(i + "," + j + "," + k, builder.create());
+                    for (LocalSuffixFinder<@Nullable Object, @Nullable Object> suffixFinder : LocalSuffixFinders.values()) {
+                        builder.setSuffixFinder(suffixFinder);
+                        builder.setUseObservationTree(useCacheGenerator.nextBoolean());
+
+                        variants.addLearnerVariant(i + "," + j + "," + k, builder.create());
+                    }
+
                 }
             }
         }

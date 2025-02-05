@@ -50,6 +50,7 @@ import de.learnlib.algorithm.adt.model.ExtensionResult;
 import de.learnlib.algorithm.adt.model.ObservationTree;
 import de.learnlib.algorithm.adt.model.ReplacementResult;
 import de.learnlib.algorithm.adt.util.ADTUtil;
+import de.learnlib.counterexample.LocalSuffixFinder;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
@@ -92,6 +93,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     private final Queue<DefaultQuery<I, Word<O>>> openCounterExamples;
     private final Set<DefaultQuery<I, Word<O>>> allCounterExamples;
     private final ObservationTree<ADTState<I, O>, I, O> observationTree;
+    private final LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder;
     private ADTHypothesis<I, O> hypothesis;
     private ADT<ADTState<I, O>, I, O> adt;
 
@@ -100,7 +102,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                       LeafSplitter leafSplitter,
                       ADTExtender adtExtender,
                       SubtreeReplacer subtreeReplacer) {
-        this(alphabet, oracle, leafSplitter, adtExtender, subtreeReplacer, true);
+        this(alphabet, oracle, leafSplitter, adtExtender, subtreeReplacer, true, LocalSuffixFinders.RIVEST_SCHAPIRE);
     }
 
     @GenerateBuilder(defaults = BuilderDefaults.class)
@@ -109,7 +111,8 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                       LeafSplitter leafSplitter,
                       ADTExtender adtExtender,
                       SubtreeReplacer subtreeReplacer,
-                      boolean useObservationTree) {
+                      boolean useObservationTree,
+                      LocalSuffixFinder<? super I, ? super Word<O>> suffixFinder) {
 
         this.alphabet = alphabet;
         this.observationTree = new ObservationTree<>(this.alphabet, oracle, useObservationTree);
@@ -119,6 +122,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         this.leafSplitter = leafSplitter;
         this.adtExtender = adtExtender;
         this.subtreeReplacer = subtreeReplacer;
+        this.suffixFinder = suffixFinder;
 
         this.hypothesis = new ADTHypothesis<>(this.alphabet);
         this.openTransitions = new ArrayDeque<>();
@@ -188,8 +192,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         }
 
         // Determine a counterexample decomposition (u, a, v)
-        final int suffixIdx =
-                LocalSuffixFinders.RIVEST_SCHAPIRE.findSuffixIndex(ceQuery, this.hypothesis, this.hypothesis, this.mqo);
+        final int suffixIdx = suffixFinder.findSuffixIndex(ceQuery, this.hypothesis, this.hypothesis, this.mqo);
 
         if (suffixIdx == -1) {
             throw new IllegalStateException();
@@ -858,6 +861,11 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
         public static boolean useObservationTree() {
             return true;
+        }
+
+        @SuppressWarnings("unchecked")
+        public static <I, D> LocalSuffixFinder<I, D> suffixFinder() {
+            return (LocalSuffixFinder<I, D>) LocalSuffixFinders.RIVEST_SCHAPIRE;
         }
     }
 }
