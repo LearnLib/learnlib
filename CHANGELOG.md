@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * With the removal of the `learnlib-annotation-processor` artifact (see below), the `learnlib-build-config` artifact is now part of the `de.learnlib` group again.
 * The `learnlib-datastructure-ot`, `learnlib-datastructure-dt`, `learnlib-datastructure-list`, and `learnlib-datastructure-pta` artifacts have been merged into a new `learnlib-datastructures` artifact.
 * The `learnlib-oml` artifact (including its packages and class names) has been renamed to `learnlib-lambda`.
+* Switched to [AutomataLib 0.12.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.12.0).
 
 ### Removed
 
