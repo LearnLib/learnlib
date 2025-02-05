@@ -60,10 +60,10 @@ public interface LearningAlgorithm<M, I, D> {
     /**
      * Returns the current hypothesis model.
      * <p>
-     * N.B.: By the contract of this interface, the model returned by this method may not be modified (i.e., M generally
-     * should refer to an immutable interface), and its validity is retained only until the next invocation of {@link
-     * #refineHypothesis(DefaultQuery)}. If older hypotheses have to be maintained, a copy of the returned model must be
-     * made.
+     * N.B.: By the contract of this interface, the model returned by this method should not be modified by external
+     * code (i.e., M generally should refer to an immutable interface), and its validity is retained only until the next
+     * invocation of {@link #refineHypothesis(DefaultQuery)}. If older hypotheses have to be maintained, a copy of the
+     * returned model must be made.
      * <p>
      * Please note that it should be illegal to invoke this method before an initial invocation of {@link
      * #startLearning()}.

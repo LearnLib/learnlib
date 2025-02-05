@@ -26,6 +26,7 @@ import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.MQUtil;
 import de.learnlib.util.nfa.NFALearnerWrapper;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.word.Word;
 
@@ -183,7 +184,7 @@ public class NLStarLearner<I> implements NFALearner<I> {
     }
 
     @Override
-    public CompactNFA<I> getHypothesisModel() {
+    public NFA<?, I> getHypothesisModel() {
         if (hypothesis == null) {
             throw new IllegalStateException();
         }
