@@ -229,6 +229,20 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         }
     }
 
+    public CompactMealy<I, O> buildHypothesis() {
+        while (true) {
+            this.makeObsTreeAdequate();
+            CompactMealy<I, O> hyp = this.constructHypothesis();
+
+            DefaultQuery<I, Word<O>> ce = this.checkConsistency(hyp);
+            if (ce != null) {
+                this.processCex(ce, hyp);
+            } else {
+                return hyp;
+            }
+        }
+    }
+
     public CompactMealy<I, O> constructHypothesis() {
 
         CompactMealy<I, O> result = new CompactMealy<>(inputAlphabet, basis.size());
@@ -319,26 +333,19 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
     @Override
     public void startLearning() {
         this.initObsTree(null);
+        buildHypothesis();
     }
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
-        return processCex(ceQuery, getHypothesisModel());
+        boolean result = processCex(ceQuery, constructHypothesis());
+        buildHypothesis();
+        return result;
     }
 
     @Override
-    public CompactMealy<I, O> getHypothesisModel() {
-        while (true) {
-            this.makeObsTreeAdequate();
-            CompactMealy<I, O> hyp = this.constructHypothesis();
-
-            DefaultQuery<I, Word<O>> ce = this.checkConsistency(hyp);
-            if (ce != null) {
-                this.processCex(ce, hyp);
-            } else {
-                return hyp;
-            }
-        }
+    public MealyMachine<?, I, ?, O> getHypothesisModel() {
+        return constructHypothesis();
     }
 
     static final class BuilderDefaults {
