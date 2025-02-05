@@ -37,15 +37,17 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.smartcollection.ReflexiveMapView;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
+import net.automatalib.util.automaton.ads.ADS;
 import net.automatalib.util.automaton.ads.ADSUtil;
+import net.automatalib.util.automaton.ads.BacktrackingSearch;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A variant of the backtracking ADS search (see {@link net.automatalib.util.automaton.ads.ADS}, {@link
- * net.automatalib.util.automaton.ads.BacktrackingSearch}), that works on partially defined automata. It tries to find an
- * ADS based on defined transitions and successively closes transitions if no ADS has been found.
+ * A variant of the backtracking ADS search (see {@link ADS}, {@link BacktrackingSearch}), that works on partially
+ * defined automata. It tries to find an ADS based on defined transitions and successively closes transitions if no ADS
+ * has been found.
  *
  * @param <S>
  *         (hypothesis) state type

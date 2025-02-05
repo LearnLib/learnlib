@@ -22,10 +22,14 @@ import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A class that describes the possible result a {@link ADTExtender} can return. Extending a parent trace can either <ul>
- * <li> yield a counterexample, if the output of the parent trace does not match the output of the hypothesis states of
- * the leaves </li> <li> yield a valid replacement for the temporary splitter </li> <li> yield no result, if the
- * referenced hypothesis states cannot be distinguished by means of extending the parent trace </li> </ul>
+ * A class that describes the possible result an {@link ADTExtender} can return. Extending a parent trace can either
+ * <ul>
+ *      <li>yield a counterexample, if the output of the parent trace does not match the output of the hypothesis
+ *      states of the leaves.</li>
+ *      <li>yield a valid replacement for the temporary splitter.</li>
+ *      <li>yield no result, if the referenced hypothesis states cannot be distinguished by means of extending the
+ *      parent trace.</li>
+ * </ul>
  *
  * @param <S>
  *         (hypothesis) state type

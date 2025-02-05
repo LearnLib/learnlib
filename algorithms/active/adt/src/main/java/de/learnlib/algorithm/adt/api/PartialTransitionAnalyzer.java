@@ -17,7 +17,7 @@ package de.learnlib.algorithm.adt.api;
 
 /**
  * During the refinement process of the hypothesis, ADS/Ts may be computed on partially defined automata. These
- * computations may want to skip undefined transitions (as closing them results in resets, which we want to omit) and
+ * computations may want to skip undefined transitions (as closing them results in resets which we want to omit) and
  * only determine the information if necessary. This interface mediates between the learner and ADS/T computations by
  * defining the basic forms of communication.
  *
