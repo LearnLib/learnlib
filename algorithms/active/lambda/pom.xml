@@ -67,6 +67,11 @@ limitations under the License.
         <!-- test -->
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-drivers-simulator</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-equivalence-oracles</artifactId>
             <scope>test</scope>
         </dependency>
@@ -111,6 +116,14 @@ limitations under the License.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <!-- append to existing argLine to nicely work together with jacoco plugin -->
+                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.lambda=net.automatalib.util</argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
                         <!-- append to existing argLine to nicely work together with jacoco plugin -->
                         <argLine>@{argLine} --add-reads=de.learnlib.algorithm.lambda=net.automatalib.util</argLine>

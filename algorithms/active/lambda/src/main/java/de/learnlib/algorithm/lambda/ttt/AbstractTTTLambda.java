@@ -31,11 +31,12 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
+import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 
 public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
-        implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I> {
+        implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, FiniteRepresentation {
 
     private final MembershipOracle<I, D> ceqs;
     private final Alphabet<I> alphabet;
@@ -69,7 +70,7 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
         witnesses.add(counterexample);
         boolean refined = false;
 
-        while (MQUtil.isCounterexample(counterexample, getHypothesisModel())) {
+        while (!witnesses.isEmpty()) {
             final DefaultQuery<I, D> witness = witnesses.getFirst();
 
             if (witness.getOutput() == null) {
@@ -81,13 +82,13 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
             if (valid) {
                 analyzeCounterexample(witness, witnesses);
                 makeConsistent();
+                refined = true;
             } else {
                 witnesses.pop();
             }
-
-            refined = true;
         }
 
+        assert size() == dtree().leaves().size();
         return refined;
     }
 

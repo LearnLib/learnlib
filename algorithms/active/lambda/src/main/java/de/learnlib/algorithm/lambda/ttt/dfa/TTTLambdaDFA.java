@@ -61,4 +61,9 @@ public class TTTLambdaDFA<I> extends AbstractTTTLambda<DFA<?, I>, I, Boolean> im
     protected AbstractDecisionTree<I, Boolean> dtree() {
         return dtree;
     }
+
+    @Override
+    public int size() {
+        return hypothesis.size();
+    }
 }

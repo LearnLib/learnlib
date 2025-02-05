@@ -84,7 +84,7 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements Le
         witnesses.add(counterexample);
         boolean refined = false;
 
-        while (MQUtil.isCounterexample(counterexample, getHypothesisModel())) {
+        while (!witnesses.isEmpty()) {
             final DefaultQuery<I, D> witness = witnesses.getFirst();
 
             if (witness.getOutput() == null) {
@@ -96,11 +96,10 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements Le
             if (valid) {
                 analyzeCounterexample(witness, witnesses);
                 learnLoop();
+                refined = true;
             } else {
                 witnesses.pop();
             }
-
-            refined = true;
         }
 
         assert size() == shortPrefixes.size();

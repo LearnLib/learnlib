@@ -65,4 +65,9 @@ public class TTTLambdaMealy<I, O> extends AbstractTTTLambda<MealyMachine<?, I, ?
     protected AbstractDecisionTree<I, Word<O>> dtree() {
         return dtree;
     }
+
+    @Override
+    public int size() {
+        return hypothesis.size();
+    }
 }
