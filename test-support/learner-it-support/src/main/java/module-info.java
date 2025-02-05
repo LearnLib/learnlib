@@ -37,6 +37,7 @@ open module de.learnlib.testsupport.it {
     requires de.learnlib.oracle.equivalence;
     requires de.learnlib.testsupport.example;
     requires net.automatalib.api;
+    requires net.automatalib.common.util;
     requires net.automatalib.util;
     requires org.slf4j;
     requires org.testng;

@@ -106,9 +106,13 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Boolean> defaultQuery) {
 
+        if (!MQUtil.isCounterexample(defaultQuery, getHypothesisModel())) {
+            return false;
+        }
+
         assert this.alphabet.isWellMatched(defaultQuery.getInput());
 
-        boolean changed = this.extractUsefulInformationFromCounterExample(defaultQuery);
+        boolean changed = extractUsefulInformationFromCounterExample(defaultQuery);
 
         while (refineHypothesisInternal(defaultQuery)) {
             changed = true;

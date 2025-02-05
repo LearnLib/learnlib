@@ -117,9 +117,13 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Boolean> defaultQuery) {
 
+        if (!MQUtil.isCounterexample(defaultQuery, getHypothesisModel())) {
+            return false;
+        }
+
         assert this.alphabet.isReturnMatched(defaultQuery.getInput());
 
-        boolean changed = this.extractUsefulInformationFromCounterExample(defaultQuery);
+        boolean changed = extractUsefulInformationFromCounterExample(defaultQuery);
 
         while (refineHypothesisInternal(defaultQuery)) {
             changed = true;
@@ -127,7 +131,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
 
         ensureCallAndReturnClosure();
 
-        assert SBAs.isValid(this.getHypothesisModel());
+        assert SBAs.isValid(getHypothesisModel());
 
         return changed;
     }

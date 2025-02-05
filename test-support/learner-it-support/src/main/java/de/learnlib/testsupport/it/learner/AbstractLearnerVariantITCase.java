@@ -15,6 +15,10 @@
  */
 package de.learnlib.testsupport.it.learner;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.EquivalenceOracle;
@@ -22,6 +26,8 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.example.LearningExample;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
+import net.automatalib.automaton.concept.Output;
+import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.word.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +35,7 @@ import org.testng.Assert;
 import org.testng.ITest;
 import org.testng.annotations.Test;
 
-abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation> implements ITest {
+abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation & Output<I, D>> implements ITest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLearnerVariantITCase.class);
 
@@ -80,6 +86,11 @@ abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation
         M hypothesis = learner.getHypothesisModel();
         Assert.assertEquals(hypothesis.size(), reference.size());
         Assert.assertNull(checkEquivalence(hypothesis), "Final hypothesis does not match reference automaton");
+
+        final List<I> trace = RandomUtil.sample(new Random(42), new ArrayList<>(alphabet), 5);
+        final D output = reference.computeOutput(trace);
+
+        Assert.assertFalse(learner.refineHypothesis(new DefaultQuery<>(Word.fromList(trace), output)));
 
         long duration = (System.nanoTime() - start) / NANOS_PER_MILLISECOND;
         LOGGER.info(Category.EVENT,

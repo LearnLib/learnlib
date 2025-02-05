@@ -18,10 +18,11 @@ package de.learnlib.testsupport.it.learner;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.testsupport.example.LearningExample.UniversalDeterministicLearningExample;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.Output;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
 
-public class UniversalDeterministicLearnerITCase<I, D, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>>
+public class UniversalDeterministicLearnerITCase<I, D, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>>
         extends AbstractLearnerVariantITCase<I, D, M> {
 
     private final UniversalDeterministicLearningExample<I, ? extends M> example;

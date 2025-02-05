@@ -59,15 +59,15 @@ limitations under the License.
             <artifactId>automata-commons-util</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-        </dependency>
-
         <!-- build -->
         <dependency>
             <groupId>de.learnlib.tooling</groupId>
             <artifactId>annotations</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
         </dependency>
 
         <!-- test -->

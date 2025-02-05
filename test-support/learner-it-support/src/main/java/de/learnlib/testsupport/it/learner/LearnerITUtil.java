@@ -37,6 +37,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.FiniteRepresentation;
+import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
@@ -78,7 +79,7 @@ public final class LearnerITUtil {
      *
      * @return the list of test cases, one for each example
      */
-    public static <I, D, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> List<UniversalDeterministicLearnerITCase<I, D, A>> createExampleITCases(
+    public static <I, D, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>> List<UniversalDeterministicLearnerITCase<I, D, A>> createExampleITCases(
             UniversalDeterministicLearningExample<I, ? extends A> example,
             LearnerVariantListImpl<A, I, D> variants,
             EquivalenceOracle<? super A, I, D> eqOracle) {
@@ -192,7 +193,7 @@ public final class LearnerITUtil {
                 OneSEVPALearnerITCase::new);
     }
 
-    private static <I, D, M extends FiniteRepresentation, L extends LearningExample<I, ? extends M>, C extends AbstractLearnerVariantITCase<I, D, M>> List<C> createExampleITCasesInternal(
+    private static <I, D, M extends FiniteRepresentation & Output<I, D>, L extends LearningExample<I, ? extends M>, C extends AbstractLearnerVariantITCase<I, D, M>> List<C> createExampleITCasesInternal(
             L example,
             LearnerVariantListImpl<M, I, D> variants,
             EquivalenceOracle<? super M, I, D> eqOracle,
@@ -265,7 +266,7 @@ public final class LearnerITUtil {
     }
 
     @FunctionalInterface
-    private interface ITCaseBuilder<I, D, M extends FiniteRepresentation, L extends LearningExample<I, ? extends M>, C extends AbstractLearnerVariantITCase<I, D, M>> {
+    private interface ITCaseBuilder<I, D, M extends FiniteRepresentation & Output<I, D>, L extends LearningExample<I, ? extends M>, C extends AbstractLearnerVariantITCase<I, D, M>> {
 
         C build(LearnerVariant<M, I, D> variant, L example, EquivalenceOracle<? super M, I, D> eqOracle);
     }

@@ -232,6 +232,10 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
         checkInternalState();
 
+        if (hypothesis.computeSuffixOutput(ceQuery.getPrefix(), ceQuery.getSuffix()).equals(ceQuery.getOutput())) {
+            return false;
+        }
+
         Collection<Word<I>> ceSuffixes = suffixFinder.findSuffixes(ceQuery, this, hypothesis, oracle);
 
         return addSuffixesUnchecked(ceSuffixes);
