@@ -70,7 +70,7 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
         witnesses.add(counterexample);
         boolean refined = false;
 
-        while (!witnesses.isEmpty()) {
+        while (MQUtil.isCounterexample(counterexample, getHypothesisModel())) {
             final DefaultQuery<I, D> witness = witnesses.getFirst();
 
             if (witness.getOutput() == null) {
