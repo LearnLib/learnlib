@@ -4,7 +4,7 @@
 [![Coverage](https://coveralls.io/repos/github/LearnLib/learnlib/badge.svg?branch=develop)](https://coveralls.io/github/LearnLib/learnlib?branch=develop)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.learnlib/learnlib-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.learnlib/learnlib-parent)
 
-LearnLib is a free, open source ([Apache License, v2.0][1]) Java library for automata learning algorithms.
+LearnLib is a free, open-source ([Apache License, v2.0][1]) Java library for automata learning algorithms.
 
 
 ## About
@@ -33,7 +33,7 @@ Currently, the following learning algorithms with respective target models are s
 
 Additionally, LearnLib offers a variety of tools to ease the practical application of automata learning on real-world systems.
 This includes drivers and mappers for interfacing software systems with the LearnLib API as well as caches and parallelization for improving the overall performance of the learning setup.
-Also, more nuanced setups such as Black-Box-Checking (via [LTSMin][ltsmin]) or inferring partial machines are possible.
+Also, more nuanced setups such as Black-Box-Checking (via [LTSmin][ltsmin]) or inferring partial machines are possible.
 
 While we strive to deliver code at a high quality, please note that there exist parts of the library that still need thorough testing.
 Contributions -- whether it is in the form of new features, better documentation or tests -- are welcome.
