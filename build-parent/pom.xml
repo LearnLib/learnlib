@@ -190,6 +190,17 @@ limitations under the License.
         </profile>
         <profile>
             <id>cf</id>
+            <dependencies>
+                <!--
+                 CF needs access to qualifier annotations even if they are not used in the code directly.
+                 Therefore, provide them by default.
+                -->
+                <dependency>
+                    <groupId>org.checkerframework</groupId>
+                    <artifactId>checker-qual</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
             <build>
                 <plugins>
                     <plugin>
