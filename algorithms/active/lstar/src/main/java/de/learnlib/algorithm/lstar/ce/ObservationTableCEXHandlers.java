@@ -142,7 +142,7 @@ public final class ObservationTableCEXHandlers {
 
     public static <I, D> ObservationTableCEXHandler<I, D> fromLocalSuffixFinder(LocalSuffixFinder<I, D> localFinder,
                                                                                 boolean allSuffixes) {
-        return new ObservationTableCEXHandler<I, D>() {
+        return new ObservationTableCEXHandler<>() {
 
             @Override
             public <RI extends I, RD extends D> List<List<Row<RI>>> handleCounterexample(DefaultQuery<RI, RD> ceQuery,

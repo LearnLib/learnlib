@@ -73,8 +73,8 @@ public class OPLearnerMealy<I, O> extends AbstractOPLearner<MealyMachine<?, I, ?
 
     @Override
     protected Query<I, Word<O>> tpQuery(HTransition<I, Word<O>, Void, O> transition) {
-        return new AbstractQuery<I, Word<O>>(transition.getSource().getAccessSequence(),
-                                             Word.fromLetter(transition.getSymbol())) {
+        return new AbstractQuery<>(transition.getSource().getAccessSequence(),
+                                   Word.fromLetter(transition.getSymbol())) {
 
             @Override
             public void answer(Word<O> output) {

@@ -213,12 +213,9 @@ limitations under the License.
         <!-- general config -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.release>8</maven.compiler.release>
-        <maven.compiler.testSource>11</maven.compiler.testSource>
-        <maven.compiler.testTarget>11</maven.compiler.testTarget>
-        <maven.compiler.testRelease>11</maven.compiler.testRelease>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.release>11</maven.compiler.release>
         <argLine /> <!-- compatibility for property expansion in surefire-plugin -->
 
         <!-- plugin versions -->
@@ -227,7 +224,7 @@ limitations under the License.
         <assembly-plugin.version>3.7.1</assembly-plugin.version>
         <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
         <clean-plugin.version>3.4.0</clean-plugin.version>
-        <compiler-plugin.version>3.11.0</compiler-plugin.version> <!-- changes to incremental compilation causes issues with our two compile phases. bump, once we completely switch to Java 11 -->
+        <compiler-plugin.version>3.13.0</compiler-plugin.version>
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
         <dependency-plugin.version>3.8.1</dependency-plugin.version>
         <deploy-plugin.version>3.1.3</deploy-plugin.version>
@@ -868,37 +865,6 @@ limitations under the License.
                             </path>
                         </annotationProcessorPaths>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <id>default-compile</id>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                            <configuration>
-                                <!-- compile everything in module-aware mode to check for errors -->
-                                <release>9</release>
-                                <createMissingPackageInfoClass>false</createMissingPackageInfoClass>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>java-8-compile</id>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                            <configuration>
-                                <!-- recompile generated sources as well -->
-                                <compileSourceRoots>
-                                    <compileSourceRoot>${project.build.sourceDirectory}</compileSourceRoot>
-                                    <compileSourceRoot>${project.build.directory}/generated-sources</compileSourceRoot>
-                                </compileSourceRoots>
-                                <proc>none</proc>
-                                <!-- re-compile everything for target VM except the module-info.java -->
-                                <excludes>
-                                    <exclude>module-info.java</exclude>
-                                </excludes>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -966,9 +932,6 @@ limitations under the License.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <release>11</release>
-                </configuration>
                 <reportSets>
                     <reportSet>
                         <id>non-aggregate</id>

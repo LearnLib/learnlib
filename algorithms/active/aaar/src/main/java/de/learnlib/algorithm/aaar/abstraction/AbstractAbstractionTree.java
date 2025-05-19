@@ -171,7 +171,7 @@ public abstract class AbstractAbstractionTree<AI, CI, D>
 
     @Override
     public VisualizationHelper<Node, Node> getVisualizationHelper() {
-        return new DefaultVisualizationHelper<Node, Node>() {
+        return new DefaultVisualizationHelper<>() {
 
             @Override
             public boolean getNodeProperties(Node node, Map<String, String> properties) {

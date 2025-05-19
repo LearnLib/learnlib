@@ -92,7 +92,7 @@ public class BaseTTTDiscriminationTree<I, D>
 
     @Override
     public VisualizationHelper<AbstractBaseDTNode<I, D>, Entry<D, AbstractBaseDTNode<I, D>>> getVisualizationHelper() {
-        return new VisualizationHelper<AbstractBaseDTNode<I, D>, Entry<D, AbstractBaseDTNode<I, D>>>() {
+        return new VisualizationHelper<>() {
 
             @Override
             public boolean getNodeProperties(AbstractBaseDTNode<I, D> node, Map<String, String> properties) {

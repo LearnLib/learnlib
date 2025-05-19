@@ -69,7 +69,7 @@ public class OPLearnerDFA<I> extends AbstractOPLearner<DFA<?, I>, I, Boolean, Bo
 
     @Override
     protected Query<I, Boolean> spQuery(HState<I, Boolean, Boolean, Void> state) {
-        return new AbstractQuery<I, Boolean>(state.getAccessSequence(), Word.epsilon()) {
+        return new AbstractQuery<>(state.getAccessSequence(), Word.epsilon()) {
 
             @Override
             public void answer(Boolean val) {

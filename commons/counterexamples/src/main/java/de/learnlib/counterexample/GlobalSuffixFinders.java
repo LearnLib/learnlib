@@ -172,7 +172,7 @@ public final class GlobalSuffixFinders {
     public static <I, D> GlobalSuffixFinder<I, D> fromLocalFinder(LocalSuffixFinder<I, D> localFinder,
                                                                   boolean allSuffixes) {
 
-        return new GlobalSuffixFinder<I, D>() {
+        return new GlobalSuffixFinder<>() {
 
             @Override
             public <RI extends I, RD extends D> List<Word<RI>> findSuffixes(Query<RI, RD> ceQuery,

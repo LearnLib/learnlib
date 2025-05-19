@@ -55,7 +55,7 @@ public interface ADTNode<S, I, O> extends RecursiveADSNode<S, I, O, ADTNode<S, I
 
     @Override
     default VisualizationHelper<ADTNode<S, I, O>, ADTNode<S, I, O>> getVisualizationHelper() {
-        return new VisualizationHelper<ADTNode<S, I, O>, ADTNode<S, I, O>>() {
+        return new VisualizationHelper<>() {
 
             @Override
             public boolean getNodeProperties(ADTNode<S, I, O> node, Map<String, String> properties) {

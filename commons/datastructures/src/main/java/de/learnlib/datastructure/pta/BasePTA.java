@@ -179,7 +179,7 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, SP, TP>
         bfsQueue.add(root);
         visited.add(root);
 
-        return new AbstractSimplifiedIterator<S>() {
+        return new AbstractSimplifiedIterator<>() {
 
             @Override
             protected boolean calculateNext() {
@@ -250,7 +250,7 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, SP, TP>
     @Override
     public UniversalGraph<S, TransitionEdge<Integer, PTATransition<S>>, SP, Property<Integer, TP>> transitionGraphView(
             Collection<? extends Integer> inputs) {
-        return new UniversalAutomatonGraphView<S, Integer, PTATransition<S>, SP, TP, BasePTA<S, SP, TP>>(this, inputs) {
+        return new UniversalAutomatonGraphView<>(this, inputs) {
 
             @Override
             public VisualizationHelper<S, TransitionEdge<Integer, PTATransition<S>>> getVisualizationHelper() {
