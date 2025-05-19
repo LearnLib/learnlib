@@ -42,5 +42,7 @@ open module de.learnlib.testsupport.it {
     requires org.slf4j;
     requires org.testng;
 
+    requires static org.checkerframework.checker.qual;
+
     exports de.learnlib.testsupport.it.learner;
 }

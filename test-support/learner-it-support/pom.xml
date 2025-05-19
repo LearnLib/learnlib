@@ -60,6 +60,12 @@ limitations under the License.
             <artifactId>learnlib-util</artifactId>
         </dependency>
 
+        <!-- build -->
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+        </dependency>
+
         <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
