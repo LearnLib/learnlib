@@ -556,7 +556,7 @@ limitations under the License.
                             <finalName>learnlib-${project.version}</finalName>
                             <jarOutputDirectory>${project.build.directory}/bundles</jarOutputDirectory>
                             <includeDependencySources>true</includeDependencySources>
-                            <!-- Aggregating multiple module-info,javas causes problems -->
+                            <!-- Aggregating multiple module-info.javas causes problems -->
                             <legacyMode>true</legacyMode>
                             <disableSourcepathUsage>true</disableSourcepathUsage>
                             <sourceFileExcludes>
