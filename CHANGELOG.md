@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.18.0...HEAD)
 
+### Changed
+
+* LearnLib now requires Java 11 at runtime.
+
+### Fixed
+
+* The `de.learnlib.algorithm.adt` module now correctly `exports` the `de.learnlib.algorithm.adt.config.model.*` packages.
+
 
 ## [0.18.0] - 2025-02-06
 
