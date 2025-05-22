@@ -29,6 +29,7 @@ import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -104,6 +105,6 @@ abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation
         return variant.getLearnerName() + "[" + variant.getName() + "]/" + example.getClass().getSimpleName();
     }
 
-    protected abstract Word<I> checkEquivalence(M hypothesis);
+    protected abstract @Nullable Word<I> checkEquivalence(M hypothesis);
 
 }

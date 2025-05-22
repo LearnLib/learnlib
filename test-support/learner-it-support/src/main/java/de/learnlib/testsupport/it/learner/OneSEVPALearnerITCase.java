@@ -20,6 +20,7 @@ import de.learnlib.testsupport.example.LearningExample.OneSEVPALearningExample;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.util.automaton.vpa.OneSEVPAs;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class OneSEVPALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Boolean, OneSEVPA<?, I>> {
 
@@ -33,7 +34,7 @@ public class OneSEVPALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Bo
     }
 
     @Override
-    protected Word<I> checkEquivalence(OneSEVPA<?, I> hypothesis) {
+    protected @Nullable Word<I> checkEquivalence(OneSEVPA<?, I> hypothesis) {
         return OneSEVPAs.findSeparatingWord(this.example.getReferenceAutomaton(),
                                             hypothesis,
                                             this.example.getAlphabet());
