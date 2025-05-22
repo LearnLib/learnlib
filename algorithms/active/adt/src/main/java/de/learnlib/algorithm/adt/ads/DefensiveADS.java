@@ -115,7 +115,7 @@ public final class DefensiveADS<S, I, O> {
         final Map<S, S> initialMapping = new ReflexiveMapView<>(states);
         Optional<ADTNode<S, I, O>> interMediateResult = compute(initialMapping);
 
-        while (!interMediateResult.isPresent()) {
+        while (interMediateResult.isEmpty()) {
 
             // we encountered open transitions that can be closed
             if (refinementStates != null && refinementInput != null) {
@@ -234,7 +234,7 @@ public final class DefensiveADS<S, I, O> {
                             succ = Optional.of(new ADTLeafNode<>(null, s));
                         }
 
-                        if (!succ.isPresent()) {
+                        if (succ.isEmpty()) {
                             cache.add(currentNodeAsBitSet);
                             continue oneSymbolFuture;
                         }

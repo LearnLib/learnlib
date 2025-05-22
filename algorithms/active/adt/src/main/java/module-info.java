@@ -50,6 +50,10 @@ open module de.learnlib.algorithm.adt {
     exports de.learnlib.algorithm.adt.api;
     exports de.learnlib.algorithm.adt.automaton;
     exports de.learnlib.algorithm.adt.config;
+    exports de.learnlib.algorithm.adt.config.model;
+    exports de.learnlib.algorithm.adt.config.model.calculator;
+    exports de.learnlib.algorithm.adt.config.model.extender;
+    exports de.learnlib.algorithm.adt.config.model.replacer;
     exports de.learnlib.algorithm.adt.learner;
     exports de.learnlib.algorithm.adt.model;
     exports de.learnlib.algorithm.adt.util;

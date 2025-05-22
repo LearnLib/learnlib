@@ -257,7 +257,7 @@ public abstract class AbstractDiscriminationTree<DSCR, I, O, D, N extends Abstra
 
     @Override
     public VisualizationHelper<N, Entry<O, N>> getVisualizationHelper() {
-        return new DefaultVisualizationHelper<N, Entry<O, N>>() {
+        return new DefaultVisualizationHelper<>() {
 
             @Override
             public boolean getNodeProperties(N node, Map<String, String> properties) {

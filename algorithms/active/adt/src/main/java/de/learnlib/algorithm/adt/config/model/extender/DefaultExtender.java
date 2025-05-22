@@ -115,7 +115,7 @@ public class DefaultExtender implements ADTExtender {
                                                                                                          currentSet,
                                                                                                          partialTransitionAnalyzer);
 
-                if (!potentialExtension.isPresent()) {
+                if (potentialExtension.isEmpty()) {
                     return ExtensionResult.empty();
                 }
 

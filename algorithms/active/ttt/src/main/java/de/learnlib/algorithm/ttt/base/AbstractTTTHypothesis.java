@@ -254,7 +254,7 @@ public abstract class AbstractTTTHypothesis<S extends TTTState<I, D>, I, D, T>
 
         @Override
         public VisualizationHelper<TTTState<I, D>, TTTEdge<I, D>> getVisualizationHelper() {
-            return new DefaultVisualizationHelper<TTTState<I, D>, TTTEdge<I, D>>() {
+            return new DefaultVisualizationHelper<>() {
 
                 @Override
                 public boolean getEdgeProperties(TTTState<I, D> src,

@@ -34,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class ObservationTableCEXHandlers {
 
     public static final ObservationTableCEXHandler<@Nullable Object, @Nullable Object> CLASSIC_LSTAR =
-            new ObservationTableCEXHandler<@Nullable Object, @Nullable Object>() {
+            new ObservationTableCEXHandler<>() {
 
                 @Override
                 public <RI, RD> List<List<Row<RI>>> handleCounterexample(DefaultQuery<RI, RD> ceQuery,
@@ -57,7 +57,7 @@ public final class ObservationTableCEXHandlers {
             };
 
     public static final ObservationTableCEXHandler<@Nullable Object, @Nullable Object> SUFFIX1BY1 =
-            new ObservationTableCEXHandler<@Nullable Object, @Nullable Object>() {
+            new ObservationTableCEXHandler<>() {
 
                 @Override
                 public <RI, RD> List<List<Row<RI>>> handleCounterexample(DefaultQuery<RI, RD> ceQuery,
@@ -107,7 +107,7 @@ public final class ObservationTableCEXHandlers {
     }
 
     public static <I, D> ObservationTableCEXHandler<I, D> fromGlobalSuffixFinder(GlobalSuffixFinder<I, D> globalFinder) {
-        return new ObservationTableCEXHandler<I, D>() {
+        return new ObservationTableCEXHandler<>() {
 
             @Override
             public <RI extends I, RD extends D> List<List<Row<RI>>> handleCounterexample(DefaultQuery<RI, RD> ceQuery,
@@ -142,7 +142,7 @@ public final class ObservationTableCEXHandlers {
 
     public static <I, D> ObservationTableCEXHandler<I, D> fromLocalSuffixFinder(LocalSuffixFinder<I, D> localFinder,
                                                                                 boolean allSuffixes) {
-        return new ObservationTableCEXHandler<I, D>() {
+        return new ObservationTableCEXHandler<>() {
 
             @Override
             public <RI extends I, RD extends D> List<List<Row<RI>>> handleCounterexample(DefaultQuery<RI, RD> ceQuery,

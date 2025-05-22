@@ -51,7 +51,7 @@ public class OPLearnerMoore<I, O> extends AbstractOPLearner<MooreMachine<?, I, ?
 
     @Override
     protected @Nullable Query<I, Word<O>> spQuery(HState<I, Word<O>, O, Void> state) {
-        return new AbstractQuery<I, Word<O>>(state.getAccessSequence(), Word.epsilon()) {
+        return new AbstractQuery<>(state.getAccessSequence(), Word.epsilon()) {
 
             @Override
             public void answer(Word<O> output) {

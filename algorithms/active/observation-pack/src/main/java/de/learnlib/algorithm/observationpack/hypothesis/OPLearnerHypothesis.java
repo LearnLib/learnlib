@@ -204,7 +204,7 @@ public class OPLearnerHypothesis<I, O, SP, TP>
 
         @Override
         public VisualizationHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>> getVisualizationHelper() {
-            return new DefaultVisualizationHelper<HState<I, O, SP, TP>, HTransition<I, O, SP, TP>>() {
+            return new DefaultVisualizationHelper<>() {
 
                 @Override
                 protected Collection<HState<I, O, SP, TP>> initialNodes() {

@@ -41,7 +41,7 @@ public final class ClosingStrategies {
      * Closing strategy that selects the first row from each equivalence class as representative.
      */
     public static final ClosingStrategy<@Nullable Object, @Nullable Object> CLOSE_FIRST =
-            new ClosingStrategy<@Nullable Object, @Nullable Object>() {
+            new ClosingStrategy<>() {
 
                 @Override
                 public <RI, RD> List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses,
@@ -65,7 +65,7 @@ public final class ClosingStrategies {
      * has minimal length in the respective class) as representative.
      */
     public static final ClosingStrategy<@Nullable Object, @Nullable Object> CLOSE_SHORTEST =
-            new ClosingStrategy<@Nullable Object, @Nullable Object>() {
+            new ClosingStrategy<>() {
 
                 @Override
                 public <RI, RD> List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses,
@@ -100,7 +100,7 @@ public final class ClosingStrategies {
      * representative.
      */
     public static final ClosingStrategy<@Nullable Object, @Nullable Object> CLOSE_LEX_MIN =
-            new ClosingStrategy<@Nullable Object, @Nullable Object>() {
+            new ClosingStrategy<>() {
 
                 @Override
                 public <RI, RD> List<Row<RI>> selectClosingRows(List<List<Row<RI>>> unclosedClasses,

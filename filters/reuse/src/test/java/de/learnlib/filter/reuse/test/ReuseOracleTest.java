@@ -40,7 +40,7 @@ public class ReuseOracleTest {
     protected void setUp() {
         // We don't use this oracle, we directly test against the reuse tree!
         final ReuseCapableOracle<Integer, Integer, String> reuseCapableOracle =
-                new ReuseCapableOracle<Integer, Integer, String>() {
+                new ReuseCapableOracle<>() {
 
                     @Override
                     public QueryResult<Integer, String> continueQuery(Word<Integer> trace, Integer s) {

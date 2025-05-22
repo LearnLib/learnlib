@@ -38,7 +38,7 @@ public final class GlobalSuffixFinders {
      * @see #findMalerPnueli(Query)
      */
     public static final GlobalSuffixFinder<@Nullable Object, @Nullable Object> MALER_PNUELI =
-            new GlobalSuffixFinder<@Nullable Object, @Nullable Object>() {
+            new GlobalSuffixFinder<>() {
 
                 @Override
                 public <RI, RD> List<Word<RI>> findSuffixes(Query<RI, RD> ceQuery,
@@ -61,7 +61,7 @@ public final class GlobalSuffixFinders {
      * @see #findShahbaz(Query, AccessSequenceTransformer)
      */
     public static final GlobalSuffixFinder<@Nullable Object, @Nullable Object> SHAHBAZ =
-            new GlobalSuffixFinder<@Nullable Object, @Nullable Object>() {
+            new GlobalSuffixFinder<>() {
 
                 @Override
                 public <RI, RD> List<Word<RI>> findSuffixes(Query<RI, RD> ceQuery,
@@ -172,7 +172,7 @@ public final class GlobalSuffixFinders {
     public static <I, D> GlobalSuffixFinder<I, D> fromLocalFinder(LocalSuffixFinder<I, D> localFinder,
                                                                   boolean allSuffixes) {
 
-        return new GlobalSuffixFinder<I, D>() {
+        return new GlobalSuffixFinder<>() {
 
             @Override
             public <RI extends I, RD extends D> List<Word<RI>> findSuffixes(Query<RI, RD> ceQuery,
