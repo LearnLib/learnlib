@@ -59,7 +59,7 @@ public interface CacheConfig<I, D, C extends LearningCache<?, I, D>> {
         @Override
         public CacheConfig<I, D, C> apply(Alphabet<I> alphabet, M oracle) {
 
-            return new CacheConfig<I, D, C>() {
+            return new CacheConfig<>() {
 
                 final Supplier<C> transformedSupplier;
 
@@ -115,7 +115,7 @@ public interface CacheConfig<I, D, C extends LearningCache<?, I, D>> {
         @Override
         public CacheConfig<I, Word<O>, C> apply(Alphabet<I> alphabet, SUL<I, O> sul) {
 
-            return new CacheConfig<I, Word<O>, C>() {
+            return new CacheConfig<>() {
 
                 final C cache;
 
@@ -148,7 +148,7 @@ public interface CacheConfig<I, D, C extends LearningCache<?, I, D>> {
         @Override
         public CacheConfig<I, Word<O>, C> apply(Alphabet<I> alphabet, StateLocalInputSUL<I, O> sul) {
 
-            return new CacheConfig<I, Word<O>, C>() {
+            return new CacheConfig<>() {
 
                 final C cache;
 
@@ -183,7 +183,7 @@ public interface CacheConfig<I, D, C extends LearningCache<?, I, D>> {
         @Override
         public CacheConfig<I, D, C> apply(Alphabet<I> alphabet, M oracle) {
 
-            return new CacheConfig<I, D, C>() {
+            return new CacheConfig<>() {
 
                 final List<C> oracles;
 

@@ -115,7 +115,7 @@ public class DomainKnowledgeTest {
 
         @Override
         public ReuseCapableOracle<Integer, Integer, String> get() {
-            return new ReuseCapableOracle<Integer, Integer, String>() {
+            return new ReuseCapableOracle<>() {
 
                 @Override
                 public QueryResult<Integer, String> continueQuery(Word<Integer> trace, Integer integer) {

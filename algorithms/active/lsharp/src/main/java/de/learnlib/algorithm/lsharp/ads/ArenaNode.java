@@ -21,7 +21,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class ArenaNode<T, P> {
 
     public final @Nullable Pair<P, Integer> parent;
-    public T value;
+    public final T value;
 
     public ArenaNode(@Nullable Pair<P, Integer> parent, T value) {
         this.parent = parent;
