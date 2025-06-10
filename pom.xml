@@ -191,12 +191,12 @@ limitations under the License.
     </ciManagement>
     <distributionManagement>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>sonatype</id>
+            <url>https://central.sonatype.com</url>
         </repository>
         <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>sonatype</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
         </snapshotRepository>
         <!-- Dummy - this will NOT actually be used, but is required for mvn site:stage -->
         <!-- Use scm-publish plugin for site deployment on GitHub pages -->
@@ -222,6 +222,7 @@ limitations under the License.
         <antrun-plugin.version>3.1.0</antrun-plugin.version>
         <archetype-plugin.version>3.3.1</archetype-plugin.version>
         <assembly-plugin.version>3.7.1</assembly-plugin.version>
+        <central-publish-plugin.version>0.7.0</central-publish-plugin.version>
         <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
         <clean-plugin.version>3.4.0</clean-plugin.version>
         <compiler-plugin.version>3.13.0</compiler-plugin.version>
@@ -659,6 +660,11 @@ limitations under the License.
                     <configuration>
                         <ignoreAllNonTestScoped>true</ignoreAllNonTestScoped>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-publish-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -1161,6 +1167,16 @@ limitations under the License.
             <id>release</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <deploymentName>LearnLib ${project.version}</deploymentName>
+                            <publishingServerId>sonatype</publishingServerId>
+                            <excludeArtifacts>learnlib-examples</excludeArtifacts>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>

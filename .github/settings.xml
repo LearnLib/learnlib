@@ -6,9 +6,9 @@
 
     <servers>
         <server>
-            <id>ossrh</id>
-            <username>${env.OSSRH_TOKEN_USERNAME}</username>
-            <password>${env.OSSRH_TOKEN_PASSWORD}</password>
+            <id>sonatype</id>
+            <username>${env.SONATYPE_TOKEN_USERNAME}</username>
+            <password>${env.SONATYPE_TOKEN_PASSWORD}</password>
         </server>
     </servers>
 </settings>
