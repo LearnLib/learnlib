@@ -15,10 +15,11 @@
  */
 package de.learnlib.oracle.equivalence;
 
-import de.learnlib.oracle.MembershipOracle;
 import java.util.Collection;
 import java.util.Random;
 import java.util.stream.Stream;
+
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.common.util.collection.IteratorUtil;
@@ -33,6 +34,9 @@ import net.automatalib.word.Word;
 public class KWayStateCoverageEQOracle<A extends UniversalDeterministicAutomaton<S, I, T, ?, ?> & Output<I, D>, S, I, T, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 
+    private static final int DEFAULT_K = 2;
+    private static final int DEFAULT_RANDOM_WALK_LENGTH = 20;
+
     private final Random random;
     private final int k;
     private final int randomWalkLen;
@@ -42,28 +46,10 @@ public class KWayStateCoverageEQOracle<A extends UniversalDeterministicAutomaton
         this(oracle, new Random(), 1);
     }
 
-    /**
-     * Initializes the KWayStateCoverageEqOracle.
-     *
-     * @param oracle
-     *         system under learning
-     */
     public KWayStateCoverageEQOracle(MembershipOracle<I, D> oracle, Random random, int batchSize) {
-        this(oracle, random, batchSize, 2, 20, CombinationMethod.Permutations);
+        this(oracle, random, batchSize, DEFAULT_K, DEFAULT_RANDOM_WALK_LENGTH, CombinationMethod.PERMUTATIONS);
     }
 
-    /**
-     * Initializes the KWayStateCoverageEqOracle.
-     *
-     * @param oracle
-     *         system under learning
-     * @param k
-     *         k value used for k-wise combinations/permutations of states
-     * @param randomWalkLen
-     *         length of random walk performed at the end of each combination/permutation
-     * @param method
-     *         either 'combinations' or 'permutations'
-     */
     public KWayStateCoverageEQOracle(MembershipOracle<I, D> oracle,
                                      Random random,
                                      int batchSize,
