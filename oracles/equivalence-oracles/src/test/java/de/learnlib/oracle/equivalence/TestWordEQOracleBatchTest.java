@@ -94,7 +94,7 @@ public class TestWordEQOracleBatchTest {
         }
 
         @Override
-        protected Stream<Word<I>> generateTestWords(Output<I, Boolean> hypothesis, Collection<? extends I> inputs) {
+        public Stream<Word<I>> generateTestWords(Output<I, Boolean> hypothesis, Collection<? extends I> inputs) {
             final I sym = inputs.iterator().next();
             return Stream.generate(() -> Word.fromLetter(sym)).peek(w-> generatedWordsCounter++).limit(MAX_QUERIES);
         }

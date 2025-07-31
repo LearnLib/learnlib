@@ -70,7 +70,7 @@ public final class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQO
     }
 
     @Override
-    protected Stream<Word<I>> generateTestWords(Output<I, Boolean> hypothesis, Collection<? extends I> inputs) {
+    public Stream<Word<I>> generateTestWords(Output<I, Boolean> hypothesis, Collection<? extends I> inputs) {
 
         if (!(inputs instanceof VPAlphabet)) {
             throw new IllegalArgumentException(

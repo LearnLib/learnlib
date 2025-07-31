@@ -102,7 +102,7 @@ public class IncrementalWMethodEQOracle<A extends UniversalDeterministicAutomato
     }
 
     @Override
-    protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
+    public Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
         // FIXME: warn about inputs being ignored?
         incrementalWMethodIt.update(hypothesis);
 

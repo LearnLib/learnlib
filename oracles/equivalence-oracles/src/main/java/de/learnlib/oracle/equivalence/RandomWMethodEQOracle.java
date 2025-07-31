@@ -185,7 +185,7 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
     }
 
     @Override
-    protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
+    public Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
         UniversalDeterministicAutomaton<?, I, ?, ?, ?> aut = hypothesis;
         return doGenerateTestWords(aut, inputs);
     }

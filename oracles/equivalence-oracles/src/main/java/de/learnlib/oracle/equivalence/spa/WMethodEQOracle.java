@@ -104,7 +104,7 @@ public class WMethodEQOracle<I> extends AbstractTestWordEQOracle<SPA<?, I>, I, B
     }
 
     @Override
-    protected Stream<Word<I>> generateTestWords(SPA<?, I> hypothesis, Collection<? extends I> inputs) {
+    public Stream<Word<I>> generateTestWords(SPA<?, I> hypothesis, Collection<? extends I> inputs) {
         if (!(inputs instanceof ProceduralInputAlphabet)) {
             throw new IllegalArgumentException("Inputs are not a procedural alphabet");
         }

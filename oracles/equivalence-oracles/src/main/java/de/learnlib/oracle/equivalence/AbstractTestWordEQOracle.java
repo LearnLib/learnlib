@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import de.learnlib.TestWordGenerator;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An abstract equivalence oracle that takes care of query batching and hypothesis checking and allows extending classes
- * to solely focus on test word generation by implementing {@link #generateTestWords(Output, Collection)}.
+ * to solely focus on test word generation by implementing {@link #generateTestWords(Object, Collection)}}.
  * <p>
  * Being {@link Stream stream}-based, this oracle encourages the lazy computation of counterexamples, so that all
  * counterexamples do not have to be computed upfront, but only until the first valid counterexample is found.
@@ -45,7 +46,8 @@ import org.slf4j.LoggerFactory;
  * @param <D>
  *         output (domain) type
  */
-public abstract class AbstractTestWordEQOracle<A extends Output<I, D>, I, D> implements EquivalenceOracle<A, I, D> {
+public abstract class AbstractTestWordEQOracle<A extends Output<I, D>, I, D>
+        implements EquivalenceOracle<A, I, D>, TestWordGenerator<A, I> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTestWordEQOracle.class);
 
@@ -81,20 +83,6 @@ public abstract class AbstractTestWordEQOracle<A extends Output<I, D>, I, D> imp
 
         return ceStream.findFirst().orElse(null);
     }
-
-    /**
-     * Generate the stream of test words that should be used for the current equivalence check cycle.
-     *
-     * @param hypothesis
-     *         the current hypothesis of the learning algorithm
-     * @param inputs
-     *         the collection of inputs to consider
-     *
-     * @return the stream of test words used for equivalence testing
-     *
-     * @see EquivalenceOracle#findCounterExample(Object, Collection)
-     */
-    protected abstract Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs);
 
     private Stream<DefaultQuery<I, D>> answerQueries(Stream<DefaultQuery<I, D>> stream) {
         if (isBatched()) {

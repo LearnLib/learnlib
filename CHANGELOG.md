@@ -6,9 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.18.0...HEAD)
 
+### Added
+
+* Added an `EarlyExitEQOracle` which for a given `AdaptiveMembershipOracle` and `TestWordGenerator` stops the evaluation of (potentially long) Mealy-based equivalence tests as soon as a mismatch with the hypothesis is detected, potentially improving the symbol performance of the given equivalence oracle.
+
 ### Changed
 
 * LearnLib now requires Java 11 at runtime.
+* The `generateTestWords` method of `AbstractTestWordEQOracle` now needs to be public.
 
 ### Fixed
 

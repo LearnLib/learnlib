@@ -78,6 +78,11 @@ limitations under the License.
         <!-- test -->
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-drivers-simulator</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-membership-oracles</artifactId>
             <scope>test</scope>
         </dependency>

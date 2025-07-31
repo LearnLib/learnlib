@@ -103,7 +103,7 @@ public class RandomWordsEQOracle<A extends Output<I, D>, I, D> extends AbstractT
     }
 
     @Override
-    protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
+    public Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
 
         final List<? extends I> symbolList = CollectionUtil.randomAccessList(inputs);
 

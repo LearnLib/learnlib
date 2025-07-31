@@ -126,7 +126,7 @@ public class CompleteExplorationEQOracle<A extends Output<I, D>, I, D> extends A
     }
 
     @Override
-    protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
+    public Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
         return IterableUtil.stream(IterableUtil.allTuples(inputs, minDepth, maxDepth)).map(Word::fromList);
     }
 }
