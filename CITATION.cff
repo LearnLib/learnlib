@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+title: LearnLib - A free, open-source Java library for automata learning algorithms
+message: If you use this software, please cite it using the metadata from this file.
+type: software
+authors:
+  - name: TU Dortmund University
+    city: Dortmund
+    country: DE
+    post-code: '44221'
+repository-code: 'https://github.com/LearnLib/learnlib'
+url: 'https://learnlib.de'
+license: Apache-2.0
+version: 0.18.0
+date-released: 2025-02-06
+preferred-citation:
+  type: conference-paper
+  authors:
+  - family-names: "Frohme"
+    given-names: "Markus"
+    orcid: "https://orcid.org/0000-0001-6520-2410"
+  - family-names: "Howar"
+    given-names: "Falk"
+    orcid: "https://orcid.org/0000-0002-9524-4459"
+  - family-names: "Steffen"
+    given-names: "Bernhard"
+    orcid: "https://orcid.org/0000-0001-9619-1558"
+  doi: 10.1007/978-3-031-98685-7_7
+  title: "LearnLib: 10 years later"
+  conference:
+    name: "Computer Aided Verification"
+  collection-title: "Computer Aided Verification - 37th International Conference, CAV 2025, Zagreb, Croatia, July 23-25, 2025, Proceedings, Part IV"
+  collection-doi: 10.1007/978-3-031-98685-7
+  collection-type: proceedings
+  editors:
+  - family-names: "Piskac"
+    given-names: "Ruzica"
+    orcid: "https://orcid.org/0000-0002-3267-0776"
+  - family-names: "Rakamarić"
+    given-names: "Zvonimir"
+    orcid: https://orcid.org/0000-0001-7946-0162
+  publisher:
+    name: "Springer Nature Switzerland"
+  volume: 15934
+  start: 141
+  end: 160
+  month: 7
+  year: 2025
