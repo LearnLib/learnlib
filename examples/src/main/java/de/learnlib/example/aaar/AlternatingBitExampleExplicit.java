@@ -56,7 +56,7 @@ public final class AlternatingBitExampleExplicit {
         // prevent instantiation
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         final Protocol mqo = new Protocol();
 
@@ -86,7 +86,7 @@ public final class AlternatingBitExampleExplicit {
     }
 
     private static <AI, CI, O> void printInfo(ExplicitAAARLearnerMealy<? extends OTLearnerMealy<CI, O>, AI, CI, O> learner)
-            throws IOException {
+            throws IOException, InterruptedException {
 
         System.out.println("-------------------------------------------------------");
         new ObservationTableASCIIWriter<>().write(learner.getLearner().getObservationTable(), System.out);

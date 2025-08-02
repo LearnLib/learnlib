@@ -50,7 +50,7 @@ public final class AlternatingBitExampleGeneric {
         // prevent instantiation
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         final Protocol mqo = new Protocol();
 
@@ -79,7 +79,7 @@ public final class AlternatingBitExampleGeneric {
     }
 
     private static <AI, CI, O> void printInfo(GenericAAARLearnerMealy<? extends OTLearnerMealy<CI, O>, AI, CI, O> learner)
-            throws IOException {
+            throws IOException, InterruptedException {
 
         System.out.println("-------------------------------------------------------");
         new ObservationTableASCIIWriter<>().write(learner.getLearner().getObservationTable(), System.out);

@@ -27,7 +27,6 @@ import javax.swing.SwingUtilities;
 
 import de.learnlib.example.aaar.AlternatingBitExampleExplicit;
 import de.learnlib.example.aaar.AlternatingBitExampleGeneric;
-import net.automatalib.common.util.system.JVMUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
 import org.mockito.MockedStatic;
@@ -61,7 +60,7 @@ public class ExamplesTest {
         SwingUtilities.invokeAndWait(() -> {
             try {
                 AlternatingBitExampleGeneric.main(new String[0]);
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -73,7 +72,7 @@ public class ExamplesTest {
         SwingUtilities.invokeAndWait(() -> {
             try {
                 AlternatingBitExampleExplicit.main(new String[0]);
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -174,11 +173,11 @@ public class ExamplesTest {
     }
 
     private static boolean isJVMCompatible() {
-        return JVMUtil.getCanonicalSpecVersion() == 11;
+        return Runtime.version().feature() == 11;
     }
 
     private static void requireJVMCompatibility() {
-        if (JVMUtil.getCanonicalSpecVersion() != 11) {
+        if (Runtime.version().feature() != 11) {
             throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
         }
     }
