@@ -31,6 +31,7 @@ open module de.learnlib.oracle.membership {
     requires de.learnlib.api;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
+    requires org.slf4j;
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static de.learnlib.tooling.annotation;
