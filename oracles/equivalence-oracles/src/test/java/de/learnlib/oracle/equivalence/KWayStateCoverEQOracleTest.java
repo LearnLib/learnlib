@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import de.learnlib.TestWordGenerator;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
@@ -40,7 +41,7 @@ public class KWayStateCoverEQOracleTest {
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
         final CompactDFA<Character> dfa = RandomAutomata.randomDFA(new Random(seed), SIZE, alphabet);
 
-        final KWayStateCoverEQOracle<DFA<Integer, Character>, Integer, Character, Integer, Boolean> oracle =
+        final TestWordGenerator<DFA<Integer, Character>, Character> oracle =
                 new KWayStateCoverEQOracleBuilder<DFA<Integer, Character>, Integer, Character, Integer, Boolean>().withRandom(
                         new Random(seed)).create();
 

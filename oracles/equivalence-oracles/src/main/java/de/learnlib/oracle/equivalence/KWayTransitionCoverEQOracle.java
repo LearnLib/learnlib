@@ -104,7 +104,7 @@ public class KWayTransitionCoverEQOracle<A extends UniversalDeterministicAutomat
     }
 
     @Override
-    protected Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
+    public Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
         return IteratorUtil.stream(new KWayTransitionCoverTestsIterator<>(hypothesis,
                                                                           inputs,
                                                                           random,
