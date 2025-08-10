@@ -25,7 +25,7 @@ import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.collection.IteratorUtil;
-import net.automatalib.util.automaton.conformance.KWayStateCoverTestsIterator;
+import net.automatalib.util.automaton.conformance.KWayTransitionCoverTestsIterator;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -42,12 +42,12 @@ public class KWayTransitionCoverEQOracleTest {
         final CompactDFA<Character> dfa = RandomAutomata.randomDFA(new Random(seed), SIZE, alphabet);
 
         final TestWordGenerator<DFA<Integer, Character>, Character> oracle =
-                new KWayStateCoverEQOracleBuilder<DFA<Integer, Character>, Integer, Character, Integer, Boolean>().withRandom(
+                new KWayTransitionCoverEQOracleBuilder<DFA<Integer, Character>, Integer, Character, Integer, Boolean>().withRandom(
                         new Random(seed)).create();
 
         List<Word<Character>> tests = oracle.generateTestWords(dfa, alphabet).collect(Collectors.toList());
         List<Word<Character>> iter =
-                IteratorUtil.list(new KWayStateCoverTestsIterator<>(dfa, alphabet, new Random(seed)));
+                IteratorUtil.list(new KWayTransitionCoverTestsIterator<>(dfa, alphabet, new Random(seed)));
 
         Assert.assertEquals(tests, iter);
     }
