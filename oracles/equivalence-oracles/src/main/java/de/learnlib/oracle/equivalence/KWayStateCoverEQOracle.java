@@ -43,8 +43,8 @@ public class KWayStateCoverEQOracle<A extends UniversalDeterministicAutomaton<S,
         extends AbstractTestWordEQOracle<A, I, D> {
 
     private final Random random;
-    private final int k;
     private final int randomWalkLen;
+    private final int k;
     private final CombinationMethod combinationMethod;
 
     /**

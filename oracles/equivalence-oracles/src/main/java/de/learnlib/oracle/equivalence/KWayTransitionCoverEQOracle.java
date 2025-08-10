@@ -44,14 +44,14 @@ import net.automatalib.word.Word;
 public class KWayTransitionCoverEQOracle<A extends UniversalDeterministicAutomaton<S, I, T, ?, ?> & Output<I, D>, S, I, T, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 
-    private final int k;
-    private final GenerationMethod generationMethod;
+    private final Random random;
+    private final int randomWalkLen;
     private final int numGeneratePaths;
     private final int maxPathLen;
     private final int maxNumberOfSteps;
+    private final int k;
     private final OptimizationMetric optimizationMetric;
-    private final int randomWalkLen;
-    private final Random random;
+    private final GenerationMethod generationMethod;
 
     /**
      * Constructor.
@@ -61,25 +61,25 @@ public class KWayTransitionCoverEQOracle<A extends UniversalDeterministicAutomat
      * @param random
      *         the random number generator to use
      * @param randomWalkLen
-     *         the number of steps that are added by 'prefix' generated paths
+     *         the number of steps that are added by {@link GenerationMethod#PREFIX prefix}-generated paths
      * @param numGeneratePaths
-     *         number of random queries used to find the optimal subset
+     *         number of {@link GenerationMethod#RANDOM randomly}-generated queries used to find the optimal subset
      * @param maxPathLen
-     *         the maximum step size of a generated path
+     *         the maximum step size of {@link GenerationMethod#RANDOM randomly}-generated queries
      * @param maxNumberOfSteps
-     *         maximum number of steps that will be executed on the automaton (<=0 = no limit)
+     *         threshold for the number of steps after which no more new test words will be generated (<=0 = no limit)
      * @param k
      *         k value used for K-Way transitions, i.e the number of steps between the start and the end of a
      *         transition
-     * @param generationMethod
-     *         defines how the queries are generated 'random' or 'prefix'
      * @param optimizationMetric
-     *         minimize either the number of 'steps' or 'queries' that are executed
+     *         the metric after which test queries are minimized
+     * @param generationMethod
+     *         defines how the queries are generated
      * @param batchSize
      *         size of the batches sent to the membership oracle
      *
      * @see KWayTransitionCoverTestsIterator#KWayTransitionCoverTestsIterator(UniversalDeterministicAutomaton,
-     * Collection, Random, int, int, int, int, int, GenerationMethod, OptimizationMetric)
+     * Collection, Random, int, int, int, int, int, OptimizationMetric, GenerationMethod)
      */
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public KWayTransitionCoverEQOracle(MembershipOracle<I, D> oracle,
@@ -89,18 +89,18 @@ public class KWayTransitionCoverEQOracle<A extends UniversalDeterministicAutomat
                                        int maxPathLen,
                                        int maxNumberOfSteps,
                                        int k,
-                                       GenerationMethod generationMethod,
                                        OptimizationMetric optimizationMetric,
+                                       GenerationMethod generationMethod,
                                        int batchSize) {
         super(oracle, batchSize);
         this.random = random;
-        this.k = k;
-        this.generationMethod = generationMethod;
+        this.randomWalkLen = randomWalkLen;
         this.numGeneratePaths = numGeneratePaths;
         this.maxPathLen = maxPathLen;
         this.maxNumberOfSteps = maxNumberOfSteps;
+        this.k = k;
         this.optimizationMetric = optimizationMetric;
-        this.randomWalkLen = randomWalkLen;
+        this.generationMethod = generationMethod;
     }
 
     @Override
@@ -113,8 +113,8 @@ public class KWayTransitionCoverEQOracle<A extends UniversalDeterministicAutomat
                                                                           maxPathLen,
                                                                           maxNumberOfSteps,
                                                                           k,
-                                                                          generationMethod,
-                                                                          optimizationMetric));
+                                                                          optimizationMetric,
+                                                                          generationMethod));
     }
 
     static final class BuilderDefaults {
