@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <!--
 Copyright (C) 2013-2025 TU Dortmund University
 This file is part of LearnLib <https://learnlib.de>.
@@ -20,31 +20,30 @@ limitations under the License.
 
     <parent>
         <groupId>de.learnlib</groupId>
-        <artifactId>learnlib-algorithms-parent</artifactId>
+        <artifactId>learnlib-algorithms-active-parent</artifactId>
         <version>0.19.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>learnlib-algorithms-active-parent</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>learnlib-sparse</artifactId>
 
-    <name>LearnLib :: Algorithms :: Active</name>
-    <description>Parent module for (active) automata learning algorithms shipped with LearnLib</description>
+    <name>LearnLib :: Algorithms :: Sparse</name>
+    <description>
+        This artifact provides the implementation of the Sparse OT learning algorithm as described in the paper "Learning Mealy Machines with Sparse Observation Tables".
+    </description>
 
-    <modules>
-        <module>aaar</module>
-        <module>adt</module>
-        <module>dhc</module>
-        <module>kearns-vazirani</module>
-        <module>lambda</module>
-        <module>lsharp</module>
-        <module>lstar</module>
-        <module>nlstar</module>
-        <module>observation-pack</module>
-        <module>observation-pack-vpa</module>
-        <module>procedural</module>
-        <module>sparse</module>
-        <module>ttt</module>
-        <module>ttt-vpa</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-counterexamples</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib.testsupport</groupId>
+            <artifactId>learnlib-learner-it-support</artifactId>
+        </dependency>
+    </dependencies>
 </project>
