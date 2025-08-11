@@ -24,7 +24,7 @@ import java.util.*;
 
 /**
  * optimized implementation of the Ls learning algorithm,
- * as described in the appendix of the paper
+ * as described in section 6 of the paper "Learning Mealy Machines with Sparse Observation Tables"
  */
 public class SparseLearner<I, O> extends AbstractSparseLearner<Integer, I, O> {
 
