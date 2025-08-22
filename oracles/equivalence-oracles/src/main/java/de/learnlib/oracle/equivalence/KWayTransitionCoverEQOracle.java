@@ -39,9 +39,16 @@ import net.automatalib.word.Word;
  * queries and finding the smallest subset with the highest coverage. In other words, this oracle finds counter examples
  * by running random paths that cover all pairwise / k-way transitions.
  *
+ * @param <A>
+ *         automaton type
+ * @param <I>
+ *         input symbol type
+ * @param <D>
+ *         output domain
+ *
  * @see KWayTransitionCoverTestsIterator
  */
-public class KWayTransitionCoverEQOracle<A extends UniversalDeterministicAutomaton<S, I, T, ?, ?> & Output<I, D>, S, I, T, D>
+public class KWayTransitionCoverEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 
     private final Random random;
@@ -105,6 +112,30 @@ public class KWayTransitionCoverEQOracle<A extends UniversalDeterministicAutomat
 
     @Override
     public Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
+        final UniversalDeterministicAutomaton<?, I, ?, ?, ?> casted = hypothesis;
+        return doGenerateTestWords(casted,
+                                   inputs,
+                                   this.random,
+                                   this.randomWalkLen,
+                                   this.numGeneratePaths,
+                                   this.maxPathLen,
+                                   this.maxNumberOfSteps,
+                                   this.k,
+                                   this.optimizationMetric,
+                                   this.generationMethod);
+    }
+
+    private static <A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>, S, I, T> Stream<Word<I>> doGenerateTestWords(
+            A hypothesis,
+            Collection<? extends I> inputs,
+            Random random,
+            int randomWalkLen,
+            int numGeneratePaths,
+            int maxPathLen,
+            int maxNumberOfSteps,
+            int k,
+            OptimizationMetric optimizationMetric,
+            GenerationMethod generationMethod) {
         return IteratorUtil.stream(new KWayTransitionCoverTestsIterator<>(hypothesis,
                                                                           inputs,
                                                                           random,

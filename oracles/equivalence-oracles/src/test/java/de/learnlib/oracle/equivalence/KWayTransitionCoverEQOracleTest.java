@@ -42,8 +42,8 @@ public class KWayTransitionCoverEQOracleTest {
         final CompactDFA<Character> dfa = RandomAutomata.randomDFA(new Random(seed), SIZE, alphabet);
 
         final TestWordGenerator<DFA<Integer, Character>, Character> oracle =
-                new KWayTransitionCoverEQOracleBuilder<DFA<Integer, Character>, Integer, Character, Integer, Boolean>().withRandom(
-                        new Random(seed)).create();
+                new KWayTransitionCoverEQOracleBuilder<DFA<Integer, Character>, Character, Boolean>().withRandom(new Random(
+                        seed)).create();
 
         List<Word<Character>> tests = oracle.generateTestWords(dfa, alphabet).collect(Collectors.toList());
         List<Word<Character>> iter =

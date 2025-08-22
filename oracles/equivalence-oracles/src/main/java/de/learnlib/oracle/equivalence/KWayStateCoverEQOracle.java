@@ -37,9 +37,16 @@ import net.automatalib.word.Word;
  * A test case will be computed for every k-combination or k-permutation of states with additional random walk at the
  * end.
  *
+ * @param <A>
+ *         automaton type
+ * @param <I>
+ *         input symbol type
+ * @param <D>
+ *         output domain
+ *
  * @see KWayStateCoverTestsIterator
  */
-public class KWayStateCoverEQOracle<A extends UniversalDeterministicAutomaton<S, I, T, ?, ?> & Output<I, D>, S, I, T, D>
+public class KWayStateCoverEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 
     private final Random random;
@@ -75,13 +82,24 @@ public class KWayStateCoverEQOracle<A extends UniversalDeterministicAutomaton<S,
                                   int batchSize) {
         super(oracle, batchSize);
         this.random = random;
-        this.k = k;
         this.randomWalkLen = randomWalkLen;
+        this.k = k;
         this.combinationMethod = combinationMethod;
     }
 
     @Override
     public Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
+        final UniversalDeterministicAutomaton<?, I, ?, ?, ?> casted = hypothesis;
+        return doGenerateTestWords(casted, inputs, this.random, this.randomWalkLen, this.k, this.combinationMethod);
+    }
+
+    private static <A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>, S, I, T> Stream<Word<I>> doGenerateTestWords(
+            A hypothesis,
+            Collection<? extends I> inputs,
+            Random random,
+            int randomWalkLen,
+            int k,
+            CombinationMethod combinationMethod) {
         return IteratorUtil.stream(new KWayStateCoverTestsIterator<>(hypothesis,
                                                                      inputs,
                                                                      random,
