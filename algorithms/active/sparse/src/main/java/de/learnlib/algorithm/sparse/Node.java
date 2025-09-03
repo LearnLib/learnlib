@@ -18,16 +18,16 @@ package de.learnlib.algorithm.sparse;
 import java.util.BitSet;
 import java.util.List;
 
-abstract class Node<S, I, O> { // type parameters required for safe casting
+class Node<S, I, O> { // type parameters required for safe casting
 
     final List<Integer> cellsIds; // cell identifiers of the fringe rows at this node
     final BitSet remRows;
 
-    Node(List<Integer> cellsIds) {
+    protected Node(List<Integer> cellsIds) {
         this(cellsIds, new BitSet());
     }
 
-    Node(List<Integer> cellsIds, BitSet remRows) {
+    protected Node(List<Integer> cellsIds, BitSet remRows) {
         this.cellsIds = cellsIds;
         this.remRows = remRows;
     }

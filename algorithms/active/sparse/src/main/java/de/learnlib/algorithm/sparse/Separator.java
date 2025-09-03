@@ -15,12 +15,12 @@
  */
 package de.learnlib.algorithm.sparse;
 
-import net.automatalib.word.Word;
-
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import net.automatalib.word.Word;
 
 class Separator<S, I, O> extends Node<S, I, O> {
     final Word<I> suffix;

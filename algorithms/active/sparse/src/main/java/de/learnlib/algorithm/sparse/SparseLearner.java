@@ -15,18 +15,19 @@
  */
 package de.learnlib.algorithm.sparse;
 
+import java.util.Collections;
+import java.util.List;
+
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.word.Word;
 
-import java.util.*;
-
 /**
  * optimized implementation of the Ls learning algorithm,
- * as described in section 6 of the paper "Learning Mealy Machines with Sparse Observation Tables"
+ * as described in section 6 of the paper "Learning Mealy Machines with Sparse Observation Tables".
  */
-public class SparseLearner<I, O> extends AbstractSparseLearner<Integer, I, O> {
+public class SparseLearner<I, O> extends GenericSparseLearner<Integer, I, O> {
 
     public SparseLearner(Alphabet<I> alphabet, MealyMembershipOracle<I, O> oracle) {
         this(alphabet, oracle, Collections.emptyList());

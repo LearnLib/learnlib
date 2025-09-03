@@ -15,6 +15,17 @@
  */
 package de.learnlib.algorithm.sparse;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
@@ -26,11 +37,7 @@ import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-abstract class AbstractSparseLearner<S, I, O> implements MealyLearner<I, O> {
+class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
 
     private final Alphabet<I> alphabet;
     private final MealyMembershipOracle<I, O> oracle;
@@ -49,10 +56,11 @@ abstract class AbstractSparseLearner<S, I, O> implements MealyLearner<I, O> {
     private final Map<Word<I>, List<BitSet>> sufToVecs;
     private final Map<Word<I>, Map<Word<O>, Integer>> sufToOutToIdx;
 
-    AbstractSparseLearner(Alphabet<I> alphabet,
-                          MealyMembershipOracle<I, O> oracle,
-                          List<Word<I>> initialSuffixes,
-                          MutableMealyMachine<S, I, ?, O> initialHypothesis) {
+    protected GenericSparseLearner(Alphabet<I> alphabet,
+                                   MealyMembershipOracle<I, O> oracle,
+                                   List<Word<I>> initialSuffixes,
+                                   MutableMealyMachine<S, I, ?, O> emptyMachine) {
+        assert emptyMachine.size() == 0;
         this.alphabet = alphabet;
         this.oracle = oracle;
         sufs = new ArrayDeque<>(initialSuffixes);
@@ -61,7 +69,7 @@ abstract class AbstractSparseLearner<S, I, O> implements MealyLearner<I, O> {
         prefToFringe = new HashMap<>();
         cells = new ArrayList<>();
         cellToIdx = new HashMap<>();
-        hyp = initialHypothesis;
+        hyp = emptyMachine;
         stateToPrefix = new HashMap<>();
         accSeq = p -> stateToPrefix.get(hyp.getState(p));
         sufToVecs = new HashMap<>();
@@ -209,8 +217,9 @@ abstract class AbstractSparseLearner<S, I, O> implements MealyLearner<I, O> {
         return out.suffix(suf.length());
     }
 
-    /** adds suffix-output pair to index if not yet contained
-     *  and returns a unique identifier representing the pair */
+    /**
+     * adds suffix-output pair to index if not yet contained
+     * and returns a unique identifier representing the pair. */
     private int getUniqueCellIdx(Word<I> suf, Word<O> out) {
         assert suf.length() == out.length();
         final Pair<Word<I>, Word<O>> cell = Pair.of(suf, out);
@@ -223,7 +232,7 @@ abstract class AbstractSparseLearner<S, I, O> implements MealyLearner<I, O> {
         return idx;
     }
 
-    /** returns index of new core row */
+    /** returns index of new core row. */
     private int moveToCore(FringeRow<S, I, O> f, List<Integer> cellIds) {
         assert fRows.contains(f);
         fRows.remove(f);
@@ -244,8 +253,9 @@ abstract class AbstractSparseLearner<S, I, O> implements MealyLearner<I, O> {
         return c.idx;
     }
 
-    /** takes fringe row and its observations, queries the missing entries
-     *  and returns a list containing the observations for all suffixes */
+    /**
+     * takes fringe row and its observations, queries the missing entries
+     * and returns a list containing the observations for all suffixes. */
     private List<Integer> completeRowObservations(FringeRow<S, I, O> f, List<Integer> cellIds) {
         final List<Word<I>> sufsPresent = cellIds.stream().map(c -> this.cells.get(c).getFirst()).collect(Collectors.toList());
         final List<Word<I>> sufsMissing = sufs.stream().filter(s -> !sufsPresent.contains(s)).collect(Collectors.toList());

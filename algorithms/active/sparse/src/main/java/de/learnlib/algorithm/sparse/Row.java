@@ -17,10 +17,10 @@ package de.learnlib.algorithm.sparse;
 
 import net.automatalib.word.Word;
 
-abstract class Row<S, I, O> { // type parameters required for safe casting
+class Row<S, I, O> { // type parameters required for safe casting
     final Word<I> prefix;
 
-    Row(Word<I> prefix) {
+    protected Row(Word<I> prefix) {
         this.prefix = prefix;
     }
 }

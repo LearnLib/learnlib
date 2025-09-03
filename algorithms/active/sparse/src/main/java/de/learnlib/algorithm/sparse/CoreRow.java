@@ -15,9 +15,12 @@
  */
 package de.learnlib.algorithm.sparse;
 
-import net.automatalib.word.Word;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
+import net.automatalib.word.Word;
 
 class CoreRow<S, I, O> extends Row<S, I, O> {
     final S state; // hypothesis state associated with this row
