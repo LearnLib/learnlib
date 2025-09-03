@@ -34,6 +34,7 @@ open module de.learnlib.algorithm.sparse {
     requires net.automatalib.core;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
+    requires net.automatalib.util;
 
     exports de.learnlib.algorithm.sparse;
 }
