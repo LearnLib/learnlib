@@ -29,10 +29,27 @@ limitations under the License.
 
     <name>LearnLib :: Algorithms :: Sparse</name>
     <description>
-        This artifact provides the implementation of the Sparse OT learning algorithm as described in the paper "Learning Mealy Machines with Sparse Observation Tables".
+        This artifact provides the implementation of the Sparse OT learning algorithm as described in the paper
+        "Learning Mealy Machines with Sparse Observation Tables" (TODO) by Wolffhardt Schwabe, Paul Kogel, and Sabine
+        Glesner.
     </description>
 
     <dependencies>
+        <!-- internal -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-counterexamples</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-util</artifactId>
+        </dependency>
+
+        <!-- external -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -45,18 +62,8 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-counterexamples</artifactId>
-        </dependency>
+
+        <!-- testing -->
         <dependency>
             <groupId>de.learnlib.testsupport</groupId>
             <artifactId>learnlib-learner-it-support</artifactId>

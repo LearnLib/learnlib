@@ -24,14 +24,17 @@ class Leaf<S, I, O> extends Node<S, I, O> {
     private boolean split;
     private int lastNumCRows;
     private int lastNumSufs;
-    Separator<S, I, O> sep;
-    // split leafs always remember how many core rows and suffixes
-    // the table contained at their last visit.
-    // this information is used as a logical timestamp
-    // to check whether the separator is still guaranteed to be optimal
-    // or if it needs to be recomputed.
 
-    /** creates split leaf without observations. */
+    /**
+     * Split leafs always remember how many core rows and suffixes the table contained at their last visit. Tis
+     * information is used as a logical timestamp to check whether the separator is still guaranteed to be optimal or if
+     * it needs to be recomputed.
+     */
+    Separator<S, I, O> sep;
+
+    /**
+     * Creates split leaf without observations.
+     */
     Leaf() {
         super(Collections.emptyList());
         cRow = null;
@@ -41,7 +44,9 @@ class Leaf<S, I, O> extends Node<S, I, O> {
         // timestamps will be updated automatically
     }
 
-    /** creates unsplit leaf associated with the given core row and observations. */
+    /**
+     * Creates unsplit leaf associated with the given core row and observations.
+     */
     Leaf(CoreRow<S, I, O> cRow, int numCRows, int numSufs, List<Integer> cellIds) {
         super(cellIds);
         this.cRow = cRow;
@@ -65,10 +70,10 @@ class Leaf<S, I, O> extends Node<S, I, O> {
             sep = null;
         }
 
-        // since suffixes and core rows grow monotonically,
-        // the separator only needs to be recomputed whenever
-        // new compatible core prefixes emerge
-        // or when the suffix set grows.
+        /*
+         * since suffixes and core rows grow monotonically, the separator only needs to be recomputed whenever new
+         * compatible core prefixes emerge or when the suffix set grows.
+         */
 
         for (int i = lastNumCRows; i < cRows.size(); i++) {
             final CoreRow<S, I, O> c = cRows.get(i);

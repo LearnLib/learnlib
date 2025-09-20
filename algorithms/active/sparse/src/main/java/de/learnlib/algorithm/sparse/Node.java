@@ -20,7 +20,10 @@ import java.util.List;
 
 class Node<S, I, O> { // type parameters required for safe casting
 
-    final List<Integer> cellsIds; // cell identifiers of the fringe rows at this node
+    /**
+     * Cell identifiers of the fringe rows at this node.
+     */
+    final List<Integer> cellsIds;
     final BitSet remRows;
 
     protected Node(List<Integer> cellsIds) {

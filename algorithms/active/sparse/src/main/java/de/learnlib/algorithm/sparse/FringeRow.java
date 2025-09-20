@@ -17,16 +17,35 @@ package de.learnlib.algorithm.sparse;
 
 import net.automatalib.word.Word;
 
+/**
+ * Each fringe row represents a hypothesis transition.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 class FringeRow<S, I, O> extends Row<S, I, O> {
 
-    // each fringe row represents a hypothesis transition
-    final S srcState; // source state
-    final I transIn; // input symbol
-    O transOut; // output symbol (determined dynamically)
+    /**
+     * Source state.
+     */
+    final S srcState;
+    /**
+     * Input symbol.
+     */
+    final I transIn;
+    /**
+     * Output symbol (determined dynamically).
+     */
+    O transOut;
+    /**
+     * For compression, fringe rows do not store observations directly. instead, they point to some leaf in a tree
+     * encoding their classification history. this trick avoids redundantly storing identical observations.
+     */
     Leaf<S, I, O> leaf;
-    // for compression, fringe rows do not store observations directly.
-    // instead, they point to some leaf in a tree encoding their classification history.
-    // this trick avoids redundantly storing identical observations.
 
     FringeRow(Word<I> prefix, S srcState, Leaf<S, I, O> leaf) {
         super(prefix);

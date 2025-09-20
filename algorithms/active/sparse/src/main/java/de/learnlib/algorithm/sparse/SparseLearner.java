@@ -24,8 +24,8 @@ import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.word.Word;
 
 /**
- * optimized implementation of the Ls learning algorithm,
- * as described in section 6 of the paper "Learning Mealy Machines with Sparse Observation Tables".
+ * Optimized implementation of the Ls learning algorithm, as described in the paper <a href="TODO">Learning Mealy
+ * Machines with Sparse Observation Tables</a> by Wolffhardt Schwabe, Paul Kogel, and Sabine Glesner.
  */
 public class SparseLearner<I, O> extends GenericSparseLearner<Integer, I, O> {
 

@@ -23,17 +23,30 @@ import java.util.Set;
 import net.automatalib.word.Word;
 
 class CoreRow<S, I, O> extends Row<S, I, O> {
-    final S state; // hypothesis state associated with this row
-    final int idx; // index in core row list
-    final Map<Word<I>, Word<O>> sufToOut; // maps suffixes to the outputs contained in this row
-    final Set<Integer> cellIds; // also store identifiers of suffix-output pairs for fast compatability checking
+
+    /**
+     * Hypothesis state associated with this row.
+     */
+    final S state;
+    /**
+     * Index in core row list.
+     */
+    final int idx;
+    /**
+     * Maps suffixes to the outputs contained in this row.
+     */
+    final Map<Word<I>, Word<O>> sufToOut;
+    /**
+     * Also store identifiers of suffix-output pairs for fast compatibility checking.
+     */
+    final Set<Integer> cellIds;
 
     CoreRow(Word<I> prefix, S state, int idx) {
         super(prefix);
         this.state = state;
         this.idx = idx;
         sufToOut = new HashMap<>();
-        cellIds = new HashSet<>(); // use HashSet to enable fast containment checks
+        cellIds = new HashSet<>();
     }
 
     void addSuffix(Word<I> suf, Word<O> out, int cell) {

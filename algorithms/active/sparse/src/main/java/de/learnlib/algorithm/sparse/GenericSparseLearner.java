@@ -21,10 +21,11 @@ import java.util.BitSet;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.counterexample.LocalSuffixFinders;
@@ -34,6 +35,7 @@ import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 
@@ -41,26 +43,56 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
 
     private final Alphabet<I> alphabet;
     private final MealyMembershipOracle<I, O> oracle;
-    private final Deque<Word<I>> sufs; // suffixes
-    private final List<CoreRow<S, I, O>> cRows; // core rows
-    private final Deque<FringeRow<S, I, O>> fRows; // fringe rows
-    private final Map<Word<I>, FringeRow<S, I, O>> prefToFringe; // fringe prefix to row
-    private final List<Pair<Word<I>, Word<O>>> cells; // list of unique cells
-    private final Map<Pair<Word<I>, Word<O>>, Integer> cellToIdx; // maps each unique cell to its list index
-    private final MutableMealyMachine<S, I, ?, O> hyp; // hypothesis
-    private final Map<S, Word<I>> stateToPrefix; // maps each state to its core row prefix
-    private final Function<Word<I>, Word<I>> accSeq; // access sequence
+    /**
+     * Suffixes.
+     */
+    private final Deque<Word<I>> sufs;
+    /**
+     * Core rows.
+     */
+    private final List<CoreRow<S, I, O>> cRows;
+    /**
+     * Fringe rows.
+     */
+    private final Deque<FringeRow<S, I, O>> fRows;
+    /**
+     * Fringe prefix to row.
+     */
+    private final Map<Word<I>, FringeRow<S, I, O>> prefToFringe;
+    /**
+     * List of unique cells.
+     */
+    private final List<Pair<Word<I>, Word<O>>> cells;
+    /**
+     * Maps each unique cell to its list index.
+     */
+    private final Map<Pair<Word<I>, Word<O>>, Integer> cellToIdx;
+    /**
+     * Hypothesis.
+     */
+    private final MutableMealyMachine<S, I, ?, O> hyp;
+    /**
+     * Maps each state to its core row prefix.
+     */
+    private final Map<S, Word<I>> stateToPrefix;
+    /**
+     * Access sequences.
+     */
+    private final Function<Word<I>, Word<I>> accSeq;
 
-    // for fast suffix ranking, we track for each suffix
-    // how the core rows are partitioned by it
+    /**
+     * For fast suffix ranking, we track for each suffix how the core rows are partitioned by it.
+     */
     private final Map<Word<I>, List<BitSet>> sufToVecs;
+    /**
+     * See {@link #sufToVecs}.
+     */
     private final Map<Word<I>, Map<Word<O>, Integer>> sufToOutToIdx;
 
     protected GenericSparseLearner(Alphabet<I> alphabet,
                                    MealyMembershipOracle<I, O> oracle,
                                    List<Word<I>> initialSuffixes,
                                    MutableMealyMachine<S, I, ?, O> emptyMachine) {
-        assert emptyMachine.size() == 0;
         this.alphabet = alphabet;
         this.oracle = oracle;
         sufs = new ArrayDeque<>(initialSuffixes);
@@ -90,8 +122,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
         stateToPrefix.put(init, c.prefix);
         extendFringe(c, init, new Leaf<>(c, 1, sufs.size(), Collections.emptyList()));
         fRows.forEach(f -> query(f, Word.epsilon())); // query transition outputs
-        // initially, transition outputs must be queried manually,
-        // for later transitions, they derive from suffix queries
+        // initially, transition outputs must be queried manually for later transitions, they derive from suffix queries
         updateHypothesis();
     }
 
@@ -157,8 +188,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
 
             assert sumOccur == remRows.cardinality();
             if (maxOccur < bestRank) {
-                // among equally ranked suffixes, pick youngest
-                // (mind that suffixes are stored/iterated LIFO)
+                // among equally ranked suffixes, pick youngest (mind that suffixes are stored/iterated LIFO)
                 bestSuf = s;
                 bestRank = maxOccur;
                 if (bestRank == 1) { // optimization: no better suffix is possible
@@ -189,11 +219,15 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
         }
 
         final BitSet remRows = new BitSet();
-        sep.remRows.stream().filter(i -> cRows.get(i).cellIds.contains(cellIdx)).forEach(remRows::set);
-        final List<Integer> cellIds = new ArrayList<>(sep.cellsIds); // important: copy elements!
+        for (int i = sep.remRows.nextSetBit(0); i >= 0; i = sep.remRows.nextSetBit(i + 1)) {
+            if (cRows.get(i).cellIds.contains(cellIdx)) {
+                remRows.set(i);
+            }
+        }
+        final List<Integer> cellIds = new ArrayList<>(sep.cellsIds.size() + 1);
+        cellIds.addAll(sep.cellsIds);
         cellIds.add(cellIdx);
-        if (remRows.isEmpty()) {
-            // no compatible core prefix
+        if (remRows.isEmpty()) { // no compatible core prefix
             f.leaf = null;
             moveToCore(f, cellIds);
         } else if (remRows.cardinality() == 1) {
@@ -218,8 +252,8 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     }
 
     /**
-     * adds suffix-output pair to index if not yet contained
-     * and returns a unique identifier representing the pair. */
+     * Adds suffix-output pair to index if not yet contained and returns a unique identifier representing the pair.
+     */
     private int getUniqueCellIdx(Word<I> suf, Word<O> out) {
         assert suf.length() == out.length();
         final Pair<Word<I>, Word<O>> cell = Pair.of(suf, out);
@@ -232,10 +266,12 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
         return idx;
     }
 
-    /** returns index of new core row. */
+    /**
+     * Returns index of new core row.
+     */
     private int moveToCore(FringeRow<S, I, O> f, List<Integer> cellIds) {
-        assert fRows.contains(f);
-        fRows.remove(f);
+        boolean removed = fRows.remove(f);
+        assert removed;
         final S state = hyp.addState();
         final CoreRow<S, I, O> c = new CoreRow<>(f.prefix, state, cRows.size());
         stateToPrefix.put(state, c.prefix);
@@ -254,13 +290,25 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     }
 
     /**
-     * takes fringe row and its observations, queries the missing entries
-     * and returns a list containing the observations for all suffixes. */
+     * Takes fringe row and its observations, Queries the missing entries and returns a list containing the observations
+     * for all suffixes.
+     */
     private List<Integer> completeRowObservations(FringeRow<S, I, O> f, List<Integer> cellIds) {
-        final List<Word<I>> sufsPresent = cellIds.stream().map(c -> this.cells.get(c).getFirst()).collect(Collectors.toList());
-        final List<Word<I>> sufsMissing = sufs.stream().filter(s -> !sufsPresent.contains(s)).collect(Collectors.toList());
-        final List<Integer> cellIdsFull = new ArrayList<>(cellIds); // important: copy elements!
-        sufsMissing.forEach(s -> cellIdsFull.add(getUniqueCellIdx(s, query(f, s))));
+        final Set<Word<I>> sufsPresent = new HashSet<>(HashUtil.capacity(cellIds.size()));
+        for (Integer id : cellIds) {
+            sufsPresent.add(this.cells.get(id).getFirst());
+        }
+        final List<Word<I>> sufsMissing = new ArrayList<>(sufs.size());
+        for (Word<I> s : sufs) {
+            if (!sufsPresent.contains(s)) {
+                sufsMissing.add(s);
+            }
+        }
+        final List<Integer> cellIdsFull = new ArrayList<>(cellIds.size() + sufsMissing.size());
+        cellIdsFull.addAll(cellIds);
+        for (Word<I> s : sufsMissing) {
+            cellIdsFull.add(getUniqueCellIdx(s, query(f, s)));
+        }
         return cellIdsFull;
     }
 
@@ -292,13 +340,11 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     private void addSuffixToTable(Word<I> suf) {
         assert !sufs.contains(suf);
         sufs.push(suf);
-        // this might be an extension of an existing suffix
-        // -> storing/iterating suffixes in LIFO order
-        //    exploits caching when filling core rows
-
-        // similarly, since core rows are prefix-closed,
-        // cache hit rate for adding suffixes is maximized
-        // by iterating core rows in LIFO order
+        /*
+         * This might be an extension of an existing suffix -> storing/iterating suffixes in LIFO order exploits caching
+         * when filling core rows. Similarly, since core rows are prefix-closed, cache hit rate for adding suffixes is
+         * maximized by iterating core rows in LIFO order
+         */
         for (int i = cRows.size() - 1; i >= 0; i--) {
             addSuffixToCoreRow(cRows.get(i), suf);
         }
