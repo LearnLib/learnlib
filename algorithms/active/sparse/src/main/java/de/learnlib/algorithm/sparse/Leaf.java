@@ -18,9 +18,11 @@ package de.learnlib.algorithm.sparse;
 import java.util.Collections;
 import java.util.List;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 class Leaf<S, I, O> extends Node<S, I, O> {
 
-    final CoreRow<S, I, O> cRow;
+    final @Nullable CoreRow<S, I, O> cRow;
     private boolean split;
     private int lastNumCRows;
     private int lastNumSufs;
@@ -30,7 +32,7 @@ class Leaf<S, I, O> extends Node<S, I, O> {
      * information is used as a logical timestamp to check whether the separator is still guaranteed to be optimal or if
      * it needs to be recomputed.
      */
-    Separator<S, I, O> sep;
+    @Nullable Separator<S, I, O> sep;
 
     /**
      * Creates split leaf without observations.
