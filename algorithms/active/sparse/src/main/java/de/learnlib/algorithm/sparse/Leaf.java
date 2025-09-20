@@ -73,7 +73,7 @@ class Leaf<S, I, O> extends Node<S, I, O> {
         }
 
         /*
-         * since suffixes and core rows grow monotonically, the separator only needs to be recomputed whenever new
+         * Since suffixes and core rows grow monotonically, the separator only needs to be recomputed whenever new
          * compatible core prefixes emerge or when the suffix set grows.
          */
 
