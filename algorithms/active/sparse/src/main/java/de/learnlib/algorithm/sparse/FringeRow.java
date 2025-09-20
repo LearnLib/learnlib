@@ -42,8 +42,8 @@ class FringeRow<S, I, O> extends Row<S, I, O> {
      */
     O transOut;
     /**
-     * For compression, fringe rows do not store observations directly. instead, they point to some leaf in a tree
-     * encoding their classification history. this trick avoids redundantly storing identical observations.
+     * For compression, fringe rows do not store observations directly. Instead, they point to some leaf in a tree
+     * encoding their classification history. This trick avoids redundantly storing identical observations.
      */
     Leaf<S, I, O> leaf;
 

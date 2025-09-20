@@ -290,8 +290,8 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     }
 
     /**
-     * Takes fringe row and its observations, Queries the missing entries and returns a list containing the observations
-     * for all suffixes.
+     * Takes fringe row and its observations, queries the missing entries, and returns a list containing the
+     * observations for all suffixes.
      */
     private List<Integer> completeRowObservations(FringeRow<S, I, O> f, List<Integer> cellIds) {
         final Set<Word<I>> sufsPresent = new HashSet<>(HashUtil.capacity(cellIds.size()));
