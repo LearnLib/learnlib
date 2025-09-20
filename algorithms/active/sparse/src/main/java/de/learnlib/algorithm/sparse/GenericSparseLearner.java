@@ -60,6 +60,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
                                    MealyMembershipOracle<I, O> oracle,
                                    List<Word<I>> initialSuffixes,
                                    MutableMealyMachine<S, I, ?, O> emptyMachine) {
+        assert emptyMachine.size() == 0;
         this.alphabet = alphabet;
         this.oracle = oracle;
         sufs = new ArrayDeque<>(initialSuffixes);
@@ -82,7 +83,6 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
 
     @Override
     public void startLearning() {
-        assert hyp.size() == 0;
         final S init = hyp.addInitialState();
         final CoreRow<S, I, O> c = new CoreRow<>(Word.epsilon(), init, 0);
         cRows.add(c);
