@@ -30,8 +30,8 @@ limitations under the License.
     <name>LearnLib :: Algorithms :: Sparse</name>
     <description>
         This artifact provides the implementation of the Sparse OT learning algorithm as described in the paper
-        "Learning Mealy Machines with Sparse Observation Tables" (TODO) by Wolffhardt Schwabe, Paul Kogel, and Sabine
-        Glesner.
+        "Learning Mealy Machines with Sparse Observation Tables" (https://doi.org/10.1007/978-3-032-05792-1_10) by
+        Wolffhardt Schwabe, Paul Kogel, and Sabine Glesner.
     </description>
 
     <dependencies>

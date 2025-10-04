@@ -16,8 +16,8 @@
 
 /**
  * This module provides the implementation of the Sparse OT learning algorithm as described in the paper <a
- * href="TODO">Learning Mealy Machines with Sparse Observation Tables</a> by Wolffhardt Schwabe, Paul Kogel, and Sabine
- * Glesner.
+ * href="https://doi.org/10.1007/978-3-032-05792-1_10">Learning Mealy Machines with Sparse Observation Tables</a> by
+ * Wolffhardt Schwabe, Paul Kogel, and Sabine Glesner.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>
