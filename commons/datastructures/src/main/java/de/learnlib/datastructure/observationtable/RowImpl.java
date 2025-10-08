@@ -18,7 +18,7 @@ package de.learnlib.datastructure.observationtable;
 import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.word.Word;
 
-final class RowImpl<I> implements Row<I> {
+public final class RowImpl<I> implements Row<I> {
 
     private final Word<I> label;
     private final int rowId;
