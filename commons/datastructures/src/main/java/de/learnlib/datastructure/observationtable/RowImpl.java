@@ -37,7 +37,7 @@ public final class RowImpl<I> implements Row<I> {
      * @param alphabetSize
      *         the size of the alphabet, used for initializing the successor array
      */
-    RowImpl(Word<I> label, int rowId, int alphabetSize) {
+    public RowImpl(Word<I> label, int rowId, int alphabetSize) {
         this(label, rowId);
 
         makeShort(alphabetSize);
@@ -51,7 +51,7 @@ public final class RowImpl<I> implements Row<I> {
      * @param rowId
      *         the unique row identifier
      */
-    RowImpl(Word<I> label, int rowId) {
+    public RowImpl(Word<I> label, int rowId) {
         this.label = label;
         this.rowId = rowId;
     }
@@ -63,7 +63,7 @@ public final class RowImpl<I> implements Row<I> {
      * @param initialAlphabetSize
      *         the size of the input alphabet.
      */
-    void makeShort(int initialAlphabetSize) {
+    public void makeShort(int initialAlphabetSize) {
         if (lpIndex == -1) {
             return;
         }
@@ -85,7 +85,7 @@ public final class RowImpl<I> implements Row<I> {
      * @param succ
      *         the successor row
      */
-    void setSuccessor(int inputIdx, RowImpl<I> succ) {
+    public void setSuccessor(int inputIdx, RowImpl<I> succ) {
         successors.set(inputIdx, succ);
     }
 
@@ -110,7 +110,7 @@ public final class RowImpl<I> implements Row<I> {
      * @param id
      *         the contents id
      */
-    void setRowContentId(int id) {
+    public void setRowContentId(int id) {
         this.rowContentId = id;
     }
 
@@ -127,11 +127,11 @@ public final class RowImpl<I> implements Row<I> {
         return lpIndex;
     }
 
-    void setLpIndex(int lpIndex) {
+    public void setLpIndex(int lpIndex) {
         this.lpIndex = lpIndex;
     }
 
-    void ensureInputCapacity(int capacity) {
+    public void ensureInputCapacity(int capacity) {
         this.successors.ensureCapacity(capacity);
     }
 }
