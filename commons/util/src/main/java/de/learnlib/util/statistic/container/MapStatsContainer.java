@@ -4,9 +4,7 @@ import de.learnlib.statistic.container.StatsContainerX;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * A {@link StatsContainerX} that stores all statistics in a {@link Map}.
@@ -95,5 +93,67 @@ public class MapStatsContainer implements StatsContainerX {
             return Optional.of(counterStatistic.getCount());
         }
         return Optional.empty();
+    }
+
+    // ==================
+
+    public String toJson() {
+        List<LearnerStatistic> sortedStats = statistics.values().stream().sorted(Comparator.comparing(LearnerStatistic::getDescription)).toList();
+
+        List<String> lines = new ArrayList<>();
+        for (var stat : sortedStats) {
+            if (stat instanceof StopClockStatistic sc) {
+                lines.add(String.format("\"%s [ms]\": %d", stat.getDescription(), sc.getElapsed().toMillis()));
+            } else if (stat instanceof CounterStatistic c) {
+                lines.add(String.format("\"%s\": %d", stat.getDescription(), c.getCount()));
+            } else if (stat instanceof FlagStatistic f) {
+                lines.add(String.format("\"%s\": %s", stat.getDescription(), f.isFlagged()));
+            } else if (stat instanceof TextStatistic t) {
+                lines.add(String.format("\"%s\": \"%s\"", stat.getDescription(), t.getText()));
+            }
+        }
+
+        if (lines.isEmpty()) {
+            return "{}";
+        }
+
+        return "{" + String.join(",\n", lines) + "}";
+    }
+
+
+    public String toYaml() {
+        List<LearnerStatistic> sortedStats = statistics.values().stream().sorted(Comparator.comparing(LearnerStatistic::getDescription)).toList();
+
+        List<String> lines = new ArrayList<>();
+        for (var stat : sortedStats) {
+            if (stat instanceof StopClockStatistic sc) {
+                lines.add(String.format("   \"%s [ms]\": %d", stat.getDescription(), sc.getElapsed().toMillis()));
+            } else if (stat instanceof CounterStatistic c) {
+                lines.add(String.format("   \"%s\": %d", stat.getDescription(), c.getCount()));
+            } else if (stat instanceof FlagStatistic f) {
+                lines.add(String.format("   \"%s\": %s", stat.getDescription(), f.isFlagged()));
+            } else if (stat instanceof TextStatistic t) {
+                lines.add(String.format("   \"%s\": \"%s\"", stat.getDescription(), t.getText()));
+            }
+        }
+
+        if (lines.isEmpty()) {
+            return null;
+        }
+
+        // Add dash to first line:
+        String newFirstLine = " - " + lines.get(0).stripLeading();
+        lines.set(0, newFirstLine);
+
+        return String.join("\n", lines);
+    }
+
+
+    public void printStats() {
+        // Print results:
+        System.out.println("============================================");
+        System.out.println("Statistics:");
+        System.out.println(this.toYaml());
+        System.out.println("============================================");
     }
 }
