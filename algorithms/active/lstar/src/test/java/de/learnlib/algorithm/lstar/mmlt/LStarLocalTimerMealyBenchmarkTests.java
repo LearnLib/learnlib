@@ -4,6 +4,7 @@ package de.learnlib.algorithm.lstar.mmlt;
 import de.learnlib.algorithm.LocalTimerMealyModelParams;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.driver.simulator.LocalTimerMealySimulatorSUL;
+import de.learnlib.filter.cache.mmlt.LocalTimerMealyCacheConsistencyTest;
 import de.learnlib.filter.cache.mmlt.TimeoutReducerSUL;
 import de.learnlib.filter.statistic.sul.LocalTimerMealyStatsSUL;
 import de.learnlib.oracle.EquivalenceOracle;
@@ -102,7 +103,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
         // Prepare cex oracle chain:
 
         LocalTimerMealyEQOracleChain<Integer, I, O> chainOracle = new LocalTimerMealyEQOracleChain<>();
-        //chainOracle.addOracle(new LocalTimerMealyCacheOracle<>(cacheSUL, params)); TODO!
+        chainOracle.addOracle(new LocalTimerMealyCacheConsistencyTest<>(cacheSUL, params));
         chainOracle.addOracle(new ResetSearchOracle<>(timeOracle, seed, 1.0, 1.0));
         chainOracle.addOracle(new LocalTimerMealyRandomWpOracle<>(timeOracle, seed, 6, 12, 100));
         chainOracle.addOracle(new LocalTimerMealySimulatorOracle<>(automaton)); // ensure that we eventually find an accurate model

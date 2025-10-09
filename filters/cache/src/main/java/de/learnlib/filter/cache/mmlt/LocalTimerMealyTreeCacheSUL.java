@@ -1,6 +1,8 @@
 package de.learnlib.filter.cache.mmlt;
 
 
+import de.learnlib.filter.cache.LocalTimerMealyCache;
+import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainer;
@@ -21,12 +23,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.*;
 
 /**
- * Caches queries sent to an AbstractLocalTimerMealySUL.
+ * Caches queries sent to a LocalTimerMealySUL.
  *
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealySUL<I, O> implements GraphViewable, LearnerStatsProvider {
+public class LocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealyCache<I, O> implements GraphViewable, LearnerStatsProvider {
     private final LocalTimerMealySUL<I, O> delegate;
 
     private final CacheTreeNode<I, O> cacheRoot;
@@ -193,6 +195,7 @@ public class LocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealySUL<I, O> 
         return leaves;
     }
 
+    @Override
     public List<Word<LocalTimerMealySemanticInputSymbol<I>>> listAllWords() {
         List<CacheTreeNode<I, O>> leaves = this.getLeaves();
 
@@ -217,6 +220,7 @@ public class LocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealySUL<I, O> 
 
         return finalWords;
     }
+
 
     @Override
     public Graph<?, ?> graphView() {
@@ -256,6 +260,5 @@ public class LocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealySUL<I, O> 
 
         return mealy.graphView();
     }
-
 
 }
