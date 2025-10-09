@@ -73,7 +73,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
         if (printFinalResult) {
             System.out.println("Final hypothesis:");
             LocalTimerMealyTestUtil.printModel(finalHypothesis);
-            new ObservationTableASCIIWriter<>().write(learner.getObservationTable(), System.out);
+            //new ObservationTableASCIIWriter<>().write(learner.getObservationTable(), System.out);
         }
     }
 
