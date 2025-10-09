@@ -125,11 +125,6 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-symbol-filters</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-dot</artifactId>
             <scope>test</scope>
@@ -137,6 +132,11 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-cache</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-symbol-filters</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

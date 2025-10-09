@@ -170,7 +170,6 @@ limitations under the License.
         <module>filters</module>
         <module>oracles</module>
         <module>test-support</module>
-        <module>oracles/symbol-filters</module>
     </modules>
 
     <!--
@@ -527,6 +526,11 @@ limitations under the License.
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-parallelism</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-symbol-filters</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
