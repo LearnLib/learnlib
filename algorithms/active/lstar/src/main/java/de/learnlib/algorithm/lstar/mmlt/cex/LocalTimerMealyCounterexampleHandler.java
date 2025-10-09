@@ -7,7 +7,7 @@ import de.learnlib.algorithm.lstar.mmlt.hyp.LocalTimerMealyHypothesis;
 import de.learnlib.oracle.AbstractTimedQueryOracle;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainerX;
+import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
@@ -32,7 +32,7 @@ import java.util.List;
 public class LocalTimerMealyCounterexampleHandler<S, I, O> implements LearnerStatsProvider {
     private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyCounterexampleHandler.class);
     private final SymbolFilter<I, O> symbolFilter;
-    private StatsContainerX stats = new DummyStatsContainer();
+    private StatsContainer stats = new DummyStatsContainer();
 
     protected final AbstractTimedQueryOracle<I, O> timeOracle;
     private final LocalTimerMealyCounterexampleDecompositor<S, I, O> decompositor;
@@ -44,7 +44,7 @@ public class LocalTimerMealyCounterexampleHandler<S, I, O> implements LearnerSta
     }
 
     @Override
-    public void setStatsContainer(StatsContainerX container) {
+    public void setStatsContainer(StatsContainer container) {
         this.stats = container;
     }
 

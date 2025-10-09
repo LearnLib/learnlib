@@ -9,6 +9,13 @@ import net.automatalib.util.automaton.mmlt.LocalTimerMealyUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Utility class for loading MMLTs from resources and printing them.
@@ -26,6 +33,22 @@ class LocalTimerMealyTestUtil {
         }
     }
 
+    static List<String> listModelFiles() {
+        var models = new ArrayList<String>();
+        try {
+            var modelFiles = LocalTimerMealyTestUtil.class.getResource("/mmlt");
+            if (modelFiles != null) {
+                try (Stream<Path> paths = Files.list(Paths.get(modelFiles.toURI()))) {
+                    paths.filter(p -> p.toString().endsWith(".dot"))
+                            .map(p -> p.getFileName().toString())
+                            .forEach(models::add);
+                }
+            }
+        } catch (IOException | URISyntaxException e) {
+            throw new RuntimeException("Failed to list model files", e);
+        }
+        return models;
+    }
 
     static Model<Integer, String, String> automatonFromFile(String name) {
         return automatonFromFile(name, -1);

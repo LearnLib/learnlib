@@ -26,7 +26,7 @@ import java.util.*;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class FastLocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealySUL<I, O> implements GraphViewable, LearnerStatsProvider {
+public class LocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealySUL<I, O> implements GraphViewable, LearnerStatsProvider {
     private final LocalTimerMealySUL<I, O> delegate;
 
     private final CacheTreeNode<I, O> cacheRoot;
@@ -42,7 +42,7 @@ public class FastLocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealySUL<I,
         this.stats = container;
     }
 
-    public FastLocalTimerMealyTreeCacheSUL(LocalTimerMealySUL<I, O> delegate, O silentOutput) {
+    public LocalTimerMealyTreeCacheSUL(LocalTimerMealySUL<I, O> delegate, O silentOutput) {
         this.delegate = delegate;
         this.silentOutput = new LocalTimerMealyOutputSymbol<>(silentOutput);
 

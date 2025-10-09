@@ -43,4 +43,5 @@ open module de.learnlib.common.util {
     exports de.learnlib.util.moore;
     exports de.learnlib.util.nfa;
     exports de.learnlib.util.statistic;
+    exports de.learnlib.util.statistic.container;
 }

@@ -21,7 +21,7 @@ import de.learnlib.oracle.AbstractTimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainerX;
+import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
 import net.automatalib.alphabet.Alphabet;
@@ -50,7 +50,7 @@ import java.util.stream.Stream;
 public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Integer, I, O>, LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>>, LearnerStatsProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(LStarLocalTimerMealy.class);
-    private StatsContainerX stats = new DummyStatsContainer();
+    private StatsContainer stats = new DummyStatsContainer();
 
     private final ClosingStrategy<? super LocalTimerMealySemanticInputSymbol<I>, ? super Word<LocalTimerMealyOutputSymbol<O>>> closingStrategy;
 
@@ -422,7 +422,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
     }
 
     @Override
-    public void setStatsContainer(StatsContainerX container) {
+    public void setStatsContainer(StatsContainer container) {
         this.stats = container;
         this.cexAnalyzer.setStatsContainer(container);
     }

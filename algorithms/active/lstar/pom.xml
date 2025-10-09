@@ -139,6 +139,11 @@ limitations under the License.
             <artifactId>learnlib-symbol-filters</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-statistics</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -149,7 +154,9 @@ limitations under the License.
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
                         <!-- append to existing argLine to nicely work together with jacoco plugin -->
-                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.lstar=net.automatalib.util</argLine>
+                        <!-- allow tests access to util and statistics -->
+                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.lstar=net.automatalib.util --add-reads=de.learnlib.algorithm.lstar=de.learnlib.filter.statistic
+                        </argLine>
                     </configuration>
                 </plugin>
             </plugins>

@@ -58,4 +58,9 @@ public class DummyStatsContainer implements StatsContainer {
     public Optional<Long> getCount(String id) {
         return Optional.empty();
     }
+
+    @Override
+    public void printStats() {
+        System.out.println("Dummy container");
+    }
 }
