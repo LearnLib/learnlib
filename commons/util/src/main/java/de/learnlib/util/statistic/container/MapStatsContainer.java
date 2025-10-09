@@ -1,15 +1,15 @@
 package de.learnlib.util.statistic.container;
 
-import de.learnlib.statistic.container.StatsContainerX;
+import de.learnlib.statistic.container.StatsContainer;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Duration;
 import java.util.*;
 
 /**
- * A {@link StatsContainerX} that stores all statistics in a {@link Map}.
+ * A {@link StatsContainer} that stores all statistics in a {@link Map}.
  */
-public class MapStatsContainer implements StatsContainerX {
+public class MapStatsContainer implements StatsContainer {
     private final Map<String, LearnerStatistic> statistics = new HashMap<>(); // id -> stat
 
     @Override

@@ -6,9 +6,9 @@ import java.time.Duration;
 import java.util.Optional;
 
 /**
- * A dummy implementation of {@link StatsContainerX} that does nothing.
+ * A dummy implementation of {@link StatsContainer} that does nothing.
  */
-public class DummyStatsContainer implements StatsContainerX {
+public class DummyStatsContainer implements StatsContainer {
     @Override
     public void addTextInfo(String id, @Nullable String description, String text) {
 

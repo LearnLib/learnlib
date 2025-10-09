@@ -3,7 +3,7 @@ package de.learnlib.filter.cache.mmlt;
 
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainerX;
+import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.sul.LocalTimerMealySUL;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 
@@ -35,10 +35,10 @@ public class FastLocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealySUL<I,
     private final LocalTimerMealyOutputSymbol<O> silentOutput;
     private boolean cacheMiss;
 
-    private StatsContainerX stats = new DummyStatsContainer();
+    private StatsContainer stats = new DummyStatsContainer();
 
     @Override
-    public void setStatsContainer(StatsContainerX container) {
+    public void setStatsContainer(StatsContainer container) {
         this.stats = container;
     }
 

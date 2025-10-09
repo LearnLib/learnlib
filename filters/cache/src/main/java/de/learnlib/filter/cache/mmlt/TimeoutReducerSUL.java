@@ -1,7 +1,7 @@
 package de.learnlib.filter.cache.mmlt;
 
 import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainerX;
+import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.sul.LocalTimerMealySUL;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
 import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
@@ -31,9 +31,9 @@ public class TimeoutReducerSUL<I, O> extends LocalTimerMealySUL<I, O> implements
      */
     private long noTimeoutWaitingTime;
 
-    private StatsContainerX stats;
+    private StatsContainer stats;
 
-    public TimeoutReducerSUL(LocalTimerMealySUL<I, O> delegate, long maxDelay, StatsContainerX stats) {
+    public TimeoutReducerSUL(LocalTimerMealySUL<I, O> delegate, long maxDelay, StatsContainer stats) {
         this.delegate = delegate;
         this.maxDelay = maxDelay;
         this.stats = stats;
@@ -74,7 +74,7 @@ public class TimeoutReducerSUL<I, O> extends LocalTimerMealySUL<I, O> implements
     }
 
     @Override
-    public void setStatsContainer(StatsContainerX container) {
+    public void setStatsContainer(StatsContainer container) {
         this.stats = container;
     }
 }

@@ -2,7 +2,7 @@ package de.learnlib.oracle.symbol_filters.mmlt;
 
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainerX;
+import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
@@ -19,7 +19,7 @@ public class StatisticsSymbolFilter<S, I, O> implements SymbolFilter<I, O>, Lear
 
     private final SymbolFilter<I, O> delegate;
     private final PerfectSymbolFilter<S, I, O> perfectFilter;
-    private StatsContainerX stats = new DummyStatsContainer();
+    private StatsContainer stats = new DummyStatsContainer();
 
 
     public StatisticsSymbolFilter(SymbolFilter<I, O> delegate, LocalTimerMealy<S, I, O> sulModel) {
@@ -58,7 +58,7 @@ public class StatisticsSymbolFilter<S, I, O> implements SymbolFilter<I, O>, Lear
     }
 
     @Override
-    public void setStatsContainer(StatsContainerX container) {
+    public void setStatsContainer(StatsContainer container) {
         this.stats = container;
     }
 }

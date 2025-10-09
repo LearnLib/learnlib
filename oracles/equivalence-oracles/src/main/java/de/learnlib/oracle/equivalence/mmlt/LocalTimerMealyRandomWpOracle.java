@@ -26,7 +26,7 @@ import de.learnlib.oracle.AbstractTimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainerX;
+import de.learnlib.statistic.container.StatsContainer;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.alphabet.time.mmlt.TimeStepSymbol;
@@ -56,7 +56,7 @@ public class LocalTimerMealyRandomWpOracle<S, I, O> implements EquivalenceOracle
     private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyRandomWpOracle.class);
     private final AbstractTimedQueryOracle<I, O> timeOracle;
 
-    private StatsContainerX stats = new DummyStatsContainer();
+    private StatsContainer stats = new DummyStatsContainer();
 
     private final Random random;
     private final int minSize;
@@ -163,7 +163,7 @@ public class LocalTimerMealyRandomWpOracle<S, I, O> implements EquivalenceOracle
 
 
     @Override
-    public void setStatsContainer(StatsContainerX container) {
+    public void setStatsContainer(StatsContainer container) {
         this.stats = container;
     }
 }

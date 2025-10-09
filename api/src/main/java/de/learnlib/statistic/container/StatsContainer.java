@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * Interface for a container that stores various statistics during learning.
  */
-public interface StatsContainerX {
+public interface StatsContainer {
 
     // Generic text
 
@@ -121,4 +121,9 @@ public interface StatsContainerX {
      * @return The value of the counter, or empty, if no counter with this id exists.
      */
     Optional<Long> getCount(String id);
+
+    /**
+     * Prints all stored statistics.
+     */
+    void printStats();
 }

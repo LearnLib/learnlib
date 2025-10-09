@@ -1,7 +1,7 @@
 package de.learnlib.filter.statistic.sul;
 
 import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainerX;
+import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.sul.LocalTimerMealySUL;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
 import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
@@ -18,16 +18,16 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class LocalTimerMealyStatsSUL<I, O> extends LocalTimerMealySUL<I, O> implements LearnerStatsProvider {
     private final LocalTimerMealySUL<I, O> delegate;
-    private StatsContainerX stats;
+    private StatsContainer stats;
 
     @Nullable
     private final String name;
 
-    public LocalTimerMealyStatsSUL(LocalTimerMealySUL<I, O> delegate, StatsContainerX stats) {
+    public LocalTimerMealyStatsSUL(LocalTimerMealySUL<I, O> delegate, StatsContainer stats) {
         this(delegate, stats, null);
     }
 
-    public LocalTimerMealyStatsSUL(LocalTimerMealySUL<I, O> delegate, StatsContainerX stats, String name) {
+    public LocalTimerMealyStatsSUL(LocalTimerMealySUL<I, O> delegate, StatsContainer stats, String name) {
         this.delegate = delegate;
         this.stats = stats;
         this.name = name;
@@ -41,7 +41,7 @@ public class LocalTimerMealyStatsSUL<I, O> extends LocalTimerMealySUL<I, O> impl
     }
 
     @Override
-    public void setStatsContainer(StatsContainerX container) {
+    public void setStatsContainer(StatsContainer container) {
         this.stats = container;
     }
 

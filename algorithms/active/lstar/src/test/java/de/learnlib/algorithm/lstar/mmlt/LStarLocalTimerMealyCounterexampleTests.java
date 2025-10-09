@@ -23,6 +23,7 @@ import java.util.List;
 /**
  * Tests several different cases of counterexamples.
  */
+@Test
 public class LStarLocalTimerMealyCounterexampleTests {
 
     private static <S, I, O> void learnModel(LocalTimerMealyTestUtil.Model<S, I, O> model, List<Word<LocalTimerMealySemanticInputSymbol<I>>> counterexamples) {

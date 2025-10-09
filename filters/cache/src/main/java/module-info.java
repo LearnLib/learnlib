@@ -47,4 +47,5 @@ open module de.learnlib.filter.cache {
     exports de.learnlib.filter.cache.mealy;
     exports de.learnlib.filter.cache.moore;
     exports de.learnlib.filter.cache.sul;
+    exports de.learnlib.filter.cache.mmlt;
 }

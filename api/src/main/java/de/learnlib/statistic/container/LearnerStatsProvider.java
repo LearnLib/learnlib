@@ -9,5 +9,5 @@ public interface LearnerStatsProvider {
      *
      * @param container Stats container.
      */
-    void setStatsContainer(StatsContainerX container);
+    void setStatsContainer(StatsContainer container);
 }
