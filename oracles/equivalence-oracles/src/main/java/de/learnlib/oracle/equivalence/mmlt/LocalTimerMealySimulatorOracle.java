@@ -40,7 +40,7 @@ import java.util.Collection;
  * @param <I>  Input type for non-delaying inputs
  * @param <O>  Output symbol type
  */
-public class LocalTimerMealySimulatorOracle<SR, SH, I, O> implements EquivalenceOracle<LocalTimerMealy<SH, I, O>, LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> {
+public class LocalTimerMealySimulatorOracle<SR, SH, I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<SH, I, O> {
 
     private final LocalTimerMealy<SR, I, O> refModel;
 
@@ -50,7 +50,7 @@ public class LocalTimerMealySimulatorOracle<SR, SH, I, O> implements Equivalence
 
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<SH, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> ignored) {
+    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<SH, I, O> hypothesis, @Nullable Collection<? extends LocalTimerMealySemanticInputSymbol<I>> ignored) {
         var separatingWord = LocalTimerMealyUtil.findSeparatingWord(refModel, hypothesis);
 
         if (separatingWord != null) {

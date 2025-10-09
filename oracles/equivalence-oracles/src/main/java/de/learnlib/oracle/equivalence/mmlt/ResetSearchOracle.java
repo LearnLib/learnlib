@@ -50,7 +50,7 @@ import java.util.*;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class ResetSearchOracle<S, I, O> implements EquivalenceOracle<LocalTimerMealy<S, I, O>, LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> {
+public class ResetSearchOracle<S, I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<S, I, O> {
 
     private final static Logger logger = LoggerFactory.getLogger(ResetSearchOracle.class);
 
@@ -90,7 +90,7 @@ public class ResetSearchOracle<S, I, O> implements EquivalenceOracle<LocalTimerM
     }
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<S, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> ignored) {
+    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<S, I, O> hypothesis, @Nullable Collection<? extends LocalTimerMealySemanticInputSymbol<I>> ignored) {
         if (loopInsertPerc == 0) {
             return null; // oracle is disabled
         }
