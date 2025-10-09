@@ -68,6 +68,10 @@ class LocalTimerMealyTestUtil {
         long maxTimeoutDelay = LocalTimerMealyUtil.getMaximumTimeoutDelay(automaton);
         long maxTimerQueryWaitingFinal = (maxTimerQueryWaiting > 0) ? maxTimerQueryWaiting : LocalTimerMealyUtil.getMaximumInitialTimerValue(automaton) * 2;
 
+        if (name.contains("SCTP")) {
+            maxTimerQueryWaitingFinal = 9000; // SCTP needs more waiting time
+        }
+
         return new Model<>(automaton, new LocalTimerMealyModelParams<>("void", maxTimeoutDelay, maxTimerQueryWaitingFinal, StringSymbolCombiner.getInstance()));
     }
 

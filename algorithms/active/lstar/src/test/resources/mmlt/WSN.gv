@@ -1,0 +1,22 @@
+// Model of a wireless sensor node that collects data and transmits if
+// if the battery has sufficient charge.
+digraph g {
+
+	s0 [timers="a=60000,b=3600000" shape="circle"];
+	s1 [timers="a=300000" shape="circle"];
+	s2 [shape="circle"];
+	s3 [shape="circle"];
+	s0 -> s1 [resets="a" label="Battery.Low / Tx.disable"];
+	s0 -> s3 [label="User.Power / void"];
+	s0 -> s0 [resets="a" label="to[a] / Sensor.sample"];
+	s0 -> s0 [resets="b" label="to[b] / Tx.send"];
+	s1 -> s2 [label="Battery.Empty / void"];
+	s1 -> s1 [resets="a" label="User.Collect / Buffer.get"];
+	s1 -> s3 [label="User.Power / void"];
+	s1 -> s1 [resets="a" label="to[a] / Sensor.sample"];
+	s3 -> s0 [resets="a,b" label="User.Power / void"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s3;
+
+}
