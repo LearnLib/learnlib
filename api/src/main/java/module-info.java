@@ -43,4 +43,6 @@ open module de.learnlib.api {
     exports de.learnlib.query;
     exports de.learnlib.statistic;
     exports de.learnlib.sul;
+    exports de.learnlib.statistic.container;
+    exports de.learnlib.symbol_filter;
 }

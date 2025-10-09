@@ -34,6 +34,7 @@ open module de.learnlib.filter.statistic {
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static de.learnlib.tooling.annotation;
+    requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.filter.statistic;
     exports de.learnlib.filter.statistic.learner;
