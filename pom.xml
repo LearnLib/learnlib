@@ -170,6 +170,7 @@ limitations under the License.
         <module>filters</module>
         <module>oracles</module>
         <module>test-support</module>
+        <module>oracles/symbol-filters</module>
     </modules>
 
     <!--

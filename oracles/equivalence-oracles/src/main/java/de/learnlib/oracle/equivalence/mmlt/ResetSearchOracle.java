@@ -21,7 +21,7 @@
 
 package de.learnlib.oracle.equivalence.mmlt;
 
-import de.learnlib.oracle.TimedQueryOracle;
+import de.learnlib.oracle.AbstractTimedQueryOracle;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.time.mmlt.*;
@@ -54,7 +54,7 @@ public class ResetSearchOracle<S, I, O> implements EquivalenceOracle.LocalTimerM
 
     private final static Logger logger = LoggerFactory.getLogger(ResetSearchOracle.class);
 
-    private final TimedQueryOracle<I, O> timeOracle;
+    private final AbstractTimedQueryOracle<I, O> timeOracle;
     private final Random locPrefixRandom;
 
     private final double loopInsertPerc;
@@ -62,7 +62,7 @@ public class ResetSearchOracle<S, I, O> implements EquivalenceOracle.LocalTimerM
 
     private final long loopingInputSelectionSeed;
 
-    public ResetSearchOracle(TimedQueryOracle<I, O> timeOracle, long seed, double loopInsertPerc, double testedLocPerc) {
+    public ResetSearchOracle(AbstractTimedQueryOracle<I, O> timeOracle, long seed, double loopInsertPerc, double testedLocPerc) {
         this.timeOracle = timeOracle;
         this.locPrefixRandom = new Random(seed);
         this.loopInsertPerc = loopInsertPerc;

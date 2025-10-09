@@ -19,7 +19,7 @@ import java.util.List;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public abstract class TimedQueryOracle<I, O> implements MembershipOracle.MealyMembershipOracle<LocalTimerMealySemanticInputSymbol<I>, LocalTimerMealyOutputSymbol<O>> {
+public abstract class AbstractTimedQueryOracle<I, O> implements MembershipOracle.MealyMembershipOracle<LocalTimerMealySemanticInputSymbol<I>, LocalTimerMealyOutputSymbol<O>> {
 
     /**
      * Response for a timer query.

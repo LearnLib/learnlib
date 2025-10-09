@@ -1,0 +1,17 @@
+// Make sure to not initialize the suffixes with the input alphabet in this example
+// In this example, the learner will infer a missing local reset, although there is actually a missing discriminator.
+digraph g {
+
+	s0 [timers="a=3" shape="circle"];
+	s1 [timers="b=3" shape="circle"];
+
+    s0 -> s0 [label="to[a] / A"];
+    s0 -> s1 [label="i / void"];
+
+    s1 -> s1 [label="to[b] / A"];
+    s1 -> s1 [label="x / X"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s0;
+
+}

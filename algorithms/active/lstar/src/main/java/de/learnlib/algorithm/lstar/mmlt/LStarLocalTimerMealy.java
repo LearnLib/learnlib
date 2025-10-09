@@ -17,7 +17,7 @@ import de.learnlib.algorithm.lstar.mmlt.hyp.LocalTimerMealyHypothesis;
 import de.learnlib.datastructure.observationtable.OTLearner;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
-import de.learnlib.oracle.TimedQueryOracle;
+import de.learnlib.oracle.AbstractTimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
@@ -54,7 +54,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
 
     private final ClosingStrategy<? super LocalTimerMealySemanticInputSymbol<I>, ? super Word<LocalTimerMealyOutputSymbol<O>>> closingStrategy;
 
-    private final TimedQueryOracle<I, O> timeOracle;
+    private final AbstractTimedQueryOracle<I, O> timeOracle;
     private final SymbolFilter<I, O> symbolFilter;
 
     private final LStarLocalTimerMealyHypDataContainer<I, O> hypData;
@@ -81,7 +81,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
                                 LocalTimerMealyModelParams<O> modelParams,
                                 @NonNull
                                 List<Word<LocalTimerMealySemanticInputSymbol<I>>> initialSuffixes,
-                                TimedQueryOracle<I, O> timeOracle,
+                                AbstractTimedQueryOracle<I, O> timeOracle,
                                 SymbolFilter<I, O> symbolFilter) {
         this(alphabet, modelParams, initialSuffixes, ClosingStrategies.CLOSE_SHORTEST, timeOracle, symbolFilter, AcexAnalyzers.BINARY_SEARCH_BWD);
     }
@@ -102,7 +102,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
                                 @NonNull
                                 List<Word<LocalTimerMealySemanticInputSymbol<I>>> initialSuffixes,
                                 ClosingStrategy<? super LocalTimerMealySemanticInputSymbol<I>, ? super Word<LocalTimerMealyOutputSymbol<O>>> closingStrategy,
-                                TimedQueryOracle<I, O> timeOracle,
+                                AbstractTimedQueryOracle<I, O> timeOracle,
                                 @NonNull
                                 SymbolFilter<I, O> symbolFilter,
                                 AcexAnalyzer analyzer) {

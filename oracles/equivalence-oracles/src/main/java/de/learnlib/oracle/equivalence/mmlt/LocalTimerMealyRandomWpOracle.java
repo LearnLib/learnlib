@@ -22,7 +22,7 @@
 package de.learnlib.oracle.equivalence.mmlt;
 
 import de.learnlib.oracle.EquivalenceOracle;
-import de.learnlib.oracle.TimedQueryOracle;
+import de.learnlib.oracle.AbstractTimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
@@ -54,7 +54,7 @@ import java.util.*;
  */
 public class LocalTimerMealyRandomWpOracle<S, I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<S, I, O>, LearnerStatsProvider {
     private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyRandomWpOracle.class);
-    private final TimedQueryOracle<I, O> timeOracle;
+    private final AbstractTimedQueryOracle<I, O> timeOracle;
 
     private StatsContainerX stats = new DummyStatsContainer();
 
@@ -63,7 +63,7 @@ public class LocalTimerMealyRandomWpOracle<S, I, O> implements EquivalenceOracle
     private final int rndLen;
     private final int bound;
 
-    public LocalTimerMealyRandomWpOracle(TimedQueryOracle<I, O> timeOracle,
+    public LocalTimerMealyRandomWpOracle(AbstractTimedQueryOracle<I, O> timeOracle,
                                          long randomSeed,
                                          int minSize, int rndAddLength, int bound) {
 
@@ -89,7 +89,7 @@ public class LocalTimerMealyRandomWpOracle<S, I, O> implements EquivalenceOracle
         // Identify global suffixes:
         var globalSuffixes = Automata.characterizingSet(hypSemModel, hypSemModel.getInputAlphabet());
 
-        // Get list of prefixes in deterministic order (so we can reproduce experiment easily):
+        // Get list of prefixes in deterministic order (so we can reproduce experiments easily):
         var locationCover = LocalTimerMealyCover.getLocalTimerMealyLocationCover(hypothesis);
         var prefixList = locationCover
                 .values()

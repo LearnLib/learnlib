@@ -2,7 +2,7 @@ package de.learnlib.algorithm.lstar.mmlt.cex;
 
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithm.lstar.mmlt.hyp.LocalTimerMealyHypothesis;
-import de.learnlib.oracle.TimedQueryOracle;
+import de.learnlib.oracle.AbstractTimedQueryOracle;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.alphabet.time.mmlt.TimeStepSequence;
 import net.automatalib.alphabet.time.mmlt.TimeStepSymbol;
@@ -24,10 +24,10 @@ class LocalTimerMealyCounterexampleDecompositor<S, I, O> {
     private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyCounterexampleDecompositor.class);
 
 
-    private final TimedQueryOracle<I, O> timeOracle;
+    private final AbstractTimedQueryOracle<I, O> timeOracle;
     private final AcexAnalyzer acexAnalyzer;
 
-    public LocalTimerMealyCounterexampleDecompositor(TimedQueryOracle<I, O> timeOracle, AcexAnalyzer acexAnalyzer) {
+    public LocalTimerMealyCounterexampleDecompositor(AbstractTimedQueryOracle<I, O> timeOracle, AcexAnalyzer acexAnalyzer) {
         this.timeOracle = timeOracle;
         this.acexAnalyzer = acexAnalyzer;
     }

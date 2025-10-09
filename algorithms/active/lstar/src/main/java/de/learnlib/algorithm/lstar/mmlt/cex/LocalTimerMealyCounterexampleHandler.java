@@ -4,7 +4,7 @@ import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithm.lstar.mmlt.LStarLocalTimerMealy;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.*;
 import de.learnlib.algorithm.lstar.mmlt.hyp.LocalTimerMealyHypothesis;
-import de.learnlib.oracle.TimedQueryOracle;
+import de.learnlib.oracle.AbstractTimedQueryOracle;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainerX;
@@ -34,10 +34,10 @@ public class LocalTimerMealyCounterexampleHandler<S, I, O> implements LearnerSta
     private final SymbolFilter<I, O> symbolFilter;
     private StatsContainerX stats = new DummyStatsContainer();
 
-    protected final TimedQueryOracle<I, O> timeOracle;
+    protected final AbstractTimedQueryOracle<I, O> timeOracle;
     private final LocalTimerMealyCounterexampleDecompositor<S, I, O> decompositor;
 
-    public LocalTimerMealyCounterexampleHandler(TimedQueryOracle<I, O> timeOracle, AcexAnalyzer acexAnalyzer, SymbolFilter<I, O> symbolFilter) {
+    public LocalTimerMealyCounterexampleHandler(AbstractTimedQueryOracle<I, O> timeOracle, AcexAnalyzer acexAnalyzer, SymbolFilter<I, O> symbolFilter) {
         this.timeOracle = timeOracle;
         this.decompositor = new LocalTimerMealyCounterexampleDecompositor<>(timeOracle, acexAnalyzer);
         this.symbolFilter = symbolFilter;

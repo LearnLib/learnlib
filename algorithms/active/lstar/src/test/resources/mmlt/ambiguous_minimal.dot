@@ -1,0 +1,21 @@
+// In this example, the learner infers an equivalent MMLT
+// that uses more timers per location but still has the same number of locations.
+digraph g {
+
+	s0 [shape="circle"];
+	s1 [shape="circle" timers="a=2"];
+	s2 [shape="circle" timers="b=1"];
+	s3 [shape="circle"];
+	s4 [shape="circle"];
+
+	s1 -> s2 [label="to[a] / A"];
+	s2 -> s3 [label="to[b] / B"];
+
+	s0 -> s1 [label="y / X"];
+	s0 -> s4 [label="x / Y"];
+	s4 -> s2 [label="x / Z"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s0;
+
+}

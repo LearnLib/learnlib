@@ -1,6 +1,7 @@
 package de.learnlib.oracle.membership;
 
 import de.learnlib.algorithm.LocalTimerMealyModelParams;
+import de.learnlib.oracle.AbstractTimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.sul.LocalTimerMealySUL;
 import net.automatalib.alphabet.time.mmlt.*;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class TimedQueryOracle<I, O> extends de.learnlib.oracle.TimedQueryOracle<I, O> {
+public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
 
     private final static Logger logger = LoggerFactory.getLogger(TimedQueryOracle.class);
 

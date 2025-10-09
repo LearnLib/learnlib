@@ -1,0 +1,27 @@
+// Example of location that becomes temporarily isolated
+// Tested with a whitebox oracle only.
+digraph g {
+
+	s0 [timers="x=3" shape="circle"];
+	s1 [timers="y=2, z=3" shape="circle"];
+	s2 [shape="circle"];
+
+	s4 [shape="circle"];
+	s5 [timers="v=1" shape="circle"];
+
+    s0 -> s0 [label="a / A"];
+    s1 -> s1 [label="a / B"];
+    s2 -> s4 [label="a / C"];
+    s4 -> s5 [label="a / C"];
+
+    s0 -> s1 [label="to[x] / X"];
+    s1 -> s1 [label="to[y] / Y"];
+    s1 -> s2 [label="to[z] / Z"];
+
+    s5 -> s5 [label="a / B"]
+    s5 -> s2 [label="to[v] / Z"]
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s0;
+
+}

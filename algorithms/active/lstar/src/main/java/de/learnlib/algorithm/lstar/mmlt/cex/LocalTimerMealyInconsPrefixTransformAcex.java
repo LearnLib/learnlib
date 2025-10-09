@@ -1,7 +1,7 @@
 package de.learnlib.algorithm.lstar.mmlt.cex;
 
 import de.learnlib.acex.AbstractBaseCounterexample;
-import de.learnlib.oracle.TimedQueryOracle;
+import de.learnlib.oracle.AbstractTimedQueryOracle;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
 import net.automatalib.word.Word;
@@ -20,7 +20,7 @@ public class LocalTimerMealyInconsPrefixTransformAcex<I, O> extends AbstractBase
 
     private final static Logger logger = LoggerFactory.getLogger(LocalTimerMealyInconsPrefixTransformAcex.class);
 
-    private final TimedQueryOracle<I, O> timeOracle;
+    private final AbstractTimedQueryOracle<I, O> timeOracle;
     private final Word<LocalTimerMealySemanticInputSymbol<I>> suffix;
 
     private final Function<Word<LocalTimerMealySemanticInputSymbol<I>>, Word<LocalTimerMealySemanticInputSymbol<I>>> asTransform;
@@ -32,7 +32,7 @@ public class LocalTimerMealyInconsPrefixTransformAcex<I, O> extends AbstractBase
      * @param timeOracle  membership oracle
      * @param asTransform retrieves the prefix of the system state in the hypothesis addressed by a word
      */
-    public LocalTimerMealyInconsPrefixTransformAcex(Word<LocalTimerMealySemanticInputSymbol<I>> suffix, TimedQueryOracle<I, O> timeOracle, Function<Word<LocalTimerMealySemanticInputSymbol<I>>, Word<LocalTimerMealySemanticInputSymbol<I>>> asTransform) {
+    public LocalTimerMealyInconsPrefixTransformAcex(Word<LocalTimerMealySemanticInputSymbol<I>> suffix, AbstractTimedQueryOracle<I, O> timeOracle, Function<Word<LocalTimerMealySemanticInputSymbol<I>>, Word<LocalTimerMealySemanticInputSymbol<I>>> asTransform) {
         super(suffix.length());
         this.timeOracle = timeOracle;
         this.suffix = suffix;
