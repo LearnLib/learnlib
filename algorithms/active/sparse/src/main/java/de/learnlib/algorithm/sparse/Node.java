@@ -21,9 +21,14 @@ import java.util.List;
 class Node<S, I, O> { // type parameters required for safe casting
 
     /**
-     * Cell identifiers of the fringe rows at this node.
+     * Suffix-output cell identifiers of the fringe rows that share this node.
      */
     final List<Integer> cellsIds;
+
+    /**
+     * Bit vector indicating the core rows that remain compatible
+     * with the observations associated with this node.
+     */
     final BitSet remRows;
 
     protected Node(List<Integer> cellsIds) {

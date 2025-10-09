@@ -28,9 +28,9 @@ class Leaf<S, I, O> extends Node<S, I, O> {
     private int lastNumSufs;
 
     /**
-     * Split leafs always remember how many core rows and suffixes the table contained at their last visit. This
-     * information is used as a logical timestamp to check whether the separator is still guaranteed to be optimal or if
-     * it needs to be recomputed.
+     * Split leafs always remember how many core rows and suffixes the table contained
+     * at their last visit. This information is used as a logical timestamp to check
+     * if the separator is still guaranteed to be optimal or if it needs to be recomputed.
      */
     @Nullable Separator<S, I, O> sep;
 
@@ -72,10 +72,9 @@ class Leaf<S, I, O> extends Node<S, I, O> {
             sep = null;
         }
 
-        /*
-         * Since suffixes and core rows grow monotonically, the separator only needs to be recomputed whenever new
-         * compatible core prefixes emerge or when the suffix set grows.
-         */
+        // Since suffixes and core rows grow monotonically,
+        // the separator only needs to be recomputed whenever
+        // new compatible core prefixes emerge or the suffix set grows.
 
         for (int i = lastNumCRows; i < cRows.size(); i++) {
             final CoreRow<S, I, O> c = cRows.get(i);
