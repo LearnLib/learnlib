@@ -20,67 +20,85 @@ import java.util.List;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Leaves can be split or unsplit.
+ * An unsplit leaf has a single compatible core row to which it points.
+ * As new core rows emerge, the observations of the leaf may not suffice
+ * anymore to uniquely assign it to some core row. Then, it becomes split.
+ * Split leaves cache suffix selection by reference to separators.
+ * Leaves remember how many core rows and suffixes existed at their last visit.
+ * This information is used as a logical timestamp to check
+ * if the separator is still known to be optimal
+ * or if it needs to be recomputed.
+ */
 class Leaf<S, I, O> extends Node<S, I, O> {
 
-    final @Nullable CoreRow<S, I, O> cRow;
-    private boolean split;
-    private int lastNumCRows;
-    private int lastNumSufs;
+    /**
+     * Core row associated with this leaf (null if split, see {@link Leaf}).
+     */
+    @Nullable CoreRow<S, I, O> cRow;
 
     /**
-     * Split leafs always remember how many core rows and suffixes the table contained
-     * at their last visit. This information is used as a logical timestamp to check
-     * if the separator is still guaranteed to be optimal or if it needs to be recomputed.
+     * Separator cached by this leaf (see {@link Leaf}).
      */
     @Nullable Separator<S, I, O> sep;
 
+    private int lastNumCRows;
+    private int lastNumSufs;
+
+    private Leaf(int numCRows, int numSufs, List<Integer> cellIds) {
+        super(cellIds);
+        this.lastNumCRows = numCRows;
+        this.lastNumSufs = numSufs;
+    }
+
     /**
-     * Creates split leaf without observations.
+     * Creates split leaf without observations (see {@link Leaf}).
      */
     Leaf() {
-        super(Collections.emptyList());
-        cRow = null;
-        split = true;
-        lastNumCRows = 0;
-        lastNumSufs = 0;
+        this(0, 0, Collections.emptyList());
         // timestamps will be updated automatically
+        cRow = null;
     }
 
     /**
-     * Creates unsplit leaf associated with the given core row and observations.
+     * Creates unsplit leaf associated with the given core row and observations
+     * (see {@link Leaf}).
      */
     Leaf(CoreRow<S, I, O> cRow, int numCRows, int numSufs, List<Integer> cellIds) {
-        super(cellIds);
+        this(numCRows, numSufs, cellIds);
         this.cRow = cRow;
         remRows.set(cRow.idx);
-        split = false;
-        lastNumCRows = numCRows;
-        lastNumSufs = numSufs;
     }
 
+    /**
+     * See {@link Leaf}.
+     */
     boolean isUnsplit() {
-        return !split;
+        return cRow != null;
     }
 
-    void update(List<CoreRow<S, I, O>> cRows, int numSufs) {
+    void update(List<CoreRow<S, I, O>> cRows) {
         assert lastNumCRows <= cRows.size();
         if (lastNumCRows == cRows.size()) {
-            assert lastNumSufs == numSufs;
             return;
-        } else if (numSufs > lastNumSufs) {
+        }
+
+        final int numSufs = cRows.get(0).sufToOut.size();
+        if (numSufs > lastNumSufs) {
             lastNumSufs = numSufs;
             sep = null;
         }
 
-        // Since suffixes and core rows grow monotonically,
+        // since suffixes and core rows grow monotonically,
         // the separator only needs to be recomputed whenever
-        // new compatible core prefixes emerge or the suffix set grows.
+        // new compatible core prefixes emerge or the suffix set grows
 
         for (int i = lastNumCRows; i < cRows.size(); i++) {
             final CoreRow<S, I, O> c = cRows.get(i);
-            if (c.cellIds.containsAll(cellsIds)) {
+            if (c.cellIds.containsAll(cellIds)) {
                 remRows.set(c.idx);
-                split = true;
+                cRow = null; // split leaf
                 sep = null;
             }
         }

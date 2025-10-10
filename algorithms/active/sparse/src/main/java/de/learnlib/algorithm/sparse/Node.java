@@ -18,25 +18,33 @@ package de.learnlib.algorithm.sparse;
 import java.util.BitSet;
 import java.util.List;
 
+/**
+ * For table compression and to cache suffix selection,
+ * fringe rows do not store observations, but instead map to some node.
+ * Each node is associated with a set of suffix-output pairs,
+ * potentially representing multiple rows with identical observations.
+ * Nodes are either leaves or separators.
+ */
 class Node<S, I, O> { // type parameters required for safe casting
 
     /**
-     * Suffix-output cell identifiers of the fringe rows that share this node.
+     * Identifiers of suffix-output pairs associated with this node.
      */
-    final List<Integer> cellsIds;
+    final List<Integer> cellIds;
 
     /**
-     * Bit vector indicating the core rows that remain compatible
-     * with the observations associated with this node.
+     * Bit vector encoding which core rows remain compatible
+     * with the observations at this node.
+     * Rows are represented by their index.
      */
     final BitSet remRows;
 
-    protected Node(List<Integer> cellsIds) {
-        this(cellsIds, new BitSet());
+    protected Node(List<Integer> cellIds) {
+        this(cellIds, new BitSet());
     }
 
-    protected Node(List<Integer> cellsIds, BitSet remRows) {
-        this.cellsIds = cellsIds;
+    protected Node(List<Integer> cellIds, BitSet remRows) {
+        this.cellIds = cellIds;
         this.remRows = remRows;
     }
 }

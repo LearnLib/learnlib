@@ -41,7 +41,7 @@ class FringeRow<S, I, O> extends Row<S, I, O> {
     final I transIn;
 
     /**
-     * Output symbol (determined dynamically).
+     * Output symbol (determined lazily).
      */
     O transOut;
 

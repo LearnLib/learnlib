@@ -48,12 +48,12 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     private final Deque<Word<I>> sufs;
 
     /**
-     * Core rows.
+     * List of core rows. Rows can be addressed by their index in this list.
      */
     private final List<CoreRow<S, I, O>> cRows;
 
     /**
-     * Fringe rows.
+     * Fringe rows (stored in a stack for LIFO iteration).
      */
     private final Deque<FringeRow<S, I, O>> fRows;
 
@@ -63,12 +63,13 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     private final Map<Word<I>, FringeRow<S, I, O>> prefToFringe;
 
     /**
-     * List of unique suffix-output cells.
+     * List of unique suffix-output pairs, addressable by index.
+     * Used for table compression: table entries only hold cell index.
      */
     private final List<Pair<Word<I>, Word<O>>> cells;
 
     /**
-     * Maps each suffix-output cell to its list index.
+     * Maps each suffix-output pair to its index (see {@link #cells}).
      */
     private final Map<Pair<Word<I>, Word<O>>, Integer> cellToIdx;
 
@@ -159,13 +160,14 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
                 return;
             } else {
                 assert f.transOut != null;
+                assert f.leaf.cRow != null;
                 hyp.setTransition(f.srcState, f.transIn, f.leaf.cRow.state, f.transOut);
             }
         }
     }
 
     private void classifyFringePrefix(FringeRow<S, I, O> f) {
-        f.leaf.update(cRows, sufs.size());
+        f.leaf.update(cRows);
         if (f.leaf.isUnsplit()) {
             return;
         }
@@ -174,7 +176,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
         if (sep != null) {
             followNode(f, sep);
         } else {
-            f.leaf.sep = new Separator<>(pickSuffix(f.leaf.remRows), f.leaf.remRows, f.leaf.cellsIds);
+            f.leaf.sep = new Separator<>(pickSuffix(f.leaf.remRows), f.leaf.remRows, f.leaf.cellIds);
             followNode(f, f.leaf.sep);
         }
     }
@@ -212,7 +214,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     }
 
     private void followNode(FringeRow<S, I, O> f, Node<S, I, O> n) {
-        if (n instanceof Leaf) {
+        if (n instanceof Leaf) { // TODO simplify when switching to newer java
             final Leaf<S, I, O> l = (Leaf<S, I, O>) n;
             assert l.isUnsplit();
             f.leaf = l;
@@ -230,7 +232,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
 
         final BitSet remRows = new BitSet();
         sep.remRows.stream().filter(i -> cRows.get(i).cellIds.contains(cellIdx)).forEach(remRows::set);
-        final List<Integer> cellIds = new ArrayList<>(sep.cellsIds); // important: copy elements!
+        final List<Integer> cellIds = new ArrayList<>(sep.cellIds); // important: copy elements!
         cellIds.add(cellIdx);
         if (remRows.isEmpty()) {
             // no compatible core prefix
@@ -249,7 +251,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
 
     private Word<O> query(Row<S, I, O> r, Word<I> suf) {
         final Word<O> out = oracle.answerQuery(r.prefix.concat(suf));
-        if (r instanceof FringeRow) {
+        if (r instanceof FringeRow) { // TODO simplify when switching to newer java
             final FringeRow<S, I, O> f = (FringeRow<S, I, O>) r;
             f.transOut = out.prefix(f.prefix.length()).lastSymbol();
         }
@@ -301,6 +303,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
      * and returns a list containing the observations for all suffixes.
      */
     private List<Integer> completeRowObservations(FringeRow<S, I, O> f, List<Integer> cellIds) {
+        // TODO simplify collector calls when switching to newer java
         final List<Word<I>> sufsPresent = cellIds.stream().map(c -> this.cells.get(c).getFirst()).collect(Collectors.toList());
         final List<Word<I>> sufsMissing = sufs.stream().filter(s -> !sufsPresent.contains(s)).collect(Collectors.toList());
         final List<Integer> cellIdsFull = new ArrayList<>(cellIds); // important: copy elements!
@@ -325,8 +328,8 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
         final Word<I> u = accSeq.apply(cex.prefix(idxSym));
         final Word<I> ui = u.append(cex.getSymbol(idxSym));
         final FringeRow<S, I, O> f = prefToFringe.get(ui);
-        assert f.leaf.isUnsplit();
-        final int cRowIdx = moveToCore(f, f.leaf.cellsIds);
+        final int cRowIdx = moveToCore(f, f.leaf.cellIds);
+        assert f.leaf.cRow != null;
         if (f.leaf.cRow.cellIds.containsAll(cRows.get(cRowIdx).cellIds)) {
             // only add new suffix if the row is not yet distinguished
             addSuffixToTable(cex.subWord(idxSuf));
