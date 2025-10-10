@@ -43,7 +43,7 @@ import java.util.*;
  * <p>
  * - Takes any prefix from a known location
  * - Appends a single time step.
- * - Appends inputs of all inputs that self-loop in that location.
+ * - Appends inputs of all non-delaying inputs that self-loop in that location.
  * - Appends timeout.
  *
  * @param <I> Input type for non-delaying inputs
@@ -75,7 +75,7 @@ public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMeal
         List<LocalTimerMealySemanticInputSymbol<I>> loopingInputs = new ArrayList<>();
         for (var sym : alphabet) {
             if (!(sym instanceof NonDelayingInput<I> ndi)) {
-                throw new AssertionError();
+                continue; // only consider non-delaying inputs, as only these can perform local resets
             }
             var trans = hypothesis.getTransition(sourceLoc, ndi);
 
@@ -89,21 +89,21 @@ public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMeal
     }
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, @Nullable Collection<? extends LocalTimerMealySemanticInputSymbol<I>> ignored) {
+    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
         if (loopInsertPerc == 0) {
             return null; // oracle is disabled
         }
-
-        return this.findCexInternal(hypothesis);
+        List<LocalTimerMealySemanticInputSymbol<I>> listInputs = new ArrayList<>(inputs);
+        return this.findCexInternal(hypothesis, listInputs);
     }
 
     private <S> @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCexInternal
-            (LocalTimerMealy<S, I, O> hypothesis) {
+            (LocalTimerMealy<S, I, O> hypothesis, List<LocalTimerMealySemanticInputSymbol<I>> inputs) {
 
         // Retrieve prefixes from state cover, to establish some separation between learner and teacher:
-        var stateCover = LocalTimerMealyCover.getLocalTimerMealyLocationCover(hypothesis);
+        var stateCover = LocalTimerMealyCover.getLocalTimerMealyLocationCover(hypothesis, inputs);
 
-        // Only keep locations that have at least two stable configs:
+        // Only keep locations that have at least two stable configs (only these can have local resets):
         List<Word<LocalTimerMealySemanticInputSymbol<I>>> prefixes = new ArrayList<>();
         for (var loc : stateCover.keySet()) {
             if (!hypothesis.getSortedTimers(loc).isEmpty() &&
@@ -125,12 +125,10 @@ public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMeal
         List<Word<LocalTimerMealySemanticInputSymbol<I>>> chosenPrefixes = RandomUtil.sampleUnique(locPrefixRandom, prefixes, randPrefixes);
 
 
-        List<LocalTimerMealySemanticInputSymbol<I>> listAlphabet = new ArrayList<>(hypothesis.getUntimedAlphabet());
-
         for (var prefix : chosenPrefixes) {
             // Retrieve looping symbols:
             var sourceLoc = hypothesis.getSemantics().traceInputs(prefix).getLocation();
-            var loopingInputs = getLoopingSymbols(sourceLoc, listAlphabet, hypothesis);
+            var loopingInputs = getLoopingSymbols(sourceLoc, inputs, hypothesis);
             if (loopingInputs.isEmpty()) {
                 continue; // no loops
             }

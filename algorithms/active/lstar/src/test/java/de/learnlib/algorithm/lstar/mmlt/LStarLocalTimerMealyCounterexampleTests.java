@@ -57,7 +57,7 @@ public class LStarLocalTimerMealyCounterexampleTests {
 
         // Now continue until arriving at an accurate model:
         System.out.println("Running to completion");
-        LocalTimerMealySimulatorOracle<S, Integer, I, O> simOracle = new LocalTimerMealySimulatorOracle<>(model.automaton());
+        LocalTimerMealySimulatorOracle<I, O> simOracle = new LocalTimerMealySimulatorOracle<>(model.automaton());
         int round = 0;
         while (round < 100) {
             var hyp = learner.getHypothesisModel();

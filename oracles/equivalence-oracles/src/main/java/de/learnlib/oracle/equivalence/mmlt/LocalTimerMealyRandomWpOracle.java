@@ -29,8 +29,6 @@ import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainer;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.TimeStepSymbol;
-import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
 import net.automatalib.automaton.time.impl.mmlt.ReducedLocalTimerMealySemantics;
 import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
 import net.automatalib.common.util.string.AbstractPrintable;
@@ -76,24 +74,22 @@ public class LocalTimerMealyRandomWpOracle<I, O> implements EquivalenceOracle.Lo
     }
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, @Nullable Collection<? extends LocalTimerMealySemanticInputSymbol<I>> ignored) {
-        return findCounterExampleInternal(hypothesis);
+    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
+        return findCounterExampleInternal(hypothesis, inputs);
     }
 
-    private <S> DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExampleInternal(LocalTimerMealy<S, I, O> hypothesis) {
+    private <S> DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExampleInternal(LocalTimerMealy<S, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
         // Make expanded form of hypothesis:
         var hypSemModel = ReducedLocalTimerMealySemantics.forLocalTimerMealy(hypothesis);
 
         // Create a list of symbols (for faster access):
-        List<LocalTimerMealySemanticInputSymbol<I>> listAlphabet = new ArrayList<>(hypothesis.getUntimedAlphabet());
-        listAlphabet.add(new TimeoutSymbol<>());
-        listAlphabet.add(new TimeStepSymbol<>());
+        List<LocalTimerMealySemanticInputSymbol<I>> listAlphabet = new ArrayList<>(inputs);
 
         // Identify global suffixes:
-        var globalSuffixes = Automata.characterizingSet(hypSemModel, hypSemModel.getInputAlphabet());
+        var globalSuffixes = Automata.characterizingSet(hypSemModel, inputs);
 
         // Get list of prefixes in deterministic order (so we can reproduce experiments easily):
-        var locationCover = LocalTimerMealyCover.getLocalTimerMealyLocationCover(hypothesis);
+        var locationCover = LocalTimerMealyCover.getLocalTimerMealyLocationCover(hypothesis, listAlphabet);
         var prefixList = locationCover
                 .values()
                 .stream()
@@ -150,7 +146,7 @@ public class LocalTimerMealyRandomWpOracle<I, O> implements EquivalenceOracle.Lo
             // Identify configuration reached by prefix:
             var currentConfig = hypothesis.getSemantics().traceInputs(wbTestWord.toWord());
             var state = hypSemModel.getStateForConfiguration(currentConfig, true);
-            var localSuffixes = Automata.stateCharacterizingSet(hypSemModel, hypSemModel.getInputAlphabet(), state);
+            var localSuffixes = Automata.stateCharacterizingSet(hypSemModel, alphabet, state);
 
             if (!localSuffixes.isEmpty()) {
                 suffix = localSuffixes.get(random.nextInt(localSuffixes.size()));

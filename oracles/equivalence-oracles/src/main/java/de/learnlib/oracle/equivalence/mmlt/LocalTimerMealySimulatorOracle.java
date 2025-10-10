@@ -30,29 +30,29 @@ import net.automatalib.util.automaton.mmlt.LocalTimerMealyUtil;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A simulator oracle for MMLTs.
  *
- * @param <SR> Reference model location type
- * @param <SH> Hypothesis model location type
- * @param <I>  Input type for non-delaying inputs
- * @param <O>  Output symbol type
+ * @param <I> Input type for non-delaying inputs
+ * @param <O> Output symbol type
  */
-public class LocalTimerMealySimulatorOracle<SR, SH, I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O> {
+public class LocalTimerMealySimulatorOracle<I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O> {
 
-    private final LocalTimerMealy<SR, I, O> refModel;
+    private final LocalTimerMealy<?, I, O> refModel;
 
-    public LocalTimerMealySimulatorOracle(LocalTimerMealy<SR, I, O> refModel) {
+    public LocalTimerMealySimulatorOracle(LocalTimerMealy<?, I, O> refModel) {
         this.refModel = refModel;
     }
 
-
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, @Nullable Collection<? extends LocalTimerMealySemanticInputSymbol<I>> ignored) {
-        var separatingWord = LocalTimerMealyUtil.findSeparatingWord(refModel, hypothesis);
+    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
+        List<LocalTimerMealySemanticInputSymbol<I>> listInputs = new ArrayList<>(inputs);
 
+        var separatingWord = LocalTimerMealyUtil.findSeparatingWord(refModel, hypothesis, listInputs);
         if (separatingWord != null) {
             var sulOutput = refModel.getSemantics().computeSuffixOutput(Word.epsilon(), separatingWord);
             return new DefaultQuery<>(Word.epsilon(), separatingWord, sulOutput);
