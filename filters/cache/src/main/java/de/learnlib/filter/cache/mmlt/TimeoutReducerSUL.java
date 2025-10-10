@@ -20,7 +20,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class TimeoutReducerSUL<I, O> extends LocalTimerMealySUL<I, O> implements LearnerStatsProvider {
+public class TimeoutReducerSUL<I, O> implements LocalTimerMealySUL<I, O>, LearnerStatsProvider {
 
     private final LocalTimerMealySUL<I, O> delegate;
     private final long maxDelay;

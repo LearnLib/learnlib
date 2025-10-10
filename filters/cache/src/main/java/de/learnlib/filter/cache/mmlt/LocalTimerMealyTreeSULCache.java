@@ -29,7 +29,7 @@ import java.util.*;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyTreeSULCache<I, O> extends LocalTimerMealySUL<I, O> implements LearningCache.LocalTimerMealyLearningCache<I, O>, GraphViewable, LearnerStatsProvider {
+public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, O>, LearningCache.LocalTimerMealyLearningCache<I, O>, GraphViewable, LearnerStatsProvider {
     private final LocalTimerMealySUL<I, O> delegate;
 
     private final CacheTreeNode<I, O> cacheRoot;

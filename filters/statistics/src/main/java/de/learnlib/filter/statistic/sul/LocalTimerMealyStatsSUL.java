@@ -16,7 +16,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyStatsSUL<I, O> extends LocalTimerMealySUL<I, O> implements LearnerStatsProvider {
+public class LocalTimerMealyStatsSUL<I, O> implements LocalTimerMealySUL<I, O>, LearnerStatsProvider {
     private final LocalTimerMealySUL<I, O> delegate;
     private StatsContainer stats;
 

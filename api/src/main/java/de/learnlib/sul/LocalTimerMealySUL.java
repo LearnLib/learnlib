@@ -6,13 +6,12 @@ import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A SUL with MMLT semantics. We use this type to interface with real systems and to
- * simulate MMLT models.
+ * Interface for a SUL with MMLT semantics.
  *
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public abstract class LocalTimerMealySUL<I, O> {
+public interface LocalTimerMealySUL<I, O> {
 
     /**
      * Follows the provided input word, starting at the current system state.
@@ -20,7 +19,7 @@ public abstract class LocalTimerMealySUL<I, O> {
      *
      * @param input Input suffix.
      */
-    public void follow(Word<LocalTimerMealySemanticInputSymbol<I>> input) {
+    default void follow(Word<LocalTimerMealySemanticInputSymbol<I>> input) {
         this.follow(input, -1);
     }
 
@@ -28,9 +27,9 @@ public abstract class LocalTimerMealySUL<I, O> {
      * Follows the provided input word, starting at the current configuration.
      *
      * @param input      Input suffix.
-     * @param maxTimeout Max. timeout to use for timeoutSymbols.
+     * @param maxTimeout Max. waiting time to use for timeoutSymbols.
      */
-    public void follow(Word<LocalTimerMealySemanticInputSymbol<I>> input, long maxTimeout) {
+    default void follow(Word<LocalTimerMealySemanticInputSymbol<I>> input, long maxTimeout) {
         for (var s : input) {
             if (s instanceof NonDelayingInput<I> ndi) {
                 this.step(ndi);
@@ -48,24 +47,24 @@ public abstract class LocalTimerMealySUL<I, O> {
     }
 
     /**
-     * Provides an input to the SUL and returns the observed output.
+     * Provides a non-delaying input to the SUL and returns the observed output.
      *
      * @param input Input
      * @return SUL output.
      */
-    public abstract LocalTimerMealyOutputSymbol<O> step(NonDelayingInput<I> input);
+    LocalTimerMealyOutputSymbol<O> step(NonDelayingInput<I> input);
 
     /**
      * Waits until a timeout occurs or the provided time is reached.
      * <p>
-     * We may observe no timeout if either the waiting time is too small or there are no timers defined
-     * in the current location.
+     * We may observe no timeout if either the waiting time is too small or if the active location
+     * has no timers.
      *
      * @param maxTime Maximum waiting time.
-     * @return Observed timer output with waiting time, or null, if no timeout observed.
+     * @return Observed timer output with waiting time, or null, if no timeout was observed.
      */
     @Nullable
-    public abstract LocalTimerMealyOutputSymbol<O> timeoutStep(long maxTime);
+    LocalTimerMealyOutputSymbol<O> timeoutStep(long maxTime);
 
     /**
      * Waits for one time unit and returns the observed output.
@@ -74,7 +73,7 @@ public abstract class LocalTimerMealySUL<I, O> {
      * The delay of this output is set to zero.
      */
     @Nullable
-    public LocalTimerMealyOutputSymbol<O> timeStep() {
+    default LocalTimerMealyOutputSymbol<O> timeStep() {
         var res = this.timeoutStep(1);
         if (res != null) {
             return new LocalTimerMealyOutputSymbol<>(res.getSymbol());
@@ -88,7 +87,7 @@ public abstract class LocalTimerMealySUL<I, O> {
      * @param input Waiting time.
      * @return Observed timeouts. Empty, if none.
      */
-    public Word<LocalTimerMealyOutputSymbol<O>> collectTimeouts(TimeStepSequence<I> input) {
+    default Word<LocalTimerMealyOutputSymbol<O>> collectTimeouts(TimeStepSequence<I> input) {
         WordBuilder<LocalTimerMealyOutputSymbol<O>> wbOutput = new WordBuilder<>();
 
         long remainingTime = input.getTimeSteps();
@@ -110,10 +109,10 @@ public abstract class LocalTimerMealySUL<I, O> {
     /**
      * Prepares the SUL for a new query.
      */
-    public abstract void pre();
+    void pre();
 
     /**
      * Deinitializes the SUL.
      */
-    public abstract void post();
+    void post();
 }

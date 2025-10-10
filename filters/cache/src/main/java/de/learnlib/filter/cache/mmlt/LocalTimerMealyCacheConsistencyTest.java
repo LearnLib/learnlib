@@ -60,8 +60,8 @@ public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOra
     }
 
     /**
-     * The cache does not use timeout symbols. Using these instead of tau-sequences has several performance benefits.
-     * This function converts a query with a tau-sequence to one that uses timeout symbols where possible.
+     * The cache does not use timeout symbols. Using these instead of time-step-sequences has several performance benefits.
+     * This function converts a query with a time-step-sequence to one that uses timeout symbols where possible.
      *
      * @param originalQuery Original query
      * @return Converted query

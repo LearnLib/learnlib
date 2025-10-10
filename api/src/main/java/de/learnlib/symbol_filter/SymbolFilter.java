@@ -21,7 +21,7 @@ public interface SymbolFilter<I, O> {
      * Predictions may not be correct, i.e., an accepted symbol may be actually ignorable and an ignored symbol
      * may be actually not ignorable.
      *
-     * @param prefix Configuration prefix. May contain delay-symbols (= tau inputs).
+     * @param prefix Configuration prefix. May contain time steps.
      * @param symbol Queried transition
      * @return IGNORE if the symbol is considered ignorable, ACCEPT if it is not.
      */
