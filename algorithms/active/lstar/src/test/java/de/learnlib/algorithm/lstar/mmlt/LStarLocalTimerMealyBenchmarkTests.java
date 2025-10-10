@@ -2,9 +2,7 @@ package de.learnlib.algorithm.lstar.mmlt;
 
 
 import de.learnlib.algorithm.LocalTimerMealyModelParams;
-import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.driver.simulator.LocalTimerMealySimulatorSUL;
-import de.learnlib.filter.cache.mmlt.LocalTimerMealyCacheConsistencyTest;
 import de.learnlib.filter.cache.mmlt.TimeoutReducerSUL;
 import de.learnlib.filter.statistic.sul.LocalTimerMealyStatsSUL;
 import de.learnlib.oracle.EquivalenceOracle;
@@ -27,7 +25,7 @@ import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
 import net.automatalib.word.Word;
 import org.testng.annotations.Test;
 
-import de.learnlib.filter.cache.mmlt.LocalTimerMealyTreeCacheSUL;
+import de.learnlib.filter.cache.mmlt.LocalTimerMealyTreeSULCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +92,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
         // Query oracle -> TimeoutReducer -> Cache -> Query stats -> SUL
         LocalTimerMealySimulatorSUL<S, I, O> sul = new LocalTimerMealySimulatorSUL<>(automaton);
         LocalTimerMealyStatsSUL<I, O> statsAfterCache = new LocalTimerMealyStatsSUL<>(sul, stats);
-        LocalTimerMealyTreeCacheSUL<I, O> cacheSUL = new LocalTimerMealyTreeCacheSUL<>(statsAfterCache, params.silentOutput());
+        LocalTimerMealyTreeSULCache<I, O> cacheSUL = new LocalTimerMealyTreeSULCache<>(statsAfterCache, params);
         cacheSUL.setStatsContainer(stats);
         LocalTimerMealySUL<I, O> toReducerSul = new TimeoutReducerSUL<>(cacheSUL, params.maxTimeoutWaitingTime(), stats);
 
@@ -103,7 +101,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
         // Prepare cex oracle chain:
 
         LocalTimerMealyEQOracleChain<I, O> chainOracle = new LocalTimerMealyEQOracleChain<>();
-        chainOracle.addOracle(new LocalTimerMealyCacheConsistencyTest<>(cacheSUL, params));
+        chainOracle.addOracle(cacheSUL.createCacheConsistencyTest());
         chainOracle.addOracle(new ResetSearchOracle<>(timeOracle, seed, 1.0, 1.0));
         chainOracle.addOracle(new LocalTimerMealyRandomWpOracle<>(timeOracle, seed, 6, 12, 100));
         chainOracle.addOracle(new LocalTimerMealySimulatorOracle<>(automaton)); // ensure that we eventually find an accurate model

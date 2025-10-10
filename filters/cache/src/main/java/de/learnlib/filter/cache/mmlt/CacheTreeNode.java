@@ -22,7 +22,7 @@ import java.util.Map;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class CacheTreeNode<I, O> {
+class CacheTreeNode<I, O> {
     private record CacheTreeTransition<I, O>(LocalTimerMealyOutputSymbol<O> output, CacheTreeNode<I, O> target) {
     }
 

@@ -25,10 +25,10 @@ import java.util.List;
 public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O> {
     private final static Logger logger = LoggerFactory.getLogger(LocalTimerMealyCacheConsistencyTest.class);
 
-    private final LocalTimerMealyTreeCacheSUL<I, O> sulCache;
+    private final LocalTimerMealyTreeSULCache<I, O> sulCache;
     private final LocalTimerMealyModelParams<O> modelParams;
 
-    public LocalTimerMealyCacheConsistencyTest(LocalTimerMealyTreeCacheSUL<I, O> sulCache, LocalTimerMealyModelParams<O> modelParams) {
+    LocalTimerMealyCacheConsistencyTest(LocalTimerMealyTreeSULCache<I, O> sulCache, LocalTimerMealyModelParams<O> modelParams) {
         this.sulCache = sulCache;
         this.modelParams = modelParams;
     }

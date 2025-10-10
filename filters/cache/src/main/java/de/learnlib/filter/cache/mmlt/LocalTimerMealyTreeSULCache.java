@@ -1,7 +1,8 @@
 package de.learnlib.filter.cache.mmlt;
 
 
-import de.learnlib.filter.cache.LocalTimerMealyCache;
+import de.learnlib.algorithm.LocalTimerMealyModelParams;
+import de.learnlib.filter.cache.LearningCache;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
@@ -28,12 +29,13 @@ import java.util.*;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealyCache<I, O> implements GraphViewable, LearnerStatsProvider {
+public class LocalTimerMealyTreeSULCache<I, O> extends LocalTimerMealySUL<I, O> implements LearningCache.LocalTimerMealyLearningCache<I, O>, GraphViewable, LearnerStatsProvider {
     private final LocalTimerMealySUL<I, O> delegate;
 
     private final CacheTreeNode<I, O> cacheRoot;
     private CacheTreeNode<I, O> currentState;
 
+    private final LocalTimerMealyModelParams<O> modelParams;
     private final LocalTimerMealyOutputSymbol<O> silentOutput;
     private boolean cacheMiss;
 
@@ -44,9 +46,10 @@ public class LocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealyCache<I, O
         this.stats = container;
     }
 
-    public LocalTimerMealyTreeCacheSUL(LocalTimerMealySUL<I, O> delegate, O silentOutput) {
+    public LocalTimerMealyTreeSULCache(LocalTimerMealySUL<I, O> delegate, LocalTimerMealyModelParams<O> modelParams) {
         this.delegate = delegate;
-        this.silentOutput = new LocalTimerMealyOutputSymbol<>(silentOutput);
+        this.modelParams = modelParams;
+        this.silentOutput = new LocalTimerMealyOutputSymbol<>(modelParams.silentOutput());
 
         // Init cache:
         this.cacheRoot = new CacheTreeNode<>(null, null);
@@ -108,7 +111,7 @@ public class LocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealyCache<I, O
 
                 if (currentState.getTimeout() > remaining) {
                     // Split current timeout:
-                    this.currentState = this.currentState.splitTimeout(remaining, silentOutput);
+                    this.currentState = this.currentState.splitTimeout(remaining, this.silentOutput);
                     return null; // no timer in this state
                 }
 
@@ -259,6 +262,11 @@ public class LocalTimerMealyTreeCacheSUL<I, O> extends LocalTimerMealyCache<I, O
         }
 
         return mealy.graphView();
+    }
+
+    @Override
+    public EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O> createCacheConsistencyTest() {
+        return new LocalTimerMealyCacheConsistencyTest<>(this, this.modelParams);
     }
 
 }

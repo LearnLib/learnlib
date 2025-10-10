@@ -16,10 +16,15 @@
 package de.learnlib.filter.cache;
 
 import de.learnlib.oracle.EquivalenceOracle;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
+
+import java.util.List;
 
 /**
  * Interface for a cache used in automata learning.
@@ -84,4 +89,19 @@ public interface LearningCache<A, I, O> {
      */
     @FunctionalInterface
     interface MooreLearningCache<I, O> extends LearningCache<MooreMachine<?, I, ?, O>, I, Word<O>> {}
+
+    /**
+     * Specialization of the {@link LearningCache} interface for MMLT learning.
+     *
+     * @param <I> Input type for non-delaying inputs
+     * @param <O> Output symbol type
+     */
+    interface LocalTimerMealyLearningCache<I, O> extends LearningCache<LocalTimerMealy<?, I, O>, LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>>{
+        /**
+         * Lists all words that are currently in the cache.
+         *
+         * @return List of all stored words.
+         */
+        List<Word<LocalTimerMealySemanticInputSymbol<I>>> listAllWords();
+    }
 }
