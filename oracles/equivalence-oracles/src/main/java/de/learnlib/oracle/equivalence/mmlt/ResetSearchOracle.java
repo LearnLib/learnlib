@@ -46,11 +46,10 @@ import java.util.*;
  * - Appends inputs of all inputs that self-loop in that location.
  * - Appends timeout.
  *
- * @param <S> Location type
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class ResetSearchOracle<S, I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<S, I, O> {
+public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O> {
 
     private final static Logger logger = LoggerFactory.getLogger(ResetSearchOracle.class);
 
@@ -71,7 +70,7 @@ public class ResetSearchOracle<S, I, O> implements EquivalenceOracle.LocalTimerM
         this.loopingInputSelectionSeed = seed;
     }
 
-    private List<LocalTimerMealySemanticInputSymbol<I>> getLoopingSymbols(S sourceLoc, List<LocalTimerMealySemanticInputSymbol<I>> alphabet, LocalTimerMealy<S, I, O> hypothesis) {
+    private <S> List<LocalTimerMealySemanticInputSymbol<I>> getLoopingSymbols(S sourceLoc, List<LocalTimerMealySemanticInputSymbol<I>> alphabet, LocalTimerMealy<S, I, O> hypothesis) {
 
         List<LocalTimerMealySemanticInputSymbol<I>> loopingInputs = new ArrayList<>();
         for (var sym : alphabet) {
@@ -90,7 +89,7 @@ public class ResetSearchOracle<S, I, O> implements EquivalenceOracle.LocalTimerM
     }
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<S, I, O> hypothesis, @Nullable Collection<? extends LocalTimerMealySemanticInputSymbol<I>> ignored) {
+    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, @Nullable Collection<? extends LocalTimerMealySemanticInputSymbol<I>> ignored) {
         if (loopInsertPerc == 0) {
             return null; // oracle is disabled
         }
@@ -98,7 +97,7 @@ public class ResetSearchOracle<S, I, O> implements EquivalenceOracle.LocalTimerM
         return this.findCexInternal(hypothesis);
     }
 
-    private @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCexInternal
+    private <S> @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCexInternal
             (LocalTimerMealy<S, I, O> hypothesis) {
 
         // Retrieve prefixes from state cover, to establish some separation between learner and teacher:

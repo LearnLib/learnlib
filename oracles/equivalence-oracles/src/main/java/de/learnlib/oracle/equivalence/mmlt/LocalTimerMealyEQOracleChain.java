@@ -18,16 +18,18 @@ import java.util.*;
 /**
  * A chain of MMLT equivalence oracles. The oracles are queried in the given order until either a counterexample is found
  * or nor example is found.
+ * <p>
+ * This operates similarly to {@link de.learnlib.oracle.equivalence.EQOracleChain},
+ * but also stores statistics about the queries in a {@link StatsContainer}.
  *
- * @param <S> Location type
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyEQOracleChain<S, I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<S, I, O>, LearnerStatsProvider {
+public class LocalTimerMealyEQOracleChain<I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O>, LearnerStatsProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyEQOracleChain.class);
 
-    private final List<LocalTimerMealyEquivalenceOracle<S, I, O>> oracles = new ArrayList<>();
+    private final List<LocalTimerMealyEquivalenceOracle<I, O>> oracles = new ArrayList<>();
     private StatsContainer stats = new DummyStatsContainer();
 
     /**
@@ -35,7 +37,7 @@ public class LocalTimerMealyEQOracleChain<S, I, O> implements EquivalenceOracle.
      */
     private List<String> oracleNames;
 
-    public void addOracle(LocalTimerMealyEquivalenceOracle<S, I, O> oracle) {
+    public void addOracle(LocalTimerMealyEquivalenceOracle<I, O> oracle) {
         this.oracles.add(oracle);
 
         // Update names:
@@ -68,7 +70,7 @@ public class LocalTimerMealyEQOracleChain<S, I, O> implements EquivalenceOracle.
     }
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<S, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
+    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
         if (this.oracles.isEmpty()) throw new IllegalStateException("Must specify at least one cex oracle in chain.");
 
         int oracleIdx = 0;

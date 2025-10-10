@@ -98,9 +98,8 @@ public interface EquivalenceOracle<A, I, D> {
     /**
      * A specialization of the {@link EquivalenceOracle} interface for a Local Timer Mealy learning scenario.
      *
-     * @param <S> Location type
      * @param <I> Input type for non-delaying inputs
      * @param <O> Output symbol type
      */
-    interface LocalTimerMealyEquivalenceOracle<S, I, O> extends EquivalenceOracle<LocalTimerMealy<S, I, O>, LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>>{}
+    interface LocalTimerMealyEquivalenceOracle<I, O> extends EquivalenceOracle<LocalTimerMealy<?, I, O>, LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>>{}
 }

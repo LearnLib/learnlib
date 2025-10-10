@@ -48,11 +48,10 @@ import java.util.*;
  * RandomWP counterexample search for MMLT learning.
  * Key modification: samples prefix from entry prefixes instead of all state prefixes.
  *
- * @param <S> Location type
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyRandomWpOracle<S, I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<S, I, O>, LearnerStatsProvider {
+public class LocalTimerMealyRandomWpOracle<I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O>, LearnerStatsProvider {
     private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyRandomWpOracle.class);
     private final AbstractTimedQueryOracle<I, O> timeOracle;
 
@@ -77,7 +76,11 @@ public class LocalTimerMealyRandomWpOracle<S, I, O> implements EquivalenceOracle
     }
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<S, I, O> hypothesis, @Nullable Collection<? extends LocalTimerMealySemanticInputSymbol<I>> ignored) {
+    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, @Nullable Collection<? extends LocalTimerMealySemanticInputSymbol<I>> ignored) {
+        return findCounterExampleInternal(hypothesis);
+    }
+
+    private <S> DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExampleInternal(LocalTimerMealy<S, I, O> hypothesis) {
         // Make expanded form of hypothesis:
         var hypSemModel = ReducedLocalTimerMealySemantics.forLocalTimerMealy(hypothesis);
 
@@ -106,18 +109,18 @@ public class LocalTimerMealyRandomWpOracle<S, I, O> implements EquivalenceOracle
 
             // Found inconsistency if outputs do no match:
             if (!sulAnswer.getOutput().equals(hypAnswer)) {
-                return sulAnswer; // expected SUL output
+                return sulAnswer;
             }
         }
 
-        return null; // no counterexample found
+        return null;
     }
 
-    private DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> generateTestword(List<Word<LocalTimerMealySemanticInputSymbol<I>>> prefixes,
-                                                                                                                       List<Word<LocalTimerMealySemanticInputSymbol<I>>> globalSuffixes,
-                                                                                                                       LocalTimerMealy<S, I, O> hypothesis,
-                                                                                                                       ReducedLocalTimerMealySemantics<S, I, O> hypSemModel,
-                                                                                                                       List<LocalTimerMealySemanticInputSymbol<I>> alphabet) {
+    private <S> DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> generateTestword(List<Word<LocalTimerMealySemanticInputSymbol<I>>> prefixes,
+                                                                                                                           List<Word<LocalTimerMealySemanticInputSymbol<I>>> globalSuffixes,
+                                                                                                                           LocalTimerMealy<S, I, O> hypothesis,
+                                                                                                                           ReducedLocalTimerMealySemantics<S, I, O> hypSemModel,
+                                                                                                                           List<LocalTimerMealySemanticInputSymbol<I>> alphabet) {
 
         WordBuilder<LocalTimerMealySemanticInputSymbol<I>> wbTestWord = new WordBuilder<>();
 

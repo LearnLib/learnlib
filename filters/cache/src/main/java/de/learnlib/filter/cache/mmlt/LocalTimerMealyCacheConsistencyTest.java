@@ -19,11 +19,10 @@ import java.util.List;
 /**
  * Searches for counterexamples by comparing the behavior of the hypothesis and the query cache.
  *
- * @param <S> Location type
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyCacheConsistencyTest<S, I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<S, I, O> {
+public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O> {
     private final static Logger logger = LoggerFactory.getLogger(LocalTimerMealyCacheConsistencyTest.class);
 
     private final LocalTimerMealyTreeCacheSUL<I, O> sulCache;
@@ -134,7 +133,7 @@ public class LocalTimerMealyCacheConsistencyTest<S, I, O> implements Equivalence
 
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<S, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
+    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
         // TODO only with the provided inputs!
 
         // Query all cached words:
@@ -164,4 +163,5 @@ public class LocalTimerMealyCacheConsistencyTest<S, I, O> implements Equivalence
         // Take the shortest word:
         return counterexamples.stream().min(Comparator.comparingInt(w -> w.getInput().length())).get();
     }
+
 }

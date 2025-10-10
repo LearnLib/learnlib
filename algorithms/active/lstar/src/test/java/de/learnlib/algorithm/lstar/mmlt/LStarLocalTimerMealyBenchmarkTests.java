@@ -44,7 +44,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
         none, random, ignore_all, perfect
     }
 
-    private static <I, O> void runExperiment(LStarLocalTimerMealy<I, O> learner, EquivalenceOracle.LocalTimerMealyEquivalenceOracle<Integer, I, O> tester, StatsContainer stats, int maxRounds,
+    private static <I, O> void runExperiment(LStarLocalTimerMealy<I, O> learner, EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O> tester, StatsContainer stats, int maxRounds,
                                              boolean printFinalResult) {
         stats.startOrResumeClock("learningRt", "Processing time");
         learner.startLearning();
@@ -102,7 +102,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
 
         // Prepare cex oracle chain:
 
-        LocalTimerMealyEQOracleChain<Integer, I, O> chainOracle = new LocalTimerMealyEQOracleChain<>();
+        LocalTimerMealyEQOracleChain<I, O> chainOracle = new LocalTimerMealyEQOracleChain<>();
         chainOracle.addOracle(new LocalTimerMealyCacheConsistencyTest<>(cacheSUL, params));
         chainOracle.addOracle(new ResetSearchOracle<>(timeOracle, seed, 1.0, 1.0));
         chainOracle.addOracle(new LocalTimerMealyRandomWpOracle<>(timeOracle, seed, 6, 12, 100));
