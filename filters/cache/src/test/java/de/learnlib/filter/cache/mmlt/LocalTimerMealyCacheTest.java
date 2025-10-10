@@ -6,6 +6,8 @@ import de.learnlib.oracle.membership.TimedQueryOracle;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
+import net.automatalib.alphabet.time.mmlt.TimeStepSymbol;
+import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
 import net.automatalib.automaton.time.impl.mmlt.CompactLocalTimerMealy;
 import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
 import net.automatalib.common.util.random.RandomUtil;
@@ -14,6 +16,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -53,7 +56,7 @@ public class LocalTimerMealyCacheTest {
     /**
      * Tests if the information in the cache is consistent with the output of the SUL.
      */
-    public void testCacheConsistency() {
+    public void testCacheAndSULConsistency() {
         Random random = new Random(100);
 
         var automaton = buildBaseModel();
@@ -90,5 +93,46 @@ public class LocalTimerMealyCacheTest {
 
             Assert.assertEquals(sulOutput, cacheOutput, "Cache output does not match SUL output for word " + word);
         }
+    }
+
+    @Test
+    public void testCacheConsistencyTest() {
+        // Test if the cache consistency test works correctly:
+        var refAutomaton = buildBaseModel();
+        var params = new LocalTimerMealyModelParams<>("void", 4, 80, StringSymbolCombiner.getInstance());
+
+        var sul = new LocalTimerMealySimulatorSUL<>(refAutomaton);
+        var cacheSUL = new LocalTimerMealyTreeSULCache<>(sul, params);
+        var timeOracleWithCache = new TimedQueryOracle<>(cacheSUL, params);
+
+        // Add word to cache:
+        Word<LocalTimerMealySemanticInputSymbol<String>> testWord = Word.fromSymbols(
+                new NonDelayingInput<>("p2"), new TimeoutSymbol<>(), new TimeStepSymbol<>(), new TimeoutSymbol<>()
+        );
+        timeOracleWithCache.querySuffixOutput(Word.epsilon(), testWord);
+
+        // Create a bad hypothesis:
+        var badAutomaton = buildBaseModel();
+        badAutomaton.removeTimer(2, "d");
+        badAutomaton.addPeriodicTimer(2, "d", 4, "done");
+
+        // Query the cache for a counterexample:
+        Word<LocalTimerMealySemanticInputSymbol<String>> expectedCex = Word.fromSymbols(
+                new NonDelayingInput<>("p2"), new TimeoutSymbol<>(), new TimeoutSymbol<>()
+        );
+
+        var cacheConsistencyTest = cacheSUL.createCacheConsistencyTest();
+        var cex = cacheConsistencyTest.findCounterExample(badAutomaton, refAutomaton.getSemantics().getInputAlphabet());
+        Assert.assertNotNull(cex);
+        Assert.assertEquals(cex.getInput(), expectedCex);
+
+        // Now test with a reduced alphabet:
+        var symbols = List.of("p1", "abort", "collect"); // not p1
+        GrowingMapAlphabet<LocalTimerMealySemanticInputSymbol<String>> reducedAlphabet = new GrowingMapAlphabet<>();
+        symbols.forEach(s -> reducedAlphabet.add(new NonDelayingInput<>(s)));
+        reducedAlphabet.add(new TimeoutSymbol<>());
+
+        // The only counterexample in the cache has the prefix p2, which is now omitted:
+        Assert.assertNull(cacheConsistencyTest.findCounterExample(badAutomaton, reducedAlphabet));
     }
 }

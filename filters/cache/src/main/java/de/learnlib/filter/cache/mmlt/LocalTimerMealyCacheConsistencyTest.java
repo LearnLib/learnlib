@@ -11,13 +11,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Searches for counterexamples by comparing the behavior of the hypothesis and the query cache.
+ * If there are multiple counterexamples, the shortest one is returned.
  *
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
@@ -109,18 +107,18 @@ public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOra
                     symIdx++;
                 }
 
-                if (combinedWaitTime == this.modelParams.maxTimeoutWaitingTime() || !combinedOutput.getSymbol().equals(this.modelParams.silentOutput())) {
+                if (combinedWaitTime >= this.modelParams.maxTimeoutWaitingTime() || !combinedOutput.getSymbol().equals(this.modelParams.silentOutput())) {
                     wbInput.append(new TimeoutSymbol<>());
 
                     if (combinedOutput.getSymbol().equals(this.modelParams.silentOutput())) {
-                        // Reached max delay -> no timeout:
+                        // Reached max delay -> waiting for any time will now produce no more timeouts:
                         wbOutput.append(new LocalTimerMealyOutputSymbol<>(this.modelParams.silentOutput()));
                     } else {
                         // Found non-silent output:
                         wbOutput.append(new LocalTimerMealyOutputSymbol<>(combinedWaitTime, combinedOutput.getSymbol()));
                     }
                 } else {
-                    // Reached end of word before max_delay OR exceeding max delay OR non-wait symbol -> ignore rest of this word:
+                    // Reached end of word before max_delay OR non-wait symbol -> ignore rest of this word:
                     if (symIdx < queryInput.length() - 1) {
                         logger.warn("Ignoring at least one symbol during cache comparison.");
                     }
@@ -131,10 +129,25 @@ public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOra
         return new DefaultQuery<>(wbInput.toWord(), wbOutput.toWord());
     }
 
+    private DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> reduceToAllowedInputs(Set<LocalTimerMealySemanticInputSymbol<I>> allowedInputs, DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> query) {
+        // Find the longest prefix with allowed inputs:
+        int prefixLength = 0;
+        while (prefixLength < query.getInput().length() && allowedInputs.contains(query.getInput().getSymbol(prefixLength))) {
+            prefixLength++;
+        }
+
+        if (prefixLength == query.getInput().length()) {
+            return query; // maximum length -> no need to reduce
+        } else {
+            return new DefaultQuery<>(query.getInput().subWord(0, prefixLength), query.getOutput().subWord(0, prefixLength));
+        }
+    }
+
 
     @Override
     public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
-        // TODO only with the provided inputs!
+        Set<LocalTimerMealySemanticInputSymbol<I>> allowedInputs = new HashSet<>(inputs);
+        boolean allInputsConsidered = allowedInputs.containsAll(hypothesis.getSemantics().getInputAlphabet());
 
         // Query all cached words:
         List<Word<LocalTimerMealySemanticInputSymbol<I>>> cachedWords = this.sulCache.listAllWords();
@@ -147,12 +160,16 @@ public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOra
             // Next, convert query that includes wait-symbols to query with timeout-symbols:
             var convertedQuery = this.convertTimeSequences(rawCacheQuery);
 
-            // Finally, query hypothesis using the converted query:
-            Word<LocalTimerMealyOutputSymbol<O>> hypOutput = hypothesis.getSemantics().computeSuffixOutput(Word.epsilon(), convertedQuery.getInput());
+            // The counterexample may only use a subset of the allowed inputs.
+            // If so, cut the query to the prefix of the word that is allowed:
+            var reducedQuery = (allInputsConsidered) ? convertedQuery : this.reduceToAllowedInputs(allowedInputs, convertedQuery);
 
-            if (!hypOutput.equals(convertedQuery.getOutput())) {
+            // Finally, query hypothesis using the converted query:
+            Word<LocalTimerMealyOutputSymbol<O>> hypOutput = hypothesis.getSemantics().computeSuffixOutput(Word.epsilon(), reducedQuery.getInput());
+
+            if (!hypOutput.equals(reducedQuery.getOutput())) {
                 // Hyp gives different output than cache (= SUL):
-                counterexamples.add(convertedQuery);
+                counterexamples.add(reducedQuery);
             }
         }
 

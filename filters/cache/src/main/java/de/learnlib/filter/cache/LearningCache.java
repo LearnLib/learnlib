@@ -99,6 +99,7 @@ public interface LearningCache<A, I, O> {
     interface LocalTimerMealyLearningCache<I, O> extends LearningCache<LocalTimerMealy<?, I, O>, LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>>{
         /**
          * Lists all words that are currently in the cache.
+         * If a cached word is a prefix of another cached word, only the longer of them is returned.
          *
          * @return List of all stored words.
          */
