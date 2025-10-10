@@ -1,0 +1,94 @@
+package de.learnlib.filter.cache.mmlt;
+
+import de.learnlib.algorithm.LocalTimerMealyModelParams;
+import de.learnlib.driver.simulator.LocalTimerMealySimulatorSUL;
+import de.learnlib.oracle.membership.TimedQueryOracle;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
+import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
+import net.automatalib.automaton.time.impl.mmlt.CompactLocalTimerMealy;
+import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
+import net.automatalib.common.util.random.RandomUtil;
+import net.automatalib.word.Word;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+@Test
+public class LocalTimerMealyCacheTest {
+    private CompactLocalTimerMealy<String, String> buildBaseModel() {
+        var symbols = List.of("p1", "p2", "abort", "collect");
+        GrowingMapAlphabet<NonDelayingInput<String>> alphabet = new GrowingMapAlphabet<>();
+        symbols.forEach(s -> alphabet.add(new NonDelayingInput<>(s)));
+
+        var model = new CompactLocalTimerMealy<>(alphabet, "void", StringSymbolCombiner.getInstance());
+
+        var s0 = model.addState();
+        var s1 = model.addState();
+        var s2 = model.addState();
+        var s3 = model.addState();
+
+        model.setInitialState(s0);
+
+        model.addTransition(s0, new NonDelayingInput<>("p1"), "go", s1);
+        model.addTransition(s1, new NonDelayingInput<>("abort"), "ok", s1);
+        model.addLocalReset(s1, new NonDelayingInput<>("abort"));
+
+        model.addPeriodicTimer(s1, "a", 3, "part");
+        model.addPeriodicTimer(s1, "b", 6, "noise");
+        model.addOneShotTimer(s1, "c", 40, "done", s3);
+
+        model.addTransition(s0, new NonDelayingInput<>("p2"), "go", s2);
+        model.addTransition(s2, new NonDelayingInput<>("abort"), "void", s3);
+        model.addOneShotTimer(s2, "d", 4, "done", s3);
+
+        model.addTransition(s3, new NonDelayingInput<>("collect"), "void", s0);
+
+        return model;
+    }
+
+    /**
+     * Tests if the information in the cache is consistent with the output of the SUL.
+     */
+    public void testCacheConsistency() {
+        Random random = new Random(100);
+
+        var automaton = buildBaseModel();
+        var params = new LocalTimerMealyModelParams<>("void", 4, 80, StringSymbolCombiner.getInstance());
+
+        var sul = new LocalTimerMealySimulatorSUL<>(automaton);
+        var cacheSUL = new LocalTimerMealyTreeSULCache<>(sul, params);
+        var timeOracleWithCache = new TimedQueryOracle<>(cacheSUL, params);
+        var timeOracleWithoutCache = new TimedQueryOracle<>(sul, params);
+
+
+        var listAlphabet = new ArrayList<>(automaton.getSemantics().getInputAlphabet());
+
+        // Generate some random words and compare outputs of the cache, SUL, and automaton:
+        List<Word<LocalTimerMealySemanticInputSymbol<String>>> words = new ArrayList<>();
+        for (int i = 0; i < 500; i++) {
+            int maxLength = random.nextInt(1, 500);
+            var symbols = RandomUtil.sample(random, listAlphabet, maxLength);
+            var word = Word.fromList(symbols);
+            words.add(word);
+
+            var cacheOutput = timeOracleWithCache.querySuffixOutput(Word.epsilon(), word);
+            var sulOutput = timeOracleWithoutCache.querySuffixOutput(Word.epsilon(), word);
+            var automatonOutput = automaton.getSemantics().computeSuffixOutput(Word.epsilon(), word);
+
+            Assert.assertEquals(sulOutput, automatonOutput, "Automaton output does not match SUL output for word " + word);
+            Assert.assertEquals(cacheOutput, sulOutput, "Cache output does not match SUL output for word " + word);
+        }
+
+        // Now that the cache contents have changed, ensure that the results are still correct:
+        for (var word : words) {
+            var cacheOutput = timeOracleWithCache.querySuffixOutput(Word.epsilon(), word);
+            var sulOutput = timeOracleWithoutCache.querySuffixOutput(Word.epsilon(), word);
+
+            Assert.assertEquals(sulOutput, cacheOutput, "Cache output does not match SUL output for word " + word);
+        }
+    }
+}
