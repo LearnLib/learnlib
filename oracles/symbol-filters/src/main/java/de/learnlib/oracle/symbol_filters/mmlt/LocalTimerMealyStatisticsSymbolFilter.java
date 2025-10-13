@@ -1,6 +1,7 @@
 package de.learnlib.oracle.symbol_filters.mmlt;
 
 import de.learnlib.oracle.symbol_filters.StatisticsSymbolFilter;
+import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
@@ -12,8 +13,8 @@ public class LocalTimerMealyStatisticsSymbolFilter<S, I, O> extends StatisticsSy
 
     private final LocalTimerMealy<S, I, O> automaton;
 
-    public LocalTimerMealyStatisticsSymbolFilter(LocalTimerMealy<S, I, O> automaton, SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> delegate) {
-        super(delegate);
+    public LocalTimerMealyStatisticsSymbolFilter(LocalTimerMealy<S, I, O> automaton, SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> delegate, StatsContainer stats) {
+        super(delegate, stats);
         this.automaton = automaton;
     }
 

@@ -18,8 +18,9 @@ public abstract class StatisticsSymbolFilter<U, V> implements SymbolFilter<U, V>
     private final SymbolFilter<U, V> delegate;
     private StatsContainer stats = new DummyStatsContainer();
 
-    public StatisticsSymbolFilter(SymbolFilter<U, V> delegate) {
+    public StatisticsSymbolFilter(SymbolFilter<U, V> delegate, StatsContainer stats) {
         this.delegate = delegate;
+        this.stats = stats;
     }
 
     protected abstract SymbolFilterResponse isIgnorable(Word<U> prefix, V symbol);

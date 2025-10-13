@@ -14,7 +14,6 @@ import de.learnlib.oracle.membership.TimedQueryOracle;
 import de.learnlib.oracle.symbol_filters.AcceptAllSymbolFilter;
 import de.learnlib.oracle.symbol_filters.CachedSymbolFilter;
 import de.learnlib.oracle.symbol_filters.IgnoreAllSymbolFilter;
-import de.learnlib.oracle.symbol_filters.StatisticsSymbolFilter;
 import de.learnlib.oracle.symbol_filters.mmlt.*;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.StatsContainer;
@@ -125,7 +124,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
             case ignore_all -> filter = new IgnoreAllSymbolFilter<>();
         }
 
-        filter = new LocalTimerMealyStatisticsSymbolFilter<>(automaton, filter);
+        filter = new LocalTimerMealyStatisticsSymbolFilter<>(automaton, filter, stats);
         filter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
 
         var learner = new LStarLocalTimerMealy<>(alphabet, params, suffixes, timeOracle, filter);
