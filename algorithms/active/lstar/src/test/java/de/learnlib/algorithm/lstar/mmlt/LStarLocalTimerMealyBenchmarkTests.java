@@ -11,6 +11,10 @@ import de.learnlib.oracle.equivalence.mmlt.LocalTimerMealyRandomWpOracle;
 import de.learnlib.oracle.equivalence.mmlt.LocalTimerMealySimulatorOracle;
 import de.learnlib.oracle.equivalence.mmlt.ResetSearchOracle;
 import de.learnlib.oracle.membership.TimedQueryOracle;
+import de.learnlib.oracle.symbol_filters.AcceptAllSymbolFilter;
+import de.learnlib.oracle.symbol_filters.CachedSymbolFilter;
+import de.learnlib.oracle.symbol_filters.IgnoreAllSymbolFilter;
+import de.learnlib.oracle.symbol_filters.StatisticsSymbolFilter;
 import de.learnlib.oracle.symbol_filters.mmlt.*;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.StatsContainer;
@@ -20,6 +24,7 @@ import de.learnlib.util.statistic.container.MapStatsContainer;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
+import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
 import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
 import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
 import net.automatalib.word.Word;
@@ -113,14 +118,14 @@ public class LStarLocalTimerMealyBenchmarkTests {
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
         // Configure symbol filter:
-        SymbolFilter<I, O> filter = new AcceptAllSymbolFilter<>(); // pass-through
+        SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> filter = new AcceptAllSymbolFilter<>(); // pass-through
         switch (symbolFilterMode) {
-            case perfect -> filter = new PerfectSymbolFilter<>(automaton);
-            case random -> filter = new RandomSymbolFilter<>(automaton, 0.1, new Random(seed));
+            case perfect -> filter = new LocalTimerMealyPerfectSymbolFilter<>(automaton);
+            case random -> filter = new LocalTimerMealyRandomSymbolFilter<>(automaton, 0.1, new Random(seed));
             case ignore_all -> filter = new IgnoreAllSymbolFilter<>();
         }
 
-        filter = new StatisticsSymbolFilter<>(filter, automaton);
+        filter = new LocalTimerMealyStatisticsSymbolFilter<>(automaton, filter);
         filter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
 
         var learner = new LStarLocalTimerMealy<>(alphabet, params, suffixes, timeOracle, filter);

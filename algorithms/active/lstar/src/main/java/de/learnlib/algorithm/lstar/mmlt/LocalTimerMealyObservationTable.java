@@ -11,6 +11,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.time.mmlt.*;
 import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
 
     private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyObservationTable.class);
 
-    private final SymbolFilter<I, O> symbolFilter;
+    private final SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> symbolFilter;
 
     private final Map<Word<LocalTimerMealySemanticInputSymbol<I>>, LocationTimerInfo<I, O>> timerInfoMap; // prefix -> timer info
 
@@ -58,7 +59,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
     private final LocalTimerMealyOutputSymbol<O> silentOutput; // used for symbol filtering
 
     public LocalTimerMealyObservationTable(Alphabet<LocalTimerMealySemanticInputSymbol<I>> alphabet, long minTimerQueryWaitTime,
-                                           SymbolFilter<I, O> symbolFilter, O silentOutput) {
+                                           @NonNull SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> symbolFilter, O silentOutput) {
         this.alphabet = alphabet;
 
         this.symbolFilter = symbolFilter;
@@ -285,8 +286,8 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
 
     @Override
     public List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> initialize(List<Word<LocalTimerMealySemanticInputSymbol<I>>> initialShortPrefixes,
-                                                                              List<Word<LocalTimerMealySemanticInputSymbol<I>>> initialSuffixes,
-                                                                              MembershipOracle<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> oracle) {
+                                                                             List<Word<LocalTimerMealySemanticInputSymbol<I>>> initialSuffixes,
+                                                                             MembershipOracle<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> oracle) {
 
         if (isInitialized()) {
             throw new IllegalStateException("Called initialize, but there are already rows present");

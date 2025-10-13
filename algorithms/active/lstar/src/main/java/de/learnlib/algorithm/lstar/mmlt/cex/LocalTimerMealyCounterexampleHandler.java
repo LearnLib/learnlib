@@ -16,6 +16,7 @@ import net.automatalib.alphabet.time.mmlt.TimeStepSymbol;
 import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
 import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,13 +32,13 @@ import java.util.List;
  */
 public class LocalTimerMealyCounterexampleHandler<S, I, O> implements LearnerStatsProvider {
     private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyCounterexampleHandler.class);
-    private final SymbolFilter<I, O> symbolFilter;
+    private final SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> symbolFilter;
     private StatsContainer stats = new DummyStatsContainer();
 
     protected final AbstractTimedQueryOracle<I, O> timeOracle;
     private final LocalTimerMealyCounterexampleDecompositor<S, I, O> decompositor;
 
-    public LocalTimerMealyCounterexampleHandler(AbstractTimedQueryOracle<I, O> timeOracle, AcexAnalyzer acexAnalyzer, SymbolFilter<I, O> symbolFilter) {
+    public LocalTimerMealyCounterexampleHandler(AbstractTimedQueryOracle<I, O> timeOracle, AcexAnalyzer acexAnalyzer, @NonNull SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> symbolFilter) {
         this.timeOracle = timeOracle;
         this.decompositor = new LocalTimerMealyCounterexampleDecompositor<>(timeOracle, acexAnalyzer);
         this.symbolFilter = symbolFilter;

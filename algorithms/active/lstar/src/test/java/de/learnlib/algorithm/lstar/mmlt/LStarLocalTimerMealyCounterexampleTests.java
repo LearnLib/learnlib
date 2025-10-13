@@ -3,7 +3,7 @@ package de.learnlib.algorithm.lstar.mmlt;
 import de.learnlib.driver.simulator.LocalTimerMealySimulatorSUL;
 import de.learnlib.oracle.equivalence.mmlt.LocalTimerMealySimulatorOracle;
 import de.learnlib.oracle.membership.TimedQueryOracle;
-import de.learnlib.oracle.symbol_filters.mmlt.AcceptAllSymbolFilter;
+import de.learnlib.oracle.symbol_filters.AcceptAllSymbolFilter;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;

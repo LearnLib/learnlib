@@ -27,6 +27,7 @@ import de.learnlib.symbol_filter.SymbolFilterResponse;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
+import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
 import net.automatalib.alphabet.time.mmlt.TimeStepSequence;
 import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
 import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
@@ -55,7 +56,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
     private final ClosingStrategy<? super LocalTimerMealySemanticInputSymbol<I>, ? super Word<LocalTimerMealyOutputSymbol<O>>> closingStrategy;
 
     private final AbstractTimedQueryOracle<I, O> timeOracle;
-    private final SymbolFilter<I, O> symbolFilter;
+    private final SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> symbolFilter;
 
     private final LStarLocalTimerMealyHypDataContainer<I, O> hypData;
 
@@ -82,7 +83,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
                                 @NonNull
                                 List<Word<LocalTimerMealySemanticInputSymbol<I>>> initialSuffixes,
                                 AbstractTimedQueryOracle<I, O> timeOracle,
-                                SymbolFilter<I, O> symbolFilter) {
+                                @NonNull SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> symbolFilter) {
         this(alphabet, modelParams, initialSuffixes, ClosingStrategies.CLOSE_SHORTEST, timeOracle, symbolFilter, AcexAnalyzers.BINARY_SEARCH_BWD);
     }
 
@@ -103,8 +104,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
                                 List<Word<LocalTimerMealySemanticInputSymbol<I>>> initialSuffixes,
                                 ClosingStrategy<? super LocalTimerMealySemanticInputSymbol<I>, ? super Word<LocalTimerMealyOutputSymbol<O>>> closingStrategy,
                                 AbstractTimedQueryOracle<I, O> timeOracle,
-                                @NonNull
-                                SymbolFilter<I, O> symbolFilter,
+                                @NonNull SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> symbolFilter,
                                 AcexAnalyzer analyzer) {
         this.closingStrategy = closingStrategy;
         this.timeOracle = timeOracle;

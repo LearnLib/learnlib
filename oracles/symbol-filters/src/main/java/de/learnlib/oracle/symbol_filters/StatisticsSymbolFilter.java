@@ -1,38 +1,35 @@
-package de.learnlib.oracle.symbol_filters.mmlt;
+package de.learnlib.oracle.symbol_filters;
 
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
 import net.automatalib.word.Word;
 
 /**
  * Collects various statistics on symbol filtering, including false accepts + false ignores.
  *
- * @param <I> Input type for non-delaying inputs
+ * @param <U> Type for symbols in the prefix of the considered states
+ * @param <V> Type of the queried symbols
  */
-public class StatisticsSymbolFilter<S, I, O> implements SymbolFilter<I, O>, LearnerStatsProvider {
+public abstract class StatisticsSymbolFilter<U, V> implements SymbolFilter<U, V>, LearnerStatsProvider {
 
-    private final SymbolFilter<I, O> delegate;
-    private final PerfectSymbolFilter<S, I, O> perfectFilter;
+    private final SymbolFilter<U, V> delegate;
     private StatsContainer stats = new DummyStatsContainer();
 
-
-    public StatisticsSymbolFilter(SymbolFilter<I, O> delegate, LocalTimerMealy<S, I, O> sulModel) {
+    public StatisticsSymbolFilter(SymbolFilter<U, V> delegate) {
         this.delegate = delegate;
-        this.perfectFilter = new PerfectSymbolFilter<>(sulModel);
     }
 
+    protected abstract SymbolFilterResponse isIgnorable(Word<U> prefix, V symbol);
+
     @Override
-    public SymbolFilterResponse query(Word<LocalTimerMealySemanticInputSymbol<I>> prefix, NonDelayingInput<I> symbol) {
+    public SymbolFilterResponse query(Word<U> prefix, V symbol) {
         stats.increaseCounter("cnt_isf_queries", "Filter: queries");
 
         SymbolFilterResponse filterResponse = this.delegate.query(prefix, symbol);
-        SymbolFilterResponse expectedResponse = this.perfectFilter.query(prefix, symbol);
+        SymbolFilterResponse expectedResponse = this.isIgnorable(prefix, symbol);
 
         // Count false ignores, rejects + correct predictions:
         if (filterResponse.equals(SymbolFilterResponse.ACCEPT)) {
@@ -53,7 +50,7 @@ public class StatisticsSymbolFilter<S, I, O> implements SymbolFilter<I, O>, Lear
     }
 
     @Override
-    public void update(Word<LocalTimerMealySemanticInputSymbol<I>> prefix, NonDelayingInput<I> symbol, SymbolFilterResponse response) {
+    public void update(Word<U> prefix, V symbol, SymbolFilterResponse response) {
         delegate.update(prefix, symbol, response);
     }
 
