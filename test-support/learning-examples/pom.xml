@@ -75,5 +75,9 @@ limitations under the License.
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-dot</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -73,7 +73,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
      * binary-backwards search for decomposing counterexamples.
      *
      * @param alphabet        Input alphabet for the semantic automaton
-     * @param modelParams     Model parameters
+     * @param modelParams     LocalTimerMealyModel parameters
      * @param initialSuffixes Initial set of suffixes. May be empty.
      * @param timeOracle      The output query oracle for MMLTs.
      * @param symbolFilter    The symbol filter. If no filter should be used, use the AcceptAll filter.
@@ -91,7 +91,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
      * Instantiates a new Rivest-Schapire learner for MMLTs.
      *
      * @param alphabet        Input alphabet for the semantic automaton
-     * @param modelParams     Model parameters
+     * @param modelParams     LocalTimerMealyModel parameters
      * @param initialSuffixes Initial set of suffixes. May be empty.
      * @param closingStrategy Closing strategy for the observation table.
      * @param timeOracle      The output query oracle for MMLTs.

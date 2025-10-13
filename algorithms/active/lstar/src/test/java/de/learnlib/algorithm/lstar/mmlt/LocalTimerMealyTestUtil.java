@@ -1,6 +1,7 @@
 package de.learnlib.algorithm.lstar.mmlt;
 
 import de.learnlib.algorithm.LocalTimerMealyModelParams;
+import de.learnlib.testsupport.example.mmlt.LocalTimerMealyModel;
 import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
 import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
 import net.automatalib.serialization.dot.GraphDOT;
@@ -20,12 +21,11 @@ import java.util.stream.Stream;
 /**
  * Utility class for loading MMLTs from resources and printing them.
  */
-class LocalTimerMealyTestUtil {
+public class LocalTimerMealyTestUtil {
 
-    record Model<S, I, O>(LocalTimerMealy<S, I, O> automaton, LocalTimerMealyModelParams<O> params) {
-
-    }
-
+    /**
+     * Prints the provided MMLT to stdout.
+     */
     static <S, I, O> void printModel(LocalTimerMealy<S, I, O> model) {
         try {
             GraphDOT.write(model.transitionGraphView(true, true), System.out);
@@ -33,6 +33,9 @@ class LocalTimerMealyTestUtil {
         }
     }
 
+    /**
+     * Lists all MMLT models in the resources directory.
+     */
     static List<String> listModelFiles() {
         var models = new ArrayList<String>();
         try {
@@ -50,7 +53,7 @@ class LocalTimerMealyTestUtil {
         return models;
     }
 
-    static Model<Integer, String, String> automatonFromFile(String name) {
+    static LocalTimerMealyModel<Integer, String, String> automatonFromFile(String name) {
         return automatonFromFile(name, -1);
     }
 
@@ -61,18 +64,14 @@ class LocalTimerMealyTestUtil {
      * @param maxTimerQueryWaiting Maximum timer query waiting time. If set to -1, the maximum initial timer value is used.
      * @return The automaton model.
      */
-    static Model<Integer, String, String> automatonFromFile(String name, int maxTimerQueryWaiting) {
+    static LocalTimerMealyModel<Integer, String, String> automatonFromFile(String name, int maxTimerQueryWaiting) {
         var modelResource = LocalTimerMealyTestUtil.class.getResource("/mmlt/" + name);
         var automaton = LocalTimerMealyGraphvizParser.parseLocalTimerMealy(new File(modelResource.getFile()), "void", StringSymbolCombiner.getInstance());
 
         long maxTimeoutDelay = LocalTimerMealyUtil.getMaximumTimeoutDelay(automaton);
         long maxTimerQueryWaitingFinal = (maxTimerQueryWaiting > 0) ? maxTimerQueryWaiting : LocalTimerMealyUtil.getMaximumInitialTimerValue(automaton) * 2;
 
-        if (name.contains("SCTP")) {
-            maxTimerQueryWaitingFinal = 9000; // SCTP needs more waiting time
-        }
-
-        return new Model<>(automaton, new LocalTimerMealyModelParams<>("void", maxTimeoutDelay, maxTimerQueryWaitingFinal, StringSymbolCombiner.getInstance()));
+        return new LocalTimerMealyModel<>(name, automaton, new LocalTimerMealyModelParams<>("void", maxTimeoutDelay, maxTimerQueryWaitingFinal, StringSymbolCombiner.getInstance()));
     }
 
 }

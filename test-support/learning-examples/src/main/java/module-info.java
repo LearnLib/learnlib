@@ -37,6 +37,7 @@ open module de.learnlib.testsupport.example {
     requires net.automatalib.serialization.learnlibv2;
     requires net.automatalib.util;
     requires org.slf4j;
+    requires net.automatalib.serialization.dot;
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;

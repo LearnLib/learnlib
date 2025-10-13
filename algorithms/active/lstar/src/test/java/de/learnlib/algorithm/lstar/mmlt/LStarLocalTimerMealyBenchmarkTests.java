@@ -19,6 +19,7 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.sul.LocalTimerMealySUL;
 import de.learnlib.symbol_filter.SymbolFilter;
+import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
 import de.learnlib.util.statistic.container.MapStatsContainer;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
@@ -85,7 +86,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
 
         // Add some stats:
         var stats = new MapStatsContainer();
-        stats.addTextInfo("Model", null, name);
+        stats.addTextInfo("LocalTimerMealyModel", null, name);
         stats.setCounter("original_locs", "Locations in original", automaton.getStates().size());
         stats.setCounter("original_inputs", "Untimed alphabet size in original", automaton.getUntimedAlphabet().size());
 
@@ -139,8 +140,10 @@ public class LStarLocalTimerMealyBenchmarkTests {
     public void learnExamplesNoFilter() {
         for (String modelFile : LocalTimerMealyTestUtil.listModelFiles()) {
             var model = LocalTimerMealyTestUtil.automatonFromFile(modelFile);
-            learnModel(modelFile, model.automaton(), model.params(), FilterMode.none, 100, true);
+            learnModel(model.name(), model.automaton(), model.params(), FilterMode.none, 100, true);
         }
+        LocalTimerMealyExamples.getAll().forEach(m ->
+                learnModel(m.name(), m.automaton(), m.params(), FilterMode.none, 100, true));
     }
 
     @Test
@@ -149,6 +152,8 @@ public class LStarLocalTimerMealyBenchmarkTests {
             var model = LocalTimerMealyTestUtil.automatonFromFile(modelFile);
             learnModel(modelFile, model.automaton(), model.params(), FilterMode.ignore_all, 100, true);
         }
+        LocalTimerMealyExamples.getAll().forEach(m ->
+                learnModel(m.name(), m.automaton(), m.params(), FilterMode.ignore_all, 100, true));
     }
 
     @Test
@@ -157,6 +162,8 @@ public class LStarLocalTimerMealyBenchmarkTests {
             var model = LocalTimerMealyTestUtil.automatonFromFile(modelFile);
             learnModel(modelFile, model.automaton(), model.params(), FilterMode.perfect, 100, true);
         }
+        LocalTimerMealyExamples.getAll().forEach(m ->
+                learnModel(m.name(), m.automaton(), m.params(), FilterMode.perfect, 100, true));
     }
 
     @Test
@@ -165,6 +172,8 @@ public class LStarLocalTimerMealyBenchmarkTests {
             var model = LocalTimerMealyTestUtil.automatonFromFile(modelFile);
             learnModel(modelFile, model.automaton(), model.params(), FilterMode.random, 100, true);
         }
+        LocalTimerMealyExamples.getAll().forEach(m ->
+                learnModel(m.name(), m.automaton(), m.params(), FilterMode.random, 100, true));
     }
 
 }

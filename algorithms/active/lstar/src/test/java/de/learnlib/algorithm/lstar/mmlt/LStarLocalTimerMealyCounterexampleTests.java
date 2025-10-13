@@ -6,6 +6,8 @@ import de.learnlib.oracle.membership.TimedQueryOracle;
 import de.learnlib.oracle.symbol_filters.AcceptAllSymbolFilter;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
+import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
+import de.learnlib.testsupport.example.mmlt.LocalTimerMealyModel;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
 import net.automatalib.alphabet.time.mmlt.TimeStepSymbol;
@@ -26,7 +28,7 @@ import java.util.List;
 @Test
 public class LStarLocalTimerMealyCounterexampleTests {
 
-    private static <S, I, O> void learnModel(LocalTimerMealyTestUtil.Model<S, I, O> model, List<Word<LocalTimerMealySemanticInputSymbol<I>>> counterexamples) {
+    private static <S, I, O> void learnModel(LocalTimerMealyModel<S, I, O> model, List<Word<LocalTimerMealySemanticInputSymbol<I>>> counterexamples) {
 
         GrowingAlphabet<LocalTimerMealySemanticInputSymbol<I>> alphabet = new GrowingMapAlphabet<>();
         model.automaton().getUntimedAlphabet().forEach(alphabet::addSymbol);
@@ -129,7 +131,7 @@ public class LStarLocalTimerMealyCounterexampleTests {
 
     @Test
     public void testMissingDiscriminators() {
-        var model = LocalTimerMealyTestUtil.automatonFromFile("sensor_collector.dot");
+        var model = LocalTimerMealyExamples.SensorCollector();
 
         // Missing discriminator at non-del in stable config:
         List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex1 = List.of(
@@ -155,7 +157,8 @@ public class LStarLocalTimerMealyCounterexampleTests {
 
     @Test
     public void testMissingResets() {
-        var model = LocalTimerMealyTestUtil.automatonFromFile("sensor_collector.dot", 40);
+        var model = LocalTimerMealyExamples.SensorCollector();
+        model.params().setMaxTimerQueryWaitingTime(40);
 
         // Missing reset in stable config:
         List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex1 = List.of(
@@ -185,7 +188,8 @@ public class LStarLocalTimerMealyCounterexampleTests {
     @Test
     public void testMissingOneShotModelB() {
         // Setting max waiting = 6 -> all inferred timers are periodic:
-        var model = LocalTimerMealyTestUtil.automatonFromFile("sensor_collector.dot", 6);
+        var model = LocalTimerMealyExamples.SensorCollector();
+        model.params().setMaxTimerQueryWaitingTime(6);
 
         // Missing one-shot via bad return to entry:
         List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex1 = List.of(
@@ -212,7 +216,8 @@ public class LStarLocalTimerMealyCounterexampleTests {
 
     @Test
     public void testMissingOneShotModelA() {
-        var model = LocalTimerMealyTestUtil.automatonFromFile("sensor_collector.dot", 40);
+        var model = LocalTimerMealyExamples.SensorCollector();
+        model.params().setMaxTimerQueryWaitingTime(40);
 
         // Missing one-shot via bad output:
         List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex1 = List.of(
