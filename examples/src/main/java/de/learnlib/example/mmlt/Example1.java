@@ -17,7 +17,6 @@ import de.learnlib.oracle.symbol_filters.mmlt.LocalTimerMealyRandomSymbolFilter;
 import de.learnlib.oracle.symbol_filters.mmlt.LocalTimerMealyStatisticsSymbolFilter;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.StatsContainer;
-import de.learnlib.sul.LocalTimerMealySUL;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
 import de.learnlib.util.statistic.container.MapStatsContainer;
