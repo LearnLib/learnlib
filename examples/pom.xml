@@ -178,6 +178,10 @@ limitations under the License.
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-symbol-filters</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

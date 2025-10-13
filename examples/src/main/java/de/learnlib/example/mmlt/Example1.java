@@ -1,0 +1,137 @@
+package de.learnlib.example.mmlt;
+
+import de.learnlib.algorithm.lstar.mmlt.LStarLocalTimerMealy;
+import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
+import de.learnlib.driver.simulator.LocalTimerMealySimulatorSUL;
+import de.learnlib.filter.cache.mmlt.LocalTimerMealyTreeSULCache;
+import de.learnlib.filter.cache.mmlt.TimeoutReducerSUL;
+import de.learnlib.filter.statistic.sul.LocalTimerMealyStatsSUL;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.equivalence.mmlt.LocalTimerMealyEQOracleChain;
+import de.learnlib.oracle.equivalence.mmlt.LocalTimerMealyRandomWpOracle;
+import de.learnlib.oracle.equivalence.mmlt.LocalTimerMealySimulatorOracle;
+import de.learnlib.oracle.equivalence.mmlt.ResetSearchOracle;
+import de.learnlib.oracle.membership.TimedQueryOracle;
+import de.learnlib.oracle.symbol_filters.CachedSymbolFilter;
+import de.learnlib.oracle.symbol_filters.mmlt.LocalTimerMealyRandomSymbolFilter;
+import de.learnlib.oracle.symbol_filters.mmlt.LocalTimerMealyStatisticsSymbolFilter;
+import de.learnlib.query.DefaultQuery;
+import de.learnlib.statistic.container.StatsContainer;
+import de.learnlib.sul.LocalTimerMealySUL;
+import de.learnlib.symbol_filter.SymbolFilter;
+import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
+import de.learnlib.util.statistic.container.MapStatsContainer;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
+import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
+import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
+import net.automatalib.serialization.dot.GraphDOT;
+import net.automatalib.word.Word;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+/**
+ * This example shows how to learn a Mealy machine with local timers,
+ * an automaton model for real-time systems.
+ */
+public class Example1 {
+
+    public static void main(String[] args) {
+        var model = LocalTimerMealyExamples.SensorCollector();
+
+        // We first create a statistics container.
+        // This container will store various statistical data during learning:
+        var stats = new MapStatsContainer();
+        stats.addTextInfo("LocalTimerMealyModel", null, model.name());
+        stats.setCounter("original_locs", "Locations in original", model.automaton().getStates().size());
+        stats.setCounter("original_inputs", "Untimed alphabet size in original", model.automaton().getUntimedAlphabet().size());
+
+        // ======================
+        // Set up the pipeline:
+        GrowingMapAlphabet<LocalTimerMealySemanticInputSymbol<String>> alphabet = new GrowingMapAlphabet<>();
+        alphabet.addAll(model.automaton().getUntimedAlphabet());
+
+        // We use a simulator SUL to simulate our automaton:
+        var sul = new LocalTimerMealySimulatorSUL<>(model.automaton());
+
+        // We count all operations that are performed on the SUL with a stats-SUL:
+        var statsAfterCache = new LocalTimerMealyStatsSUL<>(sul, stats);
+
+        // We use a cache to avoid redundant operations:
+        var cacheSUL = new LocalTimerMealyTreeSULCache<>(statsAfterCache, model.params());
+        cacheSUL.setStatsContainer(stats);
+        var toReducerSul = new TimeoutReducerSUL<>(cacheSUL, model.params().maxTimeoutWaitingTime(), stats);
+
+        // We use a query oracle to answer queries from the learner:
+        var timeOracle = new TimedQueryOracle<>(toReducerSul, model.params());
+
+        // We use a chain of different equivalence oracles:
+        LocalTimerMealyEQOracleChain<String, String> chainOracle = new LocalTimerMealyEQOracleChain<>();
+        chainOracle.addOracle(cacheSUL.createCacheConsistencyTest());
+        chainOracle.addOracle(new ResetSearchOracle<>(timeOracle, 100, 1.0, 1.0));
+        chainOracle.addOracle(new LocalTimerMealyRandomWpOracle<>(timeOracle, 100, 6, 12, 100));
+        chainOracle.addOracle(new LocalTimerMealySimulatorOracle<>(model.automaton())); // ensure that we eventually find an accurate model
+        chainOracle.setStatsContainer(stats);
+
+        // Set up our L* learner:
+        List<Word<LocalTimerMealySemanticInputSymbol<String>>> suffixes = new ArrayList<>();
+        alphabet.forEach(s -> suffixes.add(Word.fromLetter(s)));
+        suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
+
+        // A symbol filter allows us to reduce queries by exploiting prior knowledge.
+        // For this example, we use a RandomSymbolFilter. This filter correctly predicts
+        // whether a transition silently self-loops with an accuracy of 90%:
+        SymbolFilter<LocalTimerMealySemanticInputSymbol<String>, NonDelayingInput<String>> filter =
+                new LocalTimerMealyRandomSymbolFilter<>(model.automaton(), 0.1, new Random(100));
+
+        filter = new LocalTimerMealyStatisticsSymbolFilter<>(model.automaton(), filter, stats);
+        filter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
+
+        var learner = new LStarLocalTimerMealy<>(alphabet, model.params(), suffixes, timeOracle, filter);
+        learner.setStatsContainer(stats);
+
+        // Start learning:
+        runExperiment(learner, chainOracle, stats, 100);
+    }
+
+    private static void runExperiment(LStarLocalTimerMealy<String, String> learner,
+                                      EquivalenceOracle.LocalTimerMealyEquivalenceOracle<String, String> tester,
+                                      StatsContainer stats, int maxRounds) {
+        stats.startOrResumeClock("learningRt", "Processing time");
+        learner.startLearning();
+
+        var hyp = learner.getHypothesisModel();
+        DefaultQuery<LocalTimerMealySemanticInputSymbol<String>, Word<LocalTimerMealyOutputSymbol<String>>> cex = tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
+        stats.increaseCounter("roundCount", "CEX queries");
+
+        int roundCount = 1;
+        while (cex != null && roundCount < maxRounds) {
+            learner.refineHypothesis(cex);
+            hyp = learner.getHypothesisModel();
+            cex = tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
+            stats.increaseCounter("roundCount", null);
+            roundCount += 1;
+        }
+        stats.pauseClock("learningRt");
+
+        final var finalHypothesis = learner.getHypothesisModel();
+
+        // Add some more stats:
+        stats.setCounter("result_locs", "Locations in result", finalHypothesis.getStates().size());
+
+        // Print final result + statistics:
+        stats.printStats();
+
+        System.out.println("Final hypothesis:");
+        try {
+            GraphDOT.write(finalHypothesis.transitionGraphView(true, true), System.out);
+        } catch (IOException ignored) {
+        }
+        new ObservationTableASCIIWriter<>().write(learner.getObservationTable(), System.out);
+
+    }
+}

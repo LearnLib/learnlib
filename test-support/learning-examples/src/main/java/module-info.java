@@ -51,4 +51,5 @@ open module de.learnlib.testsupport.example {
     exports de.learnlib.testsupport.example.spmm;
     exports de.learnlib.testsupport.example.sst;
     exports de.learnlib.testsupport.example.vpa;
+    exports de.learnlib.testsupport.example.mmlt;
 }
