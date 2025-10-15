@@ -1,4 +1,4 @@
-// Model of the association in the SCTP protocol.
+// Model of the endpoint association in the SCTP protocol.
 // Adapted from Stewart et al.: Stream Control Transmission Protocol (RFC 9260, Figure 3)
 digraph g {
 

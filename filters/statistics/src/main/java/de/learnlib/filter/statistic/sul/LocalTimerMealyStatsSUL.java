@@ -33,13 +33,6 @@ public class LocalTimerMealyStatsSUL<I, O> implements LocalTimerMealySUL<I, O>, 
         this.name = name;
     }
 
-    public long getResetCount() {
-        if (this.stats == null) {
-            throw new IllegalStateException("No stats container set up.");
-        }
-        return this.stats.getCount(withPrefix("sul_resets_counter")).get();
-    }
-
     @Override
     public void setStatsContainer(StatsContainer container) {
         this.stats = container;

@@ -5,7 +5,6 @@ import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
 import net.automatalib.serialization.dot.LocalTimerMealyGraphvizParser;
 import net.automatalib.util.automaton.mmlt.LocalTimerMealyUtil;
 
-import java.io.File;
 import java.util.List;
 
 public class LocalTimerMealyExamples {
@@ -41,9 +40,9 @@ public class LocalTimerMealyExamples {
      * Returns an MMLT model of a sensor collector.
      * <p>
      * The sensor measures particulate matter and ambient noise.
-     * This program automatically ends after some time. The program may be restarted at any time.
+     * The measurement program automatically ends after some time. The program may be restarted at any time.
      * Alternatively, a self-check program can be entered. This also ends after some time and may be aborted.
-     * At the end of either program, the collected data may be collected.
+     * At the end of either program, the collected data may be retrieved.
      *
      * @return LocalTimerMealyModel
      */
@@ -53,6 +52,19 @@ public class LocalTimerMealyExamples {
 
     /**
      * Returns an MMLT model of a washing machine.
+     * <p>
+     * The machine is initially off. After powering it on and closing the door,
+     * the user can start either the short or the normal program. An open
+     * door prevents starting and triggers a warning. Not choosing a program within 10 seconds turns the machine off.
+     * <p>
+     * In normal model, the machine fills the drum, heats the water, and starts the main wash. During this wash,
+     * it regularly adjusts the drum speed and maintains temperature. After 2 hours,
+     * the water is drained and the drum is spun at full speed for some time. Afterwards the remaining water is drained.
+     * The short program makes less adjustments, so that a wash ends after 1 hour.
+     * <p>
+     * Both programs are interrupted when a leak is detected. Normal mode may also be interrupted by "stop".
+     * This drains the drum immediately. Once done, the door is unlocked, a message is shown, and the machine
+     * beeps repeatedly until the user presses any button or opens the door.
      *
      * @return LocalTimerMealyModel
      */

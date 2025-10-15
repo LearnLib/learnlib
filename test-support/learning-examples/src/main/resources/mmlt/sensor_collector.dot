@@ -1,7 +1,7 @@
-// This sensor node is used in the diss as running example.
-// p1 starts a normal measurement. part triggers a sensor for particulate matter, noise a sensor for ambient noise.
-// p2 performs a self-check.
-// Set maximum waiting time = 40 to reproduce bad hypothesis from diss.
+// An MMLT model of a sensor that measures particulate matter and ambient noise.
+// The measurement program automatically ends after some time. It may be restarted at any time.
+// Alternatively, a self-check program can be entered. This also ends after some time and may be aborted.
+// At the end of either program, the collected data may be retrieved.
 digraph g {
    s0 [label="L0" timers=""]
    s1 [label="L1" timers="a=3,b=6,c=40"]

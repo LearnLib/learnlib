@@ -120,7 +120,7 @@ public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOra
                 } else {
                     // Reached end of word before max_delay OR non-wait symbol -> ignore rest of this word:
                     if (symIdx < queryInput.length() - 1) {
-                        logger.warn("Ignoring at least one symbol during cache comparison.");
+                        logger.debug("Ignoring at least one symbol during cache comparison.");
                     }
                     break;
                 }

@@ -1,4 +1,14 @@
 // Model of a washing machine
+// The machine is initially off. After powering it on and closing the door,
+// the user can start either the short or the normal program. An open
+// door prevents starting and triggers a warning. Not choosing a program within 10 seconds turns the machine off.
+// In normal model, the machine fills the drum, heats the water, and starts the main wash. During this wash,
+// it regularly adjusts the drum speed and maintains temperature. After 2 hours,
+// the water is drained and the drum is spun at full speed for some time. Afterwards the remaining water is drained.
+// The short program makes less adjustments, so that a wash ends after 1 hour.
+// Both programs are interrupted when a leak is detected. Normal mode may also be interrupted by "stop".
+// This drains the drum immediately. Once done, the door is unlocked, a message is shown, and the machine
+// beeps repeatedly until the user presses any button or opens the door.
 digraph g {
 
 	s0 [timers="a=10000" shape="circle"];

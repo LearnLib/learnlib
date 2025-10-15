@@ -1,4 +1,8 @@
-// Model of an oven
+// Model of an oven with a time-controlled baking program.
+// After powering the oven on, the oven remains idle until the program is started.
+// During the program, the oven regularly measures and adjusts the temperature.
+// At the end of the program, an alarm sounds. Then, the user may extend the program.
+// If not extended, the program ends either when the user opens the door, presses a button, or a timeout occurs.
 digraph g {
 
 	s0 [shape="circle"];
