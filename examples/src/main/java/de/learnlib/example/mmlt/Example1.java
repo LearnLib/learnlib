@@ -21,10 +21,7 @@ import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
 import de.learnlib.util.statistic.container.MapStatsContainer;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
+import net.automatalib.alphabet.time.mmlt.*;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.word.Word;
 
@@ -95,6 +92,15 @@ public class Example1 {
 
         // Start learning:
         runExperiment(learner, chainOracle, stats, 100);
+
+        // Troubleshooting
+        // If you attempt to learn a model of some application and the learner
+        // throws assertion errors or illegal state exceptions,
+        // your SUL likely has no MMLT semantics.
+        // In this case, you can try to learn a partial model by excluding TimeStepSymbol
+        // from the input alphabet for the counterexample search:
+        // Replace tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
+        // with -> hyp.getSemantics().getInputAlphabet().stream().filter(s -> !(s instanceof TimeStepSymbol<String>)).toList()
     }
 
     private static void runExperiment(LStarLocalTimerMealy<String, String> learner,
