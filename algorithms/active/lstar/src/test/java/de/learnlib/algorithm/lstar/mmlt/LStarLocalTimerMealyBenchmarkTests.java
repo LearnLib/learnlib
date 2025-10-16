@@ -108,7 +108,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
         LocalTimerMealyEQOracleChain<I, O> chainOracle = new LocalTimerMealyEQOracleChain<>();
         chainOracle.addOracle(cacheSUL.createCacheConsistencyTest());
         chainOracle.addOracle(new ResetSearchOracle<>(timeOracle, seed, 1.0, 1.0));
-        chainOracle.addOracle(new LocalTimerMealyRandomWpOracle<>(timeOracle, seed, 6, 12, 100));
+        chainOracle.addOracle(new LocalTimerMealyRandomWpOracle<>(timeOracle, seed, 16, 0, 100));
         chainOracle.addOracle(new LocalTimerMealySimulatorOracle<>(automaton)); // ensure that we eventually find an accurate model
         chainOracle.setStatsContainer(stats);
 

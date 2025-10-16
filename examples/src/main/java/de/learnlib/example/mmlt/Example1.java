@@ -69,7 +69,7 @@ public class Example1 {
         LocalTimerMealyEQOracleChain<String, String> chainOracle = new LocalTimerMealyEQOracleChain<>();
         chainOracle.addOracle(cacheSUL.createCacheConsistencyTest());
         chainOracle.addOracle(new ResetSearchOracle<>(timeOracle, 100, 1.0, 1.0));
-        chainOracle.addOracle(new LocalTimerMealyRandomWpOracle<>(timeOracle, 100, 6, 12, 100));
+        chainOracle.addOracle(new LocalTimerMealyRandomWpOracle<>(timeOracle, 100, 16, 0, 100));
         chainOracle.addOracle(new LocalTimerMealySimulatorOracle<>(model.automaton())); // ensure that we eventually find an accurate model
         chainOracle.setStatsContainer(stats);
 
@@ -100,7 +100,7 @@ public class Example1 {
         // In this case, you can try to learn a partial model by excluding TimeStepSymbol
         // from the input alphabet for the counterexample search:
         // Replace tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
-        // with -> hyp.getSemantics().getInputAlphabet().stream().filter(s -> !(s instanceof TimeStepSymbol<String>)).toList()
+        // with: tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet().stream().filter(s -> !(s instanceof TimeStepSymbol<String>)).toList());
     }
 
     private static void runExperiment(LStarLocalTimerMealy<String, String> learner,

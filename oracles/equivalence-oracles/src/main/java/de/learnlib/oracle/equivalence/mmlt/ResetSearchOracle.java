@@ -73,6 +73,11 @@ public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMeal
             return null; // oracle is disabled
         }
         List<LocalTimerMealySemanticInputSymbol<I>> listInputs = new ArrayList<>(inputs);
+        if (listInputs.stream().noneMatch(s -> s instanceof TimeStepSymbol<I>) ||
+                listInputs.stream().noneMatch(s -> s instanceof TimeoutSymbol<I>)) {
+            logger.warn("ResetSearchOracle requires inputs to contain TimeoutSymbol and TimeStepSymbol. Will not find counterexample.");
+            return null;
+        }
         return this.findCexInternal(hypothesis, listInputs);
     }
 
