@@ -26,6 +26,7 @@ import de.learnlib.exception.SULException;
  * @param <C>
  *         context
  */
+@FunctionalInterface
 public interface ContextExecutableInput<O, C> {
 
     /**

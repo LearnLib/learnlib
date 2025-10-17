@@ -23,6 +23,7 @@ import de.learnlib.exception.SULException;
  * @param <O>
  *         output
  */
+@FunctionalInterface
 public interface ExecutableInput<O> {
 
     /**

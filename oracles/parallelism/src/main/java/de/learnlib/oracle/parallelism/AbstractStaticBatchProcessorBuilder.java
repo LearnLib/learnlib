@@ -118,6 +118,7 @@ public abstract class AbstractStaticBatchProcessorBuilder<Q, P extends BatchProc
      *
      * @return the batch processor
      */
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public OR create() {
         final ArrayStorage<P> instances;
         final int size;

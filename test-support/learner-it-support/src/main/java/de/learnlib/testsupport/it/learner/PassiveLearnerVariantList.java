@@ -22,6 +22,7 @@ import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.automaton.transducer.SubsequentialTransducer;
 import net.automatalib.word.Word;
 
+@FunctionalInterface
 public interface PassiveLearnerVariantList<M, I, D> {
 
     /**
@@ -37,12 +38,16 @@ public interface PassiveLearnerVariantList<M, I, D> {
      */
     void addLearnerVariant(String name, PassiveLearningAlgorithm<? extends M, I, D> learner);
 
+    @FunctionalInterface
     interface DFALearnerVariantList<I> extends PassiveLearnerVariantList<DFA<?, I>, I, Boolean> {}
 
+    @FunctionalInterface
     interface MealyLearnerVariantList<I, O> extends PassiveLearnerVariantList<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 
+    @FunctionalInterface
     interface MooreLearnerVariantList<I, O> extends PassiveLearnerVariantList<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 
+    @FunctionalInterface
     interface SSTLearnerVariantList<I, O>
             extends PassiveLearnerVariantList<SubsequentialTransducer<?, I, ?, O>, I, Word<O>> {}
 }

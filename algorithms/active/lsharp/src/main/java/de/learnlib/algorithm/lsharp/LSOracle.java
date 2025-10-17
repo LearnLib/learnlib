@@ -78,6 +78,7 @@ public class LSOracle<I, O> {
         return shuffled.subList(0, 2);
     }
 
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     private Pair<Word<I>, Word<O>> rule3IO(List<Word<I>> candidates, Word<I> prefix) {
         switch (this.rule3) {
             case ADS:
@@ -147,6 +148,7 @@ public class LSOracle<I, O> {
         return candidates;
     }
 
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     private Pair<Word<I>, Word<O>> rule2IO(Word<I> accessQ, I i, List<Integer> bss, Collection<Word<I>> basis) {
         switch (this.rule2) {
             case ADS:

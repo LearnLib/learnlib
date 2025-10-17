@@ -29,6 +29,7 @@ import net.automatalib.alphabet.Alphabet;
  * @param <D>
  *         output domain type
  */
+@FunctionalInterface
 public interface LearnerConstructor<L, I, D> {
 
     /**

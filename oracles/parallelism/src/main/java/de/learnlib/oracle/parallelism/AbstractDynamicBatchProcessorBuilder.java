@@ -123,6 +123,7 @@ public abstract class AbstractDynamicBatchProcessorBuilder<Q, P extends BatchPro
      *
      * @return the batch processor
      */
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public OR create() {
         final Supplier<? extends P> supplier;
         final int size;

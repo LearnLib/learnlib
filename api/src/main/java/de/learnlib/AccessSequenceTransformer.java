@@ -17,6 +17,7 @@ package de.learnlib;
 
 import net.automatalib.word.Word;
 
+@FunctionalInterface
 public interface AccessSequenceTransformer<I> {
 
     Word<I> transformAccessSequence(Word<I> word);

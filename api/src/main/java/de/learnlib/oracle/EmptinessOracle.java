@@ -38,6 +38,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <D>
  *         the output type
  */
+@FunctionalInterface
 public interface EmptinessOracle<A extends Output<I, D>, I, D> {
 
     default boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> input, D output) {
@@ -46,7 +47,9 @@ public interface EmptinessOracle<A extends Output<I, D>, I, D> {
 
     @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs);
 
+    @FunctionalInterface
     interface DFAEmptinessOracle<I> extends EmptinessOracle<DFA<?, I>, I, Boolean> {}
 
+    @FunctionalInterface
     interface MealyEmptinessOracle<I, O> extends EmptinessOracle<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 }

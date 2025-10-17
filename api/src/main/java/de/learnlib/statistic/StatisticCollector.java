@@ -19,6 +19,7 @@ package de.learnlib.statistic;
  * A utility interface to indicate that the implementing class collects statistical information that may be obtained via
  * its {@link #getStatisticalData()} method.
  */
+@FunctionalInterface
 public interface StatisticCollector {
 
     /**

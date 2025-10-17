@@ -61,6 +61,7 @@ public final class Splitter<I> {
         return succSeparator.getDiscriminator();
     }
 
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public ContextPair<I> getNewDiscriminator() {
         Word<I> prefix = succSeparator.getDiscriminator().getPrefix();
         Word<I> suffix = succSeparator.getDiscriminator().getSuffix();

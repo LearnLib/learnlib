@@ -214,6 +214,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         return best;
     }
 
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     protected State<HypLoc<I>> getAnySuccessor(State<HypLoc<I>> state, I sym) {
         final VPAlphabet.SymbolType type = alphabet.getSymbolType(sym);
         final StackContents stackContents = state.getStackContents();
@@ -591,6 +592,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         }
     }
 
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public AbstractHypTrans<I> getSplitterTrans(HypLoc<I> loc, Splitter<I> splitter) {
         switch (splitter.type) {
             case INTERNAL:

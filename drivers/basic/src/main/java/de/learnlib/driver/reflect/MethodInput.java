@@ -36,7 +36,6 @@ public class MethodInput implements ContextExecutableInput<MethodOutput, Object>
         this.parameters = parameters;
     }
 
-    @SuppressWarnings("PMD.PreserveStackTrace")
     @Override
     public MethodOutput execute(Object context) {
         try {

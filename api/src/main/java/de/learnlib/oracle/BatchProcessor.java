@@ -26,6 +26,7 @@ import de.learnlib.exception.BatchInterruptedException;
  * @param <T>
  *         batch type
  */
+@FunctionalInterface
 public interface BatchProcessor<T> {
 
     /**

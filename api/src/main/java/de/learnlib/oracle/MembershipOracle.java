@@ -33,6 +33,7 @@ import net.automatalib.word.Word;
  *
  * @see DefaultQuery
  */
+@FunctionalInterface
 public interface MembershipOracle<I, D> extends QueryAnswerer<I, D>, BatchProcessor<Query<I, D>> {
 
     @Override
@@ -92,6 +93,7 @@ public interface MembershipOracle<I, D> extends QueryAnswerer<I, D>, BatchProces
      * @param <I>
      *         input symbol type
      */
+    @FunctionalInterface
     interface DFAMembershipOracle<I> extends MembershipOracle<I, Boolean> {}
 
     /**
@@ -105,6 +107,7 @@ public interface MembershipOracle<I, D> extends QueryAnswerer<I, D>, BatchProces
      * @param <O>
      *         output symbol type
      */
+    @FunctionalInterface
     interface MealyMembershipOracle<I, O> extends MembershipOracle<I, Word<O>> {}
 
     /**
@@ -118,6 +121,7 @@ public interface MembershipOracle<I, D> extends QueryAnswerer<I, D>, BatchProces
      * @param <O>
      *         output symbol type
      */
+    @FunctionalInterface
     interface MooreMembershipOracle<I, O> extends MembershipOracle<I, Word<O>> {}
 
 }

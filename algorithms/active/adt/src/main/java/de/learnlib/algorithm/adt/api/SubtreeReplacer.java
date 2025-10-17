@@ -25,6 +25,7 @@ import net.automatalib.automaton.transducer.MealyMachine;
 /**
  * Interface for configuration objects that specify how nodes of the current ADT should be replaced.
  */
+@FunctionalInterface
 public interface SubtreeReplacer {
 
     /**

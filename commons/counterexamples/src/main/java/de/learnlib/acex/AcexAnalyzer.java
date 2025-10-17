@@ -15,6 +15,7 @@
  */
 package de.learnlib.acex;
 
+@FunctionalInterface
 public interface AcexAnalyzer {
 
     /**

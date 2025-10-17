@@ -42,6 +42,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <D>
  *         output domain type
  */
+@FunctionalInterface
 public interface EquivalenceOracle<A, I, D> {
 
     /**
@@ -66,6 +67,7 @@ public interface EquivalenceOracle<A, I, D> {
      * @param <I>
      *         input symbol class
      */
+    @FunctionalInterface
     interface DFAEquivalenceOracle<I> extends EquivalenceOracle<DFA<?, I>, I, Boolean> {}
 
     /**
@@ -76,6 +78,7 @@ public interface EquivalenceOracle<A, I, D> {
      * @param <O>
      *         output symbol class
      */
+    @FunctionalInterface
     interface MealyEquivalenceOracle<I, O> extends EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> {}
 
     /**
@@ -86,6 +89,7 @@ public interface EquivalenceOracle<A, I, D> {
      * @param <O>
      *         output symbol class
      */
+    @FunctionalInterface
     interface MooreEquivalenceOracle<I, O> extends EquivalenceOracle<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 
 }

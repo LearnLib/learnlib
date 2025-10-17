@@ -31,7 +31,6 @@ final class InstanceConstructor implements ContextHandler<Object> {
         this.params = params;
     }
 
-    @SuppressWarnings("PMD.PreserveStackTrace")
     @Override
     public Object createContext() {
         try {

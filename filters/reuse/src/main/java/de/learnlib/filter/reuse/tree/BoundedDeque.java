@@ -116,6 +116,7 @@ public class BoundedDeque<E> extends AbstractCollection<E> {
      *
      * @return the evicted element, may be {@code null} if the queue was empty
      */
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public @Nullable E retrieve() {
         switch (accessPolicy) {
             case LIFO:
@@ -133,6 +134,7 @@ public class BoundedDeque<E> extends AbstractCollection<E> {
      *
      * @return the top-most element of the container
      */
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public @Nullable E peek() {
         switch (accessPolicy) {
             case LIFO:

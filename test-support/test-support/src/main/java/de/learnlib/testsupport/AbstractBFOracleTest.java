@@ -47,7 +47,6 @@ public abstract class AbstractBFOracleTest<D> {
     }
 
     @AfterMethod
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void tearDown() throws Exception {
         this.mock.close();
     }

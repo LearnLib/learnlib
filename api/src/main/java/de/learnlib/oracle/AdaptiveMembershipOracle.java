@@ -30,6 +30,7 @@ import de.learnlib.query.AdaptiveQuery.Response;
  * @param <O>
  *         output symbol type
  */
+@FunctionalInterface
 public interface AdaptiveMembershipOracle<I, O> extends BatchProcessor<AdaptiveQuery<I, O>> {
 
     /**

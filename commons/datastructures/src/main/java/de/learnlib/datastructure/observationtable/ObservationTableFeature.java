@@ -15,6 +15,7 @@
  */
 package de.learnlib.datastructure.observationtable;
 
+@FunctionalInterface
 public interface ObservationTableFeature<I, D> {
 
     ObservationTable<I, D> getObservationTable();
