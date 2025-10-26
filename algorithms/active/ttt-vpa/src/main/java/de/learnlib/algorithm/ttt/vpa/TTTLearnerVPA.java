@@ -214,12 +214,11 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         return best;
     }
 
-    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     protected State<HypLoc<I>> getAnySuccessor(State<HypLoc<I>> state, I sym) {
         final VPAlphabet.SymbolType type = alphabet.getSymbolType(sym);
         final StackContents stackContents = state.getStackContents();
 
-        switch (type) {
+        return switch (type) {
             case INTERNAL: {
                 AbstractHypTrans<I> trans = hypothesis.getInternalTransition(state.getLocation(), sym);
                 HypLoc<I> succLoc;
@@ -228,11 +227,11 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
                 } else {
                     succLoc = trans.getNonTreeTarget().subtreeLocsIterator().next();
                 }
-                return new State<>(succLoc, stackContents);
+                yield new State<>(succLoc, stackContents);
             }
             case CALL: {
                 int stackSym = hypothesis.encodeStackSym(state.getLocation(), sym);
-                return new State<>(hypothesis.getInitialLocation(), StackContents.push(stackSym, stackContents));
+                yield new State<>(hypothesis.getInitialLocation(), StackContents.push(stackSym, stackContents));
             }
             case RETURN: {
                 assert stackContents != null;
@@ -244,11 +243,9 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
                 } else {
                     succLoc = trans.getNonTreeTarget().subtreeLocsIterator().next();
                 }
-                return new State<>(succLoc, stackContents.pop());
+                yield new State<>(succLoc, stackContents.pop());
             }
-            default:
-                throw new IllegalStateException("Unhandled type " + type);
-        }
+        };
     }
 
     private PrefixTransformAcex deriveAcex(OutputInconsistency<I> outIncons) {
@@ -592,18 +589,12 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         }
     }
 
-    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public AbstractHypTrans<I> getSplitterTrans(HypLoc<I> loc, Splitter<I> splitter) {
-        switch (splitter.type) {
-            case INTERNAL:
-                return hypothesis.getInternalTransition(loc, splitter.symbol);
-            case RETURN:
-                return hypothesis.getReturnTransition(loc, splitter.symbol, splitter.location, splitter.otherSymbol);
-            case CALL:
-                return hypothesis.getReturnTransition(splitter.location, splitter.otherSymbol, loc, splitter.symbol);
-            default:
-                throw new IllegalStateException("Unhandled type " + splitter.type);
-        }
+        return switch (splitter.type) {
+            case INTERNAL -> hypothesis.getInternalTransition(loc, splitter.symbol);
+            case RETURN -> hypothesis.getReturnTransition(loc, splitter.symbol, splitter.location, splitter.otherSymbol);
+            case CALL -> hypothesis.getReturnTransition(splitter.location, splitter.otherSymbol, loc, splitter.symbol);
+        };
     }
 
     private static <I> void moveIncoming(DTNode<I> newNode, DTNode<I> oldNode, Boolean label) {

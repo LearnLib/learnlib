@@ -186,9 +186,7 @@ public class KearnsVaziraniDFA<I>
 
         final List<Word<I>> transAs = new ArrayList<>(numTrans);
 
-        for (int i = 0; i < numTrans; i++) {
-            long encodedTrans = transList.get(i);
-
+        for (long encodedTrans : transList) {
             int sourceState = (int) (encodedTrans >> Integer.SIZE);
             int transIdx = (int) encodedTrans;
 

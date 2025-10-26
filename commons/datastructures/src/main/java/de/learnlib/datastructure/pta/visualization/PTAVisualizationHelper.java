@@ -36,8 +36,8 @@ public class PTAVisualizationHelper<S, I, T, SP, TP, A extends UniversalDetermin
                                      Map<String, String> properties) {
         super.getEdgeProperties(src, edge, tgt, properties);
 
-        final I input = edge.getInput();
-        properties.put(EdgeAttrs.LABEL, input + " / " + automaton.getTransitionProperty(edge.getTransition()));
+        final I input = edge.input();
+        properties.put(EdgeAttrs.LABEL, input + " / " + automaton.getTransitionProperty(edge.transition()));
 
         return true;
     }

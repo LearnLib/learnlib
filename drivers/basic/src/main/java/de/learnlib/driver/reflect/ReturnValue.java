@@ -40,15 +40,7 @@ public final class ReturnValue<T> extends MethodOutput {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof ReturnValue)) {
-            return false;
-        }
-
-        final ReturnValue<?> other = (ReturnValue<?>) obj;
-        return Objects.equals(this.ret, other.ret);
+        return this == obj || obj instanceof ReturnValue<?> other && Objects.equals(this.ret, other.ret);
     }
 
     @Override

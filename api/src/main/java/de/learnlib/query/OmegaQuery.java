@@ -102,16 +102,9 @@ public class OmegaQuery<I, D> {
 
     @Override
     public final boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof OmegaQuery)) {
-            return false;
-        }
-
-        final OmegaQuery<?, ?> that = (OmegaQuery<?, ?>) o;
-        return periodicity == that.periodicity && Objects.equals(prefix, that.prefix) &&
-               Objects.equals(loop, that.loop) && Objects.equals(output, that.output);
+        return this == o || o instanceof OmegaQuery<?, ?> that && periodicity == that.periodicity &&
+                            Objects.equals(prefix, that.prefix) && Objects.equals(loop, that.loop) &&
+                            Objects.equals(output, that.output);
     }
 
     @Override

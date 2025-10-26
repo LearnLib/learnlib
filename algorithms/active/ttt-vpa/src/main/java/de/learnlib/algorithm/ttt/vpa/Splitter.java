@@ -61,26 +61,20 @@ public final class Splitter<I> {
         return succSeparator.getDiscriminator();
     }
 
-    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public ContextPair<I> getNewDiscriminator() {
         Word<I> prefix = succSeparator.getDiscriminator().getPrefix();
         Word<I> suffix = succSeparator.getDiscriminator().getSuffix();
 
-        switch (type) {
-            case INTERNAL:
-                return new ContextPair<>(prefix, suffix.prepend(symbol));
-            case RETURN:
-                return new ContextPair<>(prefix.concat(location.getAccessSequence()).append(otherSymbol),
-                                         suffix.prepend(symbol));
-            case CALL:
-                return new ContextPair<>(prefix,
-                                         location.getAccessSequence()
-                                                 .prepend(symbol)
-                                                 .append(otherSymbol)
-                                                 .concat(suffix));
-            default:
-                throw new IllegalStateException("Unhandled type " + type);
-        }
+        return switch (type) {
+            case INTERNAL -> new ContextPair<>(prefix, suffix.prepend(symbol));
+            case RETURN -> new ContextPair<>(prefix.concat(location.getAccessSequence()).append(otherSymbol),
+                                             suffix.prepend(symbol));
+            case CALL -> new ContextPair<>(prefix,
+                                           location.getAccessSequence()
+                                                   .prepend(symbol)
+                                                   .append(otherSymbol)
+                                                   .concat(suffix));
+        };
     }
 
     public int getNewDiscriminatorLength() {
