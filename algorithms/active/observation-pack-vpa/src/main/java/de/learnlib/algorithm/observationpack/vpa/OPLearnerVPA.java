@@ -24,7 +24,7 @@ import de.learnlib.algorithm.observationpack.vpa.hypothesis.AbstractHypTrans;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.ContextPair;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.DTNode;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.HypLoc;
-import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.alphabet.VPAlphabet;
@@ -47,7 +47,7 @@ public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
     protected final AcexAnalyzer analyzer;
 
     @GenerateBuilder(defaults = BuilderDefaults.class)
-    public OPLearnerVPA(VPAlphabet<I> alphabet, DFAMembershipOracle<I> oracle, AcexAnalyzer analyzer) {
+    public OPLearnerVPA(VPAlphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, AcexAnalyzer analyzer) {
         super(alphabet, oracle);
         this.analyzer = analyzer;
     }

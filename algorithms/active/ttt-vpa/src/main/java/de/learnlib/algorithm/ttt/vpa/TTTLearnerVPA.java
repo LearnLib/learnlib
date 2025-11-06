@@ -35,7 +35,7 @@ import de.learnlib.algorithm.observationpack.vpa.hypothesis.HypLoc;
 import de.learnlib.algorithm.observationpack.vpa.hypothesis.TransList;
 import de.learnlib.datastructure.discriminationtree.SplitData;
 import de.learnlib.datastructure.list.IntrusiveList;
-import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.query.Query;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
@@ -58,7 +58,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
     private final IntrusiveList<DTNode<I>> blockList = new IntrusiveList<>();
 
     @GenerateBuilder(defaults = BuilderDefaults.class)
-    public TTTLearnerVPA(VPAlphabet<I> alphabet, DFAMembershipOracle<I> oracle, AcexAnalyzer analyzer) {
+    public TTTLearnerVPA(VPAlphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, AcexAnalyzer analyzer) {
         super(alphabet, oracle, analyzer);
     }
 
