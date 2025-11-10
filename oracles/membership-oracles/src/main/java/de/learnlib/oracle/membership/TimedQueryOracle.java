@@ -4,8 +4,12 @@ import de.learnlib.algorithm.LocalTimerMealyModelParams;
 import de.learnlib.oracle.AbstractTimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.sul.LocalTimerMealySUL;
-import net.automatalib.alphabet.time.mmlt.*;
-import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -64,7 +68,7 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
      * @return Observed timeouts. Empty, if none.
      */
     @Override
-    public TimerQueryResult<O> queryTimers(Word<LocalTimerMealySemanticInputSymbol<I>> prefix, long maxTotalWaitingTime) {
+    public TimerQueryResult<O> queryTimers(Word<TimedInput<I>> prefix, long maxTotalWaitingTime) {
         this.sul.pre();
 
         // Go to location:
@@ -130,19 +134,19 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
         List<MealyTimerInfo<O>> knownTimers = new ArrayList<>();
 
         // Wait for the first timeout:
-        LocalTimerMealyOutputSymbol<O> firstTimeout = this.sul.timeoutStep(this.modelParams.maxTimeoutWaitingTime());
+        TimedOutput<O> firstTimeout = this.sul.timeoutStep(this.modelParams.maxTimeoutWaitingTime());
         if (firstTimeout == null) {
             return new TimerQueryResult<>(false, Collections.emptyList()); // no timeouts found
         }
 
-        if (this.modelParams.outputCombiner().isCombinedSymbol(firstTimeout.getSymbol())) {
+        if (this.modelParams.outputCombiner().isCombinedSymbol(firstTimeout.symbol())) {
             logger.warn("Multiple timers expiring at first timeout, automaton may not be minimal.");
         }
 
-        knownTimers.add(new MealyTimerInfo<>(getUniqueTimerName(), firstTimeout.getDelay(), firstTimeout.getSymbol()));
+        knownTimers.add(new MealyTimerInfo<>(getUniqueTimerName(), firstTimeout.delay(), firstTimeout.symbol()));
 
         // Wait for further timeouts:
-        long currentTimeStep = firstTimeout.getDelay(); // already waited for first timeout
+        long currentTimeStep = firstTimeout.delay(); // already waited for first timeout
 
         boolean inconsistent = false;
         while (currentTimeStep < maxTotalWaitingTime) {
@@ -153,7 +157,7 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
             long nextWaiting = Math.min(nextExpectedTime, maxTotalWaitingTime) - currentTimeStep;
 
             // Wait until next timeout:
-            LocalTimerMealyOutputSymbol<O> nextOutput = this.sul.timeoutStep(nextWaiting);
+            TimedOutput<O> nextOutput = this.sul.timeoutStep(nextWaiting);
             if (nextOutput == null) {
                 if (nextExpectedTime <= maxTotalWaitingTime) {
                     // Expected a timeout within max. waiting time but nothing happened:
@@ -164,7 +168,7 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
             }
 
             // Compare observed timeout with expectation:
-            long nextActualTime = nextOutput.getDelay() + currentTimeStep;
+            long nextActualTime = nextOutput.delay() + currentTimeStep;
 
             TimerCheckResult<O> evalResult = evaluateNextTimer(nextActualTime, nextExpectedTime, nextOutput, knownTimers);
             if (evalResult.newTimer() != null) {
@@ -185,10 +189,10 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
 
     }
 
-    private TimerCheckResult<O> evaluateNextTimer(long nextActualTime, long nextExpectedTime, LocalTimerMealyOutputSymbol<O> nextOutput, List<MealyTimerInfo<O>> knownTimers) {
+    private TimerCheckResult<O> evaluateNextTimer(long nextActualTime, long nextExpectedTime, TimedOutput<O> nextOutput, List<MealyTimerInfo<O>> knownTimers) {
         if (nextActualTime < nextExpectedTime) {
             // A timeout occurred before we expected one -> new timer:
-            var newTimer = new MealyTimerInfo<>(getUniqueTimerName(), nextActualTime, nextOutput.getSymbol());
+            var newTimer = new MealyTimerInfo<>(getUniqueTimerName(), nextActualTime, nextOutput.symbol());
             return new TimerCheckResult<>(newTimer, false);
         } else if (nextActualTime == nextExpectedTime) {
             // Timeout occurred at expected time -> check if matching expected output:
@@ -198,7 +202,7 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
                     .flatMap(Collection::stream)
                     .collect(Collectors.groupingBy(t -> t, Collectors.counting())); // count occurrences
 
-            Map<O, Long> actualOutputs = this.modelParams.outputCombiner().separateSymbols(nextOutput.getSymbol())
+            Map<O, Long> actualOutputs = this.modelParams.outputCombiner().separateSymbols(nextOutput.symbol())
                     .stream()
                     .collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 
@@ -228,35 +232,35 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
 
 
     @Override
-    protected void querySuffixOutputInternal(DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> query) {
+    protected void querySuffixOutputInternal(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> query) {
 
         sul.pre();
         sul.follow(query.getPrefix(), this.modelParams.maxTimeoutWaitingTime());
 
         // Query the SUL, one symbol at a time:
-        WordBuilder<LocalTimerMealyOutputSymbol<O>> wbOutput = new WordBuilder<>();
+        WordBuilder<TimedOutput<O>> wbOutput = new WordBuilder<>();
         for (var s : query.getSuffix()) {
             if (s instanceof TimeoutSymbol<I>) {
-                LocalTimerMealyOutputSymbol<O> output = sul.timeoutStep(this.modelParams.maxTimeoutWaitingTime());
+                TimedOutput<O> output = sul.timeoutStep(this.modelParams.maxTimeoutWaitingTime());
                 if (output != null) {
                     wbOutput.append(output);
                 } else {
-                    wbOutput.append(new LocalTimerMealyOutputSymbol<>(this.modelParams.silentOutput())); // no output in time -> silent
+                    wbOutput.append(new TimedOutput<>(this.modelParams.silentOutput())); // no output in time -> silent
                 }
-            } else if (s instanceof NonDelayingInput<I> ndi) {
-                LocalTimerMealyOutputSymbol<O> output = sul.step(ndi);
+            } else if (s instanceof InputSymbol<I> ndi) {
+                TimedOutput<O> output = sul.step(ndi);
                 wbOutput.append(output);
             } else if (s instanceof TimeStepSequence<I> ws) {
-                if (ws.getTimeSteps() > 1) {
+                if (ws.timeSteps() > 1) {
                     throw new IllegalArgumentException("Only single wait step allowed in suffix.");
                 }
 
                 // Wait for a single time step:
-                LocalTimerMealyOutputSymbol<O> output = sul.timeStep();
+                TimedOutput<O> output = sul.timeStep();
                 if (output != null) {
                     wbOutput.append(output);
                 } else {
-                    wbOutput.append(new LocalTimerMealyOutputSymbol<>(this.modelParams.silentOutput())); // no output in time -> silent
+                    wbOutput.append(new TimedOutput<>(this.modelParams.silentOutput())); // no output in time -> silent
                 }
 
             } else {

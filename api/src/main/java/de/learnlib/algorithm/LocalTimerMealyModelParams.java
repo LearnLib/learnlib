@@ -1,6 +1,6 @@
 package de.learnlib.algorithm;
 
-import net.automatalib.automaton.time.mmlt.AbstractSymbolCombiner;
+import net.automatalib.automaton.mmlt.SymbolCombiner;
 
 import java.util.Objects;
 
@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public final class LocalTimerMealyModelParams<O> {
     private final O silentOutput;
-    private final AbstractSymbolCombiner<O> outputCombiner;
+    private final SymbolCombiner<O> outputCombiner;
     private final long maxTimeoutWaitingTime;
     private long maxTimerQueryWaitingTime;
 
@@ -34,7 +34,7 @@ public final class LocalTimerMealyModelParams<O> {
     public LocalTimerMealyModelParams(O silentOutput,
                                       long maxTimeoutWaitingTime,
                                       long maxTimerQueryWaitingTime,
-                                      AbstractSymbolCombiner<O> outputCombiner) {
+                                      SymbolCombiner<O> outputCombiner) {
         this.silentOutput = silentOutput;
         this.maxTimeoutWaitingTime = maxTimeoutWaitingTime;
         this.maxTimerQueryWaitingTime = maxTimerQueryWaitingTime;
@@ -53,7 +53,7 @@ public final class LocalTimerMealyModelParams<O> {
         return maxTimerQueryWaitingTime;
     }
 
-    public AbstractSymbolCombiner<O> outputCombiner() {
+    public SymbolCombiner<O> outputCombiner() {
         return outputCombiner;
     }
 

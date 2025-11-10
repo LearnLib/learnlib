@@ -1,26 +1,25 @@
 package de.learnlib.algorithm.lstar.mmlt;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
+import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.driver.simulator.LocalTimerMealySimulatorSUL;
 import de.learnlib.oracle.equivalence.mmlt.LocalTimerMealySimulatorOracle;
 import de.learnlib.oracle.membership.TimedQueryOracle;
 import de.learnlib.oracle.symbol_filters.AcceptAllSymbolFilter;
 import de.learnlib.query.DefaultQuery;
-import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
 import de.learnlib.testsupport.example.mmlt.LocalTimerMealyModel;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.time.mmlt.TimeStepSymbol;
-import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.exception.FormatException;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.testng.annotations.Test;
-
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Tests several different cases of counterexamples.
@@ -28,12 +27,12 @@ import java.util.List;
 @Test
 public class LStarLocalTimerMealyCounterexampleTests {
 
-    private static <S, I, O> void learnModel(LocalTimerMealyModel<S, I, O> model, List<Word<LocalTimerMealySemanticInputSymbol<I>>> counterexamples) {
+    private static <S, I, T, O> void learnModel(LocalTimerMealyModel<S, I, T, O> model, List<Word<TimedInput<I>>> counterexamples) {
 
-        GrowingAlphabet<LocalTimerMealySemanticInputSymbol<I>> alphabet = new GrowingMapAlphabet<>();
+        GrowingAlphabet<TimedInput<I>> alphabet = new GrowingMapAlphabet<>();
         model.automaton().getUntimedAlphabet().forEach(alphabet::addSymbol);
 
-        LocalTimerMealySimulatorSUL<S, I, O> sul = new LocalTimerMealySimulatorSUL<>(model.automaton());
+        var sul = new LocalTimerMealySimulatorSUL<>(model.automaton().getSemantics());
         TimedQueryOracle<I, O> timeOracle = new TimedQueryOracle<>(sul, model.params());
 
         var learner = new LStarLocalTimerMealy<>(alphabet, model.params(), Collections.emptyList(),
@@ -81,47 +80,34 @@ public class LStarLocalTimerMealyCounterexampleTests {
 
     }
 
-
-    private Word<LocalTimerMealySemanticInputSymbol<String>> getTimeStepSequence(int timeSteps) {
-        WordBuilder<LocalTimerMealySemanticInputSymbol<String>> wbTimeStep = new WordBuilder<>();
-        wbTimeStep.repeatAppend(timeSteps, new TimeStepSymbol<>());
-        return wbTimeStep.toWord();
-    }
-
-    private Word<LocalTimerMealySemanticInputSymbol<String>> getTimeoutSequence(int timeouts) {
-        WordBuilder<LocalTimerMealySemanticInputSymbol<String>> wbTimeouts = new WordBuilder<>();
-        wbTimeouts.repeatAppend(timeouts, new TimeoutSymbol<>());
-        return wbTimeouts.toWord();
-    }
-
     @Test
-    public void testOverApproxReset() {
+    public void testOverApproxReset() throws IOException, FormatException {
         // Infers a missing local reset instead of a missing discriminator first.
         var model = LocalTimerMealyTestUtil.automatonFromFile("over_approx_reset.dot");
 
         // Missing discriminator at non-del in stable config:
-        List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex1 = List.of(
-                Word.fromSymbols(new TimeStepSymbol<>(), new NonDelayingInput<>("i"), new TimeoutSymbol<>())
+        List<Word<TimedInput<String>>> cex1 = List.of(
+                Word.fromSymbols(TimedInput.step(), new InputSymbol<>("i"), new TimeoutSymbol<>())
         );
 
         learnModel(model, cex1);
     }
 
     @Test
-    public void testRecursiveDecomp() {
+    public void testRecursiveDecomp() throws IOException, FormatException {
         // Triggers recursive decomposition
         var model = LocalTimerMealyTestUtil.automatonFromFile("recursive_decomp.dot", 3);
 
         // Missing discriminator at non-del in stable config:
-        List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex1 = List.of(
+        List<Word<TimedInput<String>>> cex1 = List.of(
                 // Initial hyp:
-                Word.fromSymbols(new NonDelayingInput<>("p"), new NonDelayingInput<>("f")),
+                Word.fromSymbols(new InputSymbol<>("p"), new InputSymbol<>("f")),
 
-                Word.fromSymbols(new NonDelayingInput<>("u"),
+                Word.fromSymbols(new InputSymbol<>("u"),
                         new TimeoutSymbol<>(), new TimeoutSymbol<>(), new TimeoutSymbol<>(), new TimeoutSymbol<>(),
-                        new NonDelayingInput<>("f")),
+                        new InputSymbol<>("f")),
 
-                Word.fromSymbols(new NonDelayingInput<>("u"),
+                Word.fromSymbols(new InputSymbol<>("u"),
                         new TimeoutSymbol<>(), new TimeoutSymbol<>(), new TimeoutSymbol<>(), new TimeoutSymbol<>(),
                         new TimeoutSymbol<>())
         );
@@ -134,21 +120,21 @@ public class LStarLocalTimerMealyCounterexampleTests {
         var model = LocalTimerMealyExamples.SensorCollector();
 
         // Missing discriminator at non-del in stable config:
-        List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex1 = List.of(
+        List<Word<TimedInput<String>>> cex1 = List.of(
                 // Initial hyp:
-                Word.fromSymbols(new NonDelayingInput<>("p1"), new NonDelayingInput<>("p1")),
-                Word.fromSymbols(new NonDelayingInput<>("p2"), new NonDelayingInput<>("abort")),
+                Word.fromSymbols(new InputSymbol<>("p1"), new InputSymbol<>("p1")),
+                Word.fromSymbols(new InputSymbol<>("p2"), new InputSymbol<>("abort")),
 
-                Word.fromSymbols(new NonDelayingInput<>("p2"), new TimeStepSymbol<>(), new NonDelayingInput<>("abort"), new TimeoutSymbol<>())
+                Word.fromSymbols(new InputSymbol<>("p2"), TimedInput.step(), new InputSymbol<>("abort"), new TimeoutSymbol<>())
         );
 
         // Missing discriminator at one-shot:
-        List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex2 = List.of(
+        List<Word<TimedInput<String>>> cex2 = List.of(
                 // Initial hyp:
-                Word.fromSymbols(new NonDelayingInput<>("p1"), new NonDelayingInput<>("p1")),
-                Word.fromSymbols(new NonDelayingInput<>("p2"), new NonDelayingInput<>("abort")),
+                Word.fromSymbols(new InputSymbol<>("p1"), new InputSymbol<>("p1")),
+                Word.fromSymbols(new InputSymbol<>("p2"), new InputSymbol<>("abort")),
 
-                Word.fromSymbols(new NonDelayingInput<>("p2"), new TimeoutSymbol<>(), new TimeoutSymbol<>())
+                Word.fromSymbols(new InputSymbol<>("p2"), new TimeoutSymbol<>(), new TimeoutSymbol<>())
         );
 
         learnModel(model, cex1);
@@ -161,23 +147,23 @@ public class LStarLocalTimerMealyCounterexampleTests {
         model.params().setMaxTimerQueryWaitingTime(40);
 
         // Missing reset in stable config:
-        List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex1 = List.of(
+        List<Word<TimedInput<String>>> cex1 = List.of(
                 // Initial hyp:
-                Word.fromSymbols(new NonDelayingInput<>("p1"), new NonDelayingInput<>("p1")),
-                Word.fromSymbols(new NonDelayingInput<>("p2"), new NonDelayingInput<>("abort")),
+                Word.fromSymbols(new InputSymbol<>("p1"), new InputSymbol<>("p1")),
+                Word.fromSymbols(new InputSymbol<>("p2"), new InputSymbol<>("abort")),
 
-                Word.fromSymbols(new NonDelayingInput<>("p1"), new TimeStepSymbol<>(), new NonDelayingInput<>("abort"), new TimeoutSymbol<>())
+                Word.fromSymbols(new InputSymbol<>("p1"), TimedInput.step(), new InputSymbol<>("abort"), new TimeoutSymbol<>())
         );
 
         // Missing reset in non-stable config:
-        List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex2 = List.of(
+        List<Word<TimedInput<String>>> cex2 = List.of(
                 // Initial hyp:
-                Word.fromSymbols(new NonDelayingInput<>("p1"), new NonDelayingInput<>("p1")),
-                Word.fromSymbols(new NonDelayingInput<>("p2"), new NonDelayingInput<>("abort")),
+                Word.fromSymbols(new InputSymbol<>("p1"), new InputSymbol<>("p1")),
+                Word.fromSymbols(new InputSymbol<>("p2"), new InputSymbol<>("abort")),
 
-                Word.fromSymbols(new NonDelayingInput<>("p1"),
-                        new TimeStepSymbol<>(), new TimeStepSymbol<>(), new TimeStepSymbol<>(),
-                        new NonDelayingInput<>("abort"), new TimeoutSymbol<>())
+                Word.fromSymbols(new InputSymbol<>("p1"),
+                                 TimedInput.step(), TimedInput.step(), TimedInput.step(),
+                                 new InputSymbol<>("abort"), new TimeoutSymbol<>())
         );
 
         learnModel(model, cex1);
@@ -192,22 +178,21 @@ public class LStarLocalTimerMealyCounterexampleTests {
         model.params().setMaxTimerQueryWaitingTime(6);
 
         // Missing one-shot via bad return to entry:
-        List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex1 = List.of(
+        List<Word<TimedInput<String>>> cex1 = List.of(
                 // Initial hyp:
-                Word.fromSymbols(new NonDelayingInput<>("p1"), new NonDelayingInput<>("p1")),
-                Word.fromSymbols(new NonDelayingInput<>("p2"), new NonDelayingInput<>("abort")),
+                Word.fromSymbols(new InputSymbol<>("p1"), new InputSymbol<>("p1")),
+                Word.fromSymbols(new InputSymbol<>("p2"), new InputSymbol<>("abort")),
 
-                Word.fromWords(Word.fromLetter(new NonDelayingInput<>("p1")), getTimeoutSequence(14)
-                )
+                Word.fromWords(Word.fromLetter(new InputSymbol<>("p1")), TimedInput.timeouts(14))
         );
 
         // Missing one-shot in location with single timer:
-        List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex2 = List.of(
+        List<Word<TimedInput<String>>> cex2 = List.of(
                 // Initial hyp:
-                Word.fromSymbols(new NonDelayingInput<>("p1"), new NonDelayingInput<>("p1")),
-                Word.fromSymbols(new NonDelayingInput<>("p2"), new NonDelayingInput<>("abort")),
+                Word.fromSymbols(new InputSymbol<>("p1"), new InputSymbol<>("p1")),
+                Word.fromSymbols(new InputSymbol<>("p2"), new InputSymbol<>("abort")),
 
-                Word.fromSymbols(new NonDelayingInput<>("p2"), new TimeoutSymbol<>(), new TimeoutSymbol<>())
+                Word.fromSymbols(new InputSymbol<>("p2"), new TimeoutSymbol<>(), new TimeoutSymbol<>())
         );
 
         learnModel(model, cex1);
@@ -220,27 +205,22 @@ public class LStarLocalTimerMealyCounterexampleTests {
         model.params().setMaxTimerQueryWaitingTime(40);
 
         // Missing one-shot via bad output:
-        List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex1 = List.of(
+        List<Word<TimedInput<String>>> cex1 = List.of(
                 // Initial hyp:
-                Word.fromSymbols(new NonDelayingInput<>("p1"), new NonDelayingInput<>("p1")),
-                Word.fromSymbols(new NonDelayingInput<>("p2"), new NonDelayingInput<>("abort")),
+                Word.fromSymbols(new InputSymbol<>("p1"), new InputSymbol<>("p1")),
+                Word.fromSymbols(new InputSymbol<>("p2"), new InputSymbol<>("abort")),
 
-                Word.fromWords(Word.fromLetter(new NonDelayingInput<>("p1")),
-                        getTimeStepSequence(40),
+                Word.fromWords(Word.fromLetter(new InputSymbol<>("p1")),
+                        TimedInput.steps(40),
                         Word.fromLetter(new TimeoutSymbol<>())) // alternatively: new NonDelayingInput<>("abort")
         );
 
         // Missing one-shot via bad target:
-        List<Word<LocalTimerMealySemanticInputSymbol<String>>> cex2 = List.of(
+        List<Word<TimedInput<String>>> cex2 = List.of(
                 // Initial hyp:
-                Word.fromSymbols(new NonDelayingInput<>("p1"), new NonDelayingInput<>("p1")),
-                Word.fromSymbols(new NonDelayingInput<>("p2"), new NonDelayingInput<>("abort")),
-
-                Word.fromWords(Word.fromLetter(new NonDelayingInput<>("p1")),
-                        getTimeoutSequence(14),
-                        Word.fromLetter(new NonDelayingInput<>("collect")),
-                        Word.fromLetter(new NonDelayingInput<>("p1"))
-                )
+                Word.fromSymbols(new InputSymbol<>("p1"), new InputSymbol<>("p1")),
+                Word.fromSymbols(new InputSymbol<>("p2"), new InputSymbol<>("abort")),
+                Word.fromWords(TimedInput.inputs("p1"), TimedInput.timeouts(14), TimedInput.inputs("collect", "p1"))
         );
 
         learnModel(model, cex1);

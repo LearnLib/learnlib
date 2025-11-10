@@ -1,17 +1,19 @@
 package de.learnlib.testsupport.example.mmlt;
 
 import de.learnlib.algorithm.LocalTimerMealyModelParams;
-import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
-import net.automatalib.serialization.dot.LocalTimerMealyGraphvizParser;
-import net.automatalib.util.automaton.mmlt.LocalTimerMealyUtil;
+import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
+import net.automatalib.exception.FormatException;
+import net.automatalib.serialization.dot.DOTParsers;
+import net.automatalib.util.automaton.mmlt.MMLTUtil;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public class LocalTimerMealyExamples {
 
-    public static List<LocalTimerMealyModel<Integer, String, String>> getAll() {
-        return List.of(
-                HVAC(), SCTP(), SensorCollector(), WM(), Oven(), WSN());
+    public static List<LocalTimerMealyModel<?, String, ?, String>> getAll() {
+        return List.of(HVAC(), SCTP(), SensorCollector(), WM(), Oven(), WSN());
     }
 
     /**
@@ -21,7 +23,7 @@ public class LocalTimerMealyExamples {
      *
      * @return LocalTimerMealyModel
      */
-    public static LocalTimerMealyModel<Integer, String, String> HVAC() {
+    public static LocalTimerMealyModel<?, String, ?, String> HVAC() {
         return automatonFromFile("HVAC");
     }
 
@@ -32,7 +34,7 @@ public class LocalTimerMealyExamples {
      *
      * @return LocalTimerMealyModel
      */
-    public static LocalTimerMealyModel<Integer, String, String> SCTP() {
+    public static LocalTimerMealyModel<?, String, ?, String> SCTP() {
         return automatonFromFile("SCTP");
     }
 
@@ -46,7 +48,7 @@ public class LocalTimerMealyExamples {
      *
      * @return LocalTimerMealyModel
      */
-    public static LocalTimerMealyModel<Integer, String, String> SensorCollector() {
+    public static LocalTimerMealyModel<?, String, ?, String> SensorCollector() {
         return automatonFromFile("sensor_collector");
     }
 
@@ -68,7 +70,7 @@ public class LocalTimerMealyExamples {
      *
      * @return LocalTimerMealyModel
      */
-    public static LocalTimerMealyModel<Integer, String, String> WM() {
+    public static LocalTimerMealyModel<?, String, ?, String> WM() {
         return automatonFromFile("WM");
     }
 
@@ -82,7 +84,7 @@ public class LocalTimerMealyExamples {
      *
      * @return LocalTimerMealyModel
      */
-    public static LocalTimerMealyModel<Integer, String, String> Oven() {
+    public static LocalTimerMealyModel<?, String, ?, String> Oven() {
         return automatonFromFile("Oven");
     }
 
@@ -95,7 +97,7 @@ public class LocalTimerMealyExamples {
      *
      * @return LocalTimerMealyModel
      */
-    public static LocalTimerMealyModel<Integer, String, String> WSN() {
+    public static LocalTimerMealyModel<?, String, ?, String> WSN() {
         return automatonFromFile("WSN");
     }
 
@@ -110,24 +112,31 @@ public class LocalTimerMealyExamples {
      * the learner has the chance to observe its timeout at least twice. This increases the chance of observing non-periodic behavior.
      *
      */
-    static LocalTimerMealyModel<Integer, String, String> automatonFromFile(String name) {
+    static LocalTimerMealyModel<?, String, ?, String> automatonFromFile(String name) {
+        var silentOutput = "void";
+        var outputCombiner = StringSymbolCombiner.getInstance();
+        var parser = DOTParsers.mmlt(silentOutput, outputCombiner);
 
-        net.automatalib.automaton.time.mmlt.LocalTimerMealy<Integer, String, String> automaton;
-        try (var modelResource = LocalTimerMealyExamples.class.getResourceAsStream("/mmlt/" + name + ".dot")) {
-            automaton = LocalTimerMealyGraphvizParser.parseLocalTimerMealy(modelResource, "void", StringSymbolCombiner.getInstance());
-        } catch (Exception ex) {
-            throw new RuntimeException("Failed to load automaton from resource " + name, ex);
+        try (InputStream is = LocalTimerMealyExamples.class.getResourceAsStream("/mmlt/" + name + ".dot")) {
+            var model = parser.readModel(is);
+            var automaton = model.model;
+
+            long maxTimeoutDelay = MMLTUtil.getMaximumTimeoutDelay(automaton);
+            long maxTimerQueryWaitingFinal = MMLTUtil.getMaximumInitialTimerValue(automaton) * 2;
+
+            if (name.contains("SCTP")) {
+                maxTimerQueryWaitingFinal = 9000; // SCTP needs more waiting time
+            }
+
+            return new LocalTimerMealyModel<>(name,
+                                              automaton,
+                                              new LocalTimerMealyModelParams<>(silentOutput,
+                                                                               maxTimeoutDelay,
+                                                                               maxTimerQueryWaitingFinal,
+                                                                               outputCombiner));
+        } catch (IOException | FormatException e) {
+            throw new RuntimeException("Unable to load model " + name, e);
         }
-
-        long maxTimeoutDelay = LocalTimerMealyUtil.getMaximumTimeoutDelay(automaton);
-        long maxTimerQueryWaitingFinal = LocalTimerMealyUtil.getMaximumInitialTimerValue(automaton) * 2;
-
-        if (name.contains("SCTP")) {
-            maxTimerQueryWaitingFinal = 9000; // SCTP needs more waiting time
-        }
-
-        return new LocalTimerMealyModel<>(name, automaton, new LocalTimerMealyModelParams<>("void", maxTimeoutDelay, maxTimerQueryWaitingFinal, StringSymbolCombiner.getInstance()));
     }
-
 
 }

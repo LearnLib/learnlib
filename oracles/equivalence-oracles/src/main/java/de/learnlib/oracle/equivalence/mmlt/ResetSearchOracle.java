@@ -1,21 +1,29 @@
 package de.learnlib.oracle.equivalence.mmlt;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+
 import de.learnlib.oracle.AbstractTimedQueryOracle;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
-import net.automatalib.alphabet.time.mmlt.*;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.common.util.string.AbstractPrintable;
-import net.automatalib.util.automaton.cover.LocalTimerMealyCover;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.TimeoutSymbol;
+import net.automatalib.util.automaton.cover.MMLTCover;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 /**
  * Searches for counterexamples that reveal local resets.
@@ -49,17 +57,17 @@ public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMeal
         this.loopingInputSelectionSeed = seed;
     }
 
-    private <S> List<LocalTimerMealySemanticInputSymbol<I>> getLoopingSymbols(S sourceLoc, List<LocalTimerMealySemanticInputSymbol<I>> alphabet, LocalTimerMealy<S, I, O> hypothesis) {
+    private <S, T> List<TimedInput<I>> getLoopingSymbols(S sourceLoc, List<TimedInput<I>> alphabet, MMLT<S, I, T, O> hypothesis) {
 
-        List<LocalTimerMealySemanticInputSymbol<I>> loopingInputs = new ArrayList<>();
+        List<TimedInput<I>> loopingInputs = new ArrayList<>();
         for (var sym : alphabet) {
-            if (!(sym instanceof NonDelayingInput<I> ndi)) {
+            if (!(sym instanceof InputSymbol<I> ndi)) {
                 continue; // only consider non-delaying inputs, as only these can perform local resets
             }
             var trans = hypothesis.getTransition(sourceLoc, ndi);
 
             // Collect self-loops:
-            if (trans == null || (trans.successor().equals(sourceLoc))) {
+            if (trans == null || Objects.equals(hypothesis.getSuccessor(trans), sourceLoc)) {
                 loopingInputs.add(sym);
             }
         }
@@ -68,27 +76,27 @@ public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMeal
     }
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
+    public @Nullable DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> findCounterExample(MMLT<?, I, ?, O> hypothesis, Collection<? extends TimedInput<I>> inputs) {
         if (loopInsertPerc == 0) {
             return null; // oracle is disabled
         }
-        List<LocalTimerMealySemanticInputSymbol<I>> listInputs = new ArrayList<>(inputs);
-        if (listInputs.stream().noneMatch(s -> s instanceof TimeStepSymbol<I>) ||
-                listInputs.stream().noneMatch(s -> s instanceof TimeoutSymbol<I>)) {
+        List<TimedInput<I>> listInputs = new ArrayList<>(inputs);
+        if (listInputs.stream().noneMatch(s -> s instanceof TimeStepSequence<I>) ||
+            listInputs.stream().noneMatch(s -> s instanceof TimeoutSymbol<I>)) {
             logger.warn("ResetSearchOracle requires inputs to contain TimeoutSymbol and TimeStepSymbol. Will not find counterexample.");
             return null;
         }
         return this.findCexInternal(hypothesis, listInputs);
     }
 
-    private <S> @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCexInternal
-            (LocalTimerMealy<S, I, O> hypothesis, List<LocalTimerMealySemanticInputSymbol<I>> inputs) {
+    private <S, T> @Nullable DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> findCexInternal
+            (MMLT<S, I, T, O> hypothesis, List<TimedInput<I>> inputs) {
 
         // Retrieve prefixes from state cover, to establish some separation between learner and teacher:
-        var stateCover = LocalTimerMealyCover.getLocalTimerMealyLocationCover(hypothesis, inputs);
+        var stateCover = MMLTCover.getLocalTimerMealyLocationCover(hypothesis, inputs);
 
         // Only keep locations that have at least two stable configs (only these can have local resets):
-        List<Word<LocalTimerMealySemanticInputSymbol<I>>> prefixes = new ArrayList<>();
+        List<Word<TimedInput<I>>> prefixes = new ArrayList<>();
         for (var loc : stateCover.keySet()) {
             if (!hypothesis.getSortedTimers(loc).isEmpty() &&
                     hypothesis.getSortedTimers(loc).get(0).initial() > 1) {
@@ -106,12 +114,12 @@ public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMeal
             return null;
         }
 
-        List<Word<LocalTimerMealySemanticInputSymbol<I>>> chosenPrefixes = RandomUtil.sampleUnique(locPrefixRandom, prefixes, randPrefixes);
+        List<Word<TimedInput<I>>> chosenPrefixes = RandomUtil.sampleUnique(locPrefixRandom, prefixes, randPrefixes);
 
 
         for (var prefix : chosenPrefixes) {
             // Retrieve looping symbols:
-            var sourceLoc = hypothesis.getSemantics().traceInputs(prefix).getLocation();
+            var sourceLoc = hypothesis.getSemantics().getState(prefix).getLocation();
             var loopingInputs = getLoopingSymbols(sourceLoc, inputs, hypothesis);
             if (loopingInputs.isEmpty()) {
                 continue; // no loops
@@ -121,15 +129,15 @@ public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMeal
             int randElements = (int) Math.round(loopInsertPerc * loopingInputs.size());
             randElements = Math.min(loopingInputs.size(), randElements);
 
-            List<LocalTimerMealySemanticInputSymbol<I>> chosenLoopingInputs = RandomUtil.sampleUnique(new Random(loopingInputSelectionSeed), loopingInputs, randElements);
+            List<TimedInput<I>> chosenLoopingInputs = RandomUtil.sampleUnique(new Random(loopingInputSelectionSeed), loopingInputs, randElements);
 
 
             // Create test word:
-            WordBuilder<LocalTimerMealySemanticInputSymbol<I>> wbTestWord = new WordBuilder<>();
+            WordBuilder<TimedInput<I>> wbTestWord = new WordBuilder<>();
             wbTestWord.append(prefix);
-            wbTestWord.append(new TimeStepSymbol<>());
+            wbTestWord.append(TimedInput.step());
             wbTestWord.append(Word.fromList(chosenLoopingInputs));
-            wbTestWord.append(new TimeoutSymbol<>());
+            wbTestWord.append(TimedInput.timeout());
 
             // Check if counterexample:
             var testWord = wbTestWord.toWord();

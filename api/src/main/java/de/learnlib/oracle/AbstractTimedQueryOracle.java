@@ -2,9 +2,9 @@ package de.learnlib.oracle;
 
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.query.Query;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.automaton.mmlt.MealyTimerInfo;
 import net.automatalib.word.Word;
 
 import java.util.Collection;
@@ -19,7 +19,7 @@ import java.util.List;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public abstract class AbstractTimedQueryOracle<I, O> implements MembershipOracle.MealyMembershipOracle<LocalTimerMealySemanticInputSymbol<I>, LocalTimerMealyOutputSymbol<O>> {
+public abstract class AbstractTimedQueryOracle<I, O> implements MembershipOracle.MealyMembershipOracle<TimedInput<I>, TimedOutput<O>> {
 
     /**
      * Response for a timer query.
@@ -33,9 +33,9 @@ public abstract class AbstractTimedQueryOracle<I, O> implements MembershipOracle
     }
 
     @Override
-    public void processQueries(Collection<? extends Query<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>>> collection) {
+    public void processQueries(Collection<? extends Query<TimedInput<I>, Word<TimedOutput<O>>>> collection) {
         for (var q : collection) {
-            DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> query = new DefaultQuery<>(q.getPrefix(), q.getSuffix());
+            DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> query = new DefaultQuery<>(q.getPrefix(), q.getSuffix());
             this.querySuffixOutput(query);
             q.answer(query.getOutput());
         }
@@ -49,14 +49,14 @@ public abstract class AbstractTimedQueryOracle<I, O> implements MembershipOracle
      * @param maxTotalWaitingTime Maximum total time that is waited for timeouts.
      * @return Observed timeouts. Empty, if none.
      */
-    public abstract TimerQueryResult<O> queryTimers(Word<LocalTimerMealySemanticInputSymbol<I>> prefix, long maxTotalWaitingTime);
+    public abstract TimerQueryResult<O> queryTimers(Word<TimedInput<I>> prefix, long maxTotalWaitingTime);
 
     /**
      * Queries the suffix output for the provided query.
      *
      * @param query Input query.
      */
-    public void querySuffixOutput(DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> query) {
+    public void querySuffixOutput(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> query) {
         this.querySuffixOutputInternal(query);
     }
 
@@ -66,8 +66,8 @@ public abstract class AbstractTimedQueryOracle<I, O> implements MembershipOracle
      * @param prefix Prefix
      * @param suffix Suffix
      */
-    public final Word<LocalTimerMealyOutputSymbol<O>> querySuffixOutput(Word<LocalTimerMealySemanticInputSymbol<I>> prefix, Word<LocalTimerMealySemanticInputSymbol<I>> suffix) {
-        DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> query = new DefaultQuery<>(prefix, suffix);
+    public final Word<TimedOutput<O>> querySuffixOutput(Word<TimedInput<I>> prefix, Word<TimedInput<I>> suffix) {
+        DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> query = new DefaultQuery<>(prefix, suffix);
         this.querySuffixOutputInternal(query);
         return query.getOutput();
     }
@@ -77,6 +77,6 @@ public abstract class AbstractTimedQueryOracle<I, O> implements MembershipOracle
      *
      * @param query Input query.
      */
-    protected abstract void querySuffixOutputInternal(DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> query);
+    protected abstract void querySuffixOutputInternal(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> query);
 
 }

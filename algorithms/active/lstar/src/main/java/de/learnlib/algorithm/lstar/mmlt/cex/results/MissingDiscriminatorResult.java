@@ -1,6 +1,6 @@
 package de.learnlib.algorithm.lstar.mmlt.cex.results;
 
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
+import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.word.Word;
 
 /**
@@ -12,10 +12,10 @@ import net.automatalib.word.Word;
  */
 public class MissingDiscriminatorResult<S, I, O> extends CexAnalysisResult<S, I, O> {
     private final S location;
-    private final LocalTimerMealySemanticInputSymbol<I> input;
-    private final Word<LocalTimerMealySemanticInputSymbol<I>> discriminator;
+    private final TimedInput<I> input;
+    private final Word<TimedInput<I>> discriminator;
 
-    public MissingDiscriminatorResult(S location, LocalTimerMealySemanticInputSymbol<I> input, Word<LocalTimerMealySemanticInputSymbol<I>> discriminator) {
+    public MissingDiscriminatorResult(S location, TimedInput<I> input, Word<TimedInput<I>> discriminator) {
         this.location = location;
         this.input = input;
         this.discriminator = discriminator;
@@ -25,11 +25,11 @@ public class MissingDiscriminatorResult<S, I, O> extends CexAnalysisResult<S, I,
         return location;
     }
 
-    public LocalTimerMealySemanticInputSymbol<I> getInput() {
+    public TimedInput<I> getInput() {
         return input;
     }
 
-    public Word<LocalTimerMealySemanticInputSymbol<I>> getDiscriminator() {
+    public Word<TimedInput<I>> getDiscriminator() {
         return discriminator;
     }
 

@@ -1,8 +1,8 @@
 package de.learnlib.algorithm.lstar.mmlt.cex;
 
 
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealyConfiguration;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.automaton.mmlt.State;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -16,11 +16,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param discriminator If not null: transition has incorrect target
  * @param <I>           Input type for non-delaying inputs
  */
-record ExtendedDecomposition<S, I, O>(LocalTimerMealyConfiguration<S, I, O> state,
-                                      @NonNull LocalTimerMealySemanticInputSymbol<I> input,
-                                      @Nullable Word<LocalTimerMealySemanticInputSymbol<I>> discriminator) {
+record ExtendedDecomposition<S, I, O>(State<S, O> state,
+                                      @NonNull TimedInput<I> input,
+                                      @Nullable Word<TimedInput<I>> discriminator) {
 
-    public ExtendedDecomposition(LocalTimerMealyConfiguration<S, I, O> state, @NonNull LocalTimerMealySemanticInputSymbol<I> input) {
+    public ExtendedDecomposition(State<S, O> state, @NonNull TimedInput<I> input) {
         this(state, input, null);
     }
 

@@ -5,9 +5,9 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainer;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
@@ -70,7 +70,7 @@ public class LocalTimerMealyEQOracleChain<I, O> implements EquivalenceOracle.Loc
     }
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
+    public @Nullable DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> findCounterExample(MMLT<?, I, ?, O> hypothesis, Collection<? extends TimedInput<I>> inputs) {
         if (this.oracles.isEmpty()) throw new IllegalStateException("Must specify at least one cex oracle in chain.");
 
         int oracleIdx = 0;

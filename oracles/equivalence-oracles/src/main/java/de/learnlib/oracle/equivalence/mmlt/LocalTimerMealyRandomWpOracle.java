@@ -6,13 +6,13 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainer;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.automaton.time.impl.mmlt.ReducedLocalTimerMealySemantics;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.automaton.mmlt.impl.ReducedMMLTSemantics;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.common.util.string.AbstractPrintable;
 import net.automatalib.util.automaton.Automata;
-import net.automatalib.util.automaton.cover.LocalTimerMealyCover;
+import net.automatalib.util.automaton.cover.MMLTCover;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -53,22 +53,22 @@ public class LocalTimerMealyRandomWpOracle<I, O> implements EquivalenceOracle.Lo
     }
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
+    public @Nullable DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> findCounterExample(MMLT<?, I, ?, O> hypothesis, Collection<? extends TimedInput<I>> inputs) {
         return findCounterExampleInternal(hypothesis, inputs);
     }
 
-    private <S> DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExampleInternal(LocalTimerMealy<S, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
+    private <S> DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> findCounterExampleInternal(MMLT<S, I, ?, O> hypothesis, Collection<? extends TimedInput<I>> inputs) {
         // Make expanded form of hypothesis:
-        var hypSemModel = ReducedLocalTimerMealySemantics.forLocalTimerMealy(hypothesis);
+        var hypSemModel = ReducedMMLTSemantics.forLocalTimerMealy(hypothesis);
 
         // Create a list of symbols (for faster access):
-        List<LocalTimerMealySemanticInputSymbol<I>> listAlphabet = new ArrayList<>(inputs);
+        List<TimedInput<I>> listAlphabet = new ArrayList<>(inputs);
 
         // Identify global suffixes:
         var globalSuffixes = Automata.characterizingSet(hypSemModel, inputs);
 
         // Get list of prefixes in deterministic order (so we can reproduce experiments easily):
-        var locationCover = LocalTimerMealyCover.getLocalTimerMealyLocationCover(hypothesis, listAlphabet);
+        var locationCover = MMLTCover.getLocalTimerMealyLocationCover(hypothesis, listAlphabet);
         var prefixList = locationCover
                 .values()
                 .stream()
@@ -80,7 +80,7 @@ public class LocalTimerMealyRandomWpOracle<I, O> implements EquivalenceOracle.Lo
             stats.increaseCounter("WP_TESTED_WORD", "RandomWpOracle: tested words");
 
             var sulAnswer = this.generateTestword(prefixList, globalSuffixes, hypothesis, hypSemModel, listAlphabet);
-            Word<LocalTimerMealyOutputSymbol<O>> hypAnswer = hypothesis.getSemantics().computeSuffixOutput(sulAnswer.getPrefix(), sulAnswer.getSuffix());
+            Word<TimedOutput<O>> hypAnswer = hypothesis.getSemantics().computeSuffixOutput(sulAnswer.getPrefix(), sulAnswer.getSuffix());
 
             // Found inconsistency if outputs do no match:
             if (!sulAnswer.getOutput().equals(hypAnswer)) {
@@ -91,16 +91,16 @@ public class LocalTimerMealyRandomWpOracle<I, O> implements EquivalenceOracle.Lo
         return null;
     }
 
-    private <S> DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> generateTestword(List<Word<LocalTimerMealySemanticInputSymbol<I>>> prefixes,
-                                                                                                                           List<Word<LocalTimerMealySemanticInputSymbol<I>>> globalSuffixes,
-                                                                                                                           LocalTimerMealy<S, I, O> hypothesis,
-                                                                                                                           ReducedLocalTimerMealySemantics<S, I, O> hypSemModel,
-                                                                                                                           List<LocalTimerMealySemanticInputSymbol<I>> alphabet) {
+    private <S, T> DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> generateTestword(List<Word<TimedInput<I>>> prefixes,
+                                                                                      List<Word<TimedInput<I>>> globalSuffixes,
+                                                                                      MMLT<S, I, ?, O> hypothesis,
+                                                                                      ReducedMMLTSemantics<S, I, O> hypSemModel,
+                                                                                      List<TimedInput<I>> alphabet) {
 
-        WordBuilder<LocalTimerMealySemanticInputSymbol<I>> wbTestWord = new WordBuilder<>();
+        WordBuilder<TimedInput<I>> wbTestWord = new WordBuilder<>();
 
         // 1. Pick a random entry config prefix:
-        Word<LocalTimerMealySemanticInputSymbol<I>> prefix = prefixes.get(this.random.nextInt(prefixes.size()));
+        Word<TimedInput<I>> prefix = prefixes.get(this.random.nextInt(prefixes.size()));
         wbTestWord.append(prefix);
 
         // 2. Add random middle part:
@@ -116,14 +116,14 @@ public class LocalTimerMealyRandomWpOracle<I, O> implements EquivalenceOracle.Lo
 
         // 3. Pick a random suffix for this state:
         // 50% chance for state testing, 50% chance for transition testing
-        Word<LocalTimerMealySemanticInputSymbol<I>> suffix = Word.epsilon();
+        Word<TimedInput<I>> suffix = Word.epsilon();
         if (this.random.nextBoolean()) {
             if (!globalSuffixes.isEmpty()) {
                 suffix = globalSuffixes.get(random.nextInt(globalSuffixes.size()));
             }
         } else {
             // Identify configuration reached by prefix:
-            var currentConfig = hypothesis.getSemantics().traceInputs(wbTestWord.toWord());
+            var currentConfig = hypothesis.getSemantics().getState(wbTestWord.toWord());
             var state = hypSemModel.getStateForConfiguration(currentConfig, true);
             var localSuffixes = Automata.stateCharacterizingSet(hypSemModel, alphabet, state);
 

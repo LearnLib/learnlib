@@ -1,7 +1,7 @@
 package de.learnlib.algorithm.lstar.mmlt.cex.results;
 
 
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
+import net.automatalib.symbol.time.InputSymbol;
 
 /**
  * The specified symbol is considered to be falsely ignored by the symbol filter.
@@ -12,9 +12,9 @@ import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
  */
 public class FalseIgnoreResult<S, I, O> extends CexAnalysisResult<S, I, O> {
     private final S location;
-    private final NonDelayingInput<I> symbol;
+    private final InputSymbol<I> symbol;
 
-    public FalseIgnoreResult(S location, NonDelayingInput<I> symbol) {
+    public FalseIgnoreResult(S location, InputSymbol<I> symbol) {
         this.location = location;
         this.symbol = symbol;
     }
@@ -23,7 +23,7 @@ public class FalseIgnoreResult<S, I, O> extends CexAnalysisResult<S, I, O> {
         return location;
     }
 
-    public NonDelayingInput<I> getSymbol() {
+    public InputSymbol<I> getSymbol() {
         return symbol;
     }
 }

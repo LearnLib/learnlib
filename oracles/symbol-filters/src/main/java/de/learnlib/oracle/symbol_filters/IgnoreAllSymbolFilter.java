@@ -2,8 +2,6 @@ package de.learnlib.oracle.symbol_filters;
 
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
 import net.automatalib.word.Word;
 
 /**

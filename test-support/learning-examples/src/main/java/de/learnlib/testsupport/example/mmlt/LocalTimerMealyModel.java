@@ -1,7 +1,7 @@
 package de.learnlib.testsupport.example.mmlt;
 
 import de.learnlib.algorithm.LocalTimerMealyModelParams;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
+import net.automatalib.automaton.mmlt.MMLT;
 
 /**
  * Convenience class for storing a name, an automaton and model parameters.
@@ -13,8 +13,8 @@ import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
  * @param <I>       Input type for non-delaying inputs
  * @param <O>       Output symbol type
  */
-public record LocalTimerMealyModel<S, I, O>(String name,
-                                            LocalTimerMealy<S, I, O> automaton,
+public record LocalTimerMealyModel<S, I, T, O>(String name,
+                                            MMLT<S, I, T, O> automaton,
                                             LocalTimerMealyModelParams<O> params) {
 
 }

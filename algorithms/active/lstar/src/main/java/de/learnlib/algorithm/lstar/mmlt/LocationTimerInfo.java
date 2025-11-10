@@ -1,7 +1,7 @@
 package de.learnlib.algorithm.lstar.mmlt;
 
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.automaton.mmlt.MealyTimerInfo;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -26,15 +26,15 @@ public class LocationTimerInfo<I, O> implements Serializable {
     // Keep a list of timers sorted by their initial value. This lets us avoid redundant sort operations.
     private final List<MealyTimerInfo<O>> sortedTimers;
 
-    private final Word<LocalTimerMealySemanticInputSymbol<I>> prefix;
+    private final Word<TimedInput<I>> prefix;
 
-    public LocationTimerInfo(Word<LocalTimerMealySemanticInputSymbol<I>> prefix) {
+    public LocationTimerInfo(Word<TimedInput<I>> prefix) {
         this.prefix = prefix;
         this.timers = new HashMap<>();
         this.sortedTimers = new ArrayList<>();
     }
 
-    public Word<LocalTimerMealySemanticInputSymbol<I>> getPrefix() {
+    public Word<TimedInput<I>> getPrefix() {
         return prefix;
     }
 

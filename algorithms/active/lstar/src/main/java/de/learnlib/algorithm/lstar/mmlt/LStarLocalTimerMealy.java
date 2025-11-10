@@ -1,12 +1,15 @@
 package de.learnlib.algorithm.lstar.mmlt;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
 
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.LocalTimerMealyModelParams;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
-import de.learnlib.algorithm.lstar.mmlt.cex.CexPreprocessor;
 import de.learnlib.algorithm.lstar.mmlt.cex.LocalTimerMealyCounterexampleHandler;
 import de.learnlib.algorithm.lstar.mmlt.cex.LocalTimerMealyOutputInconsistency;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.FalseIgnoreResult;
@@ -24,23 +27,18 @@ import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
+import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.time.mmlt.TimeStepSequence;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
-import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * The MMLT learner.
@@ -48,22 +46,22 @@ import java.util.stream.Stream;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Integer, I, O>, LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>>, LearnerStatsProvider {
+public class LStarLocalTimerMealy<I, O> implements OTLearner<MMLT<Integer, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>>, LearnerStatsProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(LStarLocalTimerMealy.class);
     private StatsContainer stats = new DummyStatsContainer();
 
-    private final ClosingStrategy<? super LocalTimerMealySemanticInputSymbol<I>, ? super Word<LocalTimerMealyOutputSymbol<O>>> closingStrategy;
+    private final ClosingStrategy<? super TimedInput<I>, ? super Word<TimedOutput<O>>> closingStrategy;
 
     private final AbstractTimedQueryOracle<I, O> timeOracle;
-    private final SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> symbolFilter;
+    private final SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
 
     private final LStarLocalTimerMealyHypDataContainer<I, O> hypData;
 
     // ============================
 
 
-    private final List<Word<LocalTimerMealySemanticInputSymbol<I>>> initialSuffixes;
+    private final List<Word<TimedInput<I>>> initialSuffixes;
     private final LocalTimerMealyCounterexampleHandler<Integer, I, O> cexAnalyzer;
 
     /**
@@ -78,12 +76,11 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
      * @param timeOracle      The output query oracle for MMLTs.
      * @param symbolFilter    The symbol filter. If no filter should be used, use the AcceptAll filter.
      */
-    public LStarLocalTimerMealy(Alphabet<LocalTimerMealySemanticInputSymbol<I>> alphabet,
+    public LStarLocalTimerMealy(Alphabet<TimedInput<I>> alphabet,
                                 LocalTimerMealyModelParams<O> modelParams,
-                                @NonNull
-                                List<Word<LocalTimerMealySemanticInputSymbol<I>>> initialSuffixes,
+                                List<Word<TimedInput<I>>> initialSuffixes,
                                 AbstractTimedQueryOracle<I, O> timeOracle,
-                                @NonNull SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> symbolFilter) {
+                                SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter) {
         this(alphabet, modelParams, initialSuffixes, ClosingStrategies.CLOSE_SHORTEST, timeOracle, symbolFilter, AcexAnalyzers.BINARY_SEARCH_BWD);
     }
 
@@ -98,13 +95,12 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
      * @param symbolFilter    The symbol filter. If no filter should be used, use the AcceptAll filter.
      * @param analyzer        The strategy for decomposing counterexamples.
      */
-    public LStarLocalTimerMealy(Alphabet<LocalTimerMealySemanticInputSymbol<I>> alphabet,
+    public LStarLocalTimerMealy(Alphabet<TimedInput<I>> alphabet,
                                 LocalTimerMealyModelParams<O> modelParams,
-                                @NonNull
-                                List<Word<LocalTimerMealySemanticInputSymbol<I>>> initialSuffixes,
-                                ClosingStrategy<? super LocalTimerMealySemanticInputSymbol<I>, ? super Word<LocalTimerMealyOutputSymbol<O>>> closingStrategy,
+                                List<Word<TimedInput<I>>> initialSuffixes,
+                                ClosingStrategy<? super TimedInput<I>, ? super Word<TimedOutput<O>>> closingStrategy,
                                 AbstractTimedQueryOracle<I, O> timeOracle,
-                                @NonNull SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> symbolFilter,
+                                SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter,
                                 AcexAnalyzer analyzer) {
         this.closingStrategy = closingStrategy;
         this.timeOracle = timeOracle;
@@ -176,7 +172,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
      *
      * @return MMLT hypothesis
      */
-    public LocalTimerMealy<Integer, I, O> getHypothesisModel() {
+    public MMLT<Integer, I, ?, O> getHypothesisModel() {
         return getInternalLocalTimerMealyHypothesis();
     }
 
@@ -186,14 +182,14 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
      *
      * @return MMLT hypothesis
      */
-    private LocalTimerMealyHypothesis<Integer, I, O> getInternalLocalTimerMealyHypothesis() {
+    private LocalTimerMealyHypothesis<Integer, I, ?, O> getInternalLocalTimerMealyHypothesis() {
         this.updateOutputs();
         var hyp = LocalTimerMealyHypothesisBuilder.constructHypothesis(this.hypData);
 
         return new LocalTimerMealyHypothesis<>(hyp.automaton(), hyp.prefixMap());
     }
 
-    protected List<Row<LocalTimerMealySemanticInputSymbol<I>>> selectClosingRows(List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> unclosed) {
+    protected List<Row<TimedInput<I>>> selectClosingRows(List<List<Row<TimedInput<I>>>> unclosed) {
         return closingStrategy.selectClosingRows(unclosed, hypData.getTable(), timeOracle);
     }
 
@@ -210,17 +206,17 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
                         return; // already queried
                     }
 
-                    Word<LocalTimerMealySemanticInputSymbol<I>> prefix = row.getLabel().prefix(-1);
-                    LocalTimerMealySemanticInputSymbol<I> inputSym = row.getLabel().suffix(1).lastSymbol();
+                    Word<TimedInput<I>> prefix = row.getLabel().prefix(-1);
+                    TimedInput<I> inputSym = row.getLabel().suffix(1).lastSymbol();
 
-                    LocalTimerMealyOutputSymbol<O> output = null;
+                    TimedOutput<O> output = null;
                     if (inputSym instanceof TimeStepSequence<I> ws) {
                         // Query timer output from table:
-                        MealyTimerInfo<O> timerInfo = this.hypData.getTable().getTimerInfo(prefix, ws.getTimeSteps());
+                        MealyTimerInfo<O> timerInfo = this.hypData.getTable().getTimerInfo(prefix, ws.timeSteps());
                         if (timerInfo == null) {
                             throw new AssertionError();
                         }
-                        output = new LocalTimerMealyOutputSymbol<>(timerInfo.output());
+                        output = new TimedOutput<>(timerInfo.output());
                     } else {
                         output = this.timeOracle.querySuffixOutput(prefix, Word.fromLetter(inputSym)).lastSymbol();
                     }
@@ -235,14 +231,14 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
 
     @Override
     public void startLearning() {
-        List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> initialUnclosed = this.hypData.getTable().initialize(Collections.emptyList(), this.initialSuffixes, timeOracle);
+        List<List<Row<TimedInput<I>>>> initialUnclosed = this.hypData.getTable().initialize(Collections.emptyList(), this.initialSuffixes, timeOracle);
 
         // Ensure that closed:
         this.completeConsistentTable(initialUnclosed);
     }
 
     @Override
-    public boolean refineHypothesis(DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> ceQuery) {
+    public boolean refineHypothesis(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> ceQuery) {
         if (!refineHypothesisSingle(ceQuery)) {
             return false; // no valid CEX
         }
@@ -261,10 +257,9 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
      * @return The resulting inconsistency, or null, if the counterexample is not a counterexample.
      */
     @Nullable
-    private LocalTimerMealyOutputInconsistency<I, O> toOutputInconsistency(DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> ceQuery, LocalTimerMealyHypothesis<Integer, I, O> hypothesis) {
+    private LocalTimerMealyOutputInconsistency<I, O> toOutputInconsistency(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> ceQuery, LocalTimerMealyHypothesis<Integer, I, ?, O> hypothesis) {
         // 1. Cut example after first deviation:
-        Word<LocalTimerMealyOutputSymbol<O>> hypOutput = hypothesis.getSemantics().computeSuffixOutput(ceQuery.getPrefix(), ceQuery.getSuffix());
-        DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> shortQuery = CexPreprocessor.truncateCEX(ceQuery, hypOutput);
+        DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> shortQuery = MealyUtil.shortenCounterExample(hypothesis.getSemantics(), ceQuery);
         if (shortQuery == null) {
             return null;
         }
@@ -280,7 +275,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
                 shortQuery.getOutput(), shortHypOutput);
     }
 
-    private boolean refineHypothesisSingle(DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> ceQuery) {
+    private boolean refineHypothesisSingle(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> ceQuery) {
         // 1. Update hypothesis (may have changed since last refinement):
         var hypothesis = this.getInternalLocalTimerMealyHypothesis();
 
@@ -305,7 +300,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
 
             // Add new discriminator as suffix:
             if (hypData.getTable().getSuffixes().contains(locSplit.getDiscriminator())) throw new AssertionError();
-            List<Word<LocalTimerMealySemanticInputSymbol<I>>> suffixes = Collections.singletonList(locSplit.getDiscriminator());
+            List<Word<TimedInput<I>>> suffixes = Collections.singletonList(locSplit.getDiscriminator());
             var unclosed = hypData.getTable().addSuffixes(suffixes, timeOracle);
 
             // Close transitions:
@@ -322,8 +317,8 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
                     "Inaccuracies: missing one-shot timers");
 
             // Identify corresponding sp row:
-            Word<LocalTimerMealySemanticInputSymbol<I>> locPrefix = hypothesis.getPrefix(noAperiodic.getLocation());
-            Row<LocalTimerMealySemanticInputSymbol<I>> spRow = hypData.getTable().getRow(locPrefix);
+            Word<TimedInput<I>> locPrefix = hypothesis.getPrefix(noAperiodic.getLocation());
+            Row<TimedInput<I>> spRow = hypData.getTable().getRow(locPrefix);
             if (spRow == null || !spRow.isShortPrefixRow()) {
                 throw new AssertionError();
             }
@@ -338,8 +333,8 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
             }
 
             // Identify corresponding sp row:
-            Word<LocalTimerMealySemanticInputSymbol<I>> locPrefix = hypothesis.getPrefix(falseIgnore.getLocation());
-            Row<LocalTimerMealySemanticInputSymbol<I>> spRow = hypData.getTable().getRow(locPrefix);
+            Word<TimedInput<I>> locPrefix = hypothesis.getPrefix(falseIgnore.getLocation());
+            Row<TimedInput<I>> spRow = hypData.getTable().getRow(locPrefix);
             if (spRow == null || !spRow.isShortPrefixRow()) {
                 throw new AssertionError();
             }
@@ -359,7 +354,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
         return true;
     }
 
-    private void handleMissingTimeoutChange(Row<LocalTimerMealySemanticInputSymbol<I>> spRow, MealyTimerInfo<O> timeout) {
+    private void handleMissingTimeoutChange(Row<TimedInput<I>> spRow, MealyTimerInfo<O> timeout) {
         var locationTimerInfo = hypData.getTable().getLocationTimerInfo(spRow);
         if (locationTimerInfo == null) {
             throw new AssertionError("Location with missing one-shot timer must have timers.");
@@ -377,7 +372,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
         }
 
         // Prefix for timeout-transition of new one-shot timer:
-        Word<LocalTimerMealySemanticInputSymbol<I>> timerTransPrefix = spRow.getLabel().append(new TimeStepSequence<>(timeout.initial()));
+        Word<TimedInput<I>> timerTransPrefix = spRow.getLabel().append(new TimeStepSequence<>(timeout.initial()));
         if (this.hypData.getTable().getRow(timerTransPrefix) != null) {
             throw new AssertionError("Timer already appears to be one-shot.");
         }
@@ -392,13 +387,13 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
         locationTimerInfo.setOneShotTimer(timeout.name());
 
         // Update fringe prefixes + close table:
-        List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> unclosed = this.hypData.getTable().addTimerTransition(spRow, timeout, this.timeOracle);
+        List<List<Row<TimedInput<I>>>> unclosed = this.hypData.getTable().addTimerTransition(spRow, timeout, this.timeOracle);
         this.completeConsistentTable(unclosed);
     }
 
 
     @Override
-    public ObservationTable<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> getObservationTable() {
+    public ObservationTable<TimedInput<I>, Word<TimedOutput<O>>> getObservationTable() {
         return this.hypData.getTable();
     }
 
@@ -410,10 +405,10 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<LocalTimerMealy<Int
      *
      * @param unclosed the unclosed rows (equivalence classes) to start with.
      */
-    protected void completeConsistentTable(List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> unclosed) {
-        List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> unclosedIter = unclosed;
+    protected void completeConsistentTable(List<List<Row<TimedInput<I>>>> unclosed) {
+        List<List<Row<TimedInput<I>>>> unclosedIter = unclosed;
         while (!unclosedIter.isEmpty()) {
-            List<Row<LocalTimerMealySemanticInputSymbol<I>>> closingRows = this.selectClosingRows(unclosedIter);
+            List<Row<TimedInput<I>>> closingRows = this.selectClosingRows(unclosedIter);
 
             // Add new states:
             unclosedIter = hypData.getTable().toShortPrefixes(closingRows, timeOracle);

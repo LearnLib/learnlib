@@ -3,11 +3,10 @@ package de.learnlib.algorithm.lstar.mmlt.cex;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithm.lstar.mmlt.hyp.LocalTimerMealyHypothesis;
 import de.learnlib.oracle.AbstractTimedQueryOracle;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.TimeStepSequence;
-import net.automatalib.alphabet.time.mmlt.TimeStepSymbol;
-import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
-import net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealyConfiguration;
+import net.automatalib.automaton.mmlt.State;
+import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +32,11 @@ class LocalTimerMealyCounterexampleDecompositor<S, I, O> {
     }
 
     ExtendedDecomposition<S, I, O> findExtendedDecomposition(LocalTimerMealyOutputInconsistency<I, O> outIncons,
-                                                             LocalTimerMealyHypothesis<S, I, O> hypothesis) {
+                                                             LocalTimerMealyHypothesis<S, I, ?, O> hypothesis) {
 
         if (outIncons.suffix().length() == 1) {
             // Incorrect output:
-            var prefixState = hypothesis.getSemantics().traceInputs(outIncons.prefix());
+            var prefixState = hypothesis.getSemantics().getState(outIncons.prefix());
             return new ExtendedDecomposition<>(prefixState, outIncons.suffix().firstSymbol());
         }
 
@@ -48,7 +47,7 @@ class LocalTimerMealyCounterexampleDecompositor<S, I, O> {
         if (acex.testEffects(0, acex.getLength() - 1)) {
             // Breakpoint condition not met -> must be incorrect output:
             var lastStatePrefix = outIncons.prefix().concat(outIncons.suffix().prefix(outIncons.suffix().length() - 1));
-            var lastState = hypothesis.getSemantics().traceInputs(lastStatePrefix);
+            var lastState = hypothesis.getSemantics().getState(lastStatePrefix);
 
             return new ExtendedDecomposition<>(lastState, outIncons.suffix().lastSymbol());
         }
@@ -60,11 +59,11 @@ class LocalTimerMealyCounterexampleDecompositor<S, I, O> {
         }
 
         // Get components:
-        Word<LocalTimerMealySemanticInputSymbol<I>> prefix = outIncons.prefix().concat(outIncons.suffix().prefix(breakpoint));
-        LocalTimerMealySemanticInputSymbol<I> sym = outIncons.suffix().getSymbol(breakpoint);
-        Word<LocalTimerMealySemanticInputSymbol<I>> discriminator = outIncons.suffix().subWord(breakpoint + 1);
+        Word<TimedInput<I>> prefix = outIncons.prefix().concat(outIncons.suffix().prefix(breakpoint));
+        TimedInput<I> sym = outIncons.suffix().getSymbol(breakpoint);
+        Word<TimedInput<I>> discriminator = outIncons.suffix().subWord(breakpoint + 1);
 
-        var prefixState = hypothesis.getSemantics().traceInputs(prefix);
+        var prefixState = hypothesis.getSemantics().getState(prefix);
 
         logger.debug(String.format("Decomposing to %s|%s|%s %n" + "Output at %d: %s. %nOutput at %d: %s", prefixState, sym, discriminator, breakpoint,
                 acex.computeEffect(breakpoint), breakpoint + 1, acex.computeEffect(breakpoint + 1)));
@@ -80,7 +79,7 @@ class LocalTimerMealyCounterexampleDecompositor<S, I, O> {
      * @return Post-processed decomposition
      */
     ExtendedDecomposition<S, I, O> postProcessExtendedDecomposition(ExtendedDecomposition<S, I, O> decomposition,
-                                                                    LocalTimerMealyHypothesis<S, I, O> hypothesis) {
+                                                                    LocalTimerMealyHypothesis<S, I, ?, O> hypothesis) {
         if (!(decomposition.input() instanceof TimeoutSymbol<I>)) {
             return decomposition;
         }
@@ -92,43 +91,43 @@ class LocalTimerMealyCounterexampleDecompositor<S, I, O> {
         if (decomposition.isForIncorrectOutput()) {
             // Incorrect output at tout:
             long minWaitTime;
-            if (hypOutput.firstSymbol().getDelay() == 0 && sulOutput.firstSymbol().getDelay() != 0) {
+            if (hypOutput.firstSymbol().delay() == 0 && sulOutput.firstSymbol().delay() != 0) {
                 throw new AssertionError();
-            } else if (hypOutput.firstSymbol().getDelay() != 0 && sulOutput.firstSymbol().getDelay() == 0) {
+            } else if (hypOutput.firstSymbol().delay() != 0 && sulOutput.firstSymbol().delay() == 0) {
                 // If there is no timeout in either hyp or sul, need to trigger next observable timeout:
-                minWaitTime = hypOutput.firstSymbol().getDelay();
+                minWaitTime = hypOutput.firstSymbol().delay();
             } else {
                 // If there is a timeout in hyp and sul, go to next timeout:
-                minWaitTime = Math.min(hypOutput.firstSymbol().getDelay(), sulOutput.firstSymbol().getDelay());
+                minWaitTime = Math.min(hypOutput.firstSymbol().delay(), sulOutput.firstSymbol().delay());
             }
 
             // if minimum time is zero (= no timeout) or one, need to append empty word to prefix:
-            LocalTimerMealyConfiguration<S, I, O> newPrefixState;
+            State<S, O> newPrefixState;
             if (minWaitTime <= 1) {
                 newPrefixState = decomposition.state();
             } else {
-                newPrefixState = hypothesis.getSemantics().traceInputs(statePrefix.append(new TimeStepSequence<>(minWaitTime - 1)));
+                newPrefixState = hypothesis.getSemantics().getState(statePrefix.append(new TimeStepSequence<>(minWaitTime - 1)));
             }
 
             logger.debug("Updated incorrect output at tout during post-processing.");
-            return new ExtendedDecomposition<>(newPrefixState, new TimeStepSymbol<>());
+            return new ExtendedDecomposition<>(newPrefixState, TimedInput.step());
         } else {
             if (decomposition.state().isStableConfig() || hypOutput.equals(sulOutput)) {
                 // stable-configuration or same output at tout -> same wait time for output in hyp and SUL:
-                if (hypOutput.firstSymbol().getDelay() != sulOutput.firstSymbol().getDelay()) {
+                if (hypOutput.firstSymbol().delay() != sulOutput.firstSymbol().delay()) {
                     throw new AssertionError();
                 }
 
-                long waitTime = hypOutput.firstSymbol().getDelay();
-                LocalTimerMealyConfiguration<S, I, O> newPrefixState;
+                long waitTime = hypOutput.firstSymbol().delay();
+                State<S, O> newPrefixState;
                 if (waitTime <= 1) {
                     newPrefixState = decomposition.state();
                 } else {
-                    newPrefixState = hypothesis.getSemantics().traceInputs(statePrefix.append(new TimeStepSequence<>(waitTime - 1)));
+                    newPrefixState = hypothesis.getSemantics().getState(statePrefix.append(new TimeStepSequence<>(waitTime - 1)));
                 }
 
                 logger.debug("Updated incorrect target at tout during post-processing.");
-                return new ExtendedDecomposition<>(newPrefixState, new TimeStepSymbol<>(), decomposition.discriminator());
+                return new ExtendedDecomposition<>(newPrefixState, TimedInput.step(), decomposition.discriminator());
             } else {
                 // different output at tout -> found incorrect output:
                 logger.debug("Found incorrect output through post-processing.");

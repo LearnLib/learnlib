@@ -22,16 +22,18 @@ import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
 import de.learnlib.util.statistic.container.MapStatsContainer;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
+import net.automatalib.exception.FormatException;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeoutSymbol;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.word.Word;
 import org.testng.annotations.Test;
 
 import de.learnlib.filter.cache.mmlt.LocalTimerMealyTreeSULCache;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -53,7 +55,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
         learner.startLearning();
 
         var hyp = learner.getHypothesisModel();
-        DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> cex = tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
+        DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> cex = tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
         stats.increaseCounter("roundCount", "CEX queries");
 
         int roundCount = 1;
@@ -81,7 +83,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
         }
     }
 
-    private static <S, I, O> void learnModel(String name, LocalTimerMealy<S, I, O> automaton, LocalTimerMealyModelParams<O> params,
+    private static <S, I, T, O> void learnModel(String name, MMLT<S, I, T, O> automaton, LocalTimerMealyModelParams<O> params,
                                              FilterMode symbolFilterMode, long seed, boolean printResults) {
 
         // Add some stats:
@@ -91,11 +93,11 @@ public class LStarLocalTimerMealyBenchmarkTests {
         stats.setCounter("original_inputs", "Untimed alphabet size in original", automaton.getUntimedAlphabet().size());
 
         // Set up a pipeline:
-        GrowingMapAlphabet<LocalTimerMealySemanticInputSymbol<I>> alphabet = new GrowingMapAlphabet<>();
+        GrowingMapAlphabet<TimedInput<I>> alphabet = new GrowingMapAlphabet<>();
         alphabet.addAll(automaton.getUntimedAlphabet());
 
         // Query oracle -> TimeoutReducer -> Cache -> Query stats -> SUL
-        LocalTimerMealySimulatorSUL<S, I, O> sul = new LocalTimerMealySimulatorSUL<>(automaton);
+        LocalTimerMealySimulatorSUL<?, I, ?, O> sul = new LocalTimerMealySimulatorSUL<>(automaton.getSemantics());
         LocalTimerMealyStatsSUL<I, O> statsAfterCache = new LocalTimerMealyStatsSUL<>(sul, stats);
         LocalTimerMealyTreeSULCache<I, O> cacheSUL = new LocalTimerMealyTreeSULCache<>(statsAfterCache, params);
         cacheSUL.setStatsContainer(stats);
@@ -113,12 +115,12 @@ public class LStarLocalTimerMealyBenchmarkTests {
         chainOracle.setStatsContainer(stats);
 
         // Create learner:
-        List<Word<LocalTimerMealySemanticInputSymbol<I>>> suffixes = new ArrayList<>();
+        List<Word<TimedInput<I>>> suffixes = new ArrayList<>();
         alphabet.forEach(s -> suffixes.add(Word.fromLetter(s)));
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
         // Configure symbol filter:
-        SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> filter = new AcceptAllSymbolFilter<>(); // pass-through
+        SymbolFilter<TimedInput<I>, InputSymbol<I>> filter = new AcceptAllSymbolFilter<>(); // pass-through
         switch (symbolFilterMode) {
             case perfect -> filter = new LocalTimerMealyPerfectSymbolFilter<>(automaton);
             case random -> filter = new LocalTimerMealyRandomSymbolFilter<>(automaton, 0.1, new Random(seed));
@@ -137,7 +139,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
 
 
     @Test
-    public void learnExamplesNoFilter() {
+    public void learnExamplesNoFilter() throws IOException, FormatException {
         for (String modelFile : LocalTimerMealyTestUtil.listModelFiles()) {
             var model = LocalTimerMealyTestUtil.automatonFromFile(modelFile);
             learnModel(model.name(), model.automaton(), model.params(), FilterMode.none, 100, true);
@@ -147,7 +149,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
     }
 
     @Test
-    public void learnExamplesIgnoreAllFilter() {
+    public void learnExamplesIgnoreAllFilter() throws IOException, FormatException {
         for (String modelFile : LocalTimerMealyTestUtil.listModelFiles()) {
             var model = LocalTimerMealyTestUtil.automatonFromFile(modelFile);
             learnModel(modelFile, model.automaton(), model.params(), FilterMode.ignore_all, 100, true);
@@ -157,7 +159,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
     }
 
     @Test
-    public void learnExamplesPerfectFilter() {
+    public void learnExamplesPerfectFilter() throws IOException, FormatException {
         for (String modelFile : LocalTimerMealyTestUtil.listModelFiles()) {
             var model = LocalTimerMealyTestUtil.automatonFromFile(modelFile);
             learnModel(modelFile, model.automaton(), model.params(), FilterMode.perfect, 100, true);
@@ -167,7 +169,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
     }
 
     @Test
-    public void learnExamplesRandomFilter() {
+    public void learnExamplesRandomFilter() throws IOException, FormatException {
         for (String modelFile : LocalTimerMealyTestUtil.listModelFiles()) {
             var model = LocalTimerMealyTestUtil.automatonFromFile(modelFile);
             learnModel(modelFile, model.automaton(), model.params(), FilterMode.random, 100, true);

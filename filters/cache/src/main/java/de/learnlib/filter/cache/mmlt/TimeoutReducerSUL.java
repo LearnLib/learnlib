@@ -3,8 +3,8 @@ package de.learnlib.filter.cache.mmlt;
 import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.sul.LocalTimerMealySUL;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.InputSymbol;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -40,13 +40,13 @@ public class TimeoutReducerSUL<I, O> implements LocalTimerMealySUL<I, O>, Learne
     }
 
     @Override
-    public LocalTimerMealyOutputSymbol<O> step(NonDelayingInput<I> input) {
+    public TimedOutput<O> step(InputSymbol<I> input) {
         this.noTimeoutWaitingTime = 0; // might observe expirations again
         return delegate.step(input);
     }
 
     @Override
-    public @Nullable LocalTimerMealyOutputSymbol<O> timeoutStep(long maxTime) {
+    public @Nullable TimedOutput<O> timeoutStep(long maxTime) {
         if (this.noTimeoutWaitingTime >= this.maxDelay) {
             return null; // cannot observe expiration until non-delaying input
         }

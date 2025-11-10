@@ -2,10 +2,10 @@ package de.learnlib.oracle.equivalence.mmlt;
 
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
-import net.automatalib.util.automaton.mmlt.LocalTimerMealyUtil;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.util.automaton.mmlt.MMLTUtil;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -21,20 +21,20 @@ import java.util.List;
  */
 public class LocalTimerMealySimulatorOracle<I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O> {
 
-    private final LocalTimerMealy<?, I, O> refModel;
+    private final MMLT<?, I, ?, O> refModel;
 
-    public LocalTimerMealySimulatorOracle(LocalTimerMealy<?, I, O> refModel) {
+    public LocalTimerMealySimulatorOracle(MMLT<?, I, ?, O> refModel) {
         this.refModel = refModel;
     }
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
-        List<LocalTimerMealySemanticInputSymbol<I>> listInputs = new ArrayList<>(inputs);
+    public @Nullable DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> findCounterExample(MMLT<?, I, ?, O> hypothesis, Collection<? extends TimedInput<I>> inputs) {
+        List<TimedInput<I>> listInputs = new ArrayList<>(inputs);
 
-        var separatingWord = LocalTimerMealyUtil.findSeparatingWord(refModel, hypothesis, listInputs);
+        var separatingWord = MMLTUtil.findSeparatingWord(refModel, hypothesis, listInputs);
         if (separatingWord != null) {
-            var sulOutput = refModel.getSemantics().computeSuffixOutput(Word.epsilon(), separatingWord);
-            return new DefaultQuery<>(Word.epsilon(), separatingWord, sulOutput);
+            var sulOutput = refModel.getSemantics().computeOutput(separatingWord);
+            return new DefaultQuery<>(separatingWord, sulOutput);
         } else {
             return null;
         }

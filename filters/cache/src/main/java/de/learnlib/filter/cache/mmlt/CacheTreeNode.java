@@ -1,9 +1,9 @@
 package de.learnlib.filter.cache.mmlt;
 
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.time.mmlt.TimeStepSequence;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeStepSequence;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collections;
@@ -23,21 +23,21 @@ import java.util.Map;
  * @param <O> Output symbol type
  */
 class CacheTreeNode<I, O> {
-    private record CacheTreeTransition<I, O>(LocalTimerMealyOutputSymbol<O> output, CacheTreeNode<I, O> target) {
+    private record CacheTreeTransition<I, O>(TimedOutput<O> output, CacheTreeNode<I, O> target) {
     }
 
 
     @Nullable
     private CacheTreeNode<I, O> parent;
-    private LocalTimerMealySemanticInputSymbol<I> parentInput;
+    private TimedInput<I> parentInput;
 
     private long timeout;
     @Nullable
     private CacheTreeTransition<I, O> timeTransition;
 
-    private Map<NonDelayingInput<I>, CacheTreeTransition<I, O>> untimedChildren;
+    private Map<InputSymbol<I>, CacheTreeTransition<I, O>> untimedChildren;
 
-    public CacheTreeNode(CacheTreeNode<I, O> parent, LocalTimerMealySemanticInputSymbol<I> parentInput) {
+    public CacheTreeNode(CacheTreeNode<I, O> parent, TimedInput<I> parentInput) {
         this.parent = parent;
         this.parentInput = parentInput;
 
@@ -47,7 +47,7 @@ class CacheTreeNode<I, O> {
         this.untimedChildren = new HashMap<>();
     }
 
-    public CacheTreeNode<I, O> addTimeChild(long timeout, LocalTimerMealyOutputSymbol<O> output) {
+    public CacheTreeNode<I, O> addTimeChild(long timeout, TimedOutput<O> output) {
         if (this.hasTimeChild()) {
             throw new IllegalStateException("State already has time child.");
         }
@@ -89,7 +89,7 @@ class CacheTreeNode<I, O> {
         return timeout;
     }
 
-    public LocalTimerMealyOutputSymbol<O> getTimeoutOutput() {
+    public TimedOutput<O> getTimeoutOutput() {
         if (!this.hasTimeChild()) {
             throw new IllegalStateException();
         }
@@ -111,7 +111,7 @@ class CacheTreeNode<I, O> {
      * @param output     Output at the end of the new time sequence
      * @return New child node
      */
-    public CacheTreeNode<I, O> splitTimeout(long newTimeout, LocalTimerMealyOutputSymbol<O> output) {
+    public CacheTreeNode<I, O> splitTimeout(long newTimeout, TimedOutput<O> output) {
         if (this.timeTransition == null || newTimeout >= this.getTimeout()) {
             throw new IllegalArgumentException("Must split at lower timeout.");
         }
@@ -132,29 +132,29 @@ class CacheTreeNode<I, O> {
         return parent;
     }
 
-    public LocalTimerMealySemanticInputSymbol<I> getParentInput() {
+    public TimedInput<I> getParentInput() {
         return parentInput;
     }
 
-    public void setParent(CacheTreeNode<I, O> parent, LocalTimerMealySemanticInputSymbol<I> parentInput) {
+    public void setParent(CacheTreeNode<I, O> parent, TimedInput<I> parentInput) {
         this.parent = parent;
         this.parentInput = parentInput;
     }
 
     // -------------------------------------------------------
-    public boolean hasChild(NonDelayingInput<I> input) {
+    public boolean hasChild(InputSymbol<I> input) {
         return this.untimedChildren.containsKey(input);
     }
 
-    public LocalTimerMealyOutputSymbol<O> getOutput(NonDelayingInput<I> input) {
+    public TimedOutput<O> getOutput(InputSymbol<I> input) {
         return this.untimedChildren.get(input).output();
     }
 
-    public CacheTreeNode<I, O> getChild(NonDelayingInput<I> input) {
+    public CacheTreeNode<I, O> getChild(InputSymbol<I> input) {
         return this.untimedChildren.get(input).target();
     }
 
-    public CacheTreeNode<I, O> addUntimedChild(NonDelayingInput<I> input, LocalTimerMealyOutputSymbol<O> output) {
+    public CacheTreeNode<I, O> addUntimedChild(InputSymbol<I> input, TimedOutput<O> output) {
         if (untimedChildren.containsKey(input)) {
             throw new IllegalArgumentException("State already has an child for this input.");
         }
@@ -164,7 +164,7 @@ class CacheTreeNode<I, O> {
         return child;
     }
 
-    public Map<NonDelayingInput<I>, CacheTreeTransition<I, O>> getUntimedChildren() {
+    public Map<InputSymbol<I>, CacheTreeTransition<I, O>> getUntimedChildren() {
         return Collections.unmodifiableMap(this.untimedChildren);
     }
 }

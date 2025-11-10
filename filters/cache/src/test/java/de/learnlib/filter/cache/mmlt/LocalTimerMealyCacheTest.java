@@ -1,33 +1,31 @@
 package de.learnlib.filter.cache.mmlt;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import de.learnlib.algorithm.LocalTimerMealyModelParams;
 import de.learnlib.driver.simulator.LocalTimerMealySimulatorSUL;
 import de.learnlib.oracle.membership.TimedQueryOracle;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.time.mmlt.TimeStepSymbol;
-import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
-import net.automatalib.automaton.time.impl.mmlt.CompactLocalTimerMealy;
-import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
+import net.automatalib.automaton.mmlt.impl.CompactMMLT;
+import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.common.util.random.RandomUtil;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
-
 @Test
 public class LocalTimerMealyCacheTest {
-    private CompactLocalTimerMealy<String, String> buildBaseModel() {
+    private CompactMMLT<String, String> buildBaseModel() {
         var symbols = List.of("p1", "p2", "abort", "collect");
-        GrowingMapAlphabet<NonDelayingInput<String>> alphabet = new GrowingMapAlphabet<>();
-        symbols.forEach(s -> alphabet.add(new NonDelayingInput<>(s)));
+        GrowingMapAlphabet<InputSymbol<String>> alphabet = new GrowingMapAlphabet<>();
+        symbols.forEach(s -> alphabet.add(new InputSymbol<>(s)));
 
-        var model = new CompactLocalTimerMealy<>(alphabet, "void", StringSymbolCombiner.getInstance());
+        var model = new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
 
         var s0 = model.addState();
         var s1 = model.addState();
@@ -36,19 +34,19 @@ public class LocalTimerMealyCacheTest {
 
         model.setInitialState(s0);
 
-        model.addTransition(s0, new NonDelayingInput<>("p1"), "go", s1);
-        model.addTransition(s1, new NonDelayingInput<>("abort"), "ok", s1);
-        model.addLocalReset(s1, new NonDelayingInput<>("abort"));
+        model.addTransition(s0, new InputSymbol<>("p1"), s1, "go");
+        model.addTransition(s1, new InputSymbol<>("abort"), s1, "ok");
+        model.addLocalReset(s1, new InputSymbol<>("abort"));
 
         model.addPeriodicTimer(s1, "a", 3, "part");
         model.addPeriodicTimer(s1, "b", 6, "noise");
         model.addOneShotTimer(s1, "c", 40, "done", s3);
 
-        model.addTransition(s0, new NonDelayingInput<>("p2"), "go", s2);
-        model.addTransition(s2, new NonDelayingInput<>("abort"), "void", s3);
+        model.addTransition(s0, new InputSymbol<>("p2"), s2, "go");
+        model.addTransition(s2, new InputSymbol<>("abort"), s3, "void");
         model.addOneShotTimer(s2, "d", 4, "done", s3);
 
-        model.addTransition(s3, new NonDelayingInput<>("collect"), "void", s0);
+        model.addTransition(s3, new InputSymbol<>("collect"), s0, "void");
 
         return model;
     }
@@ -62,7 +60,7 @@ public class LocalTimerMealyCacheTest {
         var automaton = buildBaseModel();
         var params = new LocalTimerMealyModelParams<>("void", 4, 80, StringSymbolCombiner.getInstance());
 
-        var sul = new LocalTimerMealySimulatorSUL<>(automaton);
+        var sul = new LocalTimerMealySimulatorSUL<>(automaton.getSemantics());
         var cacheSUL = new LocalTimerMealyTreeSULCache<>(sul, params);
         var timeOracleWithCache = new TimedQueryOracle<>(cacheSUL, params);
         var timeOracleWithoutCache = new TimedQueryOracle<>(sul, params);
@@ -71,7 +69,7 @@ public class LocalTimerMealyCacheTest {
         var listAlphabet = new ArrayList<>(automaton.getSemantics().getInputAlphabet());
 
         // Generate some random words and compare outputs of the cache, SUL, and automaton:
-        List<Word<LocalTimerMealySemanticInputSymbol<String>>> words = new ArrayList<>();
+        List<Word<TimedInput<String>>> words = new ArrayList<>();
         for (int i = 0; i < 500; i++) {
             int maxLength = random.nextInt(1, 500);
             var symbols = RandomUtil.sample(random, listAlphabet, maxLength);
@@ -101,14 +99,12 @@ public class LocalTimerMealyCacheTest {
         var refAutomaton = buildBaseModel();
         var params = new LocalTimerMealyModelParams<>("void", 4, 80, StringSymbolCombiner.getInstance());
 
-        var sul = new LocalTimerMealySimulatorSUL<>(refAutomaton);
+        var sul = new LocalTimerMealySimulatorSUL<>(refAutomaton.getSemantics());
         var cacheSUL = new LocalTimerMealyTreeSULCache<>(sul, params);
         var timeOracleWithCache = new TimedQueryOracle<>(cacheSUL, params);
 
         // Add word to cache:
-        Word<LocalTimerMealySemanticInputSymbol<String>> testWord = Word.fromSymbols(
-                new NonDelayingInput<>("p2"), new TimeoutSymbol<>(), new TimeStepSymbol<>(), new TimeoutSymbol<>()
-        );
+        Word<TimedInput<String>> testWord = Word.fromSymbols(TimedInput.input("p2"), TimedInput.timeout(), TimedInput.step(), TimedInput.timeout());
         timeOracleWithCache.querySuffixOutput(Word.epsilon(), testWord);
 
         // Create a bad hypothesis:
@@ -117,8 +113,8 @@ public class LocalTimerMealyCacheTest {
         badAutomaton.addPeriodicTimer(2, "d", 4, "done");
 
         // Query the cache for a counterexample:
-        Word<LocalTimerMealySemanticInputSymbol<String>> expectedCex = Word.fromSymbols(
-                new NonDelayingInput<>("p2"), new TimeoutSymbol<>(), new TimeoutSymbol<>()
+        Word<TimedInput<String>> expectedCex = Word.fromSymbols(
+                new InputSymbol<>("p2"), new TimeoutSymbol<>(), new TimeoutSymbol<>()
         );
 
         var cacheConsistencyTest = cacheSUL.createCacheConsistencyTest();
@@ -128,8 +124,8 @@ public class LocalTimerMealyCacheTest {
 
         // Now test with a reduced alphabet:
         var symbols = List.of("p1", "abort", "collect"); // not p1
-        GrowingMapAlphabet<LocalTimerMealySemanticInputSymbol<String>> reducedAlphabet = new GrowingMapAlphabet<>();
-        symbols.forEach(s -> reducedAlphabet.add(new NonDelayingInput<>(s)));
+        GrowingMapAlphabet<TimedInput<String>> reducedAlphabet = new GrowingMapAlphabet<>();
+        symbols.forEach(s -> reducedAlphabet.add(new InputSymbol<>(s)));
         reducedAlphabet.add(new TimeoutSymbol<>());
 
         // The only counterexample in the cache has the prefix p2, which is now omitted:

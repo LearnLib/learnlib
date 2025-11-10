@@ -8,8 +8,12 @@ import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.time.mmlt.*;
-import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -34,36 +38,36 @@ import java.util.stream.Stream;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyObservationTable<I, O> implements MutableObservationTable<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> {
+public class LocalTimerMealyObservationTable<I, O> implements MutableObservationTable<TimedInput<I>, Word<TimedOutput<O>>> {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyObservationTable.class);
 
-    private final SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> symbolFilter;
+    private final SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
 
-    private final Map<Word<LocalTimerMealySemanticInputSymbol<I>>, LocationTimerInfo<I, O>> timerInfoMap; // prefix -> timer info
+    private final Map<Word<TimedInput<I>>, LocationTimerInfo<I, O>> timerInfoMap; // prefix -> timer info
 
-    private final Map<Word<LocalTimerMealySemanticInputSymbol<I>>, RowImpl<LocalTimerMealySemanticInputSymbol<I>>> shortPrefixRowMap; // label -> row info
-    private final Map<Word<LocalTimerMealySemanticInputSymbol<I>>, RowImpl<LocalTimerMealySemanticInputSymbol<I>>> longPrefixRowMap; // label -> row info
+    private final Map<Word<TimedInput<I>>, RowImpl<TimedInput<I>>> shortPrefixRowMap; // label -> row info
+    private final Map<Word<TimedInput<I>>, RowImpl<TimedInput<I>>> longPrefixRowMap; // label -> row info
 
-    private final List<RowImpl<LocalTimerMealySemanticInputSymbol<I>>> sortedShortPrefixes; // values of shortPrefixRowMap sorted by label, for faster access.
-    private final List<RowImpl<LocalTimerMealySemanticInputSymbol<I>>> longPrefixList; // values of longPrefixRowMap as list, for faster access.
+    private final List<RowImpl<TimedInput<I>>> sortedShortPrefixes; // values of shortPrefixRowMap sorted by label, for faster access.
+    private final List<RowImpl<TimedInput<I>>> longPrefixList; // values of longPrefixRowMap as list, for faster access.
 
     private final Map<Integer, RowContent<O>> rowContentMap; // contentID -> row content
     private static final int NO_CONTENT = -1;
 
-    private final List<Word<LocalTimerMealySemanticInputSymbol<I>>> suffixes = new ArrayList<>();
-    private final Set<Word<LocalTimerMealySemanticInputSymbol<I>>> suffixSet = new HashSet<>();
+    private final List<Word<TimedInput<I>>> suffixes = new ArrayList<>();
+    private final Set<Word<TimedInput<I>>> suffixSet = new HashSet<>();
 
-    private final Alphabet<LocalTimerMealySemanticInputSymbol<I>> alphabet;
+    private final Alphabet<TimedInput<I>> alphabet;
     private final long minTimerQueryWaitTime;
-    private final LocalTimerMealyOutputSymbol<O> silentOutput; // used for symbol filtering
+    private final TimedOutput<O> silentOutput; // used for symbol filtering
 
-    public LocalTimerMealyObservationTable(Alphabet<LocalTimerMealySemanticInputSymbol<I>> alphabet, long minTimerQueryWaitTime,
-                                           @NonNull SymbolFilter<LocalTimerMealySemanticInputSymbol<I>, NonDelayingInput<I>> symbolFilter, O silentOutput) {
+    public LocalTimerMealyObservationTable(Alphabet<TimedInput<I>> alphabet, long minTimerQueryWaitTime,
+                                           @NonNull SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter, O silentOutput) {
         this.alphabet = alphabet;
 
         this.symbolFilter = symbolFilter;
-        this.silentOutput = new LocalTimerMealyOutputSymbol<>(silentOutput);
+        this.silentOutput = new TimedOutput<>(silentOutput);
         this.minTimerQueryWaitTime = minTimerQueryWaitTime;
 
         this.timerInfoMap = new HashMap<>();
@@ -110,7 +114,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
             alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
-        for (RowImpl<LocalTimerMealySemanticInputSymbol<I>> prefix : this.shortPrefixRowMap.values()) {
+        for (RowImpl<TimedInput<I>> prefix : this.shortPrefixRowMap.values()) {
             prefix.ensureInputCapacity(alphabet.size());
         }
     }
@@ -120,8 +124,8 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
      *
      * @return Corresponding row in the OT
      */
-    private RowImpl<LocalTimerMealySemanticInputSymbol<I>> addInitialLocation() {
-        RowImpl<LocalTimerMealySemanticInputSymbol<I>> newRow = new RowImpl<>(Word.epsilon(), 0, alphabet.size());
+    private RowImpl<TimedInput<I>> addInitialLocation() {
+        RowImpl<TimedInput<I>> newRow = new RowImpl<>(Word.epsilon(), 0, alphabet.size());
         newRow.makeShort(alphabet.size());
         this.shortPrefixRowMap.put(Word.epsilon(), newRow);
         this.sortedShortPrefixes.add(newRow);
@@ -138,7 +142,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
      * @param newRow     Newly-added short prefix row
      * @param timeOracle Time oracle
      */
-    private void initLocation(RowImpl<LocalTimerMealySemanticInputSymbol<I>> newRow, AbstractTimedQueryOracle<I, O> timeOracle) {
+    private void initLocation(RowImpl<TimedInput<I>> newRow, AbstractTimedQueryOracle<I, O> timeOracle) {
         LocationTimerInfo<I, O> timerInfo = new LocationTimerInfo<>(newRow.getLabel());
         this.identifyLocalTimers(timerInfo, timeOracle);
 
@@ -147,7 +151,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
         }
 
         // Add outgoing transitions:
-        List<RowImpl<LocalTimerMealySemanticInputSymbol<I>>> transitions = this.createOutgoingTransitions(newRow, timeOracle);
+        List<RowImpl<TimedInput<I>>> transitions = this.createOutgoingTransitions(newRow, timeOracle);
         transitions.forEach(t -> this.queryAllSuffixes(t, timeOracle));
     }
 
@@ -162,25 +166,25 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
      * @param timeOracle Time query oracle
      * @return New transitions
      */
-    private List<RowImpl<LocalTimerMealySemanticInputSymbol<I>>> createOutgoingTransitions(RowImpl<LocalTimerMealySemanticInputSymbol<I>> spRow, AbstractTimedQueryOracle<I, O> timeOracle) {
-        List<RowImpl<LocalTimerMealySemanticInputSymbol<I>>> transitions = new ArrayList<>();
+    private List<RowImpl<TimedInput<I>>> createOutgoingTransitions(RowImpl<TimedInput<I>> spRow, AbstractTimedQueryOracle<I, O> timeOracle) {
+        List<RowImpl<TimedInput<I>>> transitions = new ArrayList<>();
 
-        Word<LocalTimerMealySemanticInputSymbol<I>> sp = spRow.getLabel();
+        Word<TimedInput<I>> sp = spRow.getLabel();
 
         // First, add transitions for non-delaying symbols:
         for (int i = 0; i < alphabet.size(); i++) {
-            LocalTimerMealySemanticInputSymbol<I> sym = alphabet.getSymbol(i);
+            TimedInput<I> sym = alphabet.getSymbol(i);
             if (sym instanceof TimeStepSequence<I> || sym instanceof TimeoutSymbol<I>) {
                 continue;
             }
 
-            Word<LocalTimerMealySemanticInputSymbol<I>> lp = sp.append(sym);
+            Word<TimedInput<I>> lp = sp.append(sym);
             assert !this.shortPrefixRowMap.containsKey(lp);
 
-            RowImpl<LocalTimerMealySemanticInputSymbol<I>> succRow = this.longPrefixRowMap.get(lp);
+            RowImpl<TimedInput<I>> succRow = this.longPrefixRowMap.get(lp);
             if (succRow == null) {
                 // Query symbol filter before adding transition:
-                var filterResponse = this.symbolFilter.query(sp, (NonDelayingInput<I>) sym);
+                var filterResponse = this.symbolFilter.query(sp, (InputSymbol<I>) sym);
                 if (filterResponse == SymbolFilterResponse.IGNORE) {
                     // Verify that output is silent:
                     var response = timeOracle.querySuffixOutput(sp, Word.fromLetter(sym));
@@ -190,7 +194,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
                         filterResponse = SymbolFilterResponse.ACCEPT;
 
                         // Update filter:
-                        this.symbolFilter.update(sp, (NonDelayingInput<I>) sym, SymbolFilterResponse.ACCEPT);
+                        this.symbolFilter.update(sp, (InputSymbol<I>) sym, SymbolFilterResponse.ACCEPT);
                     }
                 }
 
@@ -209,11 +213,11 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
         // Second, add one-shot timer transition (if any):
         var locTimers = timerInfoMap.getOrDefault(spRow.getLabel(), null);
         if (locTimers != null && !locTimers.getLastTimer().periodic()) {
-            LocalTimerMealySemanticInputSymbol<I> waitSym = new TimeStepSequence<>(locTimers.getLastTimer().initial());
-            Word<LocalTimerMealySemanticInputSymbol<I>> lp = sp.append(waitSym);
+            TimedInput<I> waitSym = new TimeStepSequence<>(locTimers.getLastTimer().initial());
+            Word<TimedInput<I>> lp = sp.append(waitSym);
             assert !this.shortPrefixRowMap.containsKey(lp);
 
-            RowImpl<LocalTimerMealySemanticInputSymbol<I>> succRow = this.longPrefixRowMap.get(lp);
+            RowImpl<TimedInput<I>> succRow = this.longPrefixRowMap.get(lp);
             if (succRow == null) {
                 succRow = this.createLpRow(lp);
             }
@@ -224,8 +228,8 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
         return transitions;
     }
 
-    private RowImpl<LocalTimerMealySemanticInputSymbol<I>> createLpRow(Word<LocalTimerMealySemanticInputSymbol<I>> prefix) {
-        RowImpl<LocalTimerMealySemanticInputSymbol<I>> newRow = new RowImpl<>(prefix, 0);
+    private RowImpl<TimedInput<I>> createLpRow(Word<TimedInput<I>> prefix) {
+        RowImpl<TimedInput<I>> newRow = new RowImpl<>(prefix, 0);
         this.longPrefixRowMap.put(prefix, newRow);
         this.longPrefixList.add(newRow);
         if (this.longPrefixList.size() != this.longPrefixRowMap.size()) throw new AssertionError();
@@ -242,21 +246,21 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
      * <p>
      * Guarantees that returned transition list order is deterministic.
      */
-    public List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> findUnclosedTransitions() {
+    public List<List<Row<TimedInput<I>>>> findUnclosedTransitions() {
         // Identify contentIds for locations:
         Set<Integer> spContentIds = this.shortPrefixRowMap.values().stream()
                 .map(RowImpl::getRowContentId)
                 .collect(Collectors.toSet());
 
         // Group lp rows by their content id:
-        Map<Integer, List<Row<LocalTimerMealySemanticInputSymbol<I>>>> lpContentMap = new HashMap<>();
+        Map<Integer, List<Row<TimedInput<I>>>> lpContentMap = new HashMap<>();
         for (var lpRow : this.longPrefixRowMap.values()) {
             lpContentMap.putIfAbsent(lpRow.getRowContentId(), new ArrayList<>());
             lpContentMap.get(lpRow.getRowContentId()).add(lpRow);
         }
 
         // Identify ids that are not used by any SP:
-        List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> unclosedRows = new ArrayList<>();
+        List<List<Row<TimedInput<I>>>> unclosedRows = new ArrayList<>();
         List<Integer> sortedLpIds = lpContentMap.keySet().stream().sorted().toList();
         for (var lpId : sortedLpIds) {
             if (spContentIds.contains(lpId)) {
@@ -264,7 +268,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
             }
 
             // Sort row s.t. list order deterministic:
-            List<Row<LocalTimerMealySemanticInputSymbol<I>>> unclosedWithId = lpContentMap.get(lpId);
+            List<Row<TimedInput<I>>> unclosedWithId = lpContentMap.get(lpId);
             unclosedWithId.sort(Comparator.comparing(r -> r.getLabel().toString()));
             unclosedRows.add(unclosedWithId);
         }
@@ -285,9 +289,9 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
     }
 
     @Override
-    public List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> initialize(List<Word<LocalTimerMealySemanticInputSymbol<I>>> initialShortPrefixes,
-                                                                             List<Word<LocalTimerMealySemanticInputSymbol<I>>> initialSuffixes,
-                                                                             MembershipOracle<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> oracle) {
+    public List<List<Row<TimedInput<I>>>> initialize(List<Word<TimedInput<I>>> initialShortPrefixes,
+                                                     List<Word<TimedInput<I>>> initialSuffixes,
+                                                     MembershipOracle<TimedInput<I>, Word<TimedOutput<O>>> oracle) {
 
         if (isInitialized()) {
             throw new IllegalStateException("Called initialize, but there are already rows present");
@@ -300,7 +304,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
         }
 
         // Add initial suffixes:
-        for (Word<LocalTimerMealySemanticInputSymbol<I>> suffix : initialSuffixes) {
+        for (Word<TimedInput<I>> suffix : initialSuffixes) {
             if (suffixSet.add(suffix)) {
                 suffixes.add(suffix);
             }
@@ -315,19 +319,19 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
         return this.findUnclosedTransitions();
     }
 
-    private void queryAllSuffixes(RowImpl<LocalTimerMealySemanticInputSymbol<I>> row, AbstractTimedQueryOracle<I, O> timedOracle) {
-        Word<LocalTimerMealySemanticInputSymbol<I>> prefix = row.getLabel();
+    private void queryAllSuffixes(RowImpl<TimedInput<I>> row, AbstractTimedQueryOracle<I, O> timedOracle) {
+        Word<TimedInput<I>> prefix = row.getLabel();
 
-        List<Word<LocalTimerMealyOutputSymbol<O>>> suffixOutputs = new ArrayList<>(this.suffixes.size());
-        for (Word<LocalTimerMealySemanticInputSymbol<I>> suffix : this.suffixes) {
-            Word<LocalTimerMealyOutputSymbol<O>> output = timedOracle.querySuffixOutput(prefix, suffix);
+        List<Word<TimedOutput<O>>> suffixOutputs = new ArrayList<>(this.suffixes.size());
+        for (Word<TimedInput<I>> suffix : this.suffixes) {
+            Word<TimedOutput<O>> output = timedOracle.querySuffixOutput(prefix, suffix);
             suffixOutputs.add(output);
         }
 
         this.processSuffixOutputs(row, suffixOutputs);
     }
 
-    private void processSuffixOutputs(RowImpl<LocalTimerMealySemanticInputSymbol<I>> row, List<Word<LocalTimerMealyOutputSymbol<O>>> rowContents) {
+    private void processSuffixOutputs(RowImpl<TimedInput<I>> row, List<Word<TimedOutput<O>>> rowContents) {
         if (rowContents.isEmpty()) {
             row.setRowContentId(NO_CONTENT);
             return;
@@ -350,14 +354,14 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
     }
 
     @Override
-    public List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> addSuffixes(Collection<? extends Word<LocalTimerMealySemanticInputSymbol<I>>> newSuffixes, MembershipOracle<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> oracle) {
+    public List<List<Row<TimedInput<I>>>> addSuffixes(Collection<? extends Word<TimedInput<I>>> newSuffixes, MembershipOracle<TimedInput<I>, Word<TimedOutput<O>>> oracle) {
         if (!(oracle instanceof AbstractTimedQueryOracle<I, O> timedOracle)) {
             throw new IllegalArgumentException();
         }
 
         // 1. Extend current suffixes + identify new suffixes:
-        List<Word<LocalTimerMealySemanticInputSymbol<I>>> newSuffixList = new ArrayList<>();
-        for (Word<LocalTimerMealySemanticInputSymbol<I>> suffix : newSuffixes) {
+        List<Word<TimedInput<I>>> newSuffixList = new ArrayList<>();
+        for (Word<TimedInput<I>> suffix : newSuffixes) {
             if (this.suffixSet.add(suffix)) {
                 logger.debug(String.format("Adding new suffix '%s'", suffix));
 
@@ -371,14 +375,14 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
 
         // 2. Update row content:
         Stream.concat(shortPrefixRowMap.values().stream(), longPrefixRowMap.values().stream()).forEach(row -> {
-            List<Word<LocalTimerMealyOutputSymbol<O>>> updatedOutputs = new ArrayList<>();
+            List<Word<TimedOutput<O>>> updatedOutputs = new ArrayList<>();
             if (row.getRowContentId() != NO_CONTENT) {
                 // Add existing suffix outputs:
                 updatedOutputs.addAll(this.rowContentMap.get(row.getRowContentId()).outputs());
             }
 
-            for (Word<LocalTimerMealySemanticInputSymbol<I>> suffix : newSuffixList) {
-                Word<LocalTimerMealyOutputSymbol<O>> output = timedOracle.querySuffixOutput(row.getLabel(), suffix);
+            for (Word<TimedInput<I>> suffix : newSuffixList) {
+                Word<TimedOutput<O>> output = timedOracle.querySuffixOutput(row.getLabel(), suffix);
                 updatedOutputs.add(output);
             }
 
@@ -389,20 +393,20 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
     }
 
     @Override
-    public List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> addShortPrefixes(List<? extends Word<LocalTimerMealySemanticInputSymbol<I>>> shortPrefixes, MembershipOracle<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> oracle) {
+    public List<List<Row<TimedInput<I>>>> addShortPrefixes(List<? extends Word<TimedInput<I>>> shortPrefixes, MembershipOracle<TimedInput<I>, Word<TimedOutput<O>>> oracle) {
         throw new IllegalStateException("Not supported.");
     }
 
     @Override
-    public List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> toShortPrefixes(List<Row<LocalTimerMealySemanticInputSymbol<I>>> lpRows, MembershipOracle<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> oracle) {
+    public List<List<Row<TimedInput<I>>>> toShortPrefixes(List<Row<TimedInput<I>>> lpRows, MembershipOracle<TimedInput<I>, Word<TimedOutput<O>>> oracle) {
         if (!(oracle instanceof AbstractTimedQueryOracle<I, O> timedOracle)) {
             throw new IllegalArgumentException();
         }
 
-        for (Row<LocalTimerMealySemanticInputSymbol<I>> row : lpRows) {
+        for (Row<TimedInput<I>> row : lpRows) {
             logger.debug(String.format("Adding new location with prefix '%s'", row.getLabel()));
 
-            final RowImpl<LocalTimerMealySemanticInputSymbol<I>> lpRow = (RowImpl<LocalTimerMealySemanticInputSymbol<I>>) row;
+            final RowImpl<TimedInput<I>> lpRow = (RowImpl<TimedInput<I>>) row;
 
             // Delete from LP rows:
             var removed = this.longPrefixRowMap.remove(row.getLabel());
@@ -422,33 +426,33 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
     }
 
     @Override
-    public List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> addAlphabetSymbol(LocalTimerMealySemanticInputSymbol<I> symbol, MembershipOracle<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> oracle) {
+    public List<List<Row<TimedInput<I>>>> addAlphabetSymbol(TimedInput<I> symbol, MembershipOracle<TimedInput<I>, Word<TimedOutput<O>>> oracle) {
         throw new IllegalStateException("Not supported.");
     }
 
     @Override
-    public Alphabet<LocalTimerMealySemanticInputSymbol<I>> getInputAlphabet() {
+    public Alphabet<TimedInput<I>> getInputAlphabet() {
         return this.alphabet;
     }
 
     @Override
-    public Collection<Row<LocalTimerMealySemanticInputSymbol<I>>> getShortPrefixRows() {
+    public Collection<Row<TimedInput<I>>> getShortPrefixRows() {
         if (this.sortedShortPrefixes.size() != this.shortPrefixRowMap.size()) throw new AssertionError();
         return Collections.unmodifiableList(this.sortedShortPrefixes);
     }
 
     @Override
-    public Collection<Row<LocalTimerMealySemanticInputSymbol<I>>> getLongPrefixRows() {
+    public Collection<Row<TimedInput<I>>> getLongPrefixRows() {
         return Collections.unmodifiableList(this.longPrefixList);
     }
 
     @Override
-    public Row<LocalTimerMealySemanticInputSymbol<I>> getRow(int idx) {
+    public Row<TimedInput<I>> getRow(int idx) {
         throw new IllegalStateException("Not supported. Use prefix to access rows instead.");
     }
 
     @Override
-    public @Nullable Row<LocalTimerMealySemanticInputSymbol<I>> getRow(Word<LocalTimerMealySemanticInputSymbol<I>> prefix) {
+    public @Nullable Row<TimedInput<I>> getRow(Word<TimedInput<I>> prefix) {
         if (this.shortPrefixRowMap.containsKey(prefix)) {
             return this.shortPrefixRowMap.get(prefix);
         }
@@ -464,13 +468,13 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
     }
 
     @Override
-    public List<Word<LocalTimerMealySemanticInputSymbol<I>>> getSuffixes() {
+    public List<Word<TimedInput<I>>> getSuffixes() {
         return this.suffixes;
     }
 
     @Override
     @Nullable
-    public List<Word<LocalTimerMealyOutputSymbol<O>>> rowContents(Row<LocalTimerMealySemanticInputSymbol<I>> row) {
+    public List<Word<TimedOutput<O>>> rowContents(Row<TimedInput<I>> row) {
         if (this.rowContentMap.isEmpty()) {
             // OT may be empty if only single location with timers:
             if (!this.suffixes.isEmpty()) {
@@ -483,17 +487,17 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
     }
 
     @Override
-    public Word<LocalTimerMealySemanticInputSymbol<I>> transformAccessSequence(Word<LocalTimerMealySemanticInputSymbol<I>> word) {
+    public Word<TimedInput<I>> transformAccessSequence(Word<TimedInput<I>> word) {
         throw new IllegalStateException("Not implemented.");
     }
 
 
     @Override
-    public boolean isAccessSequence(Word<LocalTimerMealySemanticInputSymbol<I>> word) {
+    public boolean isAccessSequence(Word<TimedInput<I>> word) {
         throw new IllegalStateException("Not implemented.");
     }
 
-    public @Nullable MealyTimerInfo<O> getTimerInfo(Word<LocalTimerMealySemanticInputSymbol<I>> prefix, long initial) {
+    public @Nullable MealyTimerInfo<O> getTimerInfo(Word<TimedInput<I>> prefix, long initial) {
         var info = this.timerInfoMap.get(prefix);
         if (info != null) {
             return info.getTimerInfo(initial);
@@ -502,7 +506,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
     }
 
     @Nullable
-    public LocationTimerInfo<I, O> getLocationTimerInfo(Row<LocalTimerMealySemanticInputSymbol<I>> sp) {
+    public LocationTimerInfo<I, O> getLocationTimerInfo(Row<TimedInput<I>> sp) {
         return this.timerInfoMap.getOrDefault(sp.getLabel(), null);
     }
 
@@ -517,23 +521,23 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
      * @param timeOracle Oracle
      * @return List of unclosed rows. Empty, if none.
      */
-    public List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> addOutgoingTransition(Row<LocalTimerMealySemanticInputSymbol<I>> spRow, LocalTimerMealySemanticInputSymbol<I> symbol, AbstractTimedQueryOracle<I, O> timeOracle) {
+    public List<List<Row<TimedInput<I>>>> addOutgoingTransition(Row<TimedInput<I>> spRow, TimedInput<I> symbol, AbstractTimedQueryOracle<I, O> timeOracle) {
         if (!this.alphabet.containsSymbol(symbol)) {
             throw new IllegalArgumentException("Unknown symbol.");
         }
 
-        Word<LocalTimerMealySemanticInputSymbol<I>> transitionPrefix = spRow.getLabel().append(symbol);
+        Word<TimedInput<I>> transitionPrefix = spRow.getLabel().append(symbol);
 
         // Add long-prefix row:
         if (this.getRow(transitionPrefix) != null) {
             throw new AssertionError("Location already has an outgoing transition for the provided symbol");
         }
 
-        RowImpl<LocalTimerMealySemanticInputSymbol<I>> succRow = this.createLpRow(transitionPrefix);
+        RowImpl<TimedInput<I>> succRow = this.createLpRow(transitionPrefix);
 
         // Set as successor:
         int symIdx = this.alphabet.getSymbolIndex(symbol);
-        ((RowImpl<LocalTimerMealySemanticInputSymbol<I>>) spRow).setSuccessor(symIdx, succRow);
+        ((RowImpl<TimedInput<I>>) spRow).setSuccessor(symIdx, succRow);
 
         // Update suffixes:
         this.queryAllSuffixes(succRow, timeOracle);
@@ -541,7 +545,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
         return this.findUnclosedTransitions();
     }
 
-    public List<List<Row<LocalTimerMealySemanticInputSymbol<I>>>> addTimerTransition(Row<LocalTimerMealySemanticInputSymbol<I>> spRow, MealyTimerInfo<O> timeout, AbstractTimedQueryOracle<I, O> timeOracle) {
+    public List<List<Row<TimedInput<I>>>> addTimerTransition(Row<TimedInput<I>> spRow, MealyTimerInfo<O> timeout, AbstractTimedQueryOracle<I, O> timeOracle) {
         return this.addOutgoingTransition(spRow, new TimeStepSequence<>(timeout.initial()), timeOracle);
     }
 
@@ -551,7 +555,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
      *
      * @param prefix Row prefix
      */
-    public void removeLpRow(Word<LocalTimerMealySemanticInputSymbol<I>> prefix) {
+    public void removeLpRow(Word<TimedInput<I>> prefix) {
         if (!this.longPrefixRowMap.containsKey(prefix)) {
             throw new IllegalArgumentException("Attempting to remove lp row that does not exist.");
         }
@@ -563,7 +567,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
 
         // Unset as successor:
         int symIdx = this.alphabet.getSymbolIndex(prefix.lastSymbol());
-        RowImpl<LocalTimerMealySemanticInputSymbol<I>> spRow = this.shortPrefixRowMap.get(prefix.prefix(-1));
+        RowImpl<TimedInput<I>> spRow = this.shortPrefixRowMap.get(prefix.prefix(-1));
         assert spRow != null;
 
         spRow.setSuccessor(symIdx, null);
@@ -571,7 +575,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
 
     // =============================
 
-    private record RowContent<O>(List<Word<LocalTimerMealyOutputSymbol<O>>> outputs) {
+    private record RowContent<O>(List<Word<TimedOutput<O>>> outputs) {
 
         @Override
         public int hashCode() {

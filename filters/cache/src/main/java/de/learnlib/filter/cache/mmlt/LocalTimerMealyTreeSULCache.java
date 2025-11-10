@@ -10,10 +10,10 @@ import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.sul.LocalTimerMealySUL;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.time.mmlt.TimeStepSequence;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
@@ -36,7 +36,7 @@ public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, 
     private CacheTreeNode<I, O> currentState;
 
     private final LocalTimerMealyModelParams<O> modelParams;
-    private final LocalTimerMealyOutputSymbol<O> silentOutput;
+    private final TimedOutput<O> silentOutput;
     private boolean cacheMiss;
 
     private StatsContainer stats = new DummyStatsContainer();
@@ -49,7 +49,7 @@ public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, 
     public LocalTimerMealyTreeSULCache(LocalTimerMealySUL<I, O> delegate, LocalTimerMealyModelParams<O> modelParams) {
         this.delegate = delegate;
         this.modelParams = modelParams;
-        this.silentOutput = new LocalTimerMealyOutputSymbol<>(modelParams.silentOutput());
+        this.silentOutput = new TimedOutput<>(modelParams.silentOutput());
 
         // Init cache:
         this.cacheRoot = new CacheTreeNode<>(null, null);
@@ -60,7 +60,7 @@ public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, 
     private void followCurrentPrefix() {
         this.delegate.pre();
 
-        WordBuilder<LocalTimerMealySemanticInputSymbol<I>> wbPrefix = new WordBuilder<>();
+        WordBuilder<TimedInput<I>> wbPrefix = new WordBuilder<>();
 
         var current = this.currentState;
         while (current.getParent() != null) {
@@ -68,19 +68,19 @@ public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, 
             current = current.getParent();
         }
 
-        Word<LocalTimerMealySemanticInputSymbol<I>> prefix = wbPrefix.reverse().toWord();
+        Word<TimedInput<I>> prefix = wbPrefix.reverse().toWord();
         this.delegate.follow(prefix);
     }
 
     @Override
-    public LocalTimerMealyOutputSymbol<O> step(NonDelayingInput<I> input) {
+    public TimedOutput<O> step(InputSymbol<I> input) {
         if (this.currentState == null) {
             throw new IllegalStateException();
         }
 
         if (!cacheMiss) {
             if (this.currentState.hasChild(input)) {
-                LocalTimerMealyOutputSymbol<O> output = this.currentState.getOutput(input);
+                TimedOutput<O> output = this.currentState.getOutput(input);
                 this.currentState = this.currentState.getChild(input);
                 return output;
             }
@@ -89,14 +89,14 @@ public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, 
         }
 
         // Cache miss -> query + insert:
-        LocalTimerMealyOutputSymbol<O> output = this.delegate.step(input);
+        TimedOutput<O> output = this.delegate.step(input);
         this.currentState = this.currentState.addUntimedChild(input, output);
         return output;
     }
 
 
     @Override
-    public @Nullable LocalTimerMealyOutputSymbol<O> timeoutStep(long maxTime) {
+    public @Nullable TimedOutput<O> timeoutStep(long maxTime) {
         if (currentState == null) {
             throw new IllegalStateException();
         }
@@ -115,13 +115,13 @@ public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, 
                     return null; // no timer in this state
                 }
 
-                LocalTimerMealyOutputSymbol<O> currentOutput = currentState.getTimeoutOutput();
+                TimedOutput<O> currentOutput = currentState.getTimeoutOutput();
                 remaining -= currentState.getTimeout();
                 this.currentState = this.currentState.getTimeoutChild();
 
                 if (!currentOutput.equals(this.silentOutput)) {
                     // Found valid timeout:
-                    return new LocalTimerMealyOutputSymbol<>(maxTime - remaining, currentOutput.getSymbol());
+                    return new TimedOutput<>(currentOutput.symbol(), maxTime - remaining);
                 }
             }
 
@@ -134,13 +134,13 @@ public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, 
         }
 
 
-        LocalTimerMealyOutputSymbol<O> timeoutStepResult = this.delegate.timeoutStep(remaining);
+        TimedOutput<O> timeoutStepResult = this.delegate.timeoutStep(remaining);
         if (timeoutStepResult == null) { // no timers here
             this.currentState = this.currentState.addTimeChild(remaining, this.silentOutput);
             return null;
         } else {
-            this.currentState = this.currentState.addTimeChild(timeoutStepResult.getDelay(), new LocalTimerMealyOutputSymbol<>(timeoutStepResult.getSymbol()));
-            return new LocalTimerMealyOutputSymbol<>(maxTime - remaining + timeoutStepResult.getDelay(), timeoutStepResult.getSymbol());
+            this.currentState = this.currentState.addTimeChild(timeoutStepResult.delay(), new TimedOutput<>(timeoutStepResult.symbol()));
+            return new TimedOutput<>(timeoutStepResult.symbol(), maxTime - remaining + timeoutStepResult.delay());
         }
 
     }
@@ -199,15 +199,15 @@ public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, 
     }
 
     @Override
-    public List<Word<LocalTimerMealySemanticInputSymbol<I>>> listAllWords() {
+    public List<Word<TimedInput<I>>> listAllWords() {
         List<CacheTreeNode<I, O>> leaves = this.getLeaves();
 
-        List<Word<LocalTimerMealySemanticInputSymbol<I>>> finalWords = new ArrayList<>(leaves.size());
+        List<Word<TimedInput<I>>> finalWords = new ArrayList<>(leaves.size());
 
         for (var leaf : leaves) {
             // Word builder capacity = number of predecessors:
             int symCount = leaf.getNumPredecessors();
-            WordBuilder<LocalTimerMealySemanticInputSymbol<I>> wbInput = new WordBuilder<>(symCount);
+            WordBuilder<TimedInput<I>> wbInput = new WordBuilder<>(symCount);
 
             // Move towards the root:
             var current = leaf;
@@ -228,7 +228,7 @@ public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, 
     @Override
     public Graph<?, ?> graphView() {
         // Convert tree to a mealy automaton:
-        CompactMealy<LocalTimerMealySemanticInputSymbol<I>, LocalTimerMealyOutputSymbol<O>> mealy = new CompactMealy<>(new GrowingMapAlphabet<>());
+        CompactMealy<TimedInput<I>, TimedOutput<O>> mealy = new CompactMealy<>(new GrowingMapAlphabet<>());
 
         Map<CacheTreeNode<I, O>, Integer> stateMap = new HashMap<>();
         stateMap.put(this.cacheRoot, mealy.addInitialState());

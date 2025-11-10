@@ -1,11 +1,12 @@
 package de.learnlib.driver.simulator;
 
 import de.learnlib.sul.LocalTimerMealySUL;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
-import net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealyConfiguration;
+import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.automaton.mmlt.MMLTSemantics;
+import net.automatalib.automaton.mmlt.State;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.TimeoutSymbol;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
@@ -16,50 +17,50 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I> Non-delaying input type.
  * @param <O> Output symbol type.
  */
-public class LocalTimerMealySimulatorSUL<S, I, O> implements LocalTimerMealySUL<I, O> {
+public class LocalTimerMealySimulatorSUL<S, I, T, O> implements LocalTimerMealySUL<I, O> {
 
-    private final LocalTimerMealy<S, I, O> automaton;
+    private final MMLTSemantics<S, I, T, O> semantics;
 
-    private LocalTimerMealyConfiguration<S, I, O> currentConfiguration;
+    private State<S, O> currentConfiguration;
 
-
-    public LocalTimerMealySimulatorSUL(LocalTimerMealy<S, I, O> automaton) {
-        this.automaton = automaton;
+    public LocalTimerMealySimulatorSUL(MMLTSemantics<S, I, T, O> semantics) {
+        this.semantics = semantics;
         this.currentConfiguration = null;
     }
 
 
     @Override
-    public LocalTimerMealyOutputSymbol<O> step(NonDelayingInput<I> input) {
+    public TimedOutput<O> step(InputSymbol<I> input) {
         if (this.currentConfiguration == null) {
             throw new IllegalStateException("Not initialized!");
         }
 
-        var trans = this.automaton.getSemantics().getTransition(this.currentConfiguration, input);
-        this.currentConfiguration = trans.target();
-        return trans.output();
+        var trans = this.semantics.getTransition(this.currentConfiguration, input);
+        this.currentConfiguration = this.semantics.getSuccessor(trans);
+        return this.semantics.getTransitionOutput(trans);
     }
 
     @Override
-    public @Nullable LocalTimerMealyOutputSymbol<O> timeoutStep(long maxTime) {
+    public @Nullable TimedOutput<O> timeoutStep(long maxTime) {
         if (this.currentConfiguration == null) {
             throw new IllegalStateException("Not initialized!");
         }
 
-        var trans = this.automaton.getSemantics().getTransition(this.currentConfiguration, new TimeoutSymbol<>(), maxTime);
-        this.currentConfiguration = trans.target();
+        var trans = this.semantics.getTransition(this.currentConfiguration, new TimeoutSymbol<>(), maxTime);
+        this.currentConfiguration = this.semantics.getSuccessor(trans);
+        var output = this.semantics.getTransitionOutput(trans);
 
-        if (trans.output().equals(automaton.getSemantics().getSilentOutput())) {
+        if (output.equals(semantics.getSilentOutput())) {
             // No timeout observed:
             return null;
         } else {
-            return trans.output();
+            return output;
         }
     }
 
     @Override
     public void pre() {
-        this.currentConfiguration = automaton.getSemantics().getInitialConfiguration().copy();
+        this.currentConfiguration = semantics.getInitialState().copy();
     }
 
     @Override

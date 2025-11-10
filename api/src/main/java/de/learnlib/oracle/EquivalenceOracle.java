@@ -18,10 +18,10 @@ package de.learnlib.oracle;
 import java.util.Collection;
 
 import de.learnlib.query.DefaultQuery;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
@@ -101,5 +101,5 @@ public interface EquivalenceOracle<A, I, D> {
      * @param <I> Input type for non-delaying inputs
      * @param <O> Output symbol type
      */
-    interface LocalTimerMealyEquivalenceOracle<I, O> extends EquivalenceOracle<LocalTimerMealy<?, I, O>, LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>>{}
+    interface LocalTimerMealyEquivalenceOracle<I, O> extends EquivalenceOracle<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>>{}
 }

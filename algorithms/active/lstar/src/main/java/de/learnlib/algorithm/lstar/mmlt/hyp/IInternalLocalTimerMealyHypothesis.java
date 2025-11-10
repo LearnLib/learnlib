@@ -1,8 +1,8 @@
 package de.learnlib.algorithm.lstar.mmlt.hyp;
 
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
-import net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealyConfiguration;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.State;
 import net.automatalib.word.Word;
 
 import java.util.List;
@@ -25,9 +25,9 @@ public interface IInternalLocalTimerMealyHypothesis<S, I, O> {
      * @param configuration Considered configuration
      * @return Assigned prefix
      */
-    Word<LocalTimerMealySemanticInputSymbol<I>> getPrefix(LocalTimerMealyConfiguration<S, I, O> configuration);
+    Word<TimedInput<I>> getPrefix(State<S, O> configuration);
 
-    Word<LocalTimerMealySemanticInputSymbol<I>> getPrefix(Word<LocalTimerMealySemanticInputSymbol<I>> prefix);
+    Word<TimedInput<I>> getPrefix(Word<TimedInput<I>> prefix);
 
     /**
      * Returns the prefix assigned to the location that is active in the provided configuration.
@@ -35,7 +35,7 @@ public interface IInternalLocalTimerMealyHypothesis<S, I, O> {
      * @param configuration Considered configuration
      * @return Assigned prefix
      */
-    Word<LocalTimerMealySemanticInputSymbol<I>> getLocationPrefix(LocalTimerMealyConfiguration<S, I, O> configuration);
+    Word<TimedInput<I>> getLocationPrefix(State<S, O> configuration);
 
     /**
      * Returns a prefix for the given location.
@@ -44,12 +44,12 @@ public interface IInternalLocalTimerMealyHypothesis<S, I, O> {
      * @param location Location
      * @return Location prefix
      */
-    Word<LocalTimerMealySemanticInputSymbol<I>> getPrefix(S location);
+    Word<TimedInput<I>> getPrefix(S location);
 
     /**
      * Convenience method that sorts timers of the provided location by initial value.
      *
      * @return Sorted timers. Empty list if no timers.
      */
-    List<MealyTimerInfo<O>> getSortedTimers(S location);
+//    List<MealyTimerInfo<O>> getSortedTimers(S location);
 }

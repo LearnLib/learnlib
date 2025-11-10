@@ -16,10 +16,10 @@
 package de.learnlib.filter.cache;
 
 import de.learnlib.oracle.EquivalenceOracle;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
@@ -96,13 +96,13 @@ public interface LearningCache<A, I, O> {
      * @param <I> Input type for non-delaying inputs
      * @param <O> Output symbol type
      */
-    interface LocalTimerMealyLearningCache<I, O> extends LearningCache<LocalTimerMealy<?, I, O>, LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>>{
+    interface LocalTimerMealyLearningCache<I, O> extends LearningCache<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>>{
         /**
          * Lists all words that are currently in the cache.
          * If a cached word is a prefix of another cached word, only the longer of them is returned.
          *
          * @return List of all stored words.
          */
-        List<Word<LocalTimerMealySemanticInputSymbol<I>>> listAllWords();
+        List<Word<TimedInput<I>>> listAllWords();
     }
 }

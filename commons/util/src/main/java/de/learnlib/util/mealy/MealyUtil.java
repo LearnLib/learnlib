@@ -22,6 +22,7 @@ import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
+import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -85,7 +86,7 @@ public final class MealyUtil {
         return NO_MISMATCH;
     }
 
-    public static <I, O> @Nullable DefaultQuery<I, Word<O>> shortenCounterExample(MealyMachine<?, I, ?, O> hypothesis,
+    public static <I, O> @Nullable DefaultQuery<I, Word<O>> shortenCounterExample(SuffixOutput<I, Word<O>> hypothesis,
                                                                                   DefaultQuery<I, Word<O>> ceQuery) {
         Word<I> cePrefix = ceQuery.getPrefix(), ceSuffix = ceQuery.getSuffix();
         Word<O> hypOut = hypothesis.computeSuffixOutput(cePrefix, ceSuffix);

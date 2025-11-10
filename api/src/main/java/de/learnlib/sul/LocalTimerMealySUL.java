@@ -1,6 +1,10 @@
 package de.learnlib.sul;
 
-import net.automatalib.alphabet.time.mmlt.*;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -19,7 +23,7 @@ public interface LocalTimerMealySUL<I, O> {
      *
      * @param input Input suffix.
      */
-    default void follow(Word<LocalTimerMealySemanticInputSymbol<I>> input) {
+    default void follow(Word<TimedInput<I>> input) {
         this.follow(input, -1);
     }
 
@@ -29,9 +33,9 @@ public interface LocalTimerMealySUL<I, O> {
      * @param input      Input suffix.
      * @param maxTimeout Max. waiting time to use for timeoutSymbols.
      */
-    default void follow(Word<LocalTimerMealySemanticInputSymbol<I>> input, long maxTimeout) {
+    default void follow(Word<TimedInput<I>> input, long maxTimeout) {
         for (var s : input) {
-            if (s instanceof NonDelayingInput<I> ndi) {
+            if (s instanceof InputSymbol<I> ndi) {
                 this.step(ndi);
             } else if (s instanceof TimeStepSequence<I>) {
                 this.collectTimeouts((TimeStepSequence<I>) s);
@@ -52,7 +56,7 @@ public interface LocalTimerMealySUL<I, O> {
      * @param input Input
      * @return SUL output.
      */
-    LocalTimerMealyOutputSymbol<O> step(NonDelayingInput<I> input);
+    TimedOutput<O> step(InputSymbol<I> input);
 
     /**
      * Waits until a timeout occurs or the provided time is reached.
@@ -64,7 +68,7 @@ public interface LocalTimerMealySUL<I, O> {
      * @return Observed timer output with waiting time, or null, if no timeout was observed.
      */
     @Nullable
-    LocalTimerMealyOutputSymbol<O> timeoutStep(long maxTime);
+    TimedOutput<O> timeoutStep(long maxTime);
 
     /**
      * Waits for one time unit and returns the observed output.
@@ -73,10 +77,10 @@ public interface LocalTimerMealySUL<I, O> {
      * The delay of this output is set to zero.
      */
     @Nullable
-    default LocalTimerMealyOutputSymbol<O> timeStep() {
+    default TimedOutput<O> timeStep() {
         var res = this.timeoutStep(1);
         if (res != null) {
-            return new LocalTimerMealyOutputSymbol<>(res.getSymbol());
+            return new TimedOutput<>(res.symbol());
         }
         return null;
     }
@@ -87,18 +91,18 @@ public interface LocalTimerMealySUL<I, O> {
      * @param input Waiting time.
      * @return Observed timeouts. Empty, if none.
      */
-    default Word<LocalTimerMealyOutputSymbol<O>> collectTimeouts(TimeStepSequence<I> input) {
-        WordBuilder<LocalTimerMealyOutputSymbol<O>> wbOutput = new WordBuilder<>();
+    default Word<TimedOutput<O>> collectTimeouts(TimeStepSequence<I> input) {
+        WordBuilder<TimedOutput<O>> wbOutput = new WordBuilder<>();
 
-        long remainingTime = input.getTimeSteps();
+        long remainingTime = input.timeSteps();
         while (remainingTime > 0) {
-            LocalTimerMealyOutputSymbol<O> nextTimeout = this.timeoutStep(remainingTime);
+            TimedOutput<O> nextTimeout = this.timeoutStep(remainingTime);
             if (nextTimeout == null) {
                 // No timer will expire during remaining waiting time:
                 break;
             } else {
                 wbOutput.append(nextTimeout);
-                remainingTime -= nextTimeout.getDelay();
+                remainingTime -= nextTimeout.delay();
             }
         }
 

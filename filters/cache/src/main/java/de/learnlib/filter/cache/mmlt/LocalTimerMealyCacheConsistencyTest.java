@@ -3,8 +3,12 @@ package de.learnlib.filter.cache.mmlt;
 import de.learnlib.algorithm.LocalTimerMealyModelParams;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
-import net.automatalib.alphabet.time.mmlt.*;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
+import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -31,22 +35,22 @@ public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOra
         this.modelParams = modelParams;
     }
 
-    private DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> queryCache(Word<LocalTimerMealySemanticInputSymbol<I>> word) {
-        WordBuilder<LocalTimerMealySemanticInputSymbol<I>> wbInput = new WordBuilder<>();
-        WordBuilder<LocalTimerMealyOutputSymbol<O>> wbOutput = new WordBuilder<>();
+    private DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> queryCache(Word<TimedInput<I>> word) {
+        WordBuilder<TimedInput<I>> wbInput = new WordBuilder<>();
+        WordBuilder<TimedOutput<O>> wbOutput = new WordBuilder<>();
 
         this.sulCache.pre();
         for (var sym : word) {
-            if (sym instanceof NonDelayingInput<I> ndi) {
-                LocalTimerMealyOutputSymbol<O> res = this.sulCache.step(ndi);
+            if (sym instanceof InputSymbol<I> ndi) {
+                TimedOutput<O> res = this.sulCache.step(ndi);
                 wbInput.append(ndi);
                 wbOutput.append(res);
             } else if (sym instanceof TimeStepSequence<I> ws) {
-                LocalTimerMealyOutputSymbol<O> res = this.sulCache.timeoutStep(ws.getTimeSteps());
+                TimedOutput<O> res = this.sulCache.timeoutStep(ws.timeSteps());
                 wbInput.append(ws);
 
                 if (res == null) {
-                    wbOutput.append(new LocalTimerMealyOutputSymbol<>(this.modelParams.silentOutput()));
+                    wbOutput.append(new TimedOutput<>(this.modelParams.silentOutput()));
                 } else {
                     wbOutput.append(res);
                 }
@@ -66,9 +70,9 @@ public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOra
      * @param originalQuery Original query
      * @return Converted query
      */
-    private DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> convertTimeSequences(DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> originalQuery) {
-        WordBuilder<LocalTimerMealySemanticInputSymbol<I>> wbInput = new WordBuilder<>();
-        WordBuilder<LocalTimerMealyOutputSymbol<O>> wbOutput = new WordBuilder<>();
+    private DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> convertTimeSequences(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> originalQuery) {
+        WordBuilder<TimedInput<I>> wbInput = new WordBuilder<>();
+        WordBuilder<TimedOutput<O>> wbOutput = new WordBuilder<>();
 
         int symIdx = 0;
         var queryInput = originalQuery.getInput();
@@ -79,43 +83,43 @@ public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOra
             var outputSym = queryOutput.getSymbol(symIdx);
             symIdx++;
 
-            if (inputSym instanceof NonDelayingInput<I> ds) {
+            if (inputSym instanceof InputSymbol<I> ds) {
                 wbInput.append(ds);
                 wbOutput.append(outputSym);
             } else if (inputSym instanceof TimeStepSequence<I> ws) {
-                if (!outputSym.getSymbol().equals(this.modelParams.silentOutput()) || ws.getTimeSteps() == this.modelParams.maxTimeoutWaitingTime()) {
+                if (!outputSym.symbol().equals(this.modelParams.silentOutput()) || ws.timeSteps() == this.modelParams.maxTimeoutWaitingTime()) {
                     // Found a timeout OR no timeout after max_delay:
                     wbInput.append(new TimeoutSymbol<>());
                     wbOutput.append(outputSym);
                     continue;
                 }
-                if (ws.getTimeSteps() >= this.modelParams.maxTimeoutWaitingTime()) {
+                if (ws.timeSteps() >= this.modelParams.maxTimeoutWaitingTime()) {
                     throw new AssertionError("Wait time that exceeds max_delay in cache.");
                 }
 
                 // Special case: silent output before max delay
                 // Cannot replace with "timeout", as this implies wait until max_delay.
                 // Hence: skip subsequent waits until reaching wait with output OR max_delay OR end of word:
-                long combinedWaitTime = ws.getTimeSteps();
-                LocalTimerMealyOutputSymbol<O> combinedOutput = outputSym;
+                long combinedWaitTime = ws.timeSteps();
+                TimedOutput<O> combinedOutput = outputSym;
 
-                while (combinedOutput.getSymbol().equals(this.modelParams.silentOutput()) && combinedWaitTime < this.modelParams.maxTimeoutWaitingTime()
+                while (combinedOutput.symbol().equals(this.modelParams.silentOutput()) && combinedWaitTime < this.modelParams.maxTimeoutWaitingTime()
                         && symIdx < queryInput.length() &&
                         queryInput.getSymbol(symIdx) instanceof TimeStepSequence<I> nextWs) {
-                    combinedWaitTime += nextWs.getTimeSteps();
+                    combinedWaitTime += nextWs.timeSteps();
                     combinedOutput = queryOutput.getSymbol(symIdx);
                     symIdx++;
                 }
 
-                if (combinedWaitTime >= this.modelParams.maxTimeoutWaitingTime() || !combinedOutput.getSymbol().equals(this.modelParams.silentOutput())) {
+                if (combinedWaitTime >= this.modelParams.maxTimeoutWaitingTime() || !combinedOutput.symbol().equals(this.modelParams.silentOutput())) {
                     wbInput.append(new TimeoutSymbol<>());
 
-                    if (combinedOutput.getSymbol().equals(this.modelParams.silentOutput())) {
+                    if (combinedOutput.symbol().equals(this.modelParams.silentOutput())) {
                         // Reached max delay -> waiting for any time will now produce no more timeouts:
-                        wbOutput.append(new LocalTimerMealyOutputSymbol<>(this.modelParams.silentOutput()));
+                        wbOutput.append(new TimedOutput<>(this.modelParams.silentOutput()));
                     } else {
                         // Found non-silent output:
-                        wbOutput.append(new LocalTimerMealyOutputSymbol<>(combinedWaitTime, combinedOutput.getSymbol()));
+                        wbOutput.append(new TimedOutput<>(combinedOutput.symbol(), combinedWaitTime));
                     }
                 } else {
                     // Reached end of word before max_delay OR non-wait symbol -> ignore rest of this word:
@@ -129,7 +133,7 @@ public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOra
         return new DefaultQuery<>(wbInput.toWord(), wbOutput.toWord());
     }
 
-    private DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> reduceToAllowedInputs(Set<LocalTimerMealySemanticInputSymbol<I>> allowedInputs, DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> query) {
+    private DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> reduceToAllowedInputs(Set<TimedInput<I>> allowedInputs, DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> query) {
         // Find the longest prefix with allowed inputs:
         int prefixLength = 0;
         while (prefixLength < query.getInput().length() && allowedInputs.contains(query.getInput().getSymbol(prefixLength))) {
@@ -145,17 +149,17 @@ public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOra
 
 
     @Override
-    public @Nullable DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> findCounterExample(LocalTimerMealy<?, I, O> hypothesis, Collection<? extends LocalTimerMealySemanticInputSymbol<I>> inputs) {
-        Set<LocalTimerMealySemanticInputSymbol<I>> allowedInputs = new HashSet<>(inputs);
+    public @Nullable DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> findCounterExample(MMLT<?, I, ?, O> hypothesis, Collection<? extends TimedInput<I>> inputs) {
+        Set<TimedInput<I>> allowedInputs = new HashSet<>(inputs);
         boolean allInputsConsidered = allowedInputs.containsAll(hypothesis.getSemantics().getInputAlphabet());
 
         // Query all cached words:
-        List<Word<LocalTimerMealySemanticInputSymbol<I>>> cachedWords = this.sulCache.listAllWords();
+        List<Word<TimedInput<I>>> cachedWords = this.sulCache.listAllWords();
 
-        List<DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>>> counterexamples = new ArrayList<>();
+        List<DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>>> counterexamples = new ArrayList<>();
         for (var word : cachedWords) {
             // First, query word as-is (may include wait-symbols in input):
-            DefaultQuery<LocalTimerMealySemanticInputSymbol<I>, Word<LocalTimerMealyOutputSymbol<O>>> rawCacheQuery = this.queryCache(word);
+            DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> rawCacheQuery = this.queryCache(word);
 
             // Next, convert query that includes wait-symbols to query with timeout-symbols:
             var convertedQuery = this.convertTimeSequences(rawCacheQuery);
@@ -165,7 +169,7 @@ public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOra
             var reducedQuery = (allInputsConsidered) ? convertedQuery : this.reduceToAllowedInputs(allowedInputs, convertedQuery);
 
             // Finally, query hypothesis using the converted query:
-            Word<LocalTimerMealyOutputSymbol<O>> hypOutput = hypothesis.getSemantics().computeSuffixOutput(Word.epsilon(), reducedQuery.getInput());
+            Word<TimedOutput<O>> hypOutput = hypothesis.getSemantics().computeSuffixOutput(Word.epsilon(), reducedQuery.getInput());
 
             if (!hypOutput.equals(reducedQuery.getOutput())) {
                 // Hyp gives different output than cache (= SUL):

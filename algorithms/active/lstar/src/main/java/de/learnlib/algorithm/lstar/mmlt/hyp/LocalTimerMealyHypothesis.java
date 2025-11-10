@@ -1,15 +1,16 @@
 package de.learnlib.algorithm.lstar.mmlt.hyp;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyInputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.time.mmlt.TimeStepSequence;
-import net.automatalib.automaton.time.mmlt.AbstractSymbolCombiner;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
-import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
-import net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealyConfiguration;
-import net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealySemantics;
+import net.automatalib.automaton.mmlt.impl.CompactMMLTSemantics;
+import net.automatalib.symbol.time.SymbolicInput;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.automaton.mmlt.SymbolCombiner;
+import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.State;
+import net.automatalib.automaton.mmlt.MMLTSemantics;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -25,17 +26,17 @@ import java.util.Map;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyHypothesis<S, I, O> implements LocalTimerMealy<S, I, O>, IInternalLocalTimerMealyHypothesis<S, I, O> {
-    private final LocalTimerMealy<S, I, O> automaton;
-    private final Map<S, Word<LocalTimerMealySemanticInputSymbol<I>>> prefixMap; // location -> prefix
+public class LocalTimerMealyHypothesis<S, I, T, O> implements MMLT<S, I, T, O>, IInternalLocalTimerMealyHypothesis<S, I, O> {
+    private final MMLT<S, I, T, O> automaton;
+    private final Map<S, Word<TimedInput<I>>> prefixMap; // location -> prefix
 
-    public LocalTimerMealyHypothesis(LocalTimerMealy<S, I, O> automaton, Map<S, Word<LocalTimerMealySemanticInputSymbol<I>>> prefixMap) {
+    public LocalTimerMealyHypothesis(MMLT<S, I, T, O> automaton, Map<S, Word<TimedInput<I>>> prefixMap) {
         this.automaton = automaton;
         this.prefixMap = prefixMap;
     }
 
     @Override
-    public Word<LocalTimerMealySemanticInputSymbol<I>> getPrefix(LocalTimerMealyConfiguration<S, I, O> configuration) {
+    public Word<TimedInput<I>> getPrefix(State<S, O> configuration) {
         var locPrefix = getLocationPrefix(configuration);
         if (configuration.isEntryConfig()) {
             return locPrefix; // entry distance = 0
@@ -45,14 +46,14 @@ public class LocalTimerMealyHypothesis<S, I, O> implements LocalTimerMealy<S, I,
     }
 
     @Override
-    public Word<LocalTimerMealySemanticInputSymbol<I>> getPrefix(Word<LocalTimerMealySemanticInputSymbol<I>> prefix) {
-        var resultingConfig = getSemantics().traceInputs(prefix);
+    public Word<TimedInput<I>> getPrefix(Word<TimedInput<I>> prefix) {
+        var resultingConfig = getSemantics().getState(prefix);
         return getPrefix(resultingConfig);
     }
 
 
     @Override
-    public Word<LocalTimerMealySemanticInputSymbol<I>> getLocationPrefix(LocalTimerMealyConfiguration<S, I, O> configuration) {
+    public Word<TimedInput<I>> getLocationPrefix(State<S, O> configuration) {
         var locPrefix = this.prefixMap.get(configuration.getLocation());
         if (locPrefix == null) throw new AssertionError();
         return locPrefix;
@@ -60,7 +61,7 @@ public class LocalTimerMealyHypothesis<S, I, O> implements LocalTimerMealy<S, I,
 
 
     @Override
-    public Word<LocalTimerMealySemanticInputSymbol<I>> getPrefix(S location) {
+    public Word<TimedInput<I>> getPrefix(S location) {
         return prefixMap.get(location);
     }
 
@@ -70,17 +71,17 @@ public class LocalTimerMealyHypothesis<S, I, O> implements LocalTimerMealy<S, I,
     }
 
     @Override
-    public AbstractSymbolCombiner<O> getOutputCombiner() {
+    public SymbolCombiner<O> getOutputCombiner() {
         return automaton.getOutputCombiner();
     }
 
     @Override
-    public Alphabet<LocalTimerMealyInputSymbol<I>> getInputAlphabet() {
+    public Alphabet<SymbolicInput<I>> getInputAlphabet() {
         return automaton.getInputAlphabet();
     }
 
     @Override
-    public Alphabet<NonDelayingInput<I>> getUntimedAlphabet() {
+    public Alphabet<InputSymbol<I>> getUntimedAlphabet() {
         return automaton.getUntimedAlphabet();
     }
 
@@ -95,12 +96,12 @@ public class LocalTimerMealyHypothesis<S, I, O> implements LocalTimerMealy<S, I,
     }
 
     @Override
-    public @Nullable LocalTimerMealyTransition<S, O> getTransition(S location, LocalTimerMealyInputSymbol<I> input) {
+    public @Nullable T getTransition(S location, SymbolicInput<I> input) {
         return automaton.getTransition(location, input);
     }
 
     @Override
-    public boolean isLocalReset(S location, NonDelayingInput<I> input) {
+    public boolean isLocalReset(S location, InputSymbol<I> input) {
         return automaton.isLocalReset(location, input);
     }
 
@@ -110,9 +111,22 @@ public class LocalTimerMealyHypothesis<S, I, O> implements LocalTimerMealy<S, I,
     }
 
     @Override
-    public LocalTimerMealySemantics<S, I, O> getSemantics() {
-        return new net.automatalib.automaton.time.impl.mmlt.LocalTimerMealySemantics<>(this);
+    public MMLTSemantics<S, I, ?, O> getSemantics() {
+        return new CompactMMLTSemantics<>(this);
     }
 
+    @Override
+    public Void getStateProperty(S state) {
+        return automaton.getStateProperty(state);
+    }
 
+    @Override
+    public O getTransitionProperty(T transition) {
+        return automaton.getTransitionProperty(transition);
+    }
+
+    @Override
+    public S getSuccessor(T transition) {
+        return automaton.getSuccessor(transition);
+    }
 }

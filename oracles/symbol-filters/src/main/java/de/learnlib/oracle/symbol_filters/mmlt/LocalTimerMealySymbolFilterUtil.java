@@ -1,9 +1,12 @@
 package de.learnlib.oracle.symbol_filters.mmlt;
 
+import java.util.Objects;
+
 import de.learnlib.symbol_filter.SymbolFilterResponse;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
+import net.automatalib.automaton.mmlt.MMLTSemantics;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.word.Word;
 
 class LocalTimerMealySymbolFilterUtil {
@@ -15,16 +18,21 @@ class LocalTimerMealySymbolFilterUtil {
      * @param automaton Automaton
      * @param prefix    State prefix
      * @param symbol    Input symbol
-     * @param <S>       Location type
      * @param <I>       Input type for non-delaying inputs
      * @param <O>       Output symbol type
      * @return IGNORE for silent self-loops, ACCEPT otherwise.
      */
-    static <S, I, O> SymbolFilterResponse isIgnorable(LocalTimerMealy<S, I, O> automaton, Word<LocalTimerMealySemanticInputSymbol<I>> prefix, NonDelayingInput<I> symbol) {
-        var targetConfig = automaton.getSemantics().traceInputs(prefix);
-        var trans = automaton.getSemantics().getTransition(targetConfig, symbol);
+    static <I, O> SymbolFilterResponse isIgnorable(MMLT<?, I, ?, O> automaton, Word<TimedInput<I>> prefix, InputSymbol<I> symbol) {
+        return isIgnorable(automaton.getSemantics(), prefix, symbol);
+    }
 
-        boolean ignorable = trans.output().equals(automaton.getSemantics().getSilentOutput()) && targetConfig.equals(trans.target());
+    static <S, I, T, O> SymbolFilterResponse isIgnorable(MMLTSemantics<S, I, T, O> semantics, Word<TimedInput<I>> prefix, InputSymbol<I> symbol) {
+        var targetConfig = semantics.getState(prefix);
+        var trans = semantics.getTransition(targetConfig, symbol);
+        var target = semantics.getSuccessor(trans);
+        var output = semantics.getTransitionOutput(trans);
+
+        boolean ignorable = Objects.equals(output, semantics.getSilentOutput()) && Objects.equals(targetConfig, target);
 
         return ignorable ? SymbolFilterResponse.IGNORE : SymbolFilterResponse.ACCEPT;
     }

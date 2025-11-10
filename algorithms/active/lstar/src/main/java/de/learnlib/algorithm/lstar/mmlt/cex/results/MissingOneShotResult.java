@@ -1,6 +1,6 @@
 package de.learnlib.algorithm.lstar.mmlt.cex.results;
 
-import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.MealyTimerInfo;
 
 /**
  * The provided timer should become one-shot.

@@ -3,9 +3,9 @@ package de.learnlib.filter.statistic.sul;
 import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.sul.LocalTimerMealySUL;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.time.mmlt.TimeStepSequence;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -46,32 +46,32 @@ public class LocalTimerMealyStatsSUL<I, O> implements LocalTimerMealySUL<I, O>, 
     }
 
     @Override
-    public LocalTimerMealyOutputSymbol<O> step(NonDelayingInput<I> input) {
+    public TimedOutput<O> step(InputSymbol<I> input) {
         stats.increaseCounter(withPrefix("sul_untimed_syms_counter"),
                 withPrefix("Total untimed symbols"));
         return this.delegate.step(input);
     }
 
     @Override
-    public @Nullable LocalTimerMealyOutputSymbol<O> timeoutStep(long maxTime) {
-        LocalTimerMealyOutputSymbol<O> res = this.delegate.timeoutStep(maxTime);
+    public @Nullable TimedOutput<O> timeoutStep(long maxTime) {
+        TimedOutput<O> res = this.delegate.timeoutStep(maxTime);
         if (res == null) {
             // Waited until maxTime, no timeout occurred:
             stats.increaseCounter(withPrefix("sul_total_time"),
                     withPrefix("Total query time"), maxTime);
         } else {
             stats.increaseCounter(withPrefix("sul_total_time"),
-                    withPrefix("Total query time"), res.getDelay());
+                    withPrefix("Total query time"), res.delay());
         }
 
         return res;
     }
 
     @Override
-    public Word<LocalTimerMealyOutputSymbol<O>> collectTimeouts(TimeStepSequence<I> input) {
+    public Word<TimedOutput<O>> collectTimeouts(TimeStepSequence<I> input) {
         stats.increaseCounter(withPrefix("sul_total_time"),
                 withPrefix("Total query time"),
-                input.getTimeSteps());
+                input.timeSteps());
         return this.delegate.collectTimeouts(input);
     }
 

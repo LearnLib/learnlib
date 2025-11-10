@@ -1,5 +1,10 @@
 package de.learnlib.example.mmlt;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import de.learnlib.algorithm.lstar.mmlt.LStarLocalTimerMealy;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.driver.simulator.LocalTimerMealySimulatorSUL;
@@ -21,14 +26,12 @@ import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
 import de.learnlib.util.statistic.container.MapStatsContainer;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.time.mmlt.*;
 import net.automatalib.serialization.dot.GraphDOT;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 /**
  * This example shows how to learn a Mealy machine with local timers,
@@ -48,11 +51,11 @@ public class Example1 {
 
         // ======================
         // Set up the pipeline:
-        GrowingMapAlphabet<LocalTimerMealySemanticInputSymbol<String>> alphabet = new GrowingMapAlphabet<>();
+        GrowingMapAlphabet<TimedInput<String>> alphabet = new GrowingMapAlphabet<>();
         alphabet.addAll(model.automaton().getUntimedAlphabet());
 
         // We use a simulator SUL to simulate our automaton:
-        var sul = new LocalTimerMealySimulatorSUL<>(model.automaton());
+        var sul = new LocalTimerMealySimulatorSUL<>(model.automaton().getSemantics());
 
         // We count all operations that are performed on the SUL with a stats-SUL:
         var statsAfterCache = new LocalTimerMealyStatsSUL<>(sul, stats);
@@ -74,14 +77,14 @@ public class Example1 {
         chainOracle.setStatsContainer(stats);
 
         // Set up our L* learner:
-        List<Word<LocalTimerMealySemanticInputSymbol<String>>> suffixes = new ArrayList<>();
+        List<Word<TimedInput<String>>> suffixes = new ArrayList<>();
         alphabet.forEach(s -> suffixes.add(Word.fromLetter(s)));
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
         // A symbol filter allows us to reduce queries by exploiting prior knowledge.
         // For this example, we use a RandomSymbolFilter. This filter correctly predicts
         // whether a transition silently self-loops with an accuracy of 90%:
-        SymbolFilter<LocalTimerMealySemanticInputSymbol<String>, NonDelayingInput<String>> filter =
+        SymbolFilter<TimedInput<String>, InputSymbol<String>> filter =
                 new LocalTimerMealyRandomSymbolFilter<>(model.automaton(), 0.1, new Random(100));
 
         filter = new LocalTimerMealyStatisticsSymbolFilter<>(model.automaton(), filter, stats);
@@ -110,7 +113,7 @@ public class Example1 {
         learner.startLearning();
 
         var hyp = learner.getHypothesisModel();
-        DefaultQuery<LocalTimerMealySemanticInputSymbol<String>, Word<LocalTimerMealyOutputSymbol<String>>> cex = tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
+        DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>> cex = tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
         stats.increaseCounter("roundCount", "CEX queries");
 
         int roundCount = 1;
@@ -133,7 +136,7 @@ public class Example1 {
 
         System.out.println("Final hypothesis:");
         try {
-            GraphDOT.write(finalHypothesis.transitionGraphView(true, true), System.out);
+            GraphDOT.write(finalHypothesis.transitionGraphView(finalHypothesis.getInputAlphabet()), System.out);
         } catch (IOException ignored) {
         }
         new ObservationTableASCIIWriter<>().write(learner.getObservationTable(), System.out);

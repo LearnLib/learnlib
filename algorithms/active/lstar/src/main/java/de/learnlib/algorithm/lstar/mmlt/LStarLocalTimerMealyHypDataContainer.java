@@ -3,8 +3,8 @@ package de.learnlib.algorithm.lstar.mmlt;
 import de.learnlib.algorithm.LocalTimerMealyModelParams;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -21,15 +21,15 @@ import java.util.Set;
  * @param <O> Output symbol type
  */
 class LStarLocalTimerMealyHypDataContainer<I, O> {
-    private final Alphabet<LocalTimerMealySemanticInputSymbol<I>> alphabet;
+    private final Alphabet<TimedInput<I>> alphabet;
 
     private final LocalTimerMealyObservationTable<I, O> table;
-    private final Map<Word<LocalTimerMealySemanticInputSymbol<I>>, LocalTimerMealyOutputSymbol<O>> transitionOutputMap;
-    private final Set<Word<LocalTimerMealySemanticInputSymbol<I>>> transitionResetSet; // all transitions that trigger a reset
+    private final Map<Word<TimedInput<I>>, TimedOutput<O>> transitionOutputMap;
+    private final Set<Word<TimedInput<I>>> transitionResetSet; // all transitions that trigger a reset
 
     private final LocalTimerMealyModelParams<O> modelParams;
 
-    public LStarLocalTimerMealyHypDataContainer(Alphabet<LocalTimerMealySemanticInputSymbol<I>> alphabet, LocalTimerMealyModelParams<O> modelParams, LocalTimerMealyObservationTable<I, O> table) {
+    public LStarLocalTimerMealyHypDataContainer(Alphabet<TimedInput<I>> alphabet, LocalTimerMealyModelParams<O> modelParams, LocalTimerMealyObservationTable<I, O> table) {
         this.alphabet = alphabet;
         this.modelParams = modelParams;
         this.table = table;
@@ -39,8 +39,8 @@ class LStarLocalTimerMealyHypDataContainer<I, O> {
     }
 
     @Nullable
-    protected LocalTimerMealyOutputSymbol<O> getTransitionOutput(Row<LocalTimerMealySemanticInputSymbol<I>> stateRow, int inputIdx) {
-        Row<LocalTimerMealySemanticInputSymbol<I>> transRow = stateRow.getSuccessor(inputIdx);
+    protected TimedOutput<O> getTransitionOutput(Row<TimedInput<I>> stateRow, int inputIdx) {
+        Row<TimedInput<I>> transRow = stateRow.getSuccessor(inputIdx);
         if (transRow == null) {
             return null;
         }
@@ -53,7 +53,7 @@ class LStarLocalTimerMealyHypDataContainer<I, O> {
         return modelParams;
     }
 
-    public Alphabet<LocalTimerMealySemanticInputSymbol<I>> getAlphabet() {
+    public Alphabet<TimedInput<I>> getAlphabet() {
         return alphabet;
     }
 
@@ -62,11 +62,11 @@ class LStarLocalTimerMealyHypDataContainer<I, O> {
         return table;
     }
 
-    public Map<Word<LocalTimerMealySemanticInputSymbol<I>>, LocalTimerMealyOutputSymbol<O>> getTransitionOutputMap() {
+    public Map<Word<TimedInput<I>>, TimedOutput<O>> getTransitionOutputMap() {
         return transitionOutputMap;
     }
 
-    public Set<Word<LocalTimerMealySemanticInputSymbol<I>>> getTransitionResetSet() {
+    public Set<Word<TimedInput<I>>> getTransitionResetSet() {
         return transitionResetSet;
     }
 }

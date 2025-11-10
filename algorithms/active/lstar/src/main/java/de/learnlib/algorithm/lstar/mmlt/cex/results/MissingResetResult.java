@@ -1,8 +1,8 @@
 package de.learnlib.algorithm.lstar.mmlt.cex.results;
 
 
-import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.InputSymbol;
 
 /**
  * There should be a local reset at the specified transition.
@@ -13,9 +13,9 @@ import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
  */
 public class MissingResetResult<S, I, O> extends CexAnalysisResult<S, I, O> {
     private final S location;
-    private final NonDelayingInput<I> input;
+    private final InputSymbol<I> input;
 
-    public MissingResetResult(S location, NonDelayingInput<I> input) {
+    public MissingResetResult(S location, InputSymbol<I> input) {
         this.location = location;
         this.input = input;
     }
@@ -24,7 +24,7 @@ public class MissingResetResult<S, I, O> extends CexAnalysisResult<S, I, O> {
         return location;
     }
 
-    public LocalTimerMealySemanticInputSymbol<I> getInput() {
+    public TimedInput<I> getInput() {
         return input;
     }
 }

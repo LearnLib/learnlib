@@ -1,15 +1,7 @@
 package de.learnlib.algorithm.lstar.mmlt;
 
-import de.learnlib.algorithm.LocalTimerMealyModelParams;
-import de.learnlib.testsupport.example.mmlt.LocalTimerMealyModel;
-import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
-import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
-import net.automatalib.serialization.dot.GraphDOT;
-import net.automatalib.serialization.dot.LocalTimerMealyGraphvizParser;
-import net.automatalib.util.automaton.mmlt.LocalTimerMealyUtil;
-
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +9,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+
+import de.learnlib.algorithm.LocalTimerMealyModelParams;
+import de.learnlib.testsupport.example.mmlt.LocalTimerMealyModel;
+import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
+import net.automatalib.automaton.visualization.MMLTVisualizationHelper;
+import net.automatalib.exception.FormatException;
+import net.automatalib.serialization.dot.DOTParsers;
+import net.automatalib.serialization.dot.GraphDOT;
+import net.automatalib.util.automaton.mmlt.MMLTUtil;
 
 /**
  * Utility class for loading MMLTs from resources and printing them.
@@ -26,9 +28,9 @@ public class LocalTimerMealyTestUtil {
     /**
      * Prints the provided MMLT to stdout.
      */
-    static <S, I, O> void printModel(LocalTimerMealy<S, I, O> model) {
+    static <S, I, T, O> void printModel(MMLT<S, I, T, O> model) {
         try {
-            GraphDOT.write(model.transitionGraphView(true, true), System.out);
+            GraphDOT.write(model.transitionGraphView(model.getInputAlphabet()), System.out, new MMLTVisualizationHelper<>(model, true, true));
         } catch (IOException ignored) {
         }
     }
@@ -53,7 +55,8 @@ public class LocalTimerMealyTestUtil {
         return models;
     }
 
-    static LocalTimerMealyModel<Integer, String, String> automatonFromFile(String name) {
+    static LocalTimerMealyModel<?, String, ?, String> automatonFromFile(String name)
+            throws IOException, FormatException {
         return automatonFromFile(name, -1);
     }
 
@@ -64,14 +67,29 @@ public class LocalTimerMealyTestUtil {
      * @param maxTimerQueryWaiting Maximum timer query waiting time. If set to -1, the maximum initial timer value is used.
      * @return The automaton model.
      */
-    static LocalTimerMealyModel<Integer, String, String> automatonFromFile(String name, int maxTimerQueryWaiting) {
-        var modelResource = LocalTimerMealyTestUtil.class.getResource("/mmlt/" + name);
-        var automaton = LocalTimerMealyGraphvizParser.parseLocalTimerMealy(new File(modelResource.getFile()), "void", StringSymbolCombiner.getInstance());
+    static LocalTimerMealyModel<?, String, ?, String> automatonFromFile(String name, int maxTimerQueryWaiting)
+            throws IOException, FormatException {
 
-        long maxTimeoutDelay = LocalTimerMealyUtil.getMaximumTimeoutDelay(automaton);
-        long maxTimerQueryWaitingFinal = (maxTimerQueryWaiting > 0) ? maxTimerQueryWaiting : LocalTimerMealyUtil.getMaximumInitialTimerValue(automaton) * 2;
+        var silentOutput = "void";
+        var outputCombiner = StringSymbolCombiner.getInstance();
+        var parser = DOTParsers.mmlt(silentOutput, outputCombiner);
 
-        return new LocalTimerMealyModel<>(name, automaton, new LocalTimerMealyModelParams<>("void", maxTimeoutDelay, maxTimerQueryWaitingFinal, StringSymbolCombiner.getInstance()));
+        try (InputStream is = LocalTimerMealyTestUtil.class.getResourceAsStream("/mmlt/" + name)) {
+            var model = parser.readModel(is);
+            var automaton = model.model;
+
+            long maxTimeoutDelay = MMLTUtil.getMaximumTimeoutDelay(automaton);
+            long maxTimerQueryWaitingFinal = (maxTimerQueryWaiting > 0) ?
+                    maxTimerQueryWaiting :
+                    MMLTUtil.getMaximumInitialTimerValue(automaton) * 2;
+
+            return new LocalTimerMealyModel<>(name,
+                                              automaton,
+                                              new LocalTimerMealyModelParams<>(silentOutput,
+                                                                               maxTimeoutDelay,
+                                                                               maxTimerQueryWaitingFinal,
+                                                                               outputCombiner));
+        }
     }
 
 }

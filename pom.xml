@@ -104,6 +104,14 @@ limitations under the License.
             </roles>
         </contributor>
         <contributor>
+            <name>Paul Kogel</name>
+            <organization>TU Berlin, Software and Embedded Systems Engineering</organization>
+            <organizationUrl>https://www.tu.berlin/sese</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+        <contributor>
             <name>Jeroen Meijer</name>
             <email>j.j.g.meijer@utwente.nl</email>
             <organization>University of Twente, Formal Methods and Tools</organization>
