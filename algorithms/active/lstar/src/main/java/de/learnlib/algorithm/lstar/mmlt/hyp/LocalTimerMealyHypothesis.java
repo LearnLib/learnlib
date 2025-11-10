@@ -2,7 +2,6 @@ package de.learnlib.algorithm.lstar.mmlt.hyp;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.mmlt.impl.CompactMMLTSemantics;
-import net.automatalib.symbol.time.SymbolicInput;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
@@ -76,7 +75,7 @@ public class LocalTimerMealyHypothesis<S, I, T, O> implements MMLT<S, I, T, O>, 
     }
 
     @Override
-    public Alphabet<SymbolicInput<I>> getInputAlphabet() {
+    public Alphabet<InputSymbol<I>> getInputAlphabet() {
         return automaton.getInputAlphabet();
     }
 
@@ -96,7 +95,7 @@ public class LocalTimerMealyHypothesis<S, I, T, O> implements MMLT<S, I, T, O>, 
     }
 
     @Override
-    public @Nullable T getTransition(S location, SymbolicInput<I> input) {
+    public @Nullable T getTransition(S location, InputSymbol<I> input) {
         return automaton.getTransition(location, input);
     }
 
@@ -106,7 +105,7 @@ public class LocalTimerMealyHypothesis<S, I, T, O> implements MMLT<S, I, T, O>, 
     }
 
     @Override
-    public List<MealyTimerInfo<O>> getSortedTimers(S location) {
+    public List<MealyTimerInfo<S, O>> getSortedTimers(S location) {
         return automaton.getSortedTimers(location);
     }
 

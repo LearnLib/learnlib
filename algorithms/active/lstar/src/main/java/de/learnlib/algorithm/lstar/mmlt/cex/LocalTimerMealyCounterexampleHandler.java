@@ -102,7 +102,7 @@ public class LocalTimerMealyCounterexampleHandler<S, I, O> implements LearnerSta
     private CexAnalysisResult<S, I, O> handleIncorrectTargetTimeStep(ExtendedDecomposition<S, I, O> decomposition, LocalTimerMealyHypothesis<S, I, ?, O> hypothesis) {
         // Check if there is a one-shot timer expiring at the next time step:
 
-        List<MealyTimerInfo<O>> localTimers = hypothesis.getSortedTimers(decomposition.state().getLocation());
+        List<? extends MealyTimerInfo<?, O>> localTimers = hypothesis.getSortedTimers(decomposition.state().getLocation());
         assert !localTimers.isEmpty();
 
         // If location has a one-shot timer, this is the one with the highest initial value:

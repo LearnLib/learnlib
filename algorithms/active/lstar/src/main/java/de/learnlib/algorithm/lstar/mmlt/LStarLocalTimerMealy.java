@@ -126,15 +126,15 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<MMLT<Integer, I, ?,
      * @param <O>             Output type
      * @return New one-shot timer
      */
-    public static <O> MealyTimerInfo<O> selectOneShotTimer(List<MealyTimerInfo<O>> sortedTimers, long maxInitialValue) {
+    public static <O> MealyTimerInfo<?, O> selectOneShotTimer(List<? extends MealyTimerInfo<?, O>> sortedTimers, long maxInitialValue) {
 
         // Filter relevant timers:
         // Start at timer with the highest initial value.
         // Ignore all timers whose initial value exceeds the maximum value.
         // Also ignore timers whose timeout is the multiple of another timer's initial value.
-        List<MealyTimerInfo<O>> relevantTimers = new ArrayList<>();
+        List<MealyTimerInfo<?, O>> relevantTimers = new ArrayList<>();
         for (int i = sortedTimers.size() - 1; i >= 0; i--) {
-            MealyTimerInfo<O> timer = sortedTimers.get(i);
+            MealyTimerInfo<?, O> timer = sortedTimers.get(i);
 
             if (timer.initial() > maxInitialValue) {
                 continue; // could not have expired
@@ -144,7 +144,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<MMLT<Integer, I, ?,
             // When set to one-shot, these would expire at same time as periodic timer -> non-deterministic behavior!
             boolean multiple = false;
             for (int j = 0; j < i; j++) {
-                MealyTimerInfo<O> otherTimer = sortedTimers.get(j);
+                MealyTimerInfo<?, O> otherTimer = sortedTimers.get(j);
                 if (timer.initial() % otherTimer.initial() == 0) {
                     multiple = true;
                     break;
@@ -212,7 +212,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<MMLT<Integer, I, ?,
                     TimedOutput<O> output = null;
                     if (inputSym instanceof TimeStepSequence<I> ws) {
                         // Query timer output from table:
-                        MealyTimerInfo<O> timerInfo = this.hypData.getTable().getTimerInfo(prefix, ws.timeSteps());
+                        MealyTimerInfo<?, O> timerInfo = this.hypData.getTable().getTimerInfo(prefix, ws.timeSteps());
                         if (timerInfo == null) {
                             throw new AssertionError();
                         }
@@ -354,7 +354,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<MMLT<Integer, I, ?,
         return true;
     }
 
-    private void handleMissingTimeoutChange(Row<TimedInput<I>> spRow, MealyTimerInfo<O> timeout) {
+    private void handleMissingTimeoutChange(Row<TimedInput<I>> spRow, MealyTimerInfo<?, O> timeout) {
         var locationTimerInfo = hypData.getTable().getLocationTimerInfo(spRow);
         if (locationTimerInfo == null) {
             throw new AssertionError("Location with missing one-shot timer must have timers.");

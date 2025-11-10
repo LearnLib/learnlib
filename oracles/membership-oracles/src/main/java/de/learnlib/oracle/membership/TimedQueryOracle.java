@@ -88,7 +88,7 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
      * @param currentTime Current time.
      * @return Next timeout time.
      */
-    private long calcNextExpectedTimeout(List<MealyTimerInfo<O>> timeouts, long currentTime) {
+    private long calcNextExpectedTimeout(List<MealyTimerInfo<?, O>> timeouts, long currentTime) {
         if (timeouts.isEmpty()) {
             throw new AssertionError();
         }
@@ -131,7 +131,7 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
             throw new IllegalArgumentException("Timer query waiting time must be at least max. waiting time for a single timeout.");
         }
 
-        List<MealyTimerInfo<O>> knownTimers = new ArrayList<>();
+        List<MealyTimerInfo<?, O>> knownTimers = new ArrayList<>();
 
         // Wait for the first timeout:
         TimedOutput<O> firstTimeout = this.sul.timeoutStep(this.modelParams.maxTimeoutWaitingTime());
@@ -143,7 +143,7 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
             logger.warn("Multiple timers expiring at first timeout, automaton may not be minimal.");
         }
 
-        knownTimers.add(new MealyTimerInfo<>(getUniqueTimerName(), firstTimeout.delay(), firstTimeout.symbol()));
+        knownTimers.add(new MealyTimerInfo<>(getUniqueTimerName(), firstTimeout.delay(), firstTimeout.symbol(), null));
 
         // Wait for further timeouts:
         long currentTimeStep = firstTimeout.delay(); // already waited for first timeout
@@ -185,14 +185,14 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
         return new TimerQueryResult<>(inconsistent, knownTimers);
     }
 
-    private record TimerCheckResult<O>(@Nullable MealyTimerInfo<O> newTimer, boolean inconsistent) {
+    private record TimerCheckResult<O>(@Nullable MealyTimerInfo<?, O> newTimer, boolean inconsistent) {
 
     }
 
-    private TimerCheckResult<O> evaluateNextTimer(long nextActualTime, long nextExpectedTime, TimedOutput<O> nextOutput, List<MealyTimerInfo<O>> knownTimers) {
+    private TimerCheckResult<O> evaluateNextTimer(long nextActualTime, long nextExpectedTime, TimedOutput<O> nextOutput, List<MealyTimerInfo<?, O>> knownTimers) {
         if (nextActualTime < nextExpectedTime) {
             // A timeout occurred before we expected one -> new timer:
-            var newTimer = new MealyTimerInfo<>(getUniqueTimerName(), nextActualTime, nextOutput.symbol());
+            var newTimer = new MealyTimerInfo<>(getUniqueTimerName(), nextActualTime, nextOutput.symbol(), null);
             return new TimerCheckResult<>(newTimer, false);
         } else if (nextActualTime == nextExpectedTime) {
             // Timeout occurred at expected time -> check if matching expected output:
@@ -220,7 +220,7 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
                     .toList();
             if (!newOutputs.isEmpty()) {
                 // Same time and more outputs -> add new timer that uses the new outputs:
-                var newTimer = new MealyTimerInfo<>(getUniqueTimerName(), nextActualTime, this.modelParams.outputCombiner().combineSymbols(newOutputs));
+                var newTimer = new MealyTimerInfo<>(getUniqueTimerName(), nextActualTime, this.modelParams.outputCombiner().combineSymbols(newOutputs), null);
                 return new TimerCheckResult<>(newTimer, false);
             }
         } else {

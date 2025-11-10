@@ -11,9 +11,9 @@ import net.automatalib.automaton.mmlt.MealyTimerInfo;
  */
 public class MissingOneShotResult<S, I, O> extends CexAnalysisResult<S, I, O> {
     private final S location;
-    private final MealyTimerInfo<O> timeout;
+    private final MealyTimerInfo<?, O> timeout;
 
-    public MissingOneShotResult(S location, MealyTimerInfo<O> timeout) {
+    public MissingOneShotResult(S location, MealyTimerInfo<?, O> timeout) {
         this.location = location;
         this.timeout = timeout;
     }
@@ -22,7 +22,7 @@ public class MissingOneShotResult<S, I, O> extends CexAnalysisResult<S, I, O> {
         return location;
     }
 
-    public MealyTimerInfo<O> getTimeout() {
+    public MealyTimerInfo<?, O> getTimeout() {
         return timeout;
     }
 }

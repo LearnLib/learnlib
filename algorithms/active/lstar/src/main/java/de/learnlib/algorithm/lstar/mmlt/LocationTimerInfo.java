@@ -21,10 +21,10 @@ public class LocationTimerInfo<I, O> implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(LocationTimerInfo.class);
 
-    private final Map<String, MealyTimerInfo<O>> timers; // name -> info
+    private final Map<String, MealyTimerInfo<?, O>> timers; // name -> info
 
     // Keep a list of timers sorted by their initial value. This lets us avoid redundant sort operations.
-    private final List<MealyTimerInfo<O>> sortedTimers;
+    private final List<MealyTimerInfo<?, O>> sortedTimers;
 
     private final Word<TimedInput<I>> prefix;
 
@@ -44,7 +44,7 @@ public class LocationTimerInfo<I, O> implements Serializable {
      * Adds a local timer to this location.
      *
      */
-    public void addTimer(MealyTimerInfo<O> timer) {
+    public void addTimer(MealyTimerInfo<?, O> timer) {
         this.timers.put(timer.name(), timer);
         this.sortedTimers.add(timer);
         this.sortedTimers.sort(Comparator.comparingLong(MealyTimerInfo::initial));
@@ -55,13 +55,13 @@ public class LocationTimerInfo<I, O> implements Serializable {
             logger.warn("Attempted to remove an unknown timer.");
             return;
         }
-        MealyTimerInfo<O> removedTimer = this.timers.remove(timerName);
+        MealyTimerInfo<?, O> removedTimer = this.timers.remove(timerName);
         this.sortedTimers.remove(removedTimer);
     }
 
     @Nullable
-    public MealyTimerInfo<O> getTimerInfo(long initial) {
-        Optional<MealyTimerInfo<O>> timer = this.sortedTimers.stream().filter(t -> t.initial() == initial).findAny();
+    public MealyTimerInfo<?, O> getTimerInfo(long initial) {
+        Optional<MealyTimerInfo<?, O>> timer = this.sortedTimers.stream().filter(t -> t.initial() == initial).findAny();
         return timer.orElse(null);
     }
 
@@ -72,7 +72,7 @@ public class LocationTimerInfo<I, O> implements Serializable {
      * @return Timer with maximum timeout. Null, if no timers defined.
      */
     @Nullable
-    public MealyTimerInfo<O> getLastTimer() {
+    public MealyTimerInfo<?, O> getLastTimer() {
         if (this.timers.isEmpty()) {
             return null;
         }
@@ -102,7 +102,7 @@ public class LocationTimerInfo<I, O> implements Serializable {
      *
      * @return List of local timers. Empty, if none.
      */
-    public List<MealyTimerInfo<O>> getSortedTimers() {
+    public List<MealyTimerInfo<?, O>> getSortedTimers() {
         return Collections.unmodifiableList(sortedTimers);
     }
 
@@ -113,7 +113,7 @@ public class LocationTimerInfo<I, O> implements Serializable {
      * @return Map of local timers. Empty, if none defined.
      */
     @NonNull
-    public Map<String, MealyTimerInfo<O>> getLocalTimers() {
+    public Map<String, MealyTimerInfo<?, O>> getLocalTimers() {
         return Collections.unmodifiableMap(this.timers);
     }
 }

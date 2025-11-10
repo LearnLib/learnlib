@@ -497,7 +497,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
         throw new IllegalStateException("Not implemented.");
     }
 
-    public @Nullable MealyTimerInfo<O> getTimerInfo(Word<TimedInput<I>> prefix, long initial) {
+    public @Nullable MealyTimerInfo<?, O> getTimerInfo(Word<TimedInput<I>> prefix, long initial) {
         var info = this.timerInfoMap.get(prefix);
         if (info != null) {
             return info.getTimerInfo(initial);
@@ -545,7 +545,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
         return this.findUnclosedTransitions();
     }
 
-    public List<List<Row<TimedInput<I>>>> addTimerTransition(Row<TimedInput<I>> spRow, MealyTimerInfo<O> timeout, AbstractTimedQueryOracle<I, O> timeOracle) {
+    public List<List<Row<TimedInput<I>>>> addTimerTransition(Row<TimedInput<I>> spRow, MealyTimerInfo<?, O> timeout, AbstractTimedQueryOracle<I, O> timeOracle) {
         return this.addOutgoingTransition(spRow, new TimeStepSequence<>(timeout.initial()), timeOracle);
     }
 

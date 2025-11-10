@@ -30,7 +30,7 @@ public class LocalTimerMealyTestUtil {
      */
     static <S, I, T, O> void printModel(MMLT<S, I, T, O> model) {
         try {
-            GraphDOT.write(model.transitionGraphView(model.getInputAlphabet()), System.out, new MMLTVisualizationHelper<>(model, true, true));
+            GraphDOT.write(model.graphView(), System.out, new MMLTVisualizationHelper<>(model, true, true));
         } catch (IOException ignored) {
         }
     }

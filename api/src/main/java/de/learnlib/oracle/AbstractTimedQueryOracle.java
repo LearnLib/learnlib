@@ -28,7 +28,7 @@ public abstract class AbstractTimedQueryOracle<I, O> implements MembershipOracle
      * @param timers  Identified timers
      * @param <O>     Untimed output suffix type
      */
-    public record TimerQueryResult<O>(boolean aborted, List<MealyTimerInfo<O>> timers) {
+    public record TimerQueryResult<O>(boolean aborted, List<MealyTimerInfo<?, O>> timers) {
 
     }
 
