@@ -64,7 +64,7 @@ public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMeal
             if (!(sym instanceof InputSymbol<I> ndi)) {
                 continue; // only consider non-delaying inputs, as only these can perform local resets
             }
-            var trans = hypothesis.getTransition(sourceLoc, ndi);
+            var trans = hypothesis.getTransition(sourceLoc, ndi.symbol());
 
             // Collect self-loops:
             if (trans == null || Objects.equals(hypothesis.getSuccessor(trans), sourceLoc)) {

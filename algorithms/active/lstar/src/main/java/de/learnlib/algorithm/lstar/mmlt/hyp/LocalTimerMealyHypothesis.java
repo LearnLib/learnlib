@@ -1,21 +1,20 @@
 package de.learnlib.algorithm.lstar.mmlt.hyp;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.mmlt.impl.CompactMMLTSemantics;
-import net.automatalib.symbol.time.TimedInput;
-import net.automatalib.symbol.time.InputSymbol;
-import net.automatalib.symbol.time.TimeStepSequence;
-import net.automatalib.automaton.mmlt.SymbolCombiner;
-import net.automatalib.automaton.mmlt.MMLT;
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
-import net.automatalib.automaton.mmlt.State;
-import net.automatalib.automaton.mmlt.MMLTSemantics;
-import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.automaton.mmlt.MMLTSemantics;
+import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.State;
+import net.automatalib.automaton.mmlt.SymbolCombiner;
+import net.automatalib.automaton.mmlt.impl.CompactMMLTSemantics;
+import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An MMLT hypothesis that includes a prefix mapping.
@@ -75,12 +74,12 @@ public class LocalTimerMealyHypothesis<S, I, T, O> implements MMLT<S, I, T, O>, 
     }
 
     @Override
-    public Alphabet<InputSymbol<I>> getInputAlphabet() {
+    public Alphabet<I> getInputAlphabet() {
         return automaton.getInputAlphabet();
     }
 
     @Override
-    public Alphabet<InputSymbol<I>> getUntimedAlphabet() {
+    public Alphabet<I> getUntimedAlphabet() {
         return automaton.getUntimedAlphabet();
     }
 
@@ -95,12 +94,12 @@ public class LocalTimerMealyHypothesis<S, I, T, O> implements MMLT<S, I, T, O>, 
     }
 
     @Override
-    public @Nullable T getTransition(S location, InputSymbol<I> input) {
+    public @Nullable T getTransition(S location, I input) {
         return automaton.getTransition(location, input);
     }
 
     @Override
-    public boolean isLocalReset(S location, InputSymbol<I> input) {
+    public boolean isLocalReset(S location, I input) {
         return automaton.isLocalReset(location, input);
     }
 

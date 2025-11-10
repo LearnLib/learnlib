@@ -21,6 +21,7 @@ import de.learnlib.sul.LocalTimerMealySUL;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
 import de.learnlib.util.statistic.container.MapStatsContainer;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.exception.FormatException;
 import net.automatalib.symbol.time.TimedOutput;
@@ -93,8 +94,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
         stats.setCounter("original_inputs", "Untimed alphabet size in original", automaton.getUntimedAlphabet().size());
 
         // Set up a pipeline:
-        GrowingMapAlphabet<TimedInput<I>> alphabet = new GrowingMapAlphabet<>();
-        alphabet.addAll(automaton.getUntimedAlphabet());
+        Alphabet<TimedInput<I>> alphabet = new GrowingMapAlphabet<>(automaton.getUntimedAlphabet().stream().map(TimedInput::input).toList());
 
         // Query oracle -> TimeoutReducer -> Cache -> Query stats -> SUL
         LocalTimerMealySimulatorSUL<?, I, ?, O> sul = new LocalTimerMealySimulatorSUL<>(automaton.getSemantics());

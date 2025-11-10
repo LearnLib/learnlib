@@ -35,10 +35,10 @@ class LocalTimerMealyHypothesisBuilder {
         }
 
         // 2. Create untimed alphabet:
-        GrowingMapAlphabet<InputSymbol<I>> alphabet = new GrowingMapAlphabet<>();
+        GrowingMapAlphabet<I> alphabet = new GrowingMapAlphabet<>();
         for (var symbol : hypData.getAlphabet()) {
             if (symbol instanceof InputSymbol<I> ndi) {
-                alphabet.add(ndi);
+                alphabet.add(ndi.symbol());
             }
         }
 
@@ -70,7 +70,7 @@ class LocalTimerMealyHypothesisBuilder {
             Row<TimedInput<I>> spLocation = locationContentIdMap.get(rowContentId);
 
             for (var symbol : alphabet) {
-                int symIdx = hypData.getAlphabet().getSymbolIndex(symbol);
+                int symIdx = hypData.getAlphabet().getSymbolIndex(TimedInput.input(symbol));
 
                 var transOutput = hypData.getTransitionOutput(spLocation, symIdx);
                 O output = hypData.getModelParams().silentOutput(); // silent by default
@@ -91,7 +91,7 @@ class LocalTimerMealyHypothesisBuilder {
                 hypothesis.addTransition(sourceLocId, symbol, successorLocId, output);
 
                 // Check for local reset:
-                var targetTransition = spLocation.getLabel().append(symbol);
+                var targetTransition = spLocation.getLabel().append(TimedInput.input(symbol));
                 if (hypData.getTransitionResetSet().contains(targetTransition) && sourceLocId == successorLocId) {
                     hypothesis.addLocalReset(sourceLocId, symbol);
                 }

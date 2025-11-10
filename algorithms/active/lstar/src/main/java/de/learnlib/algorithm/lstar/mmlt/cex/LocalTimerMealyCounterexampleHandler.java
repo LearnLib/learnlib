@@ -144,8 +144,8 @@ public class LocalTimerMealyCounterexampleHandler<S, I, O> implements LearnerSta
         }
 
         // Non-stable -> explicitly test for missing reset:
-        var isLocalReset = hypothesis.isLocalReset(decomposition.state().getLocation(), (InputSymbol<I>) decomposition.input());
-        var trans = hypothesis.getTransition(decomposition.state().getLocation(), (InputSymbol<I>) decomposition.input());
+        var isLocalReset = hypothesis.isLocalReset(decomposition.state().getLocation(), ((InputSymbol<I>) decomposition.input()).symbol());
+        var trans = hypothesis.getTransition(decomposition.state().getLocation(), ((InputSymbol<I>) decomposition.input()).symbol());
         if (trans == null) {
             throw new AssertionError();
         }

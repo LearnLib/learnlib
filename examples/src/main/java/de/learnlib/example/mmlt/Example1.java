@@ -25,6 +25,7 @@ import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
 import de.learnlib.util.statistic.container.MapStatsContainer;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.symbol.time.InputSymbol;
@@ -51,8 +52,8 @@ public class Example1 {
 
         // ======================
         // Set up the pipeline:
-        GrowingMapAlphabet<TimedInput<String>> alphabet = new GrowingMapAlphabet<>();
-        alphabet.addAll(model.automaton().getUntimedAlphabet());
+        Alphabet<TimedInput<String>> alphabet =
+                new GrowingMapAlphabet<>(model.automaton().getUntimedAlphabet().stream().map(TimedInput::input).toList());
 
         // We use a simulator SUL to simulate our automaton:
         var sul = new LocalTimerMealySimulatorSUL<>(model.automaton().getSemantics());

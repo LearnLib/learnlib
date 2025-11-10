@@ -12,7 +12,7 @@ import de.learnlib.oracle.symbol_filters.AcceptAllSymbolFilter;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
 import de.learnlib.testsupport.example.mmlt.LocalTimerMealyModel;
-import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.exception.FormatException;
 import net.automatalib.symbol.time.InputSymbol;
@@ -29,8 +29,8 @@ public class LStarLocalTimerMealyCounterexampleTests {
 
     private static <S, I, T, O> void learnModel(LocalTimerMealyModel<S, I, T, O> model, List<Word<TimedInput<I>>> counterexamples) {
 
-        GrowingAlphabet<TimedInput<I>> alphabet = new GrowingMapAlphabet<>();
-        model.automaton().getUntimedAlphabet().forEach(alphabet::addSymbol);
+        Alphabet<TimedInput<I>> alphabet =
+                new GrowingMapAlphabet<>(model.automaton().getUntimedAlphabet().stream().map(TimedInput::input).toList());
 
         var sul = new LocalTimerMealySimulatorSUL<>(model.automaton().getSemantics());
         TimedQueryOracle<I, O> timeOracle = new TimedQueryOracle<>(sul, model.params());
