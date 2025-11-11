@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.algorithm.LocalTimerMealyModelParams;
-import de.learnlib.driver.simulator.LocalTimerMealySimulatorSUL;
-import de.learnlib.oracle.membership.TimedQueryOracle;
+import de.learnlib.algorithm.MMLTModelParams;
+import de.learnlib.driver.simulator.MMLTSimulatorSUL;
+import de.learnlib.oracle.membership.TimedSULOracle;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.mmlt.impl.CompactMMLT;
@@ -20,7 +20,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
-public class LocalTimerMealyCacheTest {
+public class MMLTCacheTest {
     private CompactMMLT<String, String> buildBaseModel() {
         var alphabet = Alphabets.fromArray("p1", "p2", "abort", "collect");
         var model = new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
@@ -56,12 +56,12 @@ public class LocalTimerMealyCacheTest {
         Random random = new Random(100);
 
         var automaton = buildBaseModel();
-        var params = new LocalTimerMealyModelParams<>("void", 4, 80, StringSymbolCombiner.getInstance());
+        var params = new MMLTModelParams<>("void", 4, 80, StringSymbolCombiner.getInstance());
 
-        var sul = new LocalTimerMealySimulatorSUL<>(automaton.getSemantics());
-        var cacheSUL = new LocalTimerMealyTreeSULCache<>(sul, params);
-        var timeOracleWithCache = new TimedQueryOracle<>(cacheSUL, params);
-        var timeOracleWithoutCache = new TimedQueryOracle<>(sul, params);
+        var sul = new MMLTSimulatorSUL<>(automaton.getSemantics());
+        var cacheSUL = new TimedSULTreeCache<>(sul, params);
+        var timeOracleWithCache = new TimedSULOracle<>(cacheSUL, params);
+        var timeOracleWithoutCache = new TimedSULOracle<>(sul, params);
 
 
         var listAlphabet = new ArrayList<>(automaton.getSemantics().getInputAlphabet());
@@ -74,8 +74,8 @@ public class LocalTimerMealyCacheTest {
             var word = Word.fromList(symbols);
             words.add(word);
 
-            var cacheOutput = timeOracleWithCache.querySuffixOutput(Word.epsilon(), word);
-            var sulOutput = timeOracleWithoutCache.querySuffixOutput(Word.epsilon(), word);
+            var cacheOutput = timeOracleWithCache.answerQuery(word);
+            var sulOutput = timeOracleWithoutCache.answerQuery(word);
             var automatonOutput = automaton.getSemantics().computeSuffixOutput(Word.epsilon(), word);
 
             Assert.assertEquals(sulOutput, automatonOutput, "Automaton output does not match SUL output for word " + word);
@@ -84,8 +84,8 @@ public class LocalTimerMealyCacheTest {
 
         // Now that the cache contents have changed, ensure that the results are still correct:
         for (var word : words) {
-            var cacheOutput = timeOracleWithCache.querySuffixOutput(Word.epsilon(), word);
-            var sulOutput = timeOracleWithoutCache.querySuffixOutput(Word.epsilon(), word);
+            var cacheOutput = timeOracleWithCache.answerQuery(word);
+            var sulOutput = timeOracleWithoutCache.answerQuery(word);
 
             Assert.assertEquals(sulOutput, cacheOutput, "Cache output does not match SUL output for word " + word);
         }
@@ -95,15 +95,15 @@ public class LocalTimerMealyCacheTest {
     public void testCacheConsistencyTest() {
         // Test if the cache consistency test works correctly:
         var refAutomaton = buildBaseModel();
-        var params = new LocalTimerMealyModelParams<>("void", 4, 80, StringSymbolCombiner.getInstance());
+        var params = new MMLTModelParams<>("void", 4, 80, StringSymbolCombiner.getInstance());
 
-        var sul = new LocalTimerMealySimulatorSUL<>(refAutomaton.getSemantics());
-        var cacheSUL = new LocalTimerMealyTreeSULCache<>(sul, params);
-        var timeOracleWithCache = new TimedQueryOracle<>(cacheSUL, params);
+        var sul = new MMLTSimulatorSUL<>(refAutomaton.getSemantics());
+        var cacheSUL = new TimedSULTreeCache<>(sul, params);
+        var timeOracleWithCache = new TimedSULOracle<>(cacheSUL, params);
 
         // Add word to cache:
         Word<TimedInput<String>> testWord = Word.fromSymbols(TimedInput.input("p2"), TimedInput.timeout(), TimedInput.step(), TimedInput.timeout());
-        timeOracleWithCache.querySuffixOutput(Word.epsilon(), testWord);
+        timeOracleWithCache.answerQuery(testWord);
 
         // Create a bad hypothesis:
         var badAutomaton = buildBaseModel();

@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import de.learnlib.oracle.AbstractTimedQueryOracle;
-import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
+import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.common.util.random.RandomUtil;
@@ -36,11 +36,11 @@ import org.slf4j.LoggerFactory;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O> {
+public class ResetSearchOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
 
     private final static Logger logger = LoggerFactory.getLogger(ResetSearchOracle.class);
 
-    private final AbstractTimedQueryOracle<I, O> timeOracle;
+    private final TimedQueryOracle<I, O> timeOracle;
     private final Random locPrefixRandom;
 
     private final double loopInsertPerc;
@@ -48,7 +48,7 @@ public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMeal
 
     private final long loopingInputSelectionSeed;
 
-    public ResetSearchOracle(AbstractTimedQueryOracle<I, O> timeOracle, long seed, double loopInsertPerc, double testedLocPerc) {
+    public ResetSearchOracle(TimedQueryOracle<I, O> timeOracle, long seed, double loopInsertPerc, double testedLocPerc) {
         this.timeOracle = timeOracle;
         this.locPrefixRandom = new Random(seed);
         this.loopInsertPerc = loopInsertPerc;
@@ -143,7 +143,7 @@ public class ResetSearchOracle<I, O> implements EquivalenceOracle.LocalTimerMeal
             var testWord = wbTestWord.toWord();
 
             var hypOutput = hypothesis.getSemantics().computeSuffixOutput(Word.epsilon(), testWord);
-            var sulOutput = timeOracle.querySuffixOutput(Word.epsilon(), testWord);
+            var sulOutput = timeOracle.answerQuery(testWord);
             if (!hypOutput.equals(sulOutput)) {
                 return new DefaultQuery<>(testWord, sulOutput);
             }

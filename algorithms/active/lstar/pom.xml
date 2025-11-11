@@ -155,7 +155,23 @@ limitations under the License.
                     <configuration>
                         <!-- append to existing argLine to nicely work together with jacoco plugin -->
                         <!-- allow tests access to util and statistics -->
-                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.lstar=net.automatalib.util --add-reads=de.learnlib.algorithm.lstar=de.learnlib.filter.statistic
+                        <argLine>
+                            @{argLine}
+                            --add-reads=de.learnlib.algorithm.lstar=net.automatalib.util
+                            --add-reads=de.learnlib.algorithm.lstar=de.learnlib.filter.statistic
+                        </argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <!-- append to existing argLine to nicely work together with jacoco plugin -->
+                        <!-- allow tests access to util and statistics -->
+                        <argLine>
+                            @{argLine}
+                            --add-reads=de.learnlib.algorithm.lstar=net.automatalib.util
+                            --add-reads=de.learnlib.algorithm.lstar=de.learnlib.filter.statistic
                         </argLine>
                     </configuration>
                 </plugin>

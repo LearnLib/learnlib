@@ -1,13 +1,13 @@
 package de.learnlib.filter.cache.mmlt;
 
 
-import de.learnlib.algorithm.LocalTimerMealyModelParams;
-import de.learnlib.filter.cache.LearningCache;
-import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.algorithm.MMLTModelParams;
+import de.learnlib.filter.cache.LearningCache.MMLTLearningCache;
+import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainer;
-import de.learnlib.sul.LocalTimerMealySUL;
+import de.learnlib.sul.TimedSUL;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 
 import net.automatalib.symbol.time.TimedInput;
@@ -29,13 +29,14 @@ import java.util.*;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, O>, LearningCache.LocalTimerMealyLearningCache<I, O>, GraphViewable, LearnerStatsProvider {
-    private final LocalTimerMealySUL<I, O> delegate;
+public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>,
+                                                MMLTLearningCache<I, O>, GraphViewable, LearnerStatsProvider {
+    private final TimedSUL<I, O> delegate;
 
     private final CacheTreeNode<I, O> cacheRoot;
     private CacheTreeNode<I, O> currentState;
 
-    private final LocalTimerMealyModelParams<O> modelParams;
+    private final MMLTModelParams<O> modelParams;
     private final TimedOutput<O> silentOutput;
     private boolean cacheMiss;
 
@@ -46,7 +47,7 @@ public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, 
         this.stats = container;
     }
 
-    public LocalTimerMealyTreeSULCache(LocalTimerMealySUL<I, O> delegate, LocalTimerMealyModelParams<O> modelParams) {
+    public TimedSULTreeCache(TimedSUL<I, O> delegate, MMLTModelParams<O> modelParams) {
         this.delegate = delegate;
         this.modelParams = modelParams;
         this.silentOutput = new TimedOutput<>(modelParams.silentOutput());
@@ -265,8 +266,8 @@ public class LocalTimerMealyTreeSULCache<I, O> implements LocalTimerMealySUL<I, 
     }
 
     @Override
-    public EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O> createCacheConsistencyTest() {
-        return new LocalTimerMealyCacheConsistencyTest<>(this, this.modelParams);
+    public MMLTEquivalenceOracle<I, O> createCacheConsistencyTest() {
+        return new MMLTCacheConsistencyTest<>(this, this.modelParams);
     }
 
 }

@@ -2,7 +2,7 @@ package de.learnlib.filter.statistic.sul;
 
 import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainer;
-import de.learnlib.sul.LocalTimerMealySUL;
+import de.learnlib.sul.TimedSUL;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
@@ -16,18 +16,18 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyStatsSUL<I, O> implements LocalTimerMealySUL<I, O>, LearnerStatsProvider {
-    private final LocalTimerMealySUL<I, O> delegate;
+public class CounterTimedSUL<I, O> implements TimedSUL<I, O>, LearnerStatsProvider {
+    private final TimedSUL<I, O> delegate;
     private StatsContainer stats;
 
     @Nullable
     private final String name;
 
-    public LocalTimerMealyStatsSUL(LocalTimerMealySUL<I, O> delegate, StatsContainer stats) {
+    public CounterTimedSUL(TimedSUL<I, O> delegate, StatsContainer stats) {
         this(delegate, stats, null);
     }
 
-    public LocalTimerMealyStatsSUL(LocalTimerMealySUL<I, O> delegate, StatsContainer stats, String name) {
+    public CounterTimedSUL(TimedSUL<I, O> delegate, StatsContainer stats, String name) {
         this.delegate = delegate;
         this.stats = stats;
         this.name = name;

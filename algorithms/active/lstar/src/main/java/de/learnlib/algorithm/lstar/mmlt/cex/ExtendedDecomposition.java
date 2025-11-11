@@ -16,11 +16,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param discriminator If not null: transition has incorrect target
  * @param <I>           Input type for non-delaying inputs
  */
-record ExtendedDecomposition<S, I, O>(State<S, O> state,
-                                      @NonNull TimedInput<I> input,
-                                      @Nullable Word<TimedInput<I>> discriminator) {
+record ExtendedDecomposition<I, O>(State<Integer, O> state,
+                                   @NonNull TimedInput<I> input,
+                                   @Nullable Word<TimedInput<I>> discriminator) {
 
-    public ExtendedDecomposition(State<S, O> state, @NonNull TimedInput<I> input) {
+    public ExtendedDecomposition(State<Integer, O> state, @NonNull TimedInput<I> input) {
         this(state, input, null);
     }
 

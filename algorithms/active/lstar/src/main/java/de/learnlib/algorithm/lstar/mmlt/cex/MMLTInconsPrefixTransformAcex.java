@@ -1,7 +1,7 @@
 package de.learnlib.algorithm.lstar.mmlt.cex;
 
 import de.learnlib.acex.AbstractBaseCounterexample;
-import de.learnlib.oracle.AbstractTimedQueryOracle;
+import de.learnlib.oracle.TimedQueryOracle;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
@@ -16,11 +16,11 @@ import java.util.function.Function;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyInconsPrefixTransformAcex<I, O> extends AbstractBaseCounterexample<Word<TimedOutput<O>>> {
+public class MMLTInconsPrefixTransformAcex<I, O> extends AbstractBaseCounterexample<Word<TimedOutput<O>>> {
 
-    private final static Logger logger = LoggerFactory.getLogger(LocalTimerMealyInconsPrefixTransformAcex.class);
+    private final static Logger logger = LoggerFactory.getLogger(MMLTInconsPrefixTransformAcex.class);
 
-    private final AbstractTimedQueryOracle<I, O> timeOracle;
+    private final TimedQueryOracle<I, O> timeOracle;
     private final Word<TimedInput<I>> suffix;
 
     private final Function<Word<TimedInput<I>>, Word<TimedInput<I>>> asTransform;
@@ -32,7 +32,7 @@ public class LocalTimerMealyInconsPrefixTransformAcex<I, O> extends AbstractBase
      * @param timeOracle  membership oracle
      * @param asTransform retrieves the prefix of the system state in the hypothesis addressed by a word
      */
-    public LocalTimerMealyInconsPrefixTransformAcex(Word<TimedInput<I>> suffix, AbstractTimedQueryOracle<I, O> timeOracle, Function<Word<TimedInput<I>>, Word<TimedInput<I>>> asTransform) {
+    public MMLTInconsPrefixTransformAcex(Word<TimedInput<I>> suffix, TimedQueryOracle<I, O> timeOracle, Function<Word<TimedInput<I>>, Word<TimedInput<I>>> asTransform) {
         super(suffix.length());
         this.timeOracle = timeOracle;
         this.suffix = suffix;
@@ -53,7 +53,7 @@ public class LocalTimerMealyInconsPrefixTransformAcex<I, O> extends AbstractBase
         Word<TimedInput<I>> accessSequence = this.asTransform.apply(prefix);
 
         // Query *hypothesis state* + *suffix*:
-        return this.timeOracle.querySuffixOutput(accessSequence, suffix);
+        return this.timeOracle.answerQuery(accessSequence, suffix);
     }
 
 

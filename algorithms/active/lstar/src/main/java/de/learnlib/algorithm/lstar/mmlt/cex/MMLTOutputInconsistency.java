@@ -15,8 +15,8 @@ import net.automatalib.word.Word;
  * @param <I>       Input type for non-delaying inputs
  * @param <O>       Output symbol type
  */
-public record LocalTimerMealyOutputInconsistency<I, O>(Word<TimedInput<I>> prefix,
-                                                       Word<TimedInput<I>> suffix,
-                                                       Word<TimedOutput<O>> targetOut,
-                                                       Word<TimedOutput<O>> hypOut) {
+public record MMLTOutputInconsistency<I, O>(Word<TimedInput<I>> prefix,
+                                            Word<TimedInput<I>> suffix,
+                                            Word<TimedOutput<O>> targetOut,
+                                            Word<TimedOutput<O>> hypOut) {
 }

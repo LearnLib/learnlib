@@ -1,7 +1,7 @@
 package de.learnlib.filter.cache.mmlt;
 
-import de.learnlib.algorithm.LocalTimerMealyModelParams;
-import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.algorithm.MMLTModelParams;
+import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.symbol.time.TimedOutput;
@@ -24,13 +24,13 @@ import java.util.*;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyCacheConsistencyTest<I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O> {
-    private final static Logger logger = LoggerFactory.getLogger(LocalTimerMealyCacheConsistencyTest.class);
+public class MMLTCacheConsistencyTest<I, O> implements MMLTEquivalenceOracle<I, O> {
+    private final static Logger logger = LoggerFactory.getLogger(MMLTCacheConsistencyTest.class);
 
-    private final LocalTimerMealyTreeSULCache<I, O> sulCache;
-    private final LocalTimerMealyModelParams<O> modelParams;
+    private final TimedSULTreeCache<I, O> sulCache;
+    private final MMLTModelParams<O> modelParams;
 
-    LocalTimerMealyCacheConsistencyTest(LocalTimerMealyTreeSULCache<I, O> sulCache, LocalTimerMealyModelParams<O> modelParams) {
+    MMLTCacheConsistencyTest(TimedSULTreeCache<I, O> sulCache, MMLTModelParams<O> modelParams) {
         this.sulCache = sulCache;
         this.modelParams = modelParams;
     }

@@ -2,7 +2,7 @@ package de.learnlib.filter.cache.mmlt;
 
 import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainer;
-import de.learnlib.sul.LocalTimerMealySUL;
+import de.learnlib.sul.TimedSUL;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.InputSymbol;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -20,9 +20,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class TimeoutReducerSUL<I, O> implements LocalTimerMealySUL<I, O>, LearnerStatsProvider {
+public class TimeoutReducerSUL<I, O> implements TimedSUL<I, O>, LearnerStatsProvider {
 
-    private final LocalTimerMealySUL<I, O> delegate;
+    private final TimedSUL<I, O> delegate;
     private final long maxDelay;
 
     /**
@@ -33,7 +33,7 @@ public class TimeoutReducerSUL<I, O> implements LocalTimerMealySUL<I, O>, Learne
 
     private StatsContainer stats;
 
-    public TimeoutReducerSUL(LocalTimerMealySUL<I, O> delegate, long maxDelay, StatsContainer stats) {
+    public TimeoutReducerSUL(TimedSUL<I, O> delegate, long maxDelay, StatsContainer stats) {
         this.delegate = delegate;
         this.maxDelay = maxDelay;
         this.stats = stats;

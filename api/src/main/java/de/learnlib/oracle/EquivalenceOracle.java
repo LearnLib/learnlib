@@ -101,5 +101,5 @@ public interface EquivalenceOracle<A, I, D> {
      * @param <I> Input type for non-delaying inputs
      * @param <O> Output symbol type
      */
-    interface LocalTimerMealyEquivalenceOracle<I, O> extends EquivalenceOracle<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>>{}
+    interface MMLTEquivalenceOracle<I, O> extends EquivalenceOracle<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>>{}
 }

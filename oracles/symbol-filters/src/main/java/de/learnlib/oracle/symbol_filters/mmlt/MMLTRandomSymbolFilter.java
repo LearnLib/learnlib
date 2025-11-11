@@ -16,12 +16,12 @@ import java.util.Random;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyRandomSymbolFilter<I, O> extends RandomSymbolFilter<TimedInput<I>, InputSymbol<I>> {
+public class MMLTRandomSymbolFilter<I, O> extends RandomSymbolFilter<TimedInput<I>, InputSymbol<I>> {
 
     private final MMLT<?, I, ?, O> automaton;
 
-    public LocalTimerMealyRandomSymbolFilter(MMLT<?, I, ?, O> automaton,
-                                             double inaccurateProb, Random random) {
+    public MMLTRandomSymbolFilter(MMLT<?, I, ?, O> automaton,
+                                  double inaccurateProb, Random random) {
         super(inaccurateProb, random);
         this.automaton = automaton;
     }
@@ -29,6 +29,6 @@ public class LocalTimerMealyRandomSymbolFilter<I, O> extends RandomSymbolFilter<
 
     @Override
     protected SymbolFilterResponse isIgnorable(Word<TimedInput<I>> prefix, InputSymbol<I> symbol) {
-        return LocalTimerMealySymbolFilterUtil.isIgnorable(this.automaton, prefix, symbol);
+        return MMLTSymbolFilterUtil.isIgnorable(this.automaton, prefix, symbol);
     }
 }

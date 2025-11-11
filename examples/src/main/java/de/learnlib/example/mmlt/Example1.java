@@ -5,28 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.algorithm.lstar.mmlt.LStarLocalTimerMealy;
+import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
-import de.learnlib.driver.simulator.LocalTimerMealySimulatorSUL;
-import de.learnlib.filter.cache.mmlt.LocalTimerMealyTreeSULCache;
+import de.learnlib.driver.simulator.MMLTSimulatorSUL;
+import de.learnlib.filter.cache.mmlt.TimedSULTreeCache;
 import de.learnlib.filter.cache.mmlt.TimeoutReducerSUL;
-import de.learnlib.filter.statistic.sul.LocalTimerMealyStatsSUL;
-import de.learnlib.oracle.EquivalenceOracle;
-import de.learnlib.oracle.equivalence.mmlt.LocalTimerMealyEQOracleChain;
-import de.learnlib.oracle.equivalence.mmlt.LocalTimerMealyRandomWpOracle;
-import de.learnlib.oracle.equivalence.mmlt.LocalTimerMealySimulatorOracle;
+import de.learnlib.filter.statistic.sul.CounterTimedSUL;
+import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
+import de.learnlib.oracle.equivalence.mmlt.EQOracleChain;
+import de.learnlib.oracle.equivalence.mmlt.RandomWpOracle;
+import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.equivalence.mmlt.ResetSearchOracle;
-import de.learnlib.oracle.membership.TimedQueryOracle;
+import de.learnlib.oracle.membership.TimedSULOracle;
 import de.learnlib.oracle.symbol_filters.CachedSymbolFilter;
-import de.learnlib.oracle.symbol_filters.mmlt.LocalTimerMealyRandomSymbolFilter;
-import de.learnlib.oracle.symbol_filters.mmlt.LocalTimerMealyStatisticsSymbolFilter;
+import de.learnlib.oracle.symbol_filters.mmlt.MMLTRandomSymbolFilter;
+import de.learnlib.oracle.symbol_filters.mmlt.MMLTStatisticsSymbolFilter;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
-import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
+import de.learnlib.testsupport.example.mmlt.MMLTExamples;
 import de.learnlib.util.statistic.container.MapStatsContainer;
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.visualization.MMLTVisualizationHelper;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.symbol.time.InputSymbol;
@@ -42,7 +40,7 @@ import net.automatalib.word.Word;
 public class Example1 {
 
     public static void main(String[] args) {
-        var model = LocalTimerMealyExamples.SensorCollector();
+        var model = MMLTExamples.SensorCollector();
 
         // We first create a statistics container.
         // This container will store various statistical data during learning:
@@ -54,25 +52,25 @@ public class Example1 {
         // ======================
         // Set up the pipeline:
         // We use a simulator SUL to simulate our automaton:
-        var sul = new LocalTimerMealySimulatorSUL<>(model.automaton().getSemantics());
+        var sul = new MMLTSimulatorSUL<>(model.automaton().getSemantics());
 
         // We count all operations that are performed on the SUL with a stats-SUL:
-        var statsAfterCache = new LocalTimerMealyStatsSUL<>(sul, stats);
+        var statsAfterCache = new CounterTimedSUL<>(sul, stats);
 
         // We use a cache to avoid redundant operations:
-        var cacheSUL = new LocalTimerMealyTreeSULCache<>(statsAfterCache, model.params());
+        var cacheSUL = new TimedSULTreeCache<>(statsAfterCache, model.params());
         cacheSUL.setStatsContainer(stats);
         var toReducerSul = new TimeoutReducerSUL<>(cacheSUL, model.params().maxTimeoutWaitingTime(), stats);
 
         // We use a query oracle to answer queries from the learner:
-        var timeOracle = new TimedQueryOracle<>(toReducerSul, model.params());
+        var timeOracle = new TimedSULOracle<>(toReducerSul, model.params());
 
         // We use a chain of different equivalence oracles:
-        LocalTimerMealyEQOracleChain<String, String> chainOracle = new LocalTimerMealyEQOracleChain<>();
+        EQOracleChain<String, String> chainOracle = new EQOracleChain<>();
         chainOracle.addOracle(cacheSUL.createCacheConsistencyTest());
         chainOracle.addOracle(new ResetSearchOracle<>(timeOracle, 100, 1.0, 1.0));
-        chainOracle.addOracle(new LocalTimerMealyRandomWpOracle<>(timeOracle, 100, 16, 0, 100));
-        chainOracle.addOracle(new LocalTimerMealySimulatorOracle<>(model.automaton())); // ensure that we eventually find an accurate model
+        chainOracle.addOracle(new RandomWpOracle<>(timeOracle, 100, 16, 0, 100));
+        chainOracle.addOracle(new SimulatorEQOracle<>(model.automaton())); // ensure that we eventually find an accurate model
         chainOracle.setStatsContainer(stats);
 
         // Set up our L* learner:
@@ -84,12 +82,12 @@ public class Example1 {
         // For this example, we use a RandomSymbolFilter. This filter correctly predicts
         // whether a transition silently self-loops with an accuracy of 90%:
         SymbolFilter<TimedInput<String>, InputSymbol<String>> filter =
-                new LocalTimerMealyRandomSymbolFilter<>(model.automaton(), 0.1, new Random(100));
+                new MMLTRandomSymbolFilter<>(model.automaton(), 0.1, new Random(100));
 
-        filter = new LocalTimerMealyStatisticsSymbolFilter<>(model.automaton(), filter, stats);
+        filter = new MMLTStatisticsSymbolFilter<>(model.automaton(), filter, stats);
         filter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
 
-        var learner = new LStarLocalTimerMealy<>(model.automaton().getInputAlphabet(), model.params(), suffixes, timeOracle, filter);
+        var learner = new ExtensibleLStarMMLT<>(model.automaton().getInputAlphabet(), model.params(), suffixes, timeOracle, filter);
         learner.setStatsContainer(stats);
 
         // Start learning:
@@ -105,8 +103,8 @@ public class Example1 {
         // with: tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet().stream().filter(s -> !(s instanceof TimeStepSymbol<String>)).toList());
     }
 
-    private static void runExperiment(LStarLocalTimerMealy<String, String> learner,
-                                      EquivalenceOracle.LocalTimerMealyEquivalenceOracle<String, String> tester,
+    private static void runExperiment(ExtensibleLStarMMLT<String, String> learner,
+                                      MMLTEquivalenceOracle<String, String> tester,
                                       StatsContainer stats, int maxRounds) {
         stats.startOrResumeClock("learningRt", "Processing time");
         learner.startLearning();

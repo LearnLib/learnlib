@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @param <O> Output symbol type
  */
-public final class LocalTimerMealyModelParams<O> {
+public final class MMLTModelParams<O> {
     private final O silentOutput;
     private final SymbolCombiner<O> outputCombiner;
     private final long maxTimeoutWaitingTime;
@@ -31,10 +31,10 @@ public final class LocalTimerMealyModelParams<O> {
      *                                 the need for equivalence queries.
      * @param outputCombiner           Function for combining simultaneously occurring outputs of timers
      */
-    public LocalTimerMealyModelParams(O silentOutput,
-                                      long maxTimeoutWaitingTime,
-                                      long maxTimerQueryWaitingTime,
-                                      SymbolCombiner<O> outputCombiner) {
+    public MMLTModelParams(O silentOutput,
+                           long maxTimeoutWaitingTime,
+                           long maxTimerQueryWaitingTime,
+                           SymbolCombiner<O> outputCombiner) {
         this.silentOutput = silentOutput;
         this.maxTimeoutWaitingTime = maxTimeoutWaitingTime;
         this.maxTimerQueryWaitingTime = maxTimerQueryWaitingTime;
@@ -65,7 +65,7 @@ public final class LocalTimerMealyModelParams<O> {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (LocalTimerMealyModelParams) obj;
+        var that = (MMLTModelParams) obj;
         return Objects.equals(this.silentOutput, that.silentOutput) &&
                 this.maxTimeoutWaitingTime == that.maxTimeoutWaitingTime &&
                 this.maxTimerQueryWaitingTime == that.maxTimerQueryWaitingTime &&

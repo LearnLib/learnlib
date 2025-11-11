@@ -35,7 +35,7 @@ class CacheTreeNode<I, O> {
     @Nullable
     private CacheTreeTransition<I, O> timeTransition;
 
-    private Map<InputSymbol<I>, CacheTreeTransition<I, O>> untimedChildren;
+    private final Map<InputSymbol<I>, CacheTreeTransition<I, O>> untimedChildren;
 
     public CacheTreeNode(CacheTreeNode<I, O> parent, TimedInput<I> parentInput) {
         this.parent = parent;

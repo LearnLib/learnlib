@@ -1,6 +1,6 @@
 package de.learnlib.testsupport.example.mmlt;
 
-import de.learnlib.algorithm.LocalTimerMealyModelParams;
+import de.learnlib.algorithm.MMLTModelParams;
 import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.dot.DOTParsers;
@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class LocalTimerMealyExamples {
+public class MMLTExamples {
 
-    public static List<LocalTimerMealyModel<?, String, ?, String>> getAll() {
+    public static List<MMLTModel<?, String, ?, String>> getAll() {
         return List.of(HVAC(), SCTP(), SensorCollector(), WM(), Oven(), WSN());
     }
 
@@ -23,7 +23,7 @@ public class LocalTimerMealyExamples {
      *
      * @return LocalTimerMealyModel
      */
-    public static LocalTimerMealyModel<?, String, ?, String> HVAC() {
+    public static MMLTModel<?, String, ?, String> HVAC() {
         return automatonFromFile("HVAC");
     }
 
@@ -34,7 +34,7 @@ public class LocalTimerMealyExamples {
      *
      * @return LocalTimerMealyModel
      */
-    public static LocalTimerMealyModel<?, String, ?, String> SCTP() {
+    public static MMLTModel<?, String, ?, String> SCTP() {
         return automatonFromFile("SCTP");
     }
 
@@ -48,7 +48,7 @@ public class LocalTimerMealyExamples {
      *
      * @return LocalTimerMealyModel
      */
-    public static LocalTimerMealyModel<?, String, ?, String> SensorCollector() {
+    public static MMLTModel<?, String, ?, String> SensorCollector() {
         return automatonFromFile("sensor_collector");
     }
 
@@ -70,7 +70,7 @@ public class LocalTimerMealyExamples {
      *
      * @return LocalTimerMealyModel
      */
-    public static LocalTimerMealyModel<?, String, ?, String> WM() {
+    public static MMLTModel<?, String, ?, String> WM() {
         return automatonFromFile("WM");
     }
 
@@ -84,7 +84,7 @@ public class LocalTimerMealyExamples {
      *
      * @return LocalTimerMealyModel
      */
-    public static LocalTimerMealyModel<?, String, ?, String> Oven() {
+    public static MMLTModel<?, String, ?, String> Oven() {
         return automatonFromFile("Oven");
     }
 
@@ -97,7 +97,7 @@ public class LocalTimerMealyExamples {
      *
      * @return LocalTimerMealyModel
      */
-    public static LocalTimerMealyModel<?, String, ?, String> WSN() {
+    public static MMLTModel<?, String, ?, String> WSN() {
         return automatonFromFile("WSN");
     }
 
@@ -112,12 +112,12 @@ public class LocalTimerMealyExamples {
      * the learner has the chance to observe its timeout at least twice. This increases the chance of observing non-periodic behavior.
      *
      */
-    static LocalTimerMealyModel<?, String, ?, String> automatonFromFile(String name) {
+    static MMLTModel<?, String, ?, String> automatonFromFile(String name) {
         var silentOutput = "void";
         var outputCombiner = StringSymbolCombiner.getInstance();
         var parser = DOTParsers.mmlt(silentOutput, outputCombiner);
 
-        try (InputStream is = LocalTimerMealyExamples.class.getResourceAsStream("/mmlt/" + name + ".dot")) {
+        try (InputStream is = MMLTExamples.class.getResourceAsStream("/mmlt/" + name + ".dot")) {
             var model = parser.readModel(is);
             var automaton = model.model;
 
@@ -128,12 +128,12 @@ public class LocalTimerMealyExamples {
                 maxTimerQueryWaitingFinal = 9000; // SCTP needs more waiting time
             }
 
-            return new LocalTimerMealyModel<>(name,
-                                              automaton,
-                                              new LocalTimerMealyModelParams<>(silentOutput,
-                                                                               maxTimeoutDelay,
-                                                                               maxTimerQueryWaitingFinal,
-                                                                               outputCombiner));
+            return new MMLTModel<>(name,
+                                   automaton,
+                                   new MMLTModelParams<>(silentOutput,
+                                                         maxTimeoutDelay,
+                                                         maxTimerQueryWaitingFinal,
+                                                         outputCombiner));
         } catch (IOException | FormatException e) {
             throw new RuntimeException("Unable to load model " + name, e);
         }

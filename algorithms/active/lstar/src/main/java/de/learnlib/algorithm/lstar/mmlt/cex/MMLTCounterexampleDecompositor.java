@@ -1,8 +1,8 @@
 package de.learnlib.algorithm.lstar.mmlt.cex;
 
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.algorithm.lstar.mmlt.hyp.LocalTimerMealyHypothesis;
-import de.learnlib.oracle.AbstractTimedQueryOracle;
+import de.learnlib.algorithm.lstar.mmlt.MMLTHypothesis;
+import de.learnlib.oracle.TimedQueryOracle;
 import net.automatalib.automaton.mmlt.State;
 import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
@@ -18,21 +18,21 @@ import org.slf4j.LoggerFactory;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-class LocalTimerMealyCounterexampleDecompositor<S, I, O> {
+class MMLTCounterexampleDecompositor<S, I, O> {
 
-    private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyCounterexampleDecompositor.class);
+    private static final Logger logger = LoggerFactory.getLogger(MMLTCounterexampleDecompositor.class);
 
 
-    private final AbstractTimedQueryOracle<I, O> timeOracle;
+    private final TimedQueryOracle<I, O> timeOracle;
     private final AcexAnalyzer acexAnalyzer;
 
-    public LocalTimerMealyCounterexampleDecompositor(AbstractTimedQueryOracle<I, O> timeOracle, AcexAnalyzer acexAnalyzer) {
+    public MMLTCounterexampleDecompositor(TimedQueryOracle<I, O> timeOracle, AcexAnalyzer acexAnalyzer) {
         this.timeOracle = timeOracle;
         this.acexAnalyzer = acexAnalyzer;
     }
 
-    ExtendedDecomposition<S, I, O> findExtendedDecomposition(LocalTimerMealyOutputInconsistency<I, O> outIncons,
-                                                             LocalTimerMealyHypothesis<S, I, ?, O> hypothesis) {
+    ExtendedDecomposition<I, O> findExtendedDecomposition(MMLTOutputInconsistency<I, O> outIncons,
+                                                          MMLTHypothesis<I, O> hypothesis) {
 
         if (outIncons.suffix().length() == 1) {
             // Incorrect output:
@@ -41,7 +41,7 @@ class LocalTimerMealyCounterexampleDecompositor<S, I, O> {
         }
 
         // Verify breakpoint condition:
-        LocalTimerMealyInconsPrefixTransformAcex<I, O> acex = new LocalTimerMealyInconsPrefixTransformAcex<>(outIncons.suffix(), timeOracle,
+        MMLTInconsPrefixTransformAcex<I, O> acex = new MMLTInconsPrefixTransformAcex<>(outIncons.suffix(), timeOracle,
                 w -> hypothesis.getPrefix(outIncons.prefix().concat(w)));
 
         if (acex.testEffects(0, acex.getLength() - 1)) {
@@ -78,15 +78,15 @@ class LocalTimerMealyCounterexampleDecompositor<S, I, O> {
      * @param decomposition Extended decomposition
      * @return Post-processed decomposition
      */
-    ExtendedDecomposition<S, I, O> postProcessExtendedDecomposition(ExtendedDecomposition<S, I, O> decomposition,
-                                                                    LocalTimerMealyHypothesis<S, I, ?, O> hypothesis) {
+    ExtendedDecomposition<I, O> postProcessExtendedDecomposition(ExtendedDecomposition<I, O> decomposition,
+                                                                 MMLTHypothesis<I, O> hypothesis) {
         if (!(decomposition.input() instanceof TimeoutSymbol<I>)) {
             return decomposition;
         }
 
         var statePrefix = hypothesis.getPrefix(decomposition.state());
         var hypOutput = hypothesis.getSemantics().computeSuffixOutput(statePrefix, Word.fromLetter(decomposition.input()));
-        var sulOutput = timeOracle.querySuffixOutput(statePrefix, Word.fromLetter(decomposition.input()));
+        var sulOutput = timeOracle.answerQuery(statePrefix, Word.fromLetter(decomposition.input()));
 
         if (decomposition.isForIncorrectOutput()) {
             // Incorrect output at tout:
@@ -102,7 +102,7 @@ class LocalTimerMealyCounterexampleDecompositor<S, I, O> {
             }
 
             // if minimum time is zero (= no timeout) or one, need to append empty word to prefix:
-            State<S, O> newPrefixState;
+            State<Integer, O> newPrefixState;
             if (minWaitTime <= 1) {
                 newPrefixState = decomposition.state();
             } else {
@@ -119,7 +119,7 @@ class LocalTimerMealyCounterexampleDecompositor<S, I, O> {
                 }
 
                 long waitTime = hypOutput.firstSymbol().delay();
-                State<S, O> newPrefixState;
+                State<Integer, O> newPrefixState;
                 if (waitTime <= 1) {
                     newPrefixState = decomposition.state();
                 } else {

@@ -15,7 +15,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public interface LocalTimerMealySUL<I, O> {
+public interface TimedSUL<I, O> extends SUL<InputSymbol<I>, TimedOutput<O>> {
 
     /**
      * Follows the provided input word, starting at the current system state.
@@ -49,14 +49,6 @@ public interface LocalTimerMealySUL<I, O> {
             }
         }
     }
-
-    /**
-     * Provides a non-delaying input to the SUL and returns the observed output.
-     *
-     * @param input Input
-     * @return SUL output.
-     */
-    TimedOutput<O> step(InputSymbol<I> input);
 
     /**
      * Waits until a timeout occurs or the provided time is reached.
@@ -109,14 +101,4 @@ public interface LocalTimerMealySUL<I, O> {
         return wbOutput.toWord();
     }
 
-
-    /**
-     * Prepares the SUL for a new query.
-     */
-    void pre();
-
-    /**
-     * Deinitializes the SUL.
-     */
-    void post();
 }

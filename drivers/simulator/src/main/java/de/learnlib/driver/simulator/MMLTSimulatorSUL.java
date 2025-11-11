@@ -1,7 +1,6 @@
 package de.learnlib.driver.simulator;
 
-import de.learnlib.sul.LocalTimerMealySUL;
-import net.automatalib.automaton.mmlt.MMLT;
+import de.learnlib.sul.TimedSUL;
 import net.automatalib.automaton.mmlt.MMLTSemantics;
 import net.automatalib.automaton.mmlt.State;
 import net.automatalib.symbol.time.InputSymbol;
@@ -17,13 +16,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I> Non-delaying input type.
  * @param <O> Output symbol type.
  */
-public class LocalTimerMealySimulatorSUL<S, I, T, O> implements LocalTimerMealySUL<I, O> {
+public class MMLTSimulatorSUL<S, I, T, O> implements TimedSUL<I, O> {
 
     private final MMLTSemantics<S, I, T, O> semantics;
 
     private State<S, O> currentConfiguration;
 
-    public LocalTimerMealySimulatorSUL(MMLTSemantics<S, I, T, O> semantics) {
+    public MMLTSimulatorSUL(MMLTSemantics<S, I, T, O> semantics) {
         this.semantics = semantics;
         this.currentConfiguration = null;
     }

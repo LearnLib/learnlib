@@ -1,14 +1,22 @@
 package de.learnlib.oracle.membership;
 
-import de.learnlib.algorithm.LocalTimerMealyModelParams;
-import de.learnlib.oracle.AbstractTimedQueryOracle;
-import de.learnlib.query.DefaultQuery;
-import de.learnlib.sul.LocalTimerMealySUL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import de.learnlib.algorithm.MMLTModelParams;
+import de.learnlib.oracle.TimedQueryOracle;
+import de.learnlib.query.Query;
+import de.learnlib.sul.TimedSUL;
 import net.automatalib.automaton.mmlt.MealyTimerInfo;
-import net.automatalib.symbol.time.TimedOutput;
-import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -16,57 +24,37 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 /**
  * Implements a timed query oracle for MMLT learning.
  *
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
+public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
 
-    private final static Logger logger = LoggerFactory.getLogger(TimedQueryOracle.class);
-
-    // List of all possible timer names.
-    // Each name is assigned at most once while this oracle exists. This ensures globally-unique timer names.
-    private final List<String> timerNames;
-    private int timerNameIndex = 0;
-
-    private final LocalTimerMealySUL<I, O> sul;
-    private final LocalTimerMealyModelParams<O> modelParams;
-
-    public TimedQueryOracle(LocalTimerMealySUL<I, O> sul, LocalTimerMealyModelParams<O> modelParams) {
-        this.sul = sul;
-        this.modelParams = modelParams;
-
-        this.timerNames = generateTimerNames();
-    }
-
-    private List<String> generateTimerNames() {
-        List<String> names = new ArrayList<>();
-        // Add single letter names
-        for (char c = 'a'; c <= 'z'; c++) {
-            names.add(String.valueOf(c));
-        }
-        // Add double letter names
-        for (char c1 = 'a'; c1 <= 'z'; c1++) {
-            for (char c2 = 'a'; c2 <= 'z'; c2++) {
-                names.add("" + c1 + c2);
-            }
-        }
-        return names;
-    }
+    private final static Logger logger = LoggerFactory.getLogger(TimedSULOracle.class);
 
     /**
-     * Observes and aggregates any timeouts that occur after providing the given input to the SUL.
-     * Stops when observing inconsistent behavior.
-     *
-     * @param prefix              Input to give to the SUL.
-     * @param maxTotalWaitingTime Maximum time that is waited for timeouts.
-     * @return Observed timeouts. Empty, if none.
+     * To ensure globally unique timer names, we index them according to this counter.
      */
+    private int timerCounter;
+
+    private final TimedSUL<I, O> sul;
+    private final MMLTModelParams<O> modelParams;
+
+    public TimedSULOracle(TimedSUL<I, O> sul, MMLTModelParams<O> modelParams) {
+        this.sul = sul;
+        this.modelParams = modelParams;
+        this.timerCounter = 0;
+    }
+
+    @Override
+    public void processQueries(Collection<? extends Query<TimedInput<I>, Word<TimedOutput<O>>>> queries) {
+        for (var q : queries) {
+            this.querySuffixOutputInternal(q);
+        }
+    }
+
     @Override
     public TimerQueryResult<O> queryTimers(Word<TimedInput<I>> prefix, long maxTotalWaitingTime) {
         this.sul.pre();
@@ -111,9 +99,7 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
     }
 
     private String getUniqueTimerName() {
-        var newTimerName = timerNames.get(timerNameIndex);
-        this.timerNameIndex += 1;
-        return newTimerName;
+        return "t_" + (++this.timerCounter);
     }
 
     /**
@@ -185,9 +171,7 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
         return new TimerQueryResult<>(inconsistent, knownTimers);
     }
 
-    private record TimerCheckResult<O>(@Nullable MealyTimerInfo<?, O> newTimer, boolean inconsistent) {
-
-    }
+    private record TimerCheckResult<O>(@Nullable MealyTimerInfo<?, O> newTimer, boolean inconsistent) {}
 
     private TimerCheckResult<O> evaluateNextTimer(long nextActualTime, long nextExpectedTime, TimedOutput<O> nextOutput, List<MealyTimerInfo<?, O>> knownTimers) {
         if (nextActualTime < nextExpectedTime) {
@@ -231,8 +215,7 @@ public class TimedQueryOracle<I, O> extends AbstractTimedQueryOracle<I, O> {
     }
 
 
-    @Override
-    protected void querySuffixOutputInternal(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> query) {
+    private void querySuffixOutputInternal(Query<TimedInput<I>, Word<TimedOutput<O>>> query) {
 
         sul.pre();
         sul.follow(query.getPrefix(), this.modelParams.maxTimeoutWaitingTime());

@@ -1,7 +1,7 @@
 package de.learnlib.oracle.equivalence.mmlt;
 
-import de.learnlib.oracle.EquivalenceOracle;
-import de.learnlib.oracle.AbstractTimedQueryOracle;
+import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
+import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
@@ -28,9 +28,9 @@ import java.util.*;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyRandomWpOracle<I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O>, LearnerStatsProvider {
-    private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyRandomWpOracle.class);
-    private final AbstractTimedQueryOracle<I, O> timeOracle;
+public class RandomWpOracle<I, O> implements MMLTEquivalenceOracle<I, O>, LearnerStatsProvider {
+    private static final Logger logger = LoggerFactory.getLogger(RandomWpOracle.class);
+    private final TimedQueryOracle<I, O> timeOracle;
 
     private StatsContainer stats = new DummyStatsContainer();
 
@@ -39,9 +39,9 @@ public class LocalTimerMealyRandomWpOracle<I, O> implements EquivalenceOracle.Lo
     private final int rndLen;
     private final int bound;
 
-    public LocalTimerMealyRandomWpOracle(AbstractTimedQueryOracle<I, O> timeOracle,
-                                         long randomSeed,
-                                         int minSize, int rndAddLength, int bound) {
+    public RandomWpOracle(TimedQueryOracle<I, O> timeOracle,
+                          long randomSeed,
+                          int minSize, int rndAddLength, int bound) {
 
         this.timeOracle = timeOracle;
 

@@ -9,7 +9,7 @@ import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.word.Word;
 
-class LocalTimerMealySymbolFilterUtil {
+class MMLTSymbolFilterUtil {
 
     /**
      * Returns IGNORE if the provided input triggers a transition that silently self-loops,

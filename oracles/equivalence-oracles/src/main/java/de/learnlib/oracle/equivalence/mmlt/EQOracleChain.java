@@ -1,6 +1,6 @@
 package de.learnlib.oracle.equivalence.mmlt;
 
-import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
@@ -25,11 +25,11 @@ import java.util.*;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyEQOracleChain<I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O>, LearnerStatsProvider {
+public class EQOracleChain<I, O> implements MMLTEquivalenceOracle<I, O>, LearnerStatsProvider {
 
-    private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyEQOracleChain.class);
+    private static final Logger logger = LoggerFactory.getLogger(EQOracleChain.class);
 
-    private final List<LocalTimerMealyEquivalenceOracle<I, O>> oracles = new ArrayList<>();
+    private final List<MMLTEquivalenceOracle<I, O>> oracles = new ArrayList<>();
     private StatsContainer stats = new DummyStatsContainer();
 
     /**
@@ -37,7 +37,7 @@ public class LocalTimerMealyEQOracleChain<I, O> implements EquivalenceOracle.Loc
      */
     private List<String> oracleNames;
 
-    public void addOracle(LocalTimerMealyEquivalenceOracle<I, O> oracle) {
+    public void addOracle(MMLTEquivalenceOracle<I, O> oracle) {
         this.oracles.add(oracle);
 
         // Update names:

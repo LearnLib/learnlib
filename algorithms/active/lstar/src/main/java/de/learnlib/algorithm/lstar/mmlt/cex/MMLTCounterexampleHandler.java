@@ -3,14 +3,14 @@ package de.learnlib.algorithm.lstar.mmlt.cex;
 import java.util.List;
 
 import de.learnlib.acex.AcexAnalyzer;
-import de.learnlib.algorithm.lstar.mmlt.LStarLocalTimerMealy;
+import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.CexAnalysisResult;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.FalseIgnoreResult;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.MissingDiscriminatorResult;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.MissingOneShotResult;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.MissingResetResult;
-import de.learnlib.algorithm.lstar.mmlt.hyp.LocalTimerMealyHypothesis;
-import de.learnlib.oracle.AbstractTimedQueryOracle;
+import de.learnlib.algorithm.lstar.mmlt.MMLTHypothesis;
+import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.statistic.container.DummyStatsContainer;
 import de.learnlib.statistic.container.LearnerStatsProvider;
 import de.learnlib.statistic.container.StatsContainer;
@@ -34,17 +34,17 @@ import org.slf4j.LoggerFactory;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyCounterexampleHandler<S, I, O> implements LearnerStatsProvider {
-    private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyCounterexampleHandler.class);
+public class MMLTCounterexampleHandler<S, I, O> implements LearnerStatsProvider {
+    private static final Logger logger = LoggerFactory.getLogger(MMLTCounterexampleHandler.class);
     private final SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
     private StatsContainer stats = new DummyStatsContainer();
 
-    protected final AbstractTimedQueryOracle<I, O> timeOracle;
-    private final LocalTimerMealyCounterexampleDecompositor<S, I, O> decompositor;
+    protected final TimedQueryOracle<I, O> timeOracle;
+    private final MMLTCounterexampleDecompositor<S, I, O> decompositor;
 
-    public LocalTimerMealyCounterexampleHandler(AbstractTimedQueryOracle<I, O> timeOracle, AcexAnalyzer acexAnalyzer, @NonNull SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter) {
+    public MMLTCounterexampleHandler(TimedQueryOracle<I, O> timeOracle, AcexAnalyzer acexAnalyzer, @NonNull SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter) {
         this.timeOracle = timeOracle;
-        this.decompositor = new LocalTimerMealyCounterexampleDecompositor<>(timeOracle, acexAnalyzer);
+        this.decompositor = new MMLTCounterexampleDecompositor<>(timeOracle, acexAnalyzer);
         this.symbolFilter = symbolFilter;
     }
 
@@ -53,8 +53,8 @@ public class LocalTimerMealyCounterexampleHandler<S, I, O> implements LearnerSta
         this.stats = container;
     }
 
-    public <T> CexAnalysisResult<S, I, O> analyzeInconsistency(LocalTimerMealyOutputInconsistency<I, O> outIncons,
-                                                           LocalTimerMealyHypothesis<S, I, T, O> hypothesis) {
+    public <T> CexAnalysisResult<I, O> analyzeInconsistency(MMLTOutputInconsistency<I, O> outIncons,
+                                                            MMLTHypothesis<I, O> hypothesis) {
 
         // Search for an extended decomposition:
         var decomposition = decompositor.findExtendedDecomposition(outIncons, hypothesis);
@@ -71,13 +71,13 @@ public class LocalTimerMealyCounterexampleHandler<S, I, O> implements LearnerSta
         }
     }
 
-    private CexAnalysisResult<S, I, O> handleIncorrectOutput(ExtendedDecomposition<S, I, O> decomposition, LocalTimerMealyHypothesis<S, I, ?, O> hypothesis) {
+    private CexAnalysisResult<I, O> handleIncorrectOutput(ExtendedDecomposition<I, O> decomposition, MMLTHypothesis<I, O> hypothesis) {
         // Transition with incorrect output always implies missing one-shot timer:
         logger.debug("Found missing one-shot via incorrect output.");
         return this.selectOneShotTimer(decomposition, hypothesis, decomposition.state().getEntryDistance());
     }
 
-    private CexAnalysisResult<S, I, O> handleIncorrectTarget(ExtendedDecomposition<S, I, O> decomposition, LocalTimerMealyHypothesis<S, I, ?, O> hypothesis) {
+    private CexAnalysisResult<I, O> handleIncorrectTarget(ExtendedDecomposition<I, O> decomposition, MMLTHypothesis<I, O> hypothesis) {
         if (decomposition.input() instanceof InputSymbol<I> ndi) {
             // If decomposition at non-delaying input + considered as self-loop, treat as false ignore:
             if (symbolFilter.query(hypothesis.getLocationPrefix(decomposition.state()), ndi) == SymbolFilterResponse.IGNORE) {
@@ -93,13 +93,13 @@ public class LocalTimerMealyCounterexampleHandler<S, I, O> implements LearnerSta
         }
     }
 
-    private CexAnalysisResult<S, I, O> selectOneShotTimer(ExtendedDecomposition<S, I, O> decomposition, LocalTimerMealyHypothesis<S, I, ?, O> hypothesis, long maxInitialValue) {
-        var newOneShot = LStarLocalTimerMealy.selectOneShotTimer(hypothesis.getSortedTimers(decomposition.state().getLocation()), maxInitialValue);
+    private CexAnalysisResult<I, O> selectOneShotTimer(ExtendedDecomposition<I, O> decomposition, MMLTHypothesis<I, O> hypothesis, long maxInitialValue) {
+        var newOneShot = ExtensibleLStarMMLT.selectOneShotTimer(hypothesis.getSortedTimers(decomposition.state().getLocation()), maxInitialValue);
         logger.debug("Missing one-shot: setting ({}|{}) to one-shot.", hypothesis.getLocationPrefix(decomposition.state()), newOneShot);
         return new MissingOneShotResult<>(decomposition.state().getLocation(), newOneShot);
     }
 
-    private CexAnalysisResult<S, I, O> handleIncorrectTargetTimeStep(ExtendedDecomposition<S, I, O> decomposition, LocalTimerMealyHypothesis<S, I, ?, O> hypothesis) {
+    private CexAnalysisResult<I, O> handleIncorrectTargetTimeStep(ExtendedDecomposition<I, O> decomposition, MMLTHypothesis<I, O> hypothesis) {
         // Check if there is a one-shot timer expiring at the next time step:
 
         List<? extends MealyTimerInfo<?, O>> localTimers = hypothesis.getSortedTimers(decomposition.state().getLocation());
@@ -122,15 +122,15 @@ public class LocalTimerMealyCounterexampleHandler<S, I, O> implements LearnerSta
         }
     }
 
-    private <T> CexAnalysisResult<S, I, O> handleIncorrectTargetNonDelaying(ExtendedDecomposition<S, I, O> decomposition, LocalTimerMealyHypothesis<S, I, T, O> hypothesis) {
+    private <T> CexAnalysisResult<I, O> handleIncorrectTargetNonDelaying(ExtendedDecomposition<I, O> decomposition, MMLTHypothesis<I, O> hypothesis) {
         // 1: can be a missing discriminator?
 
         // Check if correct target in entry w.r.t. discriminator:
         var transPrefix = hypothesis.getLocationPrefix(decomposition.state()).append(decomposition.input());
         var succState = hypothesis.getSemantics().getState(transPrefix); // successor state in hypothesis
 
-        var actualSuffixOutput = this.timeOracle.querySuffixOutput(transPrefix, decomposition.discriminator());
-        var expSuffixOutput = this.timeOracle.querySuffixOutput(hypothesis.getPrefix(succState), decomposition.discriminator());
+        var actualSuffixOutput = this.timeOracle.answerQuery(transPrefix, decomposition.discriminator());
+        var expSuffixOutput = this.timeOracle.answerQuery(hypothesis.getPrefix(succState), decomposition.discriminator());
 
         if (!actualSuffixOutput.equals(expSuffixOutput)) {
             logger.debug("Inferred missing discriminator at non-delaying input.");
@@ -163,8 +163,8 @@ public class LocalTimerMealyCounterexampleHandler<S, I, O> implements LearnerSta
                         .append(decomposition.input()); // successor at $i$ in that config
 
                 Word<TimedInput<I>> suffix = Word.fromLetter(new TimeoutSymbol<>());
-                var transSuffixOutput = this.timeOracle.querySuffixOutput(resetTransPrefix, suffix);
-                var entryConfigSuffixOutput = this.timeOracle.querySuffixOutput(hypothesis.getLocationPrefix(decomposition.state()), suffix);
+                var transSuffixOutput = this.timeOracle.answerQuery(resetTransPrefix, suffix);
+                var entryConfigSuffixOutput = this.timeOracle.answerQuery(hypothesis.getLocationPrefix(decomposition.state()), suffix);
 
                 if (transSuffixOutput.equals(entryConfigSuffixOutput)) {
                     logger.debug("Inferred missing reset in non-stable config.");

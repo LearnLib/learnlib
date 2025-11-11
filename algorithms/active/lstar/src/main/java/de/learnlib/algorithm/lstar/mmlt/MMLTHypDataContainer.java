@@ -1,6 +1,6 @@
 package de.learnlib.algorithm.lstar.mmlt;
 
-import de.learnlib.algorithm.LocalTimerMealyModelParams;
+import de.learnlib.algorithm.MMLTModelParams;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.symbol.time.TimedInput;
@@ -20,16 +20,16 @@ import java.util.Set;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-class LStarLocalTimerMealyHypDataContainer<I, O> {
+class MMLTHypDataContainer<I, O> {
     private final Alphabet<TimedInput<I>> alphabet;
 
-    private final LocalTimerMealyObservationTable<I, O> table;
+    private final MMLTObservationTable<I, O> table;
     private final Map<Word<TimedInput<I>>, TimedOutput<O>> transitionOutputMap;
     private final Set<Word<TimedInput<I>>> transitionResetSet; // all transitions that trigger a reset
 
-    private final LocalTimerMealyModelParams<O> modelParams;
+    private final MMLTModelParams<O> modelParams;
 
-    public LStarLocalTimerMealyHypDataContainer(Alphabet<TimedInput<I>> alphabet, LocalTimerMealyModelParams<O> modelParams, LocalTimerMealyObservationTable<I, O> table) {
+    public MMLTHypDataContainer(Alphabet<TimedInput<I>> alphabet, MMLTModelParams<O> modelParams, MMLTObservationTable<I, O> table) {
         this.alphabet = alphabet;
         this.modelParams = modelParams;
         this.table = table;
@@ -49,7 +49,7 @@ class LStarLocalTimerMealyHypDataContainer<I, O> {
     }
 
 
-    public LocalTimerMealyModelParams<O> getModelParams() {
+    public MMLTModelParams<O> getModelParams() {
         return modelParams;
     }
 
@@ -58,7 +58,7 @@ class LStarLocalTimerMealyHypDataContainer<I, O> {
     }
 
 
-    public LocalTimerMealyObservationTable<I, O> getTable() {
+    public MMLTObservationTable<I, O> getTable() {
         return table;
     }
 

@@ -3,7 +3,7 @@ package de.learnlib.algorithm.lstar.mmlt;
 import de.learnlib.datastructure.observationtable.MutableObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import de.learnlib.datastructure.observationtable.RowImpl;
-import de.learnlib.oracle.AbstractTimedQueryOracle;
+import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
@@ -38,9 +38,9 @@ import java.util.stream.Stream;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyObservationTable<I, O> implements MutableObservationTable<TimedInput<I>, Word<TimedOutput<O>>> {
+public class MMLTObservationTable<I, O> implements MutableObservationTable<TimedInput<I>, Word<TimedOutput<O>>> {
 
-    private static final Logger logger = LoggerFactory.getLogger(LocalTimerMealyObservationTable.class);
+    private static final Logger logger = LoggerFactory.getLogger(MMLTObservationTable.class);
 
     private final SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
 
@@ -62,8 +62,8 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
     private final long minTimerQueryWaitTime;
     private final TimedOutput<O> silentOutput; // used for symbol filtering
 
-    public LocalTimerMealyObservationTable(Alphabet<TimedInput<I>> alphabet, long minTimerQueryWaitTime,
-                                           @NonNull SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter, O silentOutput) {
+    public MMLTObservationTable(Alphabet<TimedInput<I>> alphabet, long minTimerQueryWaitTime,
+                                @NonNull SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter, O silentOutput) {
         this.alphabet = alphabet;
 
         this.symbolFilter = symbolFilter;
@@ -86,11 +86,11 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
      *
      * @param location Source location.
      */
-    private void identifyLocalTimers(LocationTimerInfo<I, O> location, AbstractTimedQueryOracle<I, O> timeOracle) {
+    private void identifyLocalTimers(LocationTimerInfo<I, O> location, TimedQueryOracle<I, O> timeOracle) {
         var timerQueryResponse = timeOracle.queryTimers(location.getPrefix(), this.minTimerQueryWaitTime);
 
         if (timerQueryResponse.aborted()) {
-            var newOneShot = LStarLocalTimerMealy.selectOneShotTimer(timerQueryResponse.timers(), Long.MAX_VALUE);
+            var newOneShot = ExtensibleLStarMMLT.selectOneShotTimer(timerQueryResponse.timers(), Long.MAX_VALUE);
             newOneShot.setOneShot();
         }
 
@@ -142,7 +142,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
      * @param newRow     Newly-added short prefix row
      * @param timeOracle Time oracle
      */
-    private void initLocation(RowImpl<TimedInput<I>> newRow, AbstractTimedQueryOracle<I, O> timeOracle) {
+    private void initLocation(RowImpl<TimedInput<I>> newRow, TimedQueryOracle<I, O> timeOracle) {
         LocationTimerInfo<I, O> timerInfo = new LocationTimerInfo<>(newRow.getLabel());
         this.identifyLocalTimers(timerInfo, timeOracle);
 
@@ -166,7 +166,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
      * @param timeOracle Time query oracle
      * @return New transitions
      */
-    private List<RowImpl<TimedInput<I>>> createOutgoingTransitions(RowImpl<TimedInput<I>> spRow, AbstractTimedQueryOracle<I, O> timeOracle) {
+    private List<RowImpl<TimedInput<I>>> createOutgoingTransitions(RowImpl<TimedInput<I>> spRow, TimedQueryOracle<I, O> timeOracle) {
         List<RowImpl<TimedInput<I>>> transitions = new ArrayList<>();
 
         Word<TimedInput<I>> sp = spRow.getLabel();
@@ -187,7 +187,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
                 var filterResponse = this.symbolFilter.query(sp, (InputSymbol<I>) sym);
                 if (filterResponse == SymbolFilterResponse.IGNORE) {
                     // Verify that output is silent:
-                    var response = timeOracle.querySuffixOutput(sp, Word.fromLetter(sym));
+                    var response = timeOracle.answerQuery(sp, Word.fromLetter(sym));
                     assert response.size() == 1;
                     if (!response.firstSymbol().equals(silentOutput)) {
                         // Not silent -> cannot be silent self-loop:
@@ -299,7 +299,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
         if (!initialShortPrefixes.isEmpty()) {
             throw new IllegalArgumentException("Init with short prefixes is not supported.");
         }
-        if (!(oracle instanceof AbstractTimedQueryOracle<I, O> timedOracle)) {
+        if (!(oracle instanceof TimedQueryOracle<I, O> timedOracle)) {
             throw new IllegalArgumentException("Must use timed oracle!");
         }
 
@@ -319,12 +319,12 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
         return this.findUnclosedTransitions();
     }
 
-    private void queryAllSuffixes(RowImpl<TimedInput<I>> row, AbstractTimedQueryOracle<I, O> timedOracle) {
+    private void queryAllSuffixes(RowImpl<TimedInput<I>> row, TimedQueryOracle<I, O> timedOracle) {
         Word<TimedInput<I>> prefix = row.getLabel();
 
         List<Word<TimedOutput<O>>> suffixOutputs = new ArrayList<>(this.suffixes.size());
         for (Word<TimedInput<I>> suffix : this.suffixes) {
-            Word<TimedOutput<O>> output = timedOracle.querySuffixOutput(prefix, suffix);
+            Word<TimedOutput<O>> output = timedOracle.answerQuery(prefix, suffix);
             suffixOutputs.add(output);
         }
 
@@ -355,7 +355,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
 
     @Override
     public List<List<Row<TimedInput<I>>>> addSuffixes(Collection<? extends Word<TimedInput<I>>> newSuffixes, MembershipOracle<TimedInput<I>, Word<TimedOutput<O>>> oracle) {
-        if (!(oracle instanceof AbstractTimedQueryOracle<I, O> timedOracle)) {
+        if (!(oracle instanceof TimedQueryOracle<I, O> timedOracle)) {
             throw new IllegalArgumentException();
         }
 
@@ -382,7 +382,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
             }
 
             for (Word<TimedInput<I>> suffix : newSuffixList) {
-                Word<TimedOutput<O>> output = timedOracle.querySuffixOutput(row.getLabel(), suffix);
+                Word<TimedOutput<O>> output = timedOracle.answerQuery(row.getLabel(), suffix);
                 updatedOutputs.add(output);
             }
 
@@ -399,7 +399,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
 
     @Override
     public List<List<Row<TimedInput<I>>>> toShortPrefixes(List<Row<TimedInput<I>>> lpRows, MembershipOracle<TimedInput<I>, Word<TimedOutput<O>>> oracle) {
-        if (!(oracle instanceof AbstractTimedQueryOracle<I, O> timedOracle)) {
+        if (!(oracle instanceof TimedQueryOracle<I, O> timedOracle)) {
             throw new IllegalArgumentException();
         }
 
@@ -521,7 +521,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
      * @param timeOracle Oracle
      * @return List of unclosed rows. Empty, if none.
      */
-    public List<List<Row<TimedInput<I>>>> addOutgoingTransition(Row<TimedInput<I>> spRow, TimedInput<I> symbol, AbstractTimedQueryOracle<I, O> timeOracle) {
+    public List<List<Row<TimedInput<I>>>> addOutgoingTransition(Row<TimedInput<I>> spRow, TimedInput<I> symbol, TimedQueryOracle<I, O> timeOracle) {
         if (!this.alphabet.containsSymbol(symbol)) {
             throw new IllegalArgumentException("Unknown symbol.");
         }
@@ -545,7 +545,7 @@ public class LocalTimerMealyObservationTable<I, O> implements MutableObservation
         return this.findUnclosedTransitions();
     }
 
-    public List<List<Row<TimedInput<I>>>> addTimerTransition(Row<TimedInput<I>> spRow, MealyTimerInfo<?, O> timeout, AbstractTimedQueryOracle<I, O> timeOracle) {
+    public List<List<Row<TimedInput<I>>>> addTimerTransition(Row<TimedInput<I>> spRow, MealyTimerInfo<?, O> timeout, TimedQueryOracle<I, O> timeOracle) {
         return this.addOutgoingTransition(spRow, new TimeStepSequence<>(timeout.initial()), timeOracle);
     }
 

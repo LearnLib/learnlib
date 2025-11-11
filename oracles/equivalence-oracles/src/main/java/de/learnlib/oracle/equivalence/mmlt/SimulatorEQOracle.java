@@ -1,6 +1,6 @@
 package de.learnlib.oracle.equivalence.mmlt;
 
-import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
@@ -19,11 +19,11 @@ import java.util.List;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealySimulatorOracle<I, O> implements EquivalenceOracle.LocalTimerMealyEquivalenceOracle<I, O> {
+public class SimulatorEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
 
     private final MMLT<?, I, ?, O> refModel;
 
-    public LocalTimerMealySimulatorOracle(MMLT<?, I, ?, O> refModel) {
+    public SimulatorEQOracle(MMLT<?, I, ?, O> refModel) {
         this.refModel = refModel;
     }
 

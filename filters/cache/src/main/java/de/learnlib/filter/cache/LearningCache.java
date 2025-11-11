@@ -96,7 +96,7 @@ public interface LearningCache<A, I, O> {
      * @param <I> Input type for non-delaying inputs
      * @param <O> Output symbol type
      */
-    interface LocalTimerMealyLearningCache<I, O> extends LearningCache<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>>{
+    interface MMLTLearningCache<I, O> extends LearningCache<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>>{
         /**
          * Lists all words that are currently in the cache.
          * If a cached word is a prefix of another cached word, only the longer of them is returned.

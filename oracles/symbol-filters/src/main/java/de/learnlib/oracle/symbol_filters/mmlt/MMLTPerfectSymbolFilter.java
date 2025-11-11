@@ -15,17 +15,17 @@ import net.automatalib.word.Word;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class LocalTimerMealyPerfectSymbolFilter<I, O> extends PerfectSymbolFilter<TimedInput<I>, InputSymbol<I>> {
+public class MMLTPerfectSymbolFilter<I, O> extends PerfectSymbolFilter<TimedInput<I>, InputSymbol<I>> {
 
     private final MMLT<?, I, ?, O> automaton;
 
-    public LocalTimerMealyPerfectSymbolFilter(MMLT<?, I, ?, O> automaton) {
+    public MMLTPerfectSymbolFilter(MMLT<?, I, ?, O> automaton) {
         this.automaton = automaton;
     }
 
     @Override
     protected SymbolFilterResponse isIgnorable(Word<TimedInput<I>> prefix, InputSymbol<I> symbol) {
-        return LocalTimerMealySymbolFilterUtil.isIgnorable(this.automaton, prefix, symbol);
+        return MMLTSymbolFilterUtil.isIgnorable(this.automaton, prefix, symbol);
     }
 
 }

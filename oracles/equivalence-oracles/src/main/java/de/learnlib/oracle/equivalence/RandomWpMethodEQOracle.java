@@ -45,7 +45,7 @@ import net.automatalib.word.WordBuilder;
 
 /**
  * Implements an equivalence test based on a randomized version of the W(p)-method as described in <a
- * href="https://arxiv.org/abs/1611.02429">Complementing LocalTimerMealyModel Learning with Mutation-Based Fuzzing</a> by Rick
+ * href="https://arxiv.org/abs/1611.02429">Complementing Model Learning with Mutation-Based Fuzzing</a> by Rick
  * Smetsers, Joshua Moerman, Mark Janssen, Sicco Verwer. Instead of enumerating the test suite in order, this is a
  * sampling implementation:
  * <ol>
