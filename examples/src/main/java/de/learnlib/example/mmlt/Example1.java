@@ -27,6 +27,7 @@ import de.learnlib.testsupport.example.mmlt.LocalTimerMealyExamples;
 import de.learnlib.util.statistic.container.MapStatsContainer;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.visualization.MMLTVisualizationHelper;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimedInput;
@@ -137,7 +138,8 @@ public class Example1 {
 
         System.out.println("Final hypothesis:");
         try {
-            GraphDOT.write(finalHypothesis.transitionGraphView(finalHypothesis.getInputAlphabet()), System.out);
+            GraphDOT.write(finalHypothesis.graphView(), System.out,
+                    new MMLTVisualizationHelper<>(finalHypothesis, true, true));
         } catch (IOException ignored) {
         }
         new ObservationTableASCIIWriter<>().write(learner.getObservationTable(), System.out);
