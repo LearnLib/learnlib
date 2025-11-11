@@ -91,10 +91,10 @@ public class LStarLocalTimerMealyBenchmarkTests {
         var stats = new MapStatsContainer();
         stats.addTextInfo("LocalTimerMealyModel", null, name);
         stats.setCounter("original_locs", "Locations in original", automaton.getStates().size());
-        stats.setCounter("original_inputs", "Untimed alphabet size in original", automaton.getUntimedAlphabet().size());
+        stats.setCounter("original_inputs", "Untimed alphabet size in original", automaton.getInputAlphabet().size());
 
         // Set up a pipeline:
-        Alphabet<TimedInput<I>> alphabet = new GrowingMapAlphabet<>(automaton.getUntimedAlphabet().stream().map(TimedInput::input).toList());
+        Alphabet<TimedInput<I>> alphabet = new GrowingMapAlphabet<>(automaton.getInputAlphabet().stream().map(TimedInput::input).toList());
 
         // Query oracle -> TimeoutReducer -> Cache -> Query stats -> SUL
         LocalTimerMealySimulatorSUL<?, I, ?, O> sul = new LocalTimerMealySimulatorSUL<>(automaton.getSemantics());

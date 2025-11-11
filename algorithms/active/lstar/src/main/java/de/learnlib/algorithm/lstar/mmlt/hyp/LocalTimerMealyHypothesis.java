@@ -79,11 +79,6 @@ public class LocalTimerMealyHypothesis<S, I, T, O> implements MMLT<S, I, T, O>, 
     }
 
     @Override
-    public Alphabet<I> getUntimedAlphabet() {
-        return automaton.getUntimedAlphabet();
-    }
-
-    @Override
     public S getInitialState() {
         return automaton.getInitialState();
     }

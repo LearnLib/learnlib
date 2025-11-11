@@ -49,12 +49,12 @@ public class Example1 {
         var stats = new MapStatsContainer();
         stats.addTextInfo("LocalTimerMealyModel", null, model.name());
         stats.setCounter("original_locs", "Locations in original", model.automaton().getStates().size());
-        stats.setCounter("original_inputs", "Untimed alphabet size in original", model.automaton().getUntimedAlphabet().size());
+        stats.setCounter("original_inputs", "Untimed alphabet size in original", model.automaton().getInputAlphabet().size());
 
         // ======================
         // Set up the pipeline:
         Alphabet<TimedInput<String>> alphabet =
-                new GrowingMapAlphabet<>(model.automaton().getUntimedAlphabet().stream().map(TimedInput::input).toList());
+                new GrowingMapAlphabet<>(model.automaton().getInputAlphabet().stream().map(TimedInput::input).toList());
 
         // We use a simulator SUL to simulate our automaton:
         var sul = new LocalTimerMealySimulatorSUL<>(model.automaton().getSemantics());
