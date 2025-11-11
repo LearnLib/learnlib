@@ -29,6 +29,9 @@ import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.MealyTimerInfo;
 import net.automatalib.symbol.time.InputSymbol;
@@ -70,13 +73,13 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<MMLT<Integer, I, ?,
      * Uses the close-shortest strategy for closing the observation table and
      * binary-backwards search for decomposing counterexamples.
      *
-     * @param alphabet        Input alphabet for the semantic automaton
+     * @param alphabet        Alphabet of non-delaying inputs
      * @param modelParams     LocalTimerMealyModel parameters
      * @param initialSuffixes Initial set of suffixes. May be empty.
      * @param timeOracle      The output query oracle for MMLTs.
      * @param symbolFilter    The symbol filter. If no filter should be used, use the AcceptAll filter.
      */
-    public LStarLocalTimerMealy(Alphabet<TimedInput<I>> alphabet,
+    public LStarLocalTimerMealy(Alphabet<I> alphabet,
                                 LocalTimerMealyModelParams<O> modelParams,
                                 List<Word<TimedInput<I>>> initialSuffixes,
                                 AbstractTimedQueryOracle<I, O> timeOracle,
@@ -87,7 +90,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<MMLT<Integer, I, ?,
     /**
      * Instantiates a new Rivest-Schapire learner for MMLTs.
      *
-     * @param alphabet        Input alphabet for the semantic automaton
+     * @param alphabet        Alphabet of non-delaying inputs
      * @param modelParams     LocalTimerMealyModel parameters
      * @param initialSuffixes Initial set of suffixes. May be empty.
      * @param closingStrategy Closing strategy for the observation table.
@@ -95,7 +98,7 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<MMLT<Integer, I, ?,
      * @param symbolFilter    The symbol filter. If no filter should be used, use the AcceptAll filter.
      * @param analyzer        The strategy for decomposing counterexamples.
      */
-    public LStarLocalTimerMealy(Alphabet<TimedInput<I>> alphabet,
+    public LStarLocalTimerMealy(Alphabet<I> alphabet,
                                 LocalTimerMealyModelParams<O> modelParams,
                                 List<Word<TimedInput<I>>> initialSuffixes,
                                 ClosingStrategy<? super TimedInput<I>, ? super Word<TimedOutput<O>>> closingStrategy,
@@ -108,9 +111,14 @@ public class LStarLocalTimerMealy<I, O> implements OTLearner<MMLT<Integer, I, ?,
 
         // Prepare hyp data:
 
+        // Internally, the learner also stores TimeStepSequences in its alphabet:
+        GrowingAlphabet<TimedInput<I>> internalAlphabet = new GrowingMapAlphabet<>();
+        alphabet.forEach(s -> internalAlphabet.add(TimedInput.input(s)));
+
         // Init hypothesis data:
-        this.hypData = new LStarLocalTimerMealyHypDataContainer<>(alphabet, modelParams,
-                new LocalTimerMealyObservationTable<>(alphabet, modelParams.maxTimerQueryWaitingTime(), symbolFilter, modelParams.silentOutput()));
+        this.hypData = new LStarLocalTimerMealyHypDataContainer<>(internalAlphabet, modelParams,
+                new LocalTimerMealyObservationTable<>(internalAlphabet,
+                        modelParams.maxTimerQueryWaitingTime(), symbolFilter, modelParams.silentOutput()));
 
         this.cexAnalyzer = new LocalTimerMealyCounterexampleHandler<>(timeOracle, analyzer, symbolFilter);
         this.symbolFilter = symbolFilter;

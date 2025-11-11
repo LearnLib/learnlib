@@ -29,13 +29,10 @@ public class LStarLocalTimerMealyCounterexampleTests {
 
     private static <S, I, T, O> void learnModel(LocalTimerMealyModel<S, I, T, O> model, List<Word<TimedInput<I>>> counterexamples) {
 
-        Alphabet<TimedInput<I>> alphabet =
-                new GrowingMapAlphabet<>(model.automaton().getInputAlphabet().stream().map(TimedInput::input).toList());
-
         var sul = new LocalTimerMealySimulatorSUL<>(model.automaton().getSemantics());
         TimedQueryOracle<I, O> timeOracle = new TimedQueryOracle<>(sul, model.params());
 
-        var learner = new LStarLocalTimerMealy<>(alphabet, model.params(), Collections.emptyList(),
+        var learner = new LStarLocalTimerMealy<>(model.automaton().getInputAlphabet(), model.params(), Collections.emptyList(),
                 timeOracle, new AcceptAllSymbolFilter<>());
 
         learner.startLearning();

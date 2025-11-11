@@ -53,9 +53,6 @@ public class Example1 {
 
         // ======================
         // Set up the pipeline:
-        Alphabet<TimedInput<String>> alphabet =
-                new GrowingMapAlphabet<>(model.automaton().getInputAlphabet().stream().map(TimedInput::input).toList());
-
         // We use a simulator SUL to simulate our automaton:
         var sul = new LocalTimerMealySimulatorSUL<>(model.automaton().getSemantics());
 
@@ -80,7 +77,7 @@ public class Example1 {
 
         // Set up our L* learner:
         List<Word<TimedInput<String>>> suffixes = new ArrayList<>();
-        alphabet.forEach(s -> suffixes.add(Word.fromLetter(s)));
+        model.automaton().getInputAlphabet().forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
         // A symbol filter allows us to reduce queries by exploiting prior knowledge.
@@ -92,7 +89,7 @@ public class Example1 {
         filter = new LocalTimerMealyStatisticsSymbolFilter<>(model.automaton(), filter, stats);
         filter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
 
-        var learner = new LStarLocalTimerMealy<>(alphabet, model.params(), suffixes, timeOracle, filter);
+        var learner = new LStarLocalTimerMealy<>(model.automaton().getInputAlphabet(), model.params(), suffixes, timeOracle, filter);
         learner.setStatsContainer(stats);
 
         // Start learning:

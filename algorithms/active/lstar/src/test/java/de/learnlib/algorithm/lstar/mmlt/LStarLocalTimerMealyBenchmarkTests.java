@@ -94,8 +94,6 @@ public class LStarLocalTimerMealyBenchmarkTests {
         stats.setCounter("original_inputs", "Untimed alphabet size in original", automaton.getInputAlphabet().size());
 
         // Set up a pipeline:
-        Alphabet<TimedInput<I>> alphabet = new GrowingMapAlphabet<>(automaton.getInputAlphabet().stream().map(TimedInput::input).toList());
-
         // Query oracle -> TimeoutReducer -> Cache -> Query stats -> SUL
         LocalTimerMealySimulatorSUL<?, I, ?, O> sul = new LocalTimerMealySimulatorSUL<>(automaton.getSemantics());
         LocalTimerMealyStatsSUL<I, O> statsAfterCache = new LocalTimerMealyStatsSUL<>(sul, stats);
@@ -116,7 +114,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
 
         // Create learner:
         List<Word<TimedInput<I>>> suffixes = new ArrayList<>();
-        alphabet.forEach(s -> suffixes.add(Word.fromLetter(s)));
+        automaton.getInputAlphabet().forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
         // Configure symbol filter:
@@ -130,7 +128,7 @@ public class LStarLocalTimerMealyBenchmarkTests {
         filter = new LocalTimerMealyStatisticsSymbolFilter<>(automaton, filter, stats);
         filter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
 
-        var learner = new LStarLocalTimerMealy<>(alphabet, params, suffixes, timeOracle, filter);
+        var learner = new LStarLocalTimerMealy<>(automaton.getInputAlphabet(), params, suffixes, timeOracle, filter);
         learner.setStatsContainer(stats);
 
         // Start learning:
