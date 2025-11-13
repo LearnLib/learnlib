@@ -38,6 +38,11 @@ import net.automatalib.word.Word;
  * This Equivalence oracle selects test cases based on k-way transitions coverage. It does that by generating random
  * queries and finding the smallest subset with the highest coverage. In other words, this oracle finds counter examples
  * by running random paths that cover all pairwise / k-way transitions.
+ * <p>
+ * <b>Implementation detail:</b> Note that this test generator heavily relies on the sampling of states. If the given
+ * automaton has very few or very many states, the number of generated test cases may be very low or high, respectively.
+ * As a result, it may be advisable to {@link EQOracleChain combine} this generator with other generators or limit the
+ * number of generated test cases.
  *
  * @param <A>
  *         automaton type

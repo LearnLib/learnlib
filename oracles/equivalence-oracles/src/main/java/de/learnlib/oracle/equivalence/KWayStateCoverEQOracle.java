@@ -36,6 +36,11 @@ import net.automatalib.word.Word;
  * <p>
  * A test case will be computed for every k-combination or k-permutation of states with additional random walk at the
  * end.
+ * <p>
+ * <b>Implementation detail:</b> Note that this test generator heavily relies on the sampling of states. If the given
+ * automaton has very few or very many states, the number of generated test cases may be very low or high, respectively.
+ * As a result, it may be advisable to {@link EQOracleChain combine} this generator with other generators or limit the
+ * number of generated test cases.
  *
  * @param <A>
  *         automaton type
