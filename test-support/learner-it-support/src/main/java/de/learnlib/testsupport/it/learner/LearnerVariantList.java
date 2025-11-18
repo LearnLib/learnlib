@@ -17,12 +17,15 @@ package de.learnlib.testsupport.it.learner;
 
 import de.learnlib.algorithm.LearningAlgorithm;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
 
 /**
@@ -78,6 +81,8 @@ public interface LearnerVariantList<M, I, D> {
     interface MooreLearnerVariantList<I, O> extends LearnerVariantList<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 
     interface MooreSymLearnerVariantList<I, O> extends LearnerVariantList<MooreMachine<?, I, ?, O>, I, O> {}
+
+    interface MMLTLearnerVariantList<I, O> extends LearnerVariantList<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> {}
 
     interface SPALearnerVariantList<I> extends LearnerVariantList<SPA<?, I>, I, Boolean> {}
 

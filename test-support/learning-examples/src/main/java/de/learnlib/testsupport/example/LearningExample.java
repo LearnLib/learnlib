@@ -15,11 +15,13 @@
  */
 package de.learnlib.testsupport.example;
 
+import de.learnlib.algorithm.MMLTModelParams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.SPMM;
@@ -28,6 +30,7 @@ import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
 import net.automatalib.automaton.transducer.SubsequentialTransducer;
 import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.symbol.time.TimedInput;
 
 public interface LearningExample<I, A> {
 
@@ -60,6 +63,19 @@ public interface LearningExample<I, A> {
 
         O getUndefinedOutput();
 
+    }
+
+    interface MMLTLearningExample<I, O> extends LearningExample<TimedInput<I>, MMLT<?, I, ?, O>> {
+
+        MMLTModelParams<O> getParams();
+
+        default Alphabet<TimedInput<I>> getAlphabet() {
+            return getReferenceAutomaton().getSemantics().getInputAlphabet();
+        }
+
+        default Alphabet<I> getUntimedAlphabet() {
+            return getReferenceAutomaton().getInputAlphabet();
+        }
     }
 
     interface SPALearningExample<I> extends LearningExample<I, SPA<?, I>> {

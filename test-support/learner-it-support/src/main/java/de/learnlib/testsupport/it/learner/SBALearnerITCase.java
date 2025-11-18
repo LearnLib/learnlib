@@ -19,8 +19,6 @@ import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.testsupport.example.LearningExample.SBALearningExample;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.util.automaton.procedural.SBAs;
-import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class SBALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Boolean, SBA<?, I>> {
 
@@ -34,9 +32,7 @@ public class SBALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Boolean
     }
 
     @Override
-    protected @Nullable Word<I> checkEquivalence(SBA<?, I> hypothesis) {
-        return SBAs.findSeparatingWord(this.example.getReferenceAutomaton(),
-                                       hypothesis,
-                                       this.example.getAlphabet());
+    protected boolean testEquivalence(SBA<?, I> hypothesis) {
+        return SBAs.testEquivalence(this.example.getReferenceAutomaton(), hypothesis, this.example.getAlphabet());
     }
 }

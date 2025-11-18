@@ -26,17 +26,13 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.example.LearningExample;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
-import net.automatalib.automaton.concept.Output;
-import net.automatalib.common.util.random.RandomUtil;
-import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.ITest;
 import org.testng.annotations.Test;
 
-abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation & Output<I, D>> implements ITest {
+abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation> implements ITest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLearnerVariantITCase.class);
 
@@ -73,6 +69,7 @@ abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation
 
         int roundCounter = 0;
         DefaultQuery<I, D> ceQuery;
+        List<DefaultQuery<I, D>> ceQueries = new ArrayList<>();
 
         while ((ceQuery = eqOracle.findCounterExample(learner.getHypothesisModel(), alphabet)) != null) {
             roundCounter++;
@@ -82,16 +79,21 @@ abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation
 
             boolean refined = learner.refineHypothesis(ceQuery);
             Assert.assertTrue(refined, "Real counterexample " + ceQuery.getInput() + " did not refine hypothesis");
+            ceQueries.add(ceQuery);
         }
 
         M hypothesis = learner.getHypothesisModel();
-        Assert.assertEquals(hypothesis.size(), reference.size());
-        Assert.assertNull(checkEquivalence(hypothesis), "Final hypothesis does not match reference automaton");
+        Assert.assertTrue(testEquivalence(hypothesis), "Final hypothesis does not match reference automaton");
 
-        final List<I> trace = RandomUtil.sample(new Random(42), new ArrayList<>(alphabet), 5);
-        final D output = reference.computeOutput(trace);
+        if (hasCanonicalModel()) {
+            Assert.assertEquals(hypothesis.size(), reference.size(), "Final hypothesis is not canonical");
+        }
 
-        Assert.assertFalse(learner.refineHypothesis(new DefaultQuery<>(Word.fromList(trace), output)));
+        if (!ceQueries.isEmpty()) {
+            DefaultQuery<I, D> oldCe = ceQueries.get(new Random(42).nextInt(ceQueries.size()));
+            Assert.assertFalse(learner.refineHypothesis(oldCe),
+                               "Learner should not report a hypothesis update on outdated counterexample");
+        }
 
         long duration = (System.nanoTime() - start) / NANOS_PER_MILLISECOND;
         LOGGER.info(Category.EVENT,
@@ -105,6 +107,10 @@ abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation
         return variant.getLearnerName() + "[" + variant.getName() + "]/" + example.getClass().getSimpleName();
     }
 
-    protected abstract @Nullable Word<I> checkEquivalence(M hypothesis);
+    protected boolean hasCanonicalModel() {
+        return true;
+    }
+
+    protected abstract boolean testEquivalence(M hypothesis);
 
 }

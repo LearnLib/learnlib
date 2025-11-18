@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 import de.learnlib.testsupport.example.LearningExample.DFALearningExample;
+import de.learnlib.testsupport.example.LearningExample.MMLTLearningExample;
 import de.learnlib.testsupport.example.LearningExample.MealyLearningExample;
 import de.learnlib.testsupport.example.LearningExample.MooreLearningExample;
 import de.learnlib.testsupport.example.LearningExample.OneSEVPALearningExample;
@@ -41,6 +42,7 @@ import de.learnlib.testsupport.example.mealy.ExampleRandomStateLocalInputMealy;
 import de.learnlib.testsupport.example.mealy.ExampleShahbazGroz;
 import de.learnlib.testsupport.example.mealy.ExampleStack;
 import de.learnlib.testsupport.example.mealy.ExampleTinyMealy;
+import de.learnlib.testsupport.example.mmlt.MMLTExamples;
 import de.learnlib.testsupport.example.moore.ExampleRandomMoore;
 import de.learnlib.testsupport.example.sba.ExampleRandomSBA;
 import de.learnlib.testsupport.example.spa.ExamplePalindrome;
@@ -127,6 +129,15 @@ public final class LearningExamples {
                                                                         RANDOM_SIZE,
                                                                         RANDOM_SST_PROPS,
                                                                         RANDOM_SST_PROPS));
+    }
+
+    public static List<MMLTLearningExample<?, ?>> createMMLTExamples() {
+        return Arrays.asList(MMLTExamples.HVAC(),
+                             MMLTExamples.SCTP(),
+                             MMLTExamples.SensorCollector(),
+                             MMLTExamples.WM(),
+                             MMLTExamples.Oven(),
+                             MMLTExamples.WSN());
     }
 
     public static List<SPALearningExample<?>> createSPAExamples() {

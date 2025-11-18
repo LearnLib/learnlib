@@ -1,6 +1,5 @@
 package de.learnlib.example.mmlt;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,8 +13,8 @@ import de.learnlib.filter.statistic.sul.CounterTimedSUL;
 import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
 import de.learnlib.oracle.equivalence.mmlt.EQOracleChain;
 import de.learnlib.oracle.equivalence.mmlt.RandomWpOracle;
-import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.equivalence.mmlt.ResetSearchOracle;
+import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.membership.TimedSULOracle;
 import de.learnlib.oracle.symbol_filters.CachedSymbolFilter;
 import de.learnlib.oracle.symbol_filters.mmlt.MMLTRandomSymbolFilter;
@@ -26,11 +25,11 @@ import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.testsupport.example.mmlt.MMLTExamples;
 import de.learnlib.util.statistic.container.MapStatsContainer;
 import net.automatalib.automaton.visualization.MMLTVisualizationHelper;
-import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimeoutSymbol;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.word.Word;
 
 /**
@@ -45,49 +44,49 @@ public class Example1 {
         // We first create a statistics container.
         // This container will store various statistical data during learning:
         var stats = new MapStatsContainer();
-        stats.addTextInfo("LocalTimerMealyModel", null, model.name());
-        stats.setCounter("original_locs", "Locations in original", model.automaton().getStates().size());
-        stats.setCounter("original_inputs", "Untimed alphabet size in original", model.automaton().getInputAlphabet().size());
+        stats.addTextInfo("LocalTimerMealyModel", null, model.toString());
+        stats.setCounter("original_locs", "Locations in original", model.getReferenceAutomaton().getStates().size());
+        stats.setCounter("original_inputs", "Untimed alphabet size in original", model.getReferenceAutomaton().getInputAlphabet().size());
 
         // ======================
         // Set up the pipeline:
         // We use a simulator SUL to simulate our automaton:
-        var sul = new MMLTSimulatorSUL<>(model.automaton().getSemantics());
+        var sul = new MMLTSimulatorSUL<>(model.getReferenceAutomaton().getSemantics());
 
         // We count all operations that are performed on the SUL with a stats-SUL:
         var statsAfterCache = new CounterTimedSUL<>(sul, stats);
 
         // We use a cache to avoid redundant operations:
-        var cacheSUL = new TimedSULTreeCache<>(statsAfterCache, model.params());
+        var cacheSUL = new TimedSULTreeCache<>(statsAfterCache, model.getParams());
         cacheSUL.setStatsContainer(stats);
-        var toReducerSul = new TimeoutReducerSUL<>(cacheSUL, model.params().maxTimeoutWaitingTime(), stats);
+        var toReducerSul = new TimeoutReducerSUL<>(cacheSUL, model.getParams().maxTimeoutWaitingTime(), stats);
 
         // We use a query oracle to answer queries from the learner:
-        var timeOracle = new TimedSULOracle<>(toReducerSul, model.params());
+        var timeOracle = new TimedSULOracle<>(toReducerSul, model.getParams());
 
         // We use a chain of different equivalence oracles:
         EQOracleChain<String, String> chainOracle = new EQOracleChain<>();
         chainOracle.addOracle(cacheSUL.createCacheConsistencyTest());
         chainOracle.addOracle(new ResetSearchOracle<>(timeOracle, 100, 1.0, 1.0));
         chainOracle.addOracle(new RandomWpOracle<>(timeOracle, 100, 16, 0, 100));
-        chainOracle.addOracle(new SimulatorEQOracle<>(model.automaton())); // ensure that we eventually find an accurate model
+        chainOracle.addOracle(new SimulatorEQOracle<>(model.getReferenceAutomaton())); // ensure that we eventually find an accurate model
         chainOracle.setStatsContainer(stats);
 
         // Set up our L* learner:
         List<Word<TimedInput<String>>> suffixes = new ArrayList<>();
-        model.automaton().getInputAlphabet().forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
+        model.getReferenceAutomaton().getInputAlphabet().forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
         // A symbol filter allows us to reduce queries by exploiting prior knowledge.
         // For this example, we use a RandomSymbolFilter. This filter correctly predicts
         // whether a transition silently self-loops with an accuracy of 90%:
         SymbolFilter<TimedInput<String>, InputSymbol<String>> filter =
-                new MMLTRandomSymbolFilter<>(model.automaton(), 0.1, new Random(100));
+                new MMLTRandomSymbolFilter<>(model.getReferenceAutomaton(), 0.1, new Random(100));
 
-        filter = new MMLTStatisticsSymbolFilter<>(model.automaton(), filter, stats);
+        filter = new MMLTStatisticsSymbolFilter<>(model.getReferenceAutomaton(), filter, stats);
         filter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
 
-        var learner = new ExtensibleLStarMMLT<>(model.automaton().getInputAlphabet(), model.params(), suffixes, timeOracle, filter);
+        var learner = new ExtensibleLStarMMLT<>(model.getReferenceAutomaton().getInputAlphabet(), model.getParams(), suffixes, timeOracle, filter);
         learner.setStatsContainer(stats);
 
         // Start learning:
@@ -131,13 +130,9 @@ public class Example1 {
         // Print final result + statistics:
         stats.printStats();
 
-        System.out.println("Final hypothesis:");
-        try {
-            GraphDOT.write(finalHypothesis.graphView(), System.out,
-                    new MMLTVisualizationHelper<>(finalHypothesis, true, true));
-        } catch (IOException ignored) {
-        }
         new ObservationTableASCIIWriter<>().write(learner.getObservationTable(), System.out);
 
+        System.out.println("Final hypothesis:");
+        Visualization.visualize(finalHypothesis.graphView(), new MMLTVisualizationHelper<>(finalHypothesis, true, true));
     }
 }

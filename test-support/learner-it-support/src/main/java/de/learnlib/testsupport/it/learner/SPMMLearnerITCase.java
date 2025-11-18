@@ -20,7 +20,6 @@ import de.learnlib.testsupport.example.LearningExample.SPMMLearningExample;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.util.automaton.procedural.SPMMs;
 import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class SPMMLearnerITCase<I, O> extends AbstractLearnerVariantITCase<I, Word<O>, SPMM<?, I, ?, O>> {
 
@@ -34,9 +33,7 @@ public class SPMMLearnerITCase<I, O> extends AbstractLearnerVariantITCase<I, Wor
     }
 
     @Override
-    protected @Nullable Word<I> checkEquivalence(SPMM<?, I, ?, O> hypothesis) {
-        return SPMMs.findSeparatingWord(this.example.getReferenceAutomaton(),
-                                        hypothesis,
-                                        this.example.getAlphabet());
+    protected boolean testEquivalence(SPMM<?, I, ?, O> hypothesis) {
+        return SPMMs.testEquivalence(this.example.getReferenceAutomaton(), hypothesis, this.example.getAlphabet());
     }
 }

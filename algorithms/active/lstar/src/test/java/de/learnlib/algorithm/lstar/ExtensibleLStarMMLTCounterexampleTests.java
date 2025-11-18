@@ -1,20 +1,18 @@
 package de.learnlib.algorithm.lstar;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import de.learnlib.algorithm.lstar.it.ExtensibleLStarMMLTIT;
+import de.learnlib.algorithm.lstar.it.ExtensibleLStarMMLTIT.Example;
 import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
 import de.learnlib.driver.simulator.MMLTSimulatorSUL;
 import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.membership.TimedSULOracle;
 import de.learnlib.oracle.symbol_filters.AcceptAllSymbolFilter;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.testsupport.example.LearningExample.MMLTLearningExample;
 import de.learnlib.testsupport.example.mmlt.MMLTExamples;
-import de.learnlib.testsupport.example.mmlt.MMLTModel;
 import net.automatalib.automaton.mmlt.MMLT;
-import net.automatalib.exception.FormatException;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
@@ -28,13 +26,17 @@ import org.testng.annotations.Test;
 @Test
 public class ExtensibleLStarMMLTCounterexampleTests {
 
-    private static <S, I, T, O> void learnModel(MMLTModel<S, I, T, O> model, List<Word<TimedInput<I>>> counterexamples) {
+    private static <I, O> void learnModel(MMLTLearningExample<I, O> example,
+                                          List<Word<TimedInput<I>>> counterexamples) {
 
-        var sul = new MMLTSimulatorSUL<>(model.automaton().getSemantics());
-        var timeOracle = new TimedSULOracle<>(sul, model.params());
+        var sul = new MMLTSimulatorSUL<>(example.getReferenceAutomaton().getSemantics());
+        var timeOracle = new TimedSULOracle<>(sul, example.getParams());
 
-        var learner = new ExtensibleLStarMMLT<>(model.automaton().getInputAlphabet(), model.params(), Collections.emptyList(),
-                                                timeOracle, new AcceptAllSymbolFilter<>());
+        var learner = new ExtensibleLStarMMLT<>(example.getReferenceAutomaton().getInputAlphabet(),
+                                                example.getParams(),
+                                                Collections.emptyList(),
+                                                timeOracle,
+                                                new AcceptAllSymbolFilter<>());
 
         learner.startLearning();
 
@@ -44,7 +46,7 @@ public class ExtensibleLStarMMLTCounterexampleTests {
         }
 
         // Now continue until arriving at an accurate model:
-        SimulatorEQOracle<I, O> simOracle = new SimulatorEQOracle<>(model.automaton());
+        SimulatorEQOracle<I, O> simOracle = new SimulatorEQOracle<>(example.getReferenceAutomaton());
 
         DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> cex;
         MMLT<Integer, I, ?, O> hyp = learner.getHypothesisModel();
@@ -56,9 +58,9 @@ public class ExtensibleLStarMMLTCounterexampleTests {
     }
 
     @Test
-    public void testOverApproxReset() throws IOException, FormatException {
+    public void testOverApproxReset() {
         // Infers a missing local reset instead of a missing discriminator first.
-        var model = ExtensibleLStarMMLTIT.automatonFromFile("over_approx_reset.dot");
+        var model = new Example("over_approx_reset.dot");
 
         // Missing discriminator at non-del in stable config:
         List<Word<TimedInput<String>>> cex1 = List.of(
@@ -69,9 +71,9 @@ public class ExtensibleLStarMMLTCounterexampleTests {
     }
 
     @Test
-    public void testRecursiveDecomp() throws IOException, FormatException {
+    public void testRecursiveDecomp() {
         // Triggers recursive decomposition
-        var model = ExtensibleLStarMMLTIT.automatonFromFile("recursive_decomp.dot", 3);
+        var model = new Example("recursive_decomp.dot", 3);
 
         // Missing discriminator at non-del in stable config:
         List<Word<TimedInput<String>>> cex1 = List.of(
@@ -108,7 +110,7 @@ public class ExtensibleLStarMMLTCounterexampleTests {
     @Test
     public void testMissingResets() {
         var model = MMLTExamples.SensorCollector();
-        model.params().setMaxTimerQueryWaitingTime(40);
+        model.getParams().setMaxTimerQueryWaitingTime(40);
 
         // Missing reset in stable config:
         List<Word<TimedInput<String>>> cex1 = List.of(
@@ -133,7 +135,7 @@ public class ExtensibleLStarMMLTCounterexampleTests {
     public void testMissingOneShotModelB() {
         // Setting max waiting = 6 -> all inferred timers are periodic:
         var model = MMLTExamples.SensorCollector();
-        model.params().setMaxTimerQueryWaitingTime(6);
+        model.getParams().setMaxTimerQueryWaitingTime(6);
 
         // Missing one-shot via bad return to entry:
         List<Word<TimedInput<String>>> cex1 = List.of(
@@ -156,7 +158,7 @@ public class ExtensibleLStarMMLTCounterexampleTests {
     @Test
     public void testMissingOneShotModelA() {
         var model = MMLTExamples.SensorCollector();
-        model.params().setMaxTimerQueryWaitingTime(40);
+        model.getParams().setMaxTimerQueryWaitingTime(40);
 
         // Missing one-shot via bad output:
         List<Word<TimedInput<String>>> cex1 = List.of(
@@ -175,6 +177,5 @@ public class ExtensibleLStarMMLTCounterexampleTests {
         learnModel(model, cex1);
         learnModel(model, cex2);
     }
-
 
 }

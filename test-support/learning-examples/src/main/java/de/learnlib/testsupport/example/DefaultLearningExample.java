@@ -15,6 +15,7 @@
  */
 package de.learnlib.testsupport.example;
 
+import de.learnlib.algorithm.MMLTModelParams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.VPAlphabet;
@@ -22,6 +23,7 @@ import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.SPMM;
@@ -109,6 +111,27 @@ public class DefaultLearningExample<I, D, A extends UniversalAutomaton<?, I, ?, 
 
         public DefaultSSTLearningExample(Alphabet<I> alphabet, SubsequentialTransducer<?, I, ?, D> referenceAutomaton) {
             super(alphabet, referenceAutomaton);
+        }
+    }
+
+    public static class DefaultMMLTLearningExample<I, O> implements MMLTLearningExample<I, O> {
+
+        private final MMLT<?, I, ?, O> mmlt;
+        private final MMLTModelParams<O> params;
+
+        public DefaultMMLTLearningExample(MMLT<?, I, ?, O> mmlt, MMLTModelParams<O> params) {
+            this.mmlt = mmlt;
+            this.params = params;
+        }
+
+        @Override
+        public MMLTModelParams<O> getParams() {
+            return this.params;
+        }
+
+        @Override
+        public MMLT<?, I, ?, O> getReferenceAutomaton() {
+            return this.mmlt;
         }
     }
 
