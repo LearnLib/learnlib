@@ -17,26 +17,26 @@ package de.learnlib.filter.statistic.sul;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
-import de.learnlib.filter.statistic.Counter;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMealy;
 import de.learnlib.query.Query;
-import de.learnlib.statistic.StatisticSUL;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.sul.SUL;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public abstract class AbstractCounterSULTest<S extends StatisticSUL<Integer, Character>> {
+public abstract class AbstractCounterSULTest<S extends SUL<Integer, Character>> {
 
     private S statisticSUL;
     private MealyMembershipOracle<Integer, Character> asOracle;
 
     protected abstract S getStatisticSUL();
 
-    protected abstract Counter getCounter(S sul);
+    protected abstract Optional<Long> getCount(S sul);
 
     protected abstract int getCountIncreasePerQuery();
 
@@ -46,6 +46,7 @@ public abstract class AbstractCounterSULTest<S extends StatisticSUL<Integer, Cha
     public void setUp() {
         this.statisticSUL = getStatisticSUL();
         this.asOracle = getSimulator(this.statisticSUL);
+        Statistics.getContainer().clear();
     }
 
     @Test
@@ -100,7 +101,7 @@ public abstract class AbstractCounterSULTest<S extends StatisticSUL<Integer, Cha
     }
 
     private long getCount() {
-        return getCounter(statisticSUL).getCount();
+        return getCount(statisticSUL).orElse(0L);
     }
 
     // use custom class to prevent cyclic dependency on learnlib-membership-oracles

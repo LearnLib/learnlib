@@ -33,10 +33,9 @@ import de.learnlib.filter.statistic.sul.CounterSUL;
 import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.equivalence.mealy.RandomWalkEQOracle;
 import de.learnlib.oracle.membership.SULOracle;
-import de.learnlib.statistic.StatisticSUL;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.sul.SUL;
 import de.learnlib.util.Experiment.MealyExperiment;
-import de.learnlib.util.statistic.SimpleProfiler;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.visualization.Visualization;
@@ -75,9 +74,8 @@ public final class Example2 {
         MethodInput poll = driver.addInput("poll", mPoll);
 
         // oracle for counting queries wraps sul
-        StatisticSUL<MethodInput, MethodOutput> statisticSul = new CounterSUL<>(driver);
+        SUL<MethodInput, MethodOutput> effectiveSul = new CounterSUL<>(driver);
 
-        SUL<MethodInput, MethodOutput> effectiveSul = statisticSul;
         // use caching in order to avoid duplicate queries
         effectiveSul = SULCaches.createCache(driver.getInputs(), effectiveSul);
 
@@ -114,12 +112,6 @@ public final class Example2 {
         MealyExperiment<MethodInput, MethodOutput> experiment =
                 new MealyExperiment<>(lstar, randomWalks, driver.getInputs());
 
-        // turn on time profiling
-        experiment.setProfile(true);
-
-        // enable logging of models
-        experiment.setLogModels(true);
-
         // run experiment
         experiment.run();
 
@@ -129,12 +121,8 @@ public final class Example2 {
         // report results
         System.out.println("-------------------------------------------------------");
 
-        // profiling
-        SimpleProfiler.logResults();
-
         // learning statistics
-        System.out.println(experiment.getRounds().getSummary());
-        System.out.println(statisticSul.getStatisticalData().getSummary());
+        System.out.println(Statistics.getContainer().printStats());
 
         // model statistics
         System.out.println("States: " + result.size());

@@ -17,15 +17,13 @@ package de.learnlib.filter.statistic.oracle;
 
 import java.util.Collection;
 
-import de.learnlib.filter.statistic.Counter;
-import de.learnlib.filter.statistic.CounterCollection;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.query.Query;
-import de.learnlib.statistic.StatisticData;
-import de.learnlib.statistic.StatisticOracle;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatsContainer;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
@@ -66,47 +64,34 @@ import net.automatalib.word.Word;
                                             generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MooreMembershipOracle.class,
                                             generics = {@Generic("I"), @Generic("O")}))
-public class CounterOracle<I, D> implements StatisticOracle<I, D> {
+public class CounterOracle<I, D> implements MembershipOracle<I, D> {
+
+    public static final String DUR_KEY = "-qry-dur";
+    public static final String QUERY_KEY = "-qry-cnt";
+    public static final String SYMBOL_KEY = "-sym-cnt";
 
     private final MembershipOracle<I, D> delegate;
-    private final Counter queryCounter;
-    private final Counter symbolCounter;
+    private final StatsContainer statistics;
+    private final String prefix;
 
     public CounterOracle(MembershipOracle<I, D> delegate) {
+        this(delegate, "");
+    }
+
+    public CounterOracle(MembershipOracle<I, D> delegate, String prefix) {
         this.delegate = delegate;
-        this.queryCounter = new Counter("Queries", "#");
-        this.symbolCounter = new Counter("Symbols", "#");
+        this.prefix = prefix;
+        this.statistics = Statistics.getContainer();
     }
 
     @Override
     public void processQueries(Collection<? extends Query<I, D>> queries) {
-        queryCounter.increment(queries.size());
+        statistics.increaseCounter(prefix + QUERY_KEY, "Number of queries", queries.size());
         for (Query<I, D> qry : queries) {
-            symbolCounter.increment(qry.getPrefix().length() + qry.getSuffix().length());
+            statistics.increaseCounter(prefix + SYMBOL_KEY, "Number of symbols", qry.getPrefix().length() + qry.getSuffix().length());
         }
+        statistics.startOrResumeClock(prefix + DUR_KEY, "Duration of queries");
         delegate.processQueries(queries);
-    }
-
-    /**
-     * Retrieves {@link Counter} for the number of queries posed to this oracle.
-     *
-     * @return the counter of queries
-     */
-    public Counter getQueryCounter() {
-        return queryCounter;
-    }
-
-    /**
-     * Retrieves the {@link Counter} for the number of symbols in all queries posed to this oracle.
-     *
-     * @return the counter of symbols
-     */
-    public Counter getSymbolCounter() {
-        return symbolCounter;
-    }
-
-    @Override
-    public StatisticData getStatisticalData() {
-        return new CounterCollection(queryCounter, symbolCounter);
+        statistics.pauseClock(prefix + DUR_KEY);
     }
 }

@@ -21,6 +21,7 @@ import de.learnlib.filter.cache.CacheCreator.DFACacheCreator;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.ParallelOracle;
+import de.learnlib.statistic.Statistics;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import org.testng.annotations.DataProvider;
@@ -28,16 +29,15 @@ import org.testng.annotations.Factory;
 
 public class DFAParallelCacheTest extends AbstractParallelCacheTest<DFA<?, Character>, Character, Boolean> {
 
-    private final DFACounterOracle<Character> sul;
     private final ThreadSafeDFACacheOracle<Character> cacheRepresentative;
     private final ParallelOracle<Character, Boolean> parallelOracle;
 
     @Factory(dataProvider = "caches")
     public DFAParallelCacheTest(DFACacheCreator<Character, ThreadSafeDFACacheOracle<Character>> creator) {
-        this.sul = CacheTestUtils.getCounter(CacheTestUtils.DFA);
+        DFACounterOracle<Character> sul = CacheTestUtils.getCounter(CacheTestUtils.DFA);
 
         final CacheConfig<Character, Boolean, ThreadSafeDFACacheOracle<Character>> config =
-                creator.apply(CacheTestUtils.INPUT_ALPHABET, this.sul);
+                creator.apply(CacheTestUtils.INPUT_ALPHABET, sul);
 
         this.cacheRepresentative = config.getRepresentative();
         this.parallelOracle = config.getParallelOracle();
@@ -75,6 +75,6 @@ public class DFAParallelCacheTest extends AbstractParallelCacheTest<DFA<?, Chara
 
     @Override
     protected long getNumberOfQueries() {
-        return this.sul.getQueryCounter().getCount();
+        return Statistics.getContainer().getCount(DFACounterOracle.SYMBOL_KEY).orElse(0L);
     }
 }

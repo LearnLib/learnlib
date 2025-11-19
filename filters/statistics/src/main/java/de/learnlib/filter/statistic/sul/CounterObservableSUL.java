@@ -15,7 +15,6 @@
  */
 package de.learnlib.filter.statistic.sul;
 
-import de.learnlib.filter.statistic.Counter;
 import de.learnlib.sul.ObservableSUL;
 
 public class CounterObservableSUL<S, I, O> extends CounterSUL<I, O> implements ObservableSUL<S, I, O> {
@@ -23,18 +22,17 @@ public class CounterObservableSUL<S, I, O> extends CounterSUL<I, O> implements O
     private final ObservableSUL<S, I, O> sul;
 
     public CounterObservableSUL(ObservableSUL<S, I, O> sul) {
-        super(sul);
-        this.sul = sul;
+        this(sul, "");
     }
 
-    private CounterObservableSUL(ObservableSUL<S, I, O> sul, Counter resetCounter, Counter symbolCounter) {
-        super(sul, resetCounter, symbolCounter);
+    private CounterObservableSUL(ObservableSUL<S, I, O> sul, String prefix) {
+        super(sul, prefix);
         this.sul = sul;
     }
 
     @Override
     public ObservableSUL<S, I, O> fork() {
-        return new CounterObservableSUL<>(this.sul.fork(), super.resetCounter, super.symbolCounter);
+        return new CounterObservableSUL<>(this.sul.fork(), super.prefix);
     }
 
     @Override

@@ -20,6 +20,7 @@ import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.MooreCounterOracle;
 import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.oracle.membership.MooreSimulatorOracle;
+import de.learnlib.statistic.Statistics;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.MooreMachine;
@@ -62,7 +63,7 @@ public abstract class AbstractMooreCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getQueryCounter().getCount();
+        return Statistics.getContainer().getCount(MooreCounterOracle.QUERY_KEY).orElse(0L);
     }
 
     @Override

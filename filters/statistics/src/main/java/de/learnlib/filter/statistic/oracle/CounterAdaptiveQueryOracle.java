@@ -19,13 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.learnlib.filter.statistic.Counter;
-import de.learnlib.filter.statistic.CounterCollection;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.query.AdaptiveQuery;
 import de.learnlib.query.AdaptiveQuery.Response;
-import de.learnlib.statistic.StatisticCollector;
-import de.learnlib.statistic.StatisticData;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatsContainer;
 
 /**
  * A simple wrapper for counting the number of {@link Response#RESET resets} and {@link Response#SYMBOL symbols} of an
@@ -36,45 +34,48 @@ import de.learnlib.statistic.StatisticData;
  * @param <O>
  *         output symbol type
  */
-public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracle<I, O>, StatisticCollector {
+public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracle<I, O> {
+
+    public static final String DUR_KEY = "-qry-dur";
+    public static final String RESET_KEY = "-reset-cnt";
+    public static final String SYMBOL_KEY = "-sym-cnt";
 
     private final AdaptiveMembershipOracle<I, O> delegate;
-    private final Counter resetCounter;
-    private final Counter symbolCounter;
+    private final StatsContainer statistics;
+    private final String prefix;
 
     public CounterAdaptiveQueryOracle(AdaptiveMembershipOracle<I, O> delegate) {
+        this(delegate, "");
+    }
+
+    public CounterAdaptiveQueryOracle(AdaptiveMembershipOracle<I, O> delegate, String prefix) {
         this.delegate = delegate;
-        this.resetCounter = new Counter("Resets", "#");
-        this.symbolCounter = new Counter("Symbols", "#");
-    }
-
-    public Counter getResetCounter() {
-        return resetCounter;
-    }
-
-    public Counter getSymbolCounter() {
-        return symbolCounter;
+        this.prefix = prefix;
+        this.statistics = Statistics.getContainer();
     }
 
     @Override
     public void processQueries(Collection<? extends AdaptiveQuery<I, O>> queries) {
-        final List<CountingQuery> wrappers = new ArrayList<>(queries.size());
+        final List<CountingQuery<I, O>> wrappers = new ArrayList<>(queries.size());
         for (AdaptiveQuery<I, O> q : queries) {
-            wrappers.add(new CountingQuery(q));
+            wrappers.add(new CountingQuery<>(q));
         }
 
+        statistics.startOrResumeClock(prefix + DUR_KEY, "Duration of queries");
         this.delegate.processQueries(wrappers);
+        statistics.pauseClock(prefix + DUR_KEY);
 
+        // statContainer is not thread-safe so we need to count in post-processing
+        for (CountingQuery<I, O> wrapper : wrappers) {
+            this.statistics.increaseCounter(prefix + RESET_KEY, "Number of resets", wrapper.resets);
+            this.statistics.increaseCounter(prefix + SYMBOL_KEY, "Number of symbols", wrapper.symbols);
+        }
     }
 
-    @Override
-    public StatisticData getStatisticalData() {
-        return new CounterCollection(this.resetCounter, this.symbolCounter);
-    }
-
-    private class CountingQuery implements AdaptiveQuery<I, O> {
+    private static class CountingQuery<I, O> implements AdaptiveQuery<I, O> {
 
         private final AdaptiveQuery<I, O> delegate;
+        private int symbols, resets;
 
         CountingQuery(AdaptiveQuery<I, O> delegate) {
             this.delegate = delegate;
@@ -87,12 +88,12 @@ public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracl
 
         @Override
         public Response processOutput(O out) {
-            symbolCounter.increment();
+            symbols++;
 
             final Response response = delegate.processOutput(out);
 
             if (response != Response.SYMBOL) {
-                resetCounter.increment();
+                resets++;
             }
 
             return response;

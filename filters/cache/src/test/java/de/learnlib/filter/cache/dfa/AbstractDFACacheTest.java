@@ -20,6 +20,7 @@ import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
+import de.learnlib.statistic.Statistics;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.fsa.DFA;
@@ -57,7 +58,7 @@ public abstract class AbstractDFACacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getQueryCounter().getCount();
+        return Statistics.getContainer().getCount(DFACounterOracle.SYMBOL_KEY).orElse(0L);
     }
 
     @Override

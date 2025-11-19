@@ -29,6 +29,7 @@ import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.membership.SULAdaptiveOracle;
 import de.learnlib.query.AdaptiveQuery;
 import de.learnlib.query.Query;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.util.mealy.PresetAdaptiveQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
@@ -83,7 +84,7 @@ public class AdaptiveQueryCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getResetCounter().getCount();
+        return Statistics.getContainer().getCount(CounterAdaptiveQueryOracle.RESET_KEY).orElse(0L);
     }
 
     @Override

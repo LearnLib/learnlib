@@ -17,51 +17,32 @@ package de.learnlib.filter.statistic.sul;
 
 import java.util.Collection;
 
-import de.learnlib.filter.statistic.Counter;
-import de.learnlib.filter.statistic.CounterCollection;
-import de.learnlib.statistic.StatisticData;
 import de.learnlib.sul.StateLocalInputSUL;
 
 public class CounterStateLocalInputSUL<I, O> extends CounterSUL<I, O> implements StateLocalInputSUL<I, O> {
 
+    public static final String INPUT_KEY = "-sul-inp-cnt";
+
     private final StateLocalInputSUL<I, O> sul;
-    private final Counter inputCounter;
 
     public CounterStateLocalInputSUL(StateLocalInputSUL<I, O> sul) {
-        super(sul);
-        this.sul = sul;
-        this.inputCounter = new Counter("Input Checks", "#");
+        this(sul, "");
     }
 
-    private CounterStateLocalInputSUL(StateLocalInputSUL<I, O> sul,
-                                      Counter resetCounter,
-                                      Counter symbolCounter,
-                                      Counter inputCounter) {
-        super(sul, resetCounter, symbolCounter);
+    private CounterStateLocalInputSUL(StateLocalInputSUL<I, O> sul, String prefix) {
+        super(sul, prefix);
         this.sul = sul;
-        this.inputCounter = inputCounter;
     }
 
     @Override
     public Collection<I> currentlyEnabledInputs() {
-        this.inputCounter.increment();
+        super.statistics.increaseCounter(prefix + INPUT_KEY, "Number of enabled input checks");
         return this.sul.currentlyEnabledInputs();
     }
 
     @Override
     public StateLocalInputSUL<I, O> fork() {
-        return new CounterStateLocalInputSUL<>(this.sul.fork(),
-                                               super.resetCounter,
-                                               super.symbolCounter,
-                                               this.inputCounter);
+        return new CounterStateLocalInputSUL<>(this.sul.fork(), super.prefix);
     }
 
-    @Override
-    public StatisticData getStatisticalData() {
-        return new CounterCollection(super.resetCounter, super.symbolCounter, this.inputCounter);
-    }
-
-    public Counter getInputCounter() {
-        return this.inputCounter;
-    }
 }

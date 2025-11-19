@@ -42,6 +42,7 @@ import de.learnlib.oracle.equivalence.MealyRandomWpMethodEQOracle;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.oracle.membership.SULAdaptiveOracle;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.sul.SUL;
 import de.learnlib.testsupport.MQ2AQWrapper;
 import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
@@ -130,6 +131,7 @@ public class ADTIT extends AbstractMealyLearnerIT {
                     for (int seed = 0; seed < 50; seed++) {
                         long last = 0;
                         for (int iter = 0; iter < 5; iter++) {
+                            Statistics.getContainer().clear();
                             final CounterAdaptiveQueryOracle<String, String> counter =
                                     new CounterAdaptiveQueryOracle<>(aqo);
                             final ADTLearner<String, String> learner = new ADTLearner<>(alphabet,
@@ -151,7 +153,8 @@ public class ADTIT extends AbstractMealyLearnerIT {
 
                             exp.run();
 
-                            final long count = counter.getResetCounter().getCount();
+                            final long count =
+                                    Statistics.getContainer().getCount(CounterAdaptiveQueryOracle.RESET_KEY).orElse(0L);
 
                             if (iter == 0) {
                                 last = count;

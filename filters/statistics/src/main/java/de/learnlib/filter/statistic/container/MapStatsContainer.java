@@ -10,6 +10,7 @@ import java.util.*;
  * A {@link StatsContainer} that stores all statistics in a {@link Map}.
  */
 public class MapStatsContainer implements StatsContainer {
+
     private final Map<String, LearnerStatistic> statistics = new HashMap<>(); // id -> stat
 
     @Override
@@ -95,6 +96,11 @@ public class MapStatsContainer implements StatsContainer {
         return Optional.empty();
     }
 
+    @Override
+    public void clear() {
+        statistics.clear();
+    }
+
     // ==================
 
     public String toJson() {
@@ -119,7 +125,6 @@ public class MapStatsContainer implements StatsContainer {
 
         return "{" + String.join(",\n", lines) + "}";
     }
-
 
     public String toYaml() {
         List<LearnerStatistic> sortedStats = statistics.values().stream().sorted(Comparator.comparing(LearnerStatistic::getDescription)).toList();
@@ -148,12 +153,13 @@ public class MapStatsContainer implements StatsContainer {
         return String.join("\n", lines);
     }
 
-
-    public void printStats() {
-        // Print results:
-        System.out.println("============================================");
-        System.out.println("Statistics:");
-        System.out.println(this.toYaml());
-        System.out.println("============================================");
+    public String printStats() {
+        final String pattern = """
+                ============================================
+                Statistics:
+                %s
+                ============================================
+                """;
+        return String.format(pattern, toYaml());
     }
 }

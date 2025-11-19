@@ -26,6 +26,7 @@ import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.MealyCounterOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.ParallelOracle;
+import de.learnlib.statistic.Statistics;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
@@ -35,16 +36,15 @@ import org.testng.annotations.Factory;
 public class MealyParallelCacheTest
         extends AbstractParallelCacheTest<MealyMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 
-    private final MealyCounterOracle<Character, Integer> sul;
     private final ThreadSafeMealyCacheOracle<Character, Integer> cacheRepresentative;
     private final ParallelOracle<Character, Word<Integer>> parallelOracle;
 
     @Factory(dataProvider = "caches")
     public MealyParallelCacheTest(MealyCacheCreator<Character, Integer, ThreadSafeMealyCacheOracle<Character, Integer>> creator) {
-        this.sul = CacheTestUtils.getCounter(CacheTestUtils.MEALY);
+        MealyCounterOracle<Character, Integer> sul = CacheTestUtils.getCounter(CacheTestUtils.MEALY);
 
         final CacheConfig<Character, Word<Integer>, ThreadSafeMealyCacheOracle<Character, Integer>> config =
-                creator.apply(CacheTestUtils.INPUT_ALPHABET, this.sul);
+                creator.apply(CacheTestUtils.INPUT_ALPHABET, sul);
 
         this.cacheRepresentative = config.getRepresentative();
         this.parallelOracle = config.getParallelOracle();
@@ -82,6 +82,6 @@ public class MealyParallelCacheTest
 
     @Override
     protected long getNumberOfQueries() {
-        return this.sul.getQueryCounter().getCount();
+        return Statistics.getContainer().getCount(MealyCounterOracle.QUERY_KEY).orElse(0L);
     }
 }

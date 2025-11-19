@@ -122,8 +122,10 @@ public interface StatsContainer {
      */
     Optional<Long> getCount(String id);
 
+
+    void clear();
     /**
      * Prints all stored statistics.
      */
-    void printStats();
+    String printStats();
 }

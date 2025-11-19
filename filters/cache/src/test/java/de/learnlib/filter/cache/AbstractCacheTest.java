@@ -24,6 +24,7 @@ import de.learnlib.Resumable;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.query.Query;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.testsupport.ResumeUtils;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
@@ -50,6 +51,7 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
         alphabet = getAlphabet();
         oracle = getCachedOracle();
         queries = new ArrayList<>();
+        Statistics.getContainer().clear();
     }
 
     @Test

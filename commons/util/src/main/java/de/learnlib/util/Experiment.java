@@ -16,11 +16,11 @@
 package de.learnlib.util;
 
 import de.learnlib.algorithm.LearningAlgorithm;
-import de.learnlib.filter.statistic.Counter;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
-import de.learnlib.util.statistic.SimpleProfiler;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatsContainer;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -38,20 +38,20 @@ import org.slf4j.LoggerFactory;
  */
 public class Experiment<A extends Object> {
 
-    public static final String LEARNING_PROFILE_KEY = "Learning";
-    public static final String COUNTEREXAMPLE_PROFILE_KEY = "Searching for counterexample";
+    public static final String LEARNING_PROFILE_KEY = "exp-expl-dur";
+    public static final String COUNTEREXAMPLE_PROFILE_KEY = "exp-ce-dur";
+    public static final String LEARNING_ROUNDS_KEY = "exp-rnd";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Experiment.class);
     private final ExperimentImpl<?, ?> impl;
-    private boolean logModels;
-    private boolean profile;
-    private final Counter rounds = new Counter("Learning rounds", "#");
+    private final StatsContainer statistics;
     private @Nullable A finalHypothesis;
 
     public <I, D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
                              EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
                              Alphabet<I> inputs) {
         this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs);
+        this.statistics = Statistics.getContainer();
     }
 
     /**
@@ -87,52 +87,12 @@ public class Experiment<A extends Object> {
         return finalHypothesis;
     }
 
-    private void profileStart(String taskname) {
-        if (profile) {
-            SimpleProfiler.start(taskname);
-        }
-    }
-
-    private void profileStop(String taskname) {
-        if (profile) {
-            SimpleProfiler.stop(taskname);
-        }
-    }
-
-    /**
-     * Decides whether intermediate hypothesis models should be logged.
-     *
-     * @param logModels
-     *         flag whether models should be logged
-     */
-    public void setLogModels(boolean logModels) {
-        this.logModels = logModels;
-    }
-
-    /**
-     * Decides whether the experiment runtime should be profiled.
-     *
-     * @param profile
-     *         flag whether learning process should be profiled
-     */
-    public void setProfile(boolean profile) {
-        this.profile = profile;
-    }
-
-    /**
-     * Returns the counter for the number of refinement rounds the experiment took.
-     *
-     * @return the rounds
-     */
-    public Counter getRounds() {
-        return rounds;
-    }
-
     private final class ExperimentImpl<I, D> {
 
         private final LearningAlgorithm<? extends A, I, D> learningAlgorithm;
         private final EquivalenceOracle<? super A, I, D> equivalenceAlgorithm;
         private final Alphabet<I> inputs;
+        private int rounds;
 
         ExperimentImpl(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
                        EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
@@ -143,26 +103,23 @@ public class Experiment<A extends Object> {
         }
 
         public A run() {
-            rounds.increment();
-            LOGGER.info(Category.PHASE, "Starting round {}", rounds.getCount());
+            rounds++;
+            statistics.increaseCounter(LEARNING_ROUNDS_KEY, "Number of learning rounds");
+            LOGGER.info(Category.PHASE, "Starting round {}", rounds);
             LOGGER.info(Category.PHASE, "Learning");
 
-            profileStart(LEARNING_PROFILE_KEY);
+            statistics.startOrResumeClock(LEARNING_PROFILE_KEY, "Duration of exploration");
             learningAlgorithm.startLearning();
-            profileStop(LEARNING_PROFILE_KEY);
+            statistics.pauseClock(LEARNING_PROFILE_KEY);
 
             while (true) {
                 final A hyp = learningAlgorithm.getHypothesisModel();
 
-                if (logModels) {
-                    LOGGER.info(Category.MODEL, hyp.toString());
-                }
-
                 LOGGER.info(Category.PHASE, "Searching for counterexample");
 
-                profileStart(COUNTEREXAMPLE_PROFILE_KEY);
+                statistics.startOrResumeClock(COUNTEREXAMPLE_PROFILE_KEY, "Duration of counterexample search");
                 DefaultQuery<I, D> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
-                profileStop(COUNTEREXAMPLE_PROFILE_KEY);
+                statistics.pauseClock(COUNTEREXAMPLE_PROFILE_KEY);
 
                 if (ce == null) {
                     return hyp;
@@ -171,13 +128,14 @@ public class Experiment<A extends Object> {
                 LOGGER.info(Category.COUNTEREXAMPLE, ce.getInput().toString());
 
                 // next round ...
-                rounds.increment();
-                LOGGER.info(Category.PHASE, "Starting round {}", rounds.getCount());
+                rounds++;
+                statistics.increaseCounter(LEARNING_ROUNDS_KEY, "Number of learning rounds");
+                LOGGER.info(Category.PHASE, "Starting round {}", rounds);
                 LOGGER.info(Category.PHASE, "Learning");
 
-                profileStart(LEARNING_PROFILE_KEY);
+                statistics.startOrResumeClock(LEARNING_PROFILE_KEY, "Duration of exploration");
                 final boolean refined = learningAlgorithm.refineHypothesis(ce);
-                profileStop(LEARNING_PROFILE_KEY);
+                statistics.pauseClock(LEARNING_PROFILE_KEY);
 
                 assert refined;
             }

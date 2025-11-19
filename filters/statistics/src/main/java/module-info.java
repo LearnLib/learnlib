@@ -39,7 +39,6 @@ open module de.learnlib.filter.statistic {
     requires static de.learnlib.tooling.annotation;
     requires static org.checkerframework.checker.qual;
 
-    exports de.learnlib.filter.statistic;
     exports de.learnlib.filter.statistic.learner;
     exports de.learnlib.filter.statistic.oracle;
     exports de.learnlib.filter.statistic.sul;

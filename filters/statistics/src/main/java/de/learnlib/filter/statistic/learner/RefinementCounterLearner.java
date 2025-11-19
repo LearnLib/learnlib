@@ -19,15 +19,11 @@ import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
-import de.learnlib.filter.statistic.Counter;
 import de.learnlib.query.DefaultQuery;
-import de.learnlib.statistic.StatisticLearner;
-import de.learnlib.statistic.StatisticLearner.DFAStatisticLearner;
-import de.learnlib.statistic.StatisticLearner.MealyStatisticLearner;
-import de.learnlib.statistic.StatisticLearner.MooreStatisticLearner;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatsContainer;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
-import de.learnlib.tooling.annotation.refinement.Interface;
 import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -37,8 +33,6 @@ import net.automatalib.word.Word;
 /**
  * Counts the number of hypothesis refinements.
  * <p>
- * The value of the {@link Counter} returned by {@link #getStatisticalData()} returns the same value as
- * Experiment.getRounds().
  *
  * @param <M>
  *         automaton type
@@ -54,8 +48,7 @@ import net.automatalib.word.Word;
                                       @Generic(clazz = Boolean.class)},
                     typeMappings = @Mapping(from = LearningAlgorithm.class,
                                             to = DFALearner.class,
-                                            generics = @Generic("I")),
-                    interfaces = @Interface(clazz = DFAStatisticLearner.class, generics = @Generic("I")))
+                                            generics = @Generic("I")))
 @GenerateRefinement(name = "MealyRefinementCounterLearner",
                     generics = {@Generic(value = "I", desc = "input symbol type"),
                                 @Generic(value = "O", desc = "output symbol type")},
@@ -64,8 +57,6 @@ import net.automatalib.word.Word;
                                       @Generic(clazz = Word.class, generics = "O")},
                     typeMappings = @Mapping(from = LearningAlgorithm.class,
                                             to = MealyLearner.class,
-                                            generics = {@Generic("I"), @Generic("O")}),
-                    interfaces = @Interface(clazz = MealyStatisticLearner.class,
                                             generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "MooreRefinementCounterLearner",
                     generics = {@Generic(value = "I", desc = "input symbol type"),
@@ -75,18 +66,22 @@ import net.automatalib.word.Word;
                                       @Generic(clazz = Word.class, generics = "O")},
                     typeMappings = @Mapping(from = LearningAlgorithm.class,
                                             to = MooreLearner.class,
-                                            generics = {@Generic("I"), @Generic("O")}),
-                    interfaces = @Interface(clazz = MooreStatisticLearner.class,
                                             generics = {@Generic("I"), @Generic("O")}))
-public class RefinementCounterLearner<M, I, D> implements StatisticLearner<M, I, D> {
+public class RefinementCounterLearner<M, I, D> implements LearningAlgorithm<M, I, D> {
 
     private final LearningAlgorithm<M, I, D> learningAlgorithm;
 
-    private final Counter counter;
+    private final StatsContainer statistics;
+    private final String prefix;
 
     public RefinementCounterLearner(LearningAlgorithm<M, I, D> learningAlgorithm) {
+        this(learningAlgorithm, "");
+    }
+
+    public RefinementCounterLearner(LearningAlgorithm<M, I, D> learningAlgorithm, String prefix) {
         this.learningAlgorithm = learningAlgorithm;
-        this.counter = new Counter("Refinements", "#");
+        this.prefix = prefix;
+        this.statistics = Statistics.getContainer();
     }
 
     @Override
@@ -98,7 +93,7 @@ public class RefinementCounterLearner<M, I, D> implements StatisticLearner<M, I,
     public boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
         final boolean refined = learningAlgorithm.refineHypothesis(ceQuery);
         if (refined) {
-            counter.increment();
+            statistics.increaseCounter(prefix + "-ref-cnt", "Number of refinements");
         }
         return refined;
     }
@@ -106,10 +101,5 @@ public class RefinementCounterLearner<M, I, D> implements StatisticLearner<M, I,
     @Override
     public M getHypothesisModel() {
         return learningAlgorithm.getHypothesisModel();
-    }
-
-    @Override
-    public Counter getStatisticalData() {
-        return counter;
     }
 }

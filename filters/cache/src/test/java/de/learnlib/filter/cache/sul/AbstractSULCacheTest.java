@@ -20,6 +20,7 @@ import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.cache.SULLearningCacheOracle;
 import de.learnlib.filter.statistic.sul.CounterSUL;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
@@ -60,7 +61,7 @@ public abstract class AbstractSULCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getResetCounter().getCount();
+        return Statistics.getContainer().getCount(CounterSUL.RESET_KEY).orElse(0L);
     }
 
     @Override

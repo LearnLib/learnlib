@@ -30,6 +30,7 @@ import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.ParallelOracle;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -110,9 +111,9 @@ public class ParallelismExample2 {
         final MealyMembershipOracle<Integer, Character> cache = MealyCaches.createCache(alphabet, parallelOracle);
 
         // print results
-        System.out.println("Single-threaded cache performance: ");
+        System.out.println("Single-threaded cache performance:");
         answerQueries(cache);
-        System.out.println("  " + counter.getStatisticalData().getSummary());
+        System.out.println(Statistics.getContainer().printStats());
 
         parallelOracle.shutdownNow();
     }
@@ -142,9 +143,9 @@ public class ParallelismExample2 {
                                       .create();
 
         // print results
-        System.out.println("Shared cache performance: ");
+        System.out.println("Shared cache performance:");
         answerQueries(parallelOracle);
-        System.out.println("  " + counter.getStatisticalData().getSummary());
+        System.out.println(Statistics.getContainer().printStats());
 
         parallelOracle.shutdownNow();
     }

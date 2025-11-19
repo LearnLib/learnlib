@@ -15,31 +15,32 @@
  */
 package de.learnlib.filter.statistic.sul;
 
-import de.learnlib.filter.statistic.Counter;
-import de.learnlib.filter.statistic.CounterCollection;
-import de.learnlib.statistic.StatisticData;
-import de.learnlib.statistic.StatisticSUL;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatsContainer;
 import de.learnlib.sul.SUL;
 
-public class CounterSUL<I, O> implements StatisticSUL<I, O> {
+public class CounterSUL<I, O> implements SUL<I, O> {
+
+    public static final String RESET_KEY = "-sul-reset-cnt";
+    public static final String SYMBOL_KEY = "-sul-step-cnt";
 
     private final SUL<I, O> sul;
-    protected final Counter resetCounter;
-    protected final Counter symbolCounter;
+    protected final StatsContainer statistics;
+    protected final String prefix;
 
     public CounterSUL(SUL<I, O> sul) {
-        this(sul, new Counter("Resets", "#"), new Counter("Symbols", "#"));
+        this(sul, "");
     }
 
-    protected CounterSUL(SUL<I, O> sul, Counter resetCounter, Counter symbolCounter) {
+    public CounterSUL(SUL<I, O> sul, String prefix) {
         this.sul = sul;
-        this.resetCounter = resetCounter;
-        this.symbolCounter = symbolCounter;
+        this.prefix = prefix;
+        this.statistics = Statistics.getContainer();
     }
 
     @Override
     public void pre() {
-        this.resetCounter.increment();
+        this.statistics.increaseCounter(prefix + RESET_KEY, "Number of SUL resets");
         this.sul.pre();
     }
 
@@ -50,7 +51,7 @@ public class CounterSUL<I, O> implements StatisticSUL<I, O> {
 
     @Override
     public O step(I in) {
-        this.symbolCounter.increment();
+        this.statistics.increaseCounter(prefix + SYMBOL_KEY, "Number of SUL steps");
         return sul.step(in);
     }
 
@@ -61,19 +62,6 @@ public class CounterSUL<I, O> implements StatisticSUL<I, O> {
 
     @Override
     public SUL<I, O> fork() {
-        return new CounterSUL<>(this.sul.fork(), this.resetCounter, this.symbolCounter);
-    }
-
-    @Override
-    public StatisticData getStatisticalData() {
-        return new CounterCollection(this.resetCounter, this.symbolCounter);
-    }
-
-    public Counter getResetCounter() {
-        return this.resetCounter;
-    }
-
-    public Counter getSymbolCounter() {
-        return this.symbolCounter;
+        return new CounterSUL<>(this.sul.fork(), this.prefix);
     }
 }

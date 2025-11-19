@@ -19,10 +19,10 @@ import java.util.Collection;
 
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.query.Query;
-import de.learnlib.statistic.StatisticSUL;
+import de.learnlib.sul.SUL;
 import net.automatalib.word.Word;
 
-public abstract class AbstractResetCounterSULTest<S extends StatisticSUL<Integer, Character>>
+public abstract class AbstractResetCounterSULTest<S extends SUL<Integer, Character>>
         extends AbstractCounterSULTest<S> {
 
     @Override

@@ -27,6 +27,7 @@ import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.DFASimulatorEQOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.statistic.Statistics;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
@@ -121,7 +122,7 @@ public final class ResumableExample {
 
     private static void printStats(Setup setup) {
         System.out.println("Hypothesis size: " + setup.learner.getHypothesisModel().size());
-        System.out.println(setup.counter.getStatisticalData().getSummary());
+        System.out.println(Statistics.getContainer().printStats());
         System.out.println();
     }
 

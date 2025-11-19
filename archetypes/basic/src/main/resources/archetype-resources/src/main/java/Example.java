@@ -9,8 +9,8 @@ import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.DFAWMethodEQOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.util.Experiment.DFAExperiment;
-import de.learnlib.util.statistic.SimpleProfiler;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
@@ -60,12 +60,6 @@ public final class Example {
         // active learning
         DFAExperiment<Character> experiment = new DFAExperiment<>(lstar, wMethod, inputs);
 
-        // turn on time profiling
-        experiment.setProfile(true);
-
-        // enable logging of models
-        experiment.setLogModels(true);
-
         // run experiment
         experiment.run();
 
@@ -75,12 +69,8 @@ public final class Example {
         // report results
         System.out.println("-------------------------------------------------------");
 
-        // profiling
-        SimpleProfiler.logResults();
-
         // learning statistics
-        System.out.println(experiment.getRounds().getSummary());
-        System.out.println(mqOracle.getStatisticalData().getSummary());
+        System.out.println(Statistics.getContainer().printStats());
 
         // model statistics
         System.out.println("States: " + result.size());
