@@ -36,9 +36,9 @@ import org.slf4j.LoggerFactory;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class ResetSearchOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
+public class ResetSearchEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ResetSearchOracle.class);
+    private final static Logger logger = LoggerFactory.getLogger(ResetSearchEQOracle.class);
 
     private final TimedQueryOracle<I, O> timeOracle;
     private final Random locPrefixRandom;
@@ -48,7 +48,7 @@ public class ResetSearchOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
 
     private final long loopingInputSelectionSeed;
 
-    public ResetSearchOracle(TimedQueryOracle<I, O> timeOracle, long seed, double loopInsertPerc, double testedLocPerc) {
+    public ResetSearchEQOracle(TimedQueryOracle<I, O> timeOracle, long seed, double loopInsertPerc, double testedLocPerc) {
         this.timeOracle = timeOracle;
         this.locPrefixRandom = new Random(seed);
         this.loopInsertPerc = loopInsertPerc;

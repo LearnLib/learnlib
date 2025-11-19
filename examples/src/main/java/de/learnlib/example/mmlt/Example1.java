@@ -9,21 +9,22 @@ import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWr
 import de.learnlib.driver.simulator.MMLTSimulatorSUL;
 import de.learnlib.filter.cache.mmlt.TimedSULTreeCache;
 import de.learnlib.filter.cache.mmlt.TimeoutReducerSUL;
+import de.learnlib.filter.statistic.oracle.CounterEQOracle;
 import de.learnlib.filter.statistic.sul.CounterTimedSUL;
 import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
-import de.learnlib.oracle.equivalence.mmlt.EQOracleChain;
-import de.learnlib.oracle.equivalence.mmlt.RandomWpOracle;
-import de.learnlib.oracle.equivalence.mmlt.ResetSearchOracle;
+import de.learnlib.oracle.equivalence.MMLTEQOracleChain;
+import de.learnlib.oracle.equivalence.mmlt.RandomWpEQOracle;
+import de.learnlib.oracle.equivalence.mmlt.ResetSearchEQOracle;
 import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.membership.TimedSULOracle;
 import de.learnlib.oracle.symbol_filters.CachedSymbolFilter;
 import de.learnlib.oracle.symbol_filters.mmlt.MMLTRandomSymbolFilter;
 import de.learnlib.oracle.symbol_filters.mmlt.MMLTStatisticsSymbolFilter;
 import de.learnlib.query.DefaultQuery;
-import de.learnlib.statistic.container.StatsContainer;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.testsupport.example.mmlt.MMLTExamples;
-import de.learnlib.util.statistic.container.MapStatsContainer;
 import net.automatalib.automaton.visualization.MMLTVisualizationHelper;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimedInput;
@@ -43,7 +44,7 @@ public class Example1 {
 
         // We first create a statistics container.
         // This container will store various statistical data during learning:
-        var stats = new MapStatsContainer();
+        var stats = Statistics.getContainer();
         stats.addTextInfo("LocalTimerMealyModel", null, model.toString());
         stats.setCounter("original_locs", "Locations in original", model.getReferenceAutomaton().getStates().size());
         stats.setCounter("original_inputs", "Untimed alphabet size in original", model.getReferenceAutomaton().getInputAlphabet().size());
@@ -54,23 +55,21 @@ public class Example1 {
         var sul = new MMLTSimulatorSUL<>(model.getReferenceAutomaton().getSemantics());
 
         // We count all operations that are performed on the SUL with a stats-SUL:
-        var statsAfterCache = new CounterTimedSUL<>(sul, stats);
+        var statsAfterCache = new CounterTimedSUL<>(sul);
 
         // We use a cache to avoid redundant operations:
         var cacheSUL = new TimedSULTreeCache<>(statsAfterCache, model.getParams());
-        cacheSUL.setStatsContainer(stats);
-        var toReducerSul = new TimeoutReducerSUL<>(cacheSUL, model.getParams().maxTimeoutWaitingTime(), stats);
+        var toReducerSul = new TimeoutReducerSUL<>(cacheSUL, model.getParams().maxTimeoutWaitingTime());
 
         // We use a query oracle to answer queries from the learner:
         var timeOracle = new TimedSULOracle<>(toReducerSul, model.getParams());
 
         // We use a chain of different equivalence oracles:
-        EQOracleChain<String, String> chainOracle = new EQOracleChain<>();
-        chainOracle.addOracle(cacheSUL.createCacheConsistencyTest());
-        chainOracle.addOracle(new ResetSearchOracle<>(timeOracle, 100, 1.0, 1.0));
-        chainOracle.addOracle(new RandomWpOracle<>(timeOracle, 100, 16, 0, 100));
-        chainOracle.addOracle(new SimulatorEQOracle<>(model.getReferenceAutomaton())); // ensure that we eventually find an accurate model
-        chainOracle.setStatsContainer(stats);
+        MMLTEQOracleChain<String, String> chainOracle = new MMLTEQOracleChain<>();
+        chainOracle.addOracle(new CounterEQOracle<>(cacheSUL.createCacheConsistencyTest(), "cache"));
+        chainOracle.addOracle(new CounterEQOracle<>(new ResetSearchEQOracle<>(timeOracle, 100, 1.0, 1.0), "reset"));
+        chainOracle.addOracle(new CounterEQOracle<>(new RandomWpEQOracle<>(timeOracle, 100, 16, 0, 100), "wp"));
+        chainOracle.addOracle(new CounterEQOracle<>(new SimulatorEQOracle<>(model.getReferenceAutomaton()), "sim")); // ensure that we eventually find an accurate model
 
         // Set up our L* learner:
         List<Word<TimedInput<String>>> suffixes = new ArrayList<>();
@@ -87,7 +86,6 @@ public class Example1 {
         filter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
 
         var learner = new ExtensibleLStarMMLT<>(model.getReferenceAutomaton().getInputAlphabet(), model.getParams(), suffixes, timeOracle, filter);
-        learner.setStatsContainer(stats);
 
         // Start learning:
         runExperiment(learner, chainOracle, stats, 100);

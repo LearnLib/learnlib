@@ -1,8 +1,7 @@
 package de.learnlib.oracle.symbol_filters;
 
-import de.learnlib.statistic.container.DummyStatsContainer;
-import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainer;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
 import net.automatalib.word.Word;
@@ -10,17 +9,19 @@ import net.automatalib.word.Word;
 /**
  * Collects various statistics on symbol filtering, including false accepts + false ignores.
  *
- * @param <U> Type for symbols in the prefix of the considered states
- * @param <V> Type of the queried symbols
+ * @param <U>
+ *         Type for symbols in the prefix of the considered states
+ * @param <V>
+ *         Type of the queried symbols
  */
-public abstract class StatisticsSymbolFilter<U, V> implements SymbolFilter<U, V>, LearnerStatsProvider {
+public abstract class StatisticsSymbolFilter<U, V> implements SymbolFilter<U, V> {
 
     private final SymbolFilter<U, V> delegate;
-    private StatsContainer stats = new DummyStatsContainer();
+    private final StatsContainer stats;
 
-    public StatisticsSymbolFilter(SymbolFilter<U, V> delegate, StatsContainer stats) {
+    public StatisticsSymbolFilter(SymbolFilter<U, V> delegate) {
         this.delegate = delegate;
-        this.stats = stats;
+        this.stats = Statistics.getContainer();
     }
 
     protected abstract SymbolFilterResponse isIgnorable(Word<U> prefix, V symbol);
@@ -53,10 +54,5 @@ public abstract class StatisticsSymbolFilter<U, V> implements SymbolFilter<U, V>
     @Override
     public void update(Word<U> prefix, V symbol, SymbolFilterResponse response) {
         delegate.update(prefix, symbol, response);
-    }
-
-    @Override
-    public void setStatsContainer(StatsContainer container) {
-        this.stats = container;
     }
 }

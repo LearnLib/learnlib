@@ -1,7 +1,7 @@
 package de.learnlib.oracle.symbol_filters.mmlt;
 
 import de.learnlib.oracle.symbol_filters.StatisticsSymbolFilter;
-import de.learnlib.statistic.container.StatsContainer;
+import de.learnlib.statistic.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
 import net.automatalib.symbol.time.TimedInput;
@@ -14,7 +14,7 @@ public class MMLTStatisticsSymbolFilter<I, O> extends StatisticsSymbolFilter<Tim
     private final MMLT<?, I, ?, O> automaton;
 
     public MMLTStatisticsSymbolFilter(MMLT<?, I, ?, O> automaton, SymbolFilter<TimedInput<I>, InputSymbol<I>> delegate, StatsContainer stats) {
-        super(delegate, stats);
+        super(delegate);
         this.automaton = automaton;
     }
 

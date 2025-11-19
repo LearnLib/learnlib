@@ -1,4 +1,4 @@
-package de.learnlib.util.statistic.container;
+package de.learnlib.filter.statistic.container;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 

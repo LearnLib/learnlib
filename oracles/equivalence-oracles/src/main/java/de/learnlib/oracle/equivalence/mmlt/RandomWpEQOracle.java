@@ -1,25 +1,26 @@
 package de.learnlib.oracle.equivalence.mmlt;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
+
 import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
-import de.learnlib.statistic.container.DummyStatsContainer;
-import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainer;
-import net.automatalib.symbol.time.TimedOutput;
-import net.automatalib.symbol.time.TimedInput;
-import net.automatalib.automaton.mmlt.impl.ReducedMMLTSemantics;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatsContainer;
 import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.automaton.mmlt.impl.ReducedMMLTSemantics;
 import net.automatalib.common.util.string.AbstractPrintable;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.cover.MMLTCover;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 /**
  * RandomWP counterexample search for MMLT learning.
@@ -28,22 +29,22 @@ import java.util.*;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class RandomWpOracle<I, O> implements MMLTEquivalenceOracle<I, O>, LearnerStatsProvider {
-    private static final Logger logger = LoggerFactory.getLogger(RandomWpOracle.class);
-    private final TimedQueryOracle<I, O> timeOracle;
+public class RandomWpEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
 
-    private StatsContainer stats = new DummyStatsContainer();
+    private final TimedQueryOracle<I, O> timeOracle;
+    private final StatsContainer stats;
 
     private final Random random;
     private final int minSize;
     private final int rndLen;
     private final int bound;
 
-    public RandomWpOracle(TimedQueryOracle<I, O> timeOracle,
-                          long randomSeed,
-                          int minSize, int rndAddLength, int bound) {
+    public RandomWpEQOracle(TimedQueryOracle<I, O> timeOracle,
+                            long randomSeed,
+                            int minSize, int rndAddLength, int bound) {
 
         this.timeOracle = timeOracle;
+        this.stats = Statistics.getContainer();
 
         this.random = new Random(randomSeed);
 
@@ -137,11 +138,5 @@ public class RandomWpOracle<I, O> implements MMLTEquivalenceOracle<I, O>, Learne
         var testWord = wbTestWord.toWord();
         var sulAnswer = timeOracle.answerQuery(testWord);
         return new DefaultQuery<>(testWord, sulAnswer);
-    }
-
-
-    @Override
-    public void setStatsContainer(StatsContainer container) {
-        this.stats = container;
     }
 }

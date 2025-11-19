@@ -22,6 +22,7 @@ import java.util.List;
 
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
 import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.EquivalenceOracle.MooreEquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
@@ -30,8 +31,10 @@ import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
 import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -65,6 +68,17 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                             to = MooreEquivalenceOracle.class,
                                             generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MooreEquivalenceOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}))
+@GenerateRefinement(name = "MMLTEQOracleChain",
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
+                    parentGenerics = {@Generic(clazz = MMLT.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic(clazz = TimedInput.class, generics = "I"),
+                                      @Generic(clazz = Word.class, generics = "net.automatalib.symbol.time.TimedOutput<O>")},
+                    typeMappings = @Mapping(from = EquivalenceOracle.class,
+                                            to = MMLTEquivalenceOracle.class,
+                                            generics = {@Generic("I"), @Generic("O")}),
+                    interfaces = @Interface(clazz = MMLTEquivalenceOracle.class,
                                             generics = {@Generic("I"), @Generic("O")}))
 public class EQOracleChain<A, I, D> implements EquivalenceOracle<A, I, D> {
 

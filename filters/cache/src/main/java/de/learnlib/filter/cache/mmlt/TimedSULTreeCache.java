@@ -1,36 +1,40 @@
 package de.learnlib.filter.cache.mmlt;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.learnlib.algorithm.MMLTModelParams;
 import de.learnlib.filter.cache.LearningCache.MMLTLearningCache;
 import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
-import de.learnlib.statistic.container.DummyStatsContainer;
-import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainer;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatsContainer;
 import de.learnlib.sul.TimedSUL;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-
-import net.automatalib.symbol.time.TimedInput;
-import net.automatalib.symbol.time.TimedOutput;
-import net.automatalib.symbol.time.InputSymbol;
-import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.*;
-
 /**
  * Caches queries sent to a LocalTimerMealySUL.
  *
- * @param <I> Input type for non-delaying inputs
- * @param <O> Output symbol type
+ * @param <I>
+ *         Input type for non-delaying inputs
+ * @param <O>
+ *         Output symbol type
  */
-public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>,
-                                                MMLTLearningCache<I, O>, GraphViewable, LearnerStatsProvider {
+public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCache<I, O>, GraphViewable {
+
     private final TimedSUL<I, O> delegate;
 
     private final CacheTreeNode<I, O> cacheRoot;
@@ -40,23 +44,18 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>,
     private final TimedOutput<O> silentOutput;
     private boolean cacheMiss;
 
-    private StatsContainer stats = new DummyStatsContainer();
-
-    @Override
-    public void setStatsContainer(StatsContainer container) {
-        this.stats = container;
-    }
+    private final StatsContainer stats;
 
     public TimedSULTreeCache(TimedSUL<I, O> delegate, MMLTModelParams<O> modelParams) {
         this.delegate = delegate;
         this.modelParams = modelParams;
         this.silentOutput = new TimedOutput<>(modelParams.silentOutput());
+        this.stats = Statistics.getContainer();
 
         // Init cache:
         this.cacheRoot = new CacheTreeNode<>(null, null);
         this.currentState = null;
     }
-
 
     private void followCurrentPrefix() {
         this.delegate.pre();
@@ -94,7 +93,6 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>,
         this.currentState = this.currentState.addUntimedChild(input, output);
         return output;
     }
-
 
     @Override
     public @Nullable TimedOutput<O> timeoutStep(long maxTime) {
@@ -134,18 +132,17 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>,
             this.cacheMiss = true;
         }
 
-
         TimedOutput<O> timeoutStepResult = this.delegate.timeoutStep(remaining);
         if (timeoutStepResult == null) { // no timers here
             this.currentState = this.currentState.addTimeChild(remaining, this.silentOutput);
             return null;
         } else {
-            this.currentState = this.currentState.addTimeChild(timeoutStepResult.delay(), new TimedOutput<>(timeoutStepResult.symbol()));
+            this.currentState = this.currentState.addTimeChild(timeoutStepResult.delay(),
+                                                               new TimedOutput<>(timeoutStepResult.symbol()));
             return new TimedOutput<>(timeoutStepResult.symbol(), maxTime - remaining + timeoutStepResult.delay());
         }
 
     }
-
 
     @Override
     public void pre() {
@@ -225,7 +222,6 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>,
         return finalWords;
     }
 
-
     @Override
     public Graph<?, ?> graphView() {
         // Convert tree to a mealy automaton:
@@ -237,7 +233,6 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>,
         Deque<CacheTreeNode<I, O>> pending = new ArrayDeque<>();
         pending.add(this.cacheRoot);
 
-
         while (!pending.isEmpty()) {
             CacheTreeNode<I, O> current = pending.remove();
 
@@ -248,7 +243,10 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>,
                     pending.add(child);
                 }
                 mealy.addAlphabetSymbol(new TimeStepSequence<>(current.getTimeout()));
-                mealy.addTransition(stateMap.get(current), new TimeStepSequence<>(current.getTimeout()), stateMap.get(child), current.getTimeoutOutput());
+                mealy.addTransition(stateMap.get(current),
+                                    new TimeStepSequence<>(current.getTimeout()),
+                                    stateMap.get(child),
+                                    current.getTimeoutOutput());
             }
 
             for (var sym : current.getUntimedChildren().keySet()) {

@@ -23,9 +23,8 @@ import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
-import de.learnlib.statistic.container.DummyStatsContainer;
-import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainer;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
 import de.learnlib.util.mealy.MealyUtil;
@@ -50,10 +49,10 @@ import org.slf4j.LoggerFactory;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>>, LearnerStatsProvider {
+public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> {
 
     private static final Logger logger = LoggerFactory.getLogger(ExtensibleLStarMMLT.class);
-    private StatsContainer stats = new DummyStatsContainer();
+    private final StatsContainer stats;
 
     private final ClosingStrategy<? super TimedInput<I>, ? super Word<TimedOutput<O>>> closingStrategy;
 
@@ -109,6 +108,7 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
         this.closingStrategy = closingStrategy;
         this.timeOracle = timeOracle;
         this.initialSuffixes = initialSuffixes;
+        this.stats = Statistics.getContainer();
 
         // Prepare hyp data:
 
@@ -422,12 +422,6 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
             unclosedIter = hypData.getTable().toShortPrefixes(closingRows, timeOracle);
         }
 
-    }
-
-    @Override
-    public void setStatsContainer(StatsContainer container) {
-        this.stats = container;
-        this.cexAnalyzer.setStatsContainer(container);
     }
 
     /**

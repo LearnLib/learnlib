@@ -1,6 +1,6 @@
-package de.learnlib.util.statistic.container;
+package de.learnlib.filter.statistic.container;
 
-import de.learnlib.statistic.container.StatsContainer;
+import de.learnlib.statistic.StatsContainer;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Duration;

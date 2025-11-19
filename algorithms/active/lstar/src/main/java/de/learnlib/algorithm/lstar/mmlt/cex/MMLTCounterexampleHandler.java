@@ -4,16 +4,13 @@ import java.util.List;
 
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
+import de.learnlib.algorithm.lstar.mmlt.MMLTHypothesis;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.CexAnalysisResult;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.FalseIgnoreResult;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.MissingDiscriminatorResult;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.MissingOneShotResult;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.MissingResetResult;
-import de.learnlib.algorithm.lstar.mmlt.MMLTHypothesis;
 import de.learnlib.oracle.TimedQueryOracle;
-import de.learnlib.statistic.container.DummyStatsContainer;
-import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.symbol_filter.SymbolFilterResponse;
 import net.automatalib.automaton.mmlt.MealyTimerInfo;
@@ -34,10 +31,9 @@ import org.slf4j.LoggerFactory;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class MMLTCounterexampleHandler<S, I, O> implements LearnerStatsProvider {
+public class MMLTCounterexampleHandler<S, I, O> {
     private static final Logger logger = LoggerFactory.getLogger(MMLTCounterexampleHandler.class);
     private final SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
-    private StatsContainer stats = new DummyStatsContainer();
 
     protected final TimedQueryOracle<I, O> timeOracle;
     private final MMLTCounterexampleDecompositor<S, I, O> decompositor;
@@ -48,13 +44,8 @@ public class MMLTCounterexampleHandler<S, I, O> implements LearnerStatsProvider 
         this.symbolFilter = symbolFilter;
     }
 
-    @Override
-    public void setStatsContainer(StatsContainer container) {
-        this.stats = container;
-    }
-
-    public <T> CexAnalysisResult<I, O> analyzeInconsistency(MMLTOutputInconsistency<I, O> outIncons,
-                                                            MMLTHypothesis<I, O> hypothesis) {
+    public CexAnalysisResult<I, O> analyzeInconsistency(MMLTOutputInconsistency<I, O> outIncons,
+                                                        MMLTHypothesis<I, O> hypothesis) {
 
         // Search for an extended decomposition:
         var decomposition = decompositor.findExtendedDecomposition(outIncons, hypothesis);

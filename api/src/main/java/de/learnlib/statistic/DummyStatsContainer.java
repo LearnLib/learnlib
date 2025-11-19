@@ -1,4 +1,4 @@
-package de.learnlib.statistic.container;
+package de.learnlib.statistic;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * A dummy implementation of {@link StatsContainer} that does nothing.
  */
-public class DummyStatsContainer implements StatsContainer {
+class DummyStatsContainer implements StatsContainer {
     @Override
     public void addTextInfo(String id, @Nullable String description, String text) {
 

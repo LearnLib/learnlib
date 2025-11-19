@@ -1,11 +1,11 @@
 package de.learnlib.filter.statistic.sul;
 
-import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainer;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatsContainer;
 import de.learnlib.sul.TimedSUL;
-import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -16,26 +16,21 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class CounterTimedSUL<I, O> implements TimedSUL<I, O>, LearnerStatsProvider {
+public class CounterTimedSUL<I, O> implements TimedSUL<I, O> {
     private final TimedSUL<I, O> delegate;
-    private StatsContainer stats;
+    private final StatsContainer stats;
 
     @Nullable
     private final String name;
 
-    public CounterTimedSUL(TimedSUL<I, O> delegate, StatsContainer stats) {
-        this(delegate, stats, null);
+    public CounterTimedSUL(TimedSUL<I, O> delegate) {
+        this(delegate, null);
     }
 
-    public CounterTimedSUL(TimedSUL<I, O> delegate, StatsContainer stats, String name) {
+    public CounterTimedSUL(TimedSUL<I, O> delegate, String name) {
         this.delegate = delegate;
-        this.stats = stats;
         this.name = name;
-    }
-
-    @Override
-    public void setStatsContainer(StatsContainer container) {
-        this.stats = container;
+        this.stats = Statistics.getContainer();
     }
 
     private String withPrefix(String label) {

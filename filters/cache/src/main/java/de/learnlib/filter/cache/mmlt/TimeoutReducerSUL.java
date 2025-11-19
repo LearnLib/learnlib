@@ -1,42 +1,36 @@
 package de.learnlib.filter.cache.mmlt;
 
-import de.learnlib.statistic.container.LearnerStatsProvider;
-import de.learnlib.statistic.container.StatsContainer;
 import de.learnlib.sul.TimedSUL;
-import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimedOutput;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Avoids redundant queries for timeouts.
  * <p>
- * Assume we waited maxDelay for a timeout and observed no expiration.
- * Then, any consecutive timeout-input must also show no timer (assuming sufficient maxDelay).
- * Hence, we do not need to query the SUL for these.
+ * Assume we waited maxDelay for a timeout and observed no expiration. Then, any consecutive timeout-input must also
+ * show no timer (assuming sufficient maxDelay). Hence, we do not need to query the SUL for these.
  * <p>
- * We may observe a timeout again after any non-delaying input, as this may
- * trigger a location-change.
+ * We may observe a timeout again after any non-delaying input, as this may trigger a location-change.
  *
- * @param <I> Input type for non-delaying inputs
- * @param <O> Output symbol type
+ * @param <I>
+ *         Input type for non-delaying inputs
+ * @param <O>
+ *         Output symbol type
  */
-public class TimeoutReducerSUL<I, O> implements TimedSUL<I, O>, LearnerStatsProvider {
+public class TimeoutReducerSUL<I, O> implements TimedSUL<I, O> {
 
     private final TimedSUL<I, O> delegate;
     private final long maxDelay;
 
     /**
-     * Delay since the last non-delaying input OR
-     * timer expiration.
+     * Delay since the last non-delaying input OR timer expiration.
      */
     private long noTimeoutWaitingTime;
 
-    private StatsContainer stats;
-
-    public TimeoutReducerSUL(TimedSUL<I, O> delegate, long maxDelay, StatsContainer stats) {
+    public TimeoutReducerSUL(TimedSUL<I, O> delegate, long maxDelay) {
         this.delegate = delegate;
         this.maxDelay = maxDelay;
-        this.stats = stats;
     }
 
     @Override
@@ -71,10 +65,5 @@ public class TimeoutReducerSUL<I, O> implements TimedSUL<I, O>, LearnerStatsProv
     @Override
     public void post() {
         delegate.post();
-    }
-
-    @Override
-    public void setStatsContainer(StatsContainer container) {
-        this.stats = container;
     }
 }

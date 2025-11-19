@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import de.learnlib.filter.statistic.container.MapStatsProvider;
+import de.learnlib.statistic.StatisticsProvider;
+
 /**
  * This module provides filters for collecting statistical data.
  * <p>
@@ -40,4 +43,6 @@ open module de.learnlib.filter.statistic {
     exports de.learnlib.filter.statistic.learner;
     exports de.learnlib.filter.statistic.oracle;
     exports de.learnlib.filter.statistic.sul;
+
+    provides StatisticsProvider with MapStatsProvider;
 }

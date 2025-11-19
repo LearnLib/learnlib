@@ -1,4 +1,4 @@
-package de.learnlib.util.statistic.container;
+package de.learnlib.filter.statistic.container;
 
 /**
  * A counter that can be increased and set to a particular positive number.
