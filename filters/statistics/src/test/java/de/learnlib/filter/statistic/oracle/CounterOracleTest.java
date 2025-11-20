@@ -26,6 +26,7 @@ import de.learnlib.statistic.StatsContainer;
 import net.automatalib.word.Word;
 import org.mockito.Mockito;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class CounterOracleTest {
@@ -35,6 +36,11 @@ public class CounterOracleTest {
     @SuppressWarnings("unchecked")
     public CounterOracleTest() {
         this.oracle = new CounterOracle<Integer, Word<Character>>(Mockito.mock(MembershipOracle.class));
+    }
+
+    @BeforeClass
+    public void setUp() {
+        Statistics.getContainer().clear();
     }
 
     @Test
