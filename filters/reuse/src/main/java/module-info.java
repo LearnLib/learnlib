@@ -15,7 +15,9 @@
  */
 
 /**
- * This module provides a reuse tree for (intelligently) caching membership queries.
+ * This module provides a reuse tree for (intelligently) caching membership queries as described in the paper <a
+ * href="https://doi.org/10.1007/978-3-642-28033-7_6">Reusing System States by Active Learning Algorithms</a> by Oliver
+ * Bauer, Johannes Neubauer, Bernhard Steffen, and Falk Howar.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>
