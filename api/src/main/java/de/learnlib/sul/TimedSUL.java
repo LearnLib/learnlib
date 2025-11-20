@@ -1,9 +1,9 @@
 package de.learnlib.sul;
 
-import net.automatalib.symbol.time.TimedOutput;
-import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -101,4 +101,8 @@ public interface TimedSUL<I, O> extends SUL<InputSymbol<I>, TimedOutput<O>> {
         return wbOutput.toWord();
     }
 
+    @Override
+    default TimedSUL<I, O> fork() {
+        throw new UnsupportedOperationException();
+    }
 }

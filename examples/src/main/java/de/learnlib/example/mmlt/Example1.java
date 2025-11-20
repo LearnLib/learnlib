@@ -126,7 +126,7 @@ public class Example1 {
         stats.setCounter("result_locs", "Locations in result", finalHypothesis.getStates().size());
 
         // Print final result + statistics:
-        stats.printStats();
+        System.out.println(stats.printStats());
 
         new ObservationTableASCIIWriter<>().write(learner.getObservationTable(), System.out);
 

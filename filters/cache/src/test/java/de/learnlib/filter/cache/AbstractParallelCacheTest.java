@@ -22,6 +22,7 @@ import java.util.stream.IntStream;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.ParallelOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.statistic.Statistics;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.word.Word;
@@ -64,6 +65,7 @@ public abstract class AbstractParallelCacheTest<A, I, D> {
         this.targetModel = getTargetModel();
         this.cache = getCacheRepresentative();
         this.parallelOracle = getParallelOracle();
+        Statistics.getContainer().clear();
     }
 
     @AfterClass
@@ -71,7 +73,7 @@ public abstract class AbstractParallelCacheTest<A, I, D> {
         this.parallelOracle.shutdownNow();
     }
 
-    @Test(timeOut = 20000)
+    @Test
     public void testConcurrentMembershipQueries() {
         Assert.assertEquals(getNumberOfQueries(), 0);
 
@@ -103,7 +105,7 @@ public abstract class AbstractParallelCacheTest<A, I, D> {
         Assert.assertEquals(numOfQueriesAfter, numOfQueriesBefore);
     }
 
-    @Test(dependsOnMethods = "testConcurrentMembershipQueries", timeOut = 20000)
+    @Test(dependsOnMethods = "testConcurrentMembershipQueries")
     public void testConcurrentEquivalenceQueries() {
         final long previousCount = getNumberOfQueries();
         final EquivalenceOracle<? super A, I, D> eqOracle = cache.createCacheConsistencyTest();

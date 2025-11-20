@@ -28,9 +28,13 @@ public class CounterTimedSUL<I, O> implements TimedSUL<I, O> {
     }
 
     public CounterTimedSUL(TimedSUL<I, O> delegate, String name) {
+        this(delegate, name, Statistics.getContainer());
+    }
+
+    protected CounterTimedSUL(TimedSUL<I, O> delegate, String name, StatsContainer statistics) {
         this.delegate = delegate;
         this.name = name;
-        this.stats = Statistics.getContainer();
+        this.stats = statistics;
     }
 
     private String withPrefix(String label) {
@@ -80,6 +84,16 @@ public class CounterTimedSUL<I, O> implements TimedSUL<I, O> {
     @Override
     public void post() {
         this.delegate.post();
+    }
+
+    @Override
+    public boolean canFork() {
+        return this.delegate.canFork();
+    }
+
+    @Override
+    public TimedSUL<I, O> fork() {
+        return new CounterTimedSUL<>(this.delegate.fork(), this.name, this.stats);
     }
 
 

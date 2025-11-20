@@ -38,6 +38,7 @@ open module de.learnlib.filter.statistic {
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static de.learnlib.tooling.annotation;
     requires static org.checkerframework.checker.qual;
+    requires static org.kohsuke.metainf_services;
 
     exports de.learnlib.filter.statistic.learner;
     exports de.learnlib.filter.statistic.oracle;

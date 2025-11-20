@@ -14,12 +14,12 @@ public class MapStatsContainer implements StatsContainer {
     private final Map<String, LearnerStatistic> statistics = new HashMap<>(); // id -> stat
 
     @Override
-    public void addTextInfo(String id, @Nullable String description, String text) {
+    public synchronized void addTextInfo(String id, @Nullable String description, String text) {
         statistics.put(id, new TextStatistic(id, description, text));
     }
 
     @Override
-    public Optional<String> getTextValue(String id) {
+    public synchronized Optional<String> getTextValue(String id) {
         var value = statistics.get(id);
         if (value instanceof TextStatistic textStatistic) {
             return Optional.of(textStatistic.getText());
@@ -28,12 +28,12 @@ public class MapStatsContainer implements StatsContainer {
     }
 
     @Override
-    public void setFlag(String id, @Nullable String description, boolean value) {
+    public synchronized void setFlag(String id, @Nullable String description, boolean value) {
         statistics.put(id, new FlagStatistic(id, description, value));
     }
 
     @Override
-    public Optional<Boolean> getFlagValue(String id) {
+    public synchronized Optional<Boolean> getFlagValue(String id) {
         var value = statistics.get(id);
         if (value instanceof FlagStatistic flagStatistic) {
             return Optional.of(flagStatistic.isFlagged());
@@ -42,7 +42,7 @@ public class MapStatsContainer implements StatsContainer {
     }
 
     @Override
-    public void startOrResumeClock(String id, @Nullable String description) {
+    public synchronized void startOrResumeClock(String id, @Nullable String description) {
         var value = statistics.get(id);
         if (value instanceof StopClockStatistic clockStatistic) {
             clockStatistic.resume();
@@ -55,7 +55,7 @@ public class MapStatsContainer implements StatsContainer {
     }
 
     @Override
-    public void pauseClock(String id) {
+    public synchronized void pauseClock(String id) {
         var value = statistics.get(id);
         if (value instanceof StopClockStatistic clockStatistic) {
             clockStatistic.pause();
@@ -63,7 +63,7 @@ public class MapStatsContainer implements StatsContainer {
     }
 
     @Override
-    public Optional<Duration> getClockValue(String id) {
+    public synchronized Optional<Duration> getClockValue(String id) {
         var value = statistics.get(id);
         if (value instanceof StopClockStatistic clockStatistic) {
             return Optional.of(clockStatistic.getElapsed());
@@ -72,7 +72,7 @@ public class MapStatsContainer implements StatsContainer {
     }
 
     @Override
-    public void increaseCounter(String id, @Nullable String description, long increment) {
+    public synchronized void increaseCounter(String id, @Nullable String description, long increment) {
         var value = statistics.get(id);
         if (value instanceof CounterStatistic counterStatistic) {
             counterStatistic.increase(increment);
@@ -83,12 +83,12 @@ public class MapStatsContainer implements StatsContainer {
     }
 
     @Override
-    public void setCounter(String id, @Nullable String description, long count) {
+    public synchronized void setCounter(String id, @Nullable String description, long count) {
         statistics.put(id, new CounterStatistic(id, description, count));
     }
 
     @Override
-    public Optional<Long> getCount(String id) {
+    public synchronized Optional<Long> getCount(String id) {
         var value = statistics.get(id);
         if (value instanceof CounterStatistic counterStatistic) {
             return Optional.of(counterStatistic.getCount());
@@ -97,7 +97,7 @@ public class MapStatsContainer implements StatsContainer {
     }
 
     @Override
-    public void clear() {
+    public synchronized void clear() {
         statistics.clear();
     }
 

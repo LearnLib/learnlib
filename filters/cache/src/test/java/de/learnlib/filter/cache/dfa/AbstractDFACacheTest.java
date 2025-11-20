@@ -58,7 +58,7 @@ public abstract class AbstractDFACacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return Statistics.getContainer().getCount(DFACounterOracle.SYMBOL_KEY).orElse(0L);
+        return Statistics.getContainer().getCount(DFACounterOracle.QUERY_KEY).orElse(0L);
     }
 
     @Override

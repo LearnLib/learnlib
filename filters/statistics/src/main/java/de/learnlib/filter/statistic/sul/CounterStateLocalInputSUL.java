@@ -17,6 +17,8 @@ package de.learnlib.filter.statistic.sul;
 
 import java.util.Collection;
 
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatsContainer;
 import de.learnlib.sul.StateLocalInputSUL;
 
 public class CounterStateLocalInputSUL<I, O> extends CounterSUL<I, O> implements StateLocalInputSUL<I, O> {
@@ -30,7 +32,11 @@ public class CounterStateLocalInputSUL<I, O> extends CounterSUL<I, O> implements
     }
 
     private CounterStateLocalInputSUL(StateLocalInputSUL<I, O> sul, String prefix) {
-        super(sul, prefix);
+        this(sul, prefix, Statistics.getContainer());
+    }
+
+    protected CounterStateLocalInputSUL(StateLocalInputSUL<I, O> sul, String prefix, StatsContainer statistics) {
+        super(sul, prefix, statistics);
         this.sul = sul;
     }
 
@@ -42,7 +48,7 @@ public class CounterStateLocalInputSUL<I, O> extends CounterSUL<I, O> implements
 
     @Override
     public StateLocalInputSUL<I, O> fork() {
-        return new CounterStateLocalInputSUL<>(this.sul.fork(), super.prefix);
+        return new CounterStateLocalInputSUL<>(this.sul.fork(), super.prefix, super.statistics);
     }
 
 }

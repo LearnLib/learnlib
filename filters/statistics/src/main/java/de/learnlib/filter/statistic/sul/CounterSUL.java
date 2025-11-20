@@ -33,9 +33,13 @@ public class CounterSUL<I, O> implements SUL<I, O> {
     }
 
     public CounterSUL(SUL<I, O> sul, String prefix) {
+        this(sul, prefix, Statistics.getContainer());
+    }
+
+    protected CounterSUL(SUL<I, O> sul, String prefix, StatsContainer statistics) {
         this.sul = sul;
         this.prefix = prefix;
-        this.statistics = Statistics.getContainer();
+        this.statistics = statistics;
     }
 
     @Override
@@ -62,6 +66,6 @@ public class CounterSUL<I, O> implements SUL<I, O> {
 
     @Override
     public SUL<I, O> fork() {
-        return new CounterSUL<>(this.sul.fork(), this.prefix);
+        return new CounterSUL<>(this.sul.fork(), this.prefix, this.statistics);
     }
 }
