@@ -28,7 +28,10 @@ limitations under the License.
     <artifactId>learnlib-reuse</artifactId>
 
     <name>LearnLib :: Filters :: Reuse</name>
-    <description>Reuse Tree for (intelligently) caching membership queries</description>
+    <description>Reuse Tree for (intelligently) caching membership queries as described in the paper "Reusing System
+        States by Active Learning Algorithms" (https://doi.org/10.1007/978-3-642-28033-7_6) by Oliver Bauer, Johannes
+        Neubauer, Bernhard Steffen, and Falk Howar.
+    </description>
 
     <dependencies>
         <!-- internal -->
