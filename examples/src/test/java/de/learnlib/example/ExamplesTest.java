@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.SwingUtilities;
 
+import com.github.caciocavallosilano.cacio.ctc.junit.CacioExtension;
 import de.learnlib.example.aaar.AlternatingBitExampleExplicit;
 import de.learnlib.example.aaar.AlternatingBitExampleGeneric;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
@@ -40,6 +41,9 @@ public class ExamplesTest {
     @BeforeClass
     public void setupAutoClose() {
         if (isJVMCompatible()) {
+            // hack: the static initializer of this class does the magic we want, so only invoke it on compatible JVMs
+            new CacioExtension();
+
             // As soon as we observe an event that indicates a new window, close it to prevent blocking the tests.
             Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
                 final WindowEvent windowEvent = (WindowEvent) event;
@@ -173,12 +177,13 @@ public class ExamplesTest {
     }
 
     private static boolean isJVMCompatible() {
-        return Runtime.version().feature() == 11;
+        final int feature = Runtime.version().feature();
+        return feature == 17 || feature == 21;
     }
 
     private static void requireJVMCompatibility() {
-        if (Runtime.version().feature() != 11) {
-            throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
+        if (!isJVMCompatible()) {
+            throw new SkipException("The headless AWT environment only works with specific JVM versions");
         }
     }
 

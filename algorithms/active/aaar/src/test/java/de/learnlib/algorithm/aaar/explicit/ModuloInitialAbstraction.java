@@ -40,14 +40,11 @@ public class ModuloInitialAbstraction<CI> implements ExplicitInitialAbstraction<
 
     @Override
     public CI getRepresentative(String a) {
-        switch (a) {
-            case "even":
-                return alphabet.getSymbol(0);
-            case "odd":
-                return alphabet.getSymbol(1);
-            default:
-                throw new IllegalArgumentException("Unknown symbol: " + a);
-        }
+        return switch (a) {
+            case "even" -> alphabet.getSymbol(0);
+            case "odd" -> alphabet.getSymbol(1);
+            default -> throw new IllegalArgumentException("Unknown symbol: " + a);
+        };
     }
 
     @Override

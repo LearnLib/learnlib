@@ -205,7 +205,7 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
         }
     }
 
-    static final class StateInfo<S, I> {
+    protected static final class StateInfo<S, I> {
 
         private final Row<I> row;
         private final S state;

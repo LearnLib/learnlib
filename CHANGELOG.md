@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-* LearnLib now requires Java 11 at runtime.
+* LearnLib now requires Java 17 at runtime.
 * The `generateTestWords` method of `AbstractTestWordEQOracle` now needs to be public.
 
 ### Fixed

@@ -111,8 +111,8 @@ public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
         DTLeaf<I, D> ua2 = s2.state();
         AbstractDTNode<I, D> n = lca(ua1, ua2);
         STNode<I> av;
-        if (n instanceof DTInnerNode) {
-            av = ((DTInnerNode<I, D>) n).suffix().prepend(a);
+        if (n instanceof DTInnerNode<I, D> in) {
+            av = in.suffix().prepend(a);
         } else {
             av = tree.newSuffix(a);
         }

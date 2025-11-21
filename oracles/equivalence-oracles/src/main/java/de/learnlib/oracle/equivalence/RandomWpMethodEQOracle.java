@@ -187,6 +187,7 @@ public class RandomWpMethodEQOracle<A extends UniversalDeterministicAutomaton<?,
 
     @Override
     public Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
+        // explicitly assign type to (redundant) variable, otherwise javac complains
         UniversalDeterministicAutomaton<?, I, ?, ?, ?> aut = hypothesis;
         return doGenerateTestWords(aut, inputs);
     }
