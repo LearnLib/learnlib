@@ -52,6 +52,10 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-symbol-filters</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-util</artifactId>
         </dependency>
 
@@ -132,11 +136,6 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-cache</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-symbol-filters</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

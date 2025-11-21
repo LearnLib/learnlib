@@ -35,5 +35,6 @@ limitations under the License.
         <module>cache</module>
         <module>reuse</module>
         <module>statistics</module>
+        <module>symbol-filters</module>
     </modules>
 </project>

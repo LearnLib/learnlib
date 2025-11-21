@@ -40,12 +40,12 @@ open module de.learnlib.api {
     exports de.learnlib;
     exports de.learnlib.algorithm;
     exports de.learnlib.exception;
+    exports de.learnlib.filter;
     exports de.learnlib.logging;
     exports de.learnlib.oracle;
     exports de.learnlib.query;
     exports de.learnlib.statistic;
     exports de.learnlib.sul;
-    exports de.learnlib.symbol_filter;
 
     uses StatisticsProvider;
 }

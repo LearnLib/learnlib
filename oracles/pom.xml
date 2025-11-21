@@ -37,6 +37,5 @@ limitations under the License.
         <module>membership-oracles</module>
         <module>parallelism</module>
         <module>property-oracles</module>
-        <module>symbol-filters</module>
     </modules>
 </project>

@@ -1,8 +1,8 @@
-package de.learnlib.oracle.symbol_filters;
+package de.learnlib.filter.symbol;
 
 
-import de.learnlib.symbol_filter.SymbolFilter;
-import de.learnlib.symbol_filter.SymbolFilterResponse;
+import de.learnlib.filter.SymbolFilter;
+import de.learnlib.filter.SymbolFilterResponse;
 import net.automatalib.word.Word;
 
 import java.util.Random;
@@ -43,10 +43,5 @@ public abstract class RandomSymbolFilter<U, V> implements SymbolFilter<U, V> {
         } else {
             return SymbolFilterResponse.ACCEPT;
         }
-    }
-
-    @Override
-    public void update(Word<U> prefix, V symbol, SymbolFilterResponse response) {
-        throw new IllegalStateException("Not supported.");
     }
 }

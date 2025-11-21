@@ -14,12 +14,12 @@ import java.util.stream.Stream;
 import de.learnlib.algorithm.MMLTModelParams;
 import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
 import de.learnlib.oracle.TimedQueryOracle;
-import de.learnlib.oracle.symbol_filters.AcceptAllSymbolFilter;
-import de.learnlib.oracle.symbol_filters.CachedSymbolFilter;
-import de.learnlib.oracle.symbol_filters.IgnoreAllSymbolFilter;
-import de.learnlib.oracle.symbol_filters.mmlt.MMLTPerfectSymbolFilter;
-import de.learnlib.oracle.symbol_filters.mmlt.MMLTRandomSymbolFilter;
-import de.learnlib.symbol_filter.SymbolFilter;
+import de.learnlib.filter.symbol.AcceptAllSymbolFilter;
+import de.learnlib.filter.symbol.CachedSymbolFilter;
+import de.learnlib.filter.symbol.IgnoreAllSymbolFilter;
+import de.learnlib.algorithm.lstar.mmlt.filter.MMLTPerfectSymbolFilter;
+import de.learnlib.algorithm.lstar.mmlt.filter.MMLTRandomSymbolFilter;
+import de.learnlib.filter.SymbolFilter;
 import de.learnlib.testsupport.example.LearningExample.MMLTLearningExample;
 import de.learnlib.testsupport.it.learner.AbstractMMLTLearnerIT;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MMLTLearnerVariantList;
@@ -60,9 +60,9 @@ public class ExtensibleLStarMMLTIT extends AbstractMMLTLearnerIT {
                 case none -> new AcceptAllSymbolFilter<>();
             };
 
-            filter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
+            var cachedFilter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
 
-            var learner = new ExtensibleLStarMMLT<>(alphabet, example.getParams(), suffixes, mqOracle, filter);
+            var learner = new ExtensibleLStarMMLT<>(alphabet, example.getParams(), suffixes, mqOracle, cachedFilter);
             variants.addLearnerVariant("system=" + example + ",filter=" + filterMode, learner, counters + mmlt.size());
         }
     }

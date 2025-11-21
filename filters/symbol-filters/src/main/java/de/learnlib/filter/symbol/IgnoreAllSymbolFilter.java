@@ -1,7 +1,7 @@
-package de.learnlib.oracle.symbol_filters;
+package de.learnlib.filter.symbol;
 
-import de.learnlib.symbol_filter.SymbolFilter;
-import de.learnlib.symbol_filter.SymbolFilterResponse;
+import de.learnlib.filter.SymbolFilter;
+import de.learnlib.filter.SymbolFilterResponse;
 import net.automatalib.word.Word;
 
 /**
@@ -14,10 +14,5 @@ public class IgnoreAllSymbolFilter<U, V> implements SymbolFilter<U, V> {
     @Override
     public SymbolFilterResponse query(Word<U> prefix, V symbol) {
         return SymbolFilterResponse.IGNORE;
-    }
-
-    @Override
-    public void update(Word<U> prefix, V symbol, SymbolFilterResponse response) {
-        throw new IllegalStateException("Not supported.");
     }
 }

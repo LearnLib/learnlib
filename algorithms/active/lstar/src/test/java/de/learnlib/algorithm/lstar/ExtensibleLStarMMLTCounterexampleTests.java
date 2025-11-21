@@ -8,7 +8,7 @@ import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
 import de.learnlib.driver.simulator.MMLTSimulatorSUL;
 import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.membership.TimedSULOracle;
-import de.learnlib.oracle.symbol_filters.AcceptAllSymbolFilter;
+import de.learnlib.filter.symbol.AcceptAllSymbolFilter;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.example.LearningExample.MMLTLearningExample;
 import de.learnlib.testsupport.example.mmlt.MMLTExamples;

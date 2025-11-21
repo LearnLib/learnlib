@@ -1,9 +1,10 @@
-package de.learnlib.oracle.symbol_filters;
+package de.learnlib.filter.symbol;
 
+import de.learnlib.filter.MutableSymbolFilter;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatsContainer;
-import de.learnlib.symbol_filter.SymbolFilter;
-import de.learnlib.symbol_filter.SymbolFilterResponse;
+import de.learnlib.filter.SymbolFilter;
+import de.learnlib.filter.SymbolFilterResponse;
 import net.automatalib.word.Word;
 
 /**
@@ -14,7 +15,7 @@ import net.automatalib.word.Word;
  * @param <V>
  *         Type of the queried symbols
  */
-public abstract class StatisticsSymbolFilter<U, V> implements SymbolFilter<U, V> {
+public abstract class StatisticsSymbolFilter<U, V> implements MutableSymbolFilter<U, V> {
 
     private final SymbolFilter<U, V> delegate;
     private final StatsContainer stats;
@@ -52,7 +53,11 @@ public abstract class StatisticsSymbolFilter<U, V> implements SymbolFilter<U, V>
     }
 
     @Override
-    public void update(Word<U> prefix, V symbol, SymbolFilterResponse response) {
-        delegate.update(prefix, symbol, response);
+    public void accept(Word<U> prefix, V symbol) {
+        if (delegate instanceof MutableSymbolFilter<U,V> mut) {
+            mut.accept(prefix, symbol);
+        } else {
+            throw new UnsupportedOperationException("delegate filter does not support updates");
+        }
     }
 }

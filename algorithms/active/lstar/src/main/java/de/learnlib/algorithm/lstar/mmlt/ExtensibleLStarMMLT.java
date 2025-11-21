@@ -21,12 +21,11 @@ import de.learnlib.algorithm.lstar.mmlt.cex.results.MissingResetResult;
 import de.learnlib.datastructure.observationtable.OTLearner;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
+import de.learnlib.filter.MutableSymbolFilter;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatsContainer;
-import de.learnlib.symbol_filter.SymbolFilter;
-import de.learnlib.symbol_filter.SymbolFilterResponse;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
@@ -57,7 +56,7 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
     private final ClosingStrategy<? super TimedInput<I>, ? super Word<TimedOutput<O>>> closingStrategy;
 
     private final TimedQueryOracle<I, O> timeOracle;
-    private final SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
+    private final MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
 
     private final MMLTHypDataContainer<I, O> hypData;
 
@@ -83,7 +82,7 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
                                MMLTModelParams<O> modelParams,
                                List<Word<TimedInput<I>>> initialSuffixes,
                                TimedQueryOracle<I, O> timeOracle,
-                               SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter) {
+                               MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter) {
         this(alphabet, modelParams, initialSuffixes, ClosingStrategies.CLOSE_SHORTEST, timeOracle, symbolFilter, AcexAnalyzers.BINARY_SEARCH_BWD);
     }
 
@@ -103,7 +102,7 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
                                List<Word<TimedInput<I>>> initialSuffixes,
                                ClosingStrategy<? super TimedInput<I>, ? super Word<TimedOutput<O>>> closingStrategy,
                                TimedQueryOracle<I, O> timeOracle,
-                               SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter,
+                               MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter,
                                AcexAnalyzer analyzer) {
         this.closingStrategy = closingStrategy;
         this.timeOracle = timeOracle;
@@ -348,7 +347,7 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
             }
 
             // Update filter:
-            this.symbolFilter.update(locPrefix, falseIgnore.getSymbol(), SymbolFilterResponse.ACCEPT);
+            this.symbolFilter.accept(locPrefix, falseIgnore.getSymbol());
 
             // Legalize symbol + close table:
             var unclosed = hypData.getTable().addOutgoingTransition(spRow, falseIgnore.getSymbol(), this.timeOracle);

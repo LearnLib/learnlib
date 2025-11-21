@@ -1,4 +1,4 @@
-package de.learnlib.symbol_filter;
+package de.learnlib.filter;
 
 public enum SymbolFilterResponse {
     ACCEPT,

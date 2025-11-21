@@ -1,8 +1,8 @@
-package de.learnlib.oracle.symbol_filters.mmlt;
+package de.learnlib.algorithm.lstar.mmlt.filter;
 
 
-import de.learnlib.oracle.symbol_filters.PerfectSymbolFilter;
-import de.learnlib.symbol_filter.SymbolFilterResponse;
+import de.learnlib.filter.symbol.PerfectSymbolFilter;
+import de.learnlib.filter.SymbolFilterResponse;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.automaton.mmlt.MMLT;

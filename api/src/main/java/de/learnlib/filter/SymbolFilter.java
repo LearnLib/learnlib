@@ -1,4 +1,4 @@
-package de.learnlib.symbol_filter;
+package de.learnlib.filter;
 
 import net.automatalib.word.Word;
 
@@ -28,13 +28,4 @@ public interface SymbolFilter<U, V> {
      * @return IGNORE if the symbol is considered ignorable, ACCEPT if it is not.
      */
     SymbolFilterResponse query(Word<U> prefix, V symbol);
-
-    /**
-     * Sets the response of the filter for the given transition to the provided response.
-     *
-     * @param prefix   State prefix.
-     * @param symbol   Input of the transition that should be updated.
-     * @param response New response
-     */
-    void update(Word<U> prefix, V symbol, SymbolFilterResponse response);
 }

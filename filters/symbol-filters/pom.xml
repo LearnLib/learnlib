@@ -4,7 +4,7 @@
 
     <parent>
         <groupId>de.learnlib</groupId>
-        <artifactId>learnlib-oracles-parent</artifactId>
+        <artifactId>learnlib-filters-parent</artifactId>
         <version>0.19.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -44,42 +44,6 @@
         </dependency>
 
         <!-- test -->
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-emptiness-oracles</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-equivalence-oracles</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib.testsupport</groupId>
-            <artifactId>learnlib-learning-examples</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-membership-oracles</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-modelchecking-ltsmin</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

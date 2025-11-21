@@ -1,8 +1,9 @@
-package de.learnlib.oracle.symbol_filters;
+package de.learnlib.filter.symbol;
 
 
-import de.learnlib.symbol_filter.SymbolFilter;
-import de.learnlib.symbol_filter.SymbolFilterResponse;
+import de.learnlib.filter.MutableSymbolFilter;
+import de.learnlib.filter.SymbolFilter;
+import de.learnlib.filter.SymbolFilterResponse;
 import net.automatalib.word.Word;
 
 import java.util.HashMap;
@@ -14,7 +15,7 @@ import java.util.Map;
  * @param <U> Type for symbols in the prefix of the considered states
  * @param <V> Type of the queried symbols
  */
-public class CachedSymbolFilter<U, V> implements SymbolFilter<U, V> {
+public class CachedSymbolFilter<U, V> implements MutableSymbolFilter<U, V> {
     private final Map<Word<U>, Map<V, Boolean>> previousResponses; // prefix -> (input -> legal/ignore)
     private final SymbolFilter<U, V> delegate;
 
@@ -37,7 +38,11 @@ public class CachedSymbolFilter<U, V> implements SymbolFilter<U, V> {
     }
 
     @Override
-    public void update(Word<U> prefix, V symbol, SymbolFilterResponse response) {
+    public void accept(Word<U> prefix, V symbol) {
+        this.update(prefix, symbol, SymbolFilterResponse.ACCEPT);
+    }
+
+    private void update(Word<U> prefix, V symbol, SymbolFilterResponse response) {
         this.previousResponses.putIfAbsent(prefix, new HashMap<>());
         this.previousResponses.get(prefix).put(symbol, (response == SymbolFilterResponse.ACCEPT));
     }

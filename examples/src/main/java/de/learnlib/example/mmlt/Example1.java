@@ -7,6 +7,7 @@ import java.util.Random;
 import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.driver.simulator.MMLTSimulatorSUL;
+import de.learnlib.filter.SymbolFilter;
 import de.learnlib.filter.cache.mmlt.TimedSULTreeCache;
 import de.learnlib.filter.cache.mmlt.TimeoutReducerSUL;
 import de.learnlib.filter.statistic.oracle.CounterEQOracle;
@@ -17,13 +18,12 @@ import de.learnlib.oracle.equivalence.mmlt.RandomWpEQOracle;
 import de.learnlib.oracle.equivalence.mmlt.ResetSearchEQOracle;
 import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.membership.TimedSULOracle;
-import de.learnlib.oracle.symbol_filters.CachedSymbolFilter;
-import de.learnlib.oracle.symbol_filters.mmlt.MMLTRandomSymbolFilter;
-import de.learnlib.oracle.symbol_filters.mmlt.MMLTStatisticsSymbolFilter;
+import de.learnlib.filter.symbol.CachedSymbolFilter;
+import de.learnlib.algorithm.lstar.mmlt.filter.MMLTRandomSymbolFilter;
+import de.learnlib.algorithm.lstar.mmlt.filter.MMLTStatisticsSymbolFilter;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatsContainer;
-import de.learnlib.symbol_filter.SymbolFilter;
 import de.learnlib.testsupport.example.mmlt.MMLTExamples;
 import net.automatalib.automaton.visualization.MMLTVisualizationHelper;
 import net.automatalib.symbol.time.InputSymbol;
@@ -83,9 +83,9 @@ public class Example1 {
                 new MMLTRandomSymbolFilter<>(model.getReferenceAutomaton(), 0.1, new Random(100));
 
         filter = new MMLTStatisticsSymbolFilter<>(model.getReferenceAutomaton(), filter, stats);
-        filter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
+        var cachedFilter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
 
-        var learner = new ExtensibleLStarMMLT<>(model.getReferenceAutomaton().getInputAlphabet(), model.getParams(), suffixes, timeOracle, filter);
+        var learner = new ExtensibleLStarMMLT<>(model.getReferenceAutomaton().getInputAlphabet(), model.getParams(), suffixes, timeOracle, cachedFilter);
 
         // Start learning:
         runExperiment(learner, chainOracle, stats, 100);

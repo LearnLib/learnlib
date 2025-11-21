@@ -26,7 +26,7 @@
  * &lt;/dependency&gt;
  * </pre>
  */
-open module de.learnlib.oracle.symbol_filters {
+open module de.learnlib.filter.symbol {
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static de.learnlib.tooling.annotation;
@@ -34,6 +34,5 @@ open module de.learnlib.oracle.symbol_filters {
     requires de.learnlib.api;
     requires net.automatalib.api;
 
-    exports de.learnlib.oracle.symbol_filters;
-    exports de.learnlib.oracle.symbol_filters.mmlt;
+    exports de.learnlib.filter.symbol;
 }

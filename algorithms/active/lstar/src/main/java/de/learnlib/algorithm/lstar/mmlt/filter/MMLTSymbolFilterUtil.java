@@ -1,8 +1,8 @@
-package de.learnlib.oracle.symbol_filters.mmlt;
+package de.learnlib.algorithm.lstar.mmlt.filter;
 
 import java.util.Objects;
 
-import de.learnlib.symbol_filter.SymbolFilterResponse;
+import de.learnlib.filter.SymbolFilterResponse;
 import net.automatalib.automaton.mmlt.MMLTSemantics;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.InputSymbol;

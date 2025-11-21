@@ -3,10 +3,10 @@ package de.learnlib.algorithm.lstar.mmlt;
 import de.learnlib.datastructure.observationtable.MutableObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import de.learnlib.datastructure.observationtable.RowImpl;
+import de.learnlib.filter.MutableSymbolFilter;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.symbol_filter.SymbolFilter;
-import de.learnlib.symbol_filter.SymbolFilterResponse;
+import de.learnlib.filter.SymbolFilterResponse;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.mmlt.MealyTimerInfo;
 import net.automatalib.symbol.time.TimedOutput;
@@ -42,7 +42,7 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
 
     private static final Logger logger = LoggerFactory.getLogger(MMLTObservationTable.class);
 
-    private final SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
+    private final MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
 
     private final Map<Word<TimedInput<I>>, LocationTimerInfo<I, O>> timerInfoMap; // prefix -> timer info
 
@@ -63,7 +63,7 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
     private final TimedOutput<O> silentOutput; // used for symbol filtering
 
     public MMLTObservationTable(Alphabet<TimedInput<I>> alphabet, long minTimerQueryWaitTime,
-                                @NonNull SymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter, O silentOutput) {
+                                @NonNull MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter, O silentOutput) {
         this.alphabet = alphabet;
 
         this.symbolFilter = symbolFilter;
@@ -194,7 +194,7 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
                         filterResponse = SymbolFilterResponse.ACCEPT;
 
                         // Update filter:
-                        this.symbolFilter.update(sp, (InputSymbol<I>) sym, SymbolFilterResponse.ACCEPT);
+                        this.symbolFilter.accept(sp, (InputSymbol<I>) sym);
                     }
                 }
 
